@@ -1,0 +1,11 @@
+#ignore temporary files
+*~
+
+#ignore qtcreator user files
+*.pro.user*
+
+#ignore the doc directory content
+doc/*
+
+#ignore build directories
+*-build-*/
