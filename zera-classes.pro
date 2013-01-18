@@ -3,4 +3,7 @@ TEMPLATE    = subdirs
 SUBDIRS     = \
             zera-math \
             zera-meas \
-            zera-net
+            zera-comm\zera-net
+	    zera-comm\zera-i2c
+	    zera-dev
+	    
