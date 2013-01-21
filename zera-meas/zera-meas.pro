@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-TARGET = ZERA_MEAS
+TARGET = zerameas
 DEPENDPATH += . src
 INCLUDEPATH += .  
 

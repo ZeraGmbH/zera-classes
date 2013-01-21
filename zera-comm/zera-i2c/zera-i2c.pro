@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-TARGET = ZERA_I2C
+TARGET = zerai2c
 DEPENDPATH += . src
 INCLUDEPATH += .  
 

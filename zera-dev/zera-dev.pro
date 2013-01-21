@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-TARGET = ZERA_DEV
+TARGET = zeradev
 DEPENDPATH += . src
 INCLUDEPATH += .
 

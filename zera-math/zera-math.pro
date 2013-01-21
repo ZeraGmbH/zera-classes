@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-TARGET = ZERA_MATH
+TARGET = zeramath
 DEPENDPATH += . src
 INCLUDEPATH += .
 
