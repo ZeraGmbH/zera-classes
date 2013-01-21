@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-TARGET = ZERA_NET
+TARGET = zeranet
 DEPENDPATH += . src
 INCLUDEPATH += .
 
@@ -14,9 +14,13 @@ DEFINES += ZERA_NET_LIBRARY
 # Input
 HEADERS += src/client.h \
     src/net_global.h \
-    src/clientinterface.h
+    src/clientinterface.h \
+    src/client_pub.h \
+    src/clientinterface_pub.h
 SOURCES += src/client.cpp \
-    src/clientinterface.cpp
+    src/clientinterface.cpp \
+    src/clientinterface_pub.cpp \
+    src/client_pub.cpp
 
 target.path = /usr/lib
 INSTALLS += target

@@ -1,11 +1,14 @@
-#ifndef H2012_CLIENT_H
-#define H2012_CLIENT_H
+#ifndef H2012_CLIENT_PUB_H
+#define H2012_CLIENT_PUB_H
 
 #include <QStringList>
 #include <QObject>
 #include <QTimer>
 #include <QTcpSocket>
 
+
+#include "client.h"
+#include "net_global.h"
 
 namespace Zera
 {
@@ -15,7 +18,7 @@ namespace Zera
       @brief ZeraNet::Client represents an abstract client implementation, with a timeout/refresh function
       @todo This class needs unique identifiers for implementation clients.
       */
-    class _ClientPrivate : public QObject
+    class Client : public QObject
     {
       Q_OBJECT
     public:
@@ -23,7 +26,8 @@ namespace Zera
         @b The default constructor
         @note Other constructors are invalid
         */
-      explicit _ClientPrivate(int socketDescriptor, QObject *parent = 0);
+      explicit Client(int socketDescriptor, QObject *parent = 0);
+
       /**
         @b returns the socket descriptor of the clients socket
         */
@@ -50,26 +54,13 @@ namespace Zera
       void timeout();
 
     private:
-
       /**
         @b Writes a QString to the socket
         */
       void writeClient(QString message);
 
-      /**
-        @b The actual socket of the ZeraNet::Client, this object cannot be used cross thread wise
-        */
-      QTcpSocket clSocket;
-      /**
-        @b if the timer is called the client has a timeout
-        It will be refreshed by the client in a set interval
-        */
-      QTimer timeoutCheck;
+      Zera::Net::_ClientPrivate* d_ptr;
 
-      /**
-        @b socket of the client connection
-        */
-      int sockDescriptor;
 
     public slots:
       /**
@@ -84,4 +75,4 @@ namespace Zera
     };
   }
 }
-#endif // H2012_CLIENT_H
+#endif // H2012_CLIENT_PUB_H

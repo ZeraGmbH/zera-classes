@@ -1,54 +1,56 @@
 #include "clientinterface.h"
 #include <QDebug>
 
-namespace ZeraNet
+namespace Zera
 {
-  ClientInterface::ClientInterface(QObject* parent) :
-    QTcpServer(parent)
+  namespace Net
   {
-
-    /// @todo change default port
-    this->listen(QHostAddress::Any, 12345);
-    qDebug()<<"Server Started";
-  }
-
-  ClientInterface::~ClientInterface()
-  {
-    foreach(Client *c, clients)
+    _ClientInterfacePrivate::_ClientInterfacePrivate(QObject* parent) :
+      QTcpServer(parent)
     {
-      c->deleteLater();
+
+      /// @todo change default port
+      this->listen(QHostAddress::Any, 12345);
+      qDebug()<<"Server Started";
     }
-  }
 
-  void ClientInterface::incomingConnection(int socketDescriptor)
-  {
-    qDebug()<<"Client connected";
-
-    Client *client = new Client(socketDescriptor);
-    clients.append(client);
-    //connect(client, SIGNAL(timeout()), this, SLOT(clientDisconnect()));
-
-  }
-
-  void ClientInterface::clientDisconnect()
-  {
-    if(QObject::sender()!=0)
+    _ClientInterfacePrivate::~_ClientInterfacePrivate()
     {
-      Client* client = (Client*) QObject::sender();
-      qDebug()<<"Client disconnected:"<<client->getName();
-      clients.removeAll(client);
-      client->deleteLater();
+      foreach(_ClientPrivate *c, clients)
+      {
+        c->deleteLater();
+      }
     }
-  }
 
-  ClientInterface* ClientInterface::singletonInstance=0;
-
-  ClientInterface* ClientInterface::getInstance()
-  {
-    if(singletonInstance==0)
+    void _ClientInterfacePrivate::incomingConnection(int socketDescriptor)
     {
-      singletonInstance=new ClientInterface;
+      qDebug()<<"Client connected";
+
+      _ClientPrivate *client = new _ClientPrivate(socketDescriptor);
+      clients.append(client);
+      //connect(client, SIGNAL(timeout()), this, SLOT(clientDisconnect()));
+
     }
-    return singletonInstance;
+
+    void _ClientInterfacePrivate::clientDisconnect()
+    {
+      if(QObject::sender()!=0)
+      {
+        _ClientPrivate* client = (_ClientPrivate*) QObject::sender();
+        clients.removeAll(client);
+        client->deleteLater();
+      }
+    }
+
+    _ClientInterfacePrivate* _ClientInterfacePrivate::singletonInstance=0;
+
+    _ClientInterfacePrivate* _ClientInterfacePrivate::getInstance()
+    {
+      if(singletonInstance==0)
+      {
+        singletonInstance=new _ClientInterfacePrivate;
+      }
+      return singletonInstance;
+    }
   }
 }

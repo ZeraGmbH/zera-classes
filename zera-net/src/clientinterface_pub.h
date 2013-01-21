@@ -1,8 +1,11 @@
-#ifndef H2012_SERVERINTERFACE_H
-#define H2012_SERVERINTERFACE_H
+#ifndef H2012_SERVERINTERFACE_PUB_H
+#define H2012_SERVERINTERFACE_PUB_H
 
-#include <QTcpServer>
-#include "client.h"
+
+#include "clientinterface.h"
+#include "client_pub.h"
+
+#include "net_global.h"
 
 /**
   @brief The Server Namespace encapsulates all networking logic into a separate namespace.
@@ -14,26 +17,24 @@ namespace Zera
     /**
       @brief Represents the interface between the network implementations and the ResourceManager
       */
-    class _ClientInterfacePrivate : public QTcpServer
+    class ClientInterface : QObject
     {
       Q_OBJECT
     protected:
       /**
         @b The class is a Singleton so the constructor is protected [P.157+ Design patterns Gang of Four]
         */
-      _ClientInterfacePrivate(QObject* parent = 0);
-      ~_ClientInterfacePrivate();
+      ClientInterface(QObject* parent = 0);
+      ~ClientInterface();
 
-      /**
-        @b Overload the incoming connection to creater our own ZeraNet::Client
-        */
-      void incomingConnection(int socketDescriptor);
 
     public:
       /**
         @b See [P.157+ Design patterns Gang of Four]
         */
-      static _ClientInterfacePrivate* getInstance();
+      static ClientInterface* getInstance();
+
+    signals:
 
 
     public slots:
@@ -47,16 +48,18 @@ namespace Zera
       /**
         @b See [P.157+ Design patterns Gang of Four]
         */
-      static _ClientInterfacePrivate* singletonInstance;
+      static ClientInterface* singletonInstance;
       /**
         @b  list of all ZeraNet::Client instances this server handles
         */
-      QList<_ClientPrivate*> clients;
+      QList<Client*> clients;
+
+      Zera::Net::_ClientInterfacePrivate* d_ptr;
 
       /**
         @note Instances of this class should only get accessed through the getInstance method.
         */
-      Q_DISABLE_COPY(_ClientInterfacePrivate)
+      Q_DISABLE_COPY(ClientInterface)
     };
   }
 }
