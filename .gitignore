@@ -1,5 +1,6 @@
 #ignore temporary files
 *~
+.autosave
 
 #ignore qtcreator user files
 *.pro.user*
