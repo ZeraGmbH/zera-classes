@@ -1,12 +1,36 @@
-#ignore temporary files
+# This file is used to ignore files which are generated
+
 *~
-.autosave
+*.autosave
+*.a
+*.core
+*.moc
+*.o
+*.obj
+*.orig
+*.patch
+*.rej
+*.so
+*_pch.h.cpp
+*_resource.rc
+*.qm
+.#*
+*.*#
+.DS_Store
+*.debug
+Makefile*
+*.prl
+*.app
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+Thumbs.db
 
-#ignore qtcreator user files
+# qtcreator generated files
 *.pro.user*
+*.qmlproject.user*
+*.pluginspec
 
-#ignore the doc directory content
+#ignore the doc directory
 doc/*
-
-#ignore build directories
-*-build-*/
+doc/
