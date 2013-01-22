@@ -36,7 +36,7 @@ namespace Zera
     {
       if(QObject::sender()!=0)
       {
-        _ClientPrivate* client = (_ClientPrivate*) QObject::sender();
+        _ClientPrivate* client =  reinterpret_cast<_ClientPrivate*>(QObject::sender());
         clients.removeAll(client);
         client->deleteLater();
       }
