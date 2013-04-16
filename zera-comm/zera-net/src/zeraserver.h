@@ -1,9 +1,10 @@
 #ifndef H2012_SERVERINTERFACE_PUB_H
 #define H2012_SERVERINTERFACE_PUB_H
 
-
-#include "clientinterface.h"
-#include "client_pub.h"
+#include <QObject>
+#include <QList>
+#include "server.h"
+#include "zeraclient.h"
 
 #include "net_global.h"
 
@@ -17,49 +18,40 @@ namespace Zera
     /**
       @brief Represents the interface between the network implementations and the ResourceManager
       */
-    class ClientInterface : QObject
+    class ZERA_NETSHARED_EXPORT ZeraServer : public QObject
     {
       Q_OBJECT
+    public:
+      QList<Zera::Net::ZeraClient*> getClients();
+      /**
+        @b See [P.157+ Design patterns Gang of Four]
+        */
+      static ZeraServer* getInstance();
+
+    signals:
+      void newClientAvailable(Zera::Net::ZeraClient* newClient);
+
+    public slots:
+      void broadcastMessage(QByteArray message);
+      void startServer(quint16 port);
+
     protected:
       /**
         @b The class is a Singleton so the constructor is protected [P.157+ Design patterns Gang of Four]
         */
-      ClientInterface(QObject* parent = 0);
-      ~ClientInterface();
+      ZeraServer(QObject* parent = 0);
+      ~ZeraServer();
 
-
-    public:
+      Zera::Net::_ServerPrivate* d_ptr;
       /**
         @b See [P.157+ Design patterns Gang of Four]
         */
-      static ClientInterface* getInstance();
-
-    signals:
-
-
-    public slots:
-      /**
-        @b Will be triggered when the ZeraNet::Client disconnects
-        */
-      void clientDisconnect();
-
-
-    private:
-      /**
-        @b See [P.157+ Design patterns Gang of Four]
-        */
-      static ClientInterface* singletonInstance;
-      /**
-        @b  list of all ZeraNet::Client instances this server handles
-        */
-      QList<Client*> clients;
-
-      Zera::Net::_ClientInterfacePrivate* d_ptr;
+      static ZeraServer* singletonInstance;
 
       /**
         @note Instances of this class should only get accessed through the getInstance method.
         */
-      Q_DISABLE_COPY(ClientInterface)
+      Q_DISABLE_COPY(ZeraServer)
     };
   }
 }

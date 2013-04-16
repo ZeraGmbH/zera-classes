@@ -1,87 +1,85 @@
-#ifndef H2012_CLIENT_H
-#define H2012_CLIENT_H
+#ifndef H2013_CLIENT_H
+#define H2013_CLIENT_H
 
-#include <QStringList>
 #include <QObject>
-#include <QTimer>
+#include <QStateMachine>
 #include <QTcpSocket>
 
+QT_BEGIN_NAMESPACE
+class QFinalState;
+class QTimer;
+QT_END_NAMESPACE
 
 namespace Zera
 {
   namespace Net
   {
-    /**
-      @brief ZeraNet::Client represents an abstract client implementation, with a timeout/refresh function
-      @todo This class needs unique identifiers for implementation clients.
-      */
-    class _ClientPrivate : public QObject
+    class _ClientPrivate : public QStateMachine
     {
       Q_OBJECT
     public:
+      explicit _ClientPrivate(quint32 socketDescriptor, QString clientName = QString(), QObject *parent = 0);
+
       /**
-        @b The default constructor
-        @note Other constructors are invalid
+        @b returns the name of the client (something like RMS or Oscilloscope)
         */
-      explicit _ClientPrivate(int socketDescriptor, QObject *parent = 0);
+      const QString &getName();
       /**
         @b returns the socket descriptor of the clients socket
         */
       int getSocket();
-
       /**
         @b Reads a QString from the socket
         */
-      QString readClient();
+      QByteArray readClient();
 
     signals:
-
-      /**
-        @b forwards clSocket readyRead() signal
-        */
-      void readyRead();
-      /**
-        @b Socket error fallback
-        */
-      void error(QTcpSocket::SocketError socketError);
-      /**
-        @brief timeout raises when no communication between server and client occurs within 5 seconds
-        */
-      void timeout();
-
-    private:
-
-      /**
-        @b Writes a QString to the socket
-        */
-      void writeClient(QString message);
-
-      /**
-        @b The actual socket of the ZeraNet::Client, this object cannot be used cross thread wise
-        */
-      QTcpSocket clSocket;
-      /**
-        @b if the timer is called the client has a timeout
-        It will be refreshed by the client in a set interval
-        */
-      QTimer timeoutCheck;
-
-      /**
-        @b socket of the client connection
-        */
-      int sockDescriptor;
+      void clientConnected();
+      void clientDisconnected();
+      void clientLogout();
+      void error(QAbstractSocket::SocketError socketError);
+      void messageReceived(QByteArray message);
 
     public slots:
       /**
-        @brief Will be called if locking the resource caused errors
+       * @brief Tell the client to disconnect
+       */
+      void logoutClient();
+      void setName(QString newName);
+      /**
+        @b Writes a QString to the socket
         */
-      void sendToClient(QString message);
+      void writeClient(QByteArray message);
+
+    private slots:
+      void initialize();
+      void maintainConnection();
+      void disconnectClient();
+
+    private:
+      void setupStateMachine();
 
       /**
-        @brief Resets the timer back to 5 seconds.
+        @b The actual socket of the Server::Client
         */
-      void refresh();
+      QTcpSocket* clSocket;
+
+      QString name;
+      const quint32 sockDescriptor;
+
+      QFinalState *fstDisconnected;
+      QState *stAboutToDisconnect;
+      QState *stConnected;
+      QState *stContainer;
+      QState *stInit;
+
+
+
+
+
+
+      Q_DISABLE_COPY(_ClientPrivate)
     };
   }
 }
-#endif // H2012_CLIENT_H
+#endif // H2013_CLIENT_H
