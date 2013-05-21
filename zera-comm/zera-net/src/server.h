@@ -32,7 +32,7 @@ namespace Zera
       /**
         @b Will be triggered when the ZeraNet::Client disconnects
         */
-      void clientDisconnected();
+      void clientDisconnectedSRV();
 
       void startServer(quint16 port);
 

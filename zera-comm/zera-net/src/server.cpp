@@ -27,7 +27,7 @@ namespace Zera
       }
     }
 
-    void _ServerPrivate::clientDisconnected()
+    void _ServerPrivate::clientDisconnectedSRV()
     {
       if(QObject::sender()!=0)
       {
@@ -42,7 +42,7 @@ namespace Zera
 
       /// @todo change default port
       this->listen(QHostAddress::Any, port);
-      qDebug()<<"Server Started";
+      qDebug()<<"[zera-net]Server Started";
     }
 
     _ServerPrivate::_ServerPrivate(QObject* parent) :
@@ -60,11 +60,11 @@ namespace Zera
 
     void _ServerPrivate::incomingConnection(int socketDescriptor)
     {
-      //qDebug()<<"Client connected";
+      //qDebug()<<"[zera-net]Client connected";
 
       ZeraClient *client = new ZeraClient(socketDescriptor);
       clients.append(client);
-      connect(client, SIGNAL(clientDisconnected()), this, SLOT(clientDisconnected()));
+      connect(client, SIGNAL(clientDisconnected()), this, SLOT(clientDisconnectedSRV()));
       emit newClientAvailable(client);
       client->start();
     }
