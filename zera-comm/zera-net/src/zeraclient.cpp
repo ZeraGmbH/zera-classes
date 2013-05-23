@@ -8,8 +8,9 @@ namespace Zera
 
     ZeraClient::ZeraClient(quint32 socketDescriptor, QString name, QObject *parent) : QObject(parent)
     {
-      d_ptr=new Zera::Net::_ClientPrivate(socketDescriptor, name);
-      connect(d_ptr,SIGNAL(error(QAbstractSocket::SocketError)),this,SIGNAL(error(QAbstractSocket::SocketError)));
+      // will be autodeleted if the socket is disconnected
+      d_ptr=new Zera::Net::_ClientPrivate(socketDescriptor, name, this);
+      connect(d_ptr,SIGNAL(sockError(QAbstractSocket::SocketError)),this,SIGNAL(error(QAbstractSocket::SocketError)));
       connect(d_ptr,SIGNAL(messageReceived(QByteArray)),this,SIGNAL(messageReceived(QByteArray)));
       connect(d_ptr,SIGNAL(clientDisconnected()),this,SIGNAL(clientDisconnected()));
     }

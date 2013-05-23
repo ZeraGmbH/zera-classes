@@ -1,11 +1,10 @@
-#ifndef H2012_SERVERINTERFACE_PUB_H
-#define H2012_SERVERINTERFACE_PUB_H
+#ifndef H2012_ZERANET_SERVER_PUB_H
+#define H2012_ZERANET_SERVER_PUB_H
 
 #include <QObject>
 #include <QList>
-#include "server.h"
-#include "zeraclient.h"
 
+#include "zeraclient.h"
 #include "net_global.h"
 
 /**
@@ -15,6 +14,8 @@ namespace Zera
 {
   namespace Net
   {
+    class _ServerPrivate;
+
     /**
       @brief Represents the interface between the network implementations and the ResourceManager
       */
@@ -55,4 +56,4 @@ namespace Zera
     };
   }
 }
-#endif // H2012_SERVERINTERFACE_H
+#endif // H2012_ZERANET_SERVER_H

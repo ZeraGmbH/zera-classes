@@ -1,5 +1,5 @@
-#ifndef H2013_CLIENT_H
-#define H2013_CLIENT_H
+#ifndef H2013_ZERANET_CLIENT_H
+#define H2013_ZERANET_CLIENT_H
 
 #include <QObject>
 #include <QStateMachine>
@@ -37,7 +37,7 @@ namespace Zera
       void clientConnected();
       void clientDisconnected();
       void clientLogout();
-      void error(QAbstractSocket::SocketError socketError);
+      void sockError(QAbstractSocket::SocketError socketError);
       void messageReceived(QByteArray message);
 
     public slots:
@@ -58,7 +58,6 @@ namespace Zera
 
     private:
       void setupStateMachine();
-
       /**
         @b The actual socket of the Server::Client
         */
@@ -82,4 +81,4 @@ namespace Zera
     };
   }
 }
-#endif // H2013_CLIENT_H
+#endif // H2013_ZERANET_CLIENT_H

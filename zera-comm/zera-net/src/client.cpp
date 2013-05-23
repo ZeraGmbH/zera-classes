@@ -19,12 +19,12 @@ namespace Zera
 
       if(!clSocket->setSocketDescriptor(sockDescriptor))
       {
-        emit error(clSocket->error());
-        qFatal("error setting clients socket descriptor");
+        emit sockError(clSocket->error());
+        qFatal("[zera-net]error setting clients socket descriptor");
         return;
       }
       clSocket->setSocketOption(QAbstractSocket::KeepAliveOption, true);
-      connect(clSocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SIGNAL(error(QAbstractSocket::SocketError)));
+      connect(clSocket,SIGNAL(error(QAbstractSocket::SocketError)),this,SIGNAL(sockError(QAbstractSocket::SocketError)));
       connect(clSocket,SIGNAL(disconnected()),this,SLOT(disconnectClient()));
 
       setupStateMachine();
@@ -42,7 +42,8 @@ namespace Zera
 
     QByteArray _ClientPrivate::readClient()
     {
-      if(clSocket->bytesAvailable())  {
+      if(clSocket->bytesAvailable())
+      {
         QByteArray retVal;
         QDataStream in(clSocket);
         in.setVersion(QDataStream::Qt_4_0);
@@ -51,22 +52,23 @@ namespace Zera
         if(clSocket->bytesAvailable()<expectedSize)
         {
           //error
-          qFatal("Error bytes not available");
+          qWarning("[zera-net]Error bytes not available");
         }
         else
         {
           in >> retVal;
-          //qDebug()<<"Receiving message:"<<QString(retVal.toBase64());
+          //qDebug()<<"[zera-net]Receiving message:"<<QString(retVal.toBase64());
         }
         return retVal;
       }
       else
-        return QByteArray(); //ERROR
+        return QByteArray();
     }
 
     void _ClientPrivate::logoutClient()
     {
       emit clientLogout();
+      //placeholder
     }
 
 
@@ -77,7 +79,7 @@ namespace Zera
 
     void _ClientPrivate::writeClient(QByteArray message)
     {
-      //qDebug()<<"Sending message:"<<QString(message.toBase64());
+      //qDebug()<<"[zera-net]Sending message:"<<QString(message.toBase64());
       QByteArray block;
       // serialize the ProtobufMessage to send it
       QDataStream out(&block, QIODevice::WriteOnly);
@@ -98,7 +100,13 @@ namespace Zera
 
     void _ClientPrivate::maintainConnection()
     {
-      emit messageReceived(readClient());
+      QByteArray newMessage;
+      newMessage=readClient();
+      while(!newMessage.isNull())
+      {
+        emit messageReceived(newMessage);
+        newMessage=readClient();
+      }
     }
 
     void _ClientPrivate::disconnectClient()
@@ -110,7 +118,7 @@ namespace Zera
         clSocket->disconnectFromHost();
         clSocket->close();
       }
-      qDebug()<<"Client disconnected";
+      qDebug()<<"[zera-net]Client disconnected: "<< name;
       emit clientDisconnected();
     }
 

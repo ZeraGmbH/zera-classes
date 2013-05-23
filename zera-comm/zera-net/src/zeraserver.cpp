@@ -1,4 +1,5 @@
 #include "zeraserver.h"
+#include "server.h"
 
 namespace Zera
 {

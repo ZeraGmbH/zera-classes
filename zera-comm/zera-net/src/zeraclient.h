@@ -1,5 +1,5 @@
-#ifndef H2012_CLIENT_PUB_H
-#define H2012_CLIENT_PUB_H
+#ifndef H2012_ZERANET_CLIENT_PUB_H
+#define H2012_ZERANET_CLIENT_PUB_H
 
 #include <QStringList>
 #include <QObject>
@@ -7,7 +7,6 @@
 #include <QTcpSocket>
 
 
-#include "client.h"
 #include "net_global.h"
 
 namespace ProtobufMessage
@@ -19,6 +18,7 @@ namespace Zera
 {
   namespace Net
   {
+    class _ClientPrivate;
     /**
       @brief ZeraNet::Client represents an abstract client implementation, with a timeout/refresh function
       @todo This class needs unique identifiers for implementation clients.
@@ -62,6 +62,9 @@ namespace Zera
       void logoutClient();
       void setName(QString newName);
       void start();
+
+
+
       /**
         @brief Will be called if locking the resource caused errors
         */
@@ -78,4 +81,4 @@ namespace Zera
     };
   }
 }
-#endif // H2012_CLIENT_PUB_H
+#endif // H2012_ZERANET_CLIENT_PUB_H

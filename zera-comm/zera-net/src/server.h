@@ -1,5 +1,5 @@
-#ifndef H2012_SERVERINTERFACE_H
-#define H2012_SERVERINTERFACE_H
+#ifndef H2012_ZERANET_SERVER_H
+#define H2012_ZERANET_SERVER_H
 
 #include <QTcpServer>
 #include "zeraclient.h"
@@ -65,4 +65,4 @@ namespace Zera
     };
   }
 }
-#endif // H2012_SERVERINTERFACE_H
+#endif // H2012_ZERANET_SERVER_H
