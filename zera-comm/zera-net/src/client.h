@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QStateMachine>
 #include <QTcpSocket>
+#include <QHostAddress>
 
 QT_BEGIN_NAMESPACE
 class QFinalState;
@@ -21,23 +22,49 @@ namespace Zera
       explicit _ClientPrivate(quint32 socketDescriptor, QString clientName = QString(), QObject *parent = 0);
 
       /**
-        @b returns the name of the client (something like RMS or Oscilloscope)
+       * @brief This is a forward of TcpSocket peerAddress()
+       * @return IP address of the peer
+       */
+      QHostAddress getIpAddress();
+
+      /**
+        @brief returns the name of the client (something like RMS or Oscilloscope)
         */
       const QString &getName();
+
       /**
-        @b returns the socket descriptor of the clients socket
-        */
-      int getSocket();
+       * @brief Returns the socket descriptor of the clients socket
+       * @return socket descriptor unique id
+       */
+      quint32 getSocket();
+
       /**
-        @b Reads a QString from the socket
+        @brief Reads The QString from the socket
         */
       QByteArray readClient();
 
     signals:
+      /**
+       * @brief The new client connected
+       */
       void clientConnected();
+      /**
+       * @brief The client disconnected
+       */
       void clientDisconnected();
+      /**
+       * @brief The client will disconnect soon
+       */
       void clientLogout();
+      /**
+       * @brief Forwards the TcpSocket error
+       * @param socketError
+       */
       void sockError(QAbstractSocket::SocketError socketError);
+      /**
+       * @brief Forwards messages to the application
+       * @param the message received (UTF-8)
+       */
       void messageReceived(QByteArray message);
 
     public slots:
@@ -45,25 +72,44 @@ namespace Zera
        * @brief Tell the client to disconnect
        */
       void logoutClient();
+      /**
+       * @brief Change the clients name
+       * @param newName
+       */
       void setName(QString newName);
       /**
-        @b Writes a QString to the socket
+        @brief Writes a QString to the socket
         */
       void writeClient(QByteArray message);
 
     private slots:
+      /**
+       * @brief Will be called if the connection is established
+       */
       void initialize();
+      /**
+       * @brief Will be called on readyRead
+       */
       void maintainConnection();
+      /**
+       * @brief Shuts down the connection
+       */
       void disconnectClient();
 
     private:
+      /**
+       * @brief Entry point for stated client
+       */
       void setupStateMachine();
       /**
-        @b The actual socket of the Server::Client
+        @brief The actual socket of the Server::Client
         */
       QTcpSocket* clSocket;
 
       QString name;
+      /**
+       * @brief socket id of the TcpSocket
+       */
       const quint32 sockDescriptor;
 
       QFinalState *fstDisconnected;
@@ -71,11 +117,6 @@ namespace Zera
       QState *stConnected;
       QState *stContainer;
       QState *stInit;
-
-
-
-
-
 
       Q_DISABLE_COPY(_ClientPrivate)
     };

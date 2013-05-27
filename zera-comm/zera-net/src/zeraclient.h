@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QTcpSocket>
+#include <QHostAddress>
 
 
 #include "net_global.h"
@@ -28,29 +29,38 @@ namespace Zera
       Q_OBJECT
     public:
       /**
-        @b The default constructor
+        @brief The default constructor
         @note Other constructors are invalid
         */
       explicit ZeraClient(quint32 socketDescriptor, QString name = QString(), QObject *parent = 0);
 
       /**
-        @b returns the name of the client (something like RMS or Oscilloscope)
+       * @brief This is a forward of TcpSocket peerAddress()
+       * @return IP address of the peer
+       */
+      QHostAddress getIpAddress();
+
+      /**
+        @brief returns the name of the client (something like RMS or Oscilloscope)
         */
       const QString &getName();
 
       /**
-        @b returns the socket descriptor of the clients socket
+        @brief returns the socket descriptor of the clients socket
         */
-      int getSocket();
+      quint32 getSocket();
 
     signals:
+      /**
+       * @brief notify that the client is disconnected
+       */
       void clientDisconnected();
       /**
-        @b Socket error fallback
+        @brief Socket error fallback
         */
       void error(QAbstractSocket::SocketError socketError);
       /**
-        @b forwards clSocket readyRead() signal
+        @brief forwards clSocket readyRead() signal
         */
       void messageReceived(QByteArray message);
 
@@ -60,7 +70,14 @@ namespace Zera
        * @brief Disconnects the client
        */
       void logoutClient();
+      /**
+       * @brief setName
+       * @param newName
+       */
       void setName(QString newName);
+      /**
+       * @brief starts the state machine
+       */
       void start();
 
 
@@ -75,7 +92,7 @@ namespace Zera
 
     private:
       /**
-        @b Reads a QString from the socket
+        @brief Reads a QString from the socket
         */
       QByteArray readClient();
     };

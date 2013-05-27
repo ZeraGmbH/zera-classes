@@ -1,9 +1,8 @@
 #include "client.h"
 
-#include <QTcpSocket>
+
 #include <QState>
 #include <QFinalState>
-#include <QTimer>
 #include <QDebug>
 
 namespace Zera
@@ -30,12 +29,17 @@ namespace Zera
       setupStateMachine();
     }
 
+    QHostAddress _ClientPrivate::getIpAddress()
+    {
+      return clSocket->peerAddress();
+    }
+
     const QString &_ClientPrivate::getName()
     {
       return name;
     }
 
-    int _ClientPrivate::getSocket()
+    quint32 _ClientPrivate::getSocket()
     {
       return sockDescriptor;
     }

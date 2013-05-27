@@ -25,7 +25,7 @@ namespace Zera
     public:
       QList<Zera::Net::ZeraClient*> getClients();
       /**
-        @b See [P.157+ Design patterns Gang of Four]
+        @brief See [P.157+ Design patterns Gang of Four]
         */
       static ZeraServer* getInstance();
 
@@ -33,19 +33,27 @@ namespace Zera
       void newClientAvailable(Zera::Net::ZeraClient* newClient);
 
     public slots:
+      /**
+       * @brief Sends a message to all clients
+       * @param message
+       */
       void broadcastMessage(QByteArray message);
+      /**
+       * @brief startServer
+       * @param port
+       */
       void startServer(quint16 port);
 
     protected:
       /**
-        @b The class is a Singleton so the constructor is protected [P.157+ Design patterns Gang of Four]
+        @brief The class is a Singleton so the constructor is protected [P.157+ Design patterns Gang of Four]
         */
       ZeraServer(QObject* parent = 0);
       ~ZeraServer();
 
       Zera::Net::_ServerPrivate* d_ptr;
       /**
-        @b See [P.157+ Design patterns Gang of Four]
+        @brief See [P.157+ Design patterns Gang of Four]
         */
       static ZeraServer* singletonInstance;
 

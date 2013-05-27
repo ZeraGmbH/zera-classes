@@ -15,12 +15,17 @@ namespace Zera
       connect(d_ptr,SIGNAL(clientDisconnected()),this,SIGNAL(clientDisconnected()));
     }
 
+    QHostAddress ZeraClient::getIpAddress()
+    {
+      return d_ptr->getIpAddress();
+    }
+
     const QString &ZeraClient::getName()
     {
       return d_ptr->getName();
     }
 
-    int ZeraClient::getSocket()
+    quint32 ZeraClient::getSocket()
     {
       return d_ptr->getSocket();
     }
