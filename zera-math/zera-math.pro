@@ -16,3 +16,16 @@ DEFINES += ZERA_MATH_LIBRARY
 target.path = /usr/lib
 INSTALLS += target
 
+SOURCES += \
+    gaussmatrix_p.cpp \
+    gaussmatrix.cpp \
+    crcutils_p.cpp \
+    crcutils.cpp
+
+HEADERS += \
+    gaussmatrix.h \
+    math_global.h \
+    gaussmatrix_p.h \
+    crcutils.h \
+    crcutils_p.h
+
