@@ -5,9 +5,12 @@
 TEMPLATE = lib
 TARGET = zeradev
 DEPENDPATH += . src
-INCLUDEPATH += .
+INCLUDEPATH += . \
+               /home/peter/C++/zera-classes/zera-comm/zera-i2c
 
 DEFINES += ZERA_DEV_LIBRARY
+
+LIBS += -L/home/peter/C++/zera-classes/zera-comm/build-zera-i2c-Qt_4_8_2_in_Pfad_temporär-Debug -lzerai2c
 
 # Input
 #HEADERS += src/...
@@ -15,4 +18,15 @@ DEFINES += ZERA_DEV_LIBRARY
 
 target.path = /usr/lib
 INSTALLS += target
+
+HEADERS += \
+    i2ceeprom_p.h \
+    F24LC256_p.h \
+    dev_global.h \
+    F24LC256.h
+
+SOURCES += \
+    i2ceeprom_p.cpp \
+    F24LC256_p.cpp \
+    F24LC256.cpp
 
