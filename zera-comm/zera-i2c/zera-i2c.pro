@@ -7,7 +7,7 @@ TARGET = zerai2c
 DEPENDPATH += . src
 INCLUDEPATH += .  
 
-DEFINES += ZERA_MEAS_LIBRARY
+DEFINES += ZERA_I2C_LIBRARY
 
 # Input
 #HEADERS += src/...
@@ -15,4 +15,11 @@ DEFINES += ZERA_MEAS_LIBRARY
 
 target.path = /usr/lib
 INSTALLS += target
+
+HEADERS += \
+    i2cutils.h \
+    i2c_global.h
+
+SOURCES += \
+    i2cutils.cpp
 
