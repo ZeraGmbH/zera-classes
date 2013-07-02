@@ -1,5 +1,5 @@
 #include "zeraserver.h"
-#include "server.h"
+#include "zserver_private.h"
 
 namespace Zera
 {
@@ -31,7 +31,7 @@ namespace Zera
 
     ZeraServer::ZeraServer(QObject *parent) : QObject(parent)
     {
-      d_ptr = Zera::Net::_ServerPrivate::getInstance();
+      d_ptr = Zera::Net::_ZServerPrivate::getInstance();
       connect(d_ptr,SIGNAL(newClientAvailable(Zera::Net::ZeraClient*)), this, SIGNAL(newClientAvailable(Zera::Net::ZeraClient*)));
     }
 

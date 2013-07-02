@@ -14,7 +14,7 @@ namespace Zera
     /**
       @brief Represents the interface between the network implementations and the ResourceManager
       */
-    class _ServerPrivate : public QTcpServer
+    class _ZServerPrivate : public QTcpServer
     {
       Q_OBJECT
     public:
@@ -22,7 +22,7 @@ namespace Zera
       /**
         @brief See [P.157+ Design patterns Gang of Four]
         */
-      static _ServerPrivate* getInstance();
+      static _ZServerPrivate* getInstance();
 
     signals:
       /**
@@ -52,8 +52,8 @@ namespace Zera
       /**
         @brief The class is a Singleton so the constructor is protected [P.157+ Design patterns Gang of Four]
         */
-      _ServerPrivate(QObject* parent = 0);
-      ~_ServerPrivate();
+      _ZServerPrivate(QObject* parent = 0);
+      ~_ZServerPrivate();
 
       /**
         @brief Overload the incoming connection to creater our own ZeraNet::Client
@@ -62,7 +62,7 @@ namespace Zera
       /**
         @brief See [P.157+ Design patterns Gang of Four]
         */
-      static _ServerPrivate* singletonInstance;
+      static _ZServerPrivate* singletonInstance;
 
     private:
       /**
@@ -73,7 +73,7 @@ namespace Zera
       /**
         @note Instances of this class should only get accessed through the getInstance method.
         */
-      Q_DISABLE_COPY(_ServerPrivate)
+      Q_DISABLE_COPY(_ZServerPrivate)
     };
   }
 }

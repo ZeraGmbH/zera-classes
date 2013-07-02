@@ -1,25 +1,25 @@
-#include "server.h"
+#include "zserver_private.h"
 #include <QDebug>
 
 namespace Zera
 {
   namespace Net
   {
-    QList<Zera::Net::ZeraClient *> _ServerPrivate::getClients()
+    QList<Zera::Net::ZeraClient *> _ZServerPrivate::getClients()
     {
       return clients;
     }
 
-    _ServerPrivate* _ServerPrivate::getInstance()
+    _ZServerPrivate* _ZServerPrivate::getInstance()
     {
       if(singletonInstance==0)
       {
-        singletonInstance=new _ServerPrivate;
+        singletonInstance=new _ZServerPrivate;
       }
       return singletonInstance;
     }
 
-    void _ServerPrivate::broadcastMessage(QByteArray message)
+    void _ZServerPrivate::broadcastMessage(QByteArray message)
     {
       foreach(ZeraClient* c,clients)
       {
@@ -27,7 +27,7 @@ namespace Zera
       }
     }
 
-    void _ServerPrivate::clientDisconnectedSRV()
+    void _ZServerPrivate::clientDisconnectedSRV()
     {
       if(QObject::sender()!=0)
       {
@@ -37,7 +37,7 @@ namespace Zera
       }
     }
 
-    void _ServerPrivate::startServer(quint16 port)
+    void _ZServerPrivate::startServer(quint16 port)
     {
 
       /// @todo change default port
@@ -45,12 +45,12 @@ namespace Zera
       qDebug()<<"[zera-net]Server Started";
     }
 
-    _ServerPrivate::_ServerPrivate(QObject* parent) :
+    _ZServerPrivate::_ZServerPrivate(QObject* parent) :
       QTcpServer(parent)
     {
     }
 
-    _ServerPrivate::~_ServerPrivate()
+    _ZServerPrivate::~_ZServerPrivate()
     {
       foreach(ZeraClient *c, clients)
       {
@@ -58,7 +58,7 @@ namespace Zera
       }
     }
 
-    void _ServerPrivate::incomingConnection(int socketDescriptor)
+    void _ZServerPrivate::incomingConnection(int socketDescriptor)
     {
       //qDebug()<<"[zera-net]Client connected";
 
@@ -69,6 +69,6 @@ namespace Zera
       client->start();
     }
 
-    _ServerPrivate* _ServerPrivate::singletonInstance=0;
+    _ZServerPrivate* _ZServerPrivate::singletonInstance=0;
   }
 }

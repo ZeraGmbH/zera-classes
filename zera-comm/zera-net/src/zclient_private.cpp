@@ -1,4 +1,4 @@
-#include "client.h"
+#include "zclient_private.h"
 
 
 #include <QState>
@@ -9,7 +9,7 @@ namespace Zera
 {
   namespace Net
   {
-    _ClientPrivate::_ClientPrivate(quint32 socketDescriptor, QString clientName, QObject *parent) :
+    _ZClientPrivate::_ZClientPrivate(quint32 socketDescriptor, QString clientName, QObject *parent) :
       QStateMachine(parent),
       name(clientName),
       sockDescriptor(socketDescriptor)
@@ -29,22 +29,22 @@ namespace Zera
       setupStateMachine();
     }
 
-    QHostAddress _ClientPrivate::getIpAddress()
+    QHostAddress _ZClientPrivate::getIpAddress()
     {
       return clSocket->peerAddress();
     }
 
-    const QString &_ClientPrivate::getName()
+    const QString &_ZClientPrivate::getName()
     {
       return name;
     }
 
-    quint32 _ClientPrivate::getSocket()
+    quint32 _ZClientPrivate::getSocket()
     {
       return sockDescriptor;
     }
 
-    QByteArray _ClientPrivate::readClient()
+    QByteArray _ZClientPrivate::readClient()
     {
       if(clSocket->bytesAvailable())
       {
@@ -69,19 +69,29 @@ namespace Zera
         return QByteArray();
     }
 
-    void _ClientPrivate::logoutClient()
+    bool _ZClientPrivate::translateBA2Protobuf(google::protobuf::Message *message, const QByteArray &array)
+    {
+      return message->ParseFromArray(array, array.size());
+    }
+
+    QByteArray _ZClientPrivate::translatePB2ByteArray(const google::protobuf::Message &message)
+    {
+      return QByteArray(message.SerializeAsString().c_str(), message.ByteSize());
+    }
+
+    void _ZClientPrivate::logoutClient()
     {
       emit clientLogout();
       //placeholder
     }
 
 
-    void _ClientPrivate::setName(QString newName)
+    void _ZClientPrivate::setName(QString newName)
     {
       name=newName;
     }
 
-    void _ClientPrivate::writeClient(QByteArray message)
+    void _ZClientPrivate::writeClient(QByteArray message)
     {
       //qDebug()<<"[zera-net]Sending message:"<<QString(message.toBase64());
       QByteArray block;
@@ -96,13 +106,13 @@ namespace Zera
       clSocket->write(block);
     }
 
-    void _ClientPrivate::initialize()
+    void _ZClientPrivate::initialize()
     {
       emit clientConnected();
       connect(clSocket,SIGNAL(readyRead()),this,SLOT(maintainConnection()));
     }
 
-    void _ClientPrivate::maintainConnection()
+    void _ZClientPrivate::maintainConnection()
     {
       QByteArray newMessage;
       newMessage=readClient();
@@ -113,7 +123,7 @@ namespace Zera
       }
     }
 
-    void _ClientPrivate::disconnectClient()
+    void _ZClientPrivate::disconnectClient()
     {
       // as we will disconnect, do not read from the socket anymore
       disconnect(clSocket,SIGNAL(readyRead()),this,SLOT(maintainConnection()));
@@ -126,7 +136,7 @@ namespace Zera
       emit clientDisconnected();
     }
 
-    void _ClientPrivate::setupStateMachine()
+    void _ZClientPrivate::setupStateMachine()
     {
       stContainer = new QState(this);
       stInit = new QState(stContainer);

@@ -1,5 +1,5 @@
 #include "zeraclient.h"
-#include "client.h"
+#include "zclient_private.h"
 
 namespace Zera
 {
@@ -9,7 +9,7 @@ namespace Zera
     ZeraClient::ZeraClient(quint32 socketDescriptor, QString name, QObject *parent) : QObject(parent)
     {
       // will be autodeleted if the socket is disconnected
-      d_ptr=new Zera::Net::_ClientPrivate(socketDescriptor, name, this);
+      d_ptr=new Zera::Net::_ZClientPrivate(socketDescriptor, name, this);
       connect(d_ptr,SIGNAL(sockError(QAbstractSocket::SocketError)),this,SIGNAL(error(QAbstractSocket::SocketError)));
       connect(d_ptr,SIGNAL(messageReceived(QByteArray)),this,SIGNAL(messageReceived(QByteArray)));
       connect(d_ptr,SIGNAL(clientDisconnected()),this,SIGNAL(clientDisconnected()));
@@ -28,6 +28,16 @@ namespace Zera
     quint32 ZeraClient::getSocket()
     {
       return d_ptr->getSocket();
+    }
+
+    bool ZeraClient::translateBA2Protobuf(google::protobuf::Message *message, const QByteArray &array)
+    {
+      return d_ptr->translateBA2Protobuf(message, array);
+    }
+
+    QByteArray ZeraClient::translatePB2ByteArray(const google::protobuf::Message &message)
+    {
+      return d_ptr->translatePB2ByteArray(message);
     }
 
     void ZeraClient::logoutClient()

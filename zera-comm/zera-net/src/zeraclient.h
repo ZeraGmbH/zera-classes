@@ -6,6 +6,7 @@
 #include <QTimer>
 #include <QTcpSocket>
 #include <QHostAddress>
+#include <google/protobuf/message.h>
 
 
 #include "net_global.h"
@@ -19,7 +20,7 @@ namespace Zera
 {
   namespace Net
   {
-    class _ClientPrivate;
+    class _ZClientPrivate;
     /**
       @brief ZeraNet::Client represents an abstract client implementation, with a timeout/refresh function
       @todo This class needs unique identifiers for implementation clients.
@@ -49,6 +50,19 @@ namespace Zera
         @brief returns the socket descriptor of the clients socket
         */
       quint32 getSocket();
+
+      /**
+       * @brief translateBA2Protobuf Function to parse Protobuf messages from QByteArray
+       * @param[in,out] message Put your existing Google Protobuf implementations here
+       * @param[in] array The data to parse from
+       * @return True for success
+       */
+      bool translateBA2Protobuf(google::protobuf::Message *message, const QByteArray &array);
+      /**
+       * @brief translatePB2ByteArray Function that wraps a Protobuf message in a QByteArray
+       * @param[in] message Put your existing Google Protobuf object here
+       */
+       QByteArray translatePB2ByteArray(const google::protobuf::Message &message);
 
     signals:
       /**
@@ -88,7 +102,7 @@ namespace Zera
       void writeClient(QByteArray message);
 
     protected:
-      Zera::Net::_ClientPrivate* d_ptr;
+      Zera::Net::_ZClientPrivate* d_ptr;
 
     private:
       /**

@@ -6,6 +6,8 @@
 #include <QTcpSocket>
 #include <QHostAddress>
 
+#include <google/protobuf/message.h>
+
 QT_BEGIN_NAMESPACE
 class QFinalState;
 class QTimer;
@@ -15,11 +17,11 @@ namespace Zera
 {
   namespace Net
   {
-    class _ClientPrivate : public QStateMachine
+    class _ZClientPrivate : public QStateMachine
     {
       Q_OBJECT
     public:
-      explicit _ClientPrivate(quint32 socketDescriptor, QString clientName = QString(), QObject *parent = 0);
+      explicit _ZClientPrivate(quint32 socketDescriptor, QString clientName = QString(), QObject *parent = 0);
 
       /**
        * @brief This is a forward of TcpSocket peerAddress()
@@ -39,9 +41,22 @@ namespace Zera
       quint32 getSocket();
 
       /**
-        @brief Reads The QString from the socket
+        @brief Reads The QByteArray from the socket
         */
       QByteArray readClient();
+
+      /**
+       * @brief translateBA2Protobuf Function to parse Protobuf messages from QByteArray
+       * @param[in,out] message Put your existing Google Protobuf implementations here
+       * @param[in] array The data to parse from
+       * @return True for success
+       */
+      bool translateBA2Protobuf(google::protobuf::Message *message, const QByteArray &array);
+      /**
+       * @brief translatePB2ByteArray Function that wraps a Protobuf message in a QByteArray
+       * @param[in] message Put your existing Google Protobuf object here
+       */
+      QByteArray translatePB2ByteArray(const google::protobuf::Message &message);
 
     signals:
       /**
@@ -118,7 +133,7 @@ namespace Zera
       QState *stContainer;
       QState *stInit;
 
-      Q_DISABLE_COPY(_ClientPrivate)
+      Q_DISABLE_COPY(_ZClientPrivate)
     };
   }
 }

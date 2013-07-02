@@ -14,7 +14,7 @@ namespace Zera
 {
   namespace Net
   {
-    class _ServerPrivate;
+    class _ZServerPrivate;
 
     /**
       @brief Represents the interface between the network implementations and the ResourceManager
@@ -51,7 +51,7 @@ namespace Zera
       ZeraServer(QObject* parent = 0);
       ~ZeraServer();
 
-      Zera::Net::_ServerPrivate* d_ptr;
+      Zera::Net::_ZServerPrivate* d_ptr;
       /**
         @brief See [P.157+ Design patterns Gang of Four]
         */
