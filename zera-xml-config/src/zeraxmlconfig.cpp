@@ -1,4 +1,4 @@
-#include "xmlconfigreader.h"
+#include "zeraxmlconfig.h"
 #include "xmlconfigreader_private.h"
 
 namespace Zera

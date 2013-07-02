@@ -7,16 +7,18 @@ TARGET = zeraxmlconfig
 DEPENDPATH += . src
 INCLUDEPATH += .
 
+QT += xmlpatterns
+
 DEFINES += ZERA_XML_CONFIG_LIBRARY
 
 target.path = /usr/lib
 INSTALLS += target
 
 HEADERS += \
-    src/xmlconfigreader.h \
+    src/xml_config_global.h \
     src/xmlconfigreader_private.h \
-    src/xml_config_global.h
+    src/zeraxmlconfig.h
 
 SOURCES += \
-    src/xmlconfigreader.cpp \
-    src/xmlconfigreader_private.cpp
+    src/xmlconfigreader_private.cpp \
+    src/zeraxmlconfig.cpp

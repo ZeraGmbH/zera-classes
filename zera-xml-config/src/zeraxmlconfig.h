@@ -27,7 +27,6 @@ namespace Zera
 
     public:
       explicit XMLConfigReader(QObject *parent = 0);
-      ~XMLConfigReader();
 
       /**
        * @brief Load a XSD schema file and initialize the configuration
