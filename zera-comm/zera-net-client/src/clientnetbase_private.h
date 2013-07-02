@@ -26,54 +26,54 @@ namespace Zera
 
     public:
       /**
-   * @brief ClientNetBase This does nothing, look for startNetwork
-   */
+       * @brief ClientNetBase This does nothing, look for startNetwork
+       */
       _ClientNetBasePrivate(QObject *parent);
 
 
       /**
-   * @brief parseProtobuf Template function to parse Protobuf classes from QByteArray
-   * @param[in,out] message Put your existing Google Protobuf implementations here
-   * @param[in] array The data to parse from
-   * @return True for success
-   */
+       * @brief parseProtobuf Function to parse Protobuf classes from QByteArray
+       * @param[in,out] message Put your existing Google Protobuf implementations here
+       * @param[in] array The data to parse from
+       * @return True for success
+       */
       static bool readMessage(google::protobuf::Message *message, const QByteArray & array);
 
       /**
-   * @brief sendMessage Template function that sends a Protobuf message as QByteArray
-   * @param[in] message Put your existing Google Protobuf object here
-   */
+       * @brief sendMessage Function that sends a Protobuf message as QByteArray
+       * @param[in] message Put your existing Google Protobuf object here
+       */
       void sendMessage(google::protobuf::Message *message);
 
       /**
-   * @brief startNetwork Initializes the network connection
-   * @param ipAddress
-   * @param port
-   */
+       * @brief startNetwork Initializes the network connection
+       * @param ipAddress
+       * @param port
+       */
       void startNetwork(QString ipAddress, quint16 port);
 
     signals:
       /**
-   * @brief messageAvailable Will be called if a new message from the server arrives
-   * @param message
-   */
+       * @brief messageAvailable Will be called if a new message from the server arrives
+       * @param message
+       */
       void messageAvailable(QByteArray message);
       /**
-   * @brief connectionLost Server is unreachable
-   */
+       * @brief connectionLost Server is unreachable
+       */
       void connectionLost();
 
     private slots:
       /**
-   * @brief newMessage Forward message to messageAvailable
-   */
+       * @brief newMessage Forward message to messageAvailable
+       */
       void newMessage();
 
     private:
       /**
-   * @brief sendByteArray
-   * @param bA Data that will be sent
-   */
+       * @brief sendByteArray
+       * @param bA Data that will be sent
+       */
       void sendByteArray(const QByteArray &bA);
 
       QTcpSocket* tcpSock;
