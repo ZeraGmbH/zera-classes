@@ -74,9 +74,9 @@ namespace Zera
       return message->ParseFromArray(array, array.size());
     }
 
-    QByteArray _ZClientPrivate::translatePB2ByteArray(const google::protobuf::Message &message)
+    QByteArray _ZClientPrivate::translatePB2ByteArray(google::protobuf::Message *message)
     {
-      return QByteArray(message.SerializeAsString().c_str(), message.ByteSize());
+      return QByteArray(message->SerializeAsString().c_str(), message->ByteSize());
     }
 
     void _ZClientPrivate::logoutClient()

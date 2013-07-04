@@ -35,7 +35,7 @@ namespace Zera
       return d_ptr->translateBA2Protobuf(message, array);
     }
 
-    QByteArray ZeraClient::translatePB2ByteArray(const google::protobuf::Message &message)
+    QByteArray ZeraClient::translatePB2ByteArray(google::protobuf::Message *message)
     {
       return d_ptr->translatePB2ByteArray(message);
     }

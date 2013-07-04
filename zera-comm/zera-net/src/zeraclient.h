@@ -62,7 +62,7 @@ namespace Zera
        * @brief translatePB2ByteArray Function that wraps a Protobuf message in a QByteArray
        * @param[in] message Put your existing Google Protobuf object here
        */
-       QByteArray translatePB2ByteArray(const google::protobuf::Message &message);
+       QByteArray translatePB2ByteArray(google::protobuf::Message *message);
 
     signals:
       /**
