@@ -1,6 +1,6 @@
-#include "clientnetbase.h"
+#include "zclientnetbase.h"
 
-#include "clientnetbase_private.h"
+#include "zclientnetbase_private.h"
 namespace Zera
 {
   namespace NetClient

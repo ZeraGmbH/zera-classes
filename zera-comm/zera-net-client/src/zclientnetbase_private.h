@@ -20,7 +20,7 @@ namespace Zera
 {
   namespace NetClient
   {
-    class __attribute__ ((visibility ("hidden"))) _ClientNetBasePrivate : public QObject
+    class _ClientNetBasePrivate : public QObject
     {
       Q_OBJECT
 

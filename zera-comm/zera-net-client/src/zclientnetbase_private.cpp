@@ -1,4 +1,4 @@
-#include "clientnetbase_private.h"
+#include "zclientnetbase_private.h"
 
 #include <QTcpSocket>
 #include <google/protobuf/message.h>

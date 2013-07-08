@@ -14,13 +14,13 @@ TEMPLATE = lib
 DEFINES += CLIENTNETBASE_LIBRARY
 
 SOURCES += \
-    src/clientnetbase_private.cpp \
-    src/clientnetbase.cpp
+    src/zclientnetbase.cpp \
+    src/zclientnetbase_private.cpp
 
 HEADERS +=\
-    src/clientnetbase_private.h \
-    src/clientnetbase.h \
-    src/clientnetbase_global.h
+    src/zclientnetbase.h \
+    src/zclientnetbase_global.h \
+    src/zclientnetbase_private.h
 
 unix:!symbian {
     maemo5 {
@@ -30,3 +30,5 @@ unix:!symbian {
     }
     INSTALLS += target
 }
+
+LIBS += -lprotobuf

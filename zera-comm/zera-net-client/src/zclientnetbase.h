@@ -1,10 +1,10 @@
 #ifndef CLIENTNETBASE_H
 #define CLIENTNETBASE_H
 
-#include "clientnetbase_global.h"
+#include "zclientnetbase_global.h"
 #include <QObject>
 
-#include "clientnetbase_private.h"
+#include "zclientnetbase_private.h"
 
 QT_BEGIN_NAMESPACE
 class QTcpSocket;
@@ -29,7 +29,7 @@ namespace Zera
       /**
        * @brief ClientNetBase This does nothing, look for startNetwork
        */
-      ClientNetBase(QObject *parent);
+      explicit ClientNetBase(QObject *parent=0);
 
 
       /**
@@ -64,7 +64,7 @@ namespace Zera
        */
       void connectionLost();
 
-    private:
+    protected:
 
       /**
        * @brief d_ptr Opaque pointer
