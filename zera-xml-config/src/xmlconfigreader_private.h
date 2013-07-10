@@ -11,7 +11,7 @@ namespace Zera
   namespace XMLConfig
   {
     // class is private and hidden for the outside world, requires GCC>=4.0
-    class __attribute__ ((visibility ("hidden"))) _XMLConfigReaderPrivate : public QObject
+    class _XMLConfigReaderPrivate : public QObject
     {
       Q_OBJECT
       public:
