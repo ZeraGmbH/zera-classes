@@ -21,7 +21,7 @@ namespace Zera
   namespace NetClient
   {
 
-    class CLIENTNETBASESHARED_EXPORT ClientNetBase : public QObject
+    class CLIENTNETBASESHARED_EXPORT ZeraClientNetBase : public QObject
     {
       Q_OBJECT
 
@@ -29,7 +29,7 @@ namespace Zera
       /**
        * @brief ClientNetBase This does nothing, look for startNetwork
        */
-      explicit ClientNetBase(QObject *parent=0);
+      explicit ZeraClientNetBase(QObject *parent=0);
 
 
       /**
@@ -64,7 +64,7 @@ namespace Zera
        */
       void connectionLost();
 
-    protected:
+    private:
 
       /**
        * @brief d_ptr Opaque pointer
@@ -72,7 +72,7 @@ namespace Zera
       _ClientNetBasePrivate *d_ptr;
 
 
-      Q_DISABLE_COPY(ClientNetBase)
+      Q_DISABLE_COPY(ZeraClientNetBase)
 
     };
   }

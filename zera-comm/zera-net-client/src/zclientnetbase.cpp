@@ -5,7 +5,7 @@ namespace Zera
 {
   namespace NetClient
   {
-    ClientNetBase::ClientNetBase(QObject *parent) :
+    ZeraClientNetBase::ZeraClientNetBase(QObject *parent) :
       QObject(parent), d_ptr(new _ClientNetBasePrivate(this))
     {
       connect(d_ptr, SIGNAL(connectionLost()), this, SIGNAL(connectionLost()));
@@ -13,17 +13,17 @@ namespace Zera
 
     }
 
-    bool ClientNetBase::readMessage(google::protobuf::Message *message, const QByteArray &array)
+    bool ZeraClientNetBase::readMessage(google::protobuf::Message *message, const QByteArray &array)
     {
       return _ClientNetBasePrivate::readMessage(message,array);
     }
 
-    void ClientNetBase::sendMessage(google::protobuf::Message *message)
+    void ZeraClientNetBase::sendMessage(google::protobuf::Message *message)
     {
       d_ptr->sendMessage(message);
     }
 
-    void ClientNetBase::startNetwork(QString ipAddress, quint16 port)
+    void ZeraClientNetBase::startNetwork(QString ipAddress, quint16 port)
     {
       d_ptr->startNetwork(ipAddress,port);
     }
