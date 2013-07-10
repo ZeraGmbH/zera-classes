@@ -6,7 +6,7 @@
 
 QT       -= gui
 
-TARGET = zera-misc
+TARGET = zeramisc
 TEMPLATE = lib
 
 DEFINES += ZERAMISC_LIBRARY
