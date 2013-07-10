@@ -3,11 +3,8 @@
 
 
 #include <QObject>
+#include <QTcpSocket>
 
-
-QT_BEGIN_NAMESPACE
-class QTcpSocket;
-QT_END_NAMESPACE
 
 namespace google {
   namespace protobuf {
@@ -30,6 +27,10 @@ namespace Zera
        */
       _ClientNetBasePrivate(QObject *parent);
 
+      /**
+       * @brief disconnecFromServer The connection to the server will be closed
+       */
+      void disconnecFromServer();
 
       /**
        * @brief parseProtobuf Function to parse Protobuf classes from QByteArray
@@ -53,15 +54,23 @@ namespace Zera
       void startNetwork(QString ipAddress, quint16 port);
 
     signals:
+
+      /**
+       * @brief connectionLost Server is unreachable
+       */
+      void connectionLost();
+
       /**
        * @brief messageAvailable Will be called if a new message from the server arrives
        * @param message
        */
       void messageAvailable(QByteArray message);
+
       /**
-       * @brief connectionLost Server is unreachable
+       * @brief tcpError
+       * @param errorCode
        */
-      void connectionLost();
+      void tcpError(QAbstractSocket::SocketError errorCode);
 
     private slots:
       /**
@@ -70,6 +79,7 @@ namespace Zera
       void newMessage();
 
     private:
+      QByteArray readClient();
       /**
        * @brief sendByteArray
        * @param bA Data that will be sent

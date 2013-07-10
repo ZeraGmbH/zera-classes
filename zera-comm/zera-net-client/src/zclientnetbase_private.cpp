@@ -14,6 +14,11 @@ namespace Zera
     {
     }
 
+    void _ClientNetBasePrivate::disconnecFromServer()
+    {
+      tcpSock->close();
+    }
+
     bool _ClientNetBasePrivate::readMessage(google::protobuf::Message *message, const QByteArray &array)
     {
       return message->ParseFromArray(array, array.size());
@@ -33,27 +38,40 @@ namespace Zera
       {
         connect(tcpSock, SIGNAL(readyRead()), this, SLOT(newMessage()));
         connect(tcpSock, SIGNAL(disconnected()), this, SIGNAL(connectionLost()));
+        connect(tcpSock, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(tcpError(QAbstractSocket::SocketError)));
       }
       tcpSock->setSocketOption(QAbstractSocket::KeepAliveOption, true);
     }
 
     void _ClientNetBasePrivate::newMessage()
     {
-      QTcpSocket *client = reinterpret_cast<QTcpSocket *> (QObject::sender());
-      QDataStream in(client);
+      QByteArray newMessage;
+      newMessage=readClient();
+      while(!newMessage.isNull())
+      {
+        emit messageAvailable(newMessage);
+        newMessage=readClient();
+      }
+
+    }
+
+    QByteArray _ClientNetBasePrivate::readClient()
+    {
+      QDataStream in(tcpSock);
+      QByteArray message = QByteArray();
       in.setVersion(QDataStream::Qt_4_0);
       quint16 expectedSize;
       in >> expectedSize;
-      if(client->bytesAvailable()<expectedSize)
+      if(tcpSock->bytesAvailable()<expectedSize)
       {
         qDebug()<<"Error bytes not available";
       }
       else
       {
-        QByteArray message;
         in >> message;
         messageAvailable(message);
       }
+      return message;
     }
 
     void _ClientNetBasePrivate::sendByteArray(const QByteArray &bA)
