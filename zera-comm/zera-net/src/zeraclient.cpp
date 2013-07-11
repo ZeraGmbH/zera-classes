@@ -1,68 +1,174 @@
 #include "zeraclient.h"
-#include "zclient_private.h"
+#include "zeraclientprivate.h"
+#include <QFinalState>
 
 namespace Zera
 {
   namespace Net
   {
 
-    ZeraClient::ZeraClient(quint32 socketDescriptor, QString name, QObject *parent) : QObject(parent)
+    cClient::cClient(quint32 socketDescriptor, QString clientName, QObject *parent) :
+      QStateMachine(parent),
+      d_ptr(new Zera::Net::cClientPrivate(socketDescriptor))
     {
-      // will be autodeleted if the socket is disconnected
-      d_ptr=new Zera::Net::_ZClientPrivate(socketDescriptor, name, this);
-      connect(d_ptr,SIGNAL(sockError(QAbstractSocket::SocketError)),this,SIGNAL(error(QAbstractSocket::SocketError)));
-      connect(d_ptr,SIGNAL(messageReceived(QByteArray)),this,SIGNAL(messageReceived(QByteArray)));
-      connect(d_ptr,SIGNAL(clientDisconnected()),this,SIGNAL(clientDisconnected()));
+      Q_D(cClient);
+      d->clSocket = new QTcpSocket(this);
+      d->name =  clientName;
+
+      if(!d->clSocket->setSocketDescriptor(socketDescriptor))
+      {
+        emit sockError(d->clSocket->error());
+        qFatal("[zera-net]error setting clients socket descriptor");
+        return;
+      }
+      d->clSocket->setSocketOption(QAbstractSocket::KeepAliveOption, true);
+      connect(d->clSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(sockError(QAbstractSocket::SocketError)));
+      connect(d->clSocket, SIGNAL(disconnected()), this, SLOT(disconnectClient()));
+
+      setupStateMachine();
     }
 
-    QHostAddress ZeraClient::getIpAddress()
+    cClient::~cClient()
     {
-      return d_ptr->getIpAddress();
+      delete d_ptr;
     }
 
-    const QString &ZeraClient::getName()
+    QHostAddress cClient::getIpAddress()
     {
-      return d_ptr->getName();
+      Q_D(cClient);
+      return d->clSocket->peerAddress();
     }
 
-    quint32 ZeraClient::getSocket()
+    const QString &cClient::getName()
     {
-      return d_ptr->getSocket();
+      Q_D(cClient);
+      return d->name;
     }
 
-    bool ZeraClient::translateBA2Protobuf(google::protobuf::Message *message, const QByteArray &array)
+    quint32 cClient::getSocket()
     {
-      return d_ptr->translateBA2Protobuf(message, array);
+      Q_D(cClient);
+      return d->sockDescriptor;
     }
 
-    QByteArray ZeraClient::translatePB2ByteArray(google::protobuf::Message *message)
+    QByteArray cClient::readClient()
     {
-      return d_ptr->translatePB2ByteArray(message);
+      Q_D(cClient);
+      if(d->clSocket->bytesAvailable())
+      {
+        QByteArray retVal;
+        QDataStream in(d->clSocket);
+        in.setVersion(QDataStream::Qt_4_0);
+        quint16 expectedSize;
+        in >> expectedSize;
+        if(d->clSocket->bytesAvailable()<expectedSize)
+        {
+          //error
+          qWarning("[zera-net]Error bytes not available");
+        }
+        else
+        {
+          in >> retVal;
+          //qDebug()<<"[zera-net]Receiving message:"<<QString(retVal.toBase64());
+        }
+        return retVal;
+      }
+      else
+        return QByteArray();
     }
 
-    void ZeraClient::logoutClient()
+    bool cClient::translateBA2Protobuf(google::protobuf::Message *message, const QByteArray &array)
     {
-      d_ptr->logoutClient();
+      return message->ParseFromArray(array, array.size());
     }
 
-    void ZeraClient::setName(QString newName)
+    QByteArray cClient::translatePB2ByteArray(google::protobuf::Message *message)
     {
-      d_ptr->setName(newName);
+      return QByteArray(message->SerializeAsString().c_str(), message->ByteSize());
     }
 
-    void ZeraClient::start()
+    void cClient::logoutClient()
     {
-      d_ptr->start();
+      emit clientLogout();
+      //placeholder
     }
 
-    void ZeraClient::writeClient(QByteArray message)
+
+    void cClient::setName(QString newName)
     {
-      d_ptr->writeClient(message);
+      Q_D(cClient);
+      d->name=newName;
     }
 
-    QByteArray ZeraClient::readClient()
+    void cClient::writeClient(QByteArray message)
     {
-      return d_ptr->readClient();
+      Q_D(cClient);
+      //qDebug()<<"[zera-net]Sending message:"<<QString(message.toBase64());
+      QByteArray block;
+      // serialize the ProtobufMessage to send it
+      QDataStream out(&block, QIODevice::WriteOnly);
+      out.setVersion(QDataStream::Qt_4_0);
+      out << (quint16)0;
+      out << message;
+      out.device()->seek(0);
+      out << (quint16)(block.size() - sizeof(quint16));
+
+      d->clSocket->write(block);
+    }
+
+    void cClient::initialize()
+    {
+      Q_D(cClient);
+      emit clientConnected();
+      connect(d->clSocket,SIGNAL(readyRead()),this,SLOT(maintainConnection()));
+    }
+
+    void cClient::maintainConnection()
+    {
+      QByteArray newMessage;
+      newMessage=readClient();
+      while(!newMessage.isNull())
+      {
+        emit messageReceived(newMessage);
+        newMessage=readClient();
+      }
+    }
+
+    void cClient::disconnectClient()
+    {
+      Q_D(cClient);
+      // as we will disconnect, do not read from the socket anymore
+      disconnect(d->clSocket,SIGNAL(readyRead()),this,SLOT(maintainConnection()));
+      if(d->clSocket!=0 && d->clSocket->isOpen())
+      {
+        d->clSocket->disconnectFromHost();
+        d->clSocket->close();
+      }
+      qDebug()<<"[zera-net]Client disconnected: "<< d->name;
+      emit clientDisconnected();
+    }
+
+    void cClient::setupStateMachine()
+    {
+      Q_D(cClient);
+      d->stContainer = new QState(this);
+      d->stInit = new QState(d->stContainer);
+      d->stConnected = new QState(d->stContainer);
+      d->stAboutToDisconnect = new QState(d->stContainer);
+      d->fstDisconnected = new QFinalState(this);
+
+      this->setInitialState(d->stContainer);
+
+      d->stContainer->setInitialState(d->stInit);
+      d->stContainer->addTransition(d->clSocket, SIGNAL(disconnected()), d->fstDisconnected);
+      d->stContainer->addTransition(this, SIGNAL(clientLogout()), d->stAboutToDisconnect);
+
+      d->stInit->addTransition(this, SIGNAL(clientConnected()), d->stConnected);
+
+      connect(d->stInit, SIGNAL(entered()), this,SLOT(initialize()));
+      //obsolete
+      //connect(stConnected,SIGNAL(entered()),this,SLOT(maintainConnection()));
+      connect(d->stAboutToDisconnect, SIGNAL(entered()), this, SLOT(disconnectClient()));
     }
   }
 }

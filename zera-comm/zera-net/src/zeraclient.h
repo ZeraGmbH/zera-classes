@@ -8,6 +8,7 @@
 #include <QHostAddress>
 #include <google/protobuf/message.h>
 
+#include <QStateMachine>
 
 #include "net_global.h"
 
@@ -20,12 +21,12 @@ namespace Zera
 {
   namespace Net
   {
-    class _ZClientPrivate;
+    class cClientPrivate;
     /**
       @brief ZeraNet::Client represents an abstract client implementation, with a timeout/refresh function
       @todo This class needs unique identifiers for implementation clients.
       */
-    class ZERA_NETSHARED_EXPORT ZeraClient : public QObject
+    class ZERA_NETSHARED_EXPORT cClient : public QStateMachine
     {
       Q_OBJECT
     public:
@@ -33,7 +34,8 @@ namespace Zera
         @brief The default constructor
         @note Other constructors are invalid
         */
-      explicit ZeraClient(quint32 socketDescriptor, QString name = QString(), QObject *parent = 0);
+      explicit cClient(quint32 socketDescriptor, QString clientName = QString(), QObject *parent = 0);
+      ~cClient();
 
       /**
        * @brief This is a forward of TcpSocket peerAddress()
@@ -47,9 +49,15 @@ namespace Zera
       const QString &getName();
 
       /**
-        @brief returns the socket descriptor of the clients socket
-        */
+       * @brief Returns the socket descriptor of the clients socket
+       * @return socket descriptor unique id
+       */
       quint32 getSocket();
+
+      /**
+        @brief Reads The QByteArray from the socket
+        */
+      QByteArray readClient();
 
       /**
        * @brief translateBA2Protobuf Function to parse Protobuf messages from QByteArray
@@ -62,53 +70,69 @@ namespace Zera
        * @brief translatePB2ByteArray Function that wraps a Protobuf message in a QByteArray
        * @param[in] message Put your existing Google Protobuf object here
        */
-       QByteArray translatePB2ByteArray(google::protobuf::Message *message);
+      QByteArray translatePB2ByteArray(google::protobuf::Message *message);
 
     signals:
       /**
-       * @brief notify that the client is disconnected
+       * @brief The new client connected
+       */
+      void clientConnected();
+      /**
+       * @brief The client disconnected
        */
       void clientDisconnected();
       /**
-        @brief Socket error fallback
-        */
-      void error(QAbstractSocket::SocketError socketError);
+       * @brief The client will disconnect soon
+       */
+      void clientLogout();
       /**
-        @brief forwards clSocket readyRead() signal
-        */
+       * @brief Forwards the TcpSocket error
+       * @param socketError
+       */
+      void sockError(QAbstractSocket::SocketError socketError);
+      /**
+       * @brief Forwards messages to the application
+       * @param the message received (UTF-8)
+       */
       void messageReceived(QByteArray message);
-
 
     public slots:
       /**
-       * @brief Disconnects the client
+       * @brief Tell the client to disconnect
        */
       void logoutClient();
       /**
-       * @brief setName
+       * @brief Change the clients name
        * @param newName
        */
       void setName(QString newName);
       /**
-       * @brief starts the state machine
-       */
-      void start();
-
-
-
-      /**
-        @brief Will be called if locking the resource caused errors
+        @brief Writes a QString to the socket
         */
       void writeClient(QByteArray message);
 
     protected:
-      Zera::Net::_ZClientPrivate* d_ptr;
+      cClientPrivate* d_ptr;
+
+    private slots:
+      /**
+       * @brief Will be called if the connection is established
+       */
+      void initialize();
+      /**
+       * @brief Will be called on readyRead
+       */
+      void maintainConnection();
+      /**
+       * @brief Shuts down the connection
+       */
+      void disconnectClient();
 
     private:
-      /**
-        @brief Reads a QString from the socket
-        */
-      QByteArray readClient();
+      void setupStateMachine();
+
+      Q_DISABLE_COPY(cClient)
+      Q_DECLARE_PRIVATE(cClient)
     };
   }
 }

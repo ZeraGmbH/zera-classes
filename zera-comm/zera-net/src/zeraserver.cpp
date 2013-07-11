@@ -1,45 +1,75 @@
 #include "zeraserver.h"
-#include "zserver_private.h"
+#include "zeraserverprivate.h"
 
 namespace Zera
 {
   namespace Net
   {
-    QList<Zera::Net::ZeraClient *> ZeraServer::getClients()
+
+
+    QList<Zera::Net::cClient *> cServer::getClients()
     {
-      return d_ptr->getClients();
+      Q_D(cServer);
+      return d->clients;
     }
 
-    ZeraServer *ZeraServer::getInstance()
+    cServer *cServer::getInstance()
     {
-      if(singletonInstance==0)
+      if(cServerPrivate::singletonInstance==0)
       {
-        singletonInstance=new ZeraServer;
+        cServerPrivate::singletonInstance=new cServer;
       }
-      return singletonInstance;
+      return cServerPrivate::singletonInstance;
     }
 
-    void ZeraServer::broadcastMessage(QByteArray message)
+    void cServer::broadcastMessage(QByteArray message)
     {
-      d_ptr->broadcastMessage(message);
+      Q_D(cServer);
+      foreach(cClient* c,d->clients)
+      {
+        c->writeClient(message);
+      }
     }
 
-    void ZeraServer::startServer(quint16 port)
+    void cServer::startServer(quint16 port)
     {
-      d_ptr->startServer(port);
+      /// @todo change default port
+      this->listen(QHostAddress::Any, port);
+      qDebug()<<"[zera-net]Server Started";
     }
 
-    ZeraServer::ZeraServer(QObject *parent) : QObject(parent)
+    cServer::cServer(QObject *parent) : QTcpServer(parent), d_ptr(new Zera::Net::cServerPrivate())
     {
-      d_ptr = Zera::Net::_ZServerPrivate::getInstance();
-      connect(d_ptr,SIGNAL(newClientAvailable(Zera::Net::ZeraClient*)), this, SIGNAL(newClientAvailable(Zera::Net::ZeraClient*)));
     }
 
-    ZeraServer::~ZeraServer()
+    cServer::~cServer()
     {
-      d_ptr->deleteLater();
+      delete d_ptr;
     }
 
-    ZeraServer* ZeraServer::singletonInstance=0;
+    void cServer::incomingConnection(int socketDescriptor)
+    {
+      Q_D(cServer);
+      //qDebug()<<"[zera-net]Client connected";
+
+      cClient *client = new cClient(socketDescriptor);
+      d->clients.append(client);
+      connect(client, SIGNAL(clientDisconnected()), this, SLOT(clientDisconnectedSRV()));
+      emit newClientAvailable(client);
+      client->start();
+
+    }
+
+    void cServer::clientDisconnectedSRV()
+    {
+      if(QObject::sender()!=0)
+      {
+        Q_D(cServer);
+        cClient* client =  reinterpret_cast<cClient*>(QObject::sender());
+        d->clients.removeAll(client);
+        client->deleteLater();
+      }
+    }
+
   }
 }

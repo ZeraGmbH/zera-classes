@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QTcpServer>
 
 #include "zeraclient.h"
 #include "net_global.h"
@@ -14,23 +15,24 @@ namespace Zera
 {
   namespace Net
   {
-    class _ZServerPrivate;
+    class cServerPrivate;
 
     /**
       @brief Represents the interface between the network implementations and the ResourceManager
       */
-    class ZERA_NETSHARED_EXPORT ZeraServer : public QObject
+    class ZERA_NETSHARED_EXPORT cServer : public QTcpServer
     {
       Q_OBJECT
+
+    signals:
+      void newClientAvailable(Zera::Net::cClient* newClient);
+
     public:
-      QList<Zera::Net::ZeraClient*> getClients();
+      QList<Zera::Net::cClient*> getClients();
       /**
         @brief See [P.157+ Design patterns Gang of Four]
         */
-      static ZeraServer* getInstance();
-
-    signals:
-      void newClientAvailable(Zera::Net::ZeraClient* newClient);
+      static cServer* getInstance();
 
     public slots:
       /**
@@ -38,6 +40,7 @@ namespace Zera
        * @param message
        */
       void broadcastMessage(QByteArray message);
+
       /**
        * @brief startServer
        * @param port
@@ -48,19 +51,26 @@ namespace Zera
       /**
         @brief The class is a Singleton so the constructor is protected [P.157+ Design patterns Gang of Four]
         */
-      ZeraServer(QObject* parent = 0);
-      ~ZeraServer();
-
-      Zera::Net::_ZServerPrivate* d_ptr;
-      /**
-        @brief See [P.157+ Design patterns Gang of Four]
-        */
-      static ZeraServer* singletonInstance;
+      explicit cServer(QObject* parent = 0);
+      ~cServer();
 
       /**
-        @note Instances of this class should only get accessed through the getInstance method.
-        */
-      Q_DISABLE_COPY(ZeraServer)
+       * @brief incomingConnection Overloaded from QTcpServer
+       * @param socketDescriptor
+       */
+      void incomingConnection(int socketDescriptor);
+
+      cServerPrivate *d_ptr;
+
+    protected slots:
+      /**
+       * @brief clientDisconnectedSRV A Client disconnected
+       */
+      void clientDisconnectedSRV();
+
+    private:
+      Q_DISABLE_COPY(cServer)
+      Q_DECLARE_PRIVATE(cServer)
     };
   }
 }
