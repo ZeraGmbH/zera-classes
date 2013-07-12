@@ -14,8 +14,8 @@ TEMPLATE = lib
 DEFINES += CLIENTNETBASE_LIBRARY
 
 SOURCES += \
-    src/zclientnetbase.cpp \
-    src/zclientnetbase_private.cpp
+    src/zeraclientnetbaseprivate.cpp \
+    src/zeraclientnetbase.cpp
 
 HEADERS +=\
     src/zeraclientnetbase.h \

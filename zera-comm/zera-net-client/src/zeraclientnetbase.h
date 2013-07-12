@@ -5,6 +5,7 @@
 #include <QObject>
 
 #include "zeraclientnetbaseprivate.h"
+#include <QTcpSocket>
 
 QT_BEGIN_NAMESPACE
 class QTcpSocket;
@@ -20,7 +21,9 @@ namespace Zera
 {
   namespace NetClient
   {
-
+    /**
+     * @brief The cClientNetBase class
+     */
     class CLIENTNETBASESHARED_EXPORT cClientNetBase : public QObject
     {
       Q_OBJECT
@@ -84,6 +87,9 @@ namespace Zera
       cClientNetBasePrivate *d_ptr;
 
     protected slots:
+      /**
+       * @brief newMessage
+       */
       void newMessage();
 
     private:

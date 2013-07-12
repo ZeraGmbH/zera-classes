@@ -1,17 +1,9 @@
 #ifndef CLIENTNETBASE_PRIVATE_H
 #define CLIENTNETBASE_PRIVATE_H
 
+#include <QByteArray>
 
-#include <QObject>
-#include <QTcpSocket>
-
-
-namespace google {
-  namespace protobuf {
-    class Message;
-  }
-}
-
+class QTcpSocket;
 
 namespace Zera
 {
@@ -19,6 +11,9 @@ namespace Zera
   {
     class cClientNetBase;
 
+    /**
+     * @brief The cClientNetBasePrivate class
+     */
     class cClientNetBasePrivate
     {
     private:
@@ -27,7 +22,12 @@ namespace Zera
        */
       cClientNetBasePrivate();
 
+      /**
+       * @brief readClient
+       * @return
+       */
       QByteArray readClient();
+
       /**
        * @brief sendByteArray
        * @param bA Data that will be sent
