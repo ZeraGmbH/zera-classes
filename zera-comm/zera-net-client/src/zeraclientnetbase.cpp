@@ -31,11 +31,16 @@ namespace Zera
 
       d->tcpSock= new QTcpSocket(this);
       d->tcpSock->connectToHost(ipAddress, port);
-      if(d->tcpSock->isWritable())
+      d->tcpSock->waitForConnected(1000); /// @note Wait for 1000 msecs to give the client time to start the connection, needs to be higher if connected over a routed link (Internet)
+      if(d->tcpSock->state()==QTcpSocket::ConnectedState)
       {
         connect(d->tcpSock, SIGNAL(readyRead()), this, SLOT(newMessage()));
         connect(d->tcpSock, SIGNAL(disconnected()), this, SIGNAL(connectionLost()));
         connect(d->tcpSock, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(tcpError(QAbstractSocket::SocketError)));
+      }
+      else
+      {
+        /** @todo Error timeout connecting to host */
       }
       d->tcpSock->setSocketOption(QAbstractSocket::KeepAliveOption, true);
     }
