@@ -9,24 +9,22 @@ namespace Zera
   namespace XMLConfig
   {
 
-    class _XMLConfigReaderPrivate;
+    class ReaderPrivate;
 
     /**
      * @brief The XMLConfigReader class
      * Reads XSD and XML files as configuration
      */
-    class ZERA_XML_CONFIGSHARED_EXPORT XMLConfigReader : public QObject
+    class ZERA_XML_CONFIGSHARED_EXPORT Reader : public QObject
     {
       Q_OBJECT
 
-    protected:
-      /**
-       * @brief Opaque pointer for ABI safety
-       */
-      _XMLConfigReaderPrivate *d_ptr;
-
     public:
-      explicit XMLConfigReader(QObject *parent = 0);
+      /**
+       * @brief Reader default constructor
+       * @param parent
+       */
+      explicit Reader(QObject *parent = 0);
 
       /**
        * @brief Load a XSD schema file and initialize the configuration
@@ -40,6 +38,13 @@ namespace Zera
        * @return true for success
        */
       bool loadXML(const QString &filePath);
+
+      /**
+       * @brief Parses the QString and sets the configuration if the XML data matches the schema file
+       * @param xmlString string to parse
+       * @return true for success
+       */
+      bool loadXMLFromString(const QString &xmlString);
 
       /**
        * @brief Retrieves a value from the configuration map
@@ -73,7 +78,15 @@ namespace Zera
        */
       void finishedParsingXML();
 
+    protected:
+      /**
+       * @brief Opaque pointer for ABI safety
+       */
+      Zera::XMLConfig::ReaderPrivate *d_ptr;
+
     private:
+      Q_DISABLE_COPY(Reader)
+      Q_DECLARE_PRIVATE(Reader)
     };
   }
 }

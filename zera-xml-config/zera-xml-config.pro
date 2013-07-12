@@ -3,6 +3,8 @@
 ######################################################################
 
 TEMPLATE = lib
+VERSION = 0.0.1
+
 TARGET = zeraxmlconfig
 DEPENDPATH += . src
 INCLUDEPATH += .
@@ -16,9 +18,9 @@ INSTALLS += target
 
 HEADERS += \
     src/xml_config_global.h \
-    src/xmlconfigreader_private.h \
-    src/zeraxmlconfig.h
+    src/xmlconfigreader.h \
+    src/xmlconfigreaderprivate.h
 
 SOURCES += \
-    src/xmlconfigreader_private.cpp \
-    src/zeraxmlconfig.cpp
+    src/xmlconfigreader.cpp \
+    src/xmlconfigreaderprivate.cpp
