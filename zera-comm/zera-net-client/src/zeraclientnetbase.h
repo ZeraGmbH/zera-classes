@@ -1,10 +1,10 @@
 #ifndef CLIENTNETBASE_H
 #define CLIENTNETBASE_H
 
-#include "zclientnetbase_global.h"
+#include "clientnetbase_global.h"
 #include <QObject>
 
-#include "zclientnetbase_private.h"
+#include "zeraclientnetbaseprivate.h"
 
 QT_BEGIN_NAMESPACE
 class QTcpSocket;
@@ -21,7 +21,7 @@ namespace Zera
   namespace NetClient
   {
 
-    class CLIENTNETBASESHARED_EXPORT ZeraClientNetBase : public QObject
+    class CLIENTNETBASESHARED_EXPORT cClientNetBase : public QObject
     {
       Q_OBJECT
 
@@ -29,16 +29,21 @@ namespace Zera
       /**
        * @brief ClientNetBase This does nothing, look for startNetwork
        */
-      explicit ZeraClientNetBase(QObject *parent=0);
+      explicit cClientNetBase(QObject *parent=0);
 
 
       /**
-       * @brief parseProtobuf Template function to parse Protobuf classes from QByteArray
-       * @param[in,out] message Put your existing Google Protobuf implementations here
-       * @param[in] array The data to parse from
-       * @return True for success
+       * @brief disconnecFromServer The connection to the server will be closed
        */
-      static bool readMessage(google::protobuf::Message *message, const QByteArray & array);
+      void disconnectFromServer();
+
+      /**
+        * @brief parseProtobuf Function to parse Protobuf classes from QByteArray
+        * @param[in,out] message Put your existing Google Protobuf implementations here
+        * @param[in] array The data to parse from
+        * @return True for success
+      */
+     static bool readMessage(google::protobuf::Message *message, const QByteArray & array);
 
       /**
        * @brief sendMessage Template function that sends a Protobuf message as QByteArray
@@ -54,25 +59,36 @@ namespace Zera
       void startNetwork(QString ipAddress, quint16 port);
 
     signals:
-      /**
-       * @brief messageAvailable Will be called if a new message from the server arrives
-       * @param message
-       */
-      void messageAvailable(QByteArray message);
+
       /**
        * @brief connectionLost Server is unreachable
        */
       void connectionLost();
 
-    private:
+      /**
+       * @brief messageAvailable Will be called if a new message from the server arrives
+       * @param message
+       */
+      void messageAvailable(QByteArray message);
 
+      /**
+       * @brief tcpError
+       * @param errorCode
+       */
+      void tcpError(QAbstractSocket::SocketError errorCode);
+
+    protected:
       /**
        * @brief d_ptr Opaque pointer
        */
-      _ClientNetBasePrivate *d_ptr;
+      cClientNetBasePrivate *d_ptr;
 
+    protected slots:
+      void newMessage();
 
-      Q_DISABLE_COPY(ZeraClientNetBase)
+    private:
+      Q_DISABLE_COPY(cClientNetBase)
+      Q_DECLARE_PRIVATE(cClientNetBase)
 
     };
   }

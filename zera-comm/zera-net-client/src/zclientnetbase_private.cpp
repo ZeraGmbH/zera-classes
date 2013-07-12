@@ -1,7 +1,7 @@
-#include "zclientnetbase_private.h"
+#include "zeraclientnetbaseprivate.h"
 
-#include <QTcpSocket>
-#include <google/protobuf/message.h>
+#include "zeraclientnetbase.h"
+
 
 #include <QDebug>
 
@@ -9,53 +9,11 @@ namespace Zera
 {
   namespace NetClient
   {
-    _ClientNetBasePrivate::_ClientNetBasePrivate(QObject *parent)
-      : QObject(parent)
+    cClientNetBasePrivate::cClientNetBasePrivate()
     {
     }
 
-    void _ClientNetBasePrivate::disconnecFromServer()
-    {
-      tcpSock->close();
-    }
-
-    bool _ClientNetBasePrivate::readMessage(google::protobuf::Message *message, const QByteArray &array)
-    {
-      return message->ParseFromArray(array, array.size());
-    }
-
-    void _ClientNetBasePrivate::sendMessage(google::protobuf::Message *message)
-    {
-      sendByteArray(QByteArray(message->SerializeAsString().c_str(), message->ByteSize()));
-    }
-
-
-    void _ClientNetBasePrivate::startNetwork(QString ipAddress, quint16 port)
-    {
-      tcpSock= new QTcpSocket(this);
-      tcpSock->connectToHost(ipAddress, port);
-      if(tcpSock->isWritable())
-      {
-        connect(tcpSock, SIGNAL(readyRead()), this, SLOT(newMessage()));
-        connect(tcpSock, SIGNAL(disconnected()), this, SIGNAL(connectionLost()));
-        connect(tcpSock, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(tcpError(QAbstractSocket::SocketError)));
-      }
-      tcpSock->setSocketOption(QAbstractSocket::KeepAliveOption, true);
-    }
-
-    void _ClientNetBasePrivate::newMessage()
-    {
-      QByteArray newMessage;
-      newMessage=readClient();
-      while(!newMessage.isNull())
-      {
-        emit messageAvailable(newMessage);
-        newMessage=readClient();
-      }
-
-    }
-
-    QByteArray _ClientNetBasePrivate::readClient()
+    QByteArray cClientNetBasePrivate::readClient()
     {
       QDataStream in(tcpSock);
       QByteArray message = QByteArray();
@@ -68,13 +26,14 @@ namespace Zera
       }
       else
       {
+        Q_Q(cClientNetBase);
         in >> message;
-        messageAvailable(message);
+        q->messageAvailable(message);
       }
       return message;
     }
 
-    void _ClientNetBasePrivate::sendByteArray(const QByteArray &bA)
+    void cClientNetBasePrivate::sendByteArray(const QByteArray &bA)
     {
       QByteArray block;
       QDataStream out(&block, QIODevice::WriteOnly);

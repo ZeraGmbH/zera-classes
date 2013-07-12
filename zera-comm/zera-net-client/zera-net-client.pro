@@ -18,9 +18,9 @@ SOURCES += \
     src/zclientnetbase_private.cpp
 
 HEADERS +=\
-    src/zclientnetbase.h \
-    src/zclientnetbase_global.h \
-    src/zclientnetbase_private.h
+    src/zeraclientnetbase.h \
+    src/zeraclientnetbaseprivate.h \
+    src/clientnetbase_global.h
 
 unix:!symbian {
     maemo5 {
