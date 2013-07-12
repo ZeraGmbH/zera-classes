@@ -9,15 +9,15 @@ namespace Zera
 {
   namespace XMLConfig
   {
-    class Reader;
+    class cReader;
 
     /**
      * @brief Private data of Zera::XMLConfig::Reader for ABI safety
      */
-    class ReaderPrivate
+    class cReaderPrivate
     {
     public:
-      explicit ReaderPrivate();
+      explicit cReaderPrivate();
 
     private:
       /**
@@ -46,9 +46,9 @@ namespace Zera
       /**
        * @brief q_ptr See Q_DECLARE_PUBLIC
        */
-      Zera::XMLConfig::Reader *q_ptr;
+      Zera::XMLConfig::cReader *q_ptr;
 
-      Q_DECLARE_PUBLIC(Reader)
+      Q_DECLARE_PUBLIC(cReader)
     };
   }
 }

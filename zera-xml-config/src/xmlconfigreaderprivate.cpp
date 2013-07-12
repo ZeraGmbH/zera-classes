@@ -12,14 +12,14 @@ namespace Zera
 {
   namespace XMLConfig
   {
-    ReaderPrivate::ReaderPrivate()
+    cReaderPrivate::cReaderPrivate()
     {
       schemaFilePath=QString();
     }
 
 
 
-    QHash<QString, QVariant> ReaderPrivate::schema2Config(const QString &xsdPath)
+    QHash<QString, QVariant> cReaderPrivate::schema2Config(const QString &xsdPath)
     {
       QFile *schemaFile=0;
       QXmlStreamReader xmlReader;
@@ -82,7 +82,7 @@ namespace Zera
       return retVal;
     }
 
-    bool ReaderPrivate::xml2Config(QIODevice *xmlData)
+    bool cReaderPrivate::xml2Config(QIODevice *xmlData)
     {
       bool retVal = true;
       QXmlStreamReader xmlReader;
@@ -105,7 +105,7 @@ namespace Zera
           // ignore whitespaces
           if(!xmlReader.text().toString().isEmpty()&&!xmlReader.isWhitespace())
           {
-            Q_Q(Reader);
+            Q_Q(cReader);
             nodeData=xmlReader.text().toString();
 
             //add the first parent if it exists, if not set fullPath to an empty QString

@@ -15,21 +15,21 @@ namespace Zera
 {
   namespace XMLConfig
   {
-    Reader::Reader(QObject *parent) :
-      QObject(parent), d_ptr(new ReaderPrivate())
+    cReader::cReader(QObject *parent) :
+      QObject(parent), d_ptr(new cReaderPrivate())
     {
     }
 
-    bool Reader::loadSchema(const QString &filePath)
+    bool cReader::loadSchema(const QString &filePath)
     {
-      Q_D(Reader);
+      Q_D(cReader);
       d->data = d->schema2Config(filePath);
       return !(d->data.isEmpty());
     }
 
-    bool Reader::loadXML(const QString &filePath)
+    bool cReader::loadXML(const QString &filePath)
     {
-      Q_D(Reader);
+      Q_D(cReader);
       bool retVal = false;
       QXmlSchema schema;
       QFile schemaFile(d->schemaFilePath);
@@ -65,9 +65,9 @@ namespace Zera
       return retVal;
     }
 
-    bool Reader::loadXMLFromString(const QString &xmlString)
+    bool cReader::loadXMLFromString(const QString &xmlString)
     {
-      Q_D(Reader);
+      Q_D(cReader);
       bool retVal = false;
       QXmlSchema schema;
       QFile schemaFile(d->schemaFilePath);
@@ -103,15 +103,15 @@ namespace Zera
       return retVal;
     }
 
-    QVariant Reader::getValue(const QString &key)
+    QVariant cReader::getValue(const QString &key)
     {
-      Q_D(Reader);
+      Q_D(cReader);
       return d->data.value(key);
     }
 
-    bool Reader::setValue(const QString &key, QVariant value)
+    bool cReader::setValue(const QString &key, QVariant value)
     {
-      Q_D(Reader);
+      Q_D(cReader);
       bool retVal=false;
       if(d->data.contains(key))
       {
@@ -121,9 +121,9 @@ namespace Zera
       return retVal;
     }
 
-    QString Reader::getXMLConfig()
+    QString cReader::getXMLConfig()
     {
-      Q_D(Reader);
+      Q_D(cReader);
       QString retVal = QString();
       QStringList parents, oldParents;
       QXmlStreamWriter stream(&retVal);

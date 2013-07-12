@@ -9,13 +9,13 @@ namespace Zera
   namespace XMLConfig
   {
 
-    class ReaderPrivate;
+    class cReaderPrivate;
 
     /**
      * @brief The XMLConfigReader class
      * Reads XSD and XML files as configuration
      */
-    class ZERA_XML_CONFIGSHARED_EXPORT Reader : public QObject
+    class ZERA_XML_CONFIGSHARED_EXPORT cReader : public QObject
     {
       Q_OBJECT
 
@@ -24,7 +24,7 @@ namespace Zera
        * @brief Reader default constructor
        * @param parent
        */
-      explicit Reader(QObject *parent = 0);
+      explicit cReader(QObject *parent = 0);
 
       /**
        * @brief Load a XSD schema file and initialize the configuration
@@ -82,11 +82,11 @@ namespace Zera
       /**
        * @brief Opaque pointer for ABI safety
        */
-      Zera::XMLConfig::ReaderPrivate *d_ptr;
+      Zera::XMLConfig::cReaderPrivate *d_ptr;
 
     private:
-      Q_DISABLE_COPY(Reader)
-      Q_DECLARE_PRIVATE(Reader)
+      Q_DISABLE_COPY(cReader)
+      Q_DECLARE_PRIVATE(cReader)
     };
   }
 }
