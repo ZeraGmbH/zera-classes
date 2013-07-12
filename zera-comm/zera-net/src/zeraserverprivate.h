@@ -30,6 +30,9 @@ namespace Zera
        */
       static cServer* singletonInstance;
 
+      /**
+       * @brief q_ptr See Q_DECLARE_PUBLIC
+       */
       cServer *q_ptr;
 
     private:

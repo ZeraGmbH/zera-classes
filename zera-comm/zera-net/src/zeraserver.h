@@ -25,10 +25,19 @@ namespace Zera
       Q_OBJECT
 
     signals:
+      /**
+       * @brief newClientAvailable Will create a cClient when a client connects
+       * @param newClient
+       */
       void newClientAvailable(Zera::Net::cClient* newClient);
 
     public:
+      /**
+       * @brief getClients
+       * @return Client listings
+       */
       QList<Zera::Net::cClient*> getClients();
+
       /**
         @brief See [P.157+ Design patterns Gang of Four]
         */
@@ -60,6 +69,9 @@ namespace Zera
        */
       void incomingConnection(int socketDescriptor);
 
+      /**
+       * @brief d_ptr See Q_DECLARE_PRIVATE
+       */
       cServerPrivate *d_ptr;
 
     protected slots:

@@ -90,9 +90,10 @@ namespace Zera
        * @param socketError
        */
       void sockError(QAbstractSocket::SocketError socketError);
+
       /**
-       * @brief Forwards messages to the application
-       * @param the message received (UTF-8)
+       * @brief messageReceived Forwards messages to the application
+       * @param message
        */
       void messageReceived(QByteArray message);
 
@@ -112,6 +113,9 @@ namespace Zera
       void writeClient(QByteArray message);
 
     protected:
+      /**
+       * @brief d_ptr See Q_DECLARE_PRIVATE
+       */
       cClientPrivate* d_ptr;
 
     private slots:
@@ -129,6 +133,9 @@ namespace Zera
       void disconnectClient();
 
     private:
+      /**
+       * @brief setupStateMachine Initialize D'Pointer variables
+       */
       void setupStateMachine();
 
       Q_DISABLE_COPY(cClient)
