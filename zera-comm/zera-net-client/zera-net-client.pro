@@ -6,10 +6,9 @@
 
 QT       += network
 
-QT       -= gui
-
 TARGET = zeranetclient
 TEMPLATE = lib
+VERSION = 0.0.1
 
 DEFINES += CLIENTNETBASE_LIBRARY
 
