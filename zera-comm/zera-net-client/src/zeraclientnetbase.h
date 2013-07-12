@@ -88,7 +88,7 @@ namespace Zera
 
     protected slots:
       /**
-       * @brief newMessage
+       * @brief newMessage Reads all messages on the socket queue
        */
       void newMessage();
 
