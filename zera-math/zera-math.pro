@@ -27,5 +27,6 @@ HEADERS += \
     math_global.h \
     gaussmatrix_p.h \
     crcutils.h \
-    crcutils_p.h
+    crcutils_p.h \
+    gaussnode.h
 
