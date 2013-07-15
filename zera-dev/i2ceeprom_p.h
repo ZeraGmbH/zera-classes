@@ -20,11 +20,11 @@ public:
       @param[in] (i2c)adr is the devices adress
       */
     cI2CEEPromPrivate(QString dNode, int dLevel, ushort adr);
-    cI2CEEPromPrivate();
+    cI2CEEPromPrivate(){};
     virtual ~cI2CEEPromPrivate(){};
 
-    /**
-     * @brief Writes (count) bytes starting at (adr) data to the device
+
+    /** @brief Writes (count) bytes starting at (adr) data to the device
      * @param data is pointer
      * @param count is bytes to write
      * @param adr defines the start adress in the eeprom
