@@ -6,10 +6,11 @@
 
 class cF24LC256Private;
 
-class ZERA_DEVSHARED_EXPORT cF24LC256: public cI2CEEProm
+class ZERA_DEVSHARED_EXPORT cF24LC256: public cI2CEEPromPrivate
 {
 public:
     cF24LC256(QString devNode,int dLevel,short adr);
+    virtual ~cF24LC256();
     virtual int WriteData(char* data, ushort count, ushort adr);
     virtual int ReadData(char* data, ushort count, ushort adr);
     virtual int size();
