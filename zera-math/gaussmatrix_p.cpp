@@ -1,4 +1,5 @@
 #include "gaussmatrix_p.h"
+#include "gaussnode.h"
 
 cGaussMatrixPrivate::cGaussMatrixPrivate(int order)
 {

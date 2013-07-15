@@ -1,4 +1,5 @@
 #include "gaussmatrix.h"
+#include "gaussnode.h"
 #include "gaussmatrix_p.h"
 
 cGaussMatrix::cGaussMatrix(int order)
