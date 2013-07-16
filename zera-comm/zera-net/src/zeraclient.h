@@ -12,11 +12,6 @@
 
 #include "net_global.h"
 
-namespace ProtobufMessage
-{
-  class NetMessage;
-}
-
 namespace Zera
 {
   namespace Net
