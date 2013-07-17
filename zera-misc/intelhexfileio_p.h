@@ -44,8 +44,7 @@ public:
       @b Initialise the const variables
       */
     cIntelHexFileIOPrivate();
-    virtual ~cIntelHexFileIOPrivate();
-
+    virtual ~cIntelHexFileIOPrivate(){};
     /**
       @b Read the entire file and parse for memory regions.
       @param fileName is the files full path name.

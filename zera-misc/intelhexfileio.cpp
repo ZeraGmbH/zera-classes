@@ -8,6 +8,12 @@ cIntelHexFileIO::cIntelHexFileIO()
 }
 
 
+cIntelHexFileIO::~cIntelHexFileIO()
+{
+    delete d_ptr;
+}
+
+
 bool cIntelHexFileIO::ReadHexFile(const QString& fileName)
 {
     return d_ptr->ReadHexFile(fileName);
