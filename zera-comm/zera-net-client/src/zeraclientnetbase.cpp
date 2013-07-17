@@ -31,8 +31,8 @@ namespace Zera
 
       d->tcpSock= new QTcpSocket(this);
       d->tcpSock->connectToHost(ipAddress, port);
-      d->tcpSock->waitForConnected(1000); /// @note Wait for 1000 msecs to give the client time to start the connection, needs to be higher if connected over a routed link (Internet)
-      if(d->tcpSock->state()==QTcpSocket::ConnectedState)
+      /// @note Wait for 25 msecs to give the client time to start the connection, needs to be higher if connected over a routed link (Internet)
+      if(d->tcpSock->waitForConnected(25))
       {
         connect(d->tcpSock, SIGNAL(readyRead()), this, SLOT(newMessage()));
         connect(d->tcpSock, SIGNAL(disconnected()), this, SIGNAL(connectionLost()));
