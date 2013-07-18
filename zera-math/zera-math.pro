@@ -30,3 +30,6 @@ HEADERS += \
     crcutils_p.h \
     gaussnode.h
 
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zeramath
+INSTALLS += header_files
