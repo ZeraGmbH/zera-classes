@@ -24,3 +24,7 @@ HEADERS += \
 SOURCES += \
     src/xmlconfigreader.cpp \
     src/xmlconfigreaderprivate.cpp
+
+
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zera-classes/xml-config
