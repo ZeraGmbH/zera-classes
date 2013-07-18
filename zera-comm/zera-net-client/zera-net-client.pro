@@ -31,3 +31,7 @@ unix:!symbian {
 }
 
 LIBS += -lprotobuf
+
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zera-classes/net-client
+INSTALLS += header_files
