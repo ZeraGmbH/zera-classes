@@ -16,3 +16,6 @@ DEFINES += ZERA_MEAS_LIBRARY
 target.path = /usr/lib
 INSTALLS += target
 
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zerameas
+INSTALLS += header_files
