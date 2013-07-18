@@ -22,3 +22,7 @@ HEADERS +=\
 
 target.path = /usr/lib
 INSTALLS += target
+
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zeramisc
+INSTALLS += header_files
