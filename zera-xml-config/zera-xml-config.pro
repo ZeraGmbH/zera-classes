@@ -28,3 +28,4 @@ SOURCES += \
 
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-classes/xml-config
+INSTALLS += header_files
