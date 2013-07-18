@@ -29,5 +29,9 @@ SOURCES += \
     src/zeraserverprivate.cpp
 
 target.path = /usr/lib
+
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zera-classes/net
+INSTALLS += header_files
 INSTALLS += target
 
