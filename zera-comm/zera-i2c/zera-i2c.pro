@@ -23,3 +23,6 @@ HEADERS += \
 SOURCES += \
     i2cutils.cpp
 
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zerai2c
+INSTALLS += header_files
