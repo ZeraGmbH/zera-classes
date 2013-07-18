@@ -31,3 +31,7 @@ unix:!macx: LIBS += -L$$OUT_PWD/../zera-comm/zera-i2c/ -lzerai2c
 
 INCLUDEPATH += $$PWD/../zera-comm/zera-i2c
 DEPENDPATH += $$PWD/../zera-comm/zera-i2c
+
+header_files.files = $$HEADERS
+header_files.path = /usr/include/zeradev
+INSTALLS += header_files
