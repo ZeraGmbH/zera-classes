@@ -31,5 +31,5 @@ HEADERS += \
     gaussnode.h
 
 header_files.files = $$HEADERS
-header_files.path = /usr/include/zeramath
+header_files.path = /usr/include/zera-classes/math
 INSTALLS += header_files
