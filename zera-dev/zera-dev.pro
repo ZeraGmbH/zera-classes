@@ -33,5 +33,5 @@ INCLUDEPATH += $$PWD/../zera-comm/zera-i2c
 DEPENDPATH += $$PWD/../zera-comm/zera-i2c
 
 header_files.files = $$HEADERS
-header_files.path = /usr/include/zeradev
+header_files.path = /usr/include/zera-classes/dev
 INSTALLS += header_files
