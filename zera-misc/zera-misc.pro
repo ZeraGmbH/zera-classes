@@ -24,5 +24,5 @@ target.path = /usr/lib
 INSTALLS += target
 
 header_files.files = $$HEADERS
-header_files.path = /usr/include/zeramisc
+header_files.path = /usr/include/zera-classes/misc
 INSTALLS += header_files
