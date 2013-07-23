@@ -21,12 +21,6 @@ namespace Zera
 
     private:
       /**
-       * @brief schema2Config
-       * @param xsdPath
-       * @return
-       */
-      QHash<QString, QVariant> schema2Config(const QString &xsdPath);
-      /**
        * @brief xml2Config
        * @param xmlData
        * @return

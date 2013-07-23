@@ -22,9 +22,22 @@ namespace Zera
 
     bool cReader::loadSchema(const QString &filePath)
     {
-      Q_D(cReader);
-      d->data = d->schema2Config(filePath);
-      return !(d->data.isEmpty());
+      bool retVal = false;
+      QFile schemaFile(filePath);
+
+      if(schemaFile.exists())
+      {
+        Q_D(cReader);
+        QXmlSchema tmpSchema;
+        if(tmpSchema.load(&schemaFile,QUrl(d->schemaFilePath)))
+        {
+          /// @todo evaluate wether clearing the data is reasonable
+          d->data.clear();
+          d->schemaFilePath=filePath;
+          retVal = true;
+        }
+      }
+      return retVal;
     }
 
     bool cReader::loadXML(const QString &filePath)
@@ -130,7 +143,7 @@ namespace Zera
       stream.setAutoFormatting(true);
       stream.writeStartDocument();
 
-      // for each key in the QMap
+      // for each key in the QHash
       for(int elemCount=0; elemCount<d->data.keys().count(); elemCount++)
       {
         QString elementName;

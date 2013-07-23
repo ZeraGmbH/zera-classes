@@ -54,14 +54,14 @@ namespace Zera
       QVariant getValue(const QString &key);
       /**
        * @brief Sets config values
-       * @param key The configuration key in the QMap
+       * @param key The configuration key in the QHash
        * @param value The new value
        * @return true for success
        */
       bool setValue(const QString &key, QVariant value);
 
       /**
-       * @brief Exports the QMap to a XML file format
+       * @brief Exports the QHash to a XML file format
        * @return XML code
        */
       QString getXMLConfig();
