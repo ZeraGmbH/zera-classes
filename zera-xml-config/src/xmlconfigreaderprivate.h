@@ -20,12 +20,7 @@ namespace Zera
       explicit cReaderPrivate();
 
     private:
-      /**
-       * @brief xml2Config
-       * @param xmlData
-       * @return
-       */
-      bool xml2Config(QIODevice* xmlData);
+
 
       /**
        * @brief data Data member holding all config values

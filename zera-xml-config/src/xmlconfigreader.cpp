@@ -8,6 +8,7 @@
 #include <QByteArray>
 #include <QFile>
 #include <QBuffer>
+#include <QIODevice>
 
 #include <QDebug>
 
@@ -20,7 +21,7 @@ namespace Zera
     {
     }
 
-    bool cReader::loadSchema(const QString &filePath)
+    bool cReader::loadSchema(QString filePath)
     {
       bool retVal = false;
       QFile schemaFile(filePath);
@@ -28,8 +29,9 @@ namespace Zera
       if(schemaFile.exists())
       {
         Q_D(cReader);
+        schemaFile.open(QFile::ReadOnly);
         QXmlSchema tmpSchema;
-        if(tmpSchema.load(&schemaFile,QUrl(d->schemaFilePath)))
+        if(tmpSchema.load(&schemaFile,QUrl(filePath)))
         {
           /// @todo evaluate wether clearing the data is reasonable
           d->data.clear();
@@ -40,7 +42,7 @@ namespace Zera
       return retVal;
     }
 
-    bool cReader::loadXML(const QString &filePath)
+    bool cReader::loadXML(QString filePath)
     {
       Q_D(cReader);
       bool retVal = false;
@@ -60,7 +62,7 @@ namespace Zera
           xmlFile.open(QFile::ReadOnly);
 
           //qDebug() << "XML is valid";
-          if(d->xml2Config(&xmlFile))
+          if(xml2Config(&xmlFile))
           {
             retVal = true;
           }
@@ -78,7 +80,7 @@ namespace Zera
       return retVal;
     }
 
-    bool cReader::loadXMLFromString(const QString &xmlString)
+    bool cReader::loadXMLFromString(QString xmlString)
     {
       Q_D(cReader);
       bool retVal = false;
@@ -98,7 +100,7 @@ namespace Zera
           xmlDevice.setData(xmlString.toUtf8());
 
           //qDebug() << "XML is valid";
-          if(d->xml2Config(&xmlDevice))
+          if(xml2Config(&xmlDevice))
           {
             retVal = true;
           }
@@ -116,13 +118,13 @@ namespace Zera
       return retVal;
     }
 
-    QVariant cReader::getValue(const QString &key)
+    QVariant cReader::getValue(QString key)
     {
       Q_D(cReader);
       return d->data.value(key);
     }
 
-    bool cReader::setValue(const QString &key, QVariant value)
+    bool cReader::setValue(QString key, QVariant value)
     {
       Q_D(cReader);
       bool retVal=false;
@@ -200,6 +202,64 @@ namespace Zera
       }
       stream.writeEndDocument();
 
+      return retVal;
+    }
+
+    bool cReader::xml2Config(QIODevice *xmlData)
+    {
+      bool retVal = true;
+      QXmlStreamReader xmlReader;
+      QList<QString> parents;
+
+      xmlReader.setDevice(xmlData);
+
+      while(!xmlReader.atEnd() && !xmlReader.hasError())
+      {
+        QString fullPath;
+
+        //read next
+        QXmlStreamReader::TokenType token = xmlReader.readNext();
+
+        // we read the actual data that stands between a start and an end node
+        if(token == QXmlStreamReader::Characters)
+        {
+          QVariant nodeData;
+
+          // ignore whitespaces
+          if(!xmlReader.text().toString().isEmpty()&&!xmlReader.isWhitespace())
+          {
+            Q_D(cReader);
+            nodeData=xmlReader.text().toString();
+
+            //add the first parent if it exists, if not set fullPath to an empty QString
+            parents.isEmpty() ? fullPath = "" : fullPath = parents.first();
+
+            for(int pCount=1; pCount < parents.count(); pCount++)
+            {
+              fullPath = QString("%1:%2").arg(fullPath).arg(parents.at(pCount));
+            }
+            d->data.insert(fullPath, nodeData);
+            valueChanged(fullPath);
+          }
+        }
+        // add the node name as parent if it is a start node: <text>
+        else if(token == QXmlStreamReader::StartElement)
+        {
+          parents.append(xmlReader.name().toString());
+        }
+        // remove the last node from the parents if it is and end node: </text>
+        else if(token == QXmlStreamReader::EndElement)
+        {
+          parents.removeLast();
+        }
+      }
+
+      /* Error handling. */
+      if(xmlReader.hasError())
+      {
+        retVal = false;
+        qDebug()<<"Error parsing XML: "<<xmlReader.errorString();
+      }
       return retVal;
     }
 

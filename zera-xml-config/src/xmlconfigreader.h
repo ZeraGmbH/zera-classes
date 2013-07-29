@@ -4,6 +4,10 @@
 #include "xml_config_global.h"
 #include <QObject>
 
+QT_BEGIN_NAMESPACE
+class QIODevice;
+QT_END_NAMESPACE
+
 namespace Zera
 {
   namespace XMLConfig
@@ -31,34 +35,34 @@ namespace Zera
        * @param filePath File to load
        * @return true for success
        */
-      bool loadSchema(const QString &filePath);
+      bool loadSchema(QString filePath);
       /**
        * @brief Loads a XML file and sets the configuration if it matches the schema file
        * @param filePath File to load
        * @return true for success
        */
-      bool loadXML(const QString &filePath);
+      bool loadXML(QString filePath);
 
       /**
        * @brief Parses the QString and sets the configuration if the XML data matches the schema file
        * @param xmlString string to parse
        * @return true for success
        */
-      bool loadXMLFromString(const QString &xmlString);
+      bool loadXMLFromString(QString xmlString);
 
       /**
        * @brief Retrieves a value from the configuration map
        * @param key The map key where the value has been stored
        * @return QVariant value
        */
-      QVariant getValue(const QString &key);
+      QVariant getValue(QString key);
       /**
        * @brief Sets config values
        * @param key The configuration key in the QHash
        * @param value The new value
        * @return true for success
        */
-      bool setValue(const QString &key, QVariant value);
+      bool setValue(QString key, QVariant value);
 
       /**
        * @brief Exports the QHash to a XML file format
@@ -72,7 +76,7 @@ namespace Zera
        * @brief Notifies when values change
        * @param key The key that changed
        */
-      void valueChanged(const QString &key);
+      void valueChanged(QString key);
       /**
        * @brief Loading the XML config file is complete
        */
@@ -85,6 +89,13 @@ namespace Zera
       Zera::XMLConfig::cReaderPrivate *d_ptr;
 
     private:
+      /**
+       * @brief xml2Config
+       * @param xmlData
+       * @return
+       */
+      bool xml2Config(QIODevice* xmlData);
+
       Q_DISABLE_COPY(cReader)
       Q_DECLARE_PRIVATE(cReader)
     };
