@@ -18,7 +18,7 @@ namespace Zera
     {
     private:
       /**
-       * @brief ClientNetBase This does nothing, look for startNetwork
+       * @brief ClientNetBasePrivate This does nothing, look for startNetwork
        */
       cClientNetBasePrivate();
 
@@ -40,7 +40,7 @@ namespace Zera
       QTcpSocket* tcpSock;
 
       /**
-       * @brief q_ptr
+       * @brief q_ptr see topic D'Pointer
        */
       cClientNetBase *q_ptr;
 
