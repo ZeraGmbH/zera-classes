@@ -30,7 +30,7 @@ namespace Zera
        * @brief cClientPrivate Default constructor initializing const member
        * @param socketDescriptor Constant socket identifier
        */
-      explicit cClientPrivate(quint32 socketDescriptor);
+      explicit cClientPrivate(quint32 socketDescriptor, cClient *parent);
 
       /**
         @brief The actual socket of the Server::Client

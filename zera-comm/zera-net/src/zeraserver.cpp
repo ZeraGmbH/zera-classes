@@ -38,7 +38,7 @@ namespace Zera
       qDebug()<<"[zera-net]Server Started";
     }
 
-    cServer::cServer(QObject *parent) : QTcpServer(parent), d_ptr(new Zera::Net::cServerPrivate())
+    cServer::cServer(QObject *parent) : QTcpServer(parent), d_ptr(new Zera::Net::cServerPrivate(this))
     {
     }
 

@@ -9,7 +9,7 @@ namespace Zera
 
     cClient::cClient(quint32 socketDescriptor, QString clientName, QObject *parent) :
       QStateMachine(parent),
-      d_ptr(new Zera::Net::cClientPrivate(socketDescriptor))
+      d_ptr(new Zera::Net::cClientPrivate(socketDescriptor, this))
     {
       Q_D(cClient);
       d->clSocket = new QTcpSocket(this);
@@ -151,12 +151,6 @@ namespace Zera
     void cClient::setupStateMachine()
     {
       Q_D(cClient);
-      d->stContainer = new QState(this);
-      d->stInit = new QState(d->stContainer);
-      d->stConnected = new QState(d->stContainer);
-      d->stAboutToDisconnect = new QState(d->stContainer);
-      d->fstDisconnected = new QFinalState(this);
-
       this->setInitialState(d->stContainer);
 
       d->stContainer->setInitialState(d->stInit);

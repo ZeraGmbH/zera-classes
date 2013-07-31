@@ -6,7 +6,8 @@ namespace Zera
   {
     cServer* cServerPrivate::singletonInstance=0;
 
-    cServerPrivate::cServerPrivate()
+    cServerPrivate::cServerPrivate(cServer *parent) :
+      q_ptr(parent)
     {
     }
 

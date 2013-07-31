@@ -17,7 +17,7 @@ namespace Zera
     class cServerPrivate
     {
     protected:
-      cServerPrivate();
+      cServerPrivate(cServer *parent);
       ~cServerPrivate();
 
       /**
