@@ -56,10 +56,12 @@ namespace Zera
        * @return QVariant value
        */
       QVariant getValue(QString key);
+
       /**
        * @brief Sets config values
        * @param key The configuration key in the QHash
        * @param value The new value
+       *
        * @return true for success
        */
       bool setValue(QString key, QVariant value);
@@ -77,6 +79,7 @@ namespace Zera
        * @param key The key that changed
        */
       void valueChanged(QString key);
+
       /**
        * @brief Loading the XML config file is complete
        */
@@ -92,7 +95,7 @@ namespace Zera
       /**
        * @brief xml2Config
        * @param xmlData
-       * @return
+       * @return true for success
        */
       bool xml2Config(QIODevice* xmlData);
 

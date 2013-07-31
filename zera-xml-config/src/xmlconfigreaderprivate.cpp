@@ -5,7 +5,8 @@ namespace Zera
 {
   namespace XMLConfig
   {
-    cReaderPrivate::cReaderPrivate()
+    cReaderPrivate::cReaderPrivate(cReader *parent) :
+      q_ptr(parent)
     {
       schemaFilePath=QString();
     }

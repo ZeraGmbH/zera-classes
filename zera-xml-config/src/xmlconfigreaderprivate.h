@@ -17,7 +17,7 @@ namespace Zera
     class cReaderPrivate
     {
     public:
-      explicit cReaderPrivate();
+      explicit cReaderPrivate(cReader *parent);
 
     private:
 

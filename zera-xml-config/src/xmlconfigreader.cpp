@@ -17,7 +17,7 @@ namespace Zera
   namespace XMLConfig
   {
     cReader::cReader(QObject *parent) :
-      QObject(parent), d_ptr(new cReaderPrivate())
+      QObject(parent), d_ptr(new cReaderPrivate(this))
     {
     }
 
