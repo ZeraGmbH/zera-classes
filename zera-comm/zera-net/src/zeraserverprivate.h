@@ -18,6 +18,10 @@ namespace Zera
     class cServerPrivate
     {
     protected:
+      /**
+       * @brief cServerPrivate
+       * @param parent q_ptr of this instance
+       */
       cServerPrivate(cServer *parent);
       ~cServerPrivate();
 

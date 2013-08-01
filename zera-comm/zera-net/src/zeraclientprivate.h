@@ -27,6 +27,7 @@ namespace Zera
       /**
        * @brief cClientPrivate Default constructor initializing const member
        * @param socketDescriptor Constant socket identifier
+       * @param parent q_ptr of this instance
        */
       explicit cClientPrivate(quint32 socketDescriptor, cClient *parent);
 
