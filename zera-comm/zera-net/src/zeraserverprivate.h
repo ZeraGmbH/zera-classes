@@ -1,7 +1,7 @@
 #ifndef H2012_ZERANET_SERVER_PRIVATE_H
 #define H2012_ZERANET_SERVER_PRIVATE_H
 
-#include "zeraclient.h"
+#include <QList>
 
 /**
   @brief The Server Namespace encapsulates all networking logic into a separate namespace.
@@ -10,6 +10,7 @@ namespace Zera
 {
   namespace Net
   {
+    class cClient;
     class cServer;
     /**
       @brief Represents the interface between the network implementations and the ResourceManager

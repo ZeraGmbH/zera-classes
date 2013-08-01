@@ -1,10 +1,6 @@
 #ifndef H2012_ZERANET_CLIENT_PUB_H
 #define H2012_ZERANET_CLIENT_PUB_H
 
-#include <QStringList>
-#include <QObject>
-#include <QTimer>
-#include <QTcpSocket>
 #include <QHostAddress>
 #include <google/protobuf/message.h>
 

@@ -1,6 +1,7 @@
 #include "zeraclient.h"
 #include "zeraclientprivate.h"
 #include <QFinalState>
+#include <QTcpSocket>
 
 namespace Zera
 {

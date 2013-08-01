@@ -1,16 +1,14 @@
 #ifndef H2013_ZERANET_CLIENT_H
 #define H2013_ZERANET_CLIENT_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QTcpSocket>
-#include <QHostAddress>
-
-#include <google/protobuf/message.h>
+#include <QtGlobal>
+#include <QString>
 
 QT_BEGIN_NAMESPACE
+class QState;
 class QFinalState;
 class QTimer;
+class QTcpSocket;
 QT_END_NAMESPACE
 
 namespace Zera

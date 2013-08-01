@@ -1,7 +1,6 @@
 #ifndef H2012_ZERANET_SERVER_PUB_H
 #define H2012_ZERANET_SERVER_PUB_H
 
-#include <QObject>
 #include <QList>
 #include <QTcpServer>
 
