@@ -54,14 +54,14 @@ namespace Zera
       {
         QXmlSchemaValidator sValidator(schema);
 
-        //qDebug() << "schema is valid";
+        //qDebug() << "[zera-xml-config] schema is valid";
 
         if(sValidator.validate(QUrl(QString("file://%1").arg(filePath))))
         {
           QFile xmlFile(filePath);
           xmlFile.open(QFile::ReadOnly);
 
-          //qDebug() << "XML is valid";
+          //qDebug() << "[zera-xml-config] XML is valid";
           if(xml2Config(&xmlFile))
           {
             retVal = true;
@@ -69,12 +69,12 @@ namespace Zera
         }
         else
         {
-          qDebug() << "XML is invalid: " << filePath;
+          qDebug() << "[zera-xml-config] XML is invalid: " << filePath;
         }
       }
       else
       {
-        qDebug() << "schema is invalid";
+        qDebug() << "[zera-xml-config] schema is invalid";
       }
       emit finishedParsingXML();
       return retVal;
@@ -92,14 +92,14 @@ namespace Zera
       {
         QXmlSchemaValidator sValidator(schema);
 
-        //qDebug() << "schema is valid";
+        //qDebug() << "[zera-xml-config] schema is valid";
 
         if(sValidator.validate(xmlString))
         {
           QBuffer xmlDevice;
           xmlDevice.setData(xmlString.toUtf8());
 
-          //qDebug() << "XML is valid";
+          //qDebug() << "[zera-xml-config] XML is valid";
           if(xml2Config(&xmlDevice))
           {
             retVal = true;
@@ -107,12 +107,12 @@ namespace Zera
         }
         else
         {
-          qDebug() << "XML is invalid: " << xmlString;
+          qDebug() << "[zera-xml-config] XML is invalid: " << xmlString;
         }
       }
       else
       {
-        qDebug() << "schema is invalid";
+        qDebug() << "[zera-xml-config] schema is invalid";
       }
       emit finishedParsingXML();
       return retVal;
@@ -258,7 +258,7 @@ namespace Zera
       if(xmlReader.hasError())
       {
         retVal = false;
-        qDebug()<<"Error parsing XML: "<<xmlReader.errorString();
+        qDebug()<<"[zera-xml-config] Error parsing XML: "<<xmlReader.errorString();
       }
       return retVal;
     }
