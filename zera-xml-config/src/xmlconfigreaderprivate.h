@@ -17,10 +17,13 @@ namespace Zera
     class cReaderPrivate
     {
     public:
-      explicit cReaderPrivate(cReader *parent);
+      /**
+       * @brief cReaderPrivate Default constructor
+       * @param parent the q_ptr of this instance
+       */
+      cReaderPrivate(cReader *parent);
 
     private:
-
 
       /**
        * @brief data Data member holding all config values
