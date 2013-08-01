@@ -22,7 +22,7 @@ namespace Zera
       in >> expectedSize;
       if(tcpSock->bytesAvailable()<expectedSize)
       {
-        qDebug()<<"Error bytes not available";
+        qDebug()<<"[zera-net-client] Error bytes not available";
       }
       else
       {
@@ -39,14 +39,14 @@ namespace Zera
       QDataStream out(&block, QIODevice::WriteOnly);
       out.setVersion(QDataStream::Qt_4_0);
       out << (quint16)0;
-      //qDebug()<<"Sending message:"<<QString(bA.toBase64());
+      //qDebug()<<"[zera-net-client] Sending message:"<<QString(bA.toBase64());
       out << bA;
       out.device()->seek(0);
       out << (quint16)(block.size() - sizeof(quint16));
 
       if(!tcpSock->write(block))
       {
-        qDebug()<<"Failed to send message";
+        qDebug()<<"[zera-net-client] Failed to send message";
       }
     }
   }
