@@ -6,6 +6,8 @@
 
 #define Write24LC256 0
 #define Read24LC256 1
+#define blockReadLen 4096
+
 
 class cF24LC256Private: public cI2CEEPromPrivate
 {

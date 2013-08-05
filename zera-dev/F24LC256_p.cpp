@@ -47,26 +47,40 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
 }
 
 
-int cF24LC256Private::ReadData(char* data, ushort count, ushort adr)
+int cF24LC256Private::ReadData(char* data,ushort n,ushort adr)
 {
     uchar outpBuf[2];
-    uchar inpBuf[count];
-    ushort ret = 0;
+    uchar inpBuf[blockReadLen]; // the max. blocklength
     struct i2c_msg Msgs[2] = { {addr :I2CAdress, flags: 0,len: 2,buf: &(outpBuf[0])}, // 2 messages (tagged format )
-              {addr :I2CAdress, flags: (I2C_M_RD+I2C_M_NOSTART), len: count, buf: &(inpBuf[0])} };
+                               {addr :I2CAdress, flags: (I2C_M_RD+I2C_M_NOSTART), len: blockReadLen, buf: &(inpBuf[0])} };
 
     struct i2c_rdwr_ioctl_data EEPromData = {  msgs: &(Msgs[0]), nmsgs: 2 };
 
-    outpBuf[0]=(adr >> 8) & 0xff; outpBuf[1]=adr & 0xff;
+    ushort toRead = n;
 
-    if ( I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData) == 0 )
-    {   // everything ok and read
-        memcpy((void*)data,(void*)&inpBuf[0],count);
-        ret = count;
+    while (toRead)
+    {
+        ushort l = (toRead > blockReadLen) ? blockReadLen : toRead;
+        outpBuf[0]=(adr >> 8) & 0xff; outpBuf[1]=adr & 0xff; // we set the adress for the next transfer
+        Msgs[1].len = l; // and it's length
+
+        if ( I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData) == 0 ) // alles ok und gelesen
+        {
+            memcpy((void*)data,(void*)&inpBuf[0],l);
+            adr += l;
+            data += l;
+            toRead -= l;
+        }
+        else
+        {
+            break;
+        }
     }
 
-    return ret;
+    return(n-toRead);
+
 }
+
 
 int cF24LC256Private::size() {
     return 32768;
