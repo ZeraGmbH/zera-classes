@@ -115,7 +115,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
             nByteRead = file.readLine(FileBuffer, BUFF_LEN);
             for (ulong iByte =  0; iByte < nByteRead; iByte++)
             {
-                qDebug() << iByte;
+                qDebug() << nByteRead << ";" << iByte;
                 char chCurr = FileBuffer[iByte];
                 // Check <LF> for lin count
                 if(chCurr == '\n')
