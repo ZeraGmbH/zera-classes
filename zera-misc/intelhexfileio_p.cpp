@@ -1,6 +1,5 @@
 #include <QFile>
 #include <QList>
-#include <QDebug>
 
 #include "intelhexfileio_p.h"
 
@@ -95,7 +94,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
         char chHexDigit[3] = "00";
         bool bUpperHexDigit = true;
         bool bLastReceived = false;
-        ulong nByteRead = 0;
+        long nByteRead = 0;
         quint32 nCurrDataPos = 0;
 
         // for all subsequent records
@@ -113,202 +112,204 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 #define BUFF_LEN 1024
             char FileBuffer[BUFF_LEN];
             nByteRead = file.readLine(FileBuffer, BUFF_LEN);
-            for (ulong iByte =  0; iByte < nByteRead; iByte++)
-            {
-                qDebug() << nByteRead << ";" << iByte;
-                char chCurr = FileBuffer[iByte];
-                // Check <LF> for lin count
-                if(chCurr == '\n')
-                    nCurrInputLine++;
-                // 1st check if we are inside of a block
-                if (eHexField == HEX_UNDEF)
+            if (nByteRead <= 0) // in case of error conditions
+                nByteRead = 0; // we read nothing
+            else
+                for (long iByte =  0; iByte < nByteRead; iByte++)
                 {
-                    // Start
-                    if (chCurr == ':')
+                    char chCurr = FileBuffer[iByte];
+                    // Check <LF> for lin count
+                    if(chCurr == '\n')
+                        nCurrInputLine++;
+                    // 1st check if we are inside of a block
+                    if (eHexField == HEX_UNDEF)
                     {
-                        // There is no more record expected
-                        if(!bLastReceived)
+                        // Start
+                        if (chCurr == ':')
                         {
-                            // Init
-                            eHexField = HEX_LEN;
-                            bUpperHexDigit = true;
-                            nCurrDataLen = 0;
-                            nCurrAddress = 0;
-                            enCurrRecordType = RECTYPE_UNDEF;
-                            byteCheckSum = 0;
-                            memset(DataBuff, 0, sizeof(DataBuff));
-                            nCurrDataPos = 0;
+                            // There is no more record expected
+                            if(!bLastReceived)
+                            {
+                                // Init
+                                eHexField = HEX_LEN;
+                                bUpperHexDigit = true;
+                                nCurrDataLen = 0;
+                                nCurrAddress = 0;
+                                enCurrRecordType = RECTYPE_UNDEF;
+                                byteCheckSum = 0;
+                                memset(DataBuff, 0, sizeof(DataBuff));
+                                nCurrDataPos = 0;
+                            }
+                            else
+                            {
+                                // Error Msg
+
+                                m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Record found after end record\n")));
+                                readHexError = true;
+
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // Within a frame all must be hex
+                        if (isHexText(chCurr))
+                        {
+                            // Upper nibble
+                            if (bUpperHexDigit)
+                                chHexDigit[0] = chCurr;
+                            // Lower nibble terminates a byte
+                            else
+                            {
+                                chHexDigit[1] = chCurr;
+                                uchar byteDecoded = Hex2Bin(chHexDigit);
+                                byteCheckSum += byteDecoded;
+                                switch(eHexField)
+                                {
+                                // Keep upper nibble
+                                case HEX_LEN:
+                                    // keep data length
+                                    nCurrDataLen = byteDecoded;
+                                    // next field
+                                    eHexField = HEX_ADR0;
+                                    break;
+                                case HEX_ADR0:
+                                    // keep upper address
+                                    nCurrAddress = byteDecoded << 8;
+                                    // next field
+                                    eHexField = HEX_ADR1;
+                                    break;
+                                case HEX_ADR1:
+                                    // keep lower address
+                                    nCurrAddress += byteDecoded;
+                                    // next field
+                                    eHexField = HEX_TYP;
+                                    break;
+                                case HEX_TYP:
+                                    // keep record type
+                                    switch(byteDecoded)
+                                    {
+                                    case 0:
+                                        enCurrRecordType = RECTYPE_DATA;
+                                        break;
+                                    case 1:
+                                        enCurrRecordType = RECTYPE_LAST;
+                                        break;
+                                    case 2:
+                                        enCurrRecordType = RECTYPE_EXT_SEG;
+                                        break;
+                                    case 3:
+                                        enCurrRecordType = RECTYPE_START_SEG;						      break;				                        			          case 4:
+                                        enCurrRecordType = RECTYPE_EXT_ADR;
+                                        break;
+                                    case 5:
+                                        enCurrRecordType = RECTYPE_START_ADR;
+                                        break;
+                                        // unkown record type
+                                    default:
+                                        // Error Msg
+                                        m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Record has unkwown type\n")));
+                                        readHexError = true;
+                                        eHexField = HEX_UNDEF;
+                                        break;
+                                    }
+
+                                    // next field
+                                    if(nCurrDataLen != 0)
+                                        eHexField = HEX_DATA;
+                                    else
+                                        eHexField = HEX_CHK;
+                                    break;
+
+                                case HEX_DATA:
+                                    // Data
+                                    DataBuff[nCurrDataPos] = byteDecoded;
+                                    nCurrDataPos++;
+                                    // next field
+                                    if (nCurrDataPos==nCurrDataLen)
+                                        eHexField = HEX_CHK;
+                                    break;
+
+                                case HEX_CHK:
+                                    // Test Checksum
+                                    if (byteCheckSum == 0)
+                                    {
+                                        // The action is depending on record type
+                                        switch (enCurrRecordType)
+                                        {
+                                        // Data
+                                        case RECTYPE_DATA:
+                                        {
+                                            QByteArray byteArray;
+                                            byteArray.resize(nCurrDataLen);
+                                            for (quint32 ByteNo = 0; ByteNo < nCurrDataLen; ByteNo++)
+                                                byteArray[ByteNo] = DataBuff[ByteNo];
+                                            m_ListMemRegions.append(THexFileMemRegion(nAddressExtension+nCurrAddress, byteArray));
+                                            break;
+                                        }
+
+                                            // Last record
+                                        case RECTYPE_LAST:
+                                            bLastReceived = true;
+                                            break;
+
+                                            // Extended segment
+                                        case RECTYPE_EXT_SEG:
+                                            nAddressExtension = DataBuff[0] << 12;
+                                            nAddressExtension += DataBuff[1] << 4;
+                                            break;
+
+                                            // Start segment (not supported)
+                                        case RECTYPE_START_SEG:
+                                            m_sListErrWarn.append(THexFileMessage(nCurrInputLine, QString("Record for start adress not supported\n")));
+                                            readHexError = true;
+                                            break;
+
+                                            // Linear address record (upper 16Bit of linear address)
+                                        case RECTYPE_EXT_ADR:
+                                            nAddressExtension = DataBuff[0] << 24;
+                                            nAddressExtension += DataBuff[1] << 16;
+                                            break;
+
+                                            // Start address (not supported)
+                                        case RECTYPE_START_ADR:
+                                            m_sListErrWarn.append(THexFileMessage(nCurrInputLine, QString("Record for start adress not supported\n")));
+                                            readHexError = true;
+                                            break;
+
+                                        case RECTYPE_UNDEF:
+                                            break;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        // Error Msg
+                                        m_sListErrWarn.append(THexFileMessage(nCurrInputLine, QString("Checksum error ocurred\n")));
+                                        readHexError = true;
+                                    }
+
+                                    // terminat of record
+                                    eHexField = HEX_UNDEF;
+                                    break;
+
+                                case HEX_UNDEF:
+                                    break;
+                                }
+                            }
+
+                            bUpperHexDigit = !bUpperHexDigit;
                         }
                         else
                         {
                             // Error Msg
-
-                            m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Record found after end record\n")));
+                            m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Invalid character found in record\n")));
                             readHexError = true;
-
+                            // exit record
+                            eHexField = HEX_UNDEF;
                         }
                     }
                 }
-                else
-                {
-                    // Within a frame all must be hex
-                    if (isHexText(chCurr))
-                    {
-                        // Upper nibble
-                        if (bUpperHexDigit)
-                            chHexDigit[0] = chCurr;
-                        // Lower nibble terminates a byte
-                        else
-                        {
-                            chHexDigit[1] = chCurr;
-                            uchar byteDecoded = Hex2Bin(chHexDigit);
-                            byteCheckSum += byteDecoded;
-                            switch(eHexField)
-                            {
-                            // Keep upper nibble
-                            case HEX_LEN:
-                                // keep data length
-                                nCurrDataLen = byteDecoded;
-                                // next field
-                                eHexField = HEX_ADR0;
-                                break;
-                            case HEX_ADR0:
-                                // keep upper address
-                                nCurrAddress = byteDecoded << 8;
-                                // next field
-                                eHexField = HEX_ADR1;
-                                break;
-                            case HEX_ADR1:
-                                // keep lower address
-                                nCurrAddress += byteDecoded;
-                                // next field
-                                eHexField = HEX_TYP;
-                                break;
-                            case HEX_TYP:
-                                // keep record type
-                                switch(byteDecoded)
-                                {
-                                case 0:
-                                    enCurrRecordType = RECTYPE_DATA;
-                                    break;
-                                case 1:
-                                    enCurrRecordType = RECTYPE_LAST;
-                                    break;
-                                case 2:
-                                    enCurrRecordType = RECTYPE_EXT_SEG;
-                                    break;
-                                case 3:
-                                    enCurrRecordType = RECTYPE_START_SEG;						      break;				                        			          case 4:
-                                    enCurrRecordType = RECTYPE_EXT_ADR;
-                                    break;
-                                case 5:
-                                    enCurrRecordType = RECTYPE_START_ADR;
-                                    break;
-                                    // unkown record type
-                                default:
-                                    // Error Msg
-                                    m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Record has unkwown type\n")));
-                                    readHexError = true;
-                                    eHexField = HEX_UNDEF;
-                                    break;
-                                }
-
-                                // next field
-                                if(nCurrDataLen != 0)
-                                    eHexField = HEX_DATA;
-                                else
-                                    eHexField = HEX_CHK;
-                                break;
-
-                            case HEX_DATA:
-                                // Data
-                                DataBuff[nCurrDataPos] = byteDecoded;
-                                nCurrDataPos++;
-                                // next field
-                                if (nCurrDataPos==nCurrDataLen)
-                                    eHexField = HEX_CHK;
-                                break;
-
-                            case HEX_CHK:
-                                // Test Checksum
-                                if (byteCheckSum == 0)
-                                {
-                                    // The action is depending on record type
-                                    switch (enCurrRecordType)
-                                    {
-                                    // Data
-                                    case RECTYPE_DATA:
-                                    {
-                                        QByteArray byteArray;
-                                        byteArray.resize(nCurrDataLen);
-                                        for (quint32 ByteNo = 0; ByteNo < nCurrDataLen; ByteNo++)
-                                            byteArray[ByteNo] = DataBuff[ByteNo];
-                                        m_ListMemRegions.append(THexFileMemRegion(nAddressExtension+nCurrAddress, byteArray));
-                                        break;
-                                    }
-
-                                        // Last record
-                                    case RECTYPE_LAST:
-                                        bLastReceived = true;
-                                        break;
-
-                                        // Extended segment
-                                    case RECTYPE_EXT_SEG:
-                                        nAddressExtension = DataBuff[0] << 12;
-                                        nAddressExtension += DataBuff[1] << 4;
-                                        break;
-
-                                        // Start segment (not supported)
-                                    case RECTYPE_START_SEG:
-                                        m_sListErrWarn.append(THexFileMessage(nCurrInputLine, QString("Record for start adress not supported\n")));
-                                        readHexError = true;
-                                        break;
-
-                                        // Linear address record (upper 16Bit of linear address)
-                                    case RECTYPE_EXT_ADR:
-                                        nAddressExtension = DataBuff[0] << 24;
-                                        nAddressExtension += DataBuff[1] << 16;
-                                        break;
-
-                                        // Start address (not supported)
-                                    case RECTYPE_START_ADR:
-                                        m_sListErrWarn.append(THexFileMessage(nCurrInputLine, QString("Record for start adress not supported\n")));
-                                        readHexError = true;
-                                        break;
-
-                                    case RECTYPE_UNDEF:
-                                        break;
-                                    }
-
-                                }
-                                else
-                                {
-                                    // Error Msg
-                                    m_sListErrWarn.append(THexFileMessage(nCurrInputLine, QString("Checksum error ocurred\n")));
-                                    readHexError = true;
-                                }
-
-                                // terminat of record
-                                eHexField = HEX_UNDEF;
-                                break;
-
-                            case HEX_UNDEF:
-                                break;
-                            }
-                        }
-
-                        bUpperHexDigit = !bUpperHexDigit;
-                    }
-                    else
-                    {
-                        // Error Msg
-                        m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Invalid character found in record\n")));
-                        readHexError = true;
-                        // exit record
-                        eHexField = HEX_UNDEF;
-                    }
-                }
-            }
         }
         while(nByteRead);
 
