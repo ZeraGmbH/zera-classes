@@ -1,5 +1,6 @@
 #include <QFile>
 #include <QList>
+#include <QDebug>
 
 #include "intelhexfileio_p.h"
 
@@ -112,6 +113,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 #define BUFF_LEN 1024
             char FileBuffer[BUFF_LEN];
             nByteRead = file.readLine(FileBuffer, BUFF_LEN);
+            qDebug() << nByteRead;
             if (nByteRead <= 0) // in case of error conditions
                 nByteRead = 0; // we read nothing
             else

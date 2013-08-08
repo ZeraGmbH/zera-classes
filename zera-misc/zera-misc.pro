@@ -9,6 +9,9 @@ QT       -= gui
 TARGET = zeramisc
 TEMPLATE = lib
 
+CONFIG	+= debug
+QMAKE_CXXFLAGS += -O0
+
 DEFINES += ZERAMISC_LIBRARY
 
 SOURCES += \
