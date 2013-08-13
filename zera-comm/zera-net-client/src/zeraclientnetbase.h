@@ -64,6 +64,11 @@ namespace Zera
     signals:
 
       /**
+       * @brief connected Emitted when the connection is established
+       */
+      void connected();
+
+      /**
        * @brief connectionLost Server is unreachable
        */
       void connectionLost();
