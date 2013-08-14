@@ -9,7 +9,7 @@ namespace Zera
   namespace NetClient
   {
     cClientNetBase::cClientNetBase(QObject *parent) :
-      QObject(parent), d_ptr(new cClientNetBasePrivate())
+      QObject(parent), d_ptr(new cClientNetBasePrivate(this))
     {
 
     }

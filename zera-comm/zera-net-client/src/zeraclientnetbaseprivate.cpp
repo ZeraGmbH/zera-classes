@@ -9,7 +9,8 @@ namespace Zera
 {
   namespace NetClient
   {
-    cClientNetBasePrivate::cClientNetBasePrivate()
+    cClientNetBasePrivate::cClientNetBasePrivate(cClientNetBase *parent)
+      : q_ptr(parent)
     {
     }
 

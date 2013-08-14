@@ -18,9 +18,10 @@ namespace Zera
     {
     private:
       /**
-       * @brief ClientNetBasePrivate This does nothing, look for startNetwork
+       * @brief cClientNetBasePrivate
+       * @param parent
        */
-      cClientNetBasePrivate();
+      cClientNetBasePrivate(cClientNetBase *parent);
 
       /**
        * @brief readClient
@@ -44,6 +45,10 @@ namespace Zera
        */
       cClientNetBase *q_ptr;
 
+      /**
+       * @brief cClientNetBasePrivate DO NOT CALL
+       */
+      cClientNetBasePrivate();
       Q_DECLARE_PUBLIC(cClientNetBase)
     };
   }
