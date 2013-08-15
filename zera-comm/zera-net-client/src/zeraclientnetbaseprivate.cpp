@@ -16,22 +16,27 @@ namespace Zera
 
     QByteArray cClientNetBasePrivate::readClient()
     {
-      QDataStream in(tcpSock);
-      QByteArray message = QByteArray();
-      in.setVersion(QDataStream::Qt_4_0);
-      quint16 expectedSize;
-      in >> expectedSize;
-      if(tcpSock->bytesAvailable()<expectedSize)
+      if(tcpSock->bytesAvailable())
       {
-        qDebug()<<"[zera-net-client] Error bytes not available";
+        QByteArray retVal;
+        QDataStream in(tcpSock);
+        in.setVersion(QDataStream::Qt_4_0);
+        quint16 expectedSize;
+        in >> expectedSize;
+        if(tcpSock->bytesAvailable()<expectedSize)
+        {
+          //error
+          qWarning("[zera-net-client]Error bytes not available");
+        }
+        else
+        {
+          in >> retVal;
+          //qDebug()<<"[zera-net-client]Receiving message:"<<QString(retVal.toBase64());
+        }
+        return retVal;
       }
       else
-      {
-        Q_Q(cClientNetBase);
-        in >> message;
-        q->messageAvailable(message);
-      }
-      return message;
+        return QByteArray();
     }
 
     void cClientNetBasePrivate::sendByteArray(const QByteArray &bA)
