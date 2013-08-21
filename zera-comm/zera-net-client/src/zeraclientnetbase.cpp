@@ -30,11 +30,11 @@ namespace Zera
       Q_D(cClientNetBase);
 
       d->tcpSock= new QTcpSocket(this);
-      d->tcpSock->connectToHost(ipAddress, port);
       connect(d->tcpSock, SIGNAL(connected()), this, SIGNAL(connected()));
       connect(d->tcpSock, SIGNAL(readyRead()), this, SLOT(newMessage()));
       connect(d->tcpSock, SIGNAL(disconnected()), this, SIGNAL(connectionLost()));
       connect(d->tcpSock, SIGNAL(error(QAbstractSocket::SocketError)), this, SIGNAL(tcpError(QAbstractSocket::SocketError)));
+      d->tcpSock->connectToHost(ipAddress, port);
       d->tcpSock->setSocketOption(QAbstractSocket::KeepAliveOption, true);
     }
 
