@@ -83,7 +83,7 @@ namespace Zera
       /**
        * @brief Loading the XML config file is complete
        */
-      void finishedParsingXML();
+      void finishedParsingXML(bool ok);
 
     protected:
       /**

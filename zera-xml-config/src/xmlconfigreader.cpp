@@ -76,7 +76,7 @@ namespace Zera
       {
         qDebug() << "[zera-xml-config] schema is invalid";
       }
-      emit finishedParsingXML();
+      emit finishedParsingXML(retVal);
       return retVal;
     }
 
@@ -114,7 +114,7 @@ namespace Zera
       {
         qDebug() << "[zera-xml-config] schema is invalid";
       }
-      emit finishedParsingXML();
+      emit finishedParsingXML(retVal);
       return retVal;
     }
 
