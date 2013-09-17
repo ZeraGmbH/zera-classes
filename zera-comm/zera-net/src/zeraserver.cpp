@@ -65,9 +65,12 @@ namespace Zera
       if(QObject::sender()!=0)
       {
         Q_D(cServer);
-        cClient* client =  reinterpret_cast<cClient*>(QObject::sender());
-        d->clients.removeAll(client);
-        client->deleteLater();
+        cClient* client = qobject_cast<cClient*>(QObject::sender());
+        if(client)
+        {
+          d->clients.removeAll(client);
+          client->deleteLater();
+        }
       }
     }
 
