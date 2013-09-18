@@ -60,7 +60,7 @@ namespace Zera
         QByteArray retVal;
         QDataStream in(d->clSocket);
         in.setVersion(QDataStream::Qt_4_0);
-        quint16 expectedSize;
+        qint64 expectedSize;
         in >> expectedSize;
         if(d->clSocket->bytesAvailable()<expectedSize)
         {
@@ -109,10 +109,10 @@ namespace Zera
       // serialize the ProtobufMessage to send it
       QDataStream out(&block, QIODevice::WriteOnly);
       out.setVersion(QDataStream::Qt_4_0);
-      out << (quint16)0;
+      out << (qint64)0;
       out << message;
       out.device()->seek(0);
-      out << (quint16)(block.size() - sizeof(quint16));
+      out << (qint64)(block.size() - sizeof(qint64));
 
       d->clSocket->write(block);
     }
