@@ -21,7 +21,7 @@ namespace Zera
         QByteArray retVal;
         QDataStream in(tcpSock);
         in.setVersion(QDataStream::Qt_4_0);
-        qint64 expectedSize;
+        qint32 expectedSize;
         in >> expectedSize;
         if(tcpSock->bytesAvailable()<expectedSize)
         {
@@ -44,11 +44,11 @@ namespace Zera
       QByteArray block;
       QDataStream out(&block, QIODevice::WriteOnly);
       out.setVersion(QDataStream::Qt_4_0);
-      out << (qint64)0;
+      out << (qint32)0;
       //qDebug()<<"[zera-net-client] Sending message:"<<QString(bA.toBase64());
       out << bA;
       out.device()->seek(0);
-      out << (qint64)(block.size() - sizeof(qint64));
+      out << (qint32)(block.size() - sizeof(qint32));
 
       if(!tcpSock->write(block))
       {
