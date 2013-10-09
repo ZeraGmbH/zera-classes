@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QBuffer>
 #include <QIODevice>
+#include <QStringList>
 
 #include <QDebug>
 
@@ -113,13 +114,13 @@ namespace Zera
       return retVal;
     }
 
-    QVariant cReader::getValue(QString key)
+    QString cReader::getValue(QString key)
     {
       Q_D(cReader);
       return d->data.value(key);
     }
 
-    bool cReader::setValue(QString key, QVariant value)
+    bool cReader::setValue(QString key, QString value)
     {
       Q_D(cReader);
       bool retVal=false;
@@ -193,7 +194,7 @@ namespace Zera
           }
         }
         oldParents = parents;
-        stream.writeTextElement(elementName, d->data.values().at(elemCount).toString());
+        stream.writeTextElement(elementName, d->data.values().at(elemCount));
       }
       stream.writeEndDocument();
 
@@ -204,48 +205,43 @@ namespace Zera
     {
       bool retVal = true;
       QXmlStreamReader xmlReader;
-      QList<QString> parents;
+      QStringList parents;
 
       xmlReader.setDevice(xmlData);
 
-      while(!xmlReader.atEnd() && !xmlReader.hasError())
+      for(QXmlStreamReader::TokenType token; (!xmlReader.atEnd() && !xmlReader.hasError()); token = xmlReader.readNext())
       {
-        QString fullPath;
-
-        //read next
-        QXmlStreamReader::TokenType token = xmlReader.readNext();
-
-        // we read the actual data that stands between a start and an end node
-        if(token == QXmlStreamReader::Characters)
+        switch(token)
         {
-          QVariant nodeData;
-
-          // ignore whitespaces
-          if(!xmlReader.text().toString().isEmpty()&&!xmlReader.isWhitespace())
+          // we read the actual data that stands between a start and an end node
+          case QXmlStreamReader::Characters:
           {
-            Q_D(cReader);
-            nodeData=xmlReader.text().toString();
-
-            //add the first parent if it exists, if not set fullPath to an empty QString
-            parents.isEmpty() ? fullPath = "" : fullPath = parents.first();
-
-            for(int pCount=1; pCount < parents.count(); pCount++)
+            QString fullPath = "";
+            // ignore whitespaces
+            if(!xmlReader.text().isEmpty()&&!xmlReader.isWhitespace())
             {
-              fullPath = QString("%1:%2").arg(fullPath).arg(parents.at(pCount));
+              Q_D(cReader);
+              fullPath = parents.join(":");
+
+              d->data.insert(fullPath, xmlReader.text().toString());
+              valueChanged(fullPath);
             }
-            d->data.insert(fullPath, nodeData);
-            valueChanged(fullPath);
+            break;
           }
-        }
-        // add the node name as parent if it is a start node: <text>
-        else if(token == QXmlStreamReader::StartElement)
-        {
-          parents.append(xmlReader.name().toString());
-        }
-        // remove the last node from the parents if it is and end node: </text>
-        else if(token == QXmlStreamReader::EndElement)
-        {
-          parents.removeLast();
+            // add the node name as parent if it is a start node: <text>
+          case QXmlStreamReader::StartElement:
+          {
+            parents.append(xmlReader.name().toString());
+            break;
+          }
+            // remove the last node from the parents if it is and end node: </text>
+          case QXmlStreamReader::EndElement:
+          {
+            parents.removeLast();
+            break;
+          }
+          default:
+            break;
         }
       }
 

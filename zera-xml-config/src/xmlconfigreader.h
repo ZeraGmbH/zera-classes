@@ -53,9 +53,9 @@ namespace Zera
       /**
        * @brief Retrieves a value from the configuration map
        * @param key The map key where the value has been stored
-       * @return QVariant value
+       * @return QString value
        */
-      QVariant getValue(QString key);
+      QString getValue(QString key);
 
       /**
        * @brief Sets config values
@@ -64,7 +64,7 @@ namespace Zera
        *
        * @return true for success
        */
-      bool setValue(QString key, QVariant value);
+      bool setValue(QString key, QString value);
 
       /**
        * @brief Exports the QHash to a XML file format

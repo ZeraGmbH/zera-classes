@@ -2,7 +2,6 @@
 #define XMLCONFIGREADER_PRIVATE_H
 
 #include <QHash>
-#include <QVariant>
 
 
 namespace Zera
@@ -28,7 +27,7 @@ namespace Zera
       /**
        * @brief data Data member holding all config values
        */
-      QHash<QString, QVariant> data;
+      QHash<QString, QString> data;
 
       /**
        * @brief schemaFilePath cached path to the schema file
