@@ -29,15 +29,10 @@ namespace Zera
       if(schemaFile.exists())
       {
         Q_D(cReader);
-        schemaFile.open(QFile::ReadOnly);
-        QXmlSchema tmpSchema;
-        if(tmpSchema.load(&schemaFile,QUrl(filePath)))
-        {
-          /// @todo evaluate wether clearing the data is reasonable
-          d->data.clear();
-          d->schemaFilePath=filePath;
-          retVal = true;
-        }
+        /// @todo evaluate wether clearing the data is reasonable
+        d->data.clear();
+        d->schemaFilePath=filePath;
+        retVal = true;
       }
       return retVal;
     }
