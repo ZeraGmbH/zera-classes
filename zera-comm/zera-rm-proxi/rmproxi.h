@@ -34,7 +34,7 @@ namespace Zera
         static cRMProxi* getInstance();
 
         cInterface* getInterface();
-
+        // keep in mind that caller has to delete interface, otherwise we get a lot of zombies
         /**
          * @brief startNetwork Initializes the network connection and establishes rm connection
          * @param ipAddress
