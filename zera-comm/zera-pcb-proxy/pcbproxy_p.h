@@ -52,8 +52,8 @@ private:
     // information about the interfaces network connection
     QHash<Zera::PCBProxy::cInterfacePrivate*, Zera::NetClient::cClientNetBase*> m_InterfaceHash;
     // information for redirecting
-    QHash<QByteArray, Zera::PCBProxy::cInterfacePrivate*> m_UUIDHash;
-
+    QHash<QByteArray, Zera::PCBProxy::cInterfacePrivate*> m_messageUUIDHash; // per message uuid
+    QHash<Zera::PCBProxy::cInterfacePrivate*, QByteArray> m_clientUUIDHash; // per client uuid
 };
 
 }

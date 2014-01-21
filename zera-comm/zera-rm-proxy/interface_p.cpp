@@ -3,7 +3,7 @@
 
 namespace Zera
 {
-namespace RMProxi
+namespace RMProxy
 {
 
 

@@ -1,11 +1,11 @@
-#ifndef RMPROXI_H
-#define RMPROXI_H
+#ifndef RMPROXY_H
+#define RMPROXY_H
 
 #include <QObject>
 
 
-#include "rmproxi_global.h"
-#include "rmproxi_p.h"
+#include "rmproxy_global.h"
+#include "rmproxy_p.h"
 
 namespace google {
   namespace protobuf {
@@ -15,15 +15,15 @@ namespace google {
 
 namespace Zera
 {
-  namespace RMProxi
+  namespace RMProxy
   {
 
     class cInterface;
 
     /**
-     * @brief The cRMProxi class
+     * @brief The cRMProxy class
      */
-    class RMPROXISHARED_EXPORT cRMProxi: public QObject
+    class RMPROXYSHARED_EXPORT cRMProxy: public QObject
     {
         Q_OBJECT
 
@@ -31,7 +31,7 @@ namespace Zera
         /**
           @brief See [P.157+ Design patterns Gang of Four]
           */
-        static cRMProxi* getInstance();
+        static cRMProxy* getInstance();
 
         cInterface* getInterface();
         // keep in mind that caller has to delete interface, otherwise we get a lot of zombies
@@ -46,20 +46,20 @@ namespace Zera
       /**
         @brief The class is a Singleton so the constructor is protected [P.157+ Design patterns Gang of Four]
         */
-      explicit cRMProxi(QObject* parent = 0);
-      ~cRMProxi();
+      explicit cRMProxy(QObject* parent = 0);
+      ~cRMProxy();
 
       /**
         @b D'pointer to the private library internal structure
         this is used to hide the internal structure, and thus make the library ABI safe
       */
-      cRMProxiPrivate *d_ptr;
+      cRMProxyPrivate *d_ptr;
 
     private:
-      Q_DISABLE_COPY(cRMProxi)
-      Q_DECLARE_PRIVATE(cRMProxi)
+      Q_DISABLE_COPY(cRMProxy)
+      Q_DECLARE_PRIVATE(cRMProxy)
     };
   }
 }
 
-#endif // RMPROXI_H
+#endif // RMPROXY_H

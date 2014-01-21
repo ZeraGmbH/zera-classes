@@ -5,12 +5,12 @@
 #include <QString>
 #include <netmessages.pb.h>
 
-#include "rmproxi_global.h"
+#include "rmproxy_global.h"
 #include "interface.h"
 
 namespace Zera
 {
-namespace RMProxi
+namespace RMProxy
 {
 
 

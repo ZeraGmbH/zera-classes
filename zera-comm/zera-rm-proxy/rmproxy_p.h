@@ -1,5 +1,5 @@
-#ifndef RMPROXI_P_H
-#define RMPROXI_P_H
+#ifndef RMPROXY_P_H
+#define RMPROXY_P_H
 
 #include <QObject>
 #include <QHash>
@@ -8,10 +8,10 @@
 #include <zeraclientnetbase.h>
 
 
-#include "rmproxi_global.h"
+#include "rmproxy_global.h"
 
 
-const QString proxiName = "rmProxi";
+const QString proxyName = "rmProxy";
 
 
 namespace google {
@@ -25,42 +25,42 @@ class QState;
 
 namespace Zera
 {
-namespace RMProxi
+namespace RMProxy
 {
 
-class cRMProxi;
+class cRMProxy;
 class cInterface;
 class cInterfacePrivate;
 
 
-class cRMProxiPrivate : public Zera::NetClient::cClientNetBase
+class cRMProxyPrivate : public Zera::NetClient::cClientNetBase
 {
 
 protected:
-    cRMProxiPrivate(cRMProxi *parent);
-    ~cRMProxiPrivate(){}
+    cRMProxyPrivate(cRMProxy *parent);
+    ~cRMProxyPrivate(){}
 
     cInterface* getInterface();
 
     /**
        * @brief singletonInstance
        */
-    static cRMProxi* singletonInstance;
+    static cRMProxy* singletonInstance;
 
     /**
        * @brief q_ptr See Q_DECLARE_PUBLIC
        */
-    cRMProxi *q_ptr;
+    cRMProxy *q_ptr;
 
 protected slots:
     void transferCommand(ProtobufMessage::NetMessage *message);
     void receiveMessage(QByteArray message);
 
 private:
-    Q_DISABLE_COPY(cRMProxiPrivate)
-    Q_DECLARE_PUBLIC(cRMProxi)
+    Q_DISABLE_COPY(cRMProxyPrivate)
+    Q_DECLARE_PUBLIC(cRMProxy)
 
-    QHash<QByteArray, Zera::RMProxi::cInterfacePrivate*> m_UUIDHash;
+    QHash<QByteArray, Zera::RMProxy::cInterfacePrivate*> m_UUIDHash;
     QStateMachine* m_pStateMachine;
     QState* m_pStateConnect;
     QState* m_pStateIdent;
@@ -73,4 +73,4 @@ private slots:
 
 }
 }
-#endif // RMPROXI_P_H
+#endif // RMPROXY_P_H

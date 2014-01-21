@@ -3,19 +3,19 @@
 #include <QStateMachine>
 #include <QState>
 
-#include "rmproxi_p.h"
+#include "rmproxy_p.h"
 #include "interface_p.h"
 
 
 namespace Zera
 {
-namespace RMProxi
+namespace RMProxy
 {
 
 
-cRMProxi* cRMProxiPrivate::singletonInstance=0;
+cRMProxy* cRMProxyPrivate::singletonInstance=0;
 
-cRMProxiPrivate::cRMProxiPrivate(cRMProxi *parent):
+cRMProxyPrivate::cRMProxyPrivate(cRMProxy *parent):
     q_ptr(parent)
 {
     m_pStateMachine = new QStateMachine(this);
@@ -33,7 +33,7 @@ cRMProxiPrivate::cRMProxiPrivate(cRMProxi *parent):
 }
 
 
-cInterface *cRMProxiPrivate::getInterface()
+cInterface *cRMProxyPrivate::getInterface()
 {
     cInterfacePrivate* piface = new cInterfacePrivate(this);
     connect(piface, SIGNAL(rmCommand(ProtobufMessage::NetMessage*)), this, SLOT(transferCommand(ProtobufMessage::NetMessage*)));
@@ -41,7 +41,7 @@ cInterface *cRMProxiPrivate::getInterface()
 }
 
 
-void cRMProxiPrivate::transferCommand(ProtobufMessage::NetMessage *message)
+void cRMProxyPrivate::transferCommand(ProtobufMessage::NetMessage *message)
 {
     QUuid uuid;
     QByteArray key;
@@ -54,7 +54,7 @@ void cRMProxiPrivate::transferCommand(ProtobufMessage::NetMessage *message)
 }
 
 
-void cRMProxiPrivate::receiveMessage(QByteArray message)
+void cRMProxyPrivate::receiveMessage(QByteArray message)
 {
     ProtobufMessage::NetMessage *netMessage = new ProtobufMessage::NetMessage();
     readMessage(netMessage, message);
@@ -62,15 +62,15 @@ void cRMProxiPrivate::receiveMessage(QByteArray message)
     QByteArray key(netMessage->uuid().c_str(), netMessage->uuid().size());
     if (m_UUIDHash.contains(key))
     {
-        Zera::RMProxi::cInterfacePrivate* iface = m_UUIDHash.take(key);
+        Zera::RMProxy::cInterfacePrivate* iface = m_UUIDHash.take(key);
         iface->transferAnswer(netMessage);
     }
 }
 
 
-void cRMProxiPrivate::entryIdent()
+void cRMProxyPrivate::entryIdent()
 {
-    QString ident = proxiName;
+    QString ident = proxyName;
 
     ProtobufMessage::NetMessage envelope;
     ProtobufMessage::NetMessage::NetReply* message = envelope.mutable_reply();

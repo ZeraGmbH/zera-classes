@@ -4,9 +4,9 @@
 
 
 TEMPLATE = lib
-TARGET = zerarmproxi
+TARGET = zerarmproxy
 
-include(rmproxi.user.pri)
+include(rmproxy.user.pri)
 
 DEPENDPATH += . src
 INCLUDEPATH += .  
@@ -15,7 +15,7 @@ LIBS +=  -lzeranetclient
 LIBS +=  -lprotobuf
 LIBS +=  -lzera-resourcemanager-protobuf
 
-DEFINES += ZERA_RMPROXI_LIBRARY
+DEFINES += ZERA_RMPROXY_LIBRARY
 
 # Input
 #HEADERS += src/...
@@ -29,17 +29,17 @@ header_files.path = /usr/include/zera-classes/rmproxi
 INSTALLS += header_files
 
 HEADERS += \
-    rmproxi.h \
-    rmproxi_global.h \
-    rmproxi_p.h \
     interface.h \
-    interface_p.h
+    interface_p.h \
+    rmproxy.h \
+    rmproxy_p.h \
+    rmproxy_global.h
 
 OTHER_FILES +=
 
 SOURCES += \
-    rmproxi.cpp \
-    rmproxi_p.cpp \
-    interface_p.cpp
+    interface_p.cpp \
+    rmproxy.cpp \
+    rmproxy_p.cpp
 
 QT += network

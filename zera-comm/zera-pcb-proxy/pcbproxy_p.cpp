@@ -21,6 +21,9 @@ cPCBProxyPrivate::cPCBProxyPrivate(cPCBProxy *parent):
 
 cInterface *cPCBProxyPrivate::getInterface(quint16 port)
 {
+    QUuid uuid;
+    QByteArray binUUid;
+
     if (!m_PCBServerHash.contains(port)) // we do not have a connection yet
     {
         Zera::NetClient::cClientNetBase* netclient = new Zera::NetClient::cClientNetBase(this);
@@ -31,6 +34,11 @@ cInterface *cPCBProxyPrivate::getInterface(quint16 port)
     Zera::NetClient::cClientNetBase* netclient = m_PCBServerHash[port];
     cInterfacePrivate* piface = new cInterfacePrivate(this);
     m_InterfaceHash[piface] = netclient;
+
+    // we use a per client uuid
+    uuid.createUuid();
+    binUUid = uuid.toRfc4122();
+    m_clientUUIDHash[piface] = binUUid;
 
     connect(piface, SIGNAL(pcbCommand(ProtobufMessage::NetMessage*)), this, SLOT(transferCommand(ProtobufMessage::NetMessage*)));
     connect(netclient, SIGNAL(messageAvailable(QByteArray)), this, SLOT(receiveMessage(QByteArray)));
@@ -47,14 +55,16 @@ void cPCBProxyPrivate::setIPAdress(QString ipAddress)
 
 void cPCBProxyPrivate::transferCommand(ProtobufMessage::NetMessage *message)
 {
-    QUuid uuid;
-    QByteArray key;
+    // QUuid uuid;
+    //QByteArray key;
 
-    uuid.createUuid();
-    key = uuid.toRfc4122();
-    message->set_uuid(key);
+    //uuid.createUuid();
+    //key = uuid.toRfc4122();
+    //message->set_uuid(key);
     cInterfacePrivate* iface = qobject_cast<cInterfacePrivate*>(sender());
-    m_UUIDHash[key] = iface;
+    QByteArray binUUid = m_clientUUIDHash[iface];
+    message->set_uuid(binUUid);
+    m_messageUUIDHash[binUUid] = iface;
     m_InterfaceHash[iface]->sendMessage(message);
 }
 
@@ -69,9 +79,9 @@ void cPCBProxyPrivate::receiveMessage(QByteArray message)
     it.value()->readMessage(netMessage, message);
 
     QByteArray key(netMessage->uuid().c_str(), netMessage->uuid().size());
-    if (m_UUIDHash.contains(key))
+    if (m_messageUUIDHash.contains(key))
     {
-        Zera::PCBProxy::cInterfacePrivate* iface = m_UUIDHash.take(key);
+        Zera::PCBProxy::cInterfacePrivate* iface = m_messageUUIDHash.take(key);
         iface->transferAnswer(netMessage);
     }
 }

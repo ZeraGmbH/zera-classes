@@ -3,12 +3,12 @@
 
 #include <QObject>
 
-#include "rmproxi_global.h"
+#include "rmproxy_global.h"
 
 
 namespace Zera
 {
-namespace RMProxi
+namespace RMProxy
 {
 
 enum replies
@@ -21,7 +21,7 @@ enum replies
 };
 
 
-class RMPROXISHARED_EXPORT cInterface: public QObject
+class RMPROXYSHARED_EXPORT cInterface: public QObject
 {
     Q_OBJECT
 
