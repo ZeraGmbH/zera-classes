@@ -25,13 +25,7 @@ void cInterfacePrivate::addResource(QString type, QString name, int n, QString d
             .arg(description)
             .arg(port);
 
-    ProtobufMessage::NetMessage envelope;
-    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
-
-    message->set_command(cmd.toStdString());
-    message->set_parameter(par.toStdString());
-
-    emit rmCommand(&envelope);
+    sendCommand(cmd, par);
 }
 
 
@@ -44,13 +38,7 @@ void cInterfacePrivate::removeResource(QString type, QString name)
             .arg(type)
             .arg(name);
 
-    ProtobufMessage::NetMessage envelope;
-    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
-
-    message->set_command(cmd.toStdString());
-    message->set_parameter(par.toStdString());
-
-    emit rmCommand(&envelope);
+    sendCommand(cmd, par);
 }
 
 
@@ -59,13 +47,7 @@ void cInterfacePrivate::getResourceTypes()
     QString cmd;
 
     cmd = "RES:TYPE:CAT?";
-
-    ProtobufMessage::NetMessage envelope;
-    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
-
-    message->set_command(cmd.toStdString());
-
-    emit rmCommand(&envelope);
+    sendCommand(cmd);
 }
 
 
@@ -74,13 +56,7 @@ void cInterfacePrivate::getResources(QString type)
     QString cmd;
 
     cmd = QString("RES:%1:CAT?").arg(type);
-
-    ProtobufMessage::NetMessage envelope;
-    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
-
-    message->set_command(cmd.toStdString());
-
-    emit rmCommand(&envelope);
+    sendCommand(cmd);
 }
 
 
@@ -89,13 +65,7 @@ void cInterfacePrivate::getResourceInfo(QString type, QString name)
     QString cmd;
 
     cmd = QString("RES:%1:%2?").arg(type).arg(name);
-
-    ProtobufMessage::NetMessage envelope;
-    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
-
-    message->set_command(cmd.toStdString());
-
-    emit rmCommand(&envelope);
+    sendCommand(cmd);
 }
 
 
@@ -105,14 +75,7 @@ void cInterfacePrivate::setResource(QString type, QString name, int n)
 
     cmd = QString("RES:%1:%2?").arg(type).arg(name);
     par = QString("SET;%1;").arg(n);
-
-    ProtobufMessage::NetMessage envelope;
-    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
-
-    message->set_command(cmd.toStdString());
-    message->set_parameter(par.toStdString());
-
-    emit rmCommand(&envelope);
+    sendCommand(cmd, par);
 }
 
 
@@ -122,14 +85,7 @@ void cInterfacePrivate::freeResource(QString type, QString name)
 
     cmd = QString("RES:%1:%2?").arg(type).arg(name);
     par = "FREE";
-
-    ProtobufMessage::NetMessage envelope;
-    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
-
-    message->set_command(cmd.toStdString());
-    message->set_parameter(par.toStdString());
-
-    emit rmCommand(&envelope);
+    sendCommand(cmd, par);
 }
 
 
@@ -137,12 +93,38 @@ void cInterfacePrivate::transferAnswer(ProtobufMessage::NetMessage *message)
 {
     if (message->has_reply())
     {
-        int n = message->reply().rtype();
-        emit rmReply(replies(n));
         if (message->reply().has_body())
             emit rmAnswer(QString::fromStdString(message->reply().body()));
+        else
+        {
+            int n = message->reply().rtype();
+            emit rmReply(replies(n));
+        }
     }
 }
+
+
+void cInterfacePrivate::sendCommand(QString cmd)
+{
+    ProtobufMessage::NetMessage envelope;
+    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
+
+    message->set_command(cmd.toStdString());
+    emit rmCommand(&envelope);
+}
+
+
+void cInterfacePrivate::sendCommand(QString cmd, QString par)
+{
+    ProtobufMessage::NetMessage envelope;
+    ProtobufMessage::NetMessage::ScpiCommand* message = envelope.mutable_scpi();
+
+    message->set_command(cmd.toStdString());
+    message->set_parameter(par.toStdString());
+    emit rmCommand(&envelope);
+}
+
+
 
 }
 }
