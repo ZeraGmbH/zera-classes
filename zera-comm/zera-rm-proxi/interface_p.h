@@ -33,6 +33,10 @@ public:
 
 signals:
     void rmCommand(ProtobufMessage::NetMessage *message);
+
+private:
+    void sendCommand(QString cmd);
+    void sendCommand(QString cmd, QString par);
 };
 
 
