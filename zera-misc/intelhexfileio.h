@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "zera-misc_global.h"
+#include "zera_misc_global.h"
 
 
 class cIntelHexFileIOPrivate; // forward

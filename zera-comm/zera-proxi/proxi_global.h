@@ -1,0 +1,12 @@
+#ifndef ZERAPROXI_GLOBAL_H
+#define ZERAPROXI_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(ZERAPROXI_LIBRARY)
+#  define ZERAPROXISHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define ZERAPROXISHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // ZERAPROXI_GLOBAL_H

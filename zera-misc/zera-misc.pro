@@ -5,6 +5,9 @@
 #-------------------------------------------------
 
 QT       -= gui
+QT       += network
+
+include(misc.user.pri)
 
 TARGET = zeramisc
 TEMPLATE = lib
@@ -16,12 +19,33 @@ DEFINES += ZERAMISC_LIBRARY
 
 SOURCES += \
     intelhexfileio.cpp \
-    intelhexfileio_p.cpp
+    intelhexfileio_p.cpp \
+    ethadress.cpp \
+    ethadress_p.cpp \
+    pcbinterface.cpp \
+    pcbinterface_p.cpp \
+    interface_p.cpp \
+    dspinterface.cpp \
+    dspinterface_p.cpp \
+    dspmeasdata.cpp \
+    rminterface.cpp \
+    rminterface_p.cpp
 
 HEADERS +=\
-    zera-misc_global.h \
     intelhexfileio.h \
-    intelhexfileio_p.h
+    intelhexfileio_p.h \
+    ethadress.h \
+    ethadress_p.h \
+    zera_misc_global.h \
+    pcbinterface.h \
+    pcbinterface_p.h \
+    interface_p.h \
+    dspinterface.h \
+    dspinterface_p.h \
+    dspmeasdata.h \
+    dspvar.h \
+    rminterface.h \
+    rminterface_p.h
 
 target.path = /usr/lib
 INSTALLS += target

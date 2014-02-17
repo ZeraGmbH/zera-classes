@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "zera-misc_global.h"
+#include "zera_misc_global.h"
 
 struct THexFileMemRegion
 {
@@ -26,7 +26,7 @@ struct THexFileMessage
     ulong nLineNo;
     QString sMsgText;				// either string
     // methods
-    THexFileMessage(){};
+    THexFileMessage(){}
     THexFileMessage(ulong _nLineNo, const QString& _sMsgText);
 };
 
@@ -44,7 +44,7 @@ public:
       @b Initialise the const variables
       */
     cIntelHexFileIOPrivate();
-    virtual ~cIntelHexFileIOPrivate(){};
+    virtual ~cIntelHexFileIOPrivate(){}
     /**
       @b Read the entire file and parse for memory regions.
       @param fileName is the files full path name.
