@@ -161,6 +161,13 @@ cDspMeasData* cDSPInterface::getMemHandle(QString name, DSPDATA::DspSegType segt
 }
 
 
+void cDSPInterface::deleteDSPMemHandle(cDspMeasData *memhandle)
+{
+    Q_D(cDSPInterface);
+    d->deleteDSPMemHandle(memhandle);
+}
+
+
 void cDSPInterface::addVarItem(cDspMeasData *memgroup, cDspVar *var)
 {
     Q_D(cDSPInterface);

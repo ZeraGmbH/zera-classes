@@ -4,9 +4,17 @@
 #include <QObject>
 #include <QAbstractSocket>
 #include <QVariant>
-#include <proxiclient.h>
 
 #include "zera_misc_global.h"
+
+namespace Zera
+{
+namespace Proxi
+{
+    class cProxiClient;
+}
+}
+
 
 namespace Zera
 {

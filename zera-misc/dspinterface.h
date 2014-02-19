@@ -4,13 +4,21 @@
 #include <QObject>
 #include <QAbstractSocket>
 #include <QVariant>
-#include <proxiclient.h>
 
 #include "zera_misc_global.h"
 #include "ethadress.h"
 #include "dspmeasdata.h"
 
 class cDspVar;
+
+
+namespace Zera
+{
+namespace Proxi
+{
+    class cProxiClient;
+}
+}
 
 
 namespace Zera
@@ -50,6 +58,7 @@ public:
     virtual void addCycListItem(QString cmd); // appends new command to cyclic list
     virtual void addIntListItem(QString cmd); // same for interrupt list
     virtual cDspMeasData* getMemHandle(QString name, DSPDATA::DspSegType segtype=DSPDATA::sGlobal); // init a new memory group and return handle
+    virtual void deleteDSPMemHandle(cDspMeasData* memhandle);
     virtual void addVarItem(cDspMeasData* memgroup,cDspVar* var); // append a new dsp var to memory group
     virtual quint32 activateInterface(); // load var- and cmdlists to dsp (starts theprogram on dsp)
     virtual quint32 deactivateInterface(); // unload ...

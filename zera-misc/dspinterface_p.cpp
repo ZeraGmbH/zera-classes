@@ -236,6 +236,17 @@ cDspMeasData* cDSPInterfacePrivate::getMemHandle(QString name, DSPDATA::DspSegTy
 }
 
 
+void cDSPInterfacePrivate::deleteDSPMemHandle(cDspMeasData *memhandle)
+{
+    if (m_DspMemoryDataList.contains(memhandle))
+    {
+         int index = m_DspMemoryDataList.indexOf(memhandle);
+         cDspMeasData* pdmd = m_DspMemoryDataList.takeAt(index);
+         delete pdmd;
+    }
+}
+
+
 void cDSPInterfacePrivate::addVarItem(cDspMeasData *memgroup, cDspVar *var)
 {
     memgroup->addVarItem(var);
