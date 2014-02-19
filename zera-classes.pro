@@ -9,5 +9,5 @@ SUBDIRS     = \
             zera-dev \
             zera-misc \
             zera-xml-config \
-    zera-comm/zera-proxi
+            zera-comm/zera-proxi
 
