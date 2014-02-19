@@ -1,6 +1,7 @@
 #include "proxiclient_p.h"
 #include "proxiclient.h"
 #include "proxi.h"
+#include "proxi_p.h"
 
 namespace Zera
 {

@@ -2,10 +2,9 @@
 #define PROXI_H
 
 #include <QObject>
-#include <netmessages.pb.h>
 
 #include "proxi_global.h"
-#include "proxi_p.h"
+
 
 
 namespace Zera

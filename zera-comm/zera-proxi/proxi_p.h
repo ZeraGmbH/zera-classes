@@ -5,6 +5,7 @@
 #include <QHash>
 #include <QString>
 #include <zeraclientnetbase.h>
+#include <netmessages.pb.h>
 
 #include "proxi.h"
 
