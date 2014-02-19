@@ -5,7 +5,7 @@
 #include <QAbstractSocket>
 #include <QHash>
 #include <QVariant>
-#include <proxiclient.h>
+#include <proxyclient.h>
 #include <netmessages.pb.h>
 
 #include "zera_misc_global.h"
@@ -41,7 +41,7 @@ protected:
     QVariant returnReply(int reply);
 
     QHash<quint32, int> m_MsgNrCmdList;
-    Zera::Proxi::cProxiClient *m_pClient;
+    Zera::Proxy::cProxyClient *m_pClient;
 
 protected slots:
     virtual void receiveAnswer(ProtobufMessage::NetMessage *message) = 0;

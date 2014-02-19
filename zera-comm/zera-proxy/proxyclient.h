@@ -1,22 +1,22 @@
-#ifndef PROXICLIENT_H
-#define PROXICLIENT_H
+#ifndef PROXYCLIENT_H
+#define PROXYCLIENT_H
 
 #include <QObject>
 #include <QAbstractSocket>
 #include <netmessages.pb.h>
 
-#include "proxi_global.h"
+#include "proxy_global.h"
 
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
 
-class cProxiClientPrivate;
+class cProxyClientPrivate;
 
 
-class ZERAPROXISHARED_EXPORT cProxiClient: public QObject
+class ZERAPROXYSHARED_EXPORT cProxyClient: public QObject
 {
     Q_OBJECT
 
@@ -36,4 +36,4 @@ signals:
 }
 }
 
-#endif // PROXICLIENT_H
+#endif // PROXYCLIENT_H

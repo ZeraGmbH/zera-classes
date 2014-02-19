@@ -13,9 +13,9 @@ QT_END_NAMESPACE
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
-    class cProxi;
+    class cProxy;
 }
 }
 
@@ -29,7 +29,7 @@ namespace ZeraModules
   {
     Q_OBJECT
   public:
-    explicit VirtualModule(Zera::Proxi::cProxi*, VeinPeer*, QObject *qObjParent=0) : QObject(qObjParent) {}
+    explicit VirtualModule(Zera::Proxy::cProxy*, VeinPeer*, QObject *qObjParent=0) : QObject(qObjParent) {}
     virtual ~VirtualModule() {}
     virtual QList<const QState*> getActualStates()=0; // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData)=0; // here we set configuration and parameters

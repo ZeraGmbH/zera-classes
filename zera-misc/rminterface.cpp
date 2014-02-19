@@ -13,7 +13,7 @@ cRMInterface::cRMInterface()
 }
 
 
-void cRMInterface::setClient(Proxi::cProxiClient *client)
+void cRMInterface::setClient(Proxy::cProxyClient *client)
 {
     Q_D(cRMInterface);
     return d->setClient(client);

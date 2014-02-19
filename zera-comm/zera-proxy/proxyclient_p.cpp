@@ -1,35 +1,35 @@
-#include "proxiclient_p.h"
-#include "proxiclient.h"
-#include "proxi.h"
-#include "proxi_p.h"
+#include "proxyclient_p.h"
+#include "proxyclient.h"
+#include "proxy.h"
+#include "proxy_p.h"
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
 
-cProxiClientPrivate::cProxiClientPrivate(cProxiPrivate* proxi)
-    :m_pProxi(proxi)
+cProxyClientPrivate::cProxyClientPrivate(cProxyPrivate* proxy)
+    :m_pProxy(proxy)
 {
-    setParent(proxi);
+    setParent(proxy);
 }
 
 
-void cProxiClientPrivate::transmitAnswer(ProtobufMessage::NetMessage *message)
+void cProxyClientPrivate::transmitAnswer(ProtobufMessage::NetMessage *message)
 {
     emit answerAvailable(message);
 }
 
 
-void cProxiClientPrivate::transmitError(QAbstractSocket::SocketError errorCode)
+void cProxyClientPrivate::transmitError(QAbstractSocket::SocketError errorCode)
 {
     emit tcpError(errorCode);
 }
 
 
-quint32 cProxiClientPrivate::transmitCommand(ProtobufMessage::NetMessage *message)
+quint32 cProxyClientPrivate::transmitCommand(ProtobufMessage::NetMessage *message)
 {
-    return m_pProxi->transmitCommand(this, message);
+    return m_pProxy->transmitCommand(this, message);
 }
 
 }

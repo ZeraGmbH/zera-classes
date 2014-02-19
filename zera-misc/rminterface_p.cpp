@@ -15,7 +15,7 @@ cRMInterfacePrivate::cRMInterfacePrivate(cRMInterface *iface)
 }
 
 
-void cRMInterfacePrivate::setClient(Proxi::cProxiClient *client)
+void cRMInterfacePrivate::setClient(Proxy::cProxyClient *client)
 {
     m_pClient = client;
     connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));

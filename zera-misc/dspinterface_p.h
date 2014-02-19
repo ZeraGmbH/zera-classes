@@ -50,7 +50,7 @@ class cDSPInterfacePrivate: public cInterfacePrivate
 
 public:
     cDSPInterfacePrivate(cDSPInterface* iface);
-    virtual void setClient(Zera::Proxi::cProxiClient *client);
+    virtual void setClient(Zera::Proxy::cProxyClient *client);
     virtual quint32 bootDsp();
     virtual quint32 resetDsp();
     virtual quint32 setDSPBootPath(QString path);

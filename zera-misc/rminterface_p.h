@@ -34,7 +34,7 @@ class cRMInterfacePrivate: public cInterfacePrivate
 
 public:
     cRMInterfacePrivate(cRMInterface* iface);
-    virtual void setClient(Zera::Proxi::cProxiClient *client);
+    virtual void setClient(Zera::Proxy::cProxyClient *client);
     virtual quint32 rmIdent(QString name);
     virtual quint32 addResource(QString type, QString name, int n, QString description, quint16 port);
     virtual quint32 removeResource(QString type, QString name);

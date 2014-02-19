@@ -14,7 +14,7 @@ cDSPInterface::cDSPInterface()
 }
 
 
-void cDSPInterface::setClient(Proxi::cProxiClient *client)
+void cDSPInterface::setClient(Proxy::cProxyClient *client)
 {
     Q_D(cDSPInterface);
     return d->setClient(client);

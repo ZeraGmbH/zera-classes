@@ -14,7 +14,7 @@ cDSPInterfacePrivate::cDSPInterfacePrivate(cDSPInterface *iface)
 }
 
 
-void cDSPInterfacePrivate::setClient(Proxi::cProxiClient *client)
+void cDSPInterfacePrivate::setClient(Proxy::cProxyClient *client)
 {
     m_pClient = client;
     connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));

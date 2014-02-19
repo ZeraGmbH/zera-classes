@@ -1,50 +1,50 @@
-#include "proxi.h"
-#include "proxi_p.h"
+#include "proxy.h"
+#include "proxy_p.h"
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
 
-cProxi* cProxi::getInstance()
+cProxy* cProxy::getInstance()
 {
-    if(cProxiPrivate::singletonInstance == 0)
+    if(cProxyPrivate::singletonInstance == 0)
     {
-        cProxiPrivate::singletonInstance=new cProxi;
+        cProxyPrivate::singletonInstance=new cProxy;
     }
-    return cProxiPrivate::singletonInstance;
+    return cProxyPrivate::singletonInstance;
 }
 
 
-cProxiClient* cProxi::getConnection(QString ipadress, quint16 port)
+cProxyClient* cProxy::getConnection(QString ipadress, quint16 port)
 {
-    Q_D(cProxi);
+    Q_D(cProxy);
     return d->getConnection(ipadress, port);
 }
 
 
-cProxiClient* cProxi::getConnection(quint16 port)
+cProxyClient* cProxy::getConnection(quint16 port)
 {
-    Q_D(cProxi);
+    Q_D(cProxy);
     return d->getConnection(port);
 }
 
 
-void cProxi::setIPAdress(QString ipAddress)
+void cProxy::setIPAdress(QString ipAddress)
 {
-    Q_D(cProxi);
+    Q_D(cProxy);
     d->setIPAdress(ipAddress);
 }
 
 
-cProxi::cProxi(QObject *parent):
-    d_ptr(new Zera::Proxi::cProxiPrivate(this))
+cProxy::cProxy(QObject *parent):
+    d_ptr(new Zera::Proxy::cProxyPrivate(this))
 {
     setParent(parent);
 }
 
 
-cProxi::~cProxi()
+cProxy::~cProxy()
 {
     delete d_ptr;
 }

@@ -7,29 +7,29 @@
 QT       += network
 QT       -= gui
 
-include(proxi.user.pri)
+include(proxy.user.pri)
 
-TARGET = zera-proxi
+TARGET = zera-proxy
 TEMPLATE = lib
 
 LIBS +=  -lzeranetclient
 LIBS +=  -lprotobuf
 
-DEFINES += ZERAPROXI_LIBRARY
+DEFINES += ZERAPROXY_LIBRARY
 
-SOURCES += proxi.cpp \
-    proxi_p.cpp \
-    proxiclient_p.cpp
+SOURCES += proxy.cpp \
+    proxy_p.cpp \
+    proxyclient_p.cpp
 
-HEADERS += proxi.h \
-    proxi_global.h \
-    proxiconnection.h \
-    proxiclient.h \
-    proxiclient_p.h \
-    proxi_p.h
+HEADERS += proxy.h \
+    proxy_global.h \
+    proxyconnection.h \
+    proxyclient.h \
+    proxyclient_p.h \
+    proxy_p.h
 
 header_files.files = $$HEADERS
-header_files.path = /usr/include/zera-classes/proxi
+header_files.path = /usr/include/zera-classes/proxy
 INSTALLS += header_files
 
 target.path = /usr/lib

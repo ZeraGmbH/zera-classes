@@ -1,20 +1,20 @@
 #include <QUuid>
 #include <zeraclientnetbase.h>
 
-#include "proxi_p.h"
-#include "proxiclient_p.h"
-#include "proxiconnection.h"
+#include "proxy_p.h"
+#include "proxyclient_p.h"
+#include "proxyconnection.h"
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
 
 
-cProxi* cProxiPrivate::singletonInstance=0;
+cProxy* cProxyPrivate::singletonInstance=0;
 
 
-cProxiPrivate::cProxiPrivate(cProxi *parent):
+cProxyPrivate::cProxyPrivate(cProxy *parent):
     q_ptr(parent)
 {
     m_sIPAdress = "127.0.0.1"; // our default
@@ -22,7 +22,7 @@ cProxiPrivate::cProxiPrivate(cProxi *parent):
 }
 
 
-cProxiClient* cProxiPrivate::getConnection(QString ipadress, quint16 port)
+cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
 {
     Zera::NetClient::cClientNetBase* netClient;
     QUuid uuid;
@@ -40,26 +40,26 @@ cProxiClient* cProxiPrivate::getConnection(QString ipadress, quint16 port)
         netClient->startNetwork(ipadress, port);
     }
 
-    cProxiClientPrivate *proxiclient = new cProxiClientPrivate(this);
+    cProxyClientPrivate *proxyclient = new cProxyClientPrivate(this);
 
     uuid.createUuid(); // we use a per client uuid
     binUUid = uuid.toRfc4122();
 
-    cProxiConnection *connection = new cProxiConnection(ipadress, port, binUUid, netClient);
-    m_ConnectionHash[proxiclient] = connection;
-    m_ClientHash[binUUid] = proxiclient;
+    cProxyConnection *connection = new cProxyConnection(ipadress, port, binUUid, netClient);
+    m_ConnectionHash[proxyclient] = connection;
+    m_ClientHash[binUUid] = proxyclient;
 
-    return proxiclient;
+    return proxyclient;
 }
 
 
-cProxiClient* cProxiPrivate::getConnection(quint16 port)
+cProxyClient* cProxyPrivate::getConnection(quint16 port)
 {
     return getConnection(m_sIPAdress, port);
 }
 
 
-quint32 cProxiPrivate::transmitCommand(cProxiClientPrivate* client, ProtobufMessage::NetMessage *message)
+quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMessage::NetMessage *message)
 {
     quint32 nr;
 
@@ -74,15 +74,15 @@ quint32 cProxiPrivate::transmitCommand(cProxiClientPrivate* client, ProtobufMess
 }
 
 
-void cProxiPrivate::setIPAdress(QString ipAddress)
+void cProxyPrivate::setIPAdress(QString ipAddress)
 {
     m_sIPAdress = ipAddress;
 }
 
 
-void cProxiPrivate::receiveMessage(QByteArray message)
+void cProxyPrivate::receiveMessage(QByteArray message)
 {
-    QHash<cProxiClientPrivate*, cProxiConnection*>::Iterator it;
+    QHash<cProxyClientPrivate*, cProxyConnection*>::Iterator it;
 
     ProtobufMessage::NetMessage *netMessage = new ProtobufMessage::NetMessage();
     it = m_ConnectionHash.begin(); // we take first interface to "read" the data
@@ -98,33 +98,33 @@ void cProxiPrivate::receiveMessage(QByteArray message)
 }
 
 
-void cProxiPrivate::receiveTcpError(QAbstractSocket::SocketError errorCode)
+void cProxyPrivate::receiveTcpError(QAbstractSocket::SocketError errorCode)
 {
     Zera::NetClient::cClientNetBase* netClient = qobject_cast<Zera::NetClient::cClientNetBase*>(QObject::sender());
 
-    QHashIterator<cProxiClientPrivate*, cProxiConnection*> it(m_ConnectionHash);
+    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
 
     while (it.hasNext())
     {
-        cProxiConnection *pC;
+        cProxyConnection *pC;
         pC = it.value();
         if (pC->m_pNetClient == netClient) // we found a client that was connected to netclient
         {
-            cProxiClientPrivate* client = it.key();
+            cProxyClientPrivate* client = it.key();
             client->transmitError(errorCode); // so this client will forward error
         }
     }
 }
 
 
-Zera::NetClient::cClientNetBase* cProxiPrivate::searchConnection(QString ip, quint16 port)
+Zera::NetClient::cClientNetBase* cProxyPrivate::searchConnection(QString ip, quint16 port)
 {
     Zera::NetClient::cClientNetBase* lnetClient = 0;
-    QHashIterator<cProxiClientPrivate*, cProxiConnection*> it(m_ConnectionHash);
+    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
 
     while (it.hasNext())
     {
-        cProxiConnection *pC;
+        cProxyConnection *pC;
         pC = it.value();
         if ( (pC->m_sIP == ip) && (pC->m_nPort == port))
         {

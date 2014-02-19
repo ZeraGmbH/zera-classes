@@ -14,7 +14,7 @@ cPCBInterfacePrivate::cPCBInterfacePrivate(cPCBInterface *iface)
 }
 
 
-void cPCBInterfacePrivate::setClient(Proxi::cProxiClient *client)
+void cPCBInterfacePrivate::setClient(Proxy::cProxyClient *client)
 {
     m_pClient = client;
     connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));

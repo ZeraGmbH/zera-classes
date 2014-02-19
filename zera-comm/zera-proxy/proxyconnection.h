@@ -1,5 +1,5 @@
-#ifndef PROXICONNECTION_H
-#define PROXICONNECTION_H
+#ifndef PROXYCONNECTION_H
+#define PROXYCONNECTION_H
 
 #include <QObject>
 #include <QByteArray>
@@ -7,12 +7,12 @@
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
 
-struct cProxiConnection
+struct cProxyConnection
 {
-    cProxiConnection(QString ip, quint16 port, QByteArray uuid, Zera::NetClient::cClientNetBase *client)
+    cProxyConnection(QString ip, quint16 port, QByteArray uuid, Zera::NetClient::cClientNetBase *client)
         :m_sIP(ip), m_nPort(port), m_binUUID(uuid), m_pNetClient(client){}
     QString m_sIP;
     quint16 m_nPort;
@@ -23,4 +23,4 @@ struct cProxiConnection
 }
 }
 
-#endif // PROXICONNECTION_H
+#endif // PROXYCONNECTION_H

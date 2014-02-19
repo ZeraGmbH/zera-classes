@@ -40,7 +40,7 @@ class cPCBInterfacePrivate: public cInterfacePrivate
 
 public:
     cPCBInterfacePrivate(cPCBInterface* iface);
-    virtual void setClient(Zera::Proxi::cProxiClient *client);
+    virtual void setClient(Zera::Proxy::cProxyClient *client);
     virtual quint32 getDSPChannel(QString chnName); // int
     virtual quint32 getStatus(QString chnName); // int
     virtual quint32 getAlias(QString chnName); // qstring

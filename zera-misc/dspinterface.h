@@ -14,9 +14,9 @@ class cDspVar;
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
-    class cProxiClient;
+    class cProxyClient;
 }
 }
 
@@ -37,7 +37,7 @@ class ZERA_MISCSHARED_EXPORT cDSPInterface: public QObject
 
 public:
     cDSPInterface();
-    virtual void setClient(Zera::Proxi::cProxiClient *client);
+    virtual void setClient(Zera::Proxy::cProxyClient *client);
     virtual quint32 bootDsp();
     virtual quint32 resetDsp();
     virtual quint32 setDSPBootPath(QString path);

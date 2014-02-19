@@ -8,9 +8,9 @@
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
-    class cProxi;
+    class cProxy;
 }
 }
 
@@ -20,7 +20,7 @@ class MeasurementModuleFactory
 {
 public:
   virtual ~MeasurementModuleFactory() {}
-  virtual ZeraModules::VirtualModule *createModule(Zera::Proxi::cProxi* proxi, VeinPeer* peer, QObject* qObjParent = 0)=0;
+  virtual ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, VeinPeer* peer, QObject* qObjParent = 0)=0;
   virtual void destroyModule(ZeraModules::VirtualModule *module)=0;
   virtual QList<ZeraModules::VirtualModule*> listModules()=0;
   virtual QString getFactoryName() =0;

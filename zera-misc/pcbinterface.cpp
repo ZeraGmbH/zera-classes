@@ -13,7 +13,7 @@ cPCBInterface::cPCBInterface()
 }
 
 
-void cPCBInterface::setClient(Proxi::cProxiClient *client)
+void cPCBInterface::setClient(Proxy::cProxyClient *client)
 {
     Q_D(cPCBInterface);
     return d->setClient(client);

@@ -1,5 +1,5 @@
-#ifndef PROXI_P_H
-#define PROXI_P_H
+#ifndef PROXY_P_H
+#define PROXY_P_H
 
 #include <QObject>
 #include <QHash>
@@ -7,54 +7,54 @@
 #include <zeraclientnetbase.h>
 #include <netmessages.pb.h>
 
-#include "proxi.h"
+#include "proxy.h"
 
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
 
-class cProxi;
-class cProxiClient;
-class cProxiClientPrivate;
-class cProxiConnection;
+class cProxy;
+class cProxyClient;
+class cProxyClientPrivate;
+class cProxyConnection;
 
-class cProxiPrivate: public QObject
+class cProxyPrivate: public QObject
 {
     Q_OBJECT
 
 public:
-    quint32 transmitCommand(cProxiClientPrivate *client, ProtobufMessage::NetMessage *message);
+    quint32 transmitCommand(cProxyClientPrivate *client, ProtobufMessage::NetMessage *message);
 
 protected:
-    cProxiPrivate(cProxi *parent);
-    ~cProxiPrivate(){}
-    cProxiClient* getConnection(QString ipadress, quint16 port);
-    cProxiClient* getConnection(quint16 port);
+    cProxyPrivate(cProxy *parent);
+    ~cProxyPrivate(){}
+    cProxyClient* getConnection(QString ipadress, quint16 port);
+    cProxyClient* getConnection(quint16 port);
     void setIPAdress(QString ipAddress);
 
     /**
        * @brief singletonInstance
        */
-    static cProxi* singletonInstance;
+    static cProxy* singletonInstance;
 
     /**
        * @brief q_ptr See Q_DECLARE_PUBLIC
        */
-    cProxi *q_ptr;
+    cProxy *q_ptr;
 
 protected slots:
     void receiveMessage(QByteArray message);
     void receiveTcpError(QAbstractSocket::SocketError errorCode);
 
 private:
-    Q_DISABLE_COPY(cProxiPrivate)
-    Q_DECLARE_PUBLIC(cProxi)
+    Q_DISABLE_COPY(cProxyPrivate)
+    Q_DECLARE_PUBLIC(cProxy)
 
     Zera::NetClient::cClientNetBase* searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
-    QHash<cProxiClientPrivate*, cProxiConnection*> m_ConnectionHash; // holds network connection for each client
-    QHash<QByteArray, cProxiClientPrivate*> m_ClientHash; // information for faster redirecting
+    QHash<cProxyClientPrivate*, cProxyConnection*> m_ConnectionHash; // holds network connection for each client
+    QHash<QByteArray, cProxyClientPrivate*> m_ClientHash; // information for faster redirecting
     QString m_sIPAdress; // ip adress for all zera servers, default localhost
     quint32 m_nMessageNumber; // message number, .. we never use 0    
 
@@ -65,4 +65,4 @@ private:
 
 
 
-#endif // PROXI_P_H
+#endif // PROXY_P_H

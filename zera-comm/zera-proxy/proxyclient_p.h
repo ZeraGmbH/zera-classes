@@ -1,33 +1,33 @@
-#ifndef PROXICLIENT_P_H
-#define PROXICLIENT_P_H
+#ifndef PROXYCLIENT_P_H
+#define PROXYCLIENT_P_H
 
 #include <QObject>
 #include <netmessages.pb.h>
-#include <proxiclient.h>
+#include <proxyclient.h>
 
 
 namespace Zera
 {
-namespace Proxi
+namespace Proxy
 {
 
-class cProxiPrivate;
+class cProxyPrivate;
 
-class cProxiClientPrivate: public cProxiClient
+class cProxyClientPrivate: public cProxyClient
 {
     Q_OBJECT
 
 public:
-    cProxiClientPrivate(cProxiPrivate* proxi);
+    cProxyClientPrivate(cProxyPrivate* proxy);
     void transmitAnswer(ProtobufMessage::NetMessage *message);
     void transmitError(QAbstractSocket::SocketError errorCode);
 
 protected:
     virtual quint32 transmitCommand(ProtobufMessage::NetMessage *message);
-    cProxiPrivate *m_pProxi;
+    cProxyPrivate *m_pProxy;
 
 };
 
 }
 }
-#endif // PROXICLIENT_P_H
+#endif // PROXYCLIENT_P_H
