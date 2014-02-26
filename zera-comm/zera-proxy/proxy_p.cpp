@@ -1,15 +1,15 @@
 #include <QUuid>
-#include <zeraclientnetbase.h>
+#include <protonetpeer.h>
 
 #include "proxy_p.h"
 #include "proxyclient_p.h"
 #include "proxyconnection.h"
 
+
 namespace Zera
 {
 namespace Proxy
 {
-
 
 cProxy* cProxyPrivate::singletonInstance=0;
 
@@ -24,7 +24,7 @@ cProxyPrivate::cProxyPrivate(cProxy *parent):
 
 cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
 {
-    Zera::NetClient::cClientNetBase* netClient;
+    ProtoNetPeer* netClient;
     QUuid uuid;
     QByteArray binUUid;
 
@@ -34,10 +34,10 @@ cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
     if ((netClient = searchConnection(ipadress, port)) == 0) // look for existing connection
     {
         // if not existing we have to create
-        netClient = new Zera::NetClient::cClientNetBase(this);
-        connect(netClient, SIGNAL(messageAvailable(QByteArray)), this, SLOT(receiveMessage(QByteArray)));
-        connect(netClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveTcpError(QAbstractSocket::SocketError)));
-        netClient->startNetwork(ipadress, port);
+        netClient = new ProtoNetPeer(this);
+        connect(netClient, SIGNAL(sigMessageReceived(google::protobuf::Message*)), this, SLOT(receiveMessage(google::protobuf::Message*)));
+        connect(netClient, SIGNAL(sigSocketError(QAbstractSocket::SocketError)), this, SLOT(receiveTcpError(QAbstractSocket::SocketError)));
+        netClient->startConnection(ipadress, port);
     }
 
     cProxyClientPrivate *proxyclient = new cProxyClientPrivate(this);
@@ -80,14 +80,9 @@ void cProxyPrivate::setIPAdress(QString ipAddress)
 }
 
 
-void cProxyPrivate::receiveMessage(QByteArray message)
+void cProxyPrivate::receiveMessage(google::protobuf::Message* message)
 {
-    QHash<cProxyClientPrivate*, cProxyConnection*>::Iterator it;
-
-    ProtobufMessage::NetMessage *netMessage = new ProtobufMessage::NetMessage();
-    it = m_ConnectionHash.begin(); // we take first interface to "read" the data
-
-    it.value()->m_pNetClient->readMessage(netMessage, message);
+    ProtobufMessage::NetMessage *netMessage = static_cast<ProtobufMessage::NetMessage*>(message);
 
     QByteArray key(netMessage->clientid().c_str(), netMessage->clientid().size());
     if (m_ClientHash.contains(key))
@@ -100,7 +95,7 @@ void cProxyPrivate::receiveMessage(QByteArray message)
 
 void cProxyPrivate::receiveTcpError(QAbstractSocket::SocketError errorCode)
 {
-    Zera::NetClient::cClientNetBase* netClient = qobject_cast<Zera::NetClient::cClientNetBase*>(QObject::sender());
+    ProtoNetPeer* netClient = qobject_cast<ProtoNetPeer*>(QObject::sender());
 
     QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
 
@@ -117,9 +112,9 @@ void cProxyPrivate::receiveTcpError(QAbstractSocket::SocketError errorCode)
 }
 
 
-Zera::NetClient::cClientNetBase* cProxyPrivate::searchConnection(QString ip, quint16 port)
+ProtoNetPeer* cProxyPrivate::searchConnection(QString ip, quint16 port)
 {
-    Zera::NetClient::cClientNetBase* lnetClient = 0;
+    ProtoNetPeer* lnetClient = 0;
     QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
 
     while (it.hasNext())

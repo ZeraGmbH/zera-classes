@@ -4,11 +4,14 @@
 #include <QObject>
 #include <QHash>
 #include <QString>
-#include <zeraclientnetbase.h>
+#include <QHostAddress>
+#include <protonetpeer.h>
 #include <netmessages.pb.h>
 
 #include "proxy.h"
 
+
+class ProtoNetPeer;
 
 namespace Zera
 {
@@ -45,14 +48,14 @@ protected:
     cProxy *q_ptr;
 
 protected slots:
-    void receiveMessage(QByteArray message);
+    void receiveMessage(google::protobuf::Message *message);
     void receiveTcpError(QAbstractSocket::SocketError errorCode);
 
 private:
     Q_DISABLE_COPY(cProxyPrivate)
     Q_DECLARE_PUBLIC(cProxy)
 
-    Zera::NetClient::cClientNetBase* searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
+    ProtoNetPeer* searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
     QHash<cProxyClientPrivate*, cProxyConnection*> m_ConnectionHash; // holds network connection for each client
     QHash<QByteArray, cProxyClientPrivate*> m_ClientHash; // information for faster redirecting
     QString m_sIPAdress; // ip adress for all zera servers, default localhost
