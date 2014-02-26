@@ -2,7 +2,7 @@
 #define XMLCONFIGREADER_PRIVATE_H
 
 #include <QHash>
-
+#include <QString>
 
 namespace Zera
 {
