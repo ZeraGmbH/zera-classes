@@ -15,6 +15,8 @@ TEMPLATE = lib
 LIBS +=  -lzera-proxy
 LIBS +=  -lprotobuf
 
+INCLUDEPATH += ../zera-comm/zera-proxy
+
 CONFIG	+= debug
 QMAKE_CXXFLAGS += -O0
 
