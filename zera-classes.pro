@@ -1,11 +1,12 @@
 TEMPLATE    = subdirs
 
+CONFIG += ordered
+
 SUBDIRS     = \
             zera-math \
             zera-meas \
             zera-comm/zera-i2c \
             zera-dev \
-            zera-misc \
             zera-xml-config \
-            zera-comm/zera-proxy
-
+            zera-comm/zera-proxy \
+            zera-misc
