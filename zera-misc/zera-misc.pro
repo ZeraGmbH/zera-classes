@@ -12,6 +12,9 @@ include(misc.user.pri)
 TARGET = zeramisc
 TEMPLATE = lib
 
+LIBS +=  -lzera-proxy
+LIBS +=  -lprotobuf
+
 CONFIG	+= debug
 QMAKE_CXXFLAGS += -O0
 
