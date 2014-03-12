@@ -11,7 +11,7 @@ QT       += network core
 QT       -= gui
 
 LIBS +=  -lzera-proxy
-LIBS +=  -lzera-misc
+LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lprotobuf
 LIBS +=  -lzera-resourcemanager-protobuf
