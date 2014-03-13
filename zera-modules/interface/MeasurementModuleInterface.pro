@@ -8,7 +8,7 @@ QT       -= gui
 
 TARGET = MeasurementModuleInterface
 TEMPLATE = lib
-CONFIG += staticlib
+#CONFIG += staticlib
 
 HEADERS += \
     virtualmodule.h \
