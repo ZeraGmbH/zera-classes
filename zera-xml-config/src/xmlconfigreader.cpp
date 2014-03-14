@@ -89,11 +89,16 @@ namespace Zera
         QXmlSchemaValidator sValidator(schema);
 
         //qDebug() << "[zera-xml-config] schema is valid";
+        QByteArray baXmlData = xmlString.toUtf8();
+        QBuffer xmlDevice(&baXmlData);
 
-        if(sValidator.validate(xmlString))
+        xmlDevice.open(QBuffer::ReadOnly);
+
+        if(sValidator.validate(&xmlDevice))
         {
-          QBuffer xmlDevice;
-          xmlDevice.setData(xmlString.toUtf8());
+          //reload the file
+          xmlDevice.close();
+          xmlDevice.open(QBuffer::ReadOnly);
 
           //qDebug() << "[zera-xml-config] XML is valid";
           if(xml2Config(&xmlDevice))
