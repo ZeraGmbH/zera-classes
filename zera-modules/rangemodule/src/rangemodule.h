@@ -34,8 +34,6 @@ public:
     virtual QByteArray getConfiguration();
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
 
-public slots:
-    virtual void configXMLInfo(QString key);
 
 protected:
     cRangeModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
@@ -47,7 +45,7 @@ protected:
     virtual void doInitialization(); // here we build our dsp program and start it
 
 private:
-    cRangeModuleConfiguration *m_pConfiguration; // our xml configuration
+    //cRangeModuleConfiguration *m_pConfiguration; // our xml configuration
     Zera::Server::cDSPInterface* m_pDSPInterface;
     qint32 m_nActivationIt;
     QStateMachine m_ActivationMachine;

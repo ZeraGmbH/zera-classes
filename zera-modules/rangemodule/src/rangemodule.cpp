@@ -13,10 +13,8 @@
 #include "moduleinfo.h"
 
 cRangeModule::cRangeModule(Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(proxy, peer, parent)
+    :cBaseModule(proxy, peer, new cRangeModuleConfiguration(), parent)
 {
-    m_pConfiguration = new cRangeModuleConfiguration();
-
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
     m_ActivationDoneState.addTransition(this, SIGNAL(activationNext()), &m_ActivationExecState);
@@ -81,7 +79,7 @@ void cRangeModule::setupModule()
     }
 
     cRangeModuleConfigData *pConfData;
-    pConfData = m_pConfiguration->getConfigurationData();
+    pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)

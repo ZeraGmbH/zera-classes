@@ -8,12 +8,13 @@
 #include "basemoduleconfiguration.h"
 
 
-cBaseModule::cBaseModule(Zera::Proxy::cProxy *proxy, VeinPeer *peer, QObject* parent)
-    :ZeraModules::VirtualModule(proxy,peer,parent), m_pProxy(proxy), m_pPeer(peer)
+cBaseModule::cBaseModule(Zera::Proxy::cProxy *proxy, VeinPeer *peer, cBaseModuleConfiguration* modcfg, QObject* parent)
+    :ZeraModules::VirtualModule(proxy,peer,parent), m_pProxy(proxy), m_pPeer(peer), m_pConfiguration(modcfg)
 {
     QString s;
     setParent(parent);
 
+    m_ConfigTimer.setSingleShot(true);
     m_nStatus = BaseModule::untouched;
     m_pStateMachine = new QStateMachine(this);
 
@@ -85,6 +86,7 @@ cBaseModule::cBaseModule(Zera::Proxy::cProxy *proxy, VeinPeer *peer, QObject* pa
     connect(m_pStateRunDone, SIGNAL(entered()), SLOT(entryRunDone()));
     connect(m_pStateStopStart, SIGNAL(entered()), SLOT(entryStopStart()));
     connect(m_pStateStopDone, SIGNAL(entered()), SLOT(entryStopDone()));
+    connect(&m_ConfigTimer, SIGNAL(timeout()), SIGNAL(sigConfiguration()));
 
     m_pStateMachine->start();
 }
@@ -120,7 +122,7 @@ QList<const QState *> cBaseModule::getActualStates()
 void cBaseModule::setConfiguration(QByteArray xmlConfigData)
 {
     m_xmlconfString = xmlConfigData;
-    emit sigConfiguration(); // our statemachine enters configuration state
+    m_ConfigTimer.start(0); // in case eventloop is not yet running
 }
 
 

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QByteArray>
+#include <QTimer>
 #include <virtualmodule.h>
 
 #include "xmlsettings.h"
@@ -34,7 +35,7 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(Zera::Proxy::cProxy* proxy, VeinPeer* peer, QObject *parent = 0);
+    cBaseModule(Zera::Proxy::cProxy* proxy, VeinPeer* peer, cBaseModuleConfiguration* modcfg, QObject *parent = 0);
     virtual ~cBaseModule();
     virtual QList<const QState*> getActualStates(); // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
@@ -55,6 +56,7 @@ protected:
     Zera::Proxy::cProxy* m_pProxy; // the proxi for all our connections (to rm, dsp- pcb- server)
     VeinPeer* m_pPeer;
     QList<cModuleActivist*> m_ModuleActivistList;
+    cBaseModuleConfiguration *m_pConfiguration; // our xml configuration
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule() = 0; // after xml configuration we can setup and export our module
@@ -62,7 +64,7 @@ protected:
 
 
 private:
-    cBaseModuleConfiguration *m_pConfiguration; // our xml configuration
+    QTimer m_ConfigTimer;
     QList<const QState*> m_StateList;
     int m_nLastState;
     int m_nStatus;

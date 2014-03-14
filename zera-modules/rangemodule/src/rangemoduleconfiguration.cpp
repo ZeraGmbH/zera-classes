@@ -48,7 +48,7 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     {
         connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
         connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
-        m_pXMLReader->loadXML(xmlString);
+        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     }
     else
         m_bConfigError = true;
