@@ -3,7 +3,7 @@
 <rangemodconfpar xmlns:xs="http://www.w3.org/2001/XMLSchema-instance">
 
 	<configuration>
-		<con nectivity>
+		<connectivity>
 			<debuglevel>0</debuglevel>
 			<ethernet>
 				<resourcemanager>
