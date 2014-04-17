@@ -11,14 +11,18 @@ namespace Server
 cPCBInterfacePrivate::cPCBInterfacePrivate(cPCBInterface *iface)
     :q_ptr(iface)
 {
+    m_pClient = 0;
 }
 
 
 void cPCBInterfacePrivate::setClient(Proxy::cProxyClient *client)
 {
+    if (m_pClient) // we avoid multiple connections
+        disconnect(m_pClient, 0, this, 0);
+
     m_pClient = client;
     connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));
-    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError errorCode)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
+    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
 }
 
 
@@ -203,7 +207,7 @@ quint32 cPCBInterfacePrivate::setRange(QString chnName, QString rngName)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SENS:%1,RANG").arg(chnName), par = QString("%1;").arg(rngName));
+    msgnr = sendCommand(cmd = QString("SENS:%1:RANG").arg(chnName), par = QString("%1;").arg(rngName));
     m_MsgNrCmdList[msgnr] = setrange;
     return msgnr;
 }
@@ -214,7 +218,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
     if (message->has_reply())
     {
         quint32 lmsgnr;
-        QString lmsg;
+        QString lmsg = "";
         int lreply = 0;
 
         lmsgnr = message->messagenr();
@@ -223,10 +227,8 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         {
             lmsg = QString::fromStdString(message->reply().body());
         }
-        else
-        {
-            lreply = message->reply().rtype();
-        }
+
+        lreply = message->reply().rtype();
 
         int lastCmd = m_MsgNrCmdList.take(lmsgnr);
 
@@ -237,7 +239,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getdspchannel:
         case getstatus:
         case gettype2:
-            emit q->serverAnswer(lmsgnr, returnInt(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 
         case getalias:
@@ -245,11 +247,11 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getunit:
         case getrange:
         case getalias2:
-            emit q->serverAnswer(lmsgnr, returnString(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
         case getrangelist:
-            emit q->serverAnswer(lmsgnr, returnStringList(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, returnStringList(lmsg));
             break;
 
         case geturvalue:
@@ -258,15 +260,15 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getgaincorrection:
         case getoffsetcorrection:
         case getphasecorrection:
-            emit q->serverAnswer(lmsgnr, returnDouble(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, returnDouble(lmsg));
             break;
 
         case isavail:
-            emit q->serverAnswer(lmsgnr, returnBool(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, returnBool(lmsg));
             break;
 
         case setrange:
-            emit q->serverAnswer(lmsgnr, returnReply(lreply));
+            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }
     } // hmm ... we have to look what to do otherwise
