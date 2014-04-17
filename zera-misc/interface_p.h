@@ -38,7 +38,6 @@ protected:
     QVariant returnStringList(QString message);
     QVariant returnDouble(QString message);
     QVariant returnBool(QString message);
-    QVariant returnReply(int reply);
 
     QHash<quint32, int> m_MsgNrCmdList;
     Zera::Proxy::cProxyClient *m_pClient;

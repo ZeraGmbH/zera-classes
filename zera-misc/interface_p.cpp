@@ -70,11 +70,6 @@ QVariant cInterfacePrivate::returnBool(QString message)
 }
 
 
-QVariant cInterfacePrivate::returnReply( int reply)
-{
-    return replies(reply);
-}
-
 }
 }
 

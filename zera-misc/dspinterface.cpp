@@ -56,10 +56,31 @@ quint32 cDSPInterface::varList2Dsp()
 }
 
 
-quint32 cDSPInterface::cmdLists2Dsp()
+quint32 cDSPInterface::cmdList2Dsp()
 {
     Q_D(cDSPInterface);
-    return d->cmdLists2Dsp();
+    return d->cmdList2Dsp();
+}
+
+
+quint32 cDSPInterface::intList2Dsp()
+{
+    Q_D(cDSPInterface);
+    return d->intList2Dsp();
+}
+
+
+int cDSPInterface::cmdListCount()
+{
+    Q_D(cDSPInterface);
+    return d->cmdListCount();
+}
+
+
+int cDSPInterface::intListCount()
+{
+    Q_D(cDSPInterface);
+    return d->intListCount();
 }
 
 
@@ -70,17 +91,10 @@ void cDSPInterface::clearCmdList()
 }
 
 
-void cDSPInterface::clearVarLists()
+void cDSPInterface::clearMemLists()
 {
     Q_D(cDSPInterface);
-    d->clearVarLists();
-}
-
-
-void cDSPInterface::ClearMemLists()
-{
-    Q_D(cDSPInterface);
-    d->ClearMemLists();
+    d->clearMemLists();
 }
 
 
@@ -154,24 +168,17 @@ void cDSPInterface::addIntListItem(QString cmd)
 }
 
 
-cDspMeasData* cDSPInterface::getMemHandle(QString name, DSPDATA::DspSegType segtype)
+cDspMeasData* cDSPInterface::getMemHandle(QString name)
 {
     Q_D(cDSPInterface);
-    return d->getMemHandle(name, segtype);
+    return d->getMemHandle(name);
 }
 
 
-void cDSPInterface::deleteDSPMemHandle(cDspMeasData *memhandle)
+void cDSPInterface::deleteMemHandle(cDspMeasData *memhandle)
 {
     Q_D(cDSPInterface);
-    d->deleteDSPMemHandle(memhandle);
-}
-
-
-void cDSPInterface::addVarItem(cDspMeasData *memgroup, cDspVar *var)
-{
-    Q_D(cDSPInterface);
-    d->addVarItem(memgroup, var);
+    d->deleteMemHandle(memhandle);
 }
 
 
@@ -196,31 +203,37 @@ quint32 cDSPInterface::dataAcquisition(cDspMeasData *memgroup)
 }
 
 
-quint32 cDSPInterface::dspMemoryRead(cDspMeasData *memgroup)
+quint32 cDSPInterface::dspMemoryRead(cDspMeasData *memgroup, DSPDATA::dType type)
 {
     Q_D(cDSPInterface);
-    return d->dspMemoryRead(memgroup);
+    return d->dspMemoryRead(memgroup, type);
 }
 
 
-float* cDSPInterface::setVarData(cDspMeasData *memgroup, QString s)
+void cDSPInterface::setVarData(cDspMeasData *memgroup, QString datalist, DSPDATA::dType type)
 {
     Q_D(cDSPInterface);
-    return d->setVarData(memgroup, s);
+    d->setVarData(memgroup, datalist, type);
 }
 
 
-quint32 cDSPInterface::dspMemoryWrite(cDspMeasData *memgroup, DSPDATA::dType type)
+quint32 cDSPInterface::dspMemoryWrite(cDspMeasData *memgroup)
 {
     Q_D(cDSPInterface);
-    return d->dspMemoryWrite(memgroup, type);
+    return d->dspMemoryWrite(memgroup);
 }
 
 
-float* cDSPInterface::data(cDspMeasData *dspdata)
+float* cDSPInterface::data(cDspMeasData *memgroup, QString name)
 {
     Q_D(cDSPInterface);
-    return d->data(dspdata);
+    return d->data(memgroup, name);
+}
+
+void cDSPInterface::setData(cDspMeasData *memgroup, QVector<float> &vector)
+{
+    Q_D(cDSPInterface);
+    d->setData(memgroup, vector);
 }
 
 

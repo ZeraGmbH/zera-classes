@@ -11,14 +11,17 @@ namespace Server
 cDSPInterfacePrivate::cDSPInterfacePrivate(cDSPInterface *iface)
     :q_ptr(iface)
 {
+    m_pClient = 0;
 }
 
 
 void cDSPInterfacePrivate::setClient(Proxy::cProxyClient *client)
 {
+    if (m_pClient) // we avoid multiple connections
+        disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
     connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));
-    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError errorCode)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
+    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
 }
 
 
@@ -75,10 +78,10 @@ quint32 cDSPInterfacePrivate::varList2Dsp() // the complete list has several par
 
     QTextStream ts(&vlist, QIODevice::WriteOnly);
     cDspMeasData* pDspMeasData;
-    for (int i = 0; i < m_DspMeasDataList.count(); i++)
+    for (int i = 0; i < m_DspMemoryDataList.count(); i++)
     {
-        pDspMeasData = m_DspMeasDataList.at(i);
-        ts << pDspMeasData->VarList();
+        pDspMeasData = m_DspMemoryDataList.at(i);
+        ts << pDspMeasData->VarList(DSPDATA::vDspParam | DSPDATA::vDspTemp | DSPDATA::vDspResult);
     }
 
     msgnr = sendCommand(cmd = QString("MEAS:LIST:RAVL"), vlist);
@@ -87,7 +90,7 @@ quint32 cDSPInterfacePrivate::varList2Dsp() // the complete list has several par
 }
 
 
-quint32 cDSPInterfacePrivate::cmdLists2Dsp()
+quint32 cDSPInterfacePrivate::cmdList2Dsp()
 {
     QString plist, cmd;
     quint32 msgnr;
@@ -97,8 +100,35 @@ quint32 cDSPInterfacePrivate::cmdLists2Dsp()
         ts << *it << ";" ;
 
     msgnr = sendCommand(cmd = QString("MEAS:LIST:CYCL"), plist);
-    m_MsgNrCmdList[msgnr] = cmdlists2dsp;
+    m_MsgNrCmdList[msgnr] = cmdlist2dsp;
     return msgnr;
+}
+
+
+quint32 cDSPInterfacePrivate::intList2Dsp()
+{
+    QString plist, cmd;
+    quint32 msgnr;
+
+    QTextStream ts( &plist, QIODevice::WriteOnly );
+    for ( QStringList::Iterator it = IntCmdList.begin(); it != IntCmdList.end(); ++it )
+        ts << *it << ";" ;
+
+    msgnr = sendCommand(cmd = QString("MEAS:LIST:INTL"), plist);
+    m_MsgNrCmdList[msgnr] = intlist2dsp;
+    return msgnr;
+}
+
+
+int cDSPInterfacePrivate::cmdListCount()
+{
+    return CycCmdList.count();
+}
+
+
+int cDSPInterfacePrivate::intListCount()
+{
+    return IntCmdList.count();
 }
 
 
@@ -109,14 +139,7 @@ void cDSPInterfacePrivate::clearCmdList()
 }
 
 
-void cDSPInterfacePrivate::clearVarLists()
-{
-    while ( !m_DspMeasDataList.isEmpty())
-        delete m_DspMeasDataList.takeFirst();
-}
-
-
-void cDSPInterfacePrivate::ClearMemLists()
+void cDSPInterfacePrivate::clearMemLists()
 {
     while ( !m_DspMemoryDataList.isEmpty() )
         delete m_DspMemoryDataList.takeFirst();
@@ -228,28 +251,22 @@ void cDSPInterfacePrivate::addIntListItem(QString cmd)
 }
 
 
-cDspMeasData* cDSPInterfacePrivate::getMemHandle(QString name, DSPDATA::DspSegType segtype)
+cDspMeasData* cDSPInterfacePrivate::getMemHandle(QString name)
 {
-    cDspMeasData* pdmd = new cDspMeasData(name, segtype); // create a new object
+    cDspMeasData* pdmd = new cDspMeasData(name); // create a new object
     m_DspMemoryDataList.append(pdmd); // append it to the list
     return pdmd; // return handle
 }
 
 
-void cDSPInterfacePrivate::deleteDSPMemHandle(cDspMeasData *memhandle)
+void cDSPInterfacePrivate::deleteMemHandle(cDspMeasData *memhandle)
 {
     if (m_DspMemoryDataList.contains(memhandle))
     {
-         int index = m_DspMemoryDataList.indexOf(memhandle);
-         cDspMeasData* pdmd = m_DspMemoryDataList.takeAt(index);
-         delete pdmd;
+        int index = m_DspMemoryDataList.indexOf(memhandle);
+        cDspMeasData* pdmd = m_DspMemoryDataList.takeAt(index);
+        delete pdmd;
     }
-}
-
-
-void cDSPInterfacePrivate::addVarItem(cDspMeasData *memgroup, cDspVar *var)
-{
-    memgroup->addVarItem(var);
 }
 
 
@@ -280,94 +297,90 @@ quint32 cDSPInterfacePrivate::dataAcquisition(cDspMeasData *memgroup)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("MEAS"), par = QString("%1").arg(memgroup->MeasVarList()));
+    actMemGroup = memgroup;
+    actMemType = DSPDATA::dFloat;
+    msgnr = sendCommand(cmd = QString("MEAS"), par = QString("%1").arg(memgroup->VarList(DSPDATA::vDspResult)));
     m_MsgNrCmdList[msgnr] = dataacquisition;
     return msgnr;
 }
 
 
-quint32 cDSPInterfacePrivate::dspMemoryRead(cDspMeasData *memgroup)
+quint32 cDSPInterfacePrivate::dspMemoryRead(cDspMeasData *memgroup, DSPDATA::dType type)
 {
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("MEM:READ"), par = QString("%1").arg(memgroup->VarList()));
+    actMemGroup = memgroup;
+    actMemType = type;
+    msgnr = sendCommand(cmd = QString("MEM:READ"), par = QString("%1").arg(memgroup->VarList(DSPDATA::vDspALL)));
     m_MsgNrCmdList[msgnr] = dspmemoryread;
     return msgnr;
 }
 
 
-float* cDSPInterfacePrivate::setVarData(cDspMeasData *memgroup, QString data)
+void cDSPInterfacePrivate::setVarData(cDspMeasData *memgroup, QString datalist, DSPDATA::dType type)
 {
     QStringList DataEntryList, DataList; // werte zuorden
-    QString s;
+
     bool ok;
 
-    DataEntryList = data.split(";"); // wir haben jetzt eine stringliste mit allen werten
-    float *val = memgroup->data();
+    // we expect something like Name1:0.2,0.4,0,3;Name2:1,2,3; ......
+
+    DataEntryList = datalist.split(";"); // wir haben jetzt eine stringliste mit allen werten
+
     for ( QStringList::Iterator it = DataEntryList.begin(); it != DataEntryList.end(); ++it )
     {
-        s = *it;
-        s = s.section(":",1,1);
-        DataList = s.split(",");
-        for ( QStringList::Iterator it2 = DataList.begin(); it2 != DataList.end(); ++it2,val++ )
+        QString snamedata, sname, sdata;
+
+        snamedata = *it;
+        if (!snamedata.isEmpty())
         {
-            s = *it2;
-            s.remove(';');
-            ulong vul = s.toULong(&ok); // test auf ulong
-            if (ok)
-                *((ulong*) val) = vul;
-            else
-                *val = s.toFloat();
+            sname = snamedata.section(":",0,0);
+            sdata = snamedata.section(":",1,1);
+
+            float *val = memgroup->data(sname);
+            if (val != 0)
+            {
+                DataList = sdata.split(",");
+                for ( QStringList::Iterator it2 = DataList.begin(); it2 != DataList.end(); ++it2,val++ )
+                {
+                    QString s;
+                    s = *it2;
+                    s.remove(';');
+                    if (type == DSPDATA::dInt)
+                    {
+                        ulong vul = s.toULong(&ok); // test auf ulong
+                        *((ulong*) val) = vul;
+                    }
+                    else
+                        *val = s.toFloat();
+                }
+            }
         }
     }
-    return memgroup->data();
 }
 
 
-quint32 cDSPInterfacePrivate::dspMemoryWrite(cDspMeasData *memgroup, DSPDATA::dType type)
+quint32 cDSPInterfacePrivate::dspMemoryWrite(cDspMeasData *memgroup)
 {
-    QString list;
-    QStringList DataEntryList;
-    QString s, cmd, par;
     quint32 msgnr;
-    QTextStream ts(&par, QIODevice::WriteOnly );
-
-    list = memgroup->VarList(); // liste mit allen variablen und deren länge
-    float* fval = memgroup->data();
-    ulong* lval = (ulong*) fval;
-    DataEntryList = list.split(";"); // wir haben jetzt eine stringliste mit je variable, länge
-    for ( QStringList::Iterator it = DataEntryList.begin(); it != DataEntryList.end(); ++it )
-    {
-        s = *it; // einen eintrag variable, länge
-        ts << s.section(",",0,0); // den namen,
-        int n = s.section(",",1,1).toInt(); // anzahl der werte für diese var.
-        for (int i = 0;i < n; i++)
-        {
-            ts << ",";
-            if (type == DSPDATA::dInt)  // wir haben integer daten
-            {
-                ts << *lval;
-                lval++;
-            }
-            else
-            {
-                ts << *fval;
-                fval++;
-            }
-        }
-        ts << ";";
-    }
-
-    msgnr = sendCommand(cmd = QString("MEM:WRIT"), par);
+    QString cmd, par;
+    msgnr = sendCommand(cmd = QString("MEM:WRIT"), par = memgroup->writeCommand());
+    // qDebug() << QString("%1 %2").arg(cmd).arg(par);
     m_MsgNrCmdList[msgnr] = dspmemorywrite;
     return msgnr;
 }
 
 
-float* cDSPInterfacePrivate::data(cDspMeasData *dspdata)
+float* cDSPInterfacePrivate::data(cDspMeasData *memgroup, QString name)
 {
-    return dspdata->data();
+    return memgroup->data(name);
+}
+
+
+void cDSPInterfacePrivate::setData(cDspMeasData *memgroup, QVector<float> &vector)
+{
+    memgroup->setData(vector);
 }
 
 
@@ -431,8 +444,8 @@ void cDSPInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
     if (message->has_reply())
     {
         quint32 lmsgnr;
-        QString lmsg;
-        int lreply = 0;
+        QString lmsg = "";
+        quint8 lreply;
 
         lmsgnr = message->messagenr();
 
@@ -440,12 +453,14 @@ void cDSPInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         {
             lmsg = QString::fromStdString(message->reply().body());
         }
-        else
-        {
-            lreply = message->reply().rtype();
-        }
 
-        int lastCmd = m_MsgNrCmdList.take(lmsgnr);
+        lreply = message->reply().rtype();
+        int lastCmd;
+
+        if (lmsgnr == 0)
+            lastCmd = dspinterrupt;
+        else
+            lastCmd = m_MsgNrCmdList.take(lmsgnr);
 
         Q_Q(cDSPInterface);
 
@@ -456,7 +471,8 @@ void cDSPInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case setbootpath:
         case setsamplingsystem:
         case varlist2dsp:
-        case cmdlists2dsp:
+        case cmdlist2dsp:
+        case intlist2dsp:
         case setsignalrouting:
         case setdsp61850sourceadr:
         case setdsp61850destadr:
@@ -471,14 +487,19 @@ void cDSPInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case setgaincorrection:
         case setphasecorrection:
         case setoffsetcorrection:
-            emit q->serverAnswer(lmsgnr, returnReply(lreply));
+            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            break;
+        case readdeviceversion:
+        case readserverversion:
+        case dspinterrupt:
+            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         case dataacquisition:
         case dspmemoryread:
-        case readdeviceversion:
-        case readserverversion:
-            emit q->serverAnswer(lmsgnr, returnString(lmsg));
+            setVarData(actMemGroup, lmsg, actMemType);
+            emit q->serverAnswer(lmsgnr, 0, returnString(lmsg));
             break;
+
         }
     }
 }

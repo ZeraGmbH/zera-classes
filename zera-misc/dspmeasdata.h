@@ -11,22 +11,22 @@
 class cDspMeasData
 {
 public:
-    cDspMeasData(QString name, DSPDATA::DspSegType st = DSPDATA::sGlobal); // name des messdaten satzes
+    cDspMeasData(QString name); // name des messdaten satzes
     ~cDspMeasData();
-    float* data();
+    float* data(QString name);
     void addVarItem(cDspVar*);
-    quint32 getDataCount(); // anzahl der daten elemente in DspVarData
-    QString& VarList(bool withType = false); // liste mit allen variablen mit längenangaben
-    QString& MeasVarList(); // liste aller namen vom typ vdspresult
+    quint32 getSize(); // number of all element in this container
+    quint32 getSize(QString name); // number of elements of var name in this container
+    QString& VarList(int section, bool withType = false); // liste mit allen variablen mit längenangaben, optional mit data type
     QString& name();
-    DSPDATA::DspSegType segType();
+    QString& writeCommand();
+    void setData(QVector<float>& vector);
+
 
 private:
     QList<cDspVar*> DspVarList;
-    QVector<float> DspVarData;
     QString m_sname;
-    DSPDATA::DspSegType m_SegmentType;
-    QString m_slist;
+    QString sReturn;
 };
 
 #endif // DSPMEASDATA_H

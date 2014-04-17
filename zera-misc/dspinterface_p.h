@@ -20,7 +20,8 @@ enum dspcommands
     setbootpath,
     setsamplingsystem,
     varlist2dsp,
-    cmdlists2dsp,
+    cmdlist2dsp,
+    intlist2dsp,
     setsignalrouting,
     setdsp61850sourceadr,
     setdsp61850destadr,
@@ -38,7 +39,8 @@ enum dspcommands
     setphasecorrection,
     setoffsetcorrection,
     readdeviceversion,
-    readserverversion
+    readserverversion,
+    dspinterrupt
 };
 
 
@@ -56,10 +58,12 @@ public:
     virtual quint32 setDSPBootPath(QString path);
     virtual quint32 setSamplingSystem(int chncount, int samp_per, int samp_mper); // nmuber of channels, samples/signalperiod, samples/measperiod
     virtual quint32 varList2Dsp(); // send the var-list to dsp server
-    virtual quint32 cmdLists2Dsp(); // send cyclic- and intlist to the dsp server
+    virtual quint32 cmdList2Dsp(); // send cyclic command list to the dsp server
+    virtual quint32 intList2Dsp(); // send interrupt command list to the dsp server
+    virtual int cmdListCount(); // returns the number of command in cyclist program list
+    virtual int intListCount(); // returns the number of command in intlist program list
     virtual void clearCmdList(); // clears all cmd lists
-    virtual void clearVarLists(); // clears all varlists
-    virtual void ClearMemLists(); // clears all memory lists (memhandles)
+    virtual void clearMemLists(); // clears all memory lists (memhandles)
     virtual quint32 setSignalRouting(tRouting* routingtab); // set signal routing
     virtual quint32 setDsp61850SourceAdr(cETHAdress& ethadr); // set eth source adr
     virtual quint32 setDsp61850DestAdr(cETHAdress& ethadr); // set eth dest adr
@@ -70,16 +74,16 @@ public:
     virtual quint32 triggerIntHKSK(quint32); // trigger start hksk in intlist
     virtual void addCycListItem(QString cmd); // appends new command to cyclic list
     virtual void addIntListItem(QString cmd); // same for interrupt list
-    virtual cDspMeasData* getMemHandle(QString name, DSPDATA::DspSegType segtype); // init a new memory group and return handle
-    virtual void deleteDSPMemHandle(cDspMeasData* memhandle);
-    virtual void addVarItem(cDspMeasData* memgroup,cDspVar* var); // append a new dsp var to memory group
+    virtual cDspMeasData* getMemHandle(QString name); // init a new memory group and return handle
+    virtual void deleteMemHandle(cDspMeasData* memhandle);
     virtual quint32 activateInterface(); // load var- and cmdlists to dsp (starts theprogram on dsp)
     virtual quint32 deactivateInterface(); // unload ...
     virtual quint32 dataAcquisition(cDspMeasData* memgroup); // reads all vars of this memorygroup that are of type vapplication
-    virtual quint32 dspMemoryRead(cDspMeasData* memgroup); // reads all vars of this memorygroup
-    virtual float* setVarData(cDspMeasData* memgroup, QString s); //set the values of memgroup from qstring
-    virtual quint32 dspMemoryWrite(cDspMeasData* memgroup, DSPDATA::dType type); // writes all vars of this memorygroup with type
-    virtual float* data(cDspMeasData* dspdata); // returns a pointer to the vars read from dsp
+    virtual quint32 dspMemoryRead(cDspMeasData* memgroup, DSPDATA::dType type); // reads all vars of this memorygroup
+    virtual void setVarData(cDspMeasData* memgroup, QString datalist, DSPDATA::dType type = DSPDATA::dFloat); //set the values of memgroup from qstring
+    virtual quint32 dspMemoryWrite(cDspMeasData* memgroup); // writes all vars of this memorygroup with type
+    virtual float* data(cDspMeasData* memgroup, QString name); // returns a pointer to the vars read from dsp
+    virtual void setData(cDspMeasData* memgroup, QVector<float>& vector);
     virtual quint32 setGainCorrection(int chn, float val); // sets gaincorrection for 1 channel
     virtual quint32 setPhaseCorrection(int chn, float val); // sets phase correction for 1 channel
     virtual quint32 setOffsetCorrection(int chn, float val); // sets offset correction for 1 channel
@@ -95,9 +99,9 @@ private:
     cDSPInterface *q_ptr;
 
     QStringList CycCmdList, IntCmdList;
-    QList<cDspMeasData*> m_DspMeasDataList; // eine liste mit zeigern auf "programmdaten"
-    QList<cDspMeasData*> m_DspMemoryDataList; // eine liste mit zeigern auf  dsp speicher allgemein
-
+    QList<cDspMeasData*> m_DspMemoryDataList; // eine liste mit zeigern auf dsp speicher
+    cDspMeasData* actMemGroup;
+    DSPDATA::dType actMemType;
 };
 
 }

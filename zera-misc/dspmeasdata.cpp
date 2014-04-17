@@ -3,8 +3,8 @@
 #include "dspmeasdata.h"
 
 
-cDspMeasData::cDspMeasData(QString name, DSPDATA::DspSegType st)
-    :m_sname(name), m_SegmentType(st)
+cDspMeasData::cDspMeasData(QString name)
+    :m_sname(name)
 {
 }
 
@@ -23,9 +23,19 @@ cDspMeasData::~cDspMeasData()
 }
 
 
-float* cDspMeasData::data() // gibt einen zeiger zurück auf die var daten vom typ vDspResult bzw. vmemory
+float* cDspMeasData::data(QString name) // gibt einen zeiger zurück auf die var daten
 {
-    return DspVarData.data();
+    if (DspVarList.count() > 0)
+    {
+        cDspVar* pDspVar;
+        for (int i = 0; i < DspVarList.size(); ++i)
+        {
+            pDspVar = DspVarList.at(i);
+            if (pDspVar->Name() == name)
+                return pDspVar->data();
+        }
+    }
+    return 0; // caller has to pay attention !!!!!
 }
 
 
@@ -35,53 +45,65 @@ void cDspMeasData::addVarItem(cDspVar* var) // eine neue dsp variable
     // wir brauchen speicher für daten, die wir lesen und/oder schreiben wollen
     // dies ist der fall für ergebnisse , dsp konstanten und parameter
     //
+    /*
     if ( (var->type() & (DSPDATA::vDspResult | DSPDATA::vDspIntVar | DSPDATA::vDspParam)) > 0)
         DspVarData.resize ( DspVarData.size() + var->size());
+    */
 }
 
-quint32 cDspMeasData::getDataCount()
+quint32 cDspMeasData::getSize()
 {
-    return DspVarData.count();
-}
+    quint32 size = 0;
 
-
-QString& cDspMeasData::MeasVarList()
-{
-    m_slist="";
-    QTextStream ts( &m_slist, QIODevice::WriteOnly );
-    cDspVar *DspVar;
-
-    for (int i = 0; i < DspVarList.size(); ++i)
-    {
-        DspVar = DspVarList.at(i);
-        if ((DspVar->type() & (DSPDATA::vDspResult)) > 0)
-            ts << QString("%1;").arg(DspVar->Name());
-    }
-
-    return m_slist; // eine liste aller variablen namen vom typ vdspresult
-}
-
-
-QString& cDspMeasData::VarList(bool withType)
-{
-    m_slist="";
-    QTextStream ts( &m_slist, QIODevice::WriteOnly );
-    cDspVar *DspVar;
-
-    if (m_SegmentType == DSPDATA::sLocal) // global data must not be created
+    if (DspVarList.count() > 0)
     {
         for (int i = 0; i < DspVarList.size(); ++i)
-        {
-            DspVar = DspVarList.at(i);
-            if (withType)
-                    ts << QString("%1,%2,%3;").arg(DspVar->Name()).arg(DspVar->size()).arg(DspVar->datatype());
-            else
-                ts << QString("%1,%2;").arg(DspVar->Name()).arg(DspVar->size());
+            size += DspVarList.at(i)->size();
+    }
 
+    return size;
+}
+
+
+quint32 cDspMeasData::getSize(QString name)
+{
+    quint32 size = 0;
+
+    if (DspVarList.count() > 0)
+    {
+        cDspVar* pDspVar;
+        for (int i = 0; i < DspVarList.size(); ++i)
+        {
+            pDspVar = DspVarList.at(i);
+            if (pDspVar->Name() == name)
+                return pDspVar->size();
         }
     }
 
-    return m_slist; // eine liste aller variablen namen und deren länge
+    return size;
+}
+
+
+QString& cDspMeasData::VarList(int section, bool withType)
+{
+    sReturn="";
+    QTextStream ts( &sReturn, QIODevice::WriteOnly );
+    cDspVar *pDspVar;
+
+    for (int i = 0; i < DspVarList.size(); ++i)
+    {
+        pDspVar = DspVarList.at(i);
+        if ((section & pDspVar->type()) > 0) // do we want this value ?
+        {
+            if (withType)
+                ts << QString("%1,%2,%3;").arg(pDspVar->Name()).arg(pDspVar->size()).arg(pDspVar->datatype());
+            else
+                ts << QString("%1,%2;").arg(pDspVar->Name()).arg(pDspVar->size());
+        }
+    }
+
+
+    return sReturn; // eine liste aller variablen namen und deren länge
 }
 
 
@@ -90,9 +112,50 @@ QString& cDspMeasData::name()
     return m_sname;
 }
 
-DSPDATA::DspSegType cDspMeasData::segType()
+QString& cDspMeasData::writeCommand()
 {
-    return m_SegmentType;
+    sReturn="";
+    QTextStream ts(&sReturn, QIODevice::WriteOnly );
+
+    for (int i = 0; i < DspVarList.count(); i++)
+    {
+        cDspVar* pVar = DspVarList.at(i);
+        ts << pVar->Name();
+
+        float* fval = pVar->data();
+        int type = pVar->datatype();
+
+        if (type == DSPDATA::dInt)  // wir haben integer daten
+        {
+            ulong* lval = (ulong*) fval;
+            for (int j = 0; j < pVar->size(); j++, lval++)
+                ts << "," << *lval;
+        }
+        else
+        {
+            for (int j = 0; j < pVar->size(); j++, fval++)
+                ts << "," << *fval;
+        }
+
+        ts << ";";
+    }
+
+    return sReturn;
+
 }
+
+
+void cDspMeasData::setData(QVector<float> &vector)
+{
+    vector.clear();
+    for (int i = 0; i < DspVarList.count(); i++)
+    {
+        cDspVar* pVar = DspVarList.at(i);
+        float* fval = pVar->data();
+        for (int j = 0; j < pVar->size(); j++, fval++)
+            vector.append(*fval);
+    }
+}
+
 
 
