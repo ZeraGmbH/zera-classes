@@ -2,6 +2,7 @@
 #include "proxyclient.h"
 #include "proxy.h"
 #include "proxy_p.h"
+#include <netmessages.pb.h>
 
 namespace Zera
 {
@@ -24,6 +25,18 @@ void cProxyClientPrivate::transmitAnswer(ProtobufMessage::NetMessage *message)
 void cProxyClientPrivate::transmitError(QAbstractSocket::SocketError errorCode)
 {
     emit tcpError(errorCode);
+}
+
+
+void cProxyClientPrivate::transmitConnection()
+{
+    emit connected();
+}
+
+
+void cProxyClientPrivate::transmitDisConnection()
+{
+    emit disconnected();
 }
 
 

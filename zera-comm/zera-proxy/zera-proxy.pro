@@ -19,14 +19,16 @@ DEFINES += ZERAPROXY_LIBRARY
 
 SOURCES += proxy.cpp \
     proxy_p.cpp \
-    proxyclient_p.cpp
+    proxyclient_p.cpp \
+    proxyprotobufwrapper.cpp
 
 HEADERS += proxy.h \
     proxy_global.h \
     proxyconnection.h \
     proxyclient.h \
     proxyclient_p.h \
-    proxy_p.h
+    proxy_p.h \
+    proxyprotobufwrapper.h
 
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-classes/proxy

@@ -1,0 +1,4 @@
+#ifndef MODULESIGNAL_H
+#define MODULESIGNAL_H
+
+#endif // MODULESIGNAL_H

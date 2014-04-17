@@ -19,11 +19,13 @@ INSTALLS += target
 HEADERS += \
     src/xml_config_global.h \
     src/xmlconfigreader.h \
-    src/xmlconfigreaderprivate.h
+    src/xmlconfigreaderprivate.h \
+    src/messagehandler.h
 
 SOURCES += \
     src/xmlconfigreader.cpp \
-    src/xmlconfigreaderprivate.cpp
+    src/xmlconfigreaderprivate.cpp \
+    src/messagehandler.cpp
 
 
 header_files.files = $$HEADERS

@@ -3,9 +3,14 @@
 
 #include <QObject>
 #include <QAbstractSocket>
-#include <netmessages.pb.h>
 
 #include "proxy_global.h"
+
+
+namespace ProtobufMessage
+{
+    class NetMessage;
+}
 
 
 namespace Zera
@@ -31,6 +36,8 @@ public:
 signals:
     void answerAvailable(ProtobufMessage::NetMessage*);
     void tcpError(QAbstractSocket::SocketError errorCode);
+    void disconnected();
+    void connected();
 };
 
 }

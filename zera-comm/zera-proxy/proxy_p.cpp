@@ -1,5 +1,7 @@
 #include <QUuid>
+#include <QTimer>
 #include <protonetpeer.h>
+#include <netmessages.pb.h>
 
 #include "proxy_p.h"
 #include "proxyclient_p.h"
@@ -24,6 +26,7 @@ cProxyPrivate::cProxyPrivate(cProxy *parent):
 
 cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
 {
+    bool existed;
     ProtoNetPeer* netClient;
     QUuid uuid;
     QByteArray binUUid;
@@ -33,21 +36,30 @@ cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
 
     if ((netClient = searchConnection(ipadress, port)) == 0) // look for existing connection
     {
+        existed = false;
         // if not existing we have to create
         netClient = new ProtoNetPeer(this);
+        netClient->setWrapper(&protobufWrapper);
         connect(netClient, SIGNAL(sigMessageReceived(google::protobuf::Message*)), this, SLOT(receiveMessage(google::protobuf::Message*)));
         connect(netClient, SIGNAL(sigSocketError(QAbstractSocket::SocketError)), this, SLOT(receiveTcpError(QAbstractSocket::SocketError)));
+        connect(netClient, SIGNAL(sigConnectionEstablished()), this, SLOT(registerConnection()));
+        connect(netClient, SIGNAL(sigConnectionClosed()), this, SLOT(registerDisConnection()));
         netClient->startConnection(ipadress, port);
     }
+    else
+        existed = true;
 
     cProxyClientPrivate *proxyclient = new cProxyClientPrivate(this);
 
-    uuid.createUuid(); // we use a per client uuid
+    uuid = QUuid::createUuid(); // we use a per client uuid
     binUUid = uuid.toRfc4122();
 
     cProxyConnection *connection = new cProxyConnection(ipadress, port, binUUid, netClient);
     m_ConnectionHash[proxyclient] = connection;
     m_ClientHash[binUUid] = proxyclient;
+
+    if (existed)
+        QTimer::singleShot(10, proxyclient, SLOT(transmitConnection()));
 
     return proxyclient;
 }
@@ -63,7 +75,8 @@ quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMess
 {
     quint32 nr;
 
-    message->set_clientid(m_ConnectionHash[client]->m_binUUID); // we put the client's id into message
+    QByteArray ba = m_ConnectionHash[client]->m_binUUID;
+    message->set_clientid(ba.data(), ba.size()); // we put the client's id into message
 
     if (m_nMessageNumber == 0) m_nMessageNumber++; // we never use 0 as message number (reserved)
     message->set_messagenr(nr = m_nMessageNumber);
@@ -84,12 +97,15 @@ void cProxyPrivate::receiveMessage(google::protobuf::Message* message)
 {
     ProtobufMessage::NetMessage *netMessage = static_cast<ProtobufMessage::NetMessage*>(message);
 
-    QByteArray key(netMessage->clientid().c_str(), netMessage->clientid().size());
-    if (m_ClientHash.contains(key))
+    if (netMessage->has_clientid())
     {
-        m_ClientHash[key]->transmitAnswer(netMessage);
+        QByteArray key(netMessage->clientid().data(), netMessage->clientid().size());
+        if (m_ClientHash.contains(key))
+        {
+            m_ClientHash[key]->transmitAnswer(netMessage);
+        }
     }
-    // ? error handling in case of unknown clientid ?
+    // ? todo error handling in case of unknown clientid ?
 }
 
 
@@ -102,11 +118,51 @@ void cProxyPrivate::receiveTcpError(QAbstractSocket::SocketError errorCode)
     while (it.hasNext())
     {
         cProxyConnection *pC;
+        it.next();
         pC = it.value();
         if (pC->m_pNetClient == netClient) // we found a client that was connected to netclient
         {
             cProxyClientPrivate* client = it.key();
             client->transmitError(errorCode); // so this client will forward error
+        }
+    }
+}
+
+
+void cProxyPrivate::registerConnection()
+{
+    ProtoNetPeer* netClient = qobject_cast<ProtoNetPeer*>(QObject::sender());
+
+    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
+
+    while (it.hasNext())
+    {
+        cProxyConnection *pC;
+        it.next();
+        pC = it.value();
+        if (pC->m_pNetClient == netClient) // we found a client that tried to connected to netclient
+        {
+            cProxyClientPrivate* client = it.key();
+            client->transmitConnection(); // so this client will be forwarded connection
+        }
+    }
+}
+
+void cProxyPrivate::registerDisConnection()
+{
+    ProtoNetPeer* netClient = qobject_cast<ProtoNetPeer*>(QObject::sender());
+
+    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
+
+    while (it.hasNext())
+    {
+        cProxyConnection *pC;
+        it.next();
+        pC = it.value();
+        if (pC->m_pNetClient == netClient) // we found a client that tried to connected to netclient
+        {
+            cProxyClientPrivate* client = it.key();
+            client->transmitDisConnection(); // so this client will be forwarded connection
         }
     }
 }
@@ -120,6 +176,7 @@ ProtoNetPeer* cProxyPrivate::searchConnection(QString ip, quint16 port)
     while (it.hasNext())
     {
         cProxyConnection *pC;
+        it.next();
         pC = it.value();
         if ( (pC->m_sIP == ip) && (pC->m_nPort == port))
         {

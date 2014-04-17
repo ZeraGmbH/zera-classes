@@ -2,7 +2,6 @@
 #define PROXYCLIENT_P_H
 
 #include <QObject>
-#include <netmessages.pb.h>
 #include <proxyclient.h>
 
 
@@ -21,6 +20,10 @@ public:
     cProxyClientPrivate(cProxyPrivate* proxy);
     void transmitAnswer(ProtobufMessage::NetMessage *message);
     void transmitError(QAbstractSocket::SocketError errorCode);
+    void transmitDisConnection();
+
+public slots:
+    void transmitConnection();
 
 protected:
     virtual quint32 transmitCommand(ProtobufMessage::NetMessage *message);

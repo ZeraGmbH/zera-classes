@@ -9,6 +9,7 @@
 #include <netmessages.pb.h>
 
 #include "proxy.h"
+#include "proxyprotobufwrapper.h"
 
 
 class ProtoNetPeer;
@@ -50,11 +51,14 @@ protected:
 protected slots:
     void receiveMessage(google::protobuf::Message *message);
     void receiveTcpError(QAbstractSocket::SocketError errorCode);
+    void registerConnection();
+    void registerDisConnection();
 
 private:
     Q_DISABLE_COPY(cProxyPrivate)
     Q_DECLARE_PUBLIC(cProxy)
 
+    cProxyProtobufWrapper protobufWrapper;
     ProtoNetPeer* searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
     QHash<cProxyClientPrivate*, cProxyConnection*> m_ConnectionHash; // holds network connection for each client
     QHash<QByteArray, cProxyClientPrivate*> m_ClientHash; // information for faster redirecting

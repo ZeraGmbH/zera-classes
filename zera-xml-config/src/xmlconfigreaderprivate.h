@@ -1,6 +1,8 @@
 #ifndef XMLCONFIGREADER_PRIVATE_H
 #define XMLCONFIGREADER_PRIVATE_H
 
+#include "messagehandler.h"
+
 #include <QHash>
 #include <QString>
 
@@ -33,6 +35,8 @@ namespace Zera
        * @brief schemaFilePath cached path to the schema file
        */
       QString schemaFilePath;
+
+      MessageHandler messageHandler;
 
       /**
        * @brief q_ptr See Q_DECLARE_PUBLIC
