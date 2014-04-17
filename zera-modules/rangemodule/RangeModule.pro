@@ -74,3 +74,9 @@ unix:!symbian {
 OTHER_FILES += \
     src/rangemodule.xml \
     src/rangemodule.xsd
+
+configxml.path = /etc/zera/modules/
+configxml.files = rangemodule.xsd \
+                  rangemodule.xml
+
+INSTALLS += configxml
