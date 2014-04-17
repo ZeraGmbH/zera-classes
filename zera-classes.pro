@@ -9,4 +9,5 @@ SUBDIRS     = \
             zera-dev \
             zera-xml-config \
             zera-comm/zera-proxy \
-            zera-misc
+            zera-misc \
+            zera-modules/interface 
