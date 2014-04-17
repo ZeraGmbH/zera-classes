@@ -63,7 +63,7 @@ protected:
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
 protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, QVariant answer) = 0;
+    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) = 0;
 };
 
 #endif // BASEMEASCHANNEL_H

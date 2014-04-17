@@ -15,7 +15,8 @@ public:
     QList<QStringList> m_GroupList; // here are our groups
     quint8 m_nGroupAct; // grouping active or not 1,0
     quint8 m_nAutoAct; // range automatic active or not 1,0
-    double m_fInterval; // measuring interval 0.1 ..1.0 sec.
+    double m_fMeasInterval; // measuring interval 0.1 .. 5.0 sec.
+    double m_fAdjInterval; // adjustment interval 0.5 .. 5.0 sec.
     QStringList m_senseChannelRangeList; // the wanted ranges after configuration
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;

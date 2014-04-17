@@ -1,29 +1,40 @@
+#include <QCoreApplication>
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <proxy.h>
+#include <proxyclient.h>
 #include <veinpeer.h>
 #include <veinentity.h>
 
 #include "rangemeaschannel.h"
 
-cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
-    :cBaseMeasChannel(proxy, peer, rmsocket, pcbsocket, name, chnnr)
+cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, QString puprange)
+    :cBaseMeasChannel(proxy, peer, rmsocket, pcbsocket, name, chnnr), m_sPowerUpRange(puprange)
 {
+    app = QCoreApplication::instance();
+
+    m_pRMInterface = new Zera::Server::cRMInterface();
+    m_pPCBInterface = new Zera::Server::cPCBInterface();
+
     generateInterface();
 
     // setting up statemachine for "activating" meas channel
+    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
     m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
     m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceState);
     m_claimResourceState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionState);
-    m_pcbConnectionState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelState);
+    // m_pcbConnectionState.addTransition is done in pcbConnection
     m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
     m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
     m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties1State);
-    m_readRangeProperties1State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties2State);
-    m_readRangeProperties2State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties1State);
-    m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties2State);
+    m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties3State);
+    m_readRangeProperties3State.addTransition(this, SIGNAL(activationLoop()), &m_readRangeProperties1State);
+    m_readRangeProperties3State.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
+    m_activationMachine.addState(&m_wait4ConnectionState);
+    m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
     m_activationMachine.addState(&m_readResourceState);
     m_activationMachine.addState(&m_readResourceInfoState);
@@ -34,20 +45,22 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_readRangeProperties1State);
     m_activationMachine.addState(&m_readRangeProperties2State);
+    m_activationMachine.addState(&m_readRangeProperties3State);
     m_activationMachine.addState(&m_activationDoneState);
 
-    m_activationMachine.setInitialState(&m_readResourceTypesState);
+    m_activationMachine.setInitialState(&m_wait4ConnectionState);
 
+    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
     connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
     connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
     connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
     connect(&m_claimResourceState, SIGNAL(entered()), SLOT(claimResource()));
     connect(&m_pcbConnectionState, SIGNAL(entered()), SLOT(pcbConnection()));
-    connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(getDspChannel()));
-    connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readchnAlias()));
+    connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
+    connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
     connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
     connect(&m_readRangeProperties1State, SIGNAL(entered()), SLOT(readRangeProperties1()));
-    connect(&m_readRangeProperties2State, SIGNAL(entered()), SLOT(readRangeProperties2()));
+    connect(&m_readRangeProperties3State, SIGNAL(entered()), SLOT(readRangeProperties3()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     // setting up statemachine for querying the meas channels ranges properties
@@ -57,6 +70,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_readRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readOVRejectionState);
     m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
     m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
+
 
     m_rangeQueryMachine.addState(&m_readRngAliasState);
     m_rangeQueryMachine.addState(&m_readTypeState);
@@ -75,12 +89,25 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     connect(&m_readOVRejectionState, SIGNAL(entered()), SLOT(readOVRejection()));
     connect(&m_readisAvailState, SIGNAL(entered()), SLOT(readisAvail()));
     connect(&m_rangeQueryDoneState, SIGNAL(entered()), SLOT(rangeQueryDone()));
+
+    // setting up statemachine for freeing resources
+    m_freeResourceStartState.addTransition(this, SIGNAL(activationContinue()), &m_freeResourceDoneState);
+    m_freeResourceStatemachine.addState(&m_freeResourceStartState);
+    m_freeResourceStatemachine.addState(&m_freeResourceDoneState);
+    m_freeResourceStatemachine.setInitialState(&m_freeResourceStartState);
+
+    connect(&m_freeResourceStartState, SIGNAL(entered()), SLOT(freeResourceStart()));
+    connect(&m_freeResourceStartState, SIGNAL(entered()), SLOT(freeResourceDone()));
 }
 
 
 cRangeMeasChannel::~cRangeMeasChannel()
 {
+    deactivate();
+    // app->exec(); // we block destructor until resource is free sync.
     delete m_pRMInterface;
+    delete m_pPCBInterface;
+
     deleteInterface();
 }
 
@@ -88,8 +115,9 @@ cRangeMeasChannel::~cRangeMeasChannel()
 quint32 cRangeMeasChannel::setRange(QString range)
 {
     m_sNewRange = range;
+    m_sActRange = m_sNewRange;
     quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
-    m_MsgNrCmdList[msgnr] = setrange;
+    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::setrange;
     return msgnr;
 }
 
@@ -97,7 +125,7 @@ quint32 cRangeMeasChannel::setRange(QString range)
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
     quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_sActRange, amplitude);
-    m_MsgNrCmdList[msgnr] = readgaincorrection;
+    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::readgaincorrection;
     return msgnr;
 }
 
@@ -105,7 +133,7 @@ quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
     quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_sActRange, amplitude);
-    m_MsgNrCmdList[msgnr] = readoffsetcorrection;
+    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::readoffsetcorrection;
     return msgnr;
 }
 
@@ -113,7 +141,7 @@ quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 {
     quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_sActRange, frequency);
-    m_MsgNrCmdList[msgnr] = readphasecorrection;
+    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::readphasecorrection;
     return msgnr;
 }
 
@@ -128,6 +156,7 @@ bool cRangeMeasChannel::isOverload(double ampl)
 {
     cRangeInfo ri;
     ri = m_RangeInfoHash[m_sActRange];
+    // qDebug() << QString("Ampl: %1; Rng: %2").arg(ampl).arg(ri.alias);
     return ((ri.urvalue * ri.ovrejection * sqrt2 /ri.rejection) < ampl);
 }
 
@@ -215,19 +244,22 @@ double cRangeMeasChannel::getRejection()
 
 void cRangeMeasChannel::activate()
 {
-    // mal schaun was aktivieren hier für eine bedeutung bekommt
-
     // we instantiate a working resource manager interface first
-    m_pRMInterface = new Zera::Server::cRMInterface();
-    m_pRMInterface->setClient(m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort));
+    // so first we try to get a connection to resource manager over proxy
+    Zera::Proxy::cProxyClient* client = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    m_wait4ConnectionState.addTransition(client, SIGNAL(connected()), &m_IdentifyState);
+    // and then we set connection resource manager interface's connection
+    m_pRMInterface->setClient(client); //
+    // todo insert timer for timeout
 
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, QVariant)), this, SLOT(catchInterfaceAnswer(quint32,QVariant)));
+    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     m_activationMachine.start(); // starting statemachine
 
     // resource manager liste sense abfragen
     // bin ich da drin ?
     // nein -> fehler activierung
     // ja -> socket von rm besorgen
+    // resource bei rm belegen
     // beim pcb proxy server interface beantragen
 
     // quint8 m_nDspChannel; dsp kanal erfragen
@@ -241,22 +273,22 @@ void cRangeMeasChannel::activate()
 
 void cRangeMeasChannel::deactivate()
 {
-    // gilt auch fürs deaktivieren
+    // in case of deactivation we free our resource and connections
+    m_freeResourceStatemachine.start();
 }
 
 
 void cRangeMeasChannel::generateInterface()
 {
-    QStringList sl;
     QString s;
 
-    m_pChannelEntity = m_pPeer->dataAdd(QString("Channel%1").arg(m_nChannelNr));
+    m_pChannelEntity = m_pPeer->dataAdd(QString("INF_Channel%1Name").arg(m_nChannelNr)); // here is the actual range
     m_pChannelEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelEntity->setValue(QVariant(s = "Unknown"));
+    m_pChannelEntity->setValue(s = "Unknown", m_pPeer);
 
-    m_pChannelRangeListEntity = m_pPeer->dataAdd(QString("Channel%1RangeList").arg(m_nChannelNr));
+    m_pChannelRangeListEntity = m_pPeer->dataAdd(QString("INF_Channel%1RangeList").arg(m_nChannelNr)); // list of possible ranges
     m_pChannelRangeListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelRangeListEntity->setValue(QVariant(sl << "Unknown"));
+    m_pChannelRangeListEntity->setValue(s = "Unknown", m_pPeer);
 }
 
 
@@ -267,37 +299,45 @@ void cRangeMeasChannel::deleteInterface()
 }
 
 
-void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, QVariant answer)
+void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;
     int cmd = m_MsgNrCmdList.take(msgnr);
+
     switch (cmd)
     {
-    case readresourcetypes:
-        if (answer.toString().contains("SENSE"))
+    case RANGEMEASCHANNEL::sendrmident:
+        if (reply == ack) // we only continue if resource manager acknowledges
             emit activationContinue();
         else
             emit activationError();
         break;
-    case readresource:
-        if (answer.toString().contains(m_sName))
+    case RANGEMEASCHANNEL::readresourcetypes:
+        if ((reply == ack) && (answer.toString().contains("SENSE")))
             emit activationContinue();
         else
             emit activationError();
         break;
-    case readresourceinfo:
+    case RANGEMEASCHANNEL::readresource:
+        if ((reply == ack) && (answer.toString().contains(m_sName)))
+            emit activationContinue();
+        else
+            emit activationError();
+        break;
+    case RANGEMEASCHANNEL::readresourceinfo:
     {
         bool ok1, ok2, ok3;
         int max, free;
         QStringList sl;
 
+
         sl = answer.toString().split(';');
-        if (sl.length() == 4)
+        if ((reply ==ack) && (sl.length() >= 4))
         {
             max = sl.at(0).toInt(&ok1); // fixed position
             free = sl.at(1).toInt(&ok2);
-            m_nPort = sl.at(2).toInt(&ok3);
-            m_sDescription = sl.at(3);
+            m_sDescription = sl.at(2);
+            m_nPort = sl.at(3).toInt(&ok3);
 
             if (ok1 && ok2 && ok3 && ((max == free) == 1))
             {
@@ -314,62 +354,121 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, QVariant answer)
         break;
 
     }
-    case claimresource:
-        if (answer.toInt(&ok) == ack)
+    case RANGEMEASCHANNEL::claimresource:
+        if (reply == ack)
             emit activationContinue();
         else
             emit activationError();
         break;
-    case readdspchannel:
-        m_nDspChannel = answer.toInt(&ok);
-        emit activationContinue();
+    case RANGEMEASCHANNEL::freeresource:
+        if (reply == ack)
+            emit activationContinue();
+        else
+            emit deactivationError();
         break;
-    case readchnalias:
-        m_sAlias = answer.toString();
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readdspchannel:
+        if (reply == ack)
+        {
+            m_nDspChannel = answer.toInt(&ok);
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case readrangelist:
-        m_RangeNameList = answer.toStringList();
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readchnalias:
+        if (reply == ack)
+        {
+            m_sAlias = answer.toString();
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case readrngalias:
-        ri.alias = answer.toString();
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readrangelist:
+        if (reply == ack)
+        {
+            m_RangeNameList = answer.toStringList();
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case readtype:
-        ri.type = answer.toInt(&ok);
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readrngalias:
+        if (reply == ack)
+        {
+            ri.alias = answer.toString();
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case readurvalue:
-        ri.urvalue = answer.toDouble(&ok);
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readtype:
+        if (reply == ack)
+        {
+            ri.type = answer.toInt(&ok);
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case readrejection:
-        ri.rejection = answer.toDouble(&ok);
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readurvalue:
+        if (reply == ack)
+        {
+            ri.urvalue = answer.toDouble(&ok);
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case readovrejection:
-        ri.ovrejection = answer.toDouble(&ok);
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readrejection:
+        if (reply == ack)
+        {
+            ri.rejection = answer.toDouble(&ok);
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case readisavail:
-        ri.avail = answer.toBool();
-        emit activationContinue();
+    case RANGEMEASCHANNEL::readovrejection:
+        if (reply == ack)
+        {
+            ri.ovrejection = answer.toDouble(&ok);
+            emit activationContinue();
+        }
+        else
+            emit activationError();
         break;
-    case setrange:
-        m_sActRange = m_sNewRange;
+    case RANGEMEASCHANNEL::readisavail:
+        if (reply == ack)
+        {
+            ri.avail = answer.toBool();
+            emit activationContinue();
+        }
+        else
+            emit activationError();
+        break;
+    case RANGEMEASCHANNEL::setrange:
+        if (reply == ack)
+            m_sActRange = m_sNewRange;
+        else {}; // perhaps some error output
+        emit cmdDone(msgnr);
+        break;    
+    case RANGEMEASCHANNEL::readgaincorrection:
+        if (reply == ack)
+            m_fGainCorrection = answer.toDouble(&ok);
+        else {};
         emit cmdDone(msgnr);
         break;
-    case readgaincorrection:
-        m_fGainCorrection = answer.toDouble(&ok);
+    case RANGEMEASCHANNEL::readoffsetcorrection:
+        if (reply == ack)
+            m_fOffsetCorrection = answer.toDouble(&ok);
+        else {};
         emit cmdDone(msgnr);
         break;
-    case readoffsetcorrection:
-        m_fOffsetCorrection = answer.toDouble(&ok);
-        emit cmdDone(msgnr);
-        break;
-    case readphasecorrection:
-        m_fPhaseCorrection = answer.toDouble(&ok);
+    case RANGEMEASCHANNEL::readphasecorrection:
+        if (reply == ack)
+            m_fPhaseCorrection = answer.toDouble(&ok);
+        else {};
         emit cmdDone(msgnr);
         break;
     }
@@ -378,88 +477,102 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, QVariant answer)
 
 void cRangeMeasChannel::setRangeListEntity()
 {
-    QStringList sl;
-    QList<QString> keys;
+    QString s;
+    QList<cRangeInfo> riList = m_RangeInfoHash.values();
 
-    keys = m_RangeInfoHash.keys();
-    for (int i = 0; i < keys.count(); i++)
-        sl.append(keys.at(i));
+    // we sort the range alias according to upper range values
+    for (int i = 0; i < riList.count()-1; i++)
+        for (int j = i; j < riList.count(); j++)
+            if (riList.at(i).urvalue < riList.at(j).urvalue)
+                riList.swap(i, j);
 
-    m_pChannelRangeListEntity->setValue(QVariant(sl));
+    s = riList.at(0).alias;
+    for (int i = 1; i < riList.count(); i++)
+        s = s + ";" + riList.at(i).alias;
+
+    m_pChannelRangeListEntity->setValue(s, m_pPeer);
 }
 
 
 void cRangeMeasChannel::setChannelEntity()
 {
-    m_pChannelEntity->setValue(QVariant(m_sAlias));
+    m_pChannelEntity->setValue(m_sAlias, m_pPeer);
+}
+
+
+void cRangeMeasChannel::sendRMIdent()
+{
+   m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = RANGEMEASCHANNEL::sendrmident;
 }
 
 
 void cRangeMeasChannel::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = RANGEMEASCHANNEL::readresourcetypes;
 }
 
 
 void cRangeMeasChannel::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = RANGEMEASCHANNEL::readresource;
 }
 
 
 void cRangeMeasChannel::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", m_sName)] = readresourceinfo;
+    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", m_sName)] = RANGEMEASCHANNEL::readresourceinfo;
 }
 
 
 void cRangeMeasChannel::claimResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", m_sName, 1)] = claimresource;
+    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", m_sName, 1)] = RANGEMEASCHANNEL::claimresource;
 }
 
 
 void cRangeMeasChannel::pcbConnection()
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
-    m_pPCBInterface->setClient(m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_nPort));
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, QVariant)), this, SLOT(catchInterfaceAnswer(quint32,QVariant)));
-    emit activationContinue();
+    Zera::Proxy::cProxyClient* client = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
+    m_pcbConnectionState.addTransition(client, SIGNAL(connected()), &m_readDspChannelState);
+
+    m_pPCBInterface->setClient(client);
+    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
 }
 
 
 void cRangeMeasChannel::readDspChannel()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getDSPChannel(m_sName)] = readdspchannel;
+   m_MsgNrCmdList[m_pPCBInterface->getDSPChannel(m_sName)] = RANGEMEASCHANNEL::readdspchannel;
 }
 
 
 void cRangeMeasChannel::readChnAlias()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = readchnalias;
+   m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = RANGEMEASCHANNEL::readchnalias;
 }
 
 
 void cRangeMeasChannel::readRangelist()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
+    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = RANGEMEASCHANNEL::readrangelist;
     m_RangeQueryIt = 0; // we start with range 0
 }
 
 
 void cRangeMeasChannel::readRangeProperties1()
 {
-    if (m_RangeQueryIt <= m_RangeNameList.count()) // another range ?
-        m_rangeQueryMachine.start(); // yes, fill it with information
-    else
-        emit activationContinue();
+    m_rangeQueryMachine.start(); // yes, fill it with information
+    emit activationContinue();
 }
 
 
-void cRangeMeasChannel::readRangeProperties2()
+void cRangeMeasChannel::readRangeProperties3()
 {
     m_RangeQueryIt++;
-    emit activationContinue();
+    if (m_RangeQueryIt < m_RangeNameList.count()) // another range ?
+        emit activationLoop();
+    else
+        emit activationContinue();
 }
 
 
@@ -469,7 +582,7 @@ void cRangeMeasChannel::activationDone()
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {
         ri = it.value();
-        if (!ri.avail || ((ri.type & 1) == 0)) // in case range is not avail or virtual
+        if (!ri.avail || ((ri.type & 1) == 1)) // in case range is not avail or virtual
             it = m_RangeInfoHash.erase(it);
         else
             ++it;
@@ -484,37 +597,37 @@ void cRangeMeasChannel::activationDone()
 
 void cRangeMeasChannel::readRngAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
+    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readrngalias;
 }
 
 
 void cRangeMeasChannel::readType()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
+    m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readtype;
 }
 
 
 void cRangeMeasChannel::readUrvalue()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readurvalue;
+    m_MsgNrCmdList[m_pPCBInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readurvalue;
 }
 
 
 void cRangeMeasChannel::readRejection()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrejection;
+   m_MsgNrCmdList[m_pPCBInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readrejection;
 }
 
 
 void cRangeMeasChannel::readOVRejection()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
+    m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readovrejection;
 }
 
 
 void cRangeMeasChannel::readisAvail()
 {
-    m_MsgNrCmdList[m_pPCBInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
+    m_MsgNrCmdList[m_pPCBInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readisavail;
 }
 
 
@@ -522,6 +635,21 @@ void cRangeMeasChannel::rangeQueryDone()
 {
     ri.name = m_RangeNameList.at(m_RangeQueryIt);
     m_RangeInfoHash[ri.alias] = ri; // for each range we append cRangeinfo per alias
+}
+
+
+void cRangeMeasChannel::freeResourceStart()
+{
+    m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = RANGEMEASCHANNEL::freeresource;
+}
+
+
+void cRangeMeasChannel::freeResourceDone()
+{
+    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(m_pPCBInterface, 0, this, 0);
+    emit deactivated();
+    // app->exit();
 }
 
 

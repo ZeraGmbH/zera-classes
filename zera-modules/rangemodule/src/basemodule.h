@@ -61,10 +61,12 @@ protected:
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule() = 0; // after xml configuration we can setup and export our module
     virtual void doInitialization() = 0; // here we build our dsp program and start it
-
+    virtual void startMeas() =  0;
+    virtual void stopMeas() = 0;
 
 private:
     QTimer m_ConfigTimer;
+    QTimer m_StartTimer;
     QList<const QState*> m_StateList;
     int m_nLastState;
     int m_nStatus;

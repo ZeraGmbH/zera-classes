@@ -13,13 +13,16 @@
 #include "basemeaschannel.h"
 #include "rangeinfo.h"
 
-
+namespace RANGEMEASCHANNEL
+{
 enum rangemeaschannelCmds
 {
+    sendrmident,
     readresourcetypes,
     readresource,
     readresourceinfo,
     claimresource,
+    freeresource,
     readdspchannel,
     readchnalias,
     readrangelist,
@@ -36,6 +39,7 @@ enum rangemeaschannelCmds
     readoffsetcorrection,
     readphasecorrection
 };
+}
 
 
 enum replies
@@ -48,13 +52,14 @@ enum replies
 };
 
 const double sqrt2 = 1.41421356;
+class QCoreApplication;
 
 class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 
 public:
-    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, QString puprange);
     ~cRangeMeasChannel();
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 readGainCorrection(double amplitude); // dito
@@ -76,7 +81,8 @@ public slots:
     virtual void deactivate(); // what do you think ? yes you're right
 
 signals:
-    void activationContinue(); // for internal loop control
+    void activationContinue(); // for internal flow control
+    void activationLoop();
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void executionError(); // for error handling purpose (todo)
 
@@ -85,21 +91,25 @@ protected:
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 protected slots:
-    void catchInterfaceAnswer(quint32 msgnr, QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    QCoreApplication *app;
     VeinEntity *m_pChannelEntity;
     VeinEntity *m_pChannelRangeListEntity;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
+    QString m_sPowerUpRange; // the range after power up
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
 
     // statemachine for activating a rangemeaschannel
     QStateMachine m_activationMachine;
+    QState m_wait4ConnectionState; // we must synchronize to connected state
+    QState m_IdentifyState; // we must identify ourself at resource manager
     QState m_readResourceTypesState; // we ask for a list of all resources
     QState m_readResourceState; // we look for our resource needed
     QState m_readResourceInfoState; // we look for resource specification
@@ -110,6 +120,7 @@ private:
     QState m_readRangelistState; // we query our range list
     QState m_readRangeProperties1State; // we build up a loop for querying all the ranges properties
     QState m_readRangeProperties2State; //
+    QState m_readRangeProperties3State;
     QFinalState m_activationDoneState;
 
     // statemachine for querying a measchannels range properties
@@ -122,6 +133,11 @@ private:
     QState m_readisAvailState;
     QFinalState m_rangeQueryDoneState;
 
+    // statemachine for querying a measchannels range properties
+    QStateMachine m_freeResourceStatemachine;
+    QState m_freeResourceStartState;
+    QFinalState m_freeResourceDoneState;
+
     void setRangeListEntity();
     void setChannelEntity();
 
@@ -129,6 +145,7 @@ private:
     cRangeInfo ri;
 
 private slots:
+    void sendRMIdent();
     void readResourceTypes();
     void readResource();
     void readResourceInfo();
@@ -138,7 +155,7 @@ private slots:
     void readChnAlias();
     void readRangelist();
     void readRangeProperties1();
-    void readRangeProperties2();
+    void readRangeProperties3();
     void activationDone();
 
     // the slots for querying a measchannels range properties
@@ -149,6 +166,10 @@ private slots:
     void readOVRejection();
     void readisAvail();
     void rangeQueryDone();
+
+    // the slots for freeing the resources
+    void freeResourceStart();
+    void freeResourceDone();
 
 };
 

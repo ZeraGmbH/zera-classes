@@ -1,14 +1,16 @@
 #include <QSignalTransition>
 #include <dspinterface.h>
 
-#include "justifynorm.h"
+#include "adjustment.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 
 
-cJustifyNormManagement::cJustifyNormManagement(cRangeModule *module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist)
-    :m_pRangemodule(module), m_pPeer(peer), m_pDSPIFace(iface), m_ChannelNameList(chnlist)
+cAdjustManagement::cAdjustManagement(cRangeModule *module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist, double interval)
+    :m_pRangemodule(module), m_pPeer(peer), m_pDSPIFace(iface), m_ChannelNameList(chnlist), m_fAdjInterval(interval)
 {
+    m_bAdjust = false;
+
     generateInterface();
 
     for (int i = 0; i < m_ChannelNameList.count(); i++) // we fetch all our real channels first
@@ -42,36 +44,37 @@ cJustifyNormManagement::cJustifyNormManagement(cRangeModule *module, VeinPeer* p
     m_getGainCorr1State.addTransition(this, SIGNAL(activationContinue()), &m_getGainCorr2State);
     m_getGainCorr2State.addTransition(this, SIGNAL(repeatStateMachine()), &m_getGainCorr1State);
     m_getGainCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_getPhaseCorr1State);
+    m_getPhaseCorr1State.addTransition(this, SIGNAL(activationContinue()), &m_getPhaseCorr2State);
     m_getPhaseCorr2State.addTransition(this, SIGNAL(repeatStateMachine()), &m_getPhaseCorr1State);
     m_getPhaseCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_getOffsetCorr1State);
     m_getOffsetCorr1State.addTransition(this, SIGNAL(activationContinue()), &m_getOffsetCorr2State);
     m_getOffsetCorr2State.addTransition(this, SIGNAL(repeatStateMachine()), &m_getOffsetCorr1State);
-    m_getPhaseCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_adjNormDoneState);
-    m_adjNormMachine.addState(&m_getGainCorr1State);
-    m_adjNormMachine.addState(&m_getGainCorr2State);
-    m_adjNormMachine.addState(&m_getPhaseCorr1State);
-    m_adjNormMachine.addState(&m_getPhaseCorr2State);
-    m_adjNormMachine.addState(&m_getOffsetCorr1State);
-    m_adjNormMachine.addState(&m_getOffsetCorr2State);
-    m_adjNormMachine.addState(&m_adjNormDoneState);
-    m_adjNormMachine.setInitialState(&m_getGainCorr1State);
+    m_getOffsetCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_adjustDoneState);
+    m_adjustMachine.addState(&m_getGainCorr1State);
+    m_adjustMachine.addState(&m_getGainCorr2State);
+    m_adjustMachine.addState(&m_getPhaseCorr1State);
+    m_adjustMachine.addState(&m_getPhaseCorr2State);
+    m_adjustMachine.addState(&m_getOffsetCorr1State);
+    m_adjustMachine.addState(&m_getOffsetCorr2State);
+    m_adjustMachine.addState(&m_adjustDoneState);
+    m_adjustMachine.setInitialState(&m_getGainCorr1State);
     connect(&m_getGainCorr1State, SIGNAL(entered()), SLOT(getGainCorr1()));
     connect(&m_getGainCorr2State, SIGNAL(entered()), SLOT(getGainCorr2()));
     connect(&m_getPhaseCorr1State, SIGNAL(entered()), SLOT(getPhaseCorr1()));
     connect(&m_getPhaseCorr2State, SIGNAL(entered()), SLOT(getPhaseCorr2()));
     connect(&m_getOffsetCorr1State, SIGNAL(entered()), SLOT(getOffsetCorr1()));
     connect(&m_getOffsetCorr2State, SIGNAL(entered()), SLOT(getOffsetCorr2()));
-    connect(&m_adjNormDoneState, SIGNAL(entered()), SLOT(getCorrDone()));
+    connect(&m_adjustDoneState, SIGNAL(entered()), SLOT(getCorrDone()));
 }
 
 
-cJustifyNormManagement::~cJustifyNormManagement()
+cAdjustManagement::~cAdjustManagement()
 {
     deleteInterface();
 }
 
 
-void cJustifyNormManagement::activate()
+void cAdjustManagement::activate()
 {
     // we fetch a handle for each gain-, phase, offset correction for
     // all possible channels because we do not know which channels become active
@@ -80,106 +83,119 @@ void cJustifyNormManagement::activate()
     for (int i = 0; i < m_ChannelList.count(); i++)
         connect(m_ChannelList.at(i), SIGNAL(cmdDone(quint32)), SLOT(catchChannelReply(quint32)));
 
-    connect(m_pDSPIFace, SIGNAL(serverAnswer(quint32, QVariant)), SLOT(catchInterfaceAnswer(quint32,QVariant)));
+    connect(m_pDSPIFace, SIGNAL(serverAnswer(quint32, quint8,QVariant)), SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
 
-    m_pGainCorrectionDSP = m_pDSPIFace->getMemHandle("GainCorrection", DSPDATA::sGlobal);
+    m_pGainCorrectionDSP = m_pDSPIFace->getMemHandle("GainCorrection");
     m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
-    m_pPhaseCorrectionDSP = m_pDSPIFace->getMemHandle("PhaseCorrection", DSPDATA::sGlobal);
+    m_fGainCorr = m_pDSPIFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
+
+    m_pPhaseCorrectionDSP = m_pDSPIFace->getMemHandle("PhaseCorrection");
     m_pPhaseCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
-    m_pOffsetCorrectionDSP = m_pDSPIFace->getMemHandle("GainCorrection", DSPDATA::sGlobal);
+    m_fPhaseCorr = m_pDSPIFace->data(m_pPhaseCorrectionDSP, "PHASECORRECTION");
+
+    m_pOffsetCorrectionDSP = m_pDSPIFace->getMemHandle("OffsetCorrection");
     m_pOffsetCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
+    m_fOffsetCorr = m_pDSPIFace->data(m_pOffsetCorrectionDSP, "OFFSETCORRECTION");
 
     m_readCorrectionDSPMachine.start(); // we read all correction data once
 }
 
 
-void cJustifyNormManagement::deactivate()
+void cAdjustManagement::deactivate()
 {
-    m_pDSPIFace->deleteDSPMemHandle(m_pGainCorrectionDSP);
-    m_pDSPIFace->deleteDSPMemHandle(m_pPhaseCorrectionDSP);
-    m_pDSPIFace->deleteDSPMemHandle(m_pOffsetCorrectionDSP);
+    disconnect(m_pDSPIFace, 0, this, 0);
+    m_pDSPIFace->deleteMemHandle(m_pGainCorrectionDSP);
+    m_pDSPIFace->deleteMemHandle(m_pPhaseCorrectionDSP);
+    m_pDSPIFace->deleteMemHandle(m_pOffsetCorrectionDSP);
+    emit deactivated();
 }
 
 
-void cJustifyNormManagement::ActionHandler(QVector<double> *actualValues)
+void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
     m_nChannelIt = 0; // we start with first channel
-    m_adjNormMachine.start();
+    // in case measurement is faster than adjusting
+    if (m_bAdjust && !m_adjustMachine.isRunning())
+    {
+        m_bAdjust = false;
+        m_adjustMachine.start();
+    }
 }
 
 
-void cJustifyNormManagement::generateInterface()
+void cAdjustManagement::generateInterface()
 {
     // at the moment no interface
 }
 
 
-void cJustifyNormManagement::deleteInterface()
+void cAdjustManagement::deleteInterface()
 {
     // at the moment no interface
 }
 
 
-void cJustifyNormManagement::readGainCorr()
+void cAdjustManagement::readGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrectionDSP)] = ADJUSTMENT::readgaincorr;
 }
 
 
-void cJustifyNormManagement::readPhaseCorr()
+void cAdjustManagement::readPhaseCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pPhaseCorrectionDSP)] = readphasecorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pPhaseCorrectionDSP)] = ADJUSTMENT::readphasecorr;
 }
 
 
-void cJustifyNormManagement::readOffsetCorr()
+void cAdjustManagement::readOffsetCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pOffsetCorrectionDSP)] = readoffsetcorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pOffsetCorrectionDSP)] = ADJUSTMENT::readoffsetcorr;
 }
 
 
-void cJustifyNormManagement::readCorrDone()
+void cAdjustManagement::readCorrDone()
 {
+    m_AdjustTimer.start(m_fAdjInterval*1000.0);
+    connect(&m_AdjustTimer, SIGNAL(timeout()), this, SLOT(adjustPrepare()));
     emit activated();
 }
 
 
-void cJustifyNormManagement::writeGainCorr()
+void cAdjustManagement::writeGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrectionDSP, DSPDATA::dFloat)] = writegaincorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrectionDSP)] = ADJUSTMENT::writegaincorr;
 }
 
 
-void cJustifyNormManagement::writePhaseCorr()
+void cAdjustManagement::writePhaseCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pPhaseCorrectionDSP, DSPDATA::dFloat)] = writephasecorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pPhaseCorrectionDSP)] = ADJUSTMENT::writephasecorr;
 }
 
 
-void cJustifyNormManagement::writeOffsetCorr()
+void cAdjustManagement::writeOffsetCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pOffsetCorrectionDSP, DSPDATA::dFloat)] = writeoffsetcorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pOffsetCorrectionDSP)] = ADJUSTMENT::writeoffsetcorr;
 }
 
 
-void cJustifyNormManagement::getGainCorr1()
+void cAdjustManagement::getGainCorr1()
 {
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getgaincorr;
+    // qDebug() << "Adjustmentstatemachine";
+    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = ADJUSTMENT::getgaincorr;
 }
 
 
-void cJustifyNormManagement::getGainCorr2()
+void cAdjustManagement::getGainCorr2()
 {
     cRangeMeasChannel *measChannel;
-    double fCorrNorm;
-    float* corr;
+    float fCorr;
 
     measChannel = m_ChannelList.at(m_nChannelIt);
-    fCorrNorm = measChannel->getGainCorrection() * measChannel->getUrValue() / measChannel->getRejection();
-    corr = m_pGainCorrectionDSP->data();
-    corr[measChannel->getDSPChannelNr()] = fCorrNorm;
-
+    fCorr = measChannel->getGainCorrection();
+    m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr;
+    // qDebug() << QString("GainCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
     m_nChannelIt++;
     if (m_nChannelIt < m_ChannelNameList.count())
         emit repeatStateMachine();
@@ -191,23 +207,21 @@ void cJustifyNormManagement::getGainCorr2()
 }
 
 
-void cJustifyNormManagement::getPhaseCorr1()
+void cAdjustManagement::getPhaseCorr1()
 {
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(m_ActualValues[2 * m_ChannelNameList.count()])] = getphasecorr;
+    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(m_ActualValues[2 * m_ChannelNameList.count()])] = ADJUSTMENT::getphasecorr;
 }
 
 
-void cJustifyNormManagement::getPhaseCorr2()
+void cAdjustManagement::getPhaseCorr2()
 {
     cRangeMeasChannel *measChannel;
-    double fCorr;
-    float* corr;
+    float fCorr;
 
     measChannel = m_ChannelList.at(m_nChannelIt);
     fCorr = measChannel->getPhaseCorrection();
-    corr = m_pPhaseCorrectionDSP->data();
-    corr[measChannel->getDSPChannelNr()] = fCorr;
-
+    m_fPhaseCorr[measChannel->getDSPChannelNr()] = fCorr;
+    // qDebug() << QString("PhaseCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
     m_nChannelIt++;
     if (m_nChannelIt < m_ChannelNameList.count())
         emit repeatStateMachine();
@@ -219,22 +233,21 @@ void cJustifyNormManagement::getPhaseCorr2()
 }
 
 
-void cJustifyNormManagement::getOffsetCorr1()
+void cAdjustManagement::getOffsetCorr1()
 {
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getoffsetcore;
+    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = ADJUSTMENT::getoffsetcore;
 }
 
 
-void cJustifyNormManagement::getOffsetCorr2()
+void cAdjustManagement::getOffsetCorr2()
 {
     cRangeMeasChannel *measChannel;
-    double fCorr;
-    float* corr;
+    float fCorr;
 
     measChannel = m_ChannelList.at(m_nChannelIt);
     fCorr = measChannel->getOffsetCorrection();
-    corr = m_pOffsetCorrectionDSP->data();
-    corr[measChannel->getDSPChannelNr()] = fCorr;
+    m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr;
+    // qDebug() << QString("OffsetCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
 
     m_nChannelIt++;
     if (m_nChannelIt < m_ChannelNameList.count())
@@ -244,59 +257,66 @@ void cJustifyNormManagement::getOffsetCorr2()
 }
 
 
-void cJustifyNormManagement::getCorrDone()
+void cAdjustManagement::getCorrDone()
 {
     m_nChannelIt = 0;
     m_writeCorrectionDSPMachine.start(); // we have all correction data and write it to dsp
 }
 
 
-void cJustifyNormManagement::catchInterfaceAnswer(quint32 msgnr, QVariant answer)
+void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant)
 {
-    bool ok;
-
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         // that we will ignore
     }
     else
     {
-        int cmd = m_MsgNrCmdList.take(msgnr);
-        switch (cmd)
+        // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface
+        if (m_MsgNrCmdList.contains(msgnr))
         {
-        case readgaincorr:
-        case readphasecorr:
-        case readoffsetcorr:
-            if (answer.toInt(&ok) == ack)
-                emit activationContinue();
-            else
-                emit activationError();
-            break;
+            int cmd = m_MsgNrCmdList.take(msgnr);
+            switch (cmd)
+            {
+            case ADJUSTMENT::readgaincorr:
+            case ADJUSTMENT::readphasecorr:
+            case ADJUSTMENT::readoffsetcorr:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                    emit activationError();
+                break;
 
-        case writegaincorr:
-        case writephasecorr:
-        case writeoffsetcorr:
-            if (answer.toInt(&ok) == ack)
-                emit activationContinue();
-            else
-                break; // perhaps we emit some error here ?
-            break;
+            case ADJUSTMENT::writegaincorr:
+            case ADJUSTMENT::writephasecorr:
+            case ADJUSTMENT::writeoffsetcorr:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                    break; // perhaps we emit some error here ?
+                break;
 
+            }
         }
     }
 }
 
-void cJustifyNormManagement::catchChannelReply(quint32 msgnr)
+void cAdjustManagement::catchChannelReply(quint32 msgnr)
 {
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case getgaincorr:
-    case getphasecorr:
-    case getoffsetcore:
+    case ADJUSTMENT::getgaincorr:
+    case ADJUSTMENT::getphasecorr:
+    case ADJUSTMENT::getoffsetcore:
         emit activationContinue();
         break;
     }
+}
+
+void cAdjustManagement::adjustPrepare()
+{
+    m_bAdjust = true;
 }
 
 

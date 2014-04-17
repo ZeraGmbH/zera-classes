@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QHash>
+#include <QTimer>
 #include <QStringList>
 #include <QList>
 #include <QVector>
@@ -12,8 +13,10 @@
 
 #include "moduleacitvist.h"
 
+namespace ADJUSTMENT
+{
 
-enum justifynormCmds
+enum adjustmentCmds
 {
     readgaincorr,
     readphasecorr,
@@ -27,6 +30,7 @@ enum justifynormCmds
     getphasecorr,
     getoffsetcore
 };
+}
 
 class cRangeModule;
 class cRangeMeasChannel;
@@ -41,18 +45,18 @@ namespace Server {
 }
 
 
-class cJustifyNormManagement: public cModuleActivist
+class cAdjustManagement: public cModuleActivist
 {
     Q_OBJECT
 
 public:
-    cJustifyNormManagement(cRangeModule* module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist);
-    virtual ~cJustifyNormManagement();
+    cAdjustManagement(cRangeModule* module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist, double interval);
+    virtual ~cAdjustManagement();
 
 public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
-    virtual void ActionHandler(QVector<double>* actualValues); // entry after received actual values
+    virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
 
 signals:
     void activationContinue();
@@ -68,10 +72,13 @@ private:
     VeinPeer* m_pPeer;
     Zera::Server::cDSPInterface* m_pDSPIFace; // our interface to dsp
     QStringList m_ChannelNameList; // the list of channels (names) we work on
+    double m_fAdjInterval;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
-    QVector<double> m_ActualValues;
+    QVector<float> m_ActualValues;
     quint8 m_nChannelIt;
     QHash<quint32, int> m_MsgNrCmdList;
+    QTimer m_AdjustTimer;
+    bool m_bAdjust;
 
     // statemachine for reading dsp correction data
     QStateMachine m_readCorrectionDSPMachine;
@@ -83,16 +90,20 @@ private:
     QState m_writeGainCorrState, m_writePhaseCorrState, m_writeOffsetCorrState;
     QFinalState m_writeCorrDoneState;
 
-    // statemachine for adjustment and normation
-    QStateMachine m_adjNormMachine;
+    // statemachine for adjustment
+    QStateMachine m_adjustMachine;
     QState m_getGainCorr1State, m_getGainCorr2State;
     QState m_getPhaseCorr1State, m_getPhaseCorr2State;
     QState m_getOffsetCorr1State, m_getOffsetCorr2State;
-    QFinalState m_adjNormDoneState;
+    QFinalState m_adjustDoneState;
 
     cDspMeasData* m_pGainCorrectionDSP; // copy of dsp internal correction data
     cDspMeasData* m_pPhaseCorrectionDSP;
     cDspMeasData* m_pOffsetCorrectionDSP;
+
+    float* m_fGainCorr;
+    float* m_fPhaseCorr;
+    float* m_fOffsetCorr;
 
 
 private slots:
@@ -113,8 +124,10 @@ private slots:
     void getOffsetCorr2();
     void getCorrDone();
 
-    void catchInterfaceAnswer(quint32 msgnr,QVariant answer);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
     void catchChannelReply(quint32 msgnr);
+
+    void adjustPrepare();
 
 };
 

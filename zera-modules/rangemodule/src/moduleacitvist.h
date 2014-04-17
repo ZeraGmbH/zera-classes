@@ -18,6 +18,7 @@ signals:
     void activated();
     void deactivated();
     void activationError();
+    void deactivationError();
 
 public slots:
     virtual void activate() = 0; // here we query our properties and activate ourself

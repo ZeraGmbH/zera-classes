@@ -7,7 +7,7 @@ cModuleInfo::cModuleInfo(VeinPeer *peer, QString name, QVariant initval)
     :m_pPeer(peer)
 {
     m_pParEntity = m_pPeer->dataAdd(name);
-    m_pParEntity->setRealValue(initval, m_pPeer);
+    m_pParEntity->setValue(initval, m_pPeer);
     m_pParEntity->modifiersAdd(VeinEntity::MOD_CONST);
 }
 

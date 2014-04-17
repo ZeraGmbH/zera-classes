@@ -8,6 +8,7 @@
 
 cRangeModuleConfiguration::cRangeModuleConfiguration()
 {
+    m_pRangeModulConfigData = 0;
 }
 
 
@@ -29,20 +30,23 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:debugLevel"] = setDebugLevel;
+    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setDSPServerIp;
-    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setDSPServerPort;
+    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
+    m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
 
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:channel:n"] = setChannelCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:group:n"] = setGroupCount;
 
+    m_ConfigXMLMap["rangemodconfpar:configuration:measure:interval"] = setMeasureInterval;
+    m_ConfigXMLMap["rangemodconfpar:configuration:adjustment:interval"] = setAdjustInterval;
+
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:group"] = setGrouping;
     m_ConfigXMLMap["rangemodconfpar:parameter:sense:auto"] = setAutomatic;
-    m_ConfigXMLMap["rangemodconfpar:parameter:measure:interval"] = setInterval;
+
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
     {
@@ -107,7 +111,10 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             m_pRangeModulConfigData->m_nChannelCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for channel configuration
             for (int i = 0; i < m_pRangeModulConfigData->m_nChannelCount; i++)
+            {
                 m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:channel:ch%1").arg(i+1)] = setSenseChannel1+i;
+                m_pRangeModulConfigData->m_senseChannelRangeList.append("");
+            }
             break;
         case setGroupCount:
             m_pRangeModulConfigData->m_nGroupCount = m_pXMLReader->getValue(key).toInt(&ok);
@@ -125,14 +132,27 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
         case setAutomatic:
             m_pRangeModulConfigData->m_nAutoAct = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setInterval:
-            m_pRangeModulConfigData->m_fInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+        case setMeasureInterval:
+            m_pRangeModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setAdjustInterval:
+            m_pRangeModulConfigData->m_fAdjInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         default:
+            if ((cmd >= setDefaultRange1) && (cmd < setDefaultRange1 + 32))
+            {
+                cmd -= setDefaultRange1;
+                m_pRangeModulConfigData->m_senseChannelRangeList.replace(cmd, m_pXMLReader->getValue(key));
+            }
+            else
+
             if ((cmd >= setSenseChannel1) && (cmd < setSenseChannel1 + m_pRangeModulConfigData->m_nChannelCount))
             {
+                cmd -= setSenseChannel1;
                 // it is command for setting channel name
-                m_pRangeModulConfigData->m_senseChannelList.append(m_pXMLReader->getValue(key)); // for configuration of our engine
+                QString senseChannel = m_pXMLReader->getValue(key);
+                m_pRangeModulConfigData->m_senseChannelList.append(senseChannel); // for configuration of our engine
+                m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:range").arg(senseChannel)] = setDefaultRange1+cmd;
             }
 
             else
@@ -152,6 +172,7 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
                 {
                     QStringList sl = m_pRangeModulConfigData->m_GroupList.at(i);
                     sl.append(m_pXMLReader->getValue(key));
+                    m_pRangeModulConfigData->m_GroupList.replace(i, sl);
                 }
         }
         m_bConfigError |= !ok;

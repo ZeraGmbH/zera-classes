@@ -21,11 +21,13 @@ enum moduleconfigstate
     setGroupCount,
     setGrouping,
     setAutomatic,
-    setInterval,
+    setMeasureInterval,
+    setAdjustInterval,
 
-    setSenseChannel1 = 20, // max. 32 channels
-    setGroup1ChannelCount = 52, // max. 10 groups
-    setGroup1Channel1 = 62
+    setDefaultRange1 = 20, // max. 32 channels
+    setSenseChannel1 = 52, // max. 32 channels
+    setGroup1ChannelCount = 84, // max. 10 groups
+    setGroup1Channel1 = 94
 };
 
 

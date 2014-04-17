@@ -12,10 +12,13 @@ class cBaseModule;
 class VeinPeer;
 class cSocket;
 
-namespace Zera
-{
-namespace Server
-{
+
+namespace Zera {
+namespace Proxy {
+    class cProxy;
+}
+namespace  Server {
+    class cRMInterface;
     class cDSPInterface;
 }
 }
@@ -26,11 +29,11 @@ class cBaseMeasProgram: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasProgram(VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, QStringList chnlist);
+    cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, QStringList chnlist);
     virtual ~cBaseMeasProgram();
 
 signals:
-    void actualValues(QVector<double>*);
+    void actualValues(QVector<float>*);
 
 public slots:
     virtual void activate() = 0; // here we query our properties and activate ourself
@@ -39,13 +42,16 @@ public slots:
     virtual void stop() = 0; // in interface are not updated when stop
 
 protected:
+    Zera::Proxy::cProxy* m_pProxy;
     VeinPeer* m_pPeer; // the peer where we set our entities
     Zera::Server::cDSPInterface* m_pDSPIFace; // our interface to dsp
+    Zera::Server::cRMInterface* m_pRMInterface;
     cSocket* m_pRMSocket;
 
     QStringList m_ChannelList; // the list of channels we work on
-    QVector<double> m_pModuleActualValues; // a modules actual values
+    QVector<float> m_ModuleActualValues; // a modules actual values
     QHash<quint32, int> m_MsgNrCmdList;
+    int m_nDspMemUsed;
 
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration

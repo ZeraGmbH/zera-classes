@@ -13,7 +13,7 @@ class cModuleParameter;
 class cModuleInfo;
 class cRangeModuleConfiguration;
 class cRangeModuleMeasProgram;
-class cJustifyNormManagement;
+class cAdjustManagement;
 class cRangeObsermatic;
 
 
@@ -37,14 +37,18 @@ public:
 
 protected:
     cRangeModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    cJustifyNormManagement * m_pJustifyNorm; // our justifying and normation program
+    cAdjustManagement * m_pAdjustment; // our justifying and normation program
     cRangeObsermatic *m_pRangeObsermatic; // our range handling
     QList<cRangeMeasChannel*> m_rangeMeasChannelList; // our meas channels
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void doInitialization(); // here we build our dsp program and start it
+    virtual void startMeas(); // we make the measuring program start here
+    virtual void stopMeas();
 
 private:
+    void deleteModuleActivist();
+    cModuleInfo *channelNrInfo;
     //cRangeModuleConfiguration *m_pConfiguration; // our xml configuration
     Zera::Server::cDSPInterface* m_pDSPInterface;
     qint32 m_nActivationIt;

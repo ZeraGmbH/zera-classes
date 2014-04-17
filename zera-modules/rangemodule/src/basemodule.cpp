@@ -15,6 +15,8 @@ cBaseModule::cBaseModule(Zera::Proxy::cProxy *proxy, VeinPeer *peer, cBaseModule
     setParent(parent);
 
     m_ConfigTimer.setSingleShot(true);
+    m_StartTimer.setSingleShot(true);
+
     m_nStatus = BaseModule::untouched;
     m_pStateMachine = new QStateMachine(this);
 
@@ -87,7 +89,7 @@ cBaseModule::cBaseModule(Zera::Proxy::cProxy *proxy, VeinPeer *peer, cBaseModule
     connect(m_pStateStopStart, SIGNAL(entered()), SLOT(entryStopStart()));
     connect(m_pStateStopDone, SIGNAL(entered()), SLOT(entryStopDone()));
     connect(&m_ConfigTimer, SIGNAL(timeout()), SIGNAL(sigConfiguration()));
-
+    connect(&m_StartTimer, SIGNAL(timeout()), SIGNAL(sigRun()));
     m_pStateMachine->start();
 }
 
@@ -134,7 +136,7 @@ bool cBaseModule::isConfigured()
 
 void cBaseModule::startModule()
 {
-    emit sigRun(); // we try to start our module
+    m_StartTimer.start(0); // in case eventloop is not yet running
 }
 
 
@@ -222,6 +224,7 @@ void cBaseModule::entryRunStart()
 
 void cBaseModule::entryRunDone()
 {
+    startMeas();
     m_nStatus = BaseModule::initialized;
     m_StateList.clear(); // we remove all states
     m_StateList.append(m_pStateRun); // and add run now
@@ -246,8 +249,10 @@ void cBaseModule::entryStopStart()
 
 void cBaseModule::entryStopDone()
 {
+    stopMeas();
     m_nStatus = BaseModule::initialized;
     m_StateList.clear(); // we remove all states
     m_StateList.append(m_pStateStop); // and add run now
+
     m_nLastState = BaseModule::STOP; // we need this in case of reconfiguration
 }

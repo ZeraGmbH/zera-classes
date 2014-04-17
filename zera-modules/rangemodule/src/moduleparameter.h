@@ -20,7 +20,7 @@ public:
     QVariant getData();
 
 signals:
-    void updated();
+    void updated(QVariant);
 
 private:
     VeinPeer* m_pPeer;
