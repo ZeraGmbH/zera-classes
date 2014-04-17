@@ -12,14 +12,17 @@ namespace Server
 cRMInterfacePrivate::cRMInterfacePrivate(cRMInterface *iface)
     :q_ptr(iface)
 {
+    m_pClient = 0;
 }
 
 
 void cRMInterfacePrivate::setClient(Proxy::cProxyClient *client)
 {
+    if (m_pClient) // we avoid multiple connections
+        disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
     connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));
-    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError errorCode)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
+    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
 }
 
 
@@ -136,8 +139,8 @@ void cRMInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
     if (message->has_reply())
     {
         quint32 lmsgnr;
-        QString lmsg;
-        int lreply = 0;
+        QString lmsg = "";
+        int lreply;
 
         lmsgnr = message->messagenr();
 
@@ -145,10 +148,8 @@ void cRMInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         {
             lmsg = QString::fromStdString(message->reply().body());
         }
-        else
-        {
-            lreply = message->reply().rtype();
-        }
+
+        lreply = message->reply().rtype();
 
         int lastCmd = m_MsgNrCmdList.take(lmsgnr);
 
@@ -161,12 +162,12 @@ void cRMInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case removeresource:
         case setresource:
         case freeresource:
-            emit q->serverAnswer(lmsgnr, returnReply(lreply));
+            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         case getresourcetypes:
         case getresources:
         case getresourceinfo:
-            emit q->serverAnswer(lmsgnr, returnString(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }
     }

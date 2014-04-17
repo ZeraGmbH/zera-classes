@@ -42,7 +42,7 @@ public:
 
 signals:
     void tcpError(QAbstractSocket::SocketError errorCode);
-    void serverAnswer(quint32 msgnr, QVariant answer);
+    void serverAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
     Q_DECLARE_PRIVATE(cRMInterface)
