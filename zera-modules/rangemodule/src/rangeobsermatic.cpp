@@ -351,12 +351,15 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
 {
     bool ok;
 
-    if ((m_bRangeAutomatic = rauto.toInt(&ok) == 1))
+    if (m_bRangeAutomatic = (rauto.toInt(&ok) == 1))
     {
+        qDebug() << "Range Automatic on";
         rangeAutomatic(); // call once if switched to automatic
         groupHandling(); // check for grouping
         setRanges();
     }
+    else
+        qDebug() << "Range Automatic off";
 }
 
 
@@ -364,7 +367,7 @@ void cRangeObsermatic::newGrouping(QVariant rgrouping)
 {
     bool ok;
 
-    if ((m_bGrouping = rgrouping.toInt(&ok) == 1))
+    if (m_bGrouping = (rgrouping.toInt(&ok) == 1))
     {
         groupHandling(); // call once if switched to grouphandling
         setRanges();
