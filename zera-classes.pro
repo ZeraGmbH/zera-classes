@@ -10,4 +10,5 @@ SUBDIRS     = \
             zera-xml-config \
             zera-comm/zera-proxy \
             zera-misc \
-            zera-modules/interface 
+            zera-modules/interface \
+            zera-modules/rangemodule
