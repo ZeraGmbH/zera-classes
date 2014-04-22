@@ -6,7 +6,7 @@
 
 QT       -= gui
 
-TARGET = MeasurementModuleInterface
+#TARGET = MeasurementModuleInterface
 TEMPLATE = lib
 #CONFIG += staticlib
 
