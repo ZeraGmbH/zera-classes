@@ -18,6 +18,12 @@ LIBS +=  -lzera-resourcemanager-protobuf
 LIBS +=  -lvein-qt
 
 
+INCLUDEPATH += ../interface \
+    ../../zera-xml-config/src \
+    ../../zera-misc \
+    ../../zera-comm/zera-proxy \
+
+
 TARGET = $$qtLibraryTarget(rangemodule)
 TEMPLATE = lib
 CONFIG += plugin
