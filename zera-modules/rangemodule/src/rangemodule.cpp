@@ -75,7 +75,7 @@ void cRangeModule::setupModule()
     pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     channelNrInfo = new cModuleInfo(m_pPeer, "INF_ChannelCount", QVariant(pConfData->m_nChannelCount));
-
+    groupNrInfo = new cModuleInfo(m_pPeer, "INF_GroupCount", QVariant(pConfData->m_nGroupCount));
 
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)

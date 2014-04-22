@@ -49,6 +49,8 @@ protected:
 private:
     void deleteModuleActivist();
     cModuleInfo *channelNrInfo;
+    cModuleInfo *groupNrInfo;
+
     //cRangeModuleConfiguration *m_pConfiguration; // our xml configuration
     Zera::Server::cDSPInterface* m_pDSPInterface;
     qint32 m_nActivationIt;
