@@ -13,8 +13,6 @@ QT       -= gui
 LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
-LIBS +=  -lprotobuf
-LIBS +=  -lzera-resourcemanager-protobuf
 LIBS +=  -lvein-qt
 LIBS +=  -lMeasurementModuleInterface
 
