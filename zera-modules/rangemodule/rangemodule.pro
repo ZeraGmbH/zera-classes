@@ -82,8 +82,8 @@ OTHER_FILES += \
     src/rangemodule.xml \
     src/rangemodule.xsd
 
-configxml.path = /etc/zera/modules/
-configxml.files = rangemodule.xsd \
-                  rangemodule.xml
+config_files.files = $$OTHER_FILES
+config_files.path = /etc/zera/modules
 
-INSTALLS += configxml
+
+INSTALLS += config_files
