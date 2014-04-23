@@ -16,6 +16,7 @@ LIBS +=  -lzeraxmlconfig
 LIBS +=  -lprotobuf
 LIBS +=  -lzera-resourcemanager-protobuf
 LIBS +=  -lvein-qt
+LIBS +=  -lMeasurementModuleInterface
 
 
 INCLUDEPATH += ../interface \
