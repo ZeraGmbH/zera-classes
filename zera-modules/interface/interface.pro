@@ -16,9 +16,9 @@ HEADERS += \
 
 unix:!symbian {
     maemo5 {
-        target.path = /opt/usr/lib/zera-modules
+        target.path = /opt/usr/lib
     } else {
-        target.path = /usr/lib/zera-modules
+        target.path = /usr/lib
     }
     INSTALLS += target
 }
