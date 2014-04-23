@@ -12,8 +12,8 @@ include(proxy.user.pri)
 TARGET = zera-proxy
 TEMPLATE = lib
 
-LIBS +=  -lproto-net-qt
-LIBS +=  -lprotobuf
+#LIBS +=  -lproto-net-qt
+#LIBS +=  -lprotobuf
 
 DEFINES += ZERAPROXY_LIBRARY
 
