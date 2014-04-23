@@ -143,7 +143,10 @@ void cProxyPrivate::registerConnection()
         if (pC->m_pNetClient == netClient) // we found a client that tried to connected to netclient
         {
             cProxyClientPrivate* client = it.key();
-            client->transmitConnection(); // so this client will be forwarded connection
+            QTimer::singleShot(10, client, SLOT(transmitConnection()));
+            // client->transmitConnection(); // so this client will be forwarded connection
+            // direct call is to fast, so we take a timer
+            // todo: split start connection from getconnection
         }
     }
 }
