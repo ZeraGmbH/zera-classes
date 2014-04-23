@@ -24,7 +24,7 @@ QList<ZeraModules::VirtualModule *> RangeModuleFactory::listModules()
 
 QString RangeModuleFactory::getFactoryName()
 {
-    return QString("RangeModule");
+    return QString("rangemodule");
 }
 
 
