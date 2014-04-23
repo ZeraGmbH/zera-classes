@@ -13,7 +13,8 @@ TARGET = zeramisc
 TEMPLATE = lib
 
 LIBS +=  -lzera-proxy
-#LIBS +=  -lzera-resourcemanager-protobuf
+LIBS +=  -lprotobuf
+LIBS +=  -lzera-resourcemanager-protobuf
 
 INCLUDEPATH += ../zera-comm/zera-proxy
 
