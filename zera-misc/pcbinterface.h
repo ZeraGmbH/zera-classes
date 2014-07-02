@@ -33,6 +33,7 @@ public:
     virtual void setClient(Zera::Proxy::cProxyClient *client);
     virtual quint32 getDSPChannel(QString chnName); // int
     virtual quint32 getStatus(QString chnName); // int
+    virtual quint32 resetStatus(QString chnName); // reply (ack, nak..)
     virtual quint32 getAlias(QString chnName); // qstring
     virtual quint32 getType(QString chnName); // qstring
     virtual quint32 getUnit(QString chnName); // qstring
@@ -49,6 +50,8 @@ public:
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
 
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
+    virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
+    virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
 signals:
     void tcpError(QAbstractSocket::SocketError errorCode);

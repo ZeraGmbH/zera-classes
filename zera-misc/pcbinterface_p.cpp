@@ -48,6 +48,17 @@ quint32 cPCBInterfacePrivate::getStatus(QString chnName)
 }
 
 
+quint32 cPCBInterfacePrivate::resetStatus(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:STAT:RES;").arg(chnName));
+    m_MsgNrCmdList[msgnr] = resetstatus;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getAlias(QString chnName)
 {
     QString cmd;
@@ -213,6 +224,28 @@ quint32 cPCBInterfacePrivate::setRange(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterfacePrivate::registerNotifier(QString query, QString notifier)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SERV:REG"), par = QString("%1;%2;").arg(query).arg(notifier));
+    m_MsgNrCmdList[msgnr] = regnotifier;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::unregisterNotifiers()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SERV:UNR;"));
+    m_MsgNrCmdList[msgnr] = unregnotifier;
+    return msgnr;
+}
+
+
 void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
 {
     if (message->has_reply())
@@ -230,7 +263,13 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
 
         lreply = message->reply().rtype();
 
-        int lastCmd = m_MsgNrCmdList.take(lmsgnr);
+
+        int lastCmd;
+
+        if (lmsgnr == 0)
+            lastCmd = pcbinterrupt;
+        else
+            lastCmd = m_MsgNrCmdList.take(lmsgnr);
 
         Q_Q(cPCBInterface);
 
@@ -268,6 +307,10 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
 
         case setrange:
+        case resetstatus:
+        case regnotifier:
+        case unregnotifier:
+        case pcbinterrupt:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }

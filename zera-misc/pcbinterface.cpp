@@ -34,6 +34,13 @@ quint32 cPCBInterface::getStatus(QString chnName)
 }
 
 
+quint32 cPCBInterface::resetStatus(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->resetStatus(chnName);
+}
+
+
 quint32 cPCBInterface::getAlias(QString chnName)
 {
     Q_D(cPCBInterface);
@@ -136,6 +143,20 @@ quint32 cPCBInterface::setRange(QString chnName, QString rngName)
 {
     Q_D(cPCBInterface);
     return d->setRange(chnName, rngName);
+}
+
+
+quint32 cPCBInterface::registerNotifier(QString query, QString notifier)
+{
+    Q_D(cPCBInterface);
+    return d->registerNotifier(query, notifier);
+}
+
+
+quint32 cPCBInterface::unregisterNotifiers()
+{
+    Q_D(cPCBInterface);
+    return d->unregisterNotifiers();
 }
 
 
