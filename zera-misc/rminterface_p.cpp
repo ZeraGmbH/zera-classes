@@ -127,7 +127,7 @@ quint32 cRMInterfacePrivate::freeResource(QString type, QString name)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("RES:%1:%2").arg(type).arg(name) , par = QString("FREE"));
+    msgnr = sendCommand(cmd = QString("RES:%1:%2").arg(type).arg(name) , par = QString("FREE;"));
 
     m_MsgNrCmdList[msgnr] = freeresource;
     return msgnr;
