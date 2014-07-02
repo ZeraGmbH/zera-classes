@@ -30,6 +30,13 @@ cProxyClient* cProxy::getConnection(quint16 port)
 }
 
 
+bool cProxy::releaseConnection(cProxyClient *client)
+{
+    Q_D(cProxy);
+    return d->releaseConnection((cProxyClientPrivate*) client);
+}
+
+
 void cProxy::setIPAdress(QString ipAddress)
 {
     Q_D(cProxy);

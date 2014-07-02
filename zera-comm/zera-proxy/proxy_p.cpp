@@ -71,6 +71,27 @@ cProxyClient* cProxyPrivate::getConnection(quint16 port)
 }
 
 
+bool cProxyPrivate::releaseConnection(cProxyClientPrivate *client)
+{
+    if (m_ConnectionHash.contains(client))
+    {
+        cProxyConnection *connection = m_ConnectionHash.take(client);
+        QByteArray binUUid = m_ClientHash.key(client);
+        m_ClientHash.remove(binUUid);
+
+        ProtobufMessage::NetMessage netCommand;
+        ProtobufMessage::NetMessage::NetCmd *Command = netCommand.mutable_netcommand();
+        Command->set_cmd(ProtobufMessage::NetMessage_NetCmd_CmdType_RELEASE);
+        netCommand.set_clientid(binUUid);
+        connection->m_pNetClient->sendMessage(&netCommand);
+        delete connection;
+        return true;
+    }
+
+    return false;
+}
+
+
 quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMessage::NetMessage *message)
 {
     quint32 nr;

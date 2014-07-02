@@ -44,6 +44,13 @@ public:
     cProxyClient* getConnection(quint16 port);
 
     /**
+     * @brief releaseConnection
+     * @param cProxyClient*
+     * @return true if connection is released
+     */
+    bool releaseConnection(cProxyClient* client);
+
+    /**
       * @brief setIPAdress: default adress is localhost, can be overwritten here
       * @param ipAddress
       */
