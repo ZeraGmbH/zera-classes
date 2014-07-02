@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+        <xs:simpleType name="yesnotype">
+                <xs:restriction base="xs:integer">
+                        <xs:maxInclusive value='1'/>
+                        <xs:minInclusive value='0'/>
+                </xs:restriction>
+        </xs:simpleType>
+
+
 	<xs:simpleType name="debugtype">
 		<xs:restriction base="xs:integer">
 			<xs:maxInclusive value='7'/>
@@ -182,30 +190,12 @@
 			<xs:element name="m9" type="parametersensechanneltype" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="m10" type="parametersensechanneltype" minOccurs="0" maxOccurs="1"/>
 			<xs:element name="m11" type="parametersensechanneltype" minOccurs="0" maxOccurs="1"/>	
-			<xs:element name="group" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:minInclusive value="0"/>
-						<xs:maxInclusive value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
-			<xs:element name="auto" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:minInclusive value="0"/>
-						<xs:maxInclusive value="1"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+                        <xs:element name="grouping" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="rangeauto" type="yesnotype" minOccurs="1" maxOccurs="1"/>
 		</xs:sequence>
 	</xs:complexType>
 	
-	
-
-			
-			
-	<xs:element name="rangemodconfpar">
+        <xs:element name="rangemodconfpar">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element name="configuration">
@@ -215,7 +205,10 @@
 							<xs:element name="sense">
 								<xs:complexType>
 									<xs:sequence>
-										<xs:element name="channel" type="channeltype"/>
+                                                                                <xs:element name="withgrouping" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+                                                                                <xs:element name="withrangeauto" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+                                                                                <xs:element name="withoverload" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+                                                                                <xs:element name="channel" type="channeltype"/>
 										<xs:element name="group" type="grouptype"/>	
 									</xs:sequence>
 								</xs:complexType>

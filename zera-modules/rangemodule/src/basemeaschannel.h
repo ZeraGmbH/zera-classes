@@ -6,7 +6,7 @@
 #include <QHash>
 #include <QVariant>
 
-#include "moduleacitvist.h"
+#include "moduleactivist.h"
 #include "socket.h"
 
 class cSCPIConnection;
@@ -33,13 +33,11 @@ class cBaseMeasChannel: public cModuleActivist
 public:
     cBaseMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     virtual ~cBaseMeasChannel(){}
+    virtual void generateInterface() = 0; // here we export our interface (entities)
+    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
     quint8 getDSPChannelNr();
     QString getName();
     QString getAlias();
-
-public slots:
-    virtual void activate() = 0; // here we query our properties and activate ourself
-    virtual void deactivate() = 0; // what do you think ? yes you're right
 
 protected:
     Zera::Proxy::cProxy* m_pProxy;
@@ -59,8 +57,6 @@ protected:
     quint16 m_nPort; // and also the port adress of pcb server
 
     QHash<quint32, int> m_MsgNrCmdList;
-    virtual void generateInterface() = 0; // here we export our interface (entities)
-    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) = 0;

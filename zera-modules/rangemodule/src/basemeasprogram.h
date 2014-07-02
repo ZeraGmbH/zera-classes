@@ -6,7 +6,7 @@
 #include <QVector>
 #include <QHash>
 
-#include "moduleacitvist.h"
+#include "moduleactivist.h"
 
 class cBaseModule;
 class VeinPeer;
@@ -31,13 +31,13 @@ class cBaseMeasProgram: public cModuleActivist
 public:
     cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, QStringList chnlist);
     virtual ~cBaseMeasProgram();
+    virtual void generateInterface() = 0; // here we export our interface (entities)
+    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
 signals:
     void actualValues(QVector<float>*);
 
 public slots:
-    virtual void activate() = 0; // here we query our properties and activate ourself
-    virtual void deactivate() = 0; // what do you think ? yes you're right
     virtual void start() = 0; // difference between start and stop is that actual values
     virtual void stop() = 0; // in interface are not updated when stop
 
@@ -53,8 +53,6 @@ protected:
     QHash<quint32, int> m_MsgNrCmdList;
     int m_nDspMemUsed;
 
-    virtual void generateInterface() = 0; // here we export our interface (entities)
-    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
     virtual void setDspVarList() = 0; // dsp related stuff
     virtual void deleteDspVarList() = 0;
     virtual void setDspCmdList() = 0;

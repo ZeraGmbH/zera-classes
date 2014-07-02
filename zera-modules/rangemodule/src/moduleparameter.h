@@ -14,7 +14,7 @@ class cModuleParameter: public QObject
 {
     Q_OBJECT
 public:
-    cModuleParameter(VeinPeer* peer,QString name, QVariant initval, QString limitname, QVariant limitval );
+    cModuleParameter(VeinPeer* peer,QString name, QVariant initval, QString limitname, QVariant limitval, bool readonly = false);
     ~cModuleParameter();
     void setData(QVariant val);
     QVariant getData();

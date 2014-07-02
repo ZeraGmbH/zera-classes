@@ -1,7 +1,33 @@
 #ifndef RANGEMODULECONFIGDATA_H
 #define RANGEMODULECONFIGDATA_H
 
+#include <QString>
+#include <QList>
+
 #include "socket.h"
+
+struct boolParameter
+{
+    QString m_sKey;
+    quint8 m_nActive; // active or not 1,0
+};
+
+
+struct stringParameter
+{
+    QString m_sKey;
+    QString m_sPar;
+};
+
+struct cObsermaticConfPar
+{
+    bool m_bGrouping; //  grouping or not
+    bool m_bRangeAuto; // same for range automatic
+    bool m_bOverload; // same for overload
+    boolParameter m_nGroupAct; // grouping active or not 1,0
+    boolParameter m_nRangeAutoAct; // range automatic active or not 1,0
+    QList<stringParameter> m_senseChannelRangeParameter;
+};
 
 class cRangeModuleConfigData
 {
@@ -13,11 +39,10 @@ public:
     quint8 m_nGroupCount; // the number of groups holded
     QList<int> m_GroupCountList; // the number of expected items per group
     QList<QStringList> m_GroupList; // here are our groups
-    quint8 m_nGroupAct; // grouping active or not 1,0
-    quint8 m_nAutoAct; // range automatic active or not 1,0
+    cObsermaticConfPar m_ObsermaticConfPar;
     double m_fMeasInterval; // measuring interval 0.1 .. 5.0 sec.
     double m_fAdjInterval; // adjustment interval 0.5 .. 5.0 sec.
-    QStringList m_senseChannelRangeList; // the wanted ranges after configuration
+    // QStringList m_senseChannelRangeList; // the wanted ranges after configuration
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
     cSocket m_DSPServerSocket;

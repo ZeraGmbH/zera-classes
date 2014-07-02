@@ -9,25 +9,34 @@
 cAdjustManagement::cAdjustManagement(cRangeModule *module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist, double interval)
     :m_pRangemodule(module), m_pPeer(peer), m_pDSPIFace(iface), m_ChannelNameList(chnlist), m_fAdjInterval(interval)
 {
-    m_bAdjust = false;
-
-    generateInterface();
-
+    m_bAdjustTrigger = false;
     for (int i = 0; i < m_ChannelNameList.count(); i++) // we fetch all our real channels first
         m_ChannelList.append(m_pRangemodule->getMeasChannel(m_ChannelNameList.at(i)));
 
+    // and then set up our state machines
+
+    m_activationInitState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrState);
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readPhaseCorrState);
     m_readPhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readOffsetCorrState);
     m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readCorrDoneState);
-    m_readCorrectionDSPMachine.addState(&m_readGainCorrState);
-    m_readCorrectionDSPMachine.addState(&m_readPhaseCorrState);
-    m_readCorrectionDSPMachine.addState(&m_readOffsetCorrState);
-    m_readCorrectionDSPMachine.addState(&m_readCorrDoneState);
-    m_readCorrectionDSPMachine.setInitialState(&m_readGainCorrState);
+    m_activationMachine.addState(&m_activationInitState);
+    m_activationMachine.addState(&m_readGainCorrState);
+    m_activationMachine.addState(&m_readPhaseCorrState);
+    m_activationMachine.addState(&m_readOffsetCorrState);
+    m_activationMachine.addState(&m_readCorrDoneState);
+    m_activationMachine.setInitialState(&m_activationInitState);
+    connect(&m_activationInitState, SIGNAL(entered()), SLOT(activationInit()));
     connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
     connect(&m_readPhaseCorrState, SIGNAL(entered()), SLOT(readPhaseCorr()));
     connect(&m_readOffsetCorrState, SIGNAL(entered()), SLOT(readOffsetCorr()));
     connect(&m_readCorrDoneState, SIGNAL(entered()), SLOT(readCorrDone()));
+
+    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationMachine.addState(&m_deactivationInitState);
+    m_deactivationMachine.addState(&m_deactivationDoneState);
+    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
+    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 
     m_writeGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writePhaseCorrState);
     m_writePhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorrState);
@@ -70,15 +79,38 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module, VeinPeer* peer, Zera:
 
 cAdjustManagement::~cAdjustManagement()
 {
-    deleteInterface();
 }
 
 
-void cAdjustManagement::activate()
+void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
+{
+    m_ActualValues = *actualValues;
+    m_nChannelIt = 0; // we start with first channel
+    // in case measurement is faster than adjusting
+    if (m_bActive && m_bAdjustTrigger && !m_adjustMachine.isRunning())
+    {
+        m_bAdjustTrigger = false;
+        m_adjustMachine.start();
+    }
+}
+
+
+void cAdjustManagement::generateInterface()
+{
+    // at the moment no interface
+}
+
+
+void cAdjustManagement::deleteInterface()
+{
+    // at the moment no interface
+}
+
+
+void cAdjustManagement::activationInit()
 {
     // we fetch a handle for each gain-, phase, offset correction for
     // all possible channels because we do not know which channels become active
-
 
     for (int i = 0; i < m_ChannelList.count(); i++)
         connect(m_ChannelList.at(i), SIGNAL(cmdDone(quint32)), SLOT(catchChannelReply(quint32)));
@@ -97,42 +129,7 @@ void cAdjustManagement::activate()
     m_pOffsetCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
     m_fOffsetCorr = m_pDSPIFace->data(m_pOffsetCorrectionDSP, "OFFSETCORRECTION");
 
-    m_readCorrectionDSPMachine.start(); // we read all correction data once
-}
-
-
-void cAdjustManagement::deactivate()
-{
-    disconnect(m_pDSPIFace, 0, this, 0);
-    m_pDSPIFace->deleteMemHandle(m_pGainCorrectionDSP);
-    m_pDSPIFace->deleteMemHandle(m_pPhaseCorrectionDSP);
-    m_pDSPIFace->deleteMemHandle(m_pOffsetCorrectionDSP);
-    emit deactivated();
-}
-
-
-void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
-{
-    m_ActualValues = *actualValues;
-    m_nChannelIt = 0; // we start with first channel
-    // in case measurement is faster than adjusting
-    if (m_bAdjust && !m_adjustMachine.isRunning())
-    {
-        m_bAdjust = false;
-        m_adjustMachine.start();
-    }
-}
-
-
-void cAdjustManagement::generateInterface()
-{
-    // at the moment no interface
-}
-
-
-void cAdjustManagement::deleteInterface()
-{
-    // at the moment no interface
+    emit activationContinue(); // so we go on
 }
 
 
@@ -158,7 +155,30 @@ void cAdjustManagement::readCorrDone()
 {
     m_AdjustTimer.start(m_fAdjInterval*1000.0);
     connect(&m_AdjustTimer, SIGNAL(timeout()), this, SLOT(adjustPrepare()));
+    m_bActive = true;
     emit activated();
+}
+
+
+void cAdjustManagement::deactivationInit()
+{
+    m_bActive = false;
+    disconnect(m_pDSPIFace, 0, this, 0);
+
+    for (int i = 0; i < m_ChannelList.count(); i++)
+        disconnect(m_ChannelList.at(i), 0, this, 0);
+
+    m_pDSPIFace->deleteMemHandle(m_pGainCorrectionDSP);
+    m_pDSPIFace->deleteMemHandle(m_pPhaseCorrectionDSP);
+    m_pDSPIFace->deleteMemHandle(m_pOffsetCorrectionDSP);
+
+    emit deactivationContinue();
+}
+
+
+void cAdjustManagement::deactivationDone()
+{
+    emit deactivated();
 }
 
 
@@ -195,7 +215,7 @@ void cAdjustManagement::getGainCorr2()
     measChannel = m_ChannelList.at(m_nChannelIt);
     fCorr = measChannel->getGainCorrection();
     m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr;
-    // qDebug() << QString("GainCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
+    //qDebug() << QString("GainCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
     m_nChannelIt++;
     if (m_nChannelIt < m_ChannelNameList.count())
         emit repeatStateMachine();
@@ -316,7 +336,7 @@ void cAdjustManagement::catchChannelReply(quint32 msgnr)
 
 void cAdjustManagement::adjustPrepare()
 {
-    m_bAdjust = true;
+    m_bAdjustTrigger = true;
 }
 
 

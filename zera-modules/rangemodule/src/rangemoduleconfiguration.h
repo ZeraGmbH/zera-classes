@@ -20,22 +20,25 @@ enum moduleconfigstate
     setChannelCount,
     setGroupCount,
     setGrouping,
-    setAutomatic,
+    setRangeAutomatic,
     setMeasureInterval,
     setAdjustInterval,
+    setGroupingBool,
+    setRangeAutomaticBool,
+    setOverloadBool,
 
-    setDefaultRange1 = 20, // max. 32 channels
-    setSenseChannel1 = 52, // max. 32 channels
-    setGroup1ChannelCount = 84, // max. 10 groups
-    setGroup1Channel1 = 94
+    setDefaultRange1 = 40, // max. 32 channels
+    setSenseChannel1 = 72, // max. 32 channels
+    setGroup1ChannelCount = 104, // max. 10 groups
+    setGroup1Channel1 = 114
 };
 
 
 
 class cRangeModuleConfigData;
 
-const QString defaultXSDFile = "/etc/zera/modules/rangemodule.xsd";
-//const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/rangemodule/src/rangemodule.xsd";
+//const QString defaultXSDFile = "/etc/zera/modules/rangemodule.xsd";
+const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/rangemodule/src/rangemodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 

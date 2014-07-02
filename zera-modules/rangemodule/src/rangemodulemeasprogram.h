@@ -48,20 +48,16 @@ class cRangeModuleMeasProgram: public cBaseMeasProgram
 public:
     cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, QStringList chnlist, float interval);
     virtual ~cRangeModuleMeasProgram();
+    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void deleteInterface(); // we delete interface in case of reconfiguration
+
 
 public slots:
-    virtual void activate(); // here we query our properties and activate ourself
-    virtual void deactivate(); // what do you think ? yes you're right
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
     virtual void syncRanging(QVariant sync); //
 
-signals:
-    void activationContinue(); // for internal loop control
-
 protected:
-    virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
     virtual void setDspVarList(); // dsp related stuff
     virtual void deleteDspVarList();
     virtual void setDspCmdList();
@@ -73,7 +69,6 @@ protected slots:
 private:
     bool m_bRanging;
     bool m_bIgnore;
-    QCoreApplication* app;
     cRangeModule* m_pModule; // the module we live in
     float m_fInterval;
     QList<VeinEntity*> m_EntityList;
@@ -81,9 +76,8 @@ private:
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 
-    // statemachine for loading a dsp program
-    QStateMachine m_loadDSPMachine;
-    QState m_wait4ConnectionState;
+    // statemachine for activating gets the following states
+    QState m_serverConnectState;
     QState m_IdentifyState;
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
@@ -92,8 +86,7 @@ private:
     QState m_activateDSPState;
     QFinalState m_loadDSPDoneState;
 
-    // statemachine for unloading a dsp program;
-    QStateMachine m_unloadDSPMachine;
+    // statemachine for deactivating
     QState m_deactivateDSPState;
     QState m_freePGRMemState;
     QState m_freeUSERMemState;
@@ -107,6 +100,7 @@ private:
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
 
+    void serverConnect();
     void sendRMIdent();
     void claimPGRMem();
     void claimUSERMem();

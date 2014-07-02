@@ -2,13 +2,16 @@
 #define BASEMODULE_H
 
 #include <QObject>
+#include <QStateMachine>
+#include <QState>
+#include <QFinalState>
 #include <QList>
 #include <QByteArray>
 #include <QTimer>
 #include <virtualmodule.h>
 
 #include "xmlsettings.h"
-#include "moduleacitvist.h"
+#include "moduleactivist.h"
 
 
 namespace BaseModule
@@ -20,8 +23,12 @@ namespace BaseModule
 
     enum Status
     {
-        untouched, configured, setup, initialized
+        untouched,  // we just got new configuration data that is not yet analyzed
+        configured, // we have analyzed config data and config data was ok
+        setup,      // we have setup our interface
+        activated   // we have activated the module
     };
+
 }
 
 
@@ -44,13 +51,40 @@ public:
     virtual void startModule();
     virtual void stopModule();
 
+signals:
+    void sigRun();
+    void sigRunFailed();
+    void sigStop();
+    void sigStopFailed();
+    void sigConfiguration(); // emitting this signal starts configuration
+    void sigConfDone(); // emitted when configuration is done regardless of good or not
+    void sigReconfigureContinue();
+
+    // signals to be used by activation and deactivation statemachine when ready
+    void activationReady();
+    void deactivationReady();
+
 protected:
-    QState* m_pStateConfXML;
-    QState* m_pStateConfSetup;
-    QState* m_pStateRunStart;
-    QState* m_pStateRunDone;
-    QState* m_pStateStopStart;
-    QState* m_pStateStopDone;
+    // additional states for IDLE
+    QState* m_pStateIDLEIdle;
+    QState* m_pStateIDLEConfXML;
+    QState* m_pStateIDLEConfSetup;
+
+    // additional states for RUN
+    QState* m_pStateRUNStart;
+    QState* m_pStateRUNDone;
+    QState* m_pStateRUNDeactivate;
+    QState* m_pStateRUNUnset;
+    QState* m_pStateRUNConfXML;
+    QState* m_pStateRUNConfSetup;
+
+    // additional states for STOP
+    QState* m_pStateSTOPStart;
+    QState* m_pStateSTOPDone;
+    QState* m_pStateSTOPDeactivate;
+    QState* m_pStateSTOPUnset;
+    QState* m_pStateSTOPConfXML;
+    QState* m_pStateSTOPConfSetup;
 
     QByteArray m_xmlconfString;
     Zera::Proxy::cProxy* m_pProxy; // the proxi for all our connections (to rm, dsp- pcb- server)
@@ -60,9 +94,12 @@ protected:
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule() = 0; // after xml configuration we can setup and export our module
-    virtual void doInitialization() = 0; // here we build our dsp program and start it
+    virtual void unsetModule() = 0; // in case of reconfiguration we must unset module first
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
+
+    QStateMachine m_ActivationMachine; // we use statemachine for module activation
+    QStateMachine m_DeactivationMachine; // and deactivation
 
 private:
     QTimer m_ConfigTimer;
@@ -71,28 +108,21 @@ private:
     int m_nLastState;
     int m_nStatus;
 
-signals:
-    void sigRun();
-    void sigRunFailed();
-    void sigStop();
-    void sigStopFailed();
-    void sigConfiguration();
-    void sigConfDoneIdle();
-    void sigConfDoneStop();
-    void sigConfDoneRun();
-    void sigInitDone();
-
 private slots:
     void entryIdle();
     void exitIdle();
-    void entryConf();
+
     void entryConfXML();
     void entryConfSetup();
-    void exitConf();
+
     void entryRunStart();
     void entryRunDone();
+    void entryRunDeactivate();
+    void entryRunUnset();
     void entryStopStart();
     void entryStopDone();
+
+
 };
 
 #endif // RANGEMODULE_H

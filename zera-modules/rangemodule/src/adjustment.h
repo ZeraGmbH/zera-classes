@@ -11,7 +11,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "moduleacitvist.h"
+#include "moduleactivist.h"
 
 namespace ADJUSTMENT
 {
@@ -52,20 +52,16 @@ class cAdjustManagement: public cModuleActivist
 public:
     cAdjustManagement(cRangeModule* module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist, double interval);
     virtual ~cAdjustManagement();
+    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void deleteInterface(); // we delete interface in case of reconfiguration
+
 
 public slots:
-    virtual void activate(); // here we query our properties and activate ourself
-    virtual void deactivate(); // what do you think ? yes you're right
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
 
 signals:
-    void activationContinue();
     void repeatStateMachine();
     void finishStateMachine();
-
-protected:
-    virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 private:
     cRangeModule* m_pRangemodule; // the module we live in
@@ -78,12 +74,19 @@ private:
     quint8 m_nChannelIt;
     QHash<quint32, int> m_MsgNrCmdList;
     QTimer m_AdjustTimer;
-    bool m_bAdjust;
+    bool m_bAdjustTrigger;
 
-    // statemachine for reading dsp correction data
-    QStateMachine m_readCorrectionDSPMachine;
-    QState m_readGainCorrState, m_readPhaseCorrState, m_readOffsetCorrState;
+    // statemachine for activating gets the following states
+    QState m_activationInitState;
+    QState m_readGainCorrState;
+    QState m_readPhaseCorrState;
+    QState m_readOffsetCorrState;
     QFinalState m_readCorrDoneState;
+
+    // statemachine for deactivating
+    QState m_deactivationInitState;
+    QFinalState m_deactivationDoneState;
+
 
     // statemachine for writing dsp correction data
     QStateMachine m_writeCorrectionDSPMachine;
@@ -107,10 +110,14 @@ private:
 
 
 private slots:
+    void activationInit();
     void readGainCorr();
     void readPhaseCorr();
     void readOffsetCorr();
     void readCorrDone();
+
+    void deactivationInit();
+    void deactivationDone();
 
     void writeGainCorr();
     void writePhaseCorr();

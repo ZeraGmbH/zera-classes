@@ -37,7 +37,9 @@ enum rangemeaschannelCmds
     setrange,
     readgaincorrection,
     readoffsetcorrection,
-    readphasecorrection
+    readphasecorrection,
+    readstatus,
+    resetstatus
 };
 }
 
@@ -59,56 +61,55 @@ class cRangeMeasChannel:public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, QString puprange);
+    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     ~cRangeMeasChannel();
+    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void deleteInterface(); // we delete interface in case of reconfiguration
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 readGainCorrection(double amplitude); // dito
     quint32 readPhaseCorrection(double frequency); // dito
     quint32 readOffsetCorrection(double amplitude); // dito
+    quint32 readStatus(); // read the channels status
+    quint32 resetStatus(); // reset the channels status
     double getGainCorrection(); // returns last read gain correction
     double getPhaseCorrection(); // returns last read phase correction
     double getOffsetCorrection(); // returns last read offset correction
+    bool isHWOverload(); // test if we have some hardware overload condition
     double getUrValue(QString range); // returns upper range value of range
     double getUrValue(); // returns upper range of actual range
+    double getRejection(QString range);
     double getRejection(); // return nominal (100%) rejection of actual range
+    double getOVRRejection(QString range);
+    double getOVRRejection();
+    double getMaxRecjection(); // returns the max. rejection of channel including overload reserve
     bool isPossibleRange(QString range, double ampl); // test if range is possible with ampl
+    bool isPossibleRange(QString range); // returns true if range is available
     bool isOverload(double ampl); // test if ampl is overload condition
+
     QString getOptRange(double ampl); // returns opt. range alias
     QString getMaxRange(); // returns alias of the range with max ur value
 
-public slots:
-    virtual void activate(); // here we query our properties and activate ourself
-    virtual void deactivate(); // what do you think ? yes you're right
-
 signals:
-    void activationContinue(); // for internal flow control
-    void activationLoop();
     void cmdDone(quint32 cmdnr); // to signal we are ready
-    void executionError(); // for error handling purpose (todo)
 
-protected:
-    virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    QCoreApplication *app;
     VeinEntity *m_pChannelEntity;
     VeinEntity *m_pChannelRangeListEntity;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
-    QString m_sPowerUpRange; // the range after power up
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
+    quint32 m_nStatus;
 
     // statemachine for activating a rangemeaschannel
-    QStateMachine m_activationMachine;
-    QState m_wait4ConnectionState; // we must synchronize to connected state
+    QState m_rmConnectState; // we must connect first to resource manager
     QState m_IdentifyState; // we must identify ourself at resource manager
     QState m_readResourceTypesState; // we ask for a list of all resources
     QState m_readResourceState; // we look for our resource needed
@@ -122,6 +123,11 @@ private:
     QState m_readRangeProperties2State; //
     QState m_readRangeProperties3State;
     QFinalState m_activationDoneState;
+
+    // statemachine for deactivating a rangemeaschannel
+    QState m_deactivationInitState;
+    QFinalState m_deactivationDoneState;
+
 
     // statemachine for querying a measchannels range properties
     QStateMachine m_rangeQueryMachine;
@@ -144,7 +150,11 @@ private:
     qint32 m_RangeQueryIt;
     cRangeInfo ri;
 
+    Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Proxy::cProxyClient* m_pPCBClient;
+
 private slots:
+    void rmConnect();
     void sendRMIdent();
     void readResourceTypes();
     void readResource();
@@ -158,6 +168,9 @@ private slots:
     void readRangeProperties3();
     void activationDone();
 
+    void deactivationInit();
+    void deactivationDone();
+
     // the slots for querying a measchannels range properties
     void readRngAlias();
     void readType();
@@ -166,10 +179,6 @@ private slots:
     void readOVRejection();
     void readisAvail();
     void rangeQueryDone();
-
-    // the slots for freeing the resources
-    void freeResourceStart();
-    void freeResourceDone();
 
 };
 

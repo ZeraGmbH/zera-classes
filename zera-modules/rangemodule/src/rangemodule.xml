@@ -7,20 +7,23 @@
 			<debuglevel>0</debuglevel>
 			<ethernet>
 				<resourcemanager>
-                                        <ip>127.0.0.1</ip>
+                                        <ip>192.168.7.220</ip>
 					<port>6312</port>
 				</resourcemanager>
 				<pcbserver>
-                                        <ip>127.0.0.1</ip>
+                                        <ip>192.168.7.220</ip>
                                         <port>6307</port>
 				</pcbserver>
 				<dspserver>
-                                        <ip>127.0.0.1</ip>
+                                        <ip>192.168.7.220</ip>
                                         <port>6310</port>
 				</dspserver>
 			</ethernet>
 		</connectivity>
 		<sense>
+                        <withgrouping>1</withgrouping>
+                        <withrangeauto>1</withrangeauto>
+                        <withoverload>1</withoverload>
 			<channel>
 				<n>6</n>
 				<ch1>m0</ch1>
@@ -66,7 +69,7 @@
 	<parameter>
 		<sense>
 			<m0>
-                                <range>120V</range>
+                                <range>480V</range>
 			</m0>	
 			<m1>
                                 <range>480V</range>
@@ -75,17 +78,17 @@
                                 <range>480V</range>
 			</m2>
 			<m3>
-				<range>160A</range>
+                                <range>1.0A</range>
 			</m3>
 			<m4>
-				<range>160A</range>
+                                <range>1.0A</range>
 			</m4>
 			<m5>
-				<range>160A</range>
+                                <range>1.0A</range>
 			</m5>
-                        <group>0</group>
-                        <auto>1</auto>
+                        <grouping>0</grouping>
+                        <rangeauto>0</rangeauto>
 		</sense>
-	</parameter>
+        </parameter>
 
 </rangemodconfpar> 

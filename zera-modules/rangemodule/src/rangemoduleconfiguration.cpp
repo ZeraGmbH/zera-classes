@@ -1,4 +1,5 @@
 #include <QPoint>
+#include <QString>
 #include <xmlconfigreader.h>
 
 #include "rangemoduleconfiguration.h"
@@ -9,6 +10,8 @@
 cRangeModuleConfiguration::cRangeModuleConfiguration()
 {
     m_pRangeModulConfigData = 0;
+    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
+    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
 }
 
 
@@ -38,22 +41,21 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
 
+    m_ConfigXMLMap["rangemodconfpar:configuration:sense:withgrouping"] = setGroupingBool;
+    m_ConfigXMLMap["rangemodconfpar:configuration:sense:withrangeauto"] = setRangeAutomaticBool;
+    m_ConfigXMLMap["rangemodconfpar:configuration:sense:withoverload"] = setOverloadBool;
+
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:channel:n"] = setChannelCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:group:n"] = setGroupCount;
 
     m_ConfigXMLMap["rangemodconfpar:configuration:measure:interval"] = setMeasureInterval;
     m_ConfigXMLMap["rangemodconfpar:configuration:adjustment:interval"] = setAdjustInterval;
 
-    m_ConfigXMLMap["rangemodconfpar:parameter:sense:group"] = setGrouping;
-    m_ConfigXMLMap["rangemodconfpar:parameter:sense:auto"] = setAutomatic;
-
+    m_ConfigXMLMap["rangemodconfpar:parameter:sense:grouping"] = setGrouping;
+    m_ConfigXMLMap["rangemodconfpar:parameter:sense:rangeauto"] = setRangeAutomatic;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
-    {
-        connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-        connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
-    }
     else
         m_bConfigError = true;
 }
@@ -64,6 +66,20 @@ QByteArray cRangeModuleConfiguration::exportConfiguration()
 //    QList<QString> keyList = m_exportEntityList.keys();
 //    for (int i = 0; i << keyList.count(); i++)
 //        m_pXMLReader->setValue(keyList.at(i), m_exportEntityList[keyList.at(i)]);
+
+    boolParameter* bPar;
+    bPar = &m_pRangeModulConfigData->m_ObsermaticConfPar.m_nGroupAct;
+    m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
+    bPar = &m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct;
+    m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
+
+    stringParameter sPar;
+    QList<stringParameter> sParList = m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter;
+    for (int i = 0; i < sParList.count(); i++)
+    {
+        sPar = sParList.at(i);
+        m_pXMLReader->setValue(sPar.m_sKey, sPar.m_sPar);
+    }
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -108,14 +124,18 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             m_pRangeModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setChannelCount:
+        {
             m_pRangeModulConfigData->m_nChannelCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for channel configuration
+            stringParameter sParam;
             for (int i = 0; i < m_pRangeModulConfigData->m_nChannelCount; i++)
             {
                 m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:channel:ch%1").arg(i+1)] = setSenseChannel1+i;
-                m_pRangeModulConfigData->m_senseChannelRangeList.append("");
+                // m_senseChannelRangeList.append("");
+                m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter.append(sParam);
             }
             break;
+        }
         case setGroupCount:
             m_pRangeModulConfigData->m_nGroupCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for group configuration
@@ -127,10 +147,21 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             }
             break;
         case setGrouping:
-            m_pRangeModulConfigData->m_nGroupAct = m_pXMLReader->getValue(key).toInt(&ok);
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_nGroupAct.m_sKey = key;
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_nGroupAct.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setAutomatic:
-            m_pRangeModulConfigData->m_nAutoAct = m_pXMLReader->getValue(key).toInt(&ok);
+        case setRangeAutomatic:
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct.m_sKey = key;
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setGroupingBool:
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_bGrouping = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setRangeAutomaticBool:
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_bRangeAuto = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setOverloadBool:
+            m_pRangeModulConfigData->m_ObsermaticConfPar.m_bOverload = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setMeasureInterval:
             m_pRangeModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
@@ -142,7 +173,11 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             if ((cmd >= setDefaultRange1) && (cmd < setDefaultRange1 + 32))
             {
                 cmd -= setDefaultRange1;
-                m_pRangeModulConfigData->m_senseChannelRangeList.replace(cmd, m_pXMLReader->getValue(key));
+                //m_pRangeModulConfigData->m_senseChannelRangeList.replace(cmd, m_pXMLReader->getValue(key));
+                stringParameter sParam;
+                sParam.m_sKey = key;
+                sParam.m_sPar = m_pXMLReader->getValue(key);
+                m_pRangeModulConfigData->m_ObsermaticConfPar.m_senseChannelRangeParameter.replace(cmd, sParam);
             }
             else
 

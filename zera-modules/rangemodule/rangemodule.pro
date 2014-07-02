@@ -43,7 +43,9 @@ SOURCES += \
     src/rangemodulemeasprogram.cpp \
     src/rangeobsermatic.cpp \
     src/adjustment.cpp \
-    src/modulesignal.cpp
+    src/modulesignal.cpp \
+    src/rangemoduleobservation.cpp \
+    src/moduleactivist.cpp
 
 HEADERS += \
     src/basemeaschannel.h \
@@ -61,11 +63,12 @@ HEADERS += \
     src/moduleinfo.h \
     src/basemeasprogram.h \
     src/rangemodulemeasprogram.h \
-    src/moduleacitvist.h \
     src/rangeobsermatic.h \
     src/socket.h \
     src/adjustment.h \
-    src/modulesignal.h
+    src/modulesignal.h \
+    src/rangemoduleobservation.h \
+    src/moduleactivist.h
 
 unix:!symbian {
     maemo5 {

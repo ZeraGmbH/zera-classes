@@ -18,10 +18,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
 {
     m_bRanging = false;
     m_bIgnore = false;
-    app = QCoreApplication::instance();
     m_pRMInterface = new Zera::Server::cRMInterface();
-
-    generateInterface(); // here we set up our visible entities
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_claimPGRMemState);
     m_claimPGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_claimUSERMemState);
@@ -29,17 +26,19 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     m_var2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_cmd2DSPState);
     m_cmd2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_activateDSPState);
     m_activateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_loadDSPDoneState);
-    m_loadDSPMachine.addState(&m_wait4ConnectionState);
-    m_loadDSPMachine.addState(&m_IdentifyState);
-    m_loadDSPMachine.addState(&m_claimPGRMemState);
-    m_loadDSPMachine.addState(&m_claimUSERMemState);
-    m_loadDSPMachine.addState(&m_var2DSPState);
-    m_loadDSPMachine.addState(&m_cmd2DSPState);
-    m_loadDSPMachine.addState(&m_activateDSPState);
-    m_loadDSPMachine.addState(&m_loadDSPDoneState);
 
-    m_loadDSPMachine.setInitialState(&m_wait4ConnectionState);
+    m_activationMachine.addState(&m_serverConnectState);
+    m_activationMachine.addState(&m_IdentifyState);
+    m_activationMachine.addState(&m_claimPGRMemState);
+    m_activationMachine.addState(&m_claimUSERMemState);
+    m_activationMachine.addState(&m_var2DSPState);
+    m_activationMachine.addState(&m_cmd2DSPState);
+    m_activationMachine.addState(&m_activateDSPState);
+    m_activationMachine.addState(&m_loadDSPDoneState);
 
+    m_activationMachine.setInitialState(&m_serverConnectState);
+
+    connect(&m_serverConnectState, SIGNAL(entered()), SLOT(serverConnect()));
     connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
     connect(&m_claimPGRMemState, SIGNAL(entered()), SLOT(claimPGRMem()));
     connect(&m_claimUSERMemState, SIGNAL(entered()), SLOT(claimUSERMem()));
@@ -52,12 +51,12 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     m_deactivateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_freePGRMemState);
     m_freePGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_freeUSERMemState);
     m_freeUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_unloadDSPDoneState);
-    m_unloadDSPMachine.addState(&m_deactivateDSPState);
-    m_unloadDSPMachine.addState(&m_freePGRMemState);
-    m_unloadDSPMachine.addState(&m_freeUSERMemState);
-    m_unloadDSPMachine.addState(&m_unloadDSPDoneState);
+    m_deactivationMachine.addState(&m_deactivateDSPState);
+    m_deactivationMachine.addState(&m_freePGRMemState);
+    m_deactivationMachine.addState(&m_freeUSERMemState);
+    m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_unloadDSPMachine.setInitialState(&m_deactivateDSPState);
+    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, SIGNAL(entered()), SLOT(deactivateDSP()));
     connect(&m_freePGRMemState, SIGNAL(entered()), SLOT(freePGRMem()));
@@ -76,38 +75,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
 
 cRangeModuleMeasProgram::~cRangeModuleMeasProgram()
 {
-    deleteInterface();
-    deactivate();
-    // app->exec(); // sync !!!!!!
     delete m_pRMInterface;
-}
-
-
-void cRangeModuleMeasProgram::activate()
-{
-    setDspVarList(); // first we set the var list
-    setDspCmdList(); // and the cmd list
-
-    // we have to instantiate a working resource manager interface
-    // so first we try to get a connection to resource manager over proxy
-    Zera::Proxy::cProxyClient* client = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-    m_wait4ConnectionState.addTransition(client, SIGNAL(connected()), &m_IdentifyState);
-    // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(client); //
-    // todo insert timer for timeout
-
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    connect(m_pDSPIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_loadDSPMachine.start(); // then we start the statemachine for activating the dsp and claiming the resources
-}
-
-
-void cRangeModuleMeasProgram::deactivate()
-{
-    deleteDspVarList();
-    deleteDspCmdList();
-
-    m_unloadDSPMachine.start(); // unload dsp program and free resources
 }
 
 
@@ -254,7 +222,10 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             if (!m_bRanging)
             {
                 if (!m_bIgnore)
-                    m_dataAcquisitionMachine.start();
+                {
+                    if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
+                        m_dataAcquisitionMachine.start();
+                }
                 else
                     m_bIgnore = false;
             }
@@ -308,9 +279,30 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
 void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     int i;
-    for (i = 0; i < m_EntityList.count()-1; i++) // we set n peak values first
-        m_EntityList.at(i)->setValue((*actualValues)[i], m_pPeer);
-    m_EntityList.at(i)->setValue((*actualValues)[2*i], m_pPeer);
+    if (m_bActive) // maybe we are deactivating !!!!
+    {
+        for (i = 0; i < m_EntityList.count()-1; i++) // we set n peak values first
+            m_EntityList.at(i)->setValue((*actualValues)[i], m_pPeer);
+        m_EntityList.at(i)->setValue((*actualValues)[2*i], m_pPeer);
+    }
+}
+
+
+void cRangeModuleMeasProgram::serverConnect()
+{
+    setDspVarList(); // first we set the var list for our dsp
+    setDspCmdList(); // and the cmd list he has to work on
+
+    // we have to instantiate a working resource manager interface
+    // so first we try to get a connection to resource manager over proxy
+    Zera::Proxy::cProxyClient* client = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    m_serverConnectState.addTransition(client, SIGNAL(connected()), &m_IdentifyState);
+    // and then we set connection resource manager interface's connection
+    m_pRMInterface->setClient(client); //
+    // todo insert timer for timeout
+
+    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pDSPIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
 }
 
 
@@ -352,12 +344,17 @@ void cRangeModuleMeasProgram::activateDSP()
 
 void cRangeModuleMeasProgram::activateDSPdone()
 {
+    m_bActive = true;
     emit activated();
 }
 
 
 void cRangeModuleMeasProgram::deactivateDSP()
 {
+    m_bActive = false;
+    deleteDspVarList();
+    deleteDspCmdList();
+
     m_MsgNrCmdList[m_pDSPIFace->deactivateInterface()] = MEASPROGRAM::deactivatedsp; // wat wohl
 }
 
