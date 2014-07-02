@@ -12,6 +12,7 @@
 #include <QStringList>
 
 #include <QDebug>
+#include <QCryptographicHash>
 
 namespace Zera
 {
@@ -97,8 +98,9 @@ namespace Zera
         if(sValidator.validate(&xmlDevice))
         {
           //reload the file
-          xmlDevice.close();
-          xmlDevice.open(QBuffer::ReadOnly);
+          //xmlDevice.close();
+          //xmlDevice.open(QBuffer::ReadOnly);
+            xmlDevice.seek(0);
 
           //qDebug() << "[zera-xml-config] XML is valid";
           if(xml2Config(&xmlDevice))
@@ -110,12 +112,14 @@ namespace Zera
         {
           qDebug() << "[zera-xml-config] XML is invalid: " << xmlString;
         }
+        xmlDevice.close();
       }
       else
       {
         qDebug() << "[zera-xml-config] schema is invalid";
       }
       emit finishedParsingXML(retVal);
+      schemaFile.close();
       return retVal;
     }
 
@@ -248,6 +252,7 @@ namespace Zera
           default:
             break;
         }
+
       }
 
       /* Error handling. */
