@@ -82,7 +82,7 @@ bool cProxyPrivate::releaseConnection(cProxyClientPrivate *client)
         ProtobufMessage::NetMessage netCommand;
         ProtobufMessage::NetMessage::NetCmd *Command = netCommand.mutable_netcommand();
         Command->set_cmd(ProtobufMessage::NetMessage_NetCmd_CmdType_RELEASE);
-        netCommand.set_clientid(binUUid);
+        netCommand.set_clientid(binUUid.data(), binUUid.size());
         connection->m_pNetClient->sendMessage(&netCommand);
         delete connection;
         return true;
