@@ -76,6 +76,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
 cRangeModuleMeasProgram::~cRangeModuleMeasProgram()
 {
     delete m_pRMInterface;
+    m_pProxy->releaseConnection(m_pRMClient);
 }
 
 
@@ -295,10 +296,10 @@ void cRangeModuleMeasProgram::serverConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    Zera::Proxy::cProxyClient* client = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-    m_serverConnectState.addTransition(client, SIGNAL(connected()), &m_IdentifyState);
+    m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    m_serverConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(client); //
+    m_pRMInterface->setClient(m_pRMClient); //
     // todo insert timer for timeout
 
     connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));

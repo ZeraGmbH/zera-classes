@@ -29,6 +29,13 @@ enum rangemoduleCmds
 };
 }
 
+namespace Zera
+{
+namespace Proxy
+{
+    class cProxyClient;
+}
+}
 
 class VeinPeer;
 class VeinEntity;
@@ -96,6 +103,8 @@ private:
     QStateMachine m_dataAcquisitionMachine;
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
+
+    Zera::Proxy::cProxyClient* m_pRMClient;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
