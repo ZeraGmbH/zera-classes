@@ -68,7 +68,7 @@ public:
     virtual void setVarData(cDspMeasData* memgroup, QString datalist, DSPDATA::dType type = DSPDATA::dFloat); //set the values of memgroup from qstring
     virtual quint32 dspMemoryWrite(cDspMeasData* memgroup); // writes all vars of this memorygroup with type
     virtual float* data(cDspMeasData* memgroup, QString name); // returns a pointer to the vars read from dsp
-    virtual void setData(cDspMeasData* memgroup, QVector<float>& vector);
+    virtual void getData(cDspMeasData* memgroup, QVector<float>& vector); // copy the memgroups data into qvector
     virtual quint32 setGainCorrection(int chn, float val); // sets gaincorrection for 1 channel
     virtual quint32 setPhaseCorrection(int chn, float val); // sets phase correction for 1 channel
     virtual quint32 setOffsetCorrection(int chn, float val); // sets offset correction for 1 channel

@@ -230,10 +230,11 @@ float* cDSPInterface::data(cDspMeasData *memgroup, QString name)
     return d->data(memgroup, name);
 }
 
-void cDSPInterface::setData(cDspMeasData *memgroup, QVector<float> &vector)
+
+void cDSPInterface::getData(cDspMeasData *memgroup, QVector<float> &vector)
 {
     Q_D(cDSPInterface);
-    d->setData(memgroup, vector);
+    d->getData(memgroup, vector);
 }
 
 

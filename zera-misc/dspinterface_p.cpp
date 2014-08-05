@@ -378,9 +378,9 @@ float* cDSPInterfacePrivate::data(cDspMeasData *memgroup, QString name)
 }
 
 
-void cDSPInterfacePrivate::setData(cDspMeasData *memgroup, QVector<float> &vector)
+void cDSPInterfacePrivate::getData(cDspMeasData *memgroup, QVector<float> &vector)
 {
-    memgroup->setData(vector);
+    vector = memgroup->getData();
 }
 
 
