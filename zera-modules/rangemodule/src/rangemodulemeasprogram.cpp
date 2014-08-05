@@ -1,4 +1,3 @@
-#include <QCoreApplication>
 #include <QString>
 #include <QStateMachine>
 #include <rminterface.h>
@@ -13,8 +12,8 @@
 #include "rangemodulemeasprogram.h"
 
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, QStringList chnlist, float interval)
-    :cBaseMeasProgram(proxy, peer, iface, rmsocket, chnlist), m_pModule(module), m_fInterval(interval)
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, cSocket* pcbsocket, QStringList chnlist, float interval)
+    :cBaseMeasProgram(proxy, peer, iface, rmsocket, pcbsocket, chnlist), m_pModule(module), m_fInterval(interval)
 {
     m_bRanging = false;
     m_bIgnore = false;
@@ -241,28 +240,28 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case MEASPROGRAM::sendrmident:
-            case MEASPROGRAM::claimpgrmem:
-            case MEASPROGRAM::claimusermem:
-            case MEASPROGRAM::varlist2dsp:
-            case MEASPROGRAM::cmdlist2dsp:
-            case MEASPROGRAM::activatedsp:
+            case RANGEMEASPROGRAM::sendrmident:
+            case RANGEMEASPROGRAM::claimpgrmem:
+            case RANGEMEASPROGRAM::claimusermem:
+            case RANGEMEASPROGRAM::varlist2dsp:
+            case RANGEMEASPROGRAM::cmdlist2dsp:
+            case RANGEMEASPROGRAM::activatedsp:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
                     emit activationError();
                 break;
 
-            case MEASPROGRAM::deactivatedsp:
-            case MEASPROGRAM::freepgrmem:
-            case MEASPROGRAM::freeusermem:
+            case RANGEMEASPROGRAM::deactivatedsp:
+            case RANGEMEASPROGRAM::freepgrmem:
+            case RANGEMEASPROGRAM::freeusermem:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
                     emit deactivationError();
                 break;
 
-            case MEASPROGRAM::dataaquistion:
+            case RANGEMEASPROGRAM::dataaquistion:
                 if (reply == ack)
                     emit activationContinue();
                 else
@@ -309,37 +308,37 @@ void cRangeModuleMeasProgram::serverConnect()
 
 void cRangeModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent("RangeModule")] = MEASPROGRAM::sendrmident;
+    m_MsgNrCmdList[m_pRMInterface->rmIdent("RangeModule")] = RANGEMEASPROGRAM::sendrmident;
 }
 
 
 void cRangeModuleMeasProgram::claimPGRMem()
 {
-  m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPIFace->cmdListCount())] = MEASPROGRAM::claimpgrmem;
+  m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPIFace->cmdListCount())] = RANGEMEASPROGRAM::claimpgrmem;
 }
 
 
 void cRangeModuleMeasProgram::claimUSERMem()
 {
-   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = MEASPROGRAM::claimusermem;
+   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = RANGEMEASPROGRAM::claimusermem;
 }
 
 
 void cRangeModuleMeasProgram::varList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->varList2Dsp()] = MEASPROGRAM::varlist2dsp;
+    m_MsgNrCmdList[m_pDSPIFace->varList2Dsp()] = RANGEMEASPROGRAM::varlist2dsp;
 }
 
 
 void cRangeModuleMeasProgram::cmdList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->cmdList2Dsp()] = MEASPROGRAM::cmdlist2dsp;
+    m_MsgNrCmdList[m_pDSPIFace->cmdList2Dsp()] = RANGEMEASPROGRAM::cmdlist2dsp;
 }
 
 
 void cRangeModuleMeasProgram::activateDSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->activateInterface()] = MEASPROGRAM::activatedsp; // aktiviert die var- und cmd-listen im dsp
+    m_MsgNrCmdList[m_pDSPIFace->activateInterface()] = RANGEMEASPROGRAM::activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
 
@@ -356,19 +355,19 @@ void cRangeModuleMeasProgram::deactivateDSP()
     deleteDspVarList();
     deleteDspCmdList();
 
-    m_MsgNrCmdList[m_pDSPIFace->deactivateInterface()] = MEASPROGRAM::deactivatedsp; // wat wohl
+    m_MsgNrCmdList[m_pDSPIFace->deactivateInterface()] = RANGEMEASPROGRAM::deactivatedsp; // wat wohl
 }
 
 
 void cRangeModuleMeasProgram::freePGRMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = MEASPROGRAM::freepgrmem;
+    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = RANGEMEASPROGRAM::freepgrmem;
 }
 
 
 void cRangeModuleMeasProgram::freeUSERMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = MEASPROGRAM::freeusermem;
+    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = RANGEMEASPROGRAM::freeusermem;
 }
 
 
@@ -382,13 +381,13 @@ void cRangeModuleMeasProgram::deactivateDSPdone()
 
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dataAcquisition(m_pActualValuesDSP)] = MEASPROGRAM::dataaquistion; // we start our data aquisition now
+    m_MsgNrCmdList[m_pDSPIFace->dataAcquisition(m_pActualValuesDSP)] = RANGEMEASPROGRAM::dataaquistion; // we start our data aquisition now
 }
 
 
 void cRangeModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPIFace->setData(m_pActualValuesDSP, m_ModuleActualValues);
+    m_pDSPIFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
     emit actualValues(&m_ModuleActualValues); // and send them
 }
 

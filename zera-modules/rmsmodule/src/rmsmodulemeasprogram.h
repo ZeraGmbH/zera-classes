@@ -1,21 +1,32 @@
-#ifndef RANGEMODULEMEASPROGRAM_H
-#define RANGEMODULEMEASPROGRAM_H
+#ifndef RMSMODULEMEASPROGRAM_H
+#define RMSMODULEMEASPROGRAM_H
 
 #include <QObject>
 #include <QList>
+#include <QHash>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 
 #include "basemeasprogram.h"
+#include "measchannelinfo.h"
 
 
-namespace RANGEMEASPROGRAM
+namespace RMSMEASPROGRAM
 {
 
-enum rangemoduleCmds
+enum rmsmoduleCmds
 {
+    resourcemanagerconnect,
     sendrmident,
+    readresourcetypes,
+    readresource,
+    readresourceinfos,
+    readresourceinfo,
+    pcbserverconnect,
+    readsamplenr,
+    readalias,
+    readdspchannel,
     claimpgrmem,
     claimusermem,
     varlist2dsp,
@@ -23,37 +34,50 @@ enum rangemoduleCmds
     activatedsp,
     deactivatedsp,
     dataaquistion,
+    writeparameter,
     freepgrmem,
     freeusermem
 };
+
+enum replies
+{
+    ack,
+    nack,
+    error,
+    debug,
+    ident
+};
+
 }
 
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
+
+namespace Zera {
+namespace Proxy {
+    class cProxy;
 }
 }
 
+
+class cModuleSignal;
+class cModuleParameter;
 class VeinPeer;
 class VeinEntity;
 class cBaseModule;
 class cDspMeasData;
 class cDspIFace;
+class cRmsModuleConfigData;
 class QStateMachine;
 class QState;
-class cRangeModule;
 class QFinalState;
 
 
-class cRangeModuleMeasProgram: public cBaseMeasProgram
+class cRmsModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 
 public:
-    cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, cSocket* pcbsocket, QStringList chnlist, float interval);
-    virtual ~cRangeModuleMeasProgram();
+    cRmsModuleMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRmsModuleConfigData& configdata);
+    virtual ~cRmsModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
@@ -61,7 +85,6 @@ public:
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
-    virtual void syncRanging(QVariant sync); //
 
 protected:
     virtual void setDspVarList(); // dsp related stuff
@@ -73,18 +96,35 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    bool m_bRanging;
-    bool m_bIgnore;
-    cRangeModule* m_pModule; // the module we live in
-    float m_fInterval;
+    cRmsModuleConfigData& m_ConfigData;
+    QStringList m_ActValueList; // the list of actual values we work on
     QList<VeinEntity*> m_EntityList;
+    QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
+    QList<QString> channelInfoReadList; // a list of all channel info we have to read
+    QString channelInfoRead; // the actual channel info we are working on
+    quint32 m_nSamples; // number of samples / signal period
+
+    cModuleSignal* m_pMeasureSignal;
+    cModuleParameter* m_pIntegrationTimeParameter;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState m_serverConnectState;
+    QState m_resourceManagerConnectState;
     QState m_IdentifyState;
+    QState m_readResourceTypesState;
+    QState m_readResourceState;
+    QState m_readResourceInfosState;
+    QState m_readResourceInfoState;
+    QState m_readResourceInfoDoneState;
+    QState m_pcbserverConnectState;
+    QState m_readSamplenrState;
+    QState m_readChannelInformationState;
+    QState m_readChannelAliasState;
+    QState m_readDspChannelState;
+    QState m_readDspChannelDoneState;
+
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
     QState m_var2DSPState;
@@ -103,13 +143,26 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
-    Zera::Proxy::cProxyClient* m_pRMClient;
+    void setActualValuesNames();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
 
-    void serverConnect();
+    void resourceManagerConnect();
     void sendRMIdent();
+    void readResourceTypes();
+    void readResource();
+    void readResourceInfos();
+    void readResourceInfo();
+    void readResourceInfoDone();
+
+    void pcbserverConnect();
+    void readSamplenr();
+    void readChannelInformation();
+    void readChannelAlias();
+    void readDspChannel();
+    void readDspChannelDone();
+
     void claimPGRMem();
     void claimUSERMem();
     void varList2DSP();
@@ -125,6 +178,8 @@ private slots:
     void dataAcquisitionDSP();
     void dataReadDSP();
 
+    void newIntegrationtime(QVariant ti);
+
 };
 
-#endif // RANGEMODULEMEASPROGRAM_H
+#endif // RMSMODULEMEASPROGRAM_H

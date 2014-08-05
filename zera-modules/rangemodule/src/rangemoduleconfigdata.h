@@ -6,6 +6,9 @@
 
 #include "socket.h"
 
+
+// used for configuration export
+
 struct boolParameter
 {
     QString m_sKey;

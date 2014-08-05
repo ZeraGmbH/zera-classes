@@ -1,4 +1,3 @@
-#include <QCoreApplication>
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <proxy.h>

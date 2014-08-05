@@ -1,0 +1,135 @@
+#include <QPoint>
+#include <QString>
+#include <xmlconfigreader.h>
+
+#include "rmsmoduleconfiguration.h"
+#include "rmsmoduleconfigdata.h"
+#include "socket.h"
+
+
+cRmsModuleConfiguration::cRmsModuleConfiguration()
+{
+    m_pRmsModulConfigData = 0;
+    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
+    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+}
+
+
+cRmsModuleConfiguration::~cRmsModuleConfiguration()
+{
+    if (m_pRmsModulConfigData) delete m_pRmsModulConfigData;
+}
+
+
+void cRmsModuleConfiguration::setConfiguration(QByteArray xmlString)
+{
+    m_bConfigured = m_bConfigError = false;
+
+    if (m_pRmsModulConfigData) delete m_pRmsModulConfigData;
+    m_pRmsModulConfigData = new cRmsModuleConfigData();
+
+    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
+
+    // so now we can set up
+    // initializing hash table for xml configuration
+
+    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
+
+    m_ConfigXMLMap["rmsmodconfpar:configuration:measure:values:n"] = setValueCount;
+
+    m_ConfigXMLMap["rmsmodconfpar:parameter:interval"] = setMeasureInterval;
+
+    if (m_pXMLReader->loadSchema(defaultXSDFile))
+        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
+    else
+        m_bConfigError = true;
+}
+
+
+QByteArray cRmsModuleConfiguration::exportConfiguration()
+{
+    doubleParameter* dPar;
+    dPar = &m_pRmsModulConfigData->m_fMeasInterval;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    return m_pXMLReader->getXMLConfig().toUtf8();
+}
+
+
+cRmsModuleConfigData *cRmsModuleConfiguration::getConfigurationData()
+{
+    return m_pRmsModulConfigData;
+}
+
+
+void cRmsModuleConfiguration::configXMLInfo(QString key)
+{
+    bool ok;
+
+    if (m_ConfigXMLMap.contains(key))
+    {
+        ok = true;
+        int cmd = m_ConfigXMLMap[key];
+        switch (cmd)
+        {
+        case setDebugLevel:
+            m_pRmsModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setRMIp:
+            m_pRmsModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
+            break;
+        case setRMPort:
+            m_pRmsModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setPCBServerIp:
+            m_pRmsModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
+            break;
+        case setPCBServerPort:
+            m_pRmsModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setDSPServerIp:
+            m_pRmsModulConfigData->m_DSPServerSocket.m_sIP = m_pXMLReader->getValue(key);
+            break;
+        case setDSPServerPort:
+            m_pRmsModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setValueCount:
+            m_pRmsModulConfigData->m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
+            // here we generate dynamic hash entries for value channel configuration
+            for (int i = 0; i < m_pRmsModulConfigData->m_nValueCount; i++)
+                m_ConfigXMLMap[QString("rmsmodconfpar:configuration:measure:values:val%1").arg(i+1)] = setValue1+i;
+            break;
+        case setMeasureInterval:
+            m_pRmsModulConfigData->m_fMeasInterval.m_sKey = key;
+            m_pRmsModulConfigData->m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        default:
+            if ((cmd >= setValue1) && (cmd < setValue1 + 32))
+            {
+                cmd -= setValue1;
+                // it is command for setting value channel name
+                QString valueChannel = m_pXMLReader->getValue(key);
+                m_pRmsModulConfigData->m_valueChannelList.append(valueChannel); // for configuration of our engine
+            }
+        }
+        m_bConfigError |= !ok;
+    }
+
+    else
+        m_bConfigError = true;
+}
+
+
+void cRmsModuleConfiguration::completeConfiguration(bool ok)
+{
+    m_bConfigured = (ok && !m_bConfigError);
+    emit configXMLDone();
+}
+
+
+

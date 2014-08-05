@@ -1,0 +1,53 @@
+#ifndef RMSMODULECONFIGURATION_H
+#define RMSMODULECONFIGURATION_H
+
+
+#include <QStringList>
+#include <QByteArray>
+#include <QHash>
+
+#include "basemoduleconfiguration.h"
+
+enum moduleconfigstate
+{
+    setDebugLevel,
+    setRMIp,
+    setRMPort,
+    setPCBServerIp,
+    setPCBServerPort,
+    setDSPServerIp,
+    setDSPServerPort,
+    setValueCount,
+    setMeasureInterval,
+
+    setValue1 = 20
+};
+
+
+
+class cRmsModuleConfigData;
+
+//const QString defaultXSDFile = "/etc/zera/modules/rmsmodule.xsd";
+const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/rmsmodule/src/rmsmodule.xsd";
+
+// rangemoduleconfiguration holds configuration data as well as parameter
+
+class cRmsModuleConfiguration: public cBaseModuleConfiguration
+{
+    Q_OBJECT
+public:
+    cRmsModuleConfiguration();
+    ~cRmsModuleConfiguration();
+    virtual void setConfiguration(QByteArray xmlString);
+    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
+    cRmsModuleConfigData* getConfigurationData();
+
+protected slots:
+    virtual void configXMLInfo(QString key);
+    virtual void completeConfiguration(bool ok);
+
+private:
+    cRmsModuleConfigData *m_pRmsModulConfigData;  // configuration
+};
+
+#endif // RMSMODULCONFIGURATION_H

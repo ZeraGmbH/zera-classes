@@ -122,7 +122,7 @@ void cRangeModule::setupModule()
     connect(m_pAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, &(pConfData->m_RMSocket), pConfData->m_senseChannelList, pConfData->m_fMeasInterval);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, &(pConfData->m_RMSocket), &(pConfData->m_PCBServerSocket), pConfData->m_senseChannelList, pConfData->m_fMeasInterval);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

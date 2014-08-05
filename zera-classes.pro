@@ -11,4 +11,5 @@ SUBDIRS     = \
             zera-comm/zera-proxy \
             zera-misc \
             zera-modules/interface \
-            zera-modules/rangemodule
+            zera-modules/rangemodule \
+            zera-modules/rmsmodule

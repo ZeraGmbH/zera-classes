@@ -5,7 +5,7 @@
 #-------------------------------------------------
 
 # see user defined paths
-include(rangemodule.user.pri)
+include(rmsmodule.user.pri)
 
 QT       += network core
 QT       -= gui
@@ -23,51 +23,43 @@ INCLUDEPATH += ../interface \
     ../../zera-comm/zera-proxy \
 
 
-TARGET = $$qtLibraryTarget(rangemodule)
+TARGET = $$qtLibraryTarget(rmsmodule)
 TEMPLATE = lib
 CONFIG += plugin
 
 INCLUDEPATH += "src"
 
 SOURCES += \
-    src/rangemodulefactory.cpp \
     src/basemodule.cpp \
-    src/rangemoduleconfiguration.cpp \
     src/moduleparameter.cpp \
-    src/basemeaschannel.cpp \
-    src/rangemeaschannel.cpp \
     src/basemoduleconfiguration.cpp \
     src/moduleinfo.cpp \
     src/basemeasprogram.cpp \
-    src/rangemodulemeasprogram.cpp \
-    src/rangeobsermatic.cpp \
-    src/adjustment.cpp \
     src/modulesignal.cpp \
-    src/rangemoduleobservation.cpp \
     src/moduleactivist.cpp \
-    src/rangemodule.cpp
+    src/rmsmoduleconfiguration.cpp \
+    src/rmsmodulefactory.cpp \
+    src/rmsmodule.cpp \
+    src/rmsmodulemeasprogram.cpp \
+    src/rmsmoduleobservation.cpp
 
 HEADERS += \
-    src/basemeaschannel.h \
-    src/rangemodulefactory.h \
     src/basemodule.h \
-    src/rangemodule.h \
     src/xmlsettings.h \
-    src/rangemoduleconfiguration.h \
-    src/rangemoduleconfigdata.h \
     src/moduleparameter.h \
-    src/rangemeaschannel.h \
-    src/rangeinfo.h \
     src/basemoduleconfiguration.h \
     src/moduleinfo.h \
     src/basemeasprogram.h \
-    src/rangemodulemeasprogram.h \
-    src/rangeobsermatic.h \
     src/socket.h \
-    src/adjustment.h \
     src/modulesignal.h \
-    src/rangemoduleobservation.h \
-    src/moduleactivist.h
+    src/moduleactivist.h \
+    src/rmsmoduleconfiguration.h \
+    src/rmsmoduleconfigdata.h \
+    src/rmsmodulemeasprogram.h \
+    src/rmsmodulefactory.h \
+    src/rmsmodule.h \
+    src/rmsmoduleobservation.h \
+    src/measchannelinfo.h
 
 unix:!symbian {
     maemo5 {
@@ -79,8 +71,8 @@ unix:!symbian {
 }
 
 OTHER_FILES += \
-    src/rangemodule.xml \
-    src/rangemodule.xsd
+    src/rmsmodule.xml \
+    src/rmsmodule.xsd
 
 config_files.files = $$OTHER_FILES
 config_files.path = /etc/zera/modules

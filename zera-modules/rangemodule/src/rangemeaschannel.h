@@ -54,7 +54,6 @@ enum replies
 };
 
 const double sqrt2 = 1.41421356;
-class QCoreApplication;
 
 class cRangeMeasChannel:public cBaseMeasChannel
 {
