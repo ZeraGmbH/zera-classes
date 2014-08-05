@@ -32,7 +32,8 @@ enum pcbcommands
     setrange,
     regnotifier,
     unregnotifier,
-    pcbinterrupt
+    pcbinterrupt,
+    getsamples
 };
 
 
@@ -67,6 +68,7 @@ public:
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
+    virtual quint32 getSamples(); // int the actual set sampling rate
 
 protected slots:
     virtual void receiveAnswer(ProtobufMessage::NetMessage *message);

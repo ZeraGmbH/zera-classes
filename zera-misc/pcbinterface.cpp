@@ -160,6 +160,13 @@ quint32 cPCBInterface::unregisterNotifiers()
 }
 
 
+quint32 cPCBInterface::getSamples()
+{
+    Q_D(cPCBInterface);
+    return d->getSamples();
+}
+
+
 
 
 

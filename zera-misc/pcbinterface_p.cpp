@@ -246,6 +246,17 @@ quint32 cPCBInterfacePrivate::unregisterNotifiers()
 }
 
 
+quint32 cPCBInterfacePrivate::getSamples()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SAMP:SAMP?"));
+    m_MsgNrCmdList[msgnr] = getsamples;
+    return msgnr;
+}
+
+
 void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
 {
     if (message->has_reply())
@@ -278,6 +289,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getdspchannel:
         case getstatus:
         case gettype2:
+        case getsamples:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 
