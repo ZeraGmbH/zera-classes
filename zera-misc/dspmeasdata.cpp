@@ -145,17 +145,19 @@ QString& cDspMeasData::writeCommand()
 }
 
 
-void cDspMeasData::setData(QVector<float> &vector)
+QVector<float>& cDspMeasData::getData()
 {
     vector.clear();
-    for (int i = 0; i < DspVarList.count(); i++)
+    for (int i = 0; i < DspVarList.count(); i++) // we fetch all data of all vars in this memory group
     {
         cDspVar* pVar = DspVarList.at(i);
         float* fval = pVar->data();
         for (int j = 0; j < pVar->size(); j++, fval++)
             vector.append(*fval);
     }
+    return vector;
 }
+
 
 
 

@@ -20,11 +20,12 @@ public:
     QString& VarList(int section, bool withType = false); // liste mit allen variablen mit längenangaben, optional mit data type
     QString& name();
     QString& writeCommand();
-    void setData(QVector<float>& vector);
+    QVector<float>& getData();
 
 
 private:
     QList<cDspVar*> DspVarList;
+    QVector<float> vector;
     QString m_sname;
     QString sReturn;
 };
