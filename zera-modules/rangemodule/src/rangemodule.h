@@ -9,14 +9,7 @@
 
 #include "basemodule.h"
 
-class cRangeMeasChannel;
-class cModuleParameter;
-class cModuleInfo;
-class cRangeModuleConfiguration;
-class cRangeModuleMeasProgram;
-class cAdjustManagement;
-class cRangeObsermatic;
-class cRangeModuleObservation;
+
 
 
 namespace Zera {
@@ -28,6 +21,18 @@ namespace Proxy {
  class cProxyClient;
 }
 }
+
+namespace RANGEMODULE
+{
+
+class cRangeMeasChannel;
+class cModuleParameter;
+class cModuleInfo;
+class cRangeModuleConfiguration;
+class cRangeModuleMeasProgram;
+class cAdjustManagement;
+class cRangeObsermatic;
+class cRangeModuleObservation;
 
 
 class cRangeModule : public cBaseModule
@@ -95,5 +100,6 @@ private slots:
 
 };
 
+}
 
 #endif // RANGEMODULE_H

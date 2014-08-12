@@ -10,7 +10,6 @@
 #include "socket.h"
 
 class cSCPIConnection;
-class cBaseModule;
 class QString;
 class VeinEntity;
 class VeinPeer;
@@ -25,7 +24,10 @@ namespace  Server {
 }
 }
 
+namespace RANGEMODULE
+{
 
+class cBaseModule;
 class cBaseMeasChannel: public cModuleActivist
 {
     Q_OBJECT
@@ -62,5 +64,7 @@ protected:
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer) = 0;
 };
+
+}
 
 #endif // BASEMEASCHANNEL_H

@@ -7,6 +7,9 @@
 // pure virtual class for all objects living in a module, which generate an interface
 // and/or which can do something after it got activated
 
+namespace RANGEMODULE
+{
+
 class cModuleActivist: public QObject
 {
     Q_OBJECT
@@ -38,5 +41,7 @@ protected:
     QStateMachine m_deactivationMachine;
 
 };
+
+}
 
 #endif // MODULEACITIVIST_H

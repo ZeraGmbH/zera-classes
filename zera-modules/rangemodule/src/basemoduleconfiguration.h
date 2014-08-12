@@ -5,6 +5,9 @@
 
 // pure virtual base class for module configuration
 
+namespace RANGEMODULE
+{
+
 class cBaseModuleConfiguration: public cXMLSettings
 {
     Q_OBJECT
@@ -23,5 +26,7 @@ protected:
     bool m_bConfigured;
     bool m_bConfigError;
 };
+
+}
 
 #endif // BASEMODULECONFIGURATION_H

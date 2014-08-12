@@ -8,6 +8,9 @@
 
 #include "basemoduleconfiguration.h"
 
+namespace RANGEMODULE
+{
+
 enum moduleconfigstate
 {
     setDebugLevel,
@@ -60,5 +63,7 @@ private:
     // QHash<QString, VeinEntity*> m_exportEntityList; // we hold a list of all our entities for export
     cRangeModuleConfigData *m_pRangeModulConfigData;  // configuration
 };
+
+}
 
 #endif // RANGEMODULCONFIGURATION_H

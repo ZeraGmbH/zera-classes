@@ -10,6 +10,9 @@ class VeinPeer;
 
 // we use this class if we need an interface entity for parameter for input/output incl. description
 
+namespace RANGEMODULE
+{
+
 class cModuleParameter: public QObject
 {
     Q_OBJECT
@@ -27,5 +30,7 @@ private:
     VeinEntity *m_pParEntity;
     VeinEntity *m_pLimitEntity;
 };
+
+}
 
 #endif // MODULEPARAMETER_H

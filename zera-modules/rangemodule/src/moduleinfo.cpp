@@ -3,6 +3,9 @@
 
 #include "moduleinfo.h"
 
+namespace RANGEMODULE
+{
+
 cModuleInfo::cModuleInfo(VeinPeer *peer, QString name, QVariant initval)
     :m_pPeer(peer)
 {
@@ -16,6 +19,6 @@ cModuleInfo::~cModuleInfo()
     m_pPeer->dataRemove(m_pParEntity);
 }
 
-
+}
 
 

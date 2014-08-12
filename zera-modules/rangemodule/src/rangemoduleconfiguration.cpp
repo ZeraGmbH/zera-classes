@@ -6,6 +6,8 @@
 #include "rangemoduleconfigdata.h"
 #include "socket.h"
 
+namespace RANGEMODULE
+{
 
 cRangeModuleConfiguration::cRangeModuleConfiguration()
 {
@@ -224,5 +226,5 @@ void cRangeModuleConfiguration::completeConfiguration(bool ok)
     emit configXMLDone();
 }
 
-
+}
 

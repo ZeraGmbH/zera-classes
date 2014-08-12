@@ -8,6 +8,9 @@
 
 #include "rangemeaschannel.h"
 
+namespace RANGEMODULE
+{
+
 cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
     :cBaseMeasChannel(proxy, peer, rmsocket, pcbsocket, name, chnnr)
 {
@@ -113,7 +116,7 @@ quint32 cRangeMeasChannel::setRange(QString range)
     m_sNewRange = range;
     m_sActRange = m_sNewRange;
     quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
-    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::setrange;
+    m_MsgNrCmdList[msgnr] = setmeaschannelrange;
     return msgnr;
 }
 
@@ -121,7 +124,7 @@ quint32 cRangeMeasChannel::setRange(QString range)
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
     quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_sActRange, amplitude);
-    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::readgaincorrection;
+    m_MsgNrCmdList[msgnr] = readgaincorrection;
     return msgnr;
 }
 
@@ -129,7 +132,7 @@ quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
     quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_sActRange, amplitude);
-    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::readoffsetcorrection;
+    m_MsgNrCmdList[msgnr] = readoffsetcorrection;
     return msgnr;
 }
 
@@ -137,7 +140,7 @@ quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 quint32 cRangeMeasChannel::readStatus()
 {
     quint32 msgnr = m_pPCBInterface->getStatus(m_sName);
-    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::readstatus;
+    m_MsgNrCmdList[msgnr] = readmeaschannelstatus;
     return msgnr;
 }
 
@@ -145,7 +148,7 @@ quint32 cRangeMeasChannel::readStatus()
 quint32 cRangeMeasChannel::resetStatus()
 {
     quint32 msgnr = m_pPCBInterface->resetStatus(m_sName);
-    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::resetstatus;
+    m_MsgNrCmdList[msgnr] = resetmeaschannelstatus;
     return msgnr;
 }
 
@@ -153,7 +156,7 @@ quint32 cRangeMeasChannel::resetStatus()
 quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 {
     quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_sActRange, frequency);
-    m_MsgNrCmdList[msgnr] = RANGEMEASCHANNEL::readphasecorrection;
+    m_MsgNrCmdList[msgnr] = readphasecorrection;
     return msgnr;
 }
 
@@ -326,25 +329,25 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
     switch (cmd)
     {
-    case RANGEMEASCHANNEL::sendrmident:
+    case sendmeaschannelrmident:
         if (reply == ack) // we only continue if resource manager acknowledges
             emit activationContinue();
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readresourcetypes:
+    case readresourcetypes:
         if ((reply == ack) && (answer.toString().contains("SENSE")))
             emit activationContinue();
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readresource:
+    case readresource:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readresourceinfo:
+    case readresourceinfo:
     {
         bool ok1, ok2, ok3;
         int max, free;
@@ -374,19 +377,19 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         break;
 
     }
-    case RANGEMEASCHANNEL::claimresource:
+    case claimresource:
         if (reply == ack)
             emit activationContinue();
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::freeresource:
+    case freeresource:
         if (reply == ack || reply == nack) // we accept nack here also
             emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
         else
             emit deactivationError();
         break;
-    case RANGEMEASCHANNEL::readdspchannel:
+    case readdspchannel:
         if (reply == ack)
         {
             m_nDspChannel = answer.toInt(&ok);
@@ -395,7 +398,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readchnalias:
+    case readchnalias:
         if (reply == ack)
         {
             m_sAlias = answer.toString();
@@ -404,7 +407,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readsamplerate:
+    case readsamplerate:
         if (reply == ack)
         {
             m_nSampleRate = answer.toInt(&ok);
@@ -413,7 +416,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readrangelist:
+    case readrangelist:
         if (reply == ack)
         {
             m_RangeNameList = answer.toStringList();
@@ -422,7 +425,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readrngalias:
+    case readrngalias:
         if (reply == ack)
         {
             ri.alias = answer.toString();
@@ -431,7 +434,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readtype:
+    case readtype:
         if (reply == ack)
         {
             ri.type = answer.toInt(&ok);
@@ -440,7 +443,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readurvalue:
+    case readurvalue:
         if (reply == ack)
         {
             ri.urvalue = answer.toDouble(&ok);
@@ -449,7 +452,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readrejection:
+    case readrejection:
         if (reply == ack)
         {
             ri.rejection = answer.toDouble(&ok);
@@ -458,7 +461,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readovrejection:
+    case readovrejection:
         if (reply == ack)
         {
             ri.ovrejection = answer.toDouble(&ok);
@@ -467,7 +470,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::readisavail:
+    case readisavail:
         if (reply == ack)
         {
             ri.avail = answer.toBool();
@@ -476,37 +479,37 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         else
             emit activationError();
         break;
-    case RANGEMEASCHANNEL::setrange:
+    case setmeaschannelrange:
         if (reply == ack)
             m_sActRange = m_sNewRange;
         else {}; // perhaps some error output
         emit cmdDone(msgnr);
         break;    
-    case RANGEMEASCHANNEL::readgaincorrection:
+    case readgaincorrection:
         if (reply == ack)
             m_fGainCorrection = answer.toDouble(&ok);
         else {};
         emit cmdDone(msgnr);
         break;
-    case RANGEMEASCHANNEL::readoffsetcorrection:
+    case readoffsetcorrection:
         if (reply == ack)
             m_fOffsetCorrection = answer.toDouble(&ok);
         else {};
         emit cmdDone(msgnr);
         break;
-    case RANGEMEASCHANNEL::readphasecorrection:
+    case readphasecorrection:
         if (reply == ack)
             m_fPhaseCorrection = answer.toDouble(&ok);
         else {};
         emit cmdDone(msgnr);
         break;
-    case RANGEMEASCHANNEL::readstatus:
+    case readmeaschannelstatus:
         if (reply == ack)
             m_nStatus = answer.toInt(&ok);
         else {};
         emit cmdDone(msgnr);
         break;
-    case RANGEMEASCHANNEL::resetstatus:
+    case resetmeaschannelstatus:
         if (reply == ack)
             {}
         else {}; // perhaps some error output
@@ -577,31 +580,31 @@ void cRangeMeasChannel::rmConnect()
 
 void cRangeMeasChannel::sendRMIdent()
 {
-   m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = RANGEMEASCHANNEL::sendrmident;
+   m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = sendmeaschannelrmident;
 }
 
 
 void cRangeMeasChannel::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = RANGEMEASCHANNEL::readresourcetypes;
+    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
 }
 
 
 void cRangeMeasChannel::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = RANGEMEASCHANNEL::readresource;
+    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
 }
 
 
 void cRangeMeasChannel::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", m_sName)] = RANGEMEASCHANNEL::readresourceinfo;
+    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", m_sName)] = readresourceinfo;
 }
 
 
 void cRangeMeasChannel::claimResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", m_sName, 1)] = RANGEMEASCHANNEL::claimresource;
+    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", m_sName, 1)] = claimresource;
 }
 
 
@@ -617,25 +620,25 @@ void cRangeMeasChannel::pcbConnection()
 
 void cRangeMeasChannel::readDspChannel()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getDSPChannel(m_sName)] = RANGEMEASCHANNEL::readdspchannel;
+   m_MsgNrCmdList[m_pPCBInterface->getDSPChannel(m_sName)] = readdspchannel;
 }
 
 
 void cRangeMeasChannel::readChnAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = RANGEMEASCHANNEL::readchnalias;
+    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = readchnalias;
 }
 
 
 void cRangeMeasChannel::readSampleRate()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getSampleRate()] = RANGEMEASCHANNEL::readsamplerate;
+    m_MsgNrCmdList[m_pPCBInterface->getSampleRate()] = readsamplerate;
 }
 
 
 void cRangeMeasChannel::readRangelist()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = RANGEMEASCHANNEL::readrangelist;
+    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
     m_RangeQueryIt = 0; // we start with range 0
 }
 
@@ -679,7 +682,7 @@ void cRangeMeasChannel::activationDone()
 void cRangeMeasChannel::deactivationInit()
 {
     // deactivation means we have to free our resources
-    m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = RANGEMEASCHANNEL::freeresource;
+    m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = freeresource;
 }
 
 
@@ -694,37 +697,37 @@ void cRangeMeasChannel::deactivationDone()
 
 void cRangeMeasChannel::readRngAlias()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readrngalias;
+    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
 }
 
 
 void cRangeMeasChannel::readType()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readtype;
+    m_MsgNrCmdList[m_pPCBInterface->getType(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readtype;
 }
 
 
 void cRangeMeasChannel::readUrvalue()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readurvalue;
+    m_MsgNrCmdList[m_pPCBInterface->getUrvalue(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readurvalue;
 }
 
 
 void cRangeMeasChannel::readRejection()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readrejection;
+   m_MsgNrCmdList[m_pPCBInterface->getRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrejection;
 }
 
 
 void cRangeMeasChannel::readOVRejection()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readovrejection;
+    m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
 }
 
 
 void cRangeMeasChannel::readisAvail()
 {
-    m_MsgNrCmdList[m_pPCBInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = RANGEMEASCHANNEL::readisavail;
+    m_MsgNrCmdList[m_pPCBInterface->isAvail(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readisavail;
 }
 
 
@@ -734,4 +737,4 @@ void cRangeMeasChannel::rangeQueryDone()
     m_RangeInfoHash[ri.alias] = ri; // for each range we append cRangeinfo per alias
 }
 
-
+}

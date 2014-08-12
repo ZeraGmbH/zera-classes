@@ -5,6 +5,9 @@
 #include "rangemoduleobservation.h"
 #include "rangemodule.h"
 
+namespace RANGEMODULE
+{
+
 cRangeModuleObservation::cRangeModuleObservation(cRangeModule* module, Zera::Proxy::cProxy *proxy, cSocket *pcbsocket)
     :m_pRangemodule(module), m_pProxy(proxy), m_pPCBServerSocket(pcbsocket)
 {
@@ -76,14 +79,14 @@ void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
         int cmd = m_MsgNrCmdList.take(msgnr);
         switch (cmd)
         {
-        case RANGEMODULEOBSERVATION::registernotifier:
-            if (reply == RANGEMODULEOBSERVATION::ack) // we only continue pcb server acknowledges
+        case registernotifier:
+            if (reply == ack) // we only continue pcb server acknowledges
                 emit activationContinue();
             else
                 emit activationError();
             break;
-        case RANGEMODULEOBSERVATION::unregisternotifiers:
-            if (reply == RANGEMODULEOBSERVATION::ack) // we only continue pcb server acknowledges
+        case unregisternotifiers:
+            if (reply == ack) // we only continue pcb server acknowledges
                 emit deactivationContinue();
             else
                 emit deactivationError();
@@ -106,7 +109,7 @@ void cRangeModuleObservation::pcbConnect()
 
 void cRangeModuleObservation::setNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier("SENSE:MMODE?","1")] = RANGEMODULEOBSERVATION::registernotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier("SENSE:MMODE?","1")] = registernotifier;
 }
 
 
@@ -118,7 +121,7 @@ void cRangeModuleObservation::activationDone()
 
 void cRangeModuleObservation::resetNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = RANGEMODULEOBSERVATION::unregisternotifiers;
+    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = unregisternotifiers;
 }
 
 
@@ -127,3 +130,4 @@ void cRangeModuleObservation::deactivationDone()
     emit deactivated();
 }
 
+}

@@ -8,10 +8,7 @@
 
 #include "moduleactivist.h"
 
-class cBaseModule;
 class VeinPeer;
-class cSocket;
-
 
 namespace Zera {
 namespace Proxy {
@@ -24,6 +21,13 @@ namespace  Server {
     class cPCBInterface;
 }
 }
+
+
+namespace RANGEMODULE
+{
+
+class cBaseModule;
+class cSocket;
 
 
 class cBaseMeasProgram: public cModuleActivist
@@ -72,4 +76,6 @@ protected:
 protected slots:
     void monitorConnection();
 };
+
+}
 #endif // BASEMEASPROGRAM_H

@@ -67,7 +67,8 @@ HEADERS += \
     src/adjustment.h \
     src/modulesignal.h \
     src/rangemoduleobservation.h \
-    src/moduleactivist.h
+    src/moduleactivist.h \
+    src/reply.h
 
 unix:!symbian {
     maemo5 {

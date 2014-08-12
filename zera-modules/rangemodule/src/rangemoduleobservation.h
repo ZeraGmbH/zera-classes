@@ -8,25 +8,7 @@
 
 #include "moduleactivist.h"
 #include "socket.h"
-
-
-namespace RANGEMODULEOBSERVATION
-{
-enum rangemoduleobservationCmds
-{
-    registernotifier,
-    unregisternotifiers
-};
-
-enum replies
-{
-    ack,
-    nack,
-    error,
-    debug,
-    ident
-};
-}
+#include "reply.h"
 
 
 namespace Zera {
@@ -39,6 +21,17 @@ namespace  Server {
     class cPCBInterface;
 }
 }
+
+
+namespace RANGEMODULE
+{
+
+enum rangemoduleobservationCmds
+{
+    registernotifier,
+    unregisternotifiers
+};
+
 
 class cRangeModule;
 
@@ -85,5 +78,7 @@ private slots:
     void resetNotifier();
     void deactivationDone();
 };
+
+}
 
 #endif // RANGEMODULEOBSERVATION_H

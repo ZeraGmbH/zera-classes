@@ -8,6 +8,8 @@
 #include "basemodule.h"
 #include "basemoduleconfiguration.h"
 
+namespace RANGEMODULE
+{
 
 cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *peer, cBaseModuleConfiguration* modcfg, QObject* parent)
     :ZeraModules::VirtualModule(proxy,peer,parent), m_pProxy(proxy), m_pPeer(peer), m_pConfiguration(modcfg), m_nModuleNr(modnr)
@@ -18,7 +20,7 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
     m_ConfigTimer.setSingleShot(true);
     m_StartTimer.setSingleShot(true);
 
-    m_nStatus = BaseModule::untouched;
+    m_nStatus = untouched;
     m_pStateMachine = new QStateMachine(this);
 
     // our states from virtualmodule (interface)
@@ -158,7 +160,7 @@ void cBaseModule::setConfiguration(QByteArray xmlConfigData)
 
 bool cBaseModule::isConfigured()
 {
-    return (m_nStatus > BaseModule::untouched);
+    return (m_nStatus > untouched);
 }
 
 
@@ -185,7 +187,7 @@ void cBaseModule::entryIdle()
 {
     m_StateList.clear(); // we remove all states from list
     m_StateList.append(m_pStateIdle); // but we are in idle now
-    m_nLastState = BaseModule::IDLE; // we keep track over our last state
+    m_nLastState = IDLE; // we keep track over our last state
 }
 
 
@@ -200,7 +202,7 @@ void cBaseModule::exitIdle()
 void cBaseModule::entryConfXML()
 {
     m_StateList.append(m_pStateConfigure);
-    m_nStatus = BaseModule::untouched; // after each conf. we behave as untouched
+    m_nStatus = untouched; // after each conf. we behave as untouched
     doConfiguration(m_xmlconfString);
 }
 
@@ -209,9 +211,9 @@ void cBaseModule::entryConfSetup()
 {
     if (m_pConfiguration->isConfigured())
     {
-        m_nStatus  = BaseModule::configured;
+        m_nStatus  = configured;
         setupModule();
-        m_nStatus = BaseModule::setup;
+        m_nStatus = setup;
     }
 
     m_StateList.removeOne(m_pStateConfigure);
@@ -221,7 +223,7 @@ void cBaseModule::entryConfSetup()
 
 void cBaseModule::entryRunStart()
 {
-    if (m_nStatus == BaseModule::setup) // we must be set up (configured and interface represents configuration)
+    if (m_nStatus == setup) // we must be set up (configured and interface represents configuration)
         m_ActivationMachine.start();
     else
         emit sigRunFailed(); // otherwise we are not able to run
@@ -231,10 +233,10 @@ void cBaseModule::entryRunStart()
 void cBaseModule::entryRunDone()
 {
     startMeas();
-    m_nStatus = BaseModule::activated;
+    m_nStatus = activated;
     m_StateList.clear(); // we remove all states
     m_StateList.append(m_pStateRun); // and add run now
-    m_nLastState = BaseModule::RUN; // we need this in case of reconfiguration
+    m_nLastState = RUN; // we need this in case of reconfiguration
 }
 
 
@@ -254,7 +256,7 @@ void cBaseModule::entryRunUnset()
 
 void cBaseModule::entryStopStart()
 {
-    if (m_nStatus == BaseModule::setup) // we must be set up (configured and interface represents configuration)
+    if (m_nStatus == setup) // we must be set up (configured and interface represents configuration)
         m_ActivationMachine.start();
     else
         emit sigStopFailed(); // otherwise we are not able to run
@@ -264,11 +266,11 @@ void cBaseModule::entryStopStart()
 void cBaseModule::entryStopDone()
 {
     stopMeas();
-    m_nStatus = BaseModule::activated;
+    m_nStatus = activated;
     m_StateList.clear(); // we remove all states
     m_StateList.append(m_pStateStop); // and add run now
-    m_nLastState = BaseModule::STOP; // we need this in case of reconfiguration
+    m_nLastState = STOP; // we need this in case of reconfiguration
 }
 
-
+}
 

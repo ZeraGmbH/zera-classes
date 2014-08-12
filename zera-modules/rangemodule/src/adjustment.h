@@ -1,5 +1,5 @@
-#ifndef JUSTIFYNORM_H
-#define JUSTIFYNORM_H
+#ifndef ADJUSTMENT_H
+#define ADJUSTMENT_H
 
 #include <QObject>
 #include <QHash>
@@ -13,7 +13,17 @@
 
 #include "moduleactivist.h"
 
-namespace ADJUSTMENT
+
+class cDspMeasData;
+class VeinPeer;
+
+namespace Zera {
+namespace Server {
+    class cDSPInterface;
+}
+}
+
+namespace RANGEMODULE
 {
 
 enum adjustmentCmds
@@ -30,20 +40,10 @@ enum adjustmentCmds
     getphasecorr,
     getoffsetcore
 };
-}
+
 
 class cRangeModule;
 class cRangeMeasChannel;
-class cDspMeasData;
-class VeinPeer;
-
-
-namespace Zera {
-namespace Server {
-    class cDSPInterface;
-}
-}
-
 
 class cAdjustManagement: public cModuleActivist
 {
@@ -138,4 +138,6 @@ private slots:
 
 };
 
-#endif // JUSTIFYNORM_H
+}
+
+#endif // ADJUSTMENT_H

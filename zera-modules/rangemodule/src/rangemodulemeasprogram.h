@@ -9,7 +9,26 @@
 
 #include "basemeasprogram.h"
 
-namespace RANGEMEASPROGRAM
+
+namespace Zera
+{
+namespace Proxy
+{
+    class cProxyClient;
+}
+}
+
+class VeinPeer;
+class VeinEntity;
+
+class cDspMeasData;
+class cDspIFace;
+class QStateMachine;
+class QState;
+class QFinalState;
+
+
+namespace RANGEMODULE
 {
 
 enum rangemoduleCmds
@@ -25,26 +44,12 @@ enum rangemoduleCmds
     freepgrmem,
     freeusermem
 };
-}
 
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
 
-class VeinPeer;
-class VeinEntity;
+
 class cBaseModule;
-class cDspMeasData;
-class cDspIFace;
-class QStateMachine;
-class QState;
 class cRangeModule;
 class cRangeModuleConfigData;
-class QFinalState;
 
 
 class cRangeModuleMeasProgram: public cBaseMeasProgram
@@ -128,5 +133,7 @@ private slots:
     void dataReadDSP();
 
 };
+
+}
 
 #endif // RANGEMODULEMEASPROGRAM_H

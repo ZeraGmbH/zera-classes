@@ -3,6 +3,9 @@
 
 #include <QObject>
 
+namespace RANGEMODULE
+{
+
 struct cRangeInfo
 {
     QString name;
@@ -13,5 +16,7 @@ struct cRangeInfo
     double rejection;
     double ovrejection;
 };
+
+}
 
 #endif // RANGEINFO_H

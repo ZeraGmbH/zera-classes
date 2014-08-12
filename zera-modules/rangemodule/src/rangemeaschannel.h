@@ -10,14 +10,16 @@
 #include <QVariant>
 #include <pcbinterface.h>
 
+#include "reply.h"
 #include "basemeaschannel.h"
 #include "rangeinfo.h"
 
-namespace RANGEMEASCHANNEL
+namespace RANGEMODULE
 {
+
 enum rangemeaschannelCmds
 {
-    sendrmident,
+    sendmeaschannelrmident,
     readresourcetypes,
     readresource,
     readresourceinfo,
@@ -35,23 +37,12 @@ enum rangemeaschannelCmds
     readovrejection,
     readisavail,
 
-    setrange,
+    setmeaschannelrange,
     readgaincorrection,
     readoffsetcorrection,
     readphasecorrection,
-    readstatus,
-    resetstatus
-};
-}
-
-
-enum replies
-{
-    ack,
-    nack,
-    error,
-    debug,
-    ident
+    readmeaschannelstatus,
+    resetmeaschannelstatus
 };
 
 const double sqrt2 = 1.41421356;
@@ -183,5 +174,7 @@ private slots:
     void rangeQueryDone();
 
 };
+
+}
 
 #endif // RANGEMEASCHANNEL_H

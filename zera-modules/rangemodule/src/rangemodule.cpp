@@ -15,6 +15,9 @@
 #include "moduleinfo.h"
 #include "modulesignal.h"
 
+namespace RANGEMODULE
+{
+
 cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
     :cBaseModule(modnr, proxy, peer, new cRangeModuleConfiguration(), parent)
 {
@@ -269,4 +272,4 @@ void cRangeModule::rangeModuleReconfigure()
     emit sigConfiguration(); // we configure after our notifier has detected
 }
 
-
+}

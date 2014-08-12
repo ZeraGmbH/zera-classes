@@ -5,6 +5,8 @@
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 
+namespace RANGEMODULE 
+{
 
 cAdjustManagement::cAdjustManagement(cRangeModule *module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist, double interval)
     :m_pRangemodule(module), m_pPeer(peer), m_pDSPIFace(iface), m_ChannelNameList(chnlist), m_fAdjInterval(interval)
@@ -135,19 +137,19 @@ void cAdjustManagement::activationInit()
 
 void cAdjustManagement::readGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrectionDSP)] = ADJUSTMENT::readgaincorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }
 
 
 void cAdjustManagement::readPhaseCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pPhaseCorrectionDSP)] = ADJUSTMENT::readphasecorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pPhaseCorrectionDSP)] = readphasecorr;
 }
 
 
 void cAdjustManagement::readOffsetCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pOffsetCorrectionDSP)] = ADJUSTMENT::readoffsetcorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pOffsetCorrectionDSP)] = readoffsetcorr;
 }
 
 
@@ -184,26 +186,26 @@ void cAdjustManagement::deactivationDone()
 
 void cAdjustManagement::writeGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrectionDSP)] = ADJUSTMENT::writegaincorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
 }
 
 
 void cAdjustManagement::writePhaseCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pPhaseCorrectionDSP)] = ADJUSTMENT::writephasecorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
 }
 
 
 void cAdjustManagement::writeOffsetCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pOffsetCorrectionDSP)] = ADJUSTMENT::writeoffsetcorr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
 }
 
 
 void cAdjustManagement::getGainCorr1()
 {
     // qDebug() << "Adjustmentstatemachine";
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = ADJUSTMENT::getgaincorr;
+    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getgaincorr;
 }
 
 
@@ -229,7 +231,7 @@ void cAdjustManagement::getGainCorr2()
 
 void cAdjustManagement::getPhaseCorr1()
 {
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(m_ActualValues[2 * m_ChannelNameList.count()])] = ADJUSTMENT::getphasecorr;
+    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(m_ActualValues[2 * m_ChannelNameList.count()])] = getphasecorr;
 }
 
 
@@ -255,7 +257,7 @@ void cAdjustManagement::getPhaseCorr2()
 
 void cAdjustManagement::getOffsetCorr1()
 {
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = ADJUSTMENT::getoffsetcore;
+    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getoffsetcore;
 }
 
 
@@ -298,18 +300,18 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case ADJUSTMENT::readgaincorr:
-            case ADJUSTMENT::readphasecorr:
-            case ADJUSTMENT::readoffsetcorr:
+            case readgaincorr:
+            case readphasecorr:
+            case readoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
                     emit activationError();
                 break;
 
-            case ADJUSTMENT::writegaincorr:
-            case ADJUSTMENT::writephasecorr:
-            case ADJUSTMENT::writeoffsetcorr:
+            case writegaincorr:
+            case writephasecorr:
+            case writeoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
@@ -326,9 +328,9 @@ void cAdjustManagement::catchChannelReply(quint32 msgnr)
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case ADJUSTMENT::getgaincorr:
-    case ADJUSTMENT::getphasecorr:
-    case ADJUSTMENT::getoffsetcore:
+    case getgaincorr:
+    case getphasecorr:
+    case getoffsetcore:
         emit activationContinue();
         break;
     }
@@ -339,7 +341,7 @@ void cAdjustManagement::adjustPrepare()
     m_bAdjustTrigger = true;
 }
 
-
+}
 
 
 

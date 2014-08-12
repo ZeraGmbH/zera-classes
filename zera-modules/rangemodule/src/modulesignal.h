@@ -8,6 +8,8 @@ class VeinPeer;
 
 // we use this class if we need an interface entity for signals
 
+namespace RANGEMODULE {
+
 class cModuleSignal: public QObject
 {
     Q_OBJECT
@@ -19,5 +21,6 @@ public:
     VeinEntity *m_pParEntity;
 };
 
+}
 
 #endif // MODULESIGNAL_H

@@ -1,6 +1,8 @@
 #include "rangemodulefactory.h"
 #include "rangemodule.h"
 
+namespace RANGEMODULE
+{
 
 ZeraModules::VirtualModule* RangeModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
 {
@@ -27,5 +29,5 @@ QString RangeModuleFactory::getFactoryName()
     return QString("rangemodule");
 }
 
-
+}
 

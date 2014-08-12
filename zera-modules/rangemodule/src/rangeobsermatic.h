@@ -25,7 +25,18 @@
 #include "moduleactivist.h"
 #include "rangemoduleconfigdata.h"
 
-namespace RANGEOBSERMATIC
+namespace Zera {
+namespace Server {
+    class cDSPInterface;
+}
+}
+
+class VeinPeer;
+class VeinEntity;
+class cDspMeasData;
+
+
+namespace RANGEMODULE
 {
 
 enum rangeObsermaticCmds
@@ -36,22 +47,14 @@ enum rangeObsermaticCmds
     resetstatus,
     readstatus
 };
-}
 
-class VeinPeer;
-class VeinEntity;
+
 class cRangeModule;
 class cModuleParameter;
 class cModuleSignal;
-class cDspMeasData;
 class cModuleInfo;
 class cRangeMeasChannel;
 
-namespace Zera {
-namespace Server {
-    class cDSPInterface;
-}
-}
 
 class cRangeObsermatic: public cModuleActivist
 {
@@ -155,5 +158,7 @@ private slots:
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 };
+
+}
 
 #endif // RANGEOBSERMATIC_H

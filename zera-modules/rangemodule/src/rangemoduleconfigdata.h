@@ -6,6 +6,8 @@
 
 #include "socket.h"
 
+namespace RANGEMODULE
+{
 
 // used for configuration export
 
@@ -51,5 +53,6 @@ public:
     cSocket m_DSPServerSocket;
 };
 
+}
 
 #endif // RANGEMODULECONFIGDATA_H

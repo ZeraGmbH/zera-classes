@@ -1,5 +1,7 @@
 #include "moduleactivist.h"
 
+namespace RANGEMODULE
+{
 
 void cModuleActivist::activate()
 {
@@ -10,4 +12,6 @@ void cModuleActivist::activate()
 void cModuleActivist::deactivate()
 {
     m_deactivationMachine.start();
+}
+
 }

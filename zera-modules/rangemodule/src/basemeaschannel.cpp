@@ -1,5 +1,8 @@
 #include "basemeaschannel.h"
 
+namespace RANGEMODULE
+{
+
 cBaseMeasChannel::cBaseMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
     :m_pProxy(proxy), m_pPeer(peer), m_pRMSocket(rmsocket), m_pPCBServerSocket(pcbsocket), m_sName(name), m_nChannelNr(chnnr)
 {
@@ -29,7 +32,7 @@ QString cBaseMeasChannel::getAlias()
     return m_sAlias;
 }
 
-
+}
 
 
 

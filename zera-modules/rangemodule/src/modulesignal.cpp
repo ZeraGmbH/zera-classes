@@ -3,6 +3,9 @@
 
 #include "modulesignal.h"
 
+namespace RANGEMODULE
+{
+
 cModuleSignal::cModuleSignal(VeinPeer *peer, QString name, QVariant initval)
     :m_pPeer(peer)
 {
@@ -15,4 +18,6 @@ cModuleSignal::cModuleSignal(VeinPeer *peer, QString name, QVariant initval)
 cModuleSignal::~cModuleSignal()
 {
     m_pPeer->dataRemove(m_pParEntity);
+}
+
 }

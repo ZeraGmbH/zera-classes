@@ -13,6 +13,8 @@
 #include "rangeobsermatic.h"
 #include "rangemeaschannel.h"
 
+namespace RANGEMODULE
+{
 
 cRangeObsermatic::cRangeObsermatic(cRangeModule *module, VeinPeer *peer, Zera::Server::cDSPInterface* iface, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar)
     :m_pModule(module), m_pPeer(peer), m_pDSPIFace(iface), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
@@ -217,7 +219,7 @@ void cRangeObsermatic::rangeAutomatic()
                 else
                 {
                     unmarkOverload = false;
-                    m_MsgNrCmdList[pmChn->resetStatus()] = RANGEOBSERMATIC::resetstatus;
+                    m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 }
             }
         }
@@ -312,7 +314,7 @@ void cRangeObsermatic::setRanges(bool force)
         {
             change = true;
             m_pRangingSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
-            m_MsgNrCmdList[pmChn->setRange(s)] = RANGEOBSERMATIC::setrange;
+            m_MsgNrCmdList[pmChn->setRange(s)] = setrange;
             m_nRangeSetPending++;
 
             m_actChannelRangeList.replace(i, s);
@@ -377,7 +379,7 @@ void cRangeObsermatic::activationInit()
 void cRangeObsermatic::readGainCorr()
 {
     // qDebug() << "readGainCorr";
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrection2DSP)] = RANGEOBSERMATIC::readgain2corr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrection2DSP)] = readgain2corr;
 }
 
 
@@ -423,7 +425,7 @@ void cRangeObsermatic::deactivationDone()
 void cRangeObsermatic::writeGainCorr()
 {
     // qDebug() << "writeGainCorr";
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrection2DSP)] = RANGEOBSERMATIC::writegain2corr;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
 }
 
 
@@ -441,7 +443,7 @@ void cRangeObsermatic::readStatus()
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we read status from all channels
     {
         pmChn = m_RangeMeasChannelList.at(i);
-        m_MsgNrCmdList[pmChn->readStatus()] = RANGEOBSERMATIC::readstatus;
+        m_MsgNrCmdList[pmChn->readStatus()] = readstatus;
         m_nReadStatusPending++;
     }
 }
@@ -552,7 +554,7 @@ void cRangeObsermatic::newOverload(QVariant overload)
             for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we reset all channels
             {
                 pmChn = m_RangeMeasChannelList.at(i);
-                m_MsgNrCmdList[pmChn->resetStatus()] = RANGEOBSERMATIC::resetstatus;
+                m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
             }
@@ -584,8 +586,8 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case RANGEOBSERMATIC::readgain2corr:
-            case RANGEOBSERMATIC::writegain2corr:
+            case readgain2corr:
+            case writegain2corr:
                 if (reply == ack)
                     emit activationContinue();
                 else
@@ -602,7 +604,7 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
     int cmd = m_MsgNrCmdList.take(msgnr);
     switch (cmd)
     {
-    case RANGEOBSERMATIC::setrange:
+    case setrange:
         if (m_nRangeSetPending > 0)
         {
             m_nRangeSetPending--;
@@ -610,9 +612,9 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
                 m_pRangingSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
         }
         break;
-    case RANGEOBSERMATIC::resetstatus: // for the moment we do nothing here
+    case resetstatus: // for the moment we do nothing here
         break;
-    case RANGEOBSERMATIC::readstatus:
+    case readstatus:
         if (m_nReadStatusPending > 0)
         {
             m_nReadStatusPending--;
@@ -625,4 +627,4 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
     }
 }
 
-
+}

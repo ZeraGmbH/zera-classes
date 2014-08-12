@@ -2,6 +2,8 @@
 
 #include "basemoduleconfiguration.h"
 
+namespace RANGEMODULE
+{
 
 cBaseModuleConfiguration::cBaseModuleConfiguration()
 {
@@ -20,6 +22,6 @@ bool cBaseModuleConfiguration::isConfigured()
 {
     return m_bConfigured;
 }
-
+}
 
 
