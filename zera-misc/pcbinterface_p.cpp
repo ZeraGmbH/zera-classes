@@ -246,13 +246,13 @@ quint32 cPCBInterfacePrivate::unregisterNotifiers()
 }
 
 
-quint32 cPCBInterfacePrivate::getSamples()
+quint32 cPCBInterfacePrivate::getSampleRate()
 {
     QString cmd;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SAMP:SAMP?"));
-    m_MsgNrCmdList[msgnr] = getsamples;
+    msgnr = sendCommand(cmd = QString("SAMP:SRAT?"));
+    m_MsgNrCmdList[msgnr] = getsamplerate;
     return msgnr;
 }
 
@@ -289,7 +289,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getdspchannel:
         case getstatus:
         case gettype2:
-        case getsamples:
+        case getsamplerate:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 

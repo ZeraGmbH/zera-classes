@@ -53,7 +53,7 @@ public:
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
-    virtual quint32 getSamples(); // int the actual set sampling rate
+    virtual quint32 getSampleRate(); // int the actual set sampling rate
 
 signals:
     void tcpError(QAbstractSocket::SocketError errorCode);
