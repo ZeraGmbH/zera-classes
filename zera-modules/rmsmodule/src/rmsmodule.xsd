@@ -70,15 +70,18 @@
 
 
         <xs:complexType name="measuretype">
-		<xs:sequence>
-			<xs:element name="n" minOccurs="1" maxOccurs="1">
-				<xs:simpleType>
-					<xs:restriction base="xs:integer">
-						<xs:minInclusive value="1"/>
-						<xs:maxInclusive value="12"/>
-					</xs:restriction>
-				</xs:simpleType>
-			</xs:element>
+            <xs:sequence>
+                <xs:element name="values">
+                    <xs:complexType>
+                        <xs:sequence>
+                        <xs:element name="n" minOccurs="1" maxOccurs="1">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="12"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
                         <xs:element name="val1" type="xs:string" minOccurs="1" maxOccurs="1"/>
                         <xs:element name="val2" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="val3" type="xs:string" minOccurs="0" maxOccurs="1"/>
@@ -91,23 +94,22 @@
                         <xs:element name="val10" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="val11" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="val12" type="xs:string" minOccurs="0" maxOccurs="1"/>
-		</xs:sequence>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
 	</xs:complexType>	
 
 
-        <xs:complexType name="measureintervaltype">
-                <xs:sequence>
-                        <xs:element name="interval" minOccurs="1" maxOccurs="1">
-                                <xs:simpleType>
-                                        <xs:restriction base="xs:decimal">
-                                                <xs:minInclusive value="0.1"/>
-                                                <xs:maxInclusive value="5.0"/>
-                                        </xs:restriction>
-                                </xs:simpleType>
-                        </xs:element>
-                </xs:sequence>
-        </xs:complexType>
-	
+        <xs:simpleType name="measureintervaltype">
+                <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="0.1"/>
+                        <xs:maxInclusive value="5.0"/>
+                </xs:restriction>
+        </xs:simpleType>
+
+
+
         <xs:element name="rmsmodconfpar">
 		<xs:complexType>
 			<xs:sequence>

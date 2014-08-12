@@ -30,7 +30,7 @@ class cRmsModule : public cBaseModule
 Q_OBJECT
 
 public:
-    cRmsModule(Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cRmsModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
     virtual ~cRmsModule();
     virtual QByteArray getConfiguration();
 

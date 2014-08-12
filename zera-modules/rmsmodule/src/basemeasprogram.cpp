@@ -1,24 +1,26 @@
 #include "basemeasprogram.h"
 
+namespace RMSMODULE
+{
 
-cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer *peer, Zera::Server::cDSPInterface* iface)
+cBaseMeas2Program::cBaseMeas2Program(Zera::Proxy::cProxy* proxy, VeinPeer *peer, Zera::Server::cDSPInterface* iface)
     :m_pProxy(proxy), m_pPeer(peer), m_pDSPIFace(iface)
 {
 }
 
 
-cBaseMeasProgram::~cBaseMeasProgram()
+cBaseMeas2Program::~cBaseMeas2Program()
 {
 }
 
 
-void cBaseMeasProgram::monitorConnection()
+void cBaseMeas2Program::monitorConnection()
 {
     m_nConnectionCount--;
     if (m_nConnectionCount == 0)
         emit activationContinue();
 }
 
-
+}
 
 

@@ -39,6 +39,8 @@ enum rmsmoduleCmds
     freeusermem
 };
 
+#define DEBUG 1
+
 enum replies
 {
     ack,
@@ -66,17 +68,18 @@ class cBaseModule;
 class cDspMeasData;
 class cDspIFace;
 class cRmsModuleConfigData;
+class cRmsModule;
 class QStateMachine;
 class QState;
 class QFinalState;
 
 
-class cRmsModuleMeasProgram: public cBaseMeasProgram
+class cRmsModuleMeasProgram: public cBaseMeas2Program
 {
     Q_OBJECT
 
 public:
-    cRmsModuleMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRmsModuleConfigData& configdata);
+    cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRmsModuleConfigData& configdata);
     virtual ~cRmsModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -96,9 +99,11 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    cRmsModule* m_pModule;
     cRmsModuleConfigData& m_ConfigData;
     QStringList m_ActValueList; // the list of actual values we work on
-    QList<VeinEntity*> m_EntityList;
+    QList<VeinEntity*> m_EntityNameList;
+    QList<VeinEntity*> m_EntityActValueList;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on
@@ -119,7 +124,7 @@ private:
     QState m_readResourceInfoState;
     QState m_readResourceInfoDoneState;
     QState m_pcbserverConnectState;
-    QState m_readSamplenrState;
+    QState m_readSampleRateState;
     QState m_readChannelInformationState;
     QState m_readChannelAliasState;
     QState m_readDspChannelState;
@@ -157,7 +162,7 @@ private slots:
     void readResourceInfoDone();
 
     void pcbserverConnect();
-    void readSamplenr();
+    void readSampleRate();
     void readChannelInformation();
     void readChannelAlias();
     void readDspChannel();

@@ -25,14 +25,15 @@ namespace  Server {
 }
 }
 
+namespace RMSMODULE {
 
-class cBaseMeasProgram: public cModuleActivist
+class cBaseMeas2Program: public cModuleActivist
 {
     Q_OBJECT
 
 public:
-    cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface);
-    virtual ~cBaseMeasProgram();
+    cBaseMeas2Program(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface);
+    virtual ~cBaseMeas2Program();
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
@@ -60,7 +61,7 @@ protected:
 
     QVector<float> m_ModuleActualValues; // a modules actual values
     QHash<quint32, int> m_MsgNrCmdList;
-    int m_nDspMemUsed;
+    quint32 m_nDspMemUsed;
 
     virtual void setDspVarList() = 0; // dsp related stuff
     virtual void deleteDspVarList() = 0;
@@ -72,4 +73,7 @@ protected:
 protected slots:
     void monitorConnection();
 };
+
+}
+
 #endif // BASEMEASPROGRAM_H

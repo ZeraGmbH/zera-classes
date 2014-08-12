@@ -4,7 +4,7 @@
 
 ZeraModules::VirtualModule* RmsModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cRmsModule(proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cRmsModule(m_ModuleList.count()+1, proxy, peer, parent);
     m_ModuleList.append(module);
     return module;
 }

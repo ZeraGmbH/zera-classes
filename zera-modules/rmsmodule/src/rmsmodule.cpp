@@ -13,8 +13,8 @@
 #include "modulesignal.h"
 
 
-cRmsModule::cRmsModule(Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(proxy, peer, new cRmsModuleConfiguration(), parent)
+cRmsModule::cRmsModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
+    :cBaseModule(modnr, proxy, peer, new cRmsModuleConfiguration(), parent)
 {
     m_ModuleActivistList.clear();
 
@@ -79,7 +79,7 @@ void cRmsModule::setupModule()
     m_pDSPInterface->setClient(m_pDspProxyClient);
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRmsModuleMeasProgram(m_pProxy, m_pPeer, m_pDSPInterface, *pConfData);
+    m_pMeasProgram = new cRmsModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

@@ -16,10 +16,11 @@
 #include "rmsmodulemeasprogram.h"
 
 
-cRmsModuleMeasProgram::cRmsModuleMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRmsModuleConfigData& configdata)
-    :cBaseMeasProgram(proxy, peer, iface), m_ConfigData(configdata)
+cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRmsModuleConfigData& configdata)
+    :cBaseMeas2Program(proxy, peer, iface), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
+    m_ActValueList = m_ConfigData.m_valueChannelList;
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
@@ -28,8 +29,8 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(Zera::Proxy::cProxy* proxy, VeinPee
     m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoDoneState);
     m_readResourceInfoDoneState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectState);
     m_readResourceInfoDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceInfoState);
-    m_pcbserverConnectState.addTransition(this, SIGNAL(activationContinue()), &m_readSamplenrState);
-    m_readSamplenrState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelInformationState);
+    m_pcbserverConnectState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
+    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelInformationState);
     m_readChannelInformationState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelAliasState);
     m_readChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelState);
     m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelDoneState);
@@ -49,7 +50,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(Zera::Proxy::cProxy* proxy, VeinPee
     m_activationMachine.addState(&m_readResourceInfoState);
     m_activationMachine.addState(&m_readResourceInfoDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
-    m_activationMachine.addState(&m_readSamplenrState);
+    m_activationMachine.addState(&m_readSampleRateState);
     m_activationMachine.addState(&m_readChannelInformationState);
     m_activationMachine.addState(&m_readChannelAliasState);
     m_activationMachine.addState(&m_readDspChannelState);
@@ -69,9 +70,11 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(Zera::Proxy::cProxy* proxy, VeinPee
     connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
     connect(&m_readResourceInfosState, SIGNAL(entered()), SLOT(readResourceInfos()));
     connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
+    connect(&m_readResourceInfoDoneState, SIGNAL(entered()), SLOT(readResourceInfoDone()));
     connect(&m_pcbserverConnectState, SIGNAL(entered()), SLOT(pcbserverConnect()));
-    connect(&m_readSamplenrState, SIGNAL(entered()), SLOT(readSamplenr()));
-    connect(&m_readChannelInformationState, SIGNAL(entered()), SLOT(readDspChannels()));
+    connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
+    connect(&m_readChannelInformationState, SIGNAL(entered()), SLOT(readChannelInformation()));
+    connect(&m_readChannelAliasState, SIGNAL(entered()), SLOT(readChannelAlias()));
     connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
     connect(&m_readDspChannelDoneState, SIGNAL(entered()), SLOT(readDspChannelDone()));
     connect(&m_claimPGRMemState, SIGNAL(entered()), SLOT(claimPGRMem()));
@@ -110,9 +113,12 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(Zera::Proxy::cProxy* proxy, VeinPee
 cRmsModuleMeasProgram::~cRmsModuleMeasProgram()
 {
     delete m_pRMInterface;
-    //delete m_pPCBInterface;
+    for (int i = 0; i < m_pcbIFaceList.count(); i++)
+    {
+        delete m_pcbIFaceList.at(i);
+        m_pProxy->releaseConnection(m_pcbClientList.at(i));
+    }
     m_pProxy->releaseConnection(m_pRMClient);
-    //m_pProxy->releaseConnection(m_pPCBClient);
 }
 
 
@@ -131,14 +137,35 @@ void cRmsModuleMeasProgram::stop()
 void cRmsModuleMeasProgram::generateInterface()
 {
     VeinEntity* p_entity;
+    QString s;
+
+    // this here is for translation purpose
+    s = tr("UL%1");
+    s = tr("UL%1-UL%2");
+    s = tr("IL%1");
+    s = tr("IL%1-IL%2");
+    s = tr("REF%1");
+    s = tr("REF%1-REF%2");
+
     for (int i = 0; i < m_ActValueList.count(); i++)
     {
-        p_entity = m_pPeer->dataAdd(QString("ACT_RMS%1").arg(m_ActValueList.at(i)));
+        s = QString("TRA_RMS%1Name").arg(i);
+        p_entity = m_pPeer->dataAdd(s);
+        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
+        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
+        p_entity->setValue(QVariant("Unknown"), m_pPeer);
+        m_EntityNameList.append(p_entity);
+
+        s = QString("ACT_RMS%1").arg(i);
+        p_entity = m_pPeer->dataAdd(s);
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
         p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
         p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityList.append(p_entity);
+        m_EntityActValueList.append(p_entity);
     }
+
+    // this here is for translation purpose
+
 
     m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasInterval.m_fValue), "PAR_INTEGRATIONTIME_LIMITS", QVariant(QPointF(0.1,100.0)));
     m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
@@ -147,8 +174,10 @@ void cRmsModuleMeasProgram::generateInterface()
 
 void cRmsModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityList.count(); i++)
-        m_pPeer->dataRemove(m_EntityList.at(i));
+    for (int i = 0; i < m_EntityNameList.count(); i++)
+        m_pPeer->dataRemove(m_EntityNameList.at(i));
+    for (int i = 0; i < m_EntityActValueList.count(); i++)
+        m_pPeer->dataRemove(m_EntityActValueList.at(i));
     delete m_pIntegrationTimeParameter;
     delete m_pMeasureSignal;
 }
@@ -160,7 +189,7 @@ void cRmsModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp = m_pDSPIFace->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("VALXRMS",m_ActValueList.count(), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*2*m_ActValueList.count(),DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*m_ActValueList.count(),DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
@@ -192,7 +221,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
 
     m_pDSPIFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples) ); // clear meassignal
-        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_ActValueList.count()+1) ); // clear the whole filter incl. count
+        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) ); // clear the whole filter incl. count
         m_pDSPIFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000.0)); // initial ti time  /* todo variabel */
         m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -212,15 +241,15 @@ void cRmsModuleMeasProgram::setDspCmdList()
     }
 
     // and filter them
-    m_pDSPIFace->addCycListItem( s = QString("AVERAGE1(%1,VALXRMS,FILTER)").arg(2*m_ActValueList.count())); // we add results to filter
+    m_pDSPIFace->addCycListItem( s = QString("AVERAGE1(%1,VALXRMS,FILTER)").arg(m_ActValueList.count())); // we add results to filter
 
     m_pDSPIFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_pDSPIFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
     m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPIFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXRMSF)").arg(2*m_ActValueList.count()));
-        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_ActValueList.count()+1) );
+        m_pDSPIFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXRMSF)").arg(m_ActValueList.count()));
+        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) );
         m_pDSPIFace->addCycListItem( s = "DSPINTTRIGGER(0x0,0x0001)"); // send interrupt to module
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -413,14 +442,25 @@ void cRmsModuleMeasProgram::setActualValuesNames()
     {
         QStringList sl = m_ActValueList.at(i).split('-');
         QString s;
+        QString s1,s2,s3,s4;
         // we have 1 or 2 entries for each value
-        if (sl.count() == 1)
-            s = QString("ACT_RMS%1").arg(m_measChannelInfoHash.value(sl.at(0)).alias);
-        else
-            s = QString("ACT_RMS%1-%2").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                .arg(m_measChannelInfoHash.value(sl.at(1)).alias);
+        s1 = s2 = m_measChannelInfoHash.value(sl.at(0)).alias;
+        s1.remove(QRegExp("[1-9][0-9]?"));
+        s2.remove(s1);
 
-        m_EntityList.at(i)->setValue(s, m_pPeer);
+        if (sl.count() == 1)
+        {
+            s = s1 + "%1;" + s2;
+        }
+        else
+        {
+            s3 = s4 = m_measChannelInfoHash.value(sl.at(1)).alias;
+            s3.remove(QRegExp("[1-9][0-9]?"));
+            s4.remove(s3);
+            s = s1 + "%1-" + s3 + "%2;" + s2 + ";" + s4;
+        }
+
+        m_EntityNameList.at(i)->setValue(s, m_pPeer);
     }
 }
 
@@ -430,8 +470,8 @@ void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     int i;
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        for (i = 0; i < m_EntityList.count()-1; i++) // we set n rms values
-            m_EntityList.at(i)->setValue((*actualValues)[i], m_pPeer);
+        for (i = 0; i < m_EntityActValueList.count()-1; i++) // we set n rms values
+            m_EntityActValueList.at(i)->setValue((*actualValues)[i], m_pPeer);
     }
 }
 
@@ -467,14 +507,13 @@ void cRmsModuleMeasProgram::resourceManagerConnect()
 
 void cRmsModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent("RMSModule")] = RMSMEASPROGRAM::sendrmident;
+    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("RmsModule%1").arg(m_pModule->getModuleNr()))] = RMSMEASPROGRAM::sendrmident;
 }
 
 
 void cRmsModuleMeasProgram::readResourceTypes()
 {
     m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = RMSMEASPROGRAM::readresourcetypes;
-
 }
 
 
@@ -532,10 +571,10 @@ void cRmsModuleMeasProgram::pcbserverConnect()
 }
 
 
-void cRmsModuleMeasProgram::readSamplenr()
+void cRmsModuleMeasProgram::readSampleRate()
 {
     // we always take the sample count from the first channels pcb server
-    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSamples()] = RMSMEASPROGRAM::readsamplenr;
+    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = RMSMEASPROGRAM::readsamplenr;
 }
 
 
@@ -607,6 +646,7 @@ void cRmsModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
+    setActualValuesNames();
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
     connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
 
@@ -655,9 +695,33 @@ void cRmsModuleMeasProgram::dataAcquisitionDSP()
 
 void cRmsModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPIFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
+    m_pDSPIFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
     emit actualValues(&m_ModuleActualValues); // and send them
+    for (int i = 0; i < m_ActValueList.count(); i++)
+        m_EntityActValueList.at(i)->setValue(QVariant((double)m_ModuleActualValues.at(i)), m_pPeer); // and set entities
+
+    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+
+#ifdef DEBUG
+    bool ok;
+    QString s;
+    for (int i = 0; i < m_ActValueList.count(); i++)
+    {
+        QStringList sl = m_ActValueList.at(i).split('-');
+        QString ts;
+
+        if (sl.count() == 1)
+            ts = QString("%1:%2;").arg(m_measChannelInfoHash.value(sl.at(0)).alias).arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok));
+        else
+            ts = QString("%1-%2:%3;").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                                    .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
+                                    .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok));
+
+        s += ts;
+    }
+
+    qDebug() << s;
+#endif
 }
 
 
