@@ -9,26 +9,6 @@
 #include "moduleactivist.h"
 #include "socket.h"
 
-
-namespace RMSMODULEOBSERVATION
-{
-enum rmsmoduleobservationCmds
-{
-    registernotifier,
-    unregisternotifiers
-};
-
-enum replies
-{
-    ack,
-    nack,
-    error,
-    debug,
-    ident
-};
-}
-
-
 namespace Zera {
 namespace Proxy {
     class cProxy;
@@ -39,6 +19,14 @@ namespace  Server {
     class cPCBInterface;
 }
 }
+
+namespace RMSMODULE
+{
+enum rmsmoduleobservationCmds
+{
+    registernotifier,
+    unregisternotifiers
+};
 
 class cRmsModule;
 
@@ -86,4 +74,5 @@ private slots:
     void deactivationDone();
 };
 
+}
 #endif // RMSMODULEOBSERVATION_H

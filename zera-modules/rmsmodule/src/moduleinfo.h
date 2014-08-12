@@ -8,6 +8,9 @@ class VeinPeer;
 
 // we use this class if we need an interface entity for information
 
+namespace RMSMODULE
+{
+
 class cModuleInfo: public QObject
 {
     Q_OBJECT
@@ -20,4 +23,5 @@ private:
     VeinEntity *m_pParEntity;
 };
 
+}
 #endif // MODULEINFO_H

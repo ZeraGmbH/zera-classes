@@ -6,6 +6,9 @@
 
 #include "socket.h"
 
+namespace RMSMODULE
+{
+
 // used for configuration export
 struct doubleParameter
 {
@@ -27,5 +30,5 @@ public:
     cSocket m_DSPServerSocket;
 };
 
-
+}
 #endif // RMSMODULECONFIGDATA_H

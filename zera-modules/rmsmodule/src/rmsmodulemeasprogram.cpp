@@ -9,15 +9,18 @@
 #include <veinentity.h>
 #include <QPointF>
 
+#include "reply.h"
 #include "modulesignal.h"
 #include "moduleparameter.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfigdata.h"
 #include "rmsmodulemeasprogram.h"
 
+namespace RMSMODULE
+{
 
 cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRmsModuleConfigData& configdata)
-    :cBaseMeas2Program(proxy, peer, iface), m_pModule(module), m_ConfigData(configdata)
+    :cBaseMeasProgram(proxy, peer, iface), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_ActValueList = m_ConfigData.m_valueChannelList;
@@ -290,28 +293,28 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case RMSMEASPROGRAM::sendrmident:
-            case RMSMEASPROGRAM::claimpgrmem:
-            case RMSMEASPROGRAM::claimusermem:
-            case RMSMEASPROGRAM::varlist2dsp:
-            case RMSMEASPROGRAM::cmdlist2dsp:
-            case RMSMEASPROGRAM::activatedsp:
-                if (reply == RMSMEASPROGRAM::ack) // we only continue if resource manager acknowledges
+            case sendrmident:
+            case claimpgrmem:
+            case claimusermem:
+            case varlist2dsp:
+            case cmdlist2dsp:
+            case activatedsp:
+                if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
                     emit activationError();
                 break;
 
-            case RMSMEASPROGRAM::readresourcetypes:
-                if ((reply == RMSMEASPROGRAM::ack) && (answer.toString().contains("SENSE")))
+            case readresourcetypes:
+                if ((reply == ack) && (answer.toString().contains("SENSE")))
                     emit activationContinue();
                 else
                     emit activationError();
                 break;
 
-            case RMSMEASPROGRAM::readresource:
+            case readresource:
             {
-                if (reply == RMSMEASPROGRAM::ack)
+                if (reply == ack)
                 {
                     bool allfound = true;
                     QList<QString> sl = m_measChannelInfoHash.keys();
@@ -332,7 +335,7 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
             }
 
-            case RMSMEASPROGRAM::readresourceinfo:
+            case readresourceinfo:
 
             {
                 int port;
@@ -340,7 +343,7 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 cMeasChannelInfo mi;
 
                 sl = answer.toString().split(';');
-                if ((reply == RMSMEASPROGRAM::ack) && (sl.length() >= 4))
+                if ((reply == ack) && (sl.length() >= 4))
                 {
                     port = sl.at(3).toInt(&ok); // we have to set the port where we can find our meas channel
                     if (ok)
@@ -358,8 +361,8 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
             }
 
-            case RMSMEASPROGRAM::readsamplenr:
-            if (reply == RMSMEASPROGRAM::ack)
+            case readsamplenr:
+            if (reply == ack)
             {
                 m_nSamples = answer.toInt(&ok);
                 emit activationContinue();
@@ -368,12 +371,12 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 emit activationError();
             break;
 
-            case RMSMEASPROGRAM::readalias:
+            case readalias:
             {
                 QString alias;
                 cMeasChannelInfo mi;
 
-                if (reply == RMSMEASPROGRAM::ack)
+                if (reply == ack)
                 {
                     alias = answer.toString();
                     mi = m_measChannelInfoHash.take(channelInfoRead);
@@ -386,12 +389,12 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 break;
             }
 
-            case RMSMEASPROGRAM::readdspchannel:
+            case readdspchannel:
             {
                 int chnnr;
                 cMeasChannelInfo mi;
 
-                if (reply == RMSMEASPROGRAM::ack)
+                if (reply == ack)
                 {
                     chnnr = answer.toInt(&ok);
                     mi = m_measChannelInfoHash.take(channelInfoRead);
@@ -405,24 +408,24 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             }
 
 
-            case RMSMEASPROGRAM::writeparameter:
-                if (reply == RMSMEASPROGRAM::ack) // we ignore ack
+            case writeparameter:
+                if (reply == ack) // we ignore ack
                     ;
                 else
                     emit executionError(); // but we send error message
                 break;
 
-            case RMSMEASPROGRAM::deactivatedsp:
-            case RMSMEASPROGRAM::freepgrmem:
-            case RMSMEASPROGRAM::freeusermem:
-                if (reply == RMSMEASPROGRAM::ack) // we only continue if resource manager acknowledges
+            case deactivatedsp:
+            case freepgrmem:
+            case freeusermem:
+                if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
                     emit deactivationError();
                 break;
 
-            case RMSMEASPROGRAM::dataaquistion:
-                if (reply == RMSMEASPROGRAM::ack)
+            case dataaquistion:
+                if (reply == ack)
                     emit activationContinue();
                 else
                 {
@@ -507,19 +510,19 @@ void cRmsModuleMeasProgram::resourceManagerConnect()
 
 void cRmsModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("RmsModule%1").arg(m_pModule->getModuleNr()))] = RMSMEASPROGRAM::sendrmident;
+    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("RmsModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
 void cRmsModuleMeasProgram::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = RMSMEASPROGRAM::readresourcetypes;
+    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
 }
 
 
 void cRmsModuleMeasProgram::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = RMSMEASPROGRAM::readresource;
+    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
 }
 
 
@@ -533,7 +536,7 @@ void cRmsModuleMeasProgram::readResourceInfos()
 void cRmsModuleMeasProgram::readResourceInfo()
 {
     channelInfoRead = channelInfoReadList.takeLast();
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", channelInfoRead)] = RMSMEASPROGRAM::readresourceinfo;
+    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
 }
 
 
@@ -574,7 +577,7 @@ void cRmsModuleMeasProgram::pcbserverConnect()
 void cRmsModuleMeasProgram::readSampleRate()
 {
     // we always take the sample count from the first channels pcb server
-    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = RMSMEASPROGRAM::readsamplenr;
+    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = readsamplenr;
 }
 
 
@@ -588,13 +591,13 @@ void cRmsModuleMeasProgram::readChannelInformation()
 void cRmsModuleMeasProgram::readChannelAlias()
 {
     channelInfoRead = channelInfoReadList.takeFirst();
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getAlias(channelInfoRead)] = RMSMEASPROGRAM::readalias;
+    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getAlias(channelInfoRead)] = readalias;
 }
 
 
 void cRmsModuleMeasProgram::readDspChannel()
 {
-    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getDSPChannel(channelInfoRead)] = RMSMEASPROGRAM::readdspchannel;
+    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getDSPChannel(channelInfoRead)] = readdspchannel;
 }
 
 
@@ -614,31 +617,31 @@ void cRmsModuleMeasProgram::readDspChannelDone()
 
 void cRmsModuleMeasProgram::claimPGRMem()
 {
-  m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPIFace->cmdListCount())] = RMSMEASPROGRAM::claimpgrmem;
+  m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPIFace->cmdListCount())] = claimpgrmem;
 }
 
 
 void cRmsModuleMeasProgram::claimUSERMem()
 {
-   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = RMSMEASPROGRAM::claimusermem;
+   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
 
 
 void cRmsModuleMeasProgram::varList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->varList2Dsp()] = RMSMEASPROGRAM::varlist2dsp;
+    m_MsgNrCmdList[m_pDSPIFace->varList2Dsp()] = varlist2dsp;
 }
 
 
 void cRmsModuleMeasProgram::cmdList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->cmdList2Dsp()] = RMSMEASPROGRAM::cmdlist2dsp;
+    m_MsgNrCmdList[m_pDSPIFace->cmdList2Dsp()] = cmdlist2dsp;
 }
 
 
 void cRmsModuleMeasProgram::activateDSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->activateInterface()] = RMSMEASPROGRAM::activatedsp; // aktiviert die var- und cmd-listen im dsp
+    m_MsgNrCmdList[m_pDSPIFace->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
 
@@ -660,19 +663,19 @@ void cRmsModuleMeasProgram::deactivateDSP()
     deleteDspVarList();
     deleteDspCmdList();
 
-    m_MsgNrCmdList[m_pDSPIFace->deactivateInterface()] = RMSMEASPROGRAM::deactivatedsp; // wat wohl
+    m_MsgNrCmdList[m_pDSPIFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cRmsModuleMeasProgram::freePGRMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = RMSMEASPROGRAM::freepgrmem;
+    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
 
 void cRmsModuleMeasProgram::freeUSERMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = RMSMEASPROGRAM::freeusermem;
+    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = freeusermem;
 }
 
 
@@ -689,7 +692,7 @@ void cRmsModuleMeasProgram::deactivateDSPdone()
 void cRmsModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
-    m_MsgNrCmdList[m_pDSPIFace->dataAcquisition(m_pActualValuesDSP)] = RMSMEASPROGRAM::dataaquistion; // we start our data aquisition now
+    m_MsgNrCmdList[m_pDSPIFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 
@@ -731,10 +734,10 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
     m_ConfigData.m_fMeasInterval.m_fValue = ti.toDouble(&ok);
     m_pDSPIFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000)
                                                                             .arg(0), DSPDATA::dInt);
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pParameterDSP)] = RMSMEASPROGRAM::writeparameter;
+    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
 
-
+}
 
 
 

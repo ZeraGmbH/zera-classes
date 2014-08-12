@@ -27,13 +27,13 @@ namespace  Server {
 
 namespace RMSMODULE {
 
-class cBaseMeas2Program: public cModuleActivist
+class cBaseMeasProgram: public cModuleActivist
 {
     Q_OBJECT
 
 public:
-    cBaseMeas2Program(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface);
-    virtual ~cBaseMeas2Program();
+    cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface);
+    virtual ~cBaseMeasProgram();
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 

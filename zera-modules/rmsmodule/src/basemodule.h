@@ -14,7 +14,9 @@
 #include "moduleactivist.h"
 
 
-namespace BaseModule
+class VeinPeer;
+
+namespace RMSMODULE
 {
     enum LastState
     {
@@ -29,13 +31,11 @@ namespace BaseModule
         activated   // we have activated the module
     };
 
-}
 
-
-class cBaseMeas2Program;
+class cBaseMeasProgram;
 class cBaseModuleConfiguration;
 class cBaseMeasChannel;
-class VeinPeer;
+
 
 class cBaseModule : public ZeraModules::VirtualModule
 {
@@ -129,4 +129,5 @@ private slots:
 
 };
 
-#endif // RANGEMODULE_H
+}
+#endif // BASEMODULE_H

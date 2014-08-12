@@ -8,6 +8,9 @@ class VeinPeer;
 
 // we use this class if we need an interface entity for signals
 
+namespace RMSMODULE
+{
+
 class cModuleSignal: public QObject
 {
     Q_OBJECT
@@ -19,5 +22,6 @@ public:
     VeinEntity *m_pParEntity;
 };
 
+}
 
 #endif // MODULESIGNAL_H

@@ -7,6 +7,9 @@
 // pure virtual class for all objects living in a module, which generate an interface
 // and/or which can do something after it got activated
 
+namespace RMSMODULE
+{
+
 class cModuleActivist: public QObject
 {
     Q_OBJECT
@@ -39,4 +42,5 @@ protected:
 
 };
 
+}
 #endif // MODULEACITIVIST_H

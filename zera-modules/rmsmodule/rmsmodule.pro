@@ -59,7 +59,8 @@ HEADERS += \
     src/rmsmodulefactory.h \
     src/rmsmodule.h \
     src/rmsmoduleobservation.h \
-    src/measchannelinfo.h
+    src/measchannelinfo.h \
+    src/reply.h
 
 unix:!symbian {
     maemo5 {

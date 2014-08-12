@@ -6,6 +6,8 @@
 #include "rmsmoduleconfigdata.h"
 #include "socket.h"
 
+namespace RMSMODULE
+{
 
 cRmsModuleConfiguration::cRmsModuleConfiguration()
 {
@@ -131,5 +133,5 @@ void cRmsModuleConfiguration::completeConfiguration(bool ok)
     emit configXMLDone();
 }
 
-
+}
 

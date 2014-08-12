@@ -19,7 +19,8 @@ namespace XMLConfig
   @brief
   cXMLSettings is pure virtual class, all derived classes will have xml configuration facilitiy
  */
-
+namespace RMSMODULE
+{
 
 class cXMLSettings: public QObject
 {
@@ -32,5 +33,7 @@ protected:
     QMap<QString,quint16> m_ConfigXMLMap;
     Zera::XMLConfig::cReader* m_pXMLReader;
 };
+
+}
 
 #endif // XMLSETTINGS_H

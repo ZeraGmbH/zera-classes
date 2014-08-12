@@ -18,6 +18,9 @@ namespace Proxy
 
 class VeinPeer;
 
+namespace RMSMODULE
+{
+
 class RmsModuleFactory : public QObject, public MeasurementModuleFactory
 {
     Q_OBJECT
@@ -36,4 +39,5 @@ private:
   QList<ZeraModules::VirtualModule*> m_ModuleList; // our list of modules
 };
 
+}
 #endif // RMSMODULEFACTORY_H

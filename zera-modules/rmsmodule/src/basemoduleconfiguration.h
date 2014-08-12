@@ -3,6 +3,9 @@
 
 #include "xmlsettings.h"
 
+namespace RMSMODULE
+{
+
 // pure virtual base class for module configuration
 
 class cBaseModuleConfiguration: public cXMLSettings
@@ -24,4 +27,5 @@ protected:
     bool m_bConfigError;
 };
 
+}
 #endif // BASEMODULECONFIGURATION_H

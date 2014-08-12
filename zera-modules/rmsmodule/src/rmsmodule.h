@@ -9,12 +9,6 @@
 
 #include "basemodule.h"
 
-
-class cRmsModuleConfiguration;
-class cRmsModuleMeasProgram;
-class cRmsModuleObservation;
-
-
 namespace Zera {
 namespace Server {
  class cDSPInterface;
@@ -24,6 +18,15 @@ namespace Proxy {
  class cProxyClient;
 }
 }
+
+
+namespace RMSMODULE
+{
+
+class cRmsModuleConfiguration;
+class cRmsModuleMeasProgram;
+class cRmsModuleObservation;
+
 
 class cRmsModule : public cBaseModule
 {
@@ -82,5 +85,6 @@ private slots:
 
 };
 
+}
 
 #endif // RMSMODULE_H

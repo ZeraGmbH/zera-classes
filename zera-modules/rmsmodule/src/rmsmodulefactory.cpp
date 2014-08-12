@@ -1,6 +1,8 @@
 #include "rmsmodulefactory.h"
 #include "rmsmodule.h"
 
+namespace RMSMODULE
+{
 
 ZeraModules::VirtualModule* RmsModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
 {
@@ -27,5 +29,5 @@ QString RmsModuleFactory::getFactoryName()
     return QString("rmsmodule");
 }
 
-
+}
 

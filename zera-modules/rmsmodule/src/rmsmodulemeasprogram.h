@@ -11,8 +11,21 @@
 #include "basemeasprogram.h"
 #include "measchannelinfo.h"
 
+namespace Zera {
+namespace Proxy {
+    class cProxy;
+}
+}
 
-namespace RMSMEASPROGRAM
+class cDspMeasData;
+class VeinPeer;
+class VeinEntity;
+class QStateMachine;
+class QState;
+class QFinalState;
+
+
+namespace RMSMODULE
 {
 
 enum rmsmoduleCmds
@@ -41,40 +54,14 @@ enum rmsmoduleCmds
 
 #define DEBUG 1
 
-enum replies
-{
-    ack,
-    nack,
-    error,
-    debug,
-    ident
-};
-
-}
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-}
-
-
 class cModuleSignal;
 class cModuleParameter;
-class VeinPeer;
-class VeinEntity;
 class cBaseModule;
-class cDspMeasData;
-class cDspIFace;
 class cRmsModuleConfigData;
 class cRmsModule;
-class QStateMachine;
-class QState;
-class QFinalState;
 
 
-class cRmsModuleMeasProgram: public cBaseMeas2Program
+class cRmsModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 
@@ -187,4 +174,5 @@ private slots:
 
 };
 
+}
 #endif // RMSMODULEMEASPROGRAM_H

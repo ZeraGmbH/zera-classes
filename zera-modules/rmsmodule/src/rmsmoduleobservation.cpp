@@ -2,8 +2,12 @@
 #include <proxy.h>
 #include <proxyclient.h>
 
+#include "reply.h"
 #include "rmsmoduleobservation.h"
 #include "rmsmodule.h"
+
+namespace RMSMODULE
+{
 
 cRmsModuleObservation::cRmsModuleObservation(cRmsModule* module, Zera::Proxy::cProxy *proxy, cSocket *pcbsocket)
     :m_pRmsmodule(module), m_pProxy(proxy), m_pPCBServerSocket(pcbsocket)
@@ -76,14 +80,14 @@ void cRmsModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         int cmd = m_MsgNrCmdList.take(msgnr);
         switch (cmd)
         {
-        case RMSMODULEOBSERVATION::registernotifier:
-            if (reply == RMSMODULEOBSERVATION::ack) // we only continue pcb server acknowledges
+        case registernotifier:
+            if (reply == ack) // we only continue pcb server acknowledges
                 emit activationContinue();
             else
                 emit activationError();
             break;
-        case RMSMODULEOBSERVATION::unregisternotifiers:
-            if (reply == RMSMODULEOBSERVATION::ack) // we only continue pcb server acknowledges
+        case unregisternotifiers:
+            if (reply == ack) // we only continue pcb server acknowledges
                 emit deactivationContinue();
             else
                 emit deactivationError();
@@ -106,7 +110,7 @@ void cRmsModuleObservation::pcbConnect()
 
 void cRmsModuleObservation::setNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier("SENSE:MMODE?","1")] = RMSMODULEOBSERVATION::registernotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier("SENSE:MMODE?","1")] = registernotifier;
 }
 
 
@@ -118,7 +122,7 @@ void cRmsModuleObservation::activationDone()
 
 void cRmsModuleObservation::resetNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = RMSMODULEOBSERVATION::unregisternotifiers;
+    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = unregisternotifiers;
 }
 
 
@@ -127,3 +131,4 @@ void cRmsModuleObservation::deactivationDone()
     emit deactivated();
 }
 
+}

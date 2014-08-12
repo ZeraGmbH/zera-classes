@@ -12,6 +12,8 @@
 #include "moduleinfo.h"
 #include "modulesignal.h"
 
+namespace RMSMODULE
+{
 
 cRmsModule::cRmsModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
     :cBaseModule(modnr, proxy, peer, new cRmsModuleConfiguration(), parent)
@@ -192,4 +194,4 @@ void cRmsModule::rmsModuleReconfigure()
     emit sigConfiguration(); // we configure after our notifier has detected
 }
 
-
+}

@@ -37,7 +37,7 @@
 	</configuration>
 	
 	<parameter>
-                <interval>3.0</interval>
+                <interval>2.0</interval>
         </parameter>
 
 </rmsmodconfpar>

@@ -2,6 +2,8 @@
 
 #include "basemoduleconfiguration.h"
 
+namespace RMSMODULE
+{
 
 cBaseModuleConfiguration::cBaseModuleConfiguration()
 {
@@ -21,5 +23,5 @@ bool cBaseModuleConfiguration::isConfigured()
     return m_bConfigured;
 }
 
-
+}
 

@@ -13,6 +13,8 @@ namespace Server {
 }
 }
 
+namespace RMSMODULE
+{
 
 struct cMeasChannelInfo
 {
@@ -22,4 +24,5 @@ struct cMeasChannelInfo
     Zera::Server::cPCBInterface* pcbIFace;
 };
 
+}
 #endif // MEASCHANNELINFO_H

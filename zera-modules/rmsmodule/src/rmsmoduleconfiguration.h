@@ -8,6 +8,9 @@
 
 #include "basemoduleconfiguration.h"
 
+namespace RMSMODULE
+{
+
 enum moduleconfigstate
 {
     setDebugLevel,
@@ -49,5 +52,7 @@ protected slots:
 private:
     cRmsModuleConfigData *m_pRmsModulConfigData;  // configuration
 };
+
+}
 
 #endif // RMSMODULCONFIGURATION_H

@@ -2,6 +2,9 @@
 #include "veinpeer.h"
 #include "veinentity.h"
 
+namespace RMSMODULE
+{
+
 cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initval, QString limitname, QVariant limitval, bool readonly)
     :m_pPeer(peer)
 {
@@ -36,7 +39,7 @@ QVariant cModuleParameter::getData()
     return m_pParEntity->getValue();
 }
 
-
+}
 
 
 
