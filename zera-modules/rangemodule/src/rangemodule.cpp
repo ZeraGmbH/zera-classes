@@ -15,8 +15,8 @@
 #include "moduleinfo.h"
 #include "modulesignal.h"
 
-cRangeModule::cRangeModule(Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(proxy, peer, new cRangeModuleConfiguration(), parent)
+cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
+    :cBaseModule(modnr, proxy, peer, new cRangeModuleConfiguration(), parent)
 {
     m_ModuleActivistList.clear();
 
@@ -122,7 +122,7 @@ void cRangeModule::setupModule()
     connect(m_pAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, &(pConfData->m_RMSocket), &(pConfData->m_PCBServerSocket), pConfData->m_senseChannelList, pConfData->m_fMeasInterval);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

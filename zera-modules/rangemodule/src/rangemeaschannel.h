@@ -25,6 +25,7 @@ enum rangemeaschannelCmds
     freeresource,
     readdspchannel,
     readchnalias,
+    readsamplerate,
     readrangelist,
 
     readrngalias,
@@ -117,6 +118,7 @@ private:
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
     QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
+    QState m_readSampleRateState; // we read the sample nr
     QState m_readRangelistState; // we query our range list
     QState m_readRangeProperties1State; // we build up a loop for querying all the ranges properties
     QState m_readRangeProperties2State; //
@@ -144,7 +146,7 @@ private:
     QFinalState m_freeResourceDoneState;
 
     void setRangeListEntity();
-    void setChannelEntity();
+    void setChannelNameEntity();
 
     qint32 m_RangeQueryIt;
     cRangeInfo ri;
@@ -162,6 +164,7 @@ private slots:
     void pcbConnection();
     void readDspChannel();
     void readChnAlias();
+    void readSampleRate();
     void readRangelist();
     void readRangeProperties1();
     void readRangeProperties3();

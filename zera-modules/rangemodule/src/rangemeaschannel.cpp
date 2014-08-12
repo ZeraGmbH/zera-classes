@@ -1,3 +1,4 @@
+#include <QRegExp>
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <proxy.h>
@@ -22,7 +23,8 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_claimResourceState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionState);
     // m_pcbConnectionState.addTransition is done in pcbConnection
     m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
-    m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
+    m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
+    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
     m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties1State);
     m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties2State);
     m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties3State);
@@ -37,6 +39,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_activationMachine.addState(&m_pcbConnectionState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readChnAliasState);
+    m_activationMachine.addState(&m_readSampleRateState);
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_readRangeProperties1State);
     m_activationMachine.addState(&m_readRangeProperties2State);
@@ -52,6 +55,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     connect(&m_pcbConnectionState, SIGNAL(entered()), SLOT(pcbConnection()));
     connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
     connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
+    connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
     connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
     connect(&m_readRangeProperties1State, SIGNAL(entered()), SLOT(readRangeProperties1()));
     connect(&m_readRangeProperties3State, SIGNAL(entered()), SLOT(readRangeProperties3()));
@@ -295,8 +299,11 @@ void cRangeMeasChannel::generateInterface()
 {
     QString s;
 
-    m_pChannelEntity = m_pPeer->dataAdd(QString("INF_Channel%1Name").arg(m_nChannelNr)); // here is the actual range
+    m_pChannelEntity = m_pPeer->dataAdd(QString("TRA_Channel%1Name").arg(m_nChannelNr)); // here is the actual range
     m_pChannelEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pChannelEntity->setValue(tr("UL%1"), m_pPeer); // we only do this for translation purpose
+    m_pChannelEntity->setValue(tr("IL%1"), m_pPeer); // to be extended
+    m_pChannelEntity->setValue(tr("REF%1"), m_pPeer);
     m_pChannelEntity->setValue(s = "Unknown", m_pPeer);
 
     m_pChannelRangeListEntity = m_pPeer->dataAdd(QString("INF_Channel%1RangeList").arg(m_nChannelNr)); // list of possible ranges
@@ -392,6 +399,15 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         if (reply == ack)
         {
             m_sAlias = answer.toString();
+            emit activationContinue();
+        }
+        else
+            emit activationError();
+        break;
+    case RANGEMEASCHANNEL::readsamplerate:
+        if (reply == ack)
+        {
+            m_nSampleRate = answer.toInt(&ok);
             emit activationContinue();
         }
         else
@@ -519,9 +535,15 @@ void cRangeMeasChannel::setRangeListEntity()
 }
 
 
-void cRangeMeasChannel::setChannelEntity()
+void cRangeMeasChannel::setChannelNameEntity()
 {
-    m_pChannelEntity->setValue(m_sAlias, m_pPeer);
+    QString s1,s2;
+    s1 = s2 = m_sAlias;
+    s1.remove(QRegExp("[1-9][0-9]?"));
+    s2.remove(s1);
+    //m_pChannelEntity->setValue(m_sAlias, m_pPeer);
+
+    m_pChannelEntity->setValue(QString("%1%2;%3").arg(s1).arg("%1").arg(s2), m_pPeer);
 }
 
 
@@ -601,7 +623,13 @@ void cRangeMeasChannel::readDspChannel()
 
 void cRangeMeasChannel::readChnAlias()
 {
-   m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = RANGEMEASCHANNEL::readchnalias;
+    m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName)] = RANGEMEASCHANNEL::readchnalias;
+}
+
+
+void cRangeMeasChannel::readSampleRate()
+{
+    m_MsgNrCmdList[m_pPCBInterface->getSampleRate()] = RANGEMEASCHANNEL::readsamplerate;
 }
 
 
@@ -641,7 +669,7 @@ void cRangeMeasChannel::activationDone()
             ++it;
     }
 
-    setChannelEntity(); // we set our real name now
+    setChannelNameEntity(); // we set our real name now
     setRangeListEntity(); // and the list of possible ranges
 
     emit activated();

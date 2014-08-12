@@ -9,7 +9,6 @@
 
 #include "basemeasprogram.h"
 
-
 namespace RANGEMEASPROGRAM
 {
 
@@ -44,6 +43,7 @@ class cDspIFace;
 class QStateMachine;
 class QState;
 class cRangeModule;
+class cRangeModuleConfigData;
 class QFinalState;
 
 
@@ -52,7 +52,7 @@ class cRangeModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, cSocket* pcbsocket, QStringList chnlist, float interval);
+    cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRangeModuleConfigData& configData);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -75,9 +75,11 @@ protected slots:
 private:
     bool m_bRanging;
     bool m_bIgnore;
+    quint16 m_nSamples;
     cRangeModule* m_pModule; // the module we live in
-    float m_fInterval;
+    QStringList m_ChannelList; // the list of actual values we work on
     QList<VeinEntity*> m_EntityList;
+    cRangeModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;

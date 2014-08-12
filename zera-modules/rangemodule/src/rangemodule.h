@@ -29,12 +29,13 @@ namespace Proxy {
 }
 }
 
+
 class cRangeModule : public cBaseModule
 {
 Q_OBJECT
 
 public:
-    cRangeModule(Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cRangeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
     virtual ~cRangeModule();
     virtual QByteArray getConfiguration();
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback

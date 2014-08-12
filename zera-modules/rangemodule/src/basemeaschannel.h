@@ -36,6 +36,7 @@ public:
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
     quint8 getDSPChannelNr();
+    quint16 getSampleRate();
     QString getName();
     QString getAlias();
 
@@ -52,10 +53,10 @@ protected:
 
     // the things we have to query from our pcb server
     quint8 m_nDspChannel; // the dsp's channel where samples come in
+    quint16 m_nSampleRate; // the systems sample rate
     QString m_sAlias; // the channel' alias
     QString m_sDescription; // we take description from resource manager
     quint16 m_nPort; // and also the port adress of pcb server
-
     QHash<quint32, int> m_MsgNrCmdList;
 
 protected slots:

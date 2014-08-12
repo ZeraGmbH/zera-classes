@@ -9,8 +9,8 @@
 #include "basemoduleconfiguration.h"
 
 
-cBaseModule::cBaseModule(Zera::Proxy::cProxy *proxy, VeinPeer *peer, cBaseModuleConfiguration* modcfg, QObject* parent)
-    :ZeraModules::VirtualModule(proxy,peer,parent), m_pProxy(proxy), m_pPeer(peer), m_pConfiguration(modcfg)
+cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *peer, cBaseModuleConfiguration* modcfg, QObject* parent)
+    :ZeraModules::VirtualModule(proxy,peer,parent), m_pProxy(proxy), m_pPeer(peer), m_pConfiguration(modcfg), m_nModuleNr(modnr)
 {
     QString s;
     setParent(parent);
@@ -172,6 +172,12 @@ void cBaseModule::stopModule()
 {
     emit sigStop();
     // here we must inform our module engine
+}
+
+
+quint8 cBaseModule::getModuleNr()
+{
+    return m_nModuleNr;
 }
 
 

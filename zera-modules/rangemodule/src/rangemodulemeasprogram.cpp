@@ -10,13 +10,16 @@
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 #include "rangemodulemeasprogram.h"
+#include "rangemoduleconfigdata.h"
 
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cSocket* rmsocket, cSocket* pcbsocket, QStringList chnlist, float interval)
-    :cBaseMeasProgram(proxy, peer, iface, rmsocket, pcbsocket, chnlist), m_pModule(module), m_fInterval(interval)
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRangeModuleConfigData& configData)
+    :cBaseMeasProgram(proxy, peer, iface), m_pModule(module), m_ConfigData(configData)
 {
     m_bRanging = false;
     m_bIgnore = false;
+    m_ChannelList = m_ConfigData.m_senseChannelList;
+
     m_pRMInterface = new Zera::Server::cRMInterface();
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_claimPGRMemState);
@@ -103,7 +106,7 @@ void cRangeModuleMeasProgram::generateInterface()
     VeinEntity* p_entity;
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
-        p_entity = m_pPeer->dataAdd(QString("ACT_Peak%1").arg(i+1));
+        p_entity = m_pPeer->dataAdd(QString("ACT_Channel%1Peak").arg(i+1));
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
         p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
         p_entity->setValue(QVariant((double) 0.0), m_pPeer);
@@ -127,9 +130,10 @@ void cRangeModuleMeasProgram::deleteInterface()
 
 void cRangeModuleMeasProgram::setDspVarList()
 {
+
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_pDSPIFace->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", 504/* !!! später variable*/, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt));
     m_pTmpDataDsp->addVarItem( new cDspVar("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("CHXRMS",m_ChannelList.count(), DSPDATA::vDspTemp));
@@ -165,9 +169,9 @@ void cRangeModuleMeasProgram::setDspCmdList()
     QString s;
 
     m_pDSPIFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(504) ); // clear meassignal
+        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples) ); // clear meassignal
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
-        m_pDSPIFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_fInterval*1000.0)); // initial ti time  /* todo variabel */
+        m_pDSPIFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -290,12 +294,15 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
 
 void cRangeModuleMeasProgram::serverConnect()
 {
+    m_nSamples = m_pModule->getMeasChannel(m_ChannelList.at(0))->getSampleRate(); // we first read the sample nr from first channel
+
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    cSocket sock = m_ConfigData.m_RMSocket;
+    m_pRMClient = m_pProxy->getConnection(sock.m_sIP, sock.m_nPort);
     m_serverConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
@@ -308,7 +315,7 @@ void cRangeModuleMeasProgram::serverConnect()
 
 void cRangeModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent("RangeModule")] = RANGEMEASPROGRAM::sendrmident;
+    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("RangeModule%1").arg(m_pModule->getModuleNr()))] = RANGEMEASPROGRAM::sendrmident;
 }
 
 

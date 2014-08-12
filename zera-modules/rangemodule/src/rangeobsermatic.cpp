@@ -60,8 +60,8 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
     // qDebug() << "range obsermatic new actual values";
-    qDebug() << QString("PEAK %1 ; %2 ; %3").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2]);
-    qDebug() << QString("PEAK %1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
+    qDebug() << QString("PEAK %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
+             << QString("%1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
 
     // qDebug() << QString("RMS %1 ; %2 ; %3").arg(m_ActualValues[6]).arg(m_ActualValues[7]).arg(m_ActualValues[8]);
 

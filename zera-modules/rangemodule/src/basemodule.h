@@ -42,10 +42,11 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(Zera::Proxy::cProxy* proxy, VeinPeer* peer, cBaseModuleConfiguration* modcfg, QObject *parent = 0);
+    cBaseModule(quint8 modnr, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cBaseModuleConfiguration* modcfg, QObject *parent = 0);
     virtual ~cBaseModule();
     virtual QList<const QState*> getActualStates(); // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
+    virtual quint8 getModuleNr();
     virtual QByteArray getConfiguration()=0;
     virtual bool isConfigured();
     virtual void startModule();
@@ -107,6 +108,7 @@ private:
     QList<const QState*> m_StateList;
     int m_nLastState;
     int m_nStatus;
+    quint8 m_nModuleNr;
 
 private slots:
     void entryIdle();
@@ -125,4 +127,4 @@ private slots:
 
 };
 
-#endif // RANGEMODULE_H
+#endif // BASEMODULE_H
