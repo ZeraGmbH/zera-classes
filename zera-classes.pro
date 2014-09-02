@@ -12,4 +12,5 @@ SUBDIRS     = \
             zera-misc \
             zera-modules/interface \
             zera-modules/rangemodule \
-            zera-modules/rmsmodule
+            zera-modules/rmsmodule \
+            zera-modules/dftmodule
