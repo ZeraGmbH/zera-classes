@@ -11,8 +11,8 @@
 #include "rangemoduleobservation.h"
 #include "adjustment.h"
 #include "rangeobsermatic.h"
-#include "moduleparameter.h"
 #include "moduleinfo.h"
+#include "moduleerror.h"
 #include "modulesignal.h"
 
 namespace RANGEMODULE
@@ -94,6 +94,7 @@ void cRangeModule::setupModule()
 
     channelNrInfo = new cModuleInfo(m_pPeer, "INF_ChannelCount", QVariant(pConfData->m_nChannelCount));
     groupNrInfo = new cModuleInfo(m_pPeer, "INF_GroupCount", QVariant(pConfData->m_nGroupCount));
+    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
 
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
@@ -103,8 +104,9 @@ void cRangeModule::setupModule()
                                                         pConfData->m_senseChannelList.at(i), i+1);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
-        QObject::connect(pchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
-        QObject::connect(pchn, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+        connect(pchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
+        connect(pchn, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+        connect(pchn, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
     }
 
     m_pDspProxyClient = m_pProxy->getConnection(pConfData->m_DSPServerSocket.m_sIP, pConfData->m_DSPServerSocket.m_nPort);
@@ -117,6 +119,7 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pRangeObsermatic, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+    connect(m_pRangeObsermatic, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     // we also need some program for adjustment
     m_pAdjustment = new cAdjustManagement(this, m_pPeer, m_pDSPInterface, pConfData->m_senseChannelList, pConfData->m_fAdjInterval);
@@ -129,12 +132,13 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-
+    connect(m_pMeasProgram, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
     //
     m_pRangeModuleObservation = new cRangeModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pRangeModuleObservation);
     connect(m_pRangeModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pRangeModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+    connect(m_pRangeModuleObservation, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -154,6 +158,8 @@ void cRangeModule::unsetModule()
         m_rangeMeasChannelList.clear();
         if (channelNrInfo) delete channelNrInfo;
         if (groupNrInfo) delete groupNrInfo;
+        if (errorMessage) delete errorMessage;
+
         if (m_pDSPInterface)
         {
             m_pProxy->releaseConnection(m_pDspProxyClient);

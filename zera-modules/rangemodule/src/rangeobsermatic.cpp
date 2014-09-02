@@ -6,6 +6,8 @@
 #include <veinentity.h>
 #include <dspinterface.h>
 
+#include "debug.h"
+#include "errormessages.h"
 #include "rangemodule.h"
 #include "moduleparameter.h"
 #include "moduleinfo.h"
@@ -103,6 +105,12 @@ void cRangeObsermatic::generateInterface()
         pEntity->setValue(QVariant((float)0.0), m_pPeer);
         m_RangeRejectionEntityList.append(pEntity);
 
+        pEntity = m_pPeer->dataAdd(QString("INF_Channel%1ActREJ").arg(i+1));
+        pEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+        pEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+        pEntity->setValue(QVariant((float)0.0), m_pPeer);
+        m_RangeActRejectionEntityList.append(pEntity);
+
         m_softOvlList.append(false);
         m_hardOvlList.append(false);
         m_maxOvlList.append(false);
@@ -120,9 +128,9 @@ void cRangeObsermatic::generateInterface()
         }
     }
 
-    m_pParRangeAutomaticOnOff = new cModuleParameter(m_pPeer, "PAR_RangeAutomaticON/OFF", (int)-1, "RangeAutomaticLimits", QVariant(QPoint(1,0)), !m_ConfPar.m_bRangeAuto);
-    m_pParGroupingOnOff = new cModuleParameter(m_pPeer, "PAR_ChannelGroupingON/OFF", (int)-1, "ChannelGroupingLimits", QVariant(QPoint(1,0)), !m_ConfPar.m_bGrouping);
-    m_pParOverloadOnOff = new cModuleParameter(m_pPeer, "PAR_OverloadON/OFF", (int)-1, "OverloadLimits", QVariant(QPoint(1,0)), !m_ConfPar.m_bOverload);
+    m_pParRangeAutomaticOnOff = new cModuleParameter(m_pPeer, "PAR_RangeAutomaticON/OFF", (int)0, !m_ConfPar.m_bRangeAuto);
+    m_pParGroupingOnOff = new cModuleParameter(m_pPeer, "PAR_ChannelGroupingON/OFF", (int)0, !m_ConfPar.m_bGrouping);
+    m_pParOverloadOnOff = new cModuleParameter(m_pPeer, "PAR_OverloadON/OFF", (int)0, !m_ConfPar.m_bOverload);
 
     m_pRangingSignal = new cModuleSignal(m_pPeer, "SIG_RANGING", QVariant(0));
 }
@@ -135,6 +143,7 @@ void cRangeObsermatic::deleteInterface()
         m_pPeer->dataRemove(m_RangeEntityList.at(i));
         m_pPeer->dataRemove(m_RangeOVLEntityList.at(i));
         m_pPeer->dataRemove(m_RangeRejectionEntityList.at(i));
+        m_pPeer->dataRemove(m_RangeActRejectionEntityList.at(i));
     }
 
     for (int i = 0; i < m_GroupList.count(); i++)
@@ -253,7 +262,7 @@ void cRangeObsermatic::groupHandling()
                 // so we can group now
                 double maxUrValue= 0.0;
                 double rngUrValue;
-                int maxIndex;
+                int maxIndex = 0;
 
                 // first we search for the range with max upper range value
                 for (int j = 0; j < indexList.count(); j++)
@@ -320,10 +329,13 @@ void cRangeObsermatic::setRanges(bool force)
             m_actChannelRangeList.replace(i, s);
             VeinEntity* pEntity = m_RangeEntityList.at(i);
             disconnect(m_RangeEntityList.at(i), 0, this, 0); // we don't want a signal when we switch the range by ourself
-            pEntity->setValue(QVariant(s));
+            pEntity->setValue(QVariant(s),m_pPeer);
             connect(m_RangeEntityList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(newRange(QVariant)));
             chn = pmChn->getDSPChannelNr();
             m_pfScale[chn] = pmChn->getUrValue() / pmChn->getRejection();
+
+            m_RangeActRejectionEntityList.at(i)->setValue(pmChn->getRangeUrvalueMax(), m_pPeer); // we still set information of channels actual urvalue incl. reserve
+
             //if (chn == 0)
             qDebug() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);
         }
@@ -385,9 +397,10 @@ void cRangeObsermatic::readGainCorr()
 
 void cRangeObsermatic::readGainCorrDone()
 {
-    setRanges(); // so we set our scaling factors
-    m_bRangeAutomatic = (m_nDefaultRangeAuto == 1);
-    m_bGrouping = (m_nDefaultGrouping == 1);
+    newRangeAuto(m_ConfPar.m_nRangeAutoAct.m_nActive);
+    newGrouping(m_ConfPar.m_nGroupAct.m_nActive);
+    setRanges(); // so we set our scaling factors if not already done
+
     // we read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
     for (int i = 0; i < m_ChannelNameList.count(); i++)
@@ -401,7 +414,7 @@ void cRangeObsermatic::readGainCorrDone()
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++)
     {
         pmChn = m_RangeMeasChannelList.at(i);
-        m_RangeRejectionEntityList.at(i)->setValue(pmChn->getMaxRecjection(), m_pPeer);
+        m_RangeRejectionEntityList.at(i)->setValue(pmChn->getMaxRangeUrvalueMax(), m_pPeer);
     }
 
     emit activated();
@@ -587,11 +600,29 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
             switch (cmd)
             {
             case readgain2corr:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(readdspgaincorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << readdspgaincorrErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case writegain2corr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    emit activationError();
+                {
+                    emit errMsg((tr(writedspgaincorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspgaincorrErrMsg;
+#endif
+                    // emit activationError();
+                    emit executionError(); // we also emit exec error because
+                }
                 break;
             }
         }

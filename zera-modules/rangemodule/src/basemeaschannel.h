@@ -41,6 +41,7 @@ public:
     quint16 getSampleRate();
     QString getName();
     QString getAlias();
+    QString getUnit();
 
 protected:
     Zera::Proxy::cProxy* m_pProxy;
@@ -57,6 +58,7 @@ protected:
     quint8 m_nDspChannel; // the dsp's channel where samples come in
     quint16 m_nSampleRate; // the systems sample rate
     QString m_sAlias; // the channel' alias
+    QString m_sUnit;
     QString m_sDescription; // we take description from resource manager
     quint16 m_nPort; // and also the port adress of pcb server
     QHash<quint32, int> m_MsgNrCmdList;

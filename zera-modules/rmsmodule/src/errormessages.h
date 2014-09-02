@@ -1,0 +1,4 @@
+#ifndef ERRORMESSAGES_H
+#define ERRORMESSAGES_H
+
+#endif // ERRORMESSAGES_H

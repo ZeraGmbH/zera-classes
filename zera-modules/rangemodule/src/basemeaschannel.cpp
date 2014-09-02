@@ -32,6 +32,12 @@ QString cBaseMeasChannel::getAlias()
     return m_sAlias;
 }
 
+
+QString cBaseMeasChannel::getUnit()
+{
+    return m_sUnit;
+}
+
 }
 
 

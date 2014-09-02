@@ -6,6 +6,8 @@
 #include <veinpeer.h>
 #include <veinentity.h>
 
+#include "debug.h"
+#include "errormessages.h"
 #include "rangemeaschannel.h"
 
 namespace RANGEMODULE
@@ -27,7 +29,8 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     // m_pcbConnectionState.addTransition is done in pcbConnection
     m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
     m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
+    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readUnitState);
+    m_readUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
     m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties1State);
     m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties2State);
     m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties3State);
@@ -43,6 +46,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readChnAliasState);
     m_activationMachine.addState(&m_readSampleRateState);
+    m_activationMachine.addState(&m_readUnitState);
     m_activationMachine.addState(&m_readRangelistState);
     m_activationMachine.addState(&m_readRangeProperties1State);
     m_activationMachine.addState(&m_readRangeProperties2State);
@@ -59,6 +63,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
     connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
     connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
+    connect(&m_readUnitState, SIGNAL(entered()), SLOT(readUnit()));
     connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
     connect(&m_readRangeProperties1State, SIGNAL(entered()), SLOT(readRangeProperties1()));
     connect(&m_readRangeProperties3State, SIGNAL(entered()), SLOT(readRangeProperties3()));
@@ -291,10 +296,16 @@ double cRangeMeasChannel::getOVRRejection()
 }
 
 
-double cRangeMeasChannel::getMaxRecjection()
+double cRangeMeasChannel::getMaxRangeUrvalueMax()
 {
    QString s = getMaxRange();
    return (getUrValue(s) * getOVRRejection(s) / getRejection(s));
+}
+
+
+double cRangeMeasChannel::getRangeUrvalueMax()
+{
+    return (getUrValue() * getOVRRejection() / getRejection());
 }
 
 
@@ -304,9 +315,9 @@ void cRangeMeasChannel::generateInterface()
 
     m_pChannelEntity = m_pPeer->dataAdd(QString("TRA_Channel%1Name").arg(m_nChannelNr)); // here is the actual range
     m_pChannelEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelEntity->setValue(tr("UL%1"), m_pPeer); // we only do this for translation purpose
-    m_pChannelEntity->setValue(tr("IL%1"), m_pPeer); // to be extended
-    m_pChannelEntity->setValue(tr("REF%1"), m_pPeer);
+    m_pChannelEntity->setValue(tr("UL%1;[V]"), m_pPeer); // we only do this for translation purpose
+    m_pChannelEntity->setValue(tr("IL%1;[A]"), m_pPeer); // to be extended
+    m_pChannelEntity->setValue(tr("REF%1;[V]"), m_pPeer);
     m_pChannelEntity->setValue(s = "Unknown", m_pPeer);
 
     m_pChannelRangeListEntity = m_pPeer->dataAdd(QString("INF_Channel%1RangeList").arg(m_nChannelNr)); // list of possible ranges
@@ -333,19 +344,37 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         if (reply == ack) // we only continue if resource manager acknowledges
             emit activationContinue();
         else
+        {
+            emit errMsg(tr(rmidentErrMSG));
+#ifdef DEBUG
+            qDebug() << rmidentErrMSG;
+#endif
             emit activationError();
+        }
         break;
     case readresourcetypes:
         if ((reply == ack) && (answer.toString().contains("SENSE")))
             emit activationContinue();
         else
+        {
+            emit errMsg((tr(resourcetypeErrMsg)));
+#ifdef DEBUG
+            qDebug() << resourcetypeErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readresource:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
         else
+        {
+            emit errMsg((tr(resourceErrMsg)));
+#ifdef DEBUG
+            qDebug() << resourceErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readresourceinfo:
     {
@@ -368,11 +397,23 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
 
             else
+            {
+                emit errMsg((tr(resourceInfoErrMsg)));
+#ifdef DEBUG
+                qDebug() << resourceInfoErrMsg;
+#endif
                 emit activationError();
+            }
         }
 
         else
+        {
+            emit errMsg((tr(resourceInfoErrMsg)));
+#ifdef DEBUG
+            qDebug() << resourceInfoErrMsg;
+#endif
             emit activationError();
+        }
 
         break;
 
@@ -381,13 +422,25 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         if (reply == ack)
             emit activationContinue();
         else
+        {
+            emit errMsg((tr(claimresourceErrMsg)));
+#ifdef DEBUG
+            qDebug() << claimresourceErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case freeresource:
         if (reply == ack || reply == nack) // we accept nack here also
             emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
         else
+        {
+            emit errMsg((tr(freeresourceErrMsg)));
+#ifdef DEBUG
+            qDebug() << freeresourceErrMsg;
+#endif
             emit deactivationError();
+        }
         break;
     case readdspchannel:
         if (reply == ack)
@@ -396,7 +449,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readdspchannelErrMsg)));
+#ifdef DEBUG
+            qDebug() << readdspchannelErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readchnalias:
         if (reply == ack)
@@ -405,7 +464,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readaliasErrMsg)));
+#ifdef DEBUG
+            qDebug() << readaliasErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readsamplerate:
         if (reply == ack)
@@ -414,7 +479,28 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readsamplerateErrMsg)));
+#ifdef DEBUG
+            qDebug() << readsamplerateErrMsg;
+#endif
             emit activationError();
+        }
+        break;
+    case readunit:
+        if (reply == ack)
+        {
+            m_sUnit = answer.toString();
+            emit activationContinue();
+        }
+        else
+        {
+            emit errMsg((tr(readunitErrMsg)));
+#ifdef DEBUG
+            qDebug() << readunitErrMsg;
+#endif
+            emit activationError();
+        }
         break;
     case readrangelist:
         if (reply == ack)
@@ -423,7 +509,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readrangelistErrMsg)));
+#ifdef DEBUG
+            qDebug() << readrangelistErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readrngalias:
         if (reply == ack)
@@ -432,7 +524,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readrangealiasErrMsg)));
+#ifdef DEBUG
+            qDebug() << readrangealiasErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readtype:
         if (reply == ack)
@@ -441,7 +539,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readrangetypeErrMsg)));
+#ifdef DEBUG
+            qDebug() << readrangetypeErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readurvalue:
         if (reply == ack)
@@ -450,7 +554,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readrangeurvalueErrMsg)));
+#ifdef DEBUG
+            qDebug() << readrangeurvalueErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readrejection:
         if (reply == ack)
@@ -459,7 +569,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readrangerejectionErrMsg)));
+#ifdef DEBUG
+            qDebug() << readrangerejectionErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readovrejection:
         if (reply == ack)
@@ -468,7 +584,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readrangeovrejectionErrMsg)));
+#ifdef DEBUG
+            qDebug() << readrangeovrejectionErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case readisavail:
         if (reply == ack)
@@ -477,42 +599,89 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationContinue();
         }
         else
+        {
+            emit errMsg((tr(readrangeavailErrMsg)));
+#ifdef DEBUG
+            qDebug() << readrangeavailErrMsg;
+#endif
             emit activationError();
+        }
         break;
     case setmeaschannelrange:
         if (reply == ack)
             m_sActRange = m_sNewRange;
-        else {}; // perhaps some error output
+        else
+        {
+            emit errMsg((tr(setRangeErrMsg)));
+#ifdef DEBUG
+            qDebug() << setRangeErrMsg;
+#endif
+            emit executionError();
+        }; // perhaps some error output
         emit cmdDone(msgnr);
         break;    
     case readgaincorrection:
         if (reply == ack)
             m_fGainCorrection = answer.toDouble(&ok);
-        else {};
+        else
+        {
+            emit errMsg((tr(readGainCorrErrMsg)));
+#ifdef DEBUG
+            qDebug() << readGainCorrErrMsg;
+#endif
+        };
         emit cmdDone(msgnr);
         break;
     case readoffsetcorrection:
         if (reply == ack)
             m_fOffsetCorrection = answer.toDouble(&ok);
-        else {};
+        else
+        {
+            emit errMsg((tr(readOffsetCorrErrMsg)));
+#ifdef DEBUG
+            qDebug() << readOffsetCorrErrMsg;
+#endif
+            emit executionError();
+        };
         emit cmdDone(msgnr);
         break;
     case readphasecorrection:
         if (reply == ack)
             m_fPhaseCorrection = answer.toDouble(&ok);
-        else {};
+        else
+        {
+            emit errMsg((tr(readPhaseCorrErrMsg)));
+#ifdef DEBUG
+            qDebug() << readPhaseCorrErrMsg;
+#endif
+            emit executionError();
+        };
         emit cmdDone(msgnr);
         break;
     case readmeaschannelstatus:
         if (reply == ack)
             m_nStatus = answer.toInt(&ok);
-        else {};
+        else
+        {
+            emit errMsg((tr(readChannelStatusErrMsg)));
+#ifdef DEBUG
+            qDebug() << readChannelStatusErrMsg;
+#endif
+            emit executionError();
+        };
         emit cmdDone(msgnr);
         break;
     case resetmeaschannelstatus:
         if (reply == ack)
             {}
-        else {}; // perhaps some error output
+        else
+        {
+            emit errMsg((tr(resetChannelStatusErrMsg)));
+#ifdef DEBUG
+            qDebug() << resetChannelStatusErrMsg;
+#endif
+            emit executionError();
+        }; // perhaps some error output
         emit cmdDone(msgnr);
         break;
     }
@@ -540,13 +709,14 @@ void cRangeMeasChannel::setRangeListEntity()
 
 void cRangeMeasChannel::setChannelNameEntity()
 {
-    QString s1,s2;
+    QString s,s1,s2;
     s1 = s2 = m_sAlias;
     s1.remove(QRegExp("[1-9][0-9]?"));
     s2.remove(s1);
     //m_pChannelEntity->setValue(m_sAlias, m_pPeer);
 
-    m_pChannelEntity->setValue(QString("%1%2;%3").arg(s1).arg("%1").arg(s2), m_pPeer);
+    s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(m_sUnit);
+    m_pChannelEntity->setValue(s, m_pPeer);
 }
 
 
@@ -633,6 +803,12 @@ void cRangeMeasChannel::readChnAlias()
 void cRangeMeasChannel::readSampleRate()
 {
     m_MsgNrCmdList[m_pPCBInterface->getSampleRate()] = readsamplerate;
+}
+
+
+void cRangeMeasChannel::readUnit()
+{
+    m_MsgNrCmdList[m_pPCBInterface->getUnit(m_sName)] = readunit;
 }
 
 

@@ -100,7 +100,9 @@ private:
     QList<VeinEntity*> m_RangeEntityList;
     QList<VeinEntity*> m_RangeOVLEntityList;
     QList<VeinEntity*> m_RangeRejectionEntityList;
+    QList<VeinEntity*> m_RangeActRejectionEntityList;
     QList<cModuleInfo*> m_GroupInfoList;
+
     cModuleParameter* m_pParRangeAutomaticOnOff;
     cModuleParameter* m_pParGroupingOnOff;
     cModuleParameter* m_pParOverloadOnOff;
@@ -128,8 +130,6 @@ private:
     QState m_readStatusState;
     QFinalState m_analyzeStatusState;
 
-    quint8 m_nDefaultRangeAuto;
-    quint8 m_nDefaultGrouping;
     bool m_bRangeAutomatic;
     bool m_bGrouping;
     void rangeObservation();

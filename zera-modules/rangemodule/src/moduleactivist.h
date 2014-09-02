@@ -28,6 +28,7 @@ signals:
     void activationError();
     void deactivationError();
     void executionError();
+    void errMsg(QString);
 
 public slots:
     virtual void activate(); // here we query our properties and activate ourself

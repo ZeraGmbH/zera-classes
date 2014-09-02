@@ -2,6 +2,8 @@
 #include <proxy.h>
 #include <proxyclient.h>
 
+#include "debug.h"
+#include "errormessages.h"
 #include "rangemoduleobservation.h"
 #include "rangemodule.h"
 
@@ -83,13 +85,25 @@ void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             if (reply == ack) // we only continue pcb server acknowledges
                 emit activationContinue();
             else
+            {
+                emit errMsg((tr(registerpcbnotifierErrMsg)));
+#ifdef DEBUG
+                qDebug() << registerpcbnotifierErrMsg;
+#endif
                 emit activationError();
+            }
             break;
         case unregisternotifiers:
             if (reply == ack) // we only continue pcb server acknowledges
                 emit deactivationContinue();
             else
-                emit deactivationError();
+            {
+                emit errMsg((tr(unregisterpcbnotifierErrMsg)));
+#ifdef DEBUG
+                qDebug() << unregisterpcbnotifierErrMsg;
+#endif
+                emit activationError();
+            }
             break;
         }
     }

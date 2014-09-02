@@ -26,8 +26,8 @@ namespace RANGEMODULE
 {
 
 class cRangeMeasChannel;
-class cModuleParameter;
 class cModuleInfo;
+class cModuleError;
 class cRangeModuleConfiguration;
 class cRangeModuleMeasProgram;
 class cAdjustManagement;
@@ -78,6 +78,7 @@ protected:
 private:
     cModuleInfo *channelNrInfo;
     cModuleInfo *groupNrInfo;
+    cModuleError *errorMessage;
 
     //cRangeModuleConfiguration *m_pConfiguration; // our xml configuration
     Zera::Server::cDSPInterface* m_pDSPInterface;

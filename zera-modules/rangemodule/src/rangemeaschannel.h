@@ -28,6 +28,7 @@ enum rangemeaschannelCmds
     readdspchannel,
     readchnalias,
     readsamplerate,
+    readunit,
     readrangelist,
 
     readrngalias,
@@ -72,7 +73,8 @@ public:
     double getRejection(); // return nominal (100%) rejection of actual range
     double getOVRRejection(QString range);
     double getOVRRejection();
-    double getMaxRecjection(); // returns the max. rejection of channel including overload reserve
+    double getMaxRangeUrvalueMax(); // returns the max. upper range value including reserve of channel including overload reserve
+    double getRangeUrvalueMax(); // returns the max. upper range value including reserve of actual range
     bool isPossibleRange(QString range, double ampl); // test if range is possible with ampl
     bool isPossibleRange(QString range); // returns true if range is available
     bool isOverload(double ampl); // test if ampl is overload condition
@@ -110,6 +112,7 @@ private:
     QState m_readDspChannelState; // we query our dsp channel
     QState m_readChnAliasState; // we query our alias
     QState m_readSampleRateState; // we read the sample nr
+    QState m_readUnitState; // we read the meas channel unit volt ampere ...
     QState m_readRangelistState; // we query our range list
     QState m_readRangeProperties1State; // we build up a loop for querying all the ranges properties
     QState m_readRangeProperties2State; //
@@ -156,6 +159,7 @@ private slots:
     void readDspChannel();
     void readChnAlias();
     void readSampleRate();
+    void readUnit();
     void readRangelist();
     void readRangeProperties1();
     void readRangeProperties3();

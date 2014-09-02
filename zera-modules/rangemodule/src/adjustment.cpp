@@ -1,6 +1,8 @@
 #include <QSignalTransition>
 #include <dspinterface.h>
 
+#include "debug.h"
+#include "errormessages.h"
 #include "adjustment.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
@@ -301,21 +303,79 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             switch (cmd)
             {
             case readgaincorr:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(readdspgaincorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << readdspgaincorrErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case readphasecorr:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(readdspphasecorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << readdspphasecorrErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case readoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
+                {
+                    emit errMsg((tr(readdspoffsetcorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << readdspoffsetcorrErrMsg;
+#endif
                     emit activationError();
+                }
                 break;
 
             case writegaincorr:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    // perhaps we emit some error here ?
+                    emit errMsg((tr(writedspgaincorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspgaincorrErrMsg;
+#endif
+                }
+                break;
+
             case writephasecorr:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    // perhaps we emit some error here ?
+                    emit errMsg((tr(writedspphasecorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspphasecorrErrMsg;
+#endif
+                }
+                break;
+
             case writeoffsetcorr:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                    break; // perhaps we emit some error here ?
+                {
+                    // perhaps we emit some error here ?
+                    emit errMsg((tr(writedspoffsetcorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspoffsetcorrErrMsg;
+#endif
+                }
                 break;
 
             }

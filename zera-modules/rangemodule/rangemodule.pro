@@ -45,7 +45,8 @@ SOURCES += \
     src/modulesignal.cpp \
     src/rangemoduleobservation.cpp \
     src/moduleactivist.cpp \
-    src/rangemodule.cpp
+    src/rangemodule.cpp \
+    src/moduleerror.cpp
 
 HEADERS += \
     src/basemeaschannel.h \
@@ -68,7 +69,10 @@ HEADERS += \
     src/modulesignal.h \
     src/rangemoduleobservation.h \
     src/moduleactivist.h \
-    src/reply.h
+    src/reply.h \
+    src/moduleerror.h \
+    src/debug.h \
+    src/errormessages.h
 
 unix:!symbian {
     maemo5 {

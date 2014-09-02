@@ -7,6 +7,8 @@
 #include <veinpeer.h>
 #include <veinentity.h>
 
+#include "debug.h"
+#include "errormessages.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 #include "rangemodulemeasprogram.h"
@@ -52,9 +54,9 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     connect(&m_loadDSPDoneState, SIGNAL(entered()), SLOT(activateDSPdone()));
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_freePGRMemState);
-    m_freePGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_unloadDSPDoneState);
+    m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
+    m_freePGRMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeUSERMemState);
+    m_freeUSERMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_unloadDSPDoneState);
     m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
@@ -247,24 +249,114 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             switch (cmd)
             {
             case sendrmident:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(rmidentErrMSG)));
+#ifdef DEBUG
+                    qDebug() << rmidentErrMSG;
+#endif
+                    emit activationError();
+                }
+                break;
+                break;
             case claimpgrmem:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(claimresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << claimresourceErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case claimusermem:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(claimresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << claimresourceErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case varlist2dsp:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(dspvarlistwriteErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspvarlistwriteErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case cmdlist2dsp:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(dspcmdlistwriteErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspcmdlistwriteErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case activatedsp:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
+                {
+                    emit errMsg((tr(dspactiveErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspactiveErrMsg;
+#endif
                     emit activationError();
+                }
                 break;
 
             case deactivatedsp:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit deactivationContinue();
+                else
+                {
+                    emit errMsg((tr(dspdeactiveErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspdeactiveErrMsg;
+#endif
+                    emit deactivationError();
+                }
+                break;
             case freepgrmem:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit deactivationContinue();
+                else
+                {
+                    emit errMsg((tr(freeresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << freeresourceErrMsg;
+#endif
+                    emit deactivationError();
+                }
+                break;
             case freeusermem:
                 if (reply == ack) // we only continue if resource manager acknowledges
-                    emit activationContinue();
+                    emit deactivationContinue();
                 else
+                {
+                    emit errMsg((tr(freeresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << freeresourceErrMsg;
+#endif
                     emit deactivationError();
+                }
                 break;
 
             case dataaquistion:
@@ -274,6 +366,13 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 {
                     m_dataAcquisitionMachine.stop();
                     // perhaps we emit some error here ?
+                    {
+                        emit errMsg((tr(dataaquisitionErrMsg)));
+#ifdef DEBUG
+                        qDebug() << dataaquisitionErrMsg;
+#endif
+                        emit executionError();
+                    }
                 }
                 break;
             }

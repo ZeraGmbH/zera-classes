@@ -1,0 +1,4 @@
+#ifndef MODULEERROR_H
+#define MODULEERROR_H
+
+#endif // MODULEERROR_H

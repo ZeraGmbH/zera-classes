@@ -8,7 +8,7 @@
 class VeinEntity;
 class VeinPeer;
 
-// we use this class if we need an interface entity for parameter for input/output incl. description
+// we use this class if we need an interface entity for parameter for input/output
 
 namespace RANGEMODULE
 {
@@ -17,7 +17,7 @@ class cModuleParameter: public QObject
 {
     Q_OBJECT
 public:
-    cModuleParameter(VeinPeer* peer,QString name, QVariant initval, QString limitname, QVariant limitval, bool readonly = false);
+    cModuleParameter(VeinPeer* peer,QString name, QVariant initval,bool readonly = false);
     ~cModuleParameter();
     void setData(QVariant val);
     QVariant getData();
@@ -28,7 +28,6 @@ signals:
 private:
     VeinPeer* m_pPeer;
     VeinEntity *m_pParEntity;
-    VeinEntity *m_pLimitEntity;
 };
 
 }
