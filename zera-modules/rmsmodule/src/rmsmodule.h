@@ -26,7 +26,7 @@ namespace RMSMODULE
 class cRmsModuleConfiguration;
 class cRmsModuleMeasProgram;
 class cRmsModuleObservation;
-
+class cModuleError;
 
 class cRmsModule : public cBaseModule
 {
@@ -68,7 +68,7 @@ private:
     Zera::Server::cDSPInterface* m_pDSPInterface;
     Zera::Proxy::cProxyClient* m_pDspProxyClient;
     qint32 m_nActivationIt;
-
+    cModuleError *errorMessage;
 
 private slots:
     void activationStart();

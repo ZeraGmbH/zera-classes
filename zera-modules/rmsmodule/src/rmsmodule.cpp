@@ -1,7 +1,6 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
-#include <veinentity.h>
 
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
@@ -11,6 +10,8 @@
 #include "moduleparameter.h"
 #include "moduleinfo.h"
 #include "modulesignal.h"
+#include "moduleerror.h"
+#include "errormessages.h"
 
 namespace RMSMODULE
 {
@@ -80,17 +81,21 @@ void cRmsModule::setupModule()
     m_pDSPInterface = new Zera::Server::cDSPInterface();
     m_pDSPInterface->setClient(m_pDspProxyClient);
 
+    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
+
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cRmsModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+    connect(m_pMeasProgram, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     // and module observation in case we have to react to naming changes
     m_pRmsModuleObservation = new cRmsModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pRmsModuleObservation);
     connect(m_pRmsModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pRmsModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+    connect(m_pRmsModuleObservation, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

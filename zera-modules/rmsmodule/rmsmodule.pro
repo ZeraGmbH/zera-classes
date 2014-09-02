@@ -41,7 +41,8 @@ SOURCES += \
     src/rmsmodulefactory.cpp \
     src/rmsmodule.cpp \
     src/rmsmodulemeasprogram.cpp \
-    src/rmsmoduleobservation.cpp
+    src/rmsmoduleobservation.cpp \
+    src/moduleerror.cpp
 
 HEADERS += \
     src/basemodule.h \
@@ -60,7 +61,10 @@ HEADERS += \
     src/rmsmodule.h \
     src/rmsmoduleobservation.h \
     src/measchannelinfo.h \
-    src/reply.h
+    src/reply.h \
+    src/debug.h \
+    src/errormessages.h \
+    src/moduleerror.h
 
 unix:!symbian {
     maemo5 {

@@ -5,7 +5,7 @@
 namespace RMSMODULE
 {
 
-cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initval, QString limitname, QVariant limitval, bool readonly)
+cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initval, bool readonly)
     :m_pPeer(peer)
 {
     m_pParEntity = m_pPeer->dataAdd(name);
@@ -13,9 +13,6 @@ cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initva
     m_pParEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     if (readonly)
         m_pParEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pLimitEntity = m_pPeer->dataAdd(limitname);
-    m_pLimitEntity->setValue(limitval, m_pPeer);
-    m_pLimitEntity->modifiersAdd(VeinEntity::MOD_CONST);
 
     connect(m_pParEntity, SIGNAL(sigValueChanged(QVariant)), this, SIGNAL(updated(QVariant)));
 }
@@ -24,7 +21,6 @@ cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initva
 cModuleParameter::~cModuleParameter()
 {
     m_pPeer->dataRemove(m_pParEntity);
-    m_pPeer->dataRemove(m_pLimitEntity);
 }
 
 

@@ -9,9 +9,12 @@
 #include <veinentity.h>
 #include <QPointF>
 
+#include "debug.h"
+#include "errormessages.h"
 #include "reply.h"
 #include "modulesignal.h"
 #include "moduleparameter.h"
+#include "moduleinfo.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfigdata.h"
 #include "rmsmodulemeasprogram.h"
@@ -35,7 +38,8 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
     m_pcbserverConnectState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
     m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelInformationState);
     m_readChannelInformationState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelAliasState);
-    m_readChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelState);
+    m_readChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelUnitState);
+    m_readChannelUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelState);
     m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelDoneState);
     m_readDspChannelDoneState.addTransition(this, SIGNAL(activationContinue()), &m_claimPGRMemState);
     m_readDspChannelDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readChannelAliasState);
@@ -56,6 +60,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
     m_activationMachine.addState(&m_readSampleRateState);
     m_activationMachine.addState(&m_readChannelInformationState);
     m_activationMachine.addState(&m_readChannelAliasState);
+    m_activationMachine.addState(&m_readChannelUnitState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readDspChannelDoneState);
     m_activationMachine.addState(&m_claimPGRMemState);
@@ -78,6 +83,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
     connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
     connect(&m_readChannelInformationState, SIGNAL(entered()), SLOT(readChannelInformation()));
     connect(&m_readChannelAliasState, SIGNAL(entered()), SLOT(readChannelAlias()));
+    connect(&m_readChannelUnitState, SIGNAL(entered()), SLOT(readChannelUnit()));
     connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
     connect(&m_readDspChannelDoneState, SIGNAL(entered()), SLOT(readDspChannelDone()));
     connect(&m_claimPGRMemState, SIGNAL(entered()), SLOT(claimPGRMem()));
@@ -88,9 +94,9 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
     connect(&m_loadDSPDoneState, SIGNAL(entered()), SLOT(activateDSPdone()));
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_freePGRMemState);
-    m_freePGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_unloadDSPDoneState);
+    m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
+    m_freePGRMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeUSERMemState);
+    m_freeUSERMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_unloadDSPDoneState);
     m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
@@ -143,45 +149,90 @@ void cRmsModuleMeasProgram::generateInterface()
     QString s;
 
     // this here is for translation purpose
-    s = tr("UL%1");
-    s = tr("UL%1-UL%2");
-    s = tr("IL%1");
-    s = tr("IL%1-IL%2");
-    s = tr("REF%1");
-    s = tr("REF%1-REF%2");
+    s = tr("UL%1;[V]");
+    s = tr("UL%1-UL%2;[V]");
+    s = tr("IL%1;[A]");
+    s = tr("IL%1-IL%2;[A]");
+    s = tr("REF%1;[V]");
+    s = tr("REF%1-REF%2;[V]");
 
+    int n,p;
+    n = p = 0; //
     for (int i = 0; i < m_ActValueList.count(); i++)
     {
-        s = QString("TRA_RMS%1Name").arg(i);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
-        p_entity->setValue(QVariant("Unknown"), m_pPeer);
-        m_EntityNameList.append(p_entity);
+        QStringList sl = m_ActValueList.at(i).split('-');
+        // we have 1 or 2 entries for each value
+        if (sl.count() == 1) // in this case we have phase,neutral value
+        {
+            s = QString("TRA_RMSPN%1Name").arg(n+1);
+            p_entity = m_pPeer->dataAdd(s);
+            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
+            p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
+            p_entity->setValue(QVariant("Unknown"), m_pPeer);
+            m_EntityNamePNList.append(p_entity);
+            m_EntityNameList.append(p_entity);
 
-        s = QString("ACT_RMS%1").arg(i);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValueList.append(p_entity);
+            s = QString("ACT_RMSPN%1").arg(n+1);
+            p_entity = m_pPeer->dataAdd(s);
+            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
+            p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
+            p_entity->setValue(QVariant((double) 0.0), m_pPeer);
+            m_EntityActValuePNList.append(p_entity);
+            m_EntityActValueList.append(p_entity);
+
+            n++;
+        }
+
+        else
+
+        {
+            s = QString("TRA_RMSPP%1Name").arg(p+1);
+            p_entity = m_pPeer->dataAdd(s);
+            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
+            p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
+            p_entity->setValue(QVariant("Unknown"), m_pPeer);
+            m_EntityNamePPList.append(p_entity);
+            m_EntityNameList.append(p_entity);
+
+            s = QString("ACT_RMSPP%1").arg(p+1);
+            p_entity = m_pPeer->dataAdd(s);
+            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
+            p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
+            p_entity->setValue(QVariant((double) 0.0), m_pPeer);
+            m_EntityActValuePPList.append(p_entity);
+            m_EntityActValueList.append(p_entity);
+
+            p++;
+        }
     }
 
-    // this here is for translation purpose
+    m_pRMSPNCountInfo = new cModuleInfo(m_pPeer, "INF_RMSPNCount", QVariant(n));
+    m_pRMSPPCountInfo = new cModuleInfo(m_pPeer, "INF_RMSPPCount", QVariant(p));
 
-
-    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasInterval.m_fValue), "PAR_INTEGRATIONTIME_LIMITS", QVariant(QPointF(0.1,100.0)));
+    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasInterval.m_fValue));
+    m_pIntegrationTimeLimits = new cModuleInfo(m_pPeer, "PAR_INTEGRATIONTIME_LIMITS", QVariant(QString("%1;%2").arg(0.1).arg(100.0)));
     m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
 }
 
 
 void cRmsModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityNameList.count(); i++)
+    for (int i = 0; i < m_EntityNamePNList.count(); i++)
         m_pPeer->dataRemove(m_EntityNameList.at(i));
-    for (int i = 0; i < m_EntityActValueList.count(); i++)
+    for (int i = 0; i < m_EntityNamePPList.count(); i++)
+        m_pPeer->dataRemove(m_EntityNameList.at(i));
+    for (int i = 0; i < m_EntityActValuePNList.count(); i++)
         m_pPeer->dataRemove(m_EntityActValueList.at(i));
+    for (int i = 0; i < m_EntityActValuePPList.count(); i++)
+        m_pPeer->dataRemove(m_EntityActValueList.at(i));
+
+    m_EntityNameList.clear();
+    m_EntityActValueList.clear();
+
+    delete m_pRMSPNCountInfo;
+    delete m_pRMSPPCountInfo;
     delete m_pIntegrationTimeParameter;
+    delete m_pIntegrationTimeLimits;
     delete m_pMeasureSignal;
 }
 
@@ -190,7 +241,7 @@ void cRmsModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_pDSPIFace->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSRate, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("VALXRMS",m_ActValueList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*m_ActValueList.count(),DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
@@ -223,7 +274,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
     QString s;
 
     m_pDSPIFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples) ); // clear meassignal
+        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSRate) ); // clear meassignal
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) ); // clear the whole filter incl. count
         m_pDSPIFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000.0)); // initial ti time  /* todo variabel */
         m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
@@ -294,22 +345,89 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             switch (cmd)
             {
             case sendrmident:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg(tr(rmidentErrMSG));
+#ifdef DEBUG
+                    qDebug() << rmidentErrMSG;
+#endif
+                    emit activationError();
+                }
+                break;
             case claimpgrmem:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(claimresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << claimresourceErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case claimusermem:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(claimresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << claimresourceErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case varlist2dsp:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(dspvarlistwriteErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspvarlistwriteErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case cmdlist2dsp:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(dspcmdlistwriteErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspcmdlistwriteErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
             case activatedsp:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
+                {
+                    emit errMsg((tr(dspactiveErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspactiveErrMsg;
+#endif
                     emit activationError();
+                }
                 break;
 
             case readresourcetypes:
                 if ((reply == ack) && (answer.toString().contains("SENSE")))
                     emit activationContinue();
                 else
+                {
+                    emit errMsg((tr(resourcetypeErrMsg)));
+#ifdef DEBUG
+                    qDebug() << resourcetypeErrMsg;
+#endif
                     emit activationError();
+                }
                 break;
 
             case readresource:
@@ -328,10 +446,22 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     if (allfound)
                         emit activationContinue();
                     else
+                    {
+                        emit errMsg((tr(resourceErrMsg)));
+#ifdef DEBUG
+                        qDebug() << resourceErrMsg;
+#endif
                         emit activationError();
+                    }
                 }
                 else
+                {
+                    emit errMsg((tr(resourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << resourceErrMsg;
+#endif
                     emit activationError();
+                }
                 break;
             }
 
@@ -354,21 +484,39 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                         emit activationContinue();
                     }
                     else
+                    {
+                        emit errMsg((tr(resourceInfoErrMsg)));
+#ifdef DEBUG
+                        qDebug() << resourceInfoErrMsg;
+#endif
                         emit activationError();
+                    }
                 }
                 else
+                {
+                    emit errMsg((tr(resourceInfoErrMsg)));
+#ifdef DEBUG
+                    qDebug() << resourceInfoErrMsg;
+#endif
                     emit activationError();
+                }
                 break;
             }
 
-            case readsamplenr:
+            case readsamplerate:
             if (reply == ack)
             {
-                m_nSamples = answer.toInt(&ok);
+                m_nSRate = answer.toInt(&ok);
                 emit activationContinue();
             }
             else
+            {
+                emit errMsg((tr(readsamplerateErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readsamplerateErrMsg;
+    #endif
                 emit activationError();
+            }
             break;
 
             case readalias:
@@ -385,7 +533,37 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 }
                 else
+                {
+                    emit errMsg((tr(readaliasErrMsg)));
+#ifdef DEBUG
+                    qDebug() << readaliasErrMsg;
+#endif
                     emit activationError();
+                }
+                break;
+            }
+
+            case readunit:
+            {
+                QString unit;
+                cMeasChannelInfo mi;
+
+                if (reply == ack)
+                {
+                    unit = answer.toString();
+                    mi = m_measChannelInfoHash.take(channelInfoRead);
+                    mi.unit = unit;
+                    m_measChannelInfoHash[channelInfoRead] = mi;
+                    emit activationContinue();
+                }
+                else
+                {
+                    emit errMsg((tr(readunitErrMsg)));
+#ifdef DEBUG
+                    qDebug() << readunitErrMsg;
+#endif
+                    emit activationError();
+                }
                 break;
             }
 
@@ -403,7 +581,14 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     emit activationContinue();
                 }
                 else
+                {
+                    emit errMsg((tr(readdspchannelErrMsg)));
+#ifdef DEBUG
+                    qDebug() << readdspchannelErrMsg;
+#endif
                     emit activationError();
+                }
+                break;
             break;
             }
 
@@ -412,16 +597,50 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 if (reply == ack) // we ignore ack
                     ;
                 else
-                    emit executionError(); // but we send error message
+                {
+                    emit errMsg((tr(writedspmemoryErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspmemoryErrMsg;
+#endif
+                    emit executionError();
+                }
                 break;
 
             case deactivatedsp:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit deactivationContinue();
+                else
+                {
+                    emit errMsg((tr(dspdeactiveErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dspdeactiveErrMsg;
+#endif
+                    emit deactivationError();
+                }
+                break;
             case freepgrmem:
+                if (reply == ack) // we only continue if resource manager acknowledges
+                    emit deactivationContinue();
+                else
+                {
+                    emit errMsg((tr(freeresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << freeresourceErrMsg;
+#endif
+                    emit deactivationError();
+                }
+                break;
             case freeusermem:
                 if (reply == ack) // we only continue if resource manager acknowledges
-                    emit activationContinue();
+                    emit deactivationContinue();
                 else
+                {
+                    emit errMsg((tr(freeresourceErrMsg)));
+#ifdef DEBUG
+                    qDebug() << freeresourceErrMsg;
+#endif
                     emit deactivationError();
+                }
                 break;
 
             case dataaquistion:
@@ -430,6 +649,10 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     m_dataAcquisitionMachine.stop();
+                    emit errMsg((tr(dataaquisitionErrMsg)));
+#ifdef DEBUG
+                    qDebug() << dataaquisitionErrMsg;
+#endif
                     emit executionError(); // but we send error message
                 }
                 break;
@@ -453,14 +676,14 @@ void cRmsModuleMeasProgram::setActualValuesNames()
 
         if (sl.count() == 1)
         {
-            s = s1 + "%1;" + s2;
+            s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
         }
         else
         {
             s3 = s4 = m_measChannelInfoHash.value(sl.at(1)).alias;
             s3.remove(QRegExp("[1-9][0-9]?"));
             s4.remove(s3);
-            s = s1 + "%1-" + s3 + "%2;" + s2 + ";" + s4;
+            s = s1 + "%1-" + s3 + "%2" + QString(";%1;%2;[%3]").arg(s2).arg(s4).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
         }
 
         m_EntityNameList.at(i)->setValue(s, m_pPeer);
@@ -470,11 +693,10 @@ void cRmsModuleMeasProgram::setActualValuesNames()
 
 void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    int i;
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        for (i = 0; i < m_EntityActValueList.count()-1; i++) // we set n rms values
-            m_EntityActValueList.at(i)->setValue((*actualValues)[i], m_pPeer);
+        for (int i = 0; i < m_ActValueList.count(); i++)
+            m_EntityActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)), m_pPeer); // and set entities
     }
 }
 
@@ -577,7 +799,7 @@ void cRmsModuleMeasProgram::pcbserverConnect()
 void cRmsModuleMeasProgram::readSampleRate()
 {
     // we always take the sample count from the first channels pcb server
-    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = readsamplenr;
+    m_MsgNrCmdList[m_pcbIFaceList.at(0)->getSampleRate()] = readsamplerate;
 }
 
 
@@ -592,6 +814,12 @@ void cRmsModuleMeasProgram::readChannelAlias()
 {
     channelInfoRead = channelInfoReadList.takeFirst();
     m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getAlias(channelInfoRead)] = readalias;
+}
+
+
+void cRmsModuleMeasProgram::readChannelUnit()
+{
+    m_MsgNrCmdList[m_measChannelInfoHash[channelInfoRead].pcbIFace->getUnit(channelInfoRead)] = readunit;
 }
 
 
@@ -700,9 +928,6 @@ void cRmsModuleMeasProgram::dataReadDSP()
 {
     m_pDSPIFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
     emit actualValues(&m_ModuleActualValues); // and send them
-    for (int i = 0; i < m_ActValueList.count(); i++)
-        m_EntityActValueList.at(i)->setValue(QVariant((double)m_ModuleActualValues.at(i)), m_pPeer); // and set entities
-
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
@@ -714,11 +939,14 @@ void cRmsModuleMeasProgram::dataReadDSP()
         QString ts;
 
         if (sl.count() == 1)
-            ts = QString("%1:%2;").arg(m_measChannelInfoHash.value(sl.at(0)).alias).arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok));
+            ts = QString("RMS_%1:%2[%3];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                                          .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
+                                          .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
         else
-            ts = QString("%1-%2:%3;").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                    .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
-                                    .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok));
+            ts = QString("RMS_%1-%2:%3[%4];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                                             .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
+                                             .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
+                                             .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
 
         s += ts;
     }

@@ -37,8 +37,9 @@ enum rmsmoduleCmds
     readresourceinfos,
     readresourceinfo,
     pcbserverconnect,
-    readsamplenr,
+    readsamplerate,
     readalias,
+    readunit,
     readdspchannel,
     claimpgrmem,
     claimusermem,
@@ -56,6 +57,7 @@ enum rmsmoduleCmds
 
 class cModuleSignal;
 class cModuleParameter;
+class cModuleInfo;
 class cBaseModule;
 class cRmsModuleConfigData;
 class cRmsModule;
@@ -89,15 +91,23 @@ private:
     cRmsModule* m_pModule;
     cRmsModuleConfigData& m_ConfigData;
     QStringList m_ActValueList; // the list of actual values we work on
-    QList<VeinEntity*> m_EntityNameList;
-    QList<VeinEntity*> m_EntityActValueList;
+    QList<VeinEntity*> m_EntityNamePNList; // we have a list for all rms names for phase neutral
+    QList<VeinEntity*> m_EntityNamePPList; // and a list for all rms names for phase phase
+    QList<VeinEntity*> m_EntityActValuePNList; // we have a list for all rms values for phase neutral
+    QList<VeinEntity*> m_EntityActValuePPList; // and a list for all rms values for phase phase
+
+    QList<VeinEntity*> m_EntityNameList; // we use this list for access
+    QList<VeinEntity*> m_EntityActValueList; // also
+
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on
-    quint32 m_nSamples; // number of samples / signal period
-
+    quint32 m_nSRate; // number of samples / signal period
     cModuleSignal* m_pMeasureSignal;
     cModuleParameter* m_pIntegrationTimeParameter;
+    cModuleInfo* m_pIntegrationTimeLimits;
+    cModuleInfo* m_pRMSPNCountInfo;
+    cModuleInfo* m_pRMSPPCountInfo;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
@@ -114,6 +124,7 @@ private:
     QState m_readSampleRateState;
     QState m_readChannelInformationState;
     QState m_readChannelAliasState;
+    QState m_readChannelUnitState;
     QState m_readDspChannelState;
     QState m_readDspChannelDoneState;
 
@@ -152,6 +163,7 @@ private slots:
     void readSampleRate();
     void readChannelInformation();
     void readChannelAlias();
+    void readChannelUnit();
     void readDspChannel();
     void readDspChannelDone();
 

@@ -20,6 +20,7 @@ struct cMeasChannelInfo
 {
     quint8 dspChannelNr;
     QString alias;
+    QString unit;
     cSocket socket;
     Zera::Server::cPCBInterface* pcbIFace;
 };
