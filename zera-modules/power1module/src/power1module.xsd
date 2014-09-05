@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+        <xs:simpleType name="yesnotype">
+                <xs:restriction base="xs:integer">
+                        <xs:maxInclusive value='1'/>
+                        <xs:minInclusive value='0'/>
+                </xs:restriction>
+        </xs:simpleType>
+
+
+	<xs:simpleType name="debugtype">
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value='7'/>
+			<xs:minInclusive value='0'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="porttype">
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value='60000'/>
+			<xs:minExclusive value='1024'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="ipadresstype">
+		<xs:restriction base="xs:string">
+			<xs:pattern value = '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	
+	<xs:complexType name="connectivitytype">
+		<xs:sequence>
+			<xs:element name="debuglevel" type="debugtype"/>
+			<xs:element name="ethernet">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="resourcemanager">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ip" type="ipadresstype"/>
+									<xs:element name="port" type="porttype"/>
+								</xs:sequence>
+							</xs:complexType>		
+						</xs:element>	
+						<xs:element name="pcbserver">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ip" type="ipadresstype"/>
+									<xs:element name="port" type="porttype"/>
+								</xs:sequence>
+							</xs:complexType>		
+						</xs:element>
+						<xs:element name="dspserver">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ip" type="ipadresstype"/>
+									<xs:element name="port" type="porttype"/>
+								</xs:sequence>
+							</xs:complexType>		
+						</xs:element>
+					</xs:sequence>	
+				</xs:complexType>	
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+        <xs:simpleType name="measuringmodeType">
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="4LW"/>
+            <xs:enumeration value="4LB"/>
+            <xs:enumeration value="4LBK"/>
+            <xs:enumeration value="4LS"/>
+            <xs:enumeration value="4LSg"/>
+            <xs:enumeration value="3LW"/>
+            <xs:enumeration value="3LB"/>
+            <xs:enumeration value="2LW"/>
+            <xs:enumeration value="2LB"/>
+            <xs:enumeration value="2LS"/>
+            <xs:enumeration value="2LSg"/>
+          </xs:restriction>
+        </xs:simpleType>
+
+        <xs:simpleType name="integrationmodeType">
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="time"/>
+            <xs:enumeration value="period"/>
+          </xs:restriction>
+        </xs:simpleType>
+
+        <xs:simpleType name="pmsType">
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="pms1"/>
+            <xs:enumeration value="pms2"/>
+            <xs:enumeration value="pms3"/>
+            <xs:enumeration value="pmss"/>
+          </xs:restriction>
+        </xs:simpleType>
+
+        <xs:complexType name="measureType">
+            <xs:sequence>
+                <xs:element name="modes">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="n" minOccurs="1" maxOccurs="1">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:integer">
+                                        <xs:minInclusive value="1"/>
+                                        <xs:maxInclusive value="11"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="mode1" type="measuringmodeType" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="mode2" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode3" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode4" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode5" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode6" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode7" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode8" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode9" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode10" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="mode11" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="system">
+                    <xs:complexType>
+                        <xs:element name="pms1" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="pms2" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="pms3" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="pms2w" type="pmsType" minOccurs="1" maxOccurs="1"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="integrationmode" type="integrationmodeType" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+	</xs:complexType>	
+
+
+        <xs:simpleType name="foutxnameType">
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="FPZ1"/>
+                <xs:enumeration value="FPZ2"/>
+                <xs:enumeration value="FPZ3"/>
+                <xs:enumeration value="FPZ4"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+
+        <xs:simpleType name="foutxtypeType">
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="+-"/>
+                <xs:enumeration value="+"/>
+                <xs:enumeration value="-"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+
+        <xs:complexType name="foutxType">
+            <xs:sequence>
+                <xs:element name="name" type="foutxnameType" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="source" type="pmsType" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="type" type="foutxtypeType" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+
+
+        <xs:complexType name="frequencyoutputType">
+            <xs:sequence>
+                <xs:element name="frequency" minOccurs="1" maxOccurs="1">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                            <xs:minInclusive value="20000"/>
+                            <xs:maxInclusive value="1000000"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="frequencyact" minOccurs="1" maxOccurs="1">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:string">
+                            <xs:enumeration value="integrationtime"/>
+                            <xs:enumeration value="signalperiod"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="output">
+                    <xs:complexType>
+                        <xs:element name="n" minOccurs="1" maxOccurs="1">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="0"/>
+                                    <xs:maxInclusive value="4"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="fout1" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="fout2" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="fout3" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="fout4" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+
+
+        <xs:complexType name="measureintervalType">
+                <xs:element name="time" minOccurs="1" maxOccurs="1">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:decimal">
+                            <xs:minInclusive value="0.1"/>
+                            <xs:maxInclusive value="5.0"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+                <xs:element name="period" minOccurs="1" maxOccurs="1">
+                    <xs:simpleType>
+                        <xs:restriction base="xs:integer">
+                            <xs:minInclusive value="5"/>
+                            <xs:maxInclusive value="10000"/>
+                        </xs:restriction>
+                    </xs:simpleType>
+                </xs:element>
+        </xs:complexType>
+
+
+        <xs:element name="pow1modconfpar">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="configuration">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="connectivity" type="connectivitytype"/>
+                                                        <xs:element name="measure" type="measureType"/>
+                                                        <xs:element name="frequencyoutput" type="frequencyoutputType"/>
+						</xs:sequence>
+					</xs:complexType>	
+				</xs:element>	
+				<xs:element name="parameter">
+					<xs:complexType>
+						<xs:sequence>
+                                                        <xs:element name="interval" type="measureintervalType"/>
+						</xs:sequence>
+					</xs:complexType>	
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema> 
+
