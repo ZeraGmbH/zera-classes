@@ -13,4 +13,5 @@ SUBDIRS     = \
             zera-modules/interface \
             zera-modules/rangemodule \
             zera-modules/rmsmodule \
-            zera-modules/dftmodule
+            zera-modules/dftmodule \
+            zera-modules/power1module
