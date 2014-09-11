@@ -97,6 +97,13 @@ quint32 cPCBInterface::getUrvalue(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterface::getUrvalue(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getUrvalue(chnName);
+}
+
+
 quint32 cPCBInterface::getRejection(QString chnName, QString rngName)
 {
     Q_D(cPCBInterface);

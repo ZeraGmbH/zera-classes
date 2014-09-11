@@ -23,6 +23,7 @@ enum pcbcommands
     getalias2,
     gettype2,
     geturvalue,
+    geturvalue2,
     getrejection,
     getovrejection,
     isavail,
@@ -57,6 +58,7 @@ public:
     virtual quint32 getAlias(QString chnName, QString rngName); // qstring
     virtual quint32 getType(QString chnName, QString rngName); // int
     virtual quint32 getUrvalue(QString chnName, QString rngName); // double
+    virtual quint32 getUrvalue(QString chnName); // double
     virtual quint32 getRejection(QString chnName, QString rngName); // double
     virtual quint32 getOVRejection(QString chnName, QString rngName); // double
     virtual quint32 isAvail(QString chnName, QString rngName); // bool

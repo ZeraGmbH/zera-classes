@@ -147,6 +147,17 @@ quint32 cPCBInterfacePrivate::getUrvalue(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterfacePrivate::getUrvalue(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:URV?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = geturvalue2;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getRejection(QString chnName, QString rngName)
 {
     QString cmd;
@@ -306,6 +317,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
 
         case geturvalue:
+        case geturvalue2:
         case getrejection:
         case getovrejection:
         case getgaincorrection:
