@@ -1,0 +1,4 @@
+#ifndef CHANNELINFO_H
+#define CHANNELINFO_H
+
+#endif // CHANNELINFO_H
