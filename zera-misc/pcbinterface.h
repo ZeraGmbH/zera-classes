@@ -31,6 +31,7 @@ class ZERA_MISCSHARED_EXPORT cPCBInterface: public QObject
 public:
     cPCBInterface();
     virtual void setClient(Zera::Proxy::cProxyClient *client);
+    // all commands to sense interface
     virtual quint32 getDSPChannel(QString chnName); // int
     virtual quint32 getStatus(QString chnName); // int
     virtual quint32 resetStatus(QString chnName); // reply (ack, nak..)
@@ -49,12 +50,17 @@ public:
     virtual quint32 getGainCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
-
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
+    virtual quint32 getSampleRate(); // int the actual set sampling rate
+
+    // all commands to source interface
+    virtual quint32 getAliasSource(QString chnName); // qstring
+    virtual quint32 getDSPChannelSource(QString chnName); // int
+    virtual quint32 getFormFactorSource(QString chnName); // double
+
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
-    virtual quint32 getSampleRate(); // int the actual set sampling rate
 
 signals:
     void tcpError(QAbstractSocket::SocketError errorCode);

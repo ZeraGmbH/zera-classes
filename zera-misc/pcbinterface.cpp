@@ -174,6 +174,27 @@ quint32 cPCBInterface::getSampleRate()
 }
 
 
+quint32 cPCBInterface::getAliasSource(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getAliasSource(chnName);
+}
+
+
+quint32 cPCBInterface::getDSPChannelSource(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getDSPChannelSource(chnName);
+}
+
+
+quint32 cPCBInterface::getFormFactorSource(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getFormFactorSource(chnName);
+}
+
+
 
 
 

@@ -1,0 +1,4 @@
+#ifndef MEASMODEINFO_H
+#define MEASMODEINFO_H
+
+#endif // MEASMODEINFO_H

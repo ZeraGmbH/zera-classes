@@ -34,7 +34,11 @@ enum pcbcommands
     regnotifier,
     unregnotifier,
     pcbinterrupt,
-    getsamplerate
+    getsamplerate,
+
+    getaliassource,
+    getdspchannelsource,
+    getformfactorsource
 };
 
 
@@ -65,8 +69,13 @@ public:
     virtual quint32 getGainCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
-
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
+
+    // all commands to source interface
+    virtual quint32 getAliasSource(QString chnName); // qstring
+    virtual quint32 getDSPChannelSource(QString chnName); // int
+    virtual quint32 getFormFactorSource(QString chnName); // double
+
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 

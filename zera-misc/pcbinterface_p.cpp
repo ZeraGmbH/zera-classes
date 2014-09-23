@@ -235,6 +235,39 @@ quint32 cPCBInterfacePrivate::setRange(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterfacePrivate::getAliasSource(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SOUR:%1:ALI?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getaliassource;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getDSPChannelSource(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SOUR:%1:DSPC?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getdspchannelsource;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getFormFactorSource(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SOUR:%1:FFAC?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getformfactorsource;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::registerNotifier(QString query, QString notifier)
 {
     QString cmd, par;
@@ -301,6 +334,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getstatus:
         case gettype2:
         case getsamplerate:
+        case getdspchannelsource:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 
@@ -309,6 +343,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getunit:
         case getrange:
         case getalias2:
+        case getaliassource:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
@@ -323,6 +358,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getgaincorrection:
         case getoffsetcorrection:
         case getphasecorrection:
+        case getformfactorsource:
             emit q->serverAnswer(lmsgnr, lreply, returnDouble(lmsg));
             break;
 
