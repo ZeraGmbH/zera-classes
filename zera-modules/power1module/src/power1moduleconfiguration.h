@@ -30,29 +30,28 @@ enum moduleconfigstate
     setFrequencyActualizationMode,
     setFrequencyOutputCount,
 
-    setMeasureInterval,
+    setMeasuringMode,
+    setMeasureIntervalTime,
+    setMeasureIntervalPeriod,
 
-    setMeasMode1 = 32,
+    setMeasMode1 = 32, // we leave some place for additional cmds
 
-    setfreqout1Name = setMeasMode1 + 32,
-    setfreqout1Source,
-    setfreqout1Type,
+    setfreqout1Name = setMeasMode1 + 32, // 32 measuring modes should be enough
+    setfreqout2Name,
+    setfreqout3Name,
+    setfreqout4Name,
 
-    setfreqout2Name = setfreqout1Name + 4,
+    setfreqout1Source = setfreqout1Name +8, // also some place for additional frequency outputs
     setfreqout2Source,
-    setfreqout2Type,
-
-    setfreqout3Name = setfreqout2Name + 4,
     setfreqout3Source,
-    setfreqout3Type,
-
-    setfreqout4Name = setfreqout3Name + 4,
     setfreqout4Source,
+
+    setfreqout1Type = setfreqout1Source + 8,
+    setfreqout2Type,
+    setfreqout3Type,
     setfreqout4Type,
 
-
-
-    setnext = setfreqout4Name + 4
+    setnext = setfreqout1Type + 8
 };
 
 

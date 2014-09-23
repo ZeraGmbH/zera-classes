@@ -42,7 +42,8 @@ SOURCES += \
     src/power1moduleconfiguration.cpp \
     src/power1modulefactory.cpp \
     src/power1modulemeasprogram.cpp \
-    src/power1moduleobservation.cpp
+    src/power1moduleobservation.cpp \
+    src/measmodeinfo.cpp
 
 HEADERS += \
     src/basemodule.h \
@@ -64,7 +65,9 @@ HEADERS += \
     src/power1moduleconfiguration.h \
     src/power1modulefactory.h \
     src/power1modulemeasprogram.h \
-    src/power1moduleobservation.h
+    src/power1moduleobservation.h \
+    src/foutinfo.h \
+    src/measmodeinfo.h
 
 unix:!symbian {
     maemo5 {

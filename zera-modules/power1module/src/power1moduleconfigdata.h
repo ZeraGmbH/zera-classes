@@ -6,6 +6,7 @@
 #include <QList>
 
 #include "socket.h"
+#include "foutinfo.h"
 
 namespace POWER1MODULE
 {
@@ -24,6 +25,7 @@ struct intParameter
     quint32 m_nValue;
 };
 
+
 struct stringParameter
 {
     QString m_sKey;
@@ -33,9 +35,9 @@ struct stringParameter
 
 struct freqoutconfiguration
 {
-    QString m_sFreqOutput;
-    QString m_sSource;
-    QString m_sType;
+    QString m_sName; // system name of the used frequency output
+    int m_nSource; // from xml we get pms1,2,3,s and convert to 0 .. 3
+    int m_nFoutMode; // from xml we get +-,+,- we convert this to foutmodes
 };
 
 
@@ -59,9 +61,9 @@ public:
     quint8 m_nFreqOutputCount; // how many frequency ouptuts do we support
     QList<freqoutconfiguration> m_FreqOutputConfList; // a list of configuration values for each frequency output
 
-    stringParameter m_MeasuringMode;
-    doubleParameter m_fMeasInterval; // measuring interval 0.1 .. 5.0 sec.
-    intParameter m_nMeasPeriod; // measuring periods 1 .. 10000
+    stringParameter m_sMeasuringMode;
+    doubleParameter m_fMeasIntervalTime; // measuring interval 0.1 .. 5.0 sec.
+    intParameter m_nMeasIntervalPeriod; // measuring periods 1 .. 10000
 };
 
 }

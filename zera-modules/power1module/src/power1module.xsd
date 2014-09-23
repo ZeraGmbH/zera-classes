@@ -113,26 +113,28 @@
                                     </xs:restriction>
                                 </xs:simpleType>
                             </xs:element>
-                            <xs:element name="mode1" type="measuringmodeType" minOccurs="1" maxOccurs="1"/>
-                            <xs:element name="mode2" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode3" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode4" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode5" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode6" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode7" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode8" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode9" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode10" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
-                            <xs:element name="mode11" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m1" type="measuringmodeType" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="m2" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m3" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m4" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m5" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m6" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m7" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m8" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m9" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m10" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="m11" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="system">
                     <xs:complexType>
-                        <xs:element name="pms1" type="xs:string" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="pms2" type="xs:string" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="pms3" type="xs:string" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="pms2w" type="pmsType" minOccurs="1" maxOccurs="1"/>
+                        <xs:sequence>
+                            <xs:element name="pms1" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="pms2" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="pms3" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                            <xs:element name="pms2w" type="pmsType" minOccurs="1" maxOccurs="1"/>
+                        </xs:sequence>
                     </xs:complexType>
                 </xs:element>
                 <xs:element name="integrationmode" type="integrationmodeType" minOccurs="1" maxOccurs="1"/>
@@ -142,10 +144,10 @@
 
         <xs:simpleType name="foutxnameType">
             <xs:restriction base="xs:string">
-                <xs:enumeration value="FPZ1"/>
-                <xs:enumeration value="FPZ2"/>
-                <xs:enumeration value="FPZ3"/>
-                <xs:enumeration value="FPZ4"/>
+                <xs:enumeration value="fo0"/>
+                <xs:enumeration value="fo1"/>
+                <xs:enumeration value="fo2"/>
+                <xs:enumeration value="fo3"/>
             </xs:restriction>
         </xs:simpleType>
 
@@ -188,18 +190,20 @@
                 </xs:element>
                 <xs:element name="output">
                     <xs:complexType>
-                        <xs:element name="n" minOccurs="1" maxOccurs="1">
-                            <xs:simpleType>
-                                <xs:restriction base="xs:integer">
-                                    <xs:minInclusive value="0"/>
-                                    <xs:maxInclusive value="4"/>
-                                </xs:restriction>
-                            </xs:simpleType>
-                        </xs:element>
-                        <xs:element name="fout1" type="foutxType" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="fout2" type="foutxType" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="fout3" type="foutxType" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="fout4" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                        <xs:sequence>
+                            <xs:element name="n" minOccurs="1" maxOccurs="1">
+                                <xs:simpleType>
+                                    <xs:restriction base="xs:integer">
+                                        <xs:minInclusive value="0"/>
+                                        <xs:maxInclusive value="4"/>
+                                    </xs:restriction>
+                                </xs:simpleType>
+                            </xs:element>
+                            <xs:element name="fout1" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="fout2" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="fout3" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                            <xs:element name="fout4" type="foutxType" minOccurs="0" maxOccurs="1"/>
+                        </xs:sequence>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
@@ -207,11 +211,12 @@
 
 
         <xs:complexType name="measureintervalType">
+            <xs:sequence>
                 <xs:element name="time" minOccurs="1" maxOccurs="1">
                     <xs:simpleType>
                         <xs:restriction base="xs:decimal">
                             <xs:minInclusive value="0.1"/>
-                            <xs:maxInclusive value="5.0"/>
+                            <xs:maxInclusive value="100.0"/>
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
@@ -223,6 +228,7 @@
                         </xs:restriction>
                     </xs:simpleType>
                 </xs:element>
+            </xs:sequence>
         </xs:complexType>
 
 
@@ -241,6 +247,7 @@
 				<xs:element name="parameter">
 					<xs:complexType>
 						<xs:sequence>
+                                                        <xs:element name="measuringmode" type="measuringmodeType"/>
                                                         <xs:element name="interval" type="measureintervalType"/>
 						</xs:sequence>
 					</xs:complexType>	
