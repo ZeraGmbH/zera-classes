@@ -53,7 +53,6 @@ enum dftmoduleCmds
     freeusermem
 };
 
-#define DEBUG 1
 
 class cModuleSignal;
 class cModuleParameter;
