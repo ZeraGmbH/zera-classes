@@ -89,8 +89,6 @@ enum measmode
 };
 
 
-#define DEBUG 1
-
 class cModuleSignal;
 class cModuleParameter;
 class cModuleInfo;
