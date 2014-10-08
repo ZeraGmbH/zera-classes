@@ -291,7 +291,8 @@ void cRmsModuleMeasProgram::setDspCmdList()
         else
             m_pDSPIFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr)
                                                                                       .arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-        m_pDSPIFace->addCycListItem( s = QString("RMS(MEASSIGNAL,VALXRMS+%1)").arg(i));
+        m_pDSPIFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL,MEASSIGNAL,VALXRMS+%1)").arg(i));
+        //m_pDSPIFace->addCycListItem( s = QString("RMS(MEASSIGNAL,VALXRMS+%1)").arg(i));
     }
 
     // and filter them
@@ -303,6 +304,10 @@ void cRmsModuleMeasProgram::setDspCmdList()
     m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
         m_pDSPIFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXRMSF)").arg(m_ActValueList.count()));
+
+        for (int i = 0; i < m_ActValueList.count(); i++)
+            m_pDSPIFace->addCycListItem( s = QString("SQRT(VALXRMSF+%1,VALXRMSF+%2)").arg(i).arg(i));
+
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) );
         m_pDSPIFace->addCycListItem( s = "DSPINTTRIGGER(0x0,0x0001)"); // send interrupt to module
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
