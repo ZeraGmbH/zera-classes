@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+        <xs:simpleType name="yesnotype">
+                <xs:restriction base="xs:integer">
+                        <xs:maxInclusive value='1'/>
+                        <xs:minInclusive value='0'/>
+                </xs:restriction>
+        </xs:simpleType>
+
+
+	<xs:simpleType name="debugtype">
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value='7'/>
+			<xs:minInclusive value='0'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="porttype">
+		<xs:restriction base="xs:integer">
+			<xs:maxInclusive value='60000'/>
+			<xs:minExclusive value='1024'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+
+	<xs:simpleType name="ipadresstype">
+		<xs:restriction base="xs:string">
+			<xs:pattern value = '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	
+	<xs:complexType name="connectivitytype">
+		<xs:sequence>
+			<xs:element name="debuglevel" type="debugtype"/>
+			<xs:element name="ethernet">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="resourcemanager">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ip" type="ipadresstype"/>
+									<xs:element name="port" type="porttype"/>
+								</xs:sequence>
+							</xs:complexType>		
+						</xs:element>	
+						<xs:element name="pcbserver">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ip" type="ipadresstype"/>
+									<xs:element name="port" type="porttype"/>
+								</xs:sequence>
+							</xs:complexType>		
+						</xs:element>
+						<xs:element name="dspserver">
+							<xs:complexType>
+								<xs:sequence>
+									<xs:element name="ip" type="ipadresstype"/>
+									<xs:element name="port" type="porttype"/>
+								</xs:sequence>
+							</xs:complexType>		
+						</xs:element>
+					</xs:sequence>	
+				</xs:complexType>	
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
+
+        <xs:simpleType name="interpolationtype">
+            <xs:restriction base="xs:integer">
+                <xs:enumeration value="64"/>
+                <xs:enumeration value="128"/>
+                <xs:enumeration value="256"/>
+                <xs:enumeration value="512"/>
+                <xs:enumeration value="1024"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+
+        <xs:simpleType name="gaptype">
+            <xs:restriction base="xs:integer">
+                <xs:minInclusive value="0"/>
+                <xs:maxInclusive value="1000"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+
+        <xs:simpleType name="channeltype">
+            <xs:restriction base="xs:string">
+                <xs:enumeration value="m0"/>
+                <xs:enumeration value="m1"/>
+                <xs:enumeration value="m2"/>
+                <xs:enumeration value="m3"/>
+                <xs:enumeration value="m4"/>
+                <xs:enumeration value="m5"/>
+                <xs:enumeration value="m6"/>
+                <xs:enumeration value="m7"/>
+                <xs:enumeration value="m8"/>
+                <xs:enumeration value="m9"/>
+                <xs:enumeration value="m10"/>
+                <xs:enumeration value="m11"/>
+            </xs:restriction>
+        </xs:simpleType>
+
+
+        <xs:complexType name="measuretype">
+            <xs:sequence>
+                <xs:element name="interpolation" minOccurs="1" maxOccurs="1" type="interpolationtype"/>
+                <xs:element name="gap" minOccurs="1" maxOccurs="1" type="gaptype"/>
+                <xs:element name="values">
+                    <xs:complexType>
+                        <xs:sequence>
+                        <xs:element name="n" minOccurs="1" maxOccurs="1">
+                            <xs:simpleType>
+                                <xs:restriction base="xs:integer">
+                                    <xs:minInclusive value="1"/>
+                                    <xs:maxInclusive value="12"/>
+                                </xs:restriction>
+                            </xs:simpleType>
+                        </xs:element>
+                        <xs:element name="val1" type="channeltype" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="val2" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val3" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val4" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val5" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val6" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val7" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val8" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val9" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val10" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val11" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="val12" type="channeltype" minOccurs="0" maxOccurs="1"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+	</xs:complexType>	
+
+
+        <xs:simpleType name="measureintervaltype">
+                <xs:restriction base="xs:decimal">
+                        <xs:minInclusive value="0.1"/>
+                        <xs:maxInclusive value="5.0"/>
+                </xs:restriction>
+        </xs:simpleType>
+
+
+
+        <xs:element name="oscimodconfpar">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="configuration">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="connectivity" type="connectivitytype"/>
+                                                        <xs:element name="measure" type="measuretype"/>
+						</xs:sequence>
+					</xs:complexType>	
+                                </xs:element>
+                                <xs:element name="parameter">
+                                <xs:complexType>
+                                        <xs:sequence>
+                                                <xs:element name="refchannel" type="channeltype"/>
+                                        </xs:sequence>
+                                </xs:complexType>
+                                </xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+</xs:schema> 
+
