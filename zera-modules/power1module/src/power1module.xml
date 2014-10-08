@@ -39,33 +39,28 @@
                                 <pms1>m0,m3</pms1>
                                 <pms2>m1,m4</pms2>
                                 <pms3>m2,m5</pms3>
-                                <pms2w>pms1</pms2w>
+                                <pms2w>pms3</pms2w>
                         </system>
                         <integrationmode>time</integrationmode>
                 </measure>
                 <frequencyoutput>
-                        <frequency>60000</frequency>
-                        <frequencyact>integrationtime</frequencyact>
+                        <frequency>200000</frequency>
+                        <frequencyact>signalperiod</frequencyact>
                         <output>
-                                <n>2</n>
+                                <n>1</n>
                                 <fout1>
                                         <name>fo0</name>
-                                        <source>pms1</source>
-                                        <type>+-</type>
-                                </fout1>
-                                <fout2>
-                                        <name>fo3</name>
                                         <source>pmss</source>
                                         <type>+-</type>
-                                </fout2>
+                                </fout1>
                         </output>
                 </frequencyoutput>
 	</configuration>
 	<parameter>
                 <measuringmode>4LW</measuringmode>
                 <interval>
-                        <time>3.0</time>
-                        <period>20</period>
+                        <time>1.0</time>
+                        <period>200</period>
                 </interval>
         </parameter>
 </pow1modconfpar>
