@@ -1,0 +1,137 @@
+#include <QPoint>
+#include <QString>
+#include <xmlconfigreader.h>
+
+#include "thdnmoduleconfiguration.h"
+#include "thdnmoduleconfigdata.h"
+#include "socket.h"
+
+namespace THDNMODULE
+{
+
+cThdnModuleConfiguration::cThdnModuleConfiguration()
+{
+    m_pThdnModulConfigData = 0;
+    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
+    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+}
+
+
+cThdnModuleConfiguration::~cThdnModuleConfiguration()
+{
+    if (m_pThdnModulConfigData) delete m_pThdnModulConfigData;
+}
+
+
+void cThdnModuleConfiguration::setConfiguration(QByteArray xmlString)
+{
+    m_bConfigured = m_bConfigError = false;
+
+    if (m_pThdnModulConfigData) delete m_pThdnModulConfigData;
+    m_pThdnModulConfigData = new cThdnModuleConfigData();
+
+    m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
+
+    // so now we can set up
+    // initializing hash table for xml configuration
+
+    m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
+
+    m_ConfigXMLMap["thdnmodconfpar:configuration:measure:values:n"] = setValueCount;
+
+    m_ConfigXMLMap["thdnmodconfpar:parameter:interval"] = setMeasureInterval;
+
+    if (m_pXMLReader->loadSchema(defaultXSDFile))
+        m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
+    else
+        m_bConfigError = true;
+}
+
+
+QByteArray cThdnModuleConfiguration::exportConfiguration()
+{
+    doubleParameter* dPar;
+    dPar = &m_pThdnModulConfigData->m_fMeasInterval;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    return m_pXMLReader->getXMLConfig().toUtf8();
+}
+
+
+cThdnModuleConfigData *cThdnModuleConfiguration::getConfigurationData()
+{
+    return m_pThdnModulConfigData;
+}
+
+
+void cThdnModuleConfiguration::configXMLInfo(QString key)
+{
+    bool ok;
+
+    if (m_ConfigXMLMap.contains(key))
+    {
+        ok = true;
+        int cmd = m_ConfigXMLMap[key];
+        switch (cmd)
+        {
+        case setDebugLevel:
+            m_pThdnModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setRMIp:
+            m_pThdnModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
+            break;
+        case setRMPort:
+            m_pThdnModulConfigData->m_RMSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setPCBServerIp:
+            m_pThdnModulConfigData->m_PCBServerSocket.m_sIP = m_pXMLReader->getValue(key);
+            break;
+        case setPCBServerPort:
+            m_pThdnModulConfigData->m_PCBServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setDSPServerIp:
+            m_pThdnModulConfigData->m_DSPServerSocket.m_sIP = m_pXMLReader->getValue(key);
+            break;
+        case setDSPServerPort:
+            m_pThdnModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setValueCount:
+            m_pThdnModulConfigData->m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
+            // here we generate dynamic hash entries for value channel configuration
+            for (int i = 0; i < m_pThdnModulConfigData->m_nValueCount; i++)
+                m_ConfigXMLMap[QString("thdnmodconfpar:configuration:measure:values:val%1").arg(i+1)] = setValue1+i;
+            break;
+        case setMeasureInterval:
+            m_pThdnModulConfigData->m_fMeasInterval.m_sKey = key;
+            m_pThdnModulConfigData->m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        default:
+            if ((cmd >= setValue1) && (cmd < setValue1 + 32))
+            {
+                cmd -= setValue1;
+                // it is command for setting value channel name
+                QString valueChannel = m_pXMLReader->getValue(key);
+                m_pThdnModulConfigData->m_valueChannelList.append(valueChannel); // for configuration of our engine
+            }
+        }
+        m_bConfigError |= !ok;
+    }
+
+    else
+        m_bConfigError = true;
+}
+
+
+void cThdnModuleConfiguration::completeConfiguration(bool ok)
+{
+    m_bConfigured = (ok && !m_bConfigError);
+    emit configXMLDone();
+}
+
+}
+
