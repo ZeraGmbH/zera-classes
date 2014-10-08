@@ -39,12 +39,12 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::
 
     m_readResourceSourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceInfosState);
     m_readResourceSourceState.addTransition(this, SIGNAL(activationSkip()), &m_pcbserverConnectState);
-    m_readResourceSourceInfosState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceInfosState);
+    m_readResourceSourceInfosState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceInfoState);
     m_readResourceSourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceInfoDoneState);
     m_readResourceSourceInfoDoneState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourcesSourceState);
     m_readResourceSourceInfoDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceSourceInfoState);
 
-    m_claimResourcesSourceState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourcesSourceState);
+    m_claimResourcesSourceState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceSourceState);
     m_claimResourceSourceState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceSourceDoneState);
     m_claimResourceSourceDoneState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectState);
     m_claimResourceSourceDoneState.addTransition(this, SIGNAL(activationLoop()), &m_claimResourceSourceState);
@@ -339,8 +339,9 @@ void cPower1ModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL1", m_nSRate, DSPDATA::vDspTemp)); // we need 2 signals for our computations
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL2", m_nSRate, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("VALPQS", 4, DSPDATA::vDspTemp)); // here x1, x2, x3 , xs will land
-    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP1", 1, DSPDATA::vDspTemp)); // we need 2 temp. vars
-    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP2", 1, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP1", 2, DSPDATA::vDspTemp)); // we need 2 temp. vars also for complex
+    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP2", 2, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FAK", 1, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2*4,DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
 
@@ -381,14 +382,20 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
+        m_pDSPIFace->addCycListItem( s = QString("CLKMODE(1)")); // clk mode auf 48bit einstellen
         m_pDSPIFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode())); // initial measuring mode
+        m_pDSPIFace->addCycListItem( s = QString("SETVAL(FAK,0.5)"));
 
         if (m_ConfigData.m_sIntegrationMode == "time")
+        {
             m_pDSPIFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+            m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
+        }
         else
-            m_pDSPIFace->addCycListItem( s = "SETVAL(TIPAR,0)"); // or period
+        {
+            m_pDSPIFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)); // initial ti time
+        }
 
-        m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
@@ -429,6 +436,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
         case m4lb:
             m_pDSPIFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0111)");
+            // m_pDSPIFace->addCycListItem( s = "BREAK(0)"); // breakpoint wenn /taster
             m_pDSPIFace->addCycListItem( s = QString("TESTVCSKIPEQ(MMODE,%1)").arg(mmode));
             m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0111)");
             m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0111)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
@@ -436,20 +444,47 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             sl = m_ConfigData.m_sMeasSystemList.at(0).split(',');
             // our first measuring system
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,90,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
+            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS,VALPQS)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS,VALPQS)"));
+
+            // instead her all harmonics
+            //m_pDSPIFace->addCycListItem( s = QString("ROTATE(MEASSIGNAL2,270.0)"));
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
 
             sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
             // our second measuring system
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,90,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
+            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
+
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS+1)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS+1,VALPQS+1)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+1,VALPQS+1)"));
+
+            //m_pDSPIFace->addCycListItem( s = QString("ROTATE(MEASSIGNAL2,270.0)"));
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
 
             sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
             // our third measuring system
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,90,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
+            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
+
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS+2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS+2,VALPQS+2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+2,VALPQS+2)"));
+
+            //m_pDSPIFace->addCycListItem( s = QString("ROTATE(MEASSIGNAL2,270.0)"));
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
 
             m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0111)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -457,8 +492,8 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         case m4lbk:
             m_pDSPIFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0112)");
             m_pDSPIFace->addCycListItem( s = QString("TESTVCSKIPEQ(MMODE,%1)").arg(mmode));
-            m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0110)");
-            m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0110)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+            m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0112)");
+            m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0112)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
             // we need the information of all our system at the same time
             sl1 = m_ConfigData.m_sMeasSystemList.at(0).split(',');
@@ -467,24 +502,50 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
             // our first measuring system
             m_pDSPIFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
-                                                    .arg(m_measChannelInfoHash.value(sl3.at(0)).dspChannelNr)
-                                                    .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr));
+                                                    .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr)
+                                                    .arg(m_measChannelInfoHash.value(sl3.at(0)).dspChannelNr));
+            m_pDSPIFace->addCycListItem( s = "MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl1.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
+
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2,VALPQS)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2+1,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("ADDVVV(TEMP1,VALPQS,VALPQS)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS,VALPQS)"));
+
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
 
             // our second measuring system
             m_pDSPIFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
-                                                    .arg(m_measChannelInfoHash.value(sl1.at(0)).dspChannelNr)
-                                                    .arg(m_measChannelInfoHash.value(sl3.at(0)).dspChannelNr));
+                                                    .arg(m_measChannelInfoHash.value(sl3.at(0)).dspChannelNr)
+                                                    .arg(m_measChannelInfoHash.value(sl1.at(0)).dspChannelNr));
+            m_pDSPIFace->addCycListItem( s = "MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl2.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2,VALPQS+1)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2+1,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("ADDVVV(TEMP1,VALPQS+1,VALPQS+1)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+1,VALPQS+1)"));
+
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
 
             // our third measuring system
             m_pDSPIFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
-                                                    .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr)
-                                                    .arg(m_measChannelInfoHash.value(sl1.at(0)).dspChannelNr));
+                                                    .arg(m_measChannelInfoHash.value(sl1.at(0)).dspChannelNr)
+                                                    .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr));
+            m_pDSPIFace->addCycListItem( s = "MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl3.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
+
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2,VALPQS+2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2+1,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("ADDVVV(TEMP1,VALPQS+2,VALPQS+2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+2,VALPQS+2)"));
+
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
 
             m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0112)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -533,7 +594,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,90)");
+            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
             m_pDSPIFace->addCycListItem( s = "ADDVVG(TEMP1,TEMP2,VALPQS)"); // geometrical sum is our actual value
 
@@ -542,7 +603,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,90)");
+            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
             m_pDSPIFace->addCycListItem( s = "ADDVVG(TEMP1,TEMP2,VALPQS+1)"); // geometrical sum is our actual value
 
@@ -551,7 +612,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,90)");
+            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
             m_pDSPIFace->addCycListItem( s = "ADDVVG(TEMP1,TEMP2,VALPQS+2)"); // geometrical sum is our actual value
 
@@ -604,8 +665,16 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPIFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
                                                     .arg(m_measChannelInfoHash.value(sl1.at(0)).dspChannelNr)
                                                     .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,90,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl1.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
+            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl1.at(1)).dspChannelNr));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS,VALPQS)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS,VALPQS)"));
+
+            //m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
 
             // our second measuring system
             m_pDSPIFace->addCycListItem( s = "SETVAL(VALPQS+1,0.0)"); // is 0 output
@@ -614,8 +683,16 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPIFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
                                                     .arg(m_measChannelInfoHash.value(sl3.at(0)).dspChannelNr)
                                                     .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,90,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl3.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
+            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl3.at(1)).dspChannelNr));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS+2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS+2,VALPQS+2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+2,VALPQS+2)"));
+
+            //m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
+            //m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
 
             m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0116)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -683,8 +760,17 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
             // and then we compute the 2 wire power values for the selected system
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,90,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(index));
+            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
+
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(index));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
+            m_pDSPIFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(index).arg(index));
+            m_pDSPIFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(index).arg(index));
+
+            //m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
+            //m_pDSPIFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(index));
 
             m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0118)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -757,9 +843,9 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
             // and then we compute the 2 wire power values for the selected system
             m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
+            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,90)");
+            m_pDSPIFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
             m_pDSPIFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // Q
             m_pDSPIFace->addCycListItem( s = QString("ADDVVG(TEMP1,TEMP2,VALPQS+%1)").arg(index));
 
@@ -775,7 +861,8 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     m_pDSPIFace->addCycListItem( s = "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)");
 
     // and filter all our values
-    m_pDSPIFace->addCycListItem( s = QString("AVERAGE1(4,VALPQSF,FILTER)")); // we add results to filter
+    m_pDSPIFace->addCycListItem( s = QString("AVERAGE1(4,VALPQS,FILTER)")); // we add results to filter
+
 
     // so... let's now set our frequency outputs if he have some
     if (m_ConfigData.m_sFreqActualizationMode == "signalperiod")
@@ -790,7 +877,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                 // here we set abs, plus or minus and which frequency output has to be set
                 quint16 freqpar = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
                 // frequenzausgang berechnen lassen
-                m_pDSPIFace->addCycListItem( s = QString("CMPCLK(%1,VALPQS+%2,FREQUENCYSCALE+%3)")
+                m_pDSPIFace->addCycListItem( s = QString("CMPCLK(%1,VALPQS+%2,FREQSCALE+%3)")
                                                  .arg(freqpar)
                                                  .arg(actvalueIndex)
                                                  .arg(i));
@@ -808,7 +895,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPIFace->addCycListItem( s = QString("CMPAVERAGE1(4,FILTER,VALPQSF)"));
             m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) );
             m_pDSPIFace->addCycListItem( s = "DSPINTTRIGGER(0x0,0x0001)"); // send interrupt to module
-            m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
 
             if (m_ConfigData.m_sFreqActualizationMode == "integrationtime")
             {
@@ -822,25 +908,29 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                         // here we set abs, plus or minus and which frequency output has to be set
                         quint16 freqpar = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
                         // frequenzausgang berechnen lassen
-                        m_pDSPIFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQUENCYSCALE+%3)")
+                        m_pDSPIFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQSCALE+%3)")
                                                          .arg(freqpar)
                                                          .arg(actvalueIndex)
                                                          .arg(i));
                     }
                 }
             }
+
+            m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
 
         m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 
     }
+
     else // otherwise it is period
     {
+
         m_pDSPIFace->addCycListItem( s = "TESTVVSKIPLT(N,TIPAR)");
-        m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
+        m_pDSPIFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0103)");
+        m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0103)");
             m_pDSPIFace->addCycListItem( s = QString("CMPAVERAGE1(4,FILTER,VALPQSF)"));
             m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) );
             m_pDSPIFace->addCycListItem( s = "DSPINTTRIGGER(0x0,0x0001)"); // send interrupt to module
-            m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
 
             if (m_ConfigData.m_sFreqActualizationMode == "integrationtime")
             {
@@ -854,7 +944,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                         // here we set abs, plus or minus and which frequency output has to be set
                         quint16 freqpar = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
                         // frequenzausgang berechnen lassen
-                        m_pDSPIFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQUENCYSCALE+%3)")
+                        m_pDSPIFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQSCALE+%3)")
                                                          .arg(freqpar)
                                                          .arg(actvalueIndex)
                                                          .arg(i));
@@ -862,7 +952,9 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                 }
             }
 
-        m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
+            m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0103)");
+
+        m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0103)"); // end processnr., mainchain 1 subchain 2
     }
 
   }
@@ -1935,17 +2027,17 @@ void cPower1ModuleMeasProgram::dataReadDSP()
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    bool ok;
     QString powIndicator = "123S";
     QString s, ts;
 
     for (int i = 0; i < 4; i++) // we have fixed 4 values
     {
         cMeasModeInfo mminfo  = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
-        ts = QString("%1%2:%3[%4];").arg(mminfo.getActvalName()
+        ts = QString("%1%2:%3[%4];").arg(mminfo.getActvalName())
                                     .arg(powIndicator[i])
-                                    .arg(m_EntityActValuePQSList.at(i)->getValue().toDouble(&ok))
-                                    .arg(mminfo.getUnitName()));
+                                    .arg(m_ModuleActualValues.at(i))
+                                    .arg(mminfo.getUnitName());
+
         s += ts;
     }
 
@@ -1986,15 +2078,18 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
             imax = d;
     }
 
-    QString datalist;
+    QString datalist = "FREQSCALE:";
 
     for (int i = 0; i< m_ConfigData.m_nFreqOutputCount; i++)
     {
         double frScale;
         cFoutInfo fi = m_FoutInfoHash[m_ConfigData.m_FreqOutputConfList.at(i).m_sName];
         frScale = fi.formFactor * m_ConfigData.m_nNominalFrequency / (3.0 * umax * imax);
-        datalist += QString("FREQSCALE+%1:%2;").arg(i).arg(frScale);
+        datalist += QString("%1,").arg(frScale, 0, 'g', 7);
     }
+
+    datalist.resize(datalist.size()-1);
+    datalist += ";";
 
     m_pDSPIFace->setVarData(m_pfreqScaleDSP, datalist);
     m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
