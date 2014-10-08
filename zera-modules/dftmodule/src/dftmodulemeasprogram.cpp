@@ -930,6 +930,14 @@ void cDftModuleMeasProgram::dataAcquisitionDSP()
 void cDftModuleMeasProgram::dataReadDSP()
 {
     m_pDSPIFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+    // as our dft produces math positive values, we correct them to technical positive values
+    for (int i = 0; i < m_ActValueList.count(); i++)
+    {
+        double im;
+        im = m_ModuleActualValues[i*2+1] * -1.0;
+        m_ModuleActualValues.replace(i*2+1, im);
+    }
+
     emit actualValues(&m_ModuleActualValues); // and send them
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
