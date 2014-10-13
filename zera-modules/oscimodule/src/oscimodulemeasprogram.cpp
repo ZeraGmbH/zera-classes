@@ -672,7 +672,7 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 
             QVariant list;
             list = QVariant::fromValue<QList<qreal> >(osciList);
-//            m_EntityActValueList.at(i)->setValue( list, m_pPeer); // and set entities
+            m_EntityActValueList.at(i)->setValue( list, m_pPeer); // and set entities
         }
     }
 }
