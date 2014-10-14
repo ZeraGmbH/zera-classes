@@ -112,6 +112,12 @@ void cRangeObsermatic::generateInterface()
         pEntity->setValue(QVariant((float)0.0), m_pPeer);
         m_RangeActRejectionEntityList.append(pEntity);
 
+        pEntity = m_pPeer->dataAdd(QString("INF_Channel%1ActOVRREJ").arg(i+1));
+        pEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+        pEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+        pEntity->setValue(QVariant((float)0.0), m_pPeer);
+        m_RangeActOvrRejectionEntityList.append(pEntity);
+
         m_softOvlList.append(false);
         m_hardOvlList.append(false);
         m_maxOvlList.append(false);
@@ -145,6 +151,7 @@ void cRangeObsermatic::deleteInterface()
         m_pPeer->dataRemove(m_RangeOVLEntityList.at(i));
         m_pPeer->dataRemove(m_RangeRejectionEntityList.at(i));
         m_pPeer->dataRemove(m_RangeActRejectionEntityList.at(i));
+        m_pPeer->dataRemove(m_RangeActOvrRejectionEntityList.at(i));
     }
 
     for (int i = 0; i < m_GroupList.count(); i++)
@@ -335,7 +342,8 @@ void cRangeObsermatic::setRanges(bool force)
             chn = pmChn->getDSPChannelNr();
             m_pfScale[chn] = pmChn->getUrValue() / pmChn->getRejection();
 
-            m_RangeActRejectionEntityList.at(i)->setValue(pmChn->getRangeUrvalueMax(), m_pPeer); // we still set information of channels actual urvalue incl. reserve
+            m_RangeActRejectionEntityList.at(i)->setValue(pmChn->getUrValue(), m_pPeer); // we first set information of channels actual urvalue
+            m_RangeActOvrRejectionEntityList.at(i)->setValue(pmChn->getRangeUrvalueMax(), m_pPeer); // we additional set information of channels actual urvalue incl. reserve
 
             //if (chn == 0)
             qDebug() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);

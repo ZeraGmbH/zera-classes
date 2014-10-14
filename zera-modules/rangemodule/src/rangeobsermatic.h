@@ -101,6 +101,7 @@ private:
     QList<VeinEntity*> m_RangeOVLEntityList;
     QList<VeinEntity*> m_RangeRejectionEntityList;
     QList<VeinEntity*> m_RangeActRejectionEntityList;
+    QList<VeinEntity*> m_RangeActOvrRejectionEntityList;
     QList<cModuleInfo*> m_GroupInfoList;
 
     cModuleParameter* m_pParRangeAutomaticOnOff;
