@@ -15,6 +15,7 @@ LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lvein-qt
 LIBS +=  -lMeasurementModuleInterface
+LIBS +=  -L$$shadowed($$PWD/../../libs)
 
 
 INCLUDEPATH += ../interface \

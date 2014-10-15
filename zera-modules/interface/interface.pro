@@ -23,6 +23,8 @@ unix:!symbian {
     INSTALLS += target
 }
 
+DESTDIR = $$shadowed($$PWD/../../libs)
+
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-modules
 INSTALLS += header_files
