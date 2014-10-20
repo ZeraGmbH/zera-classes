@@ -22,9 +22,12 @@ signals:
     void activated(); // is emitted after the activist is completely activated
     void activationContinue(); // for activist progress in activation statemachine
     void activationLoop();
+    void activationSkip();
     void deactivated();
     void deactivationContinue();
     void deactivationLoop();
+    void deactivationSkip();
+    void dataAquisitionContinue();
     void activationError();
     void deactivationError();
     void executionError();
