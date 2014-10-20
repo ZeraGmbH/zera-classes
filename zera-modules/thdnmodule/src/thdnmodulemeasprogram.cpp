@@ -681,7 +681,7 @@ void cThdnModuleMeasProgram::resourceManagerConnect()
 
 void cThdnModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("RmsModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("ThdnModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
