@@ -58,7 +58,7 @@ cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
     m_ConnectionHash[proxyclient] = connection;
     m_ClientHash[binUUid] = proxyclient;
 
-    if (existed)
+    if (existed && netClient->isConnected()) // if the wanted neclient already existed and!!! connected
         QTimer::singleShot(10, proxyclient, SLOT(transmitConnection()));
 
     return proxyclient;
