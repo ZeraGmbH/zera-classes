@@ -663,16 +663,16 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 
         for (int i = 0; i < m_ActValueList.count(); i++)
         {
-            QList<qreal> osciList;
-            osciList.clear();
+            QVector<double> osciVector;
+            osciVector.clear();
             int offs = i * m_ConfigData.m_nInterpolation;
 
             for (int j = 0; j < m_ConfigData.m_nInterpolation; j++)
-                osciList.append(actualValues->at(offs + j));
+                osciVector.append(actualValues->at(offs + j));
 
-            QVariant list;
-            list = QVariant::fromValue<QList<qreal> >(osciList);
-            m_EntityActValueList.at(i)->setValue( list, m_pPeer); // and set entities
+            QVariant vec;
+            vec = QVariant::fromValue<QVector<double> >(osciVector);
+            m_EntityActValueList.at(i)->setValue( vec, m_pPeer); // and set entities
         }
     }
 }
