@@ -279,7 +279,7 @@ void cOsciModuleMeasProgram::setDspCmdList()
 
         }
 
-        m_pDSPIFace->addCycListItem( s = "DSPINTTRIGGER(0x0,0x0001)"); // send interrupt to module
+        m_pDSPIFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
 
     m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -305,7 +305,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
         int service = sintnr.toInt(&ok);
         switch (service)
         {
-        case 1:
+        case irqNr:
             // we got an interrupt from our cmd chain and have to fetch our actual values
             // but we synchronize on ranging process
             if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
@@ -663,16 +663,16 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 
         for (int i = 0; i < m_ActValueList.count(); i++)
         {
-            QVector<double> osciVector;
-            osciVector.clear();
+            QList<double> osciList;
             int offs = i * m_ConfigData.m_nInterpolation;
 
             for (int j = 0; j < m_ConfigData.m_nInterpolation; j++)
-                osciVector.append(actualValues->at(offs + j));
+                osciList.append(actualValues->at(offs + j));
 
-            QVariant vec;
-            vec = QVariant::fromValue<QVector<double> >(osciVector);
-            m_EntityActValueList.at(i)->setValue( vec, m_pPeer); // and set entities
+            QVariant list;
+            list = QVariant::fromValue<QList<double> >(osciList);
+            // qDebug() << list.value<QList<double> >();
+            m_EntityActValueList.at(i)->setValue( list, m_pPeer); // and set entities
         }
     }
 }

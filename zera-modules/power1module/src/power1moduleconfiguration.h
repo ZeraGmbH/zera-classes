@@ -58,8 +58,8 @@ enum moduleconfigstate
 
 class cPower1ModuleConfigData;
 
-const QString defaultXSDFile = "/etc/zera/modules/power1module.xsd";
-//const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/power1module/src/power1module.xsd";
+//const QString defaultXSDFile = "/etc/zera/modules/power1module.xsd";
+const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/power1module/src/power1module.xsd";
 
 // moduleconfiguration holds configuration data as well as parameter
 

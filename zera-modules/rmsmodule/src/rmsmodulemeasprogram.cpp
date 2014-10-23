@@ -309,7 +309,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
             m_pDSPIFace->addCycListItem( s = QString("SQRT(VALXRMSF+%1,VALXRMSF+%2)").arg(i).arg(i));
 
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) );
-        m_pDSPIFace->addCycListItem( s = "DSPINTTRIGGER(0x0,0x0001)"); // send interrupt to module
+        m_pDSPIFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
@@ -333,7 +333,7 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
         int service = sintnr.toInt(&ok);
         switch (service)
         {
-        case 1:
+        case irqNr:
             // we got an interrupt from our cmd chain and have to fetch our actual values
             // but we synchronize on ranging process
             if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition

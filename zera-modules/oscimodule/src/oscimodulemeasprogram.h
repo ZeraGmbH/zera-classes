@@ -53,6 +53,7 @@ enum oscimoduleCmds
     freeusermem
 };
 
+#define irqNr 6
 
 class cModuleSignal;
 class cModuleParameter;

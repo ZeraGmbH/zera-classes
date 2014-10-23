@@ -45,7 +45,7 @@ enum rangemoduleCmds
     freeusermem
 };
 
-
+#define irqNr 1
 
 class cBaseModule;
 class cRangeModule;

@@ -31,8 +31,8 @@ enum moduleconfigstate
 
 class cDftModuleConfigData;
 
-const QString defaultXSDFile = "/etc/zera/modules/dftmodule.xsd";
-//const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/dftmodule/src/dftmodule.xsd";
+//const QString defaultXSDFile = "/etc/zera/modules/dftmodule.xsd";
+const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/dftmodule/src/dftmodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 

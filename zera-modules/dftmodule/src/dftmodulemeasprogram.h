@@ -53,6 +53,7 @@ enum dftmoduleCmds
     freeusermem
 };
 
+#define irqNr 3
 
 class cModuleSignal;
 class cModuleParameter;

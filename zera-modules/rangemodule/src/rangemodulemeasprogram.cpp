@@ -200,7 +200,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
         m_pDSPIFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
         m_pDSPIFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*m_ChannelList.count()+1));
         m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) );
-        m_pDSPIFace->addCycListItem( s = "DSPINTTRIGGER(0x0,0x0001)"); // send interrupt to module
+        m_pDSPIFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 }
@@ -224,7 +224,7 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
         int service = sintnr.toInt(&ok);
         switch (service)
         {
-        case 1:
+        case irqNr:
             // we got an interrupt from our cmd chain and have to fetch our actual values
             // but we synchronize on ranging process
             if (!m_bRanging)

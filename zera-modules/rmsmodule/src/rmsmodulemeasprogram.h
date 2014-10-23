@@ -54,6 +54,8 @@ enum rmsmoduleCmds
 };
 
 
+#define irqNr 2
+
 class cModuleSignal;
 class cModuleParameter;
 class cModuleInfo;

@@ -22,7 +22,7 @@
 		</connectivity>
                 <measure>
                     <interpolation>128</interpolation>
-                    <gap>0</gap>
+                    <gap>10</gap>
                     <values>
                         <n>6</n>
                         <val1>m0</val1>

@@ -88,6 +88,7 @@ enum measmode
     m2lsg
 };
 
+#define irqNr 5
 
 class cModuleSignal;
 class cModuleParameter;
