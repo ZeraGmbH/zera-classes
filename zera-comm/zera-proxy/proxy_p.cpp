@@ -125,8 +125,16 @@ void cProxyPrivate::receiveMessage(google::protobuf::Message* message)
         {
             m_ClientHash[key]->transmitAnswer(netMessage);
         }
+        else
+        {
+            qDebug() << "Unknown ClientID";
+        }
     }
     // ? todo error handling in case of unknown clientid ?
+    else
+    {
+        qDebug() << "No ClientID";
+    }
 }
 
 
