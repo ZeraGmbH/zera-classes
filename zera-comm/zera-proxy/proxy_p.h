@@ -36,6 +36,7 @@ protected:
     ~cProxyPrivate(){}
     cProxyClient* getConnection(QString ipadress, quint16 port);
     cProxyClient* getConnection(quint16 port);
+    void startConnection(cProxyClient* prclient);
     bool releaseConnection(cProxyClientPrivate *client);
 
     void setIPAdress(QString ipAddress);
