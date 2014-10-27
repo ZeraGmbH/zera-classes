@@ -32,8 +32,8 @@ enum moduleconfigstate
 
 class cOsciModuleConfigData;
 
-//const QString defaultXSDFile = "/etc/zera/modules/oscimodule.xsd";
-const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/oscimodule/src/oscimodule.xsd";
+const QString defaultXSDFile = "/etc/zera/modules/oscimodule.xsd";
+//const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/oscimodule/src/oscimodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 
