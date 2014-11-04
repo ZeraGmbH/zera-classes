@@ -79,12 +79,7 @@ private:
     cModuleInfo *channelNrInfo;
     cModuleInfo *groupNrInfo;
     cModuleError *errorMessage;
-
-    //cRangeModuleConfiguration *m_pConfiguration; // our xml configuration
-    Zera::Server::cDSPInterface* m_pDSPInterface;
-    Zera::Proxy::cProxyClient* m_pDspProxyClient;
     qint32 m_nActivationIt;
-
 
 private slots:
     void activationStart();

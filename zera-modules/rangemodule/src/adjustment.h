@@ -18,7 +18,11 @@ class cDspMeasData;
 class VeinPeer;
 
 namespace Zera {
-namespace Server {
+namespace Proxy {
+    class cProxy;
+    class cProxyClient;
+}
+namespace  Server {
     class cDSPInterface;
 }
 }
@@ -44,13 +48,14 @@ enum adjustmentCmds
 
 class cRangeModule;
 class cRangeMeasChannel;
+class cSocket;
 
 class cAdjustManagement: public cModuleActivist
 {
     Q_OBJECT
 
 public:
-    cAdjustManagement(cRangeModule* module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist, double interval);
+    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* dspsocket, QStringList chnlist, double interval);
     virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -64,11 +69,14 @@ signals:
     void finishStateMachine();
 
 private:
-    cRangeModule* m_pRangemodule; // the module we live in
+    cRangeModule* m_pModule; // the module we live in
+    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     VeinPeer* m_pPeer;
-    Zera::Server::cDSPInterface* m_pDSPIFace; // our interface to dsp
+    cSocket* m_pDSPSocket;
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     double m_fAdjInterval;
+    Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
+    Zera::Proxy::cProxyClient *m_pDspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QVector<float> m_ActualValues;
     quint8 m_nChannelIt;
@@ -77,7 +85,7 @@ private:
     bool m_bAdjustTrigger;
 
     // statemachine for activating gets the following states
-    QState m_activationInitState;
+    QState m_dspserverConnectState;
     QState m_readGainCorrState;
     QState m_readPhaseCorrState;
     QState m_readOffsetCorrState;
@@ -110,7 +118,7 @@ private:
 
 
 private slots:
-    void activationInit();
+    void dspserverConnect();
     void readGainCorr();
     void readPhaseCorr();
     void readOffsetCorr();

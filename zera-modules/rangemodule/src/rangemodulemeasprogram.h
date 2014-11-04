@@ -57,7 +57,7 @@ class cRangeModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRangeModuleConfigData& configData);
+    cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cRangeModuleConfigData& configData);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -78,10 +78,10 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    cRangeModule* m_pModule; // the module we live in
     bool m_bRanging;
     bool m_bIgnore;
     quint16 m_nSamples;
-    cRangeModule* m_pModule; // the module we live in
     QStringList m_ChannelList; // the list of actual values we work on
     QList<VeinEntity*> m_EntityList;
     cRangeModuleConfigData& m_ConfigData;
@@ -90,8 +90,9 @@ private:
     cDspMeasData* m_pActualValuesDSP;
 
     // statemachine for activating gets the following states
-    QState m_serverConnectState;
+    QState resourceManagerConnectState;
     QState m_IdentifyState;
+    QState m_dspserverConnectState;
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
     QState m_var2DSPState;
@@ -115,8 +116,9 @@ private:
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
 
-    void serverConnect();
+    void resourceManagerConnect();
     void sendRMIdent();
+    void dspserverConnect();
     void claimPGRMem();
     void claimUSERMem();
     void varList2DSP();

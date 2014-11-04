@@ -87,8 +87,8 @@ protected:
     QState* m_pStateSTOPConfSetup;
 
     QByteArray m_xmlconfString;
-    Zera::Proxy::cProxy* m_pProxy; // the proxi for all our connections (to rm, dsp- pcb- server)
-    VeinPeer* m_pPeer;
+    Zera::Proxy::cProxy *m_pProxy; // the proxi for all our connections (to rm, dsp- pcb- server)
+    VeinPeer *m_pPeer;
     QList<cModuleActivist*> m_ModuleActivistList;
     cBaseModuleConfiguration *m_pConfiguration; // our xml configuration
 

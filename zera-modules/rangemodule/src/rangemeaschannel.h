@@ -176,7 +176,6 @@ private slots:
     void readOVRejection();
     void readisAvail();
     void rangeQueryDone();
-
 };
 
 }

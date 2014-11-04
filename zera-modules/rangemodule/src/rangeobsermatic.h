@@ -25,11 +25,17 @@
 #include "moduleactivist.h"
 #include "rangemoduleconfigdata.h"
 
+
 namespace Zera {
-namespace Server {
+namespace Proxy {
+    class cProxy;
+    class cProxyClient;
+}
+namespace  Server {
     class cDSPInterface;
 }
 }
+
 
 class VeinPeer;
 class VeinEntity;
@@ -61,7 +67,7 @@ class cRangeObsermatic: public cModuleActivist
     Q_OBJECT
 
 public:
-    cRangeObsermatic(cRangeModule* module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
+    cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -77,10 +83,14 @@ signals:
 
 private:
     cRangeModule *m_pModule;
+    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     VeinPeer* m_pPeer;
-    Zera::Server::cDSPInterface* m_pDSPIFace; // our interface to dsp
+    cSocket *m_pDSPSocket;
     QList<QStringList> m_GroupList;
     QStringList m_ChannelNameList; // the system names of our channels
+    cObsermaticConfPar& m_ConfPar;
+    Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
+    Zera::Proxy::cProxyClient *m_pDspClient;
     QStringList m_ChannelAliasList; // the alias of our channels
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;
     QList<bool> m_softOvlList; // here we enter software detected overloads
@@ -89,12 +99,9 @@ private:
     quint32 m_nRangeSetPending;
     quint32 m_nReadStatusPending;
     QStringList m_actChannelRangeList; // a list of the actual ranges set
-    // QStringList m_newChannelRangeList; // a list of new ranges we want to get set
-    // we use the
     QString m_sActPllChannel;
     QString m_sNewPllChannel;
     QVector<float> m_ActualValues; // here we find the actual values
-    cObsermaticConfPar& m_ConfPar;
 
     // our interface entities
     QList<VeinEntity*> m_RangeEntityList;
@@ -113,7 +120,7 @@ private:
     QHash<quint32, int> m_MsgNrCmdList;
 
     // statemachine for activation (reading dsp correction data used for scaling)
-    QState m_activationInitState;
+    QState m_dspserverConnectState;
     QState m_readGainCorrState;
     QFinalState m_readGainCorrDoneState;
 
@@ -140,7 +147,7 @@ private:
     QList<int> getGroupIndexList(int index);
 
 private slots:
-    void activationInit();
+    void dspserverConnect();
     void readGainCorr();
     void readGainCorrDone();
 

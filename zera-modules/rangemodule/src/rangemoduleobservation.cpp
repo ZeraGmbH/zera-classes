@@ -117,7 +117,7 @@ void cRangeModuleObservation::pcbConnect()
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-
+    m_pProxy->startConnection(m_pPCBClient);
 }
 
 
