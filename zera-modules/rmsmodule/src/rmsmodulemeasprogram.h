@@ -69,7 +69,7 @@ class cRmsModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cRmsModuleConfigData& configdata);
+    cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cRmsModuleConfigData& configdata);
     virtual ~cRmsModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -129,6 +129,7 @@ private:
     QState m_readDspChannelState;
     QState m_readDspChannelDoneState;
 
+    QState m_dspserverConnectState;
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
     QState m_var2DSPState;
@@ -168,6 +169,7 @@ private slots:
     void readDspChannel();
     void readDspChannelDone();
 
+    void dspserverConnect();
     void claimPGRMem();
     void claimUSERMem();
     void varList2DSP();
