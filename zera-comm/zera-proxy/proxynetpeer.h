@@ -1,0 +1,4 @@
+#ifndef PROXYNETPEER_H
+#define PROXYNETPEER_H
+
+#endif // PROXYNETPEER_H
