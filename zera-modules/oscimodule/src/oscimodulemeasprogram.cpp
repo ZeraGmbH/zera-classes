@@ -22,10 +22,9 @@
 namespace OSCIMODULE
 {
 
-cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cOsciModuleConfigData& configdata)
-    :cBaseMeasProgram(proxy, peer, iface), m_pModule(module), m_ConfigData(configdata)
+cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cOsciModuleConfigData& configdata)
+    :cBaseMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_ActValueList = m_ConfigData.m_valueChannelList;
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
@@ -41,7 +40,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy:
     m_readChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelUnitState);
     m_readChannelUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelState);
     m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelDoneState);
-    m_readDspChannelDoneState.addTransition(this, SIGNAL(activationContinue()), &m_claimPGRMemState);
+    m_readDspChannelDoneState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectState);
     m_readDspChannelDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readChannelAliasState);
     m_claimPGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_claimUSERMemState);
     m_claimUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_var2DSPState);
@@ -63,6 +62,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy:
     m_activationMachine.addState(&m_readChannelUnitState);
     m_activationMachine.addState(&m_readDspChannelState);
     m_activationMachine.addState(&m_readDspChannelDoneState);
+    m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_claimPGRMemState);
     m_activationMachine.addState(&m_claimUSERMemState);
     m_activationMachine.addState(&m_var2DSPState);
@@ -86,6 +86,7 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy:
     connect(&m_readChannelUnitState, SIGNAL(entered()), SLOT(readChannelUnit()));
     connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
     connect(&m_readDspChannelDoneState, SIGNAL(entered()), SLOT(readDspChannelDone()));
+    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
     connect(&m_claimPGRMemState, SIGNAL(entered()), SLOT(claimPGRMem()));
     connect(&m_claimUSERMemState, SIGNAL(entered()), SLOT(claimUSERMem()));
     connect(&m_var2DSPState, SIGNAL(entered()), SLOT(varList2DSP()));
@@ -121,12 +122,22 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy:
 
 cOsciModuleMeasProgram::~cOsciModuleMeasProgram()
 {
-    delete m_pRMInterface;
-    for (int i = 0; i < m_pcbIFaceList.count(); i++)
+    if (m_pRMInterface)
+        delete m_pRMInterface;
+
+    if (m_pcbIFaceList.count() > 0)
+        for (int i = 0; i < m_pcbIFaceList.count(); i++)
+        {
+            delete m_pcbIFaceList.at(i);
+            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+        }
+
+    if (m_pDSPInterFace)
     {
-        delete m_pcbIFaceList.at(i);
-        m_pProxy->releaseConnection(m_pcbClientList.at(i));
+        delete m_pDSPInterFace;
+        m_pProxy->releaseConnection(m_pDspClient);
     }
+
     m_pProxy->releaseConnection(m_pRMClient);
 }
 
@@ -201,7 +212,7 @@ void cOsciModuleMeasProgram::deleteInterface()
 void cOsciModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values
-    m_pTmpDataDsp = m_pDSPIFace->getMemHandle("TmpData");
+    m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_ActValueList.count() * m_nSRate, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem(new cDspVar("WORKSPACE", 2 * m_nSRate, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
@@ -211,11 +222,11 @@ void cOsciModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addVarItem( new cDspVar("DFTREF", 2, DSPDATA::vDspTemp));
 
     // a handle for parameter
-    m_pParameterDSP =  m_pDSPIFace->getMemHandle("Parameter");
+    m_pParameterDSP =  m_pDSPInterFace->getMemHandle("Parameter");
     m_pParameterDSP->addVarItem( new cDspVar("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt));
 
     // and one for actual values
-    m_pActualValuesDSP = m_pDSPIFace->getMemHandle("ActualValues");
+    m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
     m_pActualValuesDSP->addVarItem( new cDspVar("VALXOSCI",m_ActValueList.count() * m_ConfigData.m_nInterpolation, DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
@@ -225,9 +236,9 @@ void cOsciModuleMeasProgram::setDspVarList()
 
 void cOsciModuleMeasProgram::deleteDspVarList()
 {
-    m_pDSPIFace->deleteMemHandle(m_pTmpDataDsp);
-    m_pDSPIFace->deleteMemHandle(m_pParameterDSP);
-    m_pDSPIFace->deleteMemHandle(m_pActualValuesDSP);
+    m_pDSPInterFace->deleteMemHandle(m_pTmpDataDsp);
+    m_pDSPInterFace->deleteMemHandle(m_pParameterDSP);
+    m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
 }
 
 
@@ -235,61 +246,61 @@ void cOsciModuleMeasProgram::setDspCmdList()
 {
     QString s;
 
-    m_pDSPIFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_pDSPIFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_ActValueList.count() * m_nSRate) ); // clear meassignal
-        m_pDSPIFace->addCycListItem( s = QString("SETVAL(GAPCOUNT,%1)").arg(m_ConfigData.m_nGap)); // we start with the first period
-        m_pDSPIFace->addCycListItem( s = QString("SETVAL(GAPPAR,%1)").arg(m_ConfigData.m_nGap+1)); // our value to reload gap
-        m_pDSPIFace->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(m_measChannelInfoHash.value(m_ConfigData.m_RefChannel.m_sPar).dspChannelNr));
-        m_pDSPIFace->addCycListItem( s = QString("SETVAL(DEBUGCOUNT,0)"));
-        m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-    m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_ActValueList.count() * m_nSRate) ); // clear meassignal
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(GAPCOUNT,%1)").arg(m_ConfigData.m_nGap)); // we start with the first period
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(GAPPAR,%1)").arg(m_ConfigData.m_nGap+1)); // our value to reload gap
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(m_measChannelInfoHash.value(m_ConfigData.m_RefChannel.m_sPar).dspChannelNr));
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(DEBUGCOUNT,0)"));
+        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // now lets do our sampling job if necessary
 
 
     // next 3 commands for debug purpose , will be removed later
-    m_pDSPIFace->addCycListItem( s = "INC(DEBUGCOUNT)");
-    m_pDSPIFace->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
-    m_pDSPIFace->addCycListItem( s = "BREAK(1)");
+    m_pDSPInterFace->addCycListItem( s = "INC(DEBUGCOUNT)");
+    m_pDSPInterFace->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
+    m_pDSPInterFace->addCycListItem( s = "BREAK(1)");
 
-    m_pDSPIFace->addCycListItem( s = "INC(GAPCOUNT)");
-    m_pDSPIFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
-    m_pDSPIFace->addCycListItem( s = "TESTVVSKIPEQ(GAPCOUNT,GAPPAR)");
-    m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
+    m_pDSPInterFace->addCycListItem( s = "INC(GAPCOUNT)");
+    m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
+    m_pDSPInterFace->addCycListItem( s = "TESTVVSKIPEQ(GAPCOUNT,GAPPAR)");
+    m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
 
-    m_pDSPIFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
-        m_pDSPIFace->addCycListItem( s = "SETVAL((GAPCOUNT,0)"); // next gap
+    m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
+        m_pDSPInterFace->addCycListItem( s = "SETVAL((GAPCOUNT,0)"); // next gap
 
         // we compute the phase of our reference channel first
-        m_pDSPIFace->addCycListItem( s = QString("COPYDATAIND(REFCHN,0,WORKSPACE)"));
-        m_pDSPIFace->addCycListItem( s = QString("DFT(1,WORKSPACE,DFTREF)"));
-        m_pDSPIFace->addCycListItem( s = QString("GENADR(WORKSPACE,DFTREF,IPOLADR)"));
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDATAIND(REFCHN,0,WORKSPACE)"));
+        m_pDSPInterFace->addCycListItem( s = QString("DFT(1,WORKSPACE,DFTREF)"));
+        m_pDSPInterFace->addCycListItem( s = QString("GENADR(WORKSPACE,DFTREF,IPOLADR)"));
 
         // now we do all necessary for each channel we work on
         for (int i = 0; i < m_ActValueList.count(); i++)
         {
-            m_pDSPIFace->addCycListItem( s = QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(m_nSRate).arg(i * m_nSRate));
-            m_pDSPIFace->addCycListItem( s = QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).dspChannelNr)
+            m_pDSPInterFace->addCycListItem( s = QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(m_nSRate).arg(i * m_nSRate));
+            m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).dspChannelNr)
                                                                                      .arg(m_nSRate));
 
-            m_pDSPIFace->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,VALXOSCI+%2)")
+            m_pDSPInterFace->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,VALXOSCI+%2)")
                                              .arg(m_ConfigData.m_nInterpolation)
                                              .arg(i * m_ConfigData.m_nInterpolation));
-            m_pDSPIFace->addCycListItem( s = QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(m_nSRate).arg(m_nSRate).arg(i * m_nSRate));
+            m_pDSPInterFace->addCycListItem( s = QString("COPYMEM(%1,WORKSPACE+%2,MEASSIGNAL+%3)").arg(m_nSRate).arg(m_nSRate).arg(i * m_nSRate));
 
         }
 
-        m_pDSPIFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-        m_pDSPIFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
+        m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
 
-    m_pDSPIFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
+    m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
 
 }
 
 
 void cOsciModuleMeasProgram::deleteDspCmdList()
 {
-    m_pDSPIFace->clearCmdList();
+    m_pDSPInterFace->clearCmdList();
 }
 
 
@@ -681,6 +692,7 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 void cOsciModuleMeasProgram::resourceManagerConnect()
 {
     // as this is our entry point when activating the module, we do some initialization first
+    m_pRMInterface = new Zera::Server::cRMInterface();
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.socket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
@@ -698,12 +710,11 @@ void cOsciModuleMeasProgram::resourceManagerConnect()
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    // and then we set resource manager interface's connection
+    m_pRMInterface->setClient(m_pRMClient);
     m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
-    // todo insert timer for timeout
-
     connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pProxy->startConnection(m_pRMClient);
 }
 
 
@@ -753,7 +764,7 @@ void cOsciModuleMeasProgram::pcbserverConnect()
     // we have to connect to all ports....
     channelInfoReadList = m_measChannelInfoHash.keys(); // so first we look for our different pcb sockets
     m_nConnectionCount = channelInfoReadList.count();
-    for (int i = 0; i < m_nConnectionCount; i++)
+    for (int i = 0; i < channelInfoReadList.count(); i++)
     {
         QString key = channelInfoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
@@ -767,9 +778,8 @@ void cOsciModuleMeasProgram::pcbserverConnect()
         m_measChannelInfoHash[key] = mi;
         connect(pcbClient, SIGNAL(connected()), this, SLOT(monitorConnection())); // here we wait until all connections are established
         connect(pcbIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+        m_pProxy->startConnection(pcbClient);
     }
-
-    connect(m_pDSPIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
 }
 
 
@@ -809,20 +819,28 @@ void cOsciModuleMeasProgram::readDspChannel()
 void cOsciModuleMeasProgram::readDspChannelDone()
 {
     if (channelInfoReadList.isEmpty())
-    {
-        // now we have all information to setup our var and cmd lists
-        setDspVarList(); // first we set the var list for our dsp
-        setDspCmdList(); // and the cmd list he has to work on
         emit activationContinue();
-    }
     else
         emit activationLoop();
 }
 
 
+void cOsciModuleMeasProgram::dspserverConnect()
+{
+    m_pDspClient = m_pProxy->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
+    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pDSPInterFace->setClient(m_pDspClient);
+    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
+    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pProxy->startConnection(m_pDspClient);
+}
+
+
 void cOsciModuleMeasProgram::claimPGRMem()
 {
-  m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPIFace->cmdListCount())] = claimpgrmem;
+    setDspVarList(); // first we set the var list for our dsp
+    setDspCmdList(); // and the cmd list he has to work on
+    m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
 
 
@@ -834,19 +852,19 @@ void cOsciModuleMeasProgram::claimUSERMem()
 
 void cOsciModuleMeasProgram::varList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->varList2Dsp()] = varlist2dsp;
+    m_MsgNrCmdList[m_pDSPInterFace->varList2Dsp()] = varlist2dsp;
 }
 
 
 void cOsciModuleMeasProgram::cmdList2DSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->cmdList2Dsp()] = cmdlist2dsp;
+    m_MsgNrCmdList[m_pDSPInterFace->cmdList2Dsp()] = cmdlist2dsp;
 }
 
 
 void cOsciModuleMeasProgram::activateDSP()
 {
-    m_MsgNrCmdList[m_pDSPIFace->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
+    m_MsgNrCmdList[m_pDSPInterFace->activateInterface()] = activatedsp; // aktiviert die var- und cmd-listen im dsp
 }
 
 
@@ -869,7 +887,7 @@ void cOsciModuleMeasProgram::deactivateDSP()
     deleteDspVarList();
     deleteDspCmdList();
 
-    m_MsgNrCmdList[m_pDSPIFace->deactivateInterface()] = deactivatedsp; // wat wohl
+    m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
@@ -888,7 +906,7 @@ void cOsciModuleMeasProgram::freeUSERMem()
 void cOsciModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(m_pRMInterface, 0, this, 0);
-    disconnect(m_pDSPIFace, 0, this, 0);
+    disconnect(m_pDSPInterFace, 0, this, 0);
     for (int i = 0; m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
     emit deactivated();
@@ -898,13 +916,13 @@ void cOsciModuleMeasProgram::deactivateDSPdone()
 void cOsciModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
-    m_MsgNrCmdList[m_pDSPIFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
 
 void cOsciModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPIFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
     emit actualValues(&m_ModuleActualValues); // and send them
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
@@ -933,8 +951,8 @@ void cOsciModuleMeasProgram::dataReadDSP()
 void cOsciModuleMeasProgram::newRefChannel(QVariant chn)
 {
     m_ConfigData.m_RefChannel.m_sPar = chn.toString();
-    m_pDSPIFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(m_ConfigData.m_RefChannel.m_sPar).dspChannelNr));
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(m_ConfigData.m_RefChannel.m_sPar).dspChannelNr));
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
 
 

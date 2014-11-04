@@ -731,7 +731,7 @@ void cRangeMeasChannel::rmConnect()
     // todo insert timer for timeout
 
     connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-
+    m_pProxy->startConnection(m_pRMClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
     // nein -> fehler activierung
@@ -785,6 +785,7 @@ void cRangeMeasChannel::pcbConnection()
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pProxy->startConnection(m_pPCBClient);
 }
 
 

@@ -44,6 +44,12 @@ public:
     cProxyClient* getConnection(quint16 port);
 
     /**
+     * @brief startConnection
+     * @param client, that wants it's interface to be started
+    */
+    void startConnection(cProxyClient *client);
+
+    /**
      * @brief releaseConnection
      * @param cProxyClient*
      * @return true if connection is released

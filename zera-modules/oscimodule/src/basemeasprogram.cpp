@@ -3,8 +3,8 @@
 namespace OSCIMODULE
 {
 
-cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer *peer, Zera::Server::cDSPInterface* iface)
-    :m_pProxy(proxy), m_pPeer(peer), m_pDSPIFace(iface)
+cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer *peer)
+    :m_pProxy(proxy), m_pPeer(peer)
 {
 }
 

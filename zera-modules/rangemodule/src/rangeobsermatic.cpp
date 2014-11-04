@@ -5,6 +5,8 @@
 #include <veinpeer.h>
 #include <veinentity.h>
 #include <dspinterface.h>
+#include <proxy.h>
+#include <proxyclient.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -18,16 +20,17 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, VeinPeer *peer, Zera::Server::cDSPInterface* iface, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar)
-    :m_pModule(module), m_pPeer(peer), m_pDSPIFace(iface), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar)
+    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pDSPSocket(dsprmsocket), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
 {
-    m_activationInitState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrState);
+    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrDoneState);
-    m_activationMachine.addState(&m_activationInitState);
+    m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readGainCorrDoneState);
-    m_activationMachine.setInitialState(&m_activationInitState);
-    connect(&m_activationInitState, SIGNAL(entered()), SLOT(activationInit()));
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
+    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
     connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
     connect(&m_readGainCorrDoneState, SIGNAL(entered()), SLOT(readGainCorrDone()));
 
@@ -57,6 +60,8 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, VeinPeer *peer, Zera::S
 
 cRangeObsermatic::~cRangeObsermatic()
 {
+    delete m_pDSPInterFace;
+    m_pProxy->releaseConnection(m_pDspClient);
 }
 
 
@@ -381,26 +386,28 @@ QList<int> cRangeObsermatic::getGroupIndexList(int index)
 }
 
 
-void cRangeObsermatic::activationInit()
+void cRangeObsermatic::dspserverConnect()
 {
     // the alias list is correctly filled when activating range obsermatic
     // the module has first activated the channels before activating rangeobsermatic
     for (int i = 0; i < m_ChannelNameList.count(); i++)
         m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
 
-    m_pGainCorrection2DSP = m_pDSPIFace->getMemHandle("SCALEMEM");
-    m_pGainCorrection2DSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
-    m_pfScale =  m_pDSPIFace->data(m_pGainCorrection2DSP, "GAINCORRECTION2");
-
-    connect(m_pDSPIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    emit activationContinue(); // so we go on
+    m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_pDSPInterFace->setClient(m_pDspClient);
+    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_readGainCorrState);
+    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pProxy->startConnection(m_pDspClient);
 }
 
 
 void cRangeObsermatic::readGainCorr()
 {
     // qDebug() << "readGainCorr";
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrection2DSP)] = readgain2corr;
+    m_pGainCorrection2DSP = m_pDSPInterFace->getMemHandle("SCALEMEM");
+    m_pGainCorrection2DSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
+    m_pfScale =  m_pDSPInterFace->data(m_pGainCorrection2DSP, "GAINCORRECTION2");
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrection2DSP)] = readgain2corr;
 }
 
 
@@ -432,8 +439,8 @@ void cRangeObsermatic::readGainCorrDone()
 
 void cRangeObsermatic::deactivationInit()
 {
-    disconnect(m_pDSPIFace, 0, this, 0); // we disconnect from our dsp interface
-    m_pDSPIFace->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
+    disconnect(m_pDSPInterFace, 0, this, 0); // we disconnect from our dsp interface
+    m_pDSPInterFace->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
     emit deactivationContinue();
 }
 
@@ -447,7 +454,7 @@ void cRangeObsermatic::deactivationDone()
 void cRangeObsermatic::writeGainCorr()
 {
     // qDebug() << "writeGainCorr";
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
 }
 
 

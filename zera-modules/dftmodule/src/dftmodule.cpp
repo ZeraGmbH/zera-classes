@@ -78,12 +78,8 @@ void cDftModule::setupModule()
 
     errorMessage = new cModuleError(m_pPeer, "ERR_Message");
 
-    m_pDspProxyClient = m_pProxy->getConnection(pConfData->m_DSPServerSocket.m_sIP, pConfData->m_DSPServerSocket.m_nPort);
-    m_pDSPInterface = new Zera::Server::cDSPInterface();
-    m_pDSPInterface->setClient(m_pDspProxyClient);
-
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cDftModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, *pConfData);
+    m_pMeasProgram = new cDftModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

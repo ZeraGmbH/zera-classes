@@ -12,7 +12,7 @@
 #include "proxyprotobufwrapper.h"
 
 
-class ProtoNetPeer;
+
 
 namespace Zera
 {
@@ -23,6 +23,7 @@ class cProxy;
 class cProxyClient;
 class cProxyClientPrivate;
 class cProxyConnection;
+class cProxyNetPeer;
 
 class cProxyPrivate: public QObject
 {
@@ -36,6 +37,7 @@ protected:
     ~cProxyPrivate(){}
     cProxyClient* getConnection(QString ipadress, quint16 port);
     cProxyClient* getConnection(quint16 port);
+    void startConnection(cProxyClientPrivate *client);
     bool releaseConnection(cProxyClientPrivate *client);
 
     void setIPAdress(QString ipAddress);
@@ -61,7 +63,7 @@ private:
     Q_DECLARE_PUBLIC(cProxy)
 
     cProxyProtobufWrapper protobufWrapper;
-    ProtoNetPeer* searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
+    cProxyNetPeer *searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
     QHash<cProxyClientPrivate*, cProxyConnection*> m_ConnectionHash; // holds network connection for each client
     QHash<QByteArray, cProxyClientPrivate*> m_ClientHash; // information for faster redirecting
     QString m_sIPAdress; // ip adress for all zera servers, default localhost

@@ -109,26 +109,22 @@ void cRangeModule::setupModule()
         connect(pchn, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
     }
 
-    m_pDspProxyClient = m_pProxy->getConnection(pConfData->m_DSPServerSocket.m_sIP, pConfData->m_DSPServerSocket.m_nPort);
-    m_pDSPInterface = new Zera::Server::cDSPInterface();
-    m_pDSPInterface->setClient(m_pDspProxyClient);
-
     // we need some program that does the range handling (observation, automatic, setting and grouping)
     // it will also do the scaling job
-    m_pRangeObsermatic = new cRangeObsermatic(this, m_pPeer, m_pDSPInterface, pConfData->m_GroupList, pConfData->m_senseChannelList, pConfData->m_ObsermaticConfPar);
+    m_pRangeObsermatic = new cRangeObsermatic(this, m_pProxy, m_pPeer, &(pConfData->m_DSPServerSocket), pConfData->m_GroupList, pConfData->m_senseChannelList, pConfData->m_ObsermaticConfPar);
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pRangeObsermatic, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pRangeObsermatic, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, m_pPeer, m_pDSPInterface, pConfData->m_senseChannelList, pConfData->m_fAdjInterval);
+    m_pAdjustment = new cAdjustManagement(this, m_pProxy, m_pPeer, &(pConfData->m_DSPServerSocket), pConfData->m_senseChannelList, pConfData->m_fAdjInterval);
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pPeer, m_pDSPInterface, *pConfData);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
@@ -159,12 +155,6 @@ void cRangeModule::unsetModule()
         if (channelNrInfo) delete channelNrInfo;
         if (groupNrInfo) delete groupNrInfo;
         if (errorMessage) delete errorMessage;
-
-        if (m_pDSPInterface)
-        {
-            m_pProxy->releaseConnection(m_pDspProxyClient);
-            delete m_pDSPInterface;
-        }
     }
 }
 

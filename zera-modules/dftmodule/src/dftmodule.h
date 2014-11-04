@@ -65,8 +65,6 @@ protected:
     QFinalState m_DeactivationFinishedState;
 
 private:
-    Zera::Server::cDSPInterface* m_pDSPInterface;
-    Zera::Proxy::cProxyClient* m_pDspProxyClient;
     qint32 m_nActivationIt;
     cModuleError *errorMessage;
 

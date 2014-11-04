@@ -1,5 +1,7 @@
 #include <QSignalTransition>
 #include <dspinterface.h>
+#include <proxy.h>
+#include <proxyclient.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -10,26 +12,26 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module, VeinPeer* peer, Zera::Server::cDSPInterface* iface, QStringList chnlist, double interval)
-    :m_pRangemodule(module), m_pPeer(peer), m_pDSPIFace(iface), m_ChannelNameList(chnlist), m_fAdjInterval(interval)
+cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, VeinPeer* peer,  cSocket* dspsocket, QStringList chnlist, double interval)
+    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pDSPSocket(dspsocket), m_ChannelNameList(chnlist), m_fAdjInterval(interval)
 {
+    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+
     m_bAdjustTrigger = false;
     for (int i = 0; i < m_ChannelNameList.count(); i++) // we fetch all our real channels first
-        m_ChannelList.append(m_pRangemodule->getMeasChannel(m_ChannelNameList.at(i)));
+        m_ChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
 
     // and then set up our state machines
-
-    m_activationInitState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrState);
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readPhaseCorrState);
     m_readPhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readOffsetCorrState);
     m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readCorrDoneState);
-    m_activationMachine.addState(&m_activationInitState);
+    m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
     m_activationMachine.addState(&m_readOffsetCorrState);
     m_activationMachine.addState(&m_readCorrDoneState);
-    m_activationMachine.setInitialState(&m_activationInitState);
-    connect(&m_activationInitState, SIGNAL(entered()), SLOT(activationInit()));
+    m_activationMachine.setInitialState(&m_dspserverConnectState);
+    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
     connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
     connect(&m_readPhaseCorrState, SIGNAL(entered()), SLOT(readPhaseCorr()));
     connect(&m_readOffsetCorrState, SIGNAL(entered()), SLOT(readOffsetCorr()));
@@ -83,6 +85,8 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module, VeinPeer* peer, Zera:
 
 cAdjustManagement::~cAdjustManagement()
 {
+    delete m_pDSPInterFace;
+    m_pProxy->releaseConnection(m_pDspClient);
 }
 
 
@@ -111,47 +115,51 @@ void cAdjustManagement::deleteInterface()
 }
 
 
-void cAdjustManagement::activationInit()
+void cAdjustManagement::dspserverConnect()
 {
-    // we fetch a handle for each gain-, phase, offset correction for
-    // all possible channels because we do not know which channels become active
-
+    // we connect cmddone of our meas channels so we get informed if commands are finished
     for (int i = 0; i < m_ChannelList.count(); i++)
         connect(m_ChannelList.at(i), SIGNAL(cmdDone(quint32)), SLOT(catchChannelReply(quint32)));
 
-    connect(m_pDSPIFace, SIGNAL(serverAnswer(quint32, quint8,QVariant)), SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-
-    m_pGainCorrectionDSP = m_pDSPIFace->getMemHandle("GainCorrection");
-    m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
-    m_fGainCorr = m_pDSPIFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
-
-    m_pPhaseCorrectionDSP = m_pDSPIFace->getMemHandle("PhaseCorrection");
-    m_pPhaseCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
-    m_fPhaseCorr = m_pDSPIFace->data(m_pPhaseCorrectionDSP, "PHASECORRECTION");
-
-    m_pOffsetCorrectionDSP = m_pDSPIFace->getMemHandle("OffsetCorrection");
-    m_pOffsetCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
-    m_fOffsetCorr = m_pDSPIFace->data(m_pOffsetCorrectionDSP, "OFFSETCORRECTION");
-
-    emit activationContinue(); // so we go on
+    // we set up our dsp server connection
+    m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_pDSPInterFace->setClient(m_pDspClient);
+    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_readGainCorrState);
+    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pProxy->startConnection(m_pDspClient);
 }
 
 
 void cAdjustManagement::readGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
+    // we fetch a handle for each gain-, phase, offset correction for
+    // all possible channels because we do not know which channels become active
+
+    m_pGainCorrectionDSP = m_pDSPInterFace->getMemHandle("GainCorrection");
+    m_pGainCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+    m_fGainCorr = m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION");
+
+    m_pPhaseCorrectionDSP = m_pDSPInterFace->getMemHandle("PhaseCorrection");
+    m_pPhaseCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
+    m_fPhaseCorr = m_pDSPInterFace->data(m_pPhaseCorrectionDSP, "PHASECORRECTION");
+
+    m_pOffsetCorrectionDSP = m_pDSPInterFace->getMemHandle("OffsetCorrection");
+    m_pOffsetCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
+    m_fOffsetCorr = m_pDSPInterFace->data(m_pOffsetCorrectionDSP, "OFFSETCORRECTION");
+
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }
 
 
 void cAdjustManagement::readPhaseCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pPhaseCorrectionDSP)] = readphasecorr;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pPhaseCorrectionDSP)] = readphasecorr;
 }
 
 
 void cAdjustManagement::readOffsetCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryRead(m_pOffsetCorrectionDSP)] = readoffsetcorr;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pOffsetCorrectionDSP)] = readoffsetcorr;
 }
 
 
@@ -167,14 +175,14 @@ void cAdjustManagement::readCorrDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
-    disconnect(m_pDSPIFace, 0, this, 0);
+    disconnect(m_pDSPInterFace, 0, this, 0);
 
     for (int i = 0; i < m_ChannelList.count(); i++)
         disconnect(m_ChannelList.at(i), 0, this, 0);
 
-    m_pDSPIFace->deleteMemHandle(m_pGainCorrectionDSP);
-    m_pDSPIFace->deleteMemHandle(m_pPhaseCorrectionDSP);
-    m_pDSPIFace->deleteMemHandle(m_pOffsetCorrectionDSP);
+    m_pDSPInterFace->deleteMemHandle(m_pGainCorrectionDSP);
+    m_pDSPInterFace->deleteMemHandle(m_pPhaseCorrectionDSP);
+    m_pDSPInterFace->deleteMemHandle(m_pOffsetCorrectionDSP);
 
     emit deactivationContinue();
 }
@@ -188,19 +196,19 @@ void cAdjustManagement::deactivationDone()
 
 void cAdjustManagement::writeGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
 }
 
 
 void cAdjustManagement::writePhaseCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
 }
 
 
 void cAdjustManagement::writeOffsetCorr()
 {
-    m_MsgNrCmdList[m_pDSPIFace->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
 }
 
 

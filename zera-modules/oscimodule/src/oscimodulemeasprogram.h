@@ -68,7 +68,7 @@ class cOsciModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cOsciModuleConfigData& configdata);
+    cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cOsciModuleConfigData& configdata);
     virtual ~cOsciModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -125,6 +125,7 @@ private:
     QState m_readDspChannelState;
     QState m_readDspChannelDoneState;
 
+    QState m_dspserverConnectState;
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
     QState m_var2DSPState;
@@ -164,6 +165,7 @@ private slots:
     void readDspChannel();
     void readDspChannelDone();
 
+    void dspserverConnect();
     void claimPGRMem();
     void claimUSERMem();
     void varList2DSP();

@@ -103,7 +103,7 @@ class cPower1ModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cPower1ModuleMeasProgram(cPower1Module* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, Zera::Server::cDSPInterface* iface, cPower1ModuleConfigData& configdata);
+    cPower1ModuleMeasProgram(cPower1Module* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cPower1ModuleConfigData& configdata);
     virtual ~cPower1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -176,7 +176,8 @@ private:
     QState m_readResourceSourceInfoState;
     QState m_readResourceSourceInfoDoneState;
 
-    QState m_pcbserverConnectState;
+    QState m_pcbserverConnectState4measChannels;
+    QState m_pcbserverConnectState4freqChannels;
     QState m_readSampleRateState;
 
     QState m_readSenseChannelInformationState;
@@ -195,6 +196,7 @@ private:
     QState m_setSenseChannelRangeNotifierState;
     QState m_setSenseChannelRangeNotifierDoneState;
 
+    QState m_dspserverConnectState;
     QState m_claimPGRMemState;
     QState m_claimUSERMemState;
     QState m_var2DSPState;
@@ -248,7 +250,8 @@ private slots:
     void claimResourceSource();
     void claimResourceSourceDone();
 
-    void pcbserverConnect();
+    void pcbserverConnect4measChannels();
+    void pcbserverConnect4freqChannels();
     void readSampleRate();
     void readSenseChannelInformation();
     void readSenseChannelAlias();
@@ -266,6 +269,7 @@ private slots:
     void setSenseChannelRangeNotifier();
     void setSenseChannelRangeNotifierDone();
 
+    void dspserverConnect();
     void claimPGRMem();
     void claimUSERMem();
     void varList2DSP();
