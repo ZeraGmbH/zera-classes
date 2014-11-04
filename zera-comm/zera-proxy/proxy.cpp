@@ -30,6 +30,13 @@ cProxyClient* cProxy::getConnection(quint16 port)
 }
 
 
+void cProxy::startConnection(cProxyClient *client)
+{
+    Q_D(cProxy);
+    d->startConnection((cProxyClientPrivate*)client);
+}
+
+
 bool cProxy::releaseConnection(cProxyClient *client)
 {
     Q_D(cProxy);

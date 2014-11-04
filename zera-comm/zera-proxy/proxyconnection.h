@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QByteArray>
 
-class ProtoNetPeer;
+class cProxyNetPeer;
 
 namespace Zera
 {
@@ -13,12 +13,12 @@ namespace Proxy
 
 struct cProxyConnection
 {
-    cProxyConnection(QString ip, quint16 port, QByteArray uuid, ProtoNetPeer* client)
+    cProxyConnection(QString ip, quint16 port, QByteArray uuid, cProxyNetPeer* client)
         :m_sIP(ip), m_nPort(port), m_binUUID(uuid), m_pNetClient(client){}
     QString m_sIP;
     quint16 m_nPort;
     QByteArray m_binUUID;
-    ProtoNetPeer *m_pNetClient;
+    cProxyNetPeer *m_pNetClient;
 };
 
 }
