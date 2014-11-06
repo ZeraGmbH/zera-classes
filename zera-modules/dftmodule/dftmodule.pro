@@ -14,8 +14,8 @@ LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lvein-qt
-LIBS +=  -lMeasurementModuleInterface
-LIBS +=  -L$$shadowed($$PWD/../../libs)
+LIBS +=  -lzerabasemodule
+//LIBS +=  -L$$shadowed($$PWD/../../libs)
 
 
 INCLUDEPATH += ../interface \
@@ -31,41 +31,20 @@ CONFIG += plugin
 INCLUDEPATH += "src"
 
 SOURCES += \
-    src/basemodule.cpp \
-    src/moduleparameter.cpp \
-    src/basemoduleconfiguration.cpp \
-    src/moduleinfo.cpp \
-    src/basemeasprogram.cpp \
-    src/modulesignal.cpp \
-    src/moduleactivist.cpp \
     src/dftmodule.cpp \
     src/dftmodulefactory.cpp \
     src/dftmoduleconfiguration.cpp \
     src/dftmodulemeasprogram.cpp \
-    src/dftmoduleobservation.cpp \
-    src/moduleerror.cpp
+    src/dftmoduleobservation.cpp
 
 HEADERS += \
-    src/basemodule.h \
-    src/xmlsettings.h \
-    src/moduleparameter.h \
-    src/basemoduleconfiguration.h \
-    src/moduleinfo.h \
-    src/basemeasprogram.h \
-    src/socket.h \
-    src/modulesignal.h \
-    src/moduleactivist.h \
-    src/measchannelinfo.h \
-    src/reply.h \
     src/dftmodule.h \
     src/dftmoduleconfigdata.h \
     src/dftmoduleconfiguration.h \
     src/dftmodulefactory.h \
     src/dftmodulemeasprogram.h \
     src/dftmoduleobservation.h \
-    src/debug.h \
-    src/errormessages.h \
-    src/moduleerror.h
+    src/debug.h
 
 unix:!symbian {
     maemo5 {
