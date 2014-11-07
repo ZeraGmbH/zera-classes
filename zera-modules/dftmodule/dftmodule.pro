@@ -18,7 +18,7 @@ LIBS +=  -lzerabasemodule
 //LIBS +=  -L$$shadowed($$PWD/../../libs)
 
 
-INCLUDEPATH += ../interface \
+INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \

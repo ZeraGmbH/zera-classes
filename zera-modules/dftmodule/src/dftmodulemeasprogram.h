@@ -25,6 +25,12 @@ class QState;
 class QFinalState;
 
 
+class cModuleSignal;
+class cModuleParameter;
+class cModuleInfo;
+class cBaseModule;
+
+
 namespace DFTMODULE
 {
 
@@ -55,10 +61,6 @@ enum dftmoduleCmds
 
 #define irqNr 3
 
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
-class cBaseModule;
 class cDftModuleConfigData;
 class cDftModule;
 

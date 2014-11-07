@@ -76,7 +76,7 @@ void cDftModule::setupModule()
     cDftModuleConfigData* pConfData;
     pConfData = qobject_cast<cDftModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
+    errorMessage = new ::cModuleError(m_pPeer, "ERR_Message");
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cDftModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);

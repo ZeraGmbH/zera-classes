@@ -20,13 +20,15 @@ namespace Proxy {
 }
 
 
+class cModuleError;
+
+
 namespace DFTMODULE
 {
 
 class cDftModuleConfiguration;
 class cDftModuleMeasProgram;
 class cDftModuleObservation;
-class cModuleError;
 
 class cDftModule : public cBaseModule
 {
