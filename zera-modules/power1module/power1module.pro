@@ -14,10 +14,10 @@ LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lvein-qt
-LIBS +=  -lMeasurementModuleInterface
-LIBS +=  -L$$shadowed($$PWD/../../libs)
+LIBS +=  -lzerabasemodule
+//LIBS +=  -L$$shadowed($$PWD/../../libs)
 
-INCLUDEPATH += ../interface \
+INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \
@@ -30,44 +30,20 @@ CONFIG += plugin
 INCLUDEPATH += "src"
 
 SOURCES += \
-    src/basemodule.cpp \
-    src/moduleparameter.cpp \
-    src/basemoduleconfiguration.cpp \
-    src/moduleinfo.cpp \
-    src/basemeasprogram.cpp \
-    src/modulesignal.cpp \
-    src/moduleactivist.cpp \
-    src/moduleerror.cpp \
     src/power1module.cpp \
     src/power1moduleconfiguration.cpp \
     src/power1modulefactory.cpp \
     src/power1modulemeasprogram.cpp \
     src/power1moduleobservation.cpp \
-    src/measmodeinfo.cpp
 
 HEADERS += \
-    src/basemodule.h \
-    src/xmlsettings.h \
-    src/moduleparameter.h \
-    src/basemoduleconfiguration.h \
-    src/moduleinfo.h \
-    src/basemeasprogram.h \
-    src/socket.h \
-    src/modulesignal.h \
-    src/moduleactivist.h \
-    src/measchannelinfo.h \
-    src/reply.h \
     src/debug.h \
-    src/errormessages.h \
-    src/moduleerror.h \
     src/power1module.h \
     src/power1moduleconfigdata.h \
     src/power1moduleconfiguration.h \
     src/power1modulefactory.h \
     src/power1modulemeasprogram.h \
     src/power1moduleobservation.h \
-    src/foutinfo.h \
-    src/measmodeinfo.h
 
 unix:!symbian {
     maemo5 {

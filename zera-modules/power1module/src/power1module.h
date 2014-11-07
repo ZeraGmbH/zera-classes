@@ -9,6 +9,8 @@
 
 #include "basemodule.h"
 
+class cModuleError;
+
 namespace Zera {
 namespace Server {
  class cDSPInterface;
@@ -26,7 +28,7 @@ namespace POWER1MODULE
 class cPower1ModuleConfiguration;
 class cPower1ModuleMeasProgram;
 class cPower1ModuleObservation;
-class cModuleError;
+
 
 class cPower1Module : public cBaseModule
 {

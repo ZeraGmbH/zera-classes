@@ -14,6 +14,11 @@
 #include "foutinfo.h"
 
 
+class cModuleSignal;
+class cModuleParameter;
+class cModuleInfo;
+class cBaseModule;
+
 namespace Zera {
 namespace Proxy {
     class cProxy;
@@ -90,10 +95,7 @@ enum measmode
 
 #define irqNr 5
 
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
-class cBaseModule;
+
 class cPower1ModuleConfigData;
 class cPower1Module;
 
