@@ -45,7 +45,11 @@ HEADERS += \
     moduleinfo.h \
     basemoduleconfiguration.h \
     abstractmodulefactory.h \
-    virtualmodule.h
+    virtualmodule.h \
+    measmodeinfo.h \
+    foutinfo.h \
+    rangeinfo.h \
+    basemeaschannel.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -55,4 +59,6 @@ SOURCES += \
     basemoduleconfiguration.cpp \
     moduleinfo.cpp \
     moduleactivist.cpp \
-    basemodule.cpp
+    basemodule.cpp \
+    measmodeinfo.cpp \
+    basemeaschannel.cpp

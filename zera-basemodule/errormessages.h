@@ -25,7 +25,7 @@
 #define readPhaseCorrErrMsg "PCB read phase correction failed"
 #define readChannelStatusErrMsg "PCB read channel status failed"
 #define resetChannelStatusErrMsg "PCB reset channel status failed"
-
+#define readFormFactorErrMsg "PCB formfactor read failed"
 #define registerpcbnotifierErrMsg "PCB register notifier failed"
 #define unregisterpcbnotifierErrMsg "PCB unregister notifier failed"
 
