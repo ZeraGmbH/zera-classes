@@ -19,6 +19,7 @@ namespace Proxy {
 }
 }
 
+class cModuleError;
 
 namespace THDNMODULE
 {
@@ -26,7 +27,6 @@ namespace THDNMODULE
 class cThdnModuleConfiguration;
 class cThdnModuleMeasProgram;
 class cThdnModuleObservation;
-class cModuleError;
 
 class cThdnModule : public cBaseModule
 {

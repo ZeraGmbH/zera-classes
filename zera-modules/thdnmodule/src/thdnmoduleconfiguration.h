@@ -30,8 +30,8 @@ enum moduleconfigstate
 
 class cThdnModuleConfigData;
 
-const QString defaultXSDFile = "/etc/zera/modules/thdnmodule.xsd";
-//const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/thdnmodule/src/thdnmodule.xsd";
+//const QString defaultXSDFile = "/etc/zera/modules/thdnmodule.xsd";
+const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/thdnmodule/src/thdnmodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 

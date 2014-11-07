@@ -24,6 +24,9 @@ class QStateMachine;
 class QState;
 class QFinalState;
 
+class cModuleSignal;
+class cModuleParameter;
+class cModuleInfo;
 
 namespace THDNMODULE
 {
@@ -55,13 +58,8 @@ enum thdnmoduleCmds
 
 #define irqNr 4
 
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
-class cBaseModule;
 class cThdnModuleConfigData;
 class cThdnModule;
-
 
 class cThdnModuleMeasProgram: public cBaseMeasProgram
 {
