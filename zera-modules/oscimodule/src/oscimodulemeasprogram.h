@@ -11,6 +11,10 @@
 #include "basemeasprogram.h"
 #include "measchannelinfo.h"
 
+class cModuleSignal;
+class cModuleParameter;
+class cModuleInfo;
+
 namespace Zera {
 namespace Proxy {
     class cProxy;
@@ -55,13 +59,9 @@ enum oscimoduleCmds
 
 #define irqNr 6
 
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
 class cBaseModule;
 class cOsciModuleConfigData;
 class cOsciModule;
-
 
 class cOsciModuleMeasProgram: public cBaseMeasProgram
 {

@@ -14,10 +14,10 @@ LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lvein-qt
-LIBS +=  -lMeasurementModuleInterface
-LIBS +=  -L$$shadowed($$PWD/../../libs)
+LIBS +=  -lzerabasemodule
+//LIBS +=  -L$$shadowed($$PWD/../../libs)
 
-INCLUDEPATH += ../interface \
+INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \
@@ -30,14 +30,6 @@ CONFIG += plugin
 INCLUDEPATH += "src"
 
 SOURCES += \
-    src/basemodule.cpp \
-    src/moduleparameter.cpp \
-    src/basemoduleconfiguration.cpp \
-    src/moduleinfo.cpp \
-    src/basemeasprogram.cpp \
-    src/modulesignal.cpp \
-    src/moduleactivist.cpp \
-    src/moduleerror.cpp \
     src/oscimodule.cpp \
     src/oscimoduleconfiguration.cpp \
     src/oscimodulefactory.cpp \
@@ -45,20 +37,7 @@ SOURCES += \
     src/oscimoduleobservation.cpp
 
 HEADERS += \
-    src/basemodule.h \
-    src/xmlsettings.h \
-    src/moduleparameter.h \
-    src/basemoduleconfiguration.h \
-    src/moduleinfo.h \
-    src/basemeasprogram.h \
-    src/socket.h \
-    src/modulesignal.h \
-    src/moduleactivist.h \
-    src/measchannelinfo.h \
-    src/reply.h \
     src/debug.h \
-    src/errormessages.h \
-    src/moduleerror.h \
     src/oscimodule.h \
     src/oscimoduleconfigdata.h \
     src/oscimoduleconfiguration.h \

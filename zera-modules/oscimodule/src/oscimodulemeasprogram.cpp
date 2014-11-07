@@ -467,7 +467,7 @@ void cOsciModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     if (ok)
                     {
                         mi = m_measChannelInfoHash.take(channelInfoRead);
-                        mi.socket.m_nPort = port;
+                        mi.pcbServersocket.m_nPort = port;
                         m_measChannelInfoHash[channelInfoRead] = mi;
                         emit activationContinue();
                     }
@@ -695,7 +695,7 @@ void cOsciModuleMeasProgram::resourceManagerConnect()
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    mi.socket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
+    mi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
     for (int i = 0; i < m_ActValueList.count(); i++)
     {
         QStringList sl = m_ActValueList.at(i).split('-');
@@ -768,7 +768,7 @@ void cOsciModuleMeasProgram::pcbserverConnect()
     {
         QString key = channelInfoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
-        cSocket sock = mi.socket;
+        cSocket sock = mi.pcbServersocket;
         Zera::Proxy::cProxyClient* pcbClient = m_pProxy->getConnection(sock.m_sIP, sock.m_nPort);
         m_pcbClientList.append(pcbClient);
         Zera::Server::cPCBInterface* pcbIFace = new Zera::Server::cPCBInterface();

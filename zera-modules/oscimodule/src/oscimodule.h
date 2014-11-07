@@ -9,6 +9,8 @@
 
 #include "basemodule.h"
 
+class cModuleError;
+
 namespace Zera {
 namespace Server {
  class cDSPInterface;
@@ -26,7 +28,7 @@ namespace OSCIMODULE
 class cOsciModuleConfiguration;
 class cOsciModuleMeasProgram;
 class cOsciModuleObservation;
-class cModuleError;
+
 
 class cOsciModule : public cBaseModule
 {
