@@ -30,8 +30,8 @@ enum moduleconfigstate
 
 class cRmsModuleConfigData;
 
-const QString defaultXSDFile = "/etc/zera/modules/rmsmodule.xsd";
-//const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/rmsmodule/src/rmsmodule.xsd";
+//const QString defaultXSDFile = "/etc/zera/modules/rmsmodule.xsd";
+const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/rmsmodule/src/rmsmodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 

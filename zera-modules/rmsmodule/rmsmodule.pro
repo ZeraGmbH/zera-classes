@@ -14,11 +14,11 @@ LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lvein-qt
-LIBS +=  -lMeasurementModuleInterface
-LIBS +=  -L$$shadowed($$PWD/../../libs)
+LIBS +=  -lzerabasemodule
+//LIBS +=  -L$$shadowed($$PWD/../../libs)
 
 
-INCLUDEPATH += ../interface \
+INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \
@@ -31,41 +31,19 @@ CONFIG += plugin
 INCLUDEPATH += "src"
 
 SOURCES += \
-    src/basemodule.cpp \
-    src/moduleparameter.cpp \
-    src/basemoduleconfiguration.cpp \
-    src/moduleinfo.cpp \
-    src/basemeasprogram.cpp \
-    src/modulesignal.cpp \
-    src/moduleactivist.cpp \
     src/rmsmoduleconfiguration.cpp \
     src/rmsmodulefactory.cpp \
     src/rmsmodule.cpp \
     src/rmsmodulemeasprogram.cpp \
     src/rmsmoduleobservation.cpp \
-    src/moduleerror.cpp
 
 HEADERS += \
-    src/basemodule.h \
-    src/xmlsettings.h \
-    src/moduleparameter.h \
-    src/basemoduleconfiguration.h \
-    src/moduleinfo.h \
-    src/basemeasprogram.h \
-    src/socket.h \
-    src/modulesignal.h \
-    src/moduleactivist.h \
     src/rmsmoduleconfiguration.h \
     src/rmsmoduleconfigdata.h \
     src/rmsmodulemeasprogram.h \
     src/rmsmodulefactory.h \
     src/rmsmodule.h \
     src/rmsmoduleobservation.h \
-    src/measchannelinfo.h \
-    src/reply.h \
-    src/debug.h \
-    src/errormessages.h \
-    src/moduleerror.h
 
 unix:!symbian {
     maemo5 {

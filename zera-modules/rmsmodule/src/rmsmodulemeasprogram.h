@@ -24,6 +24,9 @@ class QStateMachine;
 class QState;
 class QFinalState;
 
+class cModuleSignal;
+class cModuleParameter;
+class cModuleInfo;
 
 namespace RMSMODULE
 {
@@ -56,13 +59,8 @@ enum rmsmoduleCmds
 
 #define irqNr 2
 
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
-class cBaseModule;
 class cRmsModuleConfigData;
 class cRmsModule;
-
 
 class cRmsModuleMeasProgram: public cBaseMeasProgram
 {

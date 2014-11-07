@@ -19,6 +19,7 @@ namespace Proxy {
 }
 }
 
+class cModuleError;
 
 namespace RMSMODULE
 {
@@ -26,7 +27,6 @@ namespace RMSMODULE
 class cRmsModuleConfiguration;
 class cRmsModuleMeasProgram;
 class cRmsModuleObservation;
-class cModuleError;
 
 class cRmsModule : public cBaseModule
 {
