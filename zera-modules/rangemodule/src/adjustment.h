@@ -27,6 +27,8 @@ namespace  Server {
 }
 }
 
+class cSocket;
+
 namespace RANGEMODULE
 {
 
@@ -48,7 +50,6 @@ enum adjustmentCmds
 
 class cRangeModule;
 class cRangeMeasChannel;
-class cSocket;
 
 class cAdjustManagement: public cModuleActivist
 {

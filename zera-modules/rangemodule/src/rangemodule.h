@@ -22,12 +22,13 @@ namespace Proxy {
 }
 }
 
+class cModuleInfo;
+class cModuleError;
+
 namespace RANGEMODULE
 {
 
 class cRangeMeasChannel;
-class cModuleInfo;
-class cModuleError;
 class cRangeModuleConfiguration;
 class cRangeModuleMeasProgram;
 class cAdjustManagement;

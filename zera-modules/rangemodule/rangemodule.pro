@@ -14,11 +14,11 @@ LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lvein-qt
-LIBS +=  -lMeasurementModuleInterface
-LIBS +=  -L$$shadowed($$PWD/../../libs)
+LIBS +=  -lzerabasemodule
+//LIBS +=  -L$$shadowed($$PWD/../../libs)
 
 
-INCLUDEPATH += ../interface \
+INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \
@@ -32,48 +32,25 @@ INCLUDEPATH += "src"
 
 SOURCES += \
     src/rangemodulefactory.cpp \
-    src/basemodule.cpp \
     src/rangemoduleconfiguration.cpp \
-    src/moduleparameter.cpp \
-    src/basemeaschannel.cpp \
     src/rangemeaschannel.cpp \
-    src/basemoduleconfiguration.cpp \
-    src/moduleinfo.cpp \
-    src/basemeasprogram.cpp \
     src/rangemodulemeasprogram.cpp \
     src/rangeobsermatic.cpp \
     src/adjustment.cpp \
-    src/modulesignal.cpp \
     src/rangemoduleobservation.cpp \
-    src/moduleactivist.cpp \
-    src/rangemodule.cpp \
-    src/moduleerror.cpp
+    src/rangemodule.cpp
 
 HEADERS += \
-    src/basemeaschannel.h \
     src/rangemodulefactory.h \
-    src/basemodule.h \
     src/rangemodule.h \
-    src/xmlsettings.h \
     src/rangemoduleconfiguration.h \
     src/rangemoduleconfigdata.h \
-    src/moduleparameter.h \
     src/rangemeaschannel.h \
-    src/rangeinfo.h \
-    src/basemoduleconfiguration.h \
-    src/moduleinfo.h \
-    src/basemeasprogram.h \
     src/rangemodulemeasprogram.h \
     src/rangeobsermatic.h \
-    src/socket.h \
     src/adjustment.h \
-    src/modulesignal.h \
     src/rangemoduleobservation.h \
-    src/moduleactivist.h \
-    src/reply.h \
-    src/moduleerror.h \
     src/debug.h \
-    src/errormessages.h
 
 unix:!symbian {
     maemo5 {

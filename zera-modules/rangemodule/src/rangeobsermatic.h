@@ -41,6 +41,9 @@ class VeinPeer;
 class VeinEntity;
 class cDspMeasData;
 
+class cModuleParameter;
+class cModuleSignal;
+class cModuleInfo;
 
 namespace RANGEMODULE
 {
@@ -56,11 +59,7 @@ enum rangeObsermaticCmds
 
 
 class cRangeModule;
-class cModuleParameter;
-class cModuleSignal;
-class cModuleInfo;
 class cRangeMeasChannel;
-
 
 class cRangeObsermatic: public cModuleActivist
 {
