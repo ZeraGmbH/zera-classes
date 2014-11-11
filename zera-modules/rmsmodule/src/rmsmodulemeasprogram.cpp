@@ -3,6 +3,7 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
+#include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
 #include <veinpeer.h>
@@ -27,6 +28,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
     m_ActValueList = m_ConfigData.m_valueChannelList;
 
@@ -138,18 +140,27 @@ cRmsModuleMeasProgram::~cRmsModuleMeasProgram()
     m_pProxy->releaseConnection(m_pDspClient);
 
     m_pProxy->releaseConnection(m_pRMClient);
+    delete m_pMovingwindowFilter;
 }
 
 
 void cRmsModuleMeasProgram::start()
 {
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    if (m_ConfigData.m_bmovingWindow)
+    {
+        m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
+        connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    }
+    else
+        connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cRmsModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
+    disconnect(m_pMovingwindowFilter, 0, 0, 0);
 }
 
 
@@ -219,8 +230,11 @@ void cRmsModuleMeasProgram::generateInterface()
     m_pRMSPNCountInfo = new cModuleInfo(m_pPeer, "INF_RMSPNCount", QVariant(n));
     m_pRMSPPCountInfo = new cModuleInfo(m_pPeer, "INF_RMSPPCount", QVariant(p));
 
-    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasInterval.m_fValue));
+    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasIntervalTime.m_fValue));
     m_pIntegrationTimeLimits = new cModuleInfo(m_pPeer, "PAR_INTEGRATIONTIME_LIMITS", QVariant(QString("%1;%2").arg(0.1).arg(100.0)));
+    m_pIntegrationPeriodParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONPERIOD", QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue));
+    m_pIntegrationPeriodLimits = new cModuleInfo(m_pPeer, "INF_INTEGRATIONPERIOD_LIMITS", QVariant(QString("%1;%2").arg(5).arg(10000)));
+
     m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
 }
 
@@ -286,8 +300,19 @@ void cRmsModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000.0)); // initial ti time  /* todo variabel */
-        m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
+        if (m_ConfigData.m_sIntegrationMode == "time")
+        {
+            if (m_ConfigData.m_bmovingWindow)
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fmovingwindowInterval*1000.0)); // initial ti time
+            else
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+
+            m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
+        }
+        else
+        {
+            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)); // initial ti time
+        }
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
@@ -308,20 +333,42 @@ void cRmsModuleMeasProgram::setDspCmdList()
     // and filter them
     m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,VALXRMS,FILTER)").arg(m_ActValueList.count())); // we add results to filter
 
-    m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
-    m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
+    if (m_ConfigData.m_sIntegrationMode == "time")
+    {
+        // in case intergration mode is time
+        m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
+        m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
-    m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
-        m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXRMSF)").arg(m_ActValueList.count()));
+        m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
+            m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
+            m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXRMSF)").arg(m_ActValueList.count()));
 
-        for (int i = 0; i < m_ActValueList.count(); i++)
-            m_pDSPInterFace->addCycListItem( s = QString("SQRT(VALXRMSF+%1,VALXRMSF+%2)").arg(i).arg(i));
+            for (int i = 0; i < m_ActValueList.count(); i++)
+                m_pDSPInterFace->addCycListItem( s = QString("SQRT(VALXRMSF+%1,VALXRMSF+%2)").arg(i).arg(i));
 
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) );
-        m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
-    m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
+            m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) );
+            m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+            m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
+        m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
+    }
+    else
+    {
+        // otherwise it is period
+        m_pDSPInterFace->addCycListItem( s = "TESTVVSKIPLT(N,TIPAR)");
+        m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0103)");
+        m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0103)");
+
+        m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0103)");
+            m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXRMSF)").arg(m_ActValueList.count()));
+
+            for (int i = 0; i < m_ActValueList.count(); i++)
+                m_pDSPInterFace->addCycListItem( s = QString("SQRT(VALXRMSF+%1,VALXRMSF+%2)").arg(i).arg(i));
+
+            m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) );
+            m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
+            m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0103)");
+        m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0103)"); // end processnr., mainchain 1 subchain 2
+    }
 }
 
 
@@ -901,6 +948,7 @@ void cRmsModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
     connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    connect(m_pIntegrationPeriodParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
 
     emit activated();
 }
@@ -980,10 +1028,32 @@ void cRmsModuleMeasProgram::dataReadDSP()
 void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     bool ok;
-    m_ConfigData.m_fMeasInterval.m_fValue = ti.toDouble(&ok);
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000)
-                                                                            .arg(0), DSPDATA::dInt);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    m_ConfigData.m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
+    if (m_ConfigData.m_sIntegrationMode == "time")
+    {
+        if (m_ConfigData.m_bmovingWindow)
+            m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        else
+        {
+            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
+                                                                                    .arg(0), DSPDATA::dInt);
+            m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+        }
+
+    }
+}
+
+
+void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
+{
+    bool ok;
+    m_ConfigData.m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
+    if (m_ConfigData.m_sIntegrationMode == "period")
+    {
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)
+                                    .arg(0), DSPDATA::dInt);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    }
 }
 
 }

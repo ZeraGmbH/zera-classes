@@ -44,8 +44,12 @@ void cRmsModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["rmsmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
 
     m_ConfigXMLMap["rmsmodconfpar:configuration:measure:values:n"] = setValueCount;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:measure:integrationmode"] = setIntegrationMode;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
+    m_ConfigXMLMap["rmsmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
 
-    m_ConfigXMLMap["rmsmodconfpar:parameter:interval"] = setMeasureInterval;
+    m_ConfigXMLMap["rmsmodconfpar:parameter:interval:time"] = setMeasureIntervalTime;
+    m_ConfigXMLMap["rmsmodconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -57,8 +61,11 @@ void cRmsModuleConfiguration::setConfiguration(QByteArray xmlString)
 QByteArray cRmsModuleConfiguration::exportConfiguration()
 {
     doubleParameter* dPar;
-    dPar = &m_pRmsModulConfigData->m_fMeasInterval;
+    dPar = &m_pRmsModulConfigData->m_fMeasIntervalTime;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+    intParameter* iPar;
+    iPar = &m_pRmsModulConfigData->m_nMeasIntervalPeriod;
+    m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nValue));
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -106,9 +113,22 @@ void cRmsModuleConfiguration::configXMLInfo(QString key)
             for (int i = 0; i < m_pRmsModulConfigData->m_nValueCount; i++)
                 m_ConfigXMLMap[QString("rmsmodconfpar:configuration:measure:values:val%1").arg(i+1)] = setValue1+i;
             break;
-        case setMeasureInterval:
-            m_pRmsModulConfigData->m_fMeasInterval.m_sKey = key;
-            m_pRmsModulConfigData->m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+        case setIntegrationMode:
+            m_pRmsModulConfigData->m_sIntegrationMode = m_pXMLReader->getValue(key);
+            break;
+        case setMovingwindowBool:
+            m_pRmsModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setMovingwindowTime:
+            m_pRmsModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setMeasureIntervalTime:
+            m_pRmsModulConfigData->m_fMeasIntervalTime.m_sKey = key;
+            m_pRmsModulConfigData->m_fMeasIntervalTime.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setMeasureIntervalPeriod:
+            m_pRmsModulConfigData->m_nMeasIntervalPeriod.m_sKey = key;
+            m_pRmsModulConfigData->m_nMeasIntervalPeriod.m_nValue = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         default:
             if ((cmd >= setValue1) && (cmd < setValue1 + 32))

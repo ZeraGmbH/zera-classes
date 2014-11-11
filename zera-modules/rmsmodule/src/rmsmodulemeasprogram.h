@@ -27,6 +27,7 @@ class QFinalState;
 class cModuleSignal;
 class cModuleParameter;
 class cModuleInfo;
+class cMovingwindowFilter;
 
 namespace RMSMODULE
 {
@@ -105,6 +106,8 @@ private:
     cModuleSignal* m_pMeasureSignal;
     cModuleParameter* m_pIntegrationTimeParameter;
     cModuleInfo* m_pIntegrationTimeLimits;
+    cModuleParameter* m_pIntegrationPeriodParameter;
+    cModuleInfo* m_pIntegrationPeriodLimits;
     cModuleInfo* m_pRMSPNCountInfo;
     cModuleInfo* m_pRMSPPCountInfo;
     cDspMeasData* m_pTmpDataDsp;
@@ -147,6 +150,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
+    cMovingwindowFilter* m_pMovingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
@@ -184,6 +188,7 @@ private slots:
     void dataReadDSP();
 
     void newIntegrationtime(QVariant ti);
+    void newIntegrationPeriod(QVariant period);
 
 };
 

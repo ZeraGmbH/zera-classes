@@ -44,6 +44,7 @@ HEADERS += \
     src/rmsmodulefactory.h \
     src/rmsmodule.h \
     src/rmsmoduleobservation.h \
+    src/debug.h
 
 unix:!symbian {
     maemo5 {
