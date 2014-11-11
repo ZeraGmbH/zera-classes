@@ -49,7 +49,8 @@ HEADERS += \
     measmodeinfo.h \
     foutinfo.h \
     rangeinfo.h \
-    basemeaschannel.h
+    basemeaschannel.h \
+    movingwindowfilter.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -61,4 +62,5 @@ SOURCES += \
     moduleactivist.cpp \
     basemodule.cpp \
     measmodeinfo.cpp \
-    basemeaschannel.cpp
+    basemeaschannel.cpp \
+    movingwindowfilter.cpp
