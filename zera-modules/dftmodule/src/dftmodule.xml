@@ -34,11 +34,15 @@
                         <val8>m4</val8>
                         <val9>m5</val9>
                     </values>
+                    <movingwindow>
+                        <on>1</on>
+                        <time>0.2</time>
+                    </movingwindow>
                 </measure>
 	</configuration>
 	
 	<parameter>
-                <interval>1.0</interval>
+                <interval>10.0</interval>
         </parameter>
 
 </dftmodconfpar>

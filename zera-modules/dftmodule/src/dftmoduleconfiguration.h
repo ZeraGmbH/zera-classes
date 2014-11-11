@@ -23,6 +23,8 @@ enum moduleconfigstate
     setDftOrder,
     setValueCount,
     setMeasureInterval,
+    setMovingwindowBool,
+    setMovingwindowTime,
 
     setValue1 = 20
 };

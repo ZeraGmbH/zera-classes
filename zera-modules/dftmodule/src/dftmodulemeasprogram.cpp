@@ -3,6 +3,7 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
+#include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
 #include <veinpeer.h>
@@ -27,6 +28,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cP
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
     m_ActValueList = m_ConfigData.m_valueChannelList;
 
@@ -139,18 +141,27 @@ cDftModuleMeasProgram::~cDftModuleMeasProgram()
     m_pProxy->releaseConnection(m_pDspClient);
 
     m_pProxy->releaseConnection(m_pRMClient);
+    delete m_pMovingwindowFilter;
 }
 
 
 void cDftModuleMeasProgram::start()
 {
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    if (m_ConfigData.m_bmovingWindow)
+    {
+        m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasInterval.m_fValue);
+        connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
+        connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    }
+    else
+        connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cDftModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
+    disconnect(m_pMovingwindowFilter, 0, 0, 0);
 }
 
 
@@ -289,7 +300,12 @@ void cDftModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_ActValueList.count()+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000.0)); // initial ti time  /* todo variabel */
+
+        if (m_ConfigData.m_bmovingWindow)
+            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fmovingwindowInterval*1000.0)); // initial ti time
+        else
+            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000.0)); // initial ti time
+
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -994,9 +1010,15 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     bool ok;
     m_ConfigData.m_fMeasInterval.m_fValue = ti.toDouble(&ok);
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000)
-                                                                            .arg(0), DSPDATA::dInt);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+
+    if (m_ConfigData.m_bmovingWindow)
+        m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasInterval.m_fValue);
+    else
+    {
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000)
+                                                                                .arg(0), DSPDATA::dInt);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    }
 }
 
 }

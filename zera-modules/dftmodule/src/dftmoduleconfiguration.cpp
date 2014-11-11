@@ -42,9 +42,10 @@ void cDftModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
-
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:values:nr"] = setDftOrder;
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:values:n"] = setValueCount;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
 
     m_ConfigXMLMap["dftmodconfpar:parameter:interval"] = setMeasureInterval;
 
@@ -109,6 +110,12 @@ void cDftModuleConfiguration::configXMLInfo(QString key)
             // here we generate dynamic hash entries for value channel configuration
             for (int i = 0; i < m_pDftModulConfigData->m_nValueCount; i++)
                 m_ConfigXMLMap[QString("dftmodconfpar:configuration:measure:values:val%1").arg(i+1)] = setValue1+i;
+            break;
+        case setMovingwindowBool:
+            m_pDftModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setMovingwindowTime:
+            m_pDftModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setMeasureInterval:
             m_pDftModulConfigData->m_fMeasInterval.m_sKey = key;

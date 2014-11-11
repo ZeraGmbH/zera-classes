@@ -29,7 +29,7 @@ class cModuleSignal;
 class cModuleParameter;
 class cModuleInfo;
 class cBaseModule;
-
+class cMovingwindowFilter;
 
 namespace DFTMODULE
 {
@@ -154,6 +154,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
+    cMovingwindowFilter* m_pMovingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
