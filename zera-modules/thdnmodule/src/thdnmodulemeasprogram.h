@@ -24,6 +24,7 @@ class QStateMachine;
 class QState;
 class QFinalState;
 
+class cMovingwindowFilter;
 class cModuleSignal;
 class cModuleParameter;
 class cModuleInfo;
@@ -147,6 +148,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
+    cMovingwindowFilter* m_pMovingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

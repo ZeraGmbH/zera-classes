@@ -43,7 +43,8 @@ HEADERS += \
     src/thdnmoduleconfiguration.h \
     src/thdnmodulefactory.h \
     src/thdnmodulemeasprogram.h \
-    src/thdnmoduleobservation.h
+    src/thdnmoduleobservation.h \
+    src/debug.h
 
 unix:!symbian {
     maemo5 {

@@ -42,6 +42,8 @@ void cThdnModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
     m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["thdnmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
+    m_ConfigXMLMap["thdnmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
 
     m_ConfigXMLMap["thdnmodconfpar:configuration:measure:values:n"] = setValueCount;
 
@@ -99,6 +101,12 @@ void cThdnModuleConfiguration::configXMLInfo(QString key)
             break;
         case setDSPServerPort:
             m_pThdnModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setMovingwindowBool:
+            m_pThdnModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setMovingwindowTime:
+            m_pThdnModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setValueCount:
             m_pThdnModulConfigData->m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);

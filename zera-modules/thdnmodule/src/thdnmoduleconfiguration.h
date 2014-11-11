@@ -22,6 +22,8 @@ enum moduleconfigstate
     setDSPServerPort,
     setValueCount,
     setMeasureInterval,
+    setMovingwindowBool,
+    setMovingwindowTime,
 
     setValue1 = 20
 };
