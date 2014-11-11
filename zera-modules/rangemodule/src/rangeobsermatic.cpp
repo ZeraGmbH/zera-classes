@@ -350,8 +350,9 @@ void cRangeObsermatic::setRanges(bool force)
             m_RangeActRejectionEntityList.at(i)->setValue(pmChn->getUrValue(), m_pPeer); // we first set information of channels actual urvalue
             m_RangeActOvrRejectionEntityList.at(i)->setValue(pmChn->getRangeUrvalueMax(), m_pPeer); // we additional set information of channels actual urvalue incl. reserve
 
-            //if (chn == 0)
+#ifdef DEBUG
             qDebug() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);
+#endif
         }
     }
 
