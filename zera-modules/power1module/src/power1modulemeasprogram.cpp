@@ -3,6 +3,7 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
+#include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
 #include <veinpeer.h>
@@ -28,6 +29,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSenseState);
@@ -252,19 +254,27 @@ cPower1ModuleMeasProgram::~cPower1ModuleMeasProgram()
     delete m_pDSPInterFace;
     m_pProxy->releaseConnection(m_pDspClient);
     m_pProxy->releaseConnection(m_pRMClient);
+    delete m_pMovingwindowFilter;
 }
 
 
 void cPower1ModuleMeasProgram::start()
 {
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    if (m_ConfigData.m_bmovingWindow)
+    {
+        m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
+        connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    }
+    else
+        connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cPower1ModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
-}
+    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
+    disconnect(m_pMovingwindowFilter, 0, 0, 0);}
 
 
 void cPower1ModuleMeasProgram::generateInterface()
@@ -396,7 +406,12 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
         if (m_ConfigData.m_sIntegrationMode == "time")
         {
-            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+
+            if (m_ConfigData.m_bmovingWindow)
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fmovingwindowInterval*1000.0)); // initial ti time
+            else
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+
             m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         }
         else
@@ -965,7 +980,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0103)"); // end processnr., mainchain 1 subchain 2
     }
 
-  }
+}
 
 
 void cPower1ModuleMeasProgram::deleteDspCmdList()
@@ -1944,6 +1959,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
     connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    connect(m_pIntegrationPeriodParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
     connect(m_pMeasuringmodeParameter, SIGNAL(updated(QVariant)), this , SLOT(newMeasMode(QVariant)));
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
@@ -2119,26 +2135,64 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
 }
 
 
-
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     bool ok;
     m_ConfigData.m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                    .arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
-                                                    .arg(0)
-                                                    .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    if (m_ConfigData.m_sIntegrationMode == "time")
+    {
+        if (m_ConfigData.m_bmovingWindow)
+            m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        else
+        {
+            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
+                                                            .arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
+                                                            .arg(0)
+                                                            .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+            m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+        }
+    }
+}
+
+
+void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
+{
+    bool ok;
+    m_ConfigData.m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
+    if (m_ConfigData.m_sIntegrationMode == "period")
+    {
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
+                                                        .arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)
+                                                        .arg(0)
+                                                        .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    }
 }
 
 
 void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 {
     m_ConfigData.m_sMeasuringMode.m_sValue = mm.toString();
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                    .arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
-                                                    .arg(0)
-                                                    .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+
+    if (m_ConfigData.m_sIntegrationMode == "time")
+    {
+        if (m_ConfigData.m_bmovingWindow)
+            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
+                                                            .arg(m_ConfigData.m_fmovingwindowInterval*1000)
+                                                            .arg(0)
+                                                            .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+        else
+            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
+                                                            .arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
+                                                            .arg(0)
+                                                            .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+    }
+    else
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
+                                                        .arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)
+                                                        .arg(0)
+                                                        .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     setActualValuesNames();
 }

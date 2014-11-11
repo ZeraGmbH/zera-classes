@@ -26,6 +26,8 @@ enum moduleconfigstate
     setMeasSystem3,
     set2WMeasSystem,
     setIntegrationMode,
+    setMovingwindowBool,
+    setMovingwindowTime,
     setNominalFrequency,
     setFrequencyActualizationMode,
     setFrequencyOutputCount,

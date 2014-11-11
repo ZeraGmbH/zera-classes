@@ -55,6 +55,8 @@ void cPower1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:system:pms2w"] = set2WMeasSystem;
 
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:integrationmode"] = setIntegrationMode;
+    m_ConfigXMLMap["pow1modconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
+    m_ConfigXMLMap["pow1modconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
 
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequency"] = setNominalFrequency;
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:frequencyact"] = setFrequencyActualizationMode;
@@ -63,6 +65,7 @@ void cPower1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["pow1modconfpar:parameter:measuringmode"] = setMeasuringMode;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:time"] = setMeasureIntervalTime;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
+
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -143,6 +146,12 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
             break;
         case setIntegrationMode:
             m_pPower1ModulConfigData->m_sIntegrationMode = m_pXMLReader->getValue(key);
+            break;
+        case setMovingwindowBool:
+            m_pPower1ModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+        case setMovingwindowTime:
+            m_pPower1ModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setNominalFrequency:
             m_pPower1ModulConfigData->m_nNominalFrequency = m_pXMLReader->getValue(key).toInt(&ok);

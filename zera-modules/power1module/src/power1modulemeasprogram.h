@@ -18,6 +18,7 @@ class cModuleSignal;
 class cModuleParameter;
 class cModuleInfo;
 class cBaseModule;
+class cMovingwindowFilter;
 
 namespace Zera {
 namespace Proxy {
@@ -231,6 +232,8 @@ private:
     QState m_readUrvalueDoneState;
     QFinalState m_setFrequencyScalesState;
 
+    cMovingwindowFilter* m_pMovingwindowFilter;
+
     void setActualValuesNames();
 
 private slots:
@@ -299,6 +302,7 @@ private slots:
     void setFrequencyScales();
 
     void newIntegrationtime(QVariant ti);
+    void newIntegrationPeriod(QVariant period);
     void newMeasMode(QVariant mm);
 };
 
