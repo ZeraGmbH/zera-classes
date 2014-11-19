@@ -32,7 +32,7 @@
             </values>
             <movingwindow>
                 <on>1</on>
-                <time>0.2</time>
+                <time>0.5</time>
             </movingwindow>
         </measure>
     </configuration>

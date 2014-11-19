@@ -85,6 +85,24 @@
     </xs:complexType>
 
 
+    <xs:simpleType name="channeltype">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="m0"/>
+            <xs:enumeration value="m1"/>
+            <xs:enumeration value="m2"/>
+            <xs:enumeration value="m3"/>
+            <xs:enumeration value="m4"/>
+            <xs:enumeration value="m5"/>
+            <xs:enumeration value="m6"/>
+            <xs:enumeration value="m7"/>
+            <xs:enumeration value="m8"/>
+            <xs:enumeration value="m9"/>
+            <xs:enumeration value="m10"/>
+            <xs:enumeration value="m11"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
     <xs:complexType name="measuretype">
         <xs:sequence>
             <xs:element name="values">
@@ -148,6 +166,7 @@
                 <xs:element name="parameter">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="refchannel" type="channeltype"/>
                             <xs:element name="interval" type="measureintervaltype"/>
                         </xs:sequence>
                     </xs:complexType>

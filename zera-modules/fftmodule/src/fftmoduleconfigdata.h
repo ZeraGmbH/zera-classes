@@ -17,6 +17,13 @@ struct doubleParameter
 };
 
 
+struct stringParameter
+{
+    QString m_sKey;
+    QString m_sPar;
+};
+
+
 class cFftModuleConfigData
 {
 public:
@@ -25,6 +32,7 @@ public:
     quint8 m_nFftOrder;
     quint8 m_nValueCount; // how many measurement values
     QStringList m_valueChannelList; // a list of channel or channel pairs we work on to generate our measurement values
+    stringParameter m_RefChannel;
     doubleParameter m_fMeasInterval; // measuring interval 0.1 .. 100.0 sec.
     double m_fmovingwindowInterval;
     bool m_bmovingWindow;

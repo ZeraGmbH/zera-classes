@@ -985,18 +985,19 @@ void cDftModuleMeasProgram::dataReadDSP()
         QString ts;
 
         if (sl.count() == 1)
-            ts = QString("DFT(%1)_%2:(%3,%4)[%5];").arg(m_ConfigData.m_nDftOrder)
-                                               .arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+            ts = QString("DFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                                               .arg(m_ConfigData.m_nDftOrder)
+
                                                .arg(m_ModuleActualValues.at(i*2))
                                                .arg(m_ModuleActualValues.at(i*2+1))
                                                .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
         else
-            ts = QString("DFT(%1)_%2-%3:(%4,%5)[%6];").arg(m_ConfigData.m_nDftOrder)
-                                                  .arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                                  .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
-                                                  .arg(m_ModuleActualValues.at(i*2))
-                                                  .arg(m_ModuleActualValues.at(i*2+1))
-                                                  .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            ts = QString("DFT(%1-%2(%3)):(%4,%5)[%6];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                                                       .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
+                                                       .arg(m_ConfigData.m_nDftOrder)
+                                                       .arg(m_ModuleActualValues.at(i*2))
+                                                       .arg(m_ModuleActualValues.at(i*2+1))
+                                                       .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
 
         s += ts;
     }

@@ -196,8 +196,9 @@ void cFftModuleMeasProgram::generateInterface()
         m_EntityActValueList.append(p_entity);
     }
 
+    m_pRefChannelParameter = new cModuleParameter(m_pPeer, "PAR_REFCHANNEL", m_ConfigData.m_RefChannel.m_sPar);
+    m_pRefChannelInfo = new cModuleInfo(m_pPeer, "INF_REFCHANNELLIST",QVariant(m_ConfigData.m_valueChannelList));
     m_pFftOrderInfo = new cModuleInfo(m_pPeer, "INF_FFTOrder", QVariant(m_ConfigData.m_nFftOrder));
-
     m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasInterval.m_fValue));
     m_pInfIntegrationTimeLimits = new cModuleInfo(m_pPeer, "PAR_INTEGRATIONTIME_LIMITS", QVariant(QString("%1;%2").arg(0.1).arg(100.0)));
     m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
@@ -222,6 +223,8 @@ void cFftModuleMeasProgram::deleteInterface()
     delete m_pIntegrationTimeParameter;
     delete m_pInfIntegrationTimeLimits;
     delete m_pMeasureSignal;
+    delete m_pRefChannelParameter;
+    delete m_pRefChannelInfo;
 }
 
 
@@ -230,25 +233,34 @@ void cFftModuleMeasProgram::setDspVarList()
     m_nfftLen = 2 << (int)(floor(log(m_ConfigData.m_nFftOrder)/log(2.0))+1.0); // our fft length
 
     // we fetch a handle for sampled data and other temporary values
+    // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
+    // at the beginning of that page because bitreversal adressing of fft only works properly if so
     m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSRate, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FFTINPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
+    // meassignal will also still fit in global mem ... so we save memory
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", 2 * m_nSRate, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_ActValueList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2 * 2 * m_nfftLen * m_ActValueList.count(),DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pTmpDataDsp->addVarItem( new cDspVar("DFTREF", 2, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem(new cDspVar("DEBUGCOUNT",1,DSPDATA::vDspTemp, DSPDATA::dInt));
 
     // a handle for parameter
     m_pParameterDSP =  m_pDSPInterFace->getMemHandle("Parameter");
     m_pParameterDSP->addVarItem( new cDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt));
+    m_pParameterDSP->addVarItem( new cDspVar("REFCHN",1, DSPDATA::vDspParam, DSPDATA::dInt));
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
     m_pActualValuesDSP->addVarItem( new cDspVar("VALXFFTF", 2 * m_nfftLen * m_ActValueList.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
-    m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
+    m_FFTModuleActualValues.resize(m_ActValueList.count() * m_ConfigData.m_nFftOrder * 2);
+    m_nDspMemUsed = m_pTmpDataDsp->getumemSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
 
@@ -267,34 +279,48 @@ void cFftModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_ActValueList.count()+1) ); // clear the whole filter incl. count
-
         if (m_ConfigData.m_bmovingWindow)
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fmovingwindowInterval*1000.0)); // initial ti time
         else
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval.m_fValue*1000.0)); // initial ti time
-
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(m_measChannelInfoHash.value(m_ConfigData.m_RefChannel.m_sPar).dspChannelNr));
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(DEBUGCOUNT,0)"));
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+
+    // we compute the phase of our reference channel first
+    m_pDSPInterFace->addCycListItem( s = QString("COPYDATAIND(REFCHN,0,MEASSIGNAL)"));
+    m_pDSPInterFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL,DFTREF)"));
+    m_pDSPInterFace->addCycListItem( s = QString("GENADR(MEASSIGNAL,DFTREF,IPOLADR)"));
+
+
+    // next 3 commands for debug purpose , will be removed later
+    //m_pDSPInterFace->addCycListItem( s = "INC(DEBUGCOUNT)");
+    //m_pDSPInterFace->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
+    //m_pDSPInterFace->addCycListItem( s = "BREAK(1)");
+
 
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ActValueList.count(); i++)
     {
         m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).dspChannelNr));
-        m_pDSPInterFace->addCycListItem( s = QString("INTERPOLATION(%1,MEASSIGNAL,FFTINPUT)").arg(m_nfftLen));
-        m_pDSPInterFace->addCycListItem( s = QString("FFTREAL(%1,FFTINPUT,FFTXOUTPUT+%2)").arg(m_nfftLen).arg(2 * m_nfftLen * i));
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).dspChannelNr).arg(m_nSRate));
+        m_pDSPInterFace->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,FFTINPUT)").arg(m_nfftLen));
+        m_pDSPInterFace->addCycListItem( s = QString("FFTREAL(%1,FFTINPUT,FFTOUTPUT)").arg(m_nfftLen));
+        m_pDSPInterFace->addCycListItem( s = QString("COPYMEM(%1,FFTOUTPUT,FFTXOUTPUT+%2)").arg(2 * m_nfftLen).arg(2 * m_nfftLen * i));
     }
 
     // and filter them
-    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,FFTXOUTPUT,FILTER)").arg(m_nfftLen * m_ActValueList.count())); // we add results to filter
+    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,FFTXOUTPUT,FILTER)").arg(2 * m_nfftLen * m_ActValueList.count())); // we add results to filter
 
     m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXFFTF)").arg(m_nfftLen * m_ActValueList.count()));
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * m_nfftLen * m_ActValueList.count()+1) );
+        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXFFTF)").arg(2 * m_nfftLen * m_ActValueList.count()));
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_ActValueList.count()+1) );
         m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -687,24 +713,23 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     int i;
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        /*
-        for (int i = 0; i < m_ActValueList.count(); i++)
+        int n = m_EntityActValueList.count();
+        for (i = 0; i < n; i++) // we set n fft "values"
         {
-            QList<double> osciList;
-            int offs = i * m_ConfigData.m_nInterpolation;
+            QList<double> fftList;
+            int m = m_ConfigData.m_nFftOrder;
+            int offs = i * m * 2;
 
-            for (int j = 0; j < m_ConfigData.m_nInterpolation; j++)
-                osciList.append(actualValues->at(offs + j));
+            for (int j = 0; j < m; j++)
+            {
+                fftList.append(actualValues->at(offs + j*2));
+                fftList.append(actualValues->at(offs + j*2 +1));
+            }
 
             QVariant list;
-            list = QVariant::fromValue<QList<double> >(osciList);
-            // qDebug() << list.value<QList<double> >();
+            list = QVariant::fromValue<QList<double> >(fftList);
             m_EntityActValueList.at(i)->setValue( list, m_pPeer); // and set entities
         }
-        */
-
-        for (i = 0; i < m_EntityActValueList.count(); i++) // we set n * m_nfftLen fft values
-        m_EntityActValueList.at(i)->setValue(QString("%1;%2").arg(actualValues->at(2*i)).arg(actualValues->at(2*i+1)), m_pPeer); // and set entities
     }
 }
 
@@ -897,7 +922,7 @@ void cFftModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
     connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
-
+    connect(m_pRefChannelParameter, SIGNAL(updated(QVariant)), SLOT(newRefChannel(QVariant)));
     emit activated();
 }
 
@@ -944,42 +969,55 @@ void cFftModuleMeasProgram::dataAcquisitionDSP()
 void cFftModuleMeasProgram::dataReadDSP()
 {
     m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-    // as our Fft produces math positive values, we correct them to technical positive values
-    for (int i = 0; i < m_ActValueList.count(); i++)
+
+    int nChannels, nHarmonic;
+    int middle, offs;
+    double scale;
+
+    nChannels = m_ActValueList.count();
+    nHarmonic = m_ConfigData.m_nFftOrder;
+
+    scale = 1.0/m_nfftLen;
+    middle = m_nfftLen >> 1; // the fft results are sym. ordered with pos. and neg. frequencies
+    offs = m_nfftLen << 1;
+
+    for (int i = 0; i < nChannels; i++)
     {
-        double im;
-        im = m_ModuleActualValues[i*2+1] * -1.0;
-        m_ModuleActualValues.replace(i*2+1, im);
+
+        m_FFTModuleActualValues.replace(i * nHarmonic, m_ModuleActualValues.at(i * offs) * scale); // special case dc
+        m_FFTModuleActualValues.replace(i * nHarmonic + 1, 0.0);
+
+        for (int j = 1; j < nHarmonic; j++)
+        {
+            double re, im;
+            // as our Fft produces math positive values, we correct them to technical positive values (*-1.0)
+            // also we change real and imag. parts because we are interested in sine rather than cosine
+
+            re = (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
+            im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
+            m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1), im);
+            m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1) + 1, re);
+        }
     }
 
-    emit actualValues(&m_ModuleActualValues); // and send them
+    emit actualValues(&m_FFTModuleActualValues); // and send them
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    QString s;
+    QString s, ts;
     for (int i = 0; i < m_ActValueList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
-        QString ts;
-
-        if (sl.count() == 1)
-            ts = QString("Fft(%1)_%2:(%3,%4)[%5];").arg(m_ConfigData.m_nFftOrder)
-                                               .arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                               .arg(m_ModuleActualValues.at(i*2))
-                                               .arg(m_ModuleActualValues.at(i*2+1))
-                                               .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-        else
-            ts = QString("Fft(%1)_%2-%3:(%4,%5)[%6];").arg(m_ConfigData.m_nFftOrder)
-                                                  .arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                                  .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
-                                                  .arg(m_ModuleActualValues.at(i*2))
-                                                  .arg(m_ModuleActualValues.at(i*2+1))
-                                                  .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-
-        s += ts;
+        for (int j = 0; j < m_ConfigData.m_nFftOrder; j++)
+        {
+            ts = QString("FFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
+                                                    .arg(j)
+                                                    .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)))
+                                                    .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)+1))
+                                                    .arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).unit);
+            s += ts;
+        }
+        qDebug() << s;
     }
-
-    qDebug() << s;
 #endif
 }
 
@@ -999,6 +1037,13 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
     }
 }
 
+
+void cFftModuleMeasProgram::newRefChannel(QVariant chn)
+{
+    m_ConfigData.m_RefChannel.m_sPar = chn.toString();
+    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(m_ConfigData.m_RefChannel.m_sPar).dspChannelNr));
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+}
 }
 
 

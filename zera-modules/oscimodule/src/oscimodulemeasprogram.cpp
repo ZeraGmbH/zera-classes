@@ -259,9 +259,9 @@ void cOsciModuleMeasProgram::setDspCmdList()
 
 
     // next 3 commands for debug purpose , will be removed later
-    m_pDSPInterFace->addCycListItem( s = "INC(DEBUGCOUNT)");
-    m_pDSPInterFace->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
-    m_pDSPInterFace->addCycListItem( s = "BREAK(1)");
+    // m_pDSPInterFace->addCycListItem( s = "INC(DEBUGCOUNT)");
+    // m_pDSPInterFace->addCycListItem( s = "TESTVCSKIPLT(DEBUGCOUNT,1000)");
+    // m_pDSPInterFace->addCycListItem( s = "BREAK(1)");
 
     m_pDSPInterFace->addCycListItem( s = "INC(GAPCOUNT)");
     m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
@@ -875,8 +875,6 @@ void cOsciModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
     connect(m_pRefChannelParameter, SIGNAL(updated(QVariant)), SLOT(newRefChannel(QVariant)));
-
-
     emit activated();
 }
 

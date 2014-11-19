@@ -47,6 +47,7 @@ void cFftModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["fftmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
     m_ConfigXMLMap["fftmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
 
+    m_ConfigXMLMap["fftmodconfpar:parameter:refchannel"] = setRefChannel;
     m_ConfigXMLMap["fftmodconfpar:parameter:interval"] = setMeasureInterval;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
@@ -116,6 +117,10 @@ void cFftModuleConfiguration::configXMLInfo(QString key)
             break;
         case setMovingwindowTime:
             m_pFftModulConfigData->m_fmovingwindowInterval = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setRefChannel:
+            m_pFftModulConfigData->m_RefChannel.m_sKey = key;
+            m_pFftModulConfigData->m_RefChannel.m_sPar = m_pXMLReader->getValue(key);
             break;
         case setMeasureInterval:
             m_pFftModulConfigData->m_fMeasInterval.m_sKey = key;

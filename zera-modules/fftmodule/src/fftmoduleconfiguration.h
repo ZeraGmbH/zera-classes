@@ -22,6 +22,7 @@ enum moduleconfigstate
     setDSPServerPort,
     setFftorder,
     setValueCount,
+    setRefChannel,
     setMeasureInterval,
     setMovingwindowBool,
     setMovingwindowTime,

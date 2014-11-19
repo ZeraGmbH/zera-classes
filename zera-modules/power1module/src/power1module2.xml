@@ -43,8 +43,8 @@
                 </system>
                 <integrationmode>time</integrationmode>
                 <movingwindow>
-                    <on>1</on>
-                    <time>0.2</time>
+                    <on>0</on>
+                    <time>0.5</time>
                 </movingwindow>
         </measure>
         <frequencyoutput>

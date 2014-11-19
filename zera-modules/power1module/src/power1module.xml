@@ -63,7 +63,7 @@
     <parameter>
         <measuringmode>4LW</measuringmode>
         <interval>
-            <time>4.0</time>
+            <time>10.0</time>
             <period>200</period>
         </interval>
     </parameter>

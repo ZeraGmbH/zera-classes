@@ -108,6 +108,8 @@ private:
     QString channelInfoRead; // the actual channel info we are working on
     quint32 m_nSRate; // number of samples / signal period
 
+    cModuleParameter* m_pRefChannelParameter;
+    cModuleInfo* m_pRefChannelInfo;
     cModuleSignal* m_pMeasureSignal;
     cModuleParameter* m_pIntegrationTimeParameter;
     cModuleInfo* m_pInfIntegrationTimeLimits;
@@ -154,6 +156,7 @@ private:
 
     void setActualValuesNames();
     cMovingwindowFilter* m_pMovingwindowFilter;
+    QVector<float> m_FFTModuleActualValues;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
@@ -191,6 +194,7 @@ private slots:
     void dataReadDSP();
 
     void newIntegrationtime(QVariant ti);
+    void newRefChannel(QVariant chn);
 
 };
 

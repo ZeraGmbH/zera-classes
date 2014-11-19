@@ -36,14 +36,14 @@
             <integrationmode>time</integrationmode>
             <movingwindow>
                 <on>1</on>
-                <time>1.0</time>
+                <time>0.5</time>
             </movingwindow>
         </measure>
     </configuration>
 	
     <parameter>
         <interval>
-            <time>10.0</time>
+            <time>4.0</time>
             <period>200</period>
         </interval>
     </parameter>
