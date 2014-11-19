@@ -84,6 +84,21 @@ quint32 cDspMeasData::getSize(QString name)
 }
 
 
+quint32 cDspMeasData::getumemSize()
+{
+    quint32 size = 0;
+
+    if (DspVarList.count() > 0)
+    {
+        for (int i = 0; i < DspVarList.size(); ++i)
+            if (DspVarList.at(i)->type() != DSPDATA::vDspTempGlobal)
+                size += DspVarList.at(i)->size();
+    }
+
+    return size;
+}
+
+
 QString& cDspMeasData::VarList(int section, bool withType)
 {
     sReturn="";
@@ -96,7 +111,15 @@ QString& cDspMeasData::VarList(int section, bool withType)
         if ((section & pDspVar->type()) > 0) // do we want this value ?
         {
             if (withType)
-                ts << QString("%1,%2,%3;").arg(pDspVar->Name()).arg(pDspVar->size()).arg(pDspVar->datatype());
+            {
+                int seg;
+                if (pDspVar->type() == DSPDATA::vDspTempGlobal)
+                    seg = DSPDATA::globalSegment;
+                else
+                    seg = DSPDATA::localSegment;
+
+                ts << QString("%1,%2,%3,%4;").arg(pDspVar->Name()).arg(pDspVar->size()).arg(pDspVar->datatype()).arg(seg);
+            }
             else
                 ts << QString("%1,%2;").arg(pDspVar->Name()).arg(pDspVar->size());
         }

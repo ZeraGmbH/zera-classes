@@ -81,7 +81,7 @@ quint32 cDSPInterfacePrivate::varList2Dsp() // the complete list has several par
     for (int i = 0; i < m_DspMemoryDataList.count(); i++)
     {
         pDspMeasData = m_DspMemoryDataList.at(i);
-        ts << pDspMeasData->VarList(DSPDATA::vDspParam | DSPDATA::vDspTemp | DSPDATA::vDspResult, true);
+        ts << pDspMeasData->VarList(DSPDATA::vDspParam | DSPDATA::vDspTemp | DSPDATA::vDspResult | DSPDATA::vDspTempGlobal, true);
     }
 
     msgnr = sendCommand(cmd = QString("MEAS:LIST:RAVL"), vlist);

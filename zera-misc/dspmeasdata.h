@@ -17,6 +17,7 @@ public:
     void addVarItem(cDspVar*);
     quint32 getSize(); // number of all element in this container
     quint32 getSize(QString name); // number of elements of var name in this container
+    quint32 getumemSize();
     QString& VarList(int section, bool withType = false); // liste mit allen variablen mit längenangaben, optional mit data type
     QString& name();
     QString& writeCommand();
