@@ -47,7 +47,6 @@ public:
     cObsermaticConfPar m_ObsermaticConfPar;
     double m_fMeasInterval; // measuring interval 0.1 .. 5.0 sec.
     double m_fAdjInterval; // adjustment interval 0.5 .. 5.0 sec.
-    // QStringList m_senseChannelRangeList; // the wanted ranges after configuration
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
     cSocket m_DSPServerSocket;
