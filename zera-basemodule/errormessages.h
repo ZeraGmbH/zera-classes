@@ -20,6 +20,7 @@
 #define readrangeovrejectionErrMsg "PCB range overload rejection failed"
 #define readrangeavailErrMsg "PCB range avail info read failed"
 #define setRangeErrMsg "PCB set range failed"
+#define getRangeErrMsg "PCB get range failed"
 #define readGainCorrErrMsg "PCB read gain correction failed"
 #define readOffsetCorrErrMsg "PCB read offset correction failed"
 #define readPhaseCorrErrMsg "PCB read phase correction failed"
@@ -28,6 +29,7 @@
 #define readFormFactorErrMsg "PCB formfactor read failed"
 #define registerpcbnotifierErrMsg "PCB register notifier failed"
 #define unregisterpcbnotifierErrMsg "PCB unregister notifier failed"
+#define setPllErrMsg "PCB set pll failed"
 
 #define readdspgaincorrErrMsg "DSP read gain correction failed"
 #define readdspphasecorrErrMsg "DSP read phase correction failed"
