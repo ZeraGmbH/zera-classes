@@ -35,6 +35,10 @@ enum pcbcommands
     unregnotifier,
     pcbinterrupt,
     getsamplerate,
+    getaliassample,
+    getrangelistsample,
+    setrangesample,
+    setpllchannel,
 
     getaliassource,
     getdspchannelsource,
@@ -76,10 +80,16 @@ public:
     virtual quint32 getDSPChannelSource(QString chnName); // int
     virtual quint32 getFormFactorSource(QString chnName); // double
 
+    // all commands to sample interface
+    virtual quint32 getAliasSample(QString chnName); // qstring
+    virtual quint32 getSampleRate(); // int the actual set sampling rate
+    virtual quint32 getRangeListSample(QString chnName); // qstringlist
+    virtual quint32 setRangeSample(QString chnName, QString rngName);
+    virtual quint32 setPLLChannel(QString samplechnName, QString pllchnName);
+
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
-    virtual quint32 getSampleRate(); // int the actual set sampling rate
 
 protected slots:
     virtual void receiveAnswer(ProtobufMessage::NetMessage *message);

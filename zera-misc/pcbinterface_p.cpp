@@ -268,6 +268,61 @@ quint32 cPCBInterfacePrivate::getFormFactorSource(QString chnName)
 }
 
 
+quint32 cPCBInterfacePrivate::getAliasSample(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SAMP:%1:ALIAS?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getaliassample;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getSampleRate()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SAMP:SRAT?"));
+    m_MsgNrCmdList[msgnr] = getsamplerate;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getRangeListSample(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SAMP:%1:RANG:CAT?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getrangelistsample;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setRangeSample(QString chnName, QString rngName)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SAMP:%1:RANG").arg(chnName), par = QString("%1;").arg(rngName));
+    m_MsgNrCmdList[msgnr] = setrangesample;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setPLLChannel(QString samplechnName, QString pllchnName)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SAMP:%1:PLL").arg(samplechnName), par = QString("%1;").arg(pllchnName));
+    m_MsgNrCmdList[msgnr] = setpllchannel;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::registerNotifier(QString query, QString notifier)
 {
     QString cmd, par;
@@ -286,17 +341,6 @@ quint32 cPCBInterfacePrivate::unregisterNotifiers()
 
     msgnr = sendCommand(cmd = QString("SERV:UNR;"));
     m_MsgNrCmdList[msgnr] = unregnotifier;
-    return msgnr;
-}
-
-
-quint32 cPCBInterfacePrivate::getSampleRate()
-{
-    QString cmd;
-    quint32 msgnr;
-
-    msgnr = sendCommand(cmd = QString("SAMP:SRAT?"));
-    m_MsgNrCmdList[msgnr] = getsamplerate;
     return msgnr;
 }
 
@@ -344,10 +388,12 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getrange:
         case getalias2:
         case getaliassource:
+        case getaliassample:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
         case getrangelist:
+        case getrangelistsample:
             emit q->serverAnswer(lmsgnr, lreply, returnStringList(lmsg));
             break;
 
@@ -371,6 +417,8 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case regnotifier:
         case unregnotifier:
         case pcbinterrupt:
+        case setrangesample:
+        case setpllchannel:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }

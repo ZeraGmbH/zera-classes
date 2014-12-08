@@ -153,6 +153,13 @@ quint32 cPCBInterface::setRange(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterface::getAliasSample(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getAliasSample(chnName);
+}
+
+
 quint32 cPCBInterface::registerNotifier(QString query, QString notifier)
 {
     Q_D(cPCBInterface);
@@ -171,6 +178,27 @@ quint32 cPCBInterface::getSampleRate()
 {
     Q_D(cPCBInterface);
     return d->getSampleRate();
+}
+
+
+quint32 cPCBInterface::getRangeListSample(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getRangeListSample(chnName);
+}
+
+
+quint32 cPCBInterface::setRangeSample(QString chnName, QString rngName)
+{
+    Q_D(cPCBInterface);
+    return d->setRangeSample(chnName, rngName);
+}
+
+
+quint32 cPCBInterface::setPLLChannel(QString samplechnName, QString pllchnName)
+{
+    Q_D(cPCBInterface);
+    return d->setPLLChannel(samplechnName, pllchnName);
 }
 
 

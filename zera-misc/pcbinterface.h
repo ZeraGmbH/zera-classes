@@ -51,7 +51,14 @@ public:
     virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
+
+
+    // all commands to sample interface
+    virtual quint32 getAliasSample(QString chnName); // qstring
     virtual quint32 getSampleRate(); // int the actual set sampling rate
+    virtual quint32 getRangeListSample(QString chnName); // qstringlist
+    virtual quint32 setRangeSample(QString chnName, QString rngName);
+    virtual quint32 setPLLChannel(QString samplechnName, QString pllchnName);
 
     // all commands to source interface
     virtual quint32 getAliasSource(QString chnName); // qstring
