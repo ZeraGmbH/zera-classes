@@ -230,8 +230,9 @@ void cFftModuleMeasProgram::deleteInterface()
 
 void cFftModuleMeasProgram::setDspVarList()
 {
-    m_nfftLen = 2 << (int)(floor(log(m_ConfigData.m_nFftOrder)/log(2.0))+1.0); // our fft length
-
+    m_nfftLen = 2 << (int)(floor(log(m_ConfigData.m_nFftOrder-1)/log(2.0))); // our fft length
+    if (m_nfftLen < 32)
+        m_nfftLen = m_nfftLen << 1; // minimum fftlen is 32 !!!!
     // we fetch a handle for sampled data and other temporary values
     // global data segment is 1k words and lies on 1k boundary, so we put fftinput and fftouptut
     // at the beginning of that page because bitreversal adressing of fft only works properly if so
@@ -277,7 +278,7 @@ void cFftModuleMeasProgram::setDspCmdList()
     QString s;
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSRate) ); // clear meassignal
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(2*m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_ActValueList.count()+1) ); // clear the whole filter incl. count
         if (m_ConfigData.m_bmovingWindow)
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fmovingwindowInterval*1000.0)); // initial ti time
