@@ -52,14 +52,14 @@ void cMovingwindowFilter::setIntegrationtime(float time)
 
 void cMovingwindowFilter::addnewValues()
 {
-    QVector<float> tmpVector(*m_pActualValues);
+    QVector<float> newValues(*m_pActualValues);
 
-    m_ActValueFifoList.append(tmpVector); // we add our first values
+    m_ActValueFifoList.append(newValues); // we append the next values
     int n = m_ActValueFifoList.count();
 
-    for (int i = 0; i < tmpVector.count(); i++)
+    for (int i = 0; i < newValues.count(); i++)
     {
-        m_FifoSum.replace(i, m_FifoSum.at(i) + tmpVector.at(i));
+        m_FifoSum.replace(i, m_FifoSum.at(i) + newValues.at(i));
         m_ActualValues.replace(i, m_FifoSum.at(i) / n); // our filtered actual values
     }
 
@@ -77,11 +77,9 @@ void cMovingwindowFilter::initFilter()
 void cMovingwindowFilter::setupFilter()
 {
     m_integrationTimer.start((int)(m_fintegrationTime * 1000.0)); // while timer is running we'll fill the fifo
-    QVector<float> tmpVector(*m_pActualValues);
-    m_ActValueFifoList.append(tmpVector); // we add our first values
-    m_FifoSum = *m_pActualValues; // set the sum
-    m_ActualValues = *m_pActualValues; // and our internal actual values
-    emit actualValues(&m_ActualValues); // and also emit them
+    m_FifoSum.fill(0.0, m_pActualValues->size());
+    m_ActualValues.resize(m_pActualValues->size());
+    addnewValues();
 }
 
 
@@ -93,10 +91,11 @@ void cMovingwindowFilter::buildupFilter()
 
 void cMovingwindowFilter::doFilter()
 {
-    QVector<float> tmpVector(m_ActValueFifoList.at(0));
-    for (int i = 0; i < tmpVector.count(); i++)
+    QVector<float> removeValues = m_ActValueFifoList.at(0);
+
+    for (int i = 0; i < removeValues.count(); i++)
     {
-        m_FifoSum.replace(i, m_FifoSum.at(i) - tmpVector.at(i)); // we remove the first value from our sum
+        m_FifoSum.replace(i, m_FifoSum.at(i) - removeValues.at(i)); // we remove the first value from our sum
     }
 
     m_ActValueFifoList.removeFirst(); // and remove all values from our fifo

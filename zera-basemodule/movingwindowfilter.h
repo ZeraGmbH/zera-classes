@@ -30,9 +30,8 @@ private:
 
     QTimer m_integrationTimer;
     QList<QVector<float> > m_ActValueFifoList;
-    QVector<float> m_FifoSum; // the sums of our actualvalues fifo entries
+    QVector<double> m_FifoSum; // the sums of our actualvalues fifo entries
     QVector<float> m_ActualValues; // our new internal, filtered actualvalues
-
     QVector<float> *m_pActualValues; // the received actual values
 
     QStateMachine m_FilterStatemachine;
