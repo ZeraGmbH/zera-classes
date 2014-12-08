@@ -1007,11 +1007,12 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             if (m_bActive && !m_dataAcquisitionMachine.isRunning()) // in case of deactivation in progress, no dataaquisition
                 m_dataAcquisitionMachine.start();
             break;
-        case 2:
-        case 3:
-        case 4:
-        case 6:
-        case 7:
+        case irqNr+1:
+        case irqNr+2:
+        case irqNr+3:
+        case irqNr+4:
+        case irqNr+5:
+        case irqNr+6:
             // we got a sense:channel:range notifier
             // let's look what to do
         {
@@ -1885,7 +1886,7 @@ void cPower1ModuleMeasProgram::readSourceChannelInformationDone()
 
 void cPower1ModuleMeasProgram::setSenseChannelRangeNotifiers()
 {
-    notifierNr = 1;
+    notifierNr = irqNr;
     infoReadList = m_measChannelInfoHash.keys(); // we have to set notifier for each channel we are working on
     emit activationContinue();
 }
@@ -1895,7 +1896,7 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifier()
 {
     infoRead = infoReadList.takeFirst();
     notifierNr++;
-    // we will get 2 .. 7 for notification if ranges change
+    // we will get irq+1 .. irq+6 for notification if ranges change
     m_MsgNrCmdList[ m_measChannelInfoHash[infoRead].pcbIFace->registerNotifier(QString("sens:%1:rang?").arg(infoRead), QString("%1").arg(notifierNr))] = setchannelrangenotifier;
 
 }
