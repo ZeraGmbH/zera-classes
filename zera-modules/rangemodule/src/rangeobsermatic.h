@@ -98,8 +98,6 @@ private:
     quint32 m_nRangeSetPending;
     quint32 m_nReadStatusPending;
     QStringList m_actChannelRangeList; // a list of the actual ranges set
-    QString m_sActPllChannel;
-    QString m_sNewPllChannel;
     QVector<float> m_ActualValues; // here we find the actual values
 
     // our interface entities
