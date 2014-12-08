@@ -18,6 +18,9 @@ SUBDIRS     = \
             zera-modules/power1module \
             zera-modules/thdnmodule \
             zera-modules/oscimodule \
-            zera-modules/fftmodule
+            zera-modules/fftmodule \
+            zera-modules/samplemodule \
+            zera-modules/referencemodule
+
 
 
