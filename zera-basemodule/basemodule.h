@@ -51,6 +51,13 @@ public:
     virtual void stopModule();
 
 signals:
+    // signals to be used by activation and deactivation statemachine when ready
+    void activationReady();
+    void deactivationReady();
+    // signals for modulemanager notification
+    void moduleError(QString errorString);
+    void moduleActivated();
+    void moduleDeactivated();
     void sigRun();
     void sigRunFailed();
     void sigStop();
@@ -58,10 +65,6 @@ signals:
     void sigConfiguration(); // emitting this signal starts configuration
     void sigConfDone(); // emitted when configuration is done regardless of good or not
     void sigReconfigureContinue();
-
-    // signals to be used by activation and deactivation statemachine when ready
-    void activationReady();
-    void deactivationReady();
 
 protected:
     // additional states for IDLE
@@ -98,9 +101,6 @@ protected:
     virtual void unsetModule() = 0; // in case of reconfiguration we must unset module first
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
-
-    QStateMachine m_ActivationMachine; // we use statemachine for module activation
-    QStateMachine m_DeactivationMachine; // and deactivation
 
 private:
     QTimer m_ConfigTimer;

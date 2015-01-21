@@ -115,12 +115,6 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
 
 cBaseModule::~cBaseModule()
 {
-    delete m_pStateIdle;
-    delete m_pStateConfigure;
-    delete m_pStateRun;
-    delete m_pStateStop;
-    delete m_pStateFinished;
-
     delete m_pStateIDLEIdle;
     delete m_pStateIDLEConfXML;
     delete m_pStateIDLEConfSetup;
@@ -138,6 +132,12 @@ cBaseModule::~cBaseModule()
     delete m_pStateSTOPUnset;
     delete m_pStateSTOPConfXML;
     delete m_pStateSTOPConfSetup;
+
+    delete m_pStateIdle;
+    delete m_pStateConfigure;
+    delete m_pStateRun;
+    delete m_pStateStop;
+    delete m_pStateFinished;
 
     delete m_pStateMachine;
 }
@@ -235,6 +235,7 @@ void cBaseModule::entryRunDone()
     m_StateList.clear(); // we remove all states
     m_StateList.append(m_pStateRun); // and add run now
     m_nLastState = RUN; // we need this in case of reconfiguration
+    emit moduleActivated();
 }
 
 
@@ -268,5 +269,6 @@ void cBaseModule::entryStopDone()
     m_StateList.clear(); // we remove all states
     m_StateList.append(m_pStateStop); // and add run now
     m_nLastState = STOP; // we need this in case of reconfiguration
+    emit moduleActivated();
 }
 

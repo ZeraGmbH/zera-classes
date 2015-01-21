@@ -21,6 +21,7 @@
 #define readrangeavailErrMsg "PCB range avail info read failed"
 #define setRangeErrMsg "PCB set range failed"
 #define getRangeErrMsg "PCB get range failed"
+#define setMeasModeErrMsg "PCB set measuring mode failed"
 #define readGainCorrErrMsg "PCB read gain correction failed"
 #define readOffsetCorrErrMsg "PCB read offset correction failed"
 #define readPhaseCorrErrMsg "PCB read phase correction failed"

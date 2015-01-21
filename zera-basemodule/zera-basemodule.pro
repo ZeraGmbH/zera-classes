@@ -44,8 +44,6 @@ HEADERS += \
     basemodule.h \
     moduleinfo.h \
     basemoduleconfiguration.h \
-    abstractmodulefactory.h \
-    virtualmodule.h \
     measmodeinfo.h \
     foutinfo.h \
     rangeinfo.h \
