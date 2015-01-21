@@ -159,7 +159,7 @@ void cDftModule::activationFinished()
 void cDftModule::deactivationStart()
 {
     // if we get informed we have to reconfigure
-    disconnect(m_pDftModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(DftModuleReconfigure()));
+    disconnect(m_pDftModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(dftModuleReconfigure()));
 
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();

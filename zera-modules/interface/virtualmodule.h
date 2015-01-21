@@ -2,6 +2,7 @@
 #define MODULEOBJECT_H
 #include <QObject>
 #include <QList>
+#include <QStateMachine>
 
 QT_BEGIN_NAMESPACE
 
@@ -39,8 +40,18 @@ namespace ZeraModules
     virtual void startModule()=0;
     virtual void stopModule()=0;
 
-    //  signals:
-    //    void moduleError(QString errorString);
+      QStateMachine m_ActivationMachine; // we use statemachine for module activation
+      QStateMachine m_DeactivationMachine; // and deactivation
+
+    signals:
+      // signals to be used by activation and deactivation statemachine when ready
+      void activationReady();
+      void deactivationReady();
+
+      // signals for modulemanager notification
+      void moduleError(QString errorString);
+      void moduleActivated();
+      void moduleDeactivated();
 
   protected:
     QStateMachine *m_pStateMachine;

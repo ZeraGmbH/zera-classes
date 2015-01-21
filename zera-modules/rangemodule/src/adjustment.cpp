@@ -85,8 +85,8 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
 
 cAdjustManagement::~cAdjustManagement()
 {
-    delete m_pDSPInterFace;
     m_pProxy->releaseConnection(m_pDspClient);
+    delete m_pDSPInterFace;
 }
 
 

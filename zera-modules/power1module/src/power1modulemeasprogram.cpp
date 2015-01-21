@@ -247,12 +247,13 @@ cPower1ModuleMeasProgram::~cPower1ModuleMeasProgram()
     if (m_pcbIFaceList.count() > 0)
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
-            delete m_pcbIFaceList.at(i);
             m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i);  
         }
 
-    delete m_pDSPInterFace;
     m_pProxy->releaseConnection(m_pDspClient);
+    delete m_pDSPInterFace;
+
     m_pProxy->releaseConnection(m_pRMClient);
     delete m_pMovingwindowFilter;
 }

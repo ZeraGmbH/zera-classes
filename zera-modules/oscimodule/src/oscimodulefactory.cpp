@@ -13,8 +13,10 @@ ZeraModules::VirtualModule* OsciModuleFactory::createModule(Zera::Proxy::cProxy*
 
 void OsciModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
+    module2Delete = module;
     m_ModuleList.removeAll(module);
-    module->deleteLater();
+    connect(module, SIGNAL(deactivationReady()), this, SLOT(deleteModule()));
+    module->m_DeactivationMachine.start();
 }
 
 
@@ -27,6 +29,13 @@ QList<ZeraModules::VirtualModule *> OsciModuleFactory::listModules()
 QString OsciModuleFactory::getFactoryName()
 {
     return QString("oscimodule");
+}
+
+
+void OsciModuleFactory::deleteModule()
+{
+    emit module2Delete->moduleDeactivated();
+    delete module2Delete;
 }
 
 }

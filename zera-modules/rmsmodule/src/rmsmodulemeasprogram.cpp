@@ -132,12 +132,13 @@ cRmsModuleMeasProgram::~cRmsModuleMeasProgram()
     if (m_pcbIFaceList.count() > 0)
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
-            delete m_pcbIFaceList.at(i);
             m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i);
         }
 
-    delete m_pDSPInterFace;
     m_pProxy->releaseConnection(m_pDspClient);
+    delete m_pDSPInterFace;
+
 
     m_pProxy->releaseConnection(m_pRMClient);
     delete m_pMovingwindowFilter;
@@ -242,14 +243,18 @@ void cRmsModuleMeasProgram::generateInterface()
 void cRmsModuleMeasProgram::deleteInterface()
 {
     for (int i = 0; i < m_EntityNamePNList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNameList.at(i));
+        m_pPeer->dataRemove(m_EntityNamePNList.at(i));
     for (int i = 0; i < m_EntityNamePPList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNameList.at(i));
+        m_pPeer->dataRemove(m_EntityNamePPList.at(i));
     for (int i = 0; i < m_EntityActValuePNList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueList.at(i));
+        m_pPeer->dataRemove(m_EntityActValuePNList.at(i));
     for (int i = 0; i < m_EntityActValuePPList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueList.at(i));
+        m_pPeer->dataRemove(m_EntityActValuePPList.at(i));
 
+    m_EntityNamePNList.clear();
+    m_EntityNamePPList.clear();
+    m_EntityActValuePNList.clear();
+    m_EntityActValuePPList.clear();
     m_EntityNameList.clear();
     m_EntityActValueList.clear();
 

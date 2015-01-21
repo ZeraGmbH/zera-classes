@@ -122,6 +122,7 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+    connect(m_pAdjustment, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     // at last we need some program that does the measuring on dsp
     m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);

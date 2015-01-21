@@ -62,6 +62,7 @@ unix:!symbian {
 }
 
 OTHER_FILES += \
+    src/rangemoduleREF.xml \
     src/rangemodule.xml \
     src/rangemodule.xsd
 

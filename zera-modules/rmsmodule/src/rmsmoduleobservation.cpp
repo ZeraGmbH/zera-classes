@@ -113,7 +113,7 @@ void cRmsModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
 void cRmsModuleObservation::pcbConnect()
 {
-    Zera::Proxy::cProxyClient* m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
+    m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
     m_pcbConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);

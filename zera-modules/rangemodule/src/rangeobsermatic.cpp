@@ -60,8 +60,8 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
 
 cRangeObsermatic::~cRangeObsermatic()
 {
-    delete m_pDSPInterFace;
     m_pProxy->releaseConnection(m_pDspClient);
+    delete m_pDSPInterFace;
 }
 
 
@@ -165,6 +165,8 @@ void cRangeObsermatic::deleteInterface()
     delete m_pParRangeAutomaticOnOff;
     delete m_pParGroupingOnOff;
     delete m_pParOverloadOnOff;
+
+    delete m_pRangingSignal;
 
 }
 

@@ -11,10 +11,13 @@ ZeraModules::VirtualModule* RmsModuleFactory::createModule(Zera::Proxy::cProxy* 
     return module;
 }
 
+
 void RmsModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
+    module2Delete = module;
     m_ModuleList.removeAll(module);
-    module->deleteLater();
+    connect(module, SIGNAL(deactivationReady()), this, SLOT(deleteModule()));
+    module->m_DeactivationMachine.start();
 }
 
 
@@ -27,6 +30,13 @@ QList<ZeraModules::VirtualModule *> RmsModuleFactory::listModules()
 QString RmsModuleFactory::getFactoryName()
 {
     return QString("rmsmodule");
+}
+
+
+void RmsModuleFactory::deleteModule()
+{
+    emit module2Delete->moduleDeactivated();
+    delete module2Delete;
 }
 
 }

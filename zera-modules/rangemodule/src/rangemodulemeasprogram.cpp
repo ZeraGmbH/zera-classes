@@ -85,10 +85,10 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
 
 cRangeModuleMeasProgram::~cRangeModuleMeasProgram()
 {
-    delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pRMClient);
-    delete m_pDSPInterFace;
+    delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pDspClient);
+    delete m_pDSPInterFace;
 }
 
 

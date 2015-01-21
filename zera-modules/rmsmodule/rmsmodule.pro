@@ -56,6 +56,7 @@ unix:!symbian {
 }
 
 OTHER_FILES += \
+    src/rmsmoduleREF.xml \
     src/rmsmodule.xml \
     src/rmsmodule.xsd
 

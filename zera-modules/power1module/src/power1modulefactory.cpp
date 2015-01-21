@@ -13,8 +13,10 @@ ZeraModules::VirtualModule* Power1ModuleFactory::createModule(Zera::Proxy::cProx
 
 void Power1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
+    module2Delete = module;
     m_ModuleList.removeAll(module);
-    module->deleteLater();
+    connect(module, SIGNAL(deactivationReady()), this, SLOT(deleteModule()));
+    module->m_DeactivationMachine.start();
 }
 
 
@@ -27,6 +29,13 @@ QList<ZeraModules::VirtualModule *> Power1ModuleFactory::listModules()
 QString Power1ModuleFactory::getFactoryName()
 {
     return QString("power1module");
+}
+
+
+void Power1ModuleFactory::deleteModule()
+{
+    emit module2Delete->moduleDeactivated();
+    delete module2Delete;
 }
 
 }
