@@ -3,6 +3,10 @@ exists(/work/qt_projects/include/project-paths.pri) {
   include(/work/qt_projects/include/project-paths.pri)
 }
 
+exists($$PWD/autobuilder.pri) {
+  include($$PWD/autobuilder.pri)
+}
+
 
 
 ## Usage: TEMPLATE and in plugin cases CONFIG need to be defined before the include line for this .pri
