@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = lib
-VERSION = 0.0.1
+include(../zera-classes.pri)
 
 TARGET = zeraxmlconfig
 DEPENDPATH += . src
@@ -12,9 +12,6 @@ INCLUDEPATH += .
 QT += xmlpatterns
 
 DEFINES += ZERA_XML_CONFIG_LIBRARY
-
-target.path = /usr/lib
-INSTALLS += target
 
 HEADERS += \
     src/xml_config_global.h \

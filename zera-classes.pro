@@ -10,8 +10,8 @@ SUBDIRS     = \
             zera-xml-config \
             zera-comm/zera-proxy \
             zera-misc \
-            zera-basemodule \
             zera-modules/interface \
+            zera-basemodule \
             zera-modules/rangemodule \
             zera-modules/rmsmodule \
             zera-modules/dftmodule \

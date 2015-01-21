@@ -3,28 +3,27 @@
 # Project created by QtCreator 2013-05-22T16:48:29
 #
 #-------------------------------------------------
+TEMPLATE = lib
+
+ZDEPENDS += resman libvein
+include(../zera-classes.pri)
 
 QT       -= gui
 QT       += network
 
-include(basemodule.user.pri)
-
 TARGET = zerabasemodule
-TEMPLATE = lib
 
 LIBS +=  -lzera-proxy
-LIBS +=  -lprotobuf
-LIBS +=  -lzera-resourcemanager-protobuf
 
-INCLUDEPATH += ../zera-comm/zera-proxy
+INCLUDEPATH += ../zera-modules/interface \
+    ../zera-xml-config/src \
+    ../zera-misc \
+    ../zera-comm/zera-proxy
 
 CONFIG	+= debug
 QMAKE_CXXFLAGS += -O0
 
 DEFINES += ZERABASEMODULE_LIBRARY
-
-target.path = /usr/lib
-INSTALLS += target
 
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-classes/basemodule

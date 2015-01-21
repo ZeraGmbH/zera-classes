@@ -3,18 +3,14 @@
 ######################################################################
 
 TEMPLATE = lib
+
+include(../zera-classes.pri)
+
 TARGET = zerameas
 DEPENDPATH += . src
 INCLUDEPATH += .  
 
 DEFINES += ZERA_MEAS_LIBRARY
-
-# Input
-#HEADERS += src/...
-#SOURCES += src/...
-
-target.path = /usr/lib
-INSTALLS += target
 
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-classes/meas

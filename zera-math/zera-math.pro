@@ -3,18 +3,14 @@
 ######################################################################
 
 TEMPLATE = lib
+
+include(../zera-classes.pri)
+
 TARGET = zeramath
 DEPENDPATH += . src
 INCLUDEPATH += .
 
 DEFINES += ZERA_MATH_LIBRARY
-
-# Input
-#HEADERS += src/...
-#SOURCES += src/...
-
-target.path = /usr/lib
-INSTALLS += target
 
 SOURCES += \
     gaussmatrix_p.cpp \

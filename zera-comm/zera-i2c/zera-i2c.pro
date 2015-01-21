@@ -3,18 +3,14 @@
 ######################################################################
 
 TEMPLATE = lib
+
+include(../../zera-classes.pri)
+
 TARGET = zerai2c
 DEPENDPATH += . src
 INCLUDEPATH += .  
 
 DEFINES += ZERA_I2C_LIBRARY
-
-# Input
-#HEADERS += src/...
-#SOURCES += src/...
-
-target.path = /usr/lib
-INSTALLS += target
 
 HEADERS += \
     i2cutils.h \

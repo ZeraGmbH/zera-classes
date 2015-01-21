@@ -14,17 +14,6 @@ HEADERS += \
     virtualmodule.h \
     abstractmodulefactory.h
 
-unix:!symbian {
-    maemo5 {
-        target.path = /opt/usr/lib
-    } else {
-        target.path = /usr/lib
-    }
-    INSTALLS += target
-}
-
-DESTDIR = $$shadowed($$PWD/../../libs)
-
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-modules
 INSTALLS += header_files

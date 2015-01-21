@@ -3,17 +3,13 @@
 ######################################################################
 
 TEMPLATE = lib
+
+include(../zera-classes.pri)
+
 TARGET = zeradev
 DEPENDPATH += . src
 
 DEFINES += ZERA_DEV_LIBRARY
-
-# Input
-#HEADERS += src/...
-#SOURCES += src/...
-
-target.path = /usr/lib
-INSTALLS += target
 
 HEADERS += \
     i2ceeprom_p.h \

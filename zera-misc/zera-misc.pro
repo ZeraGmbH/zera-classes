@@ -3,18 +3,17 @@
 # Project created by QtCreator 2013-05-22T16:48:29
 #
 #-------------------------------------------------
+TEMPLATE = lib
+ZDEPENDS += resman
+
+include(../zera-classes.pri)
 
 QT       -= gui
 QT       += network
 
-include(misc.user.pri)
-
 TARGET = zeramisc
-TEMPLATE = lib
 
 LIBS +=  -lzera-proxy
-LIBS +=  -lprotobuf
-LIBS +=  -lzera-resourcemanager-protobuf
 
 INCLUDEPATH += ../zera-comm/zera-proxy
 
@@ -52,9 +51,6 @@ HEADERS +=\
     dspvar.h \
     rminterface.h \
     rminterface_p.h
-
-target.path = /usr/lib
-INSTALLS += target
 
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-classes/misc
