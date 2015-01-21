@@ -51,13 +51,6 @@ public:
     virtual void stopModule();
 
 signals:
-    // signals to be used by activation and deactivation statemachine when ready
-    void activationReady();
-    void deactivationReady();
-    // signals for modulemanager notification
-    void moduleError(QString errorString);
-    void moduleActivated();
-    void moduleDeactivated();
     void sigRun();
     void sigRunFailed();
     void sigStop();

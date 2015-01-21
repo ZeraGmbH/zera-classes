@@ -9,6 +9,9 @@ exists(/work/qt_projects/include/project-paths.pri) {
 
 LIBS += -L$$PWD/libs
 
+#to be evaluated later: -Wshadow
+QMAKE_CXXFLAGS += -Wall
+
 contains( CONFIG, plugin ) {
   unix:equals(TEMPLATE, "lib") {
     DESTDIR = $$PWD/modules

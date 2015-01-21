@@ -16,6 +16,7 @@ LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lzerabasemodule
+LIBS +=  -lMeasurementModuleInterface
 
 
 INCLUDEPATH += ../interface \

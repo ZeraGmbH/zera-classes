@@ -14,6 +14,7 @@ QT       += network
 TARGET = zerabasemodule
 
 LIBS +=  -lzera-proxy
+LIBS +=  -lMeasurementModuleInterface
 
 INCLUDEPATH += ../zera-modules/interface \
     ../zera-xml-config/src \

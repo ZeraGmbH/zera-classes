@@ -3,11 +3,13 @@
 # Project created by QtCreator 2013-11-27T13:25:24
 #
 #-------------------------------------------------
+TEMPLATE = lib
+
+include(../../zera-classes.pri)
 
 QT       -= gui
 
 TARGET = MeasurementModuleInterface
-TEMPLATE = lib
 #CONFIG += staticlib
 
 HEADERS += \
