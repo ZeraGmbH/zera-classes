@@ -31,6 +31,8 @@ enum pcbcommands
     getoffsetcorrection,
     getphasecorrection,
     setrange,
+    setmeasuringmode,
+
     regnotifier,
     unregnotifier,
     pcbinterrupt,
@@ -74,6 +76,7 @@ public:
     virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
+    virtual quint32 setMMode(QString mmode);
 
     // all commands to source interface
     virtual quint32 getAliasSource(QString chnName); // qstring

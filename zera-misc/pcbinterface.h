@@ -51,6 +51,7 @@ public:
     virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
+    virtual quint32 setMMode(QString mmode); // we set the sense mode we get  reply (ack, nak..)
 
 
     // all commands to sample interface

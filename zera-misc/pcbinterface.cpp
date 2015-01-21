@@ -153,6 +153,13 @@ quint32 cPCBInterface::setRange(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterface::setMMode(QString mmode)
+{
+    Q_D(cPCBInterface);
+    return d->setMMode(mmode);
+}
+
+
 quint32 cPCBInterface::getAliasSample(QString chnName)
 {
     Q_D(cPCBInterface);

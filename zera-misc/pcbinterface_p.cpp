@@ -235,6 +235,17 @@ quint32 cPCBInterfacePrivate::setRange(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterfacePrivate::setMMode(QString mmode)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:MMODE"), par = QString("%1;").arg(mmode));
+    m_MsgNrCmdList[msgnr] = setmeasuringmode;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getAliasSource(QString chnName)
 {
     QString cmd;
@@ -412,6 +423,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             emit q->serverAnswer(lmsgnr, lreply, returnBool(lmsg));
             break;
 
+        case setmeasuringmode:
         case setrange:
         case resetstatus:
         case regnotifier:
