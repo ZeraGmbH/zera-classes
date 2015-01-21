@@ -34,8 +34,7 @@ enum moduleconfigstate
 
 class cFftModuleConfigData;
 
-//const QString defaultXSDFile = "/etc/zera/modules/fftmodule.xsd";
-const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/fftmodule/src/fftmodule.xsd";
+const QString defaultXSDFile = "://src/fftmodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 

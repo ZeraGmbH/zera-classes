@@ -32,8 +32,7 @@ enum moduleconfigstate
 
 class cReferenceModuleConfigData;
 
-//const QString defaultXSDFile = "/etc/zera/modules/referencemodule.xsd";
-const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/referencemodule/src/referencemodule.xsd";
+const QString defaultXSDFile = "://src/referencemodule.xsd";
 
 // referencemoduleconfiguration holds configuration data as well as parameter
 

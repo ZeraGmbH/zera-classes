@@ -35,8 +35,7 @@ enum moduleconfigstate
 
 class cSampleModuleConfigData;
 
-//const QString defaultXSDFile = "/etc/zera/modules/samplemodule.xsd";
-const QString defaultXSDFile = "/home/peter/C++/zera-classes/zera-modules/samplemodule/src/samplemodule.xsd";
+const QString defaultXSDFile = "://src/samplemodule.xsd";
 
 // samplemoduleconfiguration holds configuration data as well as parameter
 

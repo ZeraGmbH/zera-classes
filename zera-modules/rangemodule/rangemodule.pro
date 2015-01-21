@@ -54,3 +54,6 @@ OTHER_FILES += \
     src/rangemoduleREF.xml \
     src/rangemodule.xml \
     src/rangemodule.xsd
+
+RESOURCES += \
+    resources.qrc

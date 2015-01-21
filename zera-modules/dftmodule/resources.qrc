@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/dftmodule.xsd</file>
+    </qresource>
+</RCC>

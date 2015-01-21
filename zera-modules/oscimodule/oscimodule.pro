@@ -48,3 +48,6 @@ HEADERS += \
 OTHER_FILES += \
     src/oscimodule.xml \
     src/oscimodule.xsd
+
+RESOURCES += \
+    resources.qrc

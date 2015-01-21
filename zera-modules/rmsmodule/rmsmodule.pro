@@ -50,3 +50,6 @@ OTHER_FILES += \
     src/rmsmoduleREF.xml \
     src/rmsmodule.xml \
     src/rmsmodule.xsd
+
+RESOURCES += \
+    resources.qrc

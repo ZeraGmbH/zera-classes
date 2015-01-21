@@ -53,3 +53,6 @@ HEADERS += \
 OTHER_FILES += \
     src/samplemodule.xml \
     src/samplemodule.xsd
+
+RESOURCES += \
+    resources.qrc

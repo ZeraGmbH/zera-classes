@@ -48,3 +48,6 @@ HEADERS += \
 OTHER_FILES += \
     src/thdnmodule.xml \
     src/thdnmodule.xsd
+
+RESOURCES += \
+    resources.qrc

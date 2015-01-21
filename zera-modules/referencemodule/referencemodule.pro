@@ -56,3 +56,6 @@ HEADERS += \
 OTHER_FILES += \
     src/referencemodule.xml \
     src/referencemodule.xsd
+
+RESOURCES += \
+    resource.qrc

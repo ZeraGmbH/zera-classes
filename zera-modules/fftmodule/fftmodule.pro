@@ -50,3 +50,6 @@ HEADERS += \
 OTHER_FILES += \
     src/fftmodule.xml \
     src/fftmodule.xsd
+
+RESOURCES += \
+    resources.qrc

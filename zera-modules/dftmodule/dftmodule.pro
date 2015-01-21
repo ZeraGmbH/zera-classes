@@ -50,3 +50,6 @@ HEADERS += \
 OTHER_FILES += \
     src/dftmodule.xml \
     src/dftmodule.xsd
+
+RESOURCES += \
+    resources.qrc
