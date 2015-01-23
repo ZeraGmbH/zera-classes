@@ -35,7 +35,6 @@ QString ThdnModuleFactory::getFactoryName()
 void ThdnModuleFactory::deleteModule()
 {
     emit module2Delete->moduleDeactivated();
-    delete module2Delete;
 }
 
 }

@@ -149,7 +149,7 @@ void cSampleModule::unsetModule()
         for (int i = 0; i < m_ModuleActivistList.count(); i++)
         {
             m_ModuleActivistList.at(i)->deleteInterface();
-            m_ModuleActivistList.at(i)->deleteLater();
+            delete m_ModuleActivistList.at(i);
         }
         m_ModuleActivistList.clear();
         m_pllMeasChannelList.clear();

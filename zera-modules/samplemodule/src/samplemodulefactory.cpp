@@ -35,7 +35,6 @@ QString SampleModuleFactory::getFactoryName()
 void SampleModuleFactory::deleteModule()
 {
     emit module2Delete->moduleDeactivated();
-    delete module2Delete;
 }
 
 }

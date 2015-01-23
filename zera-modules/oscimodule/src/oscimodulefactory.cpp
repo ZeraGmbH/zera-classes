@@ -35,7 +35,6 @@ QString OsciModuleFactory::getFactoryName()
 void OsciModuleFactory::deleteModule()
 {
     emit module2Delete->moduleDeactivated();
-    delete module2Delete;
 }
 
 }

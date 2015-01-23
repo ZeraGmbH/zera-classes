@@ -931,15 +931,17 @@ void cFftModuleMeasProgram::activateDSPdone()
 void cFftModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cFftModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -954,7 +956,7 @@ void cFftModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; m_pcbIFaceList.count(); i++)
+    for (int i = 0; i < m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
     emit deactivated();
 }
@@ -969,57 +971,60 @@ void cFftModuleMeasProgram::dataAcquisitionDSP()
 
 void cFftModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-
-    int nChannels, nHarmonic;
-    int middle, offs;
-    double scale;
-
-    nChannels = m_ActValueList.count();
-    nHarmonic = m_ConfigData.m_nFftOrder;
-
-    scale = 1.0/m_nfftLen;
-    middle = m_nfftLen >> 1; // the fft results are sym. ordered with pos. and neg. frequencies
-    offs = m_nfftLen << 1;
-
-    for (int i = 0; i < nChannels; i++)
+    if (m_bActive)
     {
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
 
-        m_FFTModuleActualValues.replace(i * nHarmonic, m_ModuleActualValues.at(i * offs) * scale); // special case dc
-        m_FFTModuleActualValues.replace(i * nHarmonic + 1, 0.0);
+        int nChannels, nHarmonic;
+        int middle, offs;
+        double scale;
 
-        for (int j = 1; j < nHarmonic; j++)
+        nChannels = m_ActValueList.count();
+        nHarmonic = m_ConfigData.m_nFftOrder;
+
+        scale = 1.0/m_nfftLen;
+        middle = m_nfftLen >> 1; // the fft results are sym. ordered with pos. and neg. frequencies
+        offs = m_nfftLen << 1;
+
+        for (int i = 0; i < nChannels; i++)
         {
-            double re, im;
-            // as our Fft produces math positive values, we correct them to technical positive values (*-1.0)
-            // also we change real and imag. parts because we are interested in sine rather than cosine
 
-            re = (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
-            im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
-            m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1), im);
-            m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1) + 1, re);
+            m_FFTModuleActualValues.replace(i * nHarmonic, m_ModuleActualValues.at(i * offs) * scale); // special case dc
+            m_FFTModuleActualValues.replace(i * nHarmonic + 1, 0.0);
+
+            for (int j = 1; j < nHarmonic; j++)
+            {
+                double re, im;
+                // as our Fft produces math positive values, we correct them to technical positive values (*-1.0)
+                // also we change real and imag. parts because we are interested in sine rather than cosine
+
+                re = (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
+                im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
+                m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1), im);
+                m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1) + 1, re);
+            }
         }
-    }
 
-    emit actualValues(&m_FFTModuleActualValues); // and send them
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+        emit actualValues(&m_FFTModuleActualValues); // and send them
+        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    QString s, ts;
-    for (int i = 0; i < m_ActValueList.count(); i++)
-    {
-        for (int j = 0; j < m_ConfigData.m_nFftOrder; j++)
+        QString s, ts;
+        for (int i = 0; i < m_ActValueList.count(); i++)
         {
-            ts = QString("FFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
-                                                    .arg(j)
-                                                    .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)))
-                                                    .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)+1))
-                                                    .arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).unit);
-            s += ts;
+            for (int j = 0; j < m_ConfigData.m_nFftOrder; j++)
+            {
+                ts = QString("FFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
+                        .arg(j)
+                        .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)))
+                        .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)+1))
+                        .arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).unit);
+                s += ts;
+            }
+            qDebug() << s;
         }
-        qDebug() << s;
-    }
 #endif
+    }
 }
 
 

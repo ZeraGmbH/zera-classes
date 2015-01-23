@@ -36,7 +36,6 @@ QString DftModuleFactory::getFactoryName()
 void DftModuleFactory::deleteModule()
 {
     emit module2Delete->moduleDeactivated();
-    delete module2Delete;
 }
 
 }

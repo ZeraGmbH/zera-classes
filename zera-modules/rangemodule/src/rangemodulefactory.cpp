@@ -35,7 +35,6 @@ QString RangeModuleFactory::getFactoryName()
 void RangeModuleFactory::deleteModule()
 {
     emit module2Delete->moduleDeactivated();
-    delete module2Delete;
 }
 
 }

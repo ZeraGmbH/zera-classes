@@ -1974,15 +1974,17 @@ void cPower1ModuleMeasProgram::activateDSPdone()
 void cPower1ModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cPower1ModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -2048,7 +2050,7 @@ void cPower1ModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; m_pcbIFaceList.count(); i++)
+    for (int i = 0; i < m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
     emit deactivated();
 }
@@ -2063,27 +2065,30 @@ void cPower1ModuleMeasProgram::dataAcquisitionDSP()
 
 void cPower1ModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-    emit actualValues(&m_ModuleActualValues); // and send them
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+    if (m_bActive)
+    {
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        emit actualValues(&m_ModuleActualValues); // and send them
+        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    QString powIndicator = "123S";
-    QString s, ts;
+        QString powIndicator = "123S";
+        QString s, ts;
 
-    for (int i = 0; i < 4; i++) // we have fixed 4 values
-    {
-        cMeasModeInfo mminfo  = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
-        ts = QString("%1%2:%3[%4];").arg(mminfo.getActvalName())
-                                    .arg(powIndicator[i])
-                                    .arg(m_ModuleActualValues.at(i))
-                                    .arg(mminfo.getUnitName());
+        for (int i = 0; i < 4; i++) // we have fixed 4 values
+        {
+            cMeasModeInfo mminfo  = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
+            ts = QString("%1%2:%3[%4];").arg(mminfo.getActvalName())
+                    .arg(powIndicator[i])
+                    .arg(m_ModuleActualValues.at(i))
+                    .arg(mminfo.getUnitName());
 
-        s += ts;
-    }
+            s += ts;
+        }
 
-    qDebug() << s;
+        qDebug() << s;
 #endif
+    }
 }
 
 

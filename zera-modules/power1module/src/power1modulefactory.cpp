@@ -35,7 +35,6 @@ QString Power1ModuleFactory::getFactoryName()
 void Power1ModuleFactory::deleteModule()
 {
     emit module2Delete->moduleDeactivated();
-    delete module2Delete;
 }
 
 }

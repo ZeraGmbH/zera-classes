@@ -425,15 +425,17 @@ void cSampleModuleMeasProgram::activateDSPdone()
 void cSampleModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cSampleModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -460,8 +462,12 @@ void cSampleModuleMeasProgram::dataAcquisitionDSP()
 
 void cSampleModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
-    emit actualValues(&m_ModuleActualValues); // and send them
+    if (m_bActive)
+    {
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
+        emit actualValues(&m_ModuleActualValues); // and send them
+
+    }
 }
 
 }

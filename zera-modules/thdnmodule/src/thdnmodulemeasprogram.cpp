@@ -867,15 +867,17 @@ void cThdnModuleMeasProgram::activateDSPdone()
 void cThdnModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cThdnModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -890,7 +892,7 @@ void cThdnModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; m_pcbIFaceList.count(); i++)
+    for (int i = 0; i < m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
     emit deactivated();
 }
@@ -905,23 +907,26 @@ void cThdnModuleMeasProgram::dataAcquisitionDSP()
 
 void cThdnModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-    emit actualValues(&m_ModuleActualValues); // and send them
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+    if (m_bActive)
+    {
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        emit actualValues(&m_ModuleActualValues); // and send them
+        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    bool ok;
-    QString s;
-    for (int i = 0; i < m_ActValueList.count(); i++)
-    {
-        QString ts;
-        ts = QString("THDN_%1:%2[%];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
-                                          .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok));
-        s += ts;
-    }
+        bool ok;
+        QString s;
+        for (int i = 0; i < m_ActValueList.count(); i++)
+        {
+            QString ts;
+            ts = QString("THDN_%1:%2[%];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
+                    .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok));
+            s += ts;
+        }
 
-    qDebug() << s;
+        qDebug() << s;
 #endif
+    }
 }
 
 

@@ -262,6 +262,8 @@ void cRmsModuleMeasProgram::deleteInterface()
     delete m_pRMSPPCountInfo;
     delete m_pIntegrationTimeParameter;
     delete m_pIntegrationTimeLimits;
+    delete m_pIntegrationPeriodParameter;
+    delete m_pIntegrationPeriodLimits;
     delete m_pMeasureSignal;
 }
 
@@ -962,15 +964,17 @@ void cRmsModuleMeasProgram::activateDSPdone()
 void cRmsModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cRmsModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -985,7 +989,7 @@ void cRmsModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; m_pcbIFaceList.count(); i++)
+    for (int i = 0; i < m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
     emit deactivated();
 }
@@ -1000,33 +1004,36 @@ void cRmsModuleMeasProgram::dataAcquisitionDSP()
 
 void cRmsModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-    emit actualValues(&m_ModuleActualValues); // and send them
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+    if (m_bActive)
+    {
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        emit actualValues(&m_ModuleActualValues); // and send them
+        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    bool ok;
-    QString s;
-    for (int i = 0; i < m_ActValueList.count(); i++)
-    {
-        QStringList sl = m_ActValueList.at(i).split('-');
-        QString ts;
+        bool ok;
+        QString s;
+        for (int i = 0; i < m_ActValueList.count(); i++)
+        {
+            QStringList sl = m_ActValueList.at(i).split('-');
+            QString ts;
 
-        if (sl.count() == 1)
-            ts = QString("RMS_%1:%2[%3];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                          .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
-                                          .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-        else
-            ts = QString("RMS_%1-%2:%3[%4];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                             .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
-                                             .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
-                                             .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            if (sl.count() == 1)
+                ts = QString("RMS_%1:%2[%3];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                        .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
+                        .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            else
+                ts = QString("RMS_%1-%2:%3[%4];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                        .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
+                        .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
+                        .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
 
-        s += ts;
-    }
+            s += ts;
+        }
 
-    qDebug() << s;
+        qDebug() << s;
 #endif
+    }
 }
 
 

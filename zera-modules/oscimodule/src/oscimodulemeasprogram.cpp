@@ -128,14 +128,15 @@ cOsciModuleMeasProgram::~cOsciModuleMeasProgram()
     if (m_pcbIFaceList.count() > 0)
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
-            delete m_pcbIFaceList.at(i);
             m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i);
+
         }
 
     if (m_pDSPInterFace)
     {
-        delete m_pDSPInterFace;
         m_pProxy->releaseConnection(m_pDspClient);
+        delete m_pDSPInterFace;
     }
 
     m_pProxy->releaseConnection(m_pRMClient);
@@ -882,15 +883,17 @@ void cOsciModuleMeasProgram::activateDSPdone()
 void cOsciModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cOsciModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -905,7 +908,7 @@ void cOsciModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; m_pcbIFaceList.count(); i++)
+    for (int i = 0; i < m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
     emit deactivated();
 }
@@ -920,29 +923,32 @@ void cOsciModuleMeasProgram::dataAcquisitionDSP()
 
 void cOsciModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-    emit actualValues(&m_ModuleActualValues); // and send them
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+    if (m_bActive)
+    {
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        emit actualValues(&m_ModuleActualValues); // and send them
+        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    int offs;
-    QString s;
+        int offs;
+        QString s;
 
-    for (int i = 0; i < m_ActValueList.count(); i++)
-    {
-        QString ts;
-        ts = QString("Osci_%1:").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias);
+        for (int i = 0; i < m_ActValueList.count(); i++)
+        {
+            QString ts;
+            ts = QString("Osci_%1:").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias);
 
-        offs = i * m_ConfigData.m_nInterpolation;
-        int j;
-        for (j = 0; j < m_ConfigData.m_nInterpolation-1; j++)
-            ts += QString("%1,").arg(m_ModuleActualValues.at(offs + j));
-        ts += QString("%1[%2];").arg(m_ModuleActualValues.at(offs + j)).arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).unit);
-        s += ts;
-    }
+            offs = i * m_ConfigData.m_nInterpolation;
+            int j;
+            for (j = 0; j < m_ConfigData.m_nInterpolation-1; j++)
+                ts += QString("%1,").arg(m_ModuleActualValues.at(offs + j));
+            ts += QString("%1[%2];").arg(m_ModuleActualValues.at(offs + j)).arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).unit);
+            s += ts;
+        }
 
-    qDebug() << s;
+        qDebug() << s;
 #endif
+    }
 }
 
 

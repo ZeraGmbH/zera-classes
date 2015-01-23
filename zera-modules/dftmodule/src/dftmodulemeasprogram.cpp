@@ -101,9 +101,9 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cP
     connect(&m_loadDSPDoneState, SIGNAL(entered()), SLOT(activateDSPdone()));
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_freePGRMemState);
-    m_freePGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_unloadDSPDoneState);
+    m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
+    m_freePGRMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeUSERMemState);
+    m_freeUSERMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_unloadDSPDoneState);
     m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
@@ -928,15 +928,17 @@ void cDftModuleMeasProgram::activateDSPdone()
 void cDftModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cDftModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -951,8 +953,10 @@ void cDftModuleMeasProgram::deactivateDSPdone()
 {
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; m_pcbIFaceList.count(); i++)
+
+    for (int i = 0; i < m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
+
     emit deactivated();
 }
 
@@ -966,45 +970,48 @@ void cDftModuleMeasProgram::dataAcquisitionDSP()
 
 void cDftModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
-    // as our dft produces math positive values, we correct them to technical positive values
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    if (m_bActive)
     {
-        double im;
-        im = m_ModuleActualValues[i*2+1] * -1.0;
-        m_ModuleActualValues.replace(i*2+1, im);
-    }
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        // as our dft produces math positive values, we correct them to technical positive values
+        for (int i = 0; i < m_ActValueList.count(); i++)
+        {
+            double im;
+            im = m_ModuleActualValues[i*2+1] * -1.0;
+            m_ModuleActualValues.replace(i*2+1, im);
+        }
 
-    emit actualValues(&m_ModuleActualValues); // and send them
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+        emit actualValues(&m_ModuleActualValues); // and send them
+        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
 
 #ifdef DEBUG
-    QString s;
-    for (int i = 0; i < m_ActValueList.count(); i++)
-    {
-        QStringList sl = m_ActValueList.at(i).split('-');
-        QString ts;
+        QString s;
+        for (int i = 0; i < m_ActValueList.count(); i++)
+        {
+            QStringList sl = m_ActValueList.at(i).split('-');
+            QString ts;
 
-        if (sl.count() == 1)
-            ts = QString("DFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                               .arg(m_ConfigData.m_nDftOrder)
+            if (sl.count() == 1)
+                ts = QString("DFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                        .arg(m_ConfigData.m_nDftOrder)
 
-                                               .arg(m_ModuleActualValues.at(i*2))
-                                               .arg(m_ModuleActualValues.at(i*2+1))
-                                               .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-        else
-            ts = QString("DFT(%1-%2(%3)):(%4,%5)[%6];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                                                       .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
-                                                       .arg(m_ConfigData.m_nDftOrder)
-                                                       .arg(m_ModuleActualValues.at(i*2))
-                                                       .arg(m_ModuleActualValues.at(i*2+1))
-                                                       .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+                        .arg(m_ModuleActualValues.at(i*2))
+                        .arg(m_ModuleActualValues.at(i*2+1))
+                        .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            else
+                ts = QString("DFT(%1-%2(%3)):(%4,%5)[%6];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
+                        .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
+                        .arg(m_ConfigData.m_nDftOrder)
+                        .arg(m_ModuleActualValues.at(i*2))
+                        .arg(m_ModuleActualValues.at(i*2+1))
+                        .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
 
-        s += ts;
-    }
+            s += ts;
+        }
 
-    qDebug() << s;
+        qDebug() << s;
 #endif
+    }
 }
 
 

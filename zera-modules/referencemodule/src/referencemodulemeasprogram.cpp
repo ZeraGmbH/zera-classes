@@ -83,10 +83,10 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
 
 cReferenceModuleMeasProgram::~cReferenceModuleMeasProgram()
 {
-    delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pRMClient);
-    delete m_pDSPInterFace;
+    delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pDspClient);
+    delete m_pDSPInterFace;
 }
 
 
@@ -420,15 +420,17 @@ void cReferenceModuleMeasProgram::activateDSPdone()
 void cReferenceModuleMeasProgram::deactivateDSP()
 {
     m_bActive = false;
-    deleteDspVarList();
-    deleteDspCmdList();
-
     m_MsgNrCmdList[m_pDSPInterFace->deactivateInterface()] = deactivatedsp; // wat wohl
 }
 
 
 void cReferenceModuleMeasProgram::freePGRMem()
 {
+    //deleteDspVarList();
+    //deleteDspCmdList();
+    // we always destroy the whole interface even in case of new configuration while running
+    // so the list are gone anyway
+
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -455,8 +457,12 @@ void cReferenceModuleMeasProgram::dataAcquisitionDSP()
 
 void cReferenceModuleMeasProgram::dataReadDSP()
 {
-    m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
-    emit actualValues(&m_ModuleActualValues); // and send them
+    if (m_bActive)
+    {
+        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
+        emit actualValues(&m_ModuleActualValues); // and send them
+
+    }
 }
 
 }

@@ -1,3 +1,6 @@
+#include <veinpeer.h>
+#include <QDebug>
+
 #include "rmsmodulefactory.h"
 #include "rmsmodule.h"
 
@@ -6,6 +9,7 @@ namespace RMSMODULE
 
 ZeraModules::VirtualModule* RmsModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
 {
+    qDebug() << peer->getEntityList().count();
     ZeraModules::VirtualModule *module = new cRmsModule(m_ModuleList.count()+1, proxy, peer, parent);
     m_ModuleList.append(module);
     return module;
@@ -36,7 +40,6 @@ QString RmsModuleFactory::getFactoryName()
 void RmsModuleFactory::deleteModule()
 {
     emit module2Delete->moduleDeactivated();
-    delete module2Delete;
 }
 
 }
