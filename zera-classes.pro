@@ -20,7 +20,8 @@ SUBDIRS     = \
             zera-modules/oscimodule \
             zera-modules/fftmodule \
             zera-modules/samplemodule \
-            zera-modules/referencemodule
+            zera-modules/referencemodule \
+            zera-modules/modemodule
 
 
 
