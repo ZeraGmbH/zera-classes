@@ -56,7 +56,6 @@ cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer*
 cSampleModule::~cSampleModule()
 {
     delete m_pConfiguration;
-    unsetModule();
 }
 
 

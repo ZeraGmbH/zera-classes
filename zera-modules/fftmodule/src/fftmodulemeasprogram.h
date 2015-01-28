@@ -95,11 +95,6 @@ private:
     QStringList m_ActValueList; // the list of actual values we work on
     quint16 m_nfftLen;
 
-    QList<VeinEntity*> m_EntityNamePNList; // we have a list for all rms names for phase neutral
-    QList<VeinEntity*> m_EntityNamePPList; // and a list for all rms names for phase phase
-    QList<VeinEntity*> m_EntityActValuePNList; // we have a list for all rms values for phase neutral
-    QList<VeinEntity*> m_EntityActValuePPList; // and a list for all rms values for phase phase
-
     QList<VeinEntity*> m_EntityNameList;
     QList<VeinEntity*> m_EntityActValueList;
 

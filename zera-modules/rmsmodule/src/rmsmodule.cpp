@@ -55,7 +55,6 @@ cRmsModule::cRmsModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer,
 cRmsModule::~cRmsModule()
 {
     delete m_pConfiguration;
-    unsetModule();
 }
 
 

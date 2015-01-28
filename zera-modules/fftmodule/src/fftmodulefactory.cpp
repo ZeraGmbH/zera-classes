@@ -13,10 +13,10 @@ ZeraModules::VirtualModule* FftModuleFactory::createModule(Zera::Proxy::cProxy* 
 
 void FftModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
-    module2Delete = module;
     m_ModuleList.removeAll(module);
-    connect(module, SIGNAL(deactivationReady()), this, SLOT(deleteModule()));
-    module->m_DeactivationMachine.start();
+    connect(module, SIGNAL(deactivationReady()), module, SIGNAL(moduleDeactivated()));
+    if (!module->m_DeactivationMachine.isRunning())
+        module->m_DeactivationMachine.start();
 }
 
 
@@ -29,12 +29,6 @@ QList<ZeraModules::VirtualModule *> FftModuleFactory::listModules()
 QString FftModuleFactory::getFactoryName()
 {
     return QString("fftmodule");
-}
-
-
-void FftModuleFactory::deleteModule()
-{
-    emit module2Delete->moduleDeactivated();
 }
 
 }

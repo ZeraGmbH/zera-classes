@@ -244,17 +244,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::
 cPower1ModuleMeasProgram::~cPower1ModuleMeasProgram()
 {
     delete m_pRMInterface;
-    if (m_pcbIFaceList.count() > 0)
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            m_pProxy->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i);  
-        }
-
-    m_pProxy->releaseConnection(m_pDspClient);
     delete m_pDSPInterFace;
-
-    m_pProxy->releaseConnection(m_pRMClient);
     delete m_pMovingwindowFilter;
 }
 
@@ -1965,7 +1955,8 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     connect(m_pMeasuringmodeParameter, SIGNAL(updated(QVariant)), this , SLOT(newMeasMode(QVariant)));
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
-    m_readUrValueMachine.start();
+    if (!m_readUrValueMachine.isRunning())
+        m_readUrValueMachine.start();
 
     emit activated();
 }
@@ -1980,10 +1971,9 @@ void cPower1ModuleMeasProgram::deactivateDSP()
 
 void cPower1ModuleMeasProgram::freePGRMem()
 {
-    //deleteDspVarList();
-    //deleteDspCmdList();
-    // we always destroy the whole interface even in case of new configuration while running
-    // so the list are gone anyway
+    m_pProxy->releaseConnection(m_pDspClient);
+    deleteDspVarList();
+    deleteDspCmdList();
 
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
@@ -2025,6 +2015,7 @@ void cPower1ModuleMeasProgram::freeFreqOutputDone()
 
 void cPower1ModuleMeasProgram::resetNotifiers()
 {
+    m_pProxy->releaseConnection(m_pRMClient);
     infoReadList = m_measChannelInfoHash.keys();
     emit deactivationContinue();
 }
@@ -2048,10 +2039,21 @@ void cPower1ModuleMeasProgram::resetNotifierDone()
 
 void cPower1ModuleMeasProgram::deactivateDSPdone()
 {
+    if (m_pcbIFaceList.count() > 0)
+    {
+        for (int i = 0; i < m_pcbIFaceList.count(); i++)
+        {
+            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i);
+        }
+
+        m_pcbClientList.clear();
+        m_pcbIFaceList.clear();
+    }
+
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
+
     emit deactivated();
 }
 

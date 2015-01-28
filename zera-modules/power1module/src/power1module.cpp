@@ -55,7 +55,6 @@ cPower1Module::cPower1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer*
 cPower1Module::~cPower1Module()
 {
     delete m_pConfiguration;
-    unsetModule();
 }
 
 

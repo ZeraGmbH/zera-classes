@@ -41,7 +41,6 @@ cOsciModuleObservation::cOsciModuleObservation(cOsciModule* module, Zera::Proxy:
 
 cOsciModuleObservation::~cOsciModuleObservation()
 {
-    m_pProxy->releaseConnection(m_pPCBClient);
     delete m_pPCBInterface;
 }
 
@@ -142,6 +141,8 @@ void cOsciModuleObservation::resetNotifier()
 
 void cOsciModuleObservation::deactivationDone()
 {
+    m_pProxy->releaseConnection(m_pPCBClient);
+    disconnect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     emit deactivated();
 }
 

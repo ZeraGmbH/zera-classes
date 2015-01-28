@@ -142,6 +142,8 @@ void cPower1ModuleObservation::resetNotifier()
 
 void cPower1ModuleObservation::deactivationDone()
 {
+    m_pProxy->releaseConnection(m_pPCBClient);
+    disconnect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     emit deactivated();
 }
 

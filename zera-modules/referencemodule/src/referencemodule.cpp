@@ -10,7 +10,6 @@
 #include "referencemodulemeasprogram.h"
 #include "referencemoduleobservation.h"
 #include "referenceadjustment.h"
-#include "referencemoduleinit.h"
 #include "moduleinfo.h"
 #include "moduleerror.h"
 #include "modulesignal.h"
@@ -57,7 +56,6 @@ cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, Vei
 cReferenceModule::~cReferenceModule()
 {
     delete m_pConfiguration;
-    unsetModule();
 }
 
 
@@ -94,14 +92,8 @@ void cReferenceModule::setupModule()
 
     errorMessage = new cModuleError(m_pPeer, "ERR_Message");
 
-    // first we initialize by setting pcb in reference mode
-    m_pReferenceModuleInit = new cReferenceModuleInit(this, m_pProxy, m_pPeer, *pConfData);
-    m_ModuleActivistList.append(m_pReferenceModuleInit);
-    connect(m_pReferenceModuleInit, SIGNAL(activated()), this, SIGNAL(activationContinue()));
-    connect(m_pReferenceModuleInit, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pReferenceModuleInit, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
-
-    // before we build a list of our meas channels
+    // setting of mode has been done by seperate mode module
+    // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
         cReferenceMeasChannel* pchn = new cReferenceMeasChannel(m_pProxy, m_pPeer, &(pConfData->m_RMSocket),
@@ -214,7 +206,7 @@ void cReferenceModule::deactivationStart()
 {
     // we first disconnect all what we connected when activation took place
     disconnect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pReferenceAdjustment, SLOT(ActionHandler(QVector<float>*)));
-    disconnect(m_pReferenceAdjustment, SIGNAL(moduleReconfigure()), this, SLOT(referenceModuleReconfigure()));
+    disconnect(m_pReferenceModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(referenceModuleReconfigure()));
 
     for (int i = 0; i < m_ReferenceMeasChannelList.count(); i ++)
     {

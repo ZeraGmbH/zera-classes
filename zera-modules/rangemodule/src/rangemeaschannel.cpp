@@ -109,8 +109,6 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
 
 cRangeMeasChannel::~cRangeMeasChannel()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
-    m_pProxy->releaseConnection(m_pPCBClient);
     delete m_pRMInterface;
     delete m_pPCBInterface;
 }
@@ -865,6 +863,8 @@ void cRangeMeasChannel::deactivationInit()
 
 void cRangeMeasChannel::deactivationDone()
 {
+    m_pProxy->releaseConnection(m_pRMClient);
+    m_pProxy->releaseConnection(m_pPCBClient);
     // and disconnect for our servers afterwards
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);

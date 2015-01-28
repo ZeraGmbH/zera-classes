@@ -54,7 +54,6 @@ cDftModule::cDftModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer,
 cDftModule::~cDftModule()
 {
     delete m_pConfiguration;
-    unsetModule();
 }
 
 

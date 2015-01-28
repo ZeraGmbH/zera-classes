@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<modemodconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+            <ethernet>
+                <resourcemanager>
+                    <ip>192.168.7.220</ip>
+                    <port>6312</port>
+                </resourcemanager>
+                <pcbserver>
+                    <ip>192.168.7.220</ip>
+                    <port>6307</port>
+                </pcbserver>
+                <dspserver>
+                    <ip>192.168.7.220</ip>
+                    <port>6310</port>
+                </dspserver>
+            </ethernet>
+        </connectivity>
+        <mode>AC</mode>
+    </configuration>
+
+</modemodconfpar>

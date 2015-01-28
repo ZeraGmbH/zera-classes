@@ -13,10 +13,10 @@ ZeraModules::VirtualModule* ThdnModuleFactory::createModule(Zera::Proxy::cProxy*
 
 void ThdnModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
-    module2Delete = module;
     m_ModuleList.removeAll(module);
-    connect(module, SIGNAL(deactivationReady()), this, SLOT(deleteModule()));
-    module->m_DeactivationMachine.start();
+    connect(module, SIGNAL(deactivationReady()), module, SIGNAL(moduleDeactivated()));
+    if (!module->m_DeactivationMachine.isRunning())
+        module->m_DeactivationMachine.start();
 }
 
 
@@ -29,12 +29,6 @@ QList<ZeraModules::VirtualModule *> ThdnModuleFactory::listModules()
 QString ThdnModuleFactory::getFactoryName()
 {
     return QString("thdnmodule");
-}
-
-
-void ThdnModuleFactory::deleteModule()
-{
-    emit module2Delete->moduleDeactivated();
 }
 
 }

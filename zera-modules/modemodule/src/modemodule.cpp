@@ -1,22 +1,21 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
+#include <veinentity.h>
 
-#include "fftmodule.h"
-#include "fftmoduleconfiguration.h"
-#include "fftmoduleconfigdata.h"
-#include "fftmodulemeasprogram.h"
-#include "fftmoduleobservation.h"
-#include "moduleparameter.h"
+#include "modemodule.h"
+#include "modemoduleconfiguration.h"
+#include "modemoduleconfigdata.h"
+#include "modemoduleinit.h"
 #include "moduleinfo.h"
-#include "modulesignal.h"
 #include "moduleerror.h"
+#include "modulesignal.h"
 
-namespace FFTMODULE
+namespace MODEMODULE
 {
 
-cFftModule::cFftModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(modnr, proxy, peer, new cFftModuleConfiguration(), parent)
+cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
+    :cBaseModule(modnr, proxy, peer, new cModeModuleConfiguration(), parent)
 {
     m_ModuleActivistList.clear();
 
@@ -51,52 +50,44 @@ cFftModule::cFftModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer,
 }
 
 
-cFftModule::~cFftModule()
+cModeModule::~cModeModule()
 {
     delete m_pConfiguration;
 }
 
 
-QByteArray cFftModule::getConfiguration()
+QByteArray cModeModule::getConfiguration()
 {
     return m_pConfiguration->exportConfiguration();
 }
 
 
-
-void cFftModule::doConfiguration(QByteArray xmlConfigData)
+void cModeModule::doConfiguration(QByteArray xmlConfigData)
 {
     m_pConfiguration->setConfiguration(xmlConfigData);
 }
 
 
-void cFftModule::setupModule()
+void cModeModule::setupModule()
 {
-    cFftModuleConfigData* pConfData;
-    pConfData = qobject_cast<cFftModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    cModeModuleConfigData *pConfData;
+    pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
-    errorMessage = new ::cModuleError(m_pPeer, "ERR_Message");
+    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
 
-    // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cFftModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
-    m_ModuleActivistList.append(m_pMeasProgram);
-    connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pMeasProgram, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
-
-    // and module observation in case we have to react to naming changes
-    m_pFftModuleObservation = new cFftModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pFftModuleObservation);
-    connect(m_pFftModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pFftModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pFftModuleObservation, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    // we only have to initialize the pcb's measuring mode
+    m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, m_pPeer, *pConfData);
+    m_ModuleActivistList.append(m_pModeModuleInit);
+    connect(m_pModeModuleInit, SIGNAL(activated()), this, SIGNAL(activationContinue()));
+    connect(m_pModeModuleInit, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+    connect(m_pModeModuleInit, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 }
 
 
-void cFftModule::unsetModule()
+void cModeModule::unsetModule()
 {
     if (m_ModuleActivistList.count() > 0)
     {
@@ -106,36 +97,37 @@ void cFftModule::unsetModule()
             delete m_ModuleActivistList.at(i);
         }
         m_ModuleActivistList.clear();
+        if (errorMessage) delete errorMessage;
     }
 }
 
 
-void cFftModule::startMeas()
+void cModeModule::startMeas()
 {
-    m_pMeasProgram->start();
+    // nothing to start here
 }
 
 
-void cFftModule::stopMeas()
+void cModeModule::stopMeas()
 {
-    m_pMeasProgram->stop();
+    // also nothing to stop
 }
 
 
-void cFftModule::activationStart()
+void cModeModule::activationStart()
 {
     m_nActivationIt = 0; // we start with the first
     emit activationContinue();
 }
 
 
-void cFftModule::activationExec()
+void cModeModule::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();
 }
 
 
-void cFftModule::activationDone()
+void cModeModule::activationDone()
 {
     m_nActivationIt++;
 
@@ -146,32 +138,27 @@ void cFftModule::activationDone()
 }
 
 
-void cFftModule::activationFinished()
+void cModeModule::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pFftModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(fftModuleReconfigure()));
-
+    //we are "only" ready
     emit activationReady();
 }
 
 
-void cFftModule::deactivationStart()
+void cModeModule::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pFftModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(fftModuleReconfigure()));
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
 
 
-void cFftModule::deactivationExec()
+void cModeModule::deactivationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->deactivate();
 }
 
 
-void cFftModule::deactivationDone()
+void cModeModule::deactivationDone()
 {
     m_nActivationIt++;
 
@@ -182,15 +169,9 @@ void cFftModule::deactivationDone()
 }
 
 
-void cFftModule::deactivationFinished()
+void cModeModule::deactivationFinished()
 {
     emit deactivationReady();
-}
-
-
-void cFftModule::fftModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
 }
 
 }

@@ -34,12 +34,8 @@ public:
     QList<ZeraModules::VirtualModule *> listModules(); //override;
     QString getFactoryName(); //override;
 
-protected slots:
-  virtual void deleteModule();
-
 private:
   QList<ZeraModules::VirtualModule*> m_ModuleList; // our list of modules
-  ZeraModules::VirtualModule* module2Delete;
 };
 
 }

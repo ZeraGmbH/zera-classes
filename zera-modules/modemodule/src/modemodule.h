@@ -1,5 +1,5 @@
-#ifndef REFERENCEMODULE_H
-#define REFERENCEMODULE_H
+#ifndef MODEMODULE_H
+#define MODEMODULE_H
 
 #include <QObject>
 #include <QStateMachine>
@@ -8,8 +8,6 @@
 #include <QList>
 
 #include "basemodule.h"
-
-
 
 
 namespace Zera {
@@ -25,24 +23,23 @@ namespace Proxy {
 class cModuleInfo;
 class cModuleError;
 
-namespace REFERENCEMODULE
+namespace MODEMODULE
 {
 
-class cReferenceMeasChannel;
-class cReferencecModuleConfiguration;
-class cReferenceModuleMeasProgram;
-class cReferenceAdjustment;
-class cReferenceModuleObservation;
 
-class cReferenceModule : public cBaseModule
+class cModeModuleConfiguration;
+class cModeModuleInit;
+
+
+class cModeModule : public cBaseModule
 {
 Q_OBJECT
 
 public:
-    cReferenceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
-    virtual ~cReferenceModule();
+    cModeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    virtual ~cModeModule();
     virtual QByteArray getConfiguration();
-    virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
+
 
 signals:
     void activationContinue();
@@ -51,10 +48,7 @@ signals:
     void deactivationNext();
 
 protected:
-    cReferenceModuleObservation *m_pReferenceModuleObservation;
-    cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    cReferenceAdjustment * m_pReferenceAdjustment; // our justifying and normation program
-    QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
+    cModeModuleInit *m_pModeModuleInit;
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void unsetModule(); // in case of reconfiguration we must unset module first
@@ -87,11 +81,8 @@ private slots:
     void deactivationExec();
     void deactivationDone();
     void deactivationFinished();
-
-    void referenceModuleReconfigure();
-
 };
 
 }
 
-#endif // REFERENCEMODULE_H
+#endif // MODEMODULE_H

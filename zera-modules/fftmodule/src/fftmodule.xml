@@ -33,14 +33,14 @@
                     </values>
                     <movingwindow>
                         <on>1</on>
-                        <time>0.5</time>
+                        <time>0.2</time>
                     </movingwindow>
                 </measure>
 	</configuration>
 	
 	<parameter>
                 <refchannel>m0</refchannel>
-                <interval>4.0</interval>
+                <interval>1.0</interval>
         </parameter>
 
 </fftmodconfpar>

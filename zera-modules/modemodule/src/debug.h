@@ -1,7 +1,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-namespace REFERENCEMODULE
+namespace MODEMODULE
 {
 //#define DEBUG 1
 }

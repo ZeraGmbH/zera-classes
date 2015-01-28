@@ -64,8 +64,6 @@ cReferenceAdjustment::~cReferenceAdjustment()
 {
     delete m_pDSPInterFace;
     delete m_pPCBInterface;
-    m_pProxy->releaseConnection(m_pDspClient);
-    m_pProxy->releaseConnection(m_pPCBClient);
 }
 
 
@@ -227,7 +225,8 @@ void cReferenceAdjustment::referenceAdjustDone()
 void cReferenceAdjustment::deactivationInit()
 {
     m_bActive = false;
-
+    m_pProxy->releaseConnection(m_pDspClient);
+    m_pProxy->releaseConnection(m_pPCBClient);
     m_pDSPInterFace->deleteMemHandle(m_pGainCorrectionDSP);
     m_pDSPInterFace->deleteMemHandle(m_pOffset2CorrectionDSP);
     emit deactivationContinue();

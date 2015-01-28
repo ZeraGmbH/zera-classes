@@ -1,5 +1,5 @@
-#ifndef FFTMODULEFACTORY_H
-#define FFTMODULEFACTORY_H
+#ifndef MODEMODULEFACTORY_H
+#define MODEMODULEFACTORY_H
 
 #include <QObject>
 #include <QList>
@@ -18,17 +18,17 @@ namespace Proxy
 
 class VeinPeer;
 
-namespace FFTMODULE
+namespace MODEMODULE
 {
 
-class FftModuleFactory : public QObject, public MeasurementModuleFactory
+class ModeModuleFactory : public QObject, public MeasurementModuleFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "fftmodule.json")
+    Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "modemodule.json")
     Q_INTERFACES(MeasurementModuleFactory)
   
 public:
-    FftModuleFactory(){}
+    ModeModuleFactory(){}
     ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, VeinPeer* peer, QObject* parent = 0);
     void destroyModule(ZeraModules::VirtualModule *module); //override;
     QList<ZeraModules::VirtualModule *> listModules(); //override;
@@ -39,4 +39,5 @@ private:
 };
 
 }
-#endif // FFTMODULEFACTORY_H
+
+#endif // MODEMODULEFACTORY_H

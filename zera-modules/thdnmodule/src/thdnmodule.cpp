@@ -55,7 +55,6 @@ cThdnModule::cThdnModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* pee
 cThdnModule::~cThdnModule()
 {
     delete m_pConfiguration;
-    unsetModule();
 }
 
 

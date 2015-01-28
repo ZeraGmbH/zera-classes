@@ -40,7 +40,6 @@ cRangeModuleObservation::cRangeModuleObservation(cRangeModule* module, Zera::Pro
 
 cRangeModuleObservation::~cRangeModuleObservation()
 {
-    m_pProxy->releaseConnection(m_pPCBClient);
     delete m_pPCBInterface;
 }
 
@@ -141,6 +140,8 @@ void cRangeModuleObservation::resetNotifier()
 
 void cRangeModuleObservation::deactivationDone()
 {
+    m_pProxy->releaseConnection(m_pPCBClient);
+    disconnect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     emit deactivated();
 }
 

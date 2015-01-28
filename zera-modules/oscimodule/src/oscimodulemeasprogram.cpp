@@ -27,6 +27,9 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy:
 {
     m_ActValueList = m_ConfigData.m_valueChannelList;
 
+    m_pRMInterface = new Zera::Server::cRMInterface();
+    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
     m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfosState);
@@ -122,24 +125,8 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy:
 
 cOsciModuleMeasProgram::~cOsciModuleMeasProgram()
 {
-    if (m_pRMInterface)
-        delete m_pRMInterface;
-
-    if (m_pcbIFaceList.count() > 0)
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            m_pProxy->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i);
-
-        }
-
-    if (m_pDSPInterFace)
-    {
-        m_pProxy->releaseConnection(m_pDspClient);
-        delete m_pDSPInterFace;
-    }
-
-    m_pProxy->releaseConnection(m_pRMClient);
+    delete m_pRMInterface;
+    delete m_pDSPInterFace;
 }
 
 
@@ -693,7 +680,7 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 void cOsciModuleMeasProgram::resourceManagerConnect()
 {
     // as this is our entry point when activating the module, we do some initialization first
-    m_pRMInterface = new Zera::Server::cRMInterface();
+
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
@@ -829,7 +816,6 @@ void cOsciModuleMeasProgram::readDspChannelDone()
 void cOsciModuleMeasProgram::dspserverConnect()
 {
     m_pDspClient = m_pProxy->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
-    m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
     connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
@@ -889,10 +875,9 @@ void cOsciModuleMeasProgram::deactivateDSP()
 
 void cOsciModuleMeasProgram::freePGRMem()
 {
-    //deleteDspVarList();
-    //deleteDspCmdList();
-    // we always destroy the whole interface even in case of new configuration while running
-    // so the list are gone anyway
+    m_pProxy->releaseConnection(m_pDspClient);
+    deleteDspVarList();
+    deleteDspCmdList();
 
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
@@ -906,10 +891,21 @@ void cOsciModuleMeasProgram::freeUSERMem()
 
 void cOsciModuleMeasProgram::deactivateDSPdone()
 {
+    m_pProxy->releaseConnection(m_pRMClient);
+    if (m_pcbIFaceList.count() > 0)
+    {
+        for (int i = 0; i < m_pcbIFaceList.count(); i++)
+        {
+            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i);
+        }
+        m_pcbIFaceList.clear();
+        m_pcbClientList.clear();
+    }
+
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
+
     emit deactivated();
 }
 

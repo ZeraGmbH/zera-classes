@@ -102,9 +102,9 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cP
     connect(&m_loadDSPDoneState, SIGNAL(entered()), SLOT(activateDSPdone()));
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_freePGRMemState);
-    m_freePGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_unloadDSPDoneState);
+    m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
+    m_freePGRMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeUSERMemState);
+    m_freeUSERMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_unloadDSPDoneState);
     m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
@@ -130,18 +130,7 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cP
 cFftModuleMeasProgram::~cFftModuleMeasProgram()
 {
     delete m_pRMInterface;
-
-    if (m_pcbIFaceList.count() > 0)
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            delete m_pcbIFaceList.at(i);
-            m_pProxy->releaseConnection(m_pcbClientList.at(i));
-        }
-
     delete m_pDSPInterFace;
-    m_pProxy->releaseConnection(m_pDspClient);
-
-    m_pProxy->releaseConnection(m_pRMClient);
     delete m_pMovingwindowFilter;
 }
 
@@ -207,13 +196,9 @@ void cFftModuleMeasProgram::generateInterface()
 
 void cFftModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityNamePNList.count(); i++)
+    for (int i = 0; i < m_EntityNameList.count(); i++)
         m_pPeer->dataRemove(m_EntityNameList.at(i));
-    for (int i = 0; i < m_EntityNamePPList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNameList.at(i));
-    for (int i = 0; i < m_EntityActValuePNList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueList.at(i));
-    for (int i = 0; i < m_EntityActValuePPList.count(); i++)
+    for (int i = 0; i < m_EntityActValueList.count(); i++)
         m_pPeer->dataRemove(m_EntityActValueList.at(i));
 
     m_EntityNameList.clear();
@@ -230,7 +215,7 @@ void cFftModuleMeasProgram::deleteInterface()
 
 void cFftModuleMeasProgram::setDspVarList()
 {
-    m_nfftLen = 2 << (int)(floor(log(m_ConfigData.m_nFftOrder-1)/log(2.0))); // our fft length
+    m_nfftLen = 2 << (int)(floor(log((m_ConfigData.m_nFftOrder << 1) -1)/log(2.0))); // our fft length
     if (m_nfftLen < 32)
         m_nfftLen = m_nfftLen << 1; // minimum fftlen is 32 !!!!
     // we fetch a handle for sampled data and other temporary values
@@ -937,10 +922,9 @@ void cFftModuleMeasProgram::deactivateDSP()
 
 void cFftModuleMeasProgram::freePGRMem()
 {
-    //deleteDspVarList();
-    //deleteDspCmdList();
-    // we always destroy the whole interface even in case of new configuration while running
-    // so the list are gone anyway
+    m_pProxy->releaseConnection(m_pDspClient);
+    deleteDspVarList();
+    deleteDspCmdList();
 
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
@@ -954,10 +938,22 @@ void cFftModuleMeasProgram::freeUSERMem()
 
 void cFftModuleMeasProgram::deactivateDSPdone()
 {
+    m_pProxy->releaseConnection(m_pRMClient);
+
+    if (m_pcbIFaceList.count() > 0)
+    {
+        for (int i = 0; i < m_pcbIFaceList.count(); i++)
+        {
+            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i);
+        }
+        m_pcbClientList.clear();
+        m_pcbIFaceList.clear();
+    }
+
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
+
     emit deactivated();
 }
 
@@ -976,11 +972,12 @@ void cFftModuleMeasProgram::dataReadDSP()
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
 
         int nChannels, nHarmonic;
-        int middle, offs;
+        int middle, offs, resultOffs;
         double scale;
 
         nChannels = m_ActValueList.count();
         nHarmonic = m_ConfigData.m_nFftOrder;
+        resultOffs = nHarmonic << 1;
 
         scale = 1.0/m_nfftLen;
         middle = m_nfftLen >> 1; // the fft results are sym. ordered with pos. and neg. frequencies
@@ -989,8 +986,8 @@ void cFftModuleMeasProgram::dataReadDSP()
         for (int i = 0; i < nChannels; i++)
         {
 
-            m_FFTModuleActualValues.replace(i * nHarmonic, m_ModuleActualValues.at(i * offs) * scale); // special case dc
-            m_FFTModuleActualValues.replace(i * nHarmonic + 1, 0.0);
+            m_FFTModuleActualValues.replace(i * resultOffs, m_ModuleActualValues.at(i * offs) * scale); // special case dc
+            m_FFTModuleActualValues.replace(i * resultOffs + 1, 0.0);
 
             for (int j = 1; j < nHarmonic; j++)
             {
@@ -1000,8 +997,8 @@ void cFftModuleMeasProgram::dataReadDSP()
 
                 re = (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
                 im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
-                m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1), im);
-                m_FFTModuleActualValues.replace((i * nHarmonic) + (j << 1) + 1, re);
+                m_FFTModuleActualValues.replace((i * resultOffs) + (j << 1), re);
+                m_FFTModuleActualValues.replace((i * resultOffs) + (j << 1) + 1, im);
             }
         }
 
@@ -1016,8 +1013,8 @@ void cFftModuleMeasProgram::dataReadDSP()
             {
                 ts = QString("FFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
                         .arg(j)
-                        .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)))
-                        .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder)+(j*2)+1))
+                        .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder+j)*2))
+                        .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder+j)*2+1))
                         .arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).unit);
                 s += ts;
             }

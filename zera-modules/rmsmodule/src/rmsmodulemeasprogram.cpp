@@ -128,19 +128,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
 cRmsModuleMeasProgram::~cRmsModuleMeasProgram()
 {
     delete m_pRMInterface;
-
-    if (m_pcbIFaceList.count() > 0)
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            m_pProxy->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i);
-        }
-
-    m_pProxy->releaseConnection(m_pDspClient);
     delete m_pDSPInterFace;
-
-
-    m_pProxy->releaseConnection(m_pRMClient);
     delete m_pMovingwindowFilter;
 }
 
@@ -970,10 +958,9 @@ void cRmsModuleMeasProgram::deactivateDSP()
 
 void cRmsModuleMeasProgram::freePGRMem()
 {
-    //deleteDspVarList();
-    //deleteDspCmdList();
-    // we always destroy the whole interface even in case of new configuration while running
-    // so the list are gone anyway
+    m_pProxy->releaseConnection(m_pDspClient);
+    deleteDspVarList();
+    deleteDspCmdList();
 
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
@@ -987,10 +974,22 @@ void cRmsModuleMeasProgram::freeUSERMem()
 
 void cRmsModuleMeasProgram::deactivateDSPdone()
 {
+    m_pProxy->releaseConnection(m_pRMClient);
+
+    if (m_pcbIFaceList.count() > 0)
+    {
+        for (int i = 0; i < m_pcbIFaceList.count(); i++)
+        {
+            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i);
+        }
+        m_pcbClientList.clear();
+        m_pcbIFaceList.clear();
+    }
+
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
-    for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
+
     emit deactivated();
 }
 

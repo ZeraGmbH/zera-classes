@@ -57,7 +57,6 @@ cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* p
 cRangeModule::~cRangeModule()
 {
     delete m_pConfiguration;
-    unsetModule();
 }
 
 

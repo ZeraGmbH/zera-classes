@@ -1,5 +1,5 @@
-#ifndef REFERENCEMODULEINIT_H
-#define REFERENCEMODULEINIT_H
+#ifndef MODEMODULEINIT_H
+#define MODEMODULEINIT_H
 
 #include <QObject>
 #include <QList>
@@ -30,38 +30,36 @@ class QState;
 class QFinalState;
 
 
-namespace REFERENCEMODULE
+namespace MODEMODULE
 {
 
-namespace REFMODINIT
+namespace MODEMODINIT
 {
 
-enum referencemoduleinitCmds
+enum modemoduleinitCmds
 {
     sendrmident,
     readresourcetypes,
     readresource,
     readresourceinfo,
     claimresource,
-    setreferencemode,
-
-    setacmode,
+    setmode,
     freeresource
 };
 
 }
 
-class cReferenceModule;
-class cReferenceModuleConfigData;
+class cModeModule;
+class cModeModuleConfigData;
 
 
-class cReferenceModuleInit: public cModuleActivist
+class cModeModuleInit: public cModuleActivist
 {
     Q_OBJECT
 
 public:
-    cReferenceModuleInit(cReferenceModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cReferenceModuleConfigData& configData);
-    virtual ~cReferenceModuleInit();
+    cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cModeModuleConfigData& configData);
+    virtual ~cModeModuleInit();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
@@ -70,10 +68,10 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    cReferenceModule* m_pModule; // the module we live in
+    cModeModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     VeinPeer* m_pPeer; // the peer where we set our entities
-    cReferenceModuleConfigData& m_ConfigData;
+    cModeModuleConfigData& m_ConfigData;
 
     QHash<quint32, int> m_MsgNrCmdList;
 
@@ -93,11 +91,10 @@ private:
     QState m_readResourceInfoState; // we look for resource specification
     QState m_claimResourceState;
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
-    QState m_setReferenceModeState;
+    QState m_setModeState;
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating
-    QState m_setACModeState;
     QState m_freeResourceState;
     QFinalState m_deactivationDoneState;
 
@@ -109,10 +106,9 @@ private slots:
     void readResourceInfo();
     void claimResource();
     void pcbserverConnect();
-    void setReferenceMode();
+    void setMode();
     void activationDone();
 
-    void setACMode();
     void freeResource();
     void deactivationDone();
 
@@ -122,4 +118,4 @@ private slots:
 }
 
 
-#endif // REFERENCEMODULEINIT_H
+#endif // MODEMODULEINIT_H

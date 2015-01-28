@@ -105,8 +105,6 @@ cReferenceMeasChannel::cReferenceMeasChannel(Zera::Proxy::cProxy* proxy, VeinPee
 
 cReferenceMeasChannel::~cReferenceMeasChannel()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
-    m_pProxy->releaseConnection(m_pPCBClient);
     delete m_pRMInterface;
     delete m_pPCBInterface;
 }
@@ -611,7 +609,8 @@ void cReferenceMeasChannel::activationDone()
 
 void cReferenceMeasChannel::deactivationInit()
 {
-    // nothing to do here so
+    m_pProxy->releaseConnection(m_pRMClient);
+    m_pProxy->releaseConnection(m_pPCBClient);
     emit deactivationContinue();
 }
 

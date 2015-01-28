@@ -129,19 +129,7 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cP
 cDftModuleMeasProgram::~cDftModuleMeasProgram()
 {
     delete m_pRMInterface;
-
-    if (m_pcbIFaceList.count() > 0)
-        for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        {
-            m_pProxy->releaseConnection(m_pcbClientList.at(i));
-            delete m_pcbIFaceList.at(i);
-
-        }
-
-    m_pProxy->releaseConnection(m_pDspClient);
     delete m_pDSPInterFace;
-
-    m_pProxy->releaseConnection(m_pRMClient);
     delete m_pMovingwindowFilter;
 }
 
@@ -934,10 +922,9 @@ void cDftModuleMeasProgram::deactivateDSP()
 
 void cDftModuleMeasProgram::freePGRMem()
 {
-    //deleteDspVarList();
-    //deleteDspCmdList();
-    // we always destroy the whole interface even in case of new configuration while running
-    // so the list are gone anyway
+    m_pProxy->releaseConnection(m_pDspClient); // no async. messages anymore
+    deleteDspVarList(); // so we can destroy our actual var list
+    deleteDspCmdList(); // and command list
 
     m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
@@ -951,11 +938,21 @@ void cDftModuleMeasProgram::freeUSERMem()
 
 void cDftModuleMeasProgram::deactivateDSPdone()
 {
-    disconnect(m_pRMInterface, 0, this, 0);
-    disconnect(m_pDSPInterFace, 0, this, 0);
+    m_pProxy->releaseConnection(m_pRMClient);
 
-    for (int i = 0; i < m_pcbIFaceList.count(); i++)
-        disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);
+    if (m_pcbIFaceList.count() > 0)
+    {
+        for (int i = 0; i < m_pcbIFaceList.count(); i++)
+        {
+            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            delete m_pcbIFaceList.at(i); // our signals are also gone
+        }
+        m_pcbIFaceList.clear();
+        m_pcbClientList.clear();
+    }
+
+    disconnect(m_pRMInterface, 0, this, 0); // but we must disconnect this 2 manually
+    disconnect(m_pDSPInterFace, 0, this, 0);
 
     emit deactivated();
 }

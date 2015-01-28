@@ -25,34 +25,29 @@ INCLUDEPATH += ../../zera-basemodule \
     ../interface
 
 
-TARGET = $$qtLibraryTarget(referencemodule)
+TARGET = $$qtLibraryTarget(modemodule)
 
 
 INCLUDEPATH += "src"
 
 SOURCES += \
-    src/referencemodulefactory.cpp \
-    src/referencemoduleconfiguration.cpp \
-    src/referencemeaschannel.cpp \
-    src/referencemodulemeasprogram.cpp \
-    src/referenceadjustment.cpp \
-    src/referencemoduleobservation.cpp \
-    src/referencemodule.cpp
+    src/modemodulefactory.cpp \
+    src/modemoduleconfiguration.cpp \
+    src/modemodule.cpp \
+    src/modemoduleinit.cpp
 
 HEADERS += \
-    src/referencemodulefactory.h \
-    src/referencemodule.h \
-    src/referencemoduleconfiguration.h \
-    src/referencemoduleconfigdata.h \
-    src/referencemeaschannel.h \
-    src/referencemodulemeasprogram.h \
-    src/referenceadjustment.h \
-    src/referencemoduleobservation.h \
-    src/debug.h
+    src/modemodulefactory.h \
+    src/modemodule.h \
+    src/modemoduleconfiguration.h \
+    src/modemoduleconfigdata.h \
+    src/debug.h \
+    src/modemoduleinit.h
 
 OTHER_FILES += \
-    src/referencemodule.xml \
-    src/referencemodule.xsd
+    src/modemodule.xsd \
+    src/modemoduleAC.xml \
+    src/modemoduleREF.xml
 
 RESOURCES += \
     resource.qrc

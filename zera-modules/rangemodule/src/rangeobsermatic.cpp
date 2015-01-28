@@ -60,7 +60,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
 
 cRangeObsermatic::~cRangeObsermatic()
 {
-    m_pProxy->releaseConnection(m_pDspClient);
     delete m_pDSPInterFace;
 }
 
@@ -442,6 +441,7 @@ void cRangeObsermatic::readGainCorrDone()
 
 void cRangeObsermatic::deactivationInit()
 {
+    m_pProxy->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0); // we disconnect from our dsp interface
     m_pDSPInterFace->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
     emit deactivationContinue();

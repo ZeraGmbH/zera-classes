@@ -5,15 +5,15 @@
 #include <reply.h>
 #include <errormessages.h>
 
-#include "referencemodule.h"
-#include "referencemoduleinit.h"
-#include "referencemoduleconfigdata.h"
+#include "modemodule.h"
+#include "modemoduleinit.h"
+#include "modemoduleconfigdata.h"
 
 
-namespace REFERENCEMODULE
+namespace MODEMODULE
 {
 
-cReferenceModuleInit::cReferenceModuleInit(cReferenceModule *module, Zera::Proxy::cProxy *proxy, VeinPeer *peer, cReferenceModuleConfigData &configData)
+cModeModuleInit::cModeModuleInit(cModeModule *module, Zera::Proxy::cProxy *proxy, VeinPeer *peer, cModeModuleConfigData &configData)
     :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_ConfigData(configData)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
@@ -25,7 +25,7 @@ cReferenceModuleInit::cReferenceModuleInit(cReferenceModule *module, Zera::Proxy
     m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceState);
     m_claimResourceState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectionState);
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
-    m_setReferenceModeState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setModeState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -33,7 +33,7 @@ cReferenceModuleInit::cReferenceModuleInit(cReferenceModule *module, Zera::Proxy
     m_activationMachine.addState(&m_readResourceInfoState);
     m_activationMachine.addState(&m_claimResourceState);
     m_activationMachine.addState(&m_pcbserverConnectionState);
-    m_activationMachine.addState(&m_setReferenceModeState);
+    m_activationMachine.addState(&m_setModeState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
     connect(&m_resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
@@ -43,43 +43,38 @@ cReferenceModuleInit::cReferenceModuleInit(cReferenceModule *module, Zera::Proxy
     connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
     connect(&m_claimResourceState, SIGNAL(entered()), SLOT(claimResource()));
     connect(&m_pcbserverConnectionState, SIGNAL(entered()), SLOT(pcbserverConnect()));
-    connect(&m_setReferenceModeState, SIGNAL(entered()), SLOT(setReferenceMode()));
+    connect(&m_setModeState, SIGNAL(entered()), SLOT(setMode()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
-    m_setACModeState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeResourceState);
-    m_freeResourceState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeResourceState);
-    m_deactivationMachine.addState(&m_setACModeState);
+    m_freeResourceState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_freeResourceState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_setACModeState);
-    connect(&m_setACModeState, SIGNAL(entered()), SLOT(setACMode()));
+    m_deactivationMachine.setInitialState(&m_freeResourceState);
     connect(&m_freeResourceState, SIGNAL(entered()), SLOT(freeResource()));
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 }
 
 
-cReferenceModuleInit::~cReferenceModuleInit()
+cModeModuleInit::~cModeModuleInit()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
-    m_pProxy->releaseConnection(m_pPCBClient);
     delete m_pRMInterface;
     delete m_pPCBInterface;
 }
 
 
-void cReferenceModuleInit::generateInterface()
+void cModeModuleInit::generateInterface()
 {
     // at the moment we have no interface
 }
 
 
-void cReferenceModuleInit::deleteInterface()
+void cModeModuleInit::deleteInterface()
 {
     // so we have nothing to delete
 }
 
 
-void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages
     {
@@ -92,7 +87,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case REFMODINIT::sendrmident:
+            case MODEMODINIT::sendrmident:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
@@ -105,7 +100,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 }
                 break;
 
-            case REFMODINIT::readresourcetypes:
+            case MODEMODINIT::readresourcetypes:
                 if ((reply == ack) && (answer.toString().contains("SENSE")))
                     emit activationContinue();
                 else
@@ -118,7 +113,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 }
                 break;
 
-            case REFMODINIT::readresource:
+            case MODEMODINIT::readresource:
                 if ((reply == ack) && (answer.toString().contains("MMODE")))
                     emit activationContinue();
                 else
@@ -131,7 +126,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 }
                 break;
 
-            case REFMODINIT::readresourceinfo:
+            case MODEMODINIT::readresourceinfo:
             {
                 bool ok1, ok2, ok3;
                 int max, free;
@@ -172,7 +167,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 break;
             }
 
-            case REFMODINIT::claimresource:
+            case MODEMODINIT::claimresource:
                 if (reply == ack)
                     emit activationContinue();
                 else
@@ -185,7 +180,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 }
                 break;
 
-            case REFMODINIT::setreferencemode:
+            case MODEMODINIT::setmode:
                 if (reply == ack)
                     emit activationContinue();
                 else
@@ -198,20 +193,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 }
                 break;
 
-            case REFMODINIT::setacmode:
-                if (reply == ack)
-                    emit deactivationContinue();
-                else
-                {
-                    emit errMsg((tr(setMeasModeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << setMeasModeErrMsg;
-#endif
-                    emit deactivationError();
-                }
-                break;
-
-            case REFMODINIT::freeresource:
+            case MODEMODINIT::freeresource:
                 if (reply == ack || reply == nack) // we accept nack here also
                     emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
                 else
@@ -229,7 +211,7 @@ void cReferenceModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
 }
 
 
-void cReferenceModuleInit::resourceManagerConnect()
+void cModeModuleInit::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
@@ -242,40 +224,40 @@ void cReferenceModuleInit::resourceManagerConnect()
 }
 
 
-void cReferenceModuleInit::sendRMIdent()
+void cModeModuleInit::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("ReferenceModuleInit%1").arg(m_pModule->getModuleNr()))] = REFMODINIT::sendrmident;
+    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("ModeModuleInit%1").arg(m_pModule->getModuleNr()))] = MODEMODINIT::sendrmident;
 }
 
 
-void cReferenceModuleInit::readResourceTypes()
+void cModeModuleInit::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = REFMODINIT::readresourcetypes;
+    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = MODEMODINIT::readresourcetypes;
 }
 
 
-void cReferenceModuleInit::readResource()
+void cModeModuleInit::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = REFMODINIT::readresource;
+    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = MODEMODINIT::readresource;
 }
 
 
-void cReferenceModuleInit::readResourceInfo()
+void cModeModuleInit::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", "MMODE")] = REFMODINIT::readresourceinfo;
+    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", "MMODE")] = MODEMODINIT::readresourceinfo;
 }
 
 
-void cReferenceModuleInit::claimResource()
+void cModeModuleInit::claimResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", "MMODE", 1)] = REFMODINIT::claimresource;
+    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", "MMODE", 1)] = MODEMODINIT::claimresource;
 }
 
 
-void cReferenceModuleInit::pcbserverConnect()
+void cModeModuleInit::pcbserverConnect()
 {
     m_pPCBClient = m_pProxy->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_nPort);
-    m_pcbserverConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setReferenceModeState);
+    m_pcbserverConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setModeState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
@@ -283,33 +265,29 @@ void cReferenceModuleInit::pcbserverConnect()
 }
 
 
-void cReferenceModuleInit::setReferenceMode()
+void cModeModuleInit::setMode()
 {
-    m_MsgNrCmdList[m_pPCBInterface->setMMode("REF")] = REFMODINIT::setreferencemode;
+    m_MsgNrCmdList[m_pPCBInterface->setMMode(m_ConfigData.m_sMode)] = MODEMODINIT::setmode;
 }
 
 
-void cReferenceModuleInit::activationDone()
+void cModeModuleInit::activationDone()
 {
     emit activated();
 }
 
 
-void cReferenceModuleInit::setACMode()
+void cModeModuleInit::freeResource()
 {
-    m_MsgNrCmdList[m_pPCBInterface->setMMode("AC")] = REFMODINIT::setacmode;
+    m_pProxy->releaseConnection(m_pPCBClient);
+    m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", "MMODE")] = MODEMODINIT::freeresource;
 }
 
 
-void cReferenceModuleInit::freeResource()
+void cModeModuleInit::deactivationDone()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", "MMODE")] = REFMODINIT::freeresource;
-}
-
-
-void cReferenceModuleInit::deactivationDone()
-{
-    // and disconnect for our servers afterwards
+    m_pProxy->releaseConnection(m_pRMClient);
+    // and disconnect from our servers afterwards
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();

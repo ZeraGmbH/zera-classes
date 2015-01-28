@@ -85,7 +85,6 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
 
 cAdjustManagement::~cAdjustManagement()
 {
-    m_pProxy->releaseConnection(m_pDspClient);
     delete m_pDSPInterFace;
 }
 
@@ -175,6 +174,7 @@ void cAdjustManagement::readCorrDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
+    m_pProxy->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
     for (int i = 0; i < m_ChannelList.count(); i++)
