@@ -1,16 +1,19 @@
-# paths for s.stirtzel work environment
-exists(/work/qt_projects/include/project-paths.pri) {
-  include(/work/qt_projects/include/project-paths.pri)
+contains(DEFINES, OE_BUILD) {
+  message(Openembedded build)
 }
+else {
+  # paths for s.stirtzel work environment
+  exists(/work/qt_projects/include/project-paths.pri) {
+    include(/work/qt_projects/include/project-paths.pri)
+  }
 
+  exists($$PWD/autobuilder.pri) {
+    include($$PWD/autobuilder.pri)
+  }
 
-exists($$PWD/autobuilder.pri) {
-  include($$PWD/autobuilder.pri)
-}
-
-
-exists(/home/peter/C++/zera-classes-project/project-paths.pri) {
-  include(/home/peter/C++/zera-classes-project/project-paths.pri)
+  exists(/home/peter/C++/zera-classes-project/project-paths.pri) {
+    include(/home/peter/C++/zera-classes-project/project-paths.pri)
+  }
 }
 
 
