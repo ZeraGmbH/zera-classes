@@ -34,7 +34,7 @@
             </pllchannel>
         </sample>
         <measure>
-            <interval>0.2</interval>
+            <interval>0.5</interval>
         </measure>
     </configuration>
 

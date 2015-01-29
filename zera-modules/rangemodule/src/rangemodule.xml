@@ -59,7 +59,7 @@
             </group>
         </sense>
         <measure>
-            <interval>0.2</interval>
+            <interval>0.4</interval>
         </measure>
         <adjustment>
              <interval>0.5</interval>

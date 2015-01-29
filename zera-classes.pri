@@ -11,8 +11,8 @@ else {
     include($$PWD/autobuilder.pri)
   }
 
-  exists(/home/peter/C++/zera-classes-project/project-paths.pri) {
-    include(/home/peter/C++/zera-classes-project/project-paths.pri)
+  exists(/home/peter/C++/zera-classes/project-paths.pri) {
+    include(/home/peter/C++/zera-classes/project-paths.pri)
   }
 }
 

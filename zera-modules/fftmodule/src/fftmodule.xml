@@ -32,15 +32,15 @@
                         <val6>m5</val6>
                     </values>
                     <movingwindow>
-                        <on>1</on>
-                        <time>0.2</time>
+                        <on>0</on>
+                        <time>1.0</time>
                     </movingwindow>
                 </measure>
 	</configuration>
 	
 	<parameter>
                 <refchannel>m0</refchannel>
-                <interval>1.0</interval>
+                <interval>2.0</interval>
         </parameter>
 
 </fftmodconfpar>
