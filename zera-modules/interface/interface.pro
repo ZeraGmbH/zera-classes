@@ -5,8 +5,6 @@
 #-------------------------------------------------
 TEMPLATE = lib
 
-include(../../zera-classes.pri)
-
 QT       -= gui
 
 TARGET = MeasurementModuleInterface
@@ -19,3 +17,5 @@ HEADERS += \
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-modules
 INSTALLS += header_files
+
+include(../../zera-classes.pri)

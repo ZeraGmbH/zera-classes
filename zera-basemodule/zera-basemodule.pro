@@ -6,7 +6,6 @@
 TEMPLATE = lib
 
 ZDEPENDS += resman libvein
-include(../zera-classes.pri)
 
 QT       -= gui
 QT       += network
@@ -64,3 +63,5 @@ SOURCES += \
     basemeaschannel.cpp \
     movingwindowfilter.cpp \
     basesamplechannel.cpp
+
+include(../zera-classes.pri)

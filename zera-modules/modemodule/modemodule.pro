@@ -7,7 +7,6 @@ TEMPLATE = lib
 CONFIG += plugin
 
 ZDEPENDS += libvein
-include(../../zera-classes.pri)
 
 QT       += network core
 QT       -= gui
@@ -51,3 +50,5 @@ OTHER_FILES += \
 
 RESOURCES += \
     resource.qrc
+
+include(../../zera-classes.pri)
