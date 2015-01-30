@@ -152,7 +152,7 @@ QList<const QState *> cBaseModule::getActualStates()
 void cBaseModule::setConfiguration(QByteArray xmlConfigData)
 {
     m_xmlconfString = xmlConfigData;
-    m_ConfigTimer.start(0); // in case eventloop is not yet running
+    m_ConfigTimer.start(10); // in case eventloop is not yet running
 }
 
 
@@ -164,7 +164,7 @@ bool cBaseModule::isConfigured()
 
 void cBaseModule::startModule()
 {
-    m_StartTimer.start(0); // in case eventloop is not yet running
+    m_StartTimer.start(10); // in case eventloop is not yet running
 }
 
 
