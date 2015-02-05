@@ -23,9 +23,6 @@ private:
     VeinPeer* m_pPeer;
     VeinEntity *m_pParEntity;
     QString m_sMessage;
-
-private slots:
-    void update(QVariant);
 };
 
 #endif // MODULEERROR_H
