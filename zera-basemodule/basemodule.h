@@ -96,8 +96,11 @@ protected:
     virtual void stopMeas() = 0;
 
 private:
-    QTimer m_ConfigTimer;
-    QTimer m_StartTimer;
+    bool m_bConfCmd;
+    bool m_bStartCmd;
+    bool m_bStopCmd;
+    bool m_bStateMachineStarted;
+
     QList<const QState*> m_StateList;
     int m_nLastState;
     int m_nStatus;
@@ -105,6 +108,7 @@ private:
 
 private slots:
     void entryIdle();
+    void entryIDLEIdle();
     void exitIdle();
 
     void entryConfXML();

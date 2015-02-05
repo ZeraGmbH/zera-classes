@@ -15,8 +15,7 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
     QString s;
     setParent(parent);
 
-    m_ConfigTimer.setSingleShot(true);
-    m_StartTimer.setSingleShot(true);
+    m_bConfCmd = m_bStartCmd = m_bStopCmd = m_bStateMachineStarted = false;
 
     m_nStatus = untouched;
     m_pStateMachine = new QStateMachine(this);
@@ -44,6 +43,7 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
     m_pStateIDLEConfXML->addTransition(m_pConfiguration, SIGNAL(configXMLDone()), m_pStateIDLEConfSetup);
     m_pStateIDLEConfSetup->addTransition(this, SIGNAL(sigConfDone()), m_pStateIDLEIdle);
     m_pStateIdle->setInitialState(m_pStateIDLEIdle);
+    connect(m_pStateIDLEIdle, SIGNAL(entered()), SLOT(entryIDLEIdle()));
     connect(m_pStateIdle, SIGNAL(entered()), SLOT(entryIdle()));
     connect(m_pStateIdle, SIGNAL(exited()), SLOT(exitIdle()));
     connect(m_pStateIDLEConfXML, SIGNAL(entered()), SLOT(entryConfXML()));
@@ -107,8 +107,6 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
     m_pStateMachine->addState(m_pStateFinished);
     m_pStateMachine->setInitialState(m_pStateIdle);
 
-    connect(&m_ConfigTimer, SIGNAL(timeout()), SIGNAL(sigConfiguration()));
-    connect(&m_StartTimer, SIGNAL(timeout()), SIGNAL(sigRun()));
     m_pStateMachine->start();
 }
 
@@ -152,7 +150,10 @@ QList<const QState *> cBaseModule::getActualStates()
 void cBaseModule::setConfiguration(QByteArray xmlConfigData)
 {
     m_xmlconfString = xmlConfigData;
-    m_ConfigTimer.start(10); // in case eventloop is not yet running
+    if (m_bStateMachineStarted)
+        emit sigConfiguration(); // if our statemachine is already started we emit signal at once
+    else
+        m_bConfCmd = true; // otherwise we keep in mind that we should configure when machine starts
 }
 
 
@@ -164,14 +165,20 @@ bool cBaseModule::isConfigured()
 
 void cBaseModule::startModule()
 {
-    m_StartTimer.start(10); // in case eventloop is not yet running
+    if (m_bStateMachineStarted)
+        emit sigRun(); // if our statemachine is already started we emit signal at once
+    else
+        m_bStartCmd = true; // otherwise we keep in mind that we should configure when machine starts
 }
 
 
 void cBaseModule::stopModule()
 {
-    emit sigStop();
-    // here we must inform our module engine
+    if (m_bStateMachineStarted)
+        emit sigStop(); // if our statemachine is already started we emit signal at once
+    else
+        m_bStopCmd = true; // otherwise we keep in mind that we should configure when machine starts
+
 }
 
 
@@ -186,6 +193,30 @@ void cBaseModule::entryIdle()
     m_StateList.clear(); // we remove all states from list
     m_StateList.append(m_pStateIdle); // but we are in idle now
     m_nLastState = IDLE; // we keep track over our last state
+}
+
+
+void cBaseModule::entryIDLEIdle()
+{
+    m_bStateMachineStarted = true; // event loop has activated our statemachine
+    if (m_bConfCmd)
+    {
+        m_bConfCmd = false;
+        emit sigConfiguration();
+    }
+    else
+        if (m_bStartCmd)
+        {
+            m_bStartCmd = false;
+            emit sigRun();
+        }
+
+        else
+            if (m_bStopCmd)
+            {
+                m_bStopCmd = false;
+                emit sigStop();
+            }
 }
 
 
