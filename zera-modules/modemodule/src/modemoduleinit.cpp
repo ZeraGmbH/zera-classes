@@ -4,6 +4,7 @@
 #include <proxyclient.h>
 #include <reply.h>
 #include <errormessages.h>
+#include <dspinterface.h>
 
 #include "modemodule.h"
 #include "modemoduleinit.h"
@@ -18,6 +19,7 @@ cModeModuleInit::cModeModuleInit(cModeModule *module, Zera::Proxy::cProxy *proxy
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pDSPInterface = new Zera::Server::cDSPInterface();
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
@@ -25,7 +27,14 @@ cModeModuleInit::cModeModuleInit(cModeModule *module, Zera::Proxy::cProxy *proxy
     m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceState);
     m_claimResourceState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectionState);
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
-    m_setModeState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setModeState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectionState);
+    // m_dspserverConnectionState.addTransition is done in dspserverConnection
+    m_writeGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeGainCorr2State);
+    m_writeGainCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_writePhaseCorrState);
+    m_writePhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writePhaseCorr2State);
+    m_writePhaseCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorrState);
+    m_writeOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorr2State);
+    m_writeOffsetCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -34,6 +43,13 @@ cModeModuleInit::cModeModuleInit(cModeModule *module, Zera::Proxy::cProxy *proxy
     m_activationMachine.addState(&m_claimResourceState);
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_setModeState);
+    m_activationMachine.addState(&m_dspserverConnectionState);
+    m_activationMachine.addState(&m_writeGainCorrState);
+    m_activationMachine.addState(&m_writeGainCorr2State);
+    m_activationMachine.addState(&m_writePhaseCorrState);
+    m_activationMachine.addState(&m_writePhaseCorr2State);
+    m_activationMachine.addState(&m_writeOffsetCorrState);
+    m_activationMachine.addState(&m_writeOffsetCorr2State);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
     connect(&m_resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
@@ -44,6 +60,13 @@ cModeModuleInit::cModeModuleInit(cModeModule *module, Zera::Proxy::cProxy *proxy
     connect(&m_claimResourceState, SIGNAL(entered()), SLOT(claimResource()));
     connect(&m_pcbserverConnectionState, SIGNAL(entered()), SLOT(pcbserverConnect()));
     connect(&m_setModeState, SIGNAL(entered()), SLOT(setMode()));
+    connect(&m_dspserverConnectionState, SIGNAL(entered()), SLOT(dspserverConnect()));
+    connect(&m_writeGainCorrState, SIGNAL(entered()), SLOT(writeGainCorr()));
+    connect(&m_writeGainCorr2State, SIGNAL(entered()), SLOT(writeGainCorr2()));
+    connect(&m_writePhaseCorrState, SIGNAL(entered()), SLOT(writePhaseCorr()));
+    connect(&m_writePhaseCorr2State, SIGNAL(entered()), SLOT(writePhaseCorr2()));
+    connect(&m_writeOffsetCorrState, SIGNAL(entered()), SLOT(writeOffsetCorr()));
+    connect(&m_writeOffsetCorr2State, SIGNAL(entered()), SLOT(writeOffsetCorr2()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     m_freeResourceState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
@@ -59,6 +82,7 @@ cModeModuleInit::~cModeModuleInit()
 {
     delete m_pRMInterface;
     delete m_pPCBInterface;
+    delete m_pDSPInterface;
 }
 
 
@@ -193,6 +217,48 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 break;
 
+            case MODEMODINIT::writegaincorr:
+            case MODEMODINIT::writegaincorr2:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    // perhaps we emit some error here ?
+                    emit errMsg((tr(writedspgaincorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspgaincorrErrMsg;
+#endif
+                }
+                break;
+
+            case MODEMODINIT::writephasecorr:
+            case MODEMODINIT::writephasecorr2:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    // perhaps we emit some error here ?
+                    emit errMsg((tr(writedspphasecorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspphasecorrErrMsg;
+#endif
+                }
+                break;
+
+            case MODEMODINIT::writeoffsetcorr:
+            case MODEMODINIT::writeoffsetcorr2:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    // perhaps we emit some error here ?
+                    emit errMsg((tr(writedspoffsetcorrErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspoffsetcorrErrMsg;
+#endif
+                }
+                break;
+
             case MODEMODINIT::freeresource:
                 if (reply == ack || reply == nack) // we accept nack here also
                     emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
@@ -271,14 +337,104 @@ void cModeModuleInit::setMode()
 }
 
 
+void cModeModuleInit::dspserverConnect()
+{
+    // we set up our dsp server connection
+    m_pDSPClient = m_pProxy->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
+    m_pDSPInterface->setClient(m_pDSPClient);
+    m_dspserverConnectionState.addTransition(m_pDSPClient, SIGNAL(connected()), &m_writeGainCorrState);
+    connect(m_pDSPInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pProxy->startConnection(m_pDSPClient);
+}
+
+
+void cModeModuleInit::writeGainCorr()
+{
+    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
+    m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
+    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "GAINCORRECTION");
+    for (int i = 0; i < 32; i++)
+        data[i] = 1.0;
+    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr;
+}
+
+
+void cModeModuleInit::writeGainCorr2()
+{
+    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+
+    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
+    m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
+    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "GAINCORRECTION2");
+    for (int i = 0; i < 32; i++)
+        data[i] = 1.0;
+    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr2;
+}
+
+
+void cModeModuleInit::writePhaseCorr()
+{
+    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+
+    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
+    m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
+    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "PHASECORRECTION");
+    for (int i = 0; i < 32; i++)
+        data[i] = 0.0;
+    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr;
+}
+
+
+void cModeModuleInit::writePhaseCorr2()
+{
+    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+
+    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
+    m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION2",32, DSPDATA::vDspIntVar));
+    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "PHASECORRECTION2");
+    for (int i = 0; i < 32; i++)
+        data[i] = 0.0;
+    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr2;
+}
+
+
+void cModeModuleInit::writeOffsetCorr()
+{
+    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+
+    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
+    m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
+    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "OFFSETCORRECTION");
+    for (int i = 0; i < 32; i++)
+        data[i] = 0.0;
+    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
+}
+
+
+void cModeModuleInit::writeOffsetCorr2()
+{
+    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
+
+    m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
+    m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
+    float* data = m_pDSPInterface->data(m_pCorrectionDSP, "OFFSETCORRECTION2");
+    for (int i = 0; i < 32; i++)
+        data[i] = 0.0;
+    m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
+}
+
+
+
 void cModeModuleInit::activationDone()
 {
+    m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
     emit activated();
 }
 
 
 void cModeModuleInit::freeResource()
 {
+    m_pProxy->releaseConnection(m_pDSPClient);
     m_pProxy->releaseConnection(m_pPCBClient);
     m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", "MMODE")] = MODEMODINIT::freeresource;
 }

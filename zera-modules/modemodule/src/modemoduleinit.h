@@ -21,6 +21,7 @@ namespace Proxy
 namespace  Server {
     class cRMInterface;
     class cPCBInterface;
+    class cDSPInterface;
 }
 }
 
@@ -28,7 +29,7 @@ namespace  Server {
 class QStateMachine;
 class QState;
 class QFinalState;
-
+class cDspMeasData;
 
 namespace MODEMODULE
 {
@@ -44,6 +45,12 @@ enum modemoduleinitCmds
     readresourceinfo,
     claimresource,
     setmode,
+    writegaincorr,
+    writegaincorr2,
+    writephasecorr,
+    writephasecorr2,
+    writeoffsetcorr,
+    writeoffsetcorr2,
     freeresource
 };
 
@@ -77,11 +84,15 @@ private:
 
     Zera::Server::cPCBInterface *m_pPCBInterface;
     Zera::Proxy::cProxyClient *m_pPCBClient;
+    Zera::Server::cDSPInterface *m_pDSPInterface;
+    Zera::Proxy::cProxyClient *m_pDSPClient;
     Zera::Server::cRMInterface* m_pRMInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
 
     QString m_sDescription;
     quint16 m_nPort; // the port adress of pcb server
+
+    cDspMeasData* m_pCorrectionDSP;
 
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;
@@ -92,6 +103,10 @@ private:
     QState m_claimResourceState;
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
     QState m_setModeState;
+    QState m_dspserverConnectionState;
+    QState m_writeGainCorrState, m_writeGainCorr2State;
+    QState m_writePhaseCorrState,m_writePhaseCorr2State;
+    QState m_writeOffsetCorrState, m_writeOffsetCorr2State;
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating
@@ -107,6 +122,13 @@ private slots:
     void claimResource();
     void pcbserverConnect();
     void setMode();
+    void dspserverConnect();
+    void writeGainCorr();
+    void writeGainCorr2();
+    void writePhaseCorr();
+    void writePhaseCorr2();
+    void writeOffsetCorr();
+    void writeOffsetCorr2();
     void activationDone();
 
     void freeResource();
