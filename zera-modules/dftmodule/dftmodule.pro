@@ -48,6 +48,7 @@ HEADERS += \
 
 OTHER_FILES += \
     src/dftmodule.xml \
+    src/dftmoduleREF.xml \
     src/dftmodule.xsd
 
 RESOURCES += \

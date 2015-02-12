@@ -969,13 +969,24 @@ void cDftModuleMeasProgram::dataReadDSP()
 {
     if (m_bActive)
     {
+        double corr;
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+
+        // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
+        // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
+        if (m_ConfigData.m_nDftOrder == 0)
+            corr = 0.5; // so we correct this here
+        else
+            corr = 1.0;
+
         // as our dft produces math positive values, we correct them to technical positive values
         for (int i = 0; i < m_ActValueList.count(); i++)
         {
-            double im;
+            double im, re;
             im = m_ModuleActualValues[i*2+1] * -1.0;
             m_ModuleActualValues.replace(i*2+1, im);
+            re = m_ModuleActualValues[i*2] * corr;
+            m_ModuleActualValues.replace(i*2, re);
         }
 
         emit actualValues(&m_ModuleActualValues); // and send them
