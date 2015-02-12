@@ -37,15 +37,15 @@
                 <n>3</n>
                 <gr1>
                     <n>3</n>
-                    <ch1>REF1</ch1>
-                    <ch2>REF2</ch2>
-                    <ch3>REF3</ch3>
+                    <ch1>UL1</ch1>
+                    <ch2>UL2</ch2>
+                    <ch3>UL3</ch3>
                 </gr1>
                 <gr2>
                     <n>3</n>
-                    <ch1>REF4</ch1>
-                    <ch2>REF5</ch2>
-                    <ch3>REF6</ch3>
+                    <ch1>IL1</ch1>
+                    <ch2>IL2</ch2>
+                    <ch3>IL3</ch3>
                 </gr2>
                 <gr3>
                     <n>6</n>
@@ -69,22 +69,22 @@
     <parameter>
         <sense>
             <m0>
-                <range>R0V</range>
+                <range>R10V</range>
             </m0>
             <m1>
-                <range>R0V</range>
+                <range>R10V</range>
             </m1>
             <m2>
-                <range>R0V</range>
+                <range>R10V</range>
             </m2>
             <m3>
-                <range>R0V</range>
+                <range>R10V</range>
             </m3>
             <m4>
-                <range>R0V</range>
+                <range>R10V</range>
             </m4>
             <m5>
-                <range>R0V</range>
+                <range>R10V</range>
             </m5>
             <grouping>1</grouping>
             <rangeauto>0</rangeauto>
