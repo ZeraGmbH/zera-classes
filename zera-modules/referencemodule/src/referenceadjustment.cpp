@@ -3,6 +3,7 @@
 #include <pcbinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
+#include <math.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -73,7 +74,17 @@ void cReferenceAdjustment::ActionHandler(QVector<float> *actualValues)
 
 #ifdef DEBUG
     qDebug() << "Reference Module Actual Values received";
+    QString s;
+    for (int i = 0; i < m_ChannelList.count(); i++)
+    {
+        double dc = sqrt((m_ActualValues.at(i*2) * m_ActualValues.at(i*2)) + (m_ActualValues.at(i*2+1) * m_ActualValues.at(i*2+1))) / 2.0;
+
+        s = s + QString("DC(%1)=%2;").arg(m_ChannelList.at(i)->getAlias()).arg(dc);
+    }
+
+    qDebug() << s;
 #endif
+
     if (m_nIgnoreCount > 0)
     {
         m_nIgnoreCount--;
@@ -152,7 +163,8 @@ void cReferenceAdjustment::activationDone()
     m_bAdjustmentDone = false;
 
     m_bActive = true;
-    emit activated();
+    // emit activated();
+    // we will emit activated after reference measurement adjustment is done
 }
 
 
@@ -176,17 +188,17 @@ void cReferenceAdjustment::writeOffsetAdjustment()
 
 #ifdef DEBUG
     QVector<float> corrData;
-    corrData.resize(m_ChannelList.count());
 #endif
     // first we have to compute the offset correction data for dsp
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
         rchn = m_ChannelList.at(i);
         dspchn = rchn->getDSPChannelNr();
-        double rej = rchn->getRejection();
-        double gaink = m_fGainCorr[dspchn];
-        double urv = rchn->getUrValue();
-        cval = -1.0 * m_ActualValues.at(i) * rej / (gaink * urv);
+        //double rej = rchn->getRejection();
+        //double gaink = m_fGainCorr[dspchn];
+        //double urv = rchn->getUrValue();
+        double dc = m_ActualValues.at(i*2) / 2.0; // we only use the real part of dft but must devide by 2
+        cval = -dc /* * rej / (gaink * urv)*/;
         m_fOffset2Corr[dspchn] = cval;
 #ifdef DEBUG
         corrData.append(cval);
@@ -219,6 +231,7 @@ void cReferenceAdjustment::set10VRange()
 void cReferenceAdjustment::referenceAdjustDone()
 {
     m_bAdjustmentDone = true; // our work is done and from here we ignore further actual values
+    emit activated();
 }
 
 

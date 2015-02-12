@@ -32,7 +32,7 @@
             </channel>
         </sense>
         <measure>
-            <ignore>3</ignore>
+            <ignore>1</ignore>
             <interval>2.0</interval>
         </measure>
     </configuration>

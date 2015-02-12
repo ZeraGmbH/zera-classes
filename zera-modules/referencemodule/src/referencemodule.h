@@ -65,6 +65,7 @@ protected:
     QState m_ActivationStartState;
     QState m_ActivationExecState;
     QState m_ActivationDoneState;
+    QState m_ActivationAdjustmentState;
     QFinalState m_ActivationFinishedState;
 
     // our states for base modules deactivation statemacine
@@ -81,6 +82,7 @@ private slots:
     void activationStart();
     void activationExec();
     void activationDone();
+    void activationAdjustment();
     void activationFinished();
 
     void deactivationStart();

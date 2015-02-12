@@ -25,14 +25,17 @@ cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, Vei
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
     m_ActivationDoneState.addTransition(this, SIGNAL(activationNext()), &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationFinishedState);
+    m_ActivationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationAdjustmentState);
+    m_ActivationAdjustmentState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationFinishedState);
     m_ActivationMachine.addState(&m_ActivationStartState);
     m_ActivationMachine.addState(&m_ActivationExecState);
+    m_ActivationMachine.addState(&m_ActivationAdjustmentState);
     m_ActivationMachine.addState(&m_ActivationDoneState);
     m_ActivationMachine.addState(&m_ActivationFinishedState);
     m_ActivationMachine.setInitialState(&m_ActivationStartState);
     connect(&m_ActivationStartState, SIGNAL(entered()), SLOT(activationStart()));
     connect(&m_ActivationExecState, SIGNAL(entered()), SLOT(activationExec()));
+    connect(&m_ActivationAdjustmentState, SIGNAL(entered()), SLOT(activationAdjustment()));
     connect(&m_ActivationDoneState, SIGNAL(entered()), SLOT(activationDone()));
     connect(&m_ActivationFinishedState, SIGNAL(entered()), SLOT(activationFinished()));
 
@@ -108,7 +111,11 @@ void cReferenceModule::setupModule()
 
     // then we need some program for adjustment
     m_pReferenceAdjustment = new cReferenceAdjustment(this, m_pProxy, m_pPeer, pConfData);
-    m_ModuleActivistList.append(m_pReferenceAdjustment);
+    //m_ModuleActivistList.append(m_pReferenceAdjustment);
+    // we don't actvate this per our activation loop
+    // instead adjustment is activated after all other activists
+    // means that module emits activationReady after reference measurement adjustment is finished
+
     connect(m_pReferenceAdjustment, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pReferenceAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pReferenceAdjustment, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
@@ -191,10 +198,20 @@ void cReferenceModule::activationDone()
 }
 
 
-void cReferenceModule::activationFinished()
+void cReferenceModule::activationAdjustment()
 {
     // we connect the measurement output to our adjustment module
     connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pReferenceAdjustment, SLOT(ActionHandler(QVector<float>*)));
+
+    m_pReferenceAdjustment->activate();
+}
+
+
+
+void cReferenceModule::activationFinished()
+{
+    // we connect the measurement output to our adjustment module
+    // connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pReferenceAdjustment, SLOT(ActionHandler(QVector<float>*)));
     // if we get informed we have to reconfigure
     connect(m_pReferenceModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(referenceModuleReconfigure()));
 
