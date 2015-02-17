@@ -6,6 +6,7 @@
 #include <errormessages.h>
 #include <dspinterface.h>
 
+#include "debug.h"
 #include "modemodule.h"
 #include "modemoduleinit.h"
 #include "modemoduleconfigdata.h"
