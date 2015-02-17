@@ -6,8 +6,6 @@
 TEMPLATE = lib
 CONFIG += plugin
 
-QMAKE_CXXFLAGS += -O0
-
 ZDEPENDS += libvein
 
 QT       += network core
