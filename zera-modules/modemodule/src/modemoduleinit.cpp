@@ -356,6 +356,9 @@ void cModeModuleInit::writeGainCorr()
     for (int i = 0; i < 32; i++)
         data[i] = 1.0;
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr;
+#ifdef DEBUG
+    qDebug() << "writeGainCorr";
+#endif
 }
 
 
@@ -369,6 +372,9 @@ void cModeModuleInit::writeGainCorr2()
     for (int i = 0; i < 32; i++)
         data[i] = 1.0;
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr2;
+#ifdef DEBUG
+    qDebug() << "writeGainCorr2";
+#endif
 }
 
 
@@ -382,6 +388,9 @@ void cModeModuleInit::writePhaseCorr()
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr;
+#ifdef DEBUG
+    qDebug() << "writePhaseCorr";
+#endif
 }
 
 
@@ -395,6 +404,9 @@ void cModeModuleInit::writePhaseCorr2()
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr2;
+#ifdef DEBUG
+    qDebug() << "writePhaseCorr2";
+#endif
 }
 
 
@@ -408,6 +420,9 @@ void cModeModuleInit::writeOffsetCorr()
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
+#ifdef DEBUG
+    qDebug() << "writeOffsetCorr";
+#endif
 }
 
 
@@ -421,6 +436,9 @@ void cModeModuleInit::writeOffsetCorr2()
     for (int i = 0; i < 32; i++)
         data[i] = 0.0;
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
+#ifdef DEBUG
+    qDebug() << "writeOffsetCorr2";
+#endif
 }
 
 
