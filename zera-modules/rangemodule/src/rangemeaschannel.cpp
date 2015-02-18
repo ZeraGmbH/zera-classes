@@ -52,6 +52,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_activationMachine.addState(&m_readRangeProperties1State);
     m_activationMachine.addState(&m_readRangeProperties2State);
     m_activationMachine.addState(&m_readRangeProperties3State);
+    m_activationMachine.addState(&m_resetStatusState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_rmConnectState);
     connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
