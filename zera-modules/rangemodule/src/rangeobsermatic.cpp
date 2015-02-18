@@ -435,12 +435,14 @@ void cRangeObsermatic::readGainCorrDone()
         m_RangeRejectionEntityList.at(i)->setValue(pmChn->getMaxRangeUrvalueMax(), m_pPeer);
     }
 
+    m_bActive = true;
     emit activated();
 }
 
 
 void cRangeObsermatic::deactivationInit()
 {
+    m_bActive = false;
     m_pProxy->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0); // we disconnect from our dsp interface
     m_pDSPInterFace->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
@@ -457,7 +459,8 @@ void cRangeObsermatic::deactivationDone()
 void cRangeObsermatic::writeGainCorr()
 {
     // qDebug() << "writeGainCorr";
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
 }
 
 
@@ -471,12 +474,15 @@ void cRangeObsermatic::readStatus()
 {
     cRangeMeasChannel *pmChn;
 
-    m_nReadStatusPending = 0;
-    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we read status from all channels
+    if (m_bActive)
     {
-        pmChn = m_RangeMeasChannelList.at(i);
-        m_MsgNrCmdList[pmChn->readStatus()] = readstatus;
-        m_nReadStatusPending++;
+        m_nReadStatusPending = 0;
+        for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we read status from all channels
+        {
+            pmChn = m_RangeMeasChannelList.at(i);
+            m_MsgNrCmdList[pmChn->readStatus()] = readstatus;
+            m_nReadStatusPending++;
+        }
     }
 }
 

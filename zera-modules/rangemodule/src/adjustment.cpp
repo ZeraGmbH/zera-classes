@@ -174,9 +174,6 @@ void cAdjustManagement::readCorrDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
-    m_adjustMachine.stop(); // we stop our statemachines here which might be running and cause problems
-    m_writeCorrectionDSPMachine.stop();
-
     m_pProxy->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
@@ -199,26 +196,30 @@ void cAdjustManagement::deactivationDone()
 
 void cAdjustManagement::writeGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrectionDSP)] = writegaincorr;
 }
 
 
 void cAdjustManagement::writePhaseCorr()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pPhaseCorrectionDSP)] = writephasecorr;
 }
 
 
 void cAdjustManagement::writeOffsetCorr()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pOffsetCorrectionDSP)] = writeoffsetcorr;
 }
 
 
 void cAdjustManagement::getGainCorr1()
 {
     // qDebug() << "Adjustmentstatemachine";
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getgaincorr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getgaincorr;
 }
 
 
@@ -227,24 +228,28 @@ void cAdjustManagement::getGainCorr2()
     cRangeMeasChannel *measChannel;
     float fCorr;
 
-    measChannel = m_ChannelList.at(m_nChannelIt);
-    fCorr = measChannel->getGainCorrection();
-    m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr;
-    //qDebug() << QString("GainCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
-    m_nChannelIt++;
-    if (m_nChannelIt < m_ChannelNameList.count())
-        emit repeatStateMachine();
-    else
+    if (m_bActive)
     {
-        m_nChannelIt = 0;
-        emit activationContinue();
+        measChannel = m_ChannelList.at(m_nChannelIt);
+        fCorr = measChannel->getGainCorrection();
+        m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr;
+        //qDebug() << QString("GainCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
+        m_nChannelIt++;
+        if (m_nChannelIt < m_ChannelNameList.count())
+            emit repeatStateMachine();
+        else
+        {
+            m_nChannelIt = 0;
+            emit activationContinue();
+        }
     }
 }
 
 
 void cAdjustManagement::getPhaseCorr1()
 {
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(m_ActualValues[2 * m_ChannelNameList.count()])] = getphasecorr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(m_ActualValues[2 * m_ChannelNameList.count()])] = getphasecorr;
 }
 
 
@@ -253,24 +258,28 @@ void cAdjustManagement::getPhaseCorr2()
     cRangeMeasChannel *measChannel;
     float fCorr;
 
-    measChannel = m_ChannelList.at(m_nChannelIt);
-    fCorr = measChannel->getPhaseCorrection();
-    m_fPhaseCorr[measChannel->getDSPChannelNr()] = fCorr;
-    // qDebug() << QString("PhaseCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
-    m_nChannelIt++;
-    if (m_nChannelIt < m_ChannelNameList.count())
-        emit repeatStateMachine();
-    else
+    if (m_bActive)
     {
-        m_nChannelIt = 0;
-        emit activationContinue();
+        measChannel = m_ChannelList.at(m_nChannelIt);
+        fCorr = measChannel->getPhaseCorrection();
+        m_fPhaseCorr[measChannel->getDSPChannelNr()] = fCorr;
+        // qDebug() << QString("PhaseCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
+        m_nChannelIt++;
+        if (m_nChannelIt < m_ChannelNameList.count())
+            emit repeatStateMachine();
+        else
+        {
+            m_nChannelIt = 0;
+            emit activationContinue();
+        }
     }
 }
 
 
 void cAdjustManagement::getOffsetCorr1()
 {
-    m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getoffsetcore;
+    if (m_bActive)
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getoffsetcore;
 }
 
 
@@ -279,16 +288,19 @@ void cAdjustManagement::getOffsetCorr2()
     cRangeMeasChannel *measChannel;
     float fCorr;
 
-    measChannel = m_ChannelList.at(m_nChannelIt);
-    fCorr = measChannel->getOffsetCorrection();
-    m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr;
-    // qDebug() << QString("OffsetCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
+    if (m_bActive)
+    {
+        measChannel = m_ChannelList.at(m_nChannelIt);
+        fCorr = measChannel->getOffsetCorrection();
+        m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr;
+        // qDebug() << QString("OffsetCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
 
-    m_nChannelIt++;
-    if (m_nChannelIt < m_ChannelNameList.count())
-        emit repeatStateMachine();
-    else
-        emit activationContinue();
+        m_nChannelIt++;
+        if (m_nChannelIt < m_ChannelNameList.count())
+            emit repeatStateMachine();
+        else
+            emit activationContinue();
+    }
 }
 
 
