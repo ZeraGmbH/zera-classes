@@ -121,49 +121,80 @@ quint32 cRangeMeasChannel::setRange(QString range)
 {
     m_sNewRange = range;
     m_sActRange = m_sNewRange;
-    quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
-    m_MsgNrCmdList[msgnr] = setmeaschannelrange;
-    return msgnr;
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
+        m_MsgNrCmdList[msgnr] = setmeaschannelrange;
+        return msgnr;
+    }
+    else
+        return 1;
 }
 
 
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
-    quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_sActRange, amplitude);
-    m_MsgNrCmdList[msgnr] = readgaincorrection;
-    return msgnr;
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_sActRange, amplitude);
+        m_MsgNrCmdList[msgnr] = readgaincorrection;
+        return msgnr;
+    }
+    else
+        return 1;
 }
 
 
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
-    quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_sActRange, amplitude);
-    m_MsgNrCmdList[msgnr] = readoffsetcorrection;
-    return msgnr;
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_sActRange, amplitude);
+        m_MsgNrCmdList[msgnr] = readoffsetcorrection;
+        return msgnr;
+    }
+    else
+        return 1;
 }
 
 
 quint32 cRangeMeasChannel::readStatus()
 {
-    quint32 msgnr = m_pPCBInterface->getStatus(m_sName);
-    m_MsgNrCmdList[msgnr] = readmeaschannelstatus;
-    return msgnr;
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->getStatus(m_sName);
+        m_MsgNrCmdList[msgnr] = readmeaschannelstatus;
+        return msgnr;
+    }
+    else
+        return 1;
 }
 
 
 quint32 cRangeMeasChannel::resetStatus()
 {
-    quint32 msgnr = m_pPCBInterface->resetStatus(m_sName);
-    m_MsgNrCmdList[msgnr] = resetmeaschannelstatus;
-    return msgnr;
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->resetStatus(m_sName);
+        m_MsgNrCmdList[msgnr] = resetmeaschannelstatus;
+        return msgnr;
+    }
+    else
+        return 1;
+
 }
 
 
 quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 {
-    quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_sActRange, frequency);
-    m_MsgNrCmdList[msgnr] = readphasecorrection;
-    return msgnr;
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_sActRange, frequency);
+        m_MsgNrCmdList[msgnr] = readphasecorrection;
+        return msgnr;
+    }
+    else
+        return 1;
 }
 
 
@@ -873,6 +904,7 @@ void cRangeMeasChannel::activationDone()
     setChannelNameEntity(); // we set our real name now
     setRangeListEntity(); // and the list of possible ranges
 
+    m_bActive = true;
     emit activated();
 }
 
@@ -880,6 +912,7 @@ void cRangeMeasChannel::activationDone()
 void cRangeMeasChannel::deactivationInit()
 {
     // deactivation means we have to free our resources
+    m_bActive = false;
     m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = freeresource;
 }
 
