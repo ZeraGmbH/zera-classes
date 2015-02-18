@@ -174,6 +174,9 @@ void cAdjustManagement::readCorrDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
+    m_adjustMachine.stop(); // we stop our statemachines here which might be running and cause problems
+    m_writeCorrectionDSPMachine.stop();
+
     m_pProxy->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
