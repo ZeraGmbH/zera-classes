@@ -35,7 +35,8 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties2State);
     m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties3State);
     m_readRangeProperties3State.addTransition(this, SIGNAL(activationLoop()), &m_readRangeProperties1State);
-    m_readRangeProperties3State.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readRangeProperties3State.addTransition(this, SIGNAL(activationContinue()), &m_resetStatusState);
+    m_resetStatusState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -67,6 +68,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
     connect(&m_readRangeProperties1State, SIGNAL(entered()), SLOT(readRangeProperties1()));
     connect(&m_readRangeProperties3State, SIGNAL(entered()), SLOT(readRangeProperties3()));
+    connect(&m_resetStatusState, SIGNAL(entered()), SLOT(resetStatusSlot()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     // setting up statemachine for "deactivating" meas channel
@@ -682,6 +684,20 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         }; // perhaps some error output
         emit cmdDone(msgnr);
         break;
+    case resetmeaschannelstatus2:
+        if (reply == ack)
+        {
+            emit activationContinue();
+        }
+        else
+        {
+            emit errMsg((tr(resetChannelStatusErrMsg)));
+#ifdef DEBUG
+            qDebug() << resetChannelStatusErrMsg;
+#endif
+            emit activationError();
+        }; // perhaps some error output
+        break;
     }
 }
 
@@ -832,6 +848,12 @@ void cRangeMeasChannel::readRangeProperties3()
         emit activationLoop();
     else
         emit activationContinue();
+}
+
+
+void cRangeMeasChannel::resetStatusSlot()
+{
+    m_MsgNrCmdList[m_pPCBInterface->resetStatus(m_sName)] = resetmeaschannelstatus2;
 }
 
 

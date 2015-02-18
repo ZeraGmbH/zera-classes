@@ -43,7 +43,8 @@ enum rangemeaschannelCmds
     readoffsetcorrection,
     readphasecorrection,
     readmeaschannelstatus,
-    resetmeaschannelstatus
+    resetmeaschannelstatus,
+    resetmeaschannelstatus2, // we use this her in state machine while activating
 };
 
 const double sqrt2 = 1.41421356;
@@ -117,6 +118,7 @@ private:
     QState m_readRangeProperties1State; // we build up a loop for querying all the ranges properties
     QState m_readRangeProperties2State; //
     QState m_readRangeProperties3State;
+    QState m_resetStatusState; // we reset our measuring channel when activated
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating a rangemeaschannel
@@ -163,6 +165,7 @@ private slots:
     void readRangelist();
     void readRangeProperties1();
     void readRangeProperties3();
+    void resetStatusSlot();
     void activationDone();
 
     void deactivationInit();
