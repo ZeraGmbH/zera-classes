@@ -86,7 +86,7 @@ void cPllObsermatic::deleteInterface()
 
 void cPllObsermatic::pllAutomatic()
 {
-    if (m_ConfPar.m_ObsermaticConfPar.m_bpllAuto) // was automatic configured
+    if (m_bActive && m_ConfPar.m_ObsermaticConfPar.m_bpllAuto) // was automatic configured
     {
         int i, n;
         n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
@@ -151,12 +151,14 @@ void cPllObsermatic::activationDone()
     setPllChannelListEntity();
     newPllChannel(QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar)); // we set our default channel here
 
+    m_bActive = true;
     emit activated();
 }
 
 
 void cPllObsermatic::deactivationInit()
 {
+    m_bActive = false;
     emit deactivationContinue();
 }
 

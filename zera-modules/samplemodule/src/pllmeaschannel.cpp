@@ -136,9 +136,14 @@ void cPllMeasChannel::deleteInterface()
 
 quint32 cPllMeasChannel::setyourself4PLL(QString samplesysname)
 {
-    quint32 msgnr = m_pPCBInterface->setPLLChannel(samplesysname, m_sName);
-    m_MsgNrCmdList[msgnr] = set4PLL;
-    return msgnr;
+    if (m_bActive)
+    {
+        quint32 msgnr = m_pPCBInterface->setPLLChannel(samplesysname, m_sName);
+        m_MsgNrCmdList[msgnr] = set4PLL;
+        return msgnr;
+    }
+    else
+        return 1;
 }
 
 
@@ -584,6 +589,7 @@ void cPllMeasChannel::activationDone()
     }
 
     readRange(); // we read the actual range once here, afterwards via notifier
+    m_bActive = true;
     emit activated();
 }
 
@@ -593,6 +599,7 @@ void cPllMeasChannel::deactivationInit()
     // deactivation means we have to free our resources
     // m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = freeresource;
     // but we didn't claim here so we continue at once
+    m_bActive = false;
     emit deactivationContinue();
 }
 
