@@ -170,13 +170,15 @@ void cReferenceAdjustment::activationDone()
 
 void cReferenceAdjustment::readGainCorr()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pGainCorrectionDSP)] = readgaincorr;
 }
 
 
 void cReferenceAdjustment::readOffset2Corr()
 {
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pOffset2CorrectionDSP)] = readoffset2corr;
+    if (m_bActive)
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryRead(m_pOffset2CorrectionDSP)] = readoffset2corr;
 }
 
 
@@ -214,16 +216,20 @@ void cReferenceAdjustment::writeOffsetAdjustment()
     qDebug() << s;
 #endif
 
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pOffset2CorrectionDSP)] = writeoffsetadjustment;
+    if (m_bActive)
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pOffset2CorrectionDSP)] = writeoffsetadjustment;
 }
 
 
 void cReferenceAdjustment::set10VRange()
 {
-    m_nRangeSetPending = m_ChannelList.count();
-    for (int i = 0; i <  m_nRangeSetPending; i++)
+    if (m_bActive)
     {
-        m_MsgNrCmdList[m_ChannelList.at(i)->setRange("R10V")] = setrange10V;
+        m_nRangeSetPending = m_ChannelList.count();
+        for (int i = 0; i <  m_nRangeSetPending; i++)
+        {
+            m_MsgNrCmdList[m_ChannelList.at(i)->setRange("R10V")] = setrange10V;
+        }
     }
 }
 
