@@ -7,15 +7,15 @@
 			<debuglevel>0</debuglevel>
 			<ethernet>
 				<resourcemanager>
-                                        <ip>192.168.7.220</ip>
+                                        <ip>127.0.0.1</ip>
 					<port>6312</port>
 				</resourcemanager>
 				<pcbserver>
-                                        <ip>192.168.7.220</ip>
+                                        <ip>127.0.0.1</ip>
                                         <port>6307</port>
 				</pcbserver>
 				<dspserver>
-                                        <ip>192.168.7.220</ip>
+                                        <ip>127.0.0.1</ip>
                                         <port>6310</port>
 				</dspserver>
 			</ethernet>
