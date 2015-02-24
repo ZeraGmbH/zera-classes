@@ -174,11 +174,11 @@ void cAdjustManagement::setSubDC()
     subdc = 0;
     if (m_subDCChannelList.count() > 0)
     for (int i = 0; i < m_subDCChannelList.count(); i++)
-        subdc = (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
+        subdc |= (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
 
     m_pSubDCMaskDSP = m_pDSPInterFace->getMemHandle("SubDC");
     m_pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
-    *m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION") = subdc;
+    *m_pDSPInterFace->data(m_pSubDCMaskDSP, "SUBDC") = subdc;
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pSubDCMaskDSP)] = subdcdsp;
 }
 
