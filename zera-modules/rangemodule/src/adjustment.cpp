@@ -178,7 +178,7 @@ void cAdjustManagement::setSubDC()
 
     m_pSubDCMaskDSP = m_pDSPInterFace->getMemHandle("SubDC");
     m_pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
-    *m_pDSPInterFace->data(m_pSubDCMaskDSP, "SUBDC") = subdc;
+    m_pDSPInterFace->setVarData(m_pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pSubDCMaskDSP)] = subdcdsp;
 }
 
