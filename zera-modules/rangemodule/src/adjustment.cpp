@@ -12,30 +12,35 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, VeinPeer* peer,  cSocket* dspsocket, QStringList chnlist, double interval)
-    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pDSPSocket(dspsocket), m_ChannelNameList(chnlist), m_fAdjInterval(interval)
+cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, VeinPeer* peer,  cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval)
+    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pDSPSocket(dspsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
     m_bAdjustTrigger = false;
     for (int i = 0; i < m_ChannelNameList.count(); i++) // we fetch all our real channels first
         m_ChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
+    for (int i = 0; i < m_subdcChannelNameList.count(); i++) // we fetch all our real channels first
+        m_subDCChannelList.append(m_pModule->getMeasChannel(m_subdcChannelNameList.at(i)));
 
     // and then set up our state machines
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readPhaseCorrState);
     m_readPhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readOffsetCorrState);
-    m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readCorrDoneState);
+    m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_setSubDCState);
+    m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
     m_activationMachine.addState(&m_readOffsetCorrState);
-    m_activationMachine.addState(&m_readCorrDoneState);
+    m_activationMachine.addState(&m_setSubDCState);
+    m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_dspserverConnectState);
     connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
     connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
     connect(&m_readPhaseCorrState, SIGNAL(entered()), SLOT(readPhaseCorr()));
     connect(&m_readOffsetCorrState, SIGNAL(entered()), SLOT(readOffsetCorr()));
-    connect(&m_readCorrDoneState, SIGNAL(entered()), SLOT(readCorrDone()));
+    connect(&m_setSubDCState, SIGNAL(entered()), SLOT(setSubDC()));
+    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
@@ -162,7 +167,22 @@ void cAdjustManagement::readOffsetCorr()
 }
 
 
-void cAdjustManagement::readCorrDone()
+void cAdjustManagement::setSubDC()
+{
+    quint32 subdc;
+
+    subdc = 0;
+    for (int i = 0; i < m_subDCChannelList.count(); i++)
+        subdc = (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
+
+    m_pSubDCMaskDSP = m_pDSPInterFace->getMemHandle("SubDC");
+    m_pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
+    *m_pDSPInterFace->data(m_pGainCorrectionDSP, "GAINCORRECTION") = subdc;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pSubDCMaskDSP)] = subdcdsp;
+}
+
+
+void cAdjustManagement::activationDone()
 {
     m_AdjustTimer.start(m_fAdjInterval*1000.0);
     connect(&m_AdjustTimer, SIGNAL(timeout()), this, SLOT(adjustPrepare()));
@@ -357,6 +377,19 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit errMsg((tr(readdspoffsetcorrErrMsg)));
 #ifdef DEBUG
                     qDebug() << readdspoffsetcorrErrMsg;
+#endif
+                    emit activationError();
+                }
+                break;
+
+            case subdcdsp:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(writesubdcErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writesubdcErrMsg;
 #endif
                     emit activationError();
                 }

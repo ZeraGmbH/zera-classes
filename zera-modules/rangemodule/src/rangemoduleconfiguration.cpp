@@ -48,6 +48,7 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:withoverload"] = setOverloadBool;
 
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:channel:n"] = setChannelCount;
+    m_ConfigXMLMap["rangemodconfpar:configuration:sense:subdc:n"] = setSubdcCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:group:n"] = setGroupCount;
 
     m_ConfigXMLMap["rangemodconfpar:configuration:measure:interval"] = setMeasureInterval;
@@ -138,6 +139,17 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             }
             break;
         }
+        case setSubdcCount:
+        {
+            m_pRangeModulConfigData->m_nChannelCount = m_pXMLReader->getValue(key).toInt(&ok);
+            // here we generate dynamic hash entries for channel configuration
+            stringParameter sParam;
+            for (int i = 0; i < m_pRangeModulConfigData->m_nChannelCount; i++)
+            {
+                m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:subdc:ch%1").arg(i+1)] = setSubdcChannel1+i;
+            }
+            break;
+        }
         case setGroupCount:
             m_pRangeModulConfigData->m_nGroupCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for group configuration
@@ -190,6 +202,14 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
                 QString senseChannel = m_pXMLReader->getValue(key);
                 m_pRangeModulConfigData->m_senseChannelList.append(senseChannel); // for configuration of our engine
                 m_ConfigXMLMap[QString("rangemodconfpar:parameter:sense:%1:range").arg(senseChannel)] = setDefaultRange1+cmd;
+            }
+
+            if ((cmd >= setSubdcChannel1) && (cmd < setSubdcChannel1 + m_pRangeModulConfigData->m_nSubDCCount))
+            {
+                cmd -= setSubdcChannel1;
+                // it is command for setting subdc channel name
+                QString subdcChannel = m_pXMLReader->getValue(key);
+                m_pRangeModulConfigData->m_subdcChannelList.append(subdcChannel); // for configuration of our engine
             }
 
             else

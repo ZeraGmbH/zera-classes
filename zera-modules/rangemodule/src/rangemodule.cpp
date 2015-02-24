@@ -117,7 +117,7 @@ void cRangeModule::setupModule()
     connect(m_pRangeObsermatic, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
 
     // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, m_pProxy, m_pPeer, &(pConfData->m_DSPServerSocket), pConfData->m_senseChannelList, pConfData->m_fAdjInterval);
+    m_pAdjustment = new cAdjustManagement(this, m_pProxy, m_pPeer, &(pConfData->m_DSPServerSocket), pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
     m_ModuleActivistList.append(m_pAdjustment);
     connect(m_pAdjustment, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

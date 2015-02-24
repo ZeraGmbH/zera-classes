@@ -33,6 +33,9 @@
                 <ch5>m4</ch5>
                 <ch6>m5</ch6>
             </channel>
+            <subdc>
+                <n>0</n>
+            <subdc>
             <group>
                 <n>3</n>
                 <gr1>

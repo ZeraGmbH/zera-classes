@@ -21,6 +21,7 @@ enum moduleconfigstate
     setDSPServerIp,
     setDSPServerPort,
     setChannelCount,
+    setSubdcCount,
     setGroupCount,
     setGrouping,
     setRangeAutomatic,
@@ -32,8 +33,9 @@ enum moduleconfigstate
 
     setDefaultRange1 = 40, // max. 32 channels
     setSenseChannel1 = 72, // max. 32 channels
-    setGroup1ChannelCount = 104, // max. 10 groups
-    setGroup1Channel1 = 114
+    setSubdcChannel1 = 104,
+    setGroup1ChannelCount = 136, // max. 10 groups
+    setGroup1Channel1 = 146
 };
 
 

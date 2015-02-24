@@ -44,5 +44,6 @@
 #define dspdeactiveErrMsg "DSP measure deactivation failed"
 #define dataaquisitionErrMsg "DSP data acquisition failed"
 #define writedspmemoryErrMsg "DSP memory write failed"
+#define writesubdcErrMsg "DSP subdc write failed"
 
 #endif // ERRORMESSAGES_H

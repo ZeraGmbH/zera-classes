@@ -41,6 +41,8 @@ public:
     quint8 m_nDebugLevel;
     quint8 m_nChannelCount; // how many measurment channels
     QStringList m_senseChannelList; // a list of channel system names we work on
+    quint8 m_nSubDCCount; // how many channels for subtract dc
+    QStringList m_subdcChannelList; // a list for which channels we have to subtract dc
     quint8 m_nGroupCount; // the number of groups holded
     QList<int> m_GroupCountList; // the number of expected items per group
     QList<QStringList> m_GroupList; // here are our groups

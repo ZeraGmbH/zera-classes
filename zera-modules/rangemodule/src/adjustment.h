@@ -44,7 +44,9 @@ enum adjustmentCmds
 
     getgaincorr,
     getphasecorr,
-    getoffsetcore
+    getoffsetcore,
+
+    subdcdsp
 };
 
 
@@ -56,7 +58,7 @@ class cAdjustManagement: public cModuleActivist
     Q_OBJECT
 
 public:
-    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* dspsocket, QStringList chnlist, double interval);
+    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval);
     virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -75,10 +77,12 @@ private:
     VeinPeer* m_pPeer;
     cSocket* m_pDSPSocket;
     QStringList m_ChannelNameList; // the list of channels (names) we work on
+    QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
     double m_fAdjInterval;
     Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
     Zera::Proxy::cProxyClient *m_pDspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
+    QList<cRangeMeasChannel*> m_subDCChannelList;
     QVector<float> m_ActualValues;
     quint8 m_nChannelIt;
     QHash<quint32, int> m_MsgNrCmdList;
@@ -90,7 +94,8 @@ private:
     QState m_readGainCorrState;
     QState m_readPhaseCorrState;
     QState m_readOffsetCorrState;
-    QFinalState m_readCorrDoneState;
+    QState m_setSubDCState;
+    QFinalState m_activationDoneState;
 
     // statemachine for deactivating
     QState m_deactivationInitState;
@@ -112,6 +117,7 @@ private:
     cDspMeasData* m_pGainCorrectionDSP; // copy of dsp internal correction data
     cDspMeasData* m_pPhaseCorrectionDSP;
     cDspMeasData* m_pOffsetCorrectionDSP;
+    cDspMeasData* m_pSubDCMaskDSP; // here we can set if sub dc or not
 
     float* m_fGainCorr;
     float* m_fPhaseCorr;
@@ -123,7 +129,8 @@ private slots:
     void readGainCorr();
     void readPhaseCorr();
     void readOffsetCorr();
-    void readCorrDone();
+    void setSubDC();
+    void activationDone();
 
     void deactivationInit();
     void deactivationDone();
