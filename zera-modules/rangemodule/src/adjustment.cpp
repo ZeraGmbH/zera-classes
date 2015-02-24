@@ -172,6 +172,7 @@ void cAdjustManagement::setSubDC()
     quint32 subdc;
 
     subdc = 0;
+    if (m_subDCChannelList.count() > 0)
     for (int i = 0; i < m_subDCChannelList.count(); i++)
         subdc = (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
 

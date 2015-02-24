@@ -141,10 +141,11 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
         }
         case setSubdcCount:
         {
-            m_pRangeModulConfigData->m_nChannelCount = m_pXMLReader->getValue(key).toInt(&ok);
+            m_pRangeModulConfigData->m_nSubDCCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for channel configuration
             stringParameter sParam;
-            for (int i = 0; i < m_pRangeModulConfigData->m_nChannelCount; i++)
+            if (m_pRangeModulConfigData->m_nSubDCCount > 0)
+            for (int i = 0; i < m_pRangeModulConfigData->m_nSubDCCount; i++)
             {
                 m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:subdc:ch%1").arg(i+1)] = setSubdcChannel1+i;
             }
