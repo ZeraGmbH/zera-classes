@@ -47,7 +47,6 @@ enum adjustmentCmds
     getoffsetcore,
 
     subdcdsp,
-    resetfreqoutput,
 };
 
 
@@ -96,7 +95,6 @@ private:
     QState m_readPhaseCorrState;
     QState m_readOffsetCorrState;
     QState m_setSubDCState;
-    QState m_resetfreqOutputState;
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating
@@ -131,7 +129,6 @@ private slots:
     void readPhaseCorr();
     void readOffsetCorr();
     void setSubDC();
-    void resetfreqOutput();
     void activationDone();
 
     void deactivationInit();

@@ -27,14 +27,12 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readPhaseCorrState);
     m_readPhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readOffsetCorrState);
     m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_setSubDCState);
-    m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_resetfreqOutputState);
-    m_resetfreqOutputState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
     m_activationMachine.addState(&m_readOffsetCorrState);
     m_activationMachine.addState(&m_setSubDCState);
-    m_activationMachine.addState(&m_resetfreqOutputState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_dspserverConnectState);
     connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
@@ -42,7 +40,6 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
     connect(&m_readPhaseCorrState, SIGNAL(entered()), SLOT(readPhaseCorr()));
     connect(&m_readOffsetCorrState, SIGNAL(entered()), SLOT(readOffsetCorr()));
     connect(&m_setSubDCState, SIGNAL(entered()), SLOT(setSubDC()));
-    connect(&m_resetfreqOutputState, SIGNAL(entered()), SLOT(resetfreqOutput()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
@@ -184,17 +181,6 @@ void cAdjustManagement::setSubDC()
     pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
     m_pDSPInterFace->setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(pSubDCMaskDSP)] = subdcdsp;
-}
-
-
-void cAdjustManagement::resetfreqOutput()
-{
-    cDspMeasData* pFreqoutputScale; // here we can set if sub dc or not
-
-    pFreqoutputScale = m_pDSPInterFace->getMemHandle("FreqOut");
-    pFreqoutputScale->addVarItem( new cDspVar("FREQUENCYSCALE",4, DSPDATA::vDspIntVar));
-    m_pDSPInterFace->setVarData(pFreqoutputScale, QString("FREQUENCYSCALE:0.0,0.0,0.0,0.0;"));
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(pFreqoutputScale)] = resetfreqoutput;
 }
 
 
@@ -406,20 +392,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit errMsg((tr(writesubdcErrMsg)));
 #ifdef DEBUG
                     qDebug() << writesubdcErrMsg;
-#endif
-                    emit activationError();
-                }
-                break;
-
-
-            case resetfreqoutput:
-                if (reply == ack)
-                    emit activationContinue();
-                else
-                {
-                    emit errMsg((tr(writedspmemoryErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspmemoryErrMsg;
 #endif
                     emit activationError();
                 }

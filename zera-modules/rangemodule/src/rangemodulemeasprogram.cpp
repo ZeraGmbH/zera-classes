@@ -148,6 +148,7 @@ void cRangeModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addVarItem( new cDspVar("FREQ", 1, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(2*m_ChannelList.count()+1),DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FCONST",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
     m_pParameterDSP =  m_pDSPInterFace->getMemHandle("Parameter");
@@ -181,6 +182,11 @@ void cRangeModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(FCONST,0.0)")); // initial fout value = 0
+        m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(0,FCONST,FCONST)"));
+        m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(256,FCONST,FCONST)"));
+        m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(512,FCONST,FCONST)"));
+        m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(768,FCONST,FCONST)"));
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
