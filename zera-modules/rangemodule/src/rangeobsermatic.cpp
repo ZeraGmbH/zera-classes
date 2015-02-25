@@ -522,7 +522,7 @@ void cRangeObsermatic::newRange(QVariant range)
             else
                 attenuation = 0.0; // if we don't have any actual values yet
 
-            // lets first test that new range will cause no overload condition in this channel
+            // lets first test that new range will not cause an overload condition in this channel
             if (m_RangeMeasChannelList.at(index)->isPossibleRange(s , attenuation))
             {
                 //m_newChannelRangeList.replace(index, s);

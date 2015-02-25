@@ -200,8 +200,7 @@ quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 
 bool cRangeMeasChannel::isPossibleRange(QString range, double ampl)
 {
-    cRangeInfo ri;
-    ri = m_RangeInfoHash[range];
+    cRangeInfo& ri = m_RangeInfoHash[range];
     return ((ri.urvalue * ri.ovrejection *sqrt2 / ri.rejection) >= ampl);
     // return (m_RangeInfoHash[range].urvalue * sqrt2 >= ampl);
 }
@@ -215,8 +214,7 @@ bool cRangeMeasChannel::isPossibleRange(QString range)
 
 bool cRangeMeasChannel::isOverload(double ampl)
 {
-    cRangeInfo ri;
-    ri = m_RangeInfoHash[m_sActRange];
+    cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
     // qDebug() << QString("Ampl: %1; Rng: %2").arg(ampl).arg(ri.alias);
     return ((ri.urvalue * ri.ovrejection * sqrt2 /ri.rejection) < ampl);
 }
@@ -231,7 +229,7 @@ QString cRangeMeasChannel::getOptRange(double ampl)
 
     for (i = 0; i < riList.count(); i++)
     {
-        cRangeInfo ri = riList.at(i);
+        const cRangeInfo& ri = riList.at(i);
         newUrvalue = ri.urvalue;
         if (((newUrvalue * sqrt2 *ri.ovrejection /ri.rejection ) >= ampl) && (newUrvalue < newAmpl))
         {

@@ -46,7 +46,8 @@ enum adjustmentCmds
     getphasecorr,
     getoffsetcore,
 
-    subdcdsp
+    subdcdsp,
+    resetfreqoutput,
 };
 
 
@@ -95,6 +96,7 @@ private:
     QState m_readPhaseCorrState;
     QState m_readOffsetCorrState;
     QState m_setSubDCState;
+    QState m_resetfreqOutputState;
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating
@@ -117,7 +119,6 @@ private:
     cDspMeasData* m_pGainCorrectionDSP; // copy of dsp internal correction data
     cDspMeasData* m_pPhaseCorrectionDSP;
     cDspMeasData* m_pOffsetCorrectionDSP;
-    cDspMeasData* m_pSubDCMaskDSP; // here we can set if sub dc or not
 
     float* m_fGainCorr;
     float* m_fPhaseCorr;
@@ -130,6 +131,7 @@ private slots:
     void readPhaseCorr();
     void readOffsetCorr();
     void setSubDC();
+    void resetfreqOutput();
     void activationDone();
 
     void deactivationInit();
