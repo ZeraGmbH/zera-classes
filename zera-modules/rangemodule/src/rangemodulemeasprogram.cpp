@@ -182,6 +182,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
+        m_pDSPInterFace->addCycListItem( s = QString("CLKMODE(1)")); // clk mode auf 48bit einstellen
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
