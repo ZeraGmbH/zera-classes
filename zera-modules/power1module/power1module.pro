@@ -50,8 +50,7 @@ OTHER_FILES += \
     src/power1module.xml \
     src/power1module.xsd \
     src/power1module2.xml \
-    src/power1module3.xml \
-    src/power1moduleREF.xml
+    src/power1module3.xml
 
 RESOURCES += \
     resources.qrc
