@@ -34,7 +34,9 @@ SOURCES += \
     dspinterface_p.cpp \
     dspmeasdata.cpp \
     rminterface.cpp \
-    rminterface_p.cpp
+    rminterface_p.cpp \
+    secinterface.cpp \
+    secinterface_p.cpp
 
 HEADERS +=\
     intelhexfileio.h \
@@ -50,7 +52,9 @@ HEADERS +=\
     dspmeasdata.h \
     dspvar.h \
     rminterface.h \
-    rminterface_p.h
+    rminterface_p.h \
+    secinterface.h \
+    secinterface_p.h
 
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-classes/misc
