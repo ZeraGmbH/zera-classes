@@ -8,7 +8,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "basemeasprogram.h"
+#include "basedspmeasprogram.h"
 #include "measchannelinfo.h"
 
 namespace Zera {
@@ -62,7 +62,7 @@ enum thdnmoduleCmds
 class cThdnModuleConfigData;
 class cThdnModule;
 
-class cThdnModuleMeasProgram: public cBaseMeasProgram
+class cThdnModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 

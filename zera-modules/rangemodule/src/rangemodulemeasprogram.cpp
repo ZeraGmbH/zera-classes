@@ -18,7 +18,7 @@ namespace RANGEMODULE
 {
 
 cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cRangeModuleConfigData& configData)
-    :cBaseMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configData)
+    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configData)
 {
     // we have to instantiate a working resource manager and dspserver interface
     m_pRMInterface = new Zera::Server::cRMInterface();

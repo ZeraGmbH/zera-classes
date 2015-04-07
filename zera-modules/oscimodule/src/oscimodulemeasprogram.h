@@ -8,7 +8,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "basemeasprogram.h"
+#include "basedspmeasprogram.h"
 #include "measchannelinfo.h"
 
 class cModuleSignal;
@@ -63,7 +63,7 @@ class cBaseModule;
 class cOsciModuleConfigData;
 class cOsciModule;
 
-class cOsciModuleMeasProgram: public cBaseMeasProgram
+class cOsciModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 

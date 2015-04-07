@@ -7,7 +7,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "basemeasprogram.h"
+#include "basedspmeasprogram.h"
 
 
 namespace Zera
@@ -52,7 +52,7 @@ class cSampleModule;
 class cSampleModuleConfigData;
 
 
-class cSampleModuleMeasProgram: public cBaseMeasProgram
+class cSampleModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 

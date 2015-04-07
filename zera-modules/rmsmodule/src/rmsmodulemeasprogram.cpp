@@ -24,7 +24,7 @@ namespace RMSMODULE
 {
 
 cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cRmsModuleConfigData& configdata)
-    :cBaseMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();

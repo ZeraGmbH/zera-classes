@@ -23,7 +23,7 @@ namespace OSCIMODULE
 {
 
 cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cOsciModuleConfigData& configdata)
-    :cBaseMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
 {
     m_ActValueList = m_ConfigData.m_valueChannelList;
 

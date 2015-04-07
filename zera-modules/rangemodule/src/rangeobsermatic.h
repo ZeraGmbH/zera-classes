@@ -137,6 +137,8 @@ private:
 
     bool m_bRangeAutomatic;
     bool m_bGrouping;
+    bool m_brangeSet; // we set this here after we selected a new range and enable resetting stored overloadcondition
+
     void rangeObservation();
     void rangeAutomatic();
     void groupHandling();

@@ -8,7 +8,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "basemeasprogram.h"
+#include "basedspmeasprogram.h"
 #include "measchannelinfo.h"
 
 namespace Zera {
@@ -65,7 +65,7 @@ class cFftModuleConfigData;
 class cFftModule;
 
 
-class cFftModuleMeasProgram: public cBaseMeasProgram
+class cFftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 

@@ -22,18 +22,11 @@
         </connectivity>
         <measure>
             <modes>
-                <n>11</n>
-                <m1>4LW</m1>
-                <m2>4LB</m2>
-                <m3>4LBK</m3>
-                <m4>4LS</m4>
-                <m5>4LSg</m5>
-                <m6>3LW</m6>
-                <m7>3LB</m7>
-                <m8>2LW</m8>
-                <m9>2LB</m9>
-                <m10>2LS</m10>
-                <m11>2LSg</m11>
+                <n>4</n>
+                <m1>4LS</m1>
+                <m2>4LSg</m2>
+                <m3>2LS</m3>
+                <m4>2LSg</m4>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
@@ -48,7 +41,7 @@
             </movingwindow>
         </measure>
         <frequencyoutput>
-            <frequency>200000</frequency>
+            <frequency>100000</frequency>
             <frequencyact>signalperiod</frequencyact>
             <output>
                 <n>1</n>

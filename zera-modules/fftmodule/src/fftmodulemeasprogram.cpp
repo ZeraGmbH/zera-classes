@@ -25,7 +25,7 @@ namespace FFTMODULE
 {
 
 cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cFftModuleConfigData& configdata)
-    :cBaseMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();

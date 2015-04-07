@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<sec1modconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+            <ethernet>
+                <resourcemanager>
+                    <ip>192.168.7.222</ip>
+                    <port>6312</port>
+                </resourcemanager>
+                <pcbserver>
+                    <ip>192.168.7.222</ip>
+                    <port>6307</port>
+                </pcbserver>
+                <secserver>
+                    <ip>192.168.7.222</ip>
+                    <port>6309</port>
+                </secserver>
+            </ethernet>
+        </connectivity>
+        <measure>
+            <refconstantnotifier>1</refconstantnotifier>
+            <dutinput>
+                <n>2</n>
+                <inp1>sh0</inp1>
+                <inp2>fi0</inp2>
+            </dutinput>
+            <refinput>
+                <n>1</n>
+                <inp1>fo0</inp1>
+            </refinput>
+            <interval>2.0</interval>
+        </measure>
+    </configuration>
+
+    <parameter>
+        <measure>
+            <dutinput>sh0</dutinput>
+            <refinput>fo0</refinput>
+            <dutconstant>1000.0</dutconstant>
+            <refconstant>1000.0</refconstant>
+            <targetvalue>12000000</targetvalue>
+            <measpulses>10</measpulses>
+        </measure>
+    </parameter>
+
+</sec1modconfpar>

@@ -25,7 +25,7 @@ namespace POWER1MODULE
 {
 
 cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cPower1ModuleConfigData& configdata)
-    :cBaseMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
@@ -228,16 +228,19 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::
     m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueDoneState);
     m_readUrvalueDoneState.addTransition(this, SIGNAL(activationContinue()), &m_setFrequencyScalesState);
     m_readUrvalueDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readUrvalueState);
+    m_setFrequencyScalesState.addTransition(this, SIGNAL(activationContinue()), &m_setFoutConstantState);
 
     m_readUrValueMachine.addState(&m_readUrvalueState);
     m_readUrValueMachine.addState(&m_readUrvalueDoneState);
     m_readUrValueMachine.addState(&m_setFrequencyScalesState);
+    m_readUrValueMachine.addState(&m_setFoutConstantState);
 
     m_readUrValueMachine.setInitialState(&m_readUrvalueState);
 
     connect(&m_readUrvalueState, SIGNAL(entered()), SLOT(readUrvalue()));
     connect(&m_readUrvalueDoneState, SIGNAL(entered()), SLOT(readUrvalueDone()));
     connect(&m_setFrequencyScalesState, SIGNAL(entered()), SLOT(setFrequencyScales()));
+    connect(&m_setFoutConstantState, SIGNAL(entered()), SLOT(setFoutConstants()));
 }
 
 
@@ -717,18 +720,18 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0117)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0117)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            int index = 0;
+            m_nPMSIndex = 0;
 
             sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
             if (m_ConfigData.m_sM2WSystem == "pms2")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
-                index = 1;
+                m_nPMSIndex = 1;
             }
             if (m_ConfigData.m_sM2WSystem == "pms3")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
-                index = 2;
+                m_nPMSIndex = 2;
             }
 
             // first we set all our actual values to 0
@@ -739,7 +742,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             // and then we compute the 2 wire power values for the selected system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-            m_pDSPInterFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(index));
+            m_pDSPInterFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(m_nPMSIndex));
 
             m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0117)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -752,18 +755,18 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0118)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0118)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            int index = 0;
+            m_nPMSIndex = 0;
 
             sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
             if (m_ConfigData.m_sM2WSystem == "pms2")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
-                index = 1;
+                m_nPMSIndex = 1;
             }
             if (m_ConfigData.m_sM2WSystem == "pms3")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
-                index = 2;
+                m_nPMSIndex = 2;
             }
 
             // first we set all our actual values to 0
@@ -777,13 +780,13 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
             m_pDSPInterFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL1,TEMP1)"));
             m_pDSPInterFace->addCycListItem( s = QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-            m_pDSPInterFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(index));
+            m_pDSPInterFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(m_nPMSIndex));
             m_pDSPInterFace->addCycListItem( s = QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
-            m_pDSPInterFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(index).arg(index));
-            m_pDSPInterFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(index).arg(index));
+            m_pDSPInterFace->addCycListItem( s = QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(m_nPMSIndex).arg(m_nPMSIndex));
+            m_pDSPInterFace->addCycListItem( s = QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(m_nPMSIndex).arg(m_nPMSIndex));
 
             //m_pDSPInterFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
-            //m_pDSPInterFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(index));
+            //m_pDSPInterFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(m_nPMSIndex));
 
             m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0118)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -797,18 +800,18 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0119)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
             QStringList sl;
-            int index = 0;
+            m_nPMSIndex = 0;
 
             sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
             if (m_ConfigData.m_sM2WSystem == "pms2")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
-                index = 1;
+                m_nPMSIndex = 1;
             }
             if (m_ConfigData.m_sM2WSystem == "pms3")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
-                index = 2;
+                m_nPMSIndex = 2;
             }
 
             // first we set all our actual values to 0
@@ -821,7 +824,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "RMS(MEASSIGNAL1,TEMP1)");
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = "RMS(MEASSIGNAL1,TEMP2)");
-            m_pDSPInterFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2,VALPQS+%1)").arg(index));
+            m_pDSPInterFace->addCycListItem( s = QString("MULVVV(TEMP1,TEMP2,VALPQS+%1)").arg(m_nPMSIndex));
 
             m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0119)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -835,18 +838,18 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0120)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
             QStringList sl;
-            int index = 0;
+            m_nPMSIndex = 0;
 
             sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
             if (m_ConfigData.m_sM2WSystem == "pms2")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
-                index = 1;
+                m_nPMSIndex = 1;
             }
             if (m_ConfigData.m_sM2WSystem == "pms3")
             {
                 sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
-                index = 2;
+                m_nPMSIndex = 2;
             }
 
             // first we set all our actual values to 0
@@ -860,7 +863,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
             m_pDSPInterFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
             m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // Q
-            m_pDSPInterFace->addCycListItem( s = QString("ADDVVG(TEMP1,TEMP2,VALPQS+%1)").arg(index));
+            m_pDSPInterFace->addCycListItem( s = QString("ADDVVG(TEMP1,TEMP2,VALPQS+%1)").arg(m_nPMSIndex));
 
             m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0120)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
@@ -1590,6 +1593,13 @@ void cPower1ModuleMeasProgram::setActualValuesNames()
 }
 
 
+bool cPower1ModuleMeasProgram::is2WireMode()
+{
+    int mm = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode();
+    return ((mm == m2lw) || (mm == m2lb) || (mm == m2ls) || (mm == m2lsg));
+}
+
+
 void cPower1ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) // maybe we are deactivating !!!!
@@ -2111,27 +2121,40 @@ void cPower1ModuleMeasProgram::readUrvalueDone()
 
 void cPower1ModuleMeasProgram::setFrequencyScales()
 {
-    double umax, imax;
+    double d;
+    QStringList sl;
     umax = imax = 0.0;
 
-    for (int i = 0; i < m_ConfigData.m_sMeasSystemList.count(); i++)
+    if (is2WireMode()) // in case we are in 2 wire mode we take umax imyx from driving system
     {
-        double d;
-        QStringList sl;
-        sl = m_ConfigData.m_sMeasSystemList.at(i).split(',');
-        if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > umax)
-            umax = d;
-        if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > imax)
-            imax = d;
+        sl = m_ConfigData.m_sMeasSystemList.at(m_nPMSIndex).split(',');
+        umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
+        imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
     }
+    else // we have to consider all channels
+        for (int i = 0; i < m_ConfigData.m_sMeasSystemList.count(); i++)
+        {
+
+            sl = m_ConfigData.m_sMeasSystemList.at(i).split(',');
+            if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > umax)
+                umax = d;
+            if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > imax)
+                imax = d;
+        }
 
     QString datalist = "FREQSCALE:";
+
+    double cfak;
+    if (is2WireMode())
+        cfak = 1.0;
+    else
+        cfak = 3.0;
 
     for (int i = 0; i< m_ConfigData.m_nFreqOutputCount; i++)
     {
         double frScale;
         cFoutInfo fi = m_FoutInfoHash[m_ConfigData.m_FreqOutputConfList.at(i).m_sName];
-        frScale = fi.formFactor * m_ConfigData.m_nNominalFrequency / (3.0 * umax * imax);
+        frScale = fi.formFactor * m_ConfigData.m_nNominalFrequency / (cfak * umax * imax);
         datalist += QString("%1,").arg(frScale, 0, 'g', 7);
     }
 
@@ -2140,6 +2163,30 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
 
     m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
+}
+
+
+void cPower1ModuleMeasProgram::setFoutConstants()
+{
+    double constant;
+    double cfak;
+
+    if (is2WireMode())
+        cfak = 1.0;
+    else
+        cfak = 3.0;
+
+    constant = m_ConfigData.m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * umax * imax); // imp./kwh
+
+    QList<QString> keylist = m_FoutInfoHash.keys();
+
+    if (keylist.count() > 0)
+        for (int i = 0; i < keylist.count(); i++)
+        {
+            cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
+            m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
+
+        }
 }
 
 

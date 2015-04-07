@@ -8,7 +8,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "basemeasprogram.h"
+#include "basedspmeasprogram.h"
 #include "measchannelinfo.h"
 #include "measmodeinfo.h"
 #include "foutinfo.h"
@@ -101,7 +101,7 @@ class cPower1ModuleConfigData;
 class cPower1Module;
 
 
-class cPower1ModuleMeasProgram: public cBaseMeasProgram
+class cPower1ModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 
@@ -152,8 +152,10 @@ private:
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
+    qint32 m_nPMSIndex;
     quint32 m_nSRate; // number of samples / signal period
     quint8 notifierNr;
+    double umax, imax;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -230,11 +232,13 @@ private:
     QStateMachine m_readUrValueMachine;
     QState m_readUrvalueState;
     QState m_readUrvalueDoneState;
-    QFinalState m_setFrequencyScalesState;
+    QState m_setFrequencyScalesState;
+    QFinalState m_setFoutConstantState;
 
     cMovingwindowFilter* m_pMovingwindowFilter;
 
     void setActualValuesNames();
+    bool is2WireMode();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
@@ -300,6 +304,7 @@ private slots:
     void readUrvalue();
     void readUrvalueDone();
     void setFrequencyScales();
+    void setFoutConstants();
 
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);

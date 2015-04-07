@@ -23,6 +23,7 @@ namespace RANGEMODULE
 cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar)
     :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pDSPSocket(dsprmsocket), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
 {
+    m_brangeSet =false;
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrDoneState);
@@ -173,6 +174,7 @@ void cRangeObsermatic::deleteInterface()
 void cRangeObsermatic::rangeObservation()
 {   
     bool markOverload =false;
+
     cRangeMeasChannel *pmChn;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we test all channels
     {
@@ -204,13 +206,17 @@ void cRangeObsermatic::rangeObservation()
             m_softOvlList.replace(i, false);
         }
 
+        disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
         if (markOverload)
-        {
-            disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
             m_pParOverloadOnOff->setData(QVariant(1));
-            connect(m_pParOverloadOnOff, SIGNAL(updated(QVariant)), SLOT(newOverload(QVariant)));
-        }
+        else
+            if (m_brangeSet)
+            {
+                m_pParOverloadOnOff->setData(QVariant(0));
+                m_brangeSet = false;
+            }
 
+            connect(m_pParOverloadOnOff, SIGNAL(updated(QVariant)), SLOT(newOverload(QVariant)));
     }
 }
 
@@ -529,6 +535,7 @@ void cRangeObsermatic::newRange(QVariant range)
                 stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
                 sPar.m_sPar = s;
                 m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
+                m_brangeSet = true;
             }
         }
 
