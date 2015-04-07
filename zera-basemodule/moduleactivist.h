@@ -20,13 +20,15 @@ signals:
     void activationContinue(); // for activist progress in activation statemachine
     void activationLoop();
     void activationSkip();
+    void activationError();
     void deactivated();
     void deactivationContinue();
     void deactivationLoop();
     void deactivationSkip();
-    void dataAquisitionContinue();
-    void activationError();
     void deactivationError();
+    void dataAquisitionContinue();
+    void setupContinue();
+    void interruptContinue();
     void executionError();
     void errMsg(QString);
 
