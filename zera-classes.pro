@@ -23,7 +23,9 @@ SUBDIRS     = \
             zera-modules/fftmodule \
             zera-modules/samplemodule \
             zera-modules/referencemodule \
-            zera-modules/modemodule
+            zera-modules/modemodule \
+            zera-modules/sec1module
+
 
 
 

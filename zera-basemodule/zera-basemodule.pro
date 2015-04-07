@@ -48,7 +48,10 @@ HEADERS += \
     rangeinfo.h \
     basemeaschannel.h \
     movingwindowfilter.h \
-    basesamplechannel.h
+    basesamplechannel.h \
+    secinputinfo.h \
+    basedspmeasprogram.h \
+    ecalcinfo.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -62,6 +65,7 @@ SOURCES += \
     measmodeinfo.cpp \
     basemeaschannel.cpp \
     movingwindowfilter.cpp \
-    basesamplechannel.cpp
+    basesamplechannel.cpp \
+    basedspmeasprogram.cpp
 
 include(../zera-classes.pri)
