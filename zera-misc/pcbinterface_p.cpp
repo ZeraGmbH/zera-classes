@@ -279,6 +279,28 @@ quint32 cPCBInterfacePrivate::getFormFactorSource(QString chnName)
 }
 
 
+quint32 cPCBInterfacePrivate::getConstantSource(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SOUR:%1:CONST?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getconstantsource;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setConstantSource(QString chnName, double constant)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SOUR:%1:CONST").arg(chnName), par = QString("%1;").arg(constant));
+    m_MsgNrCmdList[msgnr] = setconstantsource;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getAliasSample(QString chnName)
 {
     QString cmd;
@@ -330,6 +352,72 @@ quint32 cPCBInterfacePrivate::setPLLChannel(QString samplechnName, QString pllch
 
     msgnr = sendCommand(cmd = QString("SAMP:%1:PLL").arg(samplechnName), par = QString("%1;").arg(pllchnName));
     m_MsgNrCmdList[msgnr] = setpllchannel;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getAliasSchead(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SCHEAD:%1:ALIAS?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getaliassschead;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getMuxChannelSchead(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SCHEAD:%1:MUXC?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getmuxchannelschead;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getAliasFrqinput(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("FRQINPUT:%1:ALIAS?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getaliasfrqinput;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getMuxChannelFrqinput(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("FRQINPUT:%1:MUXC?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getmuxchannelfrqinput;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::resourceAliasQuery(QString resourceType, QString resourceName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("%1:%2:ALI?").arg(resourceType).arg(resourceName));
+    m_MsgNrCmdList[msgnr] = resourcealiasquery;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::resourceMuxChannelQuery(QString resourceType, QString resourceName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("%1:%2:MUXC?").arg(resourceType).arg(resourceName));
+    m_MsgNrCmdList[msgnr] = resourcemuxchannelquery;
     return msgnr;
 }
 
@@ -390,6 +478,9 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case gettype2:
         case getsamplerate:
         case getdspchannelsource:
+        case getmuxchannelschead:
+        case getmuxchannelfrqinput:
+        case resourcemuxchannelquery:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 
@@ -400,6 +491,9 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getalias2:
         case getaliassource:
         case getaliassample:
+        case getaliassschead:
+        case getaliasfrqinput:
+        case resourcealiasquery:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
@@ -416,6 +510,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getoffsetcorrection:
         case getphasecorrection:
         case getformfactorsource:
+        case getconstantsource:
             emit q->serverAnswer(lmsgnr, lreply, returnDouble(lmsg));
             break;
 
@@ -431,6 +526,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case pcbinterrupt:
         case setrangesample:
         case setpllchannel:
+        case setconstantsource:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }

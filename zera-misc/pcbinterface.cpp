@@ -230,6 +230,60 @@ quint32 cPCBInterface::getFormFactorSource(QString chnName)
 }
 
 
+quint32 cPCBInterface::getConstantSource(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getConstantSource(chnName);
+}
+
+
+quint32 cPCBInterface::setConstantSource(QString chnName, double constant)
+{
+    Q_D(cPCBInterface);
+    return d->setConstantSource(chnName, constant);
+}
+
+
+quint32 cPCBInterface::getAliasSchead(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getAliasSchead(chnName);
+}
+
+
+quint32 cPCBInterface::getMuxChannelSchead(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getMuxChannelSchead(chnName);
+}
+
+
+quint32 cPCBInterface::getAliasFrqinput(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getAliasFrqinput(chnName);
+}
+
+
+quint32 cPCBInterface::getMuxChannelFrqinput(QString chnName)
+{
+    Q_D(cPCBInterface);
+    return d->getMuxChannelFrqinput(chnName);
+}
+
+
+quint32 cPCBInterface::resourceAliasQuery(QString resourceType, QString resourceName)
+{
+    Q_D(cPCBInterface);
+    return d->resourceAliasQuery(resourceType, resourceName);
+}
+
+
+quint32 cPCBInterface::resourceMuxChannelQuery(QString resourceType, QString resourceName)
+{
+    Q_D(cPCBInterface);
+    return d->resourceMuxChannelQuery(resourceType, resourceName);
+}
 
 
 

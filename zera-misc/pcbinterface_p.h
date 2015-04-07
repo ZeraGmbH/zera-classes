@@ -44,7 +44,17 @@ enum pcbcommands
 
     getaliassource,
     getdspchannelsource,
-    getformfactorsource
+    getformfactorsource,
+    getconstantsource,
+    setconstantsource,
+
+    getaliassschead,
+    getmuxchannelschead,
+    getaliasfrqinput,
+    getmuxchannelfrqinput,
+
+    resourcealiasquery,
+    resourcemuxchannelquery
 };
 
 
@@ -82,6 +92,8 @@ public:
     virtual quint32 getAliasSource(QString chnName); // qstring
     virtual quint32 getDSPChannelSource(QString chnName); // int
     virtual quint32 getFormFactorSource(QString chnName); // double
+    virtual quint32 getConstantSource(QString chnName); // double
+    virtual quint32 setConstantSource(QString chnName, double constant); // double
 
     // all commands to sample interface
     virtual quint32 getAliasSample(QString chnName); // qstring
@@ -89,6 +101,18 @@ public:
     virtual quint32 getRangeListSample(QString chnName); // qstringlist
     virtual quint32 setRangeSample(QString chnName, QString rngName);
     virtual quint32 setPLLChannel(QString samplechnName, QString pllchnName);
+
+    // all commands to schead interface
+    virtual quint32 getAliasSchead(QString chnName); // qstring
+    virtual quint32 getMuxChannelSchead(QString chnName); // int
+
+    // all commands to frqinput interface
+    virtual quint32 getAliasFrqinput(QString chnName); // qstring
+    virtual quint32 getMuxChannelFrqinput(QString chnName); // int
+
+    // resource query more generell
+    virtual quint32 resourceAliasQuery(QString resourceType, QString resourceName);
+    virtual quint32 resourceMuxChannelQuery(QString resourceType, QString resourceName);
 
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
