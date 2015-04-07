@@ -7,15 +7,15 @@
             <debuglevel>0</debuglevel>
             <ethernet>
                 <resourcemanager>
-                    <ip>192.168.7.222</ip>
+                    <ip>127.0.0.1</ip>
                     <port>6312</port>
                 </resourcemanager>
                 <pcbserver>
-                    <ip>192.168.7.222</ip>
+                    <ip>127.0.0.1</ip>
                     <port>6307</port>
                 </pcbserver>
                 <dspserver>
-                    <ip>192.168.7.222</ip>
+                    <ip>127.0.0.1</ip>
                     <port>6310</port>
                 </dspserver>
             </ethernet>
@@ -34,7 +34,7 @@
             </pllchannel>
         </sample>
         <measure>
-            <interval>1.0</interval>
+            <interval>0.5</interval>
         </measure>
     </configuration>
 
@@ -42,7 +42,7 @@
         <sample>
             <pllauto>1</pllauto>
             <pllchannel>UL1</pllchannel>
-            <range>F50Hz</range>
+            <range>F70Hz</range>
         </sample>
     </parameter>
 
