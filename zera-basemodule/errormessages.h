@@ -5,7 +5,8 @@
 #define resourcetypeErrMsg "RESMAN resourcetype not avail"
 #define resourceErrMsg "RESMAN resource not avail"
 #define resourceInfoErrMsg "RESMAN resource Info error"
-#define claimresourceErrMsg "RESMAN claim resource failed"
+#define claimresourceErrMsg "RESMAN set resource failed"
+#define setresourceErrMsg "RESMAN set resource failed"
 #define freeresourceErrMsg "RESMAN free resource failed"
 
 #define readdspchannelErrMsg "PCB dsp channel read failed"
@@ -31,6 +32,8 @@
 #define registerpcbnotifierErrMsg "PCB register notifier failed"
 #define unregisterpcbnotifierErrMsg "PCB unregister notifier failed"
 #define setPllErrMsg "PCB set pll failed"
+#define readmuxchannelErrMsg "PCB muxchannel read failed"
+#define readrefconstantErrMsg "PCB reference constant read failed"
 
 #define readdspgaincorrErrMsg "DSP read gain correction failed"
 #define readdspphasecorrErrMsg "DSP read phase correction failed"
@@ -46,4 +49,13 @@
 #define writedspmemoryErrMsg "DSP memory write failed"
 #define writesubdcErrMsg "DSP subdc write failed"
 
+#define fetchsececalcunitErrMsg "SEC fetch ecalculator failed"
+#define freesececalcunitErrMsg "SEC free ecalculator failed"
+#define readsecregisterErrMsg "SEC read register failed"
+#define writesecregisterErrMsg "SEC write register failed"
+#define setsyncErrMsg "SEC set sync failed"
+#define setmuxErrMsg "SEC set mux failed"
+#define setcmdidErrMsg "SEC set cmdid failed"
+#define startmeasErrMsg "SEC stop measure failed"
+#define stopmeasErrMsg "SEC stop measure failed"
 #endif // ERRORMESSAGES_H
