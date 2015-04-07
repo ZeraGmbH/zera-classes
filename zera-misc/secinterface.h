@@ -1,0 +1,4 @@
+#ifndef SECINTERFACE_H
+#define SECINTERFACE_H
+
+#endif // SECINTERFACE_H
