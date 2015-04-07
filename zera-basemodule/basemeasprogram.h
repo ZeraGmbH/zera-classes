@@ -47,11 +47,6 @@ public slots:
 protected:
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     VeinPeer* m_pPeer; // the peer where we set our entities
-    // the module creates a central dsp interface and forwards this
-    // the reason behind this is, that dsp server generates a new "environment" for each
-    // new client. but we want to access the same environment's value from all over the module.
-    Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
-    Zera::Proxy::cProxyClient *m_pDspClient;
     Zera::Server::cRMInterface* m_pRMInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
     // we hold an interface for every channel because it could be possible that our measuring
@@ -62,13 +57,6 @@ protected:
 
     QVector<float> m_ModuleActualValues; // a modules actual values
     QHash<quint32, int> m_MsgNrCmdList;
-    quint32 m_nDspMemUsed;
-
-    virtual void setDspVarList() = 0; // dsp related stuff
-    virtual void deleteDspVarList() = 0;
-    virtual void setDspCmdList() = 0;
-    virtual void deleteDspCmdList() = 0;
-
     quint8 m_nConnectionCount;
 
 protected slots:
