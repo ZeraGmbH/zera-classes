@@ -197,6 +197,12 @@ void cOsciModuleMeasProgram::deleteInterface()
 }
 
 
+void cOsciModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
+
 void cOsciModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

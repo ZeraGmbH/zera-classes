@@ -79,7 +79,6 @@ protected:
 private:
     cModuleInfo *channelNrInfo;
     cModuleInfo *groupNrInfo;
-    cModuleError *errorMessage;
     qint32 m_nActivationIt;
 
 private slots:

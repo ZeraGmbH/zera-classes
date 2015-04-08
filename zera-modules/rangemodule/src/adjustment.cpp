@@ -119,6 +119,12 @@ void cAdjustManagement::deleteInterface()
 }
 
 
+void cAdjustManagement::exportInterface(QJsonArray &)
+{
+    // so nothing to export
+}
+
+
 void cAdjustManagement::dspserverConnect()
 {
     // we connect cmddone of our meas channels so we get informed if commands are finished

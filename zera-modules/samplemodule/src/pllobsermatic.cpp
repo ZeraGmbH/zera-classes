@@ -84,6 +84,12 @@ void cPllObsermatic::deleteInterface()
 }
 
 
+void cPllObsermatic::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
+
 void cPllObsermatic::pllAutomatic()
 {
     if (m_bActive && m_ConfPar.m_ObsermaticConfPar.m_bpllAuto) // was automatic configured

@@ -74,7 +74,6 @@ protected:
     QFinalState m_DeactivationFinishedState;
 
 private:
-    cModuleError *errorMessage;
     qint32 m_nActivationIt;
     QList<cPllMeasChannel*> m_pllMeasChannelList; // our pll meas channels
     QList<cSampleChannel*>  m_sampleChannelList;

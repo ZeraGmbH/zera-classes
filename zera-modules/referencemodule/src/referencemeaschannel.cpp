@@ -140,6 +140,13 @@ void cReferenceMeasChannel::generateInterface()
 
 void cReferenceMeasChannel::deleteInterface()
 {
+    // so nothing to delete
+}
+
+
+void cReferenceMeasChannel::exportInterface(QJsonArray &)
+{
+    // and nothing top export
 }
 
 

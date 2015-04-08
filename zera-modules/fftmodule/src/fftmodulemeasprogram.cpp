@@ -213,6 +213,12 @@ void cFftModuleMeasProgram::deleteInterface()
 }
 
 
+void cFftModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
+
 void cFftModuleMeasProgram::setDspVarList()
 {
     m_nfftLen = 2 << (int)(floor(log((m_ConfigData.m_nFftOrder << 1) -1)/log(2.0))); // our fft length

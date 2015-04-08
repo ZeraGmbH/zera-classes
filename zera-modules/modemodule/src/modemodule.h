@@ -68,7 +68,6 @@ protected:
     QFinalState m_DeactivationFinishedState;
 
 private:
-    cModuleError *errorMessage;
     qint32 m_nActivationIt;
 
 private slots:

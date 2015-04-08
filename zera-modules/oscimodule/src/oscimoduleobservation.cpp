@@ -57,6 +57,12 @@ void cOsciModuleObservation::deleteInterface()
 }
 
 
+void cOsciModuleObservation::exportInterface(QJsonArray &)
+{
+    // and nothing to export
+}
+
+
 void cOsciModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

@@ -363,6 +363,12 @@ void cRangeMeasChannel::deleteInterface()
 }
 
 
+void cRangeMeasChannel::exportInterface(QJsonArray &)
+{
+    // we export setting the channels ranges from rangemodule observation
+}
+
+
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

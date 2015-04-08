@@ -171,6 +171,12 @@ void cRangeObsermatic::deleteInterface()
 }
 
 
+void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
+
 void cRangeObsermatic::rangeObservation()
 {   
     bool markOverload =false;

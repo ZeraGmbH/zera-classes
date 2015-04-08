@@ -134,6 +134,12 @@ void cPllMeasChannel::deleteInterface()
 }
 
 
+void cPllMeasChannel::exportInterface(QJsonArray &)
+{
+    // and nothing to export
+}
+
+
 quint32 cPllMeasChannel::setyourself4PLL(QString samplesysname)
 {
     if (m_bActive)

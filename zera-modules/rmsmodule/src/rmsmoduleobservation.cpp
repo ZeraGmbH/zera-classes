@@ -57,6 +57,12 @@ void cRmsModuleObservation::deleteInterface()
 }
 
 
+void cRmsModuleObservation::exportInterface(QJsonArray &)
+{
+    // and nothing to export
+}
+
+
 void cRmsModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

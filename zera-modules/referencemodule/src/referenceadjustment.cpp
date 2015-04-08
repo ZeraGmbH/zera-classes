@@ -112,6 +112,12 @@ void cReferenceAdjustment::deleteInterface()
 }
 
 
+void cReferenceAdjustment::exportInterface(QJsonArray &)
+{
+    // so nothing to export
+}
+
+
 void cReferenceAdjustment::pcbserverConnect()
 {
     cSocket sock = m_pConfigData->m_PCBServerSocket;

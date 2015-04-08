@@ -224,6 +224,12 @@ void cThdnModuleMeasProgram::deleteInterface()
 }
 
 
+void cThdnModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
+
 void cThdnModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

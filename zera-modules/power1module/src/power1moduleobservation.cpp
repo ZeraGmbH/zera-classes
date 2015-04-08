@@ -58,6 +58,12 @@ void cPower1ModuleObservation::deleteInterface()
 }
 
 
+void cPower1ModuleObservation::exportInterface(QJsonArray &)
+{
+
+}
+
+
 void cPower1ModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

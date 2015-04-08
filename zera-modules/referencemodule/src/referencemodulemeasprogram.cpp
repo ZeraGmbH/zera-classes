@@ -108,6 +108,13 @@ void cReferenceModuleMeasProgram::generateInterface()
 
 void cReferenceModuleMeasProgram::deleteInterface()
 {
+    // so nothing to delete
+}
+
+
+void cReferenceModuleMeasProgram::exportInterface(QJsonArray &)
+{
+    // and nothing to export
 }
 
 

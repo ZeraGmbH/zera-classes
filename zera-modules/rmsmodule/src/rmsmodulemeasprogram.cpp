@@ -256,6 +256,12 @@ void cRmsModuleMeasProgram::deleteInterface()
 }
 
 
+void cRmsModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
+
 void cRmsModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

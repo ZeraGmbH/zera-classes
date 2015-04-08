@@ -66,7 +66,6 @@ protected:
 
 private:
     qint32 m_nActivationIt;
-    cModuleError *errorMessage;
 
 private slots:
     void activationStart();

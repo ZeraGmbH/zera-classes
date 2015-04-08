@@ -114,6 +114,12 @@ void cSampleModuleMeasProgram::deleteInterface()
 }
 
 
+void cSampleModuleMeasProgram::exportInterface(QJsonArray &)
+{
+    // and nothing to delete
+}
+
+
 void cSampleModuleMeasProgram::setDspVarList()
 {
 

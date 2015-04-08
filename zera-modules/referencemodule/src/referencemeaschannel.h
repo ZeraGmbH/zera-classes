@@ -56,6 +56,8 @@ public:
     ~cReferenceMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
+    virtual void exportInterface(QJsonArray &);
+
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
 
     double getUrValue();

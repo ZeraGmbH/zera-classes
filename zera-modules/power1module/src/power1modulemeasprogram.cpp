@@ -344,6 +344,12 @@ void cPower1ModuleMeasProgram::deleteInterface()
 }
 
 
+void cPower1ModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
+
 void cPower1ModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

@@ -44,6 +44,7 @@ public:
     virtual ~cReferenceModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
+    virtual void exportInterface(QJsonArray &);
 
 signals:
     void moduleReconfigure(); // we emit a signal for module reconfiguration when we recognize significant changes

@@ -63,6 +63,7 @@ public:
     virtual ~cPllObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
+    virtual void exportInterface(QJsonArray &jsArr);
 
     cModuleSignal *m_pPllSignal; // we make the signal public for easy connection within module
 

@@ -69,7 +69,7 @@ public:
     virtual ~cModeModuleInit();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-
+    virtual void exportInterface(QJsonArray &);
 
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

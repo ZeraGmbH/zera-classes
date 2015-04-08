@@ -249,6 +249,11 @@ void cDftModuleMeasProgram::deleteInterface()
     delete m_pMeasureSignal;
 }
 
+void cDftModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+{
+
+}
+
 
 void cDftModuleMeasProgram::setDspVarList()
 {
