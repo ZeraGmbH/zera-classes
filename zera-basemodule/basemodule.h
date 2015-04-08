@@ -29,7 +29,7 @@ enum Status
     activated   // we have activated the module
 };
 
-
+class cModuleError;
 class cBaseMeasProgram;
 class cBaseModuleConfiguration;
 class cBaseMeasChannel;
@@ -88,6 +88,7 @@ protected:
     QList<cModuleActivist*> m_ModuleActivistList;
     cBaseModuleConfiguration *m_pConfiguration; // our xml configuration
     quint8 m_nModuleNr;
+    cModuleError *errorMessage;
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule() = 0; // after xml configuration we can setup and export our module

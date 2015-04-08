@@ -36,6 +36,7 @@ public:
     virtual ~cBaseMeasProgram();
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
+    virtual void exportInterface(QJsonArray &jsArr) = 0;
 
 signals:
     void actualValues(QVector<float>*);

@@ -35,6 +35,8 @@ public:
     virtual ~cBaseMeasChannel(){}
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
+    virtual void exportInterface(QJsonArray &jsArr) = 0;
+
     quint8 getDSPChannelNr();
     quint16 getSampleRate();
     QString getName();

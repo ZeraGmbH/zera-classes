@@ -2,6 +2,7 @@
 #define MODULEACTIVIST_H
 
 #include <QObject>
+#include <QJsonArray>
 #include <QStateMachine>
 
 // pure virtual class for all objects living in a module, which generate an interface
@@ -38,6 +39,7 @@ public slots:
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
+    virtual void exportInterface(QJsonArray& jsArr) = 0;
 
 protected:
     bool m_bActive;
