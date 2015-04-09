@@ -136,7 +136,7 @@ void cRangeModuleMeasProgram::deleteInterface()
 }
 
 
-void cRangeModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+void cRangeModuleMeasProgram::exportInterface(QJsonArray &)
 {
 
 }
