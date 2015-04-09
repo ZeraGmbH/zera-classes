@@ -15,6 +15,7 @@
 
 
 class VeinPeer;
+class VeinEntity;
 
 enum LastState
 {
@@ -44,6 +45,8 @@ public:
     virtual ~cBaseModule();
     virtual QList<const QState*> getActualStates(); // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
+    virtual QString getModuleName();
+    virtual QString getSCPIModuleName();
     virtual quint8 getModuleNr();
     virtual QByteArray getConfiguration()=0;
     virtual bool isConfigured();
@@ -87,8 +90,11 @@ protected:
     VeinPeer* m_pPeer;
     QList<cModuleActivist*> m_ModuleActivistList;
     cBaseModuleConfiguration *m_pConfiguration; // our xml configuration
+    QString m_sModuleName;
+    QString m_sSCPIModuleName;
     quint8 m_nModuleNr;
     cModuleError *errorMessage;
+    VeinEntity* m_pModuleInterfaceEntity; // here we export
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule() = 0; // after xml configuration we can setup and export our module

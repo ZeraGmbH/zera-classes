@@ -4,6 +4,8 @@
 #include <QString>
 #include <virtualmodule.h>
 #include <QSet>
+#include <veinpeer.h>
+#include <veinentity.h>
 
 #include "basemodule.h"
 #include "basemoduleconfiguration.h"
@@ -19,6 +21,10 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
 
     m_nStatus = untouched;
     m_pStateMachine = new QStateMachine(this);
+
+
+    m_pModuleInterfaceEntity = m_pPeer->dataAdd(QString("INF_ModuleInterface")); // here is our json interface export
+    m_pModuleInterfaceEntity->modifiersAdd(VeinEntity::MOD_READONLY);
 
     // our states from virtualmodule (interface)
     m_pStateIdle = new QState();
@@ -154,6 +160,18 @@ void cBaseModule::setConfiguration(QByteArray xmlConfigData)
         emit sigConfiguration(); // if our statemachine is already started we emit signal at once
     else
         m_bConfCmd = true; // otherwise we keep in mind that we should configure when machine starts
+}
+
+
+QString cBaseModule::getModuleName()
+{
+    return m_sModuleName;
+}
+
+
+QString cBaseModule::getSCPIModuleName()
+{
+    return m_sSCPIModuleName;
 }
 
 
