@@ -84,6 +84,8 @@ public:
 
     QString getOptRange(double ampl); // returns opt. range alias
     QString getMaxRange(); // returns alias of the range with max ur value
+    QString getRangeListEntityName();
+    QString getChannelNameEntityName();
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready

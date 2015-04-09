@@ -266,6 +266,18 @@ QString cRangeMeasChannel::getMaxRange()
 }
 
 
+QString cRangeMeasChannel::getChannelNameEntityName()
+{
+    return m_pChannelEntity->getName();
+}
+
+
+QString cRangeMeasChannel::getRangeListEntityName()
+{
+    return m_pChannelRangeListEntity->getName();
+}
+
+
 double cRangeMeasChannel::getGainCorrection()
 {
     return m_fGainCorrection;

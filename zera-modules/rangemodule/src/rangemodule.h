@@ -36,6 +36,9 @@ class cRangeObsermatic;
 class cRangeModuleObservation;
 
 
+#define BaseModuleName "RangeModule"
+#define BaseSCPIModuleName "RNG"
+
 class cRangeModule : public cBaseModule
 {
 Q_OBJECT

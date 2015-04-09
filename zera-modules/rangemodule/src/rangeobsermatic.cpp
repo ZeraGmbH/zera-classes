@@ -1,6 +1,8 @@
 #include <QString>
 #include <QVector>
 #include <QPoint>
+#include <QJsonObject>
+#include <QJsonArray>
 #include <math.h>
 #include <veinpeer.h>
 #include <veinentity.h>
@@ -173,7 +175,37 @@ void cRangeObsermatic::deleteInterface()
 
 void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
 {
+    for (int i = 0; i < m_ChannelNameList.count(); i++)
+    {
+        QJsonObject jsonObj;
+        jsonObj.insert("Name", m_RangeEntityList.at(i)->getName());
+        jsonObj.insert("DES", QString("Writing this entitiy sets a channels range"));
 
+        QJsonArray jsonValArr;
+
+        QJsonObject jsonObj2, jsonObj3;
+        jsonObj2.insert("Script", QString("setrangevalidation.js")); // our validation script
+        jsonObj3.insert("Par", m_RangeMeasChannelList.at(i)->getRangeListEntityName());
+        jsonValArr.append(jsonObj2);
+        jsonValArr.append(jsonObj3);
+
+        jsonObj.insert("VAL", jsonValArr);
+
+        QJsonArray jsonSCPIArr;
+
+        QJsonObject jsonObj4, jsonObj5, jsonObj6 ;
+        jsonObj4.insert("Model", QString("SENSE")); // our validation script
+        jsonObj5.insert("CmdNode", m_ChannelAliasList.at(i)); // instead of m_RangeMeasChannelList.at(i)->getChannelNameEntityName());
+        jsonObj6.insert("Type", QString("10"));
+
+        jsonSCPIArr.append(jsonObj4);
+        jsonSCPIArr.append(jsonObj5);
+        jsonSCPIArr.append(jsonObj6);
+
+        jsonObj.insert("SCPI", jsonSCPIArr);
+
+        jsArr.append(jsonObj);
+    }
 }
 
 
