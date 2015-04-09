@@ -3,6 +3,7 @@
 #include <proxy.h>
 #include <veinpeer.h>
 #include <veinentity.h>
+#include <QByteArray>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -226,6 +227,7 @@ void cRangeModule::activationFinished()
     // now we still have to export the json interface information
 
     QJsonObject jsonObj;
+
     jsonObj.insert("ModulName", getModuleName());
     jsonObj.insert("SCPIModuleName", getSCPIModuleName());
     jsonObj.insert("VeinPeer", m_pPeer->getName());
@@ -238,6 +240,10 @@ void cRangeModule::activationFinished()
 
     QJsonDocument jsonDoc;
     jsonDoc.setObject(jsonObj);
+
+    // QByteArray ba;
+    // ba = jsonDoc.toJson();
+    // qDebug() << ba;
 
     m_pModuleInterfaceEntity->setValue(QVariant(jsonDoc.toBinaryData()), m_pPeer);
 
