@@ -39,12 +39,6 @@ public:
     virtual ~cOsciModule();
     virtual QByteArray getConfiguration();
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cOsciModuleObservation *m_pOsciModuleObservation;
     cOsciModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

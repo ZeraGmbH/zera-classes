@@ -44,12 +44,6 @@ public:
     virtual QByteArray getConfiguration();
     cPllMeasChannel* getPllMeasChannel(QString name);
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cSampleModuleObservation *m_pSampleModuleObservation;
     cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

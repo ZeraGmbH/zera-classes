@@ -78,3 +78,9 @@ contains( ZDEPENDS, resman) {
   LIBS +=  -lzera-resourcemanager-protobuf
   LIBS +=  -lprotobuf
 }
+#Adds dependencies to the SCPI
+contains( ZDEPENDS, SCPI) {
+  INCLUDEPATH += $$SCPI_INCLUDEDIR
+  LIBS += $$SCPI_LIBDIR
+  LIBS +=  -lSCPI
+}

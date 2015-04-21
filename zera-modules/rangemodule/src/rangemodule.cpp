@@ -245,7 +245,7 @@ void cRangeModule::activationFinished()
     // ba = jsonDoc.toJson();
     // qDebug() << ba;
 
-    m_pModuleInterfaceEntity->setValue(QVariant(jsonDoc.toBinaryData()), m_pPeer);
+    m_pModuleInterfaceEntity->setValue(QVariant(jsonDoc), m_pPeer);
 
     emit activationReady();
 }

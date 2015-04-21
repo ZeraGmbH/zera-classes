@@ -179,10 +179,10 @@ void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
     {
         QJsonObject jsonObj;
         jsonObj.insert("Name", m_RangeEntityList.at(i)->getName());
-        jsonObj.insert("DES", QString("Writing this entitiy sets the channels range"));
+        jsonObj.insert("DES", QString("Writing this entity sets the channels range"));
 
         QJsonArray jsonValArr;
-        jsonValArr.append(QString("setrangevalidation.js"));
+        jsonValArr.append(QString("")); // QString("setrangevalidation.js")
         jsonValArr.append(m_RangeMeasChannelList.at(i)->getRangeListEntityName());
 
         /*

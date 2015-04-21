@@ -39,12 +39,6 @@ public:
     virtual ~cSec1Module();
     virtual QByteArray getConfiguration();
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cSec1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
 

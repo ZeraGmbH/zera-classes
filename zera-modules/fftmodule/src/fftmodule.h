@@ -39,12 +39,6 @@ public:
     virtual ~cFftModule();
     virtual QByteArray getConfiguration();
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cFftModuleObservation *m_pFftModuleObservation;
     cFftModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

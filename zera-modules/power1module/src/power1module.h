@@ -39,12 +39,6 @@ public:
     virtual ~cPower1Module();
     virtual QByteArray getConfiguration();
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cPower1ModuleObservation *m_pPower1ModuleObservation;
     cPower1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

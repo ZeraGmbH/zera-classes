@@ -1,5 +1,5 @@
-#ifndef REFERENCEMODULE_H
-#define REFERENCEMODULE_H
+#ifndef SCPIMODULE_H
+#define SCPIMODULE_H
 
 #include <QObject>
 #include <QStateMachine>
@@ -10,45 +10,39 @@
 #include "basemodule.h"
 
 
-
-
 namespace Zera {
 namespace Server {
  class cDSPInterface;
 }
 
 namespace Proxy {
- class cProxyClient;
+ class cProxy;
 }
 }
 
-class cModuleInfo;
-class cModuleError;
+class VeinPeer;
 
-namespace REFERENCEMODULE
+namespace SCPIMODULE
 {
 
-class cReferenceMeasChannel;
-class cReferencecModuleConfiguration;
-class cReferenceModuleMeasProgram;
-class cReferenceAdjustment;
-class cReferenceModuleObservation;
+#define BaseModuleName "SCPIModule"
+#define BaseSCPIModuleName "SCP"
 
-class cReferenceModule : public cBaseModule
+class cSCPIServer;
+
+
+class cSCPIModule : public cBaseModule
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
-    cReferenceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
-    virtual ~cReferenceModule();
+    cSCPIModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    virtual ~cSCPIModule();
     virtual QByteArray getConfiguration();
-    virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 
 protected:
-    cReferenceModuleObservation *m_pReferenceModuleObservation;
-    cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    cReferenceAdjustment * m_pReferenceAdjustment; // our justifying and normation program
-    QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
+    cSCPIServer *m_pSCPIServer; // our server for the world
+
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void unsetModule(); // in case of reconfiguration we must unset module first
@@ -59,7 +53,6 @@ protected:
     QState m_ActivationStartState;
     QState m_ActivationExecState;
     QState m_ActivationDoneState;
-    QState m_ActivationAdjustmentState;
     QFinalState m_ActivationFinishedState;
 
     // our states for base modules deactivation statemacine
@@ -75,7 +68,6 @@ private slots:
     void activationStart();
     void activationExec();
     void activationDone();
-    void activationAdjustment();
     void activationFinished();
 
     void deactivationStart();
@@ -83,10 +75,10 @@ private slots:
     void deactivationDone();
     void deactivationFinished();
 
-    void referenceModuleReconfigure();
+    void scpiModuleReconfigure();
 
 };
 
 }
 
-#endif // REFERENCEMODULE_H
+#endif // SCPIMODULE_H

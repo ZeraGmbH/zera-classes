@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="debugtype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='7'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="porttype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='60000'/>
+            <xs:minExclusive value='1024'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="nrclienttype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='10'/>
+            <xs:minInclusive value='1'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="connectivitytype">
+        <xs:sequence>
+            <xs:element name="debuglevel" type="debugtype"/>
+            <xs:element name="ethernet">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="nrclient" type="nrclienttype"/>
+                        <xs:element name="port" type="porttype"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="scpimodconfpar">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="configuration">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="connectivity" type="connectivitytype"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+	
+</xs:schema> 
+
