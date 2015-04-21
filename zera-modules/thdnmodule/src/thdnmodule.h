@@ -37,12 +37,6 @@ public:
     virtual ~cThdnModule();
     virtual QByteArray getConfiguration();
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cThdnModuleObservation *m_pThdnModuleObservation;
     cThdnModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

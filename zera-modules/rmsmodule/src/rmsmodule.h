@@ -37,12 +37,6 @@ public:
     virtual ~cRmsModule();
     virtual QByteArray getConfiguration();
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cRmsModuleObservation *m_pRmsModuleObservation;
     cRmsModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

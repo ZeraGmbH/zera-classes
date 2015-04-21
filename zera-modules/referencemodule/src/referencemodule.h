@@ -44,12 +44,6 @@ public:
     virtual QByteArray getConfiguration();
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cReferenceModuleObservation *m_pReferenceModuleObservation;
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

@@ -40,13 +40,6 @@ public:
     virtual ~cModeModule();
     virtual QByteArray getConfiguration();
 
-
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cModeModuleInit *m_pModeModuleInit;
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration

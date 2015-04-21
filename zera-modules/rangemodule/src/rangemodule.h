@@ -49,12 +49,6 @@ public:
     virtual QByteArray getConfiguration();
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
 
-signals:
-    void activationContinue();
-    void activationNext();
-    void deactivationContinue();
-    void deactivationNext();
-
 protected:
     cRangeModuleObservation *m_pRangeModuleObservation;
     cRangeModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
