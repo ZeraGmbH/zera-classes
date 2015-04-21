@@ -62,6 +62,11 @@ signals:
     void sigConfDone(); // emitted when configuration is done regardless of good or not
     void sigReconfigureContinue();
 
+    void activationContinue();
+    void activationNext();
+    void deactivationContinue();
+    void deactivationNext();
+
 protected:
     // additional states for IDLE
     QState* m_pStateIDLEIdle;
