@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<scpimodconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+            <ethernet>
+                <nrclient>5</nrclient>
+                <port>6320</port>
+            </ethernet>
+        </connectivity>
+    </configuration>
+
+</scpimodconfpar>
