@@ -58,4 +58,7 @@
 #define setcmdidErrMsg "SEC set cmdid failed"
 #define startmeasErrMsg "SEC stop measure failed"
 #define stopmeasErrMsg "SEC stop measure failed"
+
+#define interfacejsonErrMsg "Interface JSON Document strange"
+
 #endif // ERRORMESSAGES_H
