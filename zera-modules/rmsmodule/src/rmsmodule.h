@@ -28,6 +28,9 @@ class cRmsModuleConfiguration;
 class cRmsModuleMeasProgram;
 class cRmsModuleObservation;
 
+#define BaseModuleName "RMSModule"
+#define BaseSCPIModuleName "RMS"
+
 class cRmsModule : public cBaseModule
 {
 Q_OBJECT

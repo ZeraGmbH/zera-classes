@@ -1,7 +1,17 @@
+#include <QByteArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
+
+#include <veinpeer.h>
+#include <veinentity.h>
+
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
 
+#include "debug.h"
 #include "power1module.h"
 #include "power1moduleconfiguration.h"
 #include "power1moduleconfigdata.h"
@@ -19,6 +29,9 @@ namespace POWER1MODULE
 cPower1Module::cPower1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
     :cBaseModule(modnr, proxy, peer, new cPower1ModuleConfiguration(), parent)
 {
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
+
     m_ModuleActivistList.clear();
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
@@ -75,8 +88,6 @@ void cPower1Module::setupModule()
 {
     cPower1ModuleConfigData* pConfData;
     pConfData = qobject_cast<cPower1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
-
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cPower1ModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
@@ -151,6 +162,30 @@ void cPower1Module::activationFinished()
 {
     // if we get informed we have to reconfigure
     connect(m_pPower1ModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(power1ModuleReconfigure()));
+
+    QJsonObject jsonObj;
+
+    jsonObj.insert("ModulName", getModuleName());
+    jsonObj.insert("SCPIModuleName", getSCPIModuleName());
+    jsonObj.insert("VeinPeer", m_pPeer->getName());
+
+    QJsonArray jsonArr;
+    for (int i = 0; i < m_ModuleActivistList.count(); i++)
+        m_ModuleActivistList.at(i)->exportInterface(jsonArr);
+
+    jsonObj.insert("Entities", QJsonValue(jsonArr));
+
+    QJsonDocument jsonDoc;
+    jsonDoc.setObject(jsonObj);
+
+    QByteArray ba;
+    ba = jsonDoc.toBinaryData();
+
+#ifdef DEBUG
+    qDebug() << jsonDoc;
+#endif
+
+    m_pModuleInterfaceEntity->setValue(QVariant(ba), m_pPeer);
 
     emit activationReady();
 }

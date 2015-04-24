@@ -71,6 +71,7 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
     // qDebug() << "range obsermatic new actual values";
+
 #ifdef DEBUG
     qDebug() << QString("PEAK %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
              << QString("%1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
@@ -185,14 +186,6 @@ void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
         jsonValArr.append(QString("")); // QString("setrangevalidation.js")
         jsonValArr.append(m_RangeMeasChannelList.at(i)->getRangeListEntityName());
 
-        /*
-        QJsonObject jsonObj2, jsonObj3;
-        jsonObj2.insert("Script", QString("setrangevalidation.js")); // our validation script
-        jsonObj3.insert("Par", m_RangeMeasChannelList.at(i)->getRangeListEntityName());
-        jsonValArr.append(jsonObj2);
-        jsonValArr.append(jsonObj3);
-        */
-
         jsonObj.insert("VAL", jsonValArr);
 
         QJsonArray jsonSCPIArr;
@@ -200,16 +193,7 @@ void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
         jsonSCPIArr.append(QString("SENSE"));
         jsonSCPIArr.append(m_ChannelAliasList.at(i));
         jsonSCPIArr.append(QString("10"));
-
-        /*
-        QJsonObject jsonObj4, jsonObj5, jsonObj6 ;
-        jsonObj4.insert("Model", QString("SENSE")); // our validation script
-        jsonObj5.insert("CmdNode", m_ChannelAliasList.at(i)); // instead of m_RangeMeasChannelList.at(i)->getChannelNameEntityName());
-        jsonObj6.insert("Type", QString("10"));
-        jsonSCPIArr.append(jsonObj4);
-        jsonSCPIArr.append(jsonObj5);
-        jsonSCPIArr.append(jsonObj6);
-        */
+        jsonSCPIArr.append(QString("")); // we have no unit
 
         jsonObj.insert("SCPI", jsonSCPIArr);
 

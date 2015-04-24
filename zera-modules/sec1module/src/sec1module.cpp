@@ -72,8 +72,6 @@ void cSec1Module::setupModule()
     cSec1ModuleConfigData *pConfData;
     pConfData = qobject_cast<cSec1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
-
     // we only have this activist
     m_pMeasProgram = new cSec1ModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);

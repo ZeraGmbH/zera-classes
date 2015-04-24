@@ -90,8 +90,6 @@ void cSampleModule::setupModule()
     cSampleModuleConfigData *pConfData;
     pConfData = qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
-
     // first we build a list of our pll meas channels, that hold informations for other activists
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++)
     {

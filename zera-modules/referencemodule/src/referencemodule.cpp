@@ -93,8 +93,6 @@ void cReferenceModule::setupModule()
     cReferenceModuleConfigData *pConfData;
     pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
-
     // setting of mode has been done by seperate mode module
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)

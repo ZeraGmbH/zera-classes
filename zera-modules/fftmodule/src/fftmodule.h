@@ -30,6 +30,9 @@ class cFftModuleConfiguration;
 class cFftModuleMeasProgram;
 class cFftModuleObservation;
 
+#define BaseModuleName "FFTModule"
+#define BaseSCPIModuleName "FFT"
+
 class cFftModule : public cBaseModule
 {
 Q_OBJECT

@@ -29,6 +29,8 @@ class cOsciModuleConfiguration;
 class cOsciModuleMeasProgram;
 class cOsciModuleObservation;
 
+#define BaseModuleName "OSCModule"
+#define BaseSCPIModuleName "OSC"
 
 class cOsciModule : public cBaseModule
 {

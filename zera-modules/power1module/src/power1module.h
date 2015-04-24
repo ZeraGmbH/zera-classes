@@ -29,6 +29,8 @@ class cPower1ModuleConfiguration;
 class cPower1ModuleMeasProgram;
 class cPower1ModuleObservation;
 
+#define BaseModuleName "POWModule"
+#define BaseSCPIModuleName "POW"
 
 class cPower1Module : public cBaseModule
 {

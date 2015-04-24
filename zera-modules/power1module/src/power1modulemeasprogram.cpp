@@ -1,5 +1,8 @@
 #include <QString>
 #include <QStateMachine>
+#include <QJsonObject>
+#include <QJsonArray>
+
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -346,7 +349,40 @@ void cPower1ModuleMeasProgram::deleteInterface()
 
 void cPower1ModuleMeasProgram::exportInterface(QJsonArray &jsArr)
 {
+    for (int i = 0; i < 4; i++)
+    {
+        QJsonObject jsonObj;
+        jsonObj.insert("Name", m_EntityActValuePQSList.at(i)->getName());
+        jsonObj.insert("DES", QString("This entity holds the power value of CmdNode"));
 
+        QJsonArray jsonValArr;
+        jsonValArr.append(QString("")); // we don't need validation for queries
+        jsonValArr.append(QString(""));
+
+        jsonObj.insert("VAL", jsonValArr);
+
+        QJsonArray jsonSCPIArr;
+
+        jsonSCPIArr.append(QString("MEASURE"));
+
+        QString chnDes = m_EntityNamePQSList.at(i)->getValue().toString();
+        QStringList sl = chnDes.split(';');
+        QString CmdNode = sl.takeFirst();
+        QString Unit = sl.takeLast();
+        if (sl.count() == 1)
+            CmdNode = CmdNode.arg(sl.at(0));
+        else
+            CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
+
+        jsonSCPIArr.append(CmdNode);
+
+        jsonSCPIArr.append(QString("2"));
+        jsonSCPIArr.append(Unit);
+
+        jsonObj.insert("SCPI", jsonSCPIArr);
+
+        jsArr.append(jsonObj);
+    }
 }
 
 

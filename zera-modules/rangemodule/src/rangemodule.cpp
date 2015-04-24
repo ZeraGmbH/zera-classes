@@ -9,6 +9,7 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
+#include "debug.h"
 #include "rangemodule.h"
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
@@ -102,7 +103,6 @@ void cRangeModule::setupModule()
 
     channelNrInfo = new cModuleInfo(m_pPeer, "INF_ChannelCount", QVariant(pConfData->m_nChannelCount));
     groupNrInfo = new cModuleInfo(m_pPeer, "INF_GroupCount", QVariant(pConfData->m_nGroupCount));
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
 
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
@@ -241,11 +241,14 @@ void cRangeModule::activationFinished()
     QJsonDocument jsonDoc;
     jsonDoc.setObject(jsonObj);
 
-    // QByteArray ba;
-    // ba = jsonDoc.toJson();
-    // qDebug() << ba;
+    QByteArray ba;
+    ba = jsonDoc.toBinaryData();
 
-    m_pModuleInterfaceEntity->setValue(QVariant(jsonDoc), m_pPeer);
+#ifdef DEBUG
+    qDebug() << jsonDoc;
+#endif
+
+    m_pModuleInterfaceEntity->setValue(QVariant(ba), m_pPeer);
 
     emit activationReady();
 }

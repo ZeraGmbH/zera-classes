@@ -28,6 +28,9 @@ class cThdnModuleConfiguration;
 class cThdnModuleMeasProgram;
 class cThdnModuleObservation;
 
+#define BaseModuleName "THDModule"
+#define BaseSCPIModuleName "THD"
+
 class cThdnModule : public cBaseModule
 {
 Q_OBJECT

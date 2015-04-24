@@ -73,8 +73,6 @@ void cModeModule::setupModule()
     cModeModuleConfigData *pConfData;
     pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
-
     // we only have to initialize the pcb's measuring mode
     m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, m_pPeer, *pConfData);
     m_ModuleActivistList.append(m_pModeModuleInit);
