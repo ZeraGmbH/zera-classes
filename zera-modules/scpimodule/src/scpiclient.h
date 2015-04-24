@@ -14,11 +14,15 @@ class cSCPIClient: public QObject
 {
     Q_OBJECT
 
- public:
+public:
     cSCPIClient(QTcpSocket* socket, cSCPIInterface* iface);
-    ~cSCPIClient();
+    virtual ~cSCPIClient();
 
     void setAuthorisation(bool auth);
+
+public slots:
+    void receiveStatus(quint8 stat);
+    void receiveAnswer(QString answ);
 
 private:
     QTcpSocket* m_pSocket;
@@ -27,8 +31,6 @@ private:
 
 private slots:
     void cmdInput();
-    void receiveStatus(quint8 stat);
-    void receiveAnswer(QString answ);
 
 };
 

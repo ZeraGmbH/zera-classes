@@ -1,6 +1,8 @@
 #ifndef SCPINONMEASUREDELEGATE_H
 #define SCPINONMEASUREDELEGATE_H
 
+#include <QString>
+
 #include "scpidelegate.h"
 
 class VeinPeer;
@@ -13,14 +15,14 @@ class cSCPInonMeasureDelegate: public cSCPIDelegate
 {
     Q_OBJECT
 
- public:
-     cSCPInonMeasureDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint16 cmdCode, VeinPeer* peer, VeinEntity* entity);
-     VeinPeer* getPeer();
-     VeinEntity* getEntity();
+public:
+    cSCPInonMeasureDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint16 cmdCode, VeinPeer* peer, VeinEntity* entity);
+    VeinPeer* getPeer();
+    VeinEntity* getEntity();
 
- private:
-     VeinPeer* m_pPeer;
-     VeinEntity* m_pEntity;
+private:
+    VeinPeer* m_pPeer;
+    VeinEntity* m_pEntity;
 };
 
 }

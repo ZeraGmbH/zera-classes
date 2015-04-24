@@ -2,15 +2,16 @@
 #define SCPIDELEGATE_H
 
 #include <QObject>
+#include <QString>
 
 #include "scpiobject.h"
 
-class QString;
 class cSCPI;
 
 namespace SCPIMODULE
 {
 
+class cSCPIClient;
 
 class cSCPIDelegate: public QObject, public cSCPIObject
 {
@@ -19,10 +20,10 @@ class cSCPIDelegate: public QObject, public cSCPIObject
 public:
     cSCPIDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint16 cmdCode);
     virtual bool executeSCPI(const QString&, QString&);
-    virtual bool executeSCPI(const QString& sInput);
+    virtual bool executeSCPI(cSCPIClient *client, const QString& sInput);
 
 signals:
-    void execute(int cmdCode, QString& sInput);
+    void execute(cSCPIClient* client, int cmdCode, QString& sInput);
 
 protected:
     quint16 m_nCmdCode;

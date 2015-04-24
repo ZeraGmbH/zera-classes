@@ -35,9 +35,10 @@ void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["SCPImodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
-    m_ConfigXMLMap["SCPImodconfpar:configuration:connectivity:ethernet:nrclient"] = setnrClient;
-    m_ConfigXMLMap["SCPImodconfpar:configuration:connectivity:ethernet:port"] = setInterfacePort;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:nrclient"] = setnrClient;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:port"] = setInterfacePort;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device"] = setDeviceName;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -77,6 +78,9 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
         case setInterfacePort:
             m_pSCPIModulConfigData->m_InterfaceSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             m_pSCPIModulConfigData->m_InterfaceSocket.m_sIP = "127.0.0.1";
+            break;
+        case setDeviceName:
+            m_pSCPIModulConfigData->m_sDeviceName = m_pXMLReader->getValue(key);
             break;
         }
         m_bConfigError |= !ok;

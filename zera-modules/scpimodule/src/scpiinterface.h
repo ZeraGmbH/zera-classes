@@ -20,28 +20,23 @@ class cSCPInonMeasureDelegate;
 class cSCPIMeasureDelegate;
 class cSCPIMeasure;
 class cSCPICmdInfo;
-
+class cSCPIClient;
 
 class cSCPIInterface: public QObject
 {
     Q_OBJECT
 
 public:
+    cSCPIInterface(){}
     cSCPIInterface(QString name);
-    cSCPIInterface(const cSCPIInterface& other);
     virtual ~cSCPIInterface();
 
-    void setAuthorisation(bool auth);
     void addSCPICommand(cSCPICmdInfo& scpiCmdInfo);
-    bool executeCmd(QString cmd);
+    bool executeCmd(cSCPIClient* client, QString cmd);
 
-signals:
-    void cmdStatus(quint8);
-    void cmdAnswer(QString);
 
 private:
     QString m_sName;
-    bool m_bAuthorized; // default false
     cSCPI* m_pSCPICmdInterface;
 
     QList<cSCPInonMeasureDelegate*> m_scpinonMeasureDelegateList; // our delegatelist for non measure cmd's ... needed to clean up
@@ -52,7 +47,7 @@ private:
     void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint16 cmdCode, cSCPIMeasure* measureObject);
 
 private slots:
-    void executeCmd(int cmdCode, QString& sInput);
+    void executeCmd(cSCPIClient* client, int cmdCode, QString& sInput);
 };
 
 }

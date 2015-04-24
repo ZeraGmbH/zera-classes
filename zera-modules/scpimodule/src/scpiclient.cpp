@@ -12,17 +12,20 @@ cSCPIClient::cSCPIClient(QTcpSocket *socket, cSCPIInterface *iface)
 {
     m_bAuthorisation = false;
 
-    connect(m_pSCPIInterface, SIGNAL(cmdAnswer(QString)), this, SLOT(receiveAnswer(QString)));
-    connect(m_pSCPIInterface, SIGNAL(cmdStatus(quint8)), this, SLOT(receiveStatus(quint8)));
     connect(m_pSocket, SIGNAL(readyRead()), this, SLOT(cmdInput()));
     connect(m_pSocket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
+}
+
+
+cSCPIClient::~cSCPIClient()
+{
+    m_pSocket->abort();
 }
 
 
 void cSCPIClient::setAuthorisation(bool auth)
 {
     m_bAuthorisation = auth;
-    m_pSCPIInterface->setAuthorisation(auth);
 }
 
 
@@ -37,10 +40,12 @@ void cSCPIClient::cmdInput()
     m_sInput.remove('\r'); // we remove cr lf
     m_sInput.remove('\n');
 
-    QStringList cmds = m_sInput.split(';');
+    m_pSCPIInterface->executeCmd(this, m_sInput);
 
-    for (int i = 0; i < cmds.count(); i++)
-        m_pSCPIInterface->executeCmd(cmds.at(i));
+    // QStringList cmds = m_sInput.split(';');
+
+    //for (int i = 0; i < cmds.count(); i++)
+        //m_pSCPIInterface->executeCmd(cmds.at(i));
 }
 
 

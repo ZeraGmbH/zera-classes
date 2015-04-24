@@ -5,6 +5,7 @@
 #include <QJsonValue>
 #include <QHostAddress>
 #include <QTcpSocket>
+
 #include <veinhub.h>
 #include <veinpeer.h>
 #include <veinentity.h>
@@ -25,7 +26,7 @@ namespace SCPIMODULE
 cSCPIServer::cSCPIServer(cSCPIModule *module, VeinPeer *peer, cSCPIModuleConfigData &configData)
     : m_pModule(module), m_pPeer(peer), m_ConfigData(configData)
 {
-    m_pSCPIInterface = new cSCPIInterface(m_pModule->getModuleName()); // our scpi cmd interface
+    m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi cmd interface
 
     m_pTcpServer = new QTcpServer();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
@@ -77,7 +78,7 @@ void cSCPIServer::exportInterface(QJsonArray &)
 void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-    cSCPIClient* client = new cSCPIClient(socket, new cSCPIInterface(*m_pSCPIInterface)); // each client gets his own interface;
+    cSCPIClient* client = new cSCPIClient(socket, m_pSCPIInterface); // each client gets his own interface;
     connect(client, SIGNAL(destroyed(QObject*)), this, SLOT(deleteSCPIClient(QObject*)));
     m_SCPIClientList.append(client);
     if (m_SCPIClientList.count() == 1)
@@ -115,16 +116,21 @@ void cSCPIServer::setupTCPServer()
     {
         QJsonDocument jsonDoc; // we parse over all moduleinterface entities
         VeinEntity* entity = peerList.at(i)->getEntityByName(QString("INF_ModuleInterface"));
+
         if (entity != 0) // modulemangers and interfaces do not export INF_ModuleInterface
         {
-            jsonDoc = entity->getValue().toJsonDocument();
+            jsonDoc = QJsonDocument::fromBinaryData(entity->getValue().toByteArray());
+
             if ( !jsonDoc.isNull() && jsonDoc.isObject() )
             {
                 VeinPeer* peer;
                 QJsonObject jsonObj;
+#ifdef DEBUG
+                qDebug() << jsonDoc;
+#endif
                 jsonObj = jsonDoc.object();
-                scpiCmdInfo.scpiModuleName = jsonObj["SCPIModulName"].toString();
-                peer = hub->getPeerByName(jsonObj["LibVeinPeer"].toString());
+                scpiCmdInfo.scpiModuleName = jsonObj["SCPIModuleName"].toString();
+                peer = hub->getPeerByName(jsonObj["VeinPeer"].toString());
                 scpiCmdInfo.peer = peer;
 
                 QJsonArray jsonEntityArr = jsonObj["Entities"].toArray();
@@ -133,10 +139,15 @@ void cSCPIServer::setupTCPServer()
                 {
                     QJsonObject jsonEntityObj;
                     jsonEntityObj = jsonEntityArr[j].toObject();
-                    scpiCmdInfo.entity = peer->getEntityByName(jsonEntityObj["Name"].toString());
+                    QJsonValue jsonVal;
+                    jsonVal = jsonEntityObj["Name"];
+                    QString s = jsonVal.toString();
+                    scpiCmdInfo.entity = peer->getEntityByName(s);
+                    //scpiCmdInfo.entity = peer->getEntityByName(jsonEntityObj["Name"].toString());
                     scpiCmdInfo.scpiModel = jsonEntityObj["SCPI"].toArray()[0].toString();
                     scpiCmdInfo.cmdNode = jsonEntityObj["SCPI"].toArray()[1].toString();
                     scpiCmdInfo.type = jsonEntityObj["SCPI"].toArray()[2].toString();
+                    scpiCmdInfo.unit = jsonEntityObj["SCPI"].toArray()[3].toString();
 
                     if (scpiCmdInfo.type != "0") // we have to add this entity to our interface
                         m_pSCPIInterface->addSCPICommand(scpiCmdInfo);
@@ -145,8 +156,8 @@ void cSCPIServer::setupTCPServer()
             }
             else
             {
-                error = true;
-                break;
+                //error = true; temp. we set no error
+                //break;
             }
         }
     }
@@ -175,7 +186,17 @@ void cSCPIServer::activationDone()
 
 void cSCPIServer::shutdownTCPServer()
 {
+    cSCPIClient* client;
 
+    for (int i = 0; i < m_SCPIClientList.count(); i++)
+    {
+        client = m_SCPIClientList.at(i);
+        delete client;
+    }
+
+    m_pTcpServer->close();
+
+    emit deactivationContinue();
 }
 
 

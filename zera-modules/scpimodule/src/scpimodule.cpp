@@ -96,6 +96,7 @@ void cSCPIModule::unsetModule()
             m_ModuleActivistList.at(i)->deleteInterface();
             delete m_ModuleActivistList.at(i);
         }
+
         m_ModuleActivistList.clear();
         if (errorMessage) delete errorMessage;
     }

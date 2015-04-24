@@ -9,6 +9,7 @@
                 <nrclient>5</nrclient>
                 <port>6320</port>
             </ethernet>
+            <device>COM5003</device>
         </connectivity>
     </configuration>
 

@@ -18,9 +18,9 @@ bool cSCPIDelegate::executeSCPI(const QString &, QString &)
 }
 
 
-bool cSCPIDelegate::executeSCPI(const QString &sInput)
+bool cSCPIDelegate::executeSCPI(cSCPIClient* client, const QString& sInput)
 {
-    emit execute(m_nCmdCode,(QString&) sInput);
+    emit execute(client, m_nCmdCode,(QString&) sInput);
     return true;
 }
 

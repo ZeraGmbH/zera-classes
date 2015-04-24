@@ -1,3 +1,5 @@
+#include <QVariant>
+
 #include <veinentity.h>
 #include <scpi.h>
 #include "scpimeasure.h"
@@ -7,8 +9,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIMeasure::cSCPIMeasure(VeinEntity* entity)
-    :m_pEntity(entity)
+cSCPIMeasure::cSCPIMeasure(VeinEntity* entity, QString module, QString name, QString unit)
+    :m_pEntity(entity), m_sModule(module), m_sName(name), m_sUnit(unit)
 {
     m_ConfigureState.addTransition(this, SIGNAL(measContinue()), &m_InitState);
     m_InitState.addTransition(this, SIGNAL(measContinue()), &m_FetchState);
@@ -62,6 +64,27 @@ void cSCPIMeasure::configuration()
 }
 
 
+QString cSCPIMeasure::setAnswer(QVariant qvar)
+{
+    QString s;
+
+    if (qvar.canConvert<QVariantList>())
+    {
+        QSequentialIterable iterable = qvar.value<QSequentialIterable>();
+
+        s = QString("%1:%2:%3:").arg(m_sModule, m_sName, m_sUnit);
+        foreach (const QVariant &v, iterable)
+            s += (v.toString()+",");
+        s = s.remove(s.count()-1, 1);
+
+    }
+    else
+        s = QString("%1:%2:%3:%4").arg(m_sModule, m_sName, m_sUnit).arg(qvar.toString());
+
+    return (s);
+}
+
+
 void cSCPIMeasure::configure()
 {
     configuration();
@@ -70,7 +93,7 @@ void cSCPIMeasure::configure()
 
 void cSCPIMeasure::init()
 {
-    connect(m_pEntity, SIGNAL(sigvalueChanged(const QVariant)), this, SLOT(initDone(const QVariant)));
+    connect(m_pEntity, SIGNAL(sigValueChanged(const QVariant)), this, SLOT(initDone(const QVariant)));
 }
 
 
@@ -82,16 +105,16 @@ void cSCPIMeasure::fetch()
 
 void cSCPIMeasure::initDone(const QVariant qvar)
 {
-    m_sAnswer = qvar.toString();
-    disconnect(m_pEntity, SIGNAL(sigvalueChanged()), this, SLOT(initDone()));
+    m_sAnswer = setAnswer(qvar);
+    disconnect(m_pEntity, SIGNAL(sigValueChanged(const QVariant)), this, SLOT(initDone(const QVariant)));
     emit measContinue(); // if we are in statemachine we want to continue;
 }
 
 
 void cSCPIMeasure::initCmdDone(const QVariant qvar)
 {
-    m_sAnswer = qvar.toString();
-    disconnect(m_pEntity, SIGNAL(sigvalueChanged(const QVariant)), this, SLOT(sigvalueChanged(const QVariant)));
+    m_sAnswer = setAnswer(qvar);
+    disconnect(m_pEntity, SIGNAL(sigValueChanged(const QVariant)), this, SLOT(initCmdDone(const QVariant)));
     emit cmdStatus(SCPI::ack);
 }
 

@@ -15,7 +15,8 @@ enum moduleconfigstate
 {
     setDebugLevel,
     setnrClient,
-    setInterfacePort
+    setInterfacePort,
+    setDeviceName
 };
 
 

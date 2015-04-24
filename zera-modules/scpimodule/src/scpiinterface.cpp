@@ -2,6 +2,7 @@
 #include <scpi.h>
 #include <scpiobject.h>
 #include <scpicommand.h>
+#include <QString>
 
 #include "scpiinterface.h"
 #include "scpinonmeasuredelegate.h"
@@ -9,6 +10,8 @@
 #include "scpimeasurecollector.h"
 #include "scpimeasuredelegate.h"
 #include "scpicmdinfo.h"
+#include "scpiclient.h"
+
 
 namespace SCPIMODULE
 {
@@ -17,17 +20,14 @@ cSCPIInterface::cSCPIInterface(QString name)
     :m_sName(name)
 {
     m_pSCPICmdInterface = new cSCPI(m_sName);
-    m_nCmdCode = 0; //
-}
 
+    cSCPInonMeasureDelegate* delegate;
+    // special case command with id 0 returns the interface as xml
+    delegate = new cSCPInonMeasureDelegate(QString("DEVICE"), QString("IFACE"), 2, m_pSCPICmdInterface, 0, (VeinPeer*)0, (VeinEntity*)0);
+    m_scpinonMeasureDelegateList.append(delegate);
+    connect(delegate, SIGNAL(execute(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
 
-cSCPIInterface::cSCPIInterface(const cSCPIInterface &other)
-    :QObject()
-{
-    m_scpinonMeasureDelegateList = other.m_scpinonMeasureDelegateList;
-    m_scpiMeasureDelegateHash = other.m_scpiMeasureDelegateHash;
-    m_nCmdCode = other.m_nCmdCode;
-    m_sName = other.m_sName;
+    m_nCmdCode = 8; //
 }
 
 
@@ -37,19 +37,29 @@ cSCPIInterface::~cSCPIInterface()
 }
 
 
-void cSCPIInterface::setAuthorisation(bool auth)
-{
-    m_bAuthorized = auth;
-}
-
-
 void cSCPIInterface::addSCPICommand(cSCPICmdInfo &scpiCmdInfo)
 {
     if (scpiCmdInfo.scpiModel == "MEASURE")
     {
         // in case of measure model we add several commands by ourself
 
-        cSCPIMeasure* measureObject = new cSCPIMeasure(scpiCmdInfo.entity);
+        cSCPIMeasure* measureObject = new cSCPIMeasure(scpiCmdInfo.entity, scpiCmdInfo.scpiModuleName, scpiCmdInfo.cmdNode, scpiCmdInfo.unit);
+
+        addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, m_nCmdCode + SCPIModelType::measure, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("CONFIGURE"), SCPI::isNode | SCPI::isCmd, m_nCmdCode + SCPIModelType::configure, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("READ"), SCPI::isNode | SCPI::isQuery, m_nCmdCode + SCPIModelType::read, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("INIT"), SCPI::isNode | SCPI::isCmd, m_nCmdCode + SCPIModelType::init, measureObject);
+        addSCPIMeasureCommand(QString(""), QString("FETCH"), SCPI::isNode | SCPI::isQuery, m_nCmdCode + SCPIModelType::fetch, measureObject);
+
+        m_nCmdCode += 8;
+
+        addSCPIMeasureCommand(QString("MEASURE"), scpiCmdInfo.scpiModuleName, SCPI::isNode | SCPI::isQuery, m_nCmdCode + SCPIModelType::measure, measureObject);
+        addSCPIMeasureCommand(QString("CONFIGURE"), scpiCmdInfo.scpiModuleName, SCPI::isNode | SCPI::isCmd, m_nCmdCode + SCPIModelType::configure, measureObject);
+        addSCPIMeasureCommand(QString("READ"), scpiCmdInfo.scpiModuleName, SCPI::isNode | SCPI::isQuery, m_nCmdCode + SCPIModelType::read, measureObject);
+        addSCPIMeasureCommand(QString("INIT"), scpiCmdInfo.scpiModuleName, SCPI::isNode | SCPI::isCmd, m_nCmdCode + SCPIModelType::init, measureObject);
+        addSCPIMeasureCommand(QString("FETCH"), scpiCmdInfo.scpiModuleName, SCPI::isNode | SCPI::isQuery, m_nCmdCode + SCPIModelType::fetch, measureObject);
+
+        m_nCmdCode += 8;
 
         addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo.scpiModuleName), scpiCmdInfo.cmdNode, SCPI::isQuery, m_nCmdCode + SCPIModelType::measure, measureObject);
         addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo.scpiModuleName), scpiCmdInfo.cmdNode, SCPI::isCmd, m_nCmdCode + SCPIModelType::configure, measureObject);
@@ -57,31 +67,17 @@ void cSCPIInterface::addSCPICommand(cSCPICmdInfo &scpiCmdInfo)
         addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo.scpiModuleName), scpiCmdInfo.cmdNode, SCPI::isCmd, m_nCmdCode + SCPIModelType::init, measureObject);
         addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo.scpiModuleName), scpiCmdInfo.cmdNode, SCPI::isQuery, m_nCmdCode + SCPIModelType::fetch, measureObject);
 
-        m_nCmdCode += 8;
 
-        addSCPIMeasureCommand(QString("MEASURE"), scpiCmdInfo.scpiModuleName, SCPI::isQuery, m_nCmdCode + SCPIModelType::measure, measureObject);
-        addSCPIMeasureCommand(QString("CONFIGURE"), scpiCmdInfo.scpiModuleName, SCPI::isCmd, m_nCmdCode + SCPIModelType::configure, measureObject);
-        addSCPIMeasureCommand(QString("READ"), scpiCmdInfo.scpiModuleName, SCPI::isQuery, m_nCmdCode + SCPIModelType::read, measureObject);
-        addSCPIMeasureCommand(QString("INIT"), scpiCmdInfo.scpiModuleName, SCPI::isCmd, m_nCmdCode + SCPIModelType::init, measureObject);
-        addSCPIMeasureCommand(QString("FETCH"), scpiCmdInfo.scpiModuleName, SCPI::isQuery, m_nCmdCode + SCPIModelType::fetch, measureObject);
-
-        m_nCmdCode += 8;
-
-        addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isQuery, m_nCmdCode + SCPIModelType::measure, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("CONFIGURE"), SCPI::isCmd, m_nCmdCode + SCPIModelType::configure, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("READ"), SCPI::isQuery, m_nCmdCode + SCPIModelType::read, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("INIT"), SCPI::isCmd, m_nCmdCode + SCPIModelType::init, measureObject);
-        addSCPIMeasureCommand(QString(""), QString("FETCH"), SCPI::isQuery, m_nCmdCode + SCPIModelType::fetch, measureObject);
     }
     else
     {
         bool ok;
         cSCPInonMeasureDelegate* delegate;
 
-        delegate = new cSCPInonMeasureDelegate(QString("%1:%2").arg(scpiCmdInfo.scpiModel).arg(scpiCmdInfo.scpiModuleName),
-                                     scpiCmdInfo.cmdNode, scpiCmdInfo.type.toInt(&ok), m_pSCPICmdInterface, m_nCmdCode + SCPIModelType::normal, scpiCmdInfo.peer, scpiCmdInfo.entity);
+        QString cmdParent = QString("%1:%2").arg(scpiCmdInfo.scpiModel).arg(scpiCmdInfo.scpiModuleName);
+        delegate = new cSCPInonMeasureDelegate(cmdParent, scpiCmdInfo.cmdNode, scpiCmdInfo.type.toInt(&ok), m_pSCPICmdInterface, m_nCmdCode + SCPIModelType::normal, scpiCmdInfo.peer, scpiCmdInfo.entity);
         m_scpinonMeasureDelegateList.append(delegate);
-        connect(delegate, SIGNAL(execute(int, QString&)), this, SLOT(executeCmd(int,QString&)));
+        connect(delegate, SIGNAL(execute(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
     }
 
     m_nCmdCode+=8; // next command code
@@ -89,7 +85,7 @@ void cSCPIInterface::addSCPICommand(cSCPICmdInfo &scpiCmdInfo)
 }
 
 
-bool cSCPIInterface::executeCmd(QString cmd)
+bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 {
     cSCPIObject* scpiObject;
     QString dummy;
@@ -97,7 +93,7 @@ bool cSCPIInterface::executeCmd(QString cmd)
     if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd, dummy)) != 0)
     {
         cSCPIDelegate* scpiDelegate = static_cast<cSCPIDelegate*>(scpiObject);
-        return scpiDelegate->executeSCPI(cmd);
+        return scpiDelegate->executeSCPI(client, cmd);
     }
 
     return false; // maybe that it is a common command
@@ -118,12 +114,12 @@ void cSCPIInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint
     {
         delegate = new cSCPIMeasureDelegate(cmdparent, cmd, cmdType , m_pSCPICmdInterface, cmdCode, measureObject);
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
-        connect(delegate, SIGNAL(execute(int, QString&)), this, SLOT(executeCmd(int,QString&)));
+        connect(delegate, SIGNAL(execute(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int,QString&)));
     }
 }
 
 
-void cSCPIInterface::executeCmd(int cmdCode, QString &sInput)
+void cSCPIInterface::executeCmd(cSCPIClient* client, int cmdCode, QString& sInput)
 {
     quint8 cmdMeas, scpiCmdType;
     bool validation;
@@ -131,6 +127,15 @@ void cSCPIInterface::executeCmd(int cmdCode, QString &sInput)
     cSCPICommand cmd = sInput;
 
     cmdMeas = cmdCode % 8;
+
+    if (cmdCode == 0)
+    {
+        QString xml;
+        m_pSCPICmdInterface->exportSCPIModelXML(xml);
+        client->receiveAnswer(xml);
+    }
+
+    else
 
     if (cmdMeas == 0) // so we have a non measure command
     {
@@ -141,30 +146,27 @@ void cSCPIInterface::executeCmd(int cmdCode, QString &sInput)
         if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) // test if we got an allowed query
         {
             QString answer = entity->getValue().toString();
-            emit cmdAnswer(answer);
+            client->receiveAnswer(answer);
         }
         else
 
             if (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) // test if we got an allowed cmd + 1 parameter
             {
-                if (m_bAuthorized)
+                if (validation = true) // todo here
                 {
-                    if (validation = true) // todo here
-                    {
-                        QVariant newVar = cmd.getParam(0);
-                        QVariant var = entity->getValue();
-                        entity->setValue(newVar.convert(var.type()), delegate->getPeer());
-                        emit cmdStatus(SCPI::ack);
-                    }
-                    else
-                        emit cmdStatus(SCPI::errval);
+                    QVariant var = entity->getValue();
+                    QVariant newVar = cmd.getParam(0);
+                    newVar.convert(var.type());
+                    entity->setValue(newVar, delegate->getPeer());
+                    client->receiveStatus(SCPI::ack);
                 }
                 else
-                    emit cmdStatus(SCPI::erraut);
+                    client->receiveStatus(SCPI::errval);
+
             }
 
             else
-                emit cmdStatus(SCPI::nak);
+                client->receiveStatus(SCPI::nak);
     }
 
     else // otherwise we have to measure, configure, read, init or fetch something
@@ -177,9 +179,7 @@ void cSCPIInterface::executeCmd(int cmdCode, QString &sInput)
         {
             QList<cSCPIMeasure*>* measureObjectList = delegate->getscpimeasureObjectList();
 
-            cSCPIMeasureCollector* measureCollector = new cSCPIMeasureCollector(measureObjectList->count());
-            connect(measureCollector, SIGNAL(cmdStatus(quint8)), this, SIGNAL(cmdStatus(quint8)));
-            connect(measureCollector, SIGNAL(cmdAnswer(QString)), this, SIGNAL(cmdAnswer(QString)));
+            cSCPIMeasureCollector* measureCollector = new cSCPIMeasureCollector(client, measureObjectList->count());
 
             for (int i = 0; i < measureObjectList->count(); i++)
             {
@@ -190,7 +190,7 @@ void cSCPIInterface::executeCmd(int cmdCode, QString &sInput)
             }
         }
         else
-            emit cmdStatus(SCPI::nak);
+            client->receiveStatus(SCPI::nak);
     }
 
 }

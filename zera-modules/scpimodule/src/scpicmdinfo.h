@@ -18,6 +18,7 @@ public:
     VeinEntity* entity;
     QString scpiModel;
     QString cmdNode;
+    QString unit;
     QString type;
 };
 

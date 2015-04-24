@@ -16,8 +16,7 @@ class cSCPIMeasure: public QObject
     Q_OBJECT
 
 public:
-    cSCPIMeasure(VeinEntity *entity);
-    ~cSCPIMeasure();
+    cSCPIMeasure(VeinEntity *entity, QString module, QString name, QString unit);
 
     void execute(quint8 cmd); //
 
@@ -28,6 +27,9 @@ signals:
 
 private:
     VeinEntity* m_pEntity;
+    QString m_sModule;
+    QString m_sName;
+    QString m_sUnit;
 
     QStateMachine m_MeasureStateMachine;
 
@@ -38,6 +40,7 @@ private:
     QString m_sAnswer;
 
     void configuration();
+    QString setAnswer(QVariant qvar);
 
 private slots:
     void configure();
