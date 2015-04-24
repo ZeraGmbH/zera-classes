@@ -8,6 +8,7 @@
 #include <veinentity.h>
 
 #include "basemodule.h"
+#include "moduleerror.h"
 #include "basemoduleconfiguration.h"
 
 
@@ -22,6 +23,7 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
     m_nStatus = untouched;
     m_pStateMachine = new QStateMachine(this);
 
+    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
 
     m_pModuleInterfaceEntity = m_pPeer->dataAdd(QString("INF_ModuleInterface")); // here is our json interface export
     m_pModuleInterfaceEntity->modifiersAdd(VeinEntity::MOD_READONLY);
