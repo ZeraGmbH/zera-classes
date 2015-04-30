@@ -18,12 +18,14 @@ public:
     ~cModuleParameter();
     void setData(QVariant val);
     QVariant getData();
+    QString getName();
 
 signals:
     void updated(QVariant);
 
 private:
     VeinPeer* m_pPeer;
+    QString m_sName;
     VeinEntity *m_pParEntity;
 };
 

@@ -4,7 +4,7 @@
 
 
 cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initval, bool readonly)
-    :m_pPeer(peer)
+    :m_pPeer(peer), m_sName(name)
 {
     m_pParEntity = m_pPeer->dataAdd(name);
     m_pParEntity->setValue(initval, peer);
@@ -31,6 +31,12 @@ void cModuleParameter::setData(QVariant val)
 QVariant cModuleParameter::getData()
 {
     return m_pParEntity->getValue();
+}
+
+
+QString cModuleParameter::getName()
+{
+    return m_sName;
 }
 
 

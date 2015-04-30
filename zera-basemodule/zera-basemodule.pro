@@ -51,7 +51,8 @@ HEADERS += \
     basesamplechannel.h \
     secinputinfo.h \
     basedspmeasprogram.h \
-    ecalcinfo.h
+    ecalcinfo.h \
+    interfaceentity.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -66,6 +67,7 @@ SOURCES += \
     basemeaschannel.cpp \
     movingwindowfilter.cpp \
     basesamplechannel.cpp \
-    basedspmeasprogram.cpp
+    basedspmeasprogram.cpp \
+    interfaceentity.cpp
 
 include(../zera-classes.pri)
