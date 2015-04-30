@@ -17,6 +17,7 @@
 #include "errormessages.h"
 #include "reply.h"
 #include "modulesignal.h"
+#include "interfaceentity.h"
 #include "moduleinfo.h"
 #include "moduleparameter.h"
 #include "dftmodule.h"
@@ -255,21 +256,17 @@ void cDftModuleMeasProgram::deleteInterface()
 
 void cDftModuleMeasProgram::exportInterface(QJsonArray &jsArr)
 {
+    cInterfaceEntity ifaceEntity;
+
+    ifaceEntity.setDescription(QString("This entity holds the dft value of CmdNode")); // for all actvalues the same
+    ifaceEntity.setValidationScript(QString("")); // no validation for queries
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPIModel(QString("MEASURE"));
+    ifaceEntity.setSCPIType(QString("2"));
+
     for (int i = 0; i < m_EntityActValueList.count(); i++)
     {
-        QJsonObject jsonObj;
-        jsonObj.insert("Name", m_EntityActValueList.at(i)->getName());
-        jsonObj.insert("DES", QString("This entity holds the dft value of CmdNode"));
-
-        QJsonArray jsonValArr;
-        jsonValArr.append(QString("")); // we don't need validation for queries
-        jsonValArr.append(QString(""));
-
-        jsonObj.insert("VAL", jsonValArr);
-
-        QJsonArray jsonSCPIArr;
-
-        jsonSCPIArr.append(QString("MEASURE"));
+        ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
 
         QString chnDes = m_EntityNameList.at(i)->getValue().toString();
         QStringList sl = chnDes.split(';');
@@ -280,15 +277,22 @@ void cDftModuleMeasProgram::exportInterface(QJsonArray &jsArr)
         else
             CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
 
-        jsonSCPIArr.append(CmdNode);
+        ifaceEntity.setSCPICmdnode(CmdNode);
+        ifaceEntity.setUnit(Unit);
 
-        jsonSCPIArr.append(QString("2"));
-        jsonSCPIArr.append(Unit);
-
-        jsonObj.insert("SCPI", jsonSCPIArr);
-
-        jsArr.append(jsonObj);
+        ifaceEntity.appendInterfaceEntity(jsArr);
     }
+
+    ifaceEntity.setName(m_pIntegrationTimeParameter->getName());
+    ifaceEntity.setDescription(QString("This entity holds the modules integrationtime"));
+    ifaceEntity.setValidationScript(QString("")); // later ....
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
+    ifaceEntity.setSCPICmdnode(QString("TINTEGRATION"));
+    ifaceEntity.setSCPIType(QString("10"));
+    ifaceEntity.setUnit(QString("sec"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
 }
 
 

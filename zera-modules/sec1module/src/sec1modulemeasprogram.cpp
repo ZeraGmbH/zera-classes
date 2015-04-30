@@ -286,7 +286,7 @@ void cSec1ModuleMeasProgram::deleteInterface()
 }
 
 
-void cSec1ModuleMeasProgram::exportInterface(QJsonArray &jsArr)
+void cSec1ModuleMeasProgram::exportInterface(QJsonArray &)
 {
 
 }

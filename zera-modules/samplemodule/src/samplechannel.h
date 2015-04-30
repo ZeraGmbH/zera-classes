@@ -39,7 +39,7 @@ public:
     ~cSampleChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
+    virtual void exportInterface(QJsonArray &);
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready

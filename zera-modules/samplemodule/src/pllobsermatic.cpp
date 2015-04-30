@@ -13,6 +13,7 @@
 #include "samplemodule.h"
 #include "pllmeaschannel.h"
 #include "moduleparameter.h"
+#include "interfaceentity.h"
 #include "moduleinfo.h"
 #include "modulesignal.h"
 #include "pllobsermatic.h"
@@ -86,6 +87,26 @@ void cPllObsermatic::deleteInterface()
 
 void cPllObsermatic::exportInterface(QJsonArray &jsArr)
 {
+    cInterfaceEntity ifaceEntity;
+
+    ifaceEntity.setName(m_pPllChannelEntity->getName());
+    ifaceEntity.setDescription(QString("This entity holds the pll reference channel"));
+    ifaceEntity.setValidationScript(QString("")); // later ....
+    ifaceEntity.setValidationParamter(QString(m_pPllChannelListEntity->getName()));
+    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
+    ifaceEntity.setSCPICmdnode(QString("PLLREFERENCE"));
+    ifaceEntity.setSCPIType(QString("10"));
+    ifaceEntity.setUnit(QString(""));
+
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setName(m_pParPllAutomaticOnOff->getName());
+    ifaceEntity.setDescription(QString("This entity selects pll automatic"));
+    ifaceEntity.setValidationScript(QString("")); // later ....
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPICmdnode(QString("PLLAUTO"));
+
+    ifaceEntity.appendInterfaceEntity(jsArr);
 
 }
 

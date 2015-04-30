@@ -16,6 +16,7 @@
 #include "errormessages.h"
 #include "reply.h"
 #include "modulesignal.h"
+#include "interfaceentity.h"
 #include "moduleparameter.h"
 #include "moduleinfo.h"
 #include "oscimodule.h"
@@ -202,21 +203,16 @@ void cOsciModuleMeasProgram::deleteInterface()
 
 void cOsciModuleMeasProgram::exportInterface(QJsonArray &jsArr)
 {
+    cInterfaceEntity ifaceEntity;
+
+    ifaceEntity.setDescription(QString("This entity holds the dft value of CmdNode")); // for all actvalues the same
+    ifaceEntity.setValidationScript(QString("")); // no validation for queries
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPIModel(QString("MEASURE"));
+
     for (int i = 0; i < m_EntityActValueList.count(); i++)
     {
-        QJsonObject jsonObj;
-        jsonObj.insert("Name", m_EntityActValueList.at(i)->getName());
-        jsonObj.insert("DES", QString("This entity holds the oscillogram of CmdNode"));
-
-        QJsonArray jsonValArr;
-        jsonValArr.append(QString("")); // we don't need validation for queries
-        jsonValArr.append(QString(""));
-
-        jsonObj.insert("VAL", jsonValArr);
-
-        QJsonArray jsonSCPIArr;
-
-        jsonSCPIArr.append(QString("MEASURE"));
+        ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
 
         QString chnDes = m_EntityNameList.at(i)->getValue().toString();
         QStringList sl = chnDes.split(';');
@@ -227,16 +223,22 @@ void cOsciModuleMeasProgram::exportInterface(QJsonArray &jsArr)
         else
             CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
 
-        jsonSCPIArr.append(CmdNode);
+        ifaceEntity.setSCPICmdnode(CmdNode);
+        ifaceEntity.setSCPIType(QString("2"));
+        ifaceEntity.setUnit(Unit);
 
-        jsonSCPIArr.append(QString("2"));
-        jsonSCPIArr.append(Unit);
-
-        jsonObj.insert("SCPI", jsonSCPIArr);
-
-        jsArr.append(jsonObj);
+        ifaceEntity.appendInterfaceEntity(jsArr);
     }
 
+    ifaceEntity.setName(m_pRefChannelParameter->getName());
+    ifaceEntity.setDescription(QString("This entity holds the modules reference channel"));
+    ifaceEntity.setValidationScript(QString("")); // later ....
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
+    ifaceEntity.setSCPICmdnode(QString("REFCHANNEL"));
+    ifaceEntity.setSCPIType(QString("10"));
+    ifaceEntity.setUnit(QString(""));
+    ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
 

@@ -17,6 +17,7 @@
 #include "errormessages.h"
 #include "reply.h"
 #include "modulesignal.h"
+#include "interfaceentity.h"
 #include "moduleparameter.h"
 #include "moduleinfo.h"
 #include "measmodeinfo.h"
@@ -349,21 +350,17 @@ void cPower1ModuleMeasProgram::deleteInterface()
 
 void cPower1ModuleMeasProgram::exportInterface(QJsonArray &jsArr)
 {
+    cInterfaceEntity ifaceEntity;
+
+    ifaceEntity.setDescription(QString("This entity holds the power value of CmdNode")); // for all actvalues the same
+    ifaceEntity.setValidationScript(QString("")); // no validation for queries
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPIModel(QString("MEASURE"));
+    ifaceEntity.setSCPIType(QString("2"));
+
     for (int i = 0; i < 4; i++)
     {
-        QJsonObject jsonObj;
-        jsonObj.insert("Name", m_EntityActValuePQSList.at(i)->getName());
-        jsonObj.insert("DES", QString("This entity holds the power value of CmdNode"));
-
-        QJsonArray jsonValArr;
-        jsonValArr.append(QString("")); // we don't need validation for queries
-        jsonValArr.append(QString(""));
-
-        jsonObj.insert("VAL", jsonValArr);
-
-        QJsonArray jsonSCPIArr;
-
-        jsonSCPIArr.append(QString("MEASURE"));
+        ifaceEntity.setName(m_EntityActValuePQSList.at(i)->getName());
 
         QString chnDes = m_EntityNamePQSList.at(i)->getValue().toString();
         QStringList sl = chnDes.split(';');
@@ -374,15 +371,29 @@ void cPower1ModuleMeasProgram::exportInterface(QJsonArray &jsArr)
         else
             CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
 
-        jsonSCPIArr.append(CmdNode);
+        ifaceEntity.setSCPICmdnode(CmdNode);
+        ifaceEntity.setUnit(Unit);
 
-        jsonSCPIArr.append(QString("2"));
-        jsonSCPIArr.append(Unit);
-
-        jsonObj.insert("SCPI", jsonSCPIArr);
-
-        jsArr.append(jsonObj);
+        ifaceEntity.appendInterfaceEntity(jsArr);
     }
+
+    ifaceEntity.setName(m_pIntegrationTimeParameter->getName());
+    ifaceEntity.setDescription(QString("This entity holds the modules integrationtime"));
+    ifaceEntity.setValidationScript(QString("")); // later ....
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
+    ifaceEntity.setSCPICmdnode(QString("TINTEGRATION"));
+    ifaceEntity.setSCPIType(QString("10"));
+    ifaceEntity.setUnit(QString("sec"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setName(m_pMeasuringmodeParameter->getName());
+    ifaceEntity.setDescription(QString("This entity holds the modules measuring mode"));
+    ifaceEntity.setValidationScript(QString("")); // later ....
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPICmdnode(QString("MMODE"));
+    ifaceEntity.setUnit(QString(""));
+    ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
 

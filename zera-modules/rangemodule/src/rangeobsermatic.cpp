@@ -14,6 +14,7 @@
 #include "errormessages.h"
 #include "rangemodule.h"
 #include "moduleparameter.h"
+#include "interfaceentity.h"
 #include "moduleinfo.h"
 #include "modulesignal.h"
 #include "rangeobsermatic.h"
@@ -176,28 +177,47 @@ void cRangeObsermatic::deleteInterface()
 
 void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
 {
+    cInterfaceEntity ifaceEntity;
+
+    ifaceEntity.setDescription(QString("Writing this entity sets the channels range")); // for all actvalues the same
+    ifaceEntity.setValidationScript(QString("")); // no validation for the moment
+    ifaceEntity.setSCPIModel(QString("SENSE"));
+    ifaceEntity.setSCPIType(QString("10"));
+    ifaceEntity.setUnit(QString(""));
+
     for (int i = 0; i < m_ChannelNameList.count(); i++)
     {
-        QJsonObject jsonObj;
-        jsonObj.insert("Name", m_RangeEntityList.at(i)->getName());
-        jsonObj.insert("DES", QString("Writing this entity sets the channels range"));
+        ifaceEntity.setName(m_RangeEntityList.at(i)->getName());
+        ifaceEntity.setValidationParamter(QString(m_RangeMeasChannelList.at(i)->getRangeListEntityName()));
+        ifaceEntity.setSCPICmdnode(m_ChannelAliasList.at(i));
 
-        QJsonArray jsonValArr;
-        jsonValArr.append(QString("")); // QString("setrangevalidation.js")
-        jsonValArr.append(m_RangeMeasChannelList.at(i)->getRangeListEntityName());
+        ifaceEntity.appendInterfaceEntity(jsArr);
+    }
 
-        jsonObj.insert("VAL", jsonValArr);
+    ifaceEntity.setSCPIModel(QString("CONFIGURATION")); // preset
 
-        QJsonArray jsonSCPIArr;
+    if (m_ConfPar.m_bGrouping) // only if configured
+    {
+        ifaceEntity.setName(m_pParGroupingOnOff->getName());
+        ifaceEntity.setDescription(QString("This entity selects channel grouping"));
+        ifaceEntity.setValidationScript(QString("")); // later ....
+        ifaceEntity.setValidationParamter(QString(""));
 
-        jsonSCPIArr.append(QString("SENSE"));
-        jsonSCPIArr.append(m_ChannelAliasList.at(i));
-        jsonSCPIArr.append(QString("10"));
-        jsonSCPIArr.append(QString("")); // we have no unit
+        ifaceEntity.setSCPICmdnode(QString("GROUPING"));
+        ifaceEntity.setUnit(QString(""));
+        ifaceEntity.appendInterfaceEntity(jsArr);
+    }
 
-        jsonObj.insert("SCPI", jsonSCPIArr);
+    if (m_ConfPar.m_bRangeAuto)
+    {
+        ifaceEntity.setName(m_pParRangeAutomaticOnOff->getName());
+        ifaceEntity.setDescription(QString("This entity selects range automatic"));
+        ifaceEntity.setValidationScript(QString("")); // later ....
+        ifaceEntity.setValidationParamter(QString(""));
+        ifaceEntity.setSCPICmdnode(QString("RNGAUTO"));
+        ifaceEntity.setUnit(QString(""));
+        ifaceEntity.appendInterfaceEntity(jsArr);
 
-        jsArr.append(jsonObj);
     }
 }
 

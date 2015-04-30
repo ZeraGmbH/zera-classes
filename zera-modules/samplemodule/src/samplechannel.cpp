@@ -99,7 +99,7 @@ void cSampleChannel::deleteInterface()
 }
 
 
-void cSampleChannel::exportInterface(QJsonArray &jsArr)
+void cSampleChannel::exportInterface(QJsonArray &)
 {
 
 }
