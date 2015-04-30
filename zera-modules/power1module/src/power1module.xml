@@ -22,18 +22,10 @@
         </connectivity>
         <measure>
             <modes>
-                <n>11</n>
+                <n>3</n>
                 <m1>4LW</m1>
-                <m2>4LB</m2>
-                <m3>4LBK</m3>
-                <m4>4LS</m4>
-                <m5>4LSg</m5>
-                <m6>3LW</m6>
-                <m7>3LB</m7>
-                <m8>2LW</m8>
-                <m9>2LB</m9>
-                <m10>2LS</m10>
-                <m11>2LSg</m11>
+                <m2>3LW</m2>
+                <m3>2LW</m3>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
