@@ -56,7 +56,8 @@ HEADERS += \
     src/scpimeasurecollector.h \
     src/scpimeasure.h \
     src/scpiclient.h \
-    src/scpinonmeasuredelegate.h
+    src/scpinonmeasuredelegate.h \
+    src/scpistatus.h
 
 OTHER_FILES += \
     src/scpimodule.xml \
