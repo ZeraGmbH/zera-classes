@@ -162,7 +162,7 @@ void cSCPIServer::setupTCPServer()
         }
     }
 
-    error |= !m_pTcpServer->listen(QHostAddress(m_ConfigData.m_InterfaceSocket.m_sIP), m_ConfigData.m_InterfaceSocket.m_nPort);
+    error |= !m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
 
     if (error)
     {

@@ -40,7 +40,8 @@ SOURCES += \
     src/scpimeasurecollector.cpp \
     src/scpimeasure.cpp \
     src/scpiclient.cpp \
-    src/scpinonmeasuredelegate.cpp
+    src/scpiparameterdelegate.cpp \
+    src/scpiinterfacedelegate.cpp
 
 HEADERS += \
     src/scpimodulefactory.h \
@@ -56,8 +57,9 @@ HEADERS += \
     src/scpimeasurecollector.h \
     src/scpimeasure.h \
     src/scpiclient.h \
-    src/scpinonmeasuredelegate.h \
-    src/scpistatus.h
+    src/scpistatus.h \
+    src/scpiparameterdelegate.h \
+    src/scpiinterfacedelegate.h
 
 OTHER_FILES += \
     src/scpimodule.xml \

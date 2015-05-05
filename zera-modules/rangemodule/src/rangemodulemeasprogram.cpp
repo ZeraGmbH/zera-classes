@@ -116,14 +116,12 @@ void cRangeModuleMeasProgram::generateInterface()
     {
         p_entity = m_pPeer->dataAdd(QString("ACT_Channel%1Peak").arg(i+1));
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
         p_entity->setValue(QVariant((double) 0.0), m_pPeer);
         m_EntityList.append(p_entity);
     }
 
     p_entity = m_pPeer->dataAdd("ACT_Frequency");
     p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-    p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
     p_entity->setValue(QVariant((double) 0.0), m_pPeer);
     m_EntityList.append(p_entity);
 }

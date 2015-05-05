@@ -18,15 +18,10 @@ class cSCPIDelegate: public QObject, public cSCPIObject
    Q_OBJECT
 
 public:
-    cSCPIDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint16 cmdCode);
+    cSCPIDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface);
     virtual bool executeSCPI(const QString&, QString&);
-    virtual bool executeSCPI(cSCPIClient *client, const QString& sInput);
+    virtual bool executeSCPI(cSCPIClient *client, const QString& sInput) = 0;
 
-signals:
-    void execute(cSCPIClient* client, int cmdCode, QString& sInput);
-
-protected:
-    quint16 m_nCmdCode;
 };
 
 }

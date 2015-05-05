@@ -19,12 +19,13 @@ class cSCPIMeasureDelegate: public cSCPIDelegate
    Q_OBJECT
 
 public:
-    cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint16 cmdCode, cSCPIMeasure* scpimeasureobject);
+    cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint8 measCode, cSCPIMeasure* scpimeasureobject);
 
+    virtual bool executeSCPI(cSCPIClient *client, const QString& sInput);
     void addscpimeasureObject(cSCPIMeasure* measureobject);
-    QList<cSCPIMeasure*>* getscpimeasureObjectList();
 
 private:
+    quint8 m_nMeasCode;
     QList<cSCPIMeasure*> m_scpimeasureObjectList;
 
 };

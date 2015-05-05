@@ -11,12 +11,18 @@ class cSCPI;
 namespace SCPIMODULE
 {
 
+enum scpiinterfacecommands
+{
+    deviceinterfacecmd
+};
+
+
 namespace SCPIModelType {
     enum scpiModelType {normal, measure, configure, read, init, fetch };
 }
 
-
-class cSCPInonMeasureDelegate;
+class cSCPIInterfaceDelegate;
+class cSCPIParameterDelegate;
 class cSCPIMeasureDelegate;
 class cSCPIMeasure;
 class cSCPICmdInfo;
@@ -39,12 +45,11 @@ private:
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
 
-    QList<cSCPInonMeasureDelegate*> m_scpinonMeasureDelegateList; // our delegatelist for non measure cmd's ... needed to clean up
+    QList<cSCPIInterfaceDelegate*> m_scpiInterfaceDelegateList; // our delegatelist for interface cmd's ... needed to clean up
+    QList<cSCPIParameterDelegate*> m_scpiParameterDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
     QHash<QString, cSCPIMeasureDelegate*> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
 
-    quint32 m_nCmdCode;
-
-    void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint16 cmdCode, cSCPIMeasure* measureObject);
+    void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject);
 
 private slots:
     void executeCmd(cSCPIClient* client, int cmdCode, QString& sInput);

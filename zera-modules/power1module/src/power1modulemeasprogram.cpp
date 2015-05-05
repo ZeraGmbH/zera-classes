@@ -304,14 +304,12 @@ void cPower1ModuleMeasProgram::generateInterface()
         s = QString("TRA_PQS%1Name").arg(i+1);
         p_entity = m_pPeer->dataAdd(s);
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
         p_entity->setValue(QVariant("Unknown"), m_pPeer);
         m_EntityNamePQSList.append(p_entity);
 
         s = QString("ACT_PQS%1").arg(i+1);
         p_entity = m_pPeer->dataAdd(s);
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
         p_entity->setValue(QVariant((double) 0.0), m_pPeer);
         m_EntityActValuePQSList.append(p_entity);
     }

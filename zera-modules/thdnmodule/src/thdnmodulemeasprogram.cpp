@@ -185,7 +185,6 @@ void cThdnModuleMeasProgram::generateInterface()
         s = QString("TRA_THDN%1Name").arg(i+1);
         p_entity = m_pPeer->dataAdd(s);
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
         p_entity->setValue(QVariant("Unknown"), m_pPeer);
         m_EntityNamePNList.append(p_entity);
         m_EntityNameList.append(p_entity);
@@ -193,7 +192,6 @@ void cThdnModuleMeasProgram::generateInterface()
         s = QString("ACT_THDN%1").arg(i+1);
         p_entity = m_pPeer->dataAdd(s);
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
         p_entity->setValue(QVariant((double) 0.0), m_pPeer);
         m_EntityActValuePNList.append(p_entity);
         m_EntityActValueList.append(p_entity);

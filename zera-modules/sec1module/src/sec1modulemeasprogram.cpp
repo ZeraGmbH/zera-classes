@@ -194,7 +194,6 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_EntityList.append(m_pDutinputEntity);
 
     m_pDutinputListEntity = m_pPeer->dataAdd(QString("INF_DutInputList")); // list of dut input sources
-    m_pDutinputListEntity ->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pDutinputListEntity ->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pDutinputListEntity ->setValue(s = "Unknown", m_pPeer);
     m_EntityList.append(m_pDutinputListEntity);
@@ -205,7 +204,6 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_EntityList.append(m_pRefinputEntity);
 
     m_pRefinputListEntity = m_pPeer->dataAdd(QString("INF_RefInputList")); // list of ref input sources
-    m_pRefinputListEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pRefinputListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pRefinputListEntity->setValue(s = "Unknown", m_pPeer);
     m_EntityList.append(m_pRefinputListEntity);
@@ -216,7 +214,6 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_EntityList.append(m_pRefConstantEntity);
 
     m_pRefConstantLimitsEntity = m_pPeer->dataAdd(QString("INF_RefConstant_LIMITS"));
-    m_pRefConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pRefConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pRefConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)));
     m_EntityList.append(m_pRefConstantLimitsEntity);
@@ -227,7 +224,6 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_EntityList.append(m_pDutConstantEntity);
 
     m_pDutConstantLimitsEntity = m_pPeer->dataAdd(QString("INF_DutConstant_LIMITS"));
-    m_pDutConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pDutConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pDutConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)));
     m_EntityList.append(m_pDutConstantLimitsEntity);
@@ -238,7 +234,6 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_EntityList.append(m_pMeasPulsesEntity);
 
     m_pMeasPulsesLimitsEntity = m_pPeer->dataAdd(QString("INF_MeasPulses_LIMITS"));
-    m_pMeasPulsesLimitsEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pMeasPulsesLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pMeasPulsesLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)));
     m_EntityList.append(m_pMeasPulsesLimitsEntity);
@@ -249,25 +244,21 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_EntityList.append(m_pTargetValueEntity);
 
     m_pTargetValueLimitsEntity = m_pPeer->dataAdd(QString("INF_TargetValue_LIMITS"));
-    m_pTargetValueLimitsEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pTargetValueLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pTargetValueLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)));
     m_EntityList.append(m_pTargetValueLimitsEntity);
 
     m_pStatusEntity = m_pPeer->dataAdd("ACT_Status");
     m_pStatusEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pStatusEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pStatusEntity->setValue(QVariant((int) ECALCSTATUS::IDLE), m_pPeer);
     m_EntityList.append(m_pStatusEntity);
 
     m_pProgressEntity = m_pPeer->dataAdd("ACT_Progress");
     m_pProgressEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pProgressEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pProgressEntity->setValue(QVariant((double) 0.0), m_pPeer);
     m_EntityList.append(m_pProgressEntity);
 
     m_pResultEntity = m_pPeer->dataAdd("ACT_Result");
-    m_pResultEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
     m_pResultEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pResultEntity->setValue(QVariant((double)99.99), m_pPeer);
     m_EntityList.append(m_pResultEntity);
