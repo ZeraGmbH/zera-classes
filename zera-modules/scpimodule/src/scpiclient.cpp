@@ -1,8 +1,11 @@
 #include <QTcpSocket>
 #include <scpi.h>
 
+#include "ieee488-2.h"
 #include "scpiclient.h"
 #include "scpiinterface.h"
+#include "scpistatus.h"
+
 
 namespace SCPIMODULE
 {
@@ -11,6 +14,19 @@ cSCPIClient::cSCPIClient(QTcpSocket *socket, cSCPIInterface *iface)
     :m_pSocket(socket), m_pSCPIInterface(iface)
 {
     m_bAuthorisation = false;
+
+    // we instantiate 3 scpi status systems per client
+    cSCPIStatus* scpistatus;
+    cSCPIStatus* scpi2status;
+
+    scpistatus = new cSCPIStatus(STBQUES);
+    m_SCPIStatusList.append(scpistatus);
+    scpistatus = new cSCPIStatus(STBOPER);
+    m_SCPIStatusList.append(scpistatus);
+    scpi2status = new cSCPIStatus(OperationMeasureSummary);
+    m_SCPIStatusList.append(scpistatus);
+
+    connect(scpi2status, SIGNAL(event(quint16)), scpistatus, SLOT(setCondition(quint16)));
 
     connect(m_pSocket, SIGNAL(readyRead()), this, SLOT(cmdInput()));
     connect(m_pSocket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
@@ -26,6 +42,12 @@ cSCPIClient::~cSCPIClient()
 void cSCPIClient::setAuthorisation(bool auth)
 {
     m_bAuthorisation = auth;
+}
+
+
+cSCPIStatus *cSCPIClient::getSCPIStatus(quint8 index)
+{
+    return m_SCPIStatusList.at(index);
 }
 
 

@@ -9,8 +9,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIParameterDelegate::cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, VeinPeer* peer, VeinEntity* entity)
-    :cSCPIDelegate(cmdParent, cmd, type, scpiInterface), m_pPeer(peer), m_pEntity(entity)
+cSCPIParameterDelegate::cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, VeinPeer* peer, VeinEntity* entity)
+    :cSCPIDelegate(cmdParent, cmd, type), m_pPeer(peer), m_pEntity(entity)
 {
 }
 

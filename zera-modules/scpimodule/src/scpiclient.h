@@ -2,6 +2,7 @@
 #define SCPICLIENT_H
 
 #include <QObject>
+#include <QList>
 
 class QTcpSocket;
 
@@ -9,6 +10,7 @@ namespace SCPIMODULE
 {
 
 class cSCPIInterface;
+class cSCPIStatus;
 
 class cSCPIClient: public QObject
 {
@@ -19,6 +21,7 @@ public:
     virtual ~cSCPIClient();
 
     void setAuthorisation(bool auth);
+    cSCPIStatus* getSCPIStatus(quint8 index);
 
 public slots:
     void receiveStatus(quint8 stat);
@@ -27,6 +30,8 @@ public slots:
 private:
     QTcpSocket* m_pSocket;
     cSCPIInterface* m_pSCPIInterface;
+    QList<cSCPIStatus*> m_SCPIStatusList;
+
     bool m_bAuthorisation;
 
 private slots:

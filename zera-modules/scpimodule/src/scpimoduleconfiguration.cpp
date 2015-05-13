@@ -40,6 +40,10 @@ void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:port"] = setInterfacePort;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device"] = setDeviceName;
 
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:questionable:n"] = setQuestionableStatusBitCount;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operation:n"] = setOperationStatusBitCount;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operationmeasure:n"] = setOperationMeasureStatusBitCount;
+
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     else
@@ -81,6 +85,37 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
             break;
         case setDeviceName:
             m_pSCPIModulConfigData->m_sDeviceName = m_pXMLReader->getValue(key);
+            break;
+
+        case setQuestionableStatusBitCount:
+            m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount; i++)
+            {
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:questionable:bit%1:bit").arg(i+1)] = setQuestionableBit1Bit+i;
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:questionable:bit%1:module").arg(i+1)] = setQuestionableBit1Module+i;
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:questionable:bit%1:entity").arg(i+1)] = setQuestionableBit1Entity+i;
+                 // todo add something to some list
+            }
+            break;
+        case setOperationStatusBitCount:
+            m_pSCPIModulConfigData->m_nOperationStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_pSCPIModulConfigData->m_nOperationStatusBitCount; i++)
+            {
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operation:bit%1:bit").arg(i+1)] = setOperationBit1Bit+i;
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operation:bit%1:module").arg(i+1)] = setOperationBit1Module+i;
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operation:bit%1:entity").arg(i+1)] = setOperationBit1Entity+i;
+                 // todo add something to some list
+            }
+            break;
+        case setOperationMeasureStatusBitCount:
+            m_pSCPIModulConfigData->m_nOperationMeasureStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);
+            for (int i = 0; i < m_pSCPIModulConfigData->m_nOperationMeasureStatusBitCount; i++)
+            {
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operationmeasure:bit%1:bit").arg(i+1)] = setOperationMeasureBit1Bit+i;
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operationmeasure:bit%1:module").arg(i+1)] = setOperationMeasureBit1Module+i;
+                 m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operationmeasure:bit%1:entity").arg(i+1)] = setOperationMeasureBit1Entity+i;
+                 // todo add something to some list
+            }
             break;
         }
         m_bConfigError |= !ok;

@@ -16,8 +16,13 @@
 #include "scpiserver.h"
 #include "scpiclient.h"
 #include "scpiinterface.h"
+#include "moduleinterface.h"
+#include "interfaceinterface.h"
+#include "statusinterface.h"
+#include "ieee4882interface.h"
 #include "scpicmdinfo.h"
 #include "scpimoduleconfigdata.h"
+
 
 namespace SCPIMODULE
 {
@@ -26,7 +31,11 @@ namespace SCPIMODULE
 cSCPIServer::cSCPIServer(cSCPIModule *module, VeinPeer *peer, cSCPIModuleConfigData &configData)
     : m_pModule(module), m_pPeer(peer), m_ConfigData(configData)
 {
-    m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi cmd interface
+    m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi interface with cmd interpreter
+    m_pModuleInterface = new cModuleInterface(m_pPeer, m_pSCPIInterface); // the modules interface
+    m_pInterfaceInterface = new cInterfaceInterface(m_pPeer, m_pSCPIInterface); // the interfaces interface
+    m_pStatusInterface = new cStatusInterface(m_pPeer, m_pSCPIInterface);
+    m_pIEEE488Interface = new cIEEE4882Interface(m_pPeer, m_pSCPIInterface);
 
     m_pTcpServer = new QTcpServer();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
@@ -78,7 +87,7 @@ void cSCPIServer::exportInterface(QJsonArray &)
 void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-    cSCPIClient* client = new cSCPIClient(socket, m_pSCPIInterface); // each client gets his own interface;
+    cSCPIClient* client = new cSCPIClient(socket, m_pSCPIInterface); // each client our interface;
     connect(client, SIGNAL(destroyed(QObject*)), this, SLOT(deleteSCPIClient(QObject*)));
     m_SCPIClientList.append(client);
     if (m_SCPIClientList.count() == 1)
@@ -103,68 +112,22 @@ void cSCPIServer::TCPError(QAbstractSocket::SocketError)
 
 void cSCPIServer::setupTCPServer()
 {
-    // before we can call listen we must set up a valid interface clients can connect to
-    cSCPICmdInfo scpiCmdInfo;
-    bool error;
+    bool noError;
 
-    error = false;
-    QList<VeinPeer *> peerList;
-    VeinHub *hub = m_pPeer->getHub();
-    peerList = hub->listPeers();
+    // before we can call listen we must set up a valid interface that clients can connect to
 
-    for (int i = 0; i < peerList.count(); i++)
+    noError = m_pModuleInterface->setupInterface();
+    noError = noError && m_pInterfaceInterface->setupInterface();
+    noError = noError && m_pStatusInterface->setupInterface();
+    noError = noError && m_pIEEE488Interface->setupInterface();
+
+    noError = noError && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
+
+    if (noError)
     {
-        QJsonDocument jsonDoc; // we parse over all moduleinterface entities
-        VeinEntity* entity = peerList.at(i)->getEntityByName(QString("INF_ModuleInterface"));
-
-        if (entity != 0) // modulemangers and interfaces do not export INF_ModuleInterface
-        {
-            jsonDoc = QJsonDocument::fromBinaryData(entity->getValue().toByteArray());
-
-            if ( !jsonDoc.isNull() && jsonDoc.isObject() )
-            {
-                VeinPeer* peer;
-                QJsonObject jsonObj;
-#ifdef DEBUG
-                qDebug() << jsonDoc;
-#endif
-                jsonObj = jsonDoc.object();
-                scpiCmdInfo.scpiModuleName = jsonObj["SCPIModuleName"].toString();
-                peer = hub->getPeerByName(jsonObj["VeinPeer"].toString());
-                scpiCmdInfo.peer = peer;
-
-                QJsonArray jsonEntityArr = jsonObj["Entities"].toArray();
-
-                for (int j = 0; j < jsonEntityArr.count(); j++)
-                {
-                    QJsonObject jsonEntityObj;
-                    jsonEntityObj = jsonEntityArr[j].toObject();
-                    QJsonValue jsonVal;
-                    jsonVal = jsonEntityObj["Name"];
-                    QString s = jsonVal.toString();
-                    scpiCmdInfo.entity = peer->getEntityByName(s);
-                    //scpiCmdInfo.entity = peer->getEntityByName(jsonEntityObj["Name"].toString());
-                    scpiCmdInfo.scpiModel = jsonEntityObj["SCPI"].toArray()[0].toString();
-                    scpiCmdInfo.cmdNode = jsonEntityObj["SCPI"].toArray()[1].toString();
-                    scpiCmdInfo.type = jsonEntityObj["SCPI"].toArray()[2].toString();
-                    scpiCmdInfo.unit = jsonEntityObj["SCPI"].toArray()[3].toString();
-
-                    if (scpiCmdInfo.type != "0") // we have to add this entity to our interface
-                        m_pSCPIInterface->addSCPICommand(scpiCmdInfo);
-
-                }
-            }
-            else
-            {
-                //error = true; temp. we set no error
-                //break;
-            }
-        }
+        emit activationContinue();
     }
-
-    error |= !m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
-
-    if (error)
+    else
     {
         emit errMsg((tr(interfacejsonErrMsg)));
 #ifdef DEBUG
@@ -172,9 +135,7 @@ void cSCPIServer::setupTCPServer()
 #endif
         emit activationError();
     }
-    else
 
-        emit activationContinue();
 }
 
 

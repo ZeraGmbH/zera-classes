@@ -18,6 +18,10 @@ namespace SCPIMODULE
 class cSCPIModule;
 class cSCPIModuleConfigData;
 class cSCPIInterface;
+class cModuleInterface;
+class cInterfaceInterface;
+class cStatusInterface;
+class cIEEE4882Interface;
 class cSCPIClient;
 
 class cSCPIServer: public cModuleActivist
@@ -40,6 +44,11 @@ private:
     QTcpServer* m_pTcpServer;
     cSCPIInterface* m_pSCPIInterface;
     QList<cSCPIClient*> m_SCPIClientList;
+
+    cModuleInterface* m_pModuleInterface;
+    cInterfaceInterface* m_pInterfaceInterface;
+    cStatusInterface* m_pStatusInterface;
+    cIEEE4882Interface* m_pIEEE488Interface;
 
     // statemachine for activating gets the following states
     QState m_setupTCPServerState;

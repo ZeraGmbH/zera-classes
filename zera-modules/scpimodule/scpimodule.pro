@@ -41,7 +41,15 @@ SOURCES += \
     src/scpimeasure.cpp \
     src/scpiclient.cpp \
     src/scpiparameterdelegate.cpp \
-    src/scpiinterfacedelegate.cpp
+    src/scpiinterfacedelegate.cpp \
+    src/scpistatus.cpp \
+    src/ieee488-2.cpp \
+    src/baseinterface.cpp \
+    src/moduleinterface.cpp \
+    src/interfaceinterface.cpp \
+    src/scpistatusdelegate.cpp \
+    src/statusinterface.cpp \
+    ieee4882interface.cpp
 
 HEADERS += \
     src/scpimodulefactory.h \
@@ -59,7 +67,14 @@ HEADERS += \
     src/scpiclient.h \
     src/scpistatus.h \
     src/scpiparameterdelegate.h \
-    src/scpiinterfacedelegate.h
+    src/scpiinterfacedelegate.h \
+    src/ieee488-2.h \
+    src/baseinterface.h \
+    src/moduleinterface.h \
+    src/interfaceinterface.h \
+    src/scpistatusdelegate.h \
+    src/statusinterface.h \
+    ieee4882interface.h
 
 OTHER_FILES += \
     src/scpimodule.xml \

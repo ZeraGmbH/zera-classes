@@ -6,16 +6,10 @@ namespace SCPIMODULE
 {
 
 
-cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint16 cmdCode)
-    :cSCPIDelegate(cmdParent, cmd, type, scpiInterface), m_nCmdCode(cmdCode)
+cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type,  quint16 cmdCode)
+    :cSCPIDelegate(cmdParent, cmd, type), m_nCmdCode(cmdCode)
 {
 
-}
-
-
-bool cSCPIInterfaceDelegate::executeSCPI(const QString &, QString &)
-{
-    return true;
 }
 
 

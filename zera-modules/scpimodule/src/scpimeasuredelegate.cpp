@@ -11,8 +11,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint8 measCode, cSCPIMeasure* scpimeasureobject)
-    :cSCPIDelegate(cmdParent, cmd, type, scpiInterface), m_nMeasCode(measCode)
+cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject)
+    :cSCPIDelegate(cmdParent, cmd, type), m_nMeasCode(measCode)
 {
     m_scpimeasureObjectList.append(scpimeasureobject);
 }

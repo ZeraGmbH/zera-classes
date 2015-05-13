@@ -16,7 +16,7 @@ class cSCPIParameterDelegate: public cSCPIDelegate
     Q_OBJECT
 
 public:
-    cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, VeinPeer* peer, VeinEntity* entity);
+    cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, VeinPeer* peer, VeinEntity* entity);
 
     virtual bool executeSCPI(cSCPIClient *client, const QString& sInput);
 

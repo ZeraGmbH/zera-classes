@@ -3,7 +3,7 @@
 #include <veinentity.h>
 #include <scpi.h>
 #include "scpimeasure.h"
-#include "scpiinterface.h"
+#include "moduleinterface.h"
 
 
 namespace SCPIMODULE

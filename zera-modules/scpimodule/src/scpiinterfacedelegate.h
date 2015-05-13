@@ -13,8 +13,7 @@ class cSCPIInterfaceDelegate: public cSCPIDelegate
     Q_OBJECT
 
 public:
-    cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface, quint16 cmdCode);
-    virtual bool executeSCPI(const QString&, QString&);
+    cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type, quint16 cmdCode);
     virtual bool executeSCPI(cSCPIClient *client, const QString& sInput);
 
 signals:

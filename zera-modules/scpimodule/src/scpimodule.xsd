@@ -8,7 +8,6 @@
         </xs:restriction>
     </xs:simpleType>
 
-
     <xs:simpleType name="porttype">
         <xs:restriction base="xs:integer">
             <xs:maxInclusive value='60000'/>
@@ -23,6 +22,50 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="bittype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='15'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="bitspectype">
+        <xs:sequence>
+            <xs:element name="bit" type="bittype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="module" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="entity" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="statustype">
+        <xs:sequence>
+            <xs:element name="n" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                        <xs:maxInclusive value="16"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="bit1" type="bitspectype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="bit2" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit3" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit4" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit5" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit6" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit7" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit8" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit9" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit10" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit11" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit12" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit13" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit14" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit15" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="bit16" type="bitspectype" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:complexType name="connectivitytype">
         <xs:sequence>
             <xs:element name="debuglevel" type="debugtype"/>
@@ -35,6 +78,15 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="device" type="xs:string"/>
+            <xs:element name="status">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="questionable" type="statustype"/>
+                        <xs:element name="operation" type="statustype"/>
+                        <xs:element name="operationmeasure" type="statustype"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:sequence>
     </xs:complexType>
 

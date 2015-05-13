@@ -5,10 +5,15 @@
 namespace SCPIMODULE
 {
 
-cSCPIDelegate::cSCPIDelegate(QString cmdParent, QString cmd, quint8 type, cSCPI *scpiInterface)
-    :cSCPIObject(cmd, type)
+cSCPIDelegate::cSCPIDelegate(QString cmdParent, QString cmd, quint8 type)
+    :cSCPIObject(cmd, type), m_sCmdParent(cmdParent)
 {
-    scpiInterface->genSCPICmd(cmdParent.split(":"), this);
+}
+
+
+void cSCPIDelegate::setCommand(cSCPI *scpiCmdInterface)
+{
+    scpiCmdInterface->genSCPICmd(m_sCmdParent.split(":"), this);
 }
 
 
