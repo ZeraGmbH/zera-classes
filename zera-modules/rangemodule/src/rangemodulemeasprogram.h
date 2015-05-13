@@ -61,7 +61,7 @@ public:
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
+    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -83,7 +83,10 @@ private:
     bool m_bIgnore;
     quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
-    QList<VeinEntity*> m_EntityList;
+
+    QList<VeinEntity*> m_EntityNameList; // we use this list for access
+    QList<VeinEntity*> m_EntityActValueList; // also
+
     cRangeModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -112,6 +115,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     Zera::Proxy::cProxyClient* m_pRMClient;
+    void setActualValuesNames();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

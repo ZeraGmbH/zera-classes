@@ -11,6 +11,7 @@
 #include "errormessages.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
+#include "interfaceentity.h"
 #include "rangemodulemeasprogram.h"
 #include "rangemoduleconfigdata.h"
 
@@ -112,31 +113,77 @@ void cRangeModuleMeasProgram::syncRanging(QVariant sync)
 void cRangeModuleMeasProgram::generateInterface()
 {
     VeinEntity* p_entity;
+    QString s;
+
+    // this here is for translation purpose
+    s = tr("UL%1;[V]");
+    s = tr("UL%1-UL%2;[V]");
+    s = tr("IL%1;[A]");
+    s = tr("IL%1-IL%2;[A]");
+    s = tr("REF%1;[V]");
+    s = tr("REF%1-REF%2;[V]");
+
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
+        p_entity = m_pPeer->dataAdd(QString("TRA_Channel%1PeakName").arg(i+1));
+        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
+        p_entity->setValue(QVariant("Unknown"), m_pPeer);
+        m_EntityNameList.append(p_entity);
+
         p_entity = m_pPeer->dataAdd(QString("ACT_Channel%1Peak").arg(i+1));
         p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
         p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityList.append(p_entity);
+        m_EntityActValueList.append(p_entity);
     }
 
     p_entity = m_pPeer->dataAdd("ACT_Frequency");
     p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
     p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-    m_EntityList.append(p_entity);
+    m_EntityActValueList.append(p_entity);
 }
 
 
 void cRangeModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityList.count(); i++)
-        m_pPeer->dataRemove(m_EntityList.at(i));
+    for (int i = 0; i < m_EntityActValueList.count(); i++)
+        m_pPeer->dataRemove(m_EntityActValueList.at(i));
 }
 
 
-void cRangeModuleMeasProgram::exportInterface(QJsonArray &)
+void cRangeModuleMeasProgram::exportInterface(QJsonArray &jsArr)
 {
+    int i;
+    cInterfaceEntity ifaceEntity;
 
+    ifaceEntity.setDescription(QString("This entity holds the peak value of CmdNode")); // for all actvalues the same
+    ifaceEntity.setValidationScript(QString("")); // no validation for queries
+    ifaceEntity.setValidationParamter(QString(""));
+    ifaceEntity.setSCPIModel(QString("MEASURE"));
+    ifaceEntity.setSCPIType(QString("2"));
+
+    for (i = 0; i < m_EntityActValueList.count()-1; i++)
+    {
+        ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
+
+        QString chnDes = m_EntityNameList.at(i)->getValue().toString();
+        QStringList sl = chnDes.split(';');
+        QString CmdNode = sl.takeFirst();
+        QString Unit = sl.takeLast();
+        if (sl.count() == 1)
+            CmdNode = CmdNode.arg(sl.at(0));
+        else
+            CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
+
+        ifaceEntity.setSCPICmdnode(CmdNode);
+        ifaceEntity.setUnit(Unit);
+        ifaceEntity.appendInterfaceEntity(jsArr);
+    }
+
+    ifaceEntity.setDescription(QString("This entity holds the frequency value of CmdNode"));
+    ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
+    ifaceEntity.setSCPICmdnode("F"); // frequency stays frequency so fix here
+    ifaceEntity.setUnit("Hz");
+    ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
 
@@ -391,14 +438,33 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
 }
 
 
+void cRangeModuleMeasProgram::setActualValuesNames()
+{
+    QString s,s1,s2;
+    cRangeMeasChannel* mchn;
+
+    for (int i = 0; i < m_ChannelList.count(); i++)
+    {
+        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
+
+        s1 = s2 = mchn->getAlias();
+        s1.remove(QRegExp("[1-9][0-9]?"));
+        s2.remove(s1);
+
+        s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(mchn->getUnit());
+        m_EntityNameList.at(i)->setValue(s, m_pPeer);
+    }
+}
+
+
 void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     int i;
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        for (i = 0; i < m_EntityList.count()-1; i++) // we set n peak values first
-            m_EntityList.at(i)->setValue((*actualValues)[i], m_pPeer);
-        m_EntityList.at(i)->setValue((*actualValues)[2*i], m_pPeer);
+        for (i = 0; i < m_EntityActValueList.count()-1; i++) // we set n peak values first
+            m_EntityActValueList.at(i)->setValue((*actualValues)[i], m_pPeer);
+        m_EntityActValueList.at(i)->setValue((*actualValues)[2*i], m_pPeer);
     }
 }
 
@@ -468,6 +534,7 @@ void cRangeModuleMeasProgram::activateDSP()
 void cRangeModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
+    setActualValuesNames();
     emit activated();
 }
 
