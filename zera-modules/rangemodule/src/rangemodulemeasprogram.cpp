@@ -7,8 +7,10 @@
 #include <veinpeer.h>
 #include <veinentity.h>
 
+
 #include "debug.h"
 #include "errormessages.h"
+#include "modulesignal.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
 #include "interfaceentity.h"
@@ -88,6 +90,7 @@ cRangeModuleMeasProgram::~cRangeModuleMeasProgram()
 {
     delete m_pRMInterface;
     delete m_pDSPInterFace;
+    delete m_pMeasureSignal;
 }
 
 
@@ -140,6 +143,8 @@ void cRangeModuleMeasProgram::generateInterface()
     p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
     p_entity->setValue(QVariant((double) 0.0), m_pPeer);
     m_EntityActValueList.append(p_entity);
+
+    m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
 }
 
 
@@ -535,6 +540,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
     setActualValuesNames();
+    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
     emit activated();
 }
 
@@ -573,6 +579,7 @@ void cRangeModuleMeasProgram::deactivateDSPdone()
 
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
 {
+    m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
     m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
@@ -583,6 +590,7 @@ void cRangeModuleMeasProgram::dataReadDSP()
     {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
         emit actualValues(&m_ModuleActualValues); // and send them
+        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
     }
 }
 

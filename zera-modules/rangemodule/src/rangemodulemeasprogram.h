@@ -26,7 +26,7 @@ class cDspIFace;
 class QStateMachine;
 class QState;
 class QFinalState;
-
+class cModuleSignal;
 
 namespace RANGEMODULE
 {
@@ -86,7 +86,7 @@ private:
 
     QList<VeinEntity*> m_EntityNameList; // we use this list for access
     QList<VeinEntity*> m_EntityActValueList; // also
-
+    cModuleSignal* m_pMeasureSignal;
     cRangeModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
