@@ -49,7 +49,7 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, QString &
             client->receiveAnswer(xml);
         }
         else
-            client->receiveAnswer(SCPI::scpiAnswer[SCPI::nak]);
+            client->receiveStatus(SCPI::nak);
 
         break;
     }

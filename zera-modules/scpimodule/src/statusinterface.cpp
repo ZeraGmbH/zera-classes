@@ -42,7 +42,7 @@ bool cStatusInterface::setupInterface()
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
 
-    delegate = new cSCPIStatusDelegate(QString("STATUS:QUESTIONABLE"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::condition, SCPIStatusSystem::questionable);
+    delegate = new cSCPIStatusDelegate(QString("STATUS:QUESTIONABLE"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::event, SCPIStatusSystem::questionable);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
@@ -69,7 +69,7 @@ bool cStatusInterface::setupInterface()
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
 
-    delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::condition, SCPIStatusSystem::operation);
+    delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::event, SCPIStatusSystem::operation);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
@@ -96,7 +96,7 @@ bool cStatusInterface::setupInterface()
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
 
-    delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION:MEASURE"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::condition, SCPIStatusSystem::operationmeasure);
+    delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION:MEASURE"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::event, SCPIStatusSystem::operationmeasure);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
@@ -110,46 +110,6 @@ bool cStatusInterface::setupInterface()
 }
 
 
-QString cStatusInterface::readwriteStatusReg(quint16 &status, QString input)
-{
-    cSCPICommand cmd;
-    QString par;
-    quint16 regValue;
-    bool ok;
-
-    cmd = input;
-    if (cmd.isQuery())
-        return QString("%1").arg(status);
-    else
-        if (cmd.isCommand(1))
-        {
-            par = cmd.getParam(0);
-            regValue = par.toInt(&ok);
-            if (ok)
-            {
-                status = regValue;
-                return SCPI::scpiAnswer[SCPI::ack];
-            }
-            else
-                return SCPI::scpiAnswer[SCPI::errval];
-        }
-        else
-            return SCPI::scpiAnswer[SCPI::nak];
-}
-
-
-QString cStatusInterface::readStatusReg(quint16 &status, QString input)
-{
-    cSCPICommand cmd;
-
-    cmd = input;
-    if (cmd.isQuery())
-        return QString("%1").arg(status);
-    else
-        return SCPI::scpiAnswer[SCPI::nak];
-}
-
-
 void cStatusInterface::executeCmd(cSCPIClient *client, int cmdCode, int statIndex, QString &sInput)
 {
     QString answer;
@@ -157,31 +117,7 @@ void cStatusInterface::executeCmd(cSCPIClient *client, int cmdCode, int statInde
 
     answer="";
     status = client->getSCPIStatus(statIndex);
-
-    switch (cmdCode)
-    {
-    case SCPIStatusCmd::condition:
-        answer = readStatusReg(status->m_nCondition, sInput);
-        break;
-
-    case SCPIStatusCmd::ptransition:
-        answer = readwriteStatusReg(status->m_nPTransition, sInput);
-        break;
-
-    case SCPIStatusCmd::ntransition:
-        answer = readwriteStatusReg(status->m_nNTransition, sInput);
-        break;
-
-    case SCPIStatusCmd::event:
-        answer = readStatusReg(status->m_nEvent, sInput);
-        break;
-
-    case SCPIStatusCmd::enable:
-        answer = readwriteStatusReg(status->m_nEnable, sInput);
-        break;
-    }
-
-    client->receiveAnswer(answer);
+    status->executeCmd(client, cmdCode, sInput);
 }
 
 

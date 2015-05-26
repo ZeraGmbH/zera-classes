@@ -49,7 +49,8 @@ SOURCES += \
     src/interfaceinterface.cpp \
     src/scpistatusdelegate.cpp \
     src/statusinterface.cpp \
-    ieee4882interface.cpp
+    src/ieee4882interface.cpp \
+    src/signalconnectiondelegate.cpp
 
 HEADERS += \
     src/scpimodulefactory.h \
@@ -74,7 +75,8 @@ HEADERS += \
     src/interfaceinterface.h \
     src/scpistatusdelegate.h \
     src/statusinterface.h \
-    ieee4882interface.h
+    src/ieee4882interface.h \
+    src/signalconnectiondelegate.h
 
 OTHER_FILES += \
     src/scpimodule.xml \

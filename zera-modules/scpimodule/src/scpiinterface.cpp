@@ -48,6 +48,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
         return scpiDelegate->executeSCPI(client, cmd);
     }
 
+
     return false; // maybe that it is a common command
 }
 

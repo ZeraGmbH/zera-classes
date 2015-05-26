@@ -29,9 +29,6 @@ public:
 private:
     QList<cSCPIStatusDelegate*> m_scpiStatusDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
 
-    QString readwriteStatusReg(quint16& status, QString input);
-    QString readStatusReg(quint16& status, QString input);
-
 private slots:
     void executeCmd(cSCPIClient *client, int cmdCode, int statIndex, QString &sInput);
 

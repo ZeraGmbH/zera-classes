@@ -9,23 +9,26 @@
                 <nrclient>5</nrclient>
                 <port>6320</port>
             </ethernet>
-            <device>COM5003</device>
+            <device>
+                <name>COM5003</name>
+                <identification>Zera GmbH Königswinter, COM5003, R1.0.1</identification>
+            </device>
             <status>
                 <questionable>
                     <n>3</n>
                     <bit1>
                         <bit>9</bit>
-                        <module>rangemodule1</module>
+                        <module>RNG1</module>
                         <entity>PAR_OverloadON/OFF</entity>
                     </bit1>
                     <bit2>
                         <bit>10</bit>
-                        <module>rangemodule1</module>
+                        <module>RNG1</module>
                         <entity>INF_OverloadMax</entity>
                     </bit2>
                     <bit3>
                         <bit>11</bit>
-                        <module>rangemodule1</module>
+                        <module>RNG1</module>
                         <entity>INF_Adjusted</entity>
                     </bit3>
                 </questionable>
@@ -33,62 +36,57 @@
                     <n>1</n>
                     <bit1>
                         <bit>2</bit>
-                        <module>rangemodule1</module>
+                        <module>RNG1</module>
                         <entity>SIG_RANGING</entity>
                     </bit1>
                 </operation>
                 <operationmeasure>
-                    <n>10</n>
+                    <n>9</n>
                     <bit1>
                         <bit>0</bit>
-                        <module>rangemodule1</module>
+                        <module>RNG1</module>
                         <entity>SIG_MEASURING</entity>
                     </bit1>
                     <bit2>
                         <bit>1</bit>
-                        <module>rmsmodule1</module>
+                        <module>RMS1</module>
                         <entity>SIG_MEASURING</entity>
                     </bit2>
                     <bit3>
                         <bit>2</bit>
-                        <module>dftmodule1</module>
+                        <module>DFT1</module>
                         <entity>SIG_MEASURING</entity>
                     </bit3>
                     <bit4>
                         <bit>3</bit>
-                        <module>fftmodule1</module>
+                        <module>FFT1</module>
                         <entity>SIG_MEASURING</entity>
                     </bit4>
                     <bit5>
                         <bit>4</bit>
-                        <module>fftmodule1</module>
+                        <module>THD1</module>
                         <entity>SIG_MEASURING</entity>
                     </bit5>
                     <bit6>
                         <bit>5</bit>
-                        <module>thdnmodule1</module>
+                        <module>OSC1</module>
                         <entity>SIG_MEASURING</entity>
                     </bit6>
                     <bit7>
                         <bit>6</bit>
-                        <module>oscimodule1</module>
+                        <module>POW1</module>
                         <entity>SIG_MEASURING</entity>
                     </bit7>
                     <bit8>
                         <bit>7</bit>
-                        <module>power1module1</module>
+                        <module>POW2</module>
                         <entity>SIG_MEASURING</entity>
                     </bit8>
                     <bit9>
                         <bit>8</bit>
-                        <module>power1module2</module>
+                        <module>POW3</module>
                         <entity>SIG_MEASURING</entity>
                     </bit9>
-                    <bit10>
-                        <bit>9</bit>
-                        <module>power1module3</module>
-                        <entity>SIG_MEASURING</entity>
-                    </bit10>
                 </operationmeasure>
             </status>
         </connectivity>

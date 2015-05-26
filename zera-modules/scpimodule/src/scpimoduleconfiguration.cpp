@@ -38,7 +38,8 @@ void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:nrclient"] = setnrClient;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:port"] = setInterfacePort;
-    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device"] = setDeviceName;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:name"] = setDeviceName;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:identification"] = setDeviceIdentification;
 
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:questionable:n"] = setQuestionableStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operation:n"] = setOperationStatusBitCount;
@@ -66,6 +67,7 @@ cSCPIModuleConfigData *cSCPIModuleConfiguration::getConfigurationData()
 void cSCPIModuleConfiguration::configXMLInfo(QString key)
 {
     bool ok;
+    statusBitDescriptor sBDescriptor;
 
     if (m_ConfigXMLMap.contains(key))
     {
@@ -86,7 +88,9 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
         case setDeviceName:
             m_pSCPIModulConfigData->m_sDeviceName = m_pXMLReader->getValue(key);
             break;
-
+        case setDeviceIdentification:
+            m_pSCPIModulConfigData->m_sDeviceIdentification = m_pXMLReader->getValue(key);
+            break;
         case setQuestionableStatusBitCount:
             m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount; i++)
@@ -94,7 +98,7 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:questionable:bit%1:bit").arg(i+1)] = setQuestionableBit1Bit+i;
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:questionable:bit%1:module").arg(i+1)] = setQuestionableBit1Module+i;
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:questionable:bit%1:entity").arg(i+1)] = setQuestionableBit1Entity+i;
-                 // todo add something to some list
+                 m_pSCPIModulConfigData->m_QuestionableStatDescriptorList.append(sBDescriptor);  // we add empty descriptors to our list
             }
             break;
         case setOperationStatusBitCount:
@@ -104,7 +108,7 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operation:bit%1:bit").arg(i+1)] = setOperationBit1Bit+i;
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operation:bit%1:module").arg(i+1)] = setOperationBit1Module+i;
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operation:bit%1:entity").arg(i+1)] = setOperationBit1Entity+i;
-                 // todo add something to some list
+                 m_pSCPIModulConfigData->m_OperationStatDescriptorList.append(sBDescriptor);  // we add empty descriptors to our list
             }
             break;
         case setOperationMeasureStatusBitCount:
@@ -114,9 +118,88 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operationmeasure:bit%1:bit").arg(i+1)] = setOperationMeasureBit1Bit+i;
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operationmeasure:bit%1:module").arg(i+1)] = setOperationMeasureBit1Module+i;
                  m_ConfigXMLMap[QString("scpimodconfpar:configuration:connectivity:status:operationmeasure:bit%1:entity").arg(i+1)] = setOperationMeasureBit1Entity+i;
-                 // todo add something to some list
+                 m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.append(sBDescriptor);  // we add empty descriptors to our list
             }
             break;
+
+        default:
+            if ((cmd >=setQuestionableBit1Bit) && (cmd <= (setQuestionableBit1Bit+15)))
+            {
+                cmd -= setQuestionableBit1Bit;
+                sBDescriptor = m_pSCPIModulConfigData->m_QuestionableStatDescriptorList.at(cmd);
+                sBDescriptor.m_nBitNr = m_pXMLReader->getValue(key).toInt(&ok);
+                m_pSCPIModulConfigData->m_QuestionableStatDescriptorList.replace(cmd, sBDescriptor);
+            }
+            else
+                if ((cmd >=setQuestionableBit1Module) && (cmd <= (setQuestionableBit1Module+15)))
+                {
+                    cmd -= setQuestionableBit1Module;
+                    sBDescriptor = m_pSCPIModulConfigData->m_QuestionableStatDescriptorList.at(cmd);
+                    sBDescriptor.m_sModule = m_pXMLReader->getValue(key);
+                    m_pSCPIModulConfigData->m_QuestionableStatDescriptorList.replace(cmd, sBDescriptor);
+                }
+                else
+                    if ((cmd >=setQuestionableBit1Entity) && (cmd <= (setQuestionableBit1Entity+15)))
+                    {
+                        cmd -= setQuestionableBit1Entity;
+                        sBDescriptor = m_pSCPIModulConfigData->m_QuestionableStatDescriptorList.at(cmd);
+                        sBDescriptor.m_sEntity = m_pXMLReader->getValue(key);
+                        m_pSCPIModulConfigData->m_QuestionableStatDescriptorList.replace(cmd, sBDescriptor);
+                    }
+
+                    else
+
+                        if ((cmd >=setOperationBit1Bit) && (cmd <= (setOperationBit1Bit+15)))
+                        {
+                            cmd -= setOperationBit1Bit;
+                            sBDescriptor = m_pSCPIModulConfigData->m_OperationStatDescriptorList.at(cmd);
+                            sBDescriptor.m_nBitNr = m_pXMLReader->getValue(key).toInt(&ok);
+                            m_pSCPIModulConfigData->m_OperationStatDescriptorList.replace(cmd, sBDescriptor);
+                        }
+                        else
+                            if ((cmd >=setOperationBit1Module) && (cmd <= (setOperationBit1Module+15)))
+                            {
+                                cmd -= setOperationBit1Module;
+                                sBDescriptor = m_pSCPIModulConfigData->m_OperationStatDescriptorList.at(cmd);
+                                sBDescriptor.m_sModule = m_pXMLReader->getValue(key);
+                                m_pSCPIModulConfigData->m_OperationStatDescriptorList.replace(cmd, sBDescriptor);
+                            }
+                            else
+                                if ((cmd >=setOperationBit1Entity) && (cmd <= (setOperationBit1Entity+15)))
+                                {
+                                    cmd -= setOperationBit1Entity;
+                                    sBDescriptor = m_pSCPIModulConfigData->m_OperationStatDescriptorList.at(cmd);
+                                    sBDescriptor.m_sEntity = m_pXMLReader->getValue(key);
+                                    m_pSCPIModulConfigData->m_OperationStatDescriptorList.replace(cmd, sBDescriptor);
+                                }
+
+                                else
+
+                                    if ((cmd >=setOperationMeasureBit1Bit) && (cmd <= (setOperationMeasureBit1Bit+15)))
+                                    {
+                                        cmd -= setOperationMeasureBit1Bit;
+                                        sBDescriptor = m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.at(cmd);
+                                        sBDescriptor.m_nBitNr = m_pXMLReader->getValue(key).toInt(&ok);
+                                        m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.replace(cmd, sBDescriptor);
+                                    }
+                                    else
+                                        if ((cmd >=setOperationMeasureBit1Module) && (cmd <= (setOperationMeasureBit1Module+15)))
+                                        {
+                                            cmd -= setOperationMeasureBit1Module;
+                                            sBDescriptor = m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.at(cmd);
+                                            sBDescriptor.m_sModule = m_pXMLReader->getValue(key);
+                                            m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.replace(cmd, sBDescriptor);
+                                        }
+                                        else
+                                            if ((cmd >=setOperationMeasureBit1Entity) && (cmd <= (setOperationMeasureBit1Entity+15)))
+                                            {
+                                                cmd -= setOperationMeasureBit1Entity;
+                                                sBDescriptor = m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.at(cmd);
+                                                sBDescriptor.m_sEntity = m_pXMLReader->getValue(key);
+                                                m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.replace(cmd, sBDescriptor);
+                                            }
+
+
         }
         m_bConfigError |= !ok;
     }

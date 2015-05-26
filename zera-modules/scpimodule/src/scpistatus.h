@@ -16,14 +16,18 @@ namespace SCPIStatusCmd {
     enum scpiStatusCmd {condition, ptransition, ntransition, event, enable};
 }
 
-const quint16 OperationMeasureSummary = 0x10;
+const quint8 OperationMeasureSummary = 4; // !!!! bit position
+
+class cSCPIClient;
 
 class cSCPIStatus: public QObject
 {
     Q_OBJECT
 
 public:
-    cSCPIStatus(quint16 tothrow );
+    cSCPIStatus(quint8 tothrow );
+
+    void executeCmd(cSCPIClient* client, int cmdCode, QString &sInput);
 
     quint16 m_nCondition; // condition reg.
     quint16 m_nPTransition; // pos. transition reg.
@@ -32,14 +36,18 @@ public:
     quint16 m_nEnable; // enable register
 
 signals:
-    void event(quint16); // status object can send an event with 16bit mask
+    void event(quint8, quint8); // status object can send an event with 16bit mask
+    void eventError(int);
 
 public slots:
     void setCondition(quint16 condition); // we can set our condition reg.
+    void SetConditionBit(quint8 bitpos, quint8 val);
 
 private:
-    quint16 m_n2Throw;
+    quint8 m_n2Throw; // the bit position
 
+    void readwriteStatusReg(cSCPIClient* client, quint16 &status, QString input);
+    void readStatusReg(cSCPIClient* client, quint16 &status, QString input);
 
 };
 

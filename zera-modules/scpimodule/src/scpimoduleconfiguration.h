@@ -17,6 +17,7 @@ enum moduleconfigstate
     setnrClient,
     setInterfacePort,
     setDeviceName,
+    setDeviceIdentification,
 
     setQuestionableStatusBitCount,
     setOperationStatusBitCount,
@@ -27,12 +28,12 @@ enum moduleconfigstate
     setQuestionableBit1Entity = 48, // max. 16 bits
 
     setOperationBit1Bit = 64, // max. 16 bits
-    setOperationBit1Module = 96, // max. 16 bits
-    setOperationBit1Entity = 128, // max. 16 bits
+    setOperationBit1Module = 80, // max. 16 bits
+    setOperationBit1Entity = 96, // max. 16 bits
 
-    setOperationMeasureBit1Bit = 160, // max. 16 bits
-    setOperationMeasureBit1Module = 160, // max. 16 bits
-    setOperationMeasureBit1Entity = 192, // max. 16 bits
+    setOperationMeasureBit1Bit = 112, // max. 16 bits
+    setOperationMeasureBit1Module = 128, // max. 16 bits
+    setOperationMeasureBit1Entity = 144, // max. 16 bits
 };
 
 

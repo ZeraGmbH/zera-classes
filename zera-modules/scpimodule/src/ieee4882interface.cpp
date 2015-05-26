@@ -1,6 +1,8 @@
 #include <scpi.h>
 
 #include "ieee4882interface.h"
+#include "ieee488-2.h"
+#include "scpiclient.h"
 #include "scpiinterfacedelegate.h"
 #include "scpiinterface.h"
 
@@ -31,12 +33,12 @@ bool cIEEE4882Interface::setupInterface()
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
 
-    delegate = new cSCPIInterfaceDelegate(QString(""), QString("*ESE"), SCPI::isQuery | SCPI::isCmd, eventstatusenable);
+    delegate = new cSCPIInterfaceDelegate(QString(""), QString("*ESE"), SCPI::isQuery | SCPI::isCmdwP, eventstatusenable);
     m_IEEE4882DelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
 
-    delegate = new cSCPIInterfaceDelegate(QString(""), QString("*SRE"), SCPI::isQuery | SCPI::isCmd, servicerequestenable);
+    delegate = new cSCPIInterfaceDelegate(QString(""), QString("*SRE"), SCPI::isQuery | SCPI::isCmdwP, servicerequestenable);
     m_IEEE4882DelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
@@ -71,7 +73,20 @@ bool cIEEE4882Interface::setupInterface()
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
 
+    delegate = new cSCPIInterfaceDelegate(QString("SYSTEM"), QString("ERROR"), SCPI::isNode | SCPI::isQuery, read1error);
+    m_IEEE4882DelegateList.append(delegate);
+    m_pSCPIInterface->addSCPICommand(delegate);
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
 
+    delegate = new cSCPIInterfaceDelegate(QString("SYSTEM:ERROR"), QString("COUNT"), SCPI::isQuery, readerrorcount);
+    m_IEEE4882DelegateList.append(delegate);
+    m_pSCPIInterface->addSCPICommand(delegate);
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
+
+    delegate = new cSCPIInterfaceDelegate(QString("SYSTEM:ERROR"), QString("ALL"), SCPI::isQuery, readallerrors);
+    m_IEEE4882DelegateList.append(delegate);
+    m_pSCPIInterface->addSCPICommand(delegate);
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
 
     return true;
 }
@@ -79,31 +94,9 @@ bool cIEEE4882Interface::setupInterface()
 
 void cIEEE4882Interface::executeCmd(cSCPIClient *client, int cmdCode, QString &sInput)
 {
-    cSCPICommand cmd = sInput;
-
-    switch (cmdCode)
-    {
-    case operationComplete:
-        break;
-    case eventstatusenable:
-        break;
-    case servicerequestenable:
-        break;
-    case clearstatus:
-        break;
-    case reset:
-        break;
-    case identification:
-        break;
-    case eventstatusregister:
-        break;
-    case statusbyte:
-        break;
-    case selftest:
-        break;
-    }
+    cIEEE4882* pIEEE4882 = client->getIEEE4882();
+    pIEEE4882->executeCmd(client, cmdCode, sInput);
 }
-
 
 
 }

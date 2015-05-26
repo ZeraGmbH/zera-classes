@@ -32,10 +32,11 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, VeinPeer *peer, cSCPIModuleConfigD
     : m_pModule(module), m_pPeer(peer), m_ConfigData(configData)
 {
     m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi interface with cmd interpreter
+
     m_pModuleInterface = new cModuleInterface(m_pPeer, m_pSCPIInterface); // the modules interface
     m_pInterfaceInterface = new cInterfaceInterface(m_pPeer, m_pSCPIInterface); // the interfaces interface
-    m_pStatusInterface = new cStatusInterface(m_pPeer, m_pSCPIInterface);
-    m_pIEEE488Interface = new cIEEE4882Interface(m_pPeer, m_pSCPIInterface);
+    m_pStatusInterface = new cStatusInterface(m_pPeer, m_pSCPIInterface); // the scpi status interface
+    m_pIEEE488Interface = new cIEEE4882Interface(m_pPeer, m_pSCPIInterface); // the ieee448-2 interface
 
     m_pTcpServer = new QTcpServer();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
@@ -87,7 +88,7 @@ void cSCPIServer::exportInterface(QJsonArray &)
 void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-    cSCPIClient* client = new cSCPIClient(socket, m_pSCPIInterface); // each client our interface;
+    cSCPIClient* client = new cSCPIClient(socket, m_pPeer, m_ConfigData, m_pSCPIInterface); // each client our interface;
     connect(client, SIGNAL(destroyed(QObject*)), this, SLOT(deleteSCPIClient(QObject*)));
     m_SCPIClientList.append(client);
     if (m_SCPIClientList.count() == 1)

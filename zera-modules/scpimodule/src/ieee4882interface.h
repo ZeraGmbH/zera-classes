@@ -11,19 +11,6 @@ class VeinPeer;
 namespace SCPIMODULE
 {
 
-enum scpicommoncommands
-{
-    operationComplete,
-    eventstatusenable,
-    servicerequestenable,
-    clearstatus,
-    reset,
-    identification,
-    eventstatusregister,
-    statusbyte,
-    selftest
-};
-
 class cSCPIInterface;
 class cSCPIInterfaceDelegate;
 class cSCPIClient;
