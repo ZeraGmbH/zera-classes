@@ -13,8 +13,6 @@ public:
 
     void setName(QString name);
     void setDescription(QString des);
-    void setValidationScript(QString script);
-    void setValidationParamter(QString par);
     void setSCPIModel(QString model);
     void setSCPICmdnode(QString node);
     void setSCPIType(QString type);
@@ -25,8 +23,6 @@ public:
 private:
     QString m_sEntityName;
     QString m_sDescription;
-    QString m_sValScriptName;
-    QString m_sValParameter;
     QString m_sSCPIModel;
     QString m_sSCPICmdnode;
     QString m_sSCPIType;

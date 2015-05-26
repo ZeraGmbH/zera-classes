@@ -161,8 +161,6 @@ void cRangeModuleMeasProgram::exportInterface(QJsonArray &jsArr)
     cInterfaceEntity ifaceEntity;
 
     ifaceEntity.setDescription(QString("This entity holds the peak value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setValidationScript(QString("")); // no validation for queries
-    ifaceEntity.setValidationParamter(QString(""));
     ifaceEntity.setSCPIModel(QString("MEASURE"));
     ifaceEntity.setSCPIType(QString("2"));
 

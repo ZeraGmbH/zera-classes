@@ -91,8 +91,6 @@ void cPllObsermatic::exportInterface(QJsonArray &jsArr)
 
     ifaceEntity.setName(m_pPllChannelEntity->getName());
     ifaceEntity.setDescription(QString("This entity holds the pll reference channel"));
-    ifaceEntity.setValidationScript(QString("")); // later ....
-    ifaceEntity.setValidationParamter(QString(m_pPllChannelListEntity->getName()));
     ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
     ifaceEntity.setSCPICmdnode(QString("PLLREFERENCE"));
     ifaceEntity.setSCPIType(QString("10"));
@@ -102,8 +100,6 @@ void cPllObsermatic::exportInterface(QJsonArray &jsArr)
 
     ifaceEntity.setName(m_pParPllAutomaticOnOff->getName());
     ifaceEntity.setDescription(QString("This entity selects pll automatic"));
-    ifaceEntity.setValidationScript(QString("")); // later ....
-    ifaceEntity.setValidationParamter(QString(""));
     ifaceEntity.setSCPICmdnode(QString("PLLAUTO"));
 
     ifaceEntity.appendInterfaceEntity(jsArr);

@@ -204,8 +204,6 @@ void cOsciModuleMeasProgram::exportInterface(QJsonArray &jsArr)
     cInterfaceEntity ifaceEntity;
 
     ifaceEntity.setDescription(QString("This entity holds the dft value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setValidationScript(QString("")); // no validation for queries
-    ifaceEntity.setValidationParamter(QString(""));
     ifaceEntity.setSCPIModel(QString("MEASURE"));
 
     for (int i = 0; i < m_EntityActValueList.count(); i++)
@@ -230,8 +228,6 @@ void cOsciModuleMeasProgram::exportInterface(QJsonArray &jsArr)
 
     ifaceEntity.setName(m_pRefChannelParameter->getName());
     ifaceEntity.setDescription(QString("This entity holds the modules reference channel"));
-    ifaceEntity.setValidationScript(QString("")); // later ....
-    ifaceEntity.setValidationParamter(QString(""));
     ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
     ifaceEntity.setSCPICmdnode(QString("REFCHANNEL"));
     ifaceEntity.setSCPIType(QString("10"));

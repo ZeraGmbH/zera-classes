@@ -231,8 +231,6 @@ void cThdnModuleMeasProgram::exportInterface(QJsonArray &jsArr)
     cInterfaceEntity ifaceEntity;
 
     ifaceEntity.setDescription(QString("This entity holds the thdn value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setValidationScript(QString("")); // no validation for queries
-    ifaceEntity.setValidationParamter(QString(""));
     ifaceEntity.setSCPIModel(QString("MEASURE"));
     ifaceEntity.setSCPIType(QString("2"));
 
@@ -257,8 +255,6 @@ void cThdnModuleMeasProgram::exportInterface(QJsonArray &jsArr)
 
     ifaceEntity.setName(m_pIntegrationTimeParameter->getName());
     ifaceEntity.setDescription(QString("This entity holds the modules integrationtime"));
-    ifaceEntity.setValidationScript(QString("")); // later ....
-    ifaceEntity.setValidationParamter(QString(""));
     ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
     ifaceEntity.setSCPICmdnode(QString("TINTEGRATION"));
     ifaceEntity.setSCPIType(QString("10"));
