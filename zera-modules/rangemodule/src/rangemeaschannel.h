@@ -58,7 +58,7 @@ public:
     ~cRangeMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
+    virtual void exportInterface(QJsonArray &jsArr);
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 readGainCorrection(double amplitude); // dito

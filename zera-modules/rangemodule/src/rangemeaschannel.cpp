@@ -8,6 +8,7 @@
 
 #include "debug.h"
 #include "errormessages.h"
+#include "interfaceentity.h"
 #include "rangemeaschannel.h"
 
 namespace RANGEMODULE
@@ -375,9 +376,20 @@ void cRangeMeasChannel::deleteInterface()
 }
 
 
-void cRangeMeasChannel::exportInterface(QJsonArray &)
+void cRangeMeasChannel::exportInterface(QJsonArray &jsArr)
 {
     // we export setting the channels ranges from rangemodule observation
+
+    cInterfaceEntity ifaceEntity;
+
+    ifaceEntity.setDescription(QString("This entity holds the channels ranges"));
+    ifaceEntity.setSCPIModel(QString("SENSE"));
+    ifaceEntity.setSCPIType(QString("2"));
+    ifaceEntity.setUnit(QString(""));
+    ifaceEntity.setName(QString("INF_Channel%1RangeList").arg(m_nChannelNr));
+    ifaceEntity.setAddParents(QString("%1:RANGE").arg(m_sAlias));
+    ifaceEntity.setSCPICmdnode(QString("CATALOG"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
 
