@@ -183,15 +183,17 @@ void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
     ifaceEntity.setSCPIModel(QString("SENSE"));
     ifaceEntity.setSCPIType(QString("10"));
     ifaceEntity.setUnit(QString(""));
+    ifaceEntity.setSCPICmdnode(QString("RANGE"));
 
     for (int i = 0; i < m_ChannelNameList.count(); i++)
     {
         ifaceEntity.setName(m_RangeEntityList.at(i)->getName());
-        ifaceEntity.setSCPICmdnode(m_ChannelAliasList.at(i));
+        ifaceEntity.setAddParents(m_ChannelAliasList.at(i));
 
         ifaceEntity.appendInterfaceEntity(jsArr);
     }
 
+    ifaceEntity.setAddParents("");
     ifaceEntity.setSCPIModel(QString("CONFIGURATION")); // preset
 
     if (m_ConfPar.m_bGrouping) // only if configured
