@@ -48,6 +48,7 @@ HEADERS += \
 
 OTHER_FILES += \
     src/rmsmoduleREF.xml \
+    src/rmsmoduleCED.xml \
     src/rmsmodule.xml \
     src/rmsmodule.xsd
 
