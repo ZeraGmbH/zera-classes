@@ -217,12 +217,18 @@ void cPllObsermatic::newPllAuto(QVariant pllauto)
 
     if ( (m_bPllAutomatic = (pllauto.toInt(&ok) == 1)) )
     {
-        //qDebug() << "PLL Automatic on";
+#ifdef DEBUG
+        qDebug() << "PLL Automatic on";
+#endif
+        m_ConfPar.m_ObsermaticConfPar.m_bpllAuto = true;
         pllAutomatic(); // call once if switched to automatic
     }
     else
     {
-        //qDebug() << "PLL Automatic off";
+        m_ConfPar.m_ObsermaticConfPar.m_bpllAuto = false;
+#ifdef DEBUG
+        qDebug() << "PLL Automatic off";
+#endif
     }
 }
 
