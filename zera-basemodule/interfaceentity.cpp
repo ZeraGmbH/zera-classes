@@ -4,8 +4,8 @@
 #include "interfaceentity.h"
 
 
-cInterfaceEntity::cInterfaceEntity(QString name, QString des, QString valscpript, QString valpar, QString model, QString cmdnode, QString type, QString unit)
-    :m_sEntityName(name), m_sDescription(des), m_sValScriptName(valscpript), m_sValParameter(valpar), m_sSCPIModel(model), m_sSCPICmdnode(cmdnode), m_sSCPIType(type), m_sUnit(unit)
+cInterfaceEntity::cInterfaceEntity(QString name, QString des, QString model, QString addparents, QString cmdnode, QString type, QString unit)
+    :m_sEntityName(name), m_sDescription(des), m_sSCPIModel(model), m_sAddParents(addparents), m_sSCPICmdnode(cmdnode), m_sSCPIType(type), m_sUnit(unit)
 {
 }
 
@@ -22,21 +22,15 @@ void cInterfaceEntity::setDescription(QString des)
 }
 
 
-void cInterfaceEntity::setValidationScript(QString script)
-{
-    m_sValScriptName = script;
-}
-
-
-void cInterfaceEntity::setValidationParamter(QString par)
-{
-    m_sValParameter = par;
-}
-
-
 void cInterfaceEntity::setSCPIModel(QString model)
 {
     m_sSCPIModel = model;
+}
+
+
+void cInterfaceEntity::setAddParents(QString parents)
+{
+    m_sAddParents = parents;
 }
 
 
@@ -65,14 +59,13 @@ void cInterfaceEntity::appendInterfaceEntity(QJsonArray &jsArr)
     jsonObj.insert("DES", m_sDescription);
 
     QJsonArray jsonValArr;
-    jsonValArr.append(m_sValScriptName); // we don't need validation for queries
-    jsonValArr.append(m_sValParameter);
 
     jsonObj.insert("VAL", jsonValArr);
 
     QJsonArray jsonSCPIArr;
 
     jsonSCPIArr.append(m_sSCPIModel);
+    jsonSCPIArr.append(m_sAddParents);
     jsonSCPIArr.append(m_sSCPICmdnode);
 
     jsonSCPIArr.append(QString(m_sSCPIType));

@@ -9,11 +9,12 @@ class cInterfaceEntity
 {
 public:
     cInterfaceEntity(){}
-    cInterfaceEntity( QString name, QString des, QString valscpript, QString valpar, QString model, QString cmdnode, QString type, QString unit);
+    cInterfaceEntity( QString name, QString des, QString model,  QString addparents, QString cmdnode, QString type, QString unit);
 
     void setName(QString name);
     void setDescription(QString des);
     void setSCPIModel(QString model);
+    void setAddParents(QString parents);
     void setSCPICmdnode(QString node);
     void setSCPIType(QString type);
     void setUnit(QString unit);
@@ -24,6 +25,7 @@ private:
     QString m_sEntityName;
     QString m_sDescription;
     QString m_sSCPIModel;
+    QString m_sAddParents;
     QString m_sSCPICmdnode;
     QString m_sSCPIType;
     QString m_sUnit;
