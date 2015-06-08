@@ -70,7 +70,7 @@ void cPllObsermatic::generateInterface()
     m_pPllChannelListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pPllChannelListEntity->setValue(s = "Unknown", m_pPeer);
 
-    m_pParPllAutomaticOnOff = new cModuleParameter(m_pPeer, "PAR_PllAutomaticON/OFF", (int)0, !m_ConfPar.m_ObsermaticConfPar.m_bpllAuto);
+    m_pParPllAutomaticOnOff = new cModuleParameter(m_pPeer, "PAR_PllAutomaticON/OFF", m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive, !m_ConfPar.m_ObsermaticConfPar.m_bpllAuto);
     m_pPllSignal = new cModuleSignal(m_pPeer, "SIG_PLL", QVariant(0));
 }
 
