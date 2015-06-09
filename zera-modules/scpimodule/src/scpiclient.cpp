@@ -96,17 +96,6 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
 void cSCPIClient::cmdInput()
 {
     QString m_sInput;
-/*
-    m_sInput = "";
-    while ( m_pSocket->canReadLine() )
-        m_sInput += m_pSocket->readLine();
-
-    m_sInput.remove('\r'); // we remove cr lf
-    m_sInput.remove('\n');
-
-    if (!m_pSCPIInterface->executeCmd(this, m_sInput))
-        emit m_pIEEE4882->AddEventError(CommandError);
-*/
 
     while ( m_pSocket->canReadLine() )
     {
