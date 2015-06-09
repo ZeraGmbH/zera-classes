@@ -185,7 +185,7 @@ void cRangeModuleMeasProgram::exportInterface(QJsonArray &jsArr)
     ifaceEntity.setDescription(QString("This entity holds the frequency value of CmdNode"));
     ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
     ifaceEntity.setSCPICmdnode("F"); // frequency stays frequency so fix here
-    ifaceEntity.setUnit("Hz");
+    ifaceEntity.setUnit("[Hz]");
     ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
