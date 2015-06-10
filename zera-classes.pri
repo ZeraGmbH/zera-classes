@@ -1,3 +1,9 @@
+#enable c++11
+QMAKE_CXXFLAGS += -std=c++0x
+#enable usefull warnings
+QMAKE_CXXFLAGS += -Woverloaded-virtual -Wshadow -Wold-style-cast -Wall
+#for newer gcc versions: -Wsuggest-override
+
 contains(DEFINES, OE_BUILD) {
   message(Openembedded build)
 }
