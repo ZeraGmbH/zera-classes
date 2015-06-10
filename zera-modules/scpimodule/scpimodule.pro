@@ -18,6 +18,9 @@ LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
+LIBS += -lvein-event
+
+INCLUDEPATH += /work/qt_projects/vein-framework/processing/vein-event/
 
 #dependencies
 VEIN_DEP_EVENT = 1
