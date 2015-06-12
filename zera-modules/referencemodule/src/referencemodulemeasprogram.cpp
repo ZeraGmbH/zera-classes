@@ -167,7 +167,7 @@ void cReferenceModuleMeasProgram::setDspCmdList()
     {
         cReferenceMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
         m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
-        m_pDSPInterFace->addCycListItem( s = QString("DFT(0,MEASSIGNAL,VALXDFT+%2)").arg(2*i));
+        m_pDSPInterFace->addCycListItem( s = QString("DFT(0,MEASSIGNAL,VALXDFT+%1)").arg(2*i));
     }
 
     // and filter them
