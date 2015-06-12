@@ -51,6 +51,7 @@ enum modemoduleinitCmds
     writephasecorr2,
     writeoffsetcorr,
     writeoffsetcorr2,
+    subdcdsp,
     freeresource
 };
 
@@ -107,6 +108,7 @@ private:
     QState m_writeGainCorrState, m_writeGainCorr2State;
     QState m_writePhaseCorrState,m_writePhaseCorr2State;
     QState m_writeOffsetCorrState, m_writeOffsetCorr2State;
+    QState m_setSubDCState;
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating
@@ -129,6 +131,7 @@ private slots:
     void writePhaseCorr2();
     void writeOffsetCorr();
     void writeOffsetCorr2();
+    void setSubDC();
     void activationDone();
 
     void freeResource();
