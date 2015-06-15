@@ -24,7 +24,14 @@ SOURCES += \
     commandvalidator.cpp \
     groupvalidator.cpp
 
-HEADERS += \
-    zera-validator_global.h \
+HEADERS +=\
+        zera-validator_global.h \
     commandvalidator.h \
     groupvalidator.h
+
+
+unix {
+    target.path = /usr/lib
+    INSTALLS += target
+}
+
