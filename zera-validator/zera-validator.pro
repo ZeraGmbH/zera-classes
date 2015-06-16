@@ -11,7 +11,11 @@ VEIN_DEP_EVENT = 1
 VEIN_DEP_COMP = 1
 VEIN_DEP_HASH = 1
 
-VEIN_BASEDIR=/work/qt_projects/vein-framework
+#do not copy this file into the $$VEIN_BASEDIR/libs directory
+VF_NO_DEPLOY = 1
+
+include(../zera-classes.pri)
+
 exists($$VEIN_BASEDIR/project-paths.pri) {
   include($$VEIN_BASEDIR/project-paths.pri)
 }
@@ -31,8 +35,3 @@ HEADERS +=\
         zera-validator_global.h \
     commandvalidator.h \
     groupvalidator.h
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}
