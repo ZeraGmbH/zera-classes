@@ -11,6 +11,12 @@ VEIN_DEP_EVENT = 1
 VEIN_DEP_COMP = 1
 VEIN_DEP_HASH = 1
 
+<<<<<<< HEAD
+=======
+#do not copy the target into the $$VEIN_BASEDIR/libs directory
+VF_NO_DEPLOY = 1
+
+>>>>>>> Fix hardcoded path in zera-classes.pri
 include(../zera-classes.pri)
 
 QT       -= gui
@@ -24,8 +30,8 @@ SOURCES += \
     commandvalidator.cpp \
     groupvalidator.cpp
 
-HEADERS +=\
-        zera-validator_global.h \
+HEADERS += \
+    zera-validator_global.h \
     commandvalidator.h \
     groupvalidator.h
 
