@@ -55,7 +55,7 @@ namespace Zera
               m_generalValidators.at(i)->processCommandEvent(cEvent);
             }
 
-            if(m_entityValidators.contains(cEvent->eventData()->entityId()))
+            if(m_entityValidators.contains(cEvent->eventData()->entityId()) && cEvent->isAccepted() == false)
             {
               m_entityValidators.value(cEvent->eventData()->entityId())->processCommandEvent(cEvent);
             }
