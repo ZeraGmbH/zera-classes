@@ -11,7 +11,7 @@ VEIN_DEP_EVENT = 1
 VEIN_DEP_COMP = 1
 VEIN_DEP_HASH = 1
 
-#do not copy this file into the $$VEIN_BASEDIR/libs directory
+#do not copy the target into the $$VEIN_BASEDIR/libs directory
 VF_NO_DEPLOY = 1
 
 include(../zera-classes.pri)
@@ -31,7 +31,7 @@ SOURCES += \
     commandvalidator.cpp \
     groupvalidator.cpp
 
-HEADERS +=\
-        zera-validator_global.h \
+HEADERS += \
+    zera-validator_global.h \
     commandvalidator.h \
     groupvalidator.h

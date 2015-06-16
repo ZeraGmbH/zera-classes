@@ -73,8 +73,8 @@ contains( ZDEPENDS, protonet) {
 }
 #Adds dependencies to libvein
 contains( ZDEPENDS, libvein) {
-  INCLUDEPATH += /work/qt_projects/vein-framework/api/libvein-qt/
-  LIBS += -L/work/qt_projects/vein-framework/libs
+  INCLUDEPATH += $$VEIN_BASEDIR/api/libvein-qt/
+  LIBS += -L$$VEIN_BASEDIR/libs
   LIBS += -lvein-qt
 }
 #Adds dependencies to the resourcemanager protobuf
