@@ -52,7 +52,12 @@ HEADERS += \
     secinputinfo.h \
     basedspmeasprogram.h \
     ecalcinfo.h \
-    interfaceentity.h
+    interfaceentity.h \
+    paramvalidator.h \
+    boolvalidator.h \
+    intvalidator.h \
+    stringvalidator.h \
+    doublevalidator.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -68,6 +73,10 @@ SOURCES += \
     movingwindowfilter.cpp \
     basesamplechannel.cpp \
     basedspmeasprogram.cpp \
-    interfaceentity.cpp
+    interfaceentity.cpp \
+    boolvalidator.cpp \
+    intvalidator.cpp \
+    stringvalidator.cpp \
+    doublevalidator.cpp
 
 include(../zera-classes.pri)
