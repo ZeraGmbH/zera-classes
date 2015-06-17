@@ -5,7 +5,7 @@
 #-------------------------------------------------
 TEMPLATE = lib
 
-ZDEPENDS += resman libvein
+ZDEPENDS += resman libvein zera-validator
 
 QT       -= gui
 QT       += network
@@ -20,11 +20,14 @@ include(../zera-classes.pri)
 
 LIBS +=  -lzera-proxy
 LIBS +=  -lMeasurementModuleInterface
+LIBS +=  -lzera-validator
 
 INCLUDEPATH += ../zera-modules/interface \
     ../zera-xml-config/src \
     ../zera-misc \
-    ../zera-comm/zera-proxy
+    ../zera-comm/zera-proxy \
+    ../zera-validator
+
 
 CONFIG	+= debug
 QMAKE_CXXFLAGS += -O0
@@ -64,7 +67,11 @@ HEADERS += \
     intvalidator.h \
     stringvalidator.h \
     doublevalidator.h \
+<<<<<<< HEAD
     basemeasworkprogram.h
+=======
+    modulevalidator.h
+>>>>>>> zera-basemodule: added modulevalidator
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -85,6 +92,10 @@ SOURCES += \
     intvalidator.cpp \
     stringvalidator.cpp \
     doublevalidator.cpp \
+<<<<<<< HEAD
     basemeasworkprogram.cpp
+=======
+    modulevalidator.cpp
+>>>>>>> zera-basemodule: added modulevalidator
 
 include(../zera-classes.pri)
