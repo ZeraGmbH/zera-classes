@@ -1125,6 +1125,19 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 break;
             }
 
+            case setfrequencyscales:
+                if (reply == ack) // we ignore ack
+                    emit activationContinue();
+                else
+                {
+                    emit errMsg((tr(writedspmemoryErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspmemoryErrMsg;
+#endif
+                    emit executionError();
+                }
+                break;
+
             case claimpgrmem:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
@@ -2207,7 +2220,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
     datalist += ";";
 
     m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = setfrequencyscales;
 }
 
 

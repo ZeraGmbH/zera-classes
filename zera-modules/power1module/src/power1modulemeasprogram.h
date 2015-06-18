@@ -76,6 +76,7 @@ enum power1moduleCmds
     unregisterrangenotifiers,
 
     readurvalue,
+    setfrequencyscales,
     setchannelrangenotifier
 };
 
