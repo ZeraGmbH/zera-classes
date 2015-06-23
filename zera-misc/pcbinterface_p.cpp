@@ -284,7 +284,7 @@ quint32 cPCBInterfacePrivate::getConstantSource(QString chnName)
     QString cmd;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SOUR:%1:CONST?").arg(chnName));
+    msgnr = sendCommand(cmd = QString("SOUR:%1:CONS?").arg(chnName));
     m_MsgNrCmdList[msgnr] = getconstantsource;
     return msgnr;
 }
@@ -295,7 +295,7 @@ quint32 cPCBInterfacePrivate::setConstantSource(QString chnName, double constant
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SOUR:%1:CONST").arg(chnName), par = QString("%1;").arg(constant));
+    msgnr = sendCommand(cmd = QString("SOUR:%1:CONS").arg(chnName), par = QString("%1;").arg(constant));
     m_MsgNrCmdList[msgnr] = setconstantsource;
     return msgnr;
 }
