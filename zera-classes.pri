@@ -73,9 +73,8 @@ contains( ZDEPENDS, protonet) {
 }
 #Adds dependencies to libvein
 contains( ZDEPENDS, libvein) {
-  INCLUDEPATH += $$VEIN_BASEDIR/api/libvein-qt/
-  LIBS += -L$$VEIN_BASEDIR/libs
-  LIBS += -lvein-qt
+# inherit dependencies from vein-framework
+  VEIN_DEP_CCAPI = 1
 }
 #Adds dependencies to the resourcemanager protobuf
 contains( ZDEPENDS, resman) {
@@ -90,3 +89,8 @@ contains( ZDEPENDS, SCPI) {
   LIBS += $$SCPI_LIBDIR
   LIBS +=  -lSCPI
 }
+
+# do not copy any files to the VEIN_BASEDIR lib/bin directory
+VF_NO_DEPLOY = 1
+
+include($$VEIN_BASEDIR/project-paths.pri)
