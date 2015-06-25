@@ -12,6 +12,12 @@ QT       += network
 
 TARGET = zerabasemodule
 
+#dependencies
+VEIN_DEP_EVENT = 1
+VEIN_DEP_COMP = 1
+
+include(../zera-classes.pri)
+
 LIBS +=  -lzera-proxy
 LIBS +=  -lMeasurementModuleInterface
 
