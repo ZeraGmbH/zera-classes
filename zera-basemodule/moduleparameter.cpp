@@ -1,10 +1,12 @@
 #include "moduleparameter.h"
+#include "paramvalidator.h"
 #include "veinpeer.h"
 #include "veinentity.h"
+#include <vcmp_componentdata.h>
 
 
-cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initval, bool readonly)
-    :m_pPeer(peer), m_sName(name)
+cModuleParameter::cModuleParameter(VeinPeer *peer, QString name, QVariant initval, bool readonly, cParamValidator *pValidator)
+    :m_pPeer(peer), m_sName(name), m_pParamValidator(pValidator)
 {
     m_pParEntity = m_pPeer->dataAdd(name);
     m_pParEntity->setValue(initval, peer);
@@ -37,6 +39,28 @@ QVariant cModuleParameter::getData()
 QString cModuleParameter::getName()
 {
     return m_sName;
+}
+
+
+bool cModuleParameter::paramTransaction(VeinComponent::ComponentData *cdata)
+{
+    bool retval = false;
+    if (cdata->isValid() && (cdata->componentName() == m_sName))
+    {
+        if (m_pParamValidator)
+        {
+            if (m_pParamValidator->isValidParam(cdata->newValue()) )
+            {
+                // newValue is a valid parameter...so we emit a signal for setting
+            }
+
+        }
+        else
+
+    }
+
+    return retval;
+
 }
 
 
