@@ -17,7 +17,6 @@ public:
     VeinPeer* peer;
     VeinEntity* entity;
     QString scpiModel;
-    QString addParents;
     QString cmdNode;
     QString unit;
     QString type;
