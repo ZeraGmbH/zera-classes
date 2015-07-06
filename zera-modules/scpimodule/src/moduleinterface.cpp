@@ -78,10 +78,9 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo.entity = peer->getEntityByName(s);
                     //scpiCmdInfo.entity = peer->getEntityByName(jsonEntityObj["Name"].toString());
                     scpiCmdInfo.scpiModel = jsonEntityObj["SCPI"].toArray()[0].toString();
-                    scpiCmdInfo.addParents = jsonEntityObj["SCPI"].toArray()[1].toString();
-                    scpiCmdInfo.cmdNode = jsonEntityObj["SCPI"].toArray()[2].toString();
-                    scpiCmdInfo.type = jsonEntityObj["SCPI"].toArray()[3].toString();
-                    scpiCmdInfo.unit = jsonEntityObj["SCPI"].toArray()[4].toString();
+                    scpiCmdInfo.cmdNode = jsonEntityObj["SCPI"].toArray()[1].toString();
+                    scpiCmdInfo.type = jsonEntityObj["SCPI"].toArray()[2].toString();
+                    scpiCmdInfo.unit = jsonEntityObj["SCPI"].toArray()[3].toString();
 
                     if (scpiCmdInfo.type != "0") // we have to add this entity to our interface
                         addSCPICommand(scpiCmdInfo);
@@ -102,6 +101,7 @@ bool cModuleInterface::setupInterface()
 void cModuleInterface::addSCPICommand(cSCPICmdInfo &scpiCmdInfo)
 {
     if (scpiCmdInfo.scpiModel == "MEASURE")
+
     {
         // in case of measure model we have to add several commands for each value
 
@@ -130,12 +130,22 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo &scpiCmdInfo)
     {
         bool ok;
         cSCPIParameterDelegate* delegate;
+
+        QString cmdComplete;
+        cmdComplete = QString("%1:%2:3").arg(scpiCmdInfo.scpiModel).arg(scpiCmdInfo.scpiModuleName).arg(scpiCmdInfo.cmdNode);
+        QStringList nodeNames = cmdComplete.split(':');
+        QString cmdNode = nodeNames.takeLast();
+        QString cmdParent = nodeNames.join(':');
+
+        /*
         QString cmdParent;
         if (scpiCmdInfo.addParents == "")
             cmdParent = QString("%1:%2").arg(scpiCmdInfo.scpiModel).arg(scpiCmdInfo.scpiModuleName);
         else
             cmdParent = QString("%1:%2:%3").arg(scpiCmdInfo.scpiModel).arg(scpiCmdInfo.scpiModuleName).arg(scpiCmdInfo.addParents);
-        delegate = new cSCPIParameterDelegate(cmdParent, scpiCmdInfo.cmdNode, scpiCmdInfo.type.toInt(&ok), scpiCmdInfo.peer, scpiCmdInfo.entity);
+        */
+
+        delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo.type.toInt(&ok), scpiCmdInfo.peer, scpiCmdInfo.entity);
         m_scpiParameterDelegateList.append(delegate);
         m_pSCPIInterface->addSCPICommand(delegate);
     }
