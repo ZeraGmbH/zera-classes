@@ -387,8 +387,7 @@ void cRangeMeasChannel::exportInterface(QJsonArray &jsArr)
     ifaceEntity.setSCPIType(QString("2"));
     ifaceEntity.setUnit(QString(""));
     ifaceEntity.setName(QString("INF_Channel%1RangeList").arg(m_nChannelNr));
-    ifaceEntity.setAddParents(QString("%1:RANGE").arg(m_sAlias));
-    ifaceEntity.setSCPICmdnode(QString("CATALOG"));
+    ifaceEntity.setSCPICmdnode(QString("%1:RANGE:CATALOG").arg(m_sAlias));
     ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
