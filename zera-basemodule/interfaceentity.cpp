@@ -4,8 +4,8 @@
 #include "interfaceentity.h"
 
 
-cInterfaceEntity::cInterfaceEntity(QString name, QString des, QString model, QString addparents, QString cmdnode, QString type, QString unit)
-    :m_sEntityName(name), m_sDescription(des), m_sSCPIModel(model), m_sAddParents(addparents), m_sSCPICmdnode(cmdnode), m_sSCPIType(type), m_sUnit(unit)
+cInterfaceEntity::cInterfaceEntity(QString name, QString des, QString model, QString cmdnode, QString type, QString unit)
+    :m_sEntityName(name), m_sDescription(des), m_sSCPIModel(model), m_sSCPICmdnode(cmdnode), m_sSCPIType(type), m_sUnit(unit)
 {
 }
 
@@ -25,12 +25,6 @@ void cInterfaceEntity::setDescription(QString des)
 void cInterfaceEntity::setSCPIModel(QString model)
 {
     m_sSCPIModel = model;
-}
-
-
-void cInterfaceEntity::setAddParents(QString parents)
-{
-    m_sAddParents = parents;
 }
 
 
@@ -65,7 +59,6 @@ void cInterfaceEntity::appendInterfaceEntity(QJsonArray &jsArr)
     QJsonArray jsonSCPIArr;
 
     jsonSCPIArr.append(m_sSCPIModel);
-    jsonSCPIArr.append(m_sAddParents);
     jsonSCPIArr.append(m_sSCPICmdnode);
 
     jsonSCPIArr.append(QString(m_sSCPIType));
