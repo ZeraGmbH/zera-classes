@@ -252,19 +252,19 @@ void cRangeObsermatic::rangeObservation()
             m_RangeOVLEntityList.at(i)->setValue(QVariant((int)0), m_pPeer);
             m_softOvlList.replace(i, false);
         }
-
-        disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
-        if (markOverload)
-            m_pParOverloadOnOff->setData(QVariant(1));
-        else
-            if (m_brangeSet)
-            {
-                m_pParOverloadOnOff->setData(QVariant(0));
-                m_brangeSet = false;
-            }
-
-            connect(m_pParOverloadOnOff, SIGNAL(updated(QVariant)), SLOT(newOverload(QVariant)));
     }
+
+    disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
+    if (markOverload)
+        m_pParOverloadOnOff->setData(QVariant(1));
+    else
+        if (m_brangeSet)
+        {
+            m_pParOverloadOnOff->setData(QVariant(0));
+            m_brangeSet = false;
+        }
+
+    connect(m_pParOverloadOnOff, SIGNAL(updated(QVariant)), SLOT(newOverload(QVariant)));
 }
 
 
@@ -369,7 +369,6 @@ void cRangeObsermatic::setRanges(bool force)
     quint8 chn;
     bool change;
 
-    m_nRangeSetPending = 0;
     change = false;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we set all channels if needed
     {
@@ -388,8 +387,15 @@ void cRangeObsermatic::setRanges(bool force)
 
         if ( s != m_actChannelRangeList.at(i) || force)
         {
+            if (!change) // signal is only set once unless there are more than 1 ranges to change
+            {
+#ifdef DEBUG
+                qDebug() << "SIG_RANGING = 1";
+#endif
+                m_pRangingSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
+            }
+
             change = true;
-            m_pRangingSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
 
             // if we have an overload condition in channel we reset it before we set the new range
             if (m_hardOvlList.at(i) && ! m_maxOvlList.at(i))
@@ -479,6 +485,11 @@ void cRangeObsermatic::readGainCorrDone()
     newRangeAuto(m_ConfPar.m_nRangeAutoAct.m_nActive);
     newGrouping(m_ConfPar.m_nGroupAct.m_nActive);
     setRanges(); // so we set our scaling factors if not already done
+
+    // after activation we reset the pending counter
+    // because signal/slot connections are not yet established
+    // and so we don't get signals from ranges that were set
+    m_nRangeSetPending = 0;
 
     // we read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
@@ -727,7 +738,12 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
         {
             m_nRangeSetPending--;
             if (m_nRangeSetPending == 0)
+            {
+#ifdef DEBUG
+                qDebug() << "SIG_RANGING = 0";
+#endif
                 m_pRangingSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
+            }
         }
         break;
     case resetstatus: // for the moment we do nothing here
