@@ -101,6 +101,7 @@ void cSCPIClient::cmdInput()
     {
         m_sInput = m_pSocket->readLine();
         m_sInput.remove('\n'); // we remove f
+        m_sInput.remove('\r');
 
         if (!m_pSCPIInterface->executeCmd(this, m_sInput))
             emit m_pIEEE4882->AddEventError(CommandError);
