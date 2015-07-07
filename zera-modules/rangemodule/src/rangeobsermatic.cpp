@@ -194,6 +194,10 @@ void cRangeObsermatic::exportInterface(QJsonArray &jsArr)
     }
 
     ifaceEntity.setAddParents("");
+    ifaceEntity.setSCPICmdnode(QString("OVERLOAD"));
+    ifaceEntity.setName(m_pParOverloadOnOff->getName());
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
     ifaceEntity.setSCPIModel(QString("CONFIGURATION")); // preset
 
     if (m_ConfPar.m_bGrouping) // only if configured
