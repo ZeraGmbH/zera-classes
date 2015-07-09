@@ -3,6 +3,8 @@
 
 #include "xml_config_global.h"
 #include <QObject>
+#include <QXmlStreamReader>
+#include <QXmlStreamWriter>
 
 QT_BEGIN_NAMESPACE
 class QIODevice;
@@ -98,6 +100,8 @@ namespace Zera
        * @return true for success
        */
       bool xml2Config(QIODevice* xmlData);
+
+      void parseLists(QList<QString> oldList, QList<QString> newList, QXmlStreamWriter &writer);
 
       Q_DISABLE_COPY(cReader)
       Q_DECLARE_PRIVATE(cReader)

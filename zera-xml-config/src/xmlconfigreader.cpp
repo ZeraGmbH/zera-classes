@@ -1,7 +1,7 @@
 #include "xmlconfigreader.h"
 #include "xmlconfigreaderprivate.h"
 
-#include <QXmlStreamReader>
+
 #include <QtXmlPatterns/QXmlSchemaValidator>
 #include <QtXmlPatterns/QXmlSchema>
 #include <QStringList>
@@ -100,7 +100,7 @@ namespace Zera
           //reload the file
           //xmlDevice.close();
           //xmlDevice.open(QBuffer::ReadOnly);
-            xmlDevice.seek(0);
+          xmlDevice.seek(0);
 
           //qDebug() << "[zera-xml-config] XML is valid";
           if(xml2Config(&xmlDevice))
@@ -158,50 +158,7 @@ namespace Zera
         elementName = parents.last();
         parents.removeLast();
 
-        if(!oldParents.isEmpty())
-        {
-          if(parents.count()>=oldParents.count())
-          {
-            //parse backwards
-            for(int pCount=parents.count()-1; pCount>=0; pCount--)
-            {
-              if(pCount+1>oldParents.count())
-              {
-                continue;
-              }
-              else if(parents.at(pCount)!=oldParents.at(pCount))
-              {
-                stream.writeEndElement();
-              }
-            }
-          }
-          // in case we now have less parents than before
-          else
-          {
-            for(int pCount=oldParents.count()-1; pCount>=0; pCount--)
-            {
-              if(pCount+1>parents.count())
-              {
-                stream.writeEndElement();
-              }
-            }
-
-          }
-        }
-        // parse forward
-        for(int pCount=0; pCount<parents.count(); pCount++)
-        {
-          // if we have more elements than before, write them
-          if(pCount+1>oldParents.count())
-          {
-            stream.writeStartElement(parents.at(pCount));
-          }
-          // we don't have more elements than before but the element at this position is different
-          else if(oldParents.at(pCount)!=parents.at(pCount))
-          {
-            stream.writeStartElement(parents.at(pCount));
-          }
-        }
+        parseLists(oldParents, parents, stream);
         oldParents = parents;
         stream.writeTextElement(elementName, d->data.values().at(elemCount));
       }
@@ -262,6 +219,44 @@ namespace Zera
         qDebug()<<"[zera-xml-config] Error parsing XML: "<<xmlReader.errorString();
       }
       return retVal;
+    }
+
+
+    void cReader::parseLists(QList<QString> oldList, QList<QString> newList, QXmlStreamWriter &writer)
+    {
+      if(oldList.count() > newList.count())
+      {
+        oldList.removeLast();
+        writer.writeEndElement();
+        parseLists(oldList, newList, writer);
+      }
+      else if(oldList.isEmpty() == false)
+      {
+        if(oldList.at(0) == newList.at(0))
+        {
+          oldList.removeFirst();
+          newList.removeFirst();
+          parseLists(oldList, newList, writer);
+        }
+        else
+        {
+          for(int i=0; i<oldList.count(); ++i)
+          {
+            writer.writeEndElement();
+          }
+          for(int i=0; i<newList.count(); ++i)
+          {
+            writer.writeStartElement(newList.at(i));
+          }
+        }
+      }
+      else
+      {
+        for(int i=0; i<newList.count(); ++i)
+        {
+          writer.writeStartElement(newList.at(i));
+        }
+      }
     }
 
   }
