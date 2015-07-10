@@ -58,6 +58,10 @@ void cOsciModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cOsciModuleConfiguration::exportConfiguration()
 {
+    stringParameter sPar;
+    sPar = m_pOsciModulConfigData->m_RefChannel;
+    m_pXMLReader->setValue(sPar.m_sKey, QString("%1").arg(sPar.m_sPar));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
