@@ -27,6 +27,11 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pDSPSocket(dsprmsocket), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
 {
     m_brangeSet =false;
+
+    //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
+    for (int i = 0; i < m_ChannelNameList.count(); i++)
+        m_ActualValues.append(0.0);
+
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrDoneState);
@@ -583,7 +588,6 @@ void cRangeObsermatic::newRange(QVariant range)
     if (true /*!m_bRangeAutomatic*/)
     {
         QString s;
-        float attenuation;
         s = range.toString();
 
         QList<int> chnIndexlist = getGroupIndexList(index);
@@ -593,13 +597,9 @@ void cRangeObsermatic::newRange(QVariant range)
         for (int i = 0; i < chnIndexlist.count(); i++)
         {
             index = chnIndexlist.at(i);
-            if ( (m_ActualValues.size() > 0) && (m_ActualValues.size() >= index) )
-                attenuation = m_ActualValues[index];
-            else
-                attenuation = 0.0; // if we don't have any actual values yet
 
             // lets first test that new range will not cause an overload condition in this channel
-            if (m_RangeMeasChannelList.at(index)->isPossibleRange(s , attenuation))
+            if (m_RangeMeasChannelList.at(index)->isPossibleRange(s , m_ActualValues[index]))
             {
                 //m_newChannelRangeList.replace(index, s);
                 stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
@@ -630,6 +630,8 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
 {
     bool ok;
 
+    m_ConfPar.m_nRangeAutoAct.m_nActive = rauto.toInt(&ok);
+
     if ( (m_bRangeAutomatic = (rauto.toInt(&ok) == 1)) )
     {
         //qDebug() << "Range Automatic on";
@@ -648,6 +650,8 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
 void cRangeObsermatic::newGrouping(QVariant rgrouping)
 {
     bool ok;
+
+    m_ConfPar.m_nGroupAct.m_nActive = rgrouping.toInt(&ok);
 
     if ( (m_bGrouping = (rgrouping.toInt(&ok) == 1)) )
     {
