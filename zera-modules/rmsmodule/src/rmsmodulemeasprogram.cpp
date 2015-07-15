@@ -392,8 +392,6 @@ void cRmsModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = "TESTVVSKIPLT(N,TIPAR)");
         m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0103)");
         m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0103)");
-
-        m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0103)");
             m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXRMSF)").arg(m_ActValueList.count()));
 
             for (int i = 0; i < m_ActValueList.count(); i++)
