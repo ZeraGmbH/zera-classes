@@ -25,7 +25,7 @@
 namespace RANGEMODULE
 {
 
-cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
+cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeintEvent::EventSystem* eventsystem, QObject *parent)
     :cBaseModule(modnr, proxy, peer, new cRangeModuleConfiguration(), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);

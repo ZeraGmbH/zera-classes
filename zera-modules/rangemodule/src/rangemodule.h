@@ -44,7 +44,7 @@ class cRangeModule : public cBaseModule
 Q_OBJECT
 
 public:
-    cRangeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cRangeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeintEvent::EventSystem* eventsystem, QObject* parent = 0);
     virtual ~cRangeModule();
     virtual QByteArray getConfiguration();
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback

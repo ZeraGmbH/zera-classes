@@ -4,12 +4,13 @@
 namespace RANGEMODULE
 {
 
-ZeraModules::VirtualModule* RangeModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* RangeModuleFactory::createModule(Zera::Proxy::cProxy* proxy,  int entityId, VeintEvent::EventSystem* eventsystem, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cRangeModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cRangeModule(m_ModuleList.count()+1, proxy, entityId, eventsystem, parent);
     m_ModuleList.append(module);
     return module;
 }
+
 
 void RangeModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
