@@ -1,3 +1,5 @@
+#include <QJsonArray>
+
 #include "boolvalidator.h"
 
 
@@ -8,4 +10,15 @@ bool cBoolValidator::isValidParam(QVariant newValue)
 
    onoff = newValue.toInt(&ok);
    return (ok && ((onoff == 0) || (onoff ==1))); // we only accept 0,1
+}
+
+
+void cBoolValidator::exportMetaData(QJsonObject jsObj)
+{
+    QJsonArray jsonSCPIArr;
+
+    jsonSCPIArr.append(QString("BOOL"));
+    jsonSCPIArr.append(QString("0;1"));
+
+    jsObj.insert("VALIDATION", jsonSCPIArr);
 }

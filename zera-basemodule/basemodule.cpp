@@ -4,16 +4,18 @@
 #include <QString>
 #include <virtualmodule.h>
 #include <QSet>
+#include <QByteArray>
 #include <veinpeer.h>
 #include <veinentity.h>
 
 #include "basemodule.h"
 #include "moduleerror.h"
 #include "basemoduleconfiguration.h"
+#include "veinmodulecomponent.h"
 
 
-cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *peer, cBaseModuleConfiguration* modcfg, QObject* parent)
-    :ZeraModules::VirtualModule(proxy,peer,parent), m_pProxy(proxy), m_pPeer(peer), m_pConfiguration(modcfg), m_nModuleNr(modnr)
+cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::EventSystem *eventsystem, cBaseModuleConfiguration* modcfg, QObject* parent)
+    :ZeraModules::VirtualModule(proxy, entityId, eventsystem,parent), m_pProxy(proxy), m_nEntityId(entityId), m_pEventsystem(eventsystem), m_pConfiguration(modcfg), m_nModuleNr(modnr)
 {
     QString s;
     setParent(parent);
@@ -23,10 +25,8 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer *pee
     m_nStatus = untouched;
     m_pStateMachine = new QStateMachine(this);
 
-    errorMessage = new cModuleError(m_pPeer, "ERR_Message");
-
-    m_pModuleInterfaceEntity = m_pPeer->dataAdd(QString("INF_ModuleInterface")); // here is our json interface export
-    m_pModuleInterfaceEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pEventsystem, QString("ERR_Message"), QString("Component forwards the modules run time errors"), QVariant(QString("")));
+    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pEventsystem, "INF_ModuleInterface", "Component forwards the modules interface", QByteArray());
 
     // our states from virtualmodule (interface)
     m_pStateIdle = new QState();

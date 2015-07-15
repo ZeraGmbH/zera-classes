@@ -67,11 +67,10 @@ HEADERS += \
     intvalidator.h \
     stringvalidator.h \
     doublevalidator.h \
-<<<<<<< HEAD
-    basemeasworkprogram.h
-=======
-    modulevalidator.h
->>>>>>> zera-basemodule: added modulevalidator
+    basemeasworkprogram.h \
+    modulevalidator.h \
+    veinmodulecomponent.h \
+    veinmoduleparameter.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -92,10 +91,9 @@ SOURCES += \
     intvalidator.cpp \
     stringvalidator.cpp \
     doublevalidator.cpp \
-<<<<<<< HEAD
-    basemeasworkprogram.cpp
-=======
-    modulevalidator.cpp
->>>>>>> zera-basemodule: added modulevalidator
+    basemeasworkprogram.cpp \
+    modulevalidator.cpp \
+    veinmodulecomponent.cpp \
+    veinmoduleparameter.cpp
 
 include(../zera-classes.pri)

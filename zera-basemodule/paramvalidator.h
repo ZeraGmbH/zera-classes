@@ -2,6 +2,7 @@
 #define PARAMVALIDATOR_H
 
 #include <QVariant>
+#include <QJsonObject>
 
 // pure virtual class for parameter validation
 
@@ -11,6 +12,7 @@ public:
     cParamValidator(){}
 
     virtual bool isValidParam(QVariant newValue) = 0;
+    virtual void exportMetaData(QJsonObject jsObj) = 0;
 };
 
 
