@@ -755,8 +755,15 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     if (m_bActive) // maybe we are deactivating !!!!
     {
         for (i = 0; i < m_EntityActValueList.count(); i++) // we set n dft values
-        m_EntityActValueList.at(i)->setValue(QString("%1;%2").arg(actualValues->at(2*i)).arg(actualValues->at(2*i+1)), m_pPeer); // and set entities
-    }
+        {
+            QList<double> dftResult;
+            dftResult.append(actualValues->at(2*i));
+            dftResult.append(actualValues->at(2*i+1));
+            QVariant list;
+            list = QVariant::fromValue<QList<double> >(dftResult);
+            m_EntityActValueList.at(i)->setValue(list, m_pPeer); // and set entities
+        }
+     }
 }
 
 
