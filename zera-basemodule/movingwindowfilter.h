@@ -20,6 +20,7 @@ signals:
     void actualValues(QVector<float>*);
     void newActualValues();
     void finishFilter();
+    void filterInitialized();
 
 public slots:
     void receiveActualValues(QVector<float>* actualValues);
@@ -39,6 +40,8 @@ private:
     QState* m_pinitFilterState;
     QState* m_psetupFilterState;
     QState* m_pbuildupFilterState;
+    QState* m_pbuildupFilter2State;
+    QState* m_pbuildupFilter3State;
     QState* m_preadyFilterState;
     QState* m_pdoFilterState;
     QState* m_pFinishState;
@@ -49,6 +52,8 @@ private slots:
     void initFilter();
     void setupFilter();
     void buildupFilter();
+    void buildupFilter2();
+    void buildupFilter3();
     void doFilter();
     void stopFilter();
     void restartFilter();
