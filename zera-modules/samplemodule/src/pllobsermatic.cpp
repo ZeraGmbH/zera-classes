@@ -168,6 +168,8 @@ void cPllObsermatic::getPllMeasChannels()
 
 void cPllObsermatic::activationDone()
 {
+    m_pParPllAutomaticOnOff->setData(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive);
+
     connect(m_pParPllAutomaticOnOff, SIGNAL(updated(QVariant)), this, SLOT(newPllAuto(QVariant)));
     connect(m_pPllChannelEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllChannel(QVariant)));
 
@@ -198,13 +200,12 @@ void cPllObsermatic::newPllChannel(QVariant channel)
     if (!m_pllMeasChannelHash.contains(m_sNewPllChannel))
         m_sNewPllChannel = m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(0)];
 
-    m_pPllSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // we signal that we are changing pll channel
-
     if (m_sNewPllChannel != m_sActPllChannel)
     {
 #ifdef DEBUG
         qDebug() << QString("New PLL-Channel: %1 selected").arg(m_sNewPllChannel);
 #endif
+        m_pPllSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // we signal that we are changing pll channel
         m_MsgNrCmdList[m_pllMeasChannelHash[m_sNewPllChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
     }
 }
