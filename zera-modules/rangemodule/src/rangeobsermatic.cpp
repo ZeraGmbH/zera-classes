@@ -516,6 +516,9 @@ void cRangeObsermatic::readGainCorrDone()
         m_RangeRejectionEntityList.at(i)->setValue(pmChn->getMaxRangeUrvalueMax(), m_pPeer);
     }
 
+    m_pParRangeAutomaticOnOff->setData(m_ConfPar.m_nRangeAutoAct.m_nActive);
+    m_pParGroupingOnOff->setData(m_ConfPar.m_nGroupAct.m_nActive);
+
     m_bActive = true;
     emit activated();
 }
