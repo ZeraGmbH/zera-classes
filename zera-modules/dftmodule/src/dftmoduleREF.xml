@@ -32,7 +32,7 @@
                         <val6>m5</val6>
                     </values>
                     <movingwindow>
-                        <on>0</on>
+                        <on>1</on>
                         <time>1.0</time>
                     </movingwindow>
                 </measure>
