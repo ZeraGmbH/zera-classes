@@ -32,7 +32,7 @@ namespace ZeraModules
   {
     Q_OBJECT
   public:
-    explicit VirtualModule(Zera::Proxy::cProxy*, int entityId, VeinEvent::EventSystem*, QObject *qObjParent=0) : QObject(qObjParent) {}
+    explicit VirtualModule(QObject *qObjParent=0) : QObject(qObjParent) {}
     virtual ~VirtualModule() {}
     virtual QList<const QState*> getActualStates()=0; // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData)=0; // here we set configuration and parameters
@@ -54,6 +54,7 @@ namespace ZeraModules
       void moduleError(QString errorString);
       void moduleActivated();
       void moduleDeactivated();
+      void addEventSystem(VeinEvent::EventSystem*);
 
   protected:
     QStateMachine *m_pStateMachine;
