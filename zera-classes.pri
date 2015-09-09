@@ -75,6 +75,7 @@ contains( ZDEPENDS, protonet) {
 contains( ZDEPENDS, libvein) {
 # inherit dependencies from vein-framework
   VEIN_DEP_CCAPI = 1
+
 }
 #Adds dependencies to the resourcemanager protobuf
 contains( ZDEPENDS, resman) {
