@@ -93,4 +93,4 @@ contains( ZDEPENDS, SCPI) {
 # do not copy any files to the VEIN_BASEDIR lib/bin directory
 VF_NO_DEPLOY = 1
 
-include($$VEIN_BASEDIR/project-paths.pri)
+include($$VEIN_BASEDIR/vein-framework.pri)
