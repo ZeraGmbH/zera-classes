@@ -9,8 +9,8 @@
 namespace SCPIMODULE
 {
 
-cStatusInterface::cStatusInterface(VeinPeer *peer, cSCPIInterface *iface)
-    :cBaseInterface(peer, iface)
+cStatusInterface::cStatusInterface(cSCPIModule *module, cSCPIInterface *iface)
+    :cBaseInterface(module, iface)
 {
 }
 

@@ -11,7 +11,6 @@
 #include "moduleactivist.h"
 
 
-class VeinPeer;
 class QSerialPort;
 
 namespace SCPIMODULE
@@ -32,16 +31,14 @@ class cSCPIServer: public cModuleActivist
     Q_OBJECT
 
 public:
-    cSCPIServer(cSCPIModule* module, VeinPeer* peer, cSCPIModuleConfigData& configData);
+    cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
 
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray& );
 
 private:
     cSCPIModule* m_pModule;
-    VeinPeer* m_pPeer;
     cSCPIModuleConfigData& m_ConfigData;
 
     QTcpServer* m_pTcpServer;

@@ -34,18 +34,18 @@ namespace SCPIMODULE
 {
 
 
-cSCPIServer::cSCPIServer(cSCPIModule *module, VeinPeer *peer, cSCPIModuleConfigData &configData)
-    : m_pModule(module), m_pPeer(peer), m_ConfigData(configData)
+cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
+    : m_pModule(module), m_ConfigData(configData)
 {
     m_bSerial = false;
     m_bActive = false;
 
     m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi interface with cmd interpreter
 
-    m_pModuleInterface = new cModuleInterface(m_pPeer, m_pSCPIInterface); // the modules interface
-    m_pInterfaceInterface = new cInterfaceInterface(m_pPeer, m_pSCPIInterface); // the interfaces interface
-    m_pStatusInterface = new cStatusInterface(m_pPeer, m_pSCPIInterface); // the scpi status interface
-    m_pIEEE488Interface = new cIEEE4882Interface(m_pPeer, m_pSCPIInterface); // the ieee448-2 interface
+    m_pModuleInterface = new cModuleInterface(m_pModule, m_pSCPIInterface); // the modules interface
+    m_pInterfaceInterface = new cInterfaceInterface(m_pModule, m_pSCPIInterface); // the interfaces interface
+    m_pStatusInterface = new cStatusInterface(m_pModule, m_pSCPIInterface); // the scpi status interface
+    m_pIEEE488Interface = new cIEEE4882Interface(m_pModule, m_pSCPIInterface); // the ieee448-2 interface
 
     m_pSerial = 0;
     m_pSerialClient = 0;
@@ -92,12 +92,6 @@ void cSCPIServer::generateInterface()
 void cSCPIServer::deleteInterface()
 {
     // so we have nothing to delete
-}
-
-
-void cSCPIServer::exportInterface(QJsonArray &)
-{
-    // and nothing to export
 }
 
 

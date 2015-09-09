@@ -5,8 +5,10 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
-#include <QList>
+#include <QHash>
+#include <QMultiHash>
 
+#include "scpiclientinfo.h"
 #include "basemodule.h"
 
 
@@ -20,7 +22,11 @@ namespace Proxy {
 }
 }
 
-class VeinPeer;
+namespace VeinEvent
+{
+    class EventSystem;
+    class StorageSystem;
+}
 
 namespace SCPIMODULE
 {
@@ -29,6 +35,9 @@ namespace SCPIMODULE
 #define BaseSCPIModuleName "SCP"
 
 class cSCPIServer;
+class cSignalConnectionDelegate;
+class cSCPIMeasure;
+class cSCPIEventSystem;
 
 
 class cSCPIModule : public cBaseModule
@@ -36,9 +45,15 @@ class cSCPIModule : public cBaseModule
     Q_OBJECT
 
 public:
-    cSCPIModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cSCPIModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
     virtual ~cSCPIModule();
     virtual QByteArray getConfiguration();
+
+    QHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
+    QHash<QString, cSignalConnectionDelegate*> sConnectDelegateHash;
+    QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
+
+    cSCPIEventSystem* m_pSCPIEventSystem;
 
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
@@ -49,32 +64,22 @@ protected:
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 
-    // our states for base modules activation statemacine
-    QState m_ActivationStartState;
-    QState m_ActivationExecState;
-    QState m_ActivationDoneState;
-    QFinalState m_ActivationFinishedState;
+protected slots:
+    virtual void activationStart();
+    virtual void activationExec();
+    virtual void activationDone();
+    virtual void activationFinished();
 
-    // our states for base modules deactivation statemacine
-    QState m_DeactivationStartState;
-    QState m_DeactivationExecState;
-    QState m_DeactivationDoneState;
-    QFinalState m_DeactivationFinishedState;
+    virtual void deactivationStart();
+    virtual void deactivationExec();
+    virtual void deactivationDone();
+    virtual void deactivationFinished();
 
 private:
     qint32 m_nActivationIt;
 
+
 private slots:
-    void activationStart();
-    void activationExec();
-    void activationDone();
-    void activationFinished();
-
-    void deactivationStart();
-    void deactivationExec();
-    void deactivationDone();
-    void deactivationFinished();
-
     void scpiModuleReconfigure();
 
 };

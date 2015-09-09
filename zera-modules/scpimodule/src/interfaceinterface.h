@@ -26,7 +26,7 @@ class cInterfaceInterface: public cBaseInterface
     Q_OBJECT
 
 public:
-    cInterfaceInterface(VeinPeer* peer, cSCPIInterface* iface);
+    cInterfaceInterface(cSCPIModule* module, cSCPIInterface* iface);
     virtual ~cInterfaceInterface();
 
     virtual bool setupInterface();

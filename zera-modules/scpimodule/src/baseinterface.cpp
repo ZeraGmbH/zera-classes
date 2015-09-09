@@ -1,10 +1,11 @@
 #include "baseinterface.h"
+#include "scpimodule.h"
 
 namespace SCPIMODULE
 {
 
-cBaseInterface::cBaseInterface(VeinPeer *peer, cSCPIInterface *iface)
-    :m_pPeer(peer), m_pSCPIInterface(iface)
+cBaseInterface::cBaseInterface(cSCPIModule* module, cSCPIInterface *iface)
+    :m_pModule(module), m_pSCPIInterface(iface)
 {
 }
 

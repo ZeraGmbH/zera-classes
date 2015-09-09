@@ -6,19 +6,11 @@
 #include <QList>
 
 #include "socket.h"
+#include "statusbitdescriptor.h"
+
 
 namespace SCPIMODULE
 {
-
-// used for configuration export
-
-
-struct statusBitDescriptor
-{
-    quint8 m_nBitNr;
-    QString m_sModule;
-    QString m_sEntity;
-};
 
 
 struct serialDevice

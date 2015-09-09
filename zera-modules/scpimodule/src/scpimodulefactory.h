@@ -16,7 +16,6 @@ namespace Proxy
 }
 }
 
-class VeinPeer;
 
 namespace SCPIMODULE
 {
@@ -29,7 +28,7 @@ class SCPIModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     SCPIModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, VeinPeer* peer, QObject* parent = 0);
+    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0);
     void destroyModule(ZeraModules::VirtualModule *module); //override;
     QList<ZeraModules::VirtualModule *> listModules(); //override;
     QString getFactoryName(); //override;

@@ -18,7 +18,7 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint
 }
 
 
-bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &sInput)
+bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
     quint8 scpiCmdType;
     cSCPICommand cmd = sInput;

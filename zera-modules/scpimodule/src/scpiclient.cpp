@@ -3,10 +3,9 @@
 #include <QJsonObject>
 
 #include <scpi.h>
-#include <veinhub.h>
-#include <veinpeer.h>
-#include <veinentity.h>
+#include <ve_storagesystem.h>
 
+#include "scpimodule.h"
 #include "ieee488-2.h"
 #include "scpiclient.h"
 #include "scpiinterface.h"
@@ -18,8 +17,9 @@
 namespace SCPIMODULE
 {
 
-cSCPIClient::cSCPIClient(VeinPeer* peer, cSCPIModuleConfigData &configdata, cSCPIInterface* iface)
-    :m_pPeer(peer), m_ConfigData(configdata), m_pSCPIInterface(iface)
+
+cSCPIClient::cSCPIClient(QTcpSocket* socket, cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface)
+    :m_pSocket(socket), m_pModule(module), m_ConfigData(configdata), m_pSCPIInterface(iface)
 {
     m_bAuthorisation = false;
 
@@ -35,7 +35,7 @@ cSCPIClient::cSCPIClient(VeinPeer* peer, cSCPIModuleConfigData &configdata, cSCP
     scpiOperMeasStatus = new cSCPIStatus(OperationMeasureSummary);
     m_SCPIStatusList.append(scpiOperMeasStatus);
 
-    m_pIEEE4882 = new cIEEE4882(this, m_ConfigData.m_sDeviceIdentification, 50);
+    m_pIEEE4882 = new cIEEE4882(m_pModule, this, m_ConfigData.m_sDeviceIdentification, 50);
 
     // we connect the cascaded scpi operation status systems
     connect(scpiOperMeasStatus, SIGNAL(event(quint8, quint8)), scpiOperStatus, SLOT(SetConditionBit(quint8, quint8)));
@@ -63,8 +63,6 @@ cSCPIClient::~cSCPIClient()
 {
     for (int i = 0; i < m_SCPIStatusList.count(); i++)
         delete m_SCPIStatusList.at(i);
-    for (int i = 0; i < sConnectDelegateList.count(); i++)
-        delete sConnectDelegateList.at(i);
 
     delete m_pIEEE4882;
 }
@@ -116,56 +114,67 @@ void cSCPIClient::receiveAnswer(QString answ)
 }
 
 
-void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<statusBitDescriptor> &dList)
+void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList)
 {
-    if (dList.count() > 0)
+    int n;
+
+    if ((n = dList.count()) > 0)
     {
-        QList<VeinPeer*> peerList;
-        VeinHub *hub = m_pPeer->getHub(); // first we fetch a list of all our peers
-        peerList = hub->listPeers();
 
-        int n = dList.count();
+        QList<int> entityIdList;
+        entityIdList = m_pModule->m_pStorageSystem->getEntityList();
+        int entityIdCount = entityIdList.count();
 
+        // we iterate over all statusbitdescriptors
         for (int i = 0; i < n; i++)
         {
-            VeinPeer* peer;
-            VeinEntity* entity;
-            QString scpiModuleName;
-            QJsonDocument jsonDoc; // we parse over all moduleinterface entities
-            QJsonObject jsonObj;
-            statusBitDescriptor des;
-            bool found;
+            bool moduleFound;
+            cStatusBitDescriptor des;
 
-            found = false;
-            des = dList.at(i);
+            moduleFound = false;
+            des = dList.at(i); // the searched status bit descriptor
 
-            for (int j = 0; j < peerList.count(); j++)
+            if (entityIdCount  > 0)
             {
-                peer = peerList.at(j);
-                entity = peer->getEntityByName(QString("INF_ModuleInterface"));
-                if (entity != 0) // modulemangers and interfaces do not export INF_ModuleInterface
+                int entityID;
+                // we parse over all moduleinterface components
+                for (int j = 0; j < entityIdCount; j++)
                 {
-                    jsonDoc = QJsonDocument::fromBinaryData(entity->getValue().toByteArray());
-                    jsonObj = jsonDoc.object();
-                    scpiModuleName = jsonObj["SCPIModuleName"].toString();
-                    if (scpiModuleName == des.m_sModule)
-                        found = true; // we found the configured scpimodulename
+                    entityID = entityIdList.at(j);
+                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface")))
+                    {
+                        QJsonDocument jsonDoc;
+                        QJsonObject jsonObj;
+                        QString scpiModuleName;
+
+                        jsonDoc = QJsonDocument::fromBinaryData(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+                        jsonObj = jsonDoc.object();
+
+                        jsonObj = jsonObj["SCPIInfo"].toObject();
+
+                        scpiModuleName = jsonObj["ModuleName"].toString();
+
+                        if (scpiModuleName == des.m_sSCPIModuleName)
+                        {
+                            moduleFound = true;
+                            break;
+                        }
+                    }
                 }
 
-                if (found)
-                    break;
-            }
-
-            if (found)
-            {
-                entity = peer->getEntityByName(des.m_sEntity); // we fetch entity by name
-                if (entity != 0)
+                if (moduleFound)
                 {
-                    // this is a valid signal, so let' s connect this
-                    cSignalConnectionDelegate* sConnectDelegate;
-                    sConnectDelegate = new cSignalConnectionDelegate(scpiStatus, des.m_nBitNr);
-                    sConnectDelegateList.append(sConnectDelegate);
-                    connect(entity, SIGNAL(sigValueChanged(QVariant)), sConnectDelegate, SLOT(setStatus(QVariant)));
+                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, des.m_sComponentName))
+                    {
+                        // if we found the searched component, we generate a signal connection delegate
+                        // we need an eventsystem to look for notifications with these components
+                        // that lets the signal connection delegate  do his job
+
+                        cSignalConnectionDelegate* sConnectDelegate;
+                        sConnectDelegate = new cSignalConnectionDelegate(scpiStatus, des.m_nBitNr, entityID, des.m_sComponentName);
+                        // as we only want a single eventsystem the module itself holds the list of delegates
+                        m_pModule->sConnectDelegateHash.insertMulti(des.m_sComponentName, sConnectDelegate);
+                    }
                 }
             }
         }

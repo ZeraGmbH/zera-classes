@@ -30,15 +30,15 @@ enum moduleconfigstate
 
     setQuestionableBit1Bit = 16, // max. 16 bits
     setQuestionableBit1Module = 32, // max. 16 bits
-    setQuestionableBit1Entity = 48, // max. 16 bits
+    setQuestionableBit1Component = 48, // max. 16 bits
 
     setOperationBit1Bit = 64, // max. 16 bits
     setOperationBit1Module = 80, // max. 16 bits
-    setOperationBit1Entity = 96, // max. 16 bits
+    setOperationBit1Component = 96, // max. 16 bits
 
     setOperationMeasureBit1Bit = 112, // max. 16 bits
     setOperationMeasureBit1Module = 128, // max. 16 bits
-    setOperationMeasureBit1Entity = 144, // max. 16 bits
+    setOperationMeasureBit1Component = 144, // max. 16 bits
 };
 
 
@@ -64,7 +64,6 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    // QHash<QString, VeinEntity*> m_exportEntityList; // we hold a list of all our entities for export
     cSCPIModuleConfigData *m_pSCPIModulConfigData;  // configuration
 };
 

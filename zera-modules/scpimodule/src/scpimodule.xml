@@ -24,17 +24,17 @@
                     <bit1>
                         <bit>9</bit>
                         <module>RNG1</module>
-                        <entity>PAR_OverloadON/OFF</entity>
+                        <component>PAR_OverloadON/OFF</component>
                     </bit1>
                     <bit2>
                         <bit>10</bit>
                         <module>RNG1</module>
-                        <entity>INF_OverloadMax</entity>
+                        <component>INF_OverloadMax</component>
                     </bit2>
                     <bit3>
                         <bit>11</bit>
                         <module>RNG1</module>
-                        <entity>INF_Adjusted</entity>
+                        <component>INF_Adjusted</component>
                     </bit3>
                 </questionable>
                 <operation>
@@ -42,7 +42,7 @@
                     <bit1>
                         <bit>2</bit>
                         <module>RNG1</module>
-                        <entity>SIG_RANGING</entity>
+                        <component>SIG_RANGING</component>
                     </bit1>
                 </operation>
                 <operationmeasure>
@@ -50,47 +50,47 @@
                     <bit1>
                         <bit>0</bit>
                         <module>RNG1</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit1>
                     <bit2>
                         <bit>1</bit>
                         <module>RMS1</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit2>
                     <bit3>
                         <bit>2</bit>
                         <module>DFT1</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit3>
                     <bit4>
                         <bit>3</bit>
                         <module>FFT1</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit4>
                     <bit5>
                         <bit>4</bit>
                         <module>THD1</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit5>
                     <bit6>
                         <bit>5</bit>
                         <module>OSC1</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit6>
                     <bit7>
                         <bit>6</bit>
                         <module>POW1</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit7>
                     <bit8>
                         <bit>7</bit>
                         <module>POW2</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit8>
                     <bit9>
                         <bit>8</bit>
                         <module>POW3</module>
-                        <entity>SIG_MEASURING</entity>
+                        <component>SIG_MEASURING</component>
                     </bit9>
                 </operationmeasure>
             </status>

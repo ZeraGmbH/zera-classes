@@ -3,11 +3,10 @@
 
 #include <QObject>
 
-class VeinPeer;
-
 namespace SCPIMODULE
 {
 
+class cSCPIModule;
 class cSCPIInterface;
 
 class cBaseInterface: public QObject
@@ -15,11 +14,11 @@ class cBaseInterface: public QObject
     Q_OBJECT
 
 public:
-    cBaseInterface(VeinPeer* peer, cSCPIInterface* iface);
+    cBaseInterface(cSCPIModule *module, cSCPIInterface* iface);
     virtual bool setupInterface() = 0;
 
 protected:
-    VeinPeer* m_pPeer;
+    cSCPIModule* m_pModule;
     cSCPIInterface* m_pSCPIInterface;
 
 };

@@ -21,7 +21,7 @@ class cStatusInterface: public cBaseInterface
     Q_OBJECT
 
 public:
-    cStatusInterface(VeinPeer* peer, cSCPIInterface* iface);
+    cStatusInterface(cSCPIModule* module, cSCPIInterface* iface);
     virtual ~cStatusInterface();
 
     virtual bool setupInterface();

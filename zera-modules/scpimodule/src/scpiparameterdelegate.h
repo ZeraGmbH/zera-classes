@@ -5,24 +5,25 @@
 
 #include "scpidelegate.h"
 
-class VeinPeer;
-class VeinEntity;
-
 namespace SCPIMODULE
 {
+
+class cSCPIModule;
+class cSCPICmdInfo;
 
 class cSCPIParameterDelegate: public cSCPIDelegate
 {
     Q_OBJECT
 
 public:
-    cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, VeinPeer* peer, VeinEntity* entity);
+    cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
+    virtual ~cSCPIParameterDelegate();
 
-    virtual bool executeSCPI(cSCPIClient *client, const QString& sInput);
+    virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
 
 private:
-    VeinPeer* m_pPeer;
-    VeinEntity* m_pEntity;
+    cSCPIModule* m_pModule;
+    cSCPICmdInfo* m_pSCPICmdInfo;
 };
 
 }

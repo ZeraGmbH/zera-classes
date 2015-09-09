@@ -21,7 +21,7 @@ class cSCPIMeasureDelegate: public cSCPIDelegate
 public:
     cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject);
 
-    virtual bool executeSCPI(cSCPIClient *client, const QString& sInput);
+    virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
     void addscpimeasureObject(cSCPIMeasure* measureobject);
 
 private:

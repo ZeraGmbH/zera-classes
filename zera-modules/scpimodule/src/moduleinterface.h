@@ -6,8 +6,6 @@
 
 #include "baseinterface.h"
 
-class VeinPeer;
-
 namespace SCPIMODULE
 {
 
@@ -15,8 +13,10 @@ namespace SCPIModelType {
     enum scpiModelType {normal, measure, configure, read, init, fetch };
 }
 
+class cSCPIModule;
 class cSCPICmdInfo;
 class cSCPIInterface;
+class cSCPIDelegate;
 class cSCPIParameterDelegate;
 class cSCPIMeasure;
 class cSCPIMeasureDelegate;
@@ -28,16 +28,16 @@ class cModuleInterface: public cBaseInterface
     Q_OBJECT
 
 public:
-    cModuleInterface(VeinPeer* peer, cSCPIInterface* iface);
+    cModuleInterface(cSCPIModule* module, cSCPIInterface* iface);
     virtual ~cModuleInterface();
 
     virtual bool setupInterface();
 
 private:
-    QList<cSCPIParameterDelegate*> m_scpiParameterDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
+    QList<cSCPIDelegate*> m_scpiDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
     QHash<QString, cSCPIMeasureDelegate*> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
 
-    void addSCPICommand(cSCPICmdInfo &scpiCmdInfo);
+    void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject);
 
 

@@ -22,10 +22,7 @@ LIBS +=  -lMeasurementModuleInterface
 #dependencies
 VEIN_DEP_EVENT = 1
 VEIN_DEP_COMP = 1
-
-#dependencies
-VEIN_DEP_EVENT = 1
-VEIN_DEP_COMP = 1
+VEIN_DEP_HELPER = 1
 
 #dependencies
 VEIN_DEP_EVENT = 1
@@ -68,7 +65,10 @@ SOURCES += \
     src/ieee4882interface.cpp \
     src/signalconnectiondelegate.cpp \
     src/scpiethclient.cpp \
-    src/scpiserialclient.cpp
+    src/scpiserialclient.cpp \
+    src/scpieventsystem.cpp \
+    src/scpipropertydelegate.cpp \
+    src/scpiclientinfo.cpp
 
 HEADERS += \
     src/scpimodulefactory.h \
@@ -96,7 +96,11 @@ HEADERS += \
     src/ieee4882interface.h \
     src/signalconnectiondelegate.h \
     src/scpiethclient.h \
-    src/scpiserialclient.h
+    src/scpiserialclient.h \
+    src/statusbitdescriptor.h \
+    src/scpieventsystem.h \
+    src/scpipropertydelegate.h \
+    src/scpiclientinfo.h
 
 OTHER_FILES += \
     src/scpimodule.xml \

@@ -22,7 +22,7 @@ class cIEEE4882Interface: public cBaseInterface
     Q_OBJECT
 
 public:
-    cIEEE4882Interface(VeinPeer* peer, cSCPIInterface* iface);
+    cIEEE4882Interface(cSCPIModule* module, cSCPIInterface* iface);
     virtual ~cIEEE4882Interface();
 
     virtual bool setupInterface();

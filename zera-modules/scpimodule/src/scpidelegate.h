@@ -22,7 +22,7 @@ public:
 
     void setCommand(cSCPI *scpiCmdInterface);
     virtual bool executeSCPI(const QString&, QString&);
-    virtual bool executeSCPI(cSCPIClient *client, const QString& sInput) = 0;
+    virtual bool executeSCPI(cSCPIClient *client, QString& sInput) = 0;
 
 signals:
     void signalStatus(quint8);

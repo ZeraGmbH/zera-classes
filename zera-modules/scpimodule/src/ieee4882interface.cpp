@@ -11,8 +11,8 @@ namespace SCPIMODULE
 {
 
 
-cIEEE4882Interface::cIEEE4882Interface(VeinPeer *peer, cSCPIInterface *iface)
-    :cBaseInterface(peer, iface)
+cIEEE4882Interface::cIEEE4882Interface(cSCPIModule* module, cSCPIInterface* iface)
+    :cBaseInterface(module, iface)
 {
 }
 

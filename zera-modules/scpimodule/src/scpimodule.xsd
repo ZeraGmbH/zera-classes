@@ -65,7 +65,7 @@
         <xs:sequence>
             <xs:element name="bit" type="bittype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="module" type="xs:string" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="entity" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 

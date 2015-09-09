@@ -1,7 +1,9 @@
 #include <QVariant>
 
-#include <veinentity.h>
 #include <scpi.h>
+
+#include "scpimodule.h"
+#include "scpicmdinfo.h"
 #include "scpimeasure.h"
 #include "moduleinterface.h"
 
@@ -9,8 +11,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIMeasure::cSCPIMeasure(VeinEntity* entity, QString module, QString name, QString unit)
-    :m_pEntity(entity), m_sModule(module), m_sName(name), m_sUnit(unit)
+cSCPIMeasure::cSCPIMeasure(cSCPIModule *module, cSCPICmdInfo *scpicmdinfo)
+    :m_pModule(module), m_pSCPICmdInfo(scpicmdinfo)
 {
     m_ConfigureState.addTransition(this, SIGNAL(measContinue()), &m_InitState);
     m_InitState.addTransition(this, SIGNAL(measContinue()), &m_FetchState);
@@ -22,8 +24,12 @@ cSCPIMeasure::cSCPIMeasure(VeinEntity* entity, QString module, QString name, QSt
     connect(&m_ConfigureState, SIGNAL(entered()), SLOT(configure()));
     connect(&m_InitState, SIGNAL(entered()), SLOT(init()));
     connect(&m_FetchState, SIGNAL(entered()), SLOT(fetch()));
+}
 
 
+cSCPIMeasure::~cSCPIMeasure()
+{
+    delete m_pSCPICmdInfo;
 }
 
 
@@ -42,18 +48,27 @@ void cSCPIMeasure::execute(quint8 cmd)
         break;
 
     case SCPIModelType::read:
+        initType = fromRead;
         m_MeasureStateMachine.setInitialState(&m_InitState);
         m_MeasureStateMachine.start();
         break;
 
     case SCPIModelType::init:
-        connect(m_pEntity, SIGNAL(sigValueChanged(const QVariant)), this, SLOT(initCmdDone(const QVariant)));
+        initType = fromInit;
+        m_MeasureStateMachine.setInitialState(&m_InitState);
+        m_MeasureStateMachine.start();
         break;
 
     case SCPIModelType::fetch:
         emit cmdAnswer(m_sAnswer);
         break;
     }
+}
+
+
+int cSCPIMeasure::entityID()
+{
+    return m_pSCPICmdInfo->entityId;
 }
 
 
@@ -72,14 +87,14 @@ QString cSCPIMeasure::setAnswer(QVariant qvar)
     {
         QSequentialIterable iterable = qvar.value<QSequentialIterable>();
 
-        s = QString("%1:%2:%3:").arg(m_sModule, m_sName, m_sUnit);
+        s = QString("%1:%2:[%3]:").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->componentName, m_pSCPICmdInfo->unit);
         foreach (const QVariant &v, iterable)
             s += (v.toString()+",");
         s = s.remove(s.count()-1, 1);
 
     }
     else
-        s = QString("%1:%2:%3:%4").arg(m_sModule, m_sName, m_sUnit).arg(qvar.toString());
+        s = QString("%1:%2:[%3]:%4").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->componentName, m_pSCPICmdInfo->unit).arg(qvar.toString());
 
     return (s);
 }
@@ -93,7 +108,10 @@ void cSCPIMeasure::configure()
 
 void cSCPIMeasure::init()
 {
-    connect(m_pEntity, SIGNAL(sigValueChanged(const QVariant)), this, SLOT(initDone(const QVariant)));
+    // we insert this object into the list of pending measurement values
+    // the module's eventsystem will look for notifications on this and will
+    // then call the initDone slot, so we synchronized on next measurement value
+    m_pModule->scpiMeasureHash.insert(m_pSCPICmdInfo->componentName, this);
 }
 
 
@@ -106,16 +124,14 @@ void cSCPIMeasure::fetch()
 void cSCPIMeasure::initDone(const QVariant qvar)
 {
     m_sAnswer = setAnswer(qvar);
-    disconnect(m_pEntity, SIGNAL(sigValueChanged(const QVariant)), this, SLOT(initDone(const QVariant)));
-    emit measContinue(); // if we are in statemachine we want to continue;
-}
-
-
-void cSCPIMeasure::initCmdDone(const QVariant qvar)
-{
-    m_sAnswer = setAnswer(qvar);
-    disconnect(m_pEntity, SIGNAL(sigValueChanged(const QVariant)), this, SLOT(initCmdDone(const QVariant)));
-    emit cmdStatus(SCPI::ack);
+    switch (initType)
+    {
+    case fromRead:
+        emit measContinue(); // if we are in statemachine we want to continue;
+        break;
+    case fromInit:
+        emit cmdStatus(SCPI::ack);
+    }
 }
 
 }

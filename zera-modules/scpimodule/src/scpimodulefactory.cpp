@@ -4,9 +4,9 @@
 namespace SCPIMODULE
 {
 
-ZeraModules::VirtualModule* SCPIModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule *SCPIModuleFactory::createModule(Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *qObjParent)
 {
-    ZeraModules::VirtualModule *module = new cSCPIModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cSCPIModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, qObjParent);
     m_ModuleList.append(module);
     return module;
 }

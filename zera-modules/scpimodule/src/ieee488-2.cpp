@@ -2,6 +2,7 @@
 
 #include "ieee488-2.h"
 #include "scpiclient.h"
+#include "scpimodule.h"
 
 
 namespace SCPIMODULE
@@ -30,8 +31,8 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(const char*)"No error"},
                                             {-500,(const char*)"Power on"} };
 
 
-cIEEE4882::cIEEE4882(cSCPIClient *client, QString ident, quint16 errorqueuelen)
-    :m_pClient(client), m_sIdentification(ident), m_nQueueLen(errorqueuelen)
+cIEEE4882::cIEEE4882(cSCPIModule *module, cSCPIClient *client, QString ident, quint16 errorqueuelen)
+    :m_pModule(module), m_pClient(client), m_sIdentification(ident), m_nQueueLen(errorqueuelen)
 {
     m_nSTB = m_nSRE = m_nESR = m_nESE = 0;
 }
@@ -58,6 +59,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         }
         else
             if (cmd.isQuery())
+
                 emit signalAnswer(RegOutput(1));
                 //client->receiveAnswer(RegOutput(1));
             else

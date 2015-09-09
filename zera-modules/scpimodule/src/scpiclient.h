@@ -4,24 +4,27 @@
 #include <QObject>
 #include <QList>
 
-class VeinPeer;
+
+class QTcpSocket;
+
 
 namespace SCPIMODULE
 {
 
+class cSCPIModule;
 class cSCPIInterface;
 class cSCPIStatus;
 class cIEEE4882;
 class cSCPIModuleConfigData;
-class statusBitDescriptor;
-class cSignalConnectionDelegate;
+class cStatusBitDescriptor;
+class cStatusBitSignal;
 
 class cSCPIClient: public QObject
 {
     Q_OBJECT
 
 public:
-    cSCPIClient(VeinPeer* peer, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
+    cSCPIClient(QTcpSocket* socket, cSCPIModule* module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIClient();
 
     void setAuthorisation(bool auth);
@@ -37,15 +40,17 @@ protected:
     cIEEE4882* m_pIEEE4882;
 
 private:
-    VeinPeer* m_pPeer;
+    QTcpSocket* m_pSocket;
+    cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
+    QList<cStatusBitSignal*> mStatusBitSignalList;
+
+    cIEEE4882* m_pIEEE4882;
 
     bool m_bAuthorisation;
-    QList<cSignalConnectionDelegate*> sConnectDelegateList;
-
-    void setSignalConnections(cSCPIStatus* scpiStatus, QList<statusBitDescriptor>& dList);
+    void setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList);
 
 private slots:
     virtual void cmdInput() = 0;

@@ -6,19 +6,29 @@
 #include <QState>
 #include <QFinalState>
 
-class VeinEntity;
+
 
 namespace SCPIMODULE
 {
+
+class cSCPIModule;
+class cSCPICmdInfo;
 
 class cSCPIMeasure: public QObject
 {
     Q_OBJECT
 
+enum inittype {fromRead, fromInit};
+
 public:
-    cSCPIMeasure(VeinEntity *entity, QString module, QString name, QString unit);
+    cSCPIMeasure(cSCPIModule* module, cSCPICmdInfo *scpicmdinfo);
+    virtual ~cSCPIMeasure();
 
     void execute(quint8 cmd); //
+    int entityID();
+
+public slots:
+    void initDone(const QVariant qvar);
 
 signals:
     void cmdStatus(quint8);
@@ -26,10 +36,8 @@ signals:
     void measContinue();
 
 private:
-    VeinEntity* m_pEntity;
-    QString m_sModule;
-    QString m_sName;
-    QString m_sUnit;
+    cSCPIModule *m_pModule;
+    cSCPICmdInfo *m_pSCPICmdInfo;
 
     QStateMachine m_MeasureStateMachine;
 
@@ -42,13 +50,12 @@ private:
     void configuration();
     QString setAnswer(QVariant qvar);
 
+    int initType;
+
 private slots:
     void configure();
     void init();
     void fetch();
-
-    void initDone(const QVariant qvar);
-    void initCmdDone(const QVariant qvar);
 };
 
 

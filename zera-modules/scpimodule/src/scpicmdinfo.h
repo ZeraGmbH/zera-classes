@@ -3,9 +3,6 @@
 
 #include <QString>
 
-class VeinPeer;
-class VeinEntity;
-
 namespace SCPIMODULE
 {
 
@@ -14,12 +11,13 @@ class cSCPICmdInfo
 public:
     cSCPICmdInfo(){}
     QString scpiModuleName;
-    VeinPeer* peer;
-    VeinEntity* entity;
     QString scpiModel;
-    QString cmdNode;
+    QString scpiCommand;
+    QString scpiCommandType;
     QString unit;
-    QString type;
+    int entityId;
+    QString componentName;
+    QString refType; // 0 means component itself otherwise the component's validation data
 };
 
 }
