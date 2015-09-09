@@ -8,15 +8,15 @@
 
 namespace Zera
 {
-namespace Proxy
-{
+  namespace Proxy
+  {
     class cProxy;
-}
+  }
 }
 
 namespace VeinEvent
 {
-    class StorageSystem;
+  class StorageSystem;
 }
 
 
@@ -27,8 +27,8 @@ public:
   virtual ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0)=0;
 
   virtual void destroyModule(ZeraModules::VirtualModule *module)=0;
-  virtual QList<ZeraModules::VirtualModule*> listModules()=0;
-  virtual QString getFactoryName() =0;
+  virtual QList<ZeraModules::VirtualModule*> listModules() const =0;
+  virtual QString getFactoryName() const =0;
 };
 
 #define MeasurementModuleFactory_iid "org.qt-project.Qt.Examples.Test/1.0"
