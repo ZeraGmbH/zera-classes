@@ -4,24 +4,22 @@
 #include <dspinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
-
+#include <veinmodulecomponent.h>
+#include <veinmoduleactvalue.h>
+#include <modulevalidator.h>
 
 #include "debug.h"
 #include "errormessages.h"
-#include "modulesignal.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
-#include "interfaceentity.h"
 #include "rangemodulemeasprogram.h"
 #include "rangemoduleconfigdata.h"
 
 namespace RANGEMODULE
 {
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cRangeModuleConfigData& configData)
-    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configData)
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, cRangeModuleConfigData& configData)
+    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configData)
 {
     // we have to instantiate a working resource manager and dspserver interface
     m_pRMInterface = new Zera::Server::cRMInterface();
@@ -90,7 +88,6 @@ cRangeModuleMeasProgram::~cRangeModuleMeasProgram()
 {
     delete m_pRMInterface;
     delete m_pDSPInterFace;
-    delete m_pMeasureSignal;
 }
 
 
@@ -115,78 +112,39 @@ void cRangeModuleMeasProgram::syncRanging(QVariant sync)
 
 void cRangeModuleMeasProgram::generateInterface()
 {
-    VeinEntity* p_entity;
-    QString s;
-
-    // this here is for translation purpose
-    s = tr("UL%1;[V]");
-    s = tr("UL%1-UL%2;[V]");
-    s = tr("IL%1;[A]");
-    s = tr("IL%1-IL%2;[A]");
-    s = tr("REF%1;[V]");
-    s = tr("REF%1-REF%2;[V]");
+    cVeinModuleActvalue *pActvalue;
 
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
-        p_entity = m_pPeer->dataAdd(QString("TRA_Channel%1PeakName").arg(i+1));
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant("Unknown"), m_pPeer);
-        m_EntityNameList.append(p_entity);
-
-        p_entity = m_pPeer->dataAdd(QString("ACT_Channel%1Peak").arg(i+1));
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValueList.append(p_entity);
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_Channel%1Peak").arg(i+1),
+                                            QString("Component forwards the peak actual value"),
+                                            QVariant(0.0) );
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    p_entity = m_pPeer->dataAdd("ACT_Frequency");
-    p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-    p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-    m_EntityActValueList.append(p_entity);
+    pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                        QString("ACT_Frequency"),
+                                        QString("Component forwards the frequency actual value"),
+                                        QVariant(0.0) );
 
-    m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
+    pActvalue->setUnit("Hz");
+    m_ActValueList.append(pActvalue); // we add the component for our measurement
+    m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+    cVeinModuleComponent *pComponent;
+    pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                          QString("SIG_Measuring"),
+                                          QString("Component forwards a signal indicating measurement activity"),
+                                          QVariant(0) );
+    m_pModule->veinModuleComponentList.append(pComponent); // and for the modules interface
 }
 
 
 void cRangeModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityActValueList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueList.at(i));
-}
-
-
-void cRangeModuleMeasProgram::exportInterface(QJsonArray &jsArr)
-{
-    int i;
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setDescription(QString("This entity holds the peak value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setSCPIModel(QString("MEASURE"));
-    ifaceEntity.setSCPIType(QString("2"));
-
-    for (i = 0; i < m_EntityActValueList.count()-1; i++)
-    {
-        ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
-
-        QString chnDes = m_EntityNameList.at(i)->getValue().toString();
-        QStringList sl = chnDes.split(';');
-        QString CmdNode = sl.takeFirst();
-        QString Unit = sl.takeLast();
-        if (sl.count() == 1)
-            CmdNode = CmdNode.arg(sl.at(0));
-        else
-            CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
-
-        ifaceEntity.setSCPICmdnode(CmdNode);
-        ifaceEntity.setUnit(Unit);
-        ifaceEntity.appendInterfaceEntity(jsArr);
-    }
-
-    ifaceEntity.setDescription(QString("This entity holds the frequency value of CmdNode"));
-    ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
-    ifaceEntity.setSCPICmdnode("F"); // frequency stays frequency so fix here
-    ifaceEntity.setUnit("[Hz]");
-    ifaceEntity.appendInterfaceEntity(jsArr);
+    // the module will delete the interface when unsetting .....
 }
 
 
@@ -443,19 +401,13 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
 
 void cRangeModuleMeasProgram::setActualValuesNames()
 {
-    QString s,s1,s2;
     cRangeMeasChannel* mchn;
 
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
         mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-
-        s1 = s2 = mchn->getAlias();
-        s1.remove(QRegExp("[1-9][0-9]?"));
-        s2.remove(s1);
-
-        s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(mchn->getUnit());
-        m_EntityNameList.at(i)->setValue(s, m_pPeer);
+        m_ActValueList.at(i)->setChannelName(mchn->getAlias());
+        m_ActValueList.at(i)->setUnit(mchn->getUnit());
     }
 }
 
@@ -465,9 +417,9 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
     int i;
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        for (i = 0; i < m_EntityActValueList.count()-1; i++) // we set n peak values first
-            m_EntityActValueList.at(i)->setValue((*actualValues)[i], m_pPeer);
-        m_EntityActValueList.at(i)->setValue((*actualValues)[2*i], m_pPeer);
+        for (i = 0; i < m_ActValueList.count()-1; i++) // we set n peak values first
+            m_ActValueList.at(i)->setValue(QVariant((*actualValues)[i]));
+        m_ActValueList.at(i)->setValue(QVariant((*actualValues)[2*i]));
     }
 }
 
@@ -538,7 +490,8 @@ void cRangeModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
     setActualValuesNames();
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
+
+    m_pMeasureSignal->setValue(QVariant(1));
     emit activated();
 }
 
@@ -577,7 +530,7 @@ void cRangeModuleMeasProgram::deactivateDSPdone()
 
 void cRangeModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
+    m_pMeasureSignal->setValue(QVariant(0));
     m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
@@ -588,7 +541,7 @@ void cRangeModuleMeasProgram::dataReadDSP()
     {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
         emit actualValues(&m_ModuleActualValues); // and send them
-        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
 }
 

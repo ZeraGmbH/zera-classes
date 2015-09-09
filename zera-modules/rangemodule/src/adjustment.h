@@ -11,11 +11,10 @@
 #include <QState>
 #include <QFinalState>
 
-#include "moduleactivist.h"
+#include <moduleactivist.h>
 
 
 class cDspMeasData;
-class VeinPeer;
 
 namespace Zera {
 namespace Proxy {
@@ -58,11 +57,10 @@ class cAdjustManagement: public cModuleActivist
     Q_OBJECT
 
 public:
-    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval);
+    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval);
     virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
 
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -74,7 +72,6 @@ signals:
 private:
     cRangeModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
-    VeinPeer* m_pPeer;
     cSocket* m_pDSPSocket;
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc

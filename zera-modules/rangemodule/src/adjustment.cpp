@@ -12,8 +12,8 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, VeinPeer* peer,  cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval)
-    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pDSPSocket(dspsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
+cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval)
+    :m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dspsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
@@ -116,12 +116,6 @@ void cAdjustManagement::generateInterface()
 void cAdjustManagement::deleteInterface()
 {
     // at the moment no interface
-}
-
-
-void cAdjustManagement::exportInterface(QJsonArray &)
-{
-    // so nothing to export
 }
 
 

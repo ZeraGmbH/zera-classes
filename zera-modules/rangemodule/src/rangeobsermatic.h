@@ -22,7 +22,8 @@
 #include <QVariant>
 #include <QStringList>
 
-#include "moduleactivist.h"
+#include <moduleactivist.h>
+
 #include "rangemoduleconfigdata.h"
 
 
@@ -37,13 +38,9 @@ namespace  Server {
 }
 
 
-class VeinPeer;
-class VeinEntity;
 class cDspMeasData;
-
-class cModuleParameter;
-class cModuleSignal;
-class cModuleInfo;
+class cVeinModuleParameter;
+class cVeinModuleComponent;
 
 namespace RANGEMODULE
 {
@@ -52,9 +49,12 @@ enum rangeObsermaticCmds
 {
     readgain2corr,
     writegain2corr,
-    setrange,
     resetstatus,
-    readstatus
+    readstatus,
+
+    setrange, // we reserve 32 values for setrange
+
+    nextCmd = setrange+32
 };
 
 
@@ -66,13 +66,12 @@ class cRangeObsermatic: public cModuleActivist
     Q_OBJECT
 
 public:
-    cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
+    cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
-    cModuleSignal *m_pRangingSignal; // we make the signal public to easy connection within module
+    cVeinModuleComponent *m_pRangingSignal;
 
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
@@ -84,7 +83,6 @@ signals:
 private:
     cRangeModule *m_pModule;
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
-    VeinPeer* m_pPeer;
     cSocket *m_pDSPSocket;
     QList<QStringList> m_GroupList;
     QStringList m_ChannelNameList; // the system names of our channels
@@ -102,16 +100,15 @@ private:
     QVector<float> m_ActualValues; // here we find the actual values
 
     // our interface entities
-    QList<VeinEntity*> m_RangeEntityList;
-    QList<VeinEntity*> m_RangeOVLEntityList;
-    QList<VeinEntity*> m_RangeRejectionEntityList;
-    QList<VeinEntity*> m_RangeActRejectionEntityList;
-    QList<VeinEntity*> m_RangeActOvrRejectionEntityList;
-    QList<cModuleInfo*> m_GroupInfoList;
+    QList<cVeinModuleParameter*> m_RangeParameterList;
+    QList<cVeinModuleComponent*> m_RangeOVLComponentList;
+    QList<cVeinModuleComponent*> m_RangeOVLRejectionComponentList;
+    QList<cVeinModuleComponent*> m_RangeActRejectionComponentList;
+    QList<cVeinModuleComponent*> m_RangeActOVLRejectionComponentList;
 
-    cModuleParameter* m_pParRangeAutomaticOnOff;
-    cModuleParameter* m_pParGroupingOnOff;
-    cModuleParameter* m_pParOverloadOnOff;
+    cVeinModuleParameter* m_pParRangeAutomaticOnOff;
+    cVeinModuleParameter* m_pParGroupingOnOff;
+    cVeinModuleParameter* m_pParOverloadOnOff;
 
     cDspMeasData* m_pGainCorrection2DSP; // copy of dsp internal correction data
     float* m_pfScale;

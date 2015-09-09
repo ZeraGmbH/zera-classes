@@ -3,19 +3,16 @@
 #include <pcbinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
 
 #include "debug.h"
 #include "errormessages.h"
-#include "interfaceentity.h"
 #include "rangemeaschannel.h"
 
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
-    :cBaseMeasChannel(proxy, peer, rmsocket, pcbsocket, name, chnnr)
+cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
+    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -88,7 +85,6 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer,
     m_readRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readOVRejectionState);
     m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
     m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
-
 
     m_rangeQueryMachine.addState(&m_readRngAliasState);
     m_rangeQueryMachine.addState(&m_readTypeState);
@@ -267,15 +263,9 @@ QString cRangeMeasChannel::getMaxRange()
 }
 
 
-QString cRangeMeasChannel::getChannelNameEntityName()
+QString cRangeMeasChannel::getRangeListAlias()
 {
-    return m_pChannelEntity->getName();
-}
-
-
-QString cRangeMeasChannel::getRangeListEntityName()
-{
-    return m_pChannelRangeListEntity->getName();
+    return m_sRangeListAlias;
 }
 
 
@@ -354,41 +344,11 @@ double cRangeMeasChannel::getRangeUrvalueMax()
 
 void cRangeMeasChannel::generateInterface()
 {
-    QString s;
-
-    m_pChannelEntity = m_pPeer->dataAdd(QString("TRA_Channel%1Name").arg(m_nChannelNr)); // here is the actual range
-    m_pChannelEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelEntity->setValue(tr("UL%1;[V]"), m_pPeer); // we only do this for translation purpose
-    m_pChannelEntity->setValue(tr("IL%1;[A]"), m_pPeer); // to be extended
-    m_pChannelEntity->setValue(tr("REF%1;[V]"), m_pPeer);
-    m_pChannelEntity->setValue(s = "Unknown", m_pPeer);
-
-    m_pChannelRangeListEntity = m_pPeer->dataAdd(QString("INF_Channel%1RangeList").arg(m_nChannelNr)); // list of possible ranges
-    m_pChannelRangeListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelRangeListEntity->setValue(s = "Unknown", m_pPeer);
 }
 
 
 void cRangeMeasChannel::deleteInterface()
 {
-    m_pPeer->dataRemove(m_pChannelEntity);
-    m_pPeer->dataRemove(m_pChannelRangeListEntity);
-}
-
-
-void cRangeMeasChannel::exportInterface(QJsonArray &jsArr)
-{
-    // we export setting the channels ranges from rangemodule observation
-
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setDescription(QString("This entity holds the channels ranges"));
-    ifaceEntity.setSCPIModel(QString("SENSE"));
-    ifaceEntity.setSCPIType(QString("2"));
-    ifaceEntity.setUnit(QString(""));
-    ifaceEntity.setName(QString("INF_Channel%1RangeList").arg(m_nChannelNr));
-    ifaceEntity.setSCPICmdnode(QString("%1:RANGE:CATALOG").arg(m_sAlias));
-    ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
 
@@ -761,7 +721,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 }
 
 
-void cRangeMeasChannel::setRangeListEntity()
+void cRangeMeasChannel::setRangeListAlias()
 {
     QString s;
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
@@ -776,20 +736,7 @@ void cRangeMeasChannel::setRangeListEntity()
     for (int i = 1; i < riList.count(); i++)
         s = s + ";" + riList.at(i).alias;
 
-    m_pChannelRangeListEntity->setValue(s, m_pPeer);
-}
-
-
-void cRangeMeasChannel::setChannelNameEntity()
-{
-    QString s,s1,s2;
-    s1 = s2 = m_sAlias;
-    s1.remove(QRegExp("[1-9][0-9]?"));
-    s2.remove(s1);
-    //m_pChannelEntity->setValue(m_sAlias, m_pPeer);
-
-    s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(m_sUnit);
-    m_pChannelEntity->setValue(s, m_pPeer);
+    m_sRangeListAlias = s;
 }
 
 
@@ -928,8 +875,7 @@ void cRangeMeasChannel::activationDone()
             ++it;
     }
 
-    setChannelNameEntity(); // we set our real name now
-    setRangeListEntity(); // and the list of possible ranges
+    setRangeListAlias(); // and the list of possible ranges alias
 
     m_bActive = true;
     emit activated();

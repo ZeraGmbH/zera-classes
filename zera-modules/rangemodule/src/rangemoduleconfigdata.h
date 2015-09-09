@@ -4,7 +4,7 @@
 #include <QString>
 #include <QList>
 
-#include "socket.h"
+#include <socket.h>
 
 namespace RANGEMODULE
 {

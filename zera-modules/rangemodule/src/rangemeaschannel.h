@@ -8,11 +8,12 @@
 #include <QState>
 #include <QFinalState>
 #include <QVariant>
-#include <pcbinterface.h>
 
-#include "reply.h"
-#include "basemeaschannel.h"
-#include "rangeinfo.h"
+#include <pcbinterface.h>
+#include <reply.h>
+#include <basemeaschannel.h>
+#include <rangeinfo.h>
+
 
 namespace RANGEMODULE
 {
@@ -53,12 +54,12 @@ class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 
+
 public:
-    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     ~cRangeMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
     quint32 setRange(QString range); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     quint32 readGainCorrection(double amplitude); // dito
@@ -84,8 +85,7 @@ public:
 
     QString getOptRange(double ampl); // returns opt. range alias
     QString getMaxRange(); // returns alias of the range with max ur value
-    QString getRangeListEntityName();
-    QString getChannelNameEntityName();
+    QString getRangeListAlias();
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
@@ -95,8 +95,6 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    VeinEntity *m_pChannelEntity;
-    VeinEntity *m_pChannelRangeListEntity;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QString m_sNewRange;
@@ -105,6 +103,7 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_nStatus;
+    QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
 
     // statemachine for activating a rangemeaschannel
     QState m_rmConnectState; // we must connect first to resource manager
@@ -145,14 +144,13 @@ private:
     QState m_freeResourceStartState;
     QFinalState m_freeResourceDoneState;
 
-    void setRangeListEntity();
-    void setChannelNameEntity();
-
     qint32 m_RangeQueryIt;
     cRangeInfo ri;
 
     Zera::Proxy::cProxyClient* m_pRMClient;
     Zera::Proxy::cProxyClient* m_pPCBClient;
+
+    void setRangeListAlias();
 
 private slots:
     void rmConnect();

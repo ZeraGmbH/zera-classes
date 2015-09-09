@@ -56,12 +56,6 @@ void cRangeModuleObservation::deleteInterface()
 }
 
 
-void cRangeModuleObservation::exportInterface(QJsonArray &)
-{
-    // so nothing to export
-}
-
-
 void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

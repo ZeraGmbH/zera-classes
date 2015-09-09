@@ -4,9 +4,9 @@
 namespace RANGEMODULE
 {
 
-ZeraModules::VirtualModule* RangeModuleFactory::createModule(Zera::Proxy::cProxy* proxy,  int entityId, VeintEvent::EventSystem* eventsystem, QObject *parent)
+ZeraModules::VirtualModule* RangeModuleFactory::createModule(Zera::Proxy::cProxy* proxy,  int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cRangeModule(m_ModuleList.count()+1, proxy, entityId, eventsystem, parent);
+    ZeraModules::VirtualModule *module = new cRangeModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }

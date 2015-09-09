@@ -16,15 +16,22 @@ LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
+LIBS +=  -lzera-validator
 
 INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \
+    ../../zera-validator \
     ../interface
+
 
 TARGET = $$qtLibraryTarget(rangemodule)
 
+#dependencies
+VEIN_DEP_EVENT = 1
+VEIN_DEP_COMP = 1
+VEIN_DEP_HELPER = 1
 
 INCLUDEPATH += "src"
 

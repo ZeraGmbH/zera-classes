@@ -7,23 +7,24 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include <basemeasmodule.h>
 
 
-
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
+namespace Zera
+{
+    namespace Server
+    {
+        class cDSPInterface;
+    }
+    namespace Proxy
+    {
+        class cProxyClient;
+    }
 }
 
-namespace Proxy {
- class cProxyClient;
-}
-}
 
-class cModuleInfo;
-class cModuleError;
+
+class cVeinModuleMetaData;
 
 namespace RANGEMODULE
 {
@@ -39,12 +40,12 @@ class cRangeModuleObservation;
 #define BaseModuleName "RangeModule"
 #define BaseSCPIModuleName "RNG"
 
-class cRangeModule : public cBaseModule
+class cRangeModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cRangeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeintEvent::EventSystem* eventsystem, QObject* parent = 0);
+    cRangeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cRangeModule();
     virtual QByteArray getConfiguration();
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
@@ -61,33 +62,24 @@ protected:
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 
-    // our states for base modules activation statemacine
-    QState m_ActivationStartState;
-    QState m_ActivationExecState;
-    QState m_ActivationDoneState;
-    QFinalState m_ActivationFinishedState;
+protected slots:
+    virtual void activationStart();
+    virtual void activationExec();
+    virtual void activationDone();
+    virtual void activationFinished();
 
-    // our states for base modules deactivation statemacine
-    QState m_DeactivationStartState;
-    QState m_DeactivationExecState;
-    QState m_DeactivationDoneState;
-    QFinalState m_DeactivationFinishedState;
+    virtual void deactivationStart();
+    virtual void deactivationExec();
+    virtual void deactivationDone();
+    virtual void deactivationFinished();
 
 private:
-    cModuleInfo *channelNrInfo;
-    cModuleInfo *groupNrInfo;
+    cVeinModuleMetaData *m_pChannelNrInfo;
+    cVeinModuleMetaData *m_pGroupNrInfo;
     qint32 m_nActivationIt;
 
 private slots:
-    void activationStart();
-    void activationExec();
-    void activationDone();
-    void activationFinished();
 
-    void deactivationStart();
-    void deactivationExec();
-    void deactivationDone();
-    void deactivationFinished();
 
     void rangeModuleReconfigure();
 

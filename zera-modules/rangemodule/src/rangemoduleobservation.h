@@ -6,9 +6,9 @@
 #include <QFinalState>
 #include <QHash>
 
-#include "moduleactivist.h"
-#include "socket.h"
-#include "reply.h"
+#include <moduleactivist.h>
+#include <socket.h>
+#include <reply.h>
 
 
 namespace Zera {
@@ -44,7 +44,6 @@ public:
     virtual ~cRangeModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
 
 signals:
     void moduleReconfigure(); // we emit a signal for module reconfiguration when we recognize significant changes

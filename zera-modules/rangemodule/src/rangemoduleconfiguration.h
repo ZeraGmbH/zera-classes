@@ -6,7 +6,7 @@
 #include <QByteArray>
 #include <QHash>
 
-#include "basemoduleconfiguration.h"
+#include <basemoduleconfiguration.h>
 
 namespace RANGEMODULE
 {

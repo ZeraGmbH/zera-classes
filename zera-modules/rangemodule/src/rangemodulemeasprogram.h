@@ -7,7 +7,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "basedspmeasprogram.h"
+#include <basedspmeasprogram.h>
 
 
 namespace Zera
@@ -18,8 +18,6 @@ namespace Proxy
 }
 }
 
-class VeinPeer;
-class VeinEntity;
 
 class cDspMeasData;
 class cDspIFace;
@@ -27,6 +25,9 @@ class QStateMachine;
 class QState;
 class QFinalState;
 class cModuleSignal;
+class cModuleValidator;
+class cVeinModuleComponent;
+class cVeinModuleActvalue;
 
 namespace RANGEMODULE
 {
@@ -57,11 +58,10 @@ class cRangeModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cRangeModuleConfigData& configData);
+    cRangeModuleMeasProgram(cRangeModule* module,Zera::Proxy::cProxy* proxy, cRangeModuleConfigData& configData);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -84,9 +84,9 @@ private:
     quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
 
-    QList<VeinEntity*> m_EntityNameList; // we use this list for access
-    QList<VeinEntity*> m_EntityActValueList; // also
-    cModuleSignal* m_pMeasureSignal;
+    cVeinModuleComponent *m_pMeasureSignal;
+    QList<cVeinModuleActvalue*> m_ActValueList;
+
     cRangeModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
