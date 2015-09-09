@@ -14,12 +14,10 @@
 #include "moduleactivist.h"
 
 
-class VeinPeer;
-class VeinEntity;
-
 namespace VeinEvent
 {
     class EventSystem;
+    class StorageSystem;
 }
 
 enum LastState
@@ -35,7 +33,13 @@ enum Status
     activated   // we have activated the module
 };
 
+
+class cVeinModuleMetaData;
 class cVeinModuleComponent;
+class cVeinModuleActvalue;
+class cVeinModuleParameter;
+class cSCPIInfo;
+
 class cBaseMeasProgram;
 class cBaseModuleConfiguration;
 class cBaseMeasChannel;
@@ -46,7 +50,7 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::EventSystem* eventsystem, cBaseModuleConfiguration* modcfg, QObject *parent = 0);
+    cBaseModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, cBaseModuleConfiguration* modcfg, QObject *parent = 0);
     virtual ~cBaseModule();
     virtual QList<const QState*> getActualStates(); // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
@@ -57,6 +61,15 @@ public:
     virtual bool isConfigured();
     virtual void startModule();
     virtual void stopModule();
+
+    int m_nEntityId;
+    VeinEvent::StorageSystem* m_pStorageSystem;
+
+    QList<cVeinModuleMetaData*> veinModuleMetaDataList; // only meta information
+    QList<cVeinModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
+    QList<cVeinModuleActvalue*> veinModuleActvalueList; // actvalues are components that need an interface
+    QHash<QString, cVeinModuleParameter*> veinModuleParameterHash; // parameters are components that need an interface and validation
+    QList<cSCPIInfo*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
 
 signals:
     void sigRun();
@@ -94,24 +107,49 @@ protected:
     QState* m_pStateSTOPConfXML;
     QState* m_pStateSTOPConfSetup;
 
+    // our states for base modules activation statemachine
+    QState m_ActivationStartState;
+    QState m_ActivationExecState;
+    QState m_ActivationDoneState;
+    QFinalState m_ActivationFinishedState;
+
+    // our states for base modules deactivation statemachine
+    QState m_DeactivationStartState;
+    QState m_DeactivationExecState;
+    QState m_DeactivationDoneState;
+    QFinalState m_DeactivationFinishedState;
+
 
     QByteArray m_xmlconfString;
     Zera::Proxy::cProxy* m_pProxy; // the proxi for all our connections (to rm, dsp- pcb- server)
-    int m_nEntityId;
-    VeinEvent::EventSystem* m_pEventsystem;
     QList<cModuleActivist*> m_ModuleActivistList;
     cBaseModuleConfiguration *m_pConfiguration; // our xml configuration
     QString m_sModuleName;
+    QString m_sModuleDescription;
     QString m_sSCPIModuleName;
     quint8 m_nModuleNr;
-    cVeinModuleComponent *m_pModuleErrorComponent;
+
+    cVeinModuleMetaData *m_pModuleName;
+    cVeinModuleMetaData *m_pModuleDescription;
+    cVeinModuleComponent *m_pModuleErrorComponent; // here we export errors the module encountered
     cVeinModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule() = 0; // after xml configuration we can setup and export our module
-    virtual void unsetModule() = 0; // in case of reconfiguration we must unset module first
+    virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
+
+protected slots:
+    virtual void activationStart() = 0;
+    virtual void activationExec() = 0;
+    virtual void activationDone() = 0;
+    virtual void activationFinished() = 0;
+
+    virtual void deactivationStart() = 0;
+    virtual void deactivationExec() = 0;
+    virtual void deactivationDone() = 0;
+    virtual void deactivationFinished() = 0;
 
 private:
     bool m_bConfCmd;

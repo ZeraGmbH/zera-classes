@@ -11,26 +11,33 @@
 namespace VeinEvent
 {
     class EventSystem;
+    class StorageSystem;
 }
 
 class cParamValidator;
+class cSCPIInfo;
 
 class cVeinModuleParameter: public cVeinModuleComponent
 {
+    Q_OBJECT
 public:
-    cVeinModuleParameter(int entityId, VeinEvent::EventSystem* eventsystem, QString name, QString description, QVariant initval, bool deferredNotification = false);
+    cVeinModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification = false);
+    virtual ~cVeinModuleParameter();
 
-    virtual void exportMetaData(QJsonArray &jsArr);
+    bool hasDeferredNotification();
+    bool isValidParameter(QVariant value);
+
+    virtual void exportMetaData(QJsonObject &jsObj);
+    virtual void exportSCPIInfo(QJsonObject &jsObj);
+    void setSCPIInfo(cSCPIInfo* scpiinfo);
     void setValidator(cParamValidator* validator);
 
-    bool transaction(QVariant newValue, QVariant oldValue); // we return true if transaction is valid
-
-signals:
-    void sigValueChanged(QVariant); // we connect here if we want to do something on changed values
+    void transaction(QVariant newValue); // we return true if transaction is valid
 
 private:
     bool m_bDeferredNotification; //
     cParamValidator* m_pValidator;
+    cSCPIInfo* m_pscpiInfo;
 };
 
 

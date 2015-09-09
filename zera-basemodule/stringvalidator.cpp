@@ -1,4 +1,5 @@
 #include <QJsonArray>
+#include <QJsonObject>
 
 #include "stringvalidator.h"
 
@@ -26,12 +27,15 @@ bool cStringValidator::isValidParam(QVariant newValue)
 
 void cStringValidator::exportMetaData(QJsonObject jsObj)
 {
-    QJsonArray jsonSCPIArr;
+    QJsonArray jsonArr;
 
-    jsonSCPIArr.append(QString("STRING"));
-    jsonSCPIArr.append(m_sPossibilitiesList.join(';'));
+    jsObj.insert("Type", "STRING");
 
-    jsObj.insert("VALIDATION", jsonSCPIArr);
+    int n;
+    n = m_sPossibilitiesList.count();
+    for (int i = 0; i < n; i++)
+        jsonArr.append(m_sPossibilitiesList.at(i));
+    jsObj.insert("Data", jsonArr);
 }
 
 

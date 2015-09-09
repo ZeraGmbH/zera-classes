@@ -15,6 +15,8 @@ TARGET = zerabasemodule
 #dependencies
 VEIN_DEP_EVENT = 1
 VEIN_DEP_COMP = 1
+VEIN_DEP_CCAPI = 1
+VEIN_DEP_HELPER = 1
 
 include(../zera-classes.pri)
 
@@ -61,7 +63,6 @@ HEADERS += \
     secinputinfo.h \
     basedspmeasprogram.h \
     ecalcinfo.h \
-    interfaceentity.h \
     paramvalidator.h \
     boolvalidator.h \
     intvalidator.h \
@@ -70,7 +71,12 @@ HEADERS += \
     basemeasworkprogram.h \
     modulevalidator.h \
     veinmodulecomponent.h \
-    veinmoduleparameter.h
+    veinmoduleparameter.h \
+    metadata.h \
+    veinmodulemetadata.h \
+    veinmoduleactvalue.h \
+    scpiinfo.h \
+    basemeasmodule.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -86,7 +92,6 @@ SOURCES += \
     movingwindowfilter.cpp \
     basesamplechannel.cpp \
     basedspmeasprogram.cpp \
-    interfaceentity.cpp \
     boolvalidator.cpp \
     intvalidator.cpp \
     stringvalidator.cpp \
@@ -94,6 +99,10 @@ SOURCES += \
     basemeasworkprogram.cpp \
     modulevalidator.cpp \
     veinmodulecomponent.cpp \
-    veinmoduleparameter.cpp
+    veinmoduleparameter.cpp \
+    veinmodulemetadata.cpp \
+    veinmoduleactvalue.cpp \
+    scpiinfo.cpp \
+    basemeasmodule.cpp
 
 include(../zera-classes.pri)

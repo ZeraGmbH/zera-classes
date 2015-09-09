@@ -5,17 +5,19 @@
 #include <virtualmodule.h>
 #include <QSet>
 #include <QByteArray>
-#include <veinpeer.h>
-#include <veinentity.h>
 
 #include "basemodule.h"
 #include "moduleerror.h"
 #include "basemoduleconfiguration.h"
+#include "veinmodulemetadata.h"
+#include "veinmoduleactvalue.h"
 #include "veinmodulecomponent.h"
+#include "veinmoduleparameter.h"
+#include "scpiinfo.h"
 
 
-cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::EventSystem *eventsystem, cBaseModuleConfiguration* modcfg, QObject* parent)
-    :ZeraModules::VirtualModule(proxy, entityId, eventsystem,parent), m_pProxy(proxy), m_nEntityId(entityId), m_pEventsystem(eventsystem), m_pConfiguration(modcfg), m_nModuleNr(modnr)
+cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, cBaseModuleConfiguration* modcfg, QObject* parent)
+    :ZeraModules::VirtualModule(parent), m_pProxy(proxy), m_nEntityId(entityId), m_pStorageSystem(storagesystem), m_pConfiguration(modcfg), m_nModuleNr(modnr)
 {
     QString s;
     setParent(parent);
@@ -24,9 +26,6 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 
     m_nStatus = untouched;
     m_pStateMachine = new QStateMachine(this);
-
-    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pEventsystem, QString("ERR_Message"), QString("Component forwards the modules run time errors"), QVariant(QString("")));
-    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pEventsystem, "INF_ModuleInterface", "Component forwards the modules interface", QByteArray());
 
     // our states from virtualmodule (interface)
     m_pStateIdle = new QState();
@@ -116,6 +115,35 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
     m_pStateMachine->setInitialState(m_pStateIdle);
 
     m_pStateMachine->start();
+
+    // now we set up our machines for activating, deactivating a module
+    m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
+    m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
+    m_ActivationDoneState.addTransition(this, SIGNAL(activationNext()), &m_ActivationExecState);
+    m_ActivationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationFinishedState);
+    m_ActivationMachine.addState(&m_ActivationStartState);
+    m_ActivationMachine.addState(&m_ActivationExecState);
+    m_ActivationMachine.addState(&m_ActivationDoneState);
+    m_ActivationMachine.addState(&m_ActivationFinishedState);
+    m_ActivationMachine.setInitialState(&m_ActivationStartState);
+    connect(&m_ActivationStartState, SIGNAL(entered()), SLOT(activationStart()));
+    connect(&m_ActivationExecState, SIGNAL(entered()), SLOT(activationExec()));
+    connect(&m_ActivationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_ActivationFinishedState, SIGNAL(entered()), SLOT(activationFinished()));
+
+    m_DeactivationStartState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationExecState);
+    m_DeactivationExecState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationDoneState);
+    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationNext()), &m_DeactivationExecState);
+    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationFinishedState);
+    m_DeactivationMachine.addState(&m_DeactivationStartState);
+    m_DeactivationMachine.addState(&m_DeactivationExecState);
+    m_DeactivationMachine.addState(&m_DeactivationDoneState);
+    m_DeactivationMachine.addState(&m_DeactivationFinishedState);
+    m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
+    connect(&m_DeactivationStartState, SIGNAL(entered()), SLOT(deactivationStart()));
+    connect(&m_DeactivationExecState, SIGNAL(entered()), SLOT(deactivationExec()));
+    connect(&m_DeactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_DeactivationFinishedState, SIGNAL(entered()), SLOT(deactivationFinished()));
 }
 
 
@@ -146,6 +174,28 @@ cBaseModule::~cBaseModule()
     delete m_pStateFinished;
 
     delete m_pStateMachine;
+
+    if (veinModuleMetaDataList.count() > 0)
+        for (int i = 0; i < veinModuleMetaDataList.count(); i++)
+            delete veinModuleMetaDataList.at(i);
+
+    if (veinModuleComponentList.count() > 0)
+        for (int i = 0; i < veinModuleComponentList.count(); i++)
+            delete veinModuleComponentList.at(i);
+
+    if (veinModuleActvalueList.count() > 0)
+        for (int i = 0; i < veinModuleActvalueList.count(); i++)
+            delete veinModuleActvalueList.at(i);
+
+    if (scpiCommandList.count() > 0)
+        for (int i = 0; i < scpiCommandList.count(); i++)
+            delete scpiCommandList.at(i);
+
+    QList<QString> keylist;
+    keylist = veinModuleParameterHash.keys();
+    if (keylist.count() > 0)
+        for (int i = 0; i < keylist.count(); i++)
+            delete veinModuleParameterHash[keylist.at(i)];
 }
 
 
@@ -202,7 +252,58 @@ void cBaseModule::stopModule()
 }
 
 
-quint16 cBaseModule::getModuleNr()
+void cBaseModule::unsetModule()
+{
+    if (veinModuleMetaDataList.count() > 0)
+    {
+        for (int i = 0; i < veinModuleMetaDataList.count(); i++)
+            delete veinModuleMetaDataList.at(i);
+        veinModuleMetaDataList.clear();
+    }
+
+    if (veinModuleComponentList.count() > 0)
+    {
+        for (int i = 0; i < veinModuleComponentList.count(); i++)
+            delete veinModuleComponentList.at(i);
+        veinModuleComponentList.clear();
+    }
+
+    if (veinModuleActvalueList.count() > 0)
+    {
+        for (int i = 0; i < veinModuleActvalueList.count(); i++)
+            delete veinModuleActvalueList.at(i);
+        veinModuleActvalueList.clear();
+    }
+
+    if (scpiCommandList.count() > 0)
+    {
+        for (int i = 0; i < scpiCommandList.count(); i++)
+            delete scpiCommandList.at(i);
+        scpiCommandList.clear();
+    }
+
+    QList<QString> keylist;
+    keylist = veinModuleParameterHash.keys();
+    if (keylist.count() > 0)
+    {
+        for (int i = 0; i < keylist.count(); i++)
+            delete veinModuleParameterHash[keylist.at(i)];
+        veinModuleParameterHash.clear();
+    }
+
+    if (m_ModuleActivistList.count() > 0)
+    {
+        for (int i = 0; i < m_ModuleActivistList.count(); i++)
+        {
+            m_ModuleActivistList.at(i)->deleteInterface();
+            delete m_ModuleActivistList.at(i);
+        }
+        m_ModuleActivistList.clear();
+    }
+}
+
+
+quint8 cBaseModule::getModuleNr()
 {
     return m_nModuleNr;
 }

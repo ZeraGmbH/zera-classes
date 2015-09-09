@@ -1,4 +1,5 @@
 #include <QJsonArray>
+#include <QJsonObject>
 
 #include "intvalidator.h"
 
@@ -22,12 +23,10 @@ bool cIntValidator::isValidParam(QVariant newValue)
 
 void cIntValidator::exportMetaData(QJsonObject jsObj)
 {
-    QJsonArray jsonSCPIArr;
+    jsObj.insert("Type", "INTEGER");
 
-    jsonSCPIArr.append(QString("INTEGER"));
-    jsonSCPIArr.append(QString("%1;%2;%3").arg(m_nMin).arg(m_nMax).arg(m_nDelta));
-
-    jsObj.insert("VALIDATION", jsonSCPIArr);
+    QJsonArray jsonArr = {m_nMin, m_nMax, m_nDelta};
+    jsObj.insert("Data", jsonArr);
 }
 
 

@@ -1,4 +1,5 @@
 #include <QJsonArray>
+#include <QJsonObject>
 
 #include "doublevalidator.h"
 
@@ -22,11 +23,9 @@ bool cDoubleValidator::isValidParam(QVariant newValue)
 
 void cDoubleValidator::exportMetaData(QJsonObject jsObj)
 {
-    QJsonArray jsonSCPIArr;
+    jsObj.insert("Type", "DOUBLE");
 
-    jsonSCPIArr.append(QString("DOUBLE"));
-    jsonSCPIArr.append(QString("%1;%2;%3").arg(m_fMin).arg(m_fMax).arg(m_fDelta));
-
-    jsObj.insert("VALIDATION", jsonSCPIArr);
+    QJsonArray jsonArr = {m_fMin, m_fMax, m_fDelta};
+    jsObj.insert("Data", jsonArr);
 }
 

@@ -9,35 +9,39 @@
 
 #include <vcmp_componentdata.h>
 
+#include "metadata.h"
+
 namespace VeinEvent
 {
     class EventSystem;
 }
 
 
-class cVeinModuleComponent: public QObject
+class cVeinModuleComponent: public cMetaData
 {
     Q_OBJECT
 public:
-    cVeinModuleComponent(int entityId, VeinEvent::EventSystem* eventsystem, QString name, QString description, QVariant initval);
+    cVeinModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
 
-    virtual void exportMetaData(QJsonArray &jsArr);
+    virtual void exportMetaData(QJsonObject &jsObj);
     void setChannelName(QString name); // channel name for json export can be empty
-    void setChannelUnit(QString unit);
+    void setUnit(QString unit);
+    QString getName();
+
+signals:
+    void sigValueChanged(QVariant); // we connect here if we want to do something on changed values
 
 public slots:
     void setValue(QVariant value); // here we have to emit event for notification
 
 protected:
     int m_nEntityId;
-    VeinEvent::EventSystem* m_pEventSystem;
+    VeinEvent::EventSystem *m_pEventSystem;
     QString m_sName;
     QString m_sDescription;
     QVariant m_vValue;
     QString m_sChannelName;
     QString m_sChannelUnit;
-
-    void exportComponentMetaData(QJsonObject jsObj);
 
 private:
     void sendNotification(VeinComponent::ComponentData::Command vcmd);

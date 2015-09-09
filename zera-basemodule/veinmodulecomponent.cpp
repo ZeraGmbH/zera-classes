@@ -8,19 +8,24 @@
 #include "veinmodulecomponent.h"
 
 
-cVeinModuleComponent::cVeinModuleComponent(int entityId, VeinEvent::EventSystem* eventsystem, QString name, QString description, QVariant initval)
+cVeinModuleComponent::cVeinModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)
     :m_nEntityId(entityId), m_pEventSystem(eventsystem), m_sName(name), m_sDescription(description), m_vValue(initval)
 {
     sendNotification(VeinComponent::ComponentData::Command::CCMD_ADD);
 }
 
 
-void cVeinModuleComponent::exportMetaData(QJsonArray &jsArr)
+void cVeinModuleComponent::exportMetaData(QJsonObject &jsObj)
 {
     QJsonObject jsonObj;
 
-    exportComponentMetaData(jsonObj);
-    jsArr.append(jsonObj);
+    jsonObj.insert("Description", m_sDescription);
+    if (!m_sChannelName.isEmpty())
+        jsonObj.insert("ChannelName", m_sChannelName);
+    if (!m_sChannelUnit.isEmpty())
+        jsonObj.insert("Unit", m_sChannelUnit);
+
+    jsObj.insert(m_sName, jsonObj);
 }
 
 
@@ -30,9 +35,15 @@ void cVeinModuleComponent::setChannelName(QString name)
 }
 
 
-void cVeinModuleComponent::setChannelUnit(QString unit)
+void cVeinModuleComponent::setUnit(QString unit)
 {
     m_sChannelUnit = unit;
+}
+
+
+QString cVeinModuleComponent::getName()
+{
+    return m_sName;
 }
 
 
@@ -40,18 +51,6 @@ void cVeinModuleComponent::setValue(QVariant value)
 {
     m_vValue = value;
     sendNotification(VeinComponent::ComponentData::Command::CCMD_SET);
-}
-
-
-void cVeinModuleComponent::exportComponentMetaData(QJsonObject jsObj)
-{
-    jsObj.insert("Name", m_sName);
-    jsObj.insert("DES", m_sDescription);
-    if (!m_sChannelName.isEmpty())
-        jsObj.insert("ChannelName", m_sChannelName);
-    if (!m_sChannelUnit.isEmpty())
-        jsObj.insert("ChannelName", m_sChannelUnit);
-
 }
 
 
@@ -67,7 +66,7 @@ void cVeinModuleComponent::sendNotification(VeinComponent::ComponentData::Comman
     cData->setNewValue(m_vValue);
 
     VeinEvent::CommandEvent *event;
-    event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
+    event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
 
     m_pEventSystem->sigSendEvent(event);
 }

@@ -11,8 +11,6 @@
 
 class cSCPIConnection;
 class QString;
-class VeinEntity;
-class VeinPeer;
 
 namespace Zera {
 namespace Proxy {
@@ -31,11 +29,10 @@ class cBaseMeasChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cBaseMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     virtual ~cBaseMeasChannel(){}
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr) = 0;
 
     quint8 getDSPChannelNr();
     quint16 getSampleRate();
@@ -45,7 +42,6 @@ public:
 
 protected:
     Zera::Proxy::cProxy* m_pProxy;
-    VeinPeer* m_pPeer; // the peer where we set our entities
     cSocket* m_pRMSocket; // the sockets we can connect to
     cSocket* m_pPCBServerSocket;
     QString m_sName; // the channel's system name

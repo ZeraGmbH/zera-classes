@@ -3,23 +3,25 @@
 
 #include <QObject>
 #include <QHash>
+#include <QList>
+#include <commandvalidator.h>
 
-#include "commandvalidator.h"
-#include "moduleparameter.h"
-
-
+class cBaseModule;
+class cVeinModuleParameter;
 
 class cModuleValidator: public Zera::CommandValidator
 {
     Q_OBJECT
 public:
-    cModuleValidator(QObject *t_parent = 0);
+    cModuleValidator(cBaseModule* module);
 
-    virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent)=0;
-    QHash<QString, cModuleParameter*>& getParameter2ValidateHash();
+    virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
+    void setParameterHash(QHash<QString, cVeinModuleParameter *>&parameterhash);
 
 private:
-    QHash<QString, cModuleParameter*> m_Parameter2ValidateHash;
+    cBaseModule* m_pModule;
+    QHash<QString, cVeinModuleParameter*> m_Parameter2ValidateHash;
+    QList<QString> m_keylist;
 };
 
 #endif // MODULEVALIDATOR_H

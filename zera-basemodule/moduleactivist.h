@@ -31,7 +31,7 @@ signals:
     void setupContinue();
     void interruptContinue();
     void executionError();
-    void errMsg(QString);
+    void errMsg(QVariant);
 
 
 public slots:
@@ -39,7 +39,6 @@ public slots:
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray& jsArr) = 0;
 
 protected:
     bool m_bActive;

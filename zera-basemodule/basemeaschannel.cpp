@@ -1,7 +1,7 @@
 #include "basemeaschannel.h"
 
-cBaseMeasChannel::cBaseMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
-    :m_pProxy(proxy), m_pPeer(peer), m_pRMSocket(rmsocket), m_pPCBServerSocket(pcbsocket), m_sName(name), m_nChannelNr(chnnr)
+cBaseMeasChannel::cBaseMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
+    :m_pProxy(proxy), m_pRMSocket(rmsocket), m_pPCBServerSocket(pcbsocket), m_sName(name), m_nChannelNr(chnnr)
 {
 }
 

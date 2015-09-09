@@ -1,7 +1,7 @@
 #include "basemeasprogram.h"
 
-cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy, VeinPeer *peer)
-    :m_pProxy(proxy), m_pPeer(peer)
+cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy)
+    :m_pProxy(proxy)
 {
 }
 

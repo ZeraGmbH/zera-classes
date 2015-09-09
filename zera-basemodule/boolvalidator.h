@@ -5,6 +5,7 @@
 
 class cBoolValidator: public cParamValidator
 {
+public:
     cBoolValidator(){}
 
     virtual bool isValidParam(QVariant newValue);
