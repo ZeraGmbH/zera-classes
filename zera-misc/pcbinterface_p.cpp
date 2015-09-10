@@ -445,6 +445,13 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case gettype2:
         case getsamplerate:
         case getdspchannelsource:
+<<<<<<< HEAD
+=======
+        case getmuxchannelschead:
+        case getmuxchannelfrqinput:
+        case resourcemuxchannelquery:
+        case getadjustmentstatus:
+>>>>>>> zera-misc/pcbinterface: added c ommand to read adjustment status from pcb server
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 

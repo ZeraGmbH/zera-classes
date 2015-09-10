@@ -74,6 +74,9 @@ public:
     // all commands to frqinput interface
     virtual quint32 getAliasFrqinput(QString chnName); // qstring
 
+    // all commands to status interface
+    virtual quint32 getAdjustmentStatus(); // int
+
     // resource query more generell
     virtual quint32 resourceAliasQuery(QString resourceType, QString resourceName);
 
