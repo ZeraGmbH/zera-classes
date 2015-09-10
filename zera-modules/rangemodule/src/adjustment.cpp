@@ -1,7 +1,10 @@
 #include <QSignalTransition>
 #include <dspinterface.h>
+#include <pcbinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
+#include <veinmodulecomponent.h>
+#include <modulevalidator.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -12,10 +15,11 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval)
-    :m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dspsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
+cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval)
+    :m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pPCBInterface = new Zera::Server::cPCBInterface();
 
     m_bAdjustTrigger = false;
     for (int i = 0; i < m_ChannelNameList.count(); i++) // we fetch all our real channels first
@@ -24,10 +28,13 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
         m_subDCChannelList.append(m_pModule->getMeasChannel(m_subdcChannelNameList.at(i)));
 
     // and then set up our state machines
+    m_readAdjustmentStatusState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectState);
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readPhaseCorrState);
     m_readPhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readOffsetCorrState);
     m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_setSubDCState);
     m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_activationMachine.addState(&m_pcbserverConnectState);
+    m_activationMachine.addState(&m_readAdjustmentStatusState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
@@ -35,6 +42,7 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
     m_activationMachine.addState(&m_setSubDCState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_dspserverConnectState);
+    connect(&m_pcbserverConnectState, SIGNAL(entered()), SLOT(pcbserverConnect()));
     connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
     connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
     connect(&m_readPhaseCorrState, SIGNAL(entered()), SLOT(readPhaseCorr()));
@@ -109,7 +117,12 @@ void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
 
 void cAdjustManagement::generateInterface()
 {
-    // at the moment no interface
+    m_pAdjustmentInfo = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 QString("INF_Adjusted"),
+                                                 QString("Component forwards information about device adjustment"),
+                                                 QVariant(0));
+
+    m_pModule->veinModuleComponentList.append(m_pAdjustmentInfo);
 }
 
 
@@ -119,12 +132,29 @@ void cAdjustManagement::deleteInterface()
 }
 
 
-void cAdjustManagement::dspserverConnect()
+void cAdjustManagement::pcbserverConnect()
 {
     // we connect cmddone of our meas channels so we get informed if commands are finished
     for (int i = 0; i < m_ChannelList.count(); i++)
         connect(m_ChannelList.at(i), SIGNAL(cmdDone(quint32)), SLOT(catchChannelReply(quint32)));
 
+    // we set up our pcb server connection
+    m_pPCBClient = m_pProxy->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
+    m_pPCBInterface->setClient(m_pPCBClient);
+    m_pcbserverConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readAdjustmentStatusState);
+    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pProxy->startConnection(m_pPCBClient);
+}
+
+
+void cAdjustManagement::readAdjustmentStatus()
+{
+   m_MsgNrCmdList[m_pPCBInterface->getAdjustmentStatus()] = readadjustmentstatus;
+}
+
+
+void cAdjustManagement::dspserverConnect()
+{
     // we set up our dsp server connection
     m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
@@ -333,8 +363,10 @@ void cAdjustManagement::getCorrDone()
 }
 
 
-void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant)
+void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
+    bool ok;
+
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         // that we will ignore
@@ -347,6 +379,22 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
+            case readadjustmentstatus:
+                if (reply == ack)
+                {
+                    m_nAdjStatus = answer.toInt(&ok);
+                    m_pAdjustmentInfo->setValue(m_nAdjStatus);
+                    emit activationContinue();
+                }
+                else
+                {
+                    emit errMsg((tr(readadjstatusErrMsg)));
+        #ifdef DEBUG
+                    qDebug() << readadjstatusErrMsg;
+        #endif
+                    emit activationError();
+                }
+                break;
             case readgaincorr:
                 if (reply == ack)
                     emit activationContinue();

@@ -109,6 +109,7 @@ private:
     cVeinModuleParameter* m_pParRangeAutomaticOnOff;
     cVeinModuleParameter* m_pParGroupingOnOff;
     cVeinModuleParameter* m_pParOverloadOnOff;
+    cVeinModuleComponent* m_pComponentOverloadMax;
 
     cDspMeasData* m_pGainCorrection2DSP; // copy of dsp internal correction data
     float* m_pfScale;

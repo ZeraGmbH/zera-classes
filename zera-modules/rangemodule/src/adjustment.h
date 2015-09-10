@@ -15,6 +15,7 @@
 
 
 class cDspMeasData;
+class cVeinModuleComponent;
 
 namespace Zera {
 namespace Proxy {
@@ -23,6 +24,7 @@ namespace Proxy {
 }
 namespace  Server {
     class cDSPInterface;
+    class cPCBInterface;
 }
 }
 
@@ -33,6 +35,8 @@ namespace RANGEMODULE
 
 enum adjustmentCmds
 {
+    readadjustmentstatus,
+
     readgaincorr,
     readphasecorr,
     readoffsetcorr,
@@ -57,7 +61,7 @@ class cAdjustManagement: public cModuleActivist
     Q_OBJECT
 
 public:
-    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QStringList chnlist, QStringList subdclist, double interval);
+    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval);
     virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -73,10 +77,13 @@ private:
     cRangeModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cSocket* m_pDSPSocket;
+    cSocket* m_pPCBSocket;
     QStringList m_ChannelNameList; // the list of channels (names) we work on
     QStringList m_subdcChannelNameList; // the list of channels we have to subtract dc
     double m_fAdjInterval;
     Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
+    Zera::Server::cPCBInterface* m_pPCBInterface;
+    Zera::Proxy::cProxyClient *m_pPCBClient;
     Zera::Proxy::cProxyClient *m_pDspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
@@ -85,8 +92,13 @@ private:
     QHash<quint32, int> m_MsgNrCmdList;
     QTimer m_AdjustTimer;
     bool m_bAdjustTrigger;
+    quint8 m_nAdjStatus;
+
+    cVeinModuleComponent *m_pAdjustmentInfo;
 
     // statemachine for activating gets the following states
+    QState m_pcbserverConnectState;
+    QState m_readAdjustmentStatusState;
     QState m_dspserverConnectState;
     QState m_readGainCorrState;
     QState m_readPhaseCorrState;
@@ -121,6 +133,8 @@ private:
 
 
 private slots:
+    void pcbserverConnect();
+    void readAdjustmentStatus();
     void dspserverConnect();
     void readGainCorr();
     void readPhaseCorr();
@@ -143,7 +157,7 @@ private slots:
     void getOffsetCorr2();
     void getCorrDone();
 
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void catchChannelReply(quint32 msgnr);
 
     void adjustPrepare();

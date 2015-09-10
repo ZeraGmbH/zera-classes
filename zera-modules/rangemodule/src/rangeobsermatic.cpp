@@ -199,6 +199,11 @@ void cRangeObsermatic::generateInterface()
                                                        QVariant(0));
 
         m_pModule->veinModuleParameterHash["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
+
+        m_pComponentOverloadMax = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                           QString("INF_OverloadMax"),
+                                                           QString("Component signals maximum range overload condition"),
+                                                           QVariant(0));
     }
 
     m_pRangingSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -235,7 +240,10 @@ void cRangeObsermatic::rangeObservation()
             QString s = pmChn->getMaxRange();
 
             if (m_actChannelRangeList.at(i) == s) // in case ovrload was in max. range
+            {
                 m_maxOvlList.replace(i, true);
+                m_pComponentOverloadMax->setValue(1);
+            }
 
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
             sPar.m_sPar = s;
@@ -701,6 +709,7 @@ void cRangeObsermatic::newOverload(QVariant overload)
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
+                m_pComponentOverloadMax->setValue(0);
             }
 
             // and then we force setting new ranges
