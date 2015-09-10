@@ -35,8 +35,8 @@ public:
     RangeModuleFactory(){}
     ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0);
     void destroyModule(ZeraModules::VirtualModule *module); //override;
-    QList<ZeraModules::VirtualModule *> listModules(); //override;
-    QString getFactoryName(); //override;
+    QList<ZeraModules::VirtualModule *> listModules() const; //override;
+    QString getFactoryName() const; //override;
 
 private:
   QList<ZeraModules::VirtualModule*> m_ModuleList; // our list of modules

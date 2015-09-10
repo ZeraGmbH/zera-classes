@@ -41,7 +41,7 @@ cRangeModule::~cRangeModule()
 }
 
 
-QByteArray cRangeModule::getConfiguration()
+QByteArray cRangeModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }

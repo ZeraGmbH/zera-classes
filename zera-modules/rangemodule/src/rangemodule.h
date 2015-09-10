@@ -47,7 +47,7 @@ Q_OBJECT
 public:
     cRangeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cRangeModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
 
 protected:

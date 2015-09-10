@@ -21,13 +21,13 @@ void RangeModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> RangeModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> RangeModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString RangeModuleFactory::getFactoryName()
+QString RangeModuleFactory::getFactoryName() const
 {
     return QString("rangemodule");
 }
