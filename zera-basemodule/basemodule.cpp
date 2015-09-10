@@ -198,7 +198,7 @@ cBaseModule::~cBaseModule()
 }
 
 
-QList<const QState *> cBaseModule::getActualStates()
+QList<const QState *> cBaseModule::getActualStates() const
 {
     return m_StateList;
 }
@@ -226,7 +226,7 @@ QString cBaseModule::getSCPIModuleName()
 }
 
 
-bool cBaseModule::isConfigured()
+bool cBaseModule::isConfigured() const
 {
     return (m_nStatus > untouched);
 }

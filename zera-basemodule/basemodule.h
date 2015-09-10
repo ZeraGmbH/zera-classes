@@ -52,13 +52,19 @@ Q_OBJECT
 public:
     cBaseModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, cBaseModuleConfiguration* modcfg, QObject *parent = 0);
     virtual ~cBaseModule();
-    virtual QList<const QState*> getActualStates(); // in case parallel working states
+    virtual QList<const QState*> getActualStates() const; // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
     virtual QString getModuleName();
     virtual QString getSCPIModuleName();
+<<<<<<< HEAD
     virtual quint16 getModuleNr();
     virtual QByteArray getConfiguration()=0;
     virtual bool isConfigured();
+=======
+    virtual quint8 getModuleNr();
+    virtual QByteArray getConfiguration() const = 0;
+    virtual bool isConfigured() const;
+>>>>>>> zera-basemodule: bugfix
     virtual void startModule();
     virtual void stopModule();
 
