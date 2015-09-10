@@ -7,7 +7,6 @@
 #include <QByteArray>
 
 #include "basemodule.h"
-#include "moduleerror.h"
 #include "basemoduleconfiguration.h"
 #include "veinmodulemetadata.h"
 #include "veinmoduleactvalue.h"

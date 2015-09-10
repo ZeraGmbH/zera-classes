@@ -34,6 +34,7 @@
 #define setPllErrMsg "PCB set pll failed"
 #define readmuxchannelErrMsg "PCB muxchannel read failed"
 #define readrefconstantErrMsg "PCB reference constant read failed"
+#define readadjstatusErrMsg "PCB adjustment status read failed"
 
 #define readdspgaincorrErrMsg "DSP read gain correction failed"
 #define readdspphasecorrErrMsg "DSP read phase correction failed"

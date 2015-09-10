@@ -44,15 +44,11 @@ HEADERS += \
     basemeasprogram.h \
     moduleactivist.h \
     errormessages.h \
-    moduleerror.h \
-    moduleparameter.h \
     measchannelinfo.h \
     xmlsettings.h \
     socket.h \
     reply.h \
-    modulesignal.h \
     basemodule.h \
-    moduleinfo.h \
     basemoduleconfiguration.h \
     measmodeinfo.h \
     foutinfo.h \
@@ -80,11 +76,7 @@ HEADERS += \
 
 SOURCES += \
     basemeasprogram.cpp \
-    moduleerror.cpp \
-    moduleparameter.cpp \
-    modulesignal.cpp \
     basemoduleconfiguration.cpp \
-    moduleinfo.cpp \
     moduleactivist.cpp \
     basemodule.cpp \
     measmodeinfo.cpp \
