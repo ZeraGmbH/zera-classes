@@ -30,7 +30,7 @@ cSCPIModule::~cSCPIModule()
 }
 
 
-QByteArray cSCPIModule::getConfiguration()
+QByteArray cSCPIModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
