@@ -61,6 +61,8 @@ void cVeinModuleComponent::sendNotification(VeinComponent::ComponentData::Comman
     cData = new VeinComponent::ComponentData();
 
     cData->setEntityId(m_nEntityId);
+    cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
+    cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
     cData->setCommand(vcmd);
     cData->setComponentName(m_sName);
     cData->setNewValue(m_vValue);
