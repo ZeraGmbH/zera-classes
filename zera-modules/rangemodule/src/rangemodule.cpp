@@ -80,6 +80,16 @@ void cRangeModule::setupModule()
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, eData);
     m_pModuleValidator->sigSendEvent(tmpEvent);
 
+    VeinComponent::ComponentData *cData;
+
+    cData = new VeinComponent::ComponentData();
+    cData->setEntityId(0);
+    cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
+    cData->setComponentName("EntityName");
+    cData->setNewValue(m_sModuleName);
+    tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
+    m_pModuleValidator->sigSendEvent(tmpEvent);
+
     cRangeModuleConfigData *pConfData;
     pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
