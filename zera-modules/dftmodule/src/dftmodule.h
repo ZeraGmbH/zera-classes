@@ -20,9 +20,6 @@ namespace Proxy {
 }
 
 
-class cModuleError;
-
-
 namespace DFTMODULE
 {
 

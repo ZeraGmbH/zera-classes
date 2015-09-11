@@ -21,6 +21,7 @@ cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId,
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_pSCPIEventSystem = new cSCPIEventSystem(this);
+    emit addEventSystem(m_pSCPIEventSystem);
 }
 
 
@@ -112,8 +113,6 @@ void cSCPIModule::activationDone()
 
 void cSCPIModule::activationFinished()
 {
-    emit addEventSystem(m_pSCPIEventSystem);
-
     emit activationReady();
 }
 

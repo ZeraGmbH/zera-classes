@@ -6,7 +6,10 @@
 #include <veinmoduleparameter.h>
 #include <modulevalidator.h>
 #include <scpiinfo.h>
+#include <ve_commandevent.h>
+#include <vcmp_entitydata.h>
 
+#include <QDebug>
 #include <QByteArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -69,8 +72,28 @@ void cRangeModule::doConfiguration(QByteArray xmlConfigData)
 
 void cRangeModule::setupModule()
 {
+    emit addEventSystem(m_pModuleValidator);
+
+    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
+    eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
+    eData->setEntityId(m_nEntityId);
+    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, eData);
+    m_pModuleValidator->sigSendEvent(tmpEvent);
+
     cRangeModuleConfigData *pConfData;
     pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+
+    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleValidator,
+                                                       QString("ERR_Message"),
+                                                       QString("Component forwards the run time errors"),
+                                                       QVariant(QString("")));
+    veinModuleComponentList.append(m_pModuleErrorComponent);
+    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleValidator,
+                                                           QString("INF_ModuleInterface"),
+                                                           QString("Component forwards the modules interface"),
+                                                           QByteArray());
+    veinModuleComponentList.append(m_pModuleInterfaceComponent);
+
 
     m_pModuleName = new cVeinModuleMetaData(QString("Name"), QVariant(m_sModuleName));
     veinModuleMetaDataList.append(m_pModuleName);
@@ -195,7 +218,6 @@ void cRangeModule::activationFinished()
     connect(m_pRangeModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rangeModuleReconfigure()));
 
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
-    emit addEventSystem(m_pModuleValidator);
 
     // now we still have to export the json interface information
 
@@ -223,20 +245,23 @@ void cRangeModule::activationFinished()
 
     jsonObj.insert("ComponentInfo", jsonObj3);
 
-
-    QJsonObject jsonObj4;
-
-    jsonObj4.insert("ModuleName", m_sSCPIModuleName);
+    QJsonArray jsonArr;
 
     // and then all the command information for actual values, parameters and for add. commands without components
     for (int i = 0; i < scpiCommandList.count(); i++)
-        scpiCommandList.at(i)->appendSCPIInfo(jsonObj4);
+        scpiCommandList.at(i)->appendSCPIInfo(jsonArr);
 
     for (int i = 0; i < veinModuleActvalueList.count(); i++)
-        veinModuleActvalueList.at(i)->exportSCPIInfo(jsonObj4);
+        veinModuleActvalueList.at(i)->exportSCPIInfo(jsonArr);
 
     for (int i = 0; i < keyList.count(); i++)
-        veinModuleParameterHash[keyList.at(i)]->exportSCPIInfo(jsonObj4);
+        veinModuleParameterHash[keyList.at(i)]->exportSCPIInfo(jsonArr);
+
+
+    QJsonObject jsonObj4;
+
+    jsonObj4.insert("Name", m_sSCPIModuleName);
+    jsonObj4.insert("Cmd", jsonArr);
 
     jsonObj.insert("SCPIInfo", jsonObj4);
 
@@ -247,7 +272,7 @@ void cRangeModule::activationFinished()
     ba = jsonDoc.toBinaryData();
 
 #ifdef DEBUG
-    qDebug() << jsonDoc;
+    qDebug() << jsonDoc.toJson();
 #endif
 
     m_pModuleInterfaceComponent->setValue(QVariant(ba));

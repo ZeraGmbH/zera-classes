@@ -7,6 +7,7 @@
 #include <veinmodulecomponent.h>
 #include <veinmoduleactvalue.h>
 #include <modulevalidator.h>
+#include <scpiinfo.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -130,15 +131,15 @@ void cRangeModuleMeasProgram::generateInterface()
                                         QVariant(0.0) );
 
     pActvalue->setUnit("Hz");
+    pActvalue->setSCPIInfo(new cSCPIInfo("MEASURE","F", "8", "", "0", "Hz"));
     m_ActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-    cVeinModuleComponent *pComponent;
-    pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                          QString("SIG_Measuring"),
-                                          QString("Component forwards a signal indicating measurement activity"),
-                                          QVariant(0) );
-    m_pModule->veinModuleComponentList.append(pComponent); // and for the modules interface
+    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("SIG_Measuring"),
+                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QVariant(0) );
+    m_pModule->veinModuleComponentList.append(m_pMeasureSignal); // and for the modules interface
 }
 
 
@@ -412,6 +413,20 @@ void cRangeModuleMeasProgram::setActualValuesNames()
 }
 
 
+void cRangeModuleMeasProgram::setSCPIInfo()
+{
+    cRangeMeasChannel* mchn;
+    cSCPIInfo* pSCPIInfo;
+
+    for (int i = 0; i < m_ChannelList.count(); i++)
+    {
+        mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
+        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", "", "0", mchn->getUnit());
+        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+    }
+}
+
+
 void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     int i;
@@ -490,6 +505,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
     setActualValuesNames();
+    setSCPIInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
     emit activated();

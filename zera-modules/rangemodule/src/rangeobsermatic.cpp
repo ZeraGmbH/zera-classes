@@ -166,7 +166,7 @@ void cRangeObsermatic::generateInterface()
 
           QString s = m_GroupList.at(i).join(sep);
 
-          pMetaData = new cVeinModuleMetaData(QString("ChannelGroup%").arg(i+1), QVariant(s));
+          pMetaData = new cVeinModuleMetaData(QString("ChannelGroup%1").arg(i+1), QVariant(s));
           m_pModule->veinModuleMetaDataList.append(pMetaData); // only for module use
         }
     }
@@ -513,11 +513,11 @@ void cRangeObsermatic::readGainCorrDone()
         m_RangeParameterList.at(i)->setChannelName(s1 = m_ChannelAliasList.at(i));
         m_RangeParameterList.at(i)->setUnit(s2 = m_RangeMeasChannelList.at(i)->getUnit());
 
-        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(m_ChannelAliasList.at(i)), "10", s1, "0", s2);
+        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(m_ChannelAliasList.at(i)), "10", m_RangeParameterList.at(i)->getName(), "0", s2);
         m_RangeParameterList.at(i)->setSCPIInfo(scpiInfo);
 
         // we want to support querying the channels ranges
-        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE:CATALOG").arg(m_ChannelAliasList.at(i)), "2", s1, "1", "");
+        scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE:CATALOG").arg(m_ChannelAliasList.at(i)), "2", m_RangeParameterList.at(i)->getName(), "1", "");
         m_pModule->scpiCommandList.append(scpiInfo);
 
         m_RangeOVLRejectionComponentList.at(i)->setChannelName(s1);
@@ -525,6 +525,10 @@ void cRangeObsermatic::readGainCorrDone()
 
         m_RangeActRejectionComponentList.at(i)->setChannelName(s1);
         m_RangeActRejectionComponentList.at(i)->setUnit(s2);
+
+        m_RangeActOVLRejectionComponentList.at(i)->setChannelName(s1);
+        m_RangeActOVLRejectionComponentList.at(i)->setUnit(s2);
+
     }
 
     if (m_ConfPar.m_bRangeAuto)
