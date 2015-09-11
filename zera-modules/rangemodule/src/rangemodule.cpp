@@ -83,7 +83,7 @@ void cRangeModule::setupModule()
     VeinComponent::ComponentData *cData;
 
     cData = new VeinComponent::ComponentData();
-    cData->setEntityId(0);
+    cData->setEntityId(m_nEntityId);
     cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
     cData->setComponentName("EntityName");
     cData->setNewValue(m_sModuleName);
