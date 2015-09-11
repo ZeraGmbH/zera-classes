@@ -21,7 +21,7 @@ bool cDoubleValidator::isValidParam(QVariant newValue)
 }
 
 
-void cDoubleValidator::exportMetaData(QJsonObject jsObj)
+void cDoubleValidator::exportMetaData(QJsonObject& jsObj)
 {
     jsObj.insert("Type", "DOUBLE");
 

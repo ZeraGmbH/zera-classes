@@ -45,7 +45,7 @@ void cSCPIInfo::setUnit(QString unit)
 }
 
 
-void cSCPIInfo::appendSCPIInfo(QJsonObject &jsObj)
+void cSCPIInfo::appendSCPIInfo(QJsonArray &jsArr)
 {
     QJsonArray jsonSCPIArr;
 
@@ -56,7 +56,7 @@ void cSCPIInfo::appendSCPIInfo(QJsonObject &jsObj)
     jsonSCPIArr.append(m_sRefType);
     jsonSCPIArr.append(m_sUnit);
 
-    jsObj.insert("Cmd", jsonSCPIArr);
+    jsArr.append(jsonSCPIArr);
 }
 
 

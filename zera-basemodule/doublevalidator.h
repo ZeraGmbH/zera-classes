@@ -9,7 +9,7 @@ public:
     cDoubleValidator(double min, double max, double delta);
 
     virtual bool isValidParam(QVariant newValue);
-    virtual void exportMetaData(QJsonObject jsObj);
+    virtual void exportMetaData(QJsonObject& jsObj);
 
 private:
     double m_fMin;

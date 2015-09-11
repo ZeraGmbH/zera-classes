@@ -9,7 +9,7 @@ public:
     cBoolValidator(){}
 
     virtual bool isValidParam(QVariant newValue);
-    virtual void exportMetaData(QJsonObject jsObj);
+    virtual void exportMetaData(QJsonObject& jsObj);
 };
 
 #endif // BOOLVALIDATOR_H

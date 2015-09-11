@@ -4,6 +4,7 @@
 cVeinModuleActvalue::cVeinModuleActvalue(int entityId,  VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)
     :cVeinModuleComponent(entityId, eventsystem, name, description, initval)
 {
+    m_pscpiInfo = 0;
 }
 
 
@@ -14,10 +15,10 @@ cVeinModuleActvalue::~cVeinModuleActvalue()
 }
 
 
-void cVeinModuleActvalue::exportSCPIInfo(QJsonObject &jsObj)
+void cVeinModuleActvalue::exportSCPIInfo(QJsonArray &jsArr)
 {
     if (m_pscpiInfo)
-        m_pscpiInfo->appendSCPIInfo(jsObj);
+        m_pscpiInfo->appendSCPIInfo(jsArr);
 }
 
 

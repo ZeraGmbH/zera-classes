@@ -12,7 +12,7 @@ public:
     cStringValidator(QString possibilities); // all possible strings with ';' delimiter
     cStringValidator(QStringList possibilities); // same but as qstringlist
     virtual bool isValidParam(QVariant newValue);
-    virtual void exportMetaData(QJsonObject jsObj);
+    virtual void exportMetaData(QJsonObject& jsObj);
 
 private:
     QStringList m_sPossibilitiesList;

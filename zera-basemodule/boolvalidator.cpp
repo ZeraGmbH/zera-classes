@@ -14,7 +14,7 @@ bool cBoolValidator::isValidParam(QVariant newValue)
 }
 
 
-void cBoolValidator::exportMetaData(QJsonObject jsObj)
+void cBoolValidator::exportMetaData(QJsonObject& jsObj)
 {
     jsObj.insert("Type", "BOOL");
 

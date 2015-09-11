@@ -12,7 +12,7 @@
 #include "veinmoduleparameter.h"
 
 cModuleValidator::cModuleValidator(cBaseModule* module)
-    : m_pModule(module), Zera::CommandValidator(this)
+    : m_pModule(module), Zera::CommandValidator()
 {
 }
 

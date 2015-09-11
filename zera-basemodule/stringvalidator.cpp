@@ -25,7 +25,7 @@ bool cStringValidator::isValidParam(QVariant newValue)
 }
 
 
-void cStringValidator::exportMetaData(QJsonObject jsObj)
+void cStringValidator::exportMetaData(QJsonObject& jsObj)
 {
     QJsonArray jsonArr;
 

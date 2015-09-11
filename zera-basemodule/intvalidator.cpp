@@ -21,7 +21,7 @@ bool cIntValidator::isValidParam(QVariant newValue)
 }
 
 
-void cIntValidator::exportMetaData(QJsonObject jsObj)
+void cIntValidator::exportMetaData(QJsonObject& jsObj)
 {
     jsObj.insert("Type", "INTEGER");
 

@@ -28,7 +28,7 @@ public:
     bool isValidParameter(QVariant value);
 
     virtual void exportMetaData(QJsonObject &jsObj);
-    virtual void exportSCPIInfo(QJsonObject &jsObj);
+    virtual void exportSCPIInfo(QJsonArray &jsArr);
     void setSCPIInfo(cSCPIInfo* scpiinfo);
     void setValidator(cParamValidator* validator);
 

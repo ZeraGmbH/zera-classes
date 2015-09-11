@@ -23,7 +23,7 @@ public:
     cVeinModuleActvalue(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
     virtual ~cVeinModuleActvalue();
 
-    virtual void exportSCPIInfo(QJsonObject &jsObj);
+    virtual void exportSCPIInfo(QJsonArray &jsArr);
     void setSCPIInfo(cSCPIInfo* scpiinfo);
 
 private:

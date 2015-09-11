@@ -18,7 +18,7 @@ public:
     void setRefType(QString reftype);
     void setUnit(QString unit);
 
-    void appendSCPIInfo(QJsonObject &jsObj);
+    void appendSCPIInfo(QJsonArray &jsArr);
 
 private:
     QString m_sSCPIModel;

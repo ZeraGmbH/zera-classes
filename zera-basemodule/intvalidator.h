@@ -9,7 +9,7 @@ public:
     cIntValidator(qint32 min, qint32 max, qint32 delta = 0);
 
     virtual bool isValidParam(QVariant newValue);
-    virtual void exportMetaData(QJsonObject jsObj);
+    virtual void exportMetaData(QJsonObject& jsObj);
 
 private:
     qint32 m_nMin;

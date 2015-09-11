@@ -50,15 +50,14 @@ void cVeinModuleParameter::exportMetaData(QJsonObject &jsObj)
         m_pValidator->exportMetaData(jsonObj2);
         jsonObj.insert("Validation", jsonObj2);
     }
-
     jsObj.insert(m_sName, jsonObj);
 }
 
 
-void cVeinModuleParameter::exportSCPIInfo(QJsonObject &jsObj)
+void cVeinModuleParameter::exportSCPIInfo(QJsonArray &jsArr)
 {
     if (m_pscpiInfo)
-        m_pscpiInfo->appendSCPIInfo(jsObj);
+        m_pscpiInfo->appendSCPIInfo(jsArr);
 }
 
 
