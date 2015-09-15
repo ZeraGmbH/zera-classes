@@ -19,7 +19,7 @@ namespace SCPIMODULE
 {
 
 cSCPIEventSystem::cSCPIEventSystem(cSCPIModule* module)
-    :m_pModule(module), VeinEvent::EventSystem(this)
+    :m_pModule(module), VeinEvent::EventSystem()
 {
 }
 

@@ -1,5 +1,3 @@
-#include <veinentity.h>
-
 #include "scpistatus.h"
 #include "signalconnectiondelegate.h"
 

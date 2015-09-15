@@ -1,7 +1,18 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
+#include <veinmodulemetadata.h>
+#include <veinmoduleactvalue.h>
+#include <veinmoduleparameter.h>
+#include <scpiinfo.h>
 #include <ve_storagesystem.h>
+#include <ve_commandevent.h>
+#include <vcmp_entitydata.h>
+
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
 
 #include "scpimodule.h"
 #include "scpimoduleconfiguration.h"
@@ -18,6 +29,7 @@ cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId,
     :cBaseModule(modnr, proxi, entityId, storagesystem, new cSCPIModuleConfiguration(), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_pSCPIEventSystem = new cSCPIEventSystem(this);
@@ -44,8 +56,40 @@ void cSCPIModule::doConfiguration(QByteArray xmlConfigData)
 
 void cSCPIModule::setupModule()
 {
+    emit addEventSystem(m_pSCPIEventSystem);
+
+    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
+    eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
+    eData->setEntityId(m_nEntityId);
+    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, eData);
+    m_pSCPIEventSystem->sigSendEvent(tmpEvent);
+
+    VeinComponent::ComponentData *cData;
+
+    cData = new VeinComponent::ComponentData();
+    cData->setEntityId(m_nEntityId);
+    cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
+    cData->setComponentName("EntityName");
+    cData->setNewValue(m_sModuleName);
+    tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
+    m_pSCPIEventSystem->sigSendEvent(tmpEvent);
+
     cSCPIModuleConfigData *pConfData;
     pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+
+    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pSCPIEventSystem,
+                                                       QString("ERR_Message"),
+                                                       QString("Component forwards the run time errors"),
+                                                       QVariant(QString("")));
+    veinModuleComponentList.append(m_pModuleErrorComponent);
+    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pSCPIEventSystem,
+                                                           QString("INF_ModuleInterface"),
+                                                           QString("Component forwards the modules interface"),
+                                                           QByteArray());
+    veinModuleComponentList.append(m_pModuleInterfaceComponent);
+
+    m_pModuleDescription = new cVeinModuleMetaData(QString("Description"), QVariant(m_sModuleDescription));
+    veinModuleMetaDataList.append(m_pModuleDescription);
 
     // we only have this activist
     m_pSCPIServer = new cSCPIServer(this, *pConfData);
@@ -53,6 +97,9 @@ void cSCPIModule::setupModule()
     connect(m_pSCPIServer, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pSCPIServer, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pSCPIServer, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+
+    // we already post meta information here because setting up interface looks for valid meta info
+    exportMetaData();
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

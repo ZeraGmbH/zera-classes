@@ -7,12 +7,11 @@
 TEMPLATE = lib
 CONFIG += plugin
 
-ZDEPENDS += libvein
 ZDEPENDS += SCPI
 
 QT       += network core serialport
 
-LIBS +=  -lSCPI
+#LIBS +=  -lSCPI
 LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
 LIBS +=  -lzeraxmlconfig

@@ -72,10 +72,10 @@ bool cModuleInterface::setupInterface()
 
                 jsonObj = jsonDoc.object();
 
-                jsonArr = jsonObj["SCPIInfo"].toArray();
-                jsonObj = jsonArr.takeAt(0).toObject();
+                jsonObj = jsonObj["SCPIInfo"].toObject();
+                scpiModuleName = jsonObj["Name"].toString();
 
-                scpiModuleName = jsonObj["ModuleName"].toString();
+                jsonArr = jsonObj["Cmd"].toArray();
 
                 // we iterate over all cmds
                 for (int j = 0; j < jsonArr.count(); j++)
@@ -142,7 +142,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         cSCPIDelegate* delegate;
 
         QString cmdComplete;
-        cmdComplete = QString("%1:%2:3").arg(scpiCmdInfo->scpiModel).arg(scpiCmdInfo->scpiModuleName).arg(scpiCmdInfo->scpiCommand);
+        cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel).arg(scpiCmdInfo->scpiModuleName).arg(scpiCmdInfo->scpiCommand);
         QStringList nodeNames = cmdComplete.split(':');
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
