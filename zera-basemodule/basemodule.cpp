@@ -5,8 +5,13 @@
 #include <virtualmodule.h>
 #include <QSet>
 #include <QByteArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
 
 #include "basemodule.h"
+#include "debug.h"
 #include "basemoduleconfiguration.h"
 #include "veinmodulemetadata.h"
 #include "veinmoduleactvalue.h"
@@ -299,6 +304,67 @@ void cBaseModule::unsetModule()
         }
         m_ModuleActivistList.clear();
     }
+}
+
+
+void cBaseModule::exportMetaData()
+{
+    QJsonObject jsonObj;
+    QJsonObject jsonObj2;
+
+    for (int i = 0; i < veinModuleMetaDataList.count(); i++)
+        veinModuleMetaDataList.at(i)->exportMetaData(jsonObj2);
+
+    jsonObj.insert("ModuleInfo", jsonObj2);
+
+    QJsonObject jsonObj3;
+
+    for (int i = 0; i < veinModuleComponentList.count(); i++)
+        veinModuleComponentList.at(i)->exportMetaData(jsonObj3);
+
+    for (int i = 0; i < veinModuleActvalueList.count(); i++)
+        veinModuleActvalueList.at(i)->exportMetaData(jsonObj3);
+
+    QList<QString> keyList;
+    keyList = veinModuleParameterHash.keys();
+
+    for (int i = 0; i < keyList.count(); i++)
+        veinModuleParameterHash[keyList.at(i)]->exportMetaData(jsonObj3);
+
+    jsonObj.insert("ComponentInfo", jsonObj3);
+
+    QJsonArray jsonArr;
+
+    // and then all the command information for actual values, parameters and for add. commands without components
+    for (int i = 0; i < scpiCommandList.count(); i++)
+        scpiCommandList.at(i)->appendSCPIInfo(jsonArr);
+
+    for (int i = 0; i < veinModuleActvalueList.count(); i++)
+        veinModuleActvalueList.at(i)->exportSCPIInfo(jsonArr);
+
+    for (int i = 0; i < keyList.count(); i++)
+        veinModuleParameterHash[keyList.at(i)]->exportSCPIInfo(jsonArr);
+
+
+    QJsonObject jsonObj4;
+
+    jsonObj4.insert("Name", m_sSCPIModuleName);
+    jsonObj4.insert("Cmd", jsonArr);
+
+    jsonObj.insert("SCPIInfo", jsonObj4);
+
+    QJsonDocument jsonDoc;
+    jsonDoc.setObject(jsonObj);
+
+    QByteArray ba;
+    ba = jsonDoc.toBinaryData();
+
+#ifdef DEBUG
+    qDebug() << jsonDoc.toJson();
+#endif
+
+    m_pModuleInterfaceComponent->setValue(QVariant(ba));
+
 }
 
 

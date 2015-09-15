@@ -72,7 +72,8 @@ HEADERS += \
     veinmodulemetadata.h \
     veinmoduleactvalue.h \
     scpiinfo.h \
-    basemeasmodule.h
+    basemeasmodule.h \
+    debug.h
 
 SOURCES += \
     basemeasprogram.cpp \

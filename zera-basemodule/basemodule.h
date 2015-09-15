@@ -146,6 +146,8 @@ protected:
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
 
+    virtual void exportMetaData();
+
 protected slots:
     virtual void activationStart() = 0;
     virtual void activationExec() = 0;
