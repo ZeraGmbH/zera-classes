@@ -6,8 +6,6 @@
 TEMPLATE = lib
 CONFIG += plugin
 
-ZDEPENDS += libvein
-
 QT       += network core
 QT       -= gui
 

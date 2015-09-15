@@ -1,20 +1,16 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
-#include <veinmodulemetadata.h>
-#include <veinmoduleactvalue.h>
-#include <veinmoduleparameter.h>
 #include <modulevalidator.h>
-#include <scpiinfo.h>
+#include <veinmodulecomponent.h>
+#include <veinmodulemetadata.h>
+
 #include <ve_commandevent.h>
 #include <vcmp_entitydata.h>
+#include <vcmp_componentdata.h>
 
 #include <QDebug>
 #include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
 
 #include "debug.h"
 #include "rangemodule.h"
@@ -139,6 +135,14 @@ void cRangeModule::setupModule()
     connect(m_pRangeObsermatic, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pRangeObsermatic, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
+    // we have to connect all cmddone from our meas channel to range obsermatic
+    // this is also used for synchronizing purpose
+    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
+    {
+        cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
+        connect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
+    }
+
     // we also need some program for adjustment
     m_pAdjustment = new cAdjustManagement(this, m_pProxy, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
     m_ModuleActivistList.append(m_pAdjustment);
@@ -216,76 +220,13 @@ void cRangeModule::activationFinished()
     // we connect a signal that range has changed to measurement for synchronizing purpose
     connect(m_pRangeObsermatic->m_pRangingSignal, SIGNAL(sigValueChanged(QVariant)),  m_pMeasProgram, SLOT(syncRanging(QVariant)));
 
-    // we have to connect all cmddone from our meas channel to range obsermatic
-    // this is also used for synchronizing purpose
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
-    {
-        cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
-        connect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
-    }
-
     // if we get informed we have to reconfigure
     connect(m_pRangeModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rangeModuleReconfigure()));
 
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
     // now we still have to export the json interface information
-
-    QJsonObject jsonObj;
-    QJsonObject jsonObj2;
-
-    for (int i = 0; i < veinModuleMetaDataList.count(); i++)
-        veinModuleMetaDataList.at(i)->exportMetaData(jsonObj2);
-
-    jsonObj.insert("ModuleInfo", jsonObj2);
-
-    QJsonObject jsonObj3;
-
-    for (int i = 0; i < veinModuleComponentList.count(); i++)
-        veinModuleComponentList.at(i)->exportMetaData(jsonObj3);
-
-    for (int i = 0; i < veinModuleActvalueList.count(); i++)
-        veinModuleActvalueList.at(i)->exportMetaData(jsonObj3);
-
-    QList<QString> keyList;
-    keyList = veinModuleParameterHash.keys();
-
-    for (int i = 0; i < keyList.count(); i++)
-        veinModuleParameterHash[keyList.at(i)]->exportMetaData(jsonObj3);
-
-    jsonObj.insert("ComponentInfo", jsonObj3);
-
-    QJsonArray jsonArr;
-
-    // and then all the command information for actual values, parameters and for add. commands without components
-    for (int i = 0; i < scpiCommandList.count(); i++)
-        scpiCommandList.at(i)->appendSCPIInfo(jsonArr);
-
-    for (int i = 0; i < veinModuleActvalueList.count(); i++)
-        veinModuleActvalueList.at(i)->exportSCPIInfo(jsonArr);
-
-    for (int i = 0; i < keyList.count(); i++)
-        veinModuleParameterHash[keyList.at(i)]->exportSCPIInfo(jsonArr);
-
-
-    QJsonObject jsonObj4;
-
-    jsonObj4.insert("Name", m_sSCPIModuleName);
-    jsonObj4.insert("Cmd", jsonArr);
-
-    jsonObj.insert("SCPIInfo", jsonObj4);
-
-    QJsonDocument jsonDoc;
-    jsonDoc.setObject(jsonObj);
-
-    QByteArray ba;
-    ba = jsonDoc.toBinaryData();
-
-#ifdef DEBUG
-    qDebug() << jsonDoc.toJson();
-#endif
-
-    m_pModuleInterfaceComponent->setValue(QVariant(ba));
+    exportMetaData();
 
     emit activationReady();
 }

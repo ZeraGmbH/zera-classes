@@ -131,7 +131,8 @@ void cRangeModuleMeasProgram::generateInterface()
                                         QVariant(0.0) );
 
     pActvalue->setUnit("Hz");
-    pActvalue->setSCPIInfo(new cSCPIInfo("MEASURE","F", "8", "", "0", "Hz"));
+    pActvalue->setSCPIInfo(new cSCPIInfo("MEASURE","F", "8", "ACT_Frequency", "0", "Hz"));
+
     m_ActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
@@ -421,7 +422,7 @@ void cRangeModuleMeasProgram::setSCPIInfo()
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
         mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", "", "0", mchn->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", QString("ACT_Channel%1Peak").arg(i+1), "0", mchn->getUnit());
         m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }

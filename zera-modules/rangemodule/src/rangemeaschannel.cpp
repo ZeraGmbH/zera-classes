@@ -371,6 +371,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readresourcetypes:
         if ((reply == ack) && (answer.toString().contains("SENSE")))
             emit activationContinue();
@@ -383,6 +384,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readresource:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
@@ -395,6 +397,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readresourceinfo:
     {
         bool ok1, ok2, ok3;
@@ -449,6 +452,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case freeresource:
         if (reply == ack || reply == nack) // we accept nack here also
             emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
@@ -461,6 +465,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit deactivationError();
         }
         break;
+
     case readdspchannel:
         if (reply == ack)
         {
@@ -476,6 +481,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readchnalias:
         if (reply == ack)
         {
@@ -491,6 +497,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readsamplerate:
         if (reply == ack)
         {
@@ -506,6 +513,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readunit:
         if (reply == ack)
         {
@@ -521,6 +529,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readrangelist:
         if (reply == ack)
         {
@@ -536,6 +545,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readrngalias:
         if (reply == ack)
         {
@@ -551,6 +561,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readtype:
         if (reply == ack)
         {
@@ -566,6 +577,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readurvalue:
         if (reply == ack)
         {
@@ -581,6 +593,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readrejection:
         if (reply == ack)
         {
@@ -596,6 +609,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readovrejection:
         if (reply == ack)
         {
@@ -611,6 +625,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case readisavail:
         if (reply == ack)
         {
@@ -626,6 +641,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             emit activationError();
         }
         break;
+
     case setmeaschannelrange:
         if (reply == ack)
             m_sActRange = m_sNewRange;
@@ -639,6 +655,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         }; // perhaps some error output
         emit cmdDone(msgnr);
         break;    
+
     case readgaincorrection:
         if (reply == ack)
             m_fGainCorrection = answer.toDouble(&ok);
@@ -649,8 +666,8 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             qDebug() << readGainCorrErrMsg;
 #endif
         };
-        emit cmdDone(msgnr);
         break;
+
     case readoffsetcorrection:
         if (reply == ack)
             m_fOffsetCorrection = answer.toDouble(&ok);
@@ -662,8 +679,8 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 #endif
             emit executionError();
         };
-        emit cmdDone(msgnr);
         break;
+
     case readphasecorrection:
         if (reply == ack)
             m_fPhaseCorrection = answer.toDouble(&ok);
@@ -675,8 +692,8 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 #endif
             emit executionError();
         };
-        emit cmdDone(msgnr);
         break;
+
     case readmeaschannelstatus:
         if (reply == ack)
             m_nStatus = answer.toInt(&ok);
@@ -690,6 +707,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         };
         emit cmdDone(msgnr);
         break;
+
     case resetmeaschannelstatus:
         if (reply == ack)
             {}
@@ -703,6 +721,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
         }; // perhaps some error output
         emit cmdDone(msgnr);
         break;
+
     case resetmeaschannelstatus2:
         if (reply == ack)
         {
