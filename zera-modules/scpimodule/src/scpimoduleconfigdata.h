@@ -21,6 +21,15 @@ struct statusBitDescriptor
 };
 
 
+struct serialDevice
+{
+    quint8 m_nOn;
+    quint32 m_nBaud;
+    quint8 m_nStopbits;
+    quint8 m_nDatabits;
+    QString m_sDevice;
+};
+
 class cSCPIModuleConfigData
 {
 public:
@@ -36,6 +45,7 @@ public:
     QList<statusBitDescriptor> m_QuestionableStatDescriptorList;
     QList<statusBitDescriptor> m_OperationStatDescriptorList;
     QList<statusBitDescriptor> m_OperationMeasureStatDescriptorList;
+    serialDevice m_SerialDevice;
 };
 
 }

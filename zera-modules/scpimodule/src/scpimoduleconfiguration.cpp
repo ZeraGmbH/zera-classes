@@ -38,6 +38,12 @@ void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:nrclient"] = setnrClient;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:ethernet:port"] = setInterfacePort;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:on"] = setSerialOn;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:baud"] = setSerialBaud;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:databits"] = setSerialDatabits;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:stopbits"] = setSerialDatabits;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:device"] = setSerialDevice;
+
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:name"] = setDeviceName;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:identification"] = setDeviceIdentification;
 
@@ -84,6 +90,21 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
         case setInterfacePort:
             m_pSCPIModulConfigData->m_InterfaceSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             m_pSCPIModulConfigData->m_InterfaceSocket.m_sIP = "127.0.0.1";
+            break;
+        case setSerialOn:
+            m_pSCPIModulConfigData->m_SerialDevice.m_nOn = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setSerialBaud:
+            m_pSCPIModulConfigData->m_SerialDevice.m_nBaud = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setSerialDatabits:
+            m_pSCPIModulConfigData->m_SerialDevice.m_nDatabits = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setSerialStopbits:
+            m_pSCPIModulConfigData->m_SerialDevice.m_nStopbits = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setSerialDevice:
+            m_pSCPIModulConfigData->m_SerialDevice.m_sDevice = m_pXMLReader->getValue(key);
             break;
         case setDeviceName:
             m_pSCPIModulConfigData->m_sDeviceName = m_pXMLReader->getValue(key);

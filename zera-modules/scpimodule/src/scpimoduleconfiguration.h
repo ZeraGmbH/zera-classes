@@ -16,6 +16,11 @@ enum moduleconfigstate
     setDebugLevel,
     setnrClient,
     setInterfacePort,
+    setSerialOn,
+    setSerialBaud,
+    setSerialDatabits,
+    setSerialStopbits,
+    setSerialDevice,
     setDeviceName,
     setDeviceIdentification,
 

@@ -9,6 +9,13 @@
                 <nrclient>5</nrclient>
                 <port>6320</port>
             </ethernet>
+            <serialdevice>
+                <on>1</on>
+                <baud>9600</baud>
+                <databits>8</databits>
+                <stopbits>1</stopbits>
+                <device>/dev/ttyUSB0</device>
+            </serialdevice>
             <device>
                 <name>COM5003</name>
                 <identification>Zera GmbH Königswinter, COM5003, R1.0.1</identification>

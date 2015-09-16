@@ -6,15 +6,19 @@
 #include <QHostAddress>
 #include <QTcpSocket>
 
+#include <QtSerialPort/QSerialPort>
+//#include <QtSerialPort/QSerialPortInfo>
+
 #include <veinhub.h>
 #include <veinpeer.h>
 #include <veinentity.h>
 
 #include "debug.h"
 #include "errormessages.h"
+#include "scpimoduleconfigdata.h"
 #include "scpimodule.h"
 #include "scpiserver.h"
-#include "scpiclient.h"
+#include "scpiethclient.h"
 #include "scpiinterface.h"
 #include "moduleinterface.h"
 #include "interfaceinterface.h"
@@ -88,7 +92,7 @@ void cSCPIServer::exportInterface(QJsonArray &)
 void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-    cSCPIClient* client = new cSCPIClient(socket, m_pPeer, m_ConfigData, m_pSCPIInterface); // each client our interface;
+    cSCPIEthClient* client = new cSCPIEthClient(socket, m_pPeer, m_ConfigData, m_pSCPIInterface); // each client our interface;
     connect(client, SIGNAL(destroyed(QObject*)), this, SLOT(deleteSCPIClient(QObject*)));
     m_SCPIClientList.append(client);
     if (m_SCPIClientList.count() == 1)
@@ -122,7 +126,41 @@ void cSCPIServer::setupTCPServer()
     noError = noError && m_pStatusInterface->setupInterface();
     noError = noError && m_pIEEE488Interface->setupInterface();
 
+    if (!noError)
+    {
+        emit errMsg((tr(interfacejsonErrMsg)));
+#ifdef DEBUG
+        qDebug() << interfacejsonErrMsg;
+#endif
+    }
+
     noError = noError && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
+
+    if(!noError)
+    {
+        emit errMsg((tr(interfaceETHErrMsg)));
+#ifdef DEBUG
+        qDebug() << interfaceETHErrMsg;
+#endif
+    }
+
+    if (m_ConfigData.m_SerialDevice.m_nOn == 1)
+    {
+        m_pSerial=new QSerialPort();
+        m_pSerial->setPortName(m_ConfigData.m_SerialDevice.m_sDevice);
+        if (m_pSerial->open(QIODevice::ReadWrite))
+        {
+            m_pSerial->setBaudRate(m_ConfigData.m_SerialDevice.m_nBaud);
+            m_pSerial->setDataBits((QSerialPort::DataBits)m_ConfigData.m_SerialDevice.m_nDatabits);
+            m_pSerial->setStopBits((QSerialPort::StopBits)m_ConfigData.m_SerialDevice.m_nStopbits);
+            m_pSerial->setParity(QSerialPort::NoParity);
+            m_pSerial->setFlowControl(QSerialPort::NoFlowControl);
+
+
+            connect(m_pSerial,SIGNAL(readyRead()),this, SLOT(ReadCommand()));
+        }
+
+    }
 
     if (noError)
     {

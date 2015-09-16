@@ -50,7 +50,9 @@ SOURCES += \
     src/scpistatusdelegate.cpp \
     src/statusinterface.cpp \
     src/ieee4882interface.cpp \
-    src/signalconnectiondelegate.cpp
+    src/signalconnectiondelegate.cpp \
+    src/scpiethclient.cpp \
+    src/scpiserialclient.cpp
 
 HEADERS += \
     src/scpimodulefactory.h \
@@ -76,7 +78,9 @@ HEADERS += \
     src/scpistatusdelegate.h \
     src/statusinterface.h \
     src/ieee4882interface.h \
-    src/signalconnectiondelegate.h
+    src/signalconnectiondelegate.h \
+    src/scpiethclient.h \
+    src/scpiserialclient.h
 
 OTHER_FILES += \
     src/scpimodule.xml \

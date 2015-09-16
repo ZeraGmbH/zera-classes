@@ -18,8 +18,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIClient::cSCPIClient(QTcpSocket* socket, VeinPeer* peer, cSCPIModuleConfigData &configdata, cSCPIInterface* iface)
-    :m_pSocket(socket), m_pPeer(peer), m_ConfigData(configdata), m_pSCPIInterface(iface)
+cSCPIClient::cSCPIClient(VeinPeer* peer, cSCPIModuleConfigData &configdata, cSCPIInterface* iface)
+    :m_pPeer(peer), m_ConfigData(configdata), m_pSCPIInterface(iface)
 {
     m_bAuthorisation = false;
 
@@ -56,16 +56,11 @@ cSCPIClient::cSCPIClient(QTcpSocket* socket, VeinPeer* peer, cSCPIModuleConfigDa
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList);
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList);
-
-    // so now we can start our connection
-    connect(m_pSocket, SIGNAL(readyRead()), this, SLOT(cmdInput()));
-    connect(m_pSocket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
 }
 
 
 cSCPIClient::~cSCPIClient()
 {
-    m_pSocket->abort();
     for (int i = 0; i < m_SCPIStatusList.count(); i++)
         delete m_SCPIStatusList.at(i);
     for (int i = 0; i < sConnectDelegateList.count(); i++)
@@ -93,23 +88,6 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
 }
 
 
-void cSCPIClient::cmdInput()
-{
-    QString m_sInput;
-
-    while ( m_pSocket->canReadLine() )
-    {
-        m_sInput = m_pSocket->readLine();
-        m_sInput.remove('\n'); // we remove f
-        m_sInput.remove('\r');
-
-        if (!m_pSCPIInterface->executeCmd(this, m_sInput))
-            emit m_pIEEE4882->AddEventError(CommandError);
-    }
-
-}
-
-
 void cSCPIClient::receiveStatus(quint8 stat)
 {
     switch (stat)
@@ -134,11 +112,7 @@ void cSCPIClient::receiveStatus(quint8 stat)
 
 void cSCPIClient::receiveAnswer(QString answ)
 {
-    QString answer;
-    QByteArray ba;
-    answer = answ +"\n";
-    ba = answer.toLatin1();
-    m_pSocket->write(ba);
+
 }
 
 

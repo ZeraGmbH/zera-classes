@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="ISO-8859-1" ?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
+    <xs:simpleType name="yesnotype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='1'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="debugtype">
         <xs:restriction base="xs:integer">
             <xs:maxInclusive value='7'/>
@@ -18,6 +25,28 @@
     <xs:simpleType name="nrclienttype">
         <xs:restriction base="xs:integer">
             <xs:maxInclusive value='10'/>
+            <xs:minInclusive value='1'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="baudtype">
+        <xs:restriction base="xs:integer">
+            <xs:enumeration value='4800'/>
+            <xs:enumeration value='9600'/>
+            <xs:enumeration value='19200'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="databitstype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='8'/>
+            <xs:minInclusive value='7'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="stopbitstype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='2'/>
             <xs:minInclusive value='1'/>
         </xs:restriction>
     </xs:simpleType>
@@ -74,6 +103,17 @@
                     <xs:sequence>
                         <xs:element name="nrclient" type="nrclienttype"/>
                         <xs:element name="port" type="porttype"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="serialdevice">
+                <xs:complextType>
+                    <xs:sequence>
+                        <xs:element name="on" type="yesnotype"/>
+                        <xs:element name="baud" type="baudtype"/>
+                        <xs:element name="databits" type="databitstype"/>
+                        <xs:element name="stopbits" type="stopbitstype">
+                        <xs:element name="device" type="xs:string">
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

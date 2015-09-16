@@ -11,6 +11,7 @@
 
 
 class VeinPeer;
+class QSerialPort;
 
 namespace SCPIMODULE
 {
@@ -57,6 +58,9 @@ private:
     // statemachine for activating gets the following states
     QState m_shutdownTCPServerState;
     QFinalState m_deactivationDoneState;
+
+    // optionally we support a serial device
+    QSerialPort* m_pSerial;
 
 private slots:
     void addSCPIClient();
