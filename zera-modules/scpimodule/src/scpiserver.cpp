@@ -10,10 +10,6 @@
 #include <QtSerialPort/QSerialPort>
 //#include <QtSerialPort/QSerialPortInfo>
 
-#include <veinhub.h>
-#include <veinpeer.h>
-#include <veinentity.h>
-
 #include "debug.h"
 #include "errormessages.h"
 #include "scpimoduleconfigdata.h"

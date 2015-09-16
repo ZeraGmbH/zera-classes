@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QList>
 
-
 class QTcpSocket;
 
 
@@ -46,8 +45,6 @@ private:
 
     QList<cSCPIStatus*> m_SCPIStatusList;
     QList<cStatusBitSignal*> mStatusBitSignalList;
-
-    cIEEE4882* m_pIEEE4882;
 
     bool m_bAuthorisation;
     void setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList);

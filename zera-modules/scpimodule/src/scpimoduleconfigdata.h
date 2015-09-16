@@ -34,9 +34,9 @@ public:
     quint8 m_nQuestonionableStatusBitCount;
     quint8 m_nOperationStatusBitCount;
     quint8 m_nOperationMeasureStatusBitCount;
-    QList<statusBitDescriptor> m_QuestionableStatDescriptorList;
-    QList<statusBitDescriptor> m_OperationStatDescriptorList;
-    QList<statusBitDescriptor> m_OperationMeasureStatDescriptorList;
+    QList<cStatusBitDescriptor> m_QuestionableStatDescriptorList;
+    QList<cStatusBitDescriptor> m_OperationStatDescriptorList;
+    QList<cStatusBitDescriptor> m_OperationMeasureStatDescriptorList;
     serialDevice m_SerialDevice;
 };
 

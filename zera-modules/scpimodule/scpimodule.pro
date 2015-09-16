@@ -101,6 +101,8 @@ HEADERS += \
     src/scpieventsystem.h \
     src/scpipropertydelegate.h \
     src/scpiclientinfo.h
+    src/scpiethclient.h \
+    src/scpiserialclient.h
 
 OTHER_FILES += \
     src/scpimodule.xml \

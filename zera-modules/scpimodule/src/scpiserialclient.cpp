@@ -1,4 +1,5 @@
 #include <QtSerialPort/QSerialPort>
+
 #include <QDebug>
 
 #include "debug.h"
@@ -29,9 +30,11 @@ void cSCPISerialClient::receiveAnswer(QString answ)
     QByteArray ba;
     answer = answ + endChar;
     answer.replace("\n", endChar);
+
 #ifdef DEBUG
     qDebug() << answer.toLatin1();
 #endif
+
     ba = answer.toLatin1();
     m_pSerial->write(ba.data(), ba.size());
 }
@@ -65,7 +68,6 @@ void cSCPISerialClient::cmdInput()
             if (!m_pSCPIInterface->executeCmd(this, m_sInput))
                 emit m_pIEEE4882->AddEventError(CommandError);
         }
-    }
 }
 
 }
