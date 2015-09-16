@@ -1,0 +1,5 @@
+#ifndef SCPIETHCLIENT
+#define SCPIETHCLIENT
+
+#endif // SCPIETHCLIENT
+

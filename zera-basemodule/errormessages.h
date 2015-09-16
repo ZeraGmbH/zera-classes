@@ -60,5 +60,7 @@
 #define stopmeasErrMsg "SEC stop measure failed"
 
 #define interfacejsonErrMsg "Interface JSON Document strange"
+#define interfaceETHErrMsg "Ethernet interface listen failed"
+#define interfaceSerialErrMsg "Serial interface not connected"
 
 #endif // ERRORMESSAGES_H
