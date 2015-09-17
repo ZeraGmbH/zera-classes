@@ -19,6 +19,7 @@
 #include "scpimodule.h"
 #include "scpiserver.h"
 #include "scpiethclient.h"
+#include "scpiserialclient.h"
 #include "scpiinterface.h"
 #include "moduleinterface.h"
 #include "interfaceinterface.h"
@@ -68,6 +69,8 @@ cSCPIServer::~cSCPIServer()
 {
     delete m_pSCPIInterface;
     delete m_pTcpServer;
+    if (m_pSerial)
+        delete m_pSerial;
 }
 
 
@@ -156,24 +159,27 @@ void cSCPIServer::setupTCPServer()
             m_pSerial->setParity(QSerialPort::NoParity);
             m_pSerial->setFlowControl(QSerialPort::NoFlowControl);
 
+            cSCPISerialClient *client = new cSCPISerialClient(m_pSerial, m_pPeer, m_ConfigData, m_pSCPIInterface);
+            m_SCPIClientList.append(client);
+            if (m_SCPIClientList.count() == 1)
+                client->setAuthorisation(true);
 
-            connect(m_pSerial,SIGNAL(readyRead()),this, SLOT(ReadCommand()));
+        }
+        else
+        {
+            noError = false;
+            emit errMsg((tr(interfaceSerialErrMsg)));
+#ifdef DEBUG
+            qDebug() << interfaceSerialErrMsg;
+#endif
         }
 
     }
 
     if (noError)
-    {
         emit activationContinue();
-    }
     else
-    {
-        emit errMsg((tr(interfacejsonErrMsg)));
-#ifdef DEBUG
-        qDebug() << interfacejsonErrMsg;
-#endif
         emit activationError();
-    }
 
 }
 

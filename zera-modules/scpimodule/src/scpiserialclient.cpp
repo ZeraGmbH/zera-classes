@@ -1,4 +1,5 @@
 #include <QtSerialPort/QSerialPort>
+#include <QDebug>
 
 #include "scpiinterface.h"
 #include "ieee488-2.h"
@@ -25,7 +26,8 @@ void cSCPISerialClient::receiveAnswer(QString answ)
 {
     QString answer;
     QByteArray ba;
-    answer = answ +"\n";
+    answer = answ +"\r";
+    answer.replace("\n","\r");
     ba = answer.toLatin1();
     m_pSerial->write(ba.data(), ba.size());
 }
@@ -33,17 +35,20 @@ void cSCPISerialClient::receiveAnswer(QString answ)
 
 void cSCPISerialClient::cmdInput()
 {
+    QString addString;
 
-    QString m_sInput;
+    addString = QString(m_pSerial->readAll().data());
+    m_sInput += addString;
 
-    while ( m_pSerial->canReadLine() )
+    if (addString.contains("\n") or (addString.contains("\r")))
     {
-        m_sInput = m_pSerial->readLine();
-        m_sInput.remove('\n'); // we remove f
+        m_sInput.remove('\n'); // we remove cr and lf
         m_sInput.remove('\r');
 
         if (!m_pSCPIInterface->executeCmd(this, m_sInput))
             emit m_pIEEE4882->AddEventError(CommandError);
+
+        m_sInput = "";
     }
 }
 

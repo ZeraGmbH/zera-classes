@@ -10,7 +10,7 @@ CONFIG += plugin
 ZDEPENDS += libvein
 ZDEPENDS += SCPI
 
-QT       += network core
+QT       += network core serialport
 
 LIBS +=  -lSCPI
 LIBS +=  -lzera-proxy
