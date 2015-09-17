@@ -34,6 +34,9 @@
             <xs:enumeration value='4800'/>
             <xs:enumeration value='9600'/>
             <xs:enumeration value='19200'/>
+            <xs:enumeration value='38400'/>
+            <xs:enumeration value='57600'/>
+            <xs:enumeration value='115200'/>
         </xs:restriction>
     </xs:simpleType>
 
@@ -107,13 +110,13 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="serialdevice">
-                <xs:complextType>
+                <xs:complexType>
                     <xs:sequence>
                         <xs:element name="on" type="yesnotype"/>
                         <xs:element name="baud" type="baudtype"/>
                         <xs:element name="databits" type="databitstype"/>
-                        <xs:element name="stopbits" type="stopbitstype">
-                        <xs:element name="device" type="xs:string">
+                        <xs:element name="stopbits" type="stopbitstype"/>
+                        <xs:element name="device" type="xs:string"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

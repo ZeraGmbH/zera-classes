@@ -11,7 +11,7 @@
             </ethernet>
             <serialdevice>
                 <on>1</on>
-                <baud>9600</baud>
+                <baud>115200</baud>
                 <databits>8</databits>
                 <stopbits>1</stopbits>
                 <device>/dev/ttyUSB0</device>

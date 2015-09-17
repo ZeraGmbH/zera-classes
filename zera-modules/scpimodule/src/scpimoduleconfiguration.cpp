@@ -41,7 +41,7 @@ void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:on"] = setSerialOn;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:baud"] = setSerialBaud;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:databits"] = setSerialDatabits;
-    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:stopbits"] = setSerialDatabits;
+    m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:stopbits"] = setSerialStopbits;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:serialdevice:device"] = setSerialDevice;
 
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:device:name"] = setDeviceName;
