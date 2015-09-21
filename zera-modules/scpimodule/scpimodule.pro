@@ -103,6 +103,10 @@ HEADERS += \
     src/scpiclientinfo.h
     src/scpiethclient.h \
     src/scpiserialclient.h
+    src/statusbitdescriptor.h \
+    src/scpieventsystem.h \
+    src/scpipropertydelegate.h \
+    src/scpiclientinfo.h
 
 OTHER_FILES += \
     src/scpimodule.xml \

@@ -55,6 +55,12 @@ public:
 
     cSCPIEventSystem* m_pSCPIEventSystem;
 
+    QHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
+    QHash<QString, cSignalConnectionDelegate*> sConnectDelegateHash;
+    QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
+
+    cSCPIEventSystem* m_pSCPIEventSystem;
+
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
 
