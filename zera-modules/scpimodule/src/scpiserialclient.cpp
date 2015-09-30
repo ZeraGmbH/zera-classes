@@ -26,8 +26,8 @@ void cSCPISerialClient::receiveAnswer(QString answ)
 {
     QString answer;
     QByteArray ba;
-    answer = answ +"\r";
-    answer.replace("\n","\r");
+    answer = answ + endChar;
+    answer.replace("\n", endChar);
     ba = answer.toLatin1();
     m_pSerial->write(ba.data(), ba.size());
 }
@@ -38,17 +38,29 @@ void cSCPISerialClient::cmdInput()
     QString addString;
 
     addString = QString(m_pSerial->readAll().data());
-    m_sInput += addString;
+    m_sInputFifo.append(addString);
 
-    if (addString.contains("\n") or (addString.contains("\r")))
+    qDebug() << addString;
+
+    if (addString.contains("\n") or (addString.contains("\r"))) // we accept cr or lf
     {
-        m_sInput.remove('\n'); // we remove cr and lf
-        m_sInput.remove('\r');
+        if (addString.contains('\n'))
+            endChar = '\n';
+        else
+            endChar = '\r';
 
-        if (!m_pSCPIInterface->executeCmd(this, m_sInput))
-            emit m_pIEEE4882->AddEventError(CommandError);
+        while (m_sInputFifo.contains(endChar))
+        {
+            int index;
+            QString m_sInput;
 
-        m_sInput = "";
+            index = m_sInputFifo.indexOf(endChar);
+            m_sInput = m_sInputFifo.left(index);
+            m_sInputFifo.remove(0, index+1);
+
+            if (!m_pSCPIInterface->executeCmd(this, m_sInput))
+                emit m_pIEEE4882->AddEventError(CommandError);
+        }
     }
 }
 
