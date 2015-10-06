@@ -201,6 +201,7 @@ void cSCPIServer::shutdownTCPServer()
     }
 
     m_pTcpServer->close();
+    m_pSerial->close();
 
     emit deactivationContinue();
 }
