@@ -43,6 +43,7 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, VeinPeer *peer, cSCPIModuleConfigD
     m_pStatusInterface = new cStatusInterface(m_pPeer, m_pSCPIInterface); // the scpi status interface
     m_pIEEE488Interface = new cIEEE4882Interface(m_pPeer, m_pSCPIInterface); // the ieee448-2 interface
 
+    m_pSerial = 0;
     m_pTcpServer = new QTcpServer();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
     connect(m_pTcpServer, SIGNAL(newConnection()), this, SLOT(addSCPIClient()));
@@ -201,7 +202,8 @@ void cSCPIServer::shutdownTCPServer()
     }
 
     m_pTcpServer->close();
-    m_pSerial->close();
+    if (m_pSerial)
+        m_pSerial->close();
 
     emit deactivationContinue();
 }
