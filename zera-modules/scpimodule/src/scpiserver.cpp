@@ -168,7 +168,6 @@ void cSCPIServer::setupTCPServer()
         }
         else
         {
-            noError = false;
             emit errMsg((tr(interfaceSerialErrMsg)));
 #ifdef DEBUG
             qDebug() << interfaceSerialErrMsg;
