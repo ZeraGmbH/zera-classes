@@ -3,9 +3,6 @@
 
 #include <QString>
 
-namespace POWER1MODULE
-{
-
 enum powermodes
 {
     actPower, reactPower, appPower
@@ -31,6 +28,5 @@ private:
     quint8 m_nCode;
 };
 
-}
 
 #endif // MEASMODEINFO_H
