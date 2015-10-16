@@ -57,7 +57,8 @@ HEADERS += \
     boolvalidator.h \
     intvalidator.h \
     stringvalidator.h \
-    doublevalidator.h
+    doublevalidator.h \
+    basemeasworkprogram.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -77,6 +78,7 @@ SOURCES += \
     boolvalidator.cpp \
     intvalidator.cpp \
     stringvalidator.cpp \
-    doublevalidator.cpp
+    doublevalidator.cpp \
+    basemeasworkprogram.cpp
 
 include(../zera-classes.pri)
