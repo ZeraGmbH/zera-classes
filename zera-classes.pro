@@ -25,7 +25,10 @@ SUBDIRS     = \
             zera-modules/referencemodule \
             zera-modules/modemodule \
             zera-modules/sec1module \
-            zera-modules/scpimodule
+            zera-modules/scpimodule \
+            zera-modules/power2module \
+            zera-modules/power3module
+
 
 
 
