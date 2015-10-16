@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<pow3modconfpar>
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+        </connectivity>
+        <measure>
+            <input>fftmodule0</input>
+            <system>
+                <n>3</n>
+                <pms1>ACT_FFT1,ACT_FFT4</pms1>
+                <pms2>ACT_FFT2,ACT_FFT5</pms2>
+                <pms3>ACT_FFT3,ACT_FFT6</pms3>
+            </system>
+        </measure>
+    </configuration>
+</pow3modconfpar>
