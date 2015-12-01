@@ -1,6 +1,7 @@
 #ifndef SCPISERVER_H
 #define SCPISERVER_H
 
+#include <QTimer>
 #include <QTcpServer>
 #include <QAbstractSocket>
 #include <QHash>
@@ -24,6 +25,7 @@ class cInterfaceInterface;
 class cStatusInterface;
 class cIEEE4882Interface;
 class cSCPIClient;
+class cSCPISerialClient;
 
 class cSCPIServer: public cModuleActivist
 {
@@ -61,6 +63,9 @@ private:
 
     // optionally we support a serial device
     QSerialPort* m_pSerial;
+    cSCPISerialClient *m_pSerialClient;
+    QTimer m_SerialTestTimer;
+    bool m_bSerial;
 
 private slots:
     void addSCPIClient();
@@ -71,6 +76,7 @@ private slots:
     void activationDone();
     void shutdownTCPServer();
     void deactivationDone();
+    void testSerial();
 };
 
 }
