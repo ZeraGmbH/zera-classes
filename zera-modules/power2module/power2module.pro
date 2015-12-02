@@ -48,12 +48,10 @@ HEADERS += \
 
 OTHER_FILES += \
     src/power2module.xsd \
-    
+    src/power2moduleCED.xml \
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/power2moduleCED.xml

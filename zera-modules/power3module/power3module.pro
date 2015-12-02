@@ -48,7 +48,7 @@ HEADERS += \
 
 OTHER_FILES += \
     src/power3module.xml \
-    src/power3module.xsd \
+    src/power3module.xsd
     
 
 RESOURCES += \
