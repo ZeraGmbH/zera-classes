@@ -188,7 +188,7 @@ void cSCPIServer::shutdownTCPServer()
     }
 
     m_pTcpServer->close();
-    if (m_pSerial)
+    if (m_bSerial)
         m_pSerial->close();
 
     emit deactivationContinue();
@@ -249,6 +249,7 @@ void cSCPIServer::testSerial()
                 m_bSerial = false;
                 deleteSCPIClient(m_pSerialClient);
                 delete m_pSerialClient;
+                m_pSerial->close();
                 delete m_pSerial;
                 m_pSerialClient = 0;
                 m_pSerial = 0;
