@@ -22,7 +22,7 @@ else {
 LIBS += -L$$PWD/libs
 
 #to be evaluated later: -Wshadow
-QMAKE_CXXFLAGS += -Wall
+QMAKE_CXXFLAGS += -Wall -Werror=ignored-qualifiers -Werror=cast-qual -Werror=return-type
 
 contains( CONFIG, plugin ) {
   unix:equals(TEMPLATE, "lib") {
