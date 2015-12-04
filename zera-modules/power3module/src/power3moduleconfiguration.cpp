@@ -49,7 +49,7 @@ void cPower3ModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cPower3ModuleConfiguration::exportConfiguration()
 {
-    // no parameters -> nothing to export
+    return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
 
