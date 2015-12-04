@@ -27,7 +27,7 @@ class cSCPIStatus: public QObject
 public:
     cSCPIStatus(quint8 tothrow );
 
-    void executeCmd(cSCPIClient* client, int cmdCode, QString &sInput);
+    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
 
     quint16 m_nCondition; // condition reg.
     quint16 m_nPTransition; // pos. transition reg.

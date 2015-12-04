@@ -30,87 +30,87 @@ bool cStatusInterface::setupInterface()
     delegate = new cSCPIStatusDelegate(QString("STATUS:QUESTIONABLE"), QString("CONDITION"), SCPI::isQuery, SCPIStatusCmd::condition, SCPIStatusSystem::questionable);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:QUESTIONABLE"), QString("PTRANSITION"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::ptransition, SCPIStatusSystem::questionable);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:QUESTIONABLE"), QString("NTRANSITION"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::ntransition, SCPIStatusSystem::questionable);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:QUESTIONABLE"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::event, SCPIStatusSystem::questionable);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:QUESTIONABLE"), QString("ENABLE"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::enable, SCPIStatusSystem::questionable);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int, const QString&)));
 
     // our operation status interface
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION"), QString("CONDITION"), SCPI::isQuery, SCPIStatusCmd::condition, SCPIStatusSystem::operation);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION"), QString("PTRANSITION"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::ptransition, SCPIStatusSystem::operation);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION"), QString("NTRANSITION"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::ntransition, SCPIStatusSystem::operation);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::event, SCPIStatusSystem::operation);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION"), QString("ENABLE"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::enable, SCPIStatusSystem::operation);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     // our operation status interface
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION:MEASURE"), QString("CONDITION"), SCPI::isQuery, SCPIStatusCmd::condition, SCPIStatusSystem::operationmeasure);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION:MEASURE"), QString("PTRANSITION"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::ptransition, SCPIStatusSystem::operationmeasure);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION:MEASURE"), QString("NTRANSITION"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::ntransition, SCPIStatusSystem::operationmeasure);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION:MEASURE"), QString("EVENT"), SCPI::isQuery, SCPIStatusCmd::event, SCPIStatusSystem::operationmeasure);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     delegate = new cSCPIStatusDelegate(QString("STATUS:OPERATION:MEASURE"), QString("ENABLE"), SCPI::isQuery | SCPI::isCmdwP, SCPIStatusCmd::enable, SCPIStatusSystem::operationmeasure);
     m_scpiStatusDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*,int,int,const QString&)), this, SLOT(executeCmd(cSCPIClient*,int,int,const QString&)));
 
     return true;
 }
 
 
-void cStatusInterface::executeCmd(cSCPIClient *client, int cmdCode, int statIndex, QString &sInput)
+void cStatusInterface::executeCmd(cSCPIClient *client, int cmdCode, int statIndex, const QString &sInput)
 {
     QString answer;
     cSCPIStatus* status;

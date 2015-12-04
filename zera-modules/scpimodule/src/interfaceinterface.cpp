@@ -28,13 +28,13 @@ bool cInterfaceInterface::setupInterface()
     delegate = new cSCPIInterfaceDelegate(QString("DEVICE"), QString("IFACE"), SCPI::isQuery, deviceinterfacecmd);
     m_scpiInterfaceDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, QString&)), this, SLOT(executeCmd(cSCPIClient*, int, QString&)));
+    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, const QString&)), this, SLOT(executeCmd(cSCPIClient*, int, const QString&)));
 
     return true;
 }
 
 
-void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, QString &sInput)
+void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput)
 {
     cSCPICommand cmd = sInput;
 

@@ -98,7 +98,7 @@ class cIEEE4882: public QObject
 public:
     cIEEE4882(cSCPIClient* client, QString ident, quint16 errorqueuelen);
 
-    void executeCmd(cSCPIClient* client, int cmdCode, QString &sInput);
+    void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
 
 signals:
     void setQuestionableCondition(quint16);

@@ -53,7 +53,7 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
 }
 
 
-void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, QString &sInput)
+void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput)
 {
     switch (cmdCode)
     {

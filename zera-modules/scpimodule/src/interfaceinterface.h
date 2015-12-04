@@ -35,7 +35,7 @@ private:
     QList<cSCPIInterfaceDelegate*> m_scpiInterfaceDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
 
 private slots:
-    void executeCmd(cSCPIClient* client, int cmdCode, QString& sInput);
+    void executeCmd(cSCPIClient* client, int cmdCode, const QString& sInput);
 
 };
 
