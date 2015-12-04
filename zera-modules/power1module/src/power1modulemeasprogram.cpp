@@ -2183,44 +2183,51 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
     QStringList sl;
     umax = imax = 0.0;
 
-    if (is2WireMode()) // in case we are in 2 wire mode we take umax imyx from driving system
+    if (m_ConfigData.m_nFreqOutputCount > 0) // we only do something here if we really have a frequency output
     {
-        sl = m_ConfigData.m_sMeasSystemList.at(m_nPMSIndex).split(',');
-        umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
-        imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
-    }
-    else // we have to consider all channels
-        for (int i = 0; i < m_ConfigData.m_sMeasSystemList.count(); i++)
-        {
 
-            sl = m_ConfigData.m_sMeasSystemList.at(i).split(',');
-            if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > umax)
-                umax = d;
-            if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > imax)
-                imax = d;
+        if (is2WireMode()) // in case we are in 2 wire mode we take umax imyx from driving system
+        {
+            sl = m_ConfigData.m_sMeasSystemList.at(m_nPMSIndex).split(',');
+            umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
+            imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
+        }
+        else // we have to consider all channels
+            for (int i = 0; i < m_ConfigData.m_sMeasSystemList.count(); i++)
+            {
+
+                sl = m_ConfigData.m_sMeasSystemList.at(i).split(',');
+                if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > umax)
+                    umax = d;
+                if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > imax)
+                    imax = d;
+            }
+
+        QString datalist = "FREQSCALE:";
+
+        double cfak;
+        if (is2WireMode())
+            cfak = 1.0;
+        else
+            cfak = 3.0;
+
+        for (int i = 0; i< m_ConfigData.m_nFreqOutputCount; i++)
+        {
+            double frScale;
+            cFoutInfo fi = m_FoutInfoHash[m_ConfigData.m_FreqOutputConfList.at(i).m_sName];
+            frScale = fi.formFactor * m_ConfigData.m_nNominalFrequency / (cfak * umax * imax);
+            datalist += QString("%1,").arg(frScale, 0, 'g', 7);
         }
 
-    QString datalist = "FREQSCALE:";
+        datalist.resize(datalist.size()-1);
+        datalist += ";";
 
-    double cfak;
-    if (is2WireMode())
-        cfak = 1.0;
-    else
-        cfak = 3.0;
+        m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = setfrequencyscales;
 
-    for (int i = 0; i< m_ConfigData.m_nFreqOutputCount; i++)
-    {
-        double frScale;
-        cFoutInfo fi = m_FoutInfoHash[m_ConfigData.m_FreqOutputConfList.at(i).m_sName];
-        frScale = fi.formFactor * m_ConfigData.m_nNominalFrequency / (cfak * umax * imax);
-        datalist += QString("%1,").arg(frScale, 0, 'g', 7);
     }
-
-    datalist.resize(datalist.size()-1);
-    datalist += ";";
-
-    m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = setfrequencyscales;
+    else // otherwise we have to continue "manually"
+        emit activationContinue();
 }
 
 
