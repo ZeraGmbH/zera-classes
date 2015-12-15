@@ -367,17 +367,6 @@ quint32 cPCBInterfacePrivate::getAliasSchead(QString chnName)
 }
 
 
-quint32 cPCBInterfacePrivate::getMuxChannelSchead(QString chnName)
-{
-    QString cmd;
-    quint32 msgnr;
-
-    msgnr = sendCommand(cmd = QString("SCHEAD:%1:MUXC?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getmuxchannelschead;
-    return msgnr;
-}
-
-
 quint32 cPCBInterfacePrivate::getAliasFrqinput(QString chnName)
 {
     QString cmd;
@@ -389,17 +378,6 @@ quint32 cPCBInterfacePrivate::getAliasFrqinput(QString chnName)
 }
 
 
-quint32 cPCBInterfacePrivate::getMuxChannelFrqinput(QString chnName)
-{
-    QString cmd;
-    quint32 msgnr;
-
-    msgnr = sendCommand(cmd = QString("FRQINPUT:%1:MUXC?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getmuxchannelfrqinput;
-    return msgnr;
-}
-
-
 quint32 cPCBInterfacePrivate::resourceAliasQuery(QString resourceType, QString resourceName)
 {
     QString cmd;
@@ -407,17 +385,6 @@ quint32 cPCBInterfacePrivate::resourceAliasQuery(QString resourceType, QString r
 
     msgnr = sendCommand(cmd = QString("%1:%2:ALI?").arg(resourceType).arg(resourceName));
     m_MsgNrCmdList[msgnr] = resourcealiasquery;
-    return msgnr;
-}
-
-
-quint32 cPCBInterfacePrivate::resourceMuxChannelQuery(QString resourceType, QString resourceName)
-{
-    QString cmd;
-    quint32 msgnr;
-
-    msgnr = sendCommand(cmd = QString("%1:%2:MUXC?").arg(resourceType).arg(resourceName));
-    m_MsgNrCmdList[msgnr] = resourcemuxchannelquery;
     return msgnr;
 }
 
@@ -478,9 +445,6 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case gettype2:
         case getsamplerate:
         case getdspchannelsource:
-        case getmuxchannelschead:
-        case getmuxchannelfrqinput:
-        case resourcemuxchannelquery:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 

@@ -49,12 +49,9 @@ enum pcbcommands
     setconstantsource,
 
     getaliassschead,
-    getmuxchannelschead,
     getaliasfrqinput,
-    getmuxchannelfrqinput,
 
     resourcealiasquery,
-    resourcemuxchannelquery
 };
 
 
@@ -104,15 +101,12 @@ public:
 
     // all commands to schead interface
     virtual quint32 getAliasSchead(QString chnName); // qstring
-    virtual quint32 getMuxChannelSchead(QString chnName); // int
 
     // all commands to frqinput interface
     virtual quint32 getAliasFrqinput(QString chnName); // qstring
-    virtual quint32 getMuxChannelFrqinput(QString chnName); // int
 
     // resource query more generell
     virtual quint32 resourceAliasQuery(QString resourceType, QString resourceName);
-    virtual quint32 resourceMuxChannelQuery(QString resourceType, QString resourceName);
 
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
