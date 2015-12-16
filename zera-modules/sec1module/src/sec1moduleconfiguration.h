@@ -21,19 +21,22 @@ enum moduleconfigstate
     setSECServerIp,
     setSECServerPort,
     setMeasureInterval,
-    setwithrefconstantnotifier,
     setDutInputCount,
     setRefInputCount,
 
     setDutInputPar,
     setRefInputPar,
+    setMeasMode,
     setDutConstant,
     setRefConstant,
-    setTargetValue,
-    setMeasPulses,
+    setTarget,
+    setEnergy,
+    setMRate,
 
-    setDutInput1 = 32,
-    setRefInput1 = 64
+    setDutInput1Name = 32,
+    setDutInput1Muxer = 64,
+    setRefInput1Name = 96,
+    setRefInput1Muxer = 128
 };
 
 

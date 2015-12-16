@@ -1,6 +1,10 @@
+#include <QJsonDocument>
+#include <QJsonObject>
+
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
+#include <veinpeer.h>
 #include <veinentity.h>
 
 #include "sec1module.h"
@@ -17,6 +21,9 @@ cSec1Module::cSec1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* pee
     :cBaseModule(modnr, proxy, peer, new cSec1ModuleConfiguration(), parent)
 {
     m_ModuleActivistList.clear();
+
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr, 2, 10, QChar('0'));
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
@@ -137,7 +144,30 @@ void cSec1Module::activationDone()
 
 void cSec1Module::activationFinished()
 {
-    // we only have to signal activationReady
+    QJsonObject jsonObj;
+
+    jsonObj.insert("ModulName", getModuleName());
+    jsonObj.insert("SCPIModuleName", getSCPIModuleName());
+    jsonObj.insert("VeinPeer", m_pPeer->getName());
+
+    QJsonArray jsonArr;
+    for (int i = 0; i < m_ModuleActivistList.count(); i++)
+        m_ModuleActivistList.at(i)->exportInterface(jsonArr);
+
+    jsonObj.insert("Entities", QJsonValue(jsonArr));
+
+    QJsonDocument jsonDoc;
+    jsonDoc.setObject(jsonObj);
+
+    QByteArray ba;
+    ba = jsonDoc.toBinaryData();
+
+#ifdef DEBUG
+    qDebug() << jsonDoc;
+#endif
+
+    m_pModuleInterfaceEntity->setValue(QVariant(ba), m_pPeer);
+
     emit activationReady();
 }
 

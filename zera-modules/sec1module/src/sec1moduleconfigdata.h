@@ -2,7 +2,6 @@
 #define SEC1MODULECONFIGDATA_H
 
 #include <QString>
-#include <QStringList>
 #include <QList>
 
 #include "socket.h"
@@ -33,6 +32,13 @@ struct stringParameter
     QString m_sPar;
 };
 
+
+struct inputdefinition
+{
+    QString m_sInputName;
+    quint8 m_nMuxerCode;
+};
+
 class cSec1ModuleConfigData
 {
 public:
@@ -40,16 +46,17 @@ public:
     quint8 m_nDebugLevel;
     quint8 m_nRefInpCount;
     quint8 m_nDutInpCount;
-    bool m_bwithrefconstantnotifier;
     stringParameter m_sRefInput;
     stringParameter m_sDutInput;
-    QStringList m_refInpList;
-    QStringList m_dutInpList;
+    QList<inputdefinition> m_refInpList;
+    QList<inputdefinition> m_dutInpList;
+    stringParameter m_sMode;
     double m_fMeasInterval; // measuring interval 0.2 .. 5.0 sec. (time between actualizations)
     doubleParameter m_fDutConstant;
     doubleParameter m_fRefConstant;
-    intParameter m_nTargetValue;
-    intParameter m_nMeasPulses;
+    intParameter m_nTarget;
+    doubleParameter m_fEnergy;
+    intParameter m_nMRate;
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
     cSocket m_SECServerSocket;

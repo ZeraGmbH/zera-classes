@@ -42,10 +42,8 @@ enum sec1moduleCmds
     readresourcetypes,
     readresource,
     fetchecalcunits,
-    readrefinputalias,
-    readrefinputmuxchannel,
-    readdutinputalias,
-    readdutinputmuxchannel,
+    readrefInputalias,
+    readdutInputalias,
     setpcbrefconstantnotifier,
     setsecintnotifier,
 
@@ -91,7 +89,7 @@ public:
     virtual ~cSec1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
+    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -116,16 +114,14 @@ private:
     QState m_readResourceTypesState; // read all resource types ...at the moment we set a list of predefined resource types
     QState m_readResourcesState; // init to read all resource information for each type
     QState m_readResourceState; // read for 1 type
-    QState m_testSecInputsState; // here we test if all our configured inputs are present, we don't set them because we only get information from here
+    QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
-    QState m_readREFInputsState; // init to read all ref input informations
-    QState m_readREFInputAliasState; // read for 1 input
-    QState m_readREFInputMuxchannelState; // read for 1 input
-    QState m_readDUTInputsState; // init to read all ref input informations
-    QState m_readDUTInputAliasState; // read for 1 input
-    QState m_readDUTInputMuxchannelState; // read for 1 input
+    QState m_readREFInputsState; // init to read all ref Input informations
+    QState m_readREFInputAliasState; // read for 1 Input
+    QState m_readDUTInputsState; // init to read all ref Input informations
+    QState m_readDUTInputAliasState; // read for 1 Input
     QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
     QFinalState m_activationDoneState; // and then we have finished
@@ -139,7 +135,7 @@ private:
     QStateMachine m_startMeasurementMachine;
     QState m_setsyncState; // our 2 ecalc units must be synchronized
     QState m_setMeaspulsesState; // we set the desired measpulses
-    QState m_setMasterMuxState; // we set the input selectors
+    QState m_setMasterMuxState; // we set the Input selectors
     QState m_setSlaveMuxState;
     QState m_setMasterMeasModeState; // and the meas modes
     QState m_setSlaveMeasModeState;
@@ -160,39 +156,49 @@ private:
 
     QStringList m_ResourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    QHash<QString,cSecInputInfo> mREFSecInputInfoHash; // we hold a list of all our input properties
-    QHash<QString,cSecInputInfo> mDUTSecInputInfoHash; // systemname from configfile->alias, csecinputinfo
-    QStringList m_REFAliasList; // we want to have an ordered list with input alias
+    QHash<QString,cSecInputInfo> mREFSecInputInfoHash; // we hold a list of all our Input properties
+    QHash<QString,cSecInputInfo> mDUTSecInputInfoHash; // systemname from configfile->alias, csecInputinfo
+    QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     QStringList m_DUTAliasList;
     qint32 m_nIt;
-    QList<QString> m_sItList; // for interation over x input hash
+    QList<QString> m_sItList; // for interation over x Input hash
     cSecInputInfo siInfo;
     QString m_sIt;
 
     cECalcChannelInfo m_MasterEcalculator;
     cECalcChannelInfo m_SlaveEcalculator;
 
-    VeinEntity* m_pDutinputEntity;
-    VeinEntity* m_pDutinputListEntity;
-    VeinEntity* m_pRefinputEntity;
-    VeinEntity* m_pRefinputListEntity;
+    VeinEntity* m_pModeEntity;
+    VeinEntity* m_pModeListEntity;
+    VeinEntity* m_pDutInputEntity;
+    VeinEntity* m_pDutInputListEntity;
+    VeinEntity* m_pRefInputEntity;
+    VeinEntity* m_pRefInputListEntity;
     VeinEntity* m_pRefConstantEntity;
     VeinEntity* m_pRefConstantLimitsEntity;
     VeinEntity* m_pDutConstantEntity;
     VeinEntity* m_pDutConstantLimitsEntity;
-    VeinEntity* m_pMeasPulsesEntity;
-    VeinEntity* m_pMeasPulsesLimitsEntity;
-    VeinEntity* m_pTargetValueEntity;
-    VeinEntity* m_pTargetValueLimitsEntity;
+    VeinEntity* m_pMRateEntity;
+    VeinEntity* m_pMRateLimitsEntity;
+    VeinEntity* m_pTargetEntity;
+    VeinEntity* m_pTargetLimitsEntity;
+    VeinEntity* m_pEnergyEntity;
+    VeinEntity* m_pEnergyLimitsEntity;
+    VeinEntity* m_pStatusNameEntity;
     VeinEntity* m_pStatusEntity;
+    VeinEntity* m_pProgressNameEntity;
     VeinEntity* m_pProgressEntity;
+    VeinEntity* m_pResultNameEntity;
     VeinEntity* m_pResultEntity;
+    VeinEntity* m_pStartStopNameEntity;
     VeinEntity* m_pStartStopEntity;
 
     QList<VeinEntity*> m_EntityList;
+
     void setInterfaceEntities();
     void handleChangedREFConst();
     void handleSECInterrupt();
+    void cmpDependencies();
 
     // vars dealing with error measurement
     bool m_brunning;
@@ -219,10 +225,8 @@ private slots:
     void pcbServerConnect();
     void readREFInputs();
     void readREFInputAlias();
-    void readREFInputMuxchannel();
     void readDUTInputs();
     void readDUTInputAlias();
-    void readDUTInputMuxchannel();
     void setpcbREFConstantNotifier();
     void setsecINTNotifier();
     void activationDone();
@@ -247,6 +251,15 @@ private slots:
     void setECResult();
 
     void newStartStop(QVariant startstop);
+    void newMode(QVariant mode);
+    void newDutConstant(QVariant dutconst);
+    void newRefConstant(QVariant refconst);
+    void newDutInput(QVariant dutinput);
+    void newRefInput(QVariant refinput);
+    void newMRate(QVariant mrate);
+    void newTarget(QVariant target);
+    void newEnergy(QVariant energy);
+
     void Actualize();
 
 };

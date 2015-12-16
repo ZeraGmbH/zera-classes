@@ -43,17 +43,18 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:secserver:ip"] = setSECServerIp;
     m_ConfigXMLMap["sec1modconfpar:configuration:connectivity:ethernet:secserver:port"] = setSECServerPort;
 
-    m_ConfigXMLMap["sec1modconfpar:configuration:measure:refconstantnotifier"] = setwithrefconstantnotifier;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:dutinput:n"] = setDutInputCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:interval"] = setMeasureInterval;
 
-    m_ConfigXMLMap["sec1modconfpar:parameter:dutinput"] = setDutInputPar;
-    m_ConfigXMLMap["sec1modconfpar:parameter:refinput"] = setRefInputPar;
-    m_ConfigXMLMap["sec1modconfpar:parameter:dutconstant"] = setDutConstant;
-    m_ConfigXMLMap["sec1modconfpar:parameter:refconstant"] = setRefConstant;
-    m_ConfigXMLMap["sec1modconfpar:parameter:targetvalue"] = setTargetValue;
-    m_ConfigXMLMap["sec1modconfpar:parameter:measpulses"] = setMeasPulses;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutinput"] = setDutInputPar;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:refinput"] = setRefInputPar;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:mode"] = setMeasMode;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutconstant"] = setDutConstant;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:refconstant"] = setRefConstant;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:target"] = setTarget;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:energy"] = setEnergy;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:mrate"] = setMRate;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -75,11 +76,14 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
     dPar = &m_pSec1ModulConfigData->m_fRefConstant;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
 
+    dPar = &m_pSec1ModulConfigData->m_fEnergy;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
+
     intParameter* iPar;
-    iPar = &m_pSec1ModulConfigData->m_nTargetValue;
+    iPar = &m_pSec1ModulConfigData->m_nTarget;
     m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nPar));
 
-    iPar = &m_pSec1ModulConfigData->m_nMeasPulses;
+    iPar = &m_pSec1ModulConfigData->m_nMRate;
     m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nPar));
 
     stringParameter* sPar;
@@ -87,6 +91,9 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
 
     sPar = &m_pSec1ModulConfigData->m_sRefInput;
+    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
+
+    sPar = &m_pSec1ModulConfigData->m_sMode;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
 
     return m_pXMLReader->getXMLConfig().toUtf8();
@@ -130,25 +137,31 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
         case setSECServerPort:
             m_pSec1ModulConfigData->m_SECServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setwithrefconstantnotifier:
-            m_pSec1ModulConfigData->m_bwithrefconstantnotifier = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
-            break;
         case setDutInputCount:
+        {
+            inputdefinition inpDef;
             m_pSec1ModulConfigData->m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSec1ModulConfigData->m_nDutInpCount; i++)
             {
-                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1+i;
-                m_pSec1ModulConfigData->m_dutInpList.append("");
+                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1:input").arg(i+1)] = setDutInput1Name+i;
+                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1:muxer").arg(i+1)] = setDutInput1Muxer+i;
+                m_pSec1ModulConfigData->m_dutInpList.append(inpDef);
             }
             break;
+        }
         case setRefInputCount:
+        {
+            inputdefinition inpDef;
             m_pSec1ModulConfigData->m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
+            if (m_pSec1ModulConfigData->m_nRefInpCount > 0)
             for (int i = 0; i < m_pSec1ModulConfigData->m_nRefInpCount; i++)
-            {
-                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1+i;
-                m_pSec1ModulConfigData->m_refInpList.append("");
-            }
+                {
+                    m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1:input").arg(i+1)] = setRefInput1Name+i;
+                    m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1:muxer").arg(i+1)] = setRefInput1Muxer+i;
+                    m_pSec1ModulConfigData->m_refInpList.append(inpDef);
+                }
             break;
+        }
         case setMeasureInterval:
             m_pSec1ModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
@@ -160,6 +173,10 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             m_pSec1ModulConfigData->m_sRefInput.m_sKey = key;
             m_pSec1ModulConfigData->m_sRefInput.m_sPar = m_pXMLReader->getValue(key);
             break;
+        case setMeasMode:
+            m_pSec1ModulConfigData->m_sMode.m_sKey = key;
+            m_pSec1ModulConfigData->m_sMode.m_sPar = m_pXMLReader->getValue(key);
+            break;
         case setDutConstant:
             m_pSec1ModulConfigData->m_fDutConstant.m_sKey = key;
             m_pSec1ModulConfigData->m_fDutConstant.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
@@ -168,26 +185,51 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             m_pSec1ModulConfigData->m_fRefConstant.m_sKey = key;
             m_pSec1ModulConfigData->m_fRefConstant.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
-        case setMeasPulses:
-            m_pSec1ModulConfigData->m_nMeasPulses.m_sKey = key;
-            m_pSec1ModulConfigData->m_nMeasPulses.m_nPar = m_pXMLReader->getValue(key).toInt(&ok);
+        case setTarget:
+            m_pSec1ModulConfigData->m_nTarget.m_sKey = key;
+            m_pSec1ModulConfigData->m_nTarget.m_nPar =m_pXMLReader->getValue(key).toInt(&ok);
             break;
-        case setTargetValue:
-            m_pSec1ModulConfigData->m_nTargetValue.m_sKey = key;
-            m_pSec1ModulConfigData->m_nTargetValue.m_nPar =m_pXMLReader->getValue(key).toInt(&ok);
+        case setEnergy:
+            m_pSec1ModulConfigData->m_fEnergy.m_sKey = key;
+            m_pSec1ModulConfigData->m_fEnergy.m_fPar =m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setMRate:
+            m_pSec1ModulConfigData->m_nMRate.m_sKey = key;
+            m_pSec1ModulConfigData->m_nMRate.m_nPar = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         default:
-            if ((cmd >= setDutInput1) && (cmd < setDutInput1 + 32))
+            inputdefinition inpDef;
+            if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32))
             {
-                cmd -= setDutInput1;
-                m_pSec1ModulConfigData->m_dutInpList.replace(cmd, m_pXMLReader->getValue(key));
+                cmd -= setDutInput1Name;
+                inpDef = m_pSec1ModulConfigData->m_dutInpList.at(cmd);
+                inpDef.m_sInputName = m_pXMLReader->getValue(key);
+                m_pSec1ModulConfigData->m_dutInpList.replace(cmd, inpDef);
             }
             else
-                if ((cmd >= setRefInput1) && (cmd < setRefInput1 + 32))
+                if ((cmd >= setDutInput1Muxer) && (cmd < setDutInput1Muxer + 32))
                 {
-                    cmd -= setRefInput1;
-                    m_pSec1ModulConfigData->m_refInpList.replace(cmd, m_pXMLReader->getValue(key));
+                    cmd -= setDutInput1Muxer;
+                    inpDef = m_pSec1ModulConfigData->m_dutInpList.at(cmd);
+                    inpDef.m_nMuxerCode = m_pXMLReader->getValue(key).toInt(&ok);
+                    m_pSec1ModulConfigData->m_dutInpList.replace(cmd, inpDef);
                 }
+                else
+                    if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32))
+                    {
+                        cmd -= setRefInput1Name;
+                        inpDef = m_pSec1ModulConfigData->m_refInpList.at(cmd);
+                        inpDef.m_sInputName = m_pXMLReader->getValue(key);
+                        m_pSec1ModulConfigData->m_refInpList.replace(cmd, inpDef);
+                    }
+                    else
+                        if ((cmd >= setRefInput1Muxer) && (cmd < setRefInput1Muxer + 32))
+                        {
+                            cmd -= setRefInput1Muxer;
+                            inpDef = m_pSec1ModulConfigData->m_refInpList.at(cmd);
+                            inpDef.m_nMuxerCode = m_pXMLReader->getValue(key).toInt(&ok);
+                            m_pSec1ModulConfigData->m_refInpList.replace(cmd, inpDef);
+                        }
             break;
         }
         m_bConfigError |= !ok;

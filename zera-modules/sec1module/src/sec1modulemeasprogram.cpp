@@ -7,10 +7,12 @@
 #include <proxyclient.h>
 #include <veinpeer.h>
 #include <veinentity.h>
+#include <math.h>
 
 #include "debug.h"
 #include "reply.h"
 #include "errormessages.h"
+#include "interfaceentity.h"
 #include "sec1module.h"
 #include "sec1modulemeasprogram.h"
 #include "sec1moduleconfigdata.h"
@@ -33,20 +35,19 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     m_readResourcesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceState); // read their resources into list
     m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_testSecInputsState); // go on if done
-    m_testSecInputsState.addTransition(this, SIGNAL(activationContinue()), &m_ecalcServerConnectState); // test all configured inputs
+    m_testSecInputsState.addTransition(this, SIGNAL(activationContinue()), &m_ecalcServerConnectState); // test all configured Inputs
     //m_ecalcServerConnectState.addTransition(this, SIGNAL(activationContinue()), &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, SIGNAL(activationContinue()), &m_pcbServerConnectState); // connect to pcbserver
     //m_pcbServerConnectState.addTransition(this, SIGNAL(activationContinue()), &m_pcbServerConnectState);
     //transition from this state to m_readREFInputsState....is done in pcbServerConnect
     m_readREFInputsState.addTransition(this, SIGNAL(activationContinue()), &m_readREFInputAliasState);
-    m_readREFInputAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readREFInputMuxchannelState);
-    m_readREFInputMuxchannelState.addTransition(this, SIGNAL(activationLoop()), &m_readREFInputAliasState);
-    m_readREFInputMuxchannelState.addTransition(this, SIGNAL(activationContinue()), &m_readDUTInputsState);
+    m_readREFInputAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readDUTInputsState);
+    m_readREFInputAliasState.addTransition(this, SIGNAL(activationLoop()), &m_readREFInputAliasState);
     m_readDUTInputsState.addTransition(this, SIGNAL(activationContinue()), &m_readDUTInputAliasState);
-    m_readDUTInputAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readDUTInputMuxchannelState);
-    m_readDUTInputMuxchannelState.addTransition(this, SIGNAL(activationLoop()), &m_readDUTInputAliasState);
-    m_readDUTInputMuxchannelState.addTransition(this, SIGNAL(activationContinue()), &m_setpcbREFConstantNotifierState);
+    m_readDUTInputAliasState.addTransition(this, SIGNAL(activationContinue()), &m_setpcbREFConstantNotifierState);
+    m_readDUTInputAliasState.addTransition(this, SIGNAL(activationLoop()), &m_readDUTInputAliasState);
+
     m_setpcbREFConstantNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_setsecINTNotifierState);
     m_setsecINTNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
@@ -63,10 +64,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     m_activationMachine.addState(&m_pcbServerConnectState);
     m_activationMachine.addState(&m_readREFInputsState);
     m_activationMachine.addState(&m_readREFInputAliasState);
-    m_activationMachine.addState(&m_readREFInputMuxchannelState);
     m_activationMachine.addState(&m_readDUTInputsState);
     m_activationMachine.addState(&m_readDUTInputAliasState);
-    m_activationMachine.addState(&m_readDUTInputMuxchannelState);
     m_activationMachine.addState(&m_setpcbREFConstantNotifierState);
     m_activationMachine.addState(&m_setsecINTNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
@@ -86,10 +85,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     connect(&m_pcbServerConnectState, SIGNAL(entered()), SLOT(pcbServerConnect()));
     connect(&m_readREFInputsState, SIGNAL(entered()), SLOT(readREFInputs()));
     connect(&m_readREFInputAliasState, SIGNAL(entered()), SLOT(readREFInputAlias()));
-    connect(&m_readREFInputMuxchannelState, SIGNAL(entered()), SLOT(readREFInputMuxchannel()));
     connect(&m_readDUTInputsState, SIGNAL(entered()), SLOT(readDUTInputs()));
     connect(&m_readDUTInputAliasState, SIGNAL(entered()), SLOT(readDUTInputAlias()));
-    connect(&m_readDUTInputMuxchannelState, SIGNAL(entered()), SLOT(readDUTInputMuxchannel()));
     connect(&m_setpcbREFConstantNotifierState, SIGNAL(entered()), SLOT(setpcbREFConstantNotifier()));
     connect(&m_setsecINTNotifierState, SIGNAL(entered()), SLOT(setsecINTNotifier()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
@@ -188,80 +185,120 @@ void cSec1ModuleMeasProgram::generateInterface()
 {
     QString s;
 
-    m_pDutinputEntity = m_pPeer->dataAdd(QString("PAR_DutInput")); // here is the actual dut input
-    m_pDutinputEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pDutinputEntity->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pDutinputEntity);
+    m_pModeEntity = m_pPeer->dataAdd(QString("PAR_Mode")); // here is the actual mode
+    m_pModeEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+    m_pModeEntity->setValue(s = "Unknown", m_pPeer);
+    m_EntityList.append(m_pModeEntity);
 
-    m_pDutinputListEntity = m_pPeer->dataAdd(QString("INF_DutInputList")); // list of dut input sources
-    m_pDutinputListEntity ->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pDutinputListEntity ->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pDutinputListEntity);
+    m_pModeListEntity = m_pPeer->dataAdd(QString("INF_ModeList")); // list of possible modes
+    m_pModeListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pModeListEntity->setValue(s = "mrate;target;energy", m_pPeer);
+    m_EntityList.append(m_pModeListEntity);
 
-    m_pRefinputEntity = m_pPeer->dataAdd(QString("PAR_RefInput")); // here is the actual ref input
-    m_pRefinputEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pRefinputEntity->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pRefinputEntity);
+    m_pDutInputEntity = m_pPeer->dataAdd(QString("PAR_DutInput")); // here is the actual dut Input
+    m_pDutInputEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+    m_pDutInputEntity->setValue(s = "Unknown", m_pPeer);
+    m_EntityList.append(m_pDutInputEntity);
 
-    m_pRefinputListEntity = m_pPeer->dataAdd(QString("INF_RefInputList")); // list of ref input sources
-    m_pRefinputListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pRefinputListEntity->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pRefinputListEntity);
+    m_pDutInputListEntity = m_pPeer->dataAdd(QString("INF_DutInputList")); // list of dut Input sources
+    m_pDutInputListEntity ->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pDutInputListEntity ->setValue(s = "Unknown", m_pPeer);
+    m_EntityList.append(m_pDutInputListEntity);
+
+    m_pRefInputEntity = m_pPeer->dataAdd(QString("PAR_RefInput")); // here is the actual ref Input
+    m_pRefInputEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+    m_pRefInputEntity->setValue(s = "Unknown", m_pPeer);
+    m_EntityList.append(m_pRefInputEntity);
+
+    m_pRefInputListEntity = m_pPeer->dataAdd(QString("INF_RefInputList")); // list of ref Input sources
+    m_pRefInputListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pRefInputListEntity->setValue(s = "Unknown", m_pPeer);
+    m_EntityList.append(m_pRefInputListEntity);
 
     m_pRefConstantEntity = m_pPeer->dataAdd(QString("PAR_RefConstant")); // actual reference constant
     m_pRefConstantEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pRefConstantEntity->setValue(QVariant((double)0.0));
+    m_pRefConstantEntity->setValue(QVariant((double)0.0), m_pPeer);
     m_EntityList.append(m_pRefConstantEntity);
 
     m_pRefConstantLimitsEntity = m_pPeer->dataAdd(QString("INF_RefConstant_LIMITS"));
     m_pRefConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pRefConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)));
+    m_pRefConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)), m_pPeer);
     m_EntityList.append(m_pRefConstantLimitsEntity);
 
     m_pDutConstantEntity = m_pPeer->dataAdd(QString("PAR_DutConstant")); // actual dut constant
     m_pDutConstantEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pDutConstantEntity->setValue(QVariant((double)0.0));
+    m_pDutConstantEntity->setValue(QVariant((double)0.0), m_pPeer);
     m_EntityList.append(m_pDutConstantEntity);
 
     m_pDutConstantLimitsEntity = m_pPeer->dataAdd(QString("INF_DutConstant_LIMITS"));
     m_pDutConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pDutConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)));
+    m_pDutConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)), m_pPeer);
     m_EntityList.append(m_pDutConstantLimitsEntity);
 
-    m_pMeasPulsesEntity = m_pPeer->dataAdd(QString("PAR_MeasPulses")); // actual meas pulses
-    m_pMeasPulsesEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pMeasPulsesEntity->setValue(QVariant((double)0.0));
-    m_EntityList.append(m_pMeasPulsesEntity);
+    m_pMRateEntity = m_pPeer->dataAdd(QString("PAR_MRate")); // measuring interval in scanning head or ref. meter clock pulses
+    m_pMRateEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+    m_pMRateEntity->setValue(QVariant((double)0.0), m_pPeer);
+    m_EntityList.append(m_pMRateEntity);
 
-    m_pMeasPulsesLimitsEntity = m_pPeer->dataAdd(QString("INF_MeasPulses_LIMITS"));
-    m_pMeasPulsesLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pMeasPulsesLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)));
-    m_EntityList.append(m_pMeasPulsesLimitsEntity);
+    m_pMRateLimitsEntity = m_pPeer->dataAdd(QString("INF_MRate_LIMITS"));
+    m_pMRateLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pMRateLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)), m_pPeer);
+    m_EntityList.append(m_pMRateLimitsEntity);
 
-    m_pTargetValueEntity = m_pPeer->dataAdd(QString("PAR_TargetValue")); // actual meas pulses
-    m_pTargetValueEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pTargetValueEntity->setValue(QVariant((double)0.0));
-    m_EntityList.append(m_pTargetValueEntity);
+    m_pTargetEntity = m_pPeer->dataAdd(QString("PAR_Target")); // target (expected pulses from ref. meter)
+    m_pTargetEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+    m_pTargetEntity->setValue(QVariant((double)0.0), m_pPeer);
+    m_EntityList.append(m_pTargetEntity);
 
-    m_pTargetValueLimitsEntity = m_pPeer->dataAdd(QString("INF_TargetValue_LIMITS"));
-    m_pTargetValueLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pTargetValueLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)));
-    m_EntityList.append(m_pTargetValueLimitsEntity);
+    m_pTargetLimitsEntity = m_pPeer->dataAdd(QString("INF_Target_LIMITS"));
+    m_pTargetLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pTargetLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)), m_pPeer);
+    m_EntityList.append(m_pTargetLimitsEntity);
+
+    m_pEnergyEntity = m_pPeer->dataAdd(QString("PAR_Energy")); // measuring interval by energy
+    m_pEnergyEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+    m_pEnergyEntity->setValue(QVariant((double)0.0), m_pPeer);
+    m_EntityList.append(m_pEnergyEntity);
+
+    m_pEnergyLimitsEntity = m_pPeer->dataAdd(QString("INF_Energy_LIMITS"));
+    m_pEnergyLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pEnergyLimitsEntity->setValue(QVariant(QString("%1;%2").arg(0.0).arg(1.0e7)), m_pPeer);
+    m_EntityList.append(m_pEnergyLimitsEntity);
+
+    m_pStatusNameEntity = m_pPeer->dataAdd("TRA_Status");
+    m_pStatusNameEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pStatusNameEntity->setValue(QString("STAT,[]"), m_pPeer);
+    m_EntityList.append(m_pStatusNameEntity);
 
     m_pStatusEntity = m_pPeer->dataAdd("ACT_Status");
     m_pStatusEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pStatusEntity->setValue(QVariant((int) ECALCSTATUS::IDLE), m_pPeer);
     m_EntityList.append(m_pStatusEntity);
 
+    m_pProgressNameEntity = m_pPeer->dataAdd("TRA_Progress");
+    m_pProgressNameEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pProgressNameEntity->setValue(QString("PROGRESS,[%]"), m_pPeer);
+    m_EntityList.append(m_pProgressNameEntity);
+
     m_pProgressEntity = m_pPeer->dataAdd("ACT_Progress");
     m_pProgressEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pProgressEntity->setValue(QVariant((double) 0.0), m_pPeer);
     m_EntityList.append(m_pProgressEntity);
 
+    m_pResultNameEntity = m_pPeer->dataAdd("TRA_Result");
+    m_pResultNameEntity->modifiersAdd(VeinEntity::MOD_READONLY);
+    m_pResultNameEntity->setValue(QString("ERROR,[%]"), m_pPeer);
+    m_EntityList.append(m_pResultNameEntity);
+
     m_pResultEntity = m_pPeer->dataAdd("ACT_Result");
     m_pResultEntity->modifiersAdd(VeinEntity::MOD_READONLY);
     m_pResultEntity->setValue(QVariant((double)99.99), m_pPeer);
     m_EntityList.append(m_pResultEntity);
+
+    m_pStartStopNameEntity = m_pPeer->dataAdd("TRA_STARTSTOP");
+    m_pStartStopNameEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
+    m_pStartStopNameEntity->setValue(QString("START,[]"), m_pPeer);
+    m_EntityList.append(m_pStartStopNameEntity);
 
     m_pStartStopEntity = m_pPeer->dataAdd("PAR_STARTSTOP");
     m_pStartStopEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
@@ -277,8 +314,51 @@ void cSec1ModuleMeasProgram::deleteInterface()
 }
 
 
-void cSec1ModuleMeasProgram::exportInterface(QJsonArray &)
+void cSec1ModuleMeasProgram::exportInterface(QJsonArray & jsArr)
 {
+    cInterfaceEntity ifaceEntity;
+
+    ifaceEntity.setSCPIModel(QString("CALCULATE"));
+    ifaceEntity.setSCPIType(QString("10")); // command + query
+    ifaceEntity.setUnit(QString("")); // no unit
+
+    // first we export all parameter
+    ifaceEntity.setDescription(QString("Writing this entity start/stops measurement"));
+    ifaceEntity.setSCPICmdnode(QString("START"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the modules mode"));
+    ifaceEntity.setSCPICmdnode(QString("MODE"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the signal source of device under test"));
+    ifaceEntity.setSCPICmdnode(QString("DUTSOURCE"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the signal source of reference device"));
+    ifaceEntity.setSCPICmdnode(QString("REFSOURCE"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the measuring rate"));
+    ifaceEntity.setSCPICmdnode(QString("MRATE"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the target value"));
+    ifaceEntity.setSCPICmdnode(QString("TARGET"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the energy value"));
+    ifaceEntity.setSCPICmdnode(QString("ENERGY"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the device under test constant"));
+    ifaceEntity.setUnit(QString("1/kxh"));
+    ifaceEntity.setSCPICmdnode(QString("DUTCONSTANT"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
+
+    ifaceEntity.setDescription(QString("This entity holds the reference device constant"));
+    ifaceEntity.setSCPICmdnode(QString("REFCONSTANT"));
+    ifaceEntity.appendInterfaceEntity(jsArr);
 
 }
 
@@ -296,7 +376,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
         switch (service)
         {
         case irqPCBNotifier:
-            // we must fetch the ref constant of the selected reference input
+            // we must fetch the ref constant of the selected reference Input
             handleChangedREFConst();
             break;
         case irqSECNotifier:
@@ -401,6 +481,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     m_SlaveEcalculator.name = sl.at(1);
                     m_SlaveEcalculator.secIFace = m_pSECInterface;
                     m_SlaveEcalculator.secServersocket = m_ConfigData.m_SECServerSocket;
+                    emit activationContinue();
                 }
                 else
                 {
@@ -413,12 +494,15 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
 
-            case readrefinputalias:
+            case readrefInputalias:
             {
                 if (reply == ack)
                 {
-                    siInfo.resource = answer.toString();
-                    emit activationContinue();
+                    siInfo.alias = answer.toString();
+                    if (m_sItList.isEmpty())
+                        emit activationContinue();
+                    else
+                        emit activationLoop();
                 }
                 else
                 {
@@ -431,62 +515,21 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
 
-            case readrefinputmuxchannel:
-            {
-                if (reply == ack)
-                {
-                    siInfo.muxchannel = answer.toInt(&ok);
-                    mREFSecInputInfoHash[m_sIt] = siInfo;
-                    if (m_sItList.isEmpty())
-                        emit activationContinue();
-                    else
-                        emit activationLoop();
-                }
-                else
-                {
-                    emit errMsg((tr(readmuxchannelErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readmuxchannelErrMsg;
-#endif
-                    emit activationError();
-                }
-                break;
-            }
-
-            case readdutinputalias:
+            case readdutInputalias:
             {
                 if (reply == ack)
                 {
                     siInfo.resource = answer.toString();
-                    emit activationContinue();
+                    if (m_sItList.isEmpty())
+                        emit activationContinue();
+                    else
+                        emit activationLoop();
                 }
                 else
                 {
                     emit errMsg((tr(readaliasErrMsg)));
 #ifdef DEBUG
                     qDebug() << readaliasErrMsg;
-#endif
-                    emit activationError();
-                }
-                break;
-            }
-
-            case readdutinputmuxchannel:
-            {
-                if (reply == ack)
-                {
-                    siInfo.muxchannel = answer.toInt(&ok);
-                    mDUTSecInputInfoHash[m_sIt] = siInfo;
-                    if (m_sItList.isEmpty())
-                        emit activationContinue();
-                    else
-                        emit activationLoop();
-                }
-                else
-                {
-                    emit errMsg((tr(readmuxchannelErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readmuxchannelErrMsg;
 #endif
                     emit activationError();
                 }
@@ -523,7 +566,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    quint32 target = m_pTargetValueEntity->getValue().toUInt(&ok);
+                    quint32 target = m_pTargetEntity->getValue().toUInt(&ok);
                     m_nMTCNTact = answer.toUInt(&ok);
                     m_fProgress = 100.0 - (( 1.0*target - 1.0*m_nMTCNTact)/target)*100.0;
                     if (m_fProgress > 100.0)
@@ -767,21 +810,26 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
 void cSec1ModuleMeasProgram::setInterfaceEntities()
 {
-    m_pDutinputEntity->setValue(QVariant(m_ConfigData.m_sDutInput.m_sPar), m_pPeer);
-    m_pRefinputEntity->setValue(QVariant(m_ConfigData.m_sRefInput.m_sPar), m_pPeer);
+    m_pModeEntity->setValue(QVariant(m_ConfigData.m_sMode.m_sPar), m_pPeer);
+
+    cmpDependencies(); // dependant on mode we calculate paramters by ourself
+
+    m_pDutInputEntity->setValue(QVariant(m_ConfigData.m_sDutInput.m_sPar), m_pPeer);
+    m_pRefInputEntity->setValue(QVariant(m_ConfigData.m_sRefInput.m_sPar), m_pPeer);
     m_pDutConstantEntity->setValue(QVariant(m_ConfigData.m_fDutConstant.m_fPar), m_pPeer);
     m_pRefConstantEntity->setValue(QVariant(m_ConfigData.m_fRefConstant.m_fPar), m_pPeer);
-    m_pMeasPulsesEntity->setValue(QVariant(m_ConfigData.m_nMeasPulses.m_nPar), m_pPeer);
-    m_pTargetValueEntity->setValue(QVariant(m_ConfigData.m_nTargetValue.m_nPar), m_pPeer);
+    m_pMRateEntity->setValue(QVariant(m_ConfigData.m_nMRate.m_nPar), m_pPeer);
+    m_pTargetEntity->setValue(QVariant(m_ConfigData.m_nTarget.m_nPar), m_pPeer);
+    m_pEnergyEntity->setValue(QVariant(m_ConfigData.m_fEnergy.m_fPar), m_pPeer);
     m_pProgressEntity->setValue(QVariant(double(0.0)), m_pPeer);
-    m_pDutinputListEntity->setValue(QVariant(m_DUTAliasList), m_pPeer);
-    m_pRefinputListEntity->setValue(QVariant(m_REFAliasList), m_pPeer);
+    m_pDutInputListEntity->setValue(QVariant(m_DUTAliasList), m_pPeer);
+    m_pRefInputListEntity->setValue(QVariant(m_REFAliasList), m_pPeer);
 }
 
 
 void cSec1ModuleMeasProgram::handleChangedREFConst()
 {
-    // we ask for the reference constant of the selected input
+    // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar].name)] = fetchrefconstant;
     if ((m_nStatus == ECALCSTATUS::ARMED) || (m_nStatus == ECALCSTATUS::STARTED) )
     {
@@ -798,6 +846,33 @@ void cSec1ModuleMeasProgram::handleSECInterrupt()
 {
     if (!m_InterrupthandlingStateMachine.isRunning())
         m_InterrupthandlingStateMachine.start();
+}
+
+
+void cSec1ModuleMeasProgram::cmpDependencies()
+{
+    QString mode;
+    mode = m_ConfigData.m_sMode.m_sPar;
+
+    if (mode == "mrate")
+    {
+       // we calculate the new target value
+       m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / m_ConfigData.m_fDutConstant.m_fPar);
+    }
+
+    else
+
+    if (mode == "energy")
+    {
+        // we calcute the new mrate and target
+        m_ConfigData.m_nMRate.m_nPar = floor(m_ConfigData.m_fDutConstant.m_fPar * m_ConfigData.m_fEnergy.m_fPar);
+        m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / m_ConfigData.m_fDutConstant.m_fPar);
+    }
+
+    if (mode == "target")
+    {
+        // noting to do here ...because everything was done outside
+    }
 }
 
 
@@ -860,48 +935,66 @@ void cSec1ModuleMeasProgram::readResource()
 
 void cSec1ModuleMeasProgram::testSecInputs()
 {
-    // first we build up a list with properties for all configured inputs
-    for (int i = 0; i < m_ConfigData.m_refInpList.count(); i++)
-        mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i)] = siInfo;
-    for (int i = 0; i < m_ConfigData.m_dutInpList.count(); i++)
-        mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i)] = siInfo;
+    QList<QString> InputNameList;
+    qint32 nref;
 
-    qint32 nref, ndut;
-    QList<QString> inputNameList;
+    nref = m_ConfigData.m_refInpList.count();
 
-    nref = mREFSecInputInfoHash.count(); // we have n configured ref inputs
-    inputNameList = mREFSecInputInfoHash.keys();
-
-    for (int i = 0; i < m_ResourceTypeList.count(); i++)
+    // first we build up a list with properties for all configured Inputs
+    if (nref > 0) // maybe sec is standalone one
     {
-        QString resourcelist;
-        resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-        for (int j = 0; j < inputNameList.count(); j++)
+
+        for (int i = 0; i < nref; i++)
+        {
+            siInfo.muxchannel = m_ConfigData.m_refInpList.at(i).m_nMuxerCode;
+            mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i).m_sInputName] = siInfo;
+        }
+
+        InputNameList = mREFSecInputInfoHash.keys();
+
+        while (InputNameList.count() > 0)
         {
             QString name;
-            name = inputNameList.at(j);
-            if (resourcelist.contains(name))
+            name = InputNameList.takeFirst();
+
+            for (int i = 0; i < m_ResourceTypeList.count(); i++)
             {
-                nref--;
-                siInfo = mREFSecInputInfoHash.take(name);
-                siInfo.name = name;
-                siInfo.resource = m_ResourceTypeList.at(i);
-                mREFSecInputInfoHash[name] = siInfo;
+                QString resourcelist;
+                resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+                if (resourcelist.contains(name))
+                {
+                    nref--;
+                    siInfo = mREFSecInputInfoHash.take(name);
+                    siInfo.name = name;
+                    siInfo.resource = m_ResourceTypeList.at(i);
+                    mREFSecInputInfoHash[name] = siInfo;
+                    break;
+                }
             }
         }
     }
 
-    ndut = mDUTSecInputInfoHash.count(); // we have n configured ref inputs
-    inputNameList = mDUTSecInputInfoHash.keys();
 
-    for (int i = 0; i < m_ResourceTypeList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_dutInpList.count(); i++)
     {
-        QString resourcelist;
-        resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-        for (int j = 0; j < inputNameList.count(); j++)
+        siInfo.muxchannel = m_ConfigData.m_dutInpList.at(i).m_nMuxerCode;
+        mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i).m_sInputName] = siInfo;
+    }
+
+    qint32 ndut;
+
+    ndut = mDUTSecInputInfoHash.count(); // we have n configured dut Inputs
+    InputNameList = mDUTSecInputInfoHash.keys();
+
+    while (InputNameList.count() > 0)
+    {
+        QString name;
+        name = InputNameList.takeFirst();
+
+        for (int i = 0; i < m_ResourceTypeList.count(); i++)
         {
-            QString name;
-            name = inputNameList.at(j);
+            QString resourcelist;
+            resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(name))
             {
                 ndut--;
@@ -909,11 +1002,12 @@ void cSec1ModuleMeasProgram::testSecInputs()
                 siInfo.name = name;
                 siInfo.resource = m_ResourceTypeList.at(i);
                 mDUTSecInputInfoHash[name] = siInfo;
+                break;
             }
         }
     }
 
-    if ((nref == 0) && (ndut == 0)) // we found all our configured inputs
+    if ((nref == 0) && (ndut == 0)) // we found all our configured Inputs
     {
         emit activationContinue(); // so lets go on
     }
@@ -944,7 +1038,7 @@ void cSec1ModuleMeasProgram::ecalcServerConnect()
 
 void cSec1ModuleMeasProgram::fetchECalcUnits()
 {
-    m_MsgNrCmdList[m_pSECInterface->setECalcUnit(2)] = fetchecalcunits;
+    m_MsgNrCmdList[m_pSECInterface->setECalcUnit(2)] = fetchecalcunits; // we need 2 ecalc units to cascade
 }
 
 
@@ -965,6 +1059,10 @@ void cSec1ModuleMeasProgram::readREFInputs()
 {
     m_sItList = mREFSecInputInfoHash.keys();
     emit activationContinue();
+    if (m_ConfigData.m_nRefInpCount == 0)
+    {
+       emit activationContinue();
+    }
 }
 
 
@@ -972,15 +1070,9 @@ void cSec1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
     siInfo = mREFSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    siInfo.pcbIFace = m_pPCBInterface; // in case that inputs would be provided by several servers
+    siInfo.pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
     siInfo.pcbServersocket = m_ConfigData.m_PCBServerSocket;
-    m_MsgNrCmdList[siInfo.pcbIFace->resourceAliasQuery(siInfo.resource, m_sIt)] = readrefinputalias;
-}
-
-
-void cSec1ModuleMeasProgram::readREFInputMuxchannel()
-{
-    m_MsgNrCmdList[siInfo.pcbIFace->resourceMuxChannelQuery(siInfo.resource, m_sIt)] = readrefinputmuxchannel;
+    m_MsgNrCmdList[siInfo.pcbIFace->resourceAliasQuery(siInfo.resource, m_sIt)] = readrefInputalias;
 }
 
 
@@ -995,24 +1087,18 @@ void cSec1ModuleMeasProgram::readDUTInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
     siInfo = mDUTSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    siInfo.pcbIFace = m_pPCBInterface; // in case that inputs would be provided by several servers
+    siInfo.pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
     siInfo.pcbServersocket = m_ConfigData.m_PCBServerSocket;
-    m_MsgNrCmdList[siInfo.pcbIFace->resourceAliasQuery(siInfo.resource, m_sIt)] = readdutinputalias;
-}
-
-
-void cSec1ModuleMeasProgram::readDUTInputMuxchannel()
-{
-    m_MsgNrCmdList[siInfo.pcbIFace->resourceMuxChannelQuery(siInfo.resource, m_sIt)] = readdutinputmuxchannel;
+    m_MsgNrCmdList[siInfo.pcbIFace->resourceAliasQuery(siInfo.resource, m_sIt)] = readdutInputalias;
 }
 
 
 void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if (m_ConfigData.m_bwithrefconstantnotifier)
+    if (m_ConfigData.m_nRefInpCount > 0) // if we have some ref. Input we register for notification
     {
-        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:fo0:CONSTANT?"),QString("%1").arg(irqPCBNotifier))] = setpcbrefconstantnotifier;
-        // todo also configure the query for setting this notofier .....very flexible
+        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(m_ConfigData.m_sRefInput.m_sPar),QString("%1").arg(irqPCBNotifier))] = setpcbrefconstantnotifier;
+        // todo also configure the query for setting this notifier .....very flexible
     }
     else
         emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on
@@ -1027,23 +1113,38 @@ void cSec1ModuleMeasProgram::setsecINTNotifier()
 
 void cSec1ModuleMeasProgram::activationDone()
 {
-    for (int i = 0; i < m_ConfigData.m_refInpList.count(); i++)
+    int nref;
+
+    nref = m_ConfigData.m_refInpList.count();
+    if (nref > 0)
+    for (int i = 0; i < nref; i++)
     {
-        m_REFAliasList.append(mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i)].alias); // build up a fixed sorted list of alias
-        siInfo = mREFSecInputInfoHash.take(m_ConfigData.m_refInpList.at(i)); // change the hash for access via alias
+        m_REFAliasList.append(mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i).m_sInputName].alias); // build up a fixed sorted list of alias
+        siInfo = mREFSecInputInfoHash.take(m_ConfigData.m_refInpList.at(i).m_sInputName); // change the hash for access via alias
         mREFSecInputInfoHash[siInfo.alias] = siInfo;
     }
 
     for (int i = 0; i < m_ConfigData.m_dutInpList.count(); i++)
     {
-        m_DUTAliasList.append(mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i)].alias); // build up a fixed sorted list of alias
-        siInfo = mDUTSecInputInfoHash.take(m_ConfigData.m_dutInpList.at(i)); // change the hash for access via alias
+        m_DUTAliasList.append(mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i).m_sInputName].alias); // build up a fixed sorted list of alias
+        siInfo = mDUTSecInputInfoHash.take(m_ConfigData.m_dutInpList.at(i).m_sInputName); // change the hash for access via alias
         mDUTSecInputInfoHash[siInfo.alias] = siInfo;
     }
 
     m_bActive = true;
     connect(&m_ActualizeTimer, SIGNAL(timeout()), this, SLOT(Actualize()));
     connect(m_pStartStopEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
+    connect(m_pModeEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
+    connect(m_pDutConstantEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstant(QVariant)));
+    connect(m_pRefConstantEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefConstant(QVariant)));
+    connect(m_pDutInputEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutInput(QVariant)));
+    connect(m_pRefInputEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefInput(QVariant)));
+    connect(m_pMRateEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMRate(QVariant)));
+    connect(m_pTargetEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newTarget(QVariant)));
+    connect(m_pEnergyEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newEnergy(QVariant)));
+
+    setInterfaceEntities(); // actualize interface entities
+
     emit activated();
 }
 
@@ -1064,9 +1165,21 @@ void cSec1ModuleMeasProgram::freeECResource()
 void cSec1ModuleMeasProgram::deactivationDone()
 {
     m_pProxy->releaseConnection(m_pRMClient);
+
     disconnect(m_pRMInterface, 0, this, 0);
     disconnect(m_pSECInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
+
+    disconnect(m_pStartStopEntity, 0, this, 0);
+    disconnect(m_pModeEntity, 0, this, 0);
+    disconnect(m_pDutConstantEntity, 0, this, 0);
+    disconnect(m_pRefConstantEntity, 0, this, 0);
+    disconnect(m_pDutInputEntity, 0, this, 0);
+    disconnect(m_pRefInputEntity, 0, this, 0);
+    disconnect(m_pMRateEntity, 0, this, 0);
+    disconnect(m_pTargetEntity, 0, this, 0);
+    disconnect(m_pEnergyEntity, 0, this, 0);
+
     emit deactivated();
 }
 
@@ -1079,19 +1192,19 @@ void cSec1ModuleMeasProgram::setSync()
 
 void cSec1ModuleMeasProgram::setMeaspulses()
 {
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_pMeasPulsesEntity->getValue().toLongLong())] = setmeaspulses;
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_pMRateEntity->getValue().toLongLong())] = setmeaspulses;
 }
 
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, mDUTSecInputInfoHash[m_pDutinputEntity->getValue().toString()].muxchannel)] = setmastermux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, mDUTSecInputInfoHash[m_pDutInputEntity->getValue().toString()].muxchannel)] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, mREFSecInputInfoHash[m_pRefinputEntity->getValue().toString()].muxchannel)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, mREFSecInputInfoHash[m_pRefInputEntity->getValue().toString()].muxchannel)] = setslavemux;
 
 }
 
@@ -1151,7 +1264,7 @@ void cSec1ModuleMeasProgram::setECResult()
     m_nStatus = ECALCSTATUS::READY;
     m_fResult = (m_nTargetValue - m_nMTCNTfin) * 100.0 / m_nTargetValue;
     m_pStatusEntity->setValue(QVariant(m_nStatus),m_pPeer);
-    m_pTargetValueEntity->setValue(QVariant(m_fResult), m_pPeer);
+    m_pResultEntity->setValue(QVariant(m_fResult), m_pPeer);
     m_pStartStopEntity->setValue(QVariant(0), m_pPeer); // restart enable
 }
 
@@ -1166,8 +1279,8 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
             m_startMeasurementMachine.start();
         // setsync
         // mtvorwahl setzen
-        // master -> input mux setzen
-        // slave -> input mux setzen
+        // master -> Input mux setzen
+        // slave -> Input mux setzen
         // meas mode setzen + arm
         // m_ActualizeTimer.start(m_ConfigData.m_fMeasInterval*1000.0);
     }
@@ -1176,6 +1289,67 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
         m_ActualizeTimer.stop();
     }
+}
+
+
+void cSec1ModuleMeasProgram::newMode(QVariant mode)
+{
+    m_ConfigData.m_sMode.m_sPar = mode.toString();
+    setInterfaceEntities();
+}
+
+
+void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
+{
+    bool ok;
+    m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
+    setInterfaceEntities();
+}
+
+
+void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
+{
+    bool ok;
+    m_ConfigData.m_fRefConstant.m_fPar = refconst.toDouble(&ok);
+    setInterfaceEntities();
+}
+
+
+void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
+{
+    m_ConfigData.m_sDutInput.m_sPar = dutinput.toString();
+    setInterfaceEntities();
+}
+
+
+void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
+{
+    m_ConfigData.m_sRefInput.m_sPar = refinput.toString();
+    setInterfaceEntities();
+}
+
+
+void cSec1ModuleMeasProgram::newMRate(QVariant mrate)
+{
+    bool ok;
+    m_ConfigData.m_nMRate.m_nPar = mrate.toInt(&ok);
+    setInterfaceEntities();
+}
+
+
+void cSec1ModuleMeasProgram::newTarget(QVariant target)
+{
+    bool ok;
+    m_ConfigData.m_nTarget.m_nPar = target.toInt(&ok);
+    setInterfaceEntities();
+}
+
+
+void cSec1ModuleMeasProgram::newEnergy(QVariant energy)
+{
+    bool ok;
+    m_ConfigData.m_fEnergy.m_fPar = energy.toDouble(&ok);
+    setInterfaceEntities();
 }
 
 

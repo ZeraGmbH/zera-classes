@@ -29,6 +29,12 @@ namespace SEC1MODULE
 
 class cSec1ModuleMeasProgram;
 
+#define BaseModuleName "SECModule"
+#define BaseSCPIModuleName "E1"
+// shortcut of scpi module name is only first 4 characters
+// and in meter test bench we have more of them
+// so the 60th module would be E160
+
 
 class cSec1Module : public cBaseModule
 {
