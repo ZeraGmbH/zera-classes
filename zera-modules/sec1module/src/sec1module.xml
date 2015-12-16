@@ -7,29 +7,37 @@
             <debuglevel>0</debuglevel>
             <ethernet>
                 <resourcemanager>
-                    <ip>127.0.0.1</ip>
+                    <ip>192.168.7.222</ip>
                     <port>6312</port>
                 </resourcemanager>
                 <pcbserver>
-                    <ip>127.0.0.1</ip>
+                    <ip>192.168.7.222</ip>
                     <port>6307</port>
                 </pcbserver>
                 <secserver>
-                    <ip>127.0.0.1</ip>
-                    <port>6309</port>
+                    <ip>192.168.7.222</ip>
+                    <port>6305</port>
                 </secserver>
             </ethernet>
         </connectivity>
         <measure>
-            <refconstantnotifier>1</refconstantnotifier>
             <dutinput>
                 <n>2</n>
-                <inp1>sh0</inp1>
-                <inp2>fi0</inp2>
+                <inp1>
+                    <input>sh0</input>
+                    <muxer>1</muxer>
+                </inp1>
+                <inp2>
+                    <input>fi0</input>
+                    <muxer>2</muxer>
+                </inp2>
             </dutinput>
             <refinput>
                 <n>1</n>
-                <inp1>fo0</inp1>
+                <inp1>
+                    <input>fo0</input>
+                    <muxer>1</muxer>
+                </inp1>
             </refinput>
             <interval>2.0</interval>
         </measure>
@@ -39,10 +47,12 @@
         <measure>
             <dutinput>sh0</dutinput>
             <refinput>fo0</refinput>
+            <mode>tcount</mode>
             <dutconstant>1000.0</dutconstant>
             <refconstant>1000.0</refconstant>
-            <targetvalue>12000000</targetvalue>
-            <measpulses>10</measpulses>
+            <target>12000000</target>
+            <energy>1.0</energy>
+            <mrate>10</mrate>
         </measure>
     </parameter>
 
