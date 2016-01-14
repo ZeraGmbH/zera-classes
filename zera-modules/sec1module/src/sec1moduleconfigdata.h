@@ -33,12 +33,6 @@ struct stringParameter
 };
 
 
-struct inputdefinition
-{
-    QString m_sInputName;
-    quint8 m_nMuxerCode;
-};
-
 class cSec1ModuleConfigData
 {
 public:
@@ -48,8 +42,8 @@ public:
     quint8 m_nDutInpCount;
     stringParameter m_sRefInput;
     stringParameter m_sDutInput;
-    QList<inputdefinition> m_refInpList;
-    QList<inputdefinition> m_dutInpList;
+    QList<QString> m_refInpList;
+    QList<QString> m_dutInpList;
     stringParameter m_sMode;
     double m_fMeasInterval; // measuring interval 0.2 .. 5.0 sec. (time between actualizations)
     doubleParameter m_fDutConstant;

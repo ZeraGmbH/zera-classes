@@ -39,6 +39,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     //m_ecalcServerConnectState.addTransition(this, SIGNAL(activationContinue()), &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
     m_fetchECalcUnitsState.addTransition(this, SIGNAL(activationContinue()), &m_pcbServerConnectState); // connect to pcbserver
+
+
     //m_pcbServerConnectState.addTransition(this, SIGNAL(activationContinue()), &m_pcbServerConnectState);
     //transition from this state to m_readREFInputsState....is done in pcbServerConnect
     m_readREFInputsState.addTransition(this, SIGNAL(activationContinue()), &m_readREFInputAliasState);
@@ -946,8 +948,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
 
         for (int i = 0; i < nref; i++)
         {
-            siInfo.muxchannel = m_ConfigData.m_refInpList.at(i).m_nMuxerCode;
-            mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i).m_sInputName] = siInfo;
+            // siInfo.muxchannel = m_ConfigData.m_refInpList.at(i).m_nMuxerCode;
+            mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i)] = siInfo;
         }
 
         InputNameList = mREFSecInputInfoHash.keys();
@@ -977,8 +979,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
 
     for (int i = 0; i < m_ConfigData.m_dutInpList.count(); i++)
     {
-        siInfo.muxchannel = m_ConfigData.m_dutInpList.at(i).m_nMuxerCode;
-        mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i).m_sInputName] = siInfo;
+        // siInfo.muxchannel = m_ConfigData.m_dutInpList.at(i).m_nMuxerCode;
+        mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i)] = siInfo;
     }
 
     qint32 ndut;
@@ -1119,15 +1121,15 @@ void cSec1ModuleMeasProgram::activationDone()
     if (nref > 0)
     for (int i = 0; i < nref; i++)
     {
-        m_REFAliasList.append(mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i).m_sInputName].alias); // build up a fixed sorted list of alias
-        siInfo = mREFSecInputInfoHash.take(m_ConfigData.m_refInpList.at(i).m_sInputName); // change the hash for access via alias
+        m_REFAliasList.append(mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i)].alias); // build up a fixed sorted list of alias
+        siInfo = mREFSecInputInfoHash.take(m_ConfigData.m_refInpList.at(i)); // change the hash for access via alias
         mREFSecInputInfoHash[siInfo.alias] = siInfo;
     }
 
     for (int i = 0; i < m_ConfigData.m_dutInpList.count(); i++)
     {
-        m_DUTAliasList.append(mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i).m_sInputName].alias); // build up a fixed sorted list of alias
-        siInfo = mDUTSecInputInfoHash.take(m_ConfigData.m_dutInpList.at(i).m_sInputName); // change the hash for access via alias
+        m_DUTAliasList.append(mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i)].alias); // build up a fixed sorted list of alias
+        siInfo = mDUTSecInputInfoHash.take(m_ConfigData.m_dutInpList.at(i)); // change the hash for access via alias
         mDUTSecInputInfoHash[siInfo.alias] = siInfo;
     }
 
@@ -1198,13 +1200,13 @@ void cSec1ModuleMeasProgram::setMeaspulses()
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, mDUTSecInputInfoHash[m_pDutInputEntity->getValue().toString()].muxchannel)] = setmastermux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, m_pDutInputEntity->getValue().toString())] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, mREFSecInputInfoHash[m_pRefInputEntity->getValue().toString()].muxchannel)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, m_pRefInputEntity->getValue().toString())] = setslavemux;
 
 }
 

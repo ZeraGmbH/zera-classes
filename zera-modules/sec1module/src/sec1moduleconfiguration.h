@@ -34,9 +34,7 @@ enum moduleconfigstate
     setMRate,
 
     setDutInput1Name = 32,
-    setDutInput1Muxer = 64,
-    setRefInput1Name = 96,
-    setRefInput1Muxer = 128
+    setRefInput1Name = 64
 };
 
 

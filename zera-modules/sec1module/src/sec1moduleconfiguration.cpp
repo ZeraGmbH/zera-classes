@@ -139,26 +139,24 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             break;
         case setDutInputCount:
         {
-            inputdefinition inpDef;
+            QString name;
             m_pSec1ModulConfigData->m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSec1ModulConfigData->m_nDutInpCount; i++)
             {
-                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1:input").arg(i+1)] = setDutInput1Name+i;
-                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1:muxer").arg(i+1)] = setDutInput1Muxer+i;
-                m_pSec1ModulConfigData->m_dutInpList.append(inpDef);
+                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
+                m_pSec1ModulConfigData->m_dutInpList.append(name);
             }
             break;
         }
         case setRefInputCount:
         {
-            inputdefinition inpDef;
+            QString name;
             m_pSec1ModulConfigData->m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             if (m_pSec1ModulConfigData->m_nRefInpCount > 0)
             for (int i = 0; i < m_pSec1ModulConfigData->m_nRefInpCount; i++)
                 {
-                    m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1:input").arg(i+1)] = setRefInput1Name+i;
-                    m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1:muxer").arg(i+1)] = setRefInput1Muxer+i;
-                    m_pSec1ModulConfigData->m_refInpList.append(inpDef);
+                    m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
+                    m_pSec1ModulConfigData->m_refInpList.append(name);
                 }
             break;
         }
@@ -198,38 +196,21 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             m_pSec1ModulConfigData->m_nMRate.m_nPar = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         default:
-            inputdefinition inpDef;
+            QString name;
             if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32))
             {
                 cmd -= setDutInput1Name;
-                inpDef = m_pSec1ModulConfigData->m_dutInpList.at(cmd);
-                inpDef.m_sInputName = m_pXMLReader->getValue(key);
-                m_pSec1ModulConfigData->m_dutInpList.replace(cmd, inpDef);
+                name = m_pXMLReader->getValue(key);
+                m_pSec1ModulConfigData->m_dutInpList.replace(cmd, name);
             }
             else
-                if ((cmd >= setDutInput1Muxer) && (cmd < setDutInput1Muxer + 32))
+                if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32))
                 {
-                    cmd -= setDutInput1Muxer;
-                    inpDef = m_pSec1ModulConfigData->m_dutInpList.at(cmd);
-                    inpDef.m_nMuxerCode = m_pXMLReader->getValue(key).toInt(&ok);
-                    m_pSec1ModulConfigData->m_dutInpList.replace(cmd, inpDef);
+                    cmd -= setRefInput1Name;
+                    name = m_pXMLReader->getValue(key);
+                    m_pSec1ModulConfigData->m_refInpList.replace(cmd, name);
                 }
-                else
-                    if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32))
-                    {
-                        cmd -= setRefInput1Name;
-                        inpDef = m_pSec1ModulConfigData->m_refInpList.at(cmd);
-                        inpDef.m_sInputName = m_pXMLReader->getValue(key);
-                        m_pSec1ModulConfigData->m_refInpList.replace(cmd, inpDef);
-                    }
-                    else
-                        if ((cmd >= setRefInput1Muxer) && (cmd < setRefInput1Muxer + 32))
-                        {
-                            cmd -= setRefInput1Muxer;
-                            inpDef = m_pSec1ModulConfigData->m_refInpList.at(cmd);
-                            inpDef.m_nMuxerCode = m_pXMLReader->getValue(key).toInt(&ok);
-                            m_pSec1ModulConfigData->m_refInpList.replace(cmd, inpDef);
-                        }
+
             break;
         }
         m_bConfigError |= !ok;
