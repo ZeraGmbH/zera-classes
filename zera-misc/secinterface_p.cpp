@@ -75,18 +75,18 @@ quint32 cSECInterfacePrivate::setSync(QString chnname, QString syncChn)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("ECAL:%1:SYNC").arg(chnname), par = QString("%1;").arg(syncChn));
+    msgnr = sendCommand(cmd = QString("ECAL:%1:SYNC").arg(chnname), par = syncChn);
     m_MsgNrCmdList[msgnr] = setsync;
     return msgnr;
 }
 
 
-quint32 cSECInterfacePrivate::setMux(QString chnname, quint8 mux)
+quint32 cSECInterfacePrivate::setMux(QString chnname, QString inpname)
 {
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("ECAL:%1:MUX?").arg(chnname), par = QString("%1;").arg(mux));
+    msgnr = sendCommand(cmd = QString("ECAL:%1:MUX").arg(chnname), par = QString("%1;").arg(inpname));
     m_MsgNrCmdList[msgnr] = setmux;
     return msgnr;
 }
@@ -97,7 +97,7 @@ quint32 cSECInterfacePrivate::setCmdid(QString chnname, quint8 cmdid)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("ECAL:%1:CMDID?").arg(chnname), par = QString("%1;").arg(cmdid));
+    msgnr = sendCommand(cmd = QString("ECAL:%1:CMDID").arg(chnname), par = QString("%1;").arg(cmdid));
     m_MsgNrCmdList[msgnr] = setcmdid;
     return msgnr;
 }

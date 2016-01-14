@@ -55,10 +55,10 @@ quint32 cSECInterface::setSync(QString chnname, QString syncchn)
 }
 
 
-quint32 cSECInterface::setMux(QString chnname, quint8 mux)
+quint32 cSECInterface::setMux(QString chnname, QString inpname)
 {
     Q_D(cSECInterface);
-    return d->setMux(chnname, mux);
+    return d->setMux(chnname, inpname);
 }
 
 

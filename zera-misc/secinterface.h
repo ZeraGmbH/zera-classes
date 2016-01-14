@@ -54,7 +54,7 @@ public:
     virtual quint32 readRegister(QString chnname, quint8 reg);
 
     virtual quint32 setSync(QString chnname, QString syncchn);
-    virtual quint32 setMux(QString chnname, quint8 mux);
+    virtual quint32 setMux(QString chnname, QString inpname);
     virtual quint32 setCmdid(QString chnname, quint8 cmdid);
     virtual quint32 start(QString chnname);
     virtual quint32 stop(QString chnname);
