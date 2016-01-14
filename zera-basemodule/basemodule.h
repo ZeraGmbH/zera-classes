@@ -47,7 +47,7 @@ public:
     virtual void setConfiguration(QByteArray xmlConfigData);
     virtual QString getModuleName();
     virtual QString getSCPIModuleName();
-    virtual quint8 getModuleNr();
+    virtual quint16 getModuleNr();
     virtual QByteArray getConfiguration()=0;
     virtual bool isConfigured();
     virtual void startModule();
