@@ -23,21 +23,12 @@
         <measure>
             <dutinput>
                 <n>2</n>
-                <inp1>
-                    <input>sh0</input>
-                    <muxer>1</muxer>
-                </inp1>
-                <inp2>
-                    <input>fi0</input>
-                    <muxer>2</muxer>
-                </inp2>
+                <inp1>sh0</inp1>
+                <inp2>fi0</inp2>
             </dutinput>
             <refinput>
                 <n>1</n>
-                <inp1>
-                    <input>fo0</input>
-                    <muxer>1</muxer>
-                </inp1>
+                <inp1>fo0</inp1>
             </refinput>
             <interval>2.0</interval>
         </measure>

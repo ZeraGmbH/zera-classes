@@ -17,14 +17,6 @@
     </xs:simpleType>
 
 
-    <xs:simpleType name="muxertype">
-        <xs:restriction base="xs:integer">
-            <xs:maxInclusive value='31'/>
-            <xs:minExclusive value='0'/>
-        </xs:restriction>
-    </xs:simpleType>
-
-
     <xs:simpleType name="ipadresstype">
         <xs:restriction base="xs:string">
             <xs:pattern value = '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'/>
@@ -107,14 +99,6 @@
     </xs:simpleType>
 
 
-    <xs:complexType name="inputdefinitiontype">
-        <xs:sequence>
-            <xs:element name="input" type="inputsignaltype"/>
-            <xs:element name="muxer" type="muxertype"/>
-        </xs:sequence>
-    </xs:complexType>
-
-
     <xs:simpleType name="modetype">
         <xs:restriction base="xs:string">
             <xs:enumeration value="tcount"/>
@@ -141,38 +125,38 @@
     <xs:complexType name="dutinputtype">
         <xs:sequence>
             <xs:element name="n" type="ntype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="inp1" type="inputdefinitiontype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="inp2" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp3" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp4" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp5" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp6" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp7" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp8" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp9" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp10" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp11" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp12" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp13" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp14" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp15" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp16" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp17" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp18" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp19" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp20" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp21" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp22" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp23" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp24" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp25" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp26" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp27" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp28" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp29" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp30" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp31" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp32" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp1" type="inputsignaltype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="inp2" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp3" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp4" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp5" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp6" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp7" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp8" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp9" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp10" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp11" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp12" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp13" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp14" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp15" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp16" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp17" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp18" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp19" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp20" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp21" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp22" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp23" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp24" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp25" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp26" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp27" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp28" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp29" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp30" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp31" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp32" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -180,38 +164,38 @@
     <xs:complexType name="refinputtype">
         <xs:sequence>
             <xs:element name="n" type="ntype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="inp1" type="inputdefinitiontype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="inp2" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp3" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp4" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp5" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp6" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp7" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp8" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp9" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp10" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp11" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp12" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp13" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp14" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp15" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp16" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp17" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp18" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp19" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp20" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp21" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp22" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp23" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp24" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp25" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp26" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp27" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp28" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp29" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp30" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp31" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="inp32" type="inputdefinitiontype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp1" type="inputsignaltype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="inp2" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp3" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp4" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp5" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp6" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp7" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp8" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp9" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp10" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp11" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp12" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp13" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp14" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp15" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp16" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp17" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp18" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp19" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp20" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp21" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp22" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp23" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp24" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp25" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp26" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp27" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp28" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp29" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp30" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp31" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp32" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
