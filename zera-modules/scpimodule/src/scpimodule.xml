@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<scpimodconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
+<?xml version="1.0"?>
+<scpimodconfpar>
     <configuration>
         <connectivity>
             <debuglevel>0</debuglevel>
@@ -18,7 +16,7 @@
             </serialdevice>
             <device>
                 <name>COM5003</name>
-                <identification>Zera GmbH Königswinter, COM5003, R1.0.1</identification>
+                <identification>Zera GmbH KÃ¶nigswinter, COM5003, R1.0.1</identification>
             </device>
             <status>
                 <questionable>
@@ -98,5 +96,4 @@
             </status>
         </connectivity>
     </configuration>
-
 </scpimodconfpar>

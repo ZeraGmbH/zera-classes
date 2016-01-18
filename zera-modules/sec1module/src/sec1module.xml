@@ -1,7 +1,5 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<sec1modconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
+<?xml version="1.0"?>
+<sec1modconfpar>
     <configuration>
         <connectivity>
             <debuglevel>0</debuglevel>
@@ -33,18 +31,16 @@
             <interval>2.0</interval>
         </measure>
     </configuration>
-
     <parameter>
         <measure>
             <dutinput>sh0</dutinput>
             <refinput>fo0</refinput>
             <mode>tcount</mode>
-            <dutconstant>1000.0</dutconstant>
-            <refconstant>1000.0</refconstant>
+            <dutconstant>1000</dutconstant>
+            <refconstant>1000</refconstant>
             <target>12000000</target>
-            <energy>1.0</energy>
+            <energy>1</energy>
             <mrate>10</mrate>
         </measure>
     </parameter>
-
 </sec1modconfpar>

@@ -1,21 +1,19 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
-
-<pow1modconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
+<?xml version="1.0"?>
+<pow1modconfpar>
     <configuration>
         <connectivity>
             <debuglevel>0</debuglevel>
             <ethernet>
                 <resourcemanager>
-                    <ip>127.0.0.1</ip>
+                    <ip>192.168.7.222</ip>
                     <port>6312</port>
                 </resourcemanager>
                 <pcbserver>
-                    <ip>127.0.0.1</ip>
+                    <ip>192.168.7.222</ip>
                     <port>6307</port>
                 </pcbserver>
                 <dspserver>
-                    <ip>127.0.0.1</ip>
+                    <ip>192.168.7.222</ip>
                     <port>6310</port>
                 </dspserver>
             </ethernet>
@@ -28,17 +26,17 @@
                 <m3>3LB</m3>
                 <m4>2LB</m4>
             </modes>
-                <system>
-                    <pms1>m0,m3</pms1>
-                    <pms2>m1,m4</pms2>
-                    <pms3>m2,m5</pms3>
-                    <pms2w>pms3</pms2w>
-                </system>
-                <integrationmode>time</integrationmode>
-                <movingwindow>
-                    <on>1</on>
-                    <time>0.5</time>
-                </movingwindow>
+            <system>
+                <pms1>m0,m3</pms1>
+                <pms2>m1,m4</pms2>
+                <pms3>m2,m5</pms3>
+                <pms2w>pms3</pms2w>
+            </system>
+            <integrationmode>time</integrationmode>
+            <movingwindow>
+                <on>1</on>
+                <time>0.5</time>
+            </movingwindow>
         </measure>
         <frequencyoutput>
             <frequency>200000</frequency>
@@ -56,7 +54,7 @@
     <parameter>
         <measuringmode>4LB</measuringmode>
         <interval>
-            <time>1.0</time>
+            <time>1</time>
             <period>200</period>
         </interval>
     </parameter>
