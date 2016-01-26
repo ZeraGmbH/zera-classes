@@ -602,7 +602,10 @@ void cRangeObsermatic::newRange(QVariant range)
             index = chnIndexlist.at(i);
 
             // lets first test that new range will not cause an overload condition in this channel
-            if (true/*m_RangeMeasChannelList.at(index)->isPossibleRange(s , m_ActualValues[index])*/)
+            // if (true/*m_RangeMeasChannelList.at(index)->isPossibleRange(s , m_ActualValues[index])*/)
+            // this does not work because libvein sends "" as newrange .... this result in dsp crash
+            // so we must at least test for valid range
+            if (m_RangeMeasChannelList.at(index)->isPossibleRange(s))
             {
                 //m_newChannelRangeList.replace(index, s);
                 stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
