@@ -45,10 +45,19 @@ void cPower3MeasDelegate::computeOutput()
             real1 = input1.at(i*2+1); im1 = input1.at(i*2);
             real2 = input2.at(i*2+1); im2 = input2.at(i*2);
 
+#ifdef DEBUG
+            if (i==1)
+            {
+                QString ts;
+                ts = QString("Real1: %1 ; Imag1: %2 ; Real2: %3 ; Imag2: %4").arg(real1).arg(im1).arg(real2).arg(im2);
+                qDebug() << ts;
+            }
+#endif
+
             // additionally we have to devide by 2.0 because we get the amplitude information
             // rather then energy information
-            resultReal = ((real1 * real2) - (im1 * im2)) / 2.0;
-            resultIm = ((real1 * im2) + (real2 *im1)) / 2.0;
+            resultReal = ((real1 * real2) + (im1 * im2)) / 2.0;
+            resultIm = -((real1 * im2) - (real2 *im1)) / 2.0;
 
             resultList.append(resultReal);
             resultList.append(resultIm);
@@ -61,7 +70,7 @@ void cPower3MeasDelegate::computeOutput()
 #ifdef DEBUG
         QString ts;
         for (int j = 0; j < (resultList.count() >> 1); j++)
-            ts = ts + QString("%1,%2;").arg(resultList.at(j*2)).arg(resultList.at(j*2+1));
+            ts= ts + QString("%1,%2;").arg(resultList.at(j*2)).arg(resultList.at(j*2+1));
         qDebug() << ts;
 #endif
     }
