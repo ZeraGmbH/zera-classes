@@ -83,10 +83,17 @@ quint32 cSECInterface::stop(QString chnname)
 }
 
 
-quint32 cSECInterface::registerNotifier(QString query, QString notifier)
+quint32 cSECInterface::intAck(QString chnname, quint8 interrupt)
 {
     Q_D(cSECInterface);
-    return d->registerNotifier(query, notifier);
+    return d->intAck(chnname, interrupt);
+}
+
+
+quint32 cSECInterface::registerNotifier(QString query)
+{
+    Q_D(cSECInterface);
+    return d->registerNotifier(query);
 }
 
 

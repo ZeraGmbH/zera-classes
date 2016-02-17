@@ -25,7 +25,8 @@ enum seccommands
     startecalc,
     stopecalc,
     regnotifier,
-    unregnotifier
+    unregnotifier,
+    intacknowledge
 };
 
 
@@ -48,8 +49,9 @@ public:
     virtual quint32 setCmdid(QString chnname, quint8 cmdid);
     virtual quint32 start(QString chnname);
     virtual quint32 stop(QString chnname);
+    virtual quint32 intAck(QString chnname, quint8 interrupt);
 
-    virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
+    virtual quint32 registerNotifier(QString query); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
 protected slots:

@@ -53,7 +53,7 @@ quint32 cSECInterfacePrivate::writeRegister(QString chnname, quint8 reg, quint32
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("ECAL:%1:REG").arg(chnname), par = QString("%1;%2;").arg(reg).arg(value));
+    msgnr = sendCommand(cmd = QString("ECAL:%1:R%2").arg(chnname).arg(reg), par = QString("%1;").arg(value));
     m_MsgNrCmdList[msgnr] = writeregister;
     return msgnr;
 }
@@ -64,7 +64,7 @@ quint32 cSECInterfacePrivate::readRegister(QString chnname, quint8 reg)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("ECAL:%1:REG?").arg(chnname), par = QString("%1;").arg(reg));
+    msgnr = sendCommand(cmd = QString("ECAL:%1:R%2?").arg(chnname).arg(reg));
     m_MsgNrCmdList[msgnr] = readregister;
     return msgnr;
 }
@@ -75,7 +75,7 @@ quint32 cSECInterfacePrivate::setSync(QString chnname, QString syncChn)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("ECAL:%1:SYNC?").arg(chnname), par = syncChn);
+    msgnr = sendCommand(cmd = QString("ECAL:%1:SYNC").arg(chnname), par = QString("%1;").arg(syncChn));
     m_MsgNrCmdList[msgnr] = setsync;
     return msgnr;
 }
@@ -125,12 +125,23 @@ quint32 cSECInterfacePrivate::stop(QString chnname)
 }
 
 
-quint32 cSECInterfacePrivate::registerNotifier(QString query, QString notifier)
+quint32 cSECInterfacePrivate::intAck(QString chnname, quint8 interrupt)
 {
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SERV:REG"), par = QString("%1;%2;").arg(query).arg(notifier));
+    msgnr = sendCommand(cmd = QString("ECAL:%1:INT").arg(chnname), par = QString("%1;").arg(interrupt));
+    m_MsgNrCmdList[msgnr] = intacknowledge;
+    return msgnr;
+}
+
+
+quint32 cSECInterfacePrivate::registerNotifier(QString query)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SERV:REG"), par = QString("%1;").arg(query));
     m_MsgNrCmdList[msgnr] = regnotifier;
     return msgnr;
 }
@@ -181,6 +192,7 @@ void cSECInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case stopecalc:
         case regnotifier:
         case unregnotifier:
+        case intacknowledge:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }
