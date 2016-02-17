@@ -75,7 +75,7 @@ quint32 cSECInterfacePrivate::setSync(QString chnname, QString syncChn)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("ECAL:%1:SYNC").arg(chnname), par = syncChn);
+    msgnr = sendCommand(cmd = QString("ECAL:%1:SYNC").arg(chnname), par = QString("%1;").arg(syncChn));
     m_MsgNrCmdList[msgnr] = setsync;
     return msgnr;
 }
