@@ -45,6 +45,8 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:dutinput:n"] = setDutInputCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
+    m_ConfigXMLMap["sec1modconfpar:configuration:measure:modes:n"] = setModeCount;
+    m_ConfigXMLMap["sec1modconfpar:configuration:measure:embedded"] = setEmbedded;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:interval"] = setMeasureInterval;
 
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutinput"] = setDutInputPar;
@@ -160,6 +162,22 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
                 }
             break;
         }
+        case setModeCount:
+        {
+            QString name;
+            m_pSec1ModulConfigData->m_nModeCount = m_pXMLReader->getValue(key).toInt(&ok);
+            if (m_pSec1ModulConfigData->m_nModeCount > 0)
+            for (int i = 0; i < m_pSec1ModulConfigData->m_nModeCount; i++)
+                {
+                    m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:modes:mod%1").arg(i+1)] = setMode1Name+i;
+                    m_pSec1ModulConfigData->m_ModeList.append(name);
+                }
+            break;
+        }
+
+        case setEmbedded:
+            m_pSec1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
         case setMeasureInterval:
             m_pSec1ModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
@@ -185,7 +203,7 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             break;
         case setTarget:
             m_pSec1ModulConfigData->m_nTarget.m_sKey = key;
-            m_pSec1ModulConfigData->m_nTarget.m_nPar =m_pXMLReader->getValue(key).toInt(&ok);
+            m_pSec1ModulConfigData->m_nTarget.m_nPar =m_pXMLReader->getValue(key).toUInt(&ok);
             break;
         case setEnergy:
             m_pSec1ModulConfigData->m_fEnergy.m_sKey = key;
@@ -193,7 +211,7 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             break;
         case setMRate:
             m_pSec1ModulConfigData->m_nMRate.m_sKey = key;
-            m_pSec1ModulConfigData->m_nMRate.m_nPar = m_pXMLReader->getValue(key).toInt(&ok);
+            m_pSec1ModulConfigData->m_nMRate.m_nPar = m_pXMLReader->getValue(key).toUInt(&ok);
             break;
         default:
             QString name;
@@ -210,7 +228,13 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
                     name = m_pXMLReader->getValue(key);
                     m_pSec1ModulConfigData->m_refInpList.replace(cmd, name);
                 }
-
+                else
+                    if ((cmd >= setMode1Name) && (cmd < setMode1Name + 32))
+                    {
+                        cmd -= setMode1Name;
+                        name = m_pXMLReader->getValue(key);
+                        m_pSec1ModulConfigData->m_ModeList.replace(cmd, name);
+                    }
             break;
         }
         m_bConfigError |= !ok;

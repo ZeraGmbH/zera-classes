@@ -7,6 +7,7 @@
 #include <veinpeer.h>
 #include <veinentity.h>
 
+#include "debug.h"
 #include "sec1module.h"
 #include "sec1moduleconfiguration.h"
 #include "sec1moduleconfigdata.h"
@@ -23,7 +24,7 @@ cSec1Module::cSec1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* pee
     m_ModuleActivistList.clear();
 
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
-    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr, 2, 10, QChar('0'));
+    m_sSCPIModuleName = QString(BaseSCPIModuleName);
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);

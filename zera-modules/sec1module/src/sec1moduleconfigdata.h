@@ -40,10 +40,13 @@ public:
     quint8 m_nDebugLevel;
     quint8 m_nRefInpCount;
     quint8 m_nDutInpCount;
+    quint8 m_nModeCount;
     stringParameter m_sRefInput;
     stringParameter m_sDutInput;
     QList<QString> m_refInpList;
     QList<QString> m_dutInpList;
+    QList<QString> m_ModeList;
+    bool m_bEmbedded;
     stringParameter m_sMode;
     double m_fMeasInterval; // measuring interval 0.2 .. 5.0 sec. (time between actualizations)
     doubleParameter m_fDutConstant;

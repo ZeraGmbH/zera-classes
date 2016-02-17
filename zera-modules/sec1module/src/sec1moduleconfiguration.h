@@ -23,6 +23,8 @@ enum moduleconfigstate
     setMeasureInterval,
     setDutInputCount,
     setRefInputCount,
+    setModeCount,
+    setEmbedded,
 
     setDutInputPar,
     setRefInputPar,
@@ -34,7 +36,8 @@ enum moduleconfigstate
     setMRate,
 
     setDutInput1Name = 32,
-    setRefInput1Name = 64
+    setRefInput1Name = 64,
+    setMode1Name = 96
 };
 
 

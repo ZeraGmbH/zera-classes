@@ -72,8 +72,7 @@ enum sec1moduleCmds
 
 };
 
-#define irqPCBNotifier 10
-#define irqSECNotifier 11
+#define irqPCBNotifier 16
 
 class cBaseModule;
 class cSec1Module;
@@ -120,8 +119,10 @@ private:
     QState m_pcbServerConnectState; // connect to pcb server
     QState m_readREFInputsState; // init to read all ref Input informations
     QState m_readREFInputAliasState; // read for 1 Input
+    QState m_readREFInputDoneState;
     QState m_readDUTInputsState; // init to read all ref Input informations
     QState m_readDUTInputAliasState; // read for 1 Input
+    QState m_readDUTInputDoneState;
     QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
     QFinalState m_activationDoneState; // and then we have finished
@@ -156,13 +157,16 @@ private:
 
     QStringList m_ResourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    QHash<QString,cSecInputInfo> mREFSecInputInfoHash; // we hold a list of all our Input properties
-    QHash<QString,cSecInputInfo> mDUTSecInputInfoHash; // systemname from configfile->alias, csecInputinfo
+    QHash<QString,cSecInputInfo*> mREFSecInputInfoHash; // we hold a list of all our Input properties
+    QHash<QString,cSecInputInfo*> mDUTSecInputInfoHash; // systemname from configfile->alias, csecInputinfo
+    QHash<QString,cSecInputInfo*> mREFSecInputSelectionHash;
+    QHash<QString,cSecInputInfo*> mDUTSecInputSelectionHash;
+
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     QStringList m_DUTAliasList;
     qint32 m_nIt;
     QList<QString> m_sItList; // for interation over x Input hash
-    cSecInputInfo siInfo;
+    cSecInputInfo* siInfo;
     QString m_sIt;
 
     cECalcChannelInfo m_MasterEcalculator;
@@ -204,7 +208,9 @@ private:
     bool m_brunning;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
     quint32 m_nStatus; // idle, started, running, finished
+    quint32 m_nStatusTest;
     double m_fResult; // error value in %
+    quint32 m_nMTCNTStart;
     quint32 m_nMTCNTact;
     quint32 m_nMTCNTfin;
     quint32 m_nTargetValue;
@@ -225,8 +231,10 @@ private slots:
     void pcbServerConnect();
     void readREFInputs();
     void readREFInputAlias();
+    void readREFInputDone();
     void readDUTInputs();
     void readDUTInputAlias();
+    void readDUTInputDone();
     void setpcbREFConstantNotifier();
     void setsecINTNotifier();
     void activationDone();

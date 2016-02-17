@@ -30,10 +30,10 @@ namespace SEC1MODULE
 class cSec1ModuleMeasProgram;
 
 #define BaseModuleName "SECModule"
-#define BaseSCPIModuleName "E1"
+#define BaseSCPIModuleName "EC01"
 // shortcut of scpi module name is only first 4 characters
-// and in meter test bench we have more of them
-// so the 60th module would be E160
+// so we will provide ecalculator type EC01 .. EC99
+// and each ec will have an additional scpi parent with its number 0001 .. 9999
 
 
 class cSec1Module : public cBaseModule
