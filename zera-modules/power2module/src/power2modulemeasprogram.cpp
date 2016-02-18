@@ -620,12 +620,12 @@ void cPower2ModuleMeasProgram::setDspCmdList()
                     for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
                     {
                         // which actualvalue do we take as source (offset)
-                        quint8 actvalueIndex = m_ConfigData.m_FreqOutputConfList.at(i).m_nSource;
+                        quint8 actvalueIndex = cmpActualValIndex(m_ConfigData.m_FreqOutputConfList.at(i));
                         QString foutSystemName =  m_ConfigData.m_FreqOutputConfList.at(i).m_sName;
                         // here we set abs, plus or minus and which frequency output has to be set
                         quint16 freqpar = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
                         // frequenzausgang berechnen lassen
-                        m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQSCALE+%3)")
+                        m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPOWERF+%2,FREQSCALE+%3)")
                                                          .arg(freqpar)
                                                          .arg(actvalueIndex)
                                                          .arg(i));
