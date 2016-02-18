@@ -66,7 +66,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::
     m_readSenseChannelInformationDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readSenseChannelAliasState);
 
     m_readSourceChannelInformationState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceChannelAliasState);
-    m_readSourceChannelInformationState.addTransition(this, SIGNAL(activationSkip()), &m_claimPGRMemState);
+    m_readSourceChannelInformationState.addTransition(this, SIGNAL(activationSkip()), &m_dspserverConnectState);
     m_readSourceChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceDspChannelState);
     m_readSourceDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceFormFactorState);
     m_readSourceFormFactorState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceChannelInformationDoneState);
