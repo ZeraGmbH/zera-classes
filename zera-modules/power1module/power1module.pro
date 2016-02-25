@@ -51,6 +51,7 @@ OTHER_FILES += \
     src/power1module.xsd \
     src/power1module2.xml \
     src/power1module3.xml \
+    src/power1module4.xml \
     src/power1moduleCED.xml \
     src/power1module2CED.xml \
     src/power1module3CED.xml
@@ -59,3 +60,4 @@ RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
