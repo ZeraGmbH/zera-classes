@@ -58,6 +58,8 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
     }
 
     }
+
+    disconnect(myConn);
 }
 
 }

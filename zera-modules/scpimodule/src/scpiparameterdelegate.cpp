@@ -54,6 +54,8 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &sIn
             emit signalStatus(SCPI::nak);
             //client->receiveStatus(SCPI::nak);
 
+    disconnect(myConn);
+
     return true;
 }
 
