@@ -22,10 +22,13 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &sIn
     scpiCmdType = getType();
     cSCPICommand cmd = sInput;
 
+    QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
+
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) // test if we got an allowed query
     {
         QString answer = m_pEntity->getValue().toString();
-        client->receiveAnswer(answer);
+        emit signalAnswer(answer);
+        //client->receiveAnswer(answer);
     }
     else
 
@@ -38,15 +41,18 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, const QString &sIn
                 QVariant newVar = cmd.getParam(0);
                 newVar.convert(var.type());
                 m_pEntity->setValue(newVar, m_pPeer);
-                client->receiveStatus(SCPI::ack);
+                emit signalStatus(SCPI::ack);
+                //client->receiveStatus(SCPI::ack);
             }
             else
-                client->receiveStatus(SCPI::errval);
+                emit signalStatus(SCPI::errval);
+                //client->receiveStatus(SCPI::errval);
 
         }
 
         else
-            client->receiveStatus(SCPI::nak);
+            emit signalStatus(SCPI::nak);
+            //client->receiveStatus(SCPI::nak);
 
     return true;
 }

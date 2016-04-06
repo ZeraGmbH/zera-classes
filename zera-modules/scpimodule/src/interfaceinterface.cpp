@@ -38,6 +38,8 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
 {
     cSCPICommand cmd = sInput;
 
+    QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
+
     switch (cmdCode)
     {
     case deviceinterfacecmd:
@@ -46,11 +48,12 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
         {
             QString xml;
             m_pSCPIInterface->getSCPICmdInterface()->exportSCPIModelXML(xml);
-            client->receiveAnswer(xml);
+            emit signalAnswer(xml);
+            //client->receiveAnswer(xml);
         }
         else
-            client->receiveStatus(SCPI::nak);
-
+            emit signalStatus(SCPI::nak);
+            //client->receiveStatus(SCPI::nak);
         break;
     }
 

@@ -24,6 +24,10 @@ public:
     virtual bool executeSCPI(const QString&, QString&);
     virtual bool executeSCPI(cSCPIClient *client, const QString& sInput) = 0;
 
+signals:
+    void signalStatus(quint8);
+    void signalAnswer(QString);
+
 private:
     QString m_sCmdParent;
 };

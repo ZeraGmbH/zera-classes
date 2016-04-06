@@ -40,7 +40,12 @@ bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, const QString &sInpu
         }
     }
     else
-        client->receiveStatus(SCPI::nak);
+    {
+        QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), client, SLOT(receiveStatus(quint8)));
+        emit signalStatus(SCPI::nak);
+        disconnect(myConn);
+        // client->receiveStatus(SCPI::nak);
+    }
 
     return true;
 }

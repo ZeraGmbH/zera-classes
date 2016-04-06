@@ -18,7 +18,10 @@ void cSCPIMeasureCollector::receiveStatus(quint8 stat)
     m_nmeasureObjects--;
     if (m_nmeasureObjects == 0)
     {
-        m_pClient->receiveStatus(m_nStatus);
+        QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), m_pClient, SLOT(receiveStatus(quint8)));
+        emit signalStatus(m_nStatus);
+        disconnect(myConn);
+        //m_pClient->receiveStatus(m_nStatus);
         deleteLater();
     }
 
@@ -31,7 +34,10 @@ void cSCPIMeasureCollector::receiveAnswer(QString s)
     m_nmeasureObjects--;
     if (m_nmeasureObjects == 0)
     {
-        m_pClient->receiveAnswer(m_sAnswer);
+        QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), m_pClient, SLOT(receiveAnswer(QString)));
+        emit signalAnswer(m_sAnswer);
+        disconnect(myConn);
+        //m_pClient->receiveAnswer(m_sAnswer);
         deleteLater();
     }
 }

@@ -20,6 +20,10 @@ public slots:
     void receiveStatus(quint8 stat);
     void receiveAnswer(QString s);
 
+signals:
+    void signalStatus(quint8);
+    void signalAnswer(QString);
+
 private:
     cSCPIClient* m_pClient;
     quint32 m_nmeasureObjects;

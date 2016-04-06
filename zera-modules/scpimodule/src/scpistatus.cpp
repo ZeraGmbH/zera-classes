@@ -25,7 +25,8 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
 
     cmd = input;
     if (cmd.isQuery())
-        client->receiveAnswer(QString("%1").arg(status));
+        emit signalAnswer(QString("%1").arg(status));
+        //client->receiveAnswer(QString("%1").arg(status));
     else
         if (cmd.isCommand(1))
         {
@@ -47,7 +48,8 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
 
     cmd = input;
     if (cmd.isQuery())
-        client->receiveAnswer(QString("%1").arg(status));
+        emit signalAnswer(QString("%1").arg(status));
+        //client->receiveAnswer(QString("%1").arg(status));
     else
         emit eventError(CommandError);
 }
@@ -55,6 +57,8 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
 
 void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput)
 {
+    QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
+
     switch (cmdCode)
     {
     case SCPIStatusCmd::condition:
@@ -77,6 +81,8 @@ void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, const QString &sI
         readwriteStatusReg(client, m_nEnable, sInput);
         break;
     }
+
+    disconnect(myConn);
 }
 
 
