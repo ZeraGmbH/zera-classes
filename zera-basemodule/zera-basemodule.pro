@@ -99,3 +99,4 @@ SOURCES += \
     basemeasmodule.cpp
 
 include(../zera-classes.pri)
+include(../zera-modules.pri)

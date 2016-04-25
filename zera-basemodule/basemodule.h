@@ -56,15 +56,9 @@ public:
     virtual void setConfiguration(QByteArray xmlConfigData);
     virtual QString getModuleName();
     virtual QString getSCPIModuleName();
-<<<<<<< HEAD
     virtual quint16 getModuleNr();
-    virtual QByteArray getConfiguration()=0;
-    virtual bool isConfigured();
-=======
-    virtual quint8 getModuleNr();
     virtual QByteArray getConfiguration() const = 0;
     virtual bool isConfigured() const;
->>>>>>> zera-basemodule: bugfix
     virtual void startModule();
     virtual void stopModule();
 

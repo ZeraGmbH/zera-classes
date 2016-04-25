@@ -368,7 +368,7 @@ void cBaseModule::exportMetaData()
 }
 
 
-quint8 cBaseModule::getModuleNr()
+quint16 cBaseModule::getModuleNr()
 {
     return m_nModuleNr;
 }
