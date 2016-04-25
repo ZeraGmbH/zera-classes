@@ -15,19 +15,19 @@ SUBDIRS     = \
             zera-modules/interface \
             zera-basemodule \
             zera-modules/rangemodule \
-            zera-modules/rmsmodule \
-            zera-modules/dftmodule \
-            zera-modules/power1module \
-            zera-modules/thdnmodule \
-            zera-modules/oscimodule \
-            zera-modules/fftmodule \
-            zera-modules/samplemodule \
-            zera-modules/referencemodule \
-            zera-modules/modemodule \
-            zera-modules/sec1module \
+#            zera-modules/rmsmodule \
+#            zera-modules/dftmodule \
+#            zera-modules/power1module \
+#            zera-modules/thdnmodule \
+#            zera-modules/oscimodule \
+#            zera-modules/fftmodule \
+#            zera-modules/samplemodule \
+#            zera-modules/referencemodule \
+#            zera-modules/modemodule \
+#            zera-modules/sec1module \
             zera-modules/scpimodule \
-            zera-modules/power2module \
-            zera-modules/power3module \
+#            zera-modules/power2module \
+#            zera-modules/power3module \
             zera-validator
 
 
