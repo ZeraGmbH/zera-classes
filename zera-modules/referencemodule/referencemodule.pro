@@ -57,3 +57,4 @@ RESOURCES += \
     resource.qrc
 
 include(../../zera-classes.pri)
+include(../zera-modules.pri)

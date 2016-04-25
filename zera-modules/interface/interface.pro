@@ -19,3 +19,4 @@ header_files.path = /usr/include/zera-modules
 INSTALLS += header_files
 
 include(../../zera-classes.pri)
+include(../zera-modules.pri)
