@@ -99,9 +99,9 @@ HEADERS += \
     src/statusbitdescriptor.h \
     src/scpieventsystem.h \
     src/scpipropertydelegate.h \
-    src/scpiclientinfo.h
+    src/scpiclientinfo.h \
     src/scpiethclient.h \
-    src/scpiserialclient.h
+    src/scpiserialclient.h \
     src/statusbitdescriptor.h \
     src/scpieventsystem.h \
     src/scpipropertydelegate.h \
