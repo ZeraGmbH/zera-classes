@@ -18,8 +18,8 @@ namespace SCPIMODULE
 {
 
 
-cSCPIClient::cSCPIClient(QTcpSocket* socket, cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface)
-    :m_pSocket(socket), m_pModule(module), m_ConfigData(configdata), m_pSCPIInterface(iface)
+cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface)
+    :m_pModule(module), m_ConfigData(configdata), m_pSCPIInterface(iface)
 {
     m_bAuthorisation = false;
 
@@ -105,12 +105,6 @@ void cSCPIClient::receiveStatus(quint8 stat)
         m_pIEEE4882->AddEventError(CommandError);
         break;
     }
-}
-
-
-void cSCPIClient::receiveAnswer(QString answ)
-{
-
 }
 
 

@@ -12,13 +12,9 @@ QT       += network
 
 TARGET = zerabasemodule
 
-#dependencies
-VEIN_DEP_EVENT = 1
-VEIN_DEP_COMP = 1
-VEIN_DEP_CCAPI = 1
-VEIN_DEP_HELPER = 1
-
+include(../zera-modules/zera-modules.pri)
 include(../zera-classes.pri)
+
 
 LIBS +=  -lzera-proxy
 LIBS +=  -lMeasurementModuleInterface
@@ -98,5 +94,4 @@ SOURCES += \
     scpiinfo.cpp \
     basemeasmodule.cpp
 
-include(../zera-classes.pri)
-include(../zera-modules.pri)
+

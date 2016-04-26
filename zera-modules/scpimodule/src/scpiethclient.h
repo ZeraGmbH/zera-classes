@@ -12,13 +12,14 @@ namespace SCPIMODULE
 
 class cSCPIInterface;
 class cSCPIModuleConfigData;
+class  cSCPIModule;
 
 class cSCPIEthClient: public cSCPIClient
 {
     Q_OBJECT
 
 public:
-    cSCPIEthClient(QTcpSocket* socket, VeinPeer* peer, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
+    cSCPIEthClient(QTcpSocket* socket,  cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIEthClient();
 
 public slots:

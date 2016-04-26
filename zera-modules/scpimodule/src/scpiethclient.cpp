@@ -8,8 +8,8 @@ namespace SCPIMODULE
 
 {
 
-cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, VeinPeer *peer, cSCPIModuleConfigData &configdata, cSCPIInterface *iface)
-    :m_pSocket(socket), cSCPIClient(peer, configdata, iface)
+cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface)
+    :m_pSocket(socket), cSCPIClient(module, configdata, iface)
 {
     // so now we can start our connection
     connect(m_pSocket, SIGNAL(readyRead()), this, SLOT(cmdInput()));

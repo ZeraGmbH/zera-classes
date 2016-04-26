@@ -18,18 +18,8 @@ LIBS +=  -lzeraxmlconfig
 LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
 
-#dependencies
-VEIN_DEP_EVENT = 1
-VEIN_DEP_COMP = 1
-VEIN_DEP_HELPER = 1
-
-#dependencies
-VEIN_DEP_EVENT = 1
-VEIN_DEP_COMP = 1
-
-#dependencies
-VEIN_DEP_EVENT = 1
-VEIN_DEP_COMP = 1
+include(../zera-modules.pri)
+include(../../zera-classes.pri)
 
 INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
@@ -114,5 +104,4 @@ OTHER_FILES += \
 RESOURCES += \
     resources.qrc
 
-include(../../zera-classes.pri)
-include(../zera-modules.pri)
+

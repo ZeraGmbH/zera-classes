@@ -1,7 +1,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-namespace SEC1MODULE
+namespace SCPIMODULE
 {
 
 #define DEBUG 1

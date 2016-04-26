@@ -23,7 +23,7 @@ class cSCPIClient: public QObject
     Q_OBJECT
 
 public:
-    cSCPIClient(QTcpSocket* socket, cSCPIModule* module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
+    cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIClient();
 
     void setAuthorisation(bool auth);
@@ -39,7 +39,6 @@ protected:
     cIEEE4882* m_pIEEE4882;
 
 private:
-    QTcpSocket* m_pSocket;
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
 

@@ -11,8 +11,8 @@ namespace SCPIMODULE
 
 {
 
-cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, VeinPeer *peer, cSCPIModuleConfigData &configdata, cSCPIInterface *iface)
-    :m_pSerial(serial), cSCPIClient(peer, configdata, iface)
+cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface)
+    :m_pSerial(serial), cSCPIClient(module, configdata, iface)
 {
     // so now we can start our connection
     connect(m_pSerial, SIGNAL(readyRead()), this, SLOT(cmdInput()));
@@ -68,6 +68,7 @@ void cSCPISerialClient::cmdInput()
             if (!m_pSCPIInterface->executeCmd(this, m_sInput))
                 emit m_pIEEE4882->AddEventError(CommandError);
         }
+    }
 }
 
 }

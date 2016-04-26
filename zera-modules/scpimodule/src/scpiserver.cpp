@@ -94,7 +94,7 @@ void cSCPIServer::deleteInterface()
 void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-    cSCPIEthClient* client = new cSCPIEthClient(socket, m_pPeer, m_ConfigData, m_pSCPIInterface); // each client our interface;
+    cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
     connect(client, SIGNAL(destroyed(QObject*)), this, SLOT(deleteSCPIClient(QObject*)));
     m_SCPIClientList.append(client);
     if (m_SCPIClientList.count() == 1)
@@ -215,7 +215,7 @@ void cSCPIServer::testSerial()
                     m_pSerial->setParity(QSerialPort::NoParity);
                     m_pSerial->setFlowControl(QSerialPort::NoFlowControl);
 
-                    m_pSerialClient = new cSCPISerialClient(m_pSerial, m_pPeer, m_ConfigData, m_pSCPIInterface);
+                    m_pSerialClient = new cSCPISerialClient(m_pSerial, m_pModule, m_ConfigData, m_pSCPIInterface);
                     m_SCPIClientList.append(m_pSerialClient);
                     if (m_SCPIClientList.count() == 1)
                         m_pSerialClient->setAuthorisation(true);

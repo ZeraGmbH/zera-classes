@@ -6,15 +6,13 @@
 
 TEMPLATE = lib
 
-#dependencies
-VEIN_DEP_EVENT = 1
-VEIN_DEP_COMP = 1
-VEIN_DEP_HASH = 1
+
 
 
 #do not copy the target into the $$VEIN_BASEDIR/libs directory
 VF_NO_DEPLOY = 1
 
+include(../zera-modules/zera-modules.pri)
 include(../zera-classes.pri)
 
 QT       -= gui

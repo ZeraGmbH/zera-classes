@@ -16,6 +16,11 @@ LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
 LIBS +=  -lzera-validator
 
+
+include(../zera-modules.pri)
+include(../../zera-classes.pri)
+
+
 INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
@@ -25,11 +30,6 @@ INCLUDEPATH += ../../zera-basemodule \
 
 
 TARGET = $$qtLibraryTarget(rangemodule)
-
-#dependencies
-VEIN_DEP_EVENT = 1
-VEIN_DEP_COMP = 1
-VEIN_DEP_HELPER = 1
 
 INCLUDEPATH += "src"
 
@@ -63,5 +63,4 @@ OTHER_FILES += \
 RESOURCES += \
     resources.qrc
 
-include(../../zera-classes.pri)
-include(../zera-modules.pri)
+
