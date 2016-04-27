@@ -19,7 +19,7 @@ cModuleValidator::cModuleValidator(cBaseModule* module)
 
 void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 {
-    if (t_cEvent->peerId() == m_pModule->m_nEntityId)
+    if (t_cEvent->eventData()->entityId() == m_pModule->m_nEntityId)
     {
         // is it a command event for setting component data
         if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType())

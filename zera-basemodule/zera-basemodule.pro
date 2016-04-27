@@ -5,7 +5,7 @@
 #-------------------------------------------------
 TEMPLATE = lib
 
-ZDEPENDS += resman libvein zera-validator
+ZDEPENDS += resman zera-validator
 
 QT       -= gui
 QT       += network
