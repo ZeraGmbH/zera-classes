@@ -25,9 +25,9 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
         if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
         {
             // only transactions will be handled
-            if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::TRANSACTION)
+            VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
+            if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::TRANSACTION && cData->eventCommand() != VeinComponent::ComponentData::Command::CCMD_FETCH)
             {
-                VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
                 QString cName;
                 // does this componant data belong to our module
                 if (m_keylist.indexOf(cName = cData->componentName()) != -1 )
