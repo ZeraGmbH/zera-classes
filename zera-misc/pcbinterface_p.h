@@ -44,6 +44,7 @@ enum pcbcommands
 
     getaliassource,
     getdspchannelsource,
+    getadjustmentstatus,
     getformfactorsource,
     getconstantsource,
     setconstantsource,

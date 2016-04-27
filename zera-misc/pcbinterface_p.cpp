@@ -378,6 +378,17 @@ quint32 cPCBInterfacePrivate::getAliasFrqinput(QString chnName)
 }
 
 
+quint32 cPCBInterfacePrivate::getAdjustmentStatus()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("STAT:ADJ?"));
+    m_MsgNrCmdList[msgnr] = getadjustmentstatus;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::resourceAliasQuery(QString resourceType, QString resourceName)
 {
     QString cmd;
@@ -445,6 +456,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case gettype2:
         case getsamplerate:
         case getdspchannelsource:
+        case getadjustmentstatus:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 

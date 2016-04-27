@@ -258,6 +258,13 @@ quint32 cPCBInterface::getAliasFrqinput(QString chnName)
 }
 
 
+quint32 cPCBInterface::getAdjustmentStatus()
+{
+    Q_D(cPCBInterface);
+    return d->getAdjustmentStatus();
+}
+
+
 quint32 cPCBInterface::resourceAliasQuery(QString resourceType, QString resourceName)
 {
     Q_D(cPCBInterface);
