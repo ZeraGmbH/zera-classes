@@ -65,17 +65,11 @@ unix:equals(TEMPLATE, "staticlib") {
 
 ## Usage: ZDEPENDS removes redundancy in dependency resolving, declare it before the line including this .pri
 
-#Adds dependencies to protonet
 contains( ZDEPENDS, protonet) {
-  INCLUDEPATH += $$PROTONET_INCLUDEDIR
-  LIBS += $$PROTONET_LIBDIR
-  LIBS +=  -lproto-net-qt
+  error("INVALID DEPENDENCY")
 }
-#Adds dependencies to libvein
 contains( ZDEPENDS, libvein) {
-# inherit dependencies from vein-framework
-  VEIN_DEP_CCAPI = 1
-
+  error("INVALID DEPENDENCY")
 }
 #Adds dependencies to the resourcemanager protobuf
 contains( ZDEPENDS, resman) {
