@@ -1,14 +1,14 @@
 #ifndef PROXYNETPEER_H
 #define PROXYNETPEER_H
 
-#include "protonetpeer.h"
+#include <xiqnetpeer.h>
 
 namespace Zera
 {
 namespace Proxy
 {
 
-class cProxyNetPeer: public ProtoNetPeer
+class cProxyNetPeer: public XiQNetPeer
 {
     Q_OBJECT
 public:

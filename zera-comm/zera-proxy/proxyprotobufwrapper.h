@@ -1,10 +1,10 @@
 #ifndef PROXYPROTOBUFWRAPPER_H
 #define PROXYPROTOBUFWRAPPER_H
 
-#include <protonetwrapper.h>
+#include <xiqnetwrapper.h>
 
 
-class cProxyProtobufWrapper: public ProtoNetWrapper
+class cProxyProtobufWrapper: public XiQNetWrapper
 {
 public:
     cProxyProtobufWrapper();

@@ -1,6 +1,6 @@
 #include <QUuid>
 #include <QTimer>
-#include <protonetpeer.h>
+#include <xiqnetpeer.h>
 #include <netmessages.pb.h>
 
 #include "proxy_p.h"

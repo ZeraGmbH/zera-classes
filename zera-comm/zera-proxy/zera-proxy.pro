@@ -4,13 +4,15 @@
 #
 #-------------------------------------------------
 TEMPLATE = lib
-ZDEPENDS += protonet \
-    resman
-
-include(../../zera-classes.pri)
+ZDEPENDS += resman
 
 QT       += network
 QT       -= gui
+
+VEIN_DEP_TCP=1
+
+include(../../zera-classes.pri)
+
 
 TARGET = zera-proxy
 DEFINES += ZERAPROXY_LIBRARY

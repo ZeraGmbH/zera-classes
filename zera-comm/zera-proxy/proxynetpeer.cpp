@@ -6,7 +6,7 @@ namespace Proxy
 {
 
 cProxyNetPeer::cProxyNetPeer(QObject *qObjParent)
-    :ProtoNetPeer(qObjParent)
+    :XiQNetPeer(qObjParent)
 {
     m_bStarted = false;
 }
