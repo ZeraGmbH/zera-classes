@@ -38,6 +38,7 @@ void cSCPIMeasure::execute(quint8 cmd)
     switch (cmd)
     {
     case SCPIModelType::measure:
+        initType = fromRead; // same as only from read because we have to output in this case
         m_MeasureStateMachine.setInitialState(&m_ConfigureState);
         m_MeasureStateMachine.start();
         break;

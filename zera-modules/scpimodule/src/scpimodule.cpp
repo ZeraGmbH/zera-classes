@@ -61,7 +61,7 @@ void cSCPIModule::setupModule()
     VeinComponent::EntityData *eData = new VeinComponent::EntityData();
     eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
     eData->setEntityId(m_nEntityId);
-    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, eData);
+    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
     m_pSCPIEventSystem->sigSendEvent(tmpEvent);
 
     VeinComponent::ComponentData *cData;

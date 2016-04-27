@@ -51,8 +51,7 @@ bool cSCPIEventSystem::processEvent(QEvent *t_event)
 void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 {
     // is it a command event for setting component data
-    if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType() ||
-        t_cEvent->eventData()->type() == VeinComponent::ErrorData::dataType() )
+    if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
     {
         // only notifications will be handled
         if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
@@ -89,10 +88,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                 if (clientinfo->entityId() == entityId)
                 {
                     m_pModule->scpiClientInfoHash.remove(cName); // so sync is done
-                    if (t_cEvent->eventData()->type() == VeinComponent::ErrorData::dataType())
-                        clientinfo->getClient()->receiveStatus(SCPI::errval);
-                    else
-                        clientinfo->getClient()->receiveStatus(SCPI::ack);
+                    clientinfo->getClient()->receiveStatus(SCPI::ack);
                 }
 
             }
@@ -117,6 +113,38 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 
         }
     }
+
+    else
+        // or is it command event for error notification
+        if (t_cEvent->eventData()->type() == VeinComponent::ErrorData::dataType() )
+        {
+            // only notifications will be handled
+            if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
+            {
+                QString cName;
+                int entityId;
+                VeinComponent::ErrorData* eData;
+                eData = static_cast<VeinComponent::ErrorData*> (t_cEvent->eventData());
+                VeinComponent::ComponentData* cData = new VeinComponent::ComponentData();
+                cData->deserialize(eData->originalData());
+
+                cName = cData->componentName();
+                entityId = eData->entityId();
+
+                // error notifications are sent for invalid parameters
+                if (m_pModule->scpiClientInfoHash.contains(cName))
+                {
+                    cSCPIClientInfo *clientinfo;
+                    clientinfo = m_pModule->scpiClientInfoHash.value(cName);
+                    if (clientinfo->entityId() == entityId)
+                    {
+                        t_cEvent->accept(); // we caused the error event due to wrong parameter
+                        m_pModule->scpiClientInfoHash.remove(cName); // command was handled
+                        clientinfo->getClient()->receiveStatus(SCPI::errval);
+                    }
+                }
+            }
+        }
 }
 
 }
