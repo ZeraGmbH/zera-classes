@@ -28,7 +28,7 @@ QList<ZeraModules::VirtualModule *> SCPIModuleFactory::listModules() const
 
 QString SCPIModuleFactory::getFactoryName() const
 {
-    return QString("scpimodule");
+    return QString(BaseModuleName).toLower();
 }
 
 }
