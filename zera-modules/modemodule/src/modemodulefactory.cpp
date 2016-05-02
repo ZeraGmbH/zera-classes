@@ -1,15 +1,17 @@
 #include "modemodulefactory.h"
 #include "modemodule.h"
 
+
 namespace MODEMODULE
 {
 
-ZeraModules::VirtualModule* ModeModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* ModeModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
-    ZeraModules::VirtualModule *module = new cModeModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cModeModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
+
 
 void ModeModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
@@ -20,15 +22,15 @@ void ModeModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> ModeModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> ModeModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString ModeModuleFactory::getFactoryName()
+QString ModeModuleFactory::getFactoryName() const
 {
-    return QString("modemodule");
+    return QString(BaseModuleName);
 }
 
 }

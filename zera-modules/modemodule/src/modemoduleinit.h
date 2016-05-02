@@ -9,8 +9,6 @@
 
 #include "moduleactivist.h"
 
-class VeinPeer;
-
 namespace Zera
 {
 namespace Proxy
@@ -66,7 +64,7 @@ class cModeModuleInit: public cModuleActivist
     Q_OBJECT
 
 public:
-    cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cModeModuleConfigData& configData);
+    cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy, cModeModuleConfigData& configData);
     virtual ~cModeModuleInit();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -78,7 +76,6 @@ protected slots:
 private:
     cModeModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
-    VeinPeer* m_pPeer; // the peer where we set our entities
     cModeModuleConfigData& m_ConfigData;
 
     QHash<quint32, int> m_MsgNrCmdList;

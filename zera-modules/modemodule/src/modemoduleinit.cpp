@@ -15,8 +15,8 @@
 namespace MODEMODULE
 {
 
-cModeModuleInit::cModeModuleInit(cModeModule *module, Zera::Proxy::cProxy *proxy, VeinPeer *peer, cModeModuleConfigData &configData)
-    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_ConfigData(configData)
+cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy, cModeModuleConfigData& configData)
+    :m_pModule(module), m_pProxy(proxy), m_ConfigData(configData)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();

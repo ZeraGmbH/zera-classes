@@ -27,6 +27,9 @@ namespace MODEMODULE
 {
 
 
+#define BaseModuleName "ModeModule"
+#define BaseSCPIModuleName "MOD"
+
 class cModeModuleConfiguration;
 class cModeModuleInit;
 
@@ -36,9 +39,9 @@ class cModeModule : public cBaseModule
 Q_OBJECT
 
 public:
-    cModeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cModeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
     virtual ~cModeModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
 
 protected:
     cModeModuleInit *m_pModeModuleInit;

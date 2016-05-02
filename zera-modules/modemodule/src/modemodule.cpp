@@ -1,23 +1,23 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
-#include <veinentity.h>
+#include <veinmodulecomponent.h>
 
 #include "modemodule.h"
 #include "modemoduleconfiguration.h"
 #include "modemoduleconfigdata.h"
 #include "modemoduleinit.h"
-#include "moduleinfo.h"
-#include "moduleerror.h"
-#include "modulesignal.h"
+
 
 namespace MODEMODULE
 {
 
-cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(modnr, proxy, peer, new cModeModuleConfiguration(), parent)
+cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
+    :cBaseModule(modnr, proxy, entityId, storagesystem, new cModeModuleConfiguration(), parent)
 {
-    m_ModuleActivistList.clear();
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleDescription = QString("This module is responsible for setting measuring mode and resetting dsp adjustment data");
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
@@ -56,7 +56,7 @@ cModeModule::~cModeModule()
 }
 
 
-QByteArray cModeModule::getConfiguration()
+QByteArray cModeModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
@@ -74,11 +74,11 @@ void cModeModule::setupModule()
     pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     // we only have to initialize the pcb's measuring mode
-    m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, m_pPeer, *pConfData);
+    m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pModeModuleInit);
     connect(m_pModeModuleInit, SIGNAL(activated()), this, SIGNAL(activationContinue()));
     connect(m_pModeModuleInit, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pModeModuleInit, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pModeModuleInit, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -95,7 +95,6 @@ void cModeModule::unsetModule()
             delete m_ModuleActivistList.at(i);
         }
         m_ModuleActivistList.clear();
-        if (errorMessage) delete errorMessage;
     }
 }
 

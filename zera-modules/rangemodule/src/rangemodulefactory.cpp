@@ -29,7 +29,7 @@ QList<ZeraModules::VirtualModule *> RangeModuleFactory::listModules() const
 
 QString RangeModuleFactory::getFactoryName() const
 {
-    return QString("rangemodule");
+    return QString(BaseModuleName);
 }
 
 }
