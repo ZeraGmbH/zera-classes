@@ -3,6 +3,8 @@
 #include "scpiclient.h"
 #include "interfaceinterface.h"
 #include "scpiinterface.h"
+#include "scpiinfo.h"
+#include "scpimodule.h"
 #include "scpiinterfacedelegate.h"
 
 namespace SCPIMODULE
@@ -30,6 +32,10 @@ bool cInterfaceInterface::setupInterface()
     m_pSCPIInterface->addSCPICommand(delegate);
     connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, const QString&)), this, SLOT(executeCmd(cSCPIClient*, int, const QString&)));
 
+    // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface
+    cSCPIInfo *scpiInfo;
+    scpiInfo = new cSCPIInfo("", QString("DEVICE:IFACE"), "2", "", "0", "");
+    m_pModule->scpiCommandList.append(scpiInfo);
     return true;
 }
 
