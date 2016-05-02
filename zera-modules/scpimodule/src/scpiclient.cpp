@@ -12,6 +12,7 @@
 #include "scpistatus.h"
 #include "scpimoduleconfigdata.h"
 #include "signalconnectiondelegate.h"
+#include "statusbitdescriptor.h"
 
 
 namespace SCPIMODULE
@@ -142,16 +143,20 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                         QString scpiModuleName;
 
                         jsonDoc = QJsonDocument::fromBinaryData(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
-                        jsonObj = jsonDoc.object();
 
-                        jsonObj = jsonObj["SCPIInfo"].toObject();
-
-                        scpiModuleName = jsonObj["ModuleName"].toString();
-
-                        if (scpiModuleName == des.m_sSCPIModuleName)
+                        if ( !jsonDoc.isNull() && jsonDoc.isObject() )
                         {
-                            moduleFound = true;
-                            break;
+                            jsonObj = jsonDoc.object();
+
+                            jsonObj = jsonObj["SCPIInfo"].toObject();
+
+                            scpiModuleName = jsonObj["Name"].toString();
+
+                            if (scpiModuleName == des.m_sSCPIModuleName)
+                            {
+                                moduleFound = true;
+                                break;
+                            }
                         }
                     }
                 }
