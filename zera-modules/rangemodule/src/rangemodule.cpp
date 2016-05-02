@@ -100,7 +100,6 @@ void cRangeModule::setupModule()
                                                            QByteArray());
     veinModuleComponentList.append(m_pModuleInterfaceComponent);
 
-
     m_pModuleName = new cVeinModuleMetaData(QString("Name"), QVariant(m_sModuleName));
     veinModuleMetaDataList.append(m_pModuleName);
 
