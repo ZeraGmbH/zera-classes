@@ -159,6 +159,8 @@ void cSCPIModule::activationDone()
 
 void cSCPIModule::activationFinished()
 {
+    // we post meta information once again because it's complete now
+    exportMetaData();
     emit addEventSystem(m_pSCPIEventSystem);
     emit activationReady();
 }
