@@ -55,42 +55,42 @@
                     <bit2>
                         <bit>1</bit>
                         <module>RMS1</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit2>
                     <bit3>
                         <bit>2</bit>
                         <module>DFT1</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit3>
                     <bit4>
                         <bit>3</bit>
                         <module>FFT1</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit4>
                     <bit5>
                         <bit>4</bit>
                         <module>THD1</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit5>
                     <bit6>
                         <bit>5</bit>
                         <module>OSC1</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit6>
                     <bit7>
                         <bit>6</bit>
                         <module>POW1</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit7>
                     <bit8>
                         <bit>7</bit>
                         <module>POW2</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit8>
                     <bit9>
                         <bit>8</bit>
                         <module>POW3</module>
-                        <component>SIG_MEASURING</component>
+                        <component>SIG_Measuring</component>
                     </bit9>
                 </operationmeasure>
             </status>
