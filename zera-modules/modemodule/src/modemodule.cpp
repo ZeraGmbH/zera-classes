@@ -1,7 +1,13 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
+#include <modulevalidator.h>
 #include <veinmodulecomponent.h>
+#include <veinmodulemetadata.h>
+
+#include <ve_commandevent.h>
+#include <vcmp_entitydata.h>
+#include <vcmp_componentdata.h>
 
 #include "modemodule.h"
 #include "modemoduleconfiguration.h"
@@ -13,7 +19,7 @@ namespace MODEMODULE
 {
 
 cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseModule(modnr, proxy, entityId, storagesystem, new cModeModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cModeModuleConfiguration(), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for setting measuring mode and resetting dsp adjustment data");
@@ -70,8 +76,43 @@ void cModeModule::doConfiguration(QByteArray xmlConfigData)
 
 void cModeModule::setupModule()
 {
+    emit addEventSystem(m_pModuleValidator);
+
+    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
+    eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
+    eData->setEntityId(m_nEntityId);
+    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
+    m_pModuleValidator->sigSendEvent(tmpEvent);
+
+    VeinComponent::ComponentData *cData;
+
+    cData = new VeinComponent::ComponentData();
+    cData->setEntityId(m_nEntityId);
+    cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
+    cData->setComponentName("EntityName");
+    cData->setNewValue(m_sModuleName);
+    tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
+    m_pModuleValidator->sigSendEvent(tmpEvent);
+
     cModeModuleConfigData *pConfData;
     pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+
+    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleValidator,
+                                                       QString("ERR_Message"),
+                                                       QString("Component forwards the run time errors"),
+                                                       QVariant(QString("")));
+    veinModuleComponentList.append(m_pModuleErrorComponent);
+    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleValidator,
+                                                           QString("INF_ModuleInterface"),
+                                                           QString("Component forwards the modules interface"),
+                                                           QByteArray());
+    veinModuleComponentList.append(m_pModuleInterfaceComponent);
+
+    m_pModuleName = new cVeinModuleMetaData(QString("Name"), QVariant(m_sModuleName));
+    veinModuleMetaDataList.append(m_pModuleName);
+
+    m_pModuleDescription = new cVeinModuleMetaData(QString("Description"), QVariant(m_sModuleDescription));
+    veinModuleMetaDataList.append(m_pModuleDescription);
 
     // we only have to initialize the pcb's measuring mode
     m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, *pConfData);
@@ -137,6 +178,8 @@ void cModeModule::activationDone()
 
 void cModeModule::activationFinished()
 {
+    // now we still have to export the json interface information
+    exportMetaData();
     //we are "only" ready
     emit activationReady();
 }

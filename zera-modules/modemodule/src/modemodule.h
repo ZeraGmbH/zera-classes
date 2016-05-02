@@ -7,7 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include "basemeasmodule.h"
 
 
 namespace Zera {
@@ -34,7 +34,7 @@ class cModeModuleConfiguration;
 class cModeModuleInit;
 
 
-class cModeModule : public cBaseModule
+class cModeModule : public cBaseMeasModule
 {
 Q_OBJECT
 

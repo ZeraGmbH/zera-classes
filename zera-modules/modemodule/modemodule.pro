@@ -22,8 +22,8 @@ INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \
+    ../../zera-validator \
     ../interface
-
 
 TARGET = $$qtLibraryTarget(modemodule)
 
