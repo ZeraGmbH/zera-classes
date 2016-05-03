@@ -74,8 +74,8 @@ protected slots:
     virtual void deactivationFinished();
 
 private:
-    cVeinModuleMetaData *m_pChannelNrInfo;
-    cVeinModuleMetaData *m_pGroupNrInfo;
+    cVeinModuleMetaData* m_pChannelCountInfo;
+    cVeinModuleMetaData* m_pGroupCountInfo;
     qint32 m_nActivationIt;
 
 private slots:

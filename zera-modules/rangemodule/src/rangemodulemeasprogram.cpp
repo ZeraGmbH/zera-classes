@@ -422,7 +422,7 @@ void cRangeModuleMeasProgram::setSCPIInfo()
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
         mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", QString("ACT_Channel%1Peak").arg(i+1), "0", mchn->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
         m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
