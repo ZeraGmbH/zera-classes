@@ -7,7 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include "basemeasmodule.h"
 
 namespace Zera {
 namespace Server {
@@ -31,14 +31,14 @@ class cRmsModuleObservation;
 #define BaseModuleName "RMSModule"
 #define BaseSCPIModuleName "RMS"
 
-class cRmsModule : public cBaseModule
+class cRmsModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cRmsModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cRmsModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cRmsModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
 
 protected:
     cRmsModuleObservation *m_pRmsModuleObservation;

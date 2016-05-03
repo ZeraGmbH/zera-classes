@@ -7,19 +7,20 @@
 #include <dspinterface.h>
 #include <pcbinterface.h>
 #include <movingwindowfilter.h>
-#include "interfaceentity.h"
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
-#include <QPointF>
+#include <scpiinfo.h>
+#include <veinmodulemetadata.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleparameter.h>
+#include <veinmoduleactvalue.h>
+#include <modulevalidator.h>
+#include <doublevalidator.h>
+#include <intvalidator.h>
 
 #include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
-#include "modulesignal.h"
-#include "moduleparameter.h"
-#include "moduleinfo.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfigdata.h"
 #include "rmsmodulemeasprogram.h"
@@ -27,14 +28,12 @@
 namespace RMSMODULE
 {
 
-cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cRmsModuleConfigData& configdata)
-    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, cRmsModuleConfigData& configdata)
+    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
-
-    m_ActValueList = m_ConfigData.m_valueChannelList;
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
@@ -159,38 +158,24 @@ void cRmsModuleMeasProgram::stop()
 
 void cRmsModuleMeasProgram::generateInterface()
 {
-    VeinEntity* p_entity;
     QString s;
+    QString key;
 
-    // this here is for translation purpose
-    s = tr("UL%1;[V]");
-    s = tr("UL%1-UL%2;[V]");
-    s = tr("IL%1;[A]");
-    s = tr("IL%1-IL%2;[A]");
-    s = tr("REF%1;[V]");
-    s = tr("REF%1-REF%2;[V]");
-
+    cVeinModuleActvalue *pActvalue;
     int n,p;
     n = p = 0; //
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
+        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (sl.count() == 1) // in this case we have phase,neutral value
         {
-            s = QString("TRA_RMSPN%1Name").arg(n+1);
-            p_entity = m_pPeer->dataAdd(s);
-            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-            p_entity->setValue(QVariant("Unknown"), m_pPeer);
-            m_EntityNamePNList.append(p_entity);
-            m_EntityNameList.append(p_entity);
-
-            s = QString("ACT_RMSPN%1").arg(n+1);
-            p_entity = m_pPeer->dataAdd(s);
-            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-            p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-            m_EntityActValuePNList.append(p_entity);
-            m_EntityActValueList.append(p_entity);
+            pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("ACT_RMSPN%1").arg(i+1),
+                                                QString("Component forwards the rms actual value for phase neutral"),
+                                                QVariant(0.0) );
+            m_ActValueList.append(pActvalue); // we add the component for our measurement
+            m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
             n++;
         }
@@ -198,101 +183,60 @@ void cRmsModuleMeasProgram::generateInterface()
         else
 
         {
-            s = QString("TRA_RMSPP%1Name").arg(p+1);
-            p_entity = m_pPeer->dataAdd(s);
-            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-            p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
-            p_entity->setValue(QVariant("Unknown"), m_pPeer);
-            m_EntityNamePPList.append(p_entity);
-            m_EntityNameList.append(p_entity);
-
-            s = QString("ACT_RMSPP%1").arg(p+1);
-            p_entity = m_pPeer->dataAdd(s);
-            p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-            p_entity->modifiersAdd(VeinEntity::MOD_NOECHO);
-            p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-            m_EntityActValuePPList.append(p_entity);
-            m_EntityActValueList.append(p_entity);
+            pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("ACT_RMSPP%1").arg(i+1),
+                                                QString("Component forwards the rms actual value for phase phase"),
+                                                QVariant(0.0) );
+            m_ActValueList.append(pActvalue); // we add the component for our measurement
+            m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
             p++;
         }
     }
 
-    m_pRMSPNCountInfo = new cModuleInfo(m_pPeer, "INF_RMSPNCount", QVariant(n));
-    m_pRMSPPCountInfo = new cModuleInfo(m_pPeer, "INF_RMSPPCount", QVariant(p));
+    m_pRMSPNCountInfo = new cVeinModuleMetaData(QString("RMSPNCount"), QVariant(n));
+    m_pModule->veinModuleMetaDataList.append(m_pRMSPNCountInfo);
+    m_pRMSPPCountInfo = new cVeinModuleMetaData(QString("RMSPPCount"), QVariant(p));
+    m_pModule->veinModuleMetaDataList.append(m_pRMSPPCountInfo);
 
-    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasIntervalTime.m_fValue));
-    m_pIntegrationTimeLimits = new cModuleInfo(m_pPeer, "INF_INTEGRATIONTIME_LIMITS", QVariant(QString("%1;%2").arg(0.1).arg(100.0)));
-    m_pIntegrationPeriodParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONPERIOD", QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue));
-    m_pIntegrationPeriodLimits = new cModuleInfo(m_pPeer, "INF_INTEGRATIONPERIOD_LIMITS", QVariant(QString("%1;%2").arg(5).arg(10000)));
+    m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                           key = QString("PAR_IntegrationTime"),
+                                                           QString("Component for setting the modules integration time"),
+                                                           QVariant(m_ConfigData.m_fMeasIntervalTime.m_fValue));
+    m_pIntegrationTimeParameter->setUnit("sec");
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_IntegrationTime", "0", "sec"));
 
-    m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
+    m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
+
+    cDoubleValidator *dValidator;
+    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+    m_pIntegrationTimeParameter->setValidator(dValidator);
+
+    m_pIntegrationPeriodParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                             key = QString("PAR_IntegrationPeriod"),
+                                                             QString("Component for setting the modules integration period"),
+                                                             QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue));
+    m_pIntegrationPeriodParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", "10", "PAR_IntegrationPeriod", "0", ""));
+
+    m_pModule->veinModuleParameterHash[key] = m_pIntegrationPeriodParameter; // for modules use
+
+    cIntValidator *iValidator;
+    iValidator = new cIntValidator(5, 5000, 1);
+    m_pIntegrationPeriodParameter->setValidator(iValidator);
+
+    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("SIG_Measuring"),
+                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QVariant(0));
+
+    m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
+
+
 }
 
 
 void cRmsModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityNamePNList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNamePNList.at(i));
-    for (int i = 0; i < m_EntityNamePPList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNamePPList.at(i));
-    for (int i = 0; i < m_EntityActValuePNList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValuePNList.at(i));
-    for (int i = 0; i < m_EntityActValuePPList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValuePPList.at(i));
-
-    m_EntityNamePNList.clear();
-    m_EntityNamePPList.clear();
-    m_EntityActValuePNList.clear();
-    m_EntityActValuePPList.clear();
-    m_EntityNameList.clear();
-    m_EntityActValueList.clear();
-
-    delete m_pRMSPNCountInfo;
-    delete m_pRMSPPCountInfo;
-    delete m_pIntegrationTimeParameter;
-    delete m_pIntegrationTimeLimits;
-    delete m_pIntegrationPeriodParameter;
-    delete m_pIntegrationPeriodLimits;
-    delete m_pMeasureSignal;
-}
-
-
-void cRmsModuleMeasProgram::exportInterface(QJsonArray &jsArr)
-{
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setDescription(QString("This entity holds the true rms value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setSCPIModel(QString("MEASURE"));
-    ifaceEntity.setSCPIType(QString("2"));
-
-    for (int i = 0; i < m_EntityActValueList.count(); i++)
-    {
-        ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
-
-        QString chnDes = m_EntityNameList.at(i)->getValue().toString();
-        QStringList sl = chnDes.split(';');
-        QString CmdNode = sl.takeFirst();
-        QString Unit = sl.takeLast();
-        if (sl.count() == 1)
-            CmdNode = CmdNode.arg(sl.at(0));
-        else
-            CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
-
-        ifaceEntity.setSCPICmdnode(CmdNode);
-        ifaceEntity.setUnit(Unit);
-
-        ifaceEntity.appendInterfaceEntity(jsArr);
-    }
-
-    ifaceEntity.setName(m_pIntegrationTimeParameter->getName());
-    ifaceEntity.setDescription(QString("This entity holds the modules integrationtime"));
-    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
-    ifaceEntity.setSCPICmdnode(QString("TINTEGRATION"));
-    ifaceEntity.setSCPIType(QString("10"));
-    ifaceEntity.setUnit(QString("sec"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
 }
 
 
@@ -352,9 +296,9 @@ void cRmsModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
+        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (sl.count() == 1)
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
@@ -759,10 +703,10 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
 void cRmsModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
-        QString s;
+        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
+        QString s, name;
         QString s1,s2,s3,s4;
         // we have 1 or 2 entries for each value
         s1 = s2 = m_measChannelInfoHash.value(sl.at(0)).alias;
@@ -772,6 +716,7 @@ void cRmsModuleMeasProgram::setActualValuesNames()
         if (sl.count() == 1)
         {
             s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            name = s1 + s2; // we still have to clarify translation solution
         }
         else
         {
@@ -779,9 +724,23 @@ void cRmsModuleMeasProgram::setActualValuesNames()
             s3.remove(QRegExp("[1-9][0-9]?"));
             s4.remove(s3);
             s = s1 + "%1-" + s3 + "%2" + QString(";%1;%2;[%3]").arg(s2).arg(s4).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            name = s1 + s2 + "-" + s3 +s4; // dito
         }
 
-        m_EntityNameList.at(i)->setValue(s, m_pPeer);
+        m_ActValueList.at(i)->setChannelName(name);
+        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
+    }
+}
+
+
+void cRmsModuleMeasProgram::setSCPIInfo()
+{
+    cSCPIInfo* pSCPIInfo;
+
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    {
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
+        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
 
@@ -791,7 +750,7 @@ void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     if (m_bActive) // maybe we are deactivating !!!!
     {
         for (int i = 0; i < m_ActValueList.count(); i++)
-            m_EntityActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)), m_pPeer); // and set entities
+            m_ActValueList.at(i)->setValue(QVariant((*actualValues)[i])); // and set entities
     }
 }
 
@@ -802,9 +761,9 @@ void cRmsModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
+        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
         for (int j = 0; j < sl.count(); j++)
         {
             QString s = sl.at(j);
@@ -979,7 +938,9 @@ void cRmsModuleMeasProgram::activateDSPdone()
     m_bActive = true;
 
     setActualValuesNames();
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
+    setSCPIInfo();
+
+    m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
     connect(m_pIntegrationPeriodParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
 
@@ -1034,7 +995,7 @@ void cRmsModuleMeasProgram::deactivateDSPdone()
 
 void cRmsModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
+    m_pMeasureSignal->setValue(QVariant(0));
     m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
@@ -1045,24 +1006,24 @@ void cRmsModuleMeasProgram::dataReadDSP()
     {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
         emit actualValues(&m_ModuleActualValues); // and send them
-        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
 
 #ifdef DEBUG
         bool ok;
         QString s;
-        for (int i = 0; i < m_ActValueList.count(); i++)
+        for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
         {
-            QStringList sl = m_ActValueList.at(i).split('-');
+            QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
             QString ts;
 
             if (sl.count() == 1)
                 ts = QString("RMS_%1:%2[%3];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                        .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
+                        .arg(m_ModuleActualValues.at(i))
                         .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
             else
                 ts = QString("RMS_%1-%2:%3[%4];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
                         .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
-                        .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok))
+                        .arg(m_ModuleActualValues.at(i))
                         .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
 
             s += ts;
