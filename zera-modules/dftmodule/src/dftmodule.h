@@ -7,7 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include "basemeasmodule.h"
 
 namespace Zera {
 namespace Server {
@@ -30,14 +30,14 @@ class cDftModuleObservation;
 #define BaseModuleName "DFTModule"
 #define BaseSCPIModuleName "DFT"
 
-class cDftModule : public cBaseModule
+class cDftModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cDftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cDftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cDftModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
 
 protected:
     cDftModuleObservation *m_pDftModuleObservation;

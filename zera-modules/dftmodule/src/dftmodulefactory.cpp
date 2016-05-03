@@ -4,9 +4,9 @@
 namespace DFTMODULE
 {
 
-ZeraModules::VirtualModule* DftModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* DftModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
-    ZeraModules::VirtualModule *module = new cDftModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cDftModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -21,15 +21,15 @@ void DftModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> DftModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> DftModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString DftModuleFactory::getFactoryName()
+QString DftModuleFactory::getFactoryName() const
 {
-    return QString("dftmodule");
+    return QString(BaseModuleName).toLower();
 }
 
 }
