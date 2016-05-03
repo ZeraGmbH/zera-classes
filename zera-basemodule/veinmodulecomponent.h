@@ -25,7 +25,9 @@ public:
 
     virtual void exportMetaData(QJsonObject &jsObj);
     void setChannelName(QString name); // channel name for json export can be empty
+    QString getChannelName();
     void setUnit(QString unit);
+    QString getUnit();
     QString getName();
 
 signals:

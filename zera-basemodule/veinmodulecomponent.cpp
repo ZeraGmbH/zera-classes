@@ -35,9 +35,21 @@ void cVeinModuleComponent::setChannelName(QString name)
 }
 
 
+QString cVeinModuleComponent::getChannelName()
+{
+    return m_sChannelName;
+}
+
+
 void cVeinModuleComponent::setUnit(QString unit)
 {
     m_sChannelUnit = unit;
+}
+
+
+QString cVeinModuleComponent::getUnit()
+{
+    return m_sChannelUnit;
 }
 
 
