@@ -33,7 +33,7 @@ class RmsModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     RmsModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0);
+    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     void destroyModule(ZeraModules::VirtualModule *module); //override;
     QList<ZeraModules::VirtualModule *> listModules() const; //override;
     QString getFactoryName() const; //override;
