@@ -20,7 +20,6 @@ namespace VeinEvent
 }
 
 
-
 class cModuleValidator;
 class cVeinModuleComponent;
 
