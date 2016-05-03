@@ -158,7 +158,6 @@ void cRmsModuleMeasProgram::stop()
 
 void cRmsModuleMeasProgram::generateInterface()
 {
-    QString s;
     QString key;
 
     cVeinModuleActvalue *pActvalue;
@@ -230,8 +229,6 @@ void cRmsModuleMeasProgram::generateInterface()
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
-
-
 }
 
 
@@ -941,8 +938,8 @@ void cRmsModuleMeasProgram::activateDSPdone()
     setSCPIInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
-    connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
-    connect(m_pIntegrationPeriodParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
+    connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    connect(m_pIntegrationPeriodParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
 
     emit activated();
 }
