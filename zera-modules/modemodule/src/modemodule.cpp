@@ -178,9 +178,8 @@ void cModeModule::activationDone()
 
 void cModeModule::activationFinished()
 {
-    // now we still have to export the json interface information
+    // now we still have to export the json interface information, then we are ready
     exportMetaData();
-    //we are "only" ready
     emit activationReady();
 }
 
