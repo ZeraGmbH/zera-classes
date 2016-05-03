@@ -19,8 +19,6 @@ namespace Proxy {
 }
 }
 
-class cModuleError;
-
 namespace RMSMODULE
 {
 
