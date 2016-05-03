@@ -143,12 +143,6 @@ void cDftModule::setupModule()
 }
 
 
-void cDftModule::unsetModule()
-{
-    cBaseModule::unsetModule();
-}
-
-
 void cDftModule::startMeas()
 {
     m_pMeasProgram->start();

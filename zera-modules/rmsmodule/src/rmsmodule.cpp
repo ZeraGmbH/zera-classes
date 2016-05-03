@@ -143,12 +143,6 @@ void cRmsModule::setupModule()
 }
 
 
-void cRmsModule::unsetModule()
-{
-    cBaseModule::unsetModule();
-}
-
-
 void cRmsModule::startMeas()
 {
     m_pMeasProgram->start();

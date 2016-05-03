@@ -167,13 +167,6 @@ void cRangeModule::setupModule()
 }
 
 
-void cRangeModule::unsetModule()
-{
-    cBaseModule::unsetModule();
-    m_rangeMeasChannelList.clear();
-}
-
-
 void cRangeModule::startMeas()
 {
     m_pMeasProgram->start();

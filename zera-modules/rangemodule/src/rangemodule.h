@@ -58,7 +58,6 @@ protected:
     QList<cRangeMeasChannel*> m_rangeMeasChannelList; // our meas channels
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 

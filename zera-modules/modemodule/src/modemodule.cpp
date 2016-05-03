@@ -126,20 +126,6 @@ void cModeModule::setupModule()
 }
 
 
-void cModeModule::unsetModule()
-{
-    if (m_ModuleActivistList.count() > 0)
-    {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        {
-            m_ModuleActivistList.at(i)->deleteInterface();
-            delete m_ModuleActivistList.at(i);
-        }
-        m_ModuleActivistList.clear();
-    }
-}
-
-
 void cModeModule::startMeas()
 {
     // nothing to start here
