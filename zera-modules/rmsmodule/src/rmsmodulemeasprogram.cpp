@@ -730,7 +730,7 @@ void cRmsModuleMeasProgram::setActualValuesNames()
 }
 
 
-void cRmsModuleMeasProgram::setSCPIInfo()
+void cRmsModuleMeasProgram::setSCPIMeasInfo()
 {
     cSCPIInfo* pSCPIInfo;
 
@@ -935,7 +935,7 @@ void cRmsModuleMeasProgram::activateDSPdone()
     m_bActive = true;
 
     setActualValuesNames();
-    setSCPIInfo();
+    setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
