@@ -91,8 +91,6 @@ private:
     cDftModuleConfigData& m_ConfigData;
 
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    QList<cVeinModuleComponent*> m_EntityActValuePNList; // we have a list for all rms values for phase neutral
-    QList<cVeinModuleComponent*> m_EntityActValuePPList; // and a list for all rms values for phase phase
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on
@@ -144,7 +142,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
-    void setSCPIInfo();
+    void setSCPIMeasInfo();
 
     cMovingwindowFilter* m_pMovingwindowFilter;
 

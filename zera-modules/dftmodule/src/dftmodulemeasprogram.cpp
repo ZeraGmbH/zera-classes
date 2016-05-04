@@ -688,7 +688,7 @@ void cDftModuleMeasProgram::setActualValuesNames()
 }
 
 
-void cDftModuleMeasProgram::setSCPIInfo()
+void cDftModuleMeasProgram::setSCPIMeasInfo()
 {
     cSCPIInfo* pSCPIInfo;
 
@@ -904,7 +904,7 @@ void cDftModuleMeasProgram::activateDSPdone()
     m_bActive = true;
 
     setActualValuesNames();
-    setSCPIInfo();
+    setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
