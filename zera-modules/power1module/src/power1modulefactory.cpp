@@ -4,9 +4,9 @@
 namespace POWER1MODULE
 {
 
-ZeraModules::VirtualModule* Power1ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* Power1ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cPower1Module(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cPower1Module(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -20,15 +20,15 @@ void Power1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Power1ModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> Power1ModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString Power1ModuleFactory::getFactoryName()
+QString Power1ModuleFactory::getFactoryName() const
 {
-    return QString("power1module");
+    return QString(BaseModuleName).toLower();
 }
 
 }
