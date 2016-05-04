@@ -116,7 +116,7 @@ private:
 
     Zera::Proxy::cProxyClient* m_pRMClient;
     void setActualValuesNames();
-    void setSCPIInfo();
+    void setSCPIMeasInfo();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

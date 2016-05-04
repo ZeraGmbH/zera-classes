@@ -414,7 +414,7 @@ void cRangeModuleMeasProgram::setActualValuesNames()
 }
 
 
-void cRangeModuleMeasProgram::setSCPIInfo()
+void cRangeModuleMeasProgram::setSCPIMeasInfo()
 {
     cRangeMeasChannel* mchn;
     cSCPIInfo* pSCPIInfo;
@@ -506,7 +506,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
     setActualValuesNames();
-    setSCPIInfo();
+    setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
     emit activated();
