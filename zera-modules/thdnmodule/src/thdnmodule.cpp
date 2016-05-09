@@ -4,11 +4,12 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
-#include <veinpeer.h>
-#include <veinentity.h>
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmodulemetadata.h>
 
 #include "debug.h"
 #include "thdnmodule.h"
@@ -16,22 +17,17 @@
 #include "thdnmoduleconfigdata.h"
 #include "thdnmodulemeasprogram.h"
 #include "thdnmoduleobservation.h"
-#include "moduleparameter.h"
-#include "moduleinfo.h"
-#include "modulesignal.h"
-#include "moduleerror.h"
 #include "errormessages.h"
 
 namespace THDNMODULE
 {
 
-cThdnModule::cThdnModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(modnr, proxy, peer, new cThdnModuleConfiguration(), parent)
+cThdnModule::cThdnModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cThdnModuleConfiguration(), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleDescription = QString("This module measures thdn values for configured channels");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
-
-    m_ModuleActivistList.clear();
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
@@ -70,7 +66,7 @@ cThdnModule::~cThdnModule()
 }
 
 
-QByteArray cThdnModule::getConfiguration()
+QByteArray cThdnModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
@@ -85,39 +81,28 @@ void cThdnModule::doConfiguration(QByteArray xmlConfigData)
 
 void cThdnModule::setupModule()
 {
+    emit addEventSystem(m_pModuleValidator);
+    cBaseMeasModule::setupModule();
+
     cThdnModuleConfigData* pConfData;
     pConfData = qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
+    m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pMeasProgram, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     // and module observation in case we have to react to naming changes
     m_pThdnModuleObservation = new cThdnModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pThdnModuleObservation);
     connect(m_pThdnModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pThdnModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pThdnModuleObservation, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pThdnModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
-}
-
-
-void cThdnModule::unsetModule()
-{
-    if (m_ModuleActivistList.count() > 0)
-    {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        {
-            m_ModuleActivistList.at(i)->deleteInterface();
-            delete m_ModuleActivistList.at(i);
-        }
-        m_ModuleActivistList.clear();
-    }
 }
 
 
@@ -162,29 +147,10 @@ void cThdnModule::activationFinished()
     // if we get informed we have to reconfigure
     connect(m_pThdnModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(thdnModuleReconfigure()));
 
-    QJsonObject jsonObj;
+    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+    // now we still have to export the json interface information
 
-    jsonObj.insert("ModulName", getModuleName());
-    jsonObj.insert("SCPIModuleName", getSCPIModuleName());
-    jsonObj.insert("VeinPeer", m_pPeer->getName());
-
-    QJsonArray jsonArr;
-    for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        m_ModuleActivistList.at(i)->exportInterface(jsonArr);
-
-    jsonObj.insert("Entities", QJsonValue(jsonArr));
-
-    QJsonDocument jsonDoc;
-    jsonDoc.setObject(jsonObj);
-
-    QByteArray ba;
-    ba = jsonDoc.toBinaryData();
-
-#ifdef DEBUG
-    qDebug() << jsonDoc;
-#endif
-
-    m_pModuleInterfaceEntity->setValue(QVariant(ba), m_pPeer);
+    exportMetaData();
 
     emit activationReady();
 }

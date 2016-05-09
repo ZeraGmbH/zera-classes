@@ -18,16 +18,16 @@ namespace Proxy {
 }
 
 class cDspMeasData;
-class VeinPeer;
-class VeinEntity;
 class QStateMachine;
 class QState;
 class QFinalState;
 
+class cVeinModuleComponent;
+class cVeinModuleParameter;
+class cVeinModuleMetaData;
+class cVeinModuleActvalue;
 class cMovingwindowFilter;
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
+
 
 namespace THDNMODULE
 {
@@ -67,11 +67,10 @@ class cThdnModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cThdnModuleMeasProgram(cThdnModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cThdnModuleConfigData& configdata);
+    cThdnModuleMeasProgram(cThdnModule* module, Zera::Proxy::cProxy* proxy, cThdnModuleConfigData& configdata);
     virtual ~cThdnModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -89,24 +88,16 @@ protected slots:
 private:
     cThdnModule* m_pModule;
     cThdnModuleConfigData& m_ConfigData;
-    QStringList m_ActValueList; // the list of actual values we work on
-    QList<VeinEntity*> m_EntityNamePNList; // we have a list for all rms names for phase neutral
-    QList<VeinEntity*> m_EntityNamePPList; // and a list for all rms names for phase phase
-    QList<VeinEntity*> m_EntityActValuePNList; // we have a list for all rms values for phase neutral
-    QList<VeinEntity*> m_EntityActValuePPList; // and a list for all rms values for phase phase
 
-    QList<VeinEntity*> m_EntityNameList; // we use this list for access
-    QList<VeinEntity*> m_EntityActValueList; // also
+    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    cVeinModuleMetaData* m_pThdnCountInfo;
+    cVeinModuleComponent* m_pMeasureSignal;
+    cVeinModuleParameter* m_pIntegrationTimeParameter;
 
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on
     quint32 m_nSRate; // number of samples / signal period
-    cModuleSignal* m_pMeasureSignal;
-    cModuleParameter* m_pIntegrationTimeParameter;
-    cModuleInfo* m_pIntegrationTimeLimits;
-
-    cModuleInfo* m_pThdnCountInfo;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -148,6 +139,8 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
+    void setSCPIMeasInfo();
+
     cMovingwindowFilter* m_pMovingwindowFilter;
 
 private slots:

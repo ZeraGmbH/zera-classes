@@ -7,7 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include "basemeasmodule.h"
 
 namespace Zera {
 namespace Server {
@@ -19,8 +19,6 @@ namespace Proxy {
 }
 }
 
-class cModuleError;
-
 namespace THDNMODULE
 {
 
@@ -28,24 +26,23 @@ class cThdnModuleConfiguration;
 class cThdnModuleMeasProgram;
 class cThdnModuleObservation;
 
-#define BaseModuleName "THDModule"
+#define BaseModuleName "THDNModule"
 #define BaseSCPIModuleName "THD"
 
-class cThdnModule : public cBaseModule
+class cThdnModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cThdnModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cThdnModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cThdnModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
 
 protected:
     cThdnModuleObservation *m_pThdnModuleObservation;
     cThdnModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 

@@ -6,8 +6,6 @@
 TEMPLATE = lib
 CONFIG += plugin
 
-ZDEPENDS += libvein
-
 QT       += network core
 QT       -= gui
 
@@ -17,11 +15,14 @@ LIBS +=  -lzeraxmlconfig
 LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
 
-INCLUDEPATH += ../interface \
-    ../../zera-xml-config/src \
+include(../zera-modules.pri)
+include(../../zera-classes.pri)
+
+INCLUDEPATH += ../../zera-xml-config/src \
     ../../zera-misc \
     ../../zera-comm/zera-proxy \
     ../../zera-basemodule \
+    ../../zera-validator \
     ../interface
 
 TARGET = $$qtLibraryTarget(thdnmodule)
@@ -52,5 +53,4 @@ OTHER_FILES += \
 RESOURCES += \
     resources.qrc
 
-include(../../zera-classes.pri)
-include(../zera-modules.pri)
+

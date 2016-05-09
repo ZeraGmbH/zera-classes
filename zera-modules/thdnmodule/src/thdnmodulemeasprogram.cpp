@@ -9,17 +9,18 @@
 #include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
-#include <QPointF>
+#include <scpiinfo.h>
+#include <veinmodulemetadata.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleparameter.h>
+#include <veinmoduleactvalue.h>
+#include <modulevalidator.h>
+#include <doublevalidator.h>
+#include <intvalidator.h>
 
 #include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
-#include "modulesignal.h"
-#include "moduleparameter.h"
-#include "interfaceentity.h"
-#include "moduleinfo.h"
 #include "thdnmodule.h"
 #include "thdnmoduleconfigdata.h"
 #include "thdnmodulemeasprogram.h"
@@ -27,14 +28,12 @@
 namespace THDNMODULE
 {
 
-cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cThdnModuleConfigData& configdata)
-    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, Zera::Proxy::cProxy* proxy, cThdnModuleConfigData &configdata)
+    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
-
-    m_ActValueList = m_ConfigData.m_valueChannelList;
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
@@ -169,98 +168,49 @@ void cThdnModuleMeasProgram::stop()
 
 void cThdnModuleMeasProgram::generateInterface()
 {
-    VeinEntity* p_entity;
-    QString s;
+    QString key;
 
-    // this here is for translation purpose
-    s = tr("UL%1;[%]");
-    s = tr("IL%1;[%]");
-    s = tr("REF%1;[%]");
-
-    int n = m_ActValueList.count();
+    cVeinModuleActvalue *pActvalue;
+    int n;
+    n = m_ConfigData.m_valueChannelList.count();
 
     for (int i = 0; i < n; i++)
     {
-
-        s = QString("TRA_THDN%1Name").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant("Unknown"), m_pPeer);
-        m_EntityNamePNList.append(p_entity);
-        m_EntityNameList.append(p_entity);
-
-        s = QString("ACT_THDN%1").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValuePNList.append(p_entity);
-        m_EntityActValueList.append(p_entity);
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_THDN%1").arg(i+1),
+                                            QString("Component forwards the thdn actual value"),
+                                            QVariant(0.0) );
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pThdnCountInfo = new cModuleInfo(m_pPeer, "INF_THDNCount", QVariant(n));
+    m_pThdnCountInfo = new cVeinModuleMetaData(QString("THDNCount"), QVariant(n));
+    m_pModule->veinModuleMetaDataList.append(m_pThdnCountInfo);
 
-    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasInterval.m_fValue));
-    m_pIntegrationTimeLimits = new cModuleInfo(m_pPeer, "PAR_INTEGRATIONTIME_LIMITS", QVariant(QString("%1;%2").arg(0.1).arg(100.0)));
-    m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
+    m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                           key = QString("PAR_IntegrationTime"),
+                                                           QString("Component for setting the modules integration time"),
+                                                           QVariant(m_ConfigData.m_fMeasInterval.m_fValue));
+    m_pIntegrationTimeParameter->setUnit("sec");
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_IntegrationTime", "0", "sec"));
+
+    m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
+
+    cDoubleValidator *dValidator;
+    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+    m_pIntegrationTimeParameter->setValidator(dValidator);
+
+    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("SIG_Measuring"),
+                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QVariant(0));
+
+    m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
 
 void cThdnModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityNamePNList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNameList.at(i));
-    for (int i = 0; i < m_EntityNamePPList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNameList.at(i));
-    for (int i = 0; i < m_EntityActValuePNList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueList.at(i));
-    for (int i = 0; i < m_EntityActValuePPList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueList.at(i));
-
-    m_EntityNameList.clear();
-    m_EntityActValueList.clear();
-
-    delete m_pThdnCountInfo;
-    delete m_pIntegrationTimeParameter;
-    delete m_pIntegrationTimeLimits;
-    delete m_pMeasureSignal;
-}
-
-
-void cThdnModuleMeasProgram::exportInterface(QJsonArray &jsArr)
-{
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setDescription(QString("This entity holds the thdn value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setSCPIModel(QString("MEASURE"));
-    ifaceEntity.setSCPIType(QString("2"));
-
-    for (int i = 0; i < m_EntityActValueList.count(); i++)
-    {
-        ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
-
-        QString chnDes = m_EntityNameList.at(i)->getValue().toString();
-        QStringList sl = chnDes.split(';');
-        QString CmdNode = sl.takeFirst();
-        QString Unit = sl.takeLast();
-        if (sl.count() == 1)
-            CmdNode = CmdNode.arg(sl.at(0));
-        else
-            CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
-
-        ifaceEntity.setSCPICmdnode(CmdNode);
-        ifaceEntity.setUnit(Unit);
-
-        ifaceEntity.appendInterfaceEntity(jsArr);
-    }
-
-    ifaceEntity.setName(m_pIntegrationTimeParameter->getName());
-    ifaceEntity.setDescription(QString("This entity holds the modules integrationtime"));
-    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
-    ifaceEntity.setSCPICmdnode(QString("TINTEGRATION"));
-    ifaceEntity.setSCPIType(QString("10"));
-    ifaceEntity.setUnit(QString("sec"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
 }
 
 
@@ -316,7 +266,7 @@ void cThdnModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ActValueList.count(); i++)
     {
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).dspChannelNr));
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).dspChannelNr));
         m_pDSPInterFace->addCycListItem( s = QString("THDN(MEASSIGNAL,VALXTHDN+%1)").arg(i));
     }
 
@@ -690,17 +640,34 @@ void cThdnModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
 void cThdnModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
         QString s;
         QString s1,s2;
+        QString name;
 
-        s1 = s2 = m_measChannelInfoHash.value(m_ActValueList.at(i)).alias;
+        s1 = s2 = m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).alias;
         s1.remove(QRegExp("[1-9][0-9]?"));
         s2.remove(s1);
 
         s = s1 + "%1" + QString(";%1;[%]").arg(s2);
-        m_EntityNameList.at(i)->setValue(s, m_pPeer);
+
+        name = s1 + s2;
+
+        m_ActValueList.at(i)->setChannelName(name);
+        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).unit);
+    }
+}
+
+
+void cThdnModuleMeasProgram::setSCPIMeasInfo()
+{
+    cSCPIInfo* pSCPIInfo;
+
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    {
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
+        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
 
@@ -710,7 +677,7 @@ void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
     if (m_bActive) // maybe we are deactivating !!!!
     {
         for (int i = 0; i < m_ActValueList.count(); i++)
-            m_EntityActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)), m_pPeer); // and set entities
+            m_ActValueList.at(i)->setValue(QVariant((double)actualValues->at(i))); // and set entities
     }
 }
 
@@ -721,9 +688,9 @@ void cThdnModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
+        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
         for (int j = 0; j < sl.count(); j++)
         {
             QString s = sl.at(j);
@@ -897,8 +864,10 @@ void cThdnModuleMeasProgram::activateDSPdone()
     m_bActive = true;
 
     setActualValuesNames();
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
-    connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    setSCPIMeasInfo();
+
+    m_pMeasureSignal->setValue(QVariant(1));
+    connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
 
     emit activated();
 }
@@ -940,7 +909,7 @@ void cThdnModuleMeasProgram::deactivateDSPdone()
 
 void cThdnModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
+    m_pMeasureSignal->setValue(QVariant(0));
     m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
@@ -951,7 +920,7 @@ void cThdnModuleMeasProgram::dataReadDSP()
     {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
         emit actualValues(&m_ModuleActualValues); // and send them
-        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
 
 #ifdef DEBUG
         bool ok;
@@ -959,8 +928,8 @@ void cThdnModuleMeasProgram::dataReadDSP()
         for (int i = 0; i < m_ActValueList.count(); i++)
         {
             QString ts;
-            ts = QString("THDN_%1:%2[%];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
-                    .arg(m_EntityActValueList.at(i)->getValue().toDouble(&ok));
+            ts = QString("THDN_%1:%2[%];").arg(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).alias)
+                    .arg(m_ModuleActualValues.at(i));
             s += ts;
         }
 

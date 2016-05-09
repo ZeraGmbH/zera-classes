@@ -4,9 +4,9 @@
 namespace THDNMODULE
 {
 
-ZeraModules::VirtualModule* ThdnModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* ThdnModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cThdnModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cThdnModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -20,15 +20,15 @@ void ThdnModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> ThdnModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> ThdnModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString ThdnModuleFactory::getFactoryName()
+QString ThdnModuleFactory::getFactoryName() const
 {
-    return QString("thdnmodule");
+    return QString(BaseModuleName).toLower();
 }
 
 }
