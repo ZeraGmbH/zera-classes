@@ -7,7 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include "basemeasmodule.h"
 
 class cModuleError;
 
@@ -29,24 +29,23 @@ class cPower2ModuleConfiguration;
 class cPower2ModuleMeasProgram;
 class cPower2ModuleObservation;
 
-#define BaseModuleName "PW2Module"
+#define BaseModuleName "POWER2Module"
 #define BaseSCPIModuleName "PW2"
 
-class cPower2Module : public cBaseModule
+class cPower2Module : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cPower2Module(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cPower2Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cPower2Module();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
 
 protected:
     cPower2ModuleObservation *m_pPower2ModuleObservation;
     cPower2ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 

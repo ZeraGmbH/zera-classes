@@ -15,12 +15,6 @@
 #include "foutinfo.h"
 
 
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
-class cBaseModule;
-class cMovingwindowFilter;
-
 namespace Zera {
 namespace Proxy {
     class cProxy;
@@ -28,11 +22,15 @@ namespace Proxy {
 }
 
 class cDspMeasData;
-class VeinPeer;
-class VeinEntity;
 class QStateMachine;
 class QState;
 class QFinalState;
+
+class cVeinModuleComponent;
+class cVeinModuleParameter;
+class cVeinModuleMetaData;
+class cVeinModuleActvalue;
+class cMovingwindowFilter;
 
 
 namespace POWER2MODULE
@@ -108,11 +106,10 @@ class cPower2ModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cPower2ModuleMeasProgram(cPower2Module* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cPower2ModuleConfigData& configdata);
+    cPower2ModuleMeasProgram(cPower2Module* module, Zera::Proxy::cProxy* proxy, cPower2ModuleConfigData& configdata);
     virtual ~cPower2ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -136,18 +133,12 @@ private:
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
-    cModuleInfo* m_pPQSCountInfo; // the number of values we produce
-    QList<VeinEntity*> m_EntityNamePQSList; // we have a list for all pqs names for a power meter
-    QList<VeinEntity*> m_EntityActValuePQSList; // we have a list for all pgs values for a power meter
-
-    cModuleParameter* m_pIntegrationTimeParameter;
-    cModuleInfo* m_pIntegrationTimeLimits;
-    cModuleParameter* m_pIntegrationPeriodParameter;
-    cModuleInfo* m_pIntegrationPeriodLimits;
-    cModuleParameter* m_pMeasuringmodeParameter;
-    cModuleInfo* m_pMeasuringmodeList;
-
-    cModuleSignal* m_pMeasureSignal;
+    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    cVeinModuleMetaData* m_pPQSCountInfo; // the number of values we produce
+    cVeinModuleParameter* m_pIntegrationTimeParameter;
+    cVeinModuleParameter* m_pIntegrationPeriodParameter;
+    cVeinModuleParameter* m_pMeasuringmodeParameter;
+    cVeinModuleComponent* m_pMeasureSignal;
 
     QList<QString> infoReadList; // a list of all channel info we have to read
     QString infoRead; // the actual channel info we are working on
@@ -244,6 +235,7 @@ private:
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
 
 private slots:
+    void setSCPIMeasInfo();
     void setInterfaceActualValues(QVector<float> *actualValues);
 
     void resourceManagerConnect();

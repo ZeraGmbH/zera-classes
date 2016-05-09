@@ -4,9 +4,9 @@
 namespace POWER2MODULE
 {
 
-ZeraModules::VirtualModule* Power2ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* Power2ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
-    ZeraModules::VirtualModule *module = new cPower2Module(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cPower2Module(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -20,15 +20,15 @@ void Power2ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Power2ModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> Power2ModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString Power2ModuleFactory::getFactoryName()
+QString Power2ModuleFactory::getFactoryName() const
 {
-    return QString("power2module");
+    return QString(BaseModuleName).toLower();
 }
 
 }

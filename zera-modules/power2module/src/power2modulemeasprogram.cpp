@@ -9,17 +9,19 @@
 #include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
-#include <QPointF>
+#include <scpiinfo.h>
+#include <veinmodulemetadata.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleparameter.h>
+#include <veinmoduleactvalue.h>
+#include <modulevalidator.h>
+#include <stringvalidator.h>
+#include <doublevalidator.h>
+#include <intvalidator.h>
 
 #include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
-#include "modulesignal.h"
-#include "interfaceentity.h"
-#include "moduleparameter.h"
-#include "moduleinfo.h"
 #include "measmodeinfo.h"
 #include "power2module.h"
 #include "power2modulemeasprogram.h"
@@ -27,8 +29,8 @@
 namespace POWER2MODULE
 {
 
-cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cPower2ModuleConfigData& configdata)
-    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, Zera::Proxy::cProxy* proxy, cPower2ModuleConfigData &configdata)
+    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
@@ -276,14 +278,38 @@ void cPower2ModuleMeasProgram::stop()
 
 void cPower2ModuleMeasProgram::generateInterface()
 {
-    VeinEntity* p_entity;
-    QString s;
+    QString key;
+    cVeinModuleActvalue *pActvalue;
 
-    // this here is for translation purpose
-    s = tr("P%1;[W]");
-    s = tr("Q%1;[Var]");
-    s = tr("S%1;[VA]");
+    for (int i = 0; i < 4; i++) // // we have fixed number of power values (12)
+    {
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_PP%1").arg(i+1),
+                                            QString("Component forwards the positive power actual value"),
+                                            QVariant(0.0) );
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_PM%1").arg(i+1),
+                                            QString("Component forwards the negative power actual value"),
+                                            QVariant(0.0) );
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_P%1").arg(i+1),
+                                            QString("Component forwards the power actual value"),
+                                            QVariant(0.0) );
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+    }
+
+    m_pPQSCountInfo = new cVeinModuleMetaData(QString("PQSCount"), QVariant(12));
+    m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
+
+    // a list with all possible measuring modes
     m_MeasuringModeInfoHash["4LW"] = cMeasModeInfo(tr("4LW"), "P", "W", actPower, m4lw);
     m_MeasuringModeInfoHash["4LB"] = cMeasModeInfo(tr("4LB"), "Q", "Var", reactPower, m4lb);
     m_MeasuringModeInfoHash["4LBK"] = cMeasModeInfo(tr("4LBK"), "Q", "Var", reactPower, m4lbk);
@@ -296,119 +322,56 @@ void cPower2ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["2LS"] = cMeasModeInfo(tr("2LS"), "S", "VA", appPower, m2ls);
     m_MeasuringModeInfoHash["2LSg"] = cMeasModeInfo(tr("2LSg"), "S", "VA", appPower, m2lsg);
 
-    m_pPQSCountInfo = new cModuleInfo(m_pPeer, "INF_PCount", QVariant(12));
-
-    for (int i = 0; i < 4; i++) // we have fixed number of power values (12)
-    {
-        s = QString("TRA_Pp%1Name").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant("Unknown"), m_pPeer);
-        m_EntityNamePQSList.append(p_entity);
-
-        s = QString("TRA_Pm%1Name").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant("Unknown"), m_pPeer);
-        m_EntityNamePQSList.append(p_entity);
-
-        s = QString("TRA_P%1Name").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant("Unknown"), m_pPeer);
-        m_EntityNamePQSList.append(p_entity);
-
-        s = QString("ACT_Pp%1").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValuePQSList.append(p_entity);
-
-        s = QString("ACT_Pm%1").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValuePQSList.append(p_entity);
-
-        s = QString("ACT_P%1").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValuePQSList.append(p_entity);
-    }
-
     // our parameters we deal with
+    m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                         key = QString("PAR_MeasuringMode"),
+                                                         QString("Component for setting the modules measuring mode"),
+                                                         QVariant(m_ConfigData.m_sMeasuringMode.m_sValue));
 
-    m_pMeasuringmodeParameter = new cModuleParameter(m_pPeer, "PAR_MEASURINGMODE", QVariant(m_ConfigData.m_sMeasuringMode.m_sValue));
-    m_pMeasuringmodeList = new cModuleInfo(m_pPeer, "INF_MEASURINGMODELIST", QVariant(m_ConfigData.m_sMeasmodeList));
+    m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
 
-    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant(m_ConfigData.m_fMeasIntervalTime.m_fValue));
-    m_pIntegrationTimeLimits = new cModuleInfo(m_pPeer, "INF_INTEGRATIONTIME_LIMITS", QVariant(QString("%1;%2").arg(0.1).arg(100.0)));
-    m_pIntegrationPeriodParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONPERIOD", QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue));
-    m_pIntegrationPeriodLimits = new cModuleInfo(m_pPeer, "INF_INTEGRATIONPERIOD_LIMITS", QVariant(QString("%1;%2").arg(5).arg(10000)));
+    cStringValidator *sValidator;
+    sValidator = new cStringValidator(m_ConfigData.m_sMeasmodeList);
+    m_pMeasuringmodeParameter->setValidator(sValidator);
 
-    m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
+    m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
+
+    m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                           key = QString("PAR_IntegrationTime"),
+                                                           QString("Component for setting the modules integration time"),
+                                                           QVariant(m_ConfigData.m_fMeasIntervalTime.m_fValue));
+    m_pIntegrationTimeParameter->setUnit("sec");
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_IntegrationTime", "0", "sec"));
+
+    cDoubleValidator *dValidator;
+    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+    m_pIntegrationTimeParameter->setValidator(dValidator);
+
+    m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
+
+    m_pIntegrationPeriodParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                             key = QString("PAR_IntegrationPeriod"),
+                                                             QString("Component for setting the modules integration period"),
+                                                             QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue));
+    m_pIntegrationPeriodParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", "10", "PAR_IntegrationPeriod", "0", ""));
+
+    cIntValidator *iValidator;
+    iValidator = new cIntValidator(5, 5000, 1);
+    m_pIntegrationPeriodParameter->setValidator(iValidator);
+
+    m_pModule->veinModuleParameterHash[key] = m_pIntegrationPeriodParameter; // for modules use
+
+    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("SIG_Measuring"),
+                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QVariant(0));
+
+    m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
 
 void cPower2ModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityNamePQSList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNamePQSList.at(i));
-    for (int i = 0; i < m_EntityActValuePQSList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValuePQSList.at(i));
-
-    delete m_pPQSCountInfo;
-    delete m_pIntegrationTimeParameter;
-    delete m_pIntegrationTimeLimits;
-    delete m_pIntegrationPeriodParameter;
-    delete m_pIntegrationPeriodLimits;
-    delete m_pMeasuringmodeParameter;
-    delete m_pMeasuringmodeList;
-    delete m_pMeasureSignal;
-}
-
-
-void cPower2ModuleMeasProgram::exportInterface(QJsonArray &jsArr)
-{
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setDescription(QString("This entity holds the power value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setSCPIModel(QString("MEASURE"));
-    ifaceEntity.setSCPIType(QString("2"));
-
-    for (int i = 0; i < 12; i++)
-    {
-        ifaceEntity.setName(m_EntityActValuePQSList.at(i)->getName());
-
-        QString chnDes = m_EntityNamePQSList.at(i)->getValue().toString();
-        QStringList sl = chnDes.split(';');
-        QString CmdNode = sl.takeFirst();
-        QString Unit = sl.takeLast();
-        if (sl.count() == 1)
-            CmdNode = CmdNode.arg(sl.at(0));
-        else
-            CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
-
-        ifaceEntity.setSCPICmdnode(CmdNode);
-        ifaceEntity.setUnit(Unit);
-
-        ifaceEntity.appendInterfaceEntity(jsArr);
-    }
-
-    ifaceEntity.setName(m_pIntegrationTimeParameter->getName());
-    ifaceEntity.setDescription(QString("This entity holds the modules integrationtime"));
-    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
-    ifaceEntity.setSCPICmdnode(QString("TINTEGRATION"));
-    ifaceEntity.setSCPIType(QString("10"));
-    ifaceEntity.setUnit(QString("sec"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pMeasuringmodeParameter->getName());
-    ifaceEntity.setDescription(QString("This entity holds the modules measuring mode"));
-    ifaceEntity.setSCPICmdnode(QString("MMODE"));
-    ifaceEntity.setUnit(QString(""));
-    ifaceEntity.appendInterfaceEntity(jsArr);
 }
 
 
@@ -1259,18 +1222,20 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 
 void cPower2ModuleMeasProgram::setActualValuesNames()
 {
-    QString s;
     QString powIndicator = "123S";
+
+    cMeasModeInfo mminfo = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
 
     for (int i = 0; i < 4; i++)
     {
-        cMeasModeInfo mminfo = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
-        s = mminfo.getActvalName() + "+%1" + QString(";%1;[%2]").arg(powIndicator[i]).arg(mminfo.getUnitName());
-        m_EntityNamePQSList.at(i*3)->setValue(s, m_pPeer);
-        s = mminfo.getActvalName() + "-%1" + QString(";%1;[%2]").arg(powIndicator[i]).arg(mminfo.getUnitName());
-        m_EntityNamePQSList.at(i*3+1)->setValue(s, m_pPeer);
-        s = mminfo.getActvalName() + "%1" + QString(";%1;[%2]").arg(powIndicator[i]).arg(mminfo.getUnitName());
-        m_EntityNamePQSList.at(i*3+2)->setValue(s, m_pPeer);
+        m_ActValueList.at(i*3)->setChannelName(QString("+%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
+        m_ActValueList.at(i*3)->setUnit(mminfo.getUnitName());
+
+        m_ActValueList.at(i*3+1)->setChannelName(QString("-%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
+        m_ActValueList.at(i*3+1)->setUnit(mminfo.getUnitName());
+
+        m_ActValueList.at(i*3+2)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
+        m_ActValueList.at(i*3+2)->setUnit(mminfo.getUnitName());
     }
 }
 
@@ -1301,12 +1266,23 @@ quint8 cPower2ModuleMeasProgram::cmpActualValIndex(freqoutconfiguration frconf)
 }
 
 
+void cPower2ModuleMeasProgram::setSCPIMeasInfo()
+{
+    cSCPIInfo* pSCPIInfo;
+
+    for (int i = 0; i < 12; i++)
+    {
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
+        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+    }
+}
+
 void cPower2ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) // maybe we are deactivating !!!!
     {
         for (int i = 0; i < 12; i++)
-            m_EntityActValuePQSList.at(i)->setValue(QVariant((double)actualValues->at(i)), m_pPeer); // and set entities
+            m_ActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
     }
 }
 
@@ -1659,10 +1635,12 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     m_bActive = true;
 
     setActualValuesNames();
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
-    connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
-    connect(m_pIntegrationPeriodParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
-    connect(m_pMeasuringmodeParameter, SIGNAL(updated(QVariant)), this , SLOT(newMeasMode(QVariant)));
+    setSCPIMeasInfo();
+
+    m_pMeasureSignal->setValue(QVariant(1));
+    connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    connect(m_pIntegrationPeriodParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
+    connect(m_pMeasuringmodeParameter, SIGNAL(sigValueChanged(QVariant)), this , SLOT(newMeasMode(QVariant)));
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
@@ -1770,7 +1748,7 @@ void cPower2ModuleMeasProgram::deactivateDSPdone()
 
 void cPower2ModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
+    m_pMeasureSignal->setValue(QVariant(0));
     m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
@@ -1781,7 +1759,7 @@ void cPower2ModuleMeasProgram::dataReadDSP()
     {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
         emit actualValues(&m_ModuleActualValues); // and send them
-        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
 
 #ifdef DEBUG
         QString powIndicator = "123S";
