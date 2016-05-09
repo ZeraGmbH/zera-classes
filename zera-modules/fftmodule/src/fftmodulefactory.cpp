@@ -4,9 +4,9 @@
 namespace FFTMODULE
 {
 
-ZeraModules::VirtualModule* FftModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* FftModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cFftModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cFftModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -20,15 +20,15 @@ void FftModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> FftModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> FftModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString FftModuleFactory::getFactoryName()
+QString FftModuleFactory::getFactoryName() const
 {
-    return QString("fftmodule");
+    return QString(BaseModuleName).toLower();
 }
 
 }

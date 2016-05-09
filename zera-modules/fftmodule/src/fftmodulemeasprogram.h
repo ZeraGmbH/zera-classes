@@ -18,18 +18,16 @@ namespace Proxy {
 }
 
 class cDspMeasData;
-class VeinPeer;
-class VeinEntity;
 class QStateMachine;
 class QState;
 class QFinalState;
 
-
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
-class cBaseModule;
+class cVeinModuleComponent;
+class cVeinModuleParameter;
+class cVeinModuleMetaData;
+class cVeinModuleActvalue;
 class cMovingwindowFilter;
+
 
 namespace FFTMODULE
 {
@@ -70,11 +68,10 @@ class cFftModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cFftModuleConfigData& configdata);
+    cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, cFftModuleConfigData& configdata);
     virtual ~cFftModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -92,23 +89,18 @@ protected slots:
 private:
     cFftModule* m_pModule;
     cFftModuleConfigData& m_ConfigData;
-    QStringList m_ActValueList; // the list of actual values we work on
+    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    cVeinModuleMetaData* m_pFFTCountInfo;
+    cVeinModuleMetaData* m_pFFTOrderInfo;
+    cVeinModuleComponent* m_pMeasureSignal;
+    cVeinModuleParameter* m_pRefChannelParameter;
+    cVeinModuleParameter* m_pIntegrationTimeParameter;
     quint16 m_nfftLen;
-
-    QList<VeinEntity*> m_EntityNameList;
-    QList<VeinEntity*> m_EntityActValueList;
 
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on
     quint32 m_nSRate; // number of samples / signal period
-
-    cModuleParameter* m_pRefChannelParameter;
-    cModuleInfo* m_pRefChannelInfo;
-    cModuleSignal* m_pMeasureSignal;
-    cModuleParameter* m_pIntegrationTimeParameter;
-    cModuleInfo* m_pInfIntegrationTimeLimits;
-    cModuleInfo* m_pFftOrderInfo;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -149,7 +141,9 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
+    void setSCPIMeasInfo();
     void setActualValuesNames();
+
     cMovingwindowFilter* m_pMovingwindowFilter;
     QVector<float> m_FFTModuleActualValues;
 

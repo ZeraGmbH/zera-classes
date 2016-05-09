@@ -9,18 +9,19 @@
 #include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
-#include <QPointF>
+#include <scpiinfo.h>
+#include <veinmodulemetadata.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleparameter.h>
+#include <veinmoduleactvalue.h>
+#include <modulevalidator.h>
+#include <doublevalidator.h>
+#include <stringvalidator.h>
 #include <math.h>
 
 #include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
-#include "modulesignal.h"
-#include "interfaceentity.h"
-#include "moduleinfo.h"
-#include "moduleparameter.h"
 #include "fftmodule.h"
 #include "fftmoduleconfigdata.h"
 #include "fftmodulemeasprogram.h"
@@ -28,14 +29,12 @@
 namespace FFTMODULE
 {
 
-cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cFftModuleConfigData& configdata)
-    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configdata)
+cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, cFftModuleConfigData& configdata)
+    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
-
-    m_ActValueList = m_ConfigData.m_valueChannelList;
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
@@ -161,101 +160,65 @@ void cFftModuleMeasProgram::stop()
 
 void cFftModuleMeasProgram::generateInterface()
 {
-    VeinEntity* p_entity;
-    QString s;
+    QString key;
 
-    // this here is for translation purpose
-    s = tr("UL%1;[V]");
-    s = tr("IL%1;[A]");
-    s = tr("REF%1;[V]");
+    cVeinModuleActvalue *pActvalue;
+    int n;
 
-    int n = m_ActValueList.count();
+    n = m_ConfigData.m_valueChannelList.count();
 
     for (int i = 0; i < n; i++)
     {
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_FFT%1").arg(i+1),
+                                            QString("Component forwards the fft actual values"),
+                                            QVariant(0.0) );
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        s = QString("TRA_FFT%1Name").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant("Unknown"), m_pPeer);
-        m_EntityNameList.append(p_entity);
-
-        s = QString("ACT_FFT%1").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValueList.append(p_entity);
     }
 
-    m_pRefChannelParameter = new cModuleParameter(m_pPeer, "PAR_REFCHANNEL", m_ConfigData.m_RefChannel.m_sPar);
-    m_pRefChannelInfo = new cModuleInfo(m_pPeer, "INF_REFCHANNELLIST",QVariant(m_ConfigData.m_valueChannelList));
-    m_pFftOrderInfo = new cModuleInfo(m_pPeer, "INF_FFTOrder", QVariant(m_ConfigData.m_nFftOrder));
-    m_pIntegrationTimeParameter = new cModuleParameter(m_pPeer, "PAR_INTEGRATIONTIME", QVariant((double) m_ConfigData.m_fMeasInterval.m_fValue));
-    m_pInfIntegrationTimeLimits = new cModuleInfo(m_pPeer, "PAR_INTEGRATIONTIME_LIMITS", QVariant(QString("%1;%2").arg(0.1).arg(100.0)));
-    m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
+    m_pFFTCountInfo = new cVeinModuleMetaData(QString("FFTCount"), QVariant(n));
+    m_pModule->veinModuleMetaDataList.append(m_pFFTCountInfo);
+    m_pFFTOrderInfo = new cVeinModuleMetaData(QString("FFTOrder"), QVariant(m_ConfigData.m_nFftOrder));
+    m_pModule->veinModuleMetaDataList.append(m_pFFTOrderInfo);
+
+    m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                           key = QString("PAR_IntegrationTime"),
+                                                           QString("Component for setting the modules integration time"),
+                                                           QVariant(m_ConfigData.m_fMeasInterval.m_fValue));
+    m_pIntegrationTimeParameter->setUnit("sec");
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_IntegrationTime", "0", "sec"));
+
+    m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
+
+    cDoubleValidator *dValidator;
+    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+    m_pIntegrationTimeParameter->setValidator(dValidator);
+
+    m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                      key = QString("PAR_RefChannel"),
+                                                      QString("Component for setting the modules reference channel"),
+                                                      QVariant(m_ConfigData.m_RefChannel.m_sPar));
+
+    cStringValidator *sValidator;
+    sValidator = new cStringValidator(m_ConfigData.m_valueChannelList);
+    m_pRefChannelParameter->setValidator(sValidator);
+
+    m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
+
+    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("SIG_Measuring"),
+                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QVariant(0));
+
+    m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
 
 void cFftModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityNameList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNameList.at(i));
-    for (int i = 0; i < m_EntityActValueList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueList.at(i));
-
-    m_EntityNameList.clear();
-    m_EntityActValueList.clear();
-
-    delete m_pFftOrderInfo;
-    delete m_pIntegrationTimeParameter;
-    delete m_pInfIntegrationTimeLimits;
-    delete m_pMeasureSignal;
-    delete m_pRefChannelParameter;
-    delete m_pRefChannelInfo;
-}
-
-
-void cFftModuleMeasProgram::exportInterface(QJsonArray &jsArr)
-{
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setDescription(QString("This entity holds the dft value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setSCPIModel(QString("MEASURE"));
-    ifaceEntity.setSCPIType(QString("2"));
-
-    for (int i = 0; i < m_EntityActValueList.count(); i++)
-    {
-        ifaceEntity.setName(m_EntityActValueList.at(i)->getName());
-
-        QString chnDes = m_EntityNameList.at(i)->getValue().toString();
-        QStringList sl = chnDes.split(';');
-        QString CmdNode = sl.takeFirst();
-        QString Unit = sl.takeLast();
-        if (sl.count() == 1)
-            CmdNode = CmdNode.arg(sl.at(0));
-        else
-            CmdNode = CmdNode.arg(sl.at(0), sl.at(1));
-
-        ifaceEntity.setSCPICmdnode(CmdNode);
-        ifaceEntity.setUnit(Unit);
-
-        ifaceEntity.appendInterfaceEntity(jsArr);
-    }
-
-    ifaceEntity.setName(m_pIntegrationTimeParameter->getName());
-    ifaceEntity.setDescription(QString("This entity holds the modules integrationtime"));
-    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
-    ifaceEntity.setSCPICmdnode(QString("TINTEGRATION"));
-    ifaceEntity.setSCPIType(QString("10"));
-    ifaceEntity.setUnit(QString("sec"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pRefChannelParameter->getName());
-    ifaceEntity.setDescription(QString("This entity holds the modules reference channel"));
-    ifaceEntity.setSCPICmdnode(QString("REFCHANNEL"));
-    ifaceEntity.setUnit(QString(""));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
 }
 
 
@@ -334,10 +297,10 @@ void cFftModuleMeasProgram::setDspCmdList()
 
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).dspChannelNr));
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).dspChannelNr).arg(m_nSRate));
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).dspChannelNr) );
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL+%2)").arg(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).dspChannelNr).arg(m_nSRate));
         m_pDSPInterFace->addCycListItem( s = QString("INTERPOLATIONIND(%1,IPOLADR,FFTINPUT)").arg(m_nfftLen));
         m_pDSPInterFace->addCycListItem( s = QString("FFTREAL(%1,FFTINPUT,FFTOUTPUT)").arg(m_nfftLen));
         m_pDSPInterFace->addCycListItem( s = QString("COPYMEM(%1,FFTOUTPUT,FFTXOUTPUT+%2)").arg(2 * m_nfftLen).arg(2 * m_nfftLen * i));
@@ -711,12 +674,24 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 }
 
 
+void cFftModuleMeasProgram::setSCPIMeasInfo()
+{
+    cSCPIInfo* pSCPIInfo;
+
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    {
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
+        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+    }
+}
+
+
 void cFftModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
-        QString s;
+        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
+        QString s, name;
         QString s1,s2,s3,s4;
         // we have 1 or 2 entries for each value
         s1 = s2 = m_measChannelInfoHash.value(sl.at(0)).alias;
@@ -726,6 +701,7 @@ void cFftModuleMeasProgram::setActualValuesNames()
         if (sl.count() == 1)
         {
             s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            name = s1 + s2; // we still have to clarify translation solution
         }
         else
         {
@@ -733,9 +709,11 @@ void cFftModuleMeasProgram::setActualValuesNames()
             s3.remove(QRegExp("[1-9][0-9]?"));
             s4.remove(s3);
             s = s1 + "%1-" + s3 + "%2" + QString(";%1;%2;[%3]").arg(s2).arg(s4).arg(m_measChannelInfoHash.value(sl.at(0)).unit);
+            name = s1 + s2 + "-" + s3 +s4; // dito
         }
 
-        m_EntityNameList.at(i)->setValue(s, m_pPeer);
+        m_ActValueList.at(i)->setChannelName(name);
+        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
     }
 }
 
@@ -745,7 +723,7 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     int i;
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        int n = m_EntityActValueList.count();
+        int n = m_ActValueList.count();
         for (i = 0; i < n; i++) // we set n fft "values"
         {
             QList<double> fftList;
@@ -760,7 +738,7 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
 
             QVariant list;
             list = QVariant::fromValue<QList<double> >(fftList);
-            m_EntityActValueList.at(i)->setValue( list, m_pPeer); // and set entities
+            m_ActValueList.at(i)->setValue(list); // and set entities
         }
     }
 }
@@ -774,7 +752,7 @@ void cFftModuleMeasProgram::resourceManagerConnect()
     mi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
     for (int i = 0; i < m_ActValueList.count(); i++)
     {
-        QStringList sl = m_ActValueList.at(i).split('-');
+        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
         for (int j = 0; j < sl.count(); j++)
         {
             QString s = sl.at(j);
@@ -952,9 +930,11 @@ void cFftModuleMeasProgram::activateDSPdone()
     m_bActive = true;
 
     setActualValuesNames();
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer);
-    connect(m_pIntegrationTimeParameter, SIGNAL(updated(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
-    connect(m_pRefChannelParameter, SIGNAL(updated(QVariant)), SLOT(newRefChannel(QVariant)));
+    setSCPIMeasInfo();
+
+    m_pMeasureSignal->setValue(QVariant(1));
+    connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    connect(m_pRefChannelParameter, SIGNAL(sigValueChanged(QVariant)), SLOT(newRefChannel(QVariant)));
     emit activated();
 }
 
@@ -1006,7 +986,7 @@ void cFftModuleMeasProgram::deactivateDSPdone()
 
 void cFftModuleMeasProgram::dataAcquisitionDSP()
 {
-    m_pMeasureSignal->m_pParEntity->setValue(QVariant(0), m_pPeer);
+    m_pMeasureSignal->setValue(QVariant(0));
     m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
 }
 
@@ -1049,7 +1029,7 @@ void cFftModuleMeasProgram::dataReadDSP()
         }
 
         emit actualValues(&m_FFTModuleActualValues); // and send them
-        m_pMeasureSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // signal measuring
+        m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
 
 #ifdef DEBUG
         QString s, ts;
@@ -1057,11 +1037,11 @@ void cFftModuleMeasProgram::dataReadDSP()
         {
             for (int j = 0; j < m_ConfigData.m_nFftOrder; j++)
             {
-                ts = QString("FFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).alias)
+                ts = QString("FFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).alias)
                         .arg(j)
                         .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder+j)*2))
                         .arg(m_FFTModuleActualValues.at((i*m_ConfigData.m_nFftOrder+j)*2+1))
-                        .arg(m_measChannelInfoHash.value(m_ActValueList.at(i)).unit);
+                        .arg(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).unit);
                 s += ts;
             }
             qDebug() << s;
