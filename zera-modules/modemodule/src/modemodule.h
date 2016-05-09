@@ -20,9 +20,6 @@ namespace Proxy {
 }
 }
 
-class cModuleInfo;
-class cModuleError;
-
 namespace MODEMODULE
 {
 
