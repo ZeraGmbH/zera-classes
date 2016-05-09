@@ -9,8 +9,6 @@
 
 #include "basemeasmodule.h"
 
-class cModuleError;
-
 namespace Zera {
 namespace Server {
  class cDSPInterface;
