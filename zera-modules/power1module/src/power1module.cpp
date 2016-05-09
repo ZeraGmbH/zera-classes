@@ -23,7 +23,7 @@ namespace POWER1MODULE
 {
 
 cPower1Module::cPower1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, new cPower1ModuleConfiguration, parent)
+    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, new cPower1ModuleConfiguration(), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures power with configured measuring and integration modes");
