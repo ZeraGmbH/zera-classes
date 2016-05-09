@@ -1613,7 +1613,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 
 void cPower1ModuleMeasProgram::setActualValuesNames()
 {
-    QString s;
     QString powIndicator = "123S";
 
     cMeasModeInfo mminfo = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
