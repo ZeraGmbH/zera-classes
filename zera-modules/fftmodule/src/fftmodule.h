@@ -19,10 +19,6 @@ namespace Proxy {
 }
 }
 
-
-class cModuleError;
-
-
 namespace FFTMODULE
 {
 
