@@ -10,6 +10,11 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
+#include <ve_commandevent.h>
+#include <vcmp_entitydata.h>
+#include <vcmp_componentdata.h>
+#include <ve_eventsystem.h>
+
 #include "basemodule.h"
 #include "debug.h"
 #include "basemoduleconfiguration.h"
@@ -253,6 +258,43 @@ void cBaseModule::stopModule()
     else
         m_bStopCmd = true; // otherwise we keep in mind that we should configure when machine starts
 
+}
+
+
+void cBaseModule::setupModule()
+{
+    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
+    eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
+    eData->setEntityId(m_nEntityId);
+    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
+    m_pModuleEventSystem->sigSendEvent(tmpEvent);
+
+    VeinComponent::ComponentData *cData;
+
+    cData = new VeinComponent::ComponentData();
+    cData->setEntityId(m_nEntityId);
+    cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
+    cData->setComponentName("EntityName");
+    cData->setNewValue(m_sModuleName);
+    tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
+    m_pModuleEventSystem->sigSendEvent(tmpEvent);
+
+    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
+                                                       QString("ERR_Message"),
+                                                       QString("Component forwards the run time errors"),
+                                                       QVariant(QString("")));
+    veinModuleComponentList.append(m_pModuleErrorComponent);
+    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
+                                                           QString("INF_ModuleInterface"),
+                                                           QString("Component forwards the modules interface"),
+                                                           QByteArray());
+    veinModuleComponentList.append(m_pModuleInterfaceComponent);
+
+    m_pModuleName = new cVeinModuleMetaData(QString("Name"), QVariant(m_sModuleName));
+    veinModuleMetaDataList.append(m_pModuleName);
+
+    m_pModuleDescription = new cVeinModuleMetaData(QString("Description"), QVariant(m_sModuleDescription));
+    veinModuleMetaDataList.append(m_pModuleDescription);
 }
 
 

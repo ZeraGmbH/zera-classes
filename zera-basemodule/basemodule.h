@@ -135,12 +135,14 @@ protected:
     cVeinModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
-    virtual void setupModule() = 0; // after xml configuration we can setup and export our module
+    virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
 
     virtual void exportMetaData();
+
+    VeinEvent::EventSystem *m_pModuleEventSystem;
 
 protected slots:
     virtual void activationStart() = 0;

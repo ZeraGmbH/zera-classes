@@ -58,38 +58,11 @@ void cSCPIModule::setupModule()
 {
     emit addEventSystem(m_pSCPIEventSystem);
 
-    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
-    eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
-    eData->setEntityId(m_nEntityId);
-    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
-    m_pSCPIEventSystem->sigSendEvent(tmpEvent);
-
-    VeinComponent::ComponentData *cData;
-
-    cData = new VeinComponent::ComponentData();
-    cData->setEntityId(m_nEntityId);
-    cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
-    cData->setComponentName("EntityName");
-    cData->setNewValue(m_sModuleName);
-    tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
-    m_pSCPIEventSystem->sigSendEvent(tmpEvent);
+    m_pModuleEventSystem = m_pSCPIEventSystem;
+    cBaseModule::setupModule();
 
     cSCPIModuleConfigData *pConfData;
     pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
-
-    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pSCPIEventSystem,
-                                                       QString("ERR_Message"),
-                                                       QString("Component forwards the run time errors"),
-                                                       QVariant(QString("")));
-    veinModuleComponentList.append(m_pModuleErrorComponent);
-    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pSCPIEventSystem,
-                                                           QString("INF_ModuleInterface"),
-                                                           QString("Component forwards the modules interface"),
-                                                           QByteArray());
-    veinModuleComponentList.append(m_pModuleInterfaceComponent);
-
-    m_pModuleDescription = new cVeinModuleMetaData(QString("Description"), QVariant(m_sModuleDescription));
-    veinModuleMetaDataList.append(m_pModuleDescription);
 
     // we only have this activist
     m_pSCPIServer = new cSCPIServer(this, *pConfData);

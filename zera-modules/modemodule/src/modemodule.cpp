@@ -5,10 +5,6 @@
 #include <veinmodulecomponent.h>
 #include <veinmodulemetadata.h>
 
-#include <ve_commandevent.h>
-#include <vcmp_entitydata.h>
-#include <vcmp_componentdata.h>
-
 #include "modemodule.h"
 #include "modemoduleconfiguration.h"
 #include "modemoduleconfigdata.h"
@@ -77,42 +73,10 @@ void cModeModule::doConfiguration(QByteArray xmlConfigData)
 void cModeModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
-
-    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
-    eData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
-    eData->setEntityId(m_nEntityId);
-    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
-    m_pModuleValidator->sigSendEvent(tmpEvent);
-
-    VeinComponent::ComponentData *cData;
-
-    cData = new VeinComponent::ComponentData();
-    cData->setEntityId(m_nEntityId);
-    cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
-    cData->setComponentName("EntityName");
-    cData->setNewValue(m_sModuleName);
-    tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
-    m_pModuleValidator->sigSendEvent(tmpEvent);
+    cBaseMeasModule::setupModule();
 
     cModeModuleConfigData *pConfData;
     pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
-
-    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleValidator,
-                                                       QString("ERR_Message"),
-                                                       QString("Component forwards the run time errors"),
-                                                       QVariant(QString("")));
-    veinModuleComponentList.append(m_pModuleErrorComponent);
-    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleValidator,
-                                                           QString("INF_ModuleInterface"),
-                                                           QString("Component forwards the modules interface"),
-                                                           QByteArray());
-    veinModuleComponentList.append(m_pModuleInterfaceComponent);
-
-    m_pModuleName = new cVeinModuleMetaData(QString("Name"), QVariant(m_sModuleName));
-    veinModuleMetaDataList.append(m_pModuleName);
-
-    m_pModuleDescription = new cVeinModuleMetaData(QString("Description"), QVariant(m_sModuleDescription));
-    veinModuleMetaDataList.append(m_pModuleDescription);
 
     // we only have to initialize the pcb's measuring mode
     m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, *pConfData);
