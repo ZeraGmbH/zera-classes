@@ -4,7 +4,7 @@
 namespace OSCIMODULE
 {
 
-//#define DEBUG 1
+#define DEBUG 1
 
 }
 #endif // DEBUG_H

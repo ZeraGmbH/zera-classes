@@ -11,10 +11,6 @@
 #include "basedspmeasprogram.h"
 #include "measchannelinfo.h"
 
-class cModuleSignal;
-class cModuleParameter;
-class cModuleInfo;
-
 namespace Zera {
 namespace Proxy {
     class cProxy;
@@ -22,12 +18,14 @@ namespace Proxy {
 }
 
 class cDspMeasData;
-class VeinPeer;
-class VeinEntity;
 class QStateMachine;
 class QState;
 class QFinalState;
 
+class cVeinModuleComponent;
+class cVeinModuleParameter;
+class cVeinModuleMetaData;
+class cVeinModuleActvalue;
 
 namespace OSCIMODULE
 {
@@ -68,11 +66,10 @@ class cOsciModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cOsciModuleConfigData& configdata);
+    cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, cOsciModuleConfigData& configdata);
     virtual ~cOsciModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -90,20 +87,16 @@ protected slots:
 private:
     cOsciModule* m_pModule;
     cOsciModuleConfigData& m_ConfigData;
-    QStringList m_ActValueList; // the list of actual values we work on
 
-    QList<VeinEntity*> m_EntityNameList; // we use this list for access
-    QList<VeinEntity*> m_EntityActValueList; // also
+    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    cVeinModuleMetaData* m_pOsciCountInfo;
+    cVeinModuleComponent* m_pMeasureSignal;
+    cVeinModuleParameter* m_pRefChannelParameter;
 
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on
     quint32 m_nSRate; // number of samples / signal period
-    cModuleSignal* m_pMeasureSignal;
-
-    cModuleInfo* m_pOsciCountInfo;
-    cModuleParameter* m_pRefChannelParameter;
-    cModuleInfo* m_pRefChannelInfo;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -145,6 +138,7 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     void setActualValuesNames();
+    void setSCPIMeasInfo();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

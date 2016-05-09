@@ -7,9 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
-
-class cModuleError;
+#include "basemeasmodule.h"
 
 namespace Zera {
 namespace Server {
@@ -29,24 +27,23 @@ class cOsciModuleConfiguration;
 class cOsciModuleMeasProgram;
 class cOsciModuleObservation;
 
-#define BaseModuleName "OSCModule"
+#define BaseModuleName "OSCIModule"
 #define BaseSCPIModuleName "OSC"
 
-class cOsciModule : public cBaseModule
+class cOsciModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cOsciModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
 
 protected:
     cOsciModuleObservation *m_pOsciModuleObservation;
     cOsciModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 
