@@ -725,7 +725,7 @@ void cRmsModuleMeasProgram::setActualValuesNames()
         }
 
         m_ActValueList.at(i)->setChannelName(name);
-        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
+        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).unit);
     }
 }
 
