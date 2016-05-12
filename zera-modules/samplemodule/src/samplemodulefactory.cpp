@@ -4,9 +4,9 @@
 namespace SAMPLEMODULE
 {
 
-ZeraModules::VirtualModule* SampleModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* SampleModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cSampleModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cSampleModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -20,15 +20,15 @@ void SampleModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> SampleModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> SampleModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString SampleModuleFactory::getFactoryName()
+QString SampleModuleFactory::getFactoryName() const
 {
-    return QString("samplemodule");
+    return QString(BaseModuleName).toLower();
 }
 
 }

@@ -28,19 +28,16 @@ namespace Proxy {
     class cProxy;
     class cProxyClient;
 }
+
 namespace  Server {
     class cDSPInterface;
 }
 }
 
 
-class VeinPeer;
-class VeinEntity;
 class cDspMeasData;
-
-class cModuleParameter;
-class cModuleSignal;
-class cModuleInfo;
+class cVeinModuleParameter;
+class cVeinModuleComponent;
 
 namespace SAMPLEMODULE
 {
@@ -59,13 +56,11 @@ class cPllObsermatic: public cModuleActivist
     Q_OBJECT
 
 public:
-    cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSampleModuleConfigData& confData);
+    cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& confData);
     virtual ~cPllObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
-    cModuleSignal *m_pPllSignal; // we make the signal public for easy connection within module
 
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
@@ -74,7 +69,6 @@ public slots:
 private:
     cSampleModule *m_pModule;
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
-    VeinPeer* m_pPeer;
     cSampleModuleConfigData& m_ConfPar;
     QString m_sActPllChannel;
     QString m_sNewPllChannel;
@@ -85,9 +79,9 @@ private:
     QHash<QString,QString> m_AliasHash; // systemname -> alias
 
     // we need some entities for our interface
-    VeinEntity* m_pPllChannelEntity;
-    VeinEntity* m_pPllChannelListEntity;
-    cModuleParameter* m_pParPllAutomaticOnOff;
+    cVeinModuleParameter* m_pPllChannel;
+    cVeinModuleParameter* m_pParPllAutomaticOnOff;
+    cVeinModuleComponent* m_pPllSignal; // we make the signal public for easy connection within module
 
     QHash<quint32, int> m_MsgNrCmdList;
 
@@ -102,7 +96,7 @@ private:
     bool m_bPllAutomatic;
     void pllAutomatic();
 
-    void setPllChannelListEntity();
+    void setPllChannelValidator();
 
 private slots:
     void getPllMeasChannels();

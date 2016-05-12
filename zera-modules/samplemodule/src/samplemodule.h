@@ -7,7 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include "basemeasmodule.h"
 
 
 namespace Zera {
@@ -20,8 +20,6 @@ namespace Proxy {
 }
 }
 
-class cModuleInfo;
-class cModuleError;
 
 namespace SAMPLEMODULE
 {
@@ -34,14 +32,17 @@ class cPllObsermatic;
 class cSampleModuleObservation;
 
 
-class cSampleModule : public cBaseModule
+#define BaseModuleName "SampleModule"
+#define BaseSCPIModuleName "SAM"
+
+class cSampleModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cSampleModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cSampleModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cSampleModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
     cPllMeasChannel* getPllMeasChannel(QString name);
 
 protected:
@@ -51,7 +52,6 @@ protected:
 
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 

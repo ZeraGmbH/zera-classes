@@ -3,18 +3,23 @@
 #include <pcbinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
+#include <scpiinfo.h>
+#include <modulevalidator.h>
+#include <stringvalidator.h>
+#include <scpiinfo.h>
+#include <veinmoduleparameter.h>
 
 #include "debug.h"
 #include "errormessages.h"
 #include "samplechannel.h"
+#include "samplemodule.h"
+#include "samplemoduleconfigdata.h"
 
 namespace SAMPLEMODULE
 {
 
-cSampleChannel::cSampleChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
-    :cBaseSampleChannel(proxy, peer, rmsocket, pcbsocket, name, chnnr)
+cSampleChannel::cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configdata, quint8 chnnr)
+    :m_pModule(module), m_ConfigData(configdata), cBaseSampleChannel(proxy, configdata.m_ObsermaticConfPar.m_sSampleSystem, chnnr)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -75,33 +80,25 @@ cSampleChannel::~cSampleChannel()
 
 void cSampleChannel::generateInterface()
 {
-    QString s;
+    QString key;
+    cSCPIInfo *scpiInfo;
 
-    m_pChannelEntity = m_pPeer->dataAdd(QString("TRA_Channel%1Name").arg(m_nChannelNr)); // here is the actual range
-    m_pChannelEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelEntity->setValue(tr("S%1;[]"), m_pPeer); // we only do this for translation purpose
-    m_pChannelEntity->setValue(s = "Unknown", m_pPeer);
+    m_pChannelRange = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("PAR_ChannelRange"),
+                                               QString("Component for reading and setting the sampling channel's range"),
+                                               QVariant(m_ConfigData.m_ObsermaticConfPar.m_pllRange.m_sPar));
 
-    m_pChannelRangeEntity = m_pPeer->dataAdd(QString("PAR_Channel%1Range").arg(m_nChannelNr)); // list of possible ranges
-    m_pChannelRangeEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelRangeEntity->setValue(s = "Unknown", m_pPeer);
+    m_pModule->veinModuleParameterHash[key] = m_pChannelRange; // for modules use
 
-    m_pChannelRangeListEntity = m_pPeer->dataAdd(QString("INF_Channel%1RangeList").arg(m_nChannelNr)); // list of possible ranges
-    m_pChannelRangeListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pChannelRangeListEntity->setValue(s = "Unknown", m_pPeer);
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "SRANGE", "10", m_pChannelRange->getName(), "0", "");
+    m_pChannelRange->setSCPIInfo(scpiInfo);
+    // later we still have to set the validator for this component
 }
+
 
 
 void cSampleChannel::deleteInterface()
 {
-    m_pPeer->dataRemove(m_pChannelEntity);
-    m_pPeer->dataRemove(m_pChannelRangeListEntity);
-}
-
-
-void cSampleChannel::exportInterface(QJsonArray &)
-{
-
 }
 
 
@@ -259,29 +256,26 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
 }
 
 
-void cSampleChannel::setRangeListEntity()
+void cSampleChannel::setRangeValidator()
 {
-    QString s;
+    cStringValidator *sValidator;
 
-    s = m_RangeNameList.at(0);
-    if (m_RangeNameList.count() > 1)
-        for (int i = 1; i < m_RangeNameList.count(); i++)
-            s = s + ";" + m_RangeNameList.at(i);
-
-    m_pChannelRangeListEntity->setValue(s, m_pPeer);
+    sValidator = new cStringValidator(m_RangeNameList);
+    m_pChannelRange->setValidator(sValidator);
 }
 
 
-void cSampleChannel::setChannelNameEntity()
+void cSampleChannel::setChannelNameMetaInfo()
 {
     QString s,s1,s2;
+
     s1 = s2 = m_sAlias;
     s1.remove(QRegExp("[1-9][0-9]?"));
     s2.remove(s1);
     //m_pChannelEntity->setValue(m_sAlias, m_pPeer);
 
     s = s1 + "%1" + QString(";%1;[%2]").arg(s2).arg("");
-    m_pChannelEntity->setValue(s, m_pPeer);
+    // m_pChannelEntity->setValue(s, m_pPeer);
 }
 
 
@@ -289,7 +283,7 @@ void cSampleChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
@@ -342,7 +336,7 @@ void cSampleChannel::claimResource()
 
 void cSampleChannel::pcbConnection()
 {
-    m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
+    m_pPCBClient = m_pProxy->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
     m_pcbConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readChnAliasState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
@@ -365,10 +359,10 @@ void cSampleChannel::readRangelist()
 
 void cSampleChannel::activationDone()
 {
-    setChannelNameEntity(); // we set our real name now
-    setRangeListEntity(); // and the list of possible ranges
+    setChannelNameMetaInfo(); // we set our real name now
+    setRangeValidator(); // and the list of possible ranges
 
-    connect(m_pChannelRangeEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPLLRange(QVariant)));
+    connect(m_pChannelRange, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPLLRange(QVariant)));
     emit activated();
 }
 

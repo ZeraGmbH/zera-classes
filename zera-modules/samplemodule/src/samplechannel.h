@@ -13,6 +13,9 @@
 #include "basesamplechannel.h"
 #include "reply.h"
 
+
+class cVeinModuleParameter;
+
 namespace SAMPLEMODULE
 {
 
@@ -30,16 +33,18 @@ enum samplechannelCmds
 };
 
 
+class cSampleModule;
+class cSampleModuleConfigData;
+
 class cSampleChannel: public cBaseSampleChannel
 {
     Q_OBJECT
 
 public:
-    cSampleChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configdata, quint8 chnnr);
     ~cSampleChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
@@ -49,10 +54,12 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    VeinEntity *m_pChannelEntity;
-    VeinEntity *m_pChannelRangeEntity;
-    VeinEntity *m_pChannelRangeListEntity;
-    QStringList m_RangeNameList; // a list of all ranges
+    cSampleModule* m_pModule;
+    cSampleModuleConfigData& m_ConfigData;
+
+    cVeinModuleParameter *m_pChannelRange;
+
+    QStringList m_RangeNameList; // a list of all range's names
     QString m_sActRange; // the actual range set
     QString m_sNewRange;
 
@@ -82,8 +89,8 @@ private:
     QState m_freeResourceStartState;
     QFinalState m_freeResourceDoneState;
 
-    void setRangeListEntity();
-    void setChannelNameEntity();
+    void setRangeValidator();
+    void setChannelNameMetaInfo();
 
     qint32 m_RangeQueryIt;
 

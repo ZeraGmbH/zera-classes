@@ -18,8 +18,6 @@ namespace Proxy
 }
 }
 
-class VeinPeer;
-class VeinEntity;
 
 class cDspMeasData;
 class cDspIFace;
@@ -57,11 +55,10 @@ class cSampleModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cSampleModuleMeasProgram(cSampleModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSampleModuleConfigData& configData);
+    cSampleModuleMeasProgram(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configData);
     virtual ~cSampleModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values

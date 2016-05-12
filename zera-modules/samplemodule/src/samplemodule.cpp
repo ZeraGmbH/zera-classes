@@ -1,7 +1,9 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
-#include <veinentity.h>
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmodulemetadata.h>
 
 #include "samplemodule.h"
 #include "samplemoduleconfiguration.h"
@@ -11,16 +13,17 @@
 #include "samplemodulemeasprogram.h"
 #include "samplemoduleobservation.h"
 #include "pllobsermatic.h"
-#include "moduleerror.h"
 
 
 namespace SAMPLEMODULE
 {
 
-cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(modnr, proxy, peer, new cSampleModuleConfiguration(), parent)
+cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cSampleModuleConfiguration(), parent)
 {
-    m_ModuleActivistList.clear();
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
@@ -59,7 +62,7 @@ cSampleModule::~cSampleModule()
 }
 
 
-QByteArray cSampleModule::getConfiguration()
+QByteArray cSampleModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
@@ -87,71 +90,56 @@ void cSampleModule::doConfiguration(QByteArray xmlConfigData)
 
 void cSampleModule::setupModule()
 {
+    emit addEventSystem(m_pModuleValidator);
+    cBaseMeasModule::setupModule();
+
     cSampleModuleConfigData *pConfData;
     pConfData = qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     // first we build a list of our pll meas channels, that hold informations for other activists
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++)
     {
-        cPllMeasChannel* pllchn = new cPllMeasChannel(m_pProxy, m_pPeer, &(pConfData->m_RMSocket),
+        cPllMeasChannel* pllchn = new cPllMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i), i+1);
         m_pllMeasChannelList.append(pllchn);
         m_ModuleActivistList.append(pllchn);
         connect(pllchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
         connect(pllchn, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-        connect(pllchn, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+        connect(pllchn, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
     }
 
     // next we instantiate an object of sample channel so we can switch sample frequency ranges
-    cSampleChannel* schn = new cSampleChannel(m_pProxy, m_pPeer, &(pConfData->m_RMSocket),
-                                                        &(pConfData->m_PCBServerSocket),
-                                                        pConfData->m_ObsermaticConfPar.m_sSampleSystem, 1);
+    cSampleChannel* schn = new cSampleChannel(this, m_pProxy, *pConfData, 1);
 
     m_sampleChannelList.append(schn); // we hold a list although we only have 1
     m_ModuleActivistList.append(schn);
     connect(schn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
     connect(schn, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(schn, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(schn, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     // we need some program that does the pll handling (observation, automatic, setting)
-    m_pPllObsermatic = new cPllObsermatic(this, m_pProxy, m_pPeer, *pConfData);
+    m_pPllObsermatic = new cPllObsermatic(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pPllObsermatic);
     connect(m_pPllObsermatic, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pPllObsermatic, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pPllObsermatic, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pPllObsermatic, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
+    m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pMeasProgram, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
     //
     m_pSampleModuleObservation = new cSampleModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pSampleModuleObservation);
     connect(m_pSampleModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pSampleModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pSampleModuleObservation, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pSampleModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
-}
-
-
-void cSampleModule::unsetModule()
-{
-    if (m_ModuleActivistList.count() > 0)
-    {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        {
-            m_ModuleActivistList.at(i)->deleteInterface();
-            delete m_ModuleActivistList.at(i);
-        }
-        m_ModuleActivistList.clear();
-        m_pllMeasChannelList.clear();
-        if (errorMessage) delete errorMessage;
-    }
 }
 
 
@@ -206,6 +194,11 @@ void cSampleModule::activationFinished()
         cPllMeasChannel* pllchn = m_pllMeasChannelList.at(i);
         connect(pllchn, SIGNAL(cmdDone(quint32)), m_pPllObsermatic, SLOT(catchChannelReply(quint32)));
     }
+
+    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+
+    // now we still have to export the json interface information
+    exportMetaData();
 
     emit activationReady();
 }

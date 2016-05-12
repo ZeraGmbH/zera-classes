@@ -1,29 +1,29 @@
 #include <QString>
 #include <QVector>
-#include <QPoint>
 #include <math.h>
-#include <veinpeer.h>
-#include <veinentity.h>
+
 #include <dspinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
+#include <scpiinfo.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleparameter.h>
+#include <modulevalidator.h>
+#include <stringvalidator.h>
+#include <boolvalidator.h>
 
 #include "debug.h"
 #include "errormessages.h"
 #include "samplemodule.h"
 #include "pllmeaschannel.h"
-#include "moduleparameter.h"
-#include "interfaceentity.h"
-#include "moduleinfo.h"
-#include "modulesignal.h"
 #include "pllobsermatic.h"
 #include "samplechannel.h"
 
 namespace SAMPLEMODULE
 {
 
-cPllObsermatic::cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSampleModuleConfigData& confData)
-    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_ConfPar(confData)
+cPllObsermatic::cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& confData)
+    :m_pModule(module), m_pProxy(proxy), m_ConfPar(confData)
 {
     m_getPllMeasChannelsState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
     m_activationMachine.addState(&m_getPllMeasChannelsState);
@@ -61,49 +61,42 @@ void cPllObsermatic::ActionHandler(QVector<float> *actualValues)
 void cPllObsermatic::generateInterface()
 {
     QString s;
+    QString key;
+    cSCPIInfo *scpiInfo;
 
-    m_pPllChannelEntity = m_pPeer->dataAdd(QString("PAR_PLLChannel"));
-    m_pPllChannelEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pPllChannelEntity->setValue(QVariant(s = "Unknown"));
+    m_pPllChannel = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                             key = QString("PAR_PllChannel"),
+                                             QString("Component for reading and setting the pll reference channel"),
+                                             QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar));
 
-    m_pPllChannelListEntity = m_pPeer->dataAdd(QString("INF_PLLChannelList")); // list of possible pll channels
-    m_pPllChannelListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pPllChannelListEntity->setValue(s = "Unknown", m_pPeer);
+    m_pModule->veinModuleParameterHash[key] = m_pPllChannel; // for modules use
 
-    m_pParPllAutomaticOnOff = new cModuleParameter(m_pPeer, "PAR_PllAutomaticON/OFF", m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive, !m_ConfPar.m_ObsermaticConfPar.m_bpllAuto);
-    m_pPllSignal = new cModuleSignal(m_pPeer, "SIG_PLL", QVariant(0));
+    // later we have to set the validator for m_pPLLChannel
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pPllChannel->getName(), "0", "");
+    m_pPllChannel->setSCPIInfo(scpiInfo);
+
+    m_pParPllAutomaticOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                       key = QString("PAR_PllAutomaticOnOff"),
+                                                       QString("Component for reading and setting the pll automatic"),
+                                                       QVariant(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive));
+
+    m_pModule->veinModuleParameterHash[key] = m_pParPllAutomaticOnOff; // for modules use
+
+    m_pParPllAutomaticOnOff->setValidator(new cBoolValidator());
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLAUTO", "10", m_pParPllAutomaticOnOff->getName(), "0", "");
+    m_pParPllAutomaticOnOff->setSCPIInfo(scpiInfo);
+
+    m_pPllSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("SIG_PLL"),
+                                            QString("Component forwards information that pll channel is changing"),
+                                            QVariant(0));
+
+    m_pModule->veinModuleComponentList.append(m_pPllSignal);
 }
 
 
 void cPllObsermatic::deleteInterface()
 {
-    m_pPeer->dataRemove(m_pPllChannelEntity);
-    m_pPeer->dataRemove(m_pPllChannelListEntity);
-
-    delete m_pParPllAutomaticOnOff;
-    delete m_pPllSignal;
-}
-
-
-void cPllObsermatic::exportInterface(QJsonArray &jsArr)
-{
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setName(m_pPllChannelEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the pll reference channel"));
-    ifaceEntity.setSCPIModel(QString("CONFIGURATION"));
-    ifaceEntity.setSCPICmdnode(QString("PLLREFERENCE"));
-    ifaceEntity.setSCPIType(QString("10"));
-    ifaceEntity.setUnit(QString(""));
-
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pParPllAutomaticOnOff->getName());
-    ifaceEntity.setDescription(QString("This entity selects pll automatic"));
-    ifaceEntity.setSCPICmdnode(QString("PLLAUTO"));
-
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
 }
 
 
@@ -130,18 +123,19 @@ void cPllObsermatic::pllAutomatic()
 }
 
 
-void cPllObsermatic::setPllChannelListEntity()
+void cPllObsermatic::setPllChannelValidator()
 {
     int i, n;
-    QString s;
+    QStringList sl;
+    cStringValidator *sValidator;
 
     n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
-    s = m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(0)];
-    if (n > 1)
-        for (i = 1; i < n; i++)
-            s = s + ";" + m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)];
 
-    m_pPllChannelListEntity->setValue(s, m_pPeer);
+    for (i = 0; i < n; i++)
+        sl.append(m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]);
+
+    sValidator = new cStringValidator(sl);
+    m_pPllChannel->setValidator(sValidator);
 }
 
 
@@ -168,12 +162,12 @@ void cPllObsermatic::getPllMeasChannels()
 
 void cPllObsermatic::activationDone()
 {
-    m_pParPllAutomaticOnOff->setData(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive);
+    m_pParPllAutomaticOnOff->setValue(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive);
 
-    connect(m_pParPllAutomaticOnOff, SIGNAL(updated(QVariant)), this, SLOT(newPllAuto(QVariant)));
-    connect(m_pPllChannelEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllChannel(QVariant)));
+    connect(m_pParPllAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllAuto(QVariant)));
+    connect(m_pPllChannel, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllChannel(QVariant)));
 
-    setPllChannelListEntity();
+    setPllChannelValidator();
     newPllChannel(QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar)); // we set our default channel here
 
     m_bActive = true;
@@ -205,7 +199,7 @@ void cPllObsermatic::newPllChannel(QVariant channel)
 #ifdef DEBUG
         qDebug() << QString("New PLL-Channel: %1 selected").arg(m_sNewPllChannel);
 #endif
-        m_pPllSignal->m_pParEntity->setValue(QVariant(1), m_pPeer); // we signal that we are changing pll channel
+        m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
         m_MsgNrCmdList[m_pllMeasChannelHash[m_sNewPllChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
     }
 }
@@ -240,11 +234,8 @@ void cPllObsermatic::catchChannelReply(quint32 msgnr)
     switch (cmd)
     {
     case setpll:
-        m_pPllSignal->m_pParEntity->setValue(QVariant(0), m_pPeer); // pll change finished
+        m_pPllSignal->setValue(QVariant(0)); // pll change finished
         m_sActPllChannel = m_sNewPllChannel;
-        disconnect(m_pPllChannelEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllChannel(QVariant)));
-        m_pPllChannelEntity->setValue(m_sActPllChannel, m_pPeer); //
-        connect(m_pPllChannelEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllChannel(QVariant)));
         break;
     }
 }

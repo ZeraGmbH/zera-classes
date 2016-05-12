@@ -3,8 +3,6 @@
 #include <pcbinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -13,8 +11,8 @@
 namespace SAMPLEMODULE
 {
 
-cPllMeasChannel::cPllMeasChannel(Zera::Proxy::cProxy* proxy, VeinPeer *peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
-    :cBaseMeasChannel(proxy, peer, rmsocket, pcbsocket, name, chnnr)
+cPllMeasChannel::cPllMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
+    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -131,12 +129,6 @@ void cPllMeasChannel::generateInterface()
 void cPllMeasChannel::deleteInterface()
 {
     // so we have nothing to delete
-}
-
-
-void cPllMeasChannel::exportInterface(QJsonArray &)
-{
-    // and nothing to export
 }
 
 

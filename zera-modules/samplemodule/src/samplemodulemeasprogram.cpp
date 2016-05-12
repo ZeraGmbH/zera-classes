@@ -4,8 +4,6 @@
 #include <dspinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -17,8 +15,8 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSampleModuleConfigData& configData)
-    :cBaseDspMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configData)
+cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configData)
+    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configData)
 {
     // we have to instantiate a working resource manager and dspserver interface
     m_pRMInterface = new Zera::Server::cRMInterface();
@@ -111,12 +109,6 @@ void cSampleModuleMeasProgram::generateInterface()
 void cSampleModuleMeasProgram::deleteInterface()
 {
     // ....so we have nothing to delete
-}
-
-
-void cSampleModuleMeasProgram::exportInterface(QJsonArray &)
-{
-    // and nothing to delete
 }
 
 
