@@ -6,7 +6,6 @@
 
 #include "baseinterface.h"
 
-class VeinPeer;
 
 namespace SCPIMODULE
 {

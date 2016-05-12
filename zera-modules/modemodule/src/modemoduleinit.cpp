@@ -103,12 +103,6 @@ void cModeModuleInit::deleteInterface()
 }
 
 
-void cModeModuleInit::exportInterface(QJsonArray &)
-{
-    // and nothig to export
-}
-
-
 void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages

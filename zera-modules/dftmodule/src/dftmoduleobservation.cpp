@@ -57,12 +57,6 @@ void cDftModuleObservation::deleteInterface()
 }
 
 
-void cDftModuleObservation::exportInterface(QJsonArray &)
-{
-    // so nothing to do here too
-}
-
-
 void cDftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

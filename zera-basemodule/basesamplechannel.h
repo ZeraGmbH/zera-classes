@@ -7,12 +7,10 @@
 #include <QVariant>
 
 #include "moduleactivist.h"
-#include "socket.h"
 
 class cSCPIConnection;
 class QString;
-class VeinEntity;
-class VeinPeer;
+
 
 namespace Zera {
 namespace Proxy {
@@ -24,27 +22,22 @@ namespace  Server {
 }
 }
 
-class cBaseModule;
 
 class cBaseSampleChannel: public cModuleActivist
 {
     Q_OBJECT
 
 public:
-    cBaseSampleChannel(Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cBaseSampleChannel(Zera::Proxy::cProxy* proxy, QString name, quint8 chnnr);
     virtual ~cBaseSampleChannel(){}
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr) = 0;
 
     QString getName();
     QString getAlias();
 
 protected:
     Zera::Proxy::cProxy* m_pProxy;
-    VeinPeer* m_pPeer; // the peer where we set our entities
-    cSocket* m_pRMSocket; // the sockets we can connect to
-    cSocket* m_pPCBServerSocket;
     QString m_sName; // the channel's system name
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 

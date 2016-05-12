@@ -16,7 +16,6 @@ namespace Proxy
 }
 }
 
-class VeinPeer;
 
 namespace OSCIMODULE
 {
