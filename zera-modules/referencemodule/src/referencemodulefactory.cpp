@@ -4,9 +4,9 @@
 namespace REFERENCEMODULE
 {
 
-ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* ReferenceModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
-    ZeraModules::VirtualModule *module = new cReferenceModule(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cReferenceModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -20,15 +20,15 @@ void ReferenceModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> ReferenceModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> ReferenceModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString ReferenceModuleFactory::getFactoryName()
+QString ReferenceModuleFactory::getFactoryName() const
 {
-    return QString("referencemodule");
+    return QString(BaseModuleName).toLower();
 }
 
 }

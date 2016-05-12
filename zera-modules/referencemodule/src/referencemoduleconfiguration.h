@@ -51,7 +51,6 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 
 private:
-    // QHash<QString, VeinEntity*> m_exportEntityList; // we hold a list of all our entities for export
     cReferenceModuleConfigData *m_pReferenceModulConfigData;  // configuration
 };
 

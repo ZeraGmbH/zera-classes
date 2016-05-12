@@ -7,7 +7,7 @@
 #include <QFinalState>
 #include <QList>
 
-#include "basemodule.h"
+#include "basemeasmodule.h"
 
 
 
@@ -22,8 +22,6 @@ namespace Proxy {
 }
 }
 
-class cModuleInfo;
-class cModuleError;
 
 namespace REFERENCEMODULE
 {
@@ -34,14 +32,19 @@ class cReferenceModuleMeasProgram;
 class cReferenceAdjustment;
 class cReferenceModuleObservation;
 
-class cReferenceModule : public cBaseModule
+
+#define BaseModuleName "REFERENCEModule"
+#define BaseSCPIModuleName "REF"
+
+
+class cReferenceModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cReferenceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, VeinPeer* peer, QObject* parent = 0);
+    cReferenceModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cReferenceModule();
-    virtual QByteArray getConfiguration();
+    virtual QByteArray getConfiguration() const;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 
 protected:
@@ -51,7 +54,6 @@ protected:
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 

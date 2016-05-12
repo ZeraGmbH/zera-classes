@@ -15,8 +15,8 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceAdjustment::cReferenceAdjustment(cReferenceModule *module,  Zera::Proxy::cProxy* proxy, VeinPeer* peer, cReferenceModuleConfigData* confData)
-    :m_pModule(module), m_pProxy(proxy), m_pPeer(peer), m_pConfigData(confData)
+cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, Zera::Proxy::cProxy* proxy, cReferenceModuleConfigData* confData)
+    :m_pModule(module), m_pProxy(proxy), m_pConfigData(confData)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -109,12 +109,6 @@ void cReferenceAdjustment::generateInterface()
 void cReferenceAdjustment::deleteInterface()
 {
     // at the moment no interface
-}
-
-
-void cReferenceAdjustment::exportInterface(QJsonArray &)
-{
-    // so nothing to export
 }
 
 

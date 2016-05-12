@@ -18,8 +18,6 @@ namespace Proxy
 }
 }
 
-class VeinPeer;
-class VeinEntity;
 
 class cDspMeasData;
 class QStateMachine;
@@ -46,7 +44,6 @@ enum referencemoduleCmds
 
 #define irqNr 9
 
-class cBaseModule;
 class cReferenceModule;
 class cReferenceModuleConfigData;
 
@@ -56,11 +53,10 @@ class cReferenceModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cReferenceModuleMeasProgram(cReferenceModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cReferenceModuleConfigData& configData);
+    cReferenceModuleMeasProgram(cReferenceModule* module, Zera::Proxy::cProxy* proxy, cReferenceModuleConfigData& configData);
     virtual ~cReferenceModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &); //
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -79,7 +75,6 @@ private:
     cReferenceModule* m_pModule; // the module we live in
     quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
-    QList<VeinEntity*> m_EntityList;
     cReferenceModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;

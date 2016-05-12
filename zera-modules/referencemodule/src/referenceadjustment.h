@@ -15,7 +15,7 @@
 
 
 class cDspMeasData;
-class VeinPeer;
+
 
 namespace Zera {
 namespace Proxy {
@@ -54,11 +54,10 @@ class cReferenceAdjustment: public cModuleActivist
     Q_OBJECT
 
 public:
-    cReferenceAdjustment(cReferenceModule* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cReferenceModuleConfigData* confData);
+    cReferenceAdjustment(cReferenceModule* module, Zera::Proxy::cProxy* proxy, cReferenceModuleConfigData* confData);
     virtual ~cReferenceAdjustment();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &);
 
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
@@ -70,7 +69,6 @@ signals:
 private:
     cReferenceModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
-    VeinPeer* m_pPeer;
     cReferenceModuleConfigData* m_pConfigData;
     Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
     Zera::Proxy::cProxyClient *m_pDspClient;

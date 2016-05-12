@@ -55,11 +55,6 @@ void cReferenceModuleObservation::deleteInterface()
     // so we have nothing to delete
 }
 
-void cReferenceModuleObservation::exportInterface(QJsonArray &)
-{
-    // and nothing to export
-}
-
 
 void cReferenceModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {

@@ -1,7 +1,9 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
-#include <veinentity.h>
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmodulemetadata.h>
 
 #include "referencemodule.h"
 #include "referencemoduleconfiguration.h"
@@ -10,17 +12,17 @@
 #include "referencemodulemeasprogram.h"
 #include "referencemoduleobservation.h"
 #include "referenceadjustment.h"
-#include "moduleinfo.h"
-#include "moduleerror.h"
-#include "modulesignal.h"
+
 
 namespace REFERENCEMODULE
 {
 
-cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(modnr, proxy, peer, new cReferenceModuleConfiguration(), parent)
+cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cReferenceModuleConfiguration(), parent)
 {
-    m_ModuleActivistList.clear();
+    m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleDescription = QString("This module measures reference actual values for configured channels");
+    m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
     m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
@@ -62,7 +64,7 @@ cReferenceModule::~cReferenceModule()
 }
 
 
-QByteArray cReferenceModule::getConfiguration()
+QByteArray cReferenceModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
@@ -90,6 +92,9 @@ void cReferenceModule::doConfiguration(QByteArray xmlConfigData)
 
 void cReferenceModule::setupModule()
 {
+    emit addEventSystem(m_pModuleValidator);
+    cBaseMeasModule::setupModule();
+
     cReferenceModuleConfigData *pConfData;
     pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
@@ -97,18 +102,18 @@ void cReferenceModule::setupModule()
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
-        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(m_pProxy, m_pPeer, &(pConfData->m_RMSocket),
+        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
                                                                 &(pConfData->m_PCBServerSocket),
                                                                 pConfData->m_referenceChannelList.at(i), i+1);
         m_ReferenceMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
         connect(pchn, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-        connect(pchn, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+        connect(pchn, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
     }
 
     // then we need some program for adjustment
-    m_pReferenceAdjustment = new cReferenceAdjustment(this, m_pProxy, m_pPeer, pConfData);
+    m_pReferenceAdjustment = new cReferenceAdjustment(this, m_pProxy, pConfData);
     //m_ModuleActivistList.append(m_pReferenceAdjustment);
     // we don't actvate this per our activation loop
     // instead adjustment is activated after all other activists
@@ -116,7 +121,7 @@ void cReferenceModule::setupModule()
 
     connect(m_pReferenceAdjustment, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pReferenceAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pReferenceAdjustment, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pReferenceAdjustment, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
 
     // we have to connect all cmddone from our reference meas channels to refernce adjustment
@@ -127,36 +132,20 @@ void cReferenceModule::setupModule()
     }
 
     // at last we need some program that does the measuring job on dsp
-    m_pMeasProgram = new cReferenceModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
+    m_pMeasProgram = new cReferenceModuleMeasProgram(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pMeasProgram, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
     //
     m_pReferenceModuleObservation = new cReferenceModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pReferenceModuleObservation);
     connect(m_pReferenceModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pReferenceModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pReferenceModuleObservation, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pReferenceModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
-}
-
-
-void cReferenceModule::unsetModule()
-{
-    if (m_ModuleActivistList.count() > 0)
-    {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        {
-            m_ModuleActivistList.at(i)->deleteInterface();
-            delete m_ModuleActivistList.at(i);
-        }
-        m_ModuleActivistList.clear();
-        m_ReferenceMeasChannelList.clear();
-        if (errorMessage) delete errorMessage;
-    }
 }
 
 
@@ -212,6 +201,11 @@ void cReferenceModule::activationFinished()
     // connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pReferenceAdjustment, SLOT(ActionHandler(QVector<float>*)));
     // if we get informed we have to reconfigure
     connect(m_pReferenceModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(referenceModuleReconfigure()));
+
+    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+
+    // now we still have to export the json interface information
+    exportMetaData();
 
     emit activationReady();
 }
