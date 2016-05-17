@@ -24,10 +24,10 @@ SUBDIRS     = \
             zera-modules/samplemodule \
             zera-modules/referencemodule \
             zera-modules/modemodule \
-#           zera-modules/sec1module \
+            zera-modules/sec1module \
             zera-modules/scpimodule \
             zera-modules/power2module \
-#            zera-modules/power3module \
+            zera-modules/power3module \
             zera-validator
 
 
