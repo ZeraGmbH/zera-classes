@@ -25,8 +25,9 @@ public:
 
     quint8 m_nDebugLevel;
     quint8 m_nPowerSystemCount;
-    QString m_sInputModule;
+    int m_nModuleId;
     QList<powersystemconfiguration> m_powerSystemConfigList;
+    QStringList m_powerChannelList;
 };
 
 }

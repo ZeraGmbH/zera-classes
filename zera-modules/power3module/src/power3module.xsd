@@ -26,7 +26,7 @@
 
     <xs:complexType name="measuretype">
         <xs:sequence>
-            <xs:element name="input" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
             <xs:element name="system">
                 <xs:complexType>
                     <xs:sequence>

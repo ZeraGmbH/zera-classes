@@ -15,12 +15,11 @@
 #include "foutinfo.h"
 
 
-class cModuleSignal;
-class cModuleInfo;
 class cBaseModule;
+class cVeinModuleActvalue;
+class cVeinModuleMetaData;
+class cVeinModuleComponent;
 
-class VeinPeer;
-class VeinEntity;
 class cPower3MeasDelegate;
 class QStateMachine;
 class QState;
@@ -83,11 +82,10 @@ class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cPower3ModuleMeasProgram(cPower3Module* module, VeinPeer* peer, cPower3ModuleConfigData& configdata);
+    cPower3ModuleMeasProgram(cPower3Module* module, cPower3ModuleConfigData& configdata);
     virtual ~cPower3ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -97,12 +95,11 @@ private:
     cPower3Module* m_pModule;
     cPower3ModuleConfigData& m_ConfigData;
 
-    cModuleInfo* m_pHPWCountInfo; // the number of values we produce
-    QList<VeinEntity*> m_EntityNameHPWList; // we have a list for all pqs names for a power meter
-    QList<VeinEntity*> m_EntityActValueHPWList; // we have a list for all pgs values for a power meter
-    QList<cPower3MeasDelegate*> m_Power3MeasDelegateList;
+    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    cVeinModuleMetaData* m_pHPWCountInfo; // the number of values we produce
+    cVeinModuleComponent* m_pMeasureSignal;
 
-    cModuleSignal* m_pMeasureSignal;
+    QList<cPower3MeasDelegate*> m_Power3MeasDelegateList;
 
     // statemachine for activating gets the following states
     QState m_searchActualValuesState;
@@ -111,8 +108,6 @@ private:
     // statemachine for deactivating
     QState m_deactivateState;
     QFinalState m_deactivateDoneState;
-
-    void setActualValuesNames();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

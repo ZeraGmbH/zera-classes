@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include <veinentity.h>
+#include <veinmoduleactvalue.h>
 
 #include "debug.h"
 #include "power3measdelegate.h"
@@ -9,8 +9,8 @@
 namespace  POWER3MODULE
 {
 
-POWER3MODULE::cPower3MeasDelegate::cPower3MeasDelegate(VeinPeer *peer, VeinEntity *output)
-    :m_pPeer(peer), m_pOutput(output)
+cPower3MeasDelegate::cPower3MeasDelegate(cVeinModuleActvalue *actvalue)
+    :m_pActValue(actvalue)
 {
 }
 
@@ -65,7 +65,7 @@ void cPower3MeasDelegate::computeOutput()
 
         QVariant list;
         list = QVariant::fromValue<QList<double> >(resultList);
-        m_pOutput->setValue(list, m_pPeer);
+        m_pActValue->setValue(list);
 
 #ifdef DEBUG
         QString ts;

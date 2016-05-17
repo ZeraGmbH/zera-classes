@@ -37,7 +37,7 @@ void cPower3ModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["pow3modconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
 
-    m_ConfigXMLMap["pow3modconfpar:configuration:measure:input"] = setInputModule;
+    m_ConfigXMLMap["pow3modconfpar:configuration:measure:inputentity"] = setInputModule;
     m_ConfigXMLMap["pow3modconfpar:configuration:measure:system:n"] = setSystemCount;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
@@ -73,7 +73,7 @@ void cPower3ModuleConfiguration::configXMLInfo(QString key)
             m_pPower3ModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setInputModule:
-            m_pPower3ModulConfigData->m_sInputModule = m_pXMLReader->getValue(key);
+            m_pPower3ModulConfigData->m_nModuleId = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setSystemCount:
         {
@@ -87,6 +87,7 @@ void cPower3ModuleConfiguration::configXMLInfo(QString key)
             {
                 m_ConfigXMLMap[QString("pow3modconfpar:configuration:measure:system:pms%1").arg(i+1)] = setMeasSystem1+i;
                 m_pPower3ModulConfigData->m_powerSystemConfigList.append(psc);
+                m_pPower3ModulConfigData->m_powerChannelList.append("");
             }
             break;
         }
@@ -102,7 +103,9 @@ void cPower3ModuleConfiguration::configXMLInfo(QString key)
                 powersystemconfiguration psc = m_pPower3ModulConfigData->m_powerSystemConfigList.at(cmd);
                 psc.m_sInputU = measChannels.at(0);
                 psc.m_sInputI = measChannels.at(1);
+
                 m_pPower3ModulConfigData->m_powerSystemConfigList.replace(cmd, psc);
+                m_pPower3ModulConfigData->m_powerChannelList.replace(cmd, measChannels.at(2));
             }
         }
         m_bConfigError |= !ok;

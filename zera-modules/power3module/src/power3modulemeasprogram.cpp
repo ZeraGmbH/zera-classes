@@ -4,17 +4,16 @@
 #include <QJsonArray>
 #include <QStringList>
 
-#include <veinpeer.h>
-#include <veinhub.h>
-#include <veinentity.h>
+#include <ve_storagesystem.h>
+#include <modulevalidator.h>
+#include <veinmodulecomponentinput.h>
+#include <veinmoduleactvalue.h>
+#include <veinmodulemetadata.h>
+#include <scpiinfo.h>
 
 #include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
-#include "modulesignal.h"
-#include "interfaceentity.h"
-#include "moduleparameter.h"
-#include "moduleinfo.h"
 #include "measmodeinfo.h"
 #include "power3module.h"
 #include "power3modulemeasprogram.h"
@@ -24,8 +23,8 @@
 namespace POWER3MODULE
 {
 
-cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, VeinPeer* peer, cPower3ModuleConfigData& configdata)
-    :cBaseMeasWorkProgram(peer), m_pModule(module), m_ConfigData(configdata)
+cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, cPower3ModuleConfigData& configdata)
+    :m_pModule(module), m_ConfigData(configdata)
 {
     m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
@@ -71,108 +70,79 @@ void cPower3ModuleMeasProgram::stop()
 
 void cPower3ModuleMeasProgram::generateInterface()
 {
-    VeinEntity* p_entity;
-    QString s;
+    cVeinModuleActvalue *pActvalue;
+    cSCPIInfo* pSCPIInfo;
 
-    // this here is for translation purpose
-    s = tr("P%1;[W]");
-
-    m_pHPWCountInfo = new cModuleInfo(m_pPeer, "INF_HPWCount", QVariant(m_ConfigData.m_nPowerSystemCount));
-
-    for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++) // we have a configures number of harmonic power values
+    for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++)
     {
-        s = QString("TRA_HPW%1Name").arg(i+1);
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant(QString("P%1;[W]").arg(i+1)), m_pPeer);
-        m_EntityNameHPWList.append(p_entity);
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_HPW%1").arg(i+1),
+                                            QString("Component forwards harmonic power actual values"),
+                                            QVariant(0.0) );
+        pActvalue->setChannelName(QString("P%1").arg(i+1));
+        pActvalue->setUnit("W");
 
-        s = QString("ACT_HPW%1").arg(i+1); // actual value harmonic power
-        p_entity = m_pPeer->dataAdd(s);
-        p_entity->modifiersAdd(VeinEntity::MOD_READONLY);
-        p_entity->setValue(QVariant((double) 0.0), m_pPeer);
-        m_EntityActValueHPWList.append(p_entity);
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pActvalue->setSCPIInfo(pSCPIInfo);
 
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pMeasureSignal = new cModuleSignal(m_pPeer, "SIG_MEASURING", QVariant(0));
+    m_pHPWCountInfo = new cVeinModuleMetaData(QString("HPWCount"), QVariant(m_ConfigData.m_nPowerSystemCount));
+    m_pModule->veinModuleMetaDataList.append(m_pHPWCountInfo);
+
+    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                QString("SIG_Measuring"),
+                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QVariant(0));
+
+    m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
 
 void cPower3ModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityNameHPWList.count(); i++)
-        m_pPeer->dataRemove(m_EntityNameHPWList.at(i));
-    for (int i = 0; i < m_EntityActValueHPWList.count(); i++)
-        m_pPeer->dataRemove(m_EntityActValueHPWList.at(i));
-
-    delete m_pHPWCountInfo;
-    delete m_pMeasureSignal;
-}
-
-
-void cPower3ModuleMeasProgram::exportInterface(QJsonArray &jsArr)
-{
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setDescription(QString("This entity holds the power value of CmdNode")); // for all actvalues the same
-    ifaceEntity.setSCPIModel(QString("MEASURE"));
-    ifaceEntity.setSCPIType(QString("2"));
-
-    for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++)
-    {
-        ifaceEntity.setName(m_EntityActValueHPWList.at(i)->getName());
-
-        QString chnDes = m_EntityNameHPWList.at(i)->getValue().toString();
-        QStringList sl = chnDes.split(';');
-        QString CmdNode = sl.takeFirst();
-        QString Unit = sl.takeLast();
-
-        ifaceEntity.setSCPICmdnode(CmdNode);
-        ifaceEntity.setUnit(Unit);
-
-        ifaceEntity.appendInterfaceEntity(jsArr);
-    }
 }
 
 
 void cPower3ModuleMeasProgram::searchActualValues()
 {
-    VeinHub *vHub;
-    VeinPeer *vPeerInputModule;
     bool error;
 
     error = false;
-    vHub = m_pPeer->getHub();
-    vPeerInputModule = vHub->getPeerByName(m_ConfigData.m_sInputModule);
-    if (vPeerInputModule != 0)
+    QList<cVeinModuleComponentInput*> inputList;
+
+    for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++)
     {
-        for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++)
+        // we first test that wanted input components exist
+        if ( (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU)) &&
+             (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputI)) )
         {
-            VeinEntity *vEnt1, *vEnt2;
-            vEnt1 = vPeerInputModule->getEntityByName(m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU);
-            vEnt2 = vPeerInputModule->getEntityByName(m_ConfigData.m_powerSystemConfigList.at(i).m_sInputI);
+            cPower3MeasDelegate *cPMD;
+            cVeinModuleComponentInput *vmci;
 
-            // test that wanted input entities exist
-            if ( (vEnt1 !=0) && (vEnt2 !=0))
-            {
-                cPower3MeasDelegate *cPMD;
+            cPMD = new cPower3MeasDelegate(m_ActValueList.at(i));
 
-                cPMD = new cPower3MeasDelegate(m_pPeer, m_EntityActValueHPWList.at(i));
-                connect(vEnt1, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput1(QVariant)));
-                connect(vEnt2, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput2(QVariant)));
-            }
-            else
-                error = true;
+            vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU);
+            inputList.append(vmci);
+            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput1(QVariant)));
+
+            vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputI);
+            inputList.append(vmci);
+            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput2(QVariant)));
         }
+        else
+            error = true;
     }
-    else
-        error =true;
 
     if (error)
         emit activationError();
     else
+    {
+        m_pEventSystem->setInputList(inputList);
         emit activationContinue();
+    }
 }
 
 
