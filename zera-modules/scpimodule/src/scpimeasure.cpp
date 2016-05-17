@@ -88,14 +88,14 @@ QString cSCPIMeasure::setAnswer(QVariant qvar)
     {
         QSequentialIterable iterable = qvar.value<QSequentialIterable>();
 
-        s = QString("%1:%2:[%3]:").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->componentName, m_pSCPICmdInfo->unit);
+        s = QString("%1:%2:[%3]:").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit);
         foreach (const QVariant &v, iterable)
             s += (v.toString()+",");
         s = s.remove(s.count()-1, 1);
 
     }
     else
-        s = QString("%1:%2:[%3]:%4").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->componentName, m_pSCPICmdInfo->unit).arg(qvar.toString());
+        s = QString("%1:%2:[%3]:%4").arg(m_pSCPICmdInfo->scpiModuleName, m_pSCPICmdInfo->scpiCommand, m_pSCPICmdInfo->unit).arg(qvar.toString());
 
     return (s);
 }
