@@ -4,9 +4,9 @@
 namespace SEC1MODULE
 {
 
-ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, VeinPeer *peer, QObject *parent)
+ZeraModules::VirtualModule* Sec1ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cSec1Module(m_ModuleList.count()+1, proxy, peer, parent);
+    ZeraModules::VirtualModule *module = new cSec1Module(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
@@ -20,15 +20,15 @@ void Sec1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 }
 
 
-QList<ZeraModules::VirtualModule *> Sec1ModuleFactory::listModules()
+QList<ZeraModules::VirtualModule *> Sec1ModuleFactory::listModules() const
 {
     return m_ModuleList;
 }
 
 
-QString Sec1ModuleFactory::getFactoryName()
+QString Sec1ModuleFactory::getFactoryName() const
 {
-    return QString("sec1module");
+    return QString(BaseModuleName).toLower();
 }
 
 }

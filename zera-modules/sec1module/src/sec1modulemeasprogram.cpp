@@ -6,14 +6,18 @@
 #include <basemodule.h>
 #include <proxy.h>
 #include <proxyclient.h>
-#include <veinpeer.h>
-#include <veinentity.h>
+#include <scpiinfo.h>
+#include <modulevalidator.h>
+#include <doublevalidator.h>
+#include <intvalidator.h>
+#include <stringvalidator.h>
+#include <veinmoduleparameter.h>
+#include <veinmoduleactvalue.h>
 #include <math.h>
 
 #include "debug.h"
 #include "reply.h"
 #include "errormessages.h"
-#include "interfaceentity.h"
 #include "sec1module.h"
 #include "sec1modulemeasprogram.h"
 #include "sec1moduleconfigdata.h"
@@ -21,8 +25,8 @@
 namespace SEC1MODULE
 {
 
-cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSec1ModuleConfigData& configData)
-    :cBaseMeasProgram(proxy, peer), m_pModule(module), m_ConfigData(configData)
+cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, cSec1ModuleConfigData& configData)
+    :cBaseMeasProgram(proxy), m_pModule(module), m_ConfigData(configData)
 {
     // we have to instantiate a working resource manager and secserver interface
     m_pRMInterface = new Zera::Server::cRMInterface();
@@ -209,208 +213,115 @@ void cSec1ModuleMeasProgram::stop()
 void cSec1ModuleMeasProgram::generateInterface()
 {
     QString s;
+    QString key;
 
-    m_pModeEntity = m_pPeer->dataAdd(QString("PAR_Mode")); // here is the actual mode
-    m_pModeEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pModeEntity->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pModeEntity);
+    QString modNr;
+    modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
-    m_pModeListEntity = m_pPeer->dataAdd(QString("INF_ModeList")); // list of possible modes
-    m_pModeListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pModeListEntity->setValue(QStringList(m_ConfigData.m_ModeList ), m_pPeer);
-    m_EntityList.append(m_pModeListEntity);
+    m_pModePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                          key = QString("PAR_Mode"),
+                                          QString("Component for reading and setting the modules mode"),
+                                          QVariant(s = "Unknown"));
+    m_pModePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MODE").arg(modNr), "10", "PAR_Mode", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pModePar; // for modules use
 
-    m_pDutInputEntity = m_pPeer->dataAdd(QString("PAR_DutInput")); // here is the actual dut Input
-    m_pDutInputEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pDutInputEntity->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pDutInputEntity);
+    m_pDutInputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                              key = QString("PAR_DutInput"),
+                                              QString("Component for reading and setting the modules dut input"),
+                                              QVariant(s = "Unknown"));
+    m_pDutInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DUTSOURCE").arg(modNr), "10", "PAR_DutInput", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutInputPar; // for modules use
 
-    m_pDutInputListEntity = m_pPeer->dataAdd(QString("INF_DutInputList")); // list of dut Input sources
-    m_pDutInputListEntity ->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pDutInputListEntity ->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pDutInputListEntity);
+    m_pRefInputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                              key = QString("PAR_RefInput"),
+                                              QString("Component for reading and setting the modules ref input"),
+                                              QVariant(s = "Unknown"));
+    m_pRefInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), "10", "PAR_RefInput", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pRefInputPar; // for modules use
 
-    m_pRefInputEntity = m_pPeer->dataAdd(QString("PAR_RefInput")); // here is the actual ref Input
-    m_pRefInputEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pRefInputEntity->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pRefInputEntity);
+    m_pRefConstantPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("PAR_RefConstant"),
+                                                 QString("Component for reading and setting the modules ref constant"),
+                                                 QVariant((double)0.0));
+    m_pRefConstantPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), "10", "PAR_RefConstant", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pRefConstantPar; // for modules use
+    cDoubleValidator *dValidator;
+    dValidator = new cDoubleValidator(1.0, 1.0e20, 1e-4);
+    m_pRefConstantPar->setValidator(dValidator);
 
-    m_pRefInputListEntity = m_pPeer->dataAdd(QString("INF_RefInputList")); // list of ref Input sources
-    m_pRefInputListEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pRefInputListEntity->setValue(s = "Unknown", m_pPeer);
-    m_EntityList.append(m_pRefInputListEntity);
+    m_pDutConstantPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("PAR_DutConstant"),
+                                                 QString("Component for reading and setting the modules dut constant"),
+                                                 QVariant((double)0.0));
+    m_pDutConstantPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DUTCONSTANT").arg(modNr), "10", "PAR_DutConstant", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutConstantPar; // for modules use
+    dValidator = new cDoubleValidator(1.0, 1.0e20, 1e-5);
+    m_pDutConstantPar->setValidator(dValidator);
 
-    m_pRefConstantEntity = m_pPeer->dataAdd(QString("PAR_RefConstant")); // actual reference constant
-    m_pRefConstantEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pRefConstantEntity->setValue(QVariant((double)0.0), m_pPeer);
-    m_EntityList.append(m_pRefConstantEntity);
+    m_pMRatePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           key = QString("PAR_MRate"),
+                                           QString("Component for reading and setting the modules measuring rate"),
+                                           QVariant((double)0.0));
+    m_pMRatePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MRATE").arg(modNr), "10", "PAR_MRate", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pMRatePar; // for modules use
+    cIntValidator *iValidator;
+    iValidator = new cIntValidator(1, 4294967295, 1);
+    m_pMRatePar->setValidator(iValidator);
 
-    m_pRefConstantLimitsEntity = m_pPeer->dataAdd(QString("INF_RefConstant_LIMITS"));
-    m_pRefConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pRefConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)), m_pPeer);
-    m_EntityList.append(m_pRefConstantLimitsEntity);
+    m_pTargetPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            key = QString("PAR_Target"),
+                                            QString("Component for reading and setting the modules target value"),
+                                            QVariant((double)0.0));
+    m_pTargetPar->setSCPIInfo(new cSCPIInfo("CALCULATE",QString("%1:TARGET").arg(modNr), "10", "PAR_Target", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pTargetPar; // for modules use
+    iValidator = new cIntValidator(1, 4294967295, 1);
+    m_pTargetPar->setValidator(iValidator);
 
-    m_pDutConstantEntity = m_pPeer->dataAdd(QString("PAR_DutConstant")); // actual dut constant
-    m_pDutConstantEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pDutConstantEntity->setValue(QVariant((double)0.0), m_pPeer);
-    m_EntityList.append(m_pDutConstantEntity);
+    m_pEnergyPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            key = QString("PAR_Energy"),
+                                            QString("Component for reading and setting the modules energy value"),
+                                            QVariant((double)0.0));
+    m_pEnergyPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENERGY").arg(modNr), "10", "PAR_Energy", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pEnergyPar; // for modules use
+    dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-5);
+    m_pEnergyPar->setValidator(dValidator);
 
-    m_pDutConstantLimitsEntity = m_pPeer->dataAdd(QString("INF_DutConstant_LIMITS"));
-    m_pDutConstantLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pDutConstantLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1.0).arg(1.0e20)), m_pPeer);
-    m_EntityList.append(m_pDutConstantLimitsEntity);
+    m_pStartStopPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("PAR_STARTSTOP"),
+                                               QString("Component start/stops measurement"),
+                                               QVariant((double)0.0));
+    m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:START").arg(modNr), "10", "PAR_STARTSTOP", "0", ""));
+    m_pModule->veinModuleParameterHash[key] =  m_pStartStopPar; // for modules use
+    iValidator = new cIntValidator(0, 1, 1);
+    m_pStartStopPar->setValidator(iValidator);
 
-    m_pMRateEntity = m_pPeer->dataAdd(QString("PAR_MRate")); // measuring interval in scanning head or ref. meter clock pulses
-    m_pMRateEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pMRateEntity->setValue(QVariant((double)0.0), m_pPeer);
-    m_EntityList.append(m_pMRateEntity);
+    // after configuration we still have to set the string validators
 
-    m_pMRateLimitsEntity = m_pPeer->dataAdd(QString("INF_MRate_LIMITS"));
-    m_pMRateLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pMRateLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)), m_pPeer);
-    m_EntityList.append(m_pMRateLimitsEntity);
+    m_pStatusAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           QString("ACT_Status"),
+                                           QString("Component holds status information"),
+                                           QVariant((int) ECALCSTATUS::IDLE) );
+    m_pModule->veinModuleActvalueList.append(m_pStatusAct); // and for the modules interface
+    m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", "ACT_Status", "0", ""));
 
-    m_pTargetEntity = m_pPeer->dataAdd(QString("PAR_Target")); // target (expected pulses from ref. meter)
-    m_pTargetEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pTargetEntity->setValue(QVariant((double)0.0), m_pPeer);
-    m_EntityList.append(m_pTargetEntity);
+    m_pProgressAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                             QString("ACT_Progress"),
+                                             QString("Component holds progress information"),
+                                             QVariant((double) 0.0));
+    m_pModule->veinModuleActvalueList.append(m_pProgressAct); // and for the modules interface
+    m_pProgressAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", "ACT_Progress", "0", ""));
 
-    m_pTargetLimitsEntity = m_pPeer->dataAdd(QString("INF_Target_LIMITS"));
-    m_pTargetLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pTargetLimitsEntity->setValue(QVariant(QString("%1;%2").arg(1).arg(4294967295)), m_pPeer);
-    m_EntityList.append(m_pTargetLimitsEntity);
-
-    m_pEnergyEntity = m_pPeer->dataAdd(QString("PAR_Energy")); // measuring interval by energy
-    m_pEnergyEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pEnergyEntity->setValue(QVariant((double)0.0), m_pPeer);
-    m_EntityList.append(m_pEnergyEntity);
-
-    m_pEnergyLimitsEntity = m_pPeer->dataAdd(QString("INF_Energy_LIMITS"));
-    m_pEnergyLimitsEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pEnergyLimitsEntity->setValue(QVariant(QString("%1;%2").arg(0.0).arg(1.0e7)), m_pPeer);
-    m_EntityList.append(m_pEnergyLimitsEntity);
-
-    m_pStatusNameEntity = m_pPeer->dataAdd("TRA_Status");
-    m_pStatusNameEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pStatusNameEntity->setValue(QString("STAT,[]"), m_pPeer);
-    m_EntityList.append(m_pStatusNameEntity);
-
-    m_pStatusEntity = m_pPeer->dataAdd("ACT_Status");
-    m_pStatusEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pStatusEntity->setValue(QVariant((int) ECALCSTATUS::IDLE), m_pPeer);
-    m_EntityList.append(m_pStatusEntity);
-
-    m_pProgressNameEntity = m_pPeer->dataAdd("TRA_Progress");
-    m_pProgressNameEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pProgressNameEntity->setValue(QString("PROGRESS,[%]"), m_pPeer);
-    m_EntityList.append(m_pProgressNameEntity);
-
-    m_pProgressEntity = m_pPeer->dataAdd("ACT_Progress");
-    m_pProgressEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pProgressEntity->setValue(QVariant((double) 0.0), m_pPeer);
-    m_EntityList.append(m_pProgressEntity);
-
-    m_pResultNameEntity = m_pPeer->dataAdd("TRA_Result");
-    m_pResultNameEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pResultNameEntity->setValue(QString("ERROR,[%]"), m_pPeer);
-    m_EntityList.append(m_pResultNameEntity);
-
-    m_pResultEntity = m_pPeer->dataAdd("ACT_Result");
-    m_pResultEntity->modifiersAdd(VeinEntity::MOD_READONLY);
-    m_pResultEntity->setValue(QVariant((double)99.99), m_pPeer);
-    m_EntityList.append(m_pResultEntity);
-
-    m_pStartStopNameEntity = m_pPeer->dataAdd("TRA_STARTSTOP");
-    m_pStartStopNameEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pStartStopNameEntity->setValue(QString("START,[]"), m_pPeer);
-    m_EntityList.append(m_pStartStopNameEntity);
-
-    m_pStartStopEntity = m_pPeer->dataAdd("PAR_STARTSTOP");
-    m_pStartStopEntity->modifiersAdd(VeinEntity::MOD_NOECHO);
-    m_pStartStopEntity->setValue(QVariant((int)0), m_pPeer);
-    m_EntityList.append(m_pStartStopEntity);
+    m_pResultAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           QString("ACT_Result"),
+                                           QString("Component holds the result of last measurement"),
+                                           QVariant((double) 0.0));
+    m_pModule->veinModuleActvalueList.append(m_pResultAct); // and for the modules interface
+    m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", "ACT_Result", "0", ""));
 }
 
 
 void cSec1ModuleMeasProgram::deleteInterface()
 {
-    for (int i = 0; i < m_EntityList.count(); i++)
-        m_pPeer->dataRemove(m_EntityList.at(i));
-}
-
-
-void cSec1ModuleMeasProgram::exportInterface(QJsonArray & jsArr)
-{
-    cInterfaceEntity ifaceEntity;
-
-    ifaceEntity.setSCPIModel(QString("CALCULATE"));
-    ifaceEntity.setSCPIType(QString("10")); // command + query
-    ifaceEntity.setUnit(QString("")); // no unit
-    ifaceEntity.setAddParents(QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0')));
-
-    // first we export all parameter
-    ifaceEntity.setName(m_pStartStopEntity->getName());
-    ifaceEntity.setDescription(QString("Writing this entity start/stops measurement"));
-    ifaceEntity.setSCPICmdnode(QString("START"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pModeEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the modules mode"));
-    ifaceEntity.setSCPICmdnode(QString("MODE"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pDutInputEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the signal source of device under test"));
-    ifaceEntity.setSCPICmdnode(QString("DUTSOURCE"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pRefInputEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the signal source of reference device"));
-    ifaceEntity.setSCPICmdnode(QString("REFSOURCE"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pMRateEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the measuring rate"));
-    ifaceEntity.setSCPICmdnode(QString("MRATE"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pTargetEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the target value"));
-    ifaceEntity.setSCPICmdnode(QString("TARGET"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pEnergyEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the energy value"));
-    ifaceEntity.setSCPICmdnode(QString("ENERGY"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pDutConstantEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the device under test constant"));
-    ifaceEntity.setUnit(QString("1/kxh"));
-    ifaceEntity.setSCPICmdnode(QString("DUTCONSTANT"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName(m_pRefConstantEntity->getName());
-    ifaceEntity.setDescription(QString("This entity holds the reference device constant"));
-    ifaceEntity.setSCPICmdnode(QString("REFCONSTANT"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName((m_pStatusEntity->getName()));
-    ifaceEntity.setSCPIType(QString("2")); // query
-    ifaceEntity.setDescription(QString("This entity holds status information"));
-    ifaceEntity.setSCPICmdnode(QString("STATUS"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName((m_pProgressEntity->getName()));
-    ifaceEntity.setDescription(QString("This entity holds progress information"));
-    ifaceEntity.setSCPICmdnode(QString("PROGRESS"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
-    ifaceEntity.setName((m_pResultEntity->getName()));
-    ifaceEntity.setDescription(QString("This entity holds the result of last measurement"));
-    ifaceEntity.setSCPICmdnode(QString("RESULT"));
-    ifaceEntity.appendInterfaceEntity(jsArr);
-
 }
 
 
@@ -620,7 +531,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     else
                         m_fProgress = 0.0;
 
-                    m_pProgressEntity->setValue(QVariant(m_fProgress), m_pPeer);
+                    m_pProgressAct->setValue(QVariant(m_fProgress));
                 }
                 else
                 {
@@ -641,7 +552,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                 {
                     m_nStatus = answer.toUInt(&ok) & 7;
-                    m_pStatusEntity->setValue(QVariant(m_nStatus), m_pPeer);
+                    m_pStatusAct->setValue(QVariant(m_nStatus));
                 }
                 else
                 {
@@ -793,7 +704,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     double constant;
                     constant = answer.toDouble(&ok);
-                    m_pRefConstantEntity->setValue(QVariant(constant), m_pPeer);
+                    m_pRefConstantPar->setValue(QVariant(constant));
                 }
                 else
                 {
@@ -857,22 +768,32 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 }
 
 
-void cSec1ModuleMeasProgram::setInterfaceEntities()
+void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pModeEntity->setValue(QVariant(m_ConfigData.m_sMode.m_sPar), m_pPeer);
+    m_pModePar->setValue(QVariant(m_ConfigData.m_sMode.m_sPar));
 
     cmpDependencies(); // dependant on mode we calculate parameters by ourself
 
-    m_pDutInputEntity->setValue(QVariant(mDUTSecInputInfoHash[m_ConfigData.m_sDutInput.m_sPar]->alias), m_pPeer);
-    m_pRefInputEntity->setValue(QVariant(mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias), m_pPeer);
-    m_pDutConstantEntity->setValue(QVariant(m_ConfigData.m_fDutConstant.m_fPar), m_pPeer);
-    m_pRefConstantEntity->setValue(QVariant(m_ConfigData.m_fRefConstant.m_fPar), m_pPeer);
-    m_pMRateEntity->setValue(QVariant(m_ConfigData.m_nMRate.m_nPar), m_pPeer);
-    m_pTargetEntity->setValue(QVariant(m_ConfigData.m_nTarget.m_nPar), m_pPeer);
-    m_pEnergyEntity->setValue(QVariant(m_ConfigData.m_fEnergy.m_fPar), m_pPeer);
-    m_pProgressEntity->setValue(QVariant(double(0.0)), m_pPeer);
-    m_pDutInputListEntity->setValue(QVariant(m_DUTAliasList), m_pPeer);
-    m_pRefInputListEntity->setValue(QVariant(m_REFAliasList), m_pPeer);
+    m_pDutInputPar->setValue(QVariant(mDUTSecInputInfoHash[m_ConfigData.m_sDutInput.m_sPar]->alias));
+    m_pRefInputPar->setValue(QVariant(mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias));
+    m_pDutConstantPar->setValue(QVariant(m_ConfigData.m_fDutConstant.m_fPar));
+    m_pRefConstantPar->setValue(QVariant(m_ConfigData.m_fRefConstant.m_fPar));
+    m_pMRatePar->setValue(QVariant(m_ConfigData.m_nMRate.m_nPar));
+    m_pTargetPar->setValue(QVariant(m_ConfigData.m_nTarget.m_nPar));
+    m_pEnergyPar->setValue(QVariant(m_ConfigData.m_fEnergy.m_fPar));
+    m_pProgressAct->setValue(QVariant(double(0.0)));
+}
+
+
+void cSec1ModuleMeasProgram::setValidators()
+{
+    cStringValidator *sValidator;
+
+    sValidator = new cStringValidator(m_DUTAliasList);
+    m_pDutInputPar->setValidator(sValidator);
+
+    sValidator = new cStringValidator(m_REFAliasList);
+    m_pRefInputPar->setValidator(sValidator);
 }
 
 
@@ -884,8 +805,8 @@ void cSec1ModuleMeasProgram::handleChangedREFConst()
     {
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
         m_nStatus = ECALCSTATUS::ABORT;
-        m_pStatusEntity->setValue(QVariant(m_nStatus),m_pPeer);
-        m_pStartStopEntity->setValue(QVariant(0), m_pPeer);
+        m_pStatusAct->setValue(QVariant(m_nStatus));
+        m_pStartStopPar->setValue(QVariant(0));
         m_ActualizeTimer.stop();
     }
 }
@@ -1203,17 +1124,18 @@ void cSec1ModuleMeasProgram::activationDone()
 
     m_bActive = true;
     connect(&m_ActualizeTimer, SIGNAL(timeout()), this, SLOT(Actualize()));
-    connect(m_pStartStopEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
-    connect(m_pModeEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
-    connect(m_pDutConstantEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstant(QVariant)));
-    connect(m_pRefConstantEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefConstant(QVariant)));
-    connect(m_pDutInputEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutInput(QVariant)));
-    connect(m_pRefInputEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefInput(QVariant)));
-    connect(m_pMRateEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMRate(QVariant)));
-    connect(m_pTargetEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newTarget(QVariant)));
-    connect(m_pEnergyEntity, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newEnergy(QVariant)));
+    connect(m_pStartStopPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
+    connect(m_pModePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
+    connect(m_pDutConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstant(QVariant)));
+    connect(m_pRefConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefConstant(QVariant)));
+    connect(m_pDutInputPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutInput(QVariant)));
+    connect(m_pRefInputPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefInput(QVariant)));
+    connect(m_pMRatePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMRate(QVariant)));
+    connect(m_pTargetPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newTarget(QVariant)));
+    connect(m_pEnergyPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newEnergy(QVariant)));
 
-    setInterfaceEntities(); // actualize interface entities
+    setInterfaceComponents(); // actualize interface components
+    setValidators();
 
     emit activated();
 }
@@ -1240,15 +1162,15 @@ void cSec1ModuleMeasProgram::deactivationDone()
     disconnect(m_pSECInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
 
-    disconnect(m_pStartStopEntity, 0, this, 0);
-    disconnect(m_pModeEntity, 0, this, 0);
-    disconnect(m_pDutConstantEntity, 0, this, 0);
-    disconnect(m_pRefConstantEntity, 0, this, 0);
-    disconnect(m_pDutInputEntity, 0, this, 0);
-    disconnect(m_pRefInputEntity, 0, this, 0);
-    disconnect(m_pMRateEntity, 0, this, 0);
-    disconnect(m_pTargetEntity, 0, this, 0);
-    disconnect(m_pEnergyEntity, 0, this, 0);
+    disconnect(m_pStartStopPar, 0, this, 0);
+    disconnect(m_pModePar, 0, this, 0);
+    disconnect(m_pDutConstantPar, 0, this, 0);
+    disconnect(m_pRefConstantPar, 0, this, 0);
+    disconnect(m_pDutInputPar, 0, this, 0);
+    disconnect(m_pRefInputPar, 0, this, 0);
+    disconnect(m_pMRatePar, 0, this, 0);
+    disconnect(m_pTargetPar, 0, this, 0);
+    disconnect(m_pEnergyPar, 0, this, 0);
 
     emit deactivated();
 }
@@ -1262,20 +1184,20 @@ void cSec1ModuleMeasProgram::setSync()
 
 void cSec1ModuleMeasProgram::setMeaspulses()
 {
-    m_nMTCNTStart = m_pMRateEntity->getValue().toLongLong();
+    m_nMTCNTStart = m_pMRatePar->getValue().toLongLong();
     m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nMTCNTStart)] = setmeaspulses;
 }
 
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, mDUTSecInputSelectionHash[m_pDutInputEntity->getValue().toString()]->name)] = setmastermux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, mDUTSecInputSelectionHash[m_pDutInputPar->getValue().toString()]->name)] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, mREFSecInputSelectionHash[m_pRefInputEntity->getValue().toString()]->name)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, mREFSecInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
 
 }
 
@@ -1337,10 +1259,10 @@ void cSec1ModuleMeasProgram::setECResult()
     m_nStatus = ECALCSTATUS::READY;
     m_fProgress = 100.0;
     m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nMTCNTfin) * 100.0 / m_nTargetValue;
-    m_pStatusEntity->setValue(QVariant(m_nStatus),m_pPeer);
-    m_pProgressEntity->setValue(QVariant(m_fProgress), m_pPeer);
-    m_pResultEntity->setValue(QVariant(m_fResult), m_pPeer);
-    m_pStartStopEntity->setValue(QVariant(0), m_pPeer); // restart enable
+    m_pStatusAct->setValue(QVariant(m_nStatus));
+    m_pProgressAct->setValue(QVariant(m_fProgress));
+    m_pResultAct->setValue(QVariant(m_fResult));
+    m_pStartStopPar->setValue(QVariant(0)); // restart enable
     m_ActualizeTimer.stop();
 }
 
@@ -1364,9 +1286,9 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
     {
         if ((m_nStatus == ECALCSTATUS::ARMED) || (m_nStatus == ECALCSTATUS::STARTED) )
             m_nStatus = ECALCSTATUS::ABORT;
-        m_pStatusEntity->setValue(QVariant(m_nStatus),m_pPeer);
+        m_pStatusAct->setValue(QVariant(m_nStatus));
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
-        m_pStartStopEntity->setValue(QVariant(0), m_pPeer);
+        m_pStartStopPar->setValue(QVariant(0));
         m_ActualizeTimer.stop();
     }
 }
@@ -1375,7 +1297,7 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
 void cSec1ModuleMeasProgram::newMode(QVariant mode)
 {
     m_ConfigData.m_sMode.m_sPar = mode.toString();
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 
@@ -1383,7 +1305,7 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
 {
     bool ok;
     m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 
@@ -1391,21 +1313,21 @@ void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
 {
     bool ok;
     m_ConfigData.m_fRefConstant.m_fPar = refconst.toDouble(&ok);
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 
 void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 {
     m_ConfigData.m_sDutInput.m_sPar = mDUTSecInputSelectionHash[dutinput.toString()]->name;
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 
 void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
     m_ConfigData.m_sRefInput.m_sPar = mREFSecInputSelectionHash[refinput.toString()]->name;
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 
@@ -1413,7 +1335,7 @@ void cSec1ModuleMeasProgram::newMRate(QVariant mrate)
 {
     bool ok;
     m_ConfigData.m_nMRate.m_nPar = mrate.toInt(&ok);
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 
@@ -1421,7 +1343,7 @@ void cSec1ModuleMeasProgram::newTarget(QVariant target)
 {
     bool ok;
     m_ConfigData.m_nTarget.m_nPar = target.toInt(&ok);
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 
@@ -1429,7 +1351,7 @@ void cSec1ModuleMeasProgram::newEnergy(QVariant energy)
 {
     bool ok;
     m_ConfigData.m_fEnergy.m_fPar = energy.toDouble(&ok);
-    setInterfaceEntities();
+    setInterfaceComponents();
 }
 
 

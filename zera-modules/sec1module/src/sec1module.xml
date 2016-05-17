@@ -14,7 +14,7 @@
                 </pcbserver>
                 <secserver>
                     <ip>192.168.7.222</ip>
-                    <port>6309</port>
+                    <port>6305</port>
                 </secserver>
             </ethernet>
         </connectivity>

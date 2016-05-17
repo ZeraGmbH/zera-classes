@@ -21,8 +21,9 @@ namespace Proxy
 }
 }
 
-class VeinPeer;
-class VeinEntity;
+
+class cVeinModuleParameter;
+class cVeinModuleActvalue;
 
 class cDspMeasData;
 class cDspIFace;
@@ -74,7 +75,6 @@ enum sec1moduleCmds
 
 #define irqPCBNotifier 16
 
-class cBaseModule;
 class cSec1Module;
 class cSec1ModuleConfigData;
 
@@ -84,11 +84,10 @@ class cSec1ModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, VeinPeer* peer, cSec1ModuleConfigData& configData);
+    cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, cSec1ModuleConfigData& configData);
     virtual ~cSec1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
-    virtual void exportInterface(QJsonArray &jsArr);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -172,34 +171,22 @@ private:
     cECalcChannelInfo m_MasterEcalculator;
     cECalcChannelInfo m_SlaveEcalculator;
 
-    VeinEntity* m_pModeEntity;
-    VeinEntity* m_pModeListEntity;
-    VeinEntity* m_pDutInputEntity;
-    VeinEntity* m_pDutInputListEntity;
-    VeinEntity* m_pRefInputEntity;
-    VeinEntity* m_pRefInputListEntity;
-    VeinEntity* m_pRefConstantEntity;
-    VeinEntity* m_pRefConstantLimitsEntity;
-    VeinEntity* m_pDutConstantEntity;
-    VeinEntity* m_pDutConstantLimitsEntity;
-    VeinEntity* m_pMRateEntity;
-    VeinEntity* m_pMRateLimitsEntity;
-    VeinEntity* m_pTargetEntity;
-    VeinEntity* m_pTargetLimitsEntity;
-    VeinEntity* m_pEnergyEntity;
-    VeinEntity* m_pEnergyLimitsEntity;
-    VeinEntity* m_pStatusNameEntity;
-    VeinEntity* m_pStatusEntity;
-    VeinEntity* m_pProgressNameEntity;
-    VeinEntity* m_pProgressEntity;
-    VeinEntity* m_pResultNameEntity;
-    VeinEntity* m_pResultEntity;
-    VeinEntity* m_pStartStopNameEntity;
-    VeinEntity* m_pStartStopEntity;
+    cVeinModuleParameter* m_pModePar;
+    cVeinModuleParameter* m_pDutInputPar;
+    cVeinModuleParameter* m_pRefInputPar;
+    cVeinModuleParameter* m_pRefConstantPar;
+    cVeinModuleParameter* m_pDutConstantPar;
+    cVeinModuleParameter* m_pMRatePar;
+    cVeinModuleParameter* m_pTargetPar;
+    cVeinModuleParameter* m_pEnergyPar;
+    cVeinModuleParameter* m_pStartStopPar;
+    cVeinModuleActvalue* m_pStatusAct;
+    cVeinModuleActvalue* m_pProgressAct;
+    cVeinModuleActvalue* m_pResultAct;
 
-    QList<VeinEntity*> m_EntityList;
+    void setInterfaceComponents();
+    void setValidators();
 
-    void setInterfaceEntities();
     void handleChangedREFConst();
     void handleSECInterrupt();
     void cmpDependencies();

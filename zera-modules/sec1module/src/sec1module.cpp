@@ -4,26 +4,25 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <proxy.h>
-#include <veinpeer.h>
-#include <veinentity.h>
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmodulemetadata.h>
 
 #include "debug.h"
 #include "sec1module.h"
 #include "sec1moduleconfiguration.h"
 #include "sec1moduleconfigdata.h"
 #include "sec1modulemeasprogram.h"
-#include "moduleerror.h"
 
 
 namespace SEC1MODULE
 {
 
-cSec1Module::cSec1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, VeinPeer* peer, QObject *parent)
-    :cBaseModule(modnr, proxy, peer, new cSec1ModuleConfiguration(), parent)
+cSec1Module::cSec1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cSec1ModuleConfiguration(), parent)
 {
-    m_ModuleActivistList.clear();
-
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
+    m_sModuleDescription = QString("This module povides a configurable error calculator");
     m_sSCPIModuleName = QString(BaseSCPIModuleName);
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
@@ -63,7 +62,7 @@ cSec1Module::~cSec1Module()
 }
 
 
-QByteArray cSec1Module::getConfiguration()
+QByteArray cSec1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
@@ -77,33 +76,21 @@ void cSec1Module::doConfiguration(QByteArray xmlConfigData)
 
 void cSec1Module::setupModule()
 {
+    emit addEventSystem(m_pModuleValidator);
+    cBaseMeasModule::setupModule();
+
     cSec1ModuleConfigData *pConfData;
     pConfData = qobject_cast<cSec1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     // we only have this activist
-    m_pMeasProgram = new cSec1ModuleMeasProgram(this, m_pProxy, m_pPeer, *pConfData);
+    m_pMeasProgram = new cSec1ModuleMeasProgram(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pMeasProgram, SIGNAL(errMsg(QString)), errorMessage, SLOT(appendMsg(QString)));
+    connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
-}
-
-
-void cSec1Module::unsetModule()
-{
-    if (m_ModuleActivistList.count() > 0)
-    {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        {
-            m_ModuleActivistList.at(i)->deleteInterface();
-            delete m_ModuleActivistList.at(i);
-        }
-        m_ModuleActivistList.clear();
-        if (errorMessage) delete errorMessage;
-    }
 }
 
 
@@ -145,29 +132,10 @@ void cSec1Module::activationDone()
 
 void cSec1Module::activationFinished()
 {
-    QJsonObject jsonObj;
+    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
-    jsonObj.insert("ModulName", getModuleName());
-    jsonObj.insert("SCPIModuleName", getSCPIModuleName());
-    jsonObj.insert("VeinPeer", m_pPeer->getName());
-
-    QJsonArray jsonArr;
-    for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        m_ModuleActivistList.at(i)->exportInterface(jsonArr);
-
-    jsonObj.insert("Entities", QJsonValue(jsonArr));
-
-    QJsonDocument jsonDoc;
-    jsonDoc.setObject(jsonObj);
-
-    QByteArray ba;
-    ba = jsonDoc.toBinaryData();
-
-#ifdef DEBUG
-    qDebug() << jsonDoc;
-#endif
-
-    m_pModuleInterfaceEntity->setValue(QVariant(ba), m_pPeer);
+    // now we still have to export the json interface information
+    exportMetaData();
 
     emit activationReady();
 }
