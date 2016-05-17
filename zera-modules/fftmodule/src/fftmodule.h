@@ -34,7 +34,7 @@ class cFftModule : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cFftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cFftModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual ~cFftModule();
     virtual QByteArray getConfiguration() const;
 
