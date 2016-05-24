@@ -55,6 +55,8 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                             {
                                 // otherwise we will convert the command events transaction into notification
                                 t_cEvent->setEventSubtype(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION);
+                                t_cEvent->eventData()->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
+                                t_cEvent->eventData()->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
                             }
 
                         }
