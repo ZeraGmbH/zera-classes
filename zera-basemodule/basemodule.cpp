@@ -399,7 +399,7 @@ void cBaseModule::exportMetaData()
     jsonDoc.setObject(jsonObj);
 
     QByteArray ba;
-    ba = jsonDoc.toBinaryData();
+    ba = jsonDoc.toJson();
 
 #ifdef DEBUG
     qDebug() << jsonDoc.toJson();
