@@ -502,6 +502,8 @@ void cDSPInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
 
         }
     }
+
+    delete message;
 }
 
 

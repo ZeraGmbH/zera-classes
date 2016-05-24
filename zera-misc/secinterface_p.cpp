@@ -197,6 +197,8 @@ void cSECInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
         }
     }
+
+    delete message;
 }
 
 

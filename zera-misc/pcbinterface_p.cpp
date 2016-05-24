@@ -507,6 +507,9 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
         }
     } // hmm ... we have to look what to do otherwise
+
+    delete message;
+
 }
 
 

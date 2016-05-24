@@ -171,6 +171,8 @@ void cRMInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
         }
     }
+
+    delete message;
 }
 
 
