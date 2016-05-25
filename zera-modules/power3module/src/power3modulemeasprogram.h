@@ -117,6 +117,8 @@ private slots:
 
     void deactivateMeas();
     void deactivateMeasDone();
+
+    void setMeasureSignal(int signal);
 };
 
 }

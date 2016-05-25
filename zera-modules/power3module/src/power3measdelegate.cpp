@@ -9,8 +9,8 @@
 namespace  POWER3MODULE
 {
 
-cPower3MeasDelegate::cPower3MeasDelegate(cVeinModuleActvalue *actvalue)
-    :m_pActValue(actvalue)
+cPower3MeasDelegate::cPower3MeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal)
+    :m_pActValue(actvalue), m_bSignal(withSignal)
 {
 }
 
@@ -25,7 +25,11 @@ void cPower3MeasDelegate::actValueInput1(QVariant val)
 void cPower3MeasDelegate::actValueInput2(QVariant val)
 {
     input2 = val.value<QList<double> >();
+    if (m_bSignal)
+        emit measuring(0);
     computeOutput();
+    if (m_bSignal)
+        emit measuring(1);
 }
 
 

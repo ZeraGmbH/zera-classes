@@ -122,7 +122,13 @@ void cPower3ModuleMeasProgram::searchActualValues()
             cPower3MeasDelegate *cPMD;
             cVeinModuleComponentInput *vmci;
 
-            cPMD = new cPower3MeasDelegate(m_ActValueList.at(i));
+            if (i == (m_ConfigData.m_nPowerSystemCount-1))
+            {
+                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i), true);
+                connect(cPMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
+            }
+            else
+                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i));
 
             vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU);
             inputList.append(vmci);
@@ -167,6 +173,12 @@ void cPower3ModuleMeasProgram::deactivateMeasDone()
 }
 
 
+}
+
+
+void POWER3MODULE::cPower3ModuleMeasProgram::setMeasureSignal(int signal)
+{
+    m_pMeasureSignal->setValue(signal);
 }
 
 
