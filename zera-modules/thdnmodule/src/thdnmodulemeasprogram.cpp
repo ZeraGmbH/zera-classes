@@ -655,7 +655,7 @@ void cThdnModuleMeasProgram::setActualValuesNames()
         name = s1 + s2;
 
         m_ActValueList.at(i)->setChannelName(name);
-        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).unit);
+        m_ActValueList.at(i)->setUnit(QString("%"));
     }
 }
 
@@ -666,7 +666,7 @@ void cThdnModuleMeasProgram::setSCPIMeasInfo()
 
     for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", QString("%"));
         m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
