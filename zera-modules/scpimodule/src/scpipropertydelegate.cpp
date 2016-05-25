@@ -19,7 +19,7 @@ cSCPIPropertyDelegate::cSCPIPropertyDelegate(QString cmdParent, QString cmd, qui
     :cSCPIDelegate(cmdParent, cmd, type), m_pModule(scpimodule), m_pSCPICmdInfo(scpicmdinfo)
 {
     QJsonDocument jsonDoc;
-    jsonDoc = QJsonDocument::fromBinaryData(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, QString("INF_ModuleInterface")).toByteArray());
+    jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, QString("INF_ModuleInterface")).toByteArray());
 
     QJsonObject jsonObj;
 

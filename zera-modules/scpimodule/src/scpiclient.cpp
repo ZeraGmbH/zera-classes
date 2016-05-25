@@ -142,7 +142,7 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
                         QJsonObject jsonObj;
                         QString scpiModuleName;
 
-                        jsonDoc = QJsonDocument::fromBinaryData(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+                        jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
 
                         if ( !jsonDoc.isNull() && jsonDoc.isObject() )
                         {

@@ -62,7 +62,7 @@ bool cModuleInterface::setupInterface()
         if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface")))
         {
             QJsonDocument jsonDoc;
-            jsonDoc = QJsonDocument::fromBinaryData(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+            jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
 
             if ( !jsonDoc.isNull() && jsonDoc.isObject() )
             {
