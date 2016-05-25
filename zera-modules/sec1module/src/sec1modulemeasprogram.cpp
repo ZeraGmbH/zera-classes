@@ -789,6 +789,9 @@ void cSec1ModuleMeasProgram::setValidators()
 {
     cStringValidator *sValidator;
 
+    sValidator = new cStringValidator(QStringList(m_ConfigData.m_ModeList));
+    m_pModePar->setValidator(sValidator);
+
     sValidator = new cStringValidator(m_DUTAliasList);
     m_pDutInputPar->setValidator(sValidator);
 
