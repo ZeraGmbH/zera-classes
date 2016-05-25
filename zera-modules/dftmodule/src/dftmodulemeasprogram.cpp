@@ -170,7 +170,7 @@ void cDftModuleMeasProgram::generateInterface()
         if (sl.count() == 1) // in this case we have phase,neutral value
         {
             pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                QString("ACT_DFTPN%1").arg(i+1),
+                                                QString("ACT_DFTPN%1").arg(n+1),
                                                 QString("Component forwards the dft actual value for phase neutral"),
                                                 QVariant(0.0) );
             m_ActValueList.append(pActvalue); // we add the component for our measurement
@@ -183,7 +183,7 @@ void cDftModuleMeasProgram::generateInterface()
 
         {
             pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                QString("ACT_DFTPP%1").arg(i+1),
+                                                QString("ACT_DFTPP%1").arg(p+1),
                                                 QString("Component forwards the dft actual value for phase phase"),
                                                 QVariant(0.0) );
             m_ActValueList.append(pActvalue); // we add the component for our measurement
