@@ -258,14 +258,17 @@ void cRangeObsermatic::rangeObservation()
         }
     }
 
+    disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
+
     if (markOverload)
-        m_pParOverloadOnOff->setValue(QVariant(int(1)));
+        m_pParOverloadOnOff->setValue(QVariant(1));
     else
-        if (m_brangeSet)
-        {
-            m_pParOverloadOnOff->setValue(QVariant(int(0)));
-            m_brangeSet = false;
-        }
+        if (m_brangeSet) // only after manuell setting of range
+            m_pParOverloadOnOff->setValue(QVariant(0));
+
+    m_brangeSet = false;
+
+    connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
 }
 
 
@@ -702,6 +705,8 @@ void cRangeObsermatic::newOverload(QVariant overload)
 {
     bool ok;
 
+    disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
+
     if (overload.toInt(&ok) == 0) // allthough there is a validation for this value we only accept 0 here
     {
         if (m_ConfPar.m_bOverload) // we do something only if configured overload handling
@@ -720,10 +725,11 @@ void cRangeObsermatic::newOverload(QVariant overload)
             setRanges(true);
         }
     }
-    else
-    {   // the user can't set overload ... so we reset it
-        m_pParOverloadOnOff->setValue(QVariant(int(0)));
-    }
+
+    // in each case we reset overload here
+    m_pParOverloadOnOff->setValue(0);
+
+    connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
 }
 
 
