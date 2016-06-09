@@ -173,15 +173,12 @@ void cPower3ModuleMeasProgram::deactivateMeasDone()
 }
 
 
-}
-
-
-void POWER3MODULE::cPower3ModuleMeasProgram::setMeasureSignal(int signal)
+void cPower3ModuleMeasProgram::setMeasureSignal(int signal)
 {
     m_pMeasureSignal->setValue(signal);
 }
 
-
+}
 
 
 

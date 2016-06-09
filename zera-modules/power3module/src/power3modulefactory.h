@@ -16,7 +16,6 @@ namespace Proxy
 }
 }
 
-class VeinPeer;
 
 namespace POWER3MODULE
 {
