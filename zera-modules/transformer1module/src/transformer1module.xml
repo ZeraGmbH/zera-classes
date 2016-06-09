@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<trf1modconfpar>
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+        </connectivity>
+        <measure>
+            <inputentity>1004</inputentity>
+            <system>
+                <n>1</n>
+                <trs1>ACT_DFTPN1,ACT_DFTPN2,TRF1</trs1>
+                <unit>AAAAAA</unit>
+            </system>
+        </measure>
+    </configuration>
+    <parameter>
+        <primclampprim>1.0</primclampprim>
+        <primclampsec>1.0</primclampsec>
+        <secclampprim>1.0</secclampprim>
+        <secclampsec>1.0</secclampsec>
+        <primdut>1.0</primdut>
+        <secdut>1.0</secdut>
+    </parameter>
+</trf1modconfpar>
