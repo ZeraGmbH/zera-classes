@@ -17,7 +17,8 @@ SOURCES += \
     gaussmatrix.cpp \
     crcutils_p.cpp \
     crcutils.cpp \
-    useratan.cpp
+    useratan.cpp \
+    complex.cpp
 
 HEADERS += \
     gaussmatrix.h \
@@ -26,7 +27,8 @@ HEADERS += \
     crcutils.h \
     crcutils_p.h \
     gaussnode.h \
-    useratan.h
+    useratan.h \
+    complex.h
 
 header_files.files = $$HEADERS
 header_files.path = /usr/include/zera-classes/math
