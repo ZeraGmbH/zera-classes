@@ -28,6 +28,7 @@ SUBDIRS     = \
             zera-modules/scpimodule \
             zera-modules/power2module \
             zera-modules/power3module \
+            zera-modules/transformer1module \
             zera-validator
 
 
