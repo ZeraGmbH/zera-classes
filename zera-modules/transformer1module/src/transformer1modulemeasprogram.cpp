@@ -82,7 +82,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
                                             QString("ACT_ERROR%1").arg(i+1),
                                             QString("Component forwards transformer transmission error value"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("TRF%1").arg(i+1));
+        pActvalue->setChannelName(QString("ERR%1").arg(i+1));
         pActvalue->setUnit("");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
@@ -95,7 +95,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
                                             QString("ACT_ANGLE%1").arg(i+1),
                                             QString("Component forwards transformer angle deviation value"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("TRF%1").arg(i+1));
+        pActvalue->setChannelName(QString("ANG%1").arg(i+1));
         pActvalue->setUnit("°");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
@@ -108,7 +108,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
                                             QString("ACT_RATIO%1").arg(i+1),
                                             QString("Component forwards transformer ratio value"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("TRF%1").arg(i+1));
+        pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
