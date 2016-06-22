@@ -96,8 +96,7 @@ private:
     quint32 m_nSRate; // number of samples / signal period
 
     cVeinModuleComponent *m_pMeasureSignal;
-    cVeinModuleParameter* m_pIntegrationTimeParameter;
-    cVeinModuleParameter* m_pIntegrationPeriodParameter;
+    cVeinModuleParameter* m_pIntegrationParameter;
     cVeinModuleMetaData* m_pRMSPNCountInfo;
     cVeinModuleMetaData* m_pRMSPPCountInfo;
 

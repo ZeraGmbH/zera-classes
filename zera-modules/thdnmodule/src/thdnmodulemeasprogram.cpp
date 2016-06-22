@@ -188,11 +188,11 @@ void cThdnModuleMeasProgram::generateInterface()
     m_pModule->veinModuleMetaDataList.append(m_pThdnCountInfo);
 
     m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                           key = QString("PAR_IntegrationTime"),
+                                                           key = QString("PAR_Interval"),
                                                            QString("Component for setting the modules integration time"),
                                                            QVariant(m_ConfigData.m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("sec");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_IntegrationTime", "0", "sec"));
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "sec"));
 
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
 

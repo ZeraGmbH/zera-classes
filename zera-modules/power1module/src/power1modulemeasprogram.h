@@ -134,8 +134,7 @@ private:
 
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pPQSCountInfo; // the number of values we produce
-    cVeinModuleParameter* m_pIntegrationTimeParameter;
-    cVeinModuleParameter* m_pIntegrationPeriodParameter;
+    cVeinModuleParameter* m_pIntegrationParameter;
     cVeinModuleParameter* m_pMeasuringmodeParameter;
     cVeinModuleComponent* m_pMeasureSignal;
 

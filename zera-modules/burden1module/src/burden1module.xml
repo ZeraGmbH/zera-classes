@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<brd1modconfpar>
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+        </connectivity>
+        <measure>
+            <inputentity>1004</inputentity>
+            <system>
+                <n>3</n>
+                <bds1>ACT_DFTPN1,ACT_DFTPN4,BRD1</bds1>
+                <bds2>ACT_DFTPN2,ACT_DFTPN5,BRD2</bds2>
+                <bds3>ACT_DFTPN3,ACT_DFTPN6,BRD3</bds3>
+                <unit>A</unit>
+            </system>
+        </measure>
+    </configuration>
+    <parameter>
+        <nominalrange>1.0</nominalrange>
+        <nominalburden>1.0</nominalburden>
+        <wirelength>1.0</wirelength>
+        <wirecrosssection>1.0</wirecrosssection>
+    </parameter>
+</brd1modconfpar>

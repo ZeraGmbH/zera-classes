@@ -198,30 +198,48 @@ void cRmsModuleMeasProgram::generateInterface()
     m_pRMSPPCountInfo = new cVeinModuleMetaData(QString("RMSPPCount"), QVariant(p));
     m_pModule->veinModuleMetaDataList.append(m_pRMSPPCountInfo);
 
-    m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                           key = QString("PAR_IntegrationTime"),
-                                                           QString("Component for setting the modules integration time"),
-                                                           QVariant(m_ConfigData.m_fMeasIntervalTime.m_fValue));
-    m_pIntegrationTimeParameter->setUnit("sec");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_IntegrationTime", "0", "sec"));
 
-    m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
+    QVariant val;
+    QString s, unit;
+    bool btime;
 
-    cDoubleValidator *dValidator;
-    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
-    m_pIntegrationTimeParameter->setValidator(dValidator);
+    btime = (m_ConfigData.m_sIntegrationMode == "time");
 
-    m_pIntegrationPeriodParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                             key = QString("PAR_IntegrationPeriod"),
-                                                             QString("Component for setting the modules integration period"),
-                                                             QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue));
-    m_pIntegrationPeriodParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", "10", "PAR_IntegrationPeriod", "0", ""));
+    if (btime)
+    {
+        val = QVariant(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        s = QString("Component for setting the modules integration time");
+        unit = QString("sec");
+    }
+    else
+    {
+        val = QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue);
+        s = QString("Component for setting the modules integration period");
+        unit = QString("");
+    }
 
-    m_pModule->veinModuleParameterHash[key] = m_pIntegrationPeriodParameter; // for modules use
+    m_pIntegrationParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                           key = QString("PAR_Interval"),
+                                                           s,
+                                                           val);
+    m_pIntegrationParameter->setUnit(unit);
 
-    cIntValidator *iValidator;
-    iValidator = new cIntValidator(5, 5000, 1);
-    m_pIntegrationPeriodParameter->setValidator(iValidator);
+    if (btime)
+    {
+        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "sec"));
+        cDoubleValidator *dValidator;
+        dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+        m_pIntegrationParameter->setValidator(dValidator);
+    }
+    else
+    {
+        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TPERIOD", "10", "PAR_Interval", "0", ""));
+        cIntValidator *iValidator;
+        iValidator = new cIntValidator(5, 5000, 1);
+        m_pIntegrationParameter->setValidator(iValidator);
+    }
+
+    m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
@@ -938,8 +956,10 @@ void cRmsModuleMeasProgram::activateDSPdone()
     setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
-    connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
-    connect(m_pIntegrationPeriodParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
+    if (m_ConfigData.m_sIntegrationMode == "time")
+        connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    else
+        connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
 
     emit activated();
 }
