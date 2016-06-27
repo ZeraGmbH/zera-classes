@@ -50,7 +50,7 @@ public:
     virtual QByteArray getConfiguration() const;
 
     QHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
-    QHash<QString, cSignalConnectionDelegate*> sConnectDelegateHash;
+    QList<cSignalConnectionDelegate*> sConnectDelegateList;
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
     cSCPIEventSystem* m_pSCPIEventSystem;

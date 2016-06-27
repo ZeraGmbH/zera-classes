@@ -63,16 +63,14 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             entityId = cData->entityId();
 
             // first the handler handles existing signal connections
-            QList<cSignalConnectionDelegate*> sdelegateList;
-            sdelegateList = m_pModule->sConnectDelegateHash.values(cName);
-            int n = sdelegateList.count();
+            int n = m_pModule->sConnectDelegateList.count();
 
             if (n > 0)
             {
                 for (int i = 0; i < n; i++)
                 {
                     cSignalConnectionDelegate* sdelegate;
-                    sdelegate = sdelegateList.at(i);
+                    sdelegate = m_pModule->sConnectDelegateList.at(i);
                     if (sdelegate->EntityId() == entityId)
                     {
                         sdelegate->setStatus(cData->newValue());

@@ -17,6 +17,7 @@ class cIEEE4882;
 class cSCPIModuleConfigData;
 class cStatusBitDescriptor;
 class cStatusBitSignal;
+class cSignalConnectionDelegate;
 
 class cSCPIClient: public QObject
 {
@@ -47,6 +48,8 @@ private:
 
     bool m_bAuthorisation;
     void setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList);
+
+    QList<cSignalConnectionDelegate*> mysConnectDelegateList;
 
 private slots:
     virtual void cmdInput() = 0;
