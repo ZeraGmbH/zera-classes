@@ -4,7 +4,7 @@
 #include "intvalidator.h"
 
 
-cIntValidator::cIntValidator(qint32 min, qint32 max, qint32 delta)
+cIntValidator::cIntValidator(qint64 min, qint64 max, qint64 delta)
     :m_nMin(min), m_nMax(max), m_nDelta(delta)
 {
 }
