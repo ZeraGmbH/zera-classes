@@ -60,6 +60,7 @@ cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int
 
 cReferenceModule::~cReferenceModule()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -247,7 +248,6 @@ void cReferenceModule::deactivationDone()
 
 void cReferenceModule::deactivationFinished()
 {
-    unsetModule();
     emit deactivationReady();
 }
 

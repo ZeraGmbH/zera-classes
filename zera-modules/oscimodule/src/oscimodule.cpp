@@ -63,6 +63,7 @@ cOsciModule::cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId,
 
 cOsciModule::~cOsciModule()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -186,7 +187,6 @@ void cOsciModule::deactivationDone()
 
 void cOsciModule::deactivationFinished()
 {
-    unsetModule();
     emit deactivationReady();
 }
 

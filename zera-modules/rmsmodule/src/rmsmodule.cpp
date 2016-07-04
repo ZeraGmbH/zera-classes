@@ -62,6 +62,7 @@ cRmsModule::cRmsModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, V
 
 cRmsModule::~cRmsModule()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -185,7 +186,6 @@ void cRmsModule::deactivationDone()
 
 void cRmsModule::deactivationFinished()
 {
-    unsetModule();
     emit deactivationReady();
 }
 

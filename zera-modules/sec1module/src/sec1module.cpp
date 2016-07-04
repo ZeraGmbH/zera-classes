@@ -58,6 +58,7 @@ cSec1Module::cSec1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 
 cSec1Module::~cSec1Module()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 

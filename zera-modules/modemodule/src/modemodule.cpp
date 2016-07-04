@@ -54,6 +54,7 @@ cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 
 cModeModule::~cModeModule()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -160,7 +161,6 @@ void cModeModule::deactivationDone()
 
 void cModeModule::deactivationFinished()
 {
-    unsetModule();
     emit deactivationReady();
 }
 

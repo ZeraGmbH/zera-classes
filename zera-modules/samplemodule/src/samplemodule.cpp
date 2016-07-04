@@ -58,6 +58,7 @@ cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entit
 
 cSampleModule::~cSampleModule()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -236,7 +237,6 @@ void cSampleModule::deactivationDone()
 
 void cSampleModule::deactivationFinished()
 {
-    unsetModule();
     emit deactivationReady();
 }
 

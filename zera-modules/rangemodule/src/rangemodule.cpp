@@ -32,6 +32,7 @@ cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityI
 
 cRangeModule::~cRangeModule()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -228,7 +229,6 @@ void cRangeModule::deactivationDone()
 
 void cRangeModule::deactivationFinished()
 {
-    unsetModule();
     emit deactivationReady();
 }
 

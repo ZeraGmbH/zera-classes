@@ -61,6 +61,7 @@ cPower3Module::cPower3Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entit
 
 cPower3Module::~cPower3Module()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -174,7 +175,6 @@ void cPower3Module::deactivationDone()
 
 void cPower3Module::deactivationFinished()
 {
-    unsetModule();
     emit deactivationReady();
 }
 
