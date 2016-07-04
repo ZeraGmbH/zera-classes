@@ -22,6 +22,7 @@ class cVeinModuleComponent: public cMetaData
     Q_OBJECT
 public:
     cVeinModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
+    ~cVeinModuleComponent();
 
     virtual void exportMetaData(QJsonObject &jsObj);
     void setChannelName(QString name); // channel name for json export can be empty
@@ -46,7 +47,7 @@ protected:
     QString m_sChannelName;
     QString m_sChannelUnit;
 
-private:
+protected:
     void sendNotification(VeinComponent::ComponentData::Command vcmd);
 };
 

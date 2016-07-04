@@ -15,6 +15,12 @@ cVeinModuleComponent::cVeinModuleComponent(int entityId, VeinEvent::EventSystem 
 }
 
 
+cVeinModuleComponent::~cVeinModuleComponent()
+{
+    sendNotification(VeinComponent::ComponentData::Command::CCMD_REMOVE);
+}
+
+
 void cVeinModuleComponent::exportMetaData(QJsonObject &jsObj)
 {
     QJsonObject jsonObj;
