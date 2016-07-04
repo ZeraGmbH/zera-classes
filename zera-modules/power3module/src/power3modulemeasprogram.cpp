@@ -119,7 +119,7 @@ void cPower3ModuleMeasProgram::searchActualValues()
         if ( (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU)) &&
              (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputI)) )
         {
-            cPower3MeasDelegate *cPMD;
+            cPower3MeasDelegate* cPMD;
             cVeinModuleComponentInput *vmci;
 
             if (i == (m_ConfigData.m_nPowerSystemCount-1))
@@ -129,6 +129,8 @@ void cPower3ModuleMeasProgram::searchActualValues()
             }
             else
                 cPMD = new cPower3MeasDelegate(m_ActValueList.at(i));
+
+            m_Power3MeasDelegateList.append(cPMD);
 
             vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU);
             inputList.append(vmci);
@@ -163,6 +165,10 @@ void cPower3ModuleMeasProgram::activateDone()
 void cPower3ModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
+
+    for (int i = 0; i < m_Power3MeasDelegateList.count(); i++)
+        delete m_Power3MeasDelegateList.at(i);
+
     emit deactivationContinue();
 }
 

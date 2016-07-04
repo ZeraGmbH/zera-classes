@@ -20,7 +20,7 @@ class cVeinModuleActvalue;
 class cVeinModuleMetaData;
 class cVeinModuleComponent;
 
-class cPower3MeasDelegate;
+
 class QStateMachine;
 class QState;
 class QFinalState;
@@ -74,6 +74,7 @@ enum power3moduleCmds
 
 
 class cPower3ModuleConfigData;
+class cPower3MeasDelegate;
 class cPower3Module;
 
 

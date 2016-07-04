@@ -13,8 +13,8 @@ namespace POWER3MODULE
 
 struct powersystemconfiguration
 {
-    QString m_sInputU; // entity name for voltage input
-    QString m_sInputI; // entity name for current input
+    QString m_sInputU; // component name for voltage input
+    QString m_sInputI; // component name for current input
 };
 
 
