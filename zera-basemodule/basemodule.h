@@ -133,6 +133,7 @@ protected:
     cVeinModuleMetaData *m_pModuleDescription;
     cVeinModuleComponent *m_pModuleErrorComponent; // here we export errors the module encountered
     cVeinModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
+    cVeinModuleComponent *m_pModuleEntityName;
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module

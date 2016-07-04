@@ -269,25 +269,25 @@ void cBaseModule::setupModule()
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
     m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
-    VeinComponent::ComponentData *cData;
+    m_pModuleEntityName = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
+                                                   QString("EntityName"),
+                                                   QString("Component forwards the modules name"),
+                                                   QVariant(m_sModuleName));
 
-    cData = new VeinComponent::ComponentData();
-    cData->setEntityId(m_nEntityId);
-    cData->setCommand(VeinComponent::ComponentData::Command::CCMD_ADD);
-    cData->setComponentName("EntityName");
-    cData->setNewValue(m_sModuleName);
-    tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, cData);
-    m_pModuleEventSystem->sigSendEvent(tmpEvent);
+    veinModuleComponentList.append(m_pModuleEntityName);
 
     m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                        QString("ERR_Message"),
                                                        QString("Component forwards the run time errors"),
                                                        QVariant(QString("")));
+
     veinModuleComponentList.append(m_pModuleErrorComponent);
+
     m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
                                                            QString("Component forwards the modules interface"),
                                                            QByteArray());
+
     veinModuleComponentList.append(m_pModuleInterfaceComponent);
 
     m_pModuleName = new cVeinModuleMetaData(QString("Name"), QVariant(m_sModuleName));
@@ -336,6 +336,12 @@ void cBaseModule::unsetModule()
             delete veinModuleParameterHash[keylist.at(i)];
         veinModuleParameterHash.clear();
     }
+
+    VeinComponent::EntityData *eData = new VeinComponent::EntityData();
+    eData->setCommand(VeinComponent::EntityData::Command::ECMD_REMOVE);
+    eData->setEntityId(m_nEntityId);
+    VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
+    m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
     if (m_ModuleActivistList.count() > 0)
     {
