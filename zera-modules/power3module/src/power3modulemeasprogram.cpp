@@ -51,8 +51,6 @@ cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, cPower
 
 cPower3ModuleMeasProgram::~cPower3ModuleMeasProgram()
 {
-    for (int i = 0; i < m_Power3MeasDelegateList.count(); i++)
-        delete m_Power3MeasDelegateList.at(i);
 }
 
 
