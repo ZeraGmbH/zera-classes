@@ -204,6 +204,8 @@ void cRangeObsermatic::generateInterface()
                                                            QString("INF_OverloadMax"),
                                                            QString("Component signals maximum range overload condition"),
                                                            QVariant(0));
+
+        m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
     }
 
     m_pRangingSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
