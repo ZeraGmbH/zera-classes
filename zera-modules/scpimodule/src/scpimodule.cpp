@@ -38,6 +38,7 @@ cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId,
 
 cSCPIModule::~cSCPIModule()
 {
+    unsetModule();
     delete m_pConfiguration;
 }
 
@@ -76,21 +77,6 @@ void cSCPIModule::setupModule()
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
-}
-
-
-void cSCPIModule::unsetModule()
-{
-    if (m_ModuleActivistList.count() > 0)
-    {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        {
-            m_ModuleActivistList.at(i)->deleteInterface();
-            delete m_ModuleActivistList.at(i);
-        }
-
-        m_ModuleActivistList.clear();
-    }
 }
 
 
