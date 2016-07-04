@@ -247,6 +247,7 @@ void cReferenceModule::deactivationDone()
 
 void cReferenceModule::deactivationFinished()
 {
+    unsetModule();
     emit deactivationReady();
 }
 

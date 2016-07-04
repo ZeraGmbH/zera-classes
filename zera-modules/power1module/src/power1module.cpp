@@ -185,6 +185,7 @@ void cPower1Module::deactivationDone()
 
 void cPower1Module::deactivationFinished()
 {
+    unsetModule();
     emit deactivationReady();
 }
 

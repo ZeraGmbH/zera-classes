@@ -236,6 +236,7 @@ void cSampleModule::deactivationDone()
 
 void cSampleModule::deactivationFinished()
 {
+    unsetModule();
     emit deactivationReady();
 }
 

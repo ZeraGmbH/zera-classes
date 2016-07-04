@@ -160,6 +160,7 @@ void cModeModule::deactivationDone()
 
 void cModeModule::deactivationFinished()
 {
+    unsetModule();
     emit deactivationReady();
 }
 

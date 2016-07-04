@@ -186,6 +186,7 @@ void cDftModule::deactivationDone()
 
 void cDftModule::deactivationFinished()
 {
+    unsetModule();
     emit deactivationReady();
 }
 

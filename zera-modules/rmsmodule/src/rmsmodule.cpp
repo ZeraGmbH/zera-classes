@@ -185,6 +185,7 @@ void cRmsModule::deactivationDone()
 
 void cRmsModule::deactivationFinished()
 {
+    unsetModule();
     emit deactivationReady();
 }
 

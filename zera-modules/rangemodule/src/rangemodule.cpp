@@ -228,6 +228,7 @@ void cRangeModule::deactivationDone()
 
 void cRangeModule::deactivationFinished()
 {
+    unsetModule();
     emit deactivationReady();
 }
 
