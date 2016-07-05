@@ -233,6 +233,8 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
             else
                 cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2));
 
+            m_Transformer1MeasDelegateList.append(cTMD);
+
             vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cTMD, SLOT(actValueInput1(QVariant)));
@@ -266,6 +268,10 @@ void cTransformer1ModuleMeasProgram::activateDone()
 void cTransformer1ModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
+
+    for (int i = 0; i < m_Transformer1MeasDelegateList.count(); i++)
+        delete m_Transformer1MeasDelegateList.at(i);
+
     emit deactivationContinue();
 }
 

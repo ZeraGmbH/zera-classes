@@ -21,7 +21,6 @@ class cVeinModuleMetaData;
 class cVeinModuleComponent;
 class cVeinModuleParameter;
 
-class cTransformer1MeasDelegate;
 class QStateMachine;
 class QState;
 class QFinalState;
@@ -75,6 +74,7 @@ enum transformer1moduleCmds
 
 
 class cTransformer1ModuleConfigData;
+class cTransformer1MeasDelegate;
 class cTransformer1Module;
 
 
