@@ -158,6 +158,8 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 
 cBaseModule::~cBaseModule()
 {
+    unsetModule();
+
     delete m_pStateIDLEIdle;
     delete m_pStateIDLEConfXML;
     delete m_pStateIDLEConfSetup;
@@ -183,28 +185,6 @@ cBaseModule::~cBaseModule()
     delete m_pStateFinished;
 
     delete m_pStateMachine;
-
-    if (veinModuleMetaDataList.count() > 0)
-        for (int i = 0; i < veinModuleMetaDataList.count(); i++)
-            delete veinModuleMetaDataList.at(i);
-
-    if (veinModuleComponentList.count() > 0)
-        for (int i = 0; i < veinModuleComponentList.count(); i++)
-            delete veinModuleComponentList.at(i);
-
-    if (veinModuleActvalueList.count() > 0)
-        for (int i = 0; i < veinModuleActvalueList.count(); i++)
-            delete veinModuleActvalueList.at(i);
-
-    if (scpiCommandList.count() > 0)
-        for (int i = 0; i < scpiCommandList.count(); i++)
-            delete scpiCommandList.at(i);
-
-    QList<QString> keylist;
-    keylist = veinModuleParameterHash.keys();
-    if (keylist.count() > 0)
-        for (int i = 0; i < keylist.count(); i++)
-            delete veinModuleParameterHash[keylist.at(i)];
 }
 
 
