@@ -62,7 +62,6 @@ cThdnModule::cThdnModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 
 cThdnModule::~cThdnModule()
 {
-    unsetModule();
     delete m_pConfiguration;
 }
 

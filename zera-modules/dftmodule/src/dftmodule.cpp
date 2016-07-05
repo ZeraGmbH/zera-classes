@@ -63,7 +63,6 @@ cDftModule::cDftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, V
 
 cDftModule::~cDftModule()
 {
-    unsetModule();
     delete m_pConfiguration;
 }
 

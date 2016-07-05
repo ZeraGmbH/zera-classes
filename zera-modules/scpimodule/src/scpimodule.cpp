@@ -38,7 +38,6 @@ cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId,
 
 cSCPIModule::~cSCPIModule()
 {
-    unsetModule();
     delete m_pConfiguration;
 }
 

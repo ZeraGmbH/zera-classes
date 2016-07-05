@@ -12,22 +12,20 @@
 #include <veinmodulemetadata.h>
 
 #include "debug.h"
-#include "oscimodule.h"
-#include "oscimoduleconfiguration.h"
-#include "oscimoduleconfigdata.h"
-#include "oscimodulemeasprogram.h"
-#include "oscimoduleobservation.h"
-
+#include "efficiency1module.h"
+#include "efficiency1moduleconfiguration.h"
+#include "efficiency1moduleconfigdata.h"
+#include "efficiency1modulemeasprogram.h"
 #include "errormessages.h"
 
-namespace OSCIMODULE
+namespace EFFICIENCY1MODULE
 {
 
-cOsciModule::cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cOsciModuleConfiguration(), parent)
+cEfficiency1Module::cEfficiency1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cEfficiency1ModuleConfiguration(), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
-    m_sModuleDescription = QString("This module measures oscillograms for configured channels");
+    m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
@@ -61,78 +59,73 @@ cOsciModule::cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId,
 }
 
 
-cOsciModule::~cOsciModule()
+cEfficiency1Module::~cEfficiency1Module()
 {
     delete m_pConfiguration;
 }
 
 
-QByteArray cOsciModule::getConfiguration() const
+QByteArray cEfficiency1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
 
 
-
-void cOsciModule::doConfiguration(QByteArray xmlConfigData)
+void cEfficiency1Module::doConfiguration(QByteArray xmlConfigData)
 {
     m_pConfiguration->setConfiguration(xmlConfigData);
 }
 
 
-void cOsciModule::setupModule()
+void cEfficiency1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
+
     cBaseMeasModule::setupModule();
 
-    cOsciModuleConfigData* pConfData;
-    pConfData = qobject_cast<cOsciModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    cEfficiency1ModuleConfigData* pConfData;
+    pConfData = qobject_cast<cEfficiency1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cOsciModuleMeasProgram(this, m_pProxy, *pConfData);
+    m_pMeasProgram = new cEfficiency1ModuleMeasProgram(this, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
-    // and module observation in case we have to react to naming changes
-    m_pOsciModuleObservation = new cOsciModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pOsciModuleObservation);
-    connect(m_pOsciModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pOsciModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pOsciModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    emit addEventSystem(m_pMeasProgram->getEventSystem());
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 }
 
 
-void cOsciModule::startMeas()
+void cEfficiency1Module::startMeas()
 {
     m_pMeasProgram->start();
 }
 
 
-void cOsciModule::stopMeas()
+void cEfficiency1Module::stopMeas()
 {
     m_pMeasProgram->stop();
 }
 
 
-void cOsciModule::activationStart()
+void cEfficiency1Module::activationStart()
 {
     m_nActivationIt = 0; // we start with the first
     emit activationContinue();
 }
 
 
-void cOsciModule::activationExec()
+void cEfficiency1Module::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();
 }
 
 
-void cOsciModule::activationDone()
+void cEfficiency1Module::activationDone()
 {
     m_nActivationIt++;
 
@@ -143,37 +136,31 @@ void cOsciModule::activationDone()
 }
 
 
-void cOsciModule::activationFinished()
+void cEfficiency1Module::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pOsciModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(osciModuleReconfigure()));
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
-    // now we still have to export the json interface information
 
+    // now we still have to export the json interface information
     exportMetaData();
 
     emit activationReady();
 }
 
 
-void cOsciModule::deactivationStart()
+void cEfficiency1Module::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pOsciModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(osciModuleReconfigure()));
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
 
 
-void cOsciModule::deactivationExec()
+void cEfficiency1Module::deactivationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->deactivate();
 }
 
 
-void cOsciModule::deactivationDone()
+void cEfficiency1Module::deactivationDone()
 {
     m_nActivationIt++;
 
@@ -184,13 +171,13 @@ void cOsciModule::deactivationDone()
 }
 
 
-void cOsciModule::deactivationFinished()
+void cEfficiency1Module::deactivationFinished()
 {
     emit deactivationReady();
 }
 
 
-void cOsciModule::osciModuleReconfigure()
+void cEfficiency1Module::efficiency1ModuleReconfigure()
 {
     emit sigConfiguration(); // we configure after our notifier has detected
 }
