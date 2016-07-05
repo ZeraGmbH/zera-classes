@@ -21,7 +21,6 @@ class cVeinModuleMetaData;
 class cVeinModuleComponent;
 class cVeinModuleParameter;
 
-class cBurden1MeasDelegate;
 class QStateMachine;
 class QState;
 class QFinalState;
@@ -75,6 +74,7 @@ enum Burden1moduleCmds
 
 
 class cBurden1ModuleConfigData;
+class cBurden1MeasDelegate;
 class cBurden1Module;
 
 

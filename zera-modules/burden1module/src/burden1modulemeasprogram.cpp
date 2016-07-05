@@ -219,6 +219,8 @@ void cBurden1ModuleMeasProgram::searchActualValues()
             else
                 cBMD = new cBurden1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2), m_ConfigData.m_Unit);
 
+            m_Burden1MeasDelegateList.append(cBMD);
+
             vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cBMD, SLOT(actValueInput1(QVariant)));
@@ -252,6 +254,10 @@ void cBurden1ModuleMeasProgram::activateDone()
 void cBurden1ModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
+
+    for (int i = 0; i < m_Burden1MeasDelegateList.count(); i++)
+        delete m_Burden1MeasDelegateList.at(i);
+
     emit deactivationContinue();
 }
 
