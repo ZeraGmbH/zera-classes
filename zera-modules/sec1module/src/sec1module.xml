@@ -44,12 +44,12 @@
         <measure>
             <dutinput>sh0</dutinput>
             <refinput>fo0</refinput>
-            <mode>energy</mode>
+            <mode>mrate</mode>
             <dutconstant>10000</dutconstant>
             <refconstant>5e+08</refconstant>
             <target>500000</target>
             <energy>0.001</energy>
-            <mrate>500000</mrate>
+            <mrate>10</mrate>
         </measure>
     </parameter>
 </sec1modconfpar>
