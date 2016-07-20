@@ -13,6 +13,7 @@ SUBDIRS     = \
             zera-comm/zera-proxy \
             zera-misc \
             zera-modules/interface \
+            zera-validator \
             zera-basemodule \
             zera-modules/rangemodule \
             zera-modules/rmsmodule \
@@ -29,8 +30,8 @@ SUBDIRS     = \
             zera-modules/power2module \
             zera-modules/power3module \
             zera-modules/transformer1module \
-            zera-modules/burden1module \
-            zera-validator
+            zera-modules/burden1module
+
 
 
 
