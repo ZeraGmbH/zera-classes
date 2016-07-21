@@ -17,7 +17,6 @@ LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
 
 include(../zera-modules.pri)
-include(../../zera-classes.pri)
 
 
 INCLUDEPATH += ../../zera-basemodule \
@@ -58,3 +57,4 @@ OTHER_FILES += \
 RESOURCES += \
     resources.qrc
 
+include(../../zera-classes.pri)

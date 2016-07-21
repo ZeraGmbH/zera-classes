@@ -16,7 +16,6 @@ LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
 
 include(../zera-modules.pri)
-include(../../zera-classes.pri)
 
 INCLUDEPATH += ../interface \
     ../../zera-xml-config/src \
@@ -50,9 +49,9 @@ HEADERS += \
 OTHER_FILES += \
     src/power3module.xml \
     src/power3module.xsd
-    
+
 
 RESOURCES += \
     resources.qrc
 
-
+include(../../zera-classes.pri)

@@ -16,7 +16,6 @@ LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
 
 include(../zera-modules.pri)
-include(../../zera-classes.pri)
 
 INCLUDEPATH += ../interface \
     ../../zera-xml-config/src \
@@ -51,9 +50,9 @@ HEADERS += \
 OTHER_FILES += \
     src/transformer1module.xml \
     src/transformer1module.xsd
-    
+
 
 RESOURCES += \
     resources.qrc
 
-
+include(../../zera-classes.pri)
