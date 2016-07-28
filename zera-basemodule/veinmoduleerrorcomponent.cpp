@@ -18,10 +18,10 @@ cVeinModuleErrorComponent::cVeinModuleErrorComponent(int entityId, VeinEvent::Ev
 void cVeinModuleErrorComponent::setValue(QVariant value)
 {
     QJsonObject jsObj;
-    QString tf = "H:m:s a";
+    QString tf = "yyyy/MM/dd HH:mm:ss";
 
     jsObj.insert("ModuleName", m_sModuleName);
-    jsObj.insert("Time", QDateTime().time().toString(tf));
+    jsObj.insert("Time", QDateTime::currentDateTime().toString(tf));
     jsObj.insert("Error", value.toString());
 
     VeinComponent::ComponentData *cData;
