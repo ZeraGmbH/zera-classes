@@ -71,7 +71,8 @@ HEADERS += \
     basemeasmodule.h \
     debug.h \
     basemoduleeventsystem.h \
-    veinmodulecomponentinput.h
+    veinmodulecomponentinput.h \
+    veinmoduleerrorcomponent.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -95,6 +96,7 @@ SOURCES += \
     veinmoduleactvalue.cpp \
     scpiinfo.cpp \
     basemeasmodule.cpp \
-    basemoduleeventsystem.cpp
+    basemoduleeventsystem.cpp \
+    veinmoduleerrorcomponent.cpp
 
 

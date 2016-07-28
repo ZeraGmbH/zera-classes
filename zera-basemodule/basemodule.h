@@ -36,6 +36,7 @@ enum Status
 
 class cVeinModuleMetaData;
 class cVeinModuleComponent;
+class cVeinModuleErrorComponent;
 class cVeinModuleActvalue;
 class cVeinModuleParameter;
 class cSCPIInfo;
@@ -131,7 +132,7 @@ protected:
 
     cVeinModuleMetaData *m_pModuleName;
     cVeinModuleMetaData *m_pModuleDescription;
-    cVeinModuleComponent *m_pModuleErrorComponent; // here we export errors the module encountered
+    cVeinModuleErrorComponent *m_pModuleErrorComponent; // here we export errors the module encountered
     cVeinModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
     cVeinModuleComponent *m_pModuleEntityName;
 

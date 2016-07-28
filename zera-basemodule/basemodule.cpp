@@ -21,6 +21,7 @@
 #include "veinmodulemetadata.h"
 #include "veinmoduleactvalue.h"
 #include "veinmodulecomponent.h"
+#include "veinmoduleerrorcomponent.h"
 #include "veinmoduleparameter.h"
 #include "scpiinfo.h"
 
@@ -256,12 +257,9 @@ void cBaseModule::setupModule()
 
     veinModuleComponentList.append(m_pModuleEntityName);
 
-    m_pModuleErrorComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
-                                                       QString("ERR_Message"),
-                                                       QString("Component forwards the run time errors"),
-                                                       QVariant(QString("")));
-
-    veinModuleComponentList.append(m_pModuleErrorComponent);
+    m_pModuleErrorComponent = new cVeinModuleErrorComponent(m_nEntityId, m_pModuleEventSystem,
+                                                            QString("Error_Messages"),
+                                                            m_sModuleName);
 
     m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
@@ -280,6 +278,8 @@ void cBaseModule::setupModule()
 
 void cBaseModule::unsetModule()
 {
+    delete m_pModuleErrorComponent;
+
     if (veinModuleMetaDataList.count() > 0)
     {
         for (int i = 0; i < veinModuleMetaDataList.count(); i++)
