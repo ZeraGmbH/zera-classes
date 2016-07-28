@@ -31,7 +31,7 @@ SUBDIRS     = \
             zera-modules/power3module \
             zera-modules/transformer1module \
             zera-modules/burden1module \
-#            zera-modules/efficiency1module \
+            zera-modules/efficiency1module \
             zera-validator
 
 

@@ -705,6 +705,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     double constant;
                     constant = answer.toDouble(&ok);
                     m_pRefConstantPar->setValue(QVariant(constant));
+                    newRefConstant(QVariant(constant));
                 }
                 else
                 {
@@ -1266,6 +1267,7 @@ void cSec1ModuleMeasProgram::setECResult()
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
+    newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
     m_ActualizeTimer.stop();
 }
 

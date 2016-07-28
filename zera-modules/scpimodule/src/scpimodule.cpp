@@ -19,6 +19,7 @@
 #include "scpimoduleconfigdata.h"
 #include "scpiserver.h"
 #include "veinmodulecomponent.h"
+#include "veinmoduleerrorcomponent.h"
 #include "scpieventsystem.h"
 
 

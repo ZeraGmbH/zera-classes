@@ -6,6 +6,7 @@
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>
+#include <veinmoduleerrorcomponent.h>
 #include <veinmodulemetadata.h>
 
 #include "debug.h"
