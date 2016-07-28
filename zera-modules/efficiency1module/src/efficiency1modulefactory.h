@@ -1,5 +1,5 @@
-#ifndef POWER3MODULEFACTORY_H
-#define POWER3MODULEFACTORY_H
+#ifndef EFFICIENCY1MODULEFACTORY_H
+#define EFFICIENCY1MODULEFACTORY_H
 
 #include <QObject>
 #include <QList>
@@ -17,17 +17,17 @@ namespace Proxy
 }
 
 
-namespace POWER3MODULE
+namespace EFFICIENCY1MODULE
 {
 
-class Power3ModuleFactory : public QObject, public MeasurementModuleFactory
+class Efficiency1ModuleFactory : public QObject, public MeasurementModuleFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "power3module.json")
+    Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "efficiency1module.json")
     Q_INTERFACES(MeasurementModuleFactory)
   
 public:
-    Power3ModuleFactory(){}
+    Efficiency1ModuleFactory(){}
     ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     void destroyModule(ZeraModules::VirtualModule *module); //override;
     QList<ZeraModules::VirtualModule *> listModules() const; //override;

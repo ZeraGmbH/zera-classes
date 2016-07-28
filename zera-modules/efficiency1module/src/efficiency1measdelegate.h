@@ -3,9 +3,10 @@
 
 #include <QObject>
 #include <QVariant>
-#include <QList>
+#include <QHash>
 
 class cVeinModuleActvalue;
+class cVeinModuleComponentInput;
 
 namespace EFFICIENCY1MODULE
 {
@@ -17,6 +18,9 @@ class cEfficiency1MeasDelegate : public QObject
 public:
     cEfficiency1MeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal = false);
 
+    void addInputPowerValue(cVeinModuleComponentInput *input);
+    void addOutputPowerValue(cVeinModuleComponentInput *input);
+
 public slots:
     void actValueInput1(QVariant val);
     void actValueInput2(QVariant val);
@@ -27,8 +31,10 @@ signals:
 private:
     cVeinModuleActvalue *m_pActValue;
     bool m_bSignal;
-    QList<double> input1;
-    QList<double> input2;
+    QHash<cVeinModuleComponentInput*, double> input1Hash;
+    QHash<cVeinModuleComponentInput*, double> input2Hash;
+    cVeinModuleComponentInput *lastInput;
+    double m_fEfficiency;
 
     void computeOutput();
 };

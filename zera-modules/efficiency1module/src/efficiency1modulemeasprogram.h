@@ -26,7 +26,7 @@ class QState;
 class QFinalState;
 
 
-namespace POWER3MODULE
+namespace EFFICIENCY1MODULE
 {
 
 enum power3moduleCmds

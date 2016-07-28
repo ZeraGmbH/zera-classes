@@ -1,6 +1,7 @@
 #include <QDebug>
 
 #include <veinmoduleactvalue.h>
+#include <veinmodulecomponentinput.h>
 
 #include "debug.h"
 #include "efficiency1measdelegate.h"
@@ -15,69 +16,74 @@ cEfficiency1MeasDelegate::cEfficiency1MeasDelegate(cVeinModuleActvalue *actvalue
 }
 
 
+void cEfficiency1MeasDelegate::addInputPowerValue(cVeinModuleComponentInput *input)
+{
+    input1Hash[input] = 0.0;
+    lastInput = input;
+    connect(input, SIGNAL(sigValueChanged(QVariant)), this, SLOT(actValueInput1(QVariant)));
+}
+
+
+void cEfficiency1MeasDelegate::addOutputPowerValue(cVeinModuleComponentInput *input)
+{
+    input2Hash[input] = 0.0;
+    lastInput = input;
+    connect(input, SIGNAL(sigValueChanged(QVariant)), this, SLOT(actValueInput1(QVariant)));
+}
+
+
 void cEfficiency1MeasDelegate::actValueInput1(QVariant val)
 {
-    input1 = val.value<QList<double> >();
-    computeOutput();
+    cVeinModuleComponentInput* input = qobject_cast<cVeinModuleComponentInput*>(QObject::sender());
+    input1Hash.remove(input);
+    input1Hash[input] = val.toDouble();
+    if (input == lastInput)
+        computeOutput();
 }
 
 
 void cEfficiency1MeasDelegate::actValueInput2(QVariant val)
 {
-    input2 = val.value<QList<double> >();
-    if (m_bSignal)
-        emit measuring(0);
-    computeOutput();
-    if (m_bSignal)
-        emit measuring(1);
+    cVeinModuleComponentInput* input = qobject_cast<cVeinModuleComponentInput*>(QObject::sender());
+    input2Hash.remove(input);
+    input2Hash[input] = val.toDouble();
+    if (input == lastInput)
+        computeOutput();
 }
 
 
 void cEfficiency1MeasDelegate::computeOutput()
 {
-    QList<double> resultList;
+    if (m_bSignal)
+        emit measuring(0);
 
-    int n = input1.count() < input2.count() ? input1.count() : input2.count();
-    n = n >> 1; // we always compute pairs of values
-    if (n > 0)
-    {
-        for (int i = 0; i < n; i++)
-        {
-            double real1, im1, real2, im2, resultReal, resultIm;
-            // the fft algorithm provides information for sine
-            // for power we are interested in cos .... so we change re and im
-            real1 = input1.at(i*2+1); im1 = input1.at(i*2);
-            real2 = input2.at(i*2+1); im2 = input2.at(i*2);
+    double inputPower;
+    double outputPower;
 
-#ifdef DEBUG
-            if (i==1)
-            {
-                QString ts;
-                ts = QString("Real1: %1 ; Imag1: %2 ; Real2: %3 ; Imag2: %4").arg(real1).arg(im1).arg(real2).arg(im2);
-                qDebug() << ts;
-            }
-#endif
+    QList<double> inputlist;
 
-            // additionally we have to devide by 2.0 because we get the amplitude information
-            // rather then energy information
-            resultReal = ((real1 * real2) + (im1 * im2)) / 2.0;
-            resultIm = -((real1 * im2) - (real2 *im1)) / 2.0;
+    inputlist = input1Hash.values();
+    inputPower = 0.0;
+    for (int i = 0; i < inputlist.count(); i++)
+        inputPower += inputlist.at(i);
 
-            resultList.append(resultReal);
-            resultList.append(resultIm);
-        }
+    inputlist = input2Hash.values();
+    outputPower = 0.0;
+    for (int i = 0; i < inputlist.count(); i++)
+        outputPower += inputlist.at(i);
 
-        QVariant list;
-        list = QVariant::fromValue<QList<double> >(resultList);
-        m_pActValue->setValue(list);
+    m_fEfficiency = outputPower / inputPower;
+
+    m_pActValue->setValue(QVariant(m_fEfficiency));
 
 #ifdef DEBUG
         QString ts;
-        for (int j = 0; j < (resultList.count() >> 1); j++)
-            ts= ts + QString("%1,%2;").arg(resultList.at(j*2)).arg(resultList.at(j*2+1));
+        ts = QString("Efficiency: %1;").arg(m_fEfficiency);
         qDebug() << ts;
 #endif
-    }
+
+    if (m_bSignal)
+        emit measuring(1);
 
 }
 
