@@ -28,13 +28,11 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
         m_subDCChannelList.append(m_pModule->getMeasChannel(m_subdcChannelNameList.at(i)));
 
     // and then set up our state machines
-    m_readAdjustmentStatusState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectState);
     m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readPhaseCorrState);
     m_readPhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readOffsetCorrState);
     m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_setSubDCState);
     m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
-    m_activationMachine.addState(&m_readAdjustmentStatusState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readPhaseCorrState);
@@ -141,15 +139,9 @@ void cAdjustManagement::pcbserverConnect()
     // we set up our pcb server connection
     m_pPCBClient = m_pProxy->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
     m_pPCBInterface->setClient(m_pPCBClient);
-    m_pcbserverConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readAdjustmentStatusState);
+    m_pcbserverConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_dspserverConnectState);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     m_pProxy->startConnection(m_pPCBClient);
-}
-
-
-void cAdjustManagement::readAdjustmentStatus()
-{
-   m_MsgNrCmdList[m_pPCBInterface->getAdjustmentStatus()] = readadjustmentstatus;
 }
 
 
@@ -379,22 +371,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case readadjustmentstatus:
-                if (reply == ack)
-                {
-                    m_nAdjStatus = answer.toInt(&ok);
-                    m_pAdjustmentInfo->setValue(m_nAdjStatus);
-                    emit activationContinue();
-                }
-                else
-                {
-                    emit errMsg((tr(readadjstatusErrMsg)));
-        #ifdef DEBUG
-                    qDebug() << readadjstatusErrMsg;
-        #endif
-                    emit activationError();
-                }
-                break;
             case readgaincorr:
                 if (reply == ack)
                     emit activationContinue();

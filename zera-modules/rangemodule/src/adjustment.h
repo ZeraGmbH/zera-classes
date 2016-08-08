@@ -35,8 +35,6 @@ namespace RANGEMODULE
 
 enum adjustmentCmds
 {
-    readadjustmentstatus,
-
     readgaincorr,
     readphasecorr,
     readoffsetcorr,
@@ -98,7 +96,6 @@ private:
 
     // statemachine for activating gets the following states
     QState m_pcbserverConnectState;
-    QState m_readAdjustmentStatusState;
     QState m_dspserverConnectState;
     QState m_readGainCorrState;
     QState m_readPhaseCorrState;
@@ -134,7 +131,6 @@ private:
 
 private slots:
     void pcbserverConnect();
-    void readAdjustmentStatus();
     void dspserverConnect();
     void readGainCorr();
     void readPhaseCorr();
