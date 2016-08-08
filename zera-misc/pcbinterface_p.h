@@ -45,6 +45,7 @@ enum pcbcommands
     getaliassource,
     getdspchannelsource,
     getadjustmentstatus,
+    getadjustmentchksum,
     getformfactorsource,
     getconstantsource,
     setconstantsource,
@@ -52,6 +53,12 @@ enum pcbcommands
     getaliassschead,
     getaliasfrqinput,
     resourcealiasquery,
+
+    getserverversion,
+    getpcbversion,
+    getfpgaversion,
+    getctrlversion,
+    getserialnumber
 };
 
 
@@ -113,6 +120,14 @@ public:
 
     virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
+
+    // all commands to system interface
+    virtual quint32 readServerVersion();
+    virtual quint32 readPCBVersion();
+    virtual quint32 readFPGAVersion();
+    virtual quint32 readCTRLVersion();
+    virtual quint32 readSerialNr();
+    virtual quint32 getAdjustmentChksum();
 
 
 protected slots:

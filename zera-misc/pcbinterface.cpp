@@ -181,6 +181,48 @@ quint32 cPCBInterface::unregisterNotifiers()
 }
 
 
+quint32 cPCBInterface::readServerVersion()
+{
+    Q_D(cPCBInterface);
+    return d->readServerVersion();
+}
+
+
+quint32 cPCBInterface::readPCBVersion()
+{
+    Q_D(cPCBInterface);
+    return d->readPCBVersion();
+}
+
+
+quint32 cPCBInterface::readFPGAVersion()
+{
+    Q_D(cPCBInterface);
+    return d->readFPGAVersion();
+}
+
+
+quint32 cPCBInterface::readCTRLVersion()
+{
+    Q_D(cPCBInterface);
+    return d->readCTRLVersion();
+}
+
+
+quint32 cPCBInterface::readSerialNr()
+{
+    Q_D(cPCBInterface);
+    return d->readSerialNr();
+}
+
+
+quint32 cPCBInterface::getAdjustmentChksum()
+{
+    Q_D(cPCBInterface);
+    return d->getAdjustmentChksum();
+}
+
+
 quint32 cPCBInterface::getSampleRate()
 {
     Q_D(cPCBInterface);

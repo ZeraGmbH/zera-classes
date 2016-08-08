@@ -389,6 +389,16 @@ quint32 cPCBInterfacePrivate::getAdjustmentStatus()
 }
 
 
+quint32 cPCBInterfacePrivate::getAdjustmentChksum()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ADJ:FLAS:CHKS?"));
+    m_MsgNrCmdList[msgnr] = getadjustmentchksum;
+    return msgnr;
+}
+
 quint32 cPCBInterfacePrivate::resourceAliasQuery(QString resourceType, QString resourceName)
 {
     QString cmd;
@@ -418,6 +428,61 @@ quint32 cPCBInterfacePrivate::unregisterNotifiers()
 
     msgnr = sendCommand(cmd = QString("SERV:UNR;"));
     m_MsgNrCmdList[msgnr] = unregnotifier;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::readServerVersion()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:VERS:SERV?"));
+    m_MsgNrCmdList[msgnr] = getserverversion;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::readPCBVersion()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:VERS:PCB?"));
+    m_MsgNrCmdList[msgnr] = getpcbversion;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::readFPGAVersion()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:VERS:FPGA?"));
+    m_MsgNrCmdList[msgnr] = getfpgaversion;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::readCTRLVersion()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:VERS:FPGA?"));
+    m_MsgNrCmdList[msgnr] = getctrlversion;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::readSerialNr()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:SER?"));
+    m_MsgNrCmdList[msgnr] = getserialnumber;
     return msgnr;
 }
 
@@ -456,6 +521,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case gettype2:
         case getsamplerate:
         case getdspchannelsource:
+        case getadjustmentchksum:
         case getadjustmentstatus:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
@@ -470,6 +536,11 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getaliassschead:
         case getaliasfrqinput:
         case resourcealiasquery:
+        case getserverversion:
+        case getpcbversion:
+        case getfpgaversion:
+        case getctrlversion:
+        case getserialnumber:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
