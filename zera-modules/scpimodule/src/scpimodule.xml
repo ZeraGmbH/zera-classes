@@ -33,7 +33,7 @@
                     </bit2>
                     <bit3>
                         <bit>11</bit>
-                        <module>RNG1</module>
+                        <module>DEV1</module>
                         <component>INF_Adjusted</component>
                     </bit3>
                 </questionable>
