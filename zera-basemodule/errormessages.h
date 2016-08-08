@@ -35,6 +35,11 @@
 #define readmuxchannelErrMsg "PCB muxchannel read failed"
 #define readrefconstantErrMsg "PCB reference constant read failed"
 #define readadjstatusErrMsg "PCB adjustment status read failed"
+#define readadjchksumErrMsg "PCB adjustment chksum read failed"
+#define readPCBServerVersionErrMsg "PCB server version read failed"
+#define readPCBCtrlVersionErrMSG "PCB Controler version read failed"
+#define readPCBFPGAVersionErrMSG "PCB FPGA version read failed"
+#define readPCBSerialNrErrMSG "PCB serial number read failed"
 
 #define readdspgaincorrErrMsg "DSP read gain correction failed"
 #define readdspphasecorrErrMsg "DSP read phase correction failed"
@@ -49,6 +54,8 @@
 #define dataaquisitionErrMsg "DSP data acquisition failed"
 #define writedspmemoryErrMsg "DSP memory write failed"
 #define writesubdcErrMsg "DSP subdc write failed"
+#define readDSPServerVersionErrMsg "DSP server version read failed"
+#define readDSPProgramVersionErrMsg "DSP program version read failed"
 
 #define fetchsececalcunitErrMsg "SEC fetch ecalculator failed"
 #define freesececalcunitErrMsg "SEC free ecalculator failed"
@@ -63,5 +70,7 @@
 #define interfacejsonErrMsg "Interface JSON Document strange"
 #define interfaceETHErrMsg "Ethernet interface listen failed"
 #define interfaceSerialErrMsg "Serial interface not connected"
+
+#define releaseNumberErrMsg "Release number not found"
 
 #endif // ERRORMESSAGES_H
