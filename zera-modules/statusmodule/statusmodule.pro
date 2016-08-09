@@ -16,7 +16,6 @@ LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
 
 include(../zera-modules.pri)
-include(../../zera-classes.pri)
 
 INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
@@ -54,6 +53,4 @@ RESOURCES += \
 DISTFILES += \
     src/statusmodule.xml
 
-
-
-
+include(../../zera-classes.pri)
