@@ -342,6 +342,8 @@ QString cStatusModuleInit::findReleaseNr()
     {
        int start, end;
        QString line;
+
+       file.open(QIODevice::ReadOnly);
        QTextStream stream(&file);
 
        do
@@ -355,6 +357,8 @@ QString cStatusModuleInit::findReleaseNr()
            }
        } while (!line.isNull() && !(releaseNrFound));
      }
+
+    file.close();
 
     if (!releaseNrFound)
         emit errMsg(releaseNumberErrMsg);
