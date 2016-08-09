@@ -340,7 +340,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     {
         val = QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue);
         s = QString("Component for setting the modules integration period");
-        unit = QString("");
+        unit = QString("period");
     }
 
     m_pIntegrationParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
