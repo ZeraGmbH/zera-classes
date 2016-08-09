@@ -44,7 +44,7 @@ HEADERS += \
     src/statusmoduleinit.h
 
 OTHER_FILES += \
-    src/statusmodule.xsd
+    src/statusmodule.xsd \
     src/statusmodule.xml
 
 RESOURCES += \
