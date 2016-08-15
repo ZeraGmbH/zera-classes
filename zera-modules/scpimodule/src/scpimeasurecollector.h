@@ -29,6 +29,8 @@ private:
     quint32 m_nmeasureObjects;
     quint8 m_nStatus;
     QString m_sAnswer;
+    QMetaObject::Connection myStatusConnection;
+    QMetaObject::Connection myAnswerConnection;
 };
 
 }
