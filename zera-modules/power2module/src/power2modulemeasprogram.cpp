@@ -357,7 +357,7 @@ void cPower2ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
 
     m_pIntegrationParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                       key = QString("PAR_IntegrationTime"),
+                                                       key = QString("PAR_Interval"),
                                                        s,
                                                        val);
     m_pIntegrationParameter->setUnit(unit);
