@@ -51,7 +51,7 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
             VeinComponent::ComponentData *cData;
             QVariant oldValue = m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName);
             QVariant newValue = cmd.getParam(0);
-            newValue.convert(oldValue.type());
+            // newValue.convert(oldValue.type());
 
             cData = new VeinComponent::ComponentData();
 
