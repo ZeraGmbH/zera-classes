@@ -215,12 +215,12 @@ void cPllObsermatic::newPllAuto(QVariant pllauto)
 #ifdef DEBUG
         qDebug() << "PLL Automatic on";
 #endif
-        m_ConfPar.m_ObsermaticConfPar.m_bpllAuto = true;
+        m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 1;
         pllAutomatic(); // call once if switched to automatic
     }
     else
     {
-        m_ConfPar.m_ObsermaticConfPar.m_bpllAuto = false;
+        m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 0;
 #ifdef DEBUG
         qDebug() << "PLL Automatic off";
 #endif
