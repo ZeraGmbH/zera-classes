@@ -470,7 +470,7 @@ quint32 cPCBInterfacePrivate::readCTRLVersion()
     QString cmd;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SYST:VERS:FPGA?"));
+    msgnr = sendCommand(cmd = QString("SYST:VERS:CTRL?"));
     m_MsgNrCmdList[msgnr] = getctrlversion;
     return msgnr;
 }
