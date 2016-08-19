@@ -10,7 +10,7 @@ cIntValidator::cIntValidator(qint64 min, qint64 max, qint64 delta)
 }
 
 
-bool cIntValidator::isValidParam(QVariant newValue)
+bool cIntValidator::isValidParam(QVariant &newValue)
 {
     bool ok;
     qint32 value;

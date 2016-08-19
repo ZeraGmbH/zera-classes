@@ -25,7 +25,7 @@ public:
     virtual ~cVeinModuleParameter();
 
     bool hasDeferredNotification();
-    bool isValidParameter(QVariant value);
+    bool isValidParameter(QVariant& value);
 
     virtual void exportMetaData(QJsonObject &jsObj);
     virtual void exportSCPIInfo(QJsonArray &jsArr);

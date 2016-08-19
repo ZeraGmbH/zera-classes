@@ -16,7 +16,7 @@ cStringValidator::cStringValidator(QStringList possibilities)
 }
 
 
-bool cStringValidator::isValidParam(QVariant newValue)
+bool cStringValidator::isValidParam(QVariant& newValue)
 {
     QString s;
 

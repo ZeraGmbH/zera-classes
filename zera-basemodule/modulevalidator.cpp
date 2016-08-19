@@ -43,6 +43,7 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                         // is newValue a valid parameter
                         if (param->isValidParameter(newval))
                         {
+                            cData->setNewValue(newval);
                             param->transaction(newval);
                             if (m_Parameter2ValidateHash[cName]->hasDeferredNotification())
                             {

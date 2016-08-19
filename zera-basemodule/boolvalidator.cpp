@@ -4,15 +4,20 @@
 #include "boolvalidator.h"
 
 
-bool cBoolValidator::isValidParam(QVariant newValue)
+bool cBoolValidator::isValidParam(QVariant& newValue)
 {
    bool ok;
    int onoff;
 
-   if (newValue.type() == QMetaType::Int)
+   onoff = newValue.toInt(&ok);
+
+   if (ok && ((onoff == 0) || (onoff ==1)))
    {
-       onoff = newValue.toInt(&ok);
-       return (ok && ((onoff == 0) || (onoff ==1))); // we only accept 0,1
+       QString s;
+       s = newValue.toString();
+       if ( (s == "true") or (s == "false") )
+               newValue = onoff;
+       return true;
    }
    else
        return false;

@@ -10,7 +10,7 @@ cDoubleValidator::cDoubleValidator(double min, double max, double delta)
 }
 
 
-bool cDoubleValidator::isValidParam(QVariant newValue)
+bool cDoubleValidator::isValidParam(QVariant& newValue)
 {
     bool ok;
     double value;

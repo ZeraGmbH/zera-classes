@@ -8,7 +8,7 @@ class cBoolValidator: public cParamValidator
 public:
     cBoolValidator(){}
 
-    virtual bool isValidParam(QVariant newValue);
+    virtual bool isValidParam(QVariant& newValue);
     virtual void exportMetaData(QJsonObject& jsObj);
 };
 

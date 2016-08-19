@@ -25,7 +25,7 @@ bool cVeinModuleParameter::hasDeferredNotification()
 }
 
 
-bool cVeinModuleParameter::isValidParameter(QVariant value)
+bool cVeinModuleParameter::isValidParameter(QVariant& value)
 {
     if (m_pValidator != 0)
         return m_pValidator->isValidParam(value);
