@@ -13,10 +13,7 @@ bool cBoolValidator::isValidParam(QVariant& newValue)
 
    if (ok && ((onoff == 0) || (onoff ==1)))
    {
-       QString s;
-       s = newValue.toString();
-       if ( (s == "true") or (s == "false") )
-               newValue = onoff;
+       newValue = onoff;
        return true;
    }
    else
