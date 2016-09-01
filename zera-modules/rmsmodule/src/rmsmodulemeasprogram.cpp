@@ -239,8 +239,6 @@ void cRmsModuleMeasProgram::generateInterface()
         m_pIntegrationParameter->setValidator(iValidator);
     }
 
-    connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)),m_pModule, SIGNAL(parameterChanged()));
-
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -1069,7 +1067,9 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
 
-    }
+        emit m_pModule->parameterChanged();
+
+    }  
 }
 
 
@@ -1083,6 +1083,8 @@ void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
                                     .arg(0), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 }
