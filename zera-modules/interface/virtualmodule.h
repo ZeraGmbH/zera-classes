@@ -56,6 +56,7 @@ namespace ZeraModules
     void moduleActivated();
     void moduleDeactivated();
     void addEventSystem(VeinEvent::EventSystem*);
+    void parameterChanged();
 
   protected:
     QStateMachine *m_pStateMachine;
