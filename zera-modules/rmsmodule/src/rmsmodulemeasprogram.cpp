@@ -239,6 +239,8 @@ void cRmsModuleMeasProgram::generateInterface()
         m_pIntegrationParameter->setValidator(iValidator);
     }
 
+    connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)),m_pModule, SIGNAL(parameterChanged()));
+
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
