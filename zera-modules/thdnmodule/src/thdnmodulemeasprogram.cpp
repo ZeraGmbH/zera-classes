@@ -952,6 +952,8 @@ void cThdnModuleMeasProgram::newIntegrationtime(QVariant ti)
                                                                                 .arg(0), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 }

@@ -2284,6 +2284,8 @@ void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -2299,6 +2301,8 @@ void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
                                                         .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -2327,6 +2331,8 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     setActualValuesNames();
+
+    emit m_pModule->parameterChanged();
 }
 
 }

@@ -202,6 +202,8 @@ void cPllObsermatic::newPllChannel(QVariant channel)
         m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
         m_MsgNrCmdList[m_pllMeasChannelHash[m_sNewPllChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -225,6 +227,8 @@ void cPllObsermatic::newPllAuto(QVariant pllauto)
         qDebug() << "PLL Automatic off";
 #endif
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 

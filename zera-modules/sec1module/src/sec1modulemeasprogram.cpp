@@ -1303,6 +1303,8 @@ void cSec1ModuleMeasProgram::newMode(QVariant mode)
 {
     m_ConfigData.m_sMode.m_sPar = mode.toString();
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1311,6 +1313,8 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     bool ok;
     m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1319,6 +1323,8 @@ void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
     bool ok;
     m_ConfigData.m_fRefConstant.m_fPar = refconst.toDouble(&ok);
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1326,6 +1332,8 @@ void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 {
     m_ConfigData.m_sDutInput.m_sPar = mDUTSecInputSelectionHash[dutinput.toString()]->name;
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1333,6 +1341,8 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
     m_ConfigData.m_sRefInput.m_sPar = mREFSecInputSelectionHash[refinput.toString()]->name;
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1341,6 +1351,8 @@ void cSec1ModuleMeasProgram::newMRate(QVariant mrate)
     bool ok;
     m_ConfigData.m_nMRate.m_nPar = mrate.toInt(&ok);
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1349,6 +1361,8 @@ void cSec1ModuleMeasProgram::newTarget(QVariant target)
     bool ok;
     m_ConfigData.m_nTarget.m_nPar = target.toInt(&ok);
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1357,6 +1371,8 @@ void cSec1ModuleMeasProgram::newEnergy(QVariant energy)
     bool ok;
     m_ConfigData.m_fEnergy.m_fPar = energy.toDouble(&ok);
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 

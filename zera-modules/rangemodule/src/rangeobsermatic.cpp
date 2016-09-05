@@ -664,6 +664,8 @@ void cRangeObsermatic::newRange(QVariant range)
 
         // but for sync. purpose we must set components later , after the ranges have been set
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -685,6 +687,8 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
     {
         //qDebug() << "Range Automatic off";
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -700,6 +704,8 @@ void cRangeObsermatic::newGrouping(QVariant rgrouping)
         groupHandling(); // call once if switched to grouphandling
         setRanges();
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 // called when overload is reset

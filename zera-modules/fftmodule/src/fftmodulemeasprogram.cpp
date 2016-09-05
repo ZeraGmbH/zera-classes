@@ -1064,6 +1064,8 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
                                                                                 .arg(0), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1072,6 +1074,8 @@ void cFftModuleMeasProgram::newRefChannel(QVariant chn)
     m_ConfigData.m_RefChannel.m_sPar = chn.toString();
     m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(m_ConfigData.m_RefChannel.m_sPar).dspChannelNr));
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+
+    emit m_pModule->parameterChanged();
 }
 }
 
