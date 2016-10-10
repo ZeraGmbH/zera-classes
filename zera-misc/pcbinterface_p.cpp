@@ -521,7 +521,6 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case gettype2:
         case getsamplerate:
         case getdspchannelsource:
-        case getadjustmentchksum:
         case getadjustmentstatus:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
@@ -541,6 +540,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getfpgaversion:
         case getctrlversion:
         case getserialnumber:
+        case getadjustmentchksum:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
