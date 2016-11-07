@@ -55,7 +55,7 @@ void cBaseModuleEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEve
                 if ( (vmci->m_sName == cName) && (vmci->m_nEntityId == entityId) )
                 {
                     emit vmci->sigValueChanged(cData->newValue());
-                    break;
+                    // break; // we don't break here -> so a module can use an input several times
                 }
             }
         }
