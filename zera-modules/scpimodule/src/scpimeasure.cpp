@@ -118,7 +118,8 @@ void cSCPIMeasure::init()
 
 void cSCPIMeasure::fetch()
 {
-    emit cmdAnswer(m_sAnswer);
+    if (initType == fromRead)
+        emit cmdAnswer(m_sAnswer);
 }
 
 
@@ -131,6 +132,7 @@ void cSCPIMeasure::initDone(const QVariant qvar)
         emit measContinue(); // if we are in statemachine we want to continue;
         break;
     case fromInit:
+        emit measContinue(); // so the statemachine will finish
         emit cmdStatus(SCPI::ack);
     }
 }
