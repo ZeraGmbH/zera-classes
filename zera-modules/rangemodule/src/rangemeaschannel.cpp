@@ -666,6 +666,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             qDebug() << readGainCorrErrMsg;
 #endif
         };
+        emit cmdDone(msgnr);
         break;
 
     case readoffsetcorrection:
@@ -679,6 +680,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 #endif
             emit executionError();
         };
+        emit cmdDone(msgnr);
         break;
 
     case readphasecorrection:
@@ -692,6 +694,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 #endif
             emit executionError();
         };
+        emit cmdDone(msgnr);
         break;
 
     case readmeaschannelstatus:
