@@ -39,7 +39,7 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
     m_activationMachine.addState(&m_readOffsetCorrState);
     m_activationMachine.addState(&m_setSubDCState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_dspserverConnectState);
+    m_activationMachine.setInitialState(&m_pcbserverConnectState);
     connect(&m_pcbserverConnectState, SIGNAL(entered()), SLOT(pcbserverConnect()));
     connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
     connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
