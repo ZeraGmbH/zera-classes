@@ -7,18 +7,19 @@
         <measure>
             <inputentity>1004</inputentity>
             <system>
-                <n>1</n>
-                <trs1>ACT_DFTPN1,ACT_DFTPN2,TRF1</trs1>
+                <n>2</n>
+                <trs1>ACT_DFTPN4,ACT_DFTPN6,TRF1</trs1>
+                <trs2>ACT_DFTPN4,ACT_DFTPN5,TRF2</trs2>
                 <unit>AAAAAA</unit>
             </system>
         </measure>
     </configuration>
     <parameter>
-        <primclampprim>1.0</primclampprim>
-        <primclampsec>1.0</primclampsec>
-        <secclampprim>1.0</secclampprim>
-        <secclampsec>1.0</secclampsec>
-        <primdut>1.0</primdut>
-        <secdut>1.0</secdut>
+        <primclampprim>1</primclampprim>
+        <primclampsec>1</primclampsec>
+        <secclampprim>1</secclampprim>
+        <secclampsec>1</secclampsec>
+        <primdut>1</primdut>
+        <secdut>1</secdut>
     </parameter>
 </trf1modconfpar>

@@ -11,6 +11,7 @@ QT       -= gui
 
 LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
+LIBS +=  -lzeramath
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface

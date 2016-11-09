@@ -57,6 +57,25 @@ void cTransformer1ModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cTransformer1ModuleConfiguration::exportConfiguration()
 {
+    doubleParameter* dPar;
+    dPar = &m_pTransformer1ModulConfigData->primClampPrim;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
+    dPar = &m_pTransformer1ModulConfigData->primClampSec;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
+    dPar = &m_pTransformer1ModulConfigData->secClampPrim;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
+    dPar = &m_pTransformer1ModulConfigData->secClampSec;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
+    dPar = &m_pTransformer1ModulConfigData->dutPrim;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
+    dPar = &m_pTransformer1ModulConfigData->dutSec;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -86,7 +105,7 @@ void cTransformer1ModuleConfiguration::configXMLInfo(QString key)
         case setSystemCount:
         {
             transformersystemconfiguration tsc;
-            tsc.m_sInputPrimaryVector = "ACT_DFTPN1";
+            tsc.m_sInputPrimaryVector = "ACT_DFTPN1"; // some default
             tsc.m_sInputSecondaryVector = "ACT_DFTPN2";
 
             m_pTransformer1ModulConfigData->m_nTransformerSystemCount = m_pXMLReader->getValue(key).toInt(&ok);

@@ -127,6 +127,15 @@ private slots:
     void deactivateMeasDone();
 
     void setMeasureSignal(int signal);
+
+    void newPrimClampPrim(QVariant pcp);
+    void newPrimClampSec(QVariant pcs);
+    void newSecClampPrim(QVariant scp);
+    void newSecClampSec(QVariant scs);
+    void newPrimDut(QVariant pd);
+    void newSecDut(QVariant sd);
+
+    void setParameters();
 };
 
 }
