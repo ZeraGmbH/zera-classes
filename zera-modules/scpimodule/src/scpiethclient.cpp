@@ -46,6 +46,8 @@ void cSCPIEthClient::cmdInput()
 
         if (!m_pSCPIInterface->executeCmd(this, m_sInput))
             emit m_pIEEE4882->AddEventError(CommandError);
+        if (scpiClientInfoHash.count() > 0)
+            break;
     }
 }
 

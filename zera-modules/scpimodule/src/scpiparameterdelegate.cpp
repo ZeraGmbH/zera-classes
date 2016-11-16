@@ -35,12 +35,12 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
     scpiCmdType = getType();
     cSCPICommand cmd = sInput;
 
-    QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
-
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) // test if we got an allowed query
     {
+        QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
         QString answer = m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName).toString();
         emit signalAnswer(answer);
+        disconnect(myConn);
         //client->receiveAnswer(answer);
     }
 
@@ -68,15 +68,20 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
             cSCPIClientInfo *clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId);
             m_pModule->scpiClientInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
+            QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfo(QString,cSCPIClientInfo*)), client, SLOT(addSCPIClientInfo(QString,cSCPIClientInfo*)));
+            emit clientinfoSignal(m_pSCPICmdInfo->componentName, clientinfo);
+            disconnect(myConn);
 
             m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
         }
 
         else
+        {
+            QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), client, SLOT(receiveStatus(quint8)));
             emit signalStatus(SCPI::nak);
+            disconnect(myConn);
             //client->receiveStatus(SCPI::nak);
-
-    disconnect(myConn);
+        }
 
     return true;
 }

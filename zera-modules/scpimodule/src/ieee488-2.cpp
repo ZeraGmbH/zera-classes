@@ -59,8 +59,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         }
         else
             if (cmd.isQuery())
-
-                emit signalAnswer(RegOutput(1));
+                emit signalAnswer(RegOutput(client->operationComplete()));
                 //client->receiveAnswer(RegOutput(1));
             else
                 AddEventError(CommandError);

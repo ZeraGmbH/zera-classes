@@ -49,7 +49,7 @@ public:
     virtual ~cSCPIModule();
     virtual QByteArray getConfiguration() const;
 
-    QHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
+    QMultiHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 

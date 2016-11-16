@@ -2,6 +2,7 @@
 #define SCPICLIENT_H
 
 #include <QObject>
+#include <QHash>
 #include <QList>
 
 class QTcpSocket;
@@ -18,6 +19,7 @@ class cSCPIModuleConfigData;
 class cStatusBitDescriptor;
 class cStatusBitSignal;
 class cSignalConnectionDelegate;
+class cSCPIClientInfo;
 
 class cSCPIClient: public QObject
 {
@@ -29,15 +31,19 @@ public:
 
     void setAuthorisation(bool auth);
     cSCPIStatus* getSCPIStatus(quint8 index);
+    quint8 operationComplete();
     cIEEE4882* getIEEE4882();
 
 public slots:
     void receiveStatus(quint8 stat);
     virtual void receiveAnswer(QString answ) = 0;
+    void addSCPIClientInfo(QString key, cSCPIClientInfo* info);
+    void removeSCPIClientInfo(QString key);
 
 protected:
     cSCPIInterface* m_pSCPIInterface;
     cIEEE4882* m_pIEEE4882;
+    QHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
 
 private:
     cSCPIModule* m_pModule;

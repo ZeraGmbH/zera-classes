@@ -81,14 +81,21 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             // then it looks for parameter values
             if (m_pModule->scpiClientInfoHash.contains(cName))
             {
-                cSCPIClientInfo *clientinfo;
-                clientinfo = m_pModule->scpiClientInfoHash.value(cName);
-                if (clientinfo->entityId() == entityId)
-                {
-                    m_pModule->scpiClientInfoHash.remove(cName); // so sync is done
-                    clientinfo->getClient()->receiveStatus(SCPI::ack);
-                }
+                QList<cSCPIClientInfo*> clientinfolist;
+                clientinfolist = m_pModule->scpiClientInfoHash.values();
 
+                for (int i = 0; i < clientinfolist.count(); i++)
+                {
+                    cSCPIClientInfo* clientinfo;
+                    clientinfo = clientinfolist.at(i);
+                    if (clientinfo->entityId() == entityId)
+                    {
+                        m_pModule->scpiClientInfoHash.remove(cName, clientinfo);
+                        emit clientinfoSignal(cName);
+                        emit status(SCPI::ack);
+                        break;
+                    }
+                }
             }
 
             // then it looks for measurement values
@@ -132,13 +139,21 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                 // error notifications are sent for invalid parameters
                 if (m_pModule->scpiClientInfoHash.contains(cName))
                 {
-                    cSCPIClientInfo *clientinfo;
-                    clientinfo = m_pModule->scpiClientInfoHash.value(cName);
-                    if (clientinfo->entityId() == entityId)
+                    QList<cSCPIClientInfo*> clientinfolist;
+                    clientinfolist = m_pModule->scpiClientInfoHash.values();
+
+                    for (int i = 0; i < clientinfolist.count(); i++)
                     {
-                        t_cEvent->accept(); // we caused the error event due to wrong parameter
-                        m_pModule->scpiClientInfoHash.remove(cName); // command was handled
-                        clientinfo->getClient()->receiveStatus(SCPI::errval);
+                        cSCPIClientInfo* clientinfo;
+                        clientinfo = clientinfolist.at(i);
+                        if (clientinfo->entityId() == entityId)
+                        {
+                            t_cEvent->accept();  // we caused the error event due to wrong parameter
+                            m_pModule->scpiClientInfoHash.remove(cName, clientinfo);
+                            emit clientinfoSignal(cName);
+                            emit status(SCPI::errval);
+                            break;
+                        }
                     }
                 }
             }

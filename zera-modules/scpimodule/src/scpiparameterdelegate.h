@@ -10,6 +10,7 @@ namespace SCPIMODULE
 
 class cSCPIModule;
 class cSCPICmdInfo;
+class cSCPIClientInfo;
 
 class cSCPIParameterDelegate: public cSCPIDelegate
 {
@@ -20,6 +21,9 @@ public:
     virtual ~cSCPIParameterDelegate();
 
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
+
+signals:
+    void clientinfoSignal(QString, cSCPIClientInfo*);
 
 private:
     cSCPIModule* m_pModule;

@@ -22,6 +22,10 @@ public:
     // EventSystem interface
     bool processEvent(QEvent *t_event) override final;
 
+signals:
+    void status(quint8);
+    void clientinfoSignal(QString);
+
 private:
     cSCPIModule* m_pModule;
     virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);

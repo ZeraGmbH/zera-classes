@@ -13,6 +13,7 @@
 #include "scpimoduleconfigdata.h"
 #include "signalconnectiondelegate.h"
 #include "statusbitdescriptor.h"
+#include "scpieventsystem.h"
 
 
 namespace SCPIMODULE
@@ -57,6 +58,9 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList);
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList);
+
+    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(status(quint8)), this, SLOT(receiveStatus(quint8)));
+    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(clientinfo(QString)), this, SLOT(removeSCPIClientInfo(QString)));
 }
 
 
@@ -90,11 +94,32 @@ cSCPIStatus *cSCPIClient::getSCPIStatus(quint8 index)
 }
 
 
+quint8 cSCPIClient::operationComplete()
+{
+    if (scpiClientInfoHash.isEmpty())
+        return 1;
+    else
+        return 0;
+}
+
+
 cIEEE4882 *cSCPIClient::getIEEE4882()
 {
     return m_pIEEE4882;
 }
 
+
+void cSCPIClient::addSCPIClientInfo(QString key, cSCPIClientInfo *info)
+{
+    scpiClientInfoHash.insert(key, info);
+}
+
+
+void cSCPIClient::removeSCPIClientInfo(QString key)
+{
+    scpiClientInfoHash.remove(key);
+    cmdInput();
+}
 
 void cSCPIClient::receiveStatus(quint8 stat)
 {
