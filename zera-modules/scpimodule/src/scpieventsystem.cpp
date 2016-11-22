@@ -91,7 +91,9 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                     if (clientinfo->entityId() == entityId)
                     {
                         m_pModule->scpiClientInfoHash.remove(cName, clientinfo);
+                        QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString)), clientinfo->getClient(), SLOT(removeSCPIClientInfo(QString)), Qt::QueuedConnection);
                         emit clientinfoSignal(cName);
+                        disconnect(myConn);
                         emit status(SCPI::ack);
                         break;
                     }
@@ -150,7 +152,9 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                         {
                             t_cEvent->accept();  // we caused the error event due to wrong parameter
                             m_pModule->scpiClientInfoHash.remove(cName, clientinfo);
+                            QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString)), clientinfo->getClient(), SLOT(removeSCPIClientInfo(QString)), Qt::QueuedConnection);
                             emit clientinfoSignal(cName);
+                            disconnect(myConn);
                             emit status(SCPI::errval);
                             break;
                         }

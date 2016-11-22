@@ -66,9 +66,13 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
             VeinEvent::CommandEvent *event;
             event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
 
+            // we memorize : for component (componentname) the client to set something
             cSCPIClientInfo *clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId);
             m_pModule->scpiClientInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
-            QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfo(QString,cSCPIClientInfo*)), client, SLOT(addSCPIClientInfo(QString,cSCPIClientInfo*)));
+
+            //client->addSCPIClientInfo(m_pSCPICmdInfo->componentName, clientinfo);
+
+            QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString,cSCPIClientInfo*)), client, SLOT(addSCPIClientInfo(QString,cSCPIClientInfo*)));
             emit clientinfoSignal(m_pSCPICmdInfo->componentName, clientinfo);
             disconnect(myConn);
 
