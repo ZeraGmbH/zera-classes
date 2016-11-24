@@ -91,7 +91,11 @@ void cBurden1MeasDelegate::computeOutput()
         m_fActBurden = ((m_fNominalRange * m_fNominalRange) * (ueff + Rwire * ieff)) / ieff;
     }
 
-    m_fActPowerFactor = cos(userAtan(m_fVoltageVector.im(), m_fVoltageVector.re()) - userAtan(m_fCurrentVector.im(), m_fCurrentVector.re()));
+    double deltaW = userAtan(m_fCurrentVector.im(), m_fCurrentVector.re()) - userAtan(m_fVoltageVector.im(), m_fVoltageVector.re());
+    deltaW = deltaW * 3.1415926 / 180.0;
+
+    m_fActPowerFactor = cos(deltaW);
+
     m_fActRelativeBurden = m_fActBurden *100.0 / m_fNominalBurden;
 
     m_pActBurden->setValue(m_fActBurden);

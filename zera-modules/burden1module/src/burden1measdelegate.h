@@ -16,6 +16,7 @@ class cBurden1MeasDelegate : public QObject
     Q_OBJECT
 
 public:
+    cBurden1MeasDelegate(){}
     cBurden1MeasDelegate(cVeinModuleActvalue *actburden, cVeinModuleActvalue *actpowerfactor, cVeinModuleActvalue *actrelburden, QString mode, bool withSignal = false);
 
 public slots:

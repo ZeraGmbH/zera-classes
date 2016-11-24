@@ -125,6 +125,12 @@ private slots:
     void deactivateMeasDone();
 
     void setMeasureSignal(int signal);
+
+    void newNominalRange(QVariant nr);
+    void newNominalBurden(QVariant nb);
+    void newWireLength(QVariant wl);
+    void newWireCrosssection(QVariant wc);
+    void setParameters();
 };
 
 }

@@ -109,7 +109,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
                                             QString("Component forwards Burden ratio value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
-        pActvalue->setUnit("");
+        pActvalue->setUnit("%");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
@@ -117,14 +117,6 @@ void cBurden1ModuleMeasProgram::generateInterface()
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
-
-
-    cVeinModuleParameter* m_pNominalRangeParameter;
-    cVeinModuleParameter* m_pNominalBurdenParameter;
-    cVeinModuleParameter* m_pWireLengthParameter;
-    cVeinModuleParameter* m_pWireCrosssectionParameter;
-
-
 
     m_pNominalRangeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_NominalRange"),
@@ -245,10 +237,16 @@ void cBurden1ModuleMeasProgram::searchActualValues()
 
 void cBurden1ModuleMeasProgram::activateDone()
 {
+    setParameters();
+
+    connect(m_pNominalBurdenParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalBurden(QVariant)));
+    connect(m_pNominalRangeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalRange(QVariant)));
+    connect(m_pWireLengthParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newWireLength(QVariant)));
+    connect(m_pWireCrosssectionParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newWireCrosssection(QVariant)));
+
     m_bActive = true;
     emit activated();
 }
-
 
 
 void cBurden1ModuleMeasProgram::deactivateMeas()
@@ -271,6 +269,60 @@ void cBurden1ModuleMeasProgram::deactivateMeasDone()
 void cBurden1ModuleMeasProgram::setMeasureSignal(int signal)
 {
     m_pMeasureSignal->setValue(signal);
+}
+
+
+void cBurden1ModuleMeasProgram::newNominalRange(QVariant nr)
+{
+    bool ok;
+    m_ConfigData.nominalRange.m_fValue = nr.toFloat(&ok);
+    setParameters();
+
+    emit m_pModule->parameterChanged();
+}
+
+
+void cBurden1ModuleMeasProgram::newNominalBurden(QVariant nb)
+{
+    bool ok;
+    m_ConfigData.nominalBurden.m_fValue = nb.toFloat(&ok);
+    setParameters();
+
+    emit m_pModule->parameterChanged();
+}
+
+
+void cBurden1ModuleMeasProgram::newWireLength(QVariant wl)
+{
+    bool ok;
+    m_ConfigData.wireLength.m_fValue = wl.toFloat(&ok);
+    setParameters();
+
+    emit m_pModule->parameterChanged();
+}
+
+
+void cBurden1ModuleMeasProgram::newWireCrosssection(QVariant wc)
+{
+    bool ok;
+    m_ConfigData.wireCrosssection.m_fValue = wc.toFloat(&ok);
+    setParameters();
+
+    emit m_pModule->parameterChanged();
+}
+
+
+void cBurden1ModuleMeasProgram::setParameters()
+{
+    // we set the parameters here
+    for (int i = 0; i < m_Burden1MeasDelegateList.count(); i++)
+    {
+        cBurden1MeasDelegate* tmd = m_Burden1MeasDelegateList.at(i);
+        tmd->setNominalBurden(m_ConfigData.nominalBurden.m_fValue);
+        tmd->setNominalRange(m_ConfigData.nominalRange.m_fValue);
+        tmd->setWireLength(m_ConfigData.wireLength.m_fValue);
+        tmd->setWireCrosssection(m_ConfigData.wireCrosssection.m_fValue);
+    }
 }
 
 }
