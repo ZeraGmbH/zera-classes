@@ -16,6 +16,7 @@ class cTransformer1MeasDelegate : public QObject
     Q_OBJECT
 
 public:
+    cTransformer1MeasDelegate(){}
     cTransformer1MeasDelegate(cVeinModuleActvalue *acttrfError, cVeinModuleActvalue *acttrfAngleError, cVeinModuleActvalue *acttrfRatio, bool withSignal = false);
 
 public slots:
