@@ -21,11 +21,6 @@ class cVeinModuleMetaData;
 class cVeinModuleComponent;
 class cVeinModuleParameter;
 
-class QStateMachine;
-class QState;
-class QFinalState;
-
-
 namespace BURDEN1MODULE
 {
 

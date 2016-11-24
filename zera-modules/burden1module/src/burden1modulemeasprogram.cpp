@@ -1,5 +1,4 @@
 #include <QString>
-#include <QStateMachine>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QStringList>
@@ -200,8 +199,8 @@ void cBurden1ModuleMeasProgram::searchActualValues()
         if ( (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_BurdenSystemConfigList.at(i).m_sInputVoltageVector)) &&
              (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_BurdenSystemConfigList.at(i).m_sInputCurrentVector)) )
         {
-            cBurden1MeasDelegate *cBMD;
-            cVeinModuleComponentInput *vmci;
+            cBurden1MeasDelegate* cBMD;
+            cVeinModuleComponentInput* vmci;
 
             if (i == (m_ConfigData.m_nBurdenSystemCount-1))
             {
