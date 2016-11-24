@@ -132,21 +132,23 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
         cEfficiency1MeasDelegate* cEMD;
         cVeinModuleComponentInput *vmci;
 
-        cEMD = new cEfficiency1MeasDelegate(m_ActValueList.at(1), true);
+        cEMD = new cEfficiency1MeasDelegate(m_ActValueList.at(0), true);
         connect(cEMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
 
         m_Efficiency1MeasDelegateList.append(cEMD);
 
-        for (int i = 0; i < i < m_ConfigData.m_PowerInputConfiguration.m_nPowerSystemCount; i++)
+        for (int i = 0; i < m_ConfigData.m_PowerInputConfiguration.m_nPowerSystemCount; i++)
         {
             vmci = new cVeinModuleComponentInput(m_ConfigData.m_PowerInputConfiguration.m_nModuleId, m_ConfigData.m_PowerInputConfiguration.powerInputList.at(i));
+            cEMD->addInputPowerValue(vmci);
             vmciList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cEMD, SLOT(actValueInput1(QVariant)));
         }
 
-        for (int i = 0; i < i < m_ConfigData.m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
+        for (int i = 0; i < m_ConfigData.m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
         {
             vmci = new cVeinModuleComponentInput(m_ConfigData.m_PowerOutputConfiguration.m_nModuleId, m_ConfigData.m_PowerOutputConfiguration.powerInputList.at(i));
+            cEMD->addOutputPowerValue(vmci);
             vmciList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cEMD, SLOT(actValueInput2(QVariant)));
         }

@@ -16,6 +16,7 @@ class cEfficiency1MeasDelegate : public QObject
     Q_OBJECT
 
 public:
+    cEfficiency1MeasDelegate(){}
     cEfficiency1MeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal = false);
 
     void addInputPowerValue(cVeinModuleComponentInput *input);

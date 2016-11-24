@@ -78,6 +78,9 @@ void cEfficiency1ModuleConfiguration::configXMLInfo(QString key)
         case setInputModule4InputPower:
             m_pEfficiency1ModulConfigData->m_PowerInputConfiguration.m_nModuleId = m_pXMLReader->getValue(key).toInt(&ok);
             break;
+        case setInputModule4OutputPower:
+            m_pEfficiency1ModulConfigData->m_PowerOutputConfiguration.m_nModuleId = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
         case setInputSystemCount:
         {
             int n;

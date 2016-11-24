@@ -57,14 +57,20 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="connectivity" type="connectivitytype"/>
-                            <xs:element name="powerinput" type="inputtype"/>
-                            <xs:element name="poweroutput" type="inputtype"/>
+                            <xs:element name="measure">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="powerinput" type="inputtype"/>
+                                        <xs:element name="poweroutput" type="inputtype"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
             </xs:sequence>
         </xs:complexType>
     </xs:element>
-	
+
 </xs:schema> 
 

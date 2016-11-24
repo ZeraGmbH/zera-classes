@@ -28,7 +28,7 @@ void cEfficiency1MeasDelegate::addOutputPowerValue(cVeinModuleComponentInput *in
 {
     input2Hash[input] = 0.0;
     lastInput = input;
-    connect(input, SIGNAL(sigValueChanged(QVariant)), this, SLOT(actValueInput1(QVariant)));
+    connect(input, SIGNAL(sigValueChanged(QVariant)), this, SLOT(actValueInput2(QVariant)));
 }
 
 
