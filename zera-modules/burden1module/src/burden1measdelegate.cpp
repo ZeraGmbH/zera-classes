@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <math.h>
 
 #include <veinmoduleactvalue.h>
 #include <useratan.h>
