@@ -44,33 +44,11 @@ void cSCPISerialClient::cmdInput()
 {
     QString addString;
 
+    // first we read all available input and add it to our input fifo
     addString = QString(m_pSerial->readAll().data());
     m_sInputFifo.append(addString);
 
-    if (addString.contains("\n") or (addString.contains("\r"))) // we accept cr or lf
-    {
-        if (addString.contains('\n'))
-            endChar = '\n';
-        else
-            endChar = '\r';
-
-        while (m_sInputFifo.contains(endChar))
-        {
-            int index;
-            QString m_sInput;
-
-            index = m_sInputFifo.indexOf(endChar);
-            m_sInput = m_sInputFifo.left(index);
-            m_sInputFifo.remove(0, index+1);
-#ifdef DEBUG
-            qDebug() << m_sInput;
-#endif
-            if (!m_pSCPIInterface->executeCmd(this, m_sInput))
-                emit m_pIEEE4882->AddEventError(CommandError);
-            if (scpiClientInfoHash.count() > 0)
-                break;
-        }
-    }
+    testCmd();
 }
 
 }

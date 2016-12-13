@@ -29,8 +29,6 @@ public slots:
 
 private:
     QSerialPort* m_pSerial;
-    QString m_sInputFifo;
-    QChar endChar;
 
 private slots:
     virtual void cmdInput();

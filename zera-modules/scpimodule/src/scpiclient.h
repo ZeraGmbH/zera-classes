@@ -45,6 +45,15 @@ protected:
     cIEEE4882* m_pIEEE4882;
     QHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
 
+    QString m_sInputFifo;
+    QString activeCmd;
+    QChar endChar;
+
+    void testCmd();
+    bool cmdAvail();
+    void takeCmd();
+    void execCmd();
+
 private:
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;

@@ -38,17 +38,13 @@ void cSCPIEthClient::cmdInput()
 
     QString m_sInput;
 
-    while ( m_pSocket->canReadLine() )
+    while (m_pSocket->canReadLine())
     {
         m_sInput = m_pSocket->readLine();
-        m_sInput.remove('\n'); // we remove f
-        m_sInput.remove('\r');
-
-        if (!m_pSCPIInterface->executeCmd(this, m_sInput))
-            emit m_pIEEE4882->AddEventError(CommandError);
-        if (scpiClientInfoHash.count() > 0)
-            break;
+        m_sInputFifo.append(m_sInput);
     }
+
+    testCmd();
 }
 
 }

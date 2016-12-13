@@ -24,6 +24,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     :m_pModule(module), m_ConfigData(configdata), m_pSCPIInterface(iface)
 {
     m_bAuthorisation = false;
+    m_sInputFifo = "";
 
     // we instantiate 3 scpi status systems per client
     cSCPIStatus* scpiQuestStatus;
@@ -118,7 +119,75 @@ void cSCPIClient::addSCPIClientInfo(QString key, cSCPIClientInfo *info)
 void cSCPIClient::removeSCPIClientInfo(QString key)
 {
     scpiClientInfoHash.remove(key);
-    cmdInput();
+    execCmd();
+}
+
+
+void cSCPIClient::testCmd()
+{
+    if (cmdAvail())
+    {
+        // if we have complete commands
+        takeCmd(); // we fetch 1 of them
+        execCmd(); // and execute it
+    }
+}
+
+
+bool cSCPIClient::cmdAvail()
+{
+    if (m_sInputFifo.contains("\n"))
+        return true;
+    if (m_sInputFifo.contains("\r"))
+        return true;
+
+    return false;
+}
+
+
+void cSCPIClient::takeCmd()
+{
+    QChar firstChar;
+    int index;
+
+    if (m_sInputFifo.contains('\n'))
+        endChar = '\n';
+    else
+        endChar = '\r';
+
+    index = m_sInputFifo.indexOf(endChar);
+    activeCmd = m_sInputFifo.left(index);
+    activeCmd.remove('\n'); // we don't know which was the first
+    activeCmd.remove('\r');
+
+    m_sInputFifo.remove(0, index+1);
+
+    if (m_sInputFifo.length() > 0)
+    {
+        firstChar = m_sInputFifo.at(0); // maybe there is still 1 end char
+        if ((firstChar == '\n') or (firstChar == '\r'))
+            m_sInputFifo.remove(0,1);
+    }
+}
+
+
+void cSCPIClient::execCmd()
+{
+    QStringList cmdList;
+    QString cmd;
+
+    cmdList = activeCmd.split('|');
+
+    cmd = cmdList.at(0);
+    activeCmd.remove(0, cmd.length());
+    if (activeCmd.length() > 0)
+    {
+        if (activeCmd.at(0) == '|')
+           activeCmd.remove(0,1);
+    }
+
+    if (!m_pSCPIInterface->executeCmd(this, cmd))
+        emit m_pIEEE4882->AddEventError(CommandError);    
 }
 
 void cSCPIClient::receiveStatus(quint8 stat)
