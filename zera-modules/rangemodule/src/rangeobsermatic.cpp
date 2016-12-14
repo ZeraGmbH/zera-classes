@@ -417,6 +417,13 @@ void cRangeObsermatic::setRanges(bool force)
             qDebug() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);
 #endif
         }
+
+        else
+            m_RangeParameterList.at(i)->setValue(QVariant(m_actChannelRangeList.at(i)));
+        // the parameter delegate had memorized that there will be a deferred notification
+        // so we have to give this even in case nothing has changed. otherwise there will
+        // remain pending synch. marks
+
     }
 
     if (change && !m_writeCorrectionDSPMachine.isRunning())
