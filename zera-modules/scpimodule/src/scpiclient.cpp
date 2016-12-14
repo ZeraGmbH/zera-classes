@@ -61,7 +61,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList);
 
     connect(m_pModule->m_pSCPIEventSystem, SIGNAL(status(quint8)), this, SLOT(receiveStatus(quint8)));
-    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(clientinfo(QString)), this, SLOT(removeSCPIClientInfo(QString)));
+//    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(clientinfoSignal(QString)), this, SLOT(removeSCPIClientInfo(QString)));
 }
 
 
@@ -176,18 +176,30 @@ void cSCPIClient::execCmd()
     QStringList cmdList;
     QString cmd;
 
-    cmdList = activeCmd.split('|');
-
-    cmd = cmdList.at(0);
-    activeCmd.remove(0, cmd.length());
-    if (activeCmd.length() > 0)
+    while (true)
     {
-        if (activeCmd.at(0) == '|')
-           activeCmd.remove(0,1);
+        cmdList = activeCmd.split('|');
+
+        cmd = cmdList.at(0);
+        activeCmd.remove(0, cmd.length());
+        if (activeCmd.length() > 0)
+        {
+            if (activeCmd.at(0) == '|')
+               activeCmd.remove(0,1);
+        }
+
+        // we will leave if there is no command anymore
+        if (cmd.length() == 0)
+            break;
+
+        if (!m_pSCPIInterface->executeCmd(this, cmd))
+            emit m_pIEEE4882->AddEventError(CommandError);
+
+        // we leave here if there is any parameter settings pending
+        if (scpiClientInfoHash.count() > 0)
+            break;
     }
 
-    if (!m_pSCPIInterface->executeCmd(this, cmd))
-        emit m_pIEEE4882->AddEventError(CommandError);    
 }
 
 void cSCPIClient::receiveStatus(quint8 stat)
