@@ -125,7 +125,7 @@ void cSCPIClient::removeSCPIClientInfo(QString key)
 
 void cSCPIClient::testCmd()
 {
-    if (cmdAvail())
+    while (cmdAvail())
     {
         // if we have complete commands
         takeCmd(); // we fetch 1 of them
