@@ -14,16 +14,41 @@ namespace SCPIMODULE
 cSCPIMeasure::cSCPIMeasure(cSCPIModule *module, cSCPICmdInfo *scpicmdinfo)
     :m_pModule(module), m_pSCPICmdInfo(scpicmdinfo)
 {
-    m_ConfigureState.addTransition(this, SIGNAL(measContinue()), &m_InitState);
-    m_InitState.addTransition(this, SIGNAL(measContinue()), &m_FetchState);
+    m_bInitPending = false;
 
-    m_MeasureStateMachine.addState(&m_ConfigureState);
-    m_MeasureStateMachine.addState(&m_InitState);
-    m_MeasureStateMachine.addState(&m_FetchState);
+    m_measConfigureState.addTransition(this, SIGNAL(measContinue()), &m_measInitState);
+    m_measInitState.addTransition(this, SIGNAL(measContinue()), &m_measFetchState);
+    m_MeasureStateMachine.addState(&m_measConfigureState);
+    m_MeasureStateMachine.addState(&m_measInitState);
+    m_MeasureStateMachine.addState(&m_measFetchState);
+    connect(&m_measConfigureState, SIGNAL(entered()), SLOT(configure()));
+    connect(&m_measInitState, SIGNAL(entered()), SLOT(init()));
+    connect(&m_measFetchState, SIGNAL(entered()), SLOT(fetch()));
+    m_MeasureStateMachine.setInitialState(&m_measConfigureState);
 
-    connect(&m_ConfigureState, SIGNAL(entered()), SLOT(configure()));
-    connect(&m_InitState, SIGNAL(entered()), SLOT(init()));
-    connect(&m_FetchState, SIGNAL(entered()), SLOT(fetch()));
+
+    m_readInitState.addTransition(this, SIGNAL(measContinue()), &m_readFetchState);
+    m_ReadStateMachine.addState(&m_readInitState);
+    m_ReadStateMachine.addState(&m_readFetchState);
+    connect(&m_readInitState, SIGNAL(entered()), SLOT(init()));
+    connect(&m_readFetchState, SIGNAL(entered()), SLOT(fetch()));
+    m_ReadStateMachine.setInitialState(&m_readInitState);
+
+
+    m_initInitState.addTransition(this, SIGNAL(measContinue()), &m_initRdyState);
+    m_InitStateMachine.addState(&m_initInitState);
+    m_InitStateMachine.addState(&m_initRdyState);
+    connect(&m_initInitState, SIGNAL(entered()), SLOT(init()));
+    m_InitStateMachine.setInitialState(&m_initInitState);
+
+
+    m_fetchWaitInitState.addTransition(this, SIGNAL(measContinue()), &m_fetchFetchState);
+    m_FetchStateMachine.addState(&m_fetchWaitInitState);
+    m_FetchStateMachine.addState(&m_fetchFetchState);
+    connect(&m_fetchWaitInitState, SIGNAL(entered()), SLOT(waitInit()));
+    connect(&m_fetchFetchState, SIGNAL(entered()), SLOT(fetch()));
+    m_FetchStateMachine.setInitialState(&m_fetchWaitInitState);
+
 }
 
 
@@ -38,8 +63,6 @@ void cSCPIMeasure::execute(quint8 cmd)
     switch (cmd)
     {
     case SCPIModelType::measure:
-        initType = fromRead; // same as only from read because we have to output in this case
-        m_MeasureStateMachine.setInitialState(&m_ConfigureState);
         m_MeasureStateMachine.start();
         break;
 
@@ -49,19 +72,15 @@ void cSCPIMeasure::execute(quint8 cmd)
         break;
 
     case SCPIModelType::read:
-        initType = fromRead;
-        m_MeasureStateMachine.setInitialState(&m_InitState);
-        m_MeasureStateMachine.start();
+        m_ReadStateMachine.start();
         break;
 
     case SCPIModelType::init:
-        initType = fromInit;
-        m_MeasureStateMachine.setInitialState(&m_InitState);
-        m_MeasureStateMachine.start();
+        m_InitStateMachine.start();
         break;
 
     case SCPIModelType::fetch:
-        emit cmdAnswer(m_sAnswer);
+        m_FetchStateMachine.start();
         break;
     }
 }
@@ -113,28 +132,29 @@ void cSCPIMeasure::init()
     // the module's eventsystem will look for notifications on this and will
     // then call the initDone slot, so we synchronized on next measurement value
     m_pModule->scpiMeasureHash.insert(m_pSCPICmdInfo->componentName, this);
+    m_bInitPending = true;
+}
+
+
+void cSCPIMeasure::waitInit()
+{
+    if (!m_bInitPending)
+        emit measContinue();
 }
 
 
 void cSCPIMeasure::fetch()
 {
-    if (initType == fromRead)
-        emit cmdAnswer(m_sAnswer);
+    emit cmdAnswer(m_sAnswer);
 }
 
 
 void cSCPIMeasure::initDone(const QVariant qvar)
 {
     m_sAnswer = setAnswer(qvar);
-    switch (initType)
-    {
-    case fromRead:
-        emit measContinue(); // if we are in statemachine we want to continue;
-        break;
-    case fromInit:
-        emit measContinue(); // so the statemachine will finish
-        emit cmdStatus(SCPI::ack);
-    }
+    m_bInitPending = false;
+    emit measContinue();
 }
+
 
 }

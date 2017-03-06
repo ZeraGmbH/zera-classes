@@ -18,8 +18,6 @@ class cSCPIMeasure: public QObject
 {
     Q_OBJECT
 
-enum inittype {fromRead, fromInit};
-
 public:
     cSCPIMeasure(cSCPIModule* module, cSCPICmdInfo *scpicmdinfo);
     virtual ~cSCPIMeasure();
@@ -40,21 +38,34 @@ private:
     cSCPICmdInfo *m_pSCPICmdInfo;
 
     QStateMachine m_MeasureStateMachine;
+    QStateMachine m_ReadStateMachine;
+    QStateMachine m_InitStateMachine;
+    QStateMachine m_FetchStateMachine;
 
-    QState m_ConfigureState;
-    QState m_InitState;
-    QFinalState m_FetchState;
+    QState m_measConfigureState;
+    QState m_measInitState;
+    QFinalState m_measFetchState;
+
+    QState m_readInitState;
+    QFinalState m_readFetchState;
+
+    QState m_initInitState;
+    QFinalState m_initRdyState;
+
+    QState m_fetchWaitInitState;
+    QFinalState m_fetchFetchState;
 
     QString m_sAnswer;
 
     void configuration();
     QString setAnswer(QVariant qvar);
 
-    int initType;
+    bool m_bInitPending;
 
 private slots:
     void configure();
     void init();
+    void waitInit();
     void fetch();
 };
 
