@@ -30,6 +30,8 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     :m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dsprmsocket), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
 {
     m_brangeSet =false;
+    m_bRanging = false;
+    m_nWaitAfterRanging = 0;
 
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
     for (int i = 0; i < m_ChannelNameList.count(); i++)
@@ -78,21 +80,31 @@ cRangeObsermatic::~cRangeObsermatic()
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 {
-    m_ActualValues = *actualValues;
-    // qDebug() << "range obsermatic new actual values";
+    if (!m_bRanging)
+    {
+        if (m_nWaitAfterRanging > 0)
+        {
+            m_nWaitAfterRanging--;
+        }
+        else
+        {
+            m_ActualValues = *actualValues;
+            // qDebug() << "range obsermatic new actual values";
 
 #ifdef DEBUG
-    qDebug() << QString("PEAK %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
-             << QString("%1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
+            qDebug() << QString("PEAK %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
+                     << QString("%1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
 #endif
-    // qDebug() << QString("RMS %1 ; %2 ; %3").arg(m_ActualValues[6]).arg(m_ActualValues[7]).arg(m_ActualValues[8]);
+            // qDebug() << QString("RMS %1 ; %2 ; %3").arg(m_ActualValues[6]).arg(m_ActualValues[7]).arg(m_ActualValues[8]);
 
-    rangeObservation(); // first we test for overload conditions
-    rangeAutomatic(); // let rangeautomatic do its job
-    groupHandling(); // and look for grouping channels if necessary
-    setRanges(); // set the new ranges now
-    if (!m_readStatusMachine.isRunning()) // we only start if not running
-        m_readStatusMachine.start();
+            rangeObservation(); // first we test for overload conditions
+            rangeAutomatic(); // let rangeautomatic do its job
+            groupHandling(); // and look for grouping channels if necessary
+            setRanges(); // set the new ranges now
+            if (!m_readStatusMachine.isRunning()) // we only start if not running
+                m_readStatusMachine.start();
+        }
+    }
 }
 
 
@@ -402,6 +414,7 @@ void cRangeObsermatic::setRanges(bool force)
 
             m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
             m_nRangeSetPending++;
+            m_bRanging = true;
             m_actChannelRangeList.replace(i, s);
 
             // we set the scaling factor here
@@ -826,6 +839,8 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
                     qDebug() << "SIG_RANGING = 0";
 #endif
                     m_pRangingSignal->setValue(QVariant(0));
+                    m_bRanging = false;
+                    m_nWaitAfterRanging = 1;
                 }
             }
         }
