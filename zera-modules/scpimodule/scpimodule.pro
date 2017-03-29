@@ -38,7 +38,6 @@ SOURCES += \
     src/scpiserver.cpp \
     src/scpiinterface.cpp \
     src/scpimeasuredelegate.cpp \
-    src/scpimeasurecollector.cpp \
     src/scpimeasure.cpp \
     src/scpiclient.cpp \
     src/scpiparameterdelegate.cpp \
@@ -56,7 +55,8 @@ SOURCES += \
     src/scpiserialclient.cpp \
     src/scpieventsystem.cpp \
     src/scpipropertydelegate.cpp \
-    src/scpiclientinfo.cpp
+    src/scpiclientinfo.cpp \
+    src/scpicmdinfo.cpp
 
 HEADERS += \
     src/scpimodulefactory.h \
@@ -69,7 +69,6 @@ HEADERS += \
     src/scpiinterface.h \
     src/scpicmdinfo.h \
     src/scpimeasuredelegate.h \
-    src/scpimeasurecollector.h \
     src/scpimeasure.h \
     src/scpiclient.h \
     src/scpistatus.h \

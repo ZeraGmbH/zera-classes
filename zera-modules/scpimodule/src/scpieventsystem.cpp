@@ -1,3 +1,4 @@
+#include <QCoreApplication>
 #include <QEvent>
 #include <QHash>
 #include <QMultiHash>
@@ -108,13 +109,9 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             {
                 for (int i = 0; i < n; i++)
                 {
-                    cSCPIMeasure *scpiMeasure;
-                    scpiMeasure = scpiMeasureList.at(i);
+                    cSCPIMeasure *scpiMeasure = scpiMeasureList.at(i);
                     if (scpiMeasure->entityID() == entityId)
-                    {
-                        scpiMeasure->initDone(cData->newValue()); // once we informed the object
-                        m_pModule->scpiMeasureHash.remove(cName, scpiMeasure); // we remove it from the list
-                    }
+                        scpiMeasure->receiveMeasureValue(cData->newValue());
                 }
             }
 

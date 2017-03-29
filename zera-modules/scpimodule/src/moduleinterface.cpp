@@ -108,6 +108,12 @@ bool cModuleInterface::setupInterface()
 }
 
 
+QHash<QString, cSCPIMeasureDelegate *> *cModuleInterface::getSCPIMeasDelegateHash()
+{
+    return &m_scpiMeasureDelegateHash;
+}
+
+
 void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 {
     if (scpiCmdInfo->scpiModel == "MEASURE")

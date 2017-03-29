@@ -91,6 +91,12 @@ void cSCPIServer::deleteInterface()
 }
 
 
+cModuleInterface *cSCPIServer::getModuleInterface()
+{
+    return m_pModuleInterface;
+}
+
+
 void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();

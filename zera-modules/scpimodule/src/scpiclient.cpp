@@ -14,6 +14,10 @@
 #include "signalconnectiondelegate.h"
 #include "statusbitdescriptor.h"
 #include "scpieventsystem.h"
+#include "scpiserver.h"
+#include "moduleinterface.h"
+#include "scpimeasuredelegate.h"
+#include "scpimeasure.h"
 
 
 namespace SCPIMODULE
@@ -62,6 +66,9 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
 
     connect(m_pModule->m_pSCPIEventSystem, SIGNAL(status(quint8)), this, SLOT(receiveStatus(quint8)));
 //    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(clientinfoSignal(QString)), this, SLOT(removeSCPIClientInfo(QString)));
+
+    generateSCPIMeasureSystem();
+
 }
 
 
@@ -80,6 +87,13 @@ cSCPIClient::~cSCPIClient()
         delete m_SCPIStatusList.at(i);
 
     delete m_pIEEE4882;
+
+    QList<cSCPIMeasure*> keylist;
+    keylist = m_SCPIMeasureTranslationHash.keys();
+
+    for (int i = 0; i < keylist.count(); i++)
+        delete m_SCPIMeasureTranslationHash[keylist.at(i)];
+
 }
 
 
@@ -294,6 +308,29 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
             }
         }
     }
+}
+
+
+void cSCPIClient::generateSCPIMeasureSystem()
+{
+    // here we generate cSCPIMeasureDelegate objects including cSCPIMeasure objects for the new
+    // client so that they can work independantly when querying measuring values
+    // we ask the moduleinterface for the "base" cSCPIMeasureDelegate hash, that is once built up
+    // on module instanciation and that are connected to the scpi interface
+
+    QHash<QString, cSCPIMeasureDelegate *> *pSCPIMeasDelegateHash;
+    QList<QString> keylist;
+    cSCPIMeasureDelegate* measDelegate;
+
+    pSCPIMeasDelegateHash = m_pModule->getSCPIServer()->getModuleInterface()->getSCPIMeasDelegateHash();
+    keylist = pSCPIMeasDelegateHash->keys();
+
+    for (int i = 0; i < keylist.count(); i++)
+    {
+        measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
+        m_SCPIMeasureDelegateHash[measDelegate] = new cSCPIMeasureDelegate(*measDelegate, m_SCPIMeasureTranslationHash);
+    }
+
 }
 
 }

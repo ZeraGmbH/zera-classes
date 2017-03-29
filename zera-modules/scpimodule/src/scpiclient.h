@@ -20,6 +20,8 @@ class cStatusBitDescriptor;
 class cStatusBitSignal;
 class cSignalConnectionDelegate;
 class cSCPIClientInfo;
+class cSCPIMeasureDelegate;
+class cSCPIMeasure;
 
 class cSCPIClient: public QObject
 {
@@ -33,6 +35,8 @@ public:
     cSCPIStatus* getSCPIStatus(quint8 index);
     quint8 operationComplete();
     cIEEE4882* getIEEE4882();
+
+    QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegate*> m_SCPIMeasureDelegateHash;
 
 public slots:
     void receiveStatus(quint8 stat);
@@ -61,10 +65,12 @@ private:
     QList<cSCPIStatus*> m_SCPIStatusList;
     QList<cStatusBitSignal*> mStatusBitSignalList;
 
+    QHash<cSCPIMeasure*, cSCPIMeasure*> m_SCPIMeasureTranslationHash;
+
     bool m_bAuthorisation;
     void setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList);
-
     QList<cSignalConnectionDelegate*> mysConnectDelegateList;
+    void generateSCPIMeasureSystem();
 
 private slots:
     virtual void cmdInput() = 0;

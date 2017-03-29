@@ -6,7 +6,7 @@ namespace SCPIMODULE
 
 
 cSCPIMeasureCollector::cSCPIMeasureCollector(cSCPIClient *client, quint32 nr)
-    :m_pClient(client), m_nmeasureObjects(nr)
+    :m_pClient(client), m_nmeasureObjects(nr), m_nmeasureObjectsInit(nr)
 {
     m_nStatus = 0;
     myStatusConnection = connect(this, SIGNAL(signalStatus(quint8)), m_pClient, SLOT(receiveStatus(quint8)));

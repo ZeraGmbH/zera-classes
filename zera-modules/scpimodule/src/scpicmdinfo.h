@@ -10,6 +10,7 @@ class cSCPICmdInfo
 {
 public:
     cSCPICmdInfo(){}
+    cSCPICmdInfo(const cSCPICmdInfo& obj);
     QString scpiModuleName;
     QString scpiModel;
     QString scpiCommand;

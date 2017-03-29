@@ -5,7 +5,10 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <QList>
 
+
+class QEvent;
 
 
 namespace SCPIMODULE
@@ -14,59 +17,100 @@ namespace SCPIMODULE
 class cSCPIModule;
 class cSCPICmdInfo;
 
+
+enum signalCode {measCont, readCont, initCont, fetchCont};
+
+
 class cSCPIMeasure: public QObject
 {
     Q_OBJECT
 
 public:
     cSCPIMeasure(cSCPIModule* module, cSCPICmdInfo *scpicmdinfo);
+    cSCPIMeasure(const cSCPIMeasure &obj);
     virtual ~cSCPIMeasure();
 
+    void receiveMeasureValue(QVariant qvar);
     void execute(quint8 cmd); //
     int entityID();
 
-public slots:
-    void initDone(const QVariant qvar);
 
 signals:
-    void cmdStatus(quint8);
-    void cmdAnswer(QString);
     void measContinue();
+    void confContinue();
+    void readContinue();
+    void initContinue();
+    void fetchContinue();
+
+    void sigMeasDone(QString);
+    void sigConfDone();
+    void sigReadDone(QString);
+    void sigInitDone();
+    void sigFetchDone(QString);
 
 private:
     cSCPIModule *m_pModule;
     cSCPICmdInfo *m_pSCPICmdInfo;
 
+    void initialize();
+
     QStateMachine m_MeasureStateMachine;
+    QStateMachine m_ConfigureStateMachine;
     QStateMachine m_ReadStateMachine;
     QStateMachine m_InitStateMachine;
     QStateMachine m_FetchStateMachine;
 
-    QState m_measConfigureState;
-    QState m_measInitState;
-    QFinalState m_measFetchState;
+    QState m_measureState;
+    QState m_measureConfigureState;
+    QState m_measureInitState;
+    QState m_measureFetchState;
+    QFinalState m_measureDoneState;
 
+    QState m_confConfigureState;
+    QFinalState m_confConfigureDoneState;
+
+    QState m_readState;
     QState m_readInitState;
-    QFinalState m_readFetchState;
+    QState m_readFetchState;
+    QFinalState m_readDoneState;
 
     QState m_initInitState;
-    QFinalState m_initRdyState;
+    QFinalState m_initDoneState;
 
-    QState m_fetchWaitInitState;
-    QFinalState m_fetchFetchState;
+    QState m_fetchState;
+    QState m_fetchSyncState;
+    QState m_fetchFetchState;
+    QFinalState m_fetchDoneState;
 
     QString m_sAnswer;
-
-    void configuration();
     QString setAnswer(QVariant qvar);
+    QList<int> signalList;
 
     bool m_bInitPending;
 
 private slots:
+    void measure();
+    void measureConfigure();
+    void measureInit();
+    void measureFetch();
+    void measureDone();
+
     void configure();
+    void configureDone();
+
+    void read();
+    void readInit();
+    void readFetch();
+    void readDone();
+
     void init();
-    void waitInit();
+    void initDone();
+
     void fetch();
+    void fetchSync();
+    void fetchFetch();
+    void fetchDone();
+
 };
 
 

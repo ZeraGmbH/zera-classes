@@ -49,6 +49,12 @@ QByteArray cSCPIModule::getConfiguration() const
 }
 
 
+cSCPIServer *cSCPIModule::getSCPIServer()
+{
+    return m_pSCPIServer;
+}
+
+
 void cSCPIModule::doConfiguration(QByteArray xmlConfigData)
 {
     m_pConfiguration->setConfiguration(xmlConfigData);

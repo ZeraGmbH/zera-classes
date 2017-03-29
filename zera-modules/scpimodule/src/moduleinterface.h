@@ -33,6 +33,8 @@ public:
 
     virtual bool setupInterface();
 
+    QHash<QString, cSCPIMeasureDelegate*>* getSCPIMeasDelegateHash();
+
 private:
     QList<cSCPIDelegate*> m_scpiDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
     QHash<QString, cSCPIMeasureDelegate*> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd

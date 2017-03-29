@@ -27,6 +27,7 @@ signals:
 private:
     cSCPIClient* m_pClient;
     quint32 m_nmeasureObjects;
+    quint32 m_nmeasureObjectsInit;
     quint8 m_nStatus;
     QString m_sAnswer;
     QMetaObject::Connection myStatusConnection;

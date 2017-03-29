@@ -18,6 +18,7 @@ class cSCPIDelegate: public QObject, public cSCPIObject
    Q_OBJECT
 
 public:
+    cSCPIDelegate(){}
     cSCPIDelegate(QString cmdParent, QString cmd, quint8 type);
 
     void setCommand(cSCPI *scpiCmdInterface);
@@ -28,7 +29,7 @@ signals:
     void signalStatus(quint8);
     void signalAnswer(QString);
 
-private:
+protected:
     QString m_sCmdParent;
 };
 
