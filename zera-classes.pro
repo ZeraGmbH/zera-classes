@@ -32,4 +32,5 @@ SUBDIRS     = \
             zera-modules/transformer1module \
             zera-modules/burden1module \
             zera-modules/efficiency1module \
-            zera-modules/statusmodule
+            zera-modules/statusmodule \
+            zera-modules/lamdamodule
