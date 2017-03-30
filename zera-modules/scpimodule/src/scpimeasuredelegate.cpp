@@ -72,9 +72,22 @@ bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
 bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
 {
+    bool reentryPossible;
+
+    // we test weether reentry is possible
+    switch (m_nMeasCode)
+    {
+    case SCPIModelType::init:
+    case SCPIModelType::configure:
+        reentryPossible = true;
+        break;
+    default:
+        reentryPossible = false;
+    }
+
     m_pClient = client;
 
-    if (m_nPending == 0) // not yet running
+    if (m_nPending == 0 || reentryPossible) // not yet running or reentry
     {
         m_nPending = m_scpimeasureObjectList.count();
         m_sAnswer = "";

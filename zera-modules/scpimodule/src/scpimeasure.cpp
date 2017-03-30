@@ -72,23 +72,28 @@ void cSCPIMeasure::execute(quint8 cmd)
     switch (cmd)
     {
     case SCPIModelType::measure:
-        m_MeasureStateMachine.start();
+        if (!m_MeasureStateMachine.isRunning())
+            m_MeasureStateMachine.start();
         break;
 
     case SCPIModelType::configure:
-        m_ConfigureStateMachine.start();
+        if (!m_ConfigureStateMachine.isRunning())
+            m_ConfigureStateMachine.start();
         break;
 
     case SCPIModelType::read:
-        m_ReadStateMachine.start();
+        if (!m_ReadStateMachine.isRunning())
+            m_ReadStateMachine.start();
         break;
 
     case SCPIModelType::init:
-        m_InitStateMachine.start();
+        if (!m_InitStateMachine.isRunning())
+            m_InitStateMachine.start();
         break;
 
     case SCPIModelType::fetch:
-        m_FetchStateMachine.start();
+        if (!m_FetchStateMachine.isRunning())
+            m_FetchStateMachine.start();
         break;
     }
 }
@@ -138,10 +143,12 @@ void cSCPIMeasure::measureConfigure()
 
 void cSCPIMeasure::measureInit()
 {
+    // if not an init is still pending then
     // we insert this object into the list of pending measurement values
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
-    m_pModule->scpiMeasureHash.insert(m_pSCPICmdInfo->componentName, this);
+    if (!m_bInitPending)
+        m_pModule->scpiMeasureHash.insert(m_pSCPICmdInfo->componentName, this);
 
     signalList.append(measCont); // measure statemachine waits for measure value
 }
@@ -183,10 +190,12 @@ void cSCPIMeasure::read()
 
 void cSCPIMeasure::readInit()
 {
+    // if not an init is still pending then
     // we insert this object into the list of pending measurement values
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
-    m_pModule->scpiMeasureHash.insert(m_pSCPICmdInfo->componentName, this);
+    if (!m_bInitPending)
+        m_pModule->scpiMeasureHash.insert(m_pSCPICmdInfo->componentName, this);
 
     signalList.append(readCont); // read statemachine waits for measure value
 }
@@ -209,8 +218,9 @@ void cSCPIMeasure::init()
     // we insert this object into the list of pending measurement values
     // the module's eventsystem will look for notifications on this and will
     // then call the initDone slot, so we synchronized on next measurement value
+
+    m_bInitPending = true;
     m_pModule->scpiMeasureHash.insert(m_pSCPICmdInfo->componentName, this);
-    m_bInitPending = true; //
 
     signalList.append(initCont); // init statemachine waits for measure value
 }
