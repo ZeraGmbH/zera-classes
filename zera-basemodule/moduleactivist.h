@@ -32,6 +32,7 @@ signals:
     void interruptContinue();
     void executionError();
     void errMsg(QVariant);
+    void errMsg(QVariant, int);
 
 
 public slots:

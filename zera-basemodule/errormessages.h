@@ -40,6 +40,7 @@
 #define readPCBCtrlVersionErrMSG "PCB Controler version read failed"
 #define readPCBFPGAVersionErrMSG "PCB FPGA version read failed"
 #define readPCBSerialNrErrMSG "PCB serial number read failed"
+#define readPCBErrMSG "PCB error messages read failed"
 
 #define readdspgaincorrErrMsg "DSP read gain correction failed"
 #define readdspphasecorrErrMsg "DSP read phase correction failed"

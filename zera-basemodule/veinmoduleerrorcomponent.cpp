@@ -15,7 +15,7 @@ cVeinModuleErrorComponent::cVeinModuleErrorComponent(int entityId, VeinEvent::Ev
 }
 
 
-void cVeinModuleErrorComponent::setValue(QVariant value)
+void cVeinModuleErrorComponent::setValue(QVariant value, int dest)
 {
     QJsonObject jsObj;
     QString tf = "yyyy/MM/dd HH:mm:ss";
@@ -30,7 +30,12 @@ void cVeinModuleErrorComponent::setValue(QVariant value)
 
     cData->setEntityId(0);
     cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
-    cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
+
+    if (dest == globalDest)
+        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
+    else
+        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_LOCAL);
+
     cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
     cData->setComponentName(m_sName);
     cData->setNewValue(jsObj);
