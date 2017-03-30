@@ -306,6 +306,13 @@ quint32 cPCBInterface::getAdjustmentStatus()
     return d->getAdjustmentStatus();
 }
 
+quint32 cPCBInterface::getPCBErrorStatus()
+{
+
+    Q_D(cPCBInterface);
+    return d->getPCBErrorStatus();
+}
+
 
 quint32 cPCBInterface::resourceAliasQuery(QString resourceType, QString resourceName)
 {

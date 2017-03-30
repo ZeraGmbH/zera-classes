@@ -76,6 +76,7 @@ public:
 
     // all commands to status interface
     virtual quint32 getAdjustmentStatus(); // int
+    virtual quint32 getPCBErrorStatus();
 
     // resource query more generell
     virtual quint32 resourceAliasQuery(QString resourceType, QString resourceName);
