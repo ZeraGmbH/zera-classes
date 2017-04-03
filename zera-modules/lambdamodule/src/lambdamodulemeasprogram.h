@@ -1,5 +1,5 @@
-#ifndef LAMDAMODULEMEASPROGRAM_H
-#define LAMDAMODULEMEASPROGRAM_H
+#ifndef LAMBDAMODULEMEASPROGRAM_H
+#define LAMBDAMODULEMEASPROGRAM_H
 
 #include <QObject>
 #include <QList>
@@ -8,7 +8,7 @@
 #include <QState>
 #include <QFinalState>
 
-#include "lamdamoduleconfigdata.h"
+#include "lambdamoduleconfigdata.h"
 #include "basemeasworkprogram.h"
 
 class cBaseModule;
@@ -22,10 +22,10 @@ class QState;
 class QFinalState;
 
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
-enum lamdamoduleCmds
+enum lambdamoduleCmds
 {
     resourcemanagerconnect,
     sendrmident,
@@ -69,18 +69,18 @@ enum lamdamoduleCmds
 };
 
 
-class cLamdaModuleConfigData;
-class cLamdaMeasDelegate;
-class cLamdaModule;
+class cLambdaModuleConfigData;
+class cLambdaMeasDelegate;
+class cLambdaModule;
 
 
-class cLamdaModuleMeasProgram: public cBaseMeasWorkProgram
+class cLambdaModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 
 public:
-    cLamdaModuleMeasProgram(cLamdaModule* module, cLamdaModuleConfigData& configdata);
-    virtual ~cLamdaModuleMeasProgram();
+    cLambdaModuleMeasProgram(cLambdaModule* module, cLambdaModuleConfigData& configdata);
+    virtual ~cLambdaModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
@@ -89,14 +89,14 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 private:
-    cLamdaModule* m_pModule;
-    cLamdaModuleConfigData& m_ConfigData;
+    cLambdaModule* m_pModule;
+    cLambdaModuleConfigData& m_ConfigData;
 
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pLAMDACountInfo; // the number of values we produce
+    cVeinModuleMetaData* m_pLAMBDACountInfo; // the number of values we produce
     cVeinModuleComponent* m_pMeasureSignal;
 
-    QList<cLamdaMeasDelegate*> m_LamdaMeasDelegateList;
+    QList<cLambdaMeasDelegate*> m_LambdaMeasDelegateList;
 
     // statemachine for activating gets the following states
     QState m_searchActualValuesState;
@@ -119,4 +119,4 @@ private slots:
 };
 
 }
-#endif // LAMDAMODULEMEASPROGRAM_H
+#endif // LAMBDAMODULEMEASPROGRAM_H

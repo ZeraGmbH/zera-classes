@@ -1,7 +1,7 @@
 #ifndef DEBUG_H
 #define DEBUG_H
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
 //#define DEBUG 1

@@ -1,5 +1,5 @@
-#ifndef LAMDAMODULECONFIGDATA_H
-#define LAMDAMODULECONFIGDATA_H
+#ifndef LAMBDAMODULECONFIGDATA_H
+#define LAMBDAMODULECONFIGDATA_H
 
 #include <QString>
 #include <QStringList>
@@ -7,10 +7,10 @@
 
 #include "socket.h"
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
-struct lamdasystemconfiguration
+struct lambdasystemconfiguration
 {
     quint16 m_nInputPEntity; // entity for p input
     QString m_sInputP; // component name for p input
@@ -19,17 +19,17 @@ struct lamdasystemconfiguration
 };
 
 
-class cLamdaModuleConfigData
+class cLambdaModuleConfigData
 {
 public:
-    cLamdaModuleConfigData(){}
+    cLambdaModuleConfigData(){}
 
     quint8 m_nDebugLevel;
-    quint8 m_nLamdaSystemCount;
+    quint8 m_nLambdaSystemCount;
     int m_nModuleId;
-    QList<lamdasystemconfiguration> m_lamdaSystemConfigList;
-    QStringList m_lamdaChannelList;
+    QList<lambdasystemconfiguration> m_lambdaSystemConfigList;
+    QStringList m_lambdaChannelList;
 };
 
 }
-#endif // LAMDAMODULECONFIGDATA_H
+#endif // LAMBDAMODULECONFIGDATA_H

@@ -1,5 +1,5 @@
-#ifndef LAMDAMEASDELEGATE
-#define LAMDAMEASDELEGATE
+#ifndef LAMBDAMEASDELEGATE
+#define LAMBDAMEASDELEGATE
 
 #include <QObject>
 #include <QVariant>
@@ -7,15 +7,15 @@
 
 class cVeinModuleActvalue;
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
-class cLamdaMeasDelegate : public QObject
+class cLambdaMeasDelegate : public QObject
 {
     Q_OBJECT
 
 public:
-    cLamdaMeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal = false);
+    cLambdaMeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal = false);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -36,5 +36,5 @@ private:
 }
 
 
-#endif // LAMDAMEASDELEGATE
+#endif // LAMBDAMEASDELEGATE
 

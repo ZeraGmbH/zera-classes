@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/lamdamodule.xsd</file>
+        <file>src/lambdamodule.xsd</file>
     </qresource>
 </RCC>

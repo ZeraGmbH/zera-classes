@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<lamdamodconfpar>
+<lambdamodconfpar>
     <configuration>
         <connectivity>
             <debuglevel>0</debuglevel>
@@ -7,7 +7,7 @@
         <measure>
             <system>
                 <n>3</n>
-                <lamda1>
+                <lambda1>
                     <p>
                         <inputentity>1006</inputentity>
                         <component>ACT_PQS1</component>
@@ -16,8 +16,8 @@
                         <inputentity>1008</inputentity>
                         <component>ACT_PQS1</component>
                     </s>
-                </lamda1>
-                <lamda2>
+                </lambda1>
+                <lambda2>
                     <p>
                         <inputentity>1006</inputentity>
                         <component>ACT_PQS2</component>
@@ -26,8 +26,8 @@
                         <inputentity>1008</inputentity>
                         <component>ACT_PQS2</component>
                     </s>
-                </lamda2>
-                <lamda3>
+                </lambda2>
+                <lambda3>
                     <p>
                         <inputentity>1006</inputentity>
                         <component>ACT_PQS3</component>
@@ -36,8 +36,8 @@
                         <inputentity>1008</inputentity>
                         <component>ACT_PQS3</component>
                     </s>
-                </lamda3>
+                </lambda3>
             </system>
         </measure>
     </configuration>
-</lamdamodconfpar>
+</lambdamodconfpar>

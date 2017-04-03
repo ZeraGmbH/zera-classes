@@ -15,15 +15,15 @@
 #include "errormessages.h"
 #include "reply.h"
 #include "measmodeinfo.h"
-#include "lamdamodule.h"
-#include "lamdamodulemeasprogram.h"
-#include "lamdameasdelegate.h"
+#include "lambdamodule.h"
+#include "lambdamodulemeasprogram.h"
+#include "lambdameasdelegate.h"
 
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
-cLamdaModuleMeasProgram::cLamdaModuleMeasProgram(cLamdaModule* module, cLamdaModuleConfigData& configdata)
+cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, cLambdaModuleConfigData& configdata)
     :m_pModule(module), m_ConfigData(configdata)
 {
     m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
@@ -49,35 +49,35 @@ cLamdaModuleMeasProgram::cLamdaModuleMeasProgram(cLamdaModule* module, cLamdaMod
 }
 
 
-cLamdaModuleMeasProgram::~cLamdaModuleMeasProgram()
+cLambdaModuleMeasProgram::~cLambdaModuleMeasProgram()
 {
 }
 
 
-void cLamdaModuleMeasProgram::start()
+void cLambdaModuleMeasProgram::start()
 {
     connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
-void cLamdaModuleMeasProgram::stop()
+void cLambdaModuleMeasProgram::stop()
 {
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
 
-void cLamdaModuleMeasProgram::generateInterface()
+void cLambdaModuleMeasProgram::generateInterface()
 {
     cVeinModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
 
-    for (int i = 0; i < m_ConfigData.m_nLamdaSystemCount; i++)
+    for (int i = 0; i < m_ConfigData.m_nLambdaSystemCount; i++)
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_LAMDA%1").arg(i+1),
-                                            QString("Component forwards lamda actual values"),
+                                            QString("ACT_Lambda%1").arg(i+1),
+                                            QString("Component forwards lambda actual values"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("Lamda%1").arg(i+1));
+        pActvalue->setChannelName(QString("Lambda%1").arg(i+1));
         pActvalue->setUnit("");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
@@ -87,8 +87,8 @@ void cLamdaModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pLAMDACountInfo = new cVeinModuleMetaData(QString("LamdaCount"), QVariant(m_ConfigData.m_nLamdaSystemCount));
-    m_pModule->veinModuleMetaDataList.append(m_pLAMDACountInfo);
+    m_pLAMBDACountInfo = new cVeinModuleMetaData(QString("LambdaCount"), QVariant(m_ConfigData.m_nLambdaSystemCount));
+    m_pModule->veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
@@ -99,42 +99,42 @@ void cLamdaModuleMeasProgram::generateInterface()
 }
 
 
-void cLamdaModuleMeasProgram::deleteInterface()
+void cLambdaModuleMeasProgram::deleteInterface()
 {
 }
 
 
-void cLamdaModuleMeasProgram::searchActualValues()
+void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error;
 
     error = false;
     QList<cVeinModuleComponentInput*> inputList;
 
-    for (int i = 0; i < m_ConfigData.m_nLamdaSystemCount; i++)
+    for (int i = 0; i < m_ConfigData.m_nLambdaSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if ( (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_lamdaSystemConfigList.at(i).m_nInputPEntity, m_ConfigData.m_lamdaSystemConfigList.at(i).m_sInputP)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_lamdaSystemConfigList.at(i).m_nInputSEntity, m_ConfigData.m_lamdaSystemConfigList.at(i).m_sInputS)) )
+        if ( (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputPEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputP)) &&
+             (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputSEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputS)) )
         {
-            cLamdaMeasDelegate* cLMD;
+            cLambdaMeasDelegate* cLMD;
             cVeinModuleComponentInput *vmci;
 
-            if (i == (m_ConfigData.m_nLamdaSystemCount-1))
+            if (i == (m_ConfigData.m_nLambdaSystemCount-1))
             {
-                cLMD = new cLamdaMeasDelegate(m_ActValueList.at(i), true);
+                cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i), true);
                 connect(cLMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
             }
             else
-                cLMD = new cLamdaMeasDelegate(m_ActValueList.at(i));
+                cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i));
 
-            m_LamdaMeasDelegateList.append(cLMD);
+            m_LambdaMeasDelegateList.append(cLMD);
 
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_lamdaSystemConfigList.at(i).m_nInputPEntity, m_ConfigData.m_lamdaSystemConfigList.at(i).m_sInputP);
+            vmci = new cVeinModuleComponentInput(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputPEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputP);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cLMD, SLOT(actValueInput1(QVariant)));
 
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_lamdaSystemConfigList.at(i).m_nInputSEntity, m_ConfigData.m_lamdaSystemConfigList.at(i).m_sInputS);
+            vmci = new cVeinModuleComponentInput(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputSEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputS);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cLMD, SLOT(actValueInput2(QVariant)));
         }
@@ -152,7 +152,7 @@ void cLamdaModuleMeasProgram::searchActualValues()
 }
 
 
-void cLamdaModuleMeasProgram::activateDone()
+void cLambdaModuleMeasProgram::activateDone()
 {
     m_bActive = true;
     emit activated();
@@ -160,24 +160,24 @@ void cLamdaModuleMeasProgram::activateDone()
 
 
 
-void cLamdaModuleMeasProgram::deactivateMeas()
+void cLambdaModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
 
-    for (int i = 0; i < m_LamdaMeasDelegateList.count(); i++)
-        delete m_LamdaMeasDelegateList.at(i);
+    for (int i = 0; i < m_LambdaMeasDelegateList.count(); i++)
+        delete m_LambdaMeasDelegateList.at(i);
 
     emit deactivationContinue();
 }
 
 
-void cLamdaModuleMeasProgram::deactivateMeasDone()
+void cLambdaModuleMeasProgram::deactivateMeasDone()
 {
     emit deactivated();
 }
 
 
-void cLamdaModuleMeasProgram::setMeasureSignal(int signal)
+void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 {
     m_pMeasureSignal->setValue(signal);
 }

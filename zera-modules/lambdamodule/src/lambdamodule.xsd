@@ -24,7 +24,7 @@
     </xs:simpleType>
 
 
-    <xs:complexType name="lamdatype">
+    <xs:complexType name="lambdatype">
         <xs:sequence>
             <xs:element name="p">
                 <xs:complexType>
@@ -52,25 +52,25 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="n" type="anztype" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="lamda1" type="lamdatype" minOccurs="1" maxOccurs="1"/>
-                        <xs:element name="lamda2" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda3" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda4" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda5" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda6" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda7" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda8" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda9" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda10" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda11" type="lamdatype" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="lamda12" type="lamdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda1" type="lambdatype" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="lambda2" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda3" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda4" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda5" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda6" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda7" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda8" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda9" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda10" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda11" type="lambdatype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="lambda12" type="lambdatype" minOccurs="0" maxOccurs="1"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
         </xs:sequence>
     </xs:complexType>
 
-    <xs:element name="lamdamodconfpar">
+    <xs:element name="lambdamodconfpar">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="configuration">

@@ -25,30 +25,30 @@ INCLUDEPATH += ../interface \
     ../../zera-basemodule
 
 
-TARGET = $$qtLibraryTarget(lamdamodule)
+TARGET = $$qtLibraryTarget(lambdamodule)
 
 
 INCLUDEPATH += "src"
 
 SOURCES += \
-    src/lamdamodule.cpp \
-    src/lamdamoduleconfiguration.cpp \
-    src/lamdamodulefactory.cpp \
-    src/lamdamodulemeasprogram.cpp \
-    src/lamdameasdelegate.cpp
+    src/lambdamodule.cpp \
+    src/lambdamoduleconfiguration.cpp \
+    src/lambdamodulefactory.cpp \
+    src/lambdamodulemeasprogram.cpp \
+    src/lambdameasdelegate.cpp
 
 HEADERS += \
     src/debug.h \
-    src/lamdamodule.h \
-    src/lamdamoduleconfigdata.h \
-    src/lamdamoduleconfiguration.h \
-    src/lamdamodulefactory.h \
-    src/lamdamodulemeasprogram.h \
-    src/lamdameasdelegate.h
+    src/lambdamodule.h \
+    src/lambdamoduleconfigdata.h \
+    src/lambdamoduleconfiguration.h \
+    src/lambdamodulefactory.h \
+    src/lambdamodulemeasprogram.h \
+    src/lambdameasdelegate.h
 
 OTHER_FILES += \
-    src/lamdamodule.xml \
-    src/lamdamodule.xsd
+    src/lambdamodule.xml \
+    src/lambdamodule.xsd
 
 
 RESOURCES += \

@@ -1,5 +1,5 @@
-#ifndef LAMDAMODULEFACTORY_H
-#define LAMDAMODULEFACTORY_H
+#ifndef LAMBDAMODULEFACTORY_H
+#define LAMBDAMODULEFACTORY_H
 
 #include <QObject>
 #include <QList>
@@ -17,17 +17,17 @@ namespace Proxy
 }
 
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
-class LamdaModuleFactory : public QObject, public MeasurementModuleFactory
+class LambdaModuleFactory : public QObject, public MeasurementModuleFactory
 {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "lamdamodule.json")
+    Q_PLUGIN_METADATA(IID MeasurementModuleFactory_iid FILE "lambdamodule.json")
     Q_INTERFACES(MeasurementModuleFactory)
   
 public:
-    LamdaModuleFactory(){}
+    LambdaModuleFactory(){}
     ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     void destroyModule(ZeraModules::VirtualModule *module); //override;
     QList<ZeraModules::VirtualModule *> listModules() const; //override;
@@ -38,4 +38,4 @@ private:
 };
 
 }
-#endif // LAMDAMODULEFACTORY_H
+#endif // LAMBDAMODULEFACTORY_H

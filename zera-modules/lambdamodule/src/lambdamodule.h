@@ -1,5 +1,5 @@
-#ifndef LAMDAMODULE_H
-#define LAMDAMODULE_H
+#ifndef LAMBDAMODULE_H
+#define LAMBDAMODULE_H
 
 #include <QObject>
 #include <QStateMachine>
@@ -22,28 +22,28 @@ namespace Proxy {
 }
 
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
-class cLamdaModuleConfiguration;
-class cLamdaModuleMeasProgram;
-class cLamdaModuleObservation;
+class cLambdaModuleConfiguration;
+class cLambdaModuleMeasProgram;
+class cLambdaModuleObservation;
 
-#define BaseModuleName "LamdaModule"
+#define BaseModuleName "LambdaModule"
 #define BaseSCPIModuleName "LAM"
 
-class cLamdaModule : public cBaseMeasModule
+class cLambdaModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cLamdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cLamdaModule();
+    cLambdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    virtual ~cLambdaModule();
     virtual QByteArray getConfiguration() const;
 
 protected:
-    cLamdaModuleObservation *m_pPower3ModuleObservation;
-    cLamdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    cLambdaModuleObservation *m_pPower3ModuleObservation;
+    cLambdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
@@ -75,10 +75,10 @@ private slots:
     void deactivationDone();
     void deactivationFinished();
 
-    void lamdaModuleReconfigure();
+    void lambdaModuleReconfigure();
 
 };
 
 }
 
-#endif // LAMDAMODULE_H
+#endif // LAMBDAMODULE_H

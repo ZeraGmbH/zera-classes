@@ -13,17 +13,17 @@
 #include <veinmodulemetadata.h>
 
 #include "debug.h"
-#include "lamdamodule.h"
-#include "lamdamoduleconfiguration.h"
-#include "lamdamoduleconfigdata.h"
-#include "lamdamodulemeasprogram.h"
+#include "lambdamodule.h"
+#include "lambdamoduleconfiguration.h"
+#include "lambdamoduleconfigdata.h"
+#include "lambdamodulemeasprogram.h"
 #include "errormessages.h"
 
-namespace LAMDAMODULE
+namespace LAMBDAMODULE
 {
 
-cLamdaModule::cLamdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cLamdaModuleConfiguration(), parent)
+cLambdaModule::cLambdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cLambdaModuleConfiguration(), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
@@ -60,36 +60,36 @@ cLamdaModule::cLamdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityI
 }
 
 
-cLamdaModule::~cLamdaModule()
+cLambdaModule::~cLambdaModule()
 {
     delete m_pConfiguration;
 }
 
 
-QByteArray cLamdaModule::getConfiguration() const
+QByteArray cLambdaModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
 
 
 
-void cLamdaModule::doConfiguration(QByteArray xmlConfigData)
+void cLambdaModule::doConfiguration(QByteArray xmlConfigData)
 {
     m_pConfiguration->setConfiguration(xmlConfigData);
 }
 
 
-void cLamdaModule::setupModule()
+void cLambdaModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
 
     cBaseMeasModule::setupModule();
 
-    cLamdaModuleConfigData* pConfData;
-    pConfData = qobject_cast<cLamdaModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    cLambdaModuleConfigData* pConfData;
+    pConfData = qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cLamdaModuleMeasProgram(this, *pConfData);
+    m_pMeasProgram = new cLambdaModuleMeasProgram(this, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
@@ -102,32 +102,32 @@ void cLamdaModule::setupModule()
 }
 
 
-void cLamdaModule::startMeas()
+void cLambdaModule::startMeas()
 {
     m_pMeasProgram->start();
 }
 
 
-void cLamdaModule::stopMeas()
+void cLambdaModule::stopMeas()
 {
     m_pMeasProgram->stop();
 }
 
 
-void cLamdaModule::activationStart()
+void cLambdaModule::activationStart()
 {
     m_nActivationIt = 0; // we start with the first
     emit activationContinue();
 }
 
 
-void cLamdaModule::activationExec()
+void cLambdaModule::activationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->activate();
 }
 
 
-void cLamdaModule::activationDone()
+void cLambdaModule::activationDone()
 {
     m_nActivationIt++;
 
@@ -138,7 +138,7 @@ void cLamdaModule::activationDone()
 }
 
 
-void cLamdaModule::activationFinished()
+void cLambdaModule::activationFinished()
 {
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
@@ -149,20 +149,20 @@ void cLamdaModule::activationFinished()
 }
 
 
-void cLamdaModule::deactivationStart()
+void cLambdaModule::deactivationStart()
 {
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
 
 
-void cLamdaModule::deactivationExec()
+void cLambdaModule::deactivationExec()
 {
     m_ModuleActivistList.at(m_nActivationIt)->deactivate();
 }
 
 
-void cLamdaModule::deactivationDone()
+void cLambdaModule::deactivationDone()
 {
     m_nActivationIt++;
 
@@ -173,13 +173,13 @@ void cLamdaModule::deactivationDone()
 }
 
 
-void cLamdaModule::deactivationFinished()
+void cLambdaModule::deactivationFinished()
 {
     emit deactivationReady();
 }
 
 
-void cLamdaModule::lamdaModuleReconfigure()
+void cLambdaModule::lambdaModuleReconfigure()
 {
     emit sigConfiguration(); // we configure after our notifier has detected
 }
