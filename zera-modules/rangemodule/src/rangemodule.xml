@@ -84,13 +84,13 @@
                 <range>480V</range>
             </m2>
             <m3>
-                <range>160A</range>
+                <range>200A</range>
             </m3>
             <m4>
-                <range>160A</range>
+                <range>200A</range>
             </m4>
             <m5>
-                <range>160A</range>
+                <range>200A</range>
             </m5>
             <grouping>1</grouping>
             <rangeauto>0</rangeauto>
