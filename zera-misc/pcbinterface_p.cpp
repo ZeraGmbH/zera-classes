@@ -383,7 +383,7 @@ quint32 cPCBInterfacePrivate::getAdjustmentStatus()
     QString cmd;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("STAT:PCB:ADJ?"));
+    msgnr = sendCommand(cmd = QString("STAT:ADJ?"));
     m_MsgNrCmdList[msgnr] = getadjustmentstatus;
     return msgnr;
 }
@@ -395,7 +395,7 @@ quint32 cPCBInterfacePrivate::getPCBErrorStatus()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("STAT:PCB:ERR?"));
-    m_MsgNrCmdList[msgnr] = getadjustmentstatus;
+    m_MsgNrCmdList[msgnr] = getpcberrorstatus;
     return msgnr;
 }
 
@@ -552,6 +552,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getctrlversion:
         case getserialnumber:
         case getadjustmentchksum:
+        case getpcberrorstatus:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
