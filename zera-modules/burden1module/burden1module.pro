@@ -57,3 +57,6 @@ RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
+DISTFILES += \
+    src/burden1module2.xml
