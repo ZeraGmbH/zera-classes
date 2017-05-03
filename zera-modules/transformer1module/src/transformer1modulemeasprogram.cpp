@@ -53,8 +53,7 @@ cTransformer1ModuleMeasProgram::cTransformer1ModuleMeasProgram(cTransformer1Modu
 
 cTransformer1ModuleMeasProgram::~cTransformer1ModuleMeasProgram()
 {
-    for (int i = 0; i < m_Transformer1MeasDelegateList.count(); i++)
-        delete m_Transformer1MeasDelegateList.at(i);
+    // we delete transformer meas delegates on deactivation of module
 }
 
 
@@ -79,7 +78,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     for (int i = 0; i < m_ConfigData.m_nTransformerSystemCount; i++)
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_ERROR%1").arg(i+1),
+                                            QString("ACT_Error%1").arg(i+1),
                                             QString("Component forwards transformer transmission error value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("ERR%1").arg(i+1));
@@ -92,7 +91,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_ANGLE%1").arg(i+1),
+                                            QString("ACT_Angle%1").arg(i+1),
                                             QString("Component forwards transformer angle deviation value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("ANG%1").arg(i+1));
@@ -105,7 +104,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_RATIO%1").arg(i+1),
+                                            QString("ACT_Ratio%1").arg(i+1),
                                             QString("Component forwards transformer ratio value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
