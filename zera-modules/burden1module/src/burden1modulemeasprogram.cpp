@@ -52,8 +52,7 @@ cBurden1ModuleMeasProgram::cBurden1ModuleMeasProgram(cBurden1Module* module, cBu
 
 cBurden1ModuleMeasProgram::~cBurden1ModuleMeasProgram()
 {
-    for (int i = 0; i < m_Burden1MeasDelegateList.count(); i++)
-        delete m_Burden1MeasDelegateList.at(i);
+    // we delete burden meas delegates on deactivation of module
 }
 
 
@@ -78,7 +77,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     for (int i = 0; i < m_ConfigData.m_nBurdenSystemCount; i++)
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_BURDEN%1").arg(i+1),
+                                            QString("ACT_Burden%1").arg(i+1),
                                             QString("Component forwards burden actual value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("BRD%1").arg(i+1));
@@ -91,7 +90,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_PFACTOR%1").arg(i+1),
+                                            QString("ACT_PFactor%1").arg(i+1),
                                             QString("Component forwards burden powerfactor"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("POF%1").arg(i+1));
@@ -104,7 +103,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_RATIO%1").arg(i+1),
+                                            QString("ACT_Ratio%1").arg(i+1),
                                             QString("Component forwards Burden ratio value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
@@ -132,12 +131,12 @@ void cBurden1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pNominalRangeParameter; // for modules use
 
     m_pNominalBurdenParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                         key = QString("PAR_Burden"),
+                                                         key = QString("PAR_NominalBurden"),
                                                          QString("Component for setting the modules nominal burden"),
                                                          QVariant(m_ConfigData.nominalBurden.m_fValue));
     s = QString("VA");
     m_pNominalBurdenParameter->setUnit(s);
-    m_pNominalBurdenParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","BURDEN", "10", "PAR_Burden", "0", s));
+    m_pNominalBurdenParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","BURDEN", "10", "PAR_NominalBurden", "0", s));
 
     dValidator = new cDoubleValidator(0.1, 500.0, 0.1);
     m_pNominalBurdenParameter->setValidator(dValidator);
@@ -152,7 +151,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     m_pWireLengthParameter->setUnit(s);
     m_pWireLengthParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WLENGTH", "10", "PAR_WireLength", "0", s));
 
-    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+    dValidator = new cDoubleValidator(0.0, 100.0, 0.1);
     m_pWireLengthParameter->setValidator(dValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pWireLengthParameter; // for modules use
