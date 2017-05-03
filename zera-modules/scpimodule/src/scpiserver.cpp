@@ -74,8 +74,6 @@ cSCPIServer::~cSCPIServer()
     delete m_pTcpServer;
     if (m_pSerial)
         delete m_pSerial;
-    if (m_pSerialClient)
-        delete m_pSerialClient;
 }
 
 
