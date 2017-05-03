@@ -67,7 +67,7 @@
     <xs:simpleType name="wirelengthtype">
         <xs:restriction base="xs:float">
             <xs:maxInclusive value='100.0'/>
-            <xs:minInclusive value='0.1'/>
+            <xs:minInclusive value='0.0'/>
         </xs:restriction>
     </xs:simpleType>
 
