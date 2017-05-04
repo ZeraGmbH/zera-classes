@@ -14,6 +14,7 @@ class cModuleValidator: public Zera::CommandValidator
     Q_OBJECT
 public:
     cModuleValidator(cBaseModule* module);
+    virtual ~cModuleValidator(){}
 
     virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
     void setParameterHash(QHash<QString, cVeinModuleParameter *>&parameterhash);

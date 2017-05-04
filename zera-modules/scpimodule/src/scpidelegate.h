@@ -20,6 +20,7 @@ class cSCPIDelegate: public QObject, public cSCPIObject
 public:
     cSCPIDelegate(){}
     cSCPIDelegate(QString cmdParent, QString cmd, quint8 type);
+    virtual ~cSCPIDelegate(){}
 
     void setCommand(cSCPI *scpiCmdInterface);
     virtual bool executeSCPI(const QString&, QString&);

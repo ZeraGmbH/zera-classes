@@ -11,6 +11,7 @@ class cStringValidator: public cParamValidator
 public:
     cStringValidator(QString possibilities); // all possible strings with ';' delimiter
     cStringValidator(QStringList possibilities); // same but as qstringlist
+    virtual ~cStringValidator(){}
     virtual bool isValidParam(QVariant &newValue);
     virtual void exportMetaData(QJsonObject& jsObj);
 

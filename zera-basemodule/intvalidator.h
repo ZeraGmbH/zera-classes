@@ -7,6 +7,7 @@ class cIntValidator: public cParamValidator
 {
 public:
     cIntValidator(qint64 min, qint64 max, qint64 delta = 0);
+    virtual ~cIntValidator(){}
 
     virtual bool isValidParam(QVariant& newValue);
     virtual void exportMetaData(QJsonObject& jsObj);

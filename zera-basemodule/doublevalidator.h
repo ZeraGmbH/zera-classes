@@ -7,6 +7,7 @@ class cDoubleValidator: public cParamValidator
 {
 public:
     cDoubleValidator(double min, double max, double delta);
+    virtual ~cDoubleValidator(){}
 
     virtual bool isValidParam(QVariant& newValue);
     virtual void exportMetaData(QJsonObject& jsObj);
