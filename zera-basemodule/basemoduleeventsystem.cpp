@@ -20,7 +20,8 @@ bool cBaseModuleEventSystem::processEvent(QEvent *t_event)
                 retVal = true;
                 processCommandEvent(cEvent);
                 break;
-
+              default:
+                break;
             }
         }
     }
