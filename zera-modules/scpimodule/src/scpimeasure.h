@@ -26,8 +26,8 @@ class cSCPIMeasure: public QObject
     Q_OBJECT
 
 public:
-    cSCPIMeasure(cSCPIModule* module, cSCPICmdInfo *scpicmdinfo);
-    cSCPIMeasure(const cSCPIMeasure &obj);
+    cSCPIMeasure(cSCPIModule* module, cSCPICmdInfo *scpicmdinfo, QObject *t_parent=0);
+    cSCPIMeasure(const cSCPIMeasure &obj, QObject *t_parent=0);
     virtual ~cSCPIMeasure();
 
     void receiveMeasureValue(QVariant qvar);

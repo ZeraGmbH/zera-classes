@@ -14,14 +14,15 @@
 namespace SCPIMODULE
 {
 
-cSCPIMeasure::cSCPIMeasure(cSCPIModule *module, cSCPICmdInfo *scpicmdinfo)
-    :m_pModule(module), m_pSCPICmdInfo(scpicmdinfo)
+cSCPIMeasure::cSCPIMeasure(cSCPIModule *module, cSCPICmdInfo *scpicmdinfo, QObject *t_parent)
+    :m_pModule(module), m_pSCPICmdInfo(scpicmdinfo), QObject(t_parent)
 {
     initialize();
 }
 
 
-cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj)
+cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj, QObject *t_parent)
+  : QObject(t_parent)
 {
     m_pModule = obj.m_pModule;
     m_pSCPICmdInfo = new cSCPICmdInfo(*obj.m_pSCPICmdInfo);
