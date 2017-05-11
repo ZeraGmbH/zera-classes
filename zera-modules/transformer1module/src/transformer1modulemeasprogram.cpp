@@ -139,6 +139,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     m_pPrimClampSecParameter->setUnit(s);
     m_pPrimClampSecParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","PCSECONDARY", "10", "PAR_PrimClampSec", "0", s));
 
+    dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pPrimClampSecParameter->setValidator(dValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pPrimClampSecParameter; // for modules use
@@ -151,6 +152,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     m_pSecClampPrimParameter->setUnit(s);
     m_pSecClampPrimParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","SCPRIMARY", "10", "PAR_SecClampPrim", "0", s));
 
+    dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecClampPrimParameter->setValidator(dValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pSecClampPrimParameter; // for modules use
@@ -163,6 +165,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     m_pSecClampSecParameter->setUnit(s);
     m_pSecClampSecParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","SCSECONDARY", "10", "PAR_SecClampSec", "0", s));
 
+    dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecClampSecParameter->setValidator(dValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pSecClampSecParameter; // for modules use
@@ -175,6 +178,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     m_pPrimDutParameter->setUnit(s);
     m_pPrimDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTPRIMARY", "10", "PAR_DutPrimary", "0", s));
 
+    dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pPrimDutParameter->setValidator(dValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pPrimDutParameter; // for modules use
@@ -187,6 +191,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     m_pSecDutParameter->setUnit(s);
     m_pSecDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTSECONDARY", "10", "PAR_DutSecondary", "0", s));
 
+    dValidator = new cDoubleValidator(0.000001, 1000000.0, 0.000001);
     m_pSecDutParameter->setValidator(dValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pSecDutParameter; // for modules use
