@@ -164,6 +164,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     m_pWireCrosssectionParameter->setUnit(s);
     m_pWireCrosssectionParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","WCSection", "10", "PAR_WCrosssection", "0", s));
 
+    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
     m_pWireCrosssectionParameter->setValidator(dValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pWireCrosssectionParameter; // for modules use
