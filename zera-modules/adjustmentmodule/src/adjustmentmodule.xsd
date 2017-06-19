@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="yesnotype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='1'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="debugtype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='7'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="porttype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='60000'/>
+            <xs:minExclusive value='1024'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="ipadresstype">
+        <xs:restriction base="xs:string">
+            <xs:pattern value = '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="connectivitytype">
+        <xs:sequence>
+            <xs:element name="debuglevel" type="debugtype"/>
+            <xs:element name="ethernet">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="resourcemanager">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="ip" type="ipadresstype"/>
+                                    <xs:element name="port" type="porttype"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="pcbserver">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="ip" type="ipadresstype"/>
+                                    <xs:element name="port" type="porttype"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:simpleType name="anztype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='12'/>
+            <xs:minInclusive value='1'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="chntype">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="m0"/>
+            <xs:enumeration value="m1"/>
+            <xs:enumeration value="m2"/>
+            <xs:enumeration value="m3"/>
+            <xs:enumeration value="m4"/>
+            <xs:enumeration value="m5"/>
+            <xs:enumeration value="m6"/>
+            <xs:enumeration value="m7"/>
+            <xs:enumeration value="m8"/>
+            <xs:enumeration value="m9"/>
+            <xs:enumeration value="m10"/>
+            <xs:enumeration value="m11"/>
+        </xs:restriction>
+    </xs:complexType>
+
+
+    <xs:complexType name="justinfotype">
+        <xs:sequence>
+            <xs:element name="avail" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="entity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="justchannelinfotype">
+        <xs:sequence>
+            <xs:element name="chn" type="chntype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="amplitudeinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="phaseinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="offsetinfo" type="justinfotype" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="adjustmenttype">
+        <xs:sequence>
+            <xs:element name="channel">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="n" type="anztype" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="chn1" type="justchannelinfotype" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="chn2" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn3" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn4" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn5" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn6" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn7" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn8" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn9" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn10" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn11" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="chn12" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:element name="adjmodconfpar">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="configuration">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="connectivity" type="connectivitytype"/>
+                            <xs:element name="adjustment" type="adjustmenttype"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema> 
+
