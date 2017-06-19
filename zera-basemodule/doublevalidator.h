@@ -7,6 +7,8 @@ class cDoubleValidator: public cParamValidator
 {
 public:
     cDoubleValidator(double min, double max, double delta);
+    cDoubleValidator(const cDoubleValidator& ref);
+
     virtual ~cDoubleValidator(){}
 
     virtual bool isValidParam(QVariant& newValue);
