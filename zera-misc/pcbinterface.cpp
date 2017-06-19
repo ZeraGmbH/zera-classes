@@ -160,6 +160,56 @@ quint32 cPCBInterface::setMMode(QString mmode)
 }
 
 
+quint32 cPCBInterface::adjustComputation()
+{
+    Q_D(cPCBInterface);
+    return d->adjustComputation();
+}
+
+
+quint32 cPCBInterface::adjustStorage()
+{
+    Q_D(cPCBInterface);
+    return d->adjustStorage();
+}
+
+
+quint32 cPCBInterface::adjustInit(QString chnName, QString rngName)
+{
+    Q_D(cPCBInterface);
+    return d->adjustInit(chnName, rngName);
+}
+
+
+quint32 cPCBInterface::setAdjustStatus(QString chnName, QString rngName, int stat)
+{
+    Q_D(cPCBInterface);
+    return d->setAdjustStatus(chnName, rngName, stat);
+}
+
+
+quint32 cPCBInterface::setGainNode(QString chnName, QString rngName, int nr, double corr, double at)
+{
+    Q_D(cPCBInterface);
+    return d->setGainNode(chnName, rngName, nr, corr, at);
+}
+
+
+quint32 cPCBInterface::setPhaseNode(QString chnName, QString rngName, int nr, double corr, double at)
+{
+    Q_D(cPCBInterface);
+    return d->setPhaseNode(chnName, rngName, nr, corr, at);
+}
+
+
+quint32 cPCBInterface::setOffsetNode(QString chnName, QString rngName, int nr, double corr, double at)
+{
+    Q_D(cPCBInterface);
+    return d->setOffsetNode(chnName, rngName, nr, corr, at);
+
+}
+
+
 quint32 cPCBInterface::getAliasSample(QString chnName)
 {
     Q_D(cPCBInterface);

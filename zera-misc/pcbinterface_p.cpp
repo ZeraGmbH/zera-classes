@@ -246,6 +246,89 @@ quint32 cPCBInterfacePrivate::setMMode(QString mmode)
 }
 
 
+quint32 cPCBInterfacePrivate::adjustComputation()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:CORR:COMP;"));
+    m_MsgNrCmdList[msgnr] = adjustcomputation;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::adjustStorage()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ADJ:FLAS:WRIT;"));
+    m_MsgNrCmdList[msgnr] = adjuststorage;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::adjustInit(QString chnName, QString rngName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:init;"));
+    m_MsgNrCmdList[msgnr] = adjustinit;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setAdjustStatus(QString chnName, QString rngName, int stat)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:stat").arg(chnName).arg(rngName),
+                        par = QString("%1;").arg(stat));
+    m_MsgNrCmdList[msgnr] = setadjuststatus;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setGainNode(QString chnName, QString rngName, int nr, double corr, double at)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:gain:node:%3").arg(chnName).arg(rngName).arg(nr),
+                        par = QString("%1;%2;").arg(corr).arg(at));
+    m_MsgNrCmdList[msgnr] = setgainnode;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setPhaseNode(QString chnName, QString rngName, int nr, double corr, double at)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:phas:node:%3").arg(chnName).arg(rngName).arg(nr),
+                        par = QString("%1;%2;").arg(corr).arg(at));
+    m_MsgNrCmdList[msgnr] = setphasenode;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setOffsetNode(QString chnName, QString rngName, int nr, double corr, double at)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:offs:node:%3").arg(chnName).arg(rngName).arg(nr),
+                        par = QString("%1;%2;").arg(corr).arg(at));
+    m_MsgNrCmdList[msgnr] = setoffsetnode;
+    return msgnr;
+}
+
+
+
+
 quint32 cPCBInterfacePrivate::getAliasSource(QString chnName)
 {
     QString cmd;
@@ -577,6 +660,13 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             emit q->serverAnswer(lmsgnr, lreply, returnBool(lmsg));
             break;
 
+        case setoffsetnode:
+        case setphasenode:
+        case setgainnode:
+        case adjuststorage:
+        case adjustinit:
+        case setadjuststatus:
+        case adjustcomputation:
         case setmeasuringmode:
         case setrange:
         case resetstatus:

@@ -52,7 +52,13 @@ public:
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
     virtual quint32 setMMode(QString mmode); // we set the sense mode we get  reply (ack, nak..)
-
+    virtual quint32 adjustComputation(); // all correction coefficients will be computed
+    virtual quint32 adjustStorage(); // all correction data will be stored
+    virtual quint32 adjustInit(QString chnName, QString rngName);
+    virtual quint32 setAdjustStatus(QString chnName, QString rngName, int stat);
+    virtual quint32 setGainNode(QString chnName, QString rngName, int nr, double corr, double at); // node nr, correction, loadpoint
+    virtual quint32 setPhaseNode(QString chnName, QString rngName, int nr, double corr, double at); // node nr, correction, loadpoint = frequency
+    virtual quint32 setOffsetNode(QString chnName, QString rngName, int nr, double corr, double at); // node nr, correction, loadpoint
 
     // all commands to sample interface
     virtual quint32 getAliasSample(QString chnName); // qstring
