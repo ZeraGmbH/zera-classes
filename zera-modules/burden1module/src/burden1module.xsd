@@ -73,7 +73,7 @@
 
     <xs:simpleType name="wirecrosssectiontype">
         <xs:restriction base="xs:float">
-            <xs:maxInclusive value='500.0'/>
+            <xs:maxInclusive value='100.0'/>
             <xs:minInclusive value='0.1'/>
         </xs:restriction>
     </xs:simpleType>
