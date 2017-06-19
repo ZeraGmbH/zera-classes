@@ -10,6 +10,14 @@ cIntValidator::cIntValidator(qint64 min, qint64 max, qint64 delta)
 }
 
 
+cIntValidator::cIntValidator(const cIntValidator &ref)
+{
+    m_nMin = ref.m_nMin;
+    m_nMax = ref.m_nMax;
+    m_nDelta = ref.m_nDelta;
+}
+
+
 bool cIntValidator::isValidParam(QVariant &newValue)
 {
     bool ok;

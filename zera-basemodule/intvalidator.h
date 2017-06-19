@@ -7,6 +7,8 @@ class cIntValidator: public cParamValidator
 {
 public:
     cIntValidator(qint64 min, qint64 max, qint64 delta = 0);
+    cIntValidator(const cIntValidator& ref);
+
     virtual ~cIntValidator(){}
 
     virtual bool isValidParam(QVariant& newValue);
