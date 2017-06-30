@@ -88,7 +88,7 @@ void cAdjustmentModule::setupModule()
     cAdjustmentModuleConfigData* pConfData;
     pConfData = qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
 
-    // we need some program that does the measuring on dsp
+    // we need some program that does the job
     m_pMeasProgram = new cAdjustmentModuleMeasProgram(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));

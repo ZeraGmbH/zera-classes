@@ -19,6 +19,10 @@ enum moduleconfigstate
     setPCBIp,
     setPCBPort,
 
+    setAngleReferenceEntity,
+    setAngleReferenceComponent,
+    setFrequencyReferenceEntity,
+    setFrequencyReferenceComponent,
     setChannelCount,
 
     setChn1Chn = 16, // we leave some place for additional base cmds and commands for up 32 channels

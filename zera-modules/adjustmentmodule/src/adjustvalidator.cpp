@@ -20,7 +20,7 @@ cAdjustValidator3d::~cAdjustValidator3d()
 
 void cAdjustValidator3d::addValidator(QString chnName, QStringList rList, cDoubleValidator parVal)
 {
-    adjValidatorDatad* adjValidator;
+    adjValidatorDatad* adjValidator = new adjValidatorDatad();
     adjValidator->rangeList = rList;
     adjValidator->dValidator = parVal;
 
@@ -32,8 +32,8 @@ bool cAdjustValidator3d::isValidParam(QVariant &newValue)
 {
     QStringList sl;
 
-    sl = newValue.toString().split(';');
-    if ((sl.count() == 4) && (sl.at(3) == ""))
+    sl = newValue.toString().split(',');
+    if (sl.count() == 3)
     {
         QString key;
         key = sl.at(0);
@@ -73,8 +73,8 @@ bool cAdjustValidator2::isValidParam(QVariant &newValue)
 {
     QStringList sl;
 
-    sl = newValue.toString().split(';');
-    if ((sl.count() == 3) && (sl.at(2) == ""))
+    sl = newValue.toString().split(',');
+    if (sl.count() == 2)
     {
         QString key;
         key = sl.at(0);
@@ -96,9 +96,15 @@ void cAdjustValidator2::exportMetaData(QJsonObject &jsObj)
 }
 
 
+cAdjustValidator3i::cAdjustValidator3i(const cAdjustValidator3i &ref)
+{
+    m_adjustValidatorHash = ref.m_adjustValidatorHash;
+}
+
+
 void cAdjustValidator3i::addValidator(QString chnName, QStringList rList, cIntValidator parVal)
 {
-    adjValidatorDatai* adjValidator;
+    adjValidatorDatai* adjValidator = new adjValidatorDatai();
     adjValidator->rangeList = rList;
     adjValidator->iValidator = parVal;
 
@@ -110,8 +116,8 @@ bool cAdjustValidator3i::isValidParam(QVariant &newValue)
 {
     QStringList sl;
 
-    sl = newValue.toString().split(';');
-    if ((sl.count() == 4) && (sl.at(3) == ""))
+    sl = newValue.toString().split(',');
+    if (sl.count() == 3)
     {
         QString key;
         key = sl.at(0);

@@ -8,15 +8,19 @@
 #include "doublevalidator.h"
 #include "intvalidator.h"
 
-struct adjValidatorDatad
+class adjValidatorDatad
 {
+public:
+    adjValidatorDatad(){}
     QStringList rangeList;
     cDoubleValidator dValidator;
 };
 
 
-struct adjValidatorDatai
+class adjValidatorDatai
 {
+public:
+    adjValidatorDatai(){}
     QStringList rangeList;
     cIntValidator iValidator;
 };
@@ -42,6 +46,7 @@ class cAdjustValidator3i: public cParamValidator
 {
 public:
     cAdjustValidator3i(){}
+    cAdjustValidator3i(const cAdjustValidator3i& ref);
     virtual ~cAdjustValidator3i(){}
 
     virtual void addValidator(QString chnName, QStringList rList, cIntValidator parVal);

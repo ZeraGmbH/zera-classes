@@ -69,7 +69,7 @@
     </xs:simpleType>
 
 
-    <xs:complexType name="chntype">
+    <xs:simpleType name="chntype">
         <xs:restriction base="xs:string">
             <xs:enumeration value="m0"/>
             <xs:enumeration value="m1"/>
@@ -84,7 +84,7 @@
             <xs:enumeration value="m10"/>
             <xs:enumeration value="m11"/>
         </xs:restriction>
-    </xs:complexType>
+    </xs:simpleType>
 
 
     <xs:complexType name="justinfotype">
@@ -95,6 +95,12 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="referencetype">
+        <xs:sequence>
+            <xs:element name="entity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="component" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="justchannelinfotype">
         <xs:sequence>
@@ -111,6 +117,8 @@
             <xs:element name="channel">
                 <xs:complexType>
                     <xs:sequence>
+                        <xs:element name="anglereference" type="referencetype" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="frequencyreference" type="referencetype" minOccurs="1" maxOccurs="1"/>
                         <xs:element name="n" type="anztype" minOccurs="1" maxOccurs="1"/>
                         <xs:element name="chn1" type="justchannelinfotype" minOccurs="1" maxOccurs="1"/>
                         <xs:element name="chn2" type="justchannelinfotype" minOccurs="0" maxOccurs="1"/>

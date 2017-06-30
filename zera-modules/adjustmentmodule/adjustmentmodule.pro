@@ -27,7 +27,7 @@ INCLUDEPATH += ../interface \
     ../../zera-basemodule
 
 
-TARGET = $$qtLibraryTarget(power3module)
+TARGET = $$qtLibraryTarget(adjustmentmodule)
 
 
 INCLUDEPATH += "src"

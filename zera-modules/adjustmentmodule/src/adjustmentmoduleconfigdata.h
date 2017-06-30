@@ -21,7 +21,7 @@ struct adjInfoType
 class cAdjChannelInfo
 {
 public:
-    cAdjChannelInfo();
+    cAdjChannelInfo(){}
 
     adjInfoType amplitudeAdjInfo;
     adjInfoType phaseAdjInfo;
@@ -37,6 +37,8 @@ public:
     quint8 m_nDebugLevel;
     quint8 m_nAdjustmentChannelCount;
     QList<QString> m_AdjChannelList;
+    adjInfoType m_ReferenceAngle;
+    adjInfoType m_ReferenceFrequency;
     QHash<QString, cAdjChannelInfo*> m_AdjChannelInfoHash;
     cSocket m_RMSocket;
     cSocket m_PCBSocket;

@@ -46,7 +46,9 @@ enum adjustmentmoduleCmds
     adjustcomputation,
     adjuststorage,
     adjustinit,
-    setadjuststatus,
+    setadjustgainstatus,
+    setadjustphasestatus,
+    setadjustoffsetstatus,
     getgaincorrection,
     setgainnode,
     getphasecorrection,
@@ -63,7 +65,7 @@ class cAdjustmentModule;
 class cAdjustChannelInfo
 {
 public:
-    cAdjustChannelInfo();
+    cAdjustChannelInfo(){}
 
     QString m_sAlias;
     QStringList m_sRangelist;
@@ -106,15 +108,18 @@ private:
     QString m_sAdjustRange;
     double m_AdjustTargetValue;
     double m_AdjustActualValue;
+    double m_AdjustFrequency;
     double m_AdjustCorrection;
     int m_AdjustEntity;
     QString m_AdjustComponent;
 
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);
+    double symAngle(double ang);
 
     Zera::Server::cRMInterface* m_pRMInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Server::cPCBInterface *pcbInterface;
 
     QHash<QString,int> m_chnPortHash; // a hash for our channels ethernet ports
     QHash<int, QString> m_portChannelHash; // a list of ports for which we have established connection
@@ -132,7 +137,9 @@ private:
 
     cVeinModuleParameter* m_pPARComputation;
     cVeinModuleParameter* m_pPARStorage;
-    cVeinModuleParameter* m_pPARAdjustStatus;
+    cVeinModuleParameter* m_pPARAdjustGainStatus;
+    cVeinModuleParameter* m_pPARAdjustPhaseStatus;
+    cVeinModuleParameter* m_pPARAdjustOffsetStatus;
     cVeinModuleParameter* m_pPARAdjustInit;
     cVeinModuleParameter* m_pPARAdjustAmplitude;
     cVeinModuleParameter* m_pPARAdjustPhase;
@@ -224,7 +231,9 @@ private slots:
     void storageTest();
     void storageFinished();
 
-    void setAdjustStatusStartCommand(QVariant var);
+    void setAdjustGainStatusStartCommand(QVariant var);
+    void setAdjustPhaseStatusStartCommand(QVariant var);
+    void setAdjustOffsetStatusStartCommand(QVariant var);
     void setAdjustInitStartCommand(QVariant var);
 
     void setAdjustAmplitudeStartCommand(QVariant var);

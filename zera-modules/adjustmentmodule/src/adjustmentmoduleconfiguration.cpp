@@ -41,7 +41,12 @@ void cAdjustmentModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBIp;
     m_ConfigXMLMap["adjmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBPort;
 
-    m_ConfigXMLMap["adjmodconfpar:adjustment:channel:n"] = setChannelCount;
+    m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:anglereference:entity"] = setAngleReferenceEntity;
+    m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:anglereference:component"] = setAngleReferenceComponent;
+    m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:frequencyreference:entity"] = setFrequencyReferenceEntity;
+    m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:frequencyreference:component"] = setFrequencyReferenceComponent;
+
+    m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:n"] = setChannelCount;
     // rest of hash table is initialized dynamically depending on channel count
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
@@ -88,22 +93,35 @@ void cAdjustmentModuleConfiguration::configXMLInfo(QString key)
         case setPCBPort:
             m_pAdjustmentModulConfigData->m_PCBSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             break;
+        case setAngleReferenceEntity:
+            m_pAdjustmentModulConfigData->m_ReferenceAngle.m_nEntity = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setAngleReferenceComponent:
+            m_pAdjustmentModulConfigData->m_ReferenceAngle.m_sComponent = m_pXMLReader->getValue(key);
+            break;
+        case setFrequencyReferenceEntity:
+            m_pAdjustmentModulConfigData->m_ReferenceFrequency.m_nEntity = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setFrequencyReferenceComponent:
+            m_pAdjustmentModulConfigData->m_ReferenceFrequency.m_sComponent = m_pXMLReader->getValue(key);
+            break;
+
         case setChannelCount:
         {
             int nr;
             nr = m_pAdjustmentModulConfigData->m_nAdjustmentChannelCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < nr; i++)
             {
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:chn").arg(i+1)] = setChn1Chn + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:amplitudeinfo:avail").arg(i+1)] = setChn1AmplInfoAvail + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:amplitudeinfo:entity").arg(i+1)] = setChn1AmplInfoEntity + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:amplitudeinfo:component").arg(i+1)] = setChn1AmplInfoComponent + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:phaseinfo:avail").arg(i+1)] = setChn1PhaseInfoAvail + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:phaseinfo:entity").arg(i+1)] = setChn1PhaseInfoEntity + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:phaseinfo:component").arg(i+1)] = setChn1PhaseInfoComponent + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:offsetinfo:avail").arg(i+1)] = setChn1OffsInfoAvail + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:offsetinfo:entity").arg(i+1)] = setChn1OffsInfoEntity + i;
-                m_ConfigXMLMap[QString("adjmodconfpar:adjustment:channel:chn%1:offsetinfo:component").arg(i+1)] = setChn1OffsInfoComponent + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:chn").arg(i+1)] = setChn1Chn + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:amplitudeinfo:avail").arg(i+1)] = setChn1AmplInfoAvail + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:amplitudeinfo:entity").arg(i+1)] = setChn1AmplInfoEntity + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:amplitudeinfo:component").arg(i+1)] = setChn1AmplInfoComponent + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:phaseinfo:avail").arg(i+1)] = setChn1PhaseInfoAvail + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:phaseinfo:entity").arg(i+1)] = setChn1PhaseInfoEntity + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:phaseinfo:component").arg(i+1)] = setChn1PhaseInfoComponent + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:offsetinfo:avail").arg(i+1)] = setChn1OffsInfoAvail + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:offsetinfo:entity").arg(i+1)] = setChn1OffsInfoEntity + i;
+                m_ConfigXMLMap[QString("adjmodconfpar:configuration:adjustment:channel:chn%1:offsetinfo:component").arg(i+1)] = setChn1OffsInfoComponent + i;
             }
 
             break;
@@ -198,6 +216,8 @@ void cAdjustmentModuleConfiguration::configXMLInfo(QString key)
                 adjChannelInfo = m_pAdjustmentModulConfigData->m_AdjChannelInfoHash[chn];
                 adjChannelInfo->phaseAdjInfo.m_sComponent = m_pXMLReader->getValue(key);
             }
+
+            else
 
             if ((cmd >= setChn1OffsInfoAvail) && (cmd < setChn1OffsInfoAvail + 32))
             {
