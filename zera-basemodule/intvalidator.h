@@ -6,6 +6,7 @@
 class cIntValidator: public cParamValidator
 {
 public:
+    cIntValidator(){}
     cIntValidator(qint64 min, qint64 max, qint64 delta = 0);
     cIntValidator(const cIntValidator& ref);
 
