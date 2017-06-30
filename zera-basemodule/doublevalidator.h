@@ -6,6 +6,7 @@
 class cDoubleValidator: public cParamValidator
 {
 public:
+    cDoubleValidator(){}
     cDoubleValidator(double min, double max, double delta);
     cDoubleValidator(const cDoubleValidator& ref);
 
