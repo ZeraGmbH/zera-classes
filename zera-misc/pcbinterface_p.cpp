@@ -273,20 +273,44 @@ quint32 cPCBInterfacePrivate::adjustInit(QString chnName, QString rngName)
     QString cmd;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:init;"));
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:init;").arg(chnName).arg(rngName));
     m_MsgNrCmdList[msgnr] = adjustinit;
     return msgnr;
 }
 
 
-quint32 cPCBInterfacePrivate::setAdjustStatus(QString chnName, QString rngName, int stat)
+quint32 cPCBInterfacePrivate::setAdjustGainStatus(QString chnName, QString rngName, int stat)
 {
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:stat").arg(chnName).arg(rngName),
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:gain:stat").arg(chnName).arg(rngName),
                         par = QString("%1;").arg(stat));
-    m_MsgNrCmdList[msgnr] = setadjuststatus;
+    m_MsgNrCmdList[msgnr] = setadjustgainstatus;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setAdjustPhaseStatus(QString chnName, QString rngName, int stat)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:phas:stat").arg(chnName).arg(rngName),
+                        par = QString("%1;").arg(stat));
+    m_MsgNrCmdList[msgnr] = setadjustphasestatus;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setAdjustOffsetStatus(QString chnName, QString rngName, int stat)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:offs:stat").arg(chnName).arg(rngName),
+                        par = QString("%1;").arg(stat));
+    m_MsgNrCmdList[msgnr] = setadjustoffsetstatus;
     return msgnr;
 }
 
@@ -665,7 +689,9 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case setgainnode:
         case adjuststorage:
         case adjustinit:
-        case setadjuststatus:
+        case setadjustgainstatus:
+        case setadjustphasestatus:
+        case setadjustoffsetstatus:
         case adjustcomputation:
         case setmeasuringmode:
         case setrange:

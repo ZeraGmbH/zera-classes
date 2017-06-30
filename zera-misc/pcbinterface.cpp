@@ -13,6 +13,11 @@ cPCBInterface::cPCBInterface()
 }
 
 
+cPCBInterface::~cPCBInterface()
+{
+}
+
+
 void cPCBInterface::setClient(Proxy::cProxyClient *client)
 {
     Q_D(cPCBInterface);
@@ -181,10 +186,24 @@ quint32 cPCBInterface::adjustInit(QString chnName, QString rngName)
 }
 
 
-quint32 cPCBInterface::setAdjustStatus(QString chnName, QString rngName, int stat)
+quint32 cPCBInterface::setAdjustGainStatus(QString chnName, QString rngName, int stat)
 {
     Q_D(cPCBInterface);
-    return d->setAdjustStatus(chnName, rngName, stat);
+    return d->setAdjustGainStatus(chnName, rngName, stat);
+}
+
+
+quint32 cPCBInterface::setAdjustPhaseStatus(QString chnName, QString rngName, int stat)
+{
+    Q_D(cPCBInterface);
+    return d->setAdjustPhaseStatus(chnName, rngName, stat);
+}
+
+
+quint32 cPCBInterface::setAdjustOffsetStatus(QString chnName, QString rngName, int stat)
+{
+    Q_D(cPCBInterface);
+    return d->setAdjustOffsetStatus(chnName, rngName, stat);
 }
 
 
