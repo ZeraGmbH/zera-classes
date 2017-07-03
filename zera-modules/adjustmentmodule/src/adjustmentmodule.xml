@@ -5,11 +5,11 @@
             <debuglevel>0</debuglevel>
             <ethernet>
                 <resourcemanager>
-                    <ip>192.168.7.222</ip>
+                    <ip>127.0.0.1</ip>
                     <port>6312</port>
                 </resourcemanager>
                 <pcbserver>
-                    <ip>192.168.7.222</ip>
+                    <ip>127.0.0.1</ip>
                     <port>6307</port>
                 </pcbserver>
             </ethernet>
