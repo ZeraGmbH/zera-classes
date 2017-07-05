@@ -24,7 +24,7 @@
                     <entity>1001</entity>
                     <component>ACT_Frequency</component>
                 </frequencyreference>
-                <n>3</n>
+                <n>6</n>
                 <chn1>
                     <chn>m0</chn>
                     <amplitudeinfo>
@@ -79,6 +79,60 @@
                         <component>ACT_RMSPN3</component>
                     </offsetinfo>
                 </chn3>
+                <chn4>
+                    <chn>m3</chn>
+                    <amplitudeinfo>
+                        <avail>1</avail>
+                        <entity>1003</entity>
+                        <component>ACT_RMSPN4</component>
+                    </amplitudeinfo>
+                    <phaseinfo>
+                        <avail>1</avail>
+                        <entity>1004</entity>
+                        <component>ACT_DFTPN4</component>
+                    </phaseinfo>
+                    <offsetinfo>
+                        <avail>0</avail>
+                        <entity>1003</entity>
+                        <component>ACT_RMSPN4</component>
+                    </offsetinfo>
+                </chn4>
+                <chn5>
+                    <chn>m4</chn>
+                    <amplitudeinfo>
+                        <avail>1</avail>
+                        <entity>1003</entity>
+                        <component>ACT_RMSPN5</component>
+                    </amplitudeinfo>
+                    <phaseinfo>
+                        <avail>1</avail>
+                        <entity>1004</entity>
+                        <component>ACT_DFTPN5</component>
+                    </phaseinfo>
+                    <offsetinfo>
+                        <avail>0</avail>
+                        <entity>1003</entity>
+                        <component>ACT_RMSPN5</component>
+                    </offsetinfo>
+                </chn5>
+                <chn6>
+                    <chn>m5</chn>
+                    <amplitudeinfo>
+                        <avail>1</avail>
+                        <entity>1003</entity>
+                        <component>ACT_RMSPN4</component>
+                    </amplitudeinfo>
+                    <phaseinfo>
+                        <avail>1</avail>
+                        <entity>1004</entity>
+                        <component>ACT_DFTPN4</component>
+                    </phaseinfo>
+                    <offsetinfo>
+                        <avail>0</avail>
+                        <entity>1003</entity>
+                        <component>ACT_RMSPN4</component>
+                    </offsetinfo>
+                </chn6>
             </channel>
         </adjustment>
     </configuration>
