@@ -315,6 +315,9 @@ void cRangeObsermatic::rangeAutomatic()
                     m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 }
             }
+
+            else
+                unmarkOverload = false;
         }
 
         if (unmarkOverload) // if we could recover all overloads
