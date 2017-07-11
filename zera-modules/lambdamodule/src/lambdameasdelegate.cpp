@@ -41,19 +41,15 @@ void cLambdaMeasDelegate::computeOutput()
     if (input2 == 0)
     {
         lambda = qSNaN();
-        m_pActValue->setValue(lambda);
-#ifdef DEBUG
-    QString ts;
-    ts = QString("Lambda: %1").arg(lambda);
-    qDebug() << ts;
-#endif
-        return;
     }
-
-    lambda = input1 / input2;
-
-    if (fabs(lambda) > 1.0000001)
-        lambda = qSNaN();
+    else
+    {
+        lambda = input1 / input2;
+        if (fabs(lambda) > 1.0)
+            lambda = 1.0;
+        // we would perhaps better create a complete new measurement module
+        // that compute P and S and then lambda
+    }
 
 #ifdef DEBUG
     QString ts;
