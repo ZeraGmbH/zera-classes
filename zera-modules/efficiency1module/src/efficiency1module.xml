@@ -6,7 +6,7 @@
         </connectivity>
         <measure>
             <powerinput>
-                <inputentity>1006</inputentity>
+                <inputentity>1070</inputentity>
                 <system>
                     <n>3</n>
                     <pms1>ACT_PQS1</pms1>
@@ -15,7 +15,7 @@
                 </system>
             </powerinput>
             <poweroutput>
-                <inputentity>1006</inputentity>
+                <inputentity>1070</inputentity>
                 <system>
                     <n>3</n>
                     <pms1>ACT_PQS1</pms1>

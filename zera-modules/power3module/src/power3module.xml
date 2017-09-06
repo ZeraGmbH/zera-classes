@@ -5,7 +5,7 @@
             <debuglevel>0</debuglevel>
         </connectivity>
         <measure>
-            <inputentity>1005</inputentity>
+            <inputentity>1060</inputentity>
             <system>
                 <n>3</n>
                 <pms1>ACT_FFT1,ACT_FFT4,P1(UL1xIL1)</pms1>

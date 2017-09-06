@@ -5,7 +5,7 @@
             <debuglevel>0</debuglevel>
         </connectivity>
         <measure>
-            <inputentity>1004</inputentity>
+            <inputentity>1050</inputentity>
             <system>
                 <n>1</n>
                 <trs1>ACT_DFTPN4,ACT_DFTPN5,TRF1</trs1>

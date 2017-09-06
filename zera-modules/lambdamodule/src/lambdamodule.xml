@@ -9,31 +9,31 @@
                 <n>3</n>
                 <lambda1>
                     <p>
-                        <inputentity>1006</inputentity>
+                        <inputentity>1070</inputentity>
                         <component>ACT_PQS1</component>
                     </p>
                     <s>
-                        <inputentity>1008</inputentity>
+                        <inputentity>1072</inputentity>
                         <component>ACT_PQS1</component>
                     </s>
                 </lambda1>
                 <lambda2>
                     <p>
-                        <inputentity>1006</inputentity>
+                        <inputentity>1070</inputentity>
                         <component>ACT_PQS2</component>
                     </p>
                     <s>
-                        <inputentity>1008</inputentity>
+                        <inputentity>1072</inputentity>
                         <component>ACT_PQS2</component>
                     </s>
                 </lambda2>
                 <lambda3>
                     <p>
-                        <inputentity>1006</inputentity>
+                        <inputentity>1070</inputentity>
                         <component>ACT_PQS3</component>
                     </p>
                     <s>
-                        <inputentity>1008</inputentity>
+                        <inputentity>1072</inputentity>
                         <component>ACT_PQS3</component>
                     </s>
                 </lambda3>
