@@ -847,6 +847,7 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
             cmd -= setrange;
             // this is our synchronization..setValue emits notification
             m_RangeParameterList.at(cmd)->setValue(QVariant(m_actChannelRangeList.at(cmd)));
+            m_actChannelRangeNotifierList.replace(cmd, (m_actChannelRangeList.at(cmd)));
             if (m_nRangeSetPending > 0)
             {
                 m_nRangeSetPending--;
