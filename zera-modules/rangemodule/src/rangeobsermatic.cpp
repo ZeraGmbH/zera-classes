@@ -130,6 +130,7 @@ void cRangeObsermatic::generateInterface()
         m_pModule->veinModuleParameterHash[key] = pParameter; // for modules use
 
         m_actChannelRangeList.append(s); // here we also fill our internal actual channel range list
+        m_actChannelRangeNotifierList.append(QString(""));
         m_ChannelAliasList.append(s); // also a list for alias names
         m_RangeMeasChannelList.append(m_pModule->getMeasChannel(m_ChannelNameList.at(i)));
 
@@ -435,10 +436,20 @@ void cRangeObsermatic::setRanges(bool force)
         }
 
         else
-            m_RangeParameterList.at(i)->setValue(QVariant(m_actChannelRangeList.at(i)));
-        // the parameter delegate had memorized that there will be a deferred notification
-        // so we have to give this even in case nothing has changed. otherwise there will
-        // remain pending synch. marks
+        {
+            // the parameter delegate had memorized that there will be a deferred notification
+            // so we have to give this even in case nothing has changed. otherwise there will
+            // remain pending synchronisation marks...but we must remember when we have sent notification
+            // to ensure that we only send it once after change
+
+            if (m_actChannelRangeNotifierList.at(i) != m_actChannelRangeList.at(i))
+            {
+                m_RangeParameterList.at(i)->setValue(QVariant(m_actChannelRangeList.at(i)));
+                m_actChannelRangeNotifierList.replace(i, (m_actChannelRangeList.at(i)));
+            }
+        }
+
+
 
     }
 
@@ -676,6 +687,9 @@ void cRangeObsermatic::newRange(QVariant range)
                 m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
                 m_brangeSet = true;
             }
+
+            m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
+
         }
 
         groupHandling();
