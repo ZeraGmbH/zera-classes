@@ -226,7 +226,10 @@ bool cBaseModule::isConfigured() const
 void cBaseModule::startModule()
 {
     if (m_bStateMachineStarted)
+    {
         emit sigRun(); // if our statemachine is already started we emit signal at once
+        startMeas();
+    }
     else
         m_bStartCmd = true; // otherwise we keep in mind that we should configure when machine starts
 }
@@ -235,7 +238,10 @@ void cBaseModule::startModule()
 void cBaseModule::stopModule()
 {
     if (m_bStateMachineStarted)
+    {
         emit sigStop(); // if our statemachine is already started we emit signal at once
+        stopMeas();
+    }
     else
         m_bStopCmd = true; // otherwise we keep in mind that we should configure when machine starts
 
