@@ -273,7 +273,8 @@ void cPower2ModuleMeasProgram::start()
 void cPower2ModuleMeasProgram::stop()
 {
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
-    disconnect(m_pMovingwindowFilter, 0, 0, 0);}
+    disconnect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, 0);
+}
 
 
 void cPower2ModuleMeasProgram::generateInterface()

@@ -163,7 +163,8 @@ void cThdnModuleMeasProgram::start()
 void cThdnModuleMeasProgram::stop()
 {
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
-    disconnect(m_pMovingwindowFilter, 0, 0, 0);}
+    disconnect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, 0);
+}
 
 
 void cThdnModuleMeasProgram::generateInterface()

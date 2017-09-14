@@ -141,7 +141,7 @@ void cOsciModuleMeasProgram::start()
 
 void cOsciModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
 

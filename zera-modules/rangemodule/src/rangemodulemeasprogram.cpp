@@ -94,13 +94,14 @@ cRangeModuleMeasProgram::~cRangeModuleMeasProgram()
 
 void cRangeModuleMeasProgram::start()
 {
+    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
     connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cRangeModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    //disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
 
