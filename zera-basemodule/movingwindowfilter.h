@@ -44,7 +44,7 @@ private:
     QState* m_pbuildupFilter3State;
     QState* m_preadyFilterState;
     QState* m_pdoFilterState;
-    QState* m_pFinishState;
+    QFinalState* m_pFinishState;
 
     void addnewValues();
 

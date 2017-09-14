@@ -12,7 +12,7 @@ cMovingwindowFilter::cMovingwindowFilter(float time)
     m_pbuildupFilter3State = new QState(m_pactiveState);
     m_preadyFilterState = new QState(m_pactiveState);
     m_pdoFilterState = new QState(m_pactiveState);
-    m_pFinishState = new QState();
+    m_pFinishState = new QFinalState();
 
     m_pactiveState->addTransition(this, SIGNAL(finishFilter()), m_pFinishState);
     m_pinitFilterState->addTransition(this, SIGNAL(newActualValues()), m_psetupFilterState);
