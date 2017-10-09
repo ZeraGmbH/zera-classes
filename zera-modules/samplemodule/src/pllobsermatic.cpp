@@ -102,7 +102,7 @@ void cPllObsermatic::deleteInterface()
 
 void cPllObsermatic::pllAutomatic()
 {
-    if (m_bActive && m_ConfPar.m_ObsermaticConfPar.m_bpllAuto) // was automatic configured
+    if (m_bActive && (m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) ) // was automatic configured
     {
         int i, n;
         n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
