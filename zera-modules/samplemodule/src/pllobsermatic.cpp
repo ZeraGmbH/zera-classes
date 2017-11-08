@@ -239,6 +239,7 @@ void cPllObsermatic::catchChannelReply(quint32 msgnr)
     {
     case setpll:
         m_pPllSignal->setValue(QVariant(0)); // pll change finished
+        m_pPllChannel->setValue(QVariant(m_sNewPllChannel));
         m_sActPllChannel = m_sNewPllChannel;
         break;
     }
