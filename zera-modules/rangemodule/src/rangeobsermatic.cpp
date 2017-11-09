@@ -32,6 +32,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     m_brangeSet =false;
     m_bRanging = false;
     m_nWaitAfterRanging = 0;
+    m_nRangeSetPending = 0;
 
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
     for (int i = 0; i < m_ChannelNameList.count(); i++)
@@ -514,11 +515,6 @@ void cRangeObsermatic::readGainCorrDone()
     newRangeAuto(m_ConfPar.m_nRangeAutoAct.m_nActive);
     newGrouping(m_ConfPar.m_nGroupAct.m_nActive);
     setRanges(); // so we set our scaling factors if not already done
-
-    // after activation we reset the pending counter
-    // because signal/slot connections are not yet established
-    // and so we don't get signals from ranges that were set
-    m_nRangeSetPending = 0;
 
     // we already read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
