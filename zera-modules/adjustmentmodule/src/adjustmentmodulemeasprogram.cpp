@@ -774,7 +774,7 @@ void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
 {
     double Corr;
 
-    Corr = m_AdjustTargetValue / m_AdjustActualValue;
+    Corr = m_AdjustTargetValue * m_AdjustCorrection / m_AdjustActualValue ; // we simlpy correct the actualvalue before calculating corr
     m_MsgNrCmdList[m_AdjustPCBInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
     m_nAdjustGainIt++;
 }
@@ -802,7 +802,7 @@ void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 {
     double Corr;
 
-    Corr = symAngle(m_AdjustTargetValue - m_AdjustActualValue);
+    Corr = symAngle(m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection); // we simlpy correct the actualvalue before calculating corr
     m_MsgNrCmdList[m_AdjustPCBInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
     m_nAdjustPhaseIt++;
 }
@@ -828,7 +828,7 @@ void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
 {
     double Corr;
 
-    Corr = m_AdjustTargetValue - m_AdjustActualValue;
+    Corr = m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustComponent); // we simlpy correct the actualvalue before calculating corr
     m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
     m_nAdjustOffsetIt++;
 }
@@ -1042,14 +1042,15 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
+                    /*
                     if (fabs(m_AdjustCorrection - 1.0) > 1e-7)
                     {
                         m_adjustAmplitudeMachine.stop();
                         emit errMsg(tr(adjustinitPCBErrMSG));
                         emit adjustError();
                     }
-                    else
-                        emit adjustamplitudeContinue();
+                    else*/
+                    emit adjustamplitudeContinue();
                 }
                 else
                 {
@@ -1122,13 +1123,14 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
+                    /*
                     if (fabs(m_AdjustCorrection) > 1e-7)
                     {
                         emit errMsg(tr(adjustinitPCBErrMSG));
                         emit adjustError();
                     }
-                    else
-                        emit adjustphaseContinue();
+                    else*/
+                    emit adjustphaseContinue();
                 }
                 else
                 {
