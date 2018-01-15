@@ -15,7 +15,9 @@
 #include <veinmoduleparameter.h>
 #include <veinmoduleactvalue.h>
 #include <modulevalidator.h>
+#include <stringvalidator.h>
 #include <doublevalidator.h>
+#include <complex.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -211,6 +213,16 @@ void cDftModuleMeasProgram::generateInterface()
     cDoubleValidator *dValidator;
     dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
     m_pIntegrationTimeParameter->setValidator(dValidator);
+
+    m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                      key = QString("PAR_RefChannel"),
+                                                      QString("Component for setting the modules reference channel"),
+                                                      QVariant(m_ConfigData.m_sRefChannel.m_sPar));
+
+    m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
+
+    m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
+    // we must set validator after activation because we don't know the channel names here
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
@@ -700,6 +712,29 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
 }
 
 
+void cDftModuleMeasProgram::setRefChannelValidator()
+{
+    int i, n;
+    QList<QString> keylist;
+    QStringList sl;
+    QString key, alias;
+    cStringValidator *sValidator;
+
+    keylist = m_measChannelInfoHash.keys();
+    n = keylist.count();
+
+    for (i = 0; i < n; i++)
+    {
+        key = keylist.at(i);
+        alias = m_measChannelInfoHash.value(key).alias;
+        sl.append(alias);
+        m_ChannelSystemNameHash[alias] = key;
+    }
+
+    sValidator = new cStringValidator(sl);
+    m_pRefChannelParameter->setValidator(sValidator);
+}
+
 
 void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
@@ -905,9 +940,11 @@ void cDftModuleMeasProgram::activateDSPdone()
 
     setActualValuesNames();
     setSCPIMeasInfo();
+    setRefChannelValidator();
 
     m_pMeasureSignal->setValue(QVariant(1));
     connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+    connect(m_pRefChannelParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefChannel(QVariant)));
 
     emit activated();
 }
@@ -972,6 +1009,7 @@ void cDftModuleMeasProgram::dataReadDSP()
         double corr;
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
 
+        /*
         // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
         // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
         if (m_ConfigData.m_nDftOrder == 0)
@@ -987,6 +1025,77 @@ void cDftModuleMeasProgram::dataReadDSP()
             m_ModuleActualValues.replace(i*2+1, im);
             re = m_ModuleActualValues[i*2] * corr;
             m_ModuleActualValues.replace(i*2, re);
+        }
+        */
+
+
+        // dft(0) is a speciality. sin and cos in dsp are set so that we get amplitude rather than energy.
+        // so dc is multiplied  by sqrt(2) * sqrt(2) = 2
+        if (m_ConfigData.m_nDftOrder == 0)
+        {
+            double re;
+            for (int i = 0; i < m_ActValueList.count(); i++)
+            {
+                re = m_ModuleActualValues[i*2] * 0.5;
+                m_ModuleActualValues.replace(i*2, re);
+            }
+        }
+        else
+        {
+            // as our dft produces math positive values, we correct them to technical positive values
+            for (int i = 0; i < m_ActValueList.count(); i++)
+            {
+                double im;
+                for (int i = 0; i < m_ActValueList.count(); i++)
+                {
+                    im = m_ModuleActualValues[i*2+1] * -1.0;
+                    m_ModuleActualValues.replace(i*2+1, im);
+                }
+            }
+
+            // first we test that reference channel is configured
+            if (m_ConfigData.m_bRefChannelOn)
+            {
+                // if so ....
+                QHash<QString, complex> DftActValuesHash;
+
+                for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+                  DftActValuesHash[m_ConfigData.m_valueChannelList.at(i)] = complex(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
+
+                complex complexRef = DftActValuesHash.value(m_ChannelSystemNameHash.value(m_ConfigData.m_sRefChannel.m_sPar));
+                double tanRef = complexRef.im() / complexRef.re();
+                double divisor = sqrt(1.0+(tanRef * tanRef));
+                complex turnVector = complex((1.0 / divisor), (tanRef / divisor));
+
+                for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+                {
+                    QString key;
+                    key = m_ConfigData.m_valueChannelList.at(i);
+                    complex newDft = DftActValuesHash.take(key);
+                    newDft *= turnVector;
+                    DftActValuesHash[key] = newDft;
+                }
+
+                // now we have to compute the difference vectors and store all new values
+                for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+                {
+                    QString key;
+                    QStringList sl;
+
+                    key = m_ConfigData.m_valueChannelList.at(i);
+                    sl = key.split('-');
+
+                    // we have 2 entries
+                    if (sl.count() == 2)
+                    {
+                        DftActValuesHash.remove(key);
+                        DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
+                    }
+
+                    m_ModuleActualValues.replace(i*2, DftActValuesHash[key].re());
+                    m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].im());
+                }
+            }
         }
 
         emit actualValues(&m_ModuleActualValues); // and send them
@@ -1037,6 +1146,13 @@ void cDftModuleMeasProgram::newIntegrationtime(QVariant ti)
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
 
+    emit m_pModule->parameterChanged();
+}
+
+
+void cDftModuleMeasProgram::newRefChannel(QVariant refchn)
+{
+    m_ConfigData.m_sRefChannel.m_sPar = refchn.toString();
     emit m_pModule->parameterChanged();
 }
 
