@@ -802,7 +802,7 @@ void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 {
     double Corr;
 
-    Corr = symAngle(m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection); // we simlpy correct the actualvalue before calculating corr
+    Corr = symAngle(m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection)); // we simlpy correct the actualvalue before calculating corr
     m_MsgNrCmdList[m_AdjustPCBInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
     m_nAdjustPhaseIt++;
 }
@@ -828,7 +828,7 @@ void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
 {
     double Corr;
 
-    Corr = m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustComponent); // we simlpy correct the actualvalue before calculating corr
+    Corr = m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection); // we simlpy correct the actualvalue before calculating corr
     m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
     m_nAdjustOffsetIt++;
 }
