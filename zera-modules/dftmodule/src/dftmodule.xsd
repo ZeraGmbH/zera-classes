@@ -122,6 +122,7 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="movingwindow" type="movingwindowtype"/>
+            <xs:element name="refchannelon" type="yesnotype"/>
         </xs:sequence>
     </xs:complexType>
 
@@ -133,6 +134,10 @@
         </xs:restriction>
     </xs:simpleType>
 
+
+    <xs:simpleType name="refchanneltype">
+        <xs:restriction base="xs:string"/>
+    </xs:simpleType>
 
     <xs:element name="dftmodconfpar">
         <xs:complexType>
@@ -149,6 +154,7 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="interval" type="measureintervaltype"/>
+                            <xs:element name="refchannel" type="refchanneltype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

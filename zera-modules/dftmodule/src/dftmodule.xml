@@ -38,11 +38,13 @@
                         <on>1</on>
                         <time>0.5</time>
                     </movingwindow>
+                    <refchannelon>1</refchannelon>
                 </measure>
 	</configuration>
 	
 	<parameter>
                 <interval>1.0</interval>
+                <refchannel>UL1</refchannel>
         </parameter>
 
 </dftmodconfpar>
