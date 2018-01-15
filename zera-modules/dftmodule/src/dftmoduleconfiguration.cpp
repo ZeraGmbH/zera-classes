@@ -46,8 +46,10 @@ void cDftModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:values:n"] = setValueCount;
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:refchannelon"] = setRefChannelOn;
 
     m_ConfigXMLMap["dftmodconfpar:parameter:interval"] = setMeasureInterval;
+    m_ConfigXMLMap["dftmodconfpar:parameter:refchannel"] = setRefChannel;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -61,6 +63,11 @@ QByteArray cDftModuleConfiguration::exportConfiguration()
     doubleParameter* dPar;
     dPar = &m_pDftModulConfigData->m_fMeasInterval;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fValue));
+
+    stringParameter* sPar;
+    sPar = &m_pDftModulConfigData->m_sRefChannel;
+    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -121,6 +128,14 @@ void cDftModuleConfiguration::configXMLInfo(QString key)
             m_pDftModulConfigData->m_fMeasInterval.m_sKey = key;
             m_pDftModulConfigData->m_fMeasInterval.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
+        case setRefChannel:
+            m_pDftModulConfigData->m_sRefChannel.m_sKey = key;
+            m_pDftModulConfigData->m_sRefChannel.m_sPar = m_pXMLReader->getValue(key);
+            break;
+        case setRefChannelOn:
+            m_pDftModulConfigData->m_bRefChannelOn = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
+            break;
+
         default:
             if ((cmd >= setValue1) && (cmd < setValue1 + 32))
             {
