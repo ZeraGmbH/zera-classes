@@ -11,6 +11,7 @@ QT       -= gui
 
 LIBS +=  -lzera-proxy
 LIBS +=  -lzeramisc
+LIBS +=  -lzeramath
 LIBS +=  -lzeraxmlconfig
 LIBS +=  -lzerabasemodule
 LIBS +=  -lMeasurementModuleInterface
@@ -20,6 +21,7 @@ include(../zera-modules.pri)
 INCLUDEPATH += ../../zera-basemodule \
     ../../zera-xml-config/src \
     ../../zera-misc \
+    ../../zera-math \
     ../../zera-comm/zera-proxy \
     ../../zera-validator \
     ../interface/
