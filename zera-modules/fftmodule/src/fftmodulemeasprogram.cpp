@@ -1021,8 +1021,12 @@ void cFftModuleMeasProgram::dataReadDSP()
                 // as our Fft produces math positive values, we correct them to technical positive values (*-1.0)
                 // also we change real and imag. parts because we are interested in sine rather than cosine
 
-                re = (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
-                im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
+                //re = (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
+                //im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
+
+                im = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) - j) + m_ModuleActualValues.at((i * offs) + j)) * scale;
+                re = -1.0 * (m_ModuleActualValues.at((i * offs) + (middle << 1) +j) - m_ModuleActualValues.at((i * offs) + (middle << 2) - j) ) * scale;
+
                 m_FFTModuleActualValues.replace((i * resultOffs) + (j << 1), re);
                 m_FFTModuleActualValues.replace((i * resultOffs) + (j << 1) + 1, im);
             }
