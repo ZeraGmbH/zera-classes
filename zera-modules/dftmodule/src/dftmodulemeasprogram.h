@@ -62,7 +62,6 @@ enum dftmoduleCmds
 class cDftModuleConfigData;
 class cDftModule;
 
-
 class cDftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT

@@ -18,6 +18,7 @@
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <complex.h>
+#include <useratan.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -1004,9 +1005,10 @@ void cDftModuleMeasProgram::dataAcquisitionDSP()
 
 void cDftModuleMeasProgram::dataReadDSP()
 {
+    QHash<QString, complex> DftActValuesHash;
     if (m_bActive)
     {
-        double corr;
+        //double corr;
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
 
         /*
@@ -1042,7 +1044,7 @@ void cDftModuleMeasProgram::dataReadDSP()
         }
         else
         {
-            // as our dft produces math positive values, we correct them to technical positive values
+            // as our dft produces math positive values, we correct them to technical positive values (im * -1)
             for (int i = 0; i < m_ActValueList.count(); i++)
             {
                 double im;
@@ -1053,19 +1055,32 @@ void cDftModuleMeasProgram::dataReadDSP()
                 }
             }
 
-            // first we test that reference channel is configured
+            // first we test if reference channel is configured
             if (m_ConfigData.m_bRefChannelOn)
             {
                 // if so ....
-                QHash<QString, complex> DftActValuesHash;
+                //QHash<QString, complex> DftActValuesHash;
 
                 for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
                   DftActValuesHash[m_ConfigData.m_valueChannelList.at(i)] = complex(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
 
+                // the complex reference vector
                 complex complexRef = DftActValuesHash.value(m_ChannelSystemNameHash.value(m_ConfigData.m_sRefChannel.m_sPar));
+
                 double tanRef = complexRef.im() / complexRef.re();
                 double divisor = sqrt(1.0+(tanRef * tanRef));
-                complex turnVector = complex((1.0 / divisor), (tanRef / divisor));
+                // the turnvector has the negative reference angle
+                // computing in complex is more acurate, but we have to keep in mind the
+                // point of discontinuity of the arctan function
+                complex turnVector;
+                if (complexRef.re() < 0)
+                    turnVector = complex(-(1.0 / divisor), (tanRef / divisor));
+                else
+                    turnVector = complex((1.0 / divisor), -(tanRef / divisor));
+
+                // this method is alternative ... but it is not so accurate as the above one
+                //double phiRef = userAtan(complexRef.im(), complexRef.re());
+                //complex turnVector = complex(cos(-phiRef*0.017453292), sin(-phiRef*0.017453292));
 
                 for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
                 {
@@ -1073,8 +1088,11 @@ void cDftModuleMeasProgram::dataReadDSP()
                     key = m_ConfigData.m_valueChannelList.at(i);
                     complex newDft = DftActValuesHash.take(key);
                     newDft *= turnVector;
+                    if (fabs(newDft.im()) < 1e-8)
+                        newDft = complex(newDft.re(), 0.0);
                     DftActValuesHash[key] = newDft;
                 }
+
 
                 // now we have to compute the difference vectors and store all new values
                 for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
