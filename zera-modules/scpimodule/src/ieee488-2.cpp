@@ -32,9 +32,10 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(const char*)"No error"},
 
 
 cIEEE4882::cIEEE4882(cSCPIModule *module, cSCPIClient *client, QString ident, quint16 errorqueuelen)
-    :m_pModule(module), m_pClient(client), m_sIdentification(ident), m_nQueueLen(errorqueuelen)
+    :m_pModule(module), m_pClient(client), m_nQueueLen(errorqueuelen)
 {
     m_nSTB = m_nSRE = m_nESR = m_nESE = 0;
+    setIdentification(ident);
 }
 
 
@@ -216,6 +217,21 @@ void cIEEE4882::AddEventError(int error)
 void cIEEE4882::setStatusByte(quint8 stb, quint8)
 {
     SetSTB(m_nSTB | (1 << stb)); // we ignore the value here, it's only important for scpi status systems
+}
+
+
+void cIEEE4882::setIdentification(QString ident)
+{
+    QString releaseNr;
+    releaseNr = m_pModule->getReleaseNr(ReleaseInfoFilePath);
+    if (releaseNr == "")
+        m_sIdentification = ident;
+    else
+    {
+        QStringList sl;
+        sl = ident.split(',');
+        m_sIdentification = QString("%1, %2, %3").arg(sl[0]).arg(sl[1]).arg(releaseNr);
+    }
 }
 
 

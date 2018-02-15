@@ -5,6 +5,9 @@
 #include <QString>
 #include <QVector>
 
+
+#define ReleaseInfoFilePath "/opt/zera/conf/CHANGELOG"
+
 namespace SCPIMODULE
 {
 
@@ -120,6 +123,7 @@ private:
 
     QVector<int> m_ErrEventQueue;
 
+    void setIdentification(QString ident);
     QString RegOutput(quint8 reg);
     QString mGetScpiError();
 
