@@ -334,33 +334,10 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
 QString cStatusModuleInit::findReleaseNr()
 {
-    bool releaseNrFound = false;
-    QString releaseNr = "";
-    QFile file(ReleaseInfoFilePath);
+    QString releaseNr;
 
-    if (file.exists())
-    {
-       int start, end;
-       QString line;
-
-       file.open(QIODevice::ReadOnly);
-       QTextStream stream(&file);
-
-       do
-       {
-           line = stream.readLine();
-           if ( (start = line.indexOf("'release")+1) > 0)
-           {
-                end = line.indexOf("'", start);
-                if ((releaseNrFound = (end > start)) == true)
-                    releaseNr = line.mid(start, end-start);
-           }
-       } while (!line.isNull() && !(releaseNrFound));
-     }
-
-    file.close();
-
-    if (!releaseNrFound)
+    releaseNr = m_pModule->getReleaseNr(ReleaseInfoFilePath);
+    if (releaseNr == "")
         emit errMsg(releaseNumberErrMsg);
 
     return releaseNr;
@@ -391,7 +368,7 @@ void cStatusModuleInit::resourceManagerConnect()
     connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
- }
+}
 
 
 void cStatusModuleInit::sendRMIdent()
