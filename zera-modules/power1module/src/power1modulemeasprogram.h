@@ -75,7 +75,8 @@ enum power1moduleCmds
 
     readurvalue,
     setfrequencyscales,
-    setchannelrangenotifier
+    setchannelrangenotifier,
+    setqrefnominalpower
 };
 
 enum measmode
@@ -90,7 +91,8 @@ enum measmode
     m2lw,
     m2lb,
     m2ls,
-    m2lsg
+    m2lsg,
+    mqref
 };
 
 #define irqNr 5
@@ -152,6 +154,7 @@ private:
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
     cDspMeasData* m_pfreqScaleDSP;
+    cDspMeasData* m_pNomPower;
 
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;

@@ -310,6 +310,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["2LB"] = cMeasModeInfo(tr("2LB"), "Q", "Var", reactPower, m2lb);
     m_MeasuringModeInfoHash["2LS"] = cMeasModeInfo(tr("2LS"), "S", "VA", appPower, m2ls);
     m_MeasuringModeInfoHash["2LSg"] = cMeasModeInfo(tr("2LSg"), "S", "VA", appPower, m2lsg);
+    m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "S", "VA", appPower, mqref);
 
     // our parameters we deal with
     m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -408,6 +409,10 @@ void cPower1ModuleMeasProgram::setDspVarList()
     // and one for the frequency output scale values, we need 1 value for each configured output
     m_pfreqScaleDSP = m_pDSPInterFace->getMemHandle("FrequencyScale");
     m_pfreqScaleDSP->addVarItem( new cDspVar("FREQSCALE", m_ConfigData.m_nFreqOutputCount, DSPDATA::vDspParam));
+
+    // and one for nominal power in case that measuring mode is qref
+    m_pNomPower = m_pDSPInterFace->getMemHandle("QRefScale");
+    m_pNomPower->addVarItem( new cDspVar("NOMPOWER", 1, DSPDATA::vDspParam));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
@@ -905,6 +910,23 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0120)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
         }
+
+        case mqref:
+        {
+            m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0121)");
+            m_pDSPInterFace->addCycListItem( s = QString("TESTVCSKIPEQ(MMODE,%1)").arg(mmode));
+            m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0121)");
+            m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0121)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+
+            // we simply set all our actual values to nominal power
+
+            m_pDSPInterFace->addCycListItem( s = "COPYVAL(NOMPOWER,VALPQS)");
+            m_pDSPInterFace->addCycListItem( s = "COPYVAL(NOMPOWER,VALPQS+1)");
+            m_pDSPInterFace->addCycListItem( s = "COPYVAL(NOMPOWER,VALPQS+2)");
+
+            m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0121)"); // ende prozessnr., hauptkette 1 subkette 1
+            break;
+        }
         }
 
     }
@@ -1121,6 +1143,17 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 if (reply == ack) // we ignore ack
                     emit activationContinue();
                 else
+                {
+                    emit errMsg((tr(writedspmemoryErrMsg)));
+#ifdef DEBUG
+                    qDebug() << writedspmemoryErrMsg;
+#endif
+                    emit executionError();
+                }
+                break;
+
+            case setqrefnominalpower:
+                if (reply != ack) // we ignore ack
                 {
                     emit errMsg((tr(writedspmemoryErrMsg)));
 #ifdef DEBUG
@@ -2199,7 +2232,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
     if (m_ConfigData.m_nFreqOutputCount > 0) // we only do something here if we really have a frequency output
     {
 
-        if (is2WireMode()) // in case we are in 2 wire mode we take umax imyx from driving system
+        if (is2WireMode()) // in case we are in 2 wire mode we take umax imax from driving system
         {
             sl = m_ConfigData.m_sMeasSystemList.at(m_nPMSIndex).split(',');
             umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
@@ -2237,6 +2270,13 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
 
         m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = setfrequencyscales;
+
+        double pmax;
+        pmax = umax * imax;
+
+        datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
+        m_pDSPInterFace->setVarData(m_pNomPower, datalist);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
 
     }
     else // otherwise we have to continue "manually"
