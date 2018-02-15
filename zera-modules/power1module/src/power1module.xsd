@@ -82,6 +82,7 @@
         <xs:enumeration value="2LB"/>
         <xs:enumeration value="2LS"/>
         <xs:enumeration value="2LSg"/>
+        <xs:enumeration value="QREF"/>
       </xs:restriction>
     </xs:simpleType>
 
