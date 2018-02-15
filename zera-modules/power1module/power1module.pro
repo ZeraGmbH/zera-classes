@@ -60,3 +60,6 @@ RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
+DISTFILES += \
+    src/power1moduleREF.xml
