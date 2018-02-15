@@ -2,6 +2,7 @@
 #include <QState>
 #include <QFinalState>
 #include <QString>
+#include <QFile>
 #include <virtualmodule.h>
 #include <QSet>
 #include <QByteArray>
@@ -405,6 +406,38 @@ void cBaseModule::exportMetaData()
 quint16 cBaseModule::getModuleNr()
 {
     return m_nModuleNr;
+}
+
+
+QString cBaseModule::getReleaseNr(QString path)
+{
+    bool releaseNrFound = false;
+    QString releaseNr = "";
+    QFile file(path);
+
+    if (file.exists())
+    {
+       int start, end;
+       QString line;
+
+       file.open(QIODevice::ReadOnly);
+       QTextStream stream(&file);
+
+       do
+       {
+           line = stream.readLine();
+           if ( (start = line.indexOf("'release")+1) > 0)
+           {
+                end = line.indexOf("'", start);
+                if ((releaseNrFound = (end > start)) == true)
+                    releaseNr = line.mid(start, end-start);
+           }
+       } while (!line.isNull() && !(releaseNrFound));
+     }
+
+    file.close();
+
+    return releaseNr;
 }
 
 
