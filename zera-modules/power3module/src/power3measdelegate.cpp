@@ -46,8 +46,11 @@ void cPower3MeasDelegate::computeOutput()
             double real1, im1, real2, im2, resultReal, resultIm;
             // the fft algorithm provides information for sine
             // for power we are interested in cos .... so we change re and im
-            real1 = input1.at(i*2+1); im1 = input1.at(i*2);
-            real2 = input2.at(i*2+1); im2 = input2.at(i*2);
+            //real1 = input1.at(i*2+1); im1 = input1.at(i*2);
+            //real2 = input2.at(i*2+1); im2 = input2.at(i*2);
+
+            real1 = input1.at(i*2); im1 = input1.at(i*2+1);
+            real2 = input2.at(i*2); im2 = input2.at(i*2+1);
 
 #ifdef DEBUG
             if (i==1)
@@ -61,7 +64,7 @@ void cPower3MeasDelegate::computeOutput()
             // additionally we have to devide by 2.0 because we get the amplitude information
             // rather then energy information
             resultReal = ((real1 * real2) + (im1 * im2)) / 2.0;
-            resultIm = -((real1 * im2) - (real2 *im1)) / 2.0;
+            resultIm = ((real1 * im2) - (real2 *im1)) / 2.0;
 
             resultList.append(resultReal);
             resultList.append(resultIm);
