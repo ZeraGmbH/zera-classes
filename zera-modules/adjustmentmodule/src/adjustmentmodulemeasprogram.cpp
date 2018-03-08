@@ -16,6 +16,7 @@
 #include <veinmoduleactvalue.h>
 #include <veinmoduleparameter.h>
 #include <scpiinfo.h>
+#include <math.h>
 #include <useratan.h>
 
 #include "debug.h"
