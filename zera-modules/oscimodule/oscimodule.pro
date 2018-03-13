@@ -47,13 +47,13 @@ HEADERS += \
     src/oscimoduleobservation.h
 
 OTHER_FILES += \
-    src/oscimodule.xsd
+    src/oscimodule.xsd \
+    src/com5003-oscimodule.xml \
+    src/mt310s2-oscimodule.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-oscimodule.xml \
-    src/mt310s2-oscimodule.xml
+

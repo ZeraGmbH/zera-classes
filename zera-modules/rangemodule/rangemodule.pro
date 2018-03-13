@@ -55,15 +55,15 @@ HEADERS += \
     src/debug.h \
 
 OTHER_FILES += \
-    src/rangemodule.xsd
+    src/rangemodule.xsd \
+    src/com5003-rangemodule.xml \
+    src/com5003-rangemoduleREF.xml \
+    src/mt310s2-rangemodule.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-rangemodule.xml \
-    src/com5003-rangemoduleREF.xml \
-    src/mt310s2-rangemodule.xml
+
 

@@ -49,14 +49,12 @@ HEADERS += \
     src/adjustvalidator.h
 
 OTHER_FILES += \
-    src/adjustmentmodule.xsd
-
+    src/adjustmentmodule.xsd \
+    src/com5003-adjustmentmodule.xml \
+    src/mt310s2-adjustmentmodule.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-adjustmentmodule.xml \
-    src/mt310s2-adjustmentmodule.xml

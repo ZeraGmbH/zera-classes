@@ -47,13 +47,13 @@ HEADERS += \
     src/debug.h
 
 OTHER_FILES += \
-    src/fftmodule.xsd
+    src/fftmodule.xsd \
+    src/com5003-fftmodule.xml \
+    src/mt310s2-fftmodule.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-fftmodule.xml \
-    src/mt310s2-fftmodule.xml
+

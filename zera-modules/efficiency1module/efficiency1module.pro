@@ -48,13 +48,12 @@ HEADERS += \
     src/efficiency1measdelegate.h
 
 OTHER_FILES += \
-    src/efficiency1module.xsd
-    
+    src/efficiency1module.xsd \
+    src/mt310s2-efficiency1module.xml
 
 RESOURCES += \
     resources.qrc
 
-DISTFILES += \
-    src/mt310s2-efficiency1module.xml
+
 
 

@@ -47,14 +47,7 @@ HEADERS += \
     src/power1moduleobservation.h \
 
 OTHER_FILES += \
-    src/power1module.xsd
-
-RESOURCES += \
-    resources.qrc
-
-include(../../zera-classes.pri)
-
-DISTFILES += \
+    src/power1module.xsd \
     src/com5003-power1module.xml \
     src/com5003-power1module2.xml \
     src/com5003-power1module3.xml \
@@ -66,3 +59,9 @@ DISTFILES += \
     src/mt310s2-power1module2.xml \
     src/mt310s2-power1module3.xml \
     src/com5003-power1moduleREF.xml
+
+RESOURCES += \
+    resources.qrc
+
+include(../../zera-classes.pri)
+

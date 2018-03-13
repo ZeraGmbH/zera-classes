@@ -47,7 +47,9 @@ HEADERS += \
     src/power3measdelegate.h
 
 OTHER_FILES += \
-    src/power3module.xsd
+    src/power3module.xsd \
+    src/com5003-power3module.xml \
+    src/mt310s2-power3module.xml
 
 
 RESOURCES += \
@@ -55,6 +57,4 @@ RESOURCES += \
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-power3module.xml \
-    src/mt310s2-power3module.xml
+

@@ -49,15 +49,15 @@ HEADERS += \
     src/debug.h
 
 OTHER_FILES += \
-    src/rmsmodule.xsd
+    src/rmsmodule.xsd \
+    src/com5003-rmsmodule.xml \
+    src/com5003-rmsmoduleCED.xml \
+    src/com5003-rmsmoduleREF.xml \
+    src/mt310s2-rmsmodule.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-rmsmodule.xml \
-    src/com5003-rmsmoduleCED.xml \
-    src/com5003-rmsmoduleREF.xml \
-    src/mt310s2-rmsmodule.xml
+

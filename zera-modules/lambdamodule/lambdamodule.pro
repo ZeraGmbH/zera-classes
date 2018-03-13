@@ -47,7 +47,9 @@ HEADERS += \
     src/lambdameasdelegate.h
 
 OTHER_FILES += \
-    src/lambdamodule.xsd
+    src/lambdamodule.xsd \
+    src/com5003-lambdamodule.xml \
+    src/mt310s2-lambdamodule.xml
 
 
 RESOURCES += \
@@ -55,6 +57,4 @@ RESOURCES += \
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-lambdamodule.xml \
-    src/mt310s2-lambdamodule.xml
+

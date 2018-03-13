@@ -52,13 +52,13 @@ HEADERS += \
     src/pllmeaschannel.h
 
 OTHER_FILES += \
-    src/samplemodule.xsd
+    src/samplemodule.xsd \
+    src/com5003-samplemodule.xml \
+    src/mt310s2-samplemodule.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-samplemodule.xml \
-    src/mt310s2-samplemodule.xml
+

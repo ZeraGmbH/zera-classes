@@ -49,7 +49,8 @@ HEADERS += \
     src/transformer1measdelegate.h
 
 OTHER_FILES += \
-    src/transformer1module.xsd
+    src/transformer1module.xsd \
+    src/mt310s2-transformer1module.xml
 
 
 RESOURCES += \
@@ -57,5 +58,4 @@ RESOURCES += \
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/mt310s2-transformer1module.xml
+

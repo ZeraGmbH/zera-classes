@@ -51,12 +51,12 @@ HEADERS += \
     src/debug.h
 
 OTHER_FILES += \
-    src/referencemodule.xsd
+    src/referencemodule.xsd \
+    src/com5003-referencemodule.xml
 
 RESOURCES += \
     resource.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-referencemodule.xml
+

@@ -44,13 +44,12 @@ HEADERS += \
     src/statusmoduleinit.h
 
 OTHER_FILES += \
-    src/statusmodule.xsd
+    src/statusmodule.xsd \
+    src/com5003-statusmodule.xml \
+    src/mt310s2-statusmodule.xml
 
 RESOURCES += \
     resource.qrc
 
-DISTFILES += \
-    src/com5003-statusmodule.xml \
-    src/mt310s2-statusmodule.xml
 
 include(../../zera-classes.pri)

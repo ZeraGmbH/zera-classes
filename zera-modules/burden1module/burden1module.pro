@@ -49,14 +49,12 @@ HEADERS += \
     src/burden1measdelegate.h
 
 OTHER_FILES += \
-    src/burden1module.xsd
-
+    src/burden1module.xsd \
+    src/mt310s2-burden1module.xml \
+    src/mt310s2-burden1module2.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/mt310s2-burden1module.xml \
-    src/mt310s2-burden1module2.xml
