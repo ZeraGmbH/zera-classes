@@ -26,6 +26,7 @@ moc_*.cpp
 ui_*.h
 qrc_*.cpp
 Thumbs.db
+libs/
 
 # qtcreator generated files
 *.pro.user*

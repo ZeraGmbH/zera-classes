@@ -1,6 +1,7 @@
 TEMPLATE    = subdirs
 
 QMAKE_CXXFLAGS += -O0
+QMAKE_CFLAGS += -O0
 
 CONFIG += ordered
 
