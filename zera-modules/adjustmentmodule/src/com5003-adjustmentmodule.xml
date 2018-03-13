@@ -71,7 +71,7 @@
                     <phaseinfo>
                         <avail>1</avail>
                         <entity>1050</entity>
-                        <component>ACT_DFTPN2</component>
+                        <component>ACT_DFTPN3</component>
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
@@ -120,17 +120,17 @@
                     <amplitudeinfo>
                         <avail>1</avail>
                         <entity>1040</entity>
-                        <component>ACT_RMSPN4</component>
+                        <component>ACT_RMSPN6</component>
                     </amplitudeinfo>
                     <phaseinfo>
                         <avail>1</avail>
                         <entity>1050</entity>
-                        <component>ACT_DFTPN4</component>
+                        <component>ACT_DFTPN6</component>
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
                         <entity>1040</entity>
-                        <component>ACT_RMSPN4</component>
+                        <component>ACT_RMSPN6</component>
                     </offsetinfo>
                 </chn6>
             </channel>

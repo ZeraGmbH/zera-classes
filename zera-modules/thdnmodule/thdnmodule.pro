@@ -46,10 +46,13 @@ HEADERS += \
     src/debug.h
 
 OTHER_FILES += \
-    src/thdnmodule.xml \
     src/thdnmodule.xsd
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
+DISTFILES += \
+    src/com5003-thdnmodule.xml \
+    src/mt310s2-thdnmodule.xml

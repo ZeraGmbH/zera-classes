@@ -44,10 +44,13 @@ HEADERS += \
     src/debug.h \
 
 OTHER_FILES += \
-    src/sec1module.xml \
     src/sec1module.xsd
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
+DISTFILES += \
+    src/com5003-sec1module.xml \
+    src/mt310s2-sec1module.xml

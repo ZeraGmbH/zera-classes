@@ -49,11 +49,14 @@ HEADERS += \
     src/debug.h
 
 OTHER_FILES += \
-    src/dftmodule.xml \
-    src/dftmoduleREF.xml \
     src/dftmodule.xsd
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
+DISTFILES += \
+    src/mt310s2-dftmodule.xml \
+    src/com5003-dftmodule.xml \
+    src/com5003-dftmoduleREF.xml

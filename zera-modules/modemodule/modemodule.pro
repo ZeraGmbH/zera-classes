@@ -44,11 +44,14 @@ HEADERS += \
     src/modemoduleinit.h
 
 OTHER_FILES += \
-    src/modemodule.xsd \
-    src/modemoduleAC.xml \
-    src/modemoduleREF.xml
+    src/modemodule.xsd
 
 RESOURCES += \
     resource.qrc
 
 include(../../zera-classes.pri)
+
+DISTFILES += \
+    src/com5003-modemoduleAC.xml \
+    src/com5003-modemoduleREF.xml \
+    src/mt310s2-modemoduleAC.xml

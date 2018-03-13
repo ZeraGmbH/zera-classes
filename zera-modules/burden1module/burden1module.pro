@@ -49,7 +49,6 @@ HEADERS += \
     src/burden1measdelegate.h
 
 OTHER_FILES += \
-    src/burden1module.xml \
     src/burden1module.xsd
 
 
@@ -59,4 +58,5 @@ RESOURCES += \
 include(../../zera-classes.pri)
 
 DISTFILES += \
-    src/burden1module2.xml
+    src/mt310s2-burden1module.xml \
+    src/mt310s2-burden1module2.xml

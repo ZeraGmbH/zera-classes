@@ -47,10 +47,12 @@ HEADERS += \
     src/power2moduleobservation.h \
 
 OTHER_FILES += \
-    src/power2module.xsd \
-    src/power2moduleCED.xml
+    src/power2module.xsd
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
+DISTFILES += \
+    src/com5003-power2moduleCED.xml
