@@ -17,6 +17,7 @@
 #include <modulevalidator.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
+#include <math.h>
 #include <complex.h>
 #include <useratan.h>
 

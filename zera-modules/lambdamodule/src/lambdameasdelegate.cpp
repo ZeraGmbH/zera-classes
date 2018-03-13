@@ -2,6 +2,7 @@
 #include <QtGlobal>
 
 #include <veinmoduleactvalue.h>
+#include <math.h>
 
 #include "debug.h"
 #include "lambdameasdelegate.h"
