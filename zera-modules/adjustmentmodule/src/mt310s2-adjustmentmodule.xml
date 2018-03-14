@@ -24,7 +24,7 @@
                     <entity>1020</entity>
                     <component>ACT_Frequency</component>
                 </frequencyreference>
-                <n>6</n>
+                <n>8</n>
                 <chn1>
                     <chn>m0</chn>
                     <amplitudeinfo>
