@@ -477,6 +477,9 @@ QList<int> cRangeObsermatic::getGroupIndexList(int index)
                 break;
             }
         }
+        if (indexlist.isEmpty())
+            // if we have a channel that is not included in a grouping list
+            indexlist.append(index);
     }
     else
         indexlist.append(index); // we return 1 index at least
