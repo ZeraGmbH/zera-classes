@@ -891,10 +891,10 @@ void cRangeMeasChannel::activationDone()
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {
         ri = it.value();
-        if (!ri.avail || ((ri.type & 1) == 1)) // in case range is not avail or virtual
-            it = m_RangeInfoHash.erase(it);
-        else
+        if (ri.avail)
             ++it;
+        else
+            it = m_RangeInfoHash.erase(it); // in case range is not avail
     }
 
     setRangeListAlias(); // and the list of possible ranges alias
