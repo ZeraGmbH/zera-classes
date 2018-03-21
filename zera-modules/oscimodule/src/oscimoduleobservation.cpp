@@ -123,7 +123,8 @@ void cOsciModuleObservation::pcbConnect()
 
 void cOsciModuleObservation::setNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier("SENSE:MMODE?","1")] = registernotifier;
+    //m_MsgNrCmdList[m_pPCBInterface->registerNotifier("SENSE:MMODE?","1")] = registernotifier;
+    emit activationContinue();
 }
 
 
