@@ -11,8 +11,8 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
-    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr)
+cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend)
+    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bExtend(extend)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -28,13 +28,11 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
     m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
     m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readUnitState);
-    m_readUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
-    m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties1State);
-    m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties2State);
-    m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties3State);
-    m_readRangeProperties3State.addTransition(this, SIGNAL(activationLoop()), &m_readRangeProperties1State);
-    m_readRangeProperties3State.addTransition(this, SIGNAL(activationContinue()), &m_resetStatusState);
-    m_resetStatusState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeAndProperties);
+    m_readRangeAndProperties.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_resetStatusState);
+    m_resetStatusState.addTransition(this, SIGNAL(activationContinue()), &m_setNotifierRangeCat);
+    m_setNotifierRangeCat.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -46,13 +44,13 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     m_activationMachine.addState(&m_readChnAliasState);
     m_activationMachine.addState(&m_readSampleRateState);
     m_activationMachine.addState(&m_readUnitState);
-    m_activationMachine.addState(&m_readRangelistState);
-    m_activationMachine.addState(&m_readRangeProperties1State);
-    m_activationMachine.addState(&m_readRangeProperties2State);
-    m_activationMachine.addState(&m_readRangeProperties3State);
+    m_activationMachine.addState(&m_readRangeAndProperties);
     m_activationMachine.addState(&m_resetStatusState);
+    m_activationMachine.addState(&m_setNotifierRangeCat);
     m_activationMachine.addState(&m_activationDoneState);
+
     m_activationMachine.setInitialState(&m_rmConnectState);
+
     connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
     connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
     connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
@@ -64,10 +62,9 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
     connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
     connect(&m_readUnitState, SIGNAL(entered()), SLOT(readUnit()));
-    connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
-    connect(&m_readRangeProperties1State, SIGNAL(entered()), SLOT(readRangeProperties1()));
-    connect(&m_readRangeProperties3State, SIGNAL(entered()), SLOT(readRangeProperties3()));
+    connect(&m_readRangeAndProperties, SIGNAL(entered()), SLOT(readRangeAndProperties()));
     connect(&m_resetStatusState, SIGNAL(entered()), SLOT(resetStatusSlot()));
+    connect(&m_setNotifierRangeCat, SIGNAL(entered()), SLOT(setNotifierRangeCat()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     // setting up statemachine for "deactivating" meas channel
@@ -78,32 +75,39 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 
-    // setting up statemachine for querying the meas channels ranges properties
+    // setting up statemachine for querying the meas channels ranges and their properties
+    m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRngAliasState);
     m_readRngAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readTypeState);
     m_readTypeState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueState);
     m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readRejectionState);
     m_readRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readOVRejectionState);
     m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
-    m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
+    m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryLoopState);
+    m_rangeQueryLoopState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
+    m_rangeQueryLoopState.addTransition(this, SIGNAL(activationLoop()), &m_readRngAliasState);
 
+    m_rangeQueryMachine.addState(&m_readRangelistState);
     m_rangeQueryMachine.addState(&m_readRngAliasState);
     m_rangeQueryMachine.addState(&m_readTypeState);
     m_rangeQueryMachine.addState(&m_readUrvalueState);
     m_rangeQueryMachine.addState(&m_readRejectionState);
     m_rangeQueryMachine.addState(&m_readOVRejectionState);
     m_rangeQueryMachine.addState(&m_readisAvailState);
+    m_rangeQueryMachine.addState(&m_rangeQueryLoopState);
     m_rangeQueryMachine.addState(&m_rangeQueryDoneState);
 
-    m_rangeQueryMachine.setInitialState(&m_readRngAliasState);
+    m_rangeQueryMachine.setInitialState(&m_readRangelistState);
 
+    connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
     connect(&m_readRngAliasState, SIGNAL(entered()), SLOT(readRngAlias()));
     connect(&m_readTypeState, SIGNAL(entered()), SLOT(readType()));
     connect(&m_readUrvalueState, SIGNAL(entered()), SLOT(readUrvalue()));
     connect(&m_readRejectionState, SIGNAL(entered()), SLOT(readRejection()));
     connect(&m_readOVRejectionState, SIGNAL(entered()), SLOT(readOVRejection()));
     connect(&m_readisAvailState, SIGNAL(entered()), SLOT(readisAvail()));
-    connect(&m_rangeQueryDoneState, SIGNAL(entered()), SLOT(rangeQueryDone()));
+    connect(&m_rangeQueryLoopState, SIGNAL(entered()), SLOT(rangeQueryLoop()));
 
+    connect(&m_rangeQueryMachine, SIGNAL(finished()), this, SIGNAL(newRangeList()));
 }
 
 
@@ -355,390 +359,411 @@ void cRangeMeasChannel::deleteInterface()
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;
-    int cmd = m_MsgNrCmdList.take(msgnr);
 
-    switch (cmd)
+    if (msgnr == 0) // 0 was reserved for async. messages
     {
-    case sendmeaschannelrmident:
-        if (reply == ack) // we only continue if resource manager acknowledges
-            emit activationContinue();
-        else
+        QString sintnr;
+        // qDebug() << "meas program interrupt";
+        sintnr = answer.toString().section(':', 1, 1);
+        int service = sintnr.toInt(&ok);
+        switch (service)
         {
-            emit errMsg(tr(rmidentErrMSG));
-#ifdef DEBUG
-            qDebug() << rmidentErrMSG;
-#endif
-            emit activationError();
+        case 1:
+            // we got a sense:chn:range:cat notifier
+            // so we have to read the new range list and properties
+            if (!m_rangeQueryMachine.isRunning())
+                m_rangeQueryMachine.start();
+            break;
         }
-        break;
+    }
 
-    case readresourcetypes:
-        if ((reply == ack) && (answer.toString().contains("SENSE")))
-            emit activationContinue();
-        else
-        {
-            emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-            qDebug() << resourcetypeErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
-
-    case readresource:
-        if ((reply == ack) && (answer.toString().contains(m_sName)))
-            emit activationContinue();
-        else
-        {
-            emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-            qDebug() << resourceErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
-
-    case readresourceinfo:
+    else
     {
-        bool ok1, ok2, ok3;
-        int max, free;
-        QStringList sl;
+        int cmd = m_MsgNrCmdList.take(msgnr);
 
-
-        sl = answer.toString().split(';');
-        if ((reply ==ack) && (sl.length() >= 4))
+        switch (cmd)
         {
-            max = sl.at(0).toInt(&ok1); // fixed position
-            free = sl.at(1).toInt(&ok2);
-            m_sDescription = sl.at(2);
-            m_nPort = sl.at(3).toInt(&ok3);
-
-            if (ok1 && ok2 && ok3 && ((max == free) == 1))
-            {
+        case sendmeaschannelrmident:
+            if (reply == ack) // we only continue if resource manager acknowledges
                 emit activationContinue();
+            else
+            {
+                emit errMsg(tr(rmidentErrMSG));
+    #ifdef DEBUG
+                qDebug() << rmidentErrMSG;
+    #endif
+                emit activationError();
+            }
+            break;
+
+        case readresourcetypes:
+            if ((reply == ack) && (answer.toString().contains("SENSE")))
+                emit activationContinue();
+            else
+            {
+                emit errMsg((tr(resourcetypeErrMsg)));
+    #ifdef DEBUG
+                qDebug() << resourcetypeErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
+
+        case readresource:
+            if ((reply == ack) && (answer.toString().contains(m_sName)))
+                emit activationContinue();
+            else
+            {
+                emit errMsg((tr(resourceErrMsg)));
+    #ifdef DEBUG
+                qDebug() << resourceErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
+
+        case readresourceinfo:
+        {
+            bool ok1, ok2, ok3;
+            int max, free;
+            QStringList sl;
+
+
+            sl = answer.toString().split(';');
+            if ((reply ==ack) && (sl.length() >= 4))
+            {
+                max = sl.at(0).toInt(&ok1); // fixed position
+                free = sl.at(1).toInt(&ok2);
+                m_sDescription = sl.at(2);
+                m_nPort = sl.at(3).toInt(&ok3);
+
+                if (ok1 && ok2 && ok3 && ((max == free) == 1))
+                {
+                    emit activationContinue();
+                }
+
+                else
+                {
+                    emit errMsg((tr(resourceInfoErrMsg)));
+    #ifdef DEBUG
+                    qDebug() << resourceInfoErrMsg;
+    #endif
+                    emit activationError();
+                }
             }
 
             else
             {
                 emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
+    #ifdef DEBUG
                 qDebug() << resourceInfoErrMsg;
-#endif
+    #endif
                 emit activationError();
             }
-        }
 
-        else
-        {
-            emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-            qDebug() << resourceInfoErrMsg;
-#endif
-            emit activationError();
-        }
+            break;
 
-        break;
+        }
+        case claimresource:
+            if (reply == ack)
+                emit activationContinue();
+            else
+            {
+                emit errMsg((tr(claimresourceErrMsg)));
+    #ifdef DEBUG
+                qDebug() << claimresourceErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    }
-    case claimresource:
-        if (reply == ack)
-            emit activationContinue();
-        else
-        {
-            emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-            qDebug() << claimresourceErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case freeresource:
+            if (reply == ack || reply == nack) // we accept nack here also
+                emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
+            else
+            {
+                emit errMsg((tr(freeresourceErrMsg)));
+    #ifdef DEBUG
+                qDebug() << freeresourceErrMsg;
+    #endif
+                emit deactivationError();
+            }
+            break;
 
-    case freeresource:
-        if (reply == ack || reply == nack) // we accept nack here also
-            emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
-        else
-        {
-            emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-            qDebug() << freeresourceErrMsg;
-#endif
-            emit deactivationError();
-        }
-        break;
+        case readdspchannel:
+            if (reply == ack)
+            {
+                m_nDspChannel = answer.toInt(&ok);
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readdspchannelErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readdspchannelErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readdspchannel:
-        if (reply == ack)
-        {
-            m_nDspChannel = answer.toInt(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readdspchannelErrMsg)));
-#ifdef DEBUG
-            qDebug() << readdspchannelErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case readchnalias:
+            if (reply == ack)
+            {
+                m_sAlias = answer.toString();
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readaliasErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readaliasErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readchnalias:
-        if (reply == ack)
-        {
-            m_sAlias = answer.toString();
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-            qDebug() << readaliasErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case readsamplerate:
+            if (reply == ack)
+            {
+                m_nSampleRate = answer.toInt(&ok);
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readsamplerateErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readsamplerateErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readsamplerate:
-        if (reply == ack)
-        {
-            m_nSampleRate = answer.toInt(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readsamplerateErrMsg)));
-#ifdef DEBUG
-            qDebug() << readsamplerateErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case readunit:
+            if (reply == ack)
+            {
+                m_sUnit = answer.toString();
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readunitErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readunitErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readunit:
-        if (reply == ack)
-        {
-            m_sUnit = answer.toString();
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readunitErrMsg)));
-#ifdef DEBUG
-            qDebug() << readunitErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case readrangelist:
+            if (reply == ack)
+            {
+                m_RangeNameList = answer.toStringList();
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangelistErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangelistErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readrangelist:
-        if (reply == ack)
-        {
-            m_RangeNameList = answer.toStringList();
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangelistErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangelistErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case readrngalias:
+            if (reply == ack)
+            {
+                ri.alias = answer.toString();
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangealiasErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangealiasErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readrngalias:
-        if (reply == ack)
-        {
-            ri.alias = answer.toString();
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangealiasErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangealiasErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case readtype:
+            if (reply == ack)
+            {
+                ri.type = answer.toInt(&ok);
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangetypeErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangetypeErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readtype:
-        if (reply == ack)
-        {
-            ri.type = answer.toInt(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangetypeErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangetypeErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
+        case readurvalue:
+            if (reply == ack)
+            {
+                ri.urvalue = answer.toDouble(&ok);
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangeurvalueErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangeurvalueErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
 
-    case readurvalue:
-        if (reply == ack)
-        {
-            ri.urvalue = answer.toDouble(&ok);
-            emit activationContinue();
+        case readrejection:
+            if (reply == ack)
+            {
+                ri.rejection = answer.toDouble(&ok);
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangerejectionErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangerejectionErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
+
+        case readovrejection:
+            if (reply == ack)
+            {
+                ri.ovrejection = answer.toDouble(&ok);
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangeovrejectionErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangeovrejectionErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
+
+        case readisavail:
+            if (reply == ack)
+            {
+                ri.avail = answer.toBool();
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangeavailErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangeavailErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
+
+        case setmeaschannelrange:
+            if (reply == ack)
+                m_sActRange = m_sNewRange;
+            else
+            {
+                emit errMsg((tr(setRangeErrMsg)));
+    #ifdef DEBUG
+                qDebug() << setRangeErrMsg;
+    #endif
+                emit executionError();
+            }; // perhaps some error output
+            emit cmdDone(msgnr);
+            break;
+
+        case readgaincorrection:
+            if (reply == ack)
+                m_fGainCorrection = answer.toDouble(&ok);
+            else
+            {
+                emit errMsg((tr(readGainCorrErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readGainCorrErrMsg;
+    #endif
+            };
+            emit cmdDone(msgnr);
+            break;
+
+        case readoffsetcorrection:
+            if (reply == ack)
+                m_fOffsetCorrection = answer.toDouble(&ok);
+            else
+            {
+                emit errMsg((tr(readOffsetCorrErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readOffsetCorrErrMsg;
+    #endif
+                emit executionError();
+            };
+            emit cmdDone(msgnr);
+            break;
+
+        case readphasecorrection:
+            if (reply == ack)
+                m_fPhaseCorrection = answer.toDouble(&ok);
+            else
+            {
+                emit errMsg((tr(readPhaseCorrErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readPhaseCorrErrMsg;
+    #endif
+                emit executionError();
+            };
+            emit cmdDone(msgnr);
+            break;
+
+        case readmeaschannelstatus:
+            if (reply == ack)
+                m_nStatus = answer.toInt(&ok);
+            else
+            {
+                emit errMsg((tr(readChannelStatusErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readChannelStatusErrMsg;
+    #endif
+                emit executionError();
+            };
+            emit cmdDone(msgnr);
+            break;
+
+        case resetmeaschannelstatus:
+            if (reply == ack)
+                {}
+            else
+            {
+                emit errMsg((tr(resetChannelStatusErrMsg)));
+    #ifdef DEBUG
+                qDebug() << resetChannelStatusErrMsg;
+    #endif
+                emit executionError();
+            }; // perhaps some error output
+            emit cmdDone(msgnr);
+            break;
+
+        case resetmeaschannelstatus2:
+            if (reply == ack)
+            {
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(resetChannelStatusErrMsg)));
+    #ifdef DEBUG
+                qDebug() << resetChannelStatusErrMsg;
+    #endif
+                emit activationError();
+            }; // perhaps some error output
+            break;
         }
-        else
-        {
-            emit errMsg((tr(readrangeurvalueErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangeurvalueErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
-
-    case readrejection:
-        if (reply == ack)
-        {
-            ri.rejection = answer.toDouble(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangerejectionErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangerejectionErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
-
-    case readovrejection:
-        if (reply == ack)
-        {
-            ri.ovrejection = answer.toDouble(&ok);
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangeovrejectionErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangeovrejectionErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
-
-    case readisavail:
-        if (reply == ack)
-        {
-            ri.avail = answer.toBool();
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(readrangeavailErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangeavailErrMsg;
-#endif
-            emit activationError();
-        }
-        break;
-
-    case setmeaschannelrange:
-        if (reply == ack)
-            m_sActRange = m_sNewRange;
-        else
-        {
-            emit errMsg((tr(setRangeErrMsg)));
-#ifdef DEBUG
-            qDebug() << setRangeErrMsg;
-#endif
-            emit executionError();
-        }; // perhaps some error output
-        emit cmdDone(msgnr);
-        break;    
-
-    case readgaincorrection:
-        if (reply == ack)
-            m_fGainCorrection = answer.toDouble(&ok);
-        else
-        {
-            emit errMsg((tr(readGainCorrErrMsg)));
-#ifdef DEBUG
-            qDebug() << readGainCorrErrMsg;
-#endif
-        };
-        emit cmdDone(msgnr);
-        break;
-
-    case readoffsetcorrection:
-        if (reply == ack)
-            m_fOffsetCorrection = answer.toDouble(&ok);
-        else
-        {
-            emit errMsg((tr(readOffsetCorrErrMsg)));
-#ifdef DEBUG
-            qDebug() << readOffsetCorrErrMsg;
-#endif
-            emit executionError();
-        };
-        emit cmdDone(msgnr);
-        break;
-
-    case readphasecorrection:
-        if (reply == ack)
-            m_fPhaseCorrection = answer.toDouble(&ok);
-        else
-        {
-            emit errMsg((tr(readPhaseCorrErrMsg)));
-#ifdef DEBUG
-            qDebug() << readPhaseCorrErrMsg;
-#endif
-            emit executionError();
-        };
-        emit cmdDone(msgnr);
-        break;
-
-    case readmeaschannelstatus:
-        if (reply == ack)
-            m_nStatus = answer.toInt(&ok);
-        else
-        {
-            emit errMsg((tr(readChannelStatusErrMsg)));
-#ifdef DEBUG
-            qDebug() << readChannelStatusErrMsg;
-#endif
-            emit executionError();
-        };
-        emit cmdDone(msgnr);
-        break;
-
-    case resetmeaschannelstatus:
-        if (reply == ack)
-            {}
-        else
-        {
-            emit errMsg((tr(resetChannelStatusErrMsg)));
-#ifdef DEBUG
-            qDebug() << resetChannelStatusErrMsg;
-#endif
-            emit executionError();
-        }; // perhaps some error output
-        emit cmdDone(msgnr);
-        break;
-
-    case resetmeaschannelstatus2:
-        if (reply == ack)
-        {
-            emit activationContinue();
-        }
-        else
-        {
-            emit errMsg((tr(resetChannelStatusErrMsg)));
-#ifdef DEBUG
-            qDebug() << resetChannelStatusErrMsg;
-#endif
-            emit activationError();
-        }; // perhaps some error output
-        break;
     }
 }
 
@@ -855,33 +880,24 @@ void cRangeMeasChannel::readUnit()
 }
 
 
-void cRangeMeasChannel::readRangelist()
+void cRangeMeasChannel::readRangeAndProperties()
 {
-    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
-    m_RangeQueryIt = 0; // we start with range 0
-}
-
-
-void cRangeMeasChannel::readRangeProperties1()
-{
-    m_rangeQueryMachine.start(); // yes, fill it with information
-    emit activationContinue();
-}
-
-
-void cRangeMeasChannel::readRangeProperties3()
-{
-    m_RangeQueryIt++;
-    if (m_RangeQueryIt < m_RangeNameList.count()) // another range ?
-        emit activationLoop();
-    else
-        emit activationContinue();
+    m_rangeQueryMachine.start(); // read all ranges and their properties
 }
 
 
 void cRangeMeasChannel::resetStatusSlot()
 {
     m_MsgNrCmdList[m_pPCBInterface->resetStatus(m_sName)] = resetmeaschannelstatus2;
+}
+
+
+void cRangeMeasChannel::setNotifierRangeCat()
+{
+    if (m_bExtend)
+        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName),"1")] = registerNotifier;
+    else
+        emit activationContinue();
 }
 
 
@@ -923,6 +939,14 @@ void cRangeMeasChannel::deactivationDone()
 }
 
 
+void cRangeMeasChannel::readRangelist()
+{
+    m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
+    m_RangeQueryIt = 0; // we start with range 0
+}
+
+
+
 void cRangeMeasChannel::readRngAlias()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAlias(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readrngalias;
@@ -959,10 +983,17 @@ void cRangeMeasChannel::readisAvail()
 }
 
 
-void cRangeMeasChannel::rangeQueryDone()
+void cRangeMeasChannel::rangeQueryLoop()
 {
     ri.name = m_RangeNameList.at(m_RangeQueryIt);
     m_RangeInfoHash[ri.alias] = ri; // for each range we append cRangeinfo per alias
+
+    m_RangeQueryIt++;
+    if (m_RangeQueryIt < m_RangeNameList.count()) // another range ?
+        emit activationLoop();
+    else
+        emit activationContinue();
 }
+
 
 }

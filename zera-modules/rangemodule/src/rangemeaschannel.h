@@ -46,6 +46,7 @@ enum rangemeaschannelCmds
     readmeaschannelstatus,
     resetmeaschannelstatus,
     resetmeaschannelstatus2, // we use this her in state machine while activating
+    registerNotifier
 };
 
 const double sqrt2 = 1.41421356;
@@ -56,7 +57,7 @@ class cRangeMeasChannel:public cBaseMeasChannel
 
 
 public:
-    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend = false);
     ~cRangeMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -89,7 +90,7 @@ public:
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
-
+    void newRangeList(); // if the channel has read new range list after async. notification
 
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -103,6 +104,7 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_nStatus;
+    bool m_bExtend; // true if this channel is range extendable
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
 
     // statemachine for activating a rangemeaschannel
@@ -117,11 +119,9 @@ private:
     QState m_readChnAliasState; // we query our alias
     QState m_readSampleRateState; // we read the sample nr
     QState m_readUnitState; // we read the meas channel unit volt ampere ...
-    QState m_readRangelistState; // we query our range list
-    QState m_readRangeProperties1State; // we build up a loop for querying all the ranges properties
-    QState m_readRangeProperties2State; //
-    QState m_readRangeProperties3State;
+    QState m_readRangeAndProperties; // we query our range list and all their properties
     QState m_resetStatusState; // we reset our measuring channel when activated
+    QState m_setNotifierRangeCat; // we request notification for range cat query
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating a rangemeaschannel
@@ -131,18 +131,15 @@ private:
 
     // statemachine for querying a measchannels range properties
     QStateMachine m_rangeQueryMachine;
+    QState m_readRangelistState; // we query our range list
     QState m_readRngAliasState;
     QState m_readTypeState;
     QState m_readUrvalueState;
     QState m_readRejectionState;
     QState m_readOVRejectionState;
     QState m_readisAvailState;
+    QState m_rangeQueryLoopState;
     QFinalState m_rangeQueryDoneState;
-
-    // statemachine for querying a measchannels range properties
-    QStateMachine m_freeResourceStatemachine;
-    QState m_freeResourceStartState;
-    QFinalState m_freeResourceDoneState;
 
     qint32 m_RangeQueryIt;
     cRangeInfo ri;
@@ -164,23 +161,23 @@ private slots:
     void readChnAlias();
     void readSampleRate();
     void readUnit();
-    void readRangelist();
-    void readRangeProperties1();
-    void readRangeProperties3();
+    void readRangeAndProperties();
     void resetStatusSlot();
+    void setNotifierRangeCat();
     void activationDone();
 
     void deactivationInit();
     void deactivationDone();
 
     // the slots for querying a measchannels range properties
+    void readRangelist();
     void readRngAlias();
     void readType();
     void readUrvalue();
     void readRejection();
     void readOVRejection();
     void readisAvail();
-    void rangeQueryDone();
+    void rangeQueryLoop();
 };
 
 }
