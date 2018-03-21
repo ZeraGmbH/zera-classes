@@ -547,6 +547,7 @@ void cRangeObsermatic::readGainCorrDone()
         QString s1, s2;
         sValidator = new cStringValidator(m_RangeMeasChannelList.at(i)->getRangeListAlias());
         m_RangeParameterList.at(i)->setValidator(sValidator);
+        m_ChannelRangeValidatorHash[m_ChannelNameList.at(i)] = sValidator; // systemchannelname, stringvalidator
         // we also set the channels name alias and its unit
         m_RangeParameterList.at(i)->setChannelName(s1 = m_ChannelAliasList.at(i));
         m_RangeParameterList.at(i)->setUnit(s2 = m_RangeMeasChannelList.at(i)->getUnit());
@@ -862,6 +863,15 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
             }
         }
     }
+}
+
+
+void cRangeObsermatic::catchChannelNewRangeList()
+{
+    cRangeMeasChannel* mchn;
+
+    mchn = qobject_cast<cRangeMeasChannel*>(QObject::sender());
+    m_ChannelRangeValidatorHash[mchn->getName()]->setValidator(mchn->getRangeListAlias());
 }
 
 }

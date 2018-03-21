@@ -41,6 +41,7 @@ namespace  Server {
 class cDspMeasData;
 class cVeinModuleParameter;
 class cVeinModuleComponent;
+class cStringValidator;
 
 namespace RANGEMODULE
 {
@@ -76,6 +77,7 @@ public:
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
+    void catchChannelNewRangeList();
 
 signals:
     void readStatusContinue();
@@ -91,6 +93,7 @@ private:
     Zera::Proxy::cProxyClient *m_pDspClient;
     QStringList m_ChannelAliasList; // the alias of our channels
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;
+    QHash<QString,cStringValidator*> m_ChannelRangeValidatorHash;
     QList<bool> m_softOvlList; // here we enter software detected overloads
     QList<bool> m_hardOvlList; // what do you think ?
     QList<bool> m_maxOvlList; // here we enter overloads that occured in maximum range
