@@ -14,6 +14,8 @@ public:
     virtual ~cStringValidator(){}
     virtual bool isValidParam(QVariant &newValue);
     virtual void exportMetaData(QJsonObject& jsObj);
+    virtual void setValidator(QString possibilities);
+    virtual void setValidator(QStringList possibilities);
 
 private:
     QStringList m_sPossibilitiesList;

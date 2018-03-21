@@ -39,3 +39,15 @@ void cStringValidator::exportMetaData(QJsonObject& jsObj)
 }
 
 
+void cStringValidator::setValidator(QString possibilities)
+{
+    m_sPossibilitiesList = possibilities.split(';');
+}
+
+
+void cStringValidator::setValidator(QStringList possibilities)
+{
+    m_sPossibilitiesList = possibilities;
+}
+
+
