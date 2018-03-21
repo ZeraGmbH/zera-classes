@@ -121,6 +121,32 @@
     </xs:complexType>
 
 
+    <xs:complexType name="extendtype">
+        <xs:sequence>
+            <xs:element name="n" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="0"/>
+                        <xs:maxInclusive value="12"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="ch1" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch2" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch3" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch4" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch5" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch6" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch7" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch8" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch9" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch10" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch11" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="ch12" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
     <xs:complexType name="onegroup">
         <xs:sequence>
             <xs:element name="n" minOccurs="1" maxOccurs="1">
@@ -237,6 +263,7 @@
                                     <xs:element name="withoverload" type="yesnotype" minOccurs="1" maxOccurs="1"/>
                                     <xs:element name="channel" type="channeltype"/>
                                     <xs:element name="subdc" type="subdctype"/>
+                                    <xs:element name="extend" type="extendtype"/>
                                     <xs:element name="group" type="grouptype"/>
                                 </xs:sequence>
                             </xs:complexType>
