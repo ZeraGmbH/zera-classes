@@ -43,6 +43,8 @@ public:
     QStringList m_senseChannelList; // a list of channel system names we work on
     quint8 m_nSubDCCount; // how many channels for subtract dc
     QStringList m_subdcChannelList; // a list for which channels we have to subtract dc
+    quint8 m_nExtendCount; // how many channels for range extension
+    QStringList m_ExtendChannelList; // a list for which channels we have to instanciate notifiers for range extension
     quint8 m_nGroupCount; // the number of groups holded
     QList<int> m_GroupCountList; // the number of expected items per group
     QList<QStringList> m_GroupList; // here are our groups
