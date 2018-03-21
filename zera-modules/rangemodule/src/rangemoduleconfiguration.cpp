@@ -49,6 +49,7 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:channel:n"] = setChannelCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:subdc:n"] = setSubdcCount;
+    m_ConfigXMLMap["rangemodconfpar:configuration:sense:extend:n"] = setExtendCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:group:n"] = setGroupCount;
 
     m_ConfigXMLMap["rangemodconfpar:configuration:measure:interval"] = setMeasureInterval;
@@ -143,11 +144,21 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
         {
             m_pRangeModulConfigData->m_nSubDCCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for channel configuration
-            stringParameter sParam;
             if (m_pRangeModulConfigData->m_nSubDCCount > 0)
             for (int i = 0; i < m_pRangeModulConfigData->m_nSubDCCount; i++)
             {
                 m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:subdc:ch%1").arg(i+1)] = setSubdcChannel1+i;
+            }
+            break;
+        }
+        case setExtendCount:
+        {
+            m_pRangeModulConfigData->m_nExtendCount = m_pXMLReader->getValue(key).toInt(&ok);
+            // here we generate dynamic hash entries for channel configuration
+            if (m_pRangeModulConfigData->m_nExtendCount > 0)
+            for (int i = 0; i < m_pRangeModulConfigData->m_nExtendCount; i++)
+            {
+                m_ConfigXMLMap[QString("rangemodconfpar:configuration:sense:extend:ch%1").arg(i+1)] = setExtendChannel1+i;
             }
             break;
         }
@@ -211,6 +222,16 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
                 // it is command for setting subdc channel name
                 QString subdcChannel = m_pXMLReader->getValue(key);
                 m_pRangeModulConfigData->m_subdcChannelList.append(subdcChannel); // for configuration of our engine
+            }
+
+            else
+
+            if ((cmd >= setExtendChannel1) && (cmd < setExtendChannel1 + m_pRangeModulConfigData->m_nExtendCount))
+            {
+                cmd -= setExtendChannel1;
+                // it is command for setting extend channel name
+                QString extendChannel = m_pXMLReader->getValue(key);
+                m_pRangeModulConfigData->m_ExtendChannelList.append(extendChannel); // for configuration of our engine
             }
 
             else
