@@ -81,9 +81,14 @@ void cRangeModule::setupModule()
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
+        bool extend;
+        QString channel;
+
+        channel = pConfData->m_senseChannelList.at(i);
+        extend = pConfData->m_ExtendChannelList.contains(channel); // let's test if this channel is range extendable
         cRangeMeasChannel* pchn = new cRangeMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
-                                                        pConfData->m_senseChannelList.at(i), i+1);
+                                                        pConfData->m_senseChannelList.at(i), i+1, extend);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
@@ -101,10 +106,12 @@ void cRangeModule::setupModule()
 
     // we have to connect all cmddone from our meas channel to range obsermatic
     // this is also used for synchronizing purpose
+    // additionally we connect the newrangesignal of all measchannels to range obsermatic
     for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
     {
         cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         connect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
+        connect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
     }
 
     // we also need some program for adjustment
@@ -200,6 +207,7 @@ void cRangeModule::deactivationStart()
     {
         cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         disconnect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
+        disconnect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
     }
 
     // if we get informed we have to reconfigure
