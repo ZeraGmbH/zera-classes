@@ -872,6 +872,7 @@ void cRangeObsermatic::catchChannelNewRangeList()
 
     mchn = qobject_cast<cRangeMeasChannel*>(QObject::sender());
     m_ChannelRangeValidatorHash[mchn->getName()]->setValidator(mchn->getRangeListAlias());
+    m_pModule->exportMetaData();
 }
 
 }
