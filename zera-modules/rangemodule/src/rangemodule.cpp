@@ -111,7 +111,6 @@ void cRangeModule::setupModule()
     {
         cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         connect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
-        connect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
     }
 
     // we also need some program for adjustment
@@ -186,6 +185,12 @@ void cRangeModule::activationFinished()
 
     // if we get informed we have to reconfigure
     connect(m_pRangeModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rangeModuleReconfigure()));
+
+    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
+    {
+        cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
+        connect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
+    }
 
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
