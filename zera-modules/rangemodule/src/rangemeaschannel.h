@@ -46,7 +46,8 @@ enum rangemeaschannelCmds
     readmeaschannelstatus,
     resetmeaschannelstatus,
     resetmeaschannelstatus2, // we use this her in state machine while activating
-    registerNotifier
+    registerNotifier,
+    unregisterNotifiers
 };
 
 const double sqrt2 = 1.41421356;
@@ -126,6 +127,7 @@ private:
 
     // statemachine for deactivating a rangemeaschannel
     QState m_deactivationInitState;
+    QState m_deactivationResetNotifiersState;
     QFinalState m_deactivationDoneState;
 
 
@@ -167,6 +169,7 @@ private slots:
     void activationDone();
 
     void deactivationInit();
+    void deactivationResetNotifiers();
     void deactivationDone();
 
     // the slots for querying a measchannels range properties

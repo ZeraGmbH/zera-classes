@@ -68,11 +68,14 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     // setting up statemachine for "deactivating" meas channel
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationResetNotifiersState);
+    m_deactivationResetNotifiersState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
+    m_deactivationMachine.addState(&m_deactivationResetNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
     connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
+    connect(&m_deactivationResetNotifiersState, SIGNAL(entered()), SLOT(deactivationResetNotifiers()));
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 
     // setting up statemachine for querying the meas channels ranges and their properties
@@ -490,6 +493,18 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             break;
 
+        case unregisterNotifiers:
+            if (reply == ack)
+                emit deactivationContinue();
+            {
+                emit errMsg((tr(unregisterpcbnotifierErrMsg)));
+    #ifdef DEBUG
+                qDebug() << unregisterpcbnotifierErrMsg;
+    #endif
+                emit deactivationError();
+            }
+            break;
+
         case readdspchannel:
             if (reply == ack)
             {
@@ -763,6 +778,21 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationError();
             }; // perhaps some error output
             break;
+
+        case registerNotifier:
+            if (reply == ack)
+            {
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(registerpcbnotifierErrMsg)));
+    #ifdef DEBUG
+                qDebug() << registerpcbnotifierErrMsg;
+    #endif
+                emit activationError();
+            }; // perhaps some error output
+            break;
         }
     }
 }
@@ -925,6 +955,12 @@ void cRangeMeasChannel::deactivationInit()
     // deactivation means we have to free our resources
     m_bActive = false;
     m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = freeresource;
+}
+
+
+void cRangeMeasChannel::deactivationResetNotifiers()
+{
+    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = unregisterNotifiers;
 }
 
 
