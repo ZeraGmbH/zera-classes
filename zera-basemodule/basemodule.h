@@ -63,6 +63,7 @@ public:
     virtual bool isConfigured() const;
     virtual void startModule();
     virtual void stopModule();
+    virtual void exportMetaData();
 
     int m_nEntityId;
     VeinEvent::StorageSystem* m_pStorageSystem;
@@ -142,8 +143,6 @@ protected:
     virtual void unsetModule(); // in case of reconfiguration we must unset module first
     virtual void startMeas() =  0;
     virtual void stopMeas() = 0;
-
-    virtual void exportMetaData();
 
     VeinEvent::EventSystem *m_pModuleEventSystem;
 
