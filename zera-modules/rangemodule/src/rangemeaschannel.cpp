@@ -933,18 +933,6 @@ void cRangeMeasChannel::setNotifierRangeCat()
 
 void cRangeMeasChannel::activationDone()
 {
-    QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHash.begin();
-    while (it != m_RangeInfoHash.end()) // we delete all unused ranges
-    {
-        ri = it.value();
-        if (ri.avail)
-            ++it;
-        else
-            it = m_RangeInfoHash.erase(it); // in case range is not avail
-    }
-
-    setRangeListAlias(); // and the list of possible ranges alias
-
     m_bActive = true;
     emit activated();
 }
@@ -977,6 +965,7 @@ void cRangeMeasChannel::deactivationDone()
 
 void cRangeMeasChannel::readRangelist()
 {
+    m_RangeInfoHash.clear();
     m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
     m_RangeQueryIt = 0; // we start with range 0
 }
@@ -1028,7 +1017,20 @@ void cRangeMeasChannel::rangeQueryLoop()
     if (m_RangeQueryIt < m_RangeNameList.count()) // another range ?
         emit activationLoop();
     else
+    {
+        QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHash.begin();
+        while (it != m_RangeInfoHash.end()) // we delete all unused ranges
+        {
+            ri = it.value();
+            if (ri.avail)
+                ++it;
+            else
+                it = m_RangeInfoHash.erase(it); // in case range is not avail
+        }
+
+        setRangeListAlias(); // and the list of possible ranges alias
         emit activationContinue();
+    }
 }
 
 
