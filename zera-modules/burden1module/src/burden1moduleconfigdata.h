@@ -26,6 +26,13 @@ struct doubleParameter
 };
 
 
+struct stringParameter
+{
+    QString m_sKey;
+    QString m_sPar;
+};
+
+
 class cBurden1ModuleConfigData
 {
 public:
@@ -38,6 +45,7 @@ public:
     QString m_Unit; // A or V
     QStringList m_BurdenChannelList;
     doubleParameter nominalRange;
+    stringParameter nominalRangeFactor;
     doubleParameter nominalBurden;
     doubleParameter wireLength;
     doubleParameter wireCrosssection;

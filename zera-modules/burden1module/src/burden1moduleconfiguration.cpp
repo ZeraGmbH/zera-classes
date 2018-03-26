@@ -42,6 +42,7 @@ void cBurden1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["brd1modconfpar:configuration:measure:system:unit"] = setSystemUnit;
 
     m_ConfigXMLMap["brd1modconfpar:parameter:nominalrange"] = setNominalRange;
+    m_ConfigXMLMap["brd1modconfpar:parameter:nominalrangefactor"] = setNominalRangeFactor;
     m_ConfigXMLMap["brd1modconfpar:parameter:nominalburden"] = setNominalBurden;
     m_ConfigXMLMap["brd1modconfpar:parameter:wirelength"] = setWireLength;
     m_ConfigXMLMap["brd1modconfpar:parameter:wirecrosssection"] = setWireCrosssection;
@@ -103,6 +104,10 @@ void cBurden1ModuleConfiguration::configXMLInfo(QString key)
         case setNominalRange:
             m_pBurden1ModulConfigData->nominalRange.m_sKey = key;
             m_pBurden1ModulConfigData->nominalRange.m_fValue = m_pXMLReader->getValue(key).toDouble();
+            break;
+        case setNominalRangeFactor:
+            m_pBurden1ModulConfigData->nominalRangeFactor.m_sKey = key;
+            m_pBurden1ModulConfigData->nominalRangeFactor.m_sPar = m_pXMLReader->getValue(key);
             break;
         case setNominalBurden:
             m_pBurden1ModulConfigData->nominalBurden.m_sKey = key;

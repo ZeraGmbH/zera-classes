@@ -6,6 +6,7 @@
 #include <ve_storagesystem.h>
 #include <modulevalidator.h>
 #include <doublevalidator.h>
+#include <stringvalidator.h>
 #include <veinmodulecomponentinput.h>
 #include <veinmoduleactvalue.h>
 #include <veinmodulemetadata.h>
@@ -127,8 +128,19 @@ void cBurden1ModuleMeasProgram::generateInterface()
     cDoubleValidator *dValidator;
     dValidator = new cDoubleValidator(1.0, 300.0, 0.1);
     m_pNominalRangeParameter->setValidator(dValidator);
-
     m_pModule->veinModuleParameterHash[key] = m_pNominalRangeParameter; // for modules use
+
+    m_pNominalRangeFactorParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                              key = QString("PAR_NominalRangeFactor"),
+                                                              QString("Component for setting the modules nominal range factor"),
+                                                              QVariant(m_ConfigData.nominalRangeFactor.m_sPar));
+    m_pNominalRangeFactorParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RFACTOR", "10", "PAR_NominalRangeFactor", "0", ""));
+
+    cStringValidator *sValidator;
+    sValidator = new cStringValidator(QString("1;sqrt(3);1/sqrt(3)"));
+    m_pNominalRangeFactorParameter->setValidator(sValidator);
+    m_pModule->veinModuleParameterHash[key] = m_pNominalRangeFactorParameter; // for modules use
+
 
     m_pNominalBurdenParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_NominalBurden"),
@@ -240,6 +252,7 @@ void cBurden1ModuleMeasProgram::activateDone()
 
     connect(m_pNominalBurdenParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalBurden(QVariant)));
     connect(m_pNominalRangeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalRange(QVariant)));
+    connect(m_pNominalRangeFactorParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalFactorRange(QVariant)));
     connect(m_pWireLengthParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newWireLength(QVariant)));
     connect(m_pWireCrosssectionParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newWireCrosssection(QVariant)));
 
@@ -275,6 +288,15 @@ void cBurden1ModuleMeasProgram::newNominalRange(QVariant nr)
 {
     bool ok;
     m_ConfigData.nominalRange.m_fValue = nr.toFloat(&ok);
+    setParameters();
+
+    emit m_pModule->parameterChanged();
+}
+
+
+void cBurden1ModuleMeasProgram::newNominalFactorRange(QVariant nrf)
+{
+    m_ConfigData.nominalRangeFactor.m_sPar = nrf.toString();
     setParameters();
 
     emit m_pModule->parameterChanged();

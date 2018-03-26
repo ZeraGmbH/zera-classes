@@ -23,6 +23,7 @@ public slots:
     void actValueInput2(QVariant val);
     void setNominalBurden(QVariant val);
     void setNominalRange(QVariant val);
+    void setNominalRangeFactor(QVariant val);
     void setWireLength(QVariant val);
     void setWireCrosssection(QVariant val);
 
@@ -41,6 +42,8 @@ private:
     complex m_fCurrentVector;
     double m_fNominalBurden;
     double m_fNominalRange;
+    QString m_sNominalRangeFactor;
+    double m_fNominalRangeFactor;
     double m_fWireLength;
     double m_fWireCrosssection;
 

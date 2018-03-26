@@ -96,6 +96,7 @@ private:
     cVeinModuleComponent* m_pMeasureSignal;
 
     cVeinModuleParameter* m_pNominalRangeParameter;
+    cVeinModuleParameter* m_pNominalRangeFactorParameter;
     cVeinModuleParameter* m_pNominalBurdenParameter;
     cVeinModuleParameter* m_pWireLengthParameter;
     cVeinModuleParameter* m_pWireCrosssectionParameter;
@@ -122,6 +123,7 @@ private slots:
     void setMeasureSignal(int signal);
 
     void newNominalRange(QVariant nr);
+    void newNominalFactorRange(QVariant nrf);
     void newNominalBurden(QVariant nb);
     void newWireLength(QVariant wl);
     void newWireCrosssection(QVariant wc);

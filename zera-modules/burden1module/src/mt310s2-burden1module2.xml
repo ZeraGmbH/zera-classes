@@ -17,6 +17,7 @@
     </configuration>
     <parameter>
         <nominalrange>1.0</nominalrange>
+        <nominalrangefactor>1</nominalrangefactor>
         <nominalburden>1.0</nominalburden>
         <wirelength>1.0</wirelength>
         <wirecrosssection>1.0</wirecrosssection>

@@ -19,6 +19,7 @@ enum moduleconfigstate
     setSystemUnit,
 
     setNominalRange,
+    setNominalRangeFactor,
     setNominalBurden,
     setWireLength,
     setWireCrosssection,

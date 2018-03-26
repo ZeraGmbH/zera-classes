@@ -61,6 +61,18 @@ void cBurden1MeasDelegate::setNominalRange(QVariant val)
 }
 
 
+void cBurden1MeasDelegate::setNominalRangeFactor(QVariant val)
+{
+    m_sNominalRangeFactor = val.toString();
+    if (m_sNominalRangeFactor == "1")
+        m_fNominalRangeFactor = 1.0;
+    if (m_sNominalRangeFactor == "sqrt(3)")
+        m_fNominalRangeFactor = sqrt(3.0);
+    if (m_sNominalRangeFactor == "1/sqrt(3)")
+        m_fNominalRangeFactor = 1.0 / sqrt(3.0);
+}
+
+
 void cBurden1MeasDelegate::setWireLength(QVariant val)
 {
     m_fWireLength = val.toDouble();
