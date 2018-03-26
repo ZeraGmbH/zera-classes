@@ -971,7 +971,7 @@ void cRangeMeasChannel::deactivationDone()
 
 void cRangeMeasChannel::readRangelist()
 {
-    m_RangeInfoHash.clear();
+    m_RangeInfoHashWorking.clear();
     m_MsgNrCmdList[m_pPCBInterface->getRangeList(m_sName)] = readrangelist;
     m_RangeQueryIt = 0; // we start with range 0
 }
@@ -1017,22 +1017,24 @@ void cRangeMeasChannel::readisAvail()
 void cRangeMeasChannel::rangeQueryLoop()
 {
     ri.name = m_RangeNameList.at(m_RangeQueryIt);
-    m_RangeInfoHash[ri.alias] = ri; // for each range we append cRangeinfo per alias
+    m_RangeInfoHashWorking[ri.alias] = ri; // for each range we append cRangeinfo per alias
 
     m_RangeQueryIt++;
     if (m_RangeQueryIt < m_RangeNameList.count()) // another range ?
         emit activationLoop();
     else
     {
-        QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHash.begin();
-        while (it != m_RangeInfoHash.end()) // we delete all unused ranges
+        QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHashWorking.begin();
+        while (it != m_RangeInfoHashWorking.end()) // we delete all unused ranges
         {
             ri = it.value();
             if (ri.avail)
                 ++it;
             else
-                it = m_RangeInfoHash.erase(it); // in case range is not avail
+                it = m_RangeInfoHashWorking.erase(it); // in case range is not avail
         }
+
+        m_RangeInfoHash = m_RangeInfoHashWorking;
 
         setRangeListAlias(); // and the list of possible ranges alias
         emit activationContinue();

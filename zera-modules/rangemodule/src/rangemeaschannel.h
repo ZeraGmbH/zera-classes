@@ -99,6 +99,7 @@ protected slots:
 private:
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
+    QHash<QString, cRangeInfo> m_RangeInfoHashWorking;
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
     double m_fGainCorrection;
