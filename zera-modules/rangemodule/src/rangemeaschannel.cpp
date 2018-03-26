@@ -803,16 +803,16 @@ void cRangeMeasChannel::setRangeListAlias()
     QString s;
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
 
-    // first we sort the range alias according to upper range values
-    for (int i = 0; i < riList.count()-1; i++)
-        for (int j = i; j < riList.count(); j++)
-            if (riList.at(i).urvalue < riList.at(j).urvalue)
-                riList.swap(i, j);
-
-    // second we sort the range alias according to range type
+    // first we sort the range alias according to range type
     for (int i = 0; i < riList.count()-1; i++)
         for (int j = i; j < riList.count(); j++)
             if (riList.at(i).type < riList.at(j).type)
+                riList.swap(i, j);
+
+    // second we sort the range alias according to upper range values but grouped with types
+    for (int i = 0; i < riList.count()-1; i++)
+        for (int j = i; j < riList.count(); j++)
+            if ( (riList.at(i).urvalue < riList.at(j).urvalue) && (riList.at(i).type == riList.at(j).type) )
                 riList.swap(i, j);
 
     s = riList.at(0).alias;
