@@ -896,6 +896,7 @@ void cSec1ModuleMeasProgram::readResourceTypes()
     m_ResourceTypeList.append("FRQINPUT");
     m_ResourceTypeList.append("SOURCE");
     m_ResourceTypeList.append("SCHEAD");
+    m_ResourceTypeList.append("HKEY");
     emit activationContinue();
 }
 
@@ -1188,7 +1189,10 @@ void cSec1ModuleMeasProgram::setSync()
 
 void cSec1ModuleMeasProgram::setMeaspulses()
 {
-    m_nMTCNTStart = m_pMRatePar->getValue().toLongLong();
+    if (m_pDutInputPar->getValue().toString().contains("HK"))
+        m_nMTCNTStart = 1;
+    else
+        m_nMTCNTStart = m_pMRatePar->getValue().toLongLong();
     m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nMTCNTStart)] = setmeaspulses;
 }
 
