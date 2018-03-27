@@ -103,6 +103,7 @@
             <xs:enumeration value="fi1"/>
             <xs:enumeration value="fi2"/>
             <xs:enumeration value="fi3"/>
+            <xs:enumeration value="hk0"/>
         </xs:restriction>
     </xs:simpleType>
 
