@@ -59,6 +59,8 @@ enum pcbcommands
     getformfactorsource,
     getconstantsource,
     setconstantsource,
+    getpowtypesource,
+    setpowtypesource,
 
     getaliassschead,
     getaliasfrqinput,
@@ -117,6 +119,8 @@ public:
     virtual quint32 getFormFactorSource(QString chnName); // double
     virtual quint32 getConstantSource(QString chnName); // double
     virtual quint32 setConstantSource(QString chnName, double constant); // double
+    virtual quint32 getPowTypeSource(QString chnName); // qstring
+    virtual quint32 setPowTypeSource(QString chnName, QString ptype);
 
     // all commands to sample interface
     virtual quint32 getAliasSample(QString chnName); // qstring

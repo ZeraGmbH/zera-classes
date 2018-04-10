@@ -408,6 +408,28 @@ quint32 cPCBInterfacePrivate::setConstantSource(QString chnName, double constant
 }
 
 
+quint32 cPCBInterfacePrivate::getPowTypeSource(QString chnName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SOUR:%1:POWT?").arg(chnName));
+    m_MsgNrCmdList[msgnr] = getpowtypesource;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setPowTypeSource(QString chnName, QString ptype)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SOUR:%1:POWT").arg(chnName), par = QString("%1;").arg(ptype));
+    m_MsgNrCmdList[msgnr] = setpowtypesource;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getAliasSample(QString chnName)
 {
     QString cmd;
@@ -660,6 +682,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getserialnumber:
         case getadjustmentchksum:
         case getpcberrorstatus:
+        case getpowtypesource:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
@@ -702,6 +725,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case setrangesample:
         case setpllchannel:
         case setconstantsource:
+        case setpowtypesource:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }

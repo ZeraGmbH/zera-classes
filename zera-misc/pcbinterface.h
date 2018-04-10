@@ -76,6 +76,8 @@ public:
     virtual quint32 getFormFactorSource(QString chnName); // double
     virtual quint32 getConstantSource(QString chnName); // double
     virtual quint32 setConstantSource(QString chnName, double constant); // double
+    virtual quint32 getPowTypeSource(QString chnName); // qstring
+    virtual quint32 setPowTypeSource(QString chnName, QString ptype);
 
     // all commands to schead interface
     virtual quint32 getAliasSchead(QString chnName); // qstring
