@@ -2305,6 +2305,39 @@ void cPower1ModuleMeasProgram::setFoutConstants()
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
 
         }
+
+    setFoutPowerModes();
+}
+
+
+void cPower1ModuleMeasProgram::setFoutPowerModes()
+{
+    QList<QString> keylist = m_FoutInfoHash.keys();
+
+    if (keylist.count() > 0)
+        for (int i = 0; i < keylist.count(); i++)
+        {
+            QString powtype;
+            int foutmode;
+
+            foutmode = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode;
+            switch (foutmode)
+            {
+            case posPower:
+                powtype = "+";
+                break;
+            case negPower:
+                powtype = "-";
+                break;
+            default:
+                powtype = "";
+            }
+
+            powtype += m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getActvalName();
+
+            cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
+            m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
+        }
 }
 
 
@@ -2372,6 +2405,7 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     setActualValuesNames();
+    setFoutPowerModes();
 
     emit m_pModule->parameterChanged();
 }
