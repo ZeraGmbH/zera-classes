@@ -299,6 +299,7 @@ private slots:
     void readUrvalueDone();
     void setFrequencyScales();
     void setFoutConstants();
+    void setFoutPowerModes();
 
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);
