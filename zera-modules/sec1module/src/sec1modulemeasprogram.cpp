@@ -1047,7 +1047,11 @@ void cSec1ModuleMeasProgram::readREFInputAlias()
     siInfo = mREFSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
     siInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
     siInfo->pcbServersocket = m_ConfigData.m_PCBServerSocket;
-    m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readrefInputalias;
+    //m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readrefInputalias;
+
+    // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
+    m_MsgNrCmdList[siInfo->pcbIFace->getPowTypeSource(m_sIt)] = readrefInputalias;
+
 }
 
 
