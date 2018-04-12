@@ -262,7 +262,7 @@ void cSec1ModuleMeasProgram::generateInterface()
                                                      key = QString("PAR_DUTConstUnit"),
                                                      QString("Component for reading and setting the modules ref constant unit"),
                                                      QVariant(s = "Unknown"));
-    m_pRefInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DCUNIT").arg(modNr), "10", "PAR_DUTConstUnit", "0", ""));
+    m_pDutConstantUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DCUNIT").arg(modNr), "10", "PAR_DUTConstUnit", "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantUnitPar; // for modules use
 
     m_pMRatePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
