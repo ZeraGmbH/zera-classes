@@ -1390,6 +1390,7 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 
     // if the reference input changes P <-> Q <-> S it is necessary to change dut constanst unit and its validator
     QStringList sl;
+    sl = getDutConstUnitValidator();
     initDutConstantUnit(sl);
     m_pDutConstanstUnitValidator->setValidator(sl);
     m_pModule->exportMetaData();
