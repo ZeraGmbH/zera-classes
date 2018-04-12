@@ -192,6 +192,8 @@ private:
     void setValidators();
 
     QStringList getDutConstUnitValidator();
+    void initDutConstantUnit(QStringList sl);
+
     void handleChangedREFConst();
     void handleSECInterrupt();
     void cmpDependencies();

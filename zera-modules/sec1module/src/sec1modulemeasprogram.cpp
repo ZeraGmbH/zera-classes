@@ -814,14 +814,20 @@ void cSec1ModuleMeasProgram::setValidators()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    if (m_pDutInputPar->getValue().toString().contains('P'))
+    if (m_pRefInputPar->getValue().toString().contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
-    if (m_pDutInputPar->getValue().toString().contains('Q'))
+    if (m_pRefInputPar->getValue().toString().contains('Q'))
         sl << QString("I/kVarh") << QString("Varh/I");
-    if (m_pDutInputPar->getValue().toString().contains('S'))
+    if (m_pRefInputPar->getValue().toString().contains('S'))
         sl << QString("I/kVAh") << QString("VAh/I");
 
     return sl;
+}
+
+
+void cSec1ModuleMeasProgram::initDutConstantUnit(QStringList sl)
+{
+    m_pDutConstantUnitPar->setValue(sl.at(0));
 }
 
 
@@ -1346,9 +1352,6 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
     setInterfaceComponents();
 
-    m_pDutConstanstUnitValidator->setValidator(getDutConstUnitValidator());
-    m_pModule->exportMetaData();
-
     emit m_pModule->parameterChanged();
 }
 
@@ -1376,6 +1379,12 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
     m_ConfigData.m_sRefInput.m_sPar = mREFSecInputSelectionHash[refinput.toString()]->name;
     setInterfaceComponents();
+
+    // if the reference input changes P <-> Q <-> S it is necessary to change dut constanst unit and its validator
+    QStringList sl;
+    initDutConstantUnit(sl);
+    m_pDutConstanstUnitValidator->setValidator(sl);
+    m_pModule->exportMetaData();
 
     emit m_pModule->parameterChanged();
 }
