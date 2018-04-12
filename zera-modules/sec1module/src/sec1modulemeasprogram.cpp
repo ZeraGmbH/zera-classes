@@ -258,6 +258,13 @@ void cSec1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(1.0, 1.0e20, 1e-5);
     m_pDutConstantPar->setValidator(dValidator);
 
+    m_pDutConstantUnitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                     key = QString("PAR_DUTConstUnit"),
+                                                     QString("Component for reading and setting the modules ref constant unit"),
+                                                     QVariant(s = "Unknown"));
+    m_pRefInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DCUNIT").arg(modNr), "10", "PAR_DUTConstUnit", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutConstantUnitPar; // for modules use
+
     m_pMRatePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MRate"),
                                            QString("Component for reading and setting the modules measuring rate"),
@@ -798,6 +805,23 @@ void cSec1ModuleMeasProgram::setValidators()
 
     sValidator = new cStringValidator(m_REFAliasList);
     m_pRefInputPar->setValidator(sValidator);
+
+    m_pDutConstanstUnitValidator = new cStringValidator(getDutConstUnitValidator());
+    m_pDutConstantUnitPar->setValidator(m_pDutConstanstUnitValidator);
+}
+
+
+QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
+{
+    QStringList sl;
+    if (m_pDutInputPar->getValue().toString().contains('P'))
+        sl << QString("I/kWh") << QString("Wh/I");
+    if (m_pDutInputPar->getValue().toString().contains('Q'))
+        sl << QString("I/kVarh") << QString("Varh/I");
+    if (m_pDutInputPar->getValue().toString().contains('S'))
+        sl << QString("I/kVAh") << QString("VAh/I");
+
+    return sl;
 }
 
 
@@ -1321,6 +1345,9 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     bool ok;
     m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
     setInterfaceComponents();
+
+    m_pDutConstanstUnitValidator->setValidator(getDutConstUnitValidator());
+    m_pModule->exportMetaData();
 
     emit m_pModule->parameterChanged();
 }

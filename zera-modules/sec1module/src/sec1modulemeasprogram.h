@@ -24,6 +24,7 @@ namespace Proxy
 
 class cVeinModuleParameter;
 class cVeinModuleActvalue;
+class cStringValidator;
 
 class cDspMeasData;
 class cDspIFace;
@@ -176,6 +177,7 @@ private:
     cVeinModuleParameter* m_pRefInputPar;
     cVeinModuleParameter* m_pRefConstantPar;
     cVeinModuleParameter* m_pDutConstantPar;
+    cVeinModuleParameter* m_pDutConstantUnitPar;
     cVeinModuleParameter* m_pMRatePar;
     cVeinModuleParameter* m_pTargetPar;
     cVeinModuleParameter* m_pEnergyPar;
@@ -184,9 +186,12 @@ private:
     cVeinModuleActvalue* m_pProgressAct;
     cVeinModuleActvalue* m_pResultAct;
 
+    cStringValidator *m_pDutConstanstUnitValidator;
+
     void setInterfaceComponents();
     void setValidators();
 
+    QStringList getDutConstUnitValidator();
     void handleChangedREFConst();
     void handleSECInterrupt();
     void cmpDependencies();
