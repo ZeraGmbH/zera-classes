@@ -790,6 +790,8 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     m_pTargetPar->setValue(QVariant(m_ConfigData.m_nTarget.m_nPar));
     m_pEnergyPar->setValue(QVariant(m_ConfigData.m_fEnergy.m_fPar));
     m_pProgressAct->setValue(QVariant(double(0.0)));
+
+    initDutConstantUnit();
 }
 
 
@@ -828,6 +830,12 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 void cSec1ModuleMeasProgram::initDutConstantUnit(QStringList sl)
 {
     m_pDutConstantUnitPar->setValue(sl.at(0));
+}
+
+
+void cSec1ModuleMeasProgram::initDutConstantUnit()
+{
+    initDutConstantUnit(getDutConstUnitValidator());
 }
 
 

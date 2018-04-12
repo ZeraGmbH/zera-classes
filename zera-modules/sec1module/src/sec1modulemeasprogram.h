@@ -193,6 +193,7 @@ private:
 
     QStringList getDutConstUnitValidator();
     void initDutConstantUnit(QStringList sl);
+    void initDutConstantUnit();
 
     void handleChangedREFConst();
     void handleSECInterrupt();
