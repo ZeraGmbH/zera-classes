@@ -790,8 +790,6 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     m_pTargetPar->setValue(QVariant(m_ConfigData.m_nTarget.m_nPar));
     m_pEnergyPar->setValue(QVariant(m_ConfigData.m_fEnergy.m_fPar));
     m_pProgressAct->setValue(QVariant(double(0.0)));
-
-    initDutConstantUnit();
 }
 
 
@@ -816,11 +814,15 @@ void cSec1ModuleMeasProgram::setValidators()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    if (m_pRefInputPar->getValue().toString().contains('P'))
+    QString powType;
+
+    powType = mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+
+    if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
-    if (m_pRefInputPar->getValue().toString().contains('Q'))
+    if (powType.contains('Q'))
         sl << QString("I/kVarh") << QString("Varh/I");
-    if (m_pRefInputPar->getValue().toString().contains('S'))
+    if (powType.contains('S'))
         sl << QString("I/kVAh") << QString("VAh/I");
 
     return sl;
@@ -864,13 +866,22 @@ void cSec1ModuleMeasProgram::handleSECInterrupt()
 void cSec1ModuleMeasProgram::cmpDependencies()
 {
     QString mode;
+    double constant;
+    bool energyPerImpulse;
+
     mode = m_ConfigData.m_sMode.m_sPar;
+
+    constant = m_ConfigData.m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
+    energyPerImpulse = m_pDutConstantUnitPar->getValue().toString().contains(QString("/I"));
+
+    if (energyPerImpulse)
+        constant = (1.0/constant) * 1000.0; // if xxx/I we calculate in I/kxxx
 
     if (mode == "mrate")
     {
        // we calculate the new target value
-       m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / m_ConfigData.m_fDutConstant.m_fPar);
-       m_ConfigData.m_fEnergy.m_fPar = m_ConfigData.m_nMRate.m_nPar / m_ConfigData.m_fDutConstant.m_fPar;
+       m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / constant);
+       m_ConfigData.m_fEnergy.m_fPar = m_ConfigData.m_nMRate.m_nPar / constant;
 
     }
 
@@ -879,17 +890,22 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     if (mode == "energy")
     {
         // we calcute the new mrate and target
-        double test = m_ConfigData.m_fDutConstant.m_fPar;
+        double test = constant;
         test *= m_ConfigData.m_fEnergy.m_fPar;
         test = floor(test);
         quint32 itest = (quint32) test;
-        m_ConfigData.m_nMRate.m_nPar = ceil(m_ConfigData.m_fDutConstant.m_fPar * m_ConfigData.m_fEnergy.m_fPar);
-        m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / m_ConfigData.m_fDutConstant.m_fPar);
+        m_ConfigData.m_nMRate.m_nPar = ceil(constant * m_ConfigData.m_fEnergy.m_fPar);
+        m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / constant);
     }
+
+    else
 
     if (mode == "target")
     {
-        m_ConfigData.m_fDutConstant.m_fPar = m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / m_ConfigData.m_nTarget.m_nPar;
+        constant = m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / m_ConfigData.m_nTarget.m_nPar;
+        if (energyPerImpulse)
+            constant = (1.0/constant) * 1000.0;
+        m_ConfigData.m_fDutConstant.m_fPar = constant;
         m_ConfigData.m_fEnergy.m_fPar = m_ConfigData.m_nMRate.m_nPar / m_ConfigData.m_fDutConstant.m_fPar;
     }
 }
@@ -1174,6 +1190,7 @@ void cSec1ModuleMeasProgram::activationDone()
     connect(m_pStartStopPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
     connect(m_pModePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
     connect(m_pDutConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstant(QVariant)));
+    connect(m_pDutConstantUnitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstantUnit(QVariant)));
     connect(m_pRefConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefConstant(QVariant)));
     connect(m_pDutInputPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutInput(QVariant)));
     connect(m_pRefInputPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefInput(QVariant)));
@@ -1181,7 +1198,9 @@ void cSec1ModuleMeasProgram::activationDone()
     connect(m_pTargetPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newTarget(QVariant)));
     connect(m_pEnergyPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newEnergy(QVariant)));
 
+    initDutConstantUnit();
     setInterfaceComponents(); // actualize interface components
+
     setValidators();
 
     emit activated();
@@ -1361,6 +1380,12 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
+}
+
+
+void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
+{
+    setInterfaceComponents(); // to compute the dependencies
 }
 
 

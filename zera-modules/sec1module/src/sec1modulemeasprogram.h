@@ -256,6 +256,7 @@ private slots:
     void newStartStop(QVariant startstop);
     void newMode(QVariant mode);
     void newDutConstant(QVariant dutconst);
+    void newDutConstantUnit(QVariant dutconstunit);
     void newRefConstant(QVariant refconst);
     void newDutInput(QVariant dutinput);
     void newRefInput(QVariant refinput);
