@@ -946,12 +946,19 @@ void cSec1ModuleMeasProgram::setECResource()
 void cSec1ModuleMeasProgram::readResourceTypes()
 {
     //m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
-    // instead of taking all resourcetypes we take predefined types
-    m_ResourceTypeList.append("FRQINPUT");
-    m_ResourceTypeList.append("SOURCE");
-    m_ResourceTypeList.append("SCHEAD");
+    // instead of taking all resourcetypes we take predefined types if we found them in our config
+
+    if (found(m_ConfigData.m_dutInpList, "fi") || found(m_ConfigData.m_refInpList, "fi"))
+        m_ResourceTypeList.append("FRQINPUT");
+    if (found(m_ConfigData.m_dutInpList, "fo") || found(m_ConfigData.m_refInpList, "fo"))
+        m_ResourceTypeList.append("SOURCE");
+    if (found(m_ConfigData.m_dutInpList, "sh") || found(m_ConfigData.m_refInpList, "sh"))
+        m_ResourceTypeList.append("SCHEAD");
+    if (found(m_ConfigData.m_dutInpList, "hk") || found(m_ConfigData.m_refInpList, "hk"))
     m_ResourceTypeList.append("HKEY");
+
     emit activationContinue();
+
 }
 
 
@@ -1458,6 +1465,15 @@ void cSec1ModuleMeasProgram::Actualize()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
+}
+
+
+bool cSec1ModuleMeasProgram::found(QList<QString> &list, QString searched)
+{
+    for (int i = 0; i < list.count(); i++)
+        if (list.at(i).contains(searched))
+            return true;
+    return false;
 }
 
 }

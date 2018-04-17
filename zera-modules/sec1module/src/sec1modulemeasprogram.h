@@ -265,6 +265,7 @@ private slots:
     void newEnergy(QVariant energy);
 
     void Actualize();
+    bool found(QList<QString>& list, QString searched);
 
 };
 }
