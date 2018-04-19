@@ -873,7 +873,7 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     mode = m_ConfigData.m_sMode.m_sPar;
 
     constant = m_ConfigData.m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
-    energyPerImpulse = m_pDutConstantUnitPar->getValue().toString().contains(QString("/I"));
+    energyPerImpulse = m_sDutConstantUnit.contains(QString("/I"));
 
     if (energyPerImpulse)
         constant = (1.0/constant) * 1000.0; // if xxx/I we calculate in I/kxxx
