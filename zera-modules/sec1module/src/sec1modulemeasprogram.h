@@ -187,6 +187,7 @@ private:
     cVeinModuleActvalue* m_pResultAct;
 
     cStringValidator *m_pDutConstanstUnitValidator;
+    QString m_sDutConstantUnit;
 
     void setInterfaceComponents();
     void setValidators();

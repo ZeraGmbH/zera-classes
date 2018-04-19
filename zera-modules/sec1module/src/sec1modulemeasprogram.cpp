@@ -831,7 +831,8 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 
 void cSec1ModuleMeasProgram::initDutConstantUnit(QStringList sl)
 {
-    m_pDutConstantUnitPar->setValue(sl.at(0));
+    m_sDutConstantUnit = sl.at(0);
+    m_pDutConstantUnitPar->setValue(m_sDutConstantUnit);
 }
 
 
@@ -1392,7 +1393,10 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
 
 void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
 {
+    m_sDutConstantUnit = dutconstunit.toString();
     setInterfaceComponents(); // to compute the dependencies
+
+    emit m_pModule->parameterChanged();
 }
 
 
