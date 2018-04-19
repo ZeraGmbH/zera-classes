@@ -18,6 +18,7 @@ class cSCPICmdInfo;
 class cSCPIInterface;
 class cSCPIDelegate;
 class cSCPIParameterDelegate;
+class cSCPIPropertyDelegate;
 class cSCPIMeasure;
 class cSCPIMeasureDelegate;
 
@@ -32,12 +33,14 @@ public:
     virtual ~cModuleInterface();
 
     virtual bool setupInterface();
+    virtual void actualizeInterface(int entityID);
 
     QHash<QString, cSCPIMeasureDelegate*>* getSCPIMeasDelegateHash();
 
 private:
     QList<cSCPIDelegate*> m_scpiDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
     QHash<QString, cSCPIMeasureDelegate*> m_scpiMeasureDelegateHash; // a hash for measure cmd's ... needed for clean up and search for existing cmd
+    QHash<QString, cSCPIPropertyDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject);

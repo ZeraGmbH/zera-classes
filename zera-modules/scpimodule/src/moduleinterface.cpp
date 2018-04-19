@@ -108,6 +108,51 @@ bool cModuleInterface::setupInterface()
 }
 
 
+void cModuleInterface::actualizeInterface(int entityID)
+{
+    QJsonDocument jsonDoc;
+    jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+
+    if ( !jsonDoc.isNull() && jsonDoc.isObject() )
+    {
+        QString scpiModuleName;
+        QJsonObject jsonObj;
+        QJsonArray jsonArr, jsonCmdArr;
+
+        jsonObj = jsonDoc.object();
+
+        jsonObj = jsonObj["SCPIInfo"].toObject();
+        scpiModuleName = jsonObj["Name"].toString();
+
+        jsonArr = jsonObj["Cmd"].toArray();
+
+        // we iterate over all cmds
+        for (int j = 0; j < jsonArr.count(); j++)
+        {
+            jsonCmdArr = jsonArr[j].toArray();
+
+            if (jsonCmdArr[4].toString() != "0")
+            { // so it is a property delegate
+                cSCPICmdInfo *scpiCmdInfo;
+                QString cmdComplete;
+
+                scpiCmdInfo = new cSCPICmdInfo();
+                scpiCmdInfo->scpiModuleName = scpiModuleName;
+                scpiCmdInfo->entityId = entityID;
+                scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
+                scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
+                scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
+                scpiCmdInfo->componentName = jsonCmdArr[3].toString();
+                scpiCmdInfo->refType = jsonCmdArr[4].toString();
+                scpiCmdInfo->unit = jsonCmdArr[5].toString();
+                cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel).arg(scpiCmdInfo->scpiModuleName).arg(scpiCmdInfo->scpiCommand);
+                m_scpiPropertyDelegateHash[cmdComplete]->setOutput(scpiCmdInfo);
+             }
+        }
+    }
+}
+
+
 QHash<QString, cSCPIMeasureDelegate *> *cModuleInterface::getSCPIMeasDelegateHash()
 {
     return &m_scpiMeasureDelegateHash;
@@ -156,9 +201,12 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         if (scpiCmdInfo->refType == "0")
             delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
         else
+        {
             delegate = new cSCPIPropertyDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
+            m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPIPropertyDelegate*>(delegate); // for easier access if we need to change answers of this delegate
+        }
 
-        m_scpiDelegateList.append(delegate);
+        m_scpiDelegateList.append(delegate); // for clean up .....
         m_pSCPIInterface->addSCPICommand(delegate);
     }
 }

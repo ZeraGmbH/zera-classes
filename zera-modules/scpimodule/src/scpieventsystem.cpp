@@ -14,6 +14,8 @@
 #include "scpiclientinfo.h"
 #include "signalconnectiondelegate.h"
 #include "scpimeasure.h"
+#include "scpiserver.h"
+#include "moduleinterface.h"
 
 
 namespace SCPIMODULE
@@ -114,6 +116,12 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                     if (scpiMeasure->entityID() == entityId)
                         scpiMeasure->receiveMeasureValue(cData->newValue());
                 }
+            }
+
+            // then it looks for changes on module interface components
+            {
+                if ( cName == QString("INF_ModuleInterface"))
+                    m_pModule->getSCPIServer()->getModuleInterface()->actualizeInterface(entityId);
             }
 
         }

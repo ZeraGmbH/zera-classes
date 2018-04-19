@@ -20,6 +20,7 @@ public:
     virtual ~cSCPIPropertyDelegate();
 
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
+    virtual void setOutput(cSCPICmdInfo* scpicmdinfo);
 
 private:
     cSCPIModule* m_pModule;
