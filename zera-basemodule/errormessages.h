@@ -64,6 +64,7 @@
 #define writesubdcErrMsg "DSP subdc write failed"
 #define readDSPServerVersionErrMsg "DSP server version read failed"
 #define readDSPProgramVersionErrMsg "DSP program version read failed"
+#define setsamplingsystemErrmsg "DSP setting sampling system failed"
 
 #define fetchsececalcunitErrMsg "SEC fetch ecalculator failed"
 #define freesececalcunitErrMsg "SEC free ecalculator failed"
