@@ -36,7 +36,8 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy
     m_writePhaseCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorrState);
     m_writeOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorr2State);
     m_writeOffsetCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_setSubDCState);
-    m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_setSamplingSystemState);
+    m_setSamplingSystemState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -54,6 +55,7 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy
     m_activationMachine.addState(&m_writeOffsetCorrState);
     m_activationMachine.addState(&m_writeOffsetCorr2State);
     m_activationMachine.addState(&m_setSubDCState);
+    m_activationMachine.addState(&m_setSamplingSystemState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
     connect(&m_resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
@@ -72,6 +74,7 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy
     connect(&m_writeOffsetCorrState, SIGNAL(entered()), SLOT(writeOffsetCorr()));
     connect(&m_writeOffsetCorr2State, SIGNAL(entered()), SLOT(writeOffsetCorr2()));
     connect(&m_setSubDCState, SIGNAL(entered()), SLOT(setSubDC()));
+    connect(&m_setSamplingSystemState, SIGNAL(entered()), SLOT(setSamplingsytem()));
     connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
 
     m_freeResourceState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
@@ -277,6 +280,19 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 break;
 
+            case MODEMODINIT::setsamplingsystem:
+                if (reply == ack)
+                    emit activationContinue();
+                else
+                {
+                    // perhaps we emit some error here ?
+                    emit errMsg((tr(setsamplingsystemErrmsg)));
+#ifdef DEBUG
+                    qDebug() << setsamplingsystemErrmsg;
+#endif
+                }
+                break;
+
             case MODEMODINIT::freeresource:
                 if (reply == ack || reply == nack) // we accept nack here also
                     emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
@@ -472,6 +488,12 @@ void cModeModuleInit::setSubDC()
     pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
     m_pDSPInterface->setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
+}
+
+
+void cModeModuleInit::setSamplingsytem()
+{
+    m_MsgNrCmdList[m_pDSPInterface->setSamplingSystem(m_ConfigData.m_nChannelnr, m_ConfigData.m_nSignalPeriod, m_ConfigData.m_nMeasurePeriod)] = MODEMODINIT::setsamplingsystem;
 }
 
 

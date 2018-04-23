@@ -25,6 +25,22 @@
     </xs:simpleType>
 
 
+    <xs:simpleType name="chnnrtype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='32'/>
+            <xs:minInclusive value='1'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="periodtype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='1024'/>
+            <xs:minInclusive value='32'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
     <xs:simpleType name="ipadresstype">
         <xs:restriction base="xs:string">
             <xs:pattern value = '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'/>
@@ -77,6 +93,28 @@
     </xs:simpleType>
 
 
+    <xs:complexType name="pcbtype">
+        <xs:sequence>
+            <xs:element name="mode" type="modetype"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="samplingtype">
+        <xs:sequence>
+            <xs:element name="chnnr" type="chnnrtype"/>
+            <xs:element name="signalperiod" type="periodtype"/>
+            <xs:element name="measureperiod" type="periodtype"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="dsptype">
+        <xs:sequence>
+            <xs:element name="sampling" type="samplingtype"/>
+        </xs:sequence>
+    </xs:complexType>
+
     <xs:element name="modemodconfpar">
         <xs:complexType>
             <xs:sequence>
@@ -84,7 +122,8 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="connectivity" type="connectivitytype"/>
-                            <xs:element name="mode" type="modetype"/>
+                            <xs:element name="pcb" type="pcbtype"/>
+                            <xs:element name="dsp" type="dsptype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

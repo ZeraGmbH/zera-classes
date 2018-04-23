@@ -50,6 +50,7 @@ enum modemoduleinitCmds
     writeoffsetcorr,
     writeoffsetcorr2,
     subdcdsp,
+    setsamplingsystem,
     freeresource
 };
 
@@ -105,6 +106,7 @@ private:
     QState m_writePhaseCorrState,m_writePhaseCorr2State;
     QState m_writeOffsetCorrState, m_writeOffsetCorr2State;
     QState m_setSubDCState;
+    QState m_setSamplingSystemState;
     QFinalState m_activationDoneState;
 
     // statemachine for deactivating
@@ -128,6 +130,7 @@ private slots:
     void writeOffsetCorr();
     void writeOffsetCorr2();
     void setSubDC();
+    void setSamplingsytem();
     void activationDone();
 
     void freeResource();

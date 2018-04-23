@@ -20,7 +20,10 @@ enum moduleconfigstate
     setPCBServerPort,
     setDSPServerIp,
     setDSPServerPort,
-    setMeasMode
+    setMeasMode,
+    setSamplingChnNr,
+    setSamplingSigPeriod,
+    setSamplingMeasPeriod
 };
 
 

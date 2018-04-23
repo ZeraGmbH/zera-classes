@@ -43,7 +43,10 @@ void cModeModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["modemodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["modemodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
 
-    m_ConfigXMLMap["modemodconfpar:configuration:mode"] = setMeasMode;
+    m_ConfigXMLMap["modemodconfpar:configuration:pcb:mode"] = setMeasMode;
+    m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:chnnr"] = setSamplingChnNr;
+    m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:signalperiod"] = setSamplingSigPeriod;
+    m_ConfigXMLMap["modemodconfpar:configuration:dsp:sampling:measureperiod"] = setSamplingMeasPeriod;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -98,6 +101,15 @@ void cModeModuleConfiguration::configXMLInfo(QString key)
             break;
         case setMeasMode:
             m_pModeModulConfigData->m_sMode = m_pXMLReader->getValue(key);
+            break;
+        case setSamplingChnNr:
+            m_pModeModulConfigData->m_nChannelnr = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setSamplingSigPeriod:
+            m_pModeModulConfigData->m_nSignalPeriod = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setSamplingMeasPeriod:
+            m_pModeModulConfigData->m_nMeasurePeriod = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         }
 

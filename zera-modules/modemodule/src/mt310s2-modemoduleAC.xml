@@ -18,6 +18,15 @@
                 </dspserver>
             </ethernet>
         </connectivity>
-        <mode>AC</mode>
+        <pcb>
+            <mode>AC</mode>
+        </pcb>
+        <dsp>
+            <sampling>
+                <chnnr>8</chnnr>
+                <signalperiod>504</signalperiod>
+                <measureperiod>504</measureperiod>
+            </sampling>
+        </dsp>
     </configuration>
 </modemodconfpar>
