@@ -86,7 +86,9 @@ public:
     bool isOverload(double ampl); // test if ampl is overload condition
 
     QString getOptRange(double ampl); // returns opt. range alias
+    QString getOptRange(double ampl, QString rngAlias); // returns opt. range alias
     QString getMaxRange(); // returns alias of the range with max ur value
+    QString getMaxRange(QString rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
 
 signals:

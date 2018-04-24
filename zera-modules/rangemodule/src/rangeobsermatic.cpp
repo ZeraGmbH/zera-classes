@@ -253,7 +253,8 @@ void cRangeObsermatic::rangeObservation()
 
                 // if an overload is recovered by rangeautomatic during running measurement
 
-            QString s = pmChn->getMaxRange();
+            stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
+            QString s = pmChn->getMaxRange(sPar.m_sPar);
 
             if (m_actChannelRangeList.at(i) == s) // in case ovrload was in max. range
             {
@@ -261,8 +262,7 @@ void cRangeObsermatic::rangeObservation()
                 m_pComponentOverloadMax->setValue(1);
             }
 
-            stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-            sPar.m_sPar = s;
+            sPar.m_sPar = s; // we preset the max. range here
             m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
             m_RangeOVLComponentList.at(i)->setValue(QVariant(1)); // set interface overload
             m_softOvlList.replace(i, true); //
@@ -306,7 +306,7 @@ void cRangeObsermatic::rangeAutomatic()
                     if (!m_softOvlList.at(i))
                     {
                         stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-                        sPar.m_sPar = pmChn->getOptRange(m_ActualValues[i]);
+                        sPar.m_sPar = pmChn->getOptRange(m_ActualValues[i], sPar.m_sPar);
                         m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
                     }
                 }
@@ -391,9 +391,8 @@ void cRangeObsermatic::setRanges(bool force)
         pmChn = m_RangeMeasChannelList.at(i);
         if (! pmChn->isPossibleRange(s)) // we test whether this range is possible, otherwise we take the max. range
         {
-            s = pmChn->getMaxRange();
-
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
+            s = pmChn->getMaxRange(sPar.m_sPar);
             sPar.m_sPar = s;
             m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
         }

@@ -249,6 +249,33 @@ QString cRangeMeasChannel::getOptRange(double ampl)
 }
 
 
+QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
+{
+    qint32 actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
+
+    QList<cRangeInfo> riList = m_RangeInfoHash.values();
+    double newAmpl = 1e32;
+    double newUrvalue;
+    int i, p = -1;
+
+    for (i = 0; i < riList.count(); i++)
+    {
+        const cRangeInfo& ri = riList.at(i);
+        newUrvalue = ri.urvalue;
+        if (((newUrvalue * sqrt2 *ri.ovrejection /ri.rejection ) >= ampl) && (newUrvalue < newAmpl) && (ri.type == actRngType))
+        {
+            newAmpl = newUrvalue;
+            p=i;
+        }
+    }
+
+    if (p > -1)
+        return riList.at(p).alias;
+    else
+        return getMaxRange(); // we return maximum range in case of overload condtion
+}
+
+
 QString cRangeMeasChannel::getMaxRange()
 {
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
@@ -260,6 +287,31 @@ QString cRangeMeasChannel::getMaxRange()
     {
         newUrvalue = riList.at(i).urvalue;
         if (newUrvalue > newAmpl)
+        {
+            newAmpl = newUrvalue;
+            p=i;
+        }
+    }
+
+    return riList.at(p).alias;
+}
+
+
+QString cRangeMeasChannel::getMaxRange(QString rngAlias)
+{
+    qint32 actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
+
+    QList<cRangeInfo> riList = m_RangeInfoHash.values();
+    double newAmpl = 0;
+    double newUrvalue;
+    int i, p = -1;
+
+    for (i = 0; i < riList.count(); i++)
+    {
+        const cRangeInfo& ri = riList.at(i);
+
+        newUrvalue = ri.urvalue;
+        if ((newUrvalue > newAmpl) && (ri.type == actRngType))
         {
             newAmpl = newUrvalue;
             p=i;
