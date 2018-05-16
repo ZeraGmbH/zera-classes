@@ -96,13 +96,13 @@ HEADERS += \
     src/scpiclientinfo.h
 
 OTHER_FILES += \
-    src/scpimodule.xsd
+    src/scpimodule.xsd \
+    src/com5003-scpimodule.xml \
+    src/mt310s2-scpimodule.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/com5003-scpimodule.xml \
-    src/mt310s2-scpimodule.xml
+
