@@ -251,7 +251,14 @@ QString cRangeMeasChannel::getOptRange(double ampl)
 
 QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
 {
-    qint32 actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
+    qint32 actRngType = -1;
+    if (m_RangeInfoHash.contains(rngAlias))
+        // if we know this rngalias we take that's type for searching max range
+        actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
+    else
+        // if we already set a range we could take the actual range for searching
+        if (m_RangeInfoHash.contains(m_sActRange))
+            actRngType = m_RangeInfoHash[m_sActRange].type;
 
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
     double newAmpl = 1e32;
@@ -272,7 +279,7 @@ QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
     if (p > -1)
         return riList.at(p).alias;
     else
-        return getMaxRange(); // we return maximum range in case of overload condtion
+        return getMaxRange(rngAlias); // we return maximum range in case of overload condtion
 }
 
 
@@ -299,7 +306,14 @@ QString cRangeMeasChannel::getMaxRange()
 
 QString cRangeMeasChannel::getMaxRange(QString rngAlias)
 {
-    qint32 actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
+    qint32 actRngType = -1;
+    if (m_RangeInfoHash.contains(rngAlias))
+        // if we know this rngalias we take that's type for searching max range
+        actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
+    else
+        // if we already set a range we could take the actual range for searching
+        if (m_RangeInfoHash.contains(m_sActRange))
+            actRngType = m_RangeInfoHash[m_sActRange].type;
 
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
     double newAmpl = 0;
@@ -311,7 +325,7 @@ QString cRangeMeasChannel::getMaxRange(QString rngAlias)
         const cRangeInfo& ri = riList.at(i);
 
         newUrvalue = ri.urvalue;
-        if ((newUrvalue > newAmpl) && (ri.type == actRngType))
+        if ((newUrvalue > newAmpl) && ((actRngType >=0 ) && (ri.type == actRngType)))
         {
             newAmpl = newUrvalue;
             p=i;
