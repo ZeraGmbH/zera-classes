@@ -325,10 +325,21 @@ QString cRangeMeasChannel::getMaxRange(QString rngAlias)
         const cRangeInfo& ri = riList.at(i);
 
         newUrvalue = ri.urvalue;
-        if ((newUrvalue > newAmpl) && ((actRngType >=0 ) && (ri.type == actRngType)))
+        if (actRngType >=0)
         {
-            newAmpl = newUrvalue;
-            p=i;
+            if ((newUrvalue > newAmpl) && (ri.type == actRngType))
+            {
+                newAmpl = newUrvalue;
+                p=i;
+            }
+        }
+        else
+        {
+            if ((newUrvalue > newAmpl))
+            {
+                newAmpl = newUrvalue;
+                p=i;
+            }
         }
     }
 
