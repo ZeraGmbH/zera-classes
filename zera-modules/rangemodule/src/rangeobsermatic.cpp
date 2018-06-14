@@ -356,8 +356,15 @@ void cRangeObsermatic::groupHandling()
                     rngUrValue = m_RangeMeasChannelList.at(k)->getUrValue(m_ConfPar.m_senseChannelRangeParameter.at(k).m_sPar);
                     if (maxUrValue < rngUrValue)
                     {
-                        maxUrValue = rngUrValue;
-                        maxIndex = indexList.at(j); //
+                        bool allPossible =true;
+                        for (int l = 0; l <indexList.count(); l++)
+                            allPossible = allPossible && m_RangeMeasChannelList.at(l)->isPossibleRange(m_ConfPar.m_senseChannelRangeParameter.at(l).m_sPar);
+                        // but we only take the new maximum value if all channels support this range
+                        if (allPossible)
+                        {
+                            maxUrValue = rngUrValue;
+                            maxIndex = indexList.at(j); //
+                        }
                     }
                 }
 
@@ -671,31 +678,30 @@ void cRangeObsermatic::newRange(QVariant range)
         // in case of active grouping we have to set all the ranges in that group if possible
         // so we fetch a list of index for all channels in group ,in case of inactive grouping
         // the list will contain only 1 index
-
+        // if we find 1 channel in a group that hasn't the wanted range we reset grouping !
         // let's first test if all channels have the wanted range
-        bool allChannelsHaveThatRange = true;
+
         for (int i = 0; i < chnIndexlist.count(); i++)
         {
             index = chnIndexlist.at(i);
-            allChannelsHaveThatRange = allChannelsHaveThatRange && m_RangeMeasChannelList.at(index)->isPossibleRange(s);
-        }
-
-        if (allChannelsHaveThatRange)
-        {
-            for (int i = 0; i < chnIndexlist.count(); i++)
+            if ( m_RangeMeasChannelList.at(index)->isPossibleRange(s))
             {
-                index = chnIndexlist.at(i);
-
                 stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
                 sPar.m_sPar = s;
                 m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
                 m_brangeSet = true;
                 m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
-
             }
-
-            setRanges();
+            else
+            {
+                m_ConfPar.m_nGroupAct.m_nActive = 0;
+                m_bGrouping = false;
+                if (m_ConfPar.m_bGrouping)
+                    m_pParGroupingOnOff->setValue(0);
+            }
         }
+
+        setRanges();
 
         // earlier we actualized the components (entities) from here
         // it could be that we had to switch also other channels
