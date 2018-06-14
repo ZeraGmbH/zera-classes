@@ -339,7 +339,7 @@ void cRangeObsermatic::groupHandling()
             indexList.clear();
             grouplist = m_GroupList.at(i); // we fetch 1 list of all our grouplists
             for(int j = 0; j < grouplist.count(); j++)
-                if (m_ChannelAliasList.contains(grouplist.at(j)))
+                if (m_ChannelAliasList.contains(grouplist.at(j))) // and look if all channels of that grouplist are present
                     indexList.append(m_ChannelAliasList.indexOf(grouplist.at(j)));
             if (grouplist.count() == indexList.count())
             {
@@ -669,30 +669,33 @@ void cRangeObsermatic::newRange(QVariant range)
 
         QList<int> chnIndexlist = getGroupIndexList(index);
         // in case of active grouping we have to set all the ranges in that group if possible
-        // so we fetch a list for all channels in group of index
+        // so we fetch a list of index for all channels in group ,in case of inactive grouping
+        // the list will contain only 1 index
 
+        // let's first test if all channels have the wanted range
+        bool allChannelsHaveThatRange = true;
         for (int i = 0; i < chnIndexlist.count(); i++)
         {
             index = chnIndexlist.at(i);
+            allChannelsHaveThatRange = allChannelsHaveThatRange && m_RangeMeasChannelList.at(index)->isPossibleRange(s);
+        }
 
-            // lets first test that new range will not cause an overload condition in this channel
-            // if (true/*m_RangeMeasChannelList.at(index)->isPossibleRange(s , m_ActualValues[index])*/)
-            // this does not work because libvein sends "" as newrange .... this result in dsp crash
-            // so we must at least test for valid range
-            if (m_RangeMeasChannelList.at(index)->isPossibleRange(s))
+        if (allChannelsHaveThatRange)
+        {
+            for (int i = 0; i < chnIndexlist.count(); i++)
             {
+                index = chnIndexlist.at(i);
+
                 stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
                 sPar.m_sPar = s;
                 m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
                 m_brangeSet = true;
+                m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
+
             }
 
-            m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
-
+            setRanges();
         }
-
-        groupHandling();
-        setRanges();
 
         // earlier we actualized the components (entities) from here
         // it could be that we had to switch also other channels
