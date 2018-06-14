@@ -358,7 +358,7 @@ void cRangeObsermatic::groupHandling()
                     {
                         bool allPossible =true;
                         for (int l = 0; l <indexList.count(); l++)
-                            allPossible = allPossible && m_RangeMeasChannelList.at(l)->isPossibleRange(m_ConfPar.m_senseChannelRangeParameter.at(k).m_sPar);
+                            allPossible = allPossible && m_RangeMeasChannelList.at(indexList.at(l))->isPossibleRange(m_ConfPar.m_senseChannelRangeParameter.at(k).m_sPar);
                         // but we only take the new maximum value if all channels support this range
                         if (allPossible)
                         {
