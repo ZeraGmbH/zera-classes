@@ -881,6 +881,7 @@ void cRangeObsermatic::catchChannelNewRangeList()
     mchn = qobject_cast<cRangeMeasChannel*>(QObject::sender());
     m_ChannelRangeValidatorHash[mchn->getName()]->setValidator(mchn->getRangeListAlias());
     m_pModule->exportMetaData();
+    setRanges(true); // after a new range list was detected, we force setting ranges because it may be that the actual range disappeared
 }
 
 }
