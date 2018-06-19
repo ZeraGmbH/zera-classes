@@ -111,6 +111,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     connect(&m_rangeQueryLoopState, SIGNAL(entered()), SLOT(rangeQueryLoop()));
 
     connect(&m_rangeQueryMachine, SIGNAL(finished()), this, SIGNAL(newRangeList()));
+    setActionErrorcount(1);
 }
 
 
@@ -439,6 +440,7 @@ void cRangeMeasChannel::deleteInterface()
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;
+    int errcount;
 
     if (msgnr == 0) // 0 was reserved for async. messages
     {
@@ -452,7 +454,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             // we got a sense:chn:range:cat notifier
             // so we have to read the new range list and properties
             if (!m_rangeQueryMachine.isRunning())
+            {
+                setActionErrorcount(0);
                 m_rangeQueryMachine.start();
+            }
             break;
         }
     }
@@ -777,10 +782,17 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 m_fGainCorrection = answer.toDouble(&ok);
             else
             {
-                emit errMsg((tr(readGainCorrErrMsg)));
+                errcount = m_ActionErrorcountHash.take(readgaincorrection);
+                errcount++;
+                m_ActionErrorcountHash[readgaincorrection] = errcount;
+                if (errcount > 1)
+                {
+                    emit errMsg((tr(readGainCorrErrMsg)));
     #ifdef DEBUG
-                qDebug() << readGainCorrErrMsg;
+                    qDebug() << readGainCorrErrMsg;
     #endif
+                    emit executionError();
+                }
             };
             emit cmdDone(msgnr);
             break;
@@ -790,11 +802,17 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 m_fOffsetCorrection = answer.toDouble(&ok);
             else
             {
-                emit errMsg((tr(readOffsetCorrErrMsg)));
+                errcount = m_ActionErrorcountHash.take(readoffsetcorrection);
+                errcount++;
+                m_ActionErrorcountHash[readoffsetcorrection] = errcount;
+                if (errcount > 1)
+                {
+                    emit errMsg((tr(readOffsetCorrErrMsg)));
     #ifdef DEBUG
-                qDebug() << readOffsetCorrErrMsg;
+                    qDebug() << readOffsetCorrErrMsg;
     #endif
-                emit executionError();
+                    emit executionError();
+                }
             };
             emit cmdDone(msgnr);
             break;
@@ -804,11 +822,17 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 m_fPhaseCorrection = answer.toDouble(&ok);
             else
             {
-                emit errMsg((tr(readPhaseCorrErrMsg)));
+                errcount = m_ActionErrorcountHash.take(readphasecorrection);
+                errcount++;
+                m_ActionErrorcountHash[readphasecorrection] = errcount;
+                if (errcount > 1)
+                {
+                    emit errMsg((tr(readPhaseCorrErrMsg)));
     #ifdef DEBUG
-                qDebug() << readPhaseCorrErrMsg;
+                    qDebug() << readPhaseCorrErrMsg;
     #endif
-                emit executionError();
+                    emit executionError();
+                }
             };
             emit cmdDone(msgnr);
             break;
@@ -897,6 +921,15 @@ void cRangeMeasChannel::setRangeListAlias()
         s = s + ";" + riList.at(i).alias;
 
     m_sRangeListAlias = s;
+}
+
+
+void cRangeMeasChannel::setActionErrorcount(int Count)
+{
+    m_ActionErrorcountHash.clear();
+    m_ActionErrorcountHash[readgaincorrection] = Count;
+    m_ActionErrorcountHash[readphasecorrection] = Count;
+    m_ActionErrorcountHash[readoffsetcorrection] = Count;
 }
 
 
