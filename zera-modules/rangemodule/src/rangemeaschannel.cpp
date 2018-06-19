@@ -768,11 +768,17 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 m_sActRange = m_sNewRange;
             else
             {
-                emit errMsg((tr(setRangeErrMsg)));
+                errcount = m_ActionErrorcountHash.take(setmeaschannelrange);
+                errcount++;
+                m_ActionErrorcountHash[setmeaschannelrange] = errcount;
+                if (errcount > 1)
+                {
+                    emit errMsg((tr(setRangeErrMsg)));
     #ifdef DEBUG
-                qDebug() << setRangeErrMsg;
+                    qDebug() << setRangeErrMsg;
     #endif
-                emit executionError();
+                    emit executionError();
+                }
             }; // perhaps some error output
             emit cmdDone(msgnr);
             break;
@@ -930,6 +936,7 @@ void cRangeMeasChannel::setActionErrorcount(int Count)
     m_ActionErrorcountHash[readgaincorrection] = Count;
     m_ActionErrorcountHash[readphasecorrection] = Count;
     m_ActionErrorcountHash[readoffsetcorrection] = Count;
+    m_ActionErrorcountHash[setmeaschannelrange] = Count;
 }
 
 
