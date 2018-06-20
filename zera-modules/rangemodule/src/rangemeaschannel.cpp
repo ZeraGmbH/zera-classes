@@ -909,22 +909,28 @@ void cRangeMeasChannel::setRangeListAlias()
 {
     QString s;
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
+    int riLen;
 
-    // first we sort the range alias according to range type
-    for (int i = 0; i < riList.count()-1; i++)
-        for (int j = i; j < riList.count(); j++)
-            if (riList.at(i).type < riList.at(j).type)
-                riList.swap(i, j);
+    if ( (riLen = riList.count()) > 1) // nothing to sort if we only have 1 range
+    {
+        // first we sort the range alias according to range type
+        for (int i = 0; i < riLen-1; i++)
+            for (int j = i; j < riLen; j++)
+                if (riList.at(i).type < riList.at(j).type)
+                    riList.swap(i, j);
 
-    // second we sort the range alias according to upper range values but grouped with types
-    for (int i = 0; i < riList.count()-1; i++)
-        for (int j = i; j < riList.count(); j++)
-            if ( (riList.at(i).urvalue < riList.at(j).urvalue) && (riList.at(i).type == riList.at(j).type) )
-                riList.swap(i, j);
+        // second we sort the range alias according to upper range values but grouped with types
+        for (int i = 0; i < riLen-1; i++)
+            for (int j = i; j < riLen; j++)
+                if ( (riList.at(i).urvalue < riList.at(j).urvalue) && (riList.at(i).type == riList.at(j).type) )
+                    riList.swap(i, j);
+    }
 
     s = riList.at(0).alias;
-    for (int i = 1; i < riList.count(); i++)
-        s = s + ";" + riList.at(i).alias;
+
+    if (riLen > 1)
+        for (int i = 1; i < riList.count(); i++)
+            s = s + ";" + riList.at(i).alias;
 
     m_sRangeListAlias = s;
 }
