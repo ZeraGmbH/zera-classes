@@ -98,7 +98,7 @@
                 <range>250V</range>
             </m6>
             <m7>
-                <range>10A</range>
+                <range>0A</range>
             </m7>
             <grouping>1</grouping>
             <rangeauto>0</rangeauto>
