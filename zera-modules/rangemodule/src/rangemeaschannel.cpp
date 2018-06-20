@@ -287,7 +287,7 @@ QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
 QString cRangeMeasChannel::getMaxRange()
 {
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
-    double newAmpl = 0;
+    double newAmpl = -1.0;
     double newUrvalue;
     int i, p = -1;
 
@@ -317,7 +317,7 @@ QString cRangeMeasChannel::getMaxRange(QString rngAlias)
             actRngType = m_RangeInfoHash[m_sActRange].type;
 
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
-    double newAmpl = 0;
+    double newAmpl = -1.0;
     double newUrvalue;
     int i, p = -1;
 
