@@ -28,6 +28,7 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
 
     Msgs.flags = 0; // switch to write direction
     char* mydata = data;
+    m_bEEpromTimeout = false;
     while (toWrite)
     {
         if (adr > 32767 ) break; // we are ready if adress get greater than 32767
@@ -38,8 +39,10 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
         mydata+=l;
         Msgs.len = l+2; // set length for i2c driver
         int r;
-        while (( r = I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData)) == 2); // device node ok , but eeprom is busy
-        if (r) break; // problems when writing to device node
+        m_EEPromtimer.start(20);
+        while (( r = I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData)) == 2 && !m_bEEpromTimeout); // device node ok , but eeprom is busy or nak becaus write protection
+        m_EEPromtimer.stop();
+        if (r || m_bEEpromTimeout) break; // problems when writing to device node
         adr += l; // set adress where to go on
         toWrite -= l; // actualize byte to write
     }
@@ -82,8 +85,10 @@ int cF24LC256Private::ReadData(char* data,ushort n,ushort adr)
 }
 
 
-int cF24LC256Private::size() {
+int cF24LC256Private::size()
+{
     return 32768;
 }
+
 
 
