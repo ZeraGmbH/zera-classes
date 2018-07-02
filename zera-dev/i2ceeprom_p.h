@@ -1,7 +1,6 @@
 #ifndef I2CEEPROM_P_H
 #define I2CEEPROM_P_H
 
-#include <QObject>
 #include <QString>
 #include <QTimer>
 
@@ -13,7 +12,6 @@
 
 class cI2CEEPromPrivate: public QObject  // virtuelle basisklasse für i2c eeproms
 {
-Q_OBJECT
 public:
     /**
       @b Initializes a new eeprom object
@@ -47,12 +45,6 @@ protected:
     QString DevNode;
     int DebugLevel;
     ushort I2CAdress;
-
-    QTimer m_EEPromtimer;
-    bool m_bEEpromTimeout;
-
-protected slots:
-    virtual void EEPromTimeout();
 };
 
 

@@ -3,6 +3,7 @@
 #include <fcntl.h>
 #include <linux/i2c.h>
 #include <linux/i2c-dev.h>
+#include <unistd.h>
 #include <QString>
 #include <QtGlobal>
 
@@ -28,7 +29,6 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
 
     Msgs.flags = 0; // switch to write direction
     char* mydata = data;
-    m_bEEpromTimeout = false;
     while (toWrite)
     {
         if (adr > 32767 ) break; // we are ready if adress get greater than 32767
@@ -39,10 +39,13 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
         mydata+=l;
         Msgs.len = l+2; // set length for i2c driver
         int r;
-        m_EEPromtimer.start(20);
-        while (( r = I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData)) == 2 && !m_bEEpromTimeout); // device node ok , but eeprom is busy or nak becaus write protection
-        m_EEPromtimer.stop();
-        if (r || m_bEEpromTimeout) break; // problems when writing to device node
+        for (int i = 0; i < 100; i++) // max 10ms
+        {
+            if (( r = I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData)) == 0)
+                break;
+            usleep(100);
+        }
+        if (r) break; // // device node ok , but eeprom is busy or i2c nak because write protection
         adr += l; // set adress where to go on
         toWrite -= l; // actualize byte to write
     }
