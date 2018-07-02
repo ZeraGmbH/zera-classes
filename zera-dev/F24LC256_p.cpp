@@ -13,7 +13,6 @@
 cF24LC256Private::cF24LC256Private(QString devNode, int dLevel, short adr)
     : cI2CEEPromPrivate(devNode,dLevel,adr)
 {
-    connect(&m_EEPromtimer, SIGNAL(timeout()), this, SLOT(EEPromTimeout()));
 }
 
 

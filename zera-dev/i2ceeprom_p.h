@@ -51,7 +51,7 @@ protected:
     bool m_bEEpromTimeout;
 
 protected slots:
-    void EEPromTimeout();
+    virtual void EEPromTimeout();
 
 
 };
