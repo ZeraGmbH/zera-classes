@@ -77,7 +77,7 @@ void cPower3ModuleMeasProgram::generateInterface()
                                             QString("ACT_HPW%1").arg(i+1),
                                             QString("Component forwards harmonic power actual values"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("P%1").arg(i+1));
+        pActvalue->setChannelName(QString("L%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("W");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
