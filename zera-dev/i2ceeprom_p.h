@@ -13,6 +13,7 @@
 
 class cI2CEEPromPrivate: public QObject  // virtuelle basisklasse für i2c eeproms
 {
+Q_OBJECT
 public:
     /**
       @b Initializes a new eeprom object
@@ -52,8 +53,6 @@ protected:
 
 protected slots:
     virtual void EEPromTimeout();
-
-
 };
 
 
