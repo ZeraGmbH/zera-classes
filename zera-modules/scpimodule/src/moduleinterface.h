@@ -33,7 +33,7 @@ public:
     virtual ~cModuleInterface();
 
     virtual bool setupInterface();
-    virtual void actualizeInterface(int entityID);
+    virtual void actualizeInterface(int entityID, QVariant qvar);
 
     QHash<QString, cSCPIMeasureDelegate*>* getSCPIMeasDelegateHash();
 

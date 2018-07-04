@@ -108,10 +108,10 @@ bool cModuleInterface::setupInterface()
 }
 
 
-void cModuleInterface::actualizeInterface(int entityID)
+void cModuleInterface::actualizeInterface(int entityID, QVariant qvar)
 {
     QJsonDocument jsonDoc;
-    jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+    jsonDoc = QJsonDocument::fromVariant(qvar);
 
     if ( !jsonDoc.isNull() && jsonDoc.isObject() )
     {

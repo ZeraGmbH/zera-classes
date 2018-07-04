@@ -121,7 +121,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             // then it looks for changes on module interface components
             {
                 if ( cName == QString("INF_ModuleInterface"))
-                    m_pModule->getSCPIServer()->getModuleInterface()->actualizeInterface(entityId);
+                    m_pModule->getSCPIServer()->getModuleInterface()->actualizeInterface(entityId, cData->newValue());
             }
 
         }
