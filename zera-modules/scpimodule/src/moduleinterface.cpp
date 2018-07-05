@@ -111,7 +111,7 @@ bool cModuleInterface::setupInterface()
 void cModuleInterface::actualizeInterface(int entityID, QVariant qvar)
 {
     QJsonDocument jsonDoc;
-    jsonDoc = QJsonDocument::fromVariant(qvar);
+    jsonDoc = QJsonDocument::fromJson(qvar.toByteArray());
 
     if ( !jsonDoc.isNull() && jsonDoc.isObject() )
     {
