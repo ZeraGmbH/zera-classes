@@ -5,6 +5,8 @@
 #include <QVariantList>
 
 #include <ve_storagesystem.h>
+#include <ve_commandevent.h>
+#include <vcmp_componentdata.h>
 
 #include "scpimodule.h"
 #include "scpicmdinfo.h"
@@ -48,8 +50,15 @@ bool cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
 void cSCPIPropertyDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
 {
+    QVariant ModInterface = m_pModule->m_pStorageSystem->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface"));
+    setOutput(ModInterface);
+}
+
+
+void cSCPIPropertyDelegate::setOutput(QVariant modInterface)
+{
     QJsonDocument jsonDoc;
-    jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(scpicmdinfo->entityId, QString("INF_ModuleInterface")).toByteArray());
+    jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
 
     QJsonObject jsonObj;
 

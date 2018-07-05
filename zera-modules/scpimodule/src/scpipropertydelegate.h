@@ -21,6 +21,7 @@ public:
 
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
     virtual void setOutput(cSCPICmdInfo* scpicmdinfo);
+    virtual void setOutput(QVariant modInterface);
 
 private:
     cSCPIModule* m_pModule;

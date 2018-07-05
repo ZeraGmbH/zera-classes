@@ -5,6 +5,9 @@
 #include <QJsonValue>
 
 #include <ve_storagesystem.h>
+#include <ve_commandevent.h>
+#include <vcmp_componentdata.h>
+
 #include <scpi.h>
 
 #include "scpimodule.h"
@@ -108,10 +111,10 @@ bool cModuleInterface::setupInterface()
 }
 
 
-void cModuleInterface::actualizeInterface(int entityID, QVariant qvar)
+void cModuleInterface::actualizeInterface(QVariant modInterface)
 {
     QJsonDocument jsonDoc;
-    jsonDoc = QJsonDocument::fromJson(qvar.toByteArray());
+    jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
 
     if ( !jsonDoc.isNull() && jsonDoc.isObject() )
     {
@@ -133,9 +136,12 @@ void cModuleInterface::actualizeInterface(int entityID, QVariant qvar)
 
             if (jsonCmdArr[4].toString() != "0")
             { // so it is a property delegate
-                cSCPICmdInfo *scpiCmdInfo;
-                QString cmdComplete;
 
+                //cSCPICmdInfo *scpiCmdInfo;
+                QString cmdComplete;
+                cmdComplete = QString("%1:%2:%3").arg(jsonCmdArr[0].toString()).arg(scpiModuleName).arg(jsonCmdArr[1].toString());
+                m_scpiPropertyDelegateHash[cmdComplete]->setOutput(modInterface);
+                /*
                 scpiCmdInfo = new cSCPICmdInfo();
                 scpiCmdInfo->scpiModuleName = scpiModuleName;
                 scpiCmdInfo->entityId = entityID;
@@ -147,6 +153,7 @@ void cModuleInterface::actualizeInterface(int entityID, QVariant qvar)
                 scpiCmdInfo->unit = jsonCmdArr[5].toString();
                 cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel).arg(scpiCmdInfo->scpiModuleName).arg(scpiCmdInfo->scpiCommand);
                 m_scpiPropertyDelegateHash[cmdComplete]->setOutput(scpiCmdInfo);
+                */
              }
         }
     }
