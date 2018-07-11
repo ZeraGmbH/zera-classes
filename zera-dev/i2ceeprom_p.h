@@ -5,12 +5,11 @@
 #include <QTimer>
 
 /**
-  @brief
-  Pure virtual base class for i2c flash or eeprom devices
+  @brief virtual base class for i2c flash or eeprom devices
   */
 
 
-class cI2CEEPromPrivate: public QObject  // virtuelle basisklasse für i2c eeproms
+class cI2CEEPromPrivate // virtuelle basisklasse für i2c eeproms
 {
 public:
     /**
