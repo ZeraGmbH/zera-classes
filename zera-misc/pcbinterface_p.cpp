@@ -21,7 +21,7 @@ void cPCBInterfacePrivate::setClient(Proxy::cProxyClient *client)
         disconnect(m_pClient, 0, this, 0);
 
     m_pClient = client;
-    connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));
+    connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cPCBInterfacePrivate::receiveAnswer);
     connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
 }
 
@@ -638,7 +638,7 @@ quint32 cPCBInterfacePrivate::readSerialNr()
 }
 
 
-void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
+void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
     if (message->has_reply())
     {
@@ -742,9 +742,6 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
         }
     } // hmm ... we have to look what to do otherwise
-
-    delete message;
-
 }
 
 

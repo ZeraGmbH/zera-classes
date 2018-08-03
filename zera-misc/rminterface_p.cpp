@@ -21,7 +21,7 @@ void cRMInterfacePrivate::setClient(Proxy::cProxyClient *client)
     if (m_pClient) // we avoid multiple connections
         disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
-    connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));
+    connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cRMInterfacePrivate::receiveAnswer);
     connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
 }
 
@@ -134,7 +134,7 @@ quint32 cRMInterfacePrivate::freeResource(QString type, QString name)
 }
 
 
-void cRMInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
+void cRMInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
     if (message->has_reply())
     {
@@ -171,8 +171,6 @@ void cRMInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
         }
     }
-
-    delete message;
 }
 
 

@@ -157,8 +157,8 @@ public:
 
 
 protected slots:
-    virtual void receiveAnswer(ProtobufMessage::NetMessage *message);
-    virtual void receiveError(QAbstractSocket::SocketError errorCode);
+    virtual void receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message) override;
+    virtual void receiveError(QAbstractSocket::SocketError errorCode) override;
 
 private:
     Q_DECLARE_PUBLIC(cPCBInterface)

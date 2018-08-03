@@ -39,7 +39,7 @@ cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
         // if not existing we have to create
         netClient = new cProxyNetPeer(this);
         netClient->setWrapper(&protobufWrapper);
-        connect(netClient, SIGNAL(sigMessageReceived(google::protobuf::Message*)), this, SLOT(receiveMessage(google::protobuf::Message*)));
+        connect(netClient, &cProxyNetPeer::sigMessageReceived, this, &cProxyPrivate::receiveMessage);
         connect(netClient, SIGNAL(sigSocketError(QAbstractSocket::SocketError)), this, SLOT(receiveTcpError(QAbstractSocket::SocketError)));
         connect(netClient, SIGNAL(sigConnectionEstablished()), this, SLOT(registerConnection()));
         connect(netClient, SIGNAL(sigConnectionClosed()), this, SLOT(registerDisConnection()));
@@ -91,7 +91,7 @@ bool cProxyPrivate::releaseConnection(cProxyClientPrivate *client)
         ProtobufMessage::NetMessage::NetCmd *Command = netCommand.mutable_netcommand();
         Command->set_cmd(ProtobufMessage::NetMessage_NetCmd_CmdType_RELEASE);
         netCommand.set_clientid(binUUid.data(), binUUid.size());
-        connection->m_pNetClient->sendMessage(&netCommand);
+        connection->m_pNetClient->sendMessage(netCommand);
         delete connection;
         return true;
     }
@@ -111,7 +111,7 @@ quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMess
     message->set_messagenr(nr = m_nMessageNumber);
     m_nMessageNumber++; // increment message number
 
-    m_ConnectionHash[client]->m_pNetClient->sendMessage(message);
+    m_ConnectionHash[client]->m_pNetClient->sendMessage(*message);
     return nr;
 }
 
@@ -122,9 +122,9 @@ void cProxyPrivate::setIPAdress(QString ipAddress)
 }
 
 
-void cProxyPrivate::receiveMessage(google::protobuf::Message* message)
+void cProxyPrivate::receiveMessage(std::shared_ptr<google::protobuf::Message> message)
 {
-    ProtobufMessage::NetMessage *netMessage = static_cast<ProtobufMessage::NetMessage*>(message);
+    std::shared_ptr<ProtobufMessage::NetMessage> netMessage = std::static_pointer_cast<ProtobufMessage::NetMessage>(message);
 
     if (netMessage->has_clientid())
     {

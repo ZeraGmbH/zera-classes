@@ -6,6 +6,7 @@
 
 #include "proxy_global.h"
 
+#include <memory>
 
 namespace ProtobufMessage
 {
@@ -34,7 +35,7 @@ public:
     virtual quint32 transmitCommand(ProtobufMessage::NetMessage *message) = 0;
 
 signals:
-    void answerAvailable(ProtobufMessage::NetMessage*);
+    void answerAvailable(std::shared_ptr<ProtobufMessage::NetMessage>);
     void tcpError(QAbstractSocket::SocketError errorCode);
     void disconnected();
     void connected();

@@ -20,7 +20,7 @@ void cDSPInterfacePrivate::setClient(Proxy::cProxyClient *client)
     if (m_pClient) // we avoid multiple connections
         disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
-    connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));
+    connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cDSPInterfacePrivate::receiveAnswer);
     connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
 }
 
@@ -439,7 +439,7 @@ quint32 cDSPInterfacePrivate::readServerVersion()
 }
 
 
-void cDSPInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
+void cDSPInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
     if (message->has_reply())
     {
@@ -502,8 +502,6 @@ void cDSPInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
 
         }
     }
-
-    delete message;
 }
 
 

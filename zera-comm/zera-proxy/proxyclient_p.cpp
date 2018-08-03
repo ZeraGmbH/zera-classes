@@ -16,7 +16,7 @@ cProxyClientPrivate::cProxyClientPrivate(cProxyPrivate* proxy)
 }
 
 
-void cProxyClientPrivate::transmitAnswer(ProtobufMessage::NetMessage *message)
+void cProxyClientPrivate::transmitAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
     emit answerAvailable(message);
 }

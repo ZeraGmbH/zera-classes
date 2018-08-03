@@ -21,7 +21,7 @@ void cSECInterfacePrivate::setClient(Proxy::cProxyClient *client)
     if (m_pClient) // we avoid multiple connections
         disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
-    connect(m_pClient, SIGNAL(answerAvailable(ProtobufMessage::NetMessage*)), this, SLOT(receiveAnswer(ProtobufMessage::NetMessage*)));
+    connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cSECInterfacePrivate::receiveAnswer);
     connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
 }
 
@@ -158,7 +158,7 @@ quint32 cSECInterfacePrivate::unregisterNotifiers()
 }
 
 
-void cSECInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
+void cSECInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
     if (message->has_reply())
     {
@@ -197,8 +197,6 @@ void cSECInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
             break;
         }
     }
-
-    delete message;
 }
 
 

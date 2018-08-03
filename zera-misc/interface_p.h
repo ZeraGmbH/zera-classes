@@ -43,7 +43,7 @@ protected:
     Zera::Proxy::cProxyClient *m_pClient;
 
 protected slots:
-    virtual void receiveAnswer(ProtobufMessage::NetMessage *message) = 0;
+    virtual void receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message) = 0;
     virtual void receiveError(QAbstractSocket::SocketError errorCode) = 0;
 };
 
