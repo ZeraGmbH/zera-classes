@@ -180,6 +180,17 @@ quint32 cPCBInterfacePrivate::getOVRejection(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterfacePrivate::getADCRejection(QString chnName, QString rngName)
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:ADCR?").arg(chnName).arg(rngName));
+    m_MsgNrCmdList[msgnr] = getadcrejection;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::isAvail(QString chnName, QString rngName)
 {
     QString cmd;
@@ -695,6 +706,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case geturvalue2:
         case getrejection:
         case getovrejection:
+        case getadcrejection:
         case getgaincorrection:
         case getoffsetcorrection:
         case getphasecorrection:

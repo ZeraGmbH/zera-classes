@@ -47,6 +47,7 @@ public:
     virtual quint32 getUrvalue(QString chnName); // double
     virtual quint32 getRejection(QString chnName, QString rngName); // double
     virtual quint32 getOVRejection(QString chnName, QString rngName); // double
+    virtual quint32 getADCRejection(QString chnName, QString rngName); // double
     virtual quint32 isAvail(QString chnName, QString rngName); // bool
     virtual quint32 getGainCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double

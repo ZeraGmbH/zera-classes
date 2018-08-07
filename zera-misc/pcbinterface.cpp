@@ -123,6 +123,13 @@ quint32 cPCBInterface::getOVRejection(QString chnName, QString rngName)
 }
 
 
+quint32 cPCBInterface::getADCRejection(QString chnName, QString rngName)
+{
+    Q_D(cPCBInterface);
+    return d->getADCRejection(chnName, rngName);
+}
+
+
 quint32 cPCBInterface::isAvail(QString chnName, QString rngName)
 {
     Q_D(cPCBInterface);
