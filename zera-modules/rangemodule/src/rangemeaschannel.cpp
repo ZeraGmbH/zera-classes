@@ -84,7 +84,8 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     m_readTypeState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueState);
     m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readRejectionState);
     m_readRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readOVRejectionState);
-    m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
+    m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readADCRejectionState);
+    m_readADCRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
     m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryLoopState);
     m_rangeQueryLoopState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
     m_rangeQueryLoopState.addTransition(this, SIGNAL(activationLoop()), &m_readRngAliasState);
@@ -95,6 +96,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     m_rangeQueryMachine.addState(&m_readUrvalueState);
     m_rangeQueryMachine.addState(&m_readRejectionState);
     m_rangeQueryMachine.addState(&m_readOVRejectionState);
+    m_rangeQueryMachine.addState(&m_readADCRejectionState);
     m_rangeQueryMachine.addState(&m_readisAvailState);
     m_rangeQueryMachine.addState(&m_rangeQueryLoopState);
     m_rangeQueryMachine.addState(&m_rangeQueryDoneState);
@@ -107,6 +109,7 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     connect(&m_readUrvalueState, SIGNAL(entered()), SLOT(readUrvalue()));
     connect(&m_readRejectionState, SIGNAL(entered()), SLOT(readRejection()));
     connect(&m_readOVRejectionState, SIGNAL(entered()), SLOT(readOVRejection()));
+    connect(&m_readADCRejectionState, SIGNAL(entered()), SLOT(readADCRejection()));
     connect(&m_readisAvailState, SIGNAL(entered()), SLOT(readisAvail()));
     connect(&m_rangeQueryLoopState, SIGNAL(entered()), SLOT(rangeQueryLoop()));
 
@@ -217,11 +220,18 @@ bool cRangeMeasChannel::isPossibleRange(QString range)
 }
 
 
-bool cRangeMeasChannel::isOverload(double ampl)
+bool cRangeMeasChannel::isRMSOverload(double ampl)
 {
     cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
     // qDebug() << QString("Ampl: %1; Rng: %2").arg(ampl).arg(ri.alias);
-    return ((ri.urvalue * ri.ovrejection * sqrt2 /ri.rejection) < ampl);
+    return ((ri.urvalue * ri.ovrejection / ri.rejection) < ampl);
+}
+
+
+bool cRangeMeasChannel::isADCOverload(double ampl)
+{
+    cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
+    return ((ri.urvalue * ri.adcrejection / ri.rejection) <= ampl);
 }
 
 
@@ -747,6 +757,22 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             break;
 
+        case readadcrejection:
+            if (reply == ack)
+            {
+                ri.adcrejection = answer.toDouble(&ok);
+                emit activationContinue();
+            }
+            else
+            {
+                emit errMsg((tr(readrangeadcrejectionErrMsg)));
+    #ifdef DEBUG
+                qDebug() << readrangeadcrejectionErrMsg;
+    #endif
+                emit activationError();
+            }
+            break;
+
         case readisavail:
             if (reply == ack)
             {
@@ -1128,6 +1154,12 @@ void cRangeMeasChannel::readRejection()
 void cRangeMeasChannel::readOVRejection()
 {
     m_MsgNrCmdList[m_pPCBInterface->getOVRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readovrejection;
+}
+
+
+void cRangeMeasChannel::readADCRejection()
+{
+    m_MsgNrCmdList[m_pPCBInterface->getADCRejection(m_sName, m_RangeNameList.at(m_RangeQueryIt))] = readadcrejection;
 }
 
 

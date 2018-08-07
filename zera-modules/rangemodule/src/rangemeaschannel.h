@@ -37,6 +37,7 @@ enum rangemeaschannelCmds
     readurvalue,
     readrejection,
     readovrejection,
+    readadcrejection,
     readisavail,
 
     setmeaschannelrange,
@@ -83,7 +84,8 @@ public:
     double getRangeUrvalueMax(); // returns the max. upper range value including reserve of actual range
     bool isPossibleRange(QString range, double ampl); // test if range is possible with ampl
     bool isPossibleRange(QString range); // returns true if range is available
-    bool isOverload(double ampl); // test if ampl is overload condition
+    bool isRMSOverload(double ampl); // test if ampl is overload condition
+    bool isADCOverload(double ampl); // test if ampl is adc overload condition
 
     QString getOptRange(double ampl); // returns opt. range alias
     QString getOptRange(double ampl, QString rngAlias); // returns opt. range alias
@@ -143,6 +145,7 @@ private:
     QState m_readUrvalueState;
     QState m_readRejectionState;
     QState m_readOVRejectionState;
+    QState m_readADCRejectionState;
     QState m_readisAvailState;
     QState m_rangeQueryLoopState;
     QFinalState m_rangeQueryDoneState;
@@ -184,6 +187,7 @@ private slots:
     void readUrvalue();
     void readRejection();
     void readOVRejection();
+    void readADCRejection();
     void readisAvail();
     void rangeQueryLoop();
 };
