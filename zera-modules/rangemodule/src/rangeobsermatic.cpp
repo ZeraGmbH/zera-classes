@@ -239,13 +239,18 @@ void cRangeObsermatic::deleteInterface()
 void cRangeObsermatic::rangeObservation()
 {   
     bool markOverload =false;
+    qint32 nrActValues;
 
+    nrActValues = m_RangeMeasChannelList.count();
     cRangeMeasChannel *pmChn;
-    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we test all channels
+
+    for (int i = 0; i < nrActValues; i++) // we test all channels
     {
         pmChn = m_RangeMeasChannelList.at(i);
 
-        if ( (pmChn->isOverload(m_ActualValues[i])) || m_hardOvlList.at(i)) // if any overload ?
+        // for test overload we take the rms value with/without dc depending on configuration
+        // and for overload condition of adc test, we take the peakvalues including dc
+        if ( (pmChn->isRMSOverload(m_ActualValues[nrActValues + i])) || (pmChn->isADCOverload(m_ActualValues[i])) || m_hardOvlList.at(i)) // if any overload ?
         {
             markOverload = true;
             // we mark each overload condition if possible (range automatic) we unmark it
