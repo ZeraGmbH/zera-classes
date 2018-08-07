@@ -19,6 +19,7 @@
 #define readrangeurvalueErrMsg "PCB range urvalue read failed"
 #define readrangerejectionErrMsg "PCB range rejection read failed"
 #define readrangeovrejectionErrMsg "PCB range overload rejection failed"
+#define readrangeadcrejectionErrMsg "PCB range adc rejection failed"
 #define readrangeavailErrMsg "PCB range avail info read failed"
 #define setRangeErrMsg "PCB set range failed"
 #define getRangeErrMsg "PCB get range failed"
