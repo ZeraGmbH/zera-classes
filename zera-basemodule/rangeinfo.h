@@ -28,6 +28,7 @@ struct cRangeInfo
     double urvalue;
     double rejection;
     double ovrejection;
+    double adcrejection;
 };
 
 #endif // RANGEINFO_H
