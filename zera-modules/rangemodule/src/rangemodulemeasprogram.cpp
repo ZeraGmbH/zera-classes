@@ -158,10 +158,11 @@ void cRangeModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSamples, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspTemp, DSPDATA::dInt));
-    m_pTmpDataDsp->addVarItem( new cDspVar("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspTemp));
+    //m_pTmpDataDsp->addVarItem( new cDspVar("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("CHXRMS",m_ChannelList.count(), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FREQ", 1, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(2*m_ChannelList.count()+1),DSPDATA::vDspTemp));
+    //m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(2*m_ChannelList.count()+1),DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*(m_ChannelList.count()+1),DSPDATA::vDspTemp)); // filter workspace for rms and freq
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FCONST",1,DSPDATA::vDspTemp));
 
@@ -171,7 +172,8 @@ void cRangeModuleMeasProgram::setDspVarList()
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("CHXPEAKF",m_ChannelList.count(), DSPDATA::vDspResult));
+    //m_pActualValuesDSP->addVarItem( new cDspVar("CHXPEAKF",m_ChannelList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("CHXPEAK",m_ChannelList.count(), DSPDATA::vDspResult)); // only copied values from channels maximum from dsp workspace
     m_pActualValuesDSP->addVarItem( new cDspVar("CHXRMSF",m_ChannelList.count(), DSPDATA::vDspResult));
     m_pActualValuesDSP->addVarItem( new cDspVar("FREQF", 1, DSPDATA::vDspResult));
 
@@ -194,7 +196,8 @@ void cRangeModuleMeasProgram::setDspCmdList()
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSamples) ); // clear meassignal
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
+        //m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) ); // clear the whole filter incl. count
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg((2*(m_ChannelList.count()+1))+1)); // clear the whole filter incl. count
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasInterval*1000.0)); // initial ti time  /* todo variabel */
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         m_pDSPInterFace->addCycListItem( s = QString("CLKMODE(1)")); // clk mode auf 48bit einstellen
@@ -204,24 +207,39 @@ void cRangeModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
+        quint8 chnnr;
+
         cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATAWDC(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
-        m_pDSPInterFace->addCycListItem( s = QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
+        chnnr = mchn->getDSPChannelNr();
+        //m_pDSPInterFace->addCycListItem( s = QString("COPYDATAWDC(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
+        //m_pDSPInterFace->addCycListItem( s = QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
         m_pDSPInterFace->addCycListItem( s = QString("RMS(MEASSIGNAL,CHXRMS+%1)").arg(i)); // with or without dc depending on subdc .... see config file
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXPEAK+%2)").arg(chnnr).arg(chnnr));
     }
     m_pDSPInterFace->addCycListItem( s = "COPYDU(1,FREQENCY,FREQ)");
 
     // and filter them
-    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,CHXPEAK,FILTER)").arg(2*m_ChannelList.count()+1)); // we add results to filter
-
+    //m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,CHXPEAK,FILTER)").arg(2*m_ChannelList.count()+1)); // we add results to filter
+    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,CHXRMS,FILTER)").arg(m_ChannelList.count()+1)); // we add results to filter
     m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*m_ChannelList.count()+1));
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) );
+        //m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXPEAKF)").arg(2*m_ChannelList.count()+1));
+        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,CHXRMSF)").arg(m_ChannelList.count()+1));
+        //m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*(2*m_ChannelList.count()+1)+1) );
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg((2*(m_ChannelList.count()+1))+1));
+        for (int i = 0; i < m_ChannelList.count(); i++)
+        {
+            quint8 chnnr;
+
+            cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
+            chnnr = mchn->getDSPChannelNr();
+            m_pDSPInterFace->addCycListItem( s = QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXPEAK+%2)").arg(chnnr).arg(chnnr)); // raw adc value maximum
+            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MAXIMUMSAMPLE+%1,0.0)").arg(chnnr));
+        }
         m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
