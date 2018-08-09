@@ -231,7 +231,7 @@ bool cRangeMeasChannel::isRMSOverload(double ampl)
 bool cRangeMeasChannel::isADCOverload(double ampl)
 {
     cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
-    return ((ri.urvalue * ri.adcrejection / ri.rejection) <= ampl);
+    return (fabs(ri.adcrejection - ampl) < 8.0);
 }
 
 
