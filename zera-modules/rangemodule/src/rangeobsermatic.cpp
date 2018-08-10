@@ -250,7 +250,7 @@ void cRangeObsermatic::rangeObservation()
 
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        if ( (pmChn->isRMSOverload(m_ActualValues[nrActValues + i])) || (pmChn->isADCOverload(m_ActualValues[i])) || m_hardOvlList.at(i)) // if any overload ?
+        if ( (pmChn->isRMSOverload(m_ActualValues[nrActValues+i])) || (pmChn->isADCOverload(m_ActualValues[2* nrActValues+i])) || m_hardOvlList.at(i)) // if any overload ?
         {
             markOverload = true;
             // we mark each overload condition if possible (range automatic) we unmark it
