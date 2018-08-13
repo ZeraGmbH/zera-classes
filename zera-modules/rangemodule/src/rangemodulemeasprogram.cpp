@@ -238,7 +238,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MAXRESET+%1,0.0)").arg(chnnr)); // raw adc value maximum
 
         }
-        m_pDSPInterFace->addCycListItem( s = QString("COPYUD(32,MAXREST,MAXIMUMSAMPLE)")); // reset dspworkspace maximum samples
+        m_pDSPInterFace->addCycListItem( s = QString("COPYUD(32,MAXRESET,MAXIMUMSAMPLE)")); // reset dspworkspace maximum samples
 
         m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
