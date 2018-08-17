@@ -234,7 +234,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
 
             cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
             chnnr = mchn->getDSPChannelNr();
-            m_pDSPInterFace->addCycListItem( s = QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXRAWPEAK+%2)").arg(chnnr).arg(chnnr)); // raw adc value maximum
+            m_pDSPInterFace->addCycListItem( s = QString("COPYDU(1,MAXIMUMSAMPLE+%1,CHXRAWPEAK+%2)").arg(chnnr).arg(i)); // raw adc value maximum
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MAXRESET+%1,0.0)").arg(chnnr)); // raw adc value maximum
 
         }
