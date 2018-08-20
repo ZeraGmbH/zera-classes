@@ -209,9 +209,9 @@ void cRangeModuleMeasProgram::setDspCmdList()
 
         cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
         chnnr = mchn->getDSPChannelNr();
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATAWDC(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
+        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
         m_pDSPInterFace->addCycListItem( s = QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
-        m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
+        //m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
         m_pDSPInterFace->addCycListItem( s = QString("RMS(MEASSIGNAL,CHXRMS+%1)").arg(i)); // with or without dc depending on subdc .... see config file
     }
     m_pDSPInterFace->addCycListItem( s = "COPYDU(1,FREQENCY,FREQ)");
