@@ -72,7 +72,8 @@ HEADERS += \
     debug.h \
     basemoduleeventsystem.h \
     veinmodulecomponentinput.h \
-    veinmoduleerrorcomponent.h
+    veinmoduleerrorcomponent.h \
+    movingwindowsqare.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -97,6 +98,7 @@ SOURCES += \
     scpiinfo.cpp \
     basemeasmodule.cpp \
     basemoduleeventsystem.cpp \
-    veinmoduleerrorcomponent.cpp
+    veinmoduleerrorcomponent.cpp \
+    movingwindowsqare.cpp
 
 

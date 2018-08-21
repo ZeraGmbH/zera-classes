@@ -1,6 +1,7 @@
 #ifndef PROXYPROTOBUFWRAPPER_H
 #define PROXYPROTOBUFWRAPPER_H
 
+#include <memory>
 #include <xiqnetwrapper.h>
 
 
