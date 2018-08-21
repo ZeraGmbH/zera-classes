@@ -6,7 +6,7 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
-#include <movingwindowfilter.h>
+#include <movingwindowsqare.h>
 #include <proxy.h>
 #include <proxyclient.h>
 #include <scpiinfo.h>
@@ -33,7 +33,7 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
-    m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
+    m_pMovingwindowFilter = new cMovingwindowSqare(1.0);
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);

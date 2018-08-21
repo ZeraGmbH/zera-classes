@@ -26,7 +26,7 @@ class cVeinModuleComponent;
 class cVeinModuleParameter;
 class cVeinModuleMetaData;
 class cVeinModuleActvalue;
-class cMovingwindowFilter;
+class cMovingwindowSqare;
 
 namespace RMSMODULE
 {
@@ -142,7 +142,7 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
-    cMovingwindowFilter* m_pMovingwindowFilter;
+    cMovingwindowSqare* m_pMovingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
