@@ -26,15 +26,16 @@ public slots:
     void receiveActualValues(QVector<float>* actualValues);
     void setIntegrationtime(float time);
 
-private:
+protected:
+    virtual void addnewValues();
     float m_fintegrationTime;
-
     QTimer m_integrationTimer;
-    QList<QVector<float> > m_ActValueFifoList;
+    QList<QVector<double> > m_ActValueFifoList;
     QVector<double> m_FifoSum; // the sums of our actualvalues fifo entries
     QVector<float> m_ActualValues; // our new internal, filtered actualvalues
     QVector<float> *m_pActualValues; // the received actual values
 
+private:
     QStateMachine m_FilterStatemachine;
     QState* m_pactiveState;
     QState* m_pinitFilterState;
@@ -45,8 +46,6 @@ private:
     QState* m_preadyFilterState;
     QState* m_pdoFilterState;
     QFinalState* m_pFinishState;
-
-    void addnewValues();
 
 private slots:
     void initFilter();

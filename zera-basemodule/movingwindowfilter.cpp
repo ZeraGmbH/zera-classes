@@ -59,15 +59,21 @@ void cMovingwindowFilter::setIntegrationtime(float time)
 
 void cMovingwindowFilter::addnewValues()
 {
-    QVector<float> newValues(*m_pActualValues);
+    int n;
+    //QVector<float> newValues(*m_pActualValues);
+    QVector<double> newValues;
+
+    n = m_pActualValues->count();
+    for (int i = 0; i < n; i++)
+        newValues.append(m_pActualValues->at(i));
 
     m_ActValueFifoList.append(newValues); // we append the next values
-    int n = m_ActValueFifoList.count();
+    int m = m_ActValueFifoList.count();
 
     for (int i = 0; i < newValues.count(); i++)
     {
         m_FifoSum.replace(i, m_FifoSum.at(i) + newValues.at(i));
-        m_ActualValues.replace(i, m_FifoSum.at(i) / n); // our filtered actual values
+        m_ActualValues.replace(i, m_FifoSum.at(i) / m); // our filtered actual values
     }
 
     emit actualValues(&m_ActualValues); // we emit them here
@@ -116,7 +122,7 @@ void cMovingwindowFilter::buildupFilter3()
 
 void cMovingwindowFilter::doFilter()
 {
-    QVector<float> removeValues = m_ActValueFifoList.at(0);
+    QVector<double> removeValues = m_ActValueFifoList.at(0);
 
     int n = removeValues.count();
 
