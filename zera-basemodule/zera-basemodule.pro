@@ -99,6 +99,7 @@ SOURCES += \
     basemeasmodule.cpp \
     basemoduleeventsystem.cpp \
     veinmoduleerrorcomponent.cpp \
-    movingwindowsqare.cpp
+    movingwindowsqare.cpp \
+    rangeinfo.cpp
 
 
