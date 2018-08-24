@@ -580,7 +580,7 @@ void cPllMeasChannel::activationDone()
     while (it != m_RangeInfoHash.end()) // we delete all unused ranges
     {
         ri = it.value();
-        if (!ri.avail || ((ri.type & 1) == 1)) // in case range is not avail or virtual
+        if (!ri.avail) // in case range is not avail
             it = m_RangeInfoHash.erase(it);
         else
             ++it;
