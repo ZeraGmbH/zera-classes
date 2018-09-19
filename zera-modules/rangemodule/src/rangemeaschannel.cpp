@@ -3,6 +3,7 @@
 #include <pcbinterface.h>
 #include <proxy.h>
 #include <proxyclient.h>
+#include <math.h>
 
 #include "debug.h"
 #include "errormessages.h"
