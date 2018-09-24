@@ -5,10 +5,9 @@
 #include <QStringList>
 #include <QHash>
 
+#include "adjustmentmodulemeasprogram.h"
 #include "doublevalidator.h"
 #include "intvalidator.h"
-
-class ccAdjustmentModuleMeasProgram;
 
 class adjValidatorDatad
 {

@@ -419,6 +419,12 @@ void cAdjustmentModuleMeasProgram::deleteInterface()
 }
 
 
+bool cAdjustmentModuleMeasProgram::isAuthorized()
+{
+    return m_bAuthorized;
+}
+
+
 void cAdjustmentModuleMeasProgram::rmConnect()
 {
     // we instantiate a working resource manager interface first

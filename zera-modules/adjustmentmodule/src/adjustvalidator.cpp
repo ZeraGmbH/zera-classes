@@ -90,7 +90,7 @@ bool cAdjustValidator2::isValidParam(QVariant &newValue)
         QString key;
         key = sl.at(0);
         if (m_adjustValidatorHash.contains(key))
-            if (m_adjustValidatorHash[key]->contains(sl.at(1)))
+            if ((m_adjustValidatorHash[key]->contains(sl.at(1)))  && (m_pMeasprogram->isAuthorized()))
                 return true;
     }
 
@@ -142,7 +142,7 @@ bool cAdjustValidator3i::isValidParam(QVariant &newValue)
             if (m_adjustValidatorHash[key]->rangeList.contains(sl.at(1)))
             {
                 QVariant var = (QVariant)(sl.at(2).toInt());
-                if (m_adjustValidatorHash[key]->iValidator.isValidParam(var))
+                if ((m_adjustValidatorHash[key]->iValidator.isValidParam(var)) && (m_pMeasprogram->isAuthorized()))
                     return true;
             }
     }
