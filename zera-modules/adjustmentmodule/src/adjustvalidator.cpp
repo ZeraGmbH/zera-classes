@@ -1,8 +1,13 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-
+#include "adjustmentmodulemeasprogram.h"
 #include "adjustvalidator.h"
+
+cAdjustValidator3d::cAdjustValidator3d(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
+    :m_pMeasprogram(measprogram)
+{
+}
 
 cAdjustValidator3d::~cAdjustValidator3d()
 {
@@ -42,7 +47,7 @@ bool cAdjustValidator3d::isValidParam(QVariant &newValue)
             {
                 QVariant var;
                 var = (QVariant)(sl.at(2).toDouble());
-                if (m_adjustValidatorHash[key]->dValidator.isValidParam(var))
+                if ((m_adjustValidatorHash[key]->dValidator.isValidParam(var)) && (m_pMeasprogram->isAuthorized()))
                     return true;
             }
     }
@@ -57,6 +62,12 @@ void cAdjustValidator3d::exportMetaData(QJsonObject &jsObj)
 
     QJsonArray jsonArr = {"not subject"};
     jsObj.insert("Data", jsonArr);
+}
+
+
+cAdjustValidator2::cAdjustValidator2(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
+    :m_pMeasprogram(measprogram)
+{
 }
 
 
@@ -93,6 +104,12 @@ void cAdjustValidator2::exportMetaData(QJsonObject &jsObj)
 
     QJsonArray jsonArr = {"not subject"};
     jsObj.insert("Data", jsonArr);
+}
+
+
+cAdjustValidator3i::cAdjustValidator3i(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
+    :m_pMeasprogram(measprogram)
+{
 }
 
 
