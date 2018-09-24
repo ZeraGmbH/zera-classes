@@ -34,6 +34,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     :m_pModule(module), m_pProxy(proxy), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
+    m_bAuthorized = true; // per default we are authorized
 
     // setting up statemachine for "activating" adjustment
     // m_rmConnectState.addTransition is done in rmConnect
@@ -227,7 +228,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     // first the validator for amplitude adjustment
     cDoubleValidator dValidator = cDoubleValidator(0, 2000,1e-7);
-    adjValidatord = new cAdjustValidator3d();
+    adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         sysName = m_ConfigData.m_AdjChannelList.at(i);
@@ -240,7 +241,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     m_pPARAdjustAmplitude->setValidator(adjValidatord);
 
     // validator for offset adjustment
-    adjValidatord = new cAdjustValidator3d();
+    adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         sysName = m_ConfigData.m_AdjChannelList.at(i);
@@ -254,7 +255,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     // validator for angle adjustment
     dValidator = cDoubleValidator(0, 360,1e-7);
-    adjValidatord = new cAdjustValidator3d();
+    adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         sysName = m_ConfigData.m_AdjChannelList.at(i);
@@ -269,7 +270,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     // validator for adjustment status setting
     cIntValidator iValidator = cIntValidator(0,255);
 
-    adjValidatori = new cAdjustValidator3i();
+    adjValidatori = new cAdjustValidator3i(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         adjChnInfo = m_adjustChannelInfoHash[m_ConfigData.m_AdjChannelList.at(i)];
@@ -283,7 +284,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     cAdjustValidator2* adjInitValidator;
 
-    adjInitValidator = new cAdjustValidator2();
+    adjInitValidator = new cAdjustValidator2(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         adjChnInfo = m_adjustChannelInfoHash[m_ConfigData.m_AdjChannelList.at(i)];
@@ -984,9 +985,13 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case adjustcomputation:
                 if (reply == ack)
+                {
+                    m_bAuthorized = true;
                     emit computationContinue();
+                }
                 else
                 {
+                    m_bAuthorized = false;
                     m_computationMachine.stop();
                     emit errMsg((tr(adjustcomputationPCBErrMSG)));
 #ifdef DEBUG
@@ -998,9 +1003,13 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case adjuststorage:
                 if (reply == ack)
+                {
+                    m_bAuthorized = true;
                     emit storageContinue();
+                }
                 else
                 {
+                    m_bAuthorized = false;
                     m_storageMachine.stop();
                     emit errMsg((tr(adjuststoragePCBErrMSG)));
 #ifdef DEBUG
@@ -1014,9 +1023,12 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setadjustphasestatus:
             case setadjustoffsetstatus:
                 if (reply == ack)
-                    {} // nothing here to do
+                {
+                    m_bAuthorized = true;
+                }
                 else
                 {
+                    m_bAuthorized = false;
                     emit errMsg((tr(adjuststatusPCBErrMSG)));
 #ifdef DEBUG
                     qDebug() << adjuststatusPCBErrMSG;
@@ -1027,9 +1039,12 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case adjustinit:
                 if (reply == ack)
-                    {} // nothing here to do
+                {
+                    m_bAuthorized = true;
+                }
                 else
                 {
+                    m_bAuthorized = false;
                     emit errMsg((tr(adjustinitPCBErrMSG)));
 #ifdef DEBUG
                     qDebug() << adjustinitPCBErrMSG;
@@ -1067,10 +1082,12 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setgainnode:
                 if (reply == ack)
                 {
+                    m_bAuthorized = true;
                     emit adjustamplitudeContinue();
                 }
                 else
                 {
+                    m_bAuthorized = false;
                     emit errMsg(setGainNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1083,17 +1100,20 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case getoffsetcorrection:
                 if (reply == ack)
                 {
+                    m_bAuthorized = true;
                     m_AdjustCorrection = answer.toDouble();
+                    /*
                     if (fabs(m_AdjustCorrection) > 1e-7)
                     {
                         emit errMsg(tr(adjustinitPCBErrMSG));
                         emit adjustError();
                     }
-                    else
-                        emit adjustoffsetContinue();
+                    else*/
+                    emit adjustoffsetContinue();
                 }
                 else
                 {
+                    m_bAuthorized = false;
                     emit errMsg(readOffsetCorrErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1106,14 +1126,16 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setoffsetnode:
                 if (reply == ack)
                 {
+                    m_bAuthorized = true;
                     emit adjustoffsetContinue();
                 }
                 else
                 {
-                    emit errMsg(setGainNodeErrMsg);
+                    m_bAuthorized = false;
+                    emit errMsg(setOffsetNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
-                    qDebug() << setGainNodeErrMsg;
+                    qDebug() << setOffsetNodeErrMsg;
 #endif
                     emit executionError();
                 }
@@ -1122,6 +1144,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case getphasecorrection:
                 if (reply == ack)
                 {
+                    m_bAuthorized = true;
                     m_AdjustCorrection = answer.toDouble();
                     /*
                     if (fabs(m_AdjustCorrection) > 1e-7)
@@ -1134,6 +1157,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else
                 {
+                    m_bAuthorized = false;
                     emit errMsg(readPhaseCorrErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1146,14 +1170,16 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setphasenode:
                 if (reply == ack)
                 {
+                    m_bAuthorized = true;
                     emit adjustphaseContinue();
                 }
                 else
                 {
+                    m_bAuthorized = false;
                     emit errMsg(setPhaseNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
-                    qDebug() << setGainNodeErrMsg;
+                    qDebug() << setPhaseNodeErrMsg;
 #endif
                     emit executionError();
                 }

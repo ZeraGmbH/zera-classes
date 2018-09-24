@@ -82,6 +82,7 @@ public:
     virtual ~cAdjustmentModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
+    bool isAuthorized();
 
 signals:
     void computationContinue();
@@ -112,6 +113,7 @@ private:
     double m_AdjustCorrection;
     int m_AdjustEntity;
     QString m_AdjustComponent;
+    bool m_bAuthorized;
 
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);
