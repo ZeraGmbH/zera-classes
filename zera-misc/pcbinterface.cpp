@@ -375,6 +375,13 @@ quint32 cPCBInterface::getAdjustmentStatus()
     return d->getAdjustmentStatus();
 }
 
+
+quint32 cPCBInterface::getAuthorizationStatus()
+{
+    Q_D(cPCBInterface);
+    return d->getAuthorizationStatus();
+}
+
 quint32 cPCBInterface::getPCBErrorStatus()
 {
 

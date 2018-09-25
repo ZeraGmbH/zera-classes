@@ -496,6 +496,17 @@ quint32 cPCBInterfacePrivate::getAdjustmentStatus()
 }
 
 
+quint32 cPCBInterfacePrivate::getAuthorizationStatus()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("STAT:AUTH?"));
+    m_MsgNrCmdList[msgnr] = getauthorizationstatus;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getPCBErrorStatus()
 {
     QString cmd;
@@ -640,6 +651,7 @@ void cPCBInterfacePrivate::receiveAnswer(ProtobufMessage::NetMessage *message)
         case getsamplerate:
         case getdspchannelsource:
         case getadjustmentstatus:
+        case getauthorizationstatus:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 

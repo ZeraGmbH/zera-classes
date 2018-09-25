@@ -54,6 +54,7 @@ enum pcbcommands
     getaliassource,
     getdspchannelsource,
     getadjustmentstatus,
+    getauthorizationstatus,
     getpcberrorstatus,
     getadjustmentchksum,
     getformfactorsource,
@@ -133,6 +134,7 @@ public:
 
     // all commands to status interface
     virtual quint32 getAdjustmentStatus(); // int
+    virtual quint32 getAuthorizationStatus();
     virtual quint32 getPCBErrorStatus();
 
     // resource query more generell
