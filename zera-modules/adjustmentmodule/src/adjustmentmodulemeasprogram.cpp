@@ -620,6 +620,8 @@ void cAdjustmentModuleMeasProgram::activationDone()
 {
     m_bActive = true;
     setInterfaceValidation();
+    connect(&m_AuthTimer, SIGNAL(timeout()),this,SLOT(fetchAuhorizationStatus()));
+    m_AuthTimer.start(5000);
     emit activated();
 }
 
@@ -841,6 +843,12 @@ void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
 }
 
 
+void cAdjustmentModuleMeasProgram::fetchAuhorizationStatus()
+{
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
+}
+
+
 void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages
@@ -992,12 +1000,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case adjustcomputation:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                     emit computationContinue();
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     m_computationMachine.stop();
                     emit errMsg((tr(adjustcomputationPCBErrMSG)));
 #ifdef DEBUG
@@ -1010,12 +1016,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case adjuststorage:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                     emit storageContinue();
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     m_storageMachine.stop();
                     emit errMsg((tr(adjuststoragePCBErrMSG)));
 #ifdef DEBUG
@@ -1030,11 +1034,9 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setadjustoffsetstatus:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     emit errMsg((tr(adjuststatusPCBErrMSG)));
 #ifdef DEBUG
                     qDebug() << adjuststatusPCBErrMSG;
@@ -1046,11 +1048,9 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case adjustinit:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     emit errMsg((tr(adjustinitPCBErrMSG)));
 #ifdef DEBUG
                     qDebug() << adjustinitPCBErrMSG;
@@ -1088,12 +1088,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setgainnode:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                     emit adjustamplitudeContinue();
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     emit errMsg(setGainNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1106,7 +1104,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case getoffsetcorrection:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                     m_AdjustCorrection = answer.toDouble();
                     /*
                     if (fabs(m_AdjustCorrection) > 1e-7)
@@ -1119,7 +1116,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     emit errMsg(readOffsetCorrErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1132,12 +1128,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setoffsetnode:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                     emit adjustoffsetContinue();
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     emit errMsg(setOffsetNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1150,7 +1144,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case getphasecorrection:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                     m_AdjustCorrection = answer.toDouble();
                     /*
                     if (fabs(m_AdjustCorrection) > 1e-7)
@@ -1163,7 +1156,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     emit errMsg(readPhaseCorrErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1176,12 +1168,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setphasenode:
                 if (reply == ack)
                 {
-                    m_bAuthorized = true;
                     emit adjustphaseContinue();
                 }
                 else
                 {
-                    m_bAuthorized = false;
                     emit errMsg(setPhaseNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
@@ -1190,6 +1180,13 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     emit executionError();
                 }
                 break;
+
+            case getauthorizationstatus:
+                if (reply == ack)
+                    m_bAuthorized = (answer.toInt() > 0);
+                else
+                    emit errMsg(readauthorizationErrMSG);
+
             }
         }
     }

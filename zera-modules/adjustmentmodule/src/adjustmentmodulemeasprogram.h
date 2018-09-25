@@ -6,6 +6,7 @@
 #include <QHash>
 #include <QStateMachine>
 #include <QState>
+#include <QTimer>
 #include <QFinalState>
 #include <pcbinterface.h>
 
@@ -54,7 +55,8 @@ enum adjustmentmoduleCmds
     getphasecorrection,
     setphasenode,
     getoffsetcorrection,
-    setoffsetnode
+    setoffsetnode,
+    getauthorizationstatus
 };
 
 
@@ -201,6 +203,9 @@ private:
     QState m_adjustphaseSetNodeState;
     QFinalState m_adjustphaseFinishState;
 
+    // timer for cyclic eeprom access enable (authorization) query
+    QTimer m_AuthTimer;
+
 private slots:
     void setInterfaceValidation();
 
@@ -249,6 +254,8 @@ private slots:
     void setAdjustOffsetStartCommand(QVariant var);
     void adjustoffsetGetCorr();
     void adjustoffsetSetNode();
+
+    void fetchAuhorizationStatus();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
