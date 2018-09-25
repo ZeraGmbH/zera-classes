@@ -845,6 +845,10 @@ void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
 
 void cAdjustmentModuleMeasProgram::fetchAuhorizationStatus()
 {
+    QList<QString> sysnameList;
+    sysnameList = m_AliasChannelHash.values();
+    m_AdjustPCBInterface = m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
+
     m_MsgNrCmdList[m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
 }
 
