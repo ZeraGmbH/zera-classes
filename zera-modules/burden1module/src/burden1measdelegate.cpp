@@ -97,11 +97,11 @@ void cBurden1MeasDelegate::computeOutput()
 
     if (m_sMode == "V")
     {
-        m_fActBurden = (m_fNominalRange * m_fNominalRange) * ieff / (ueff * ueff /(ueff - Rwire * ieff));
+        m_fActBurden = ((m_fNominalRange * m_fNominalRange) * ieff) / (ueff + (Rwire * ieff));
     }
     else
     {
-        m_fActBurden = ((m_fNominalRange * m_fNominalRange) * (ueff - Rwire * ieff)) / ieff;
+        m_fActBurden = (m_fNominalRange * m_fNominalRange) * ((ueff/ieff) + Rwire);
     }
 
     double deltaW = userAtan(m_fCurrentVector.im(), m_fCurrentVector.re()) - userAtan(m_fVoltageVector.im(), m_fVoltageVector.re());
