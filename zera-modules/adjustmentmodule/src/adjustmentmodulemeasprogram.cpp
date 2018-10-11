@@ -775,7 +775,7 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 void cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr()
 {
     m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getGainCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getgaincorrection;
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjGainCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjgaincorrection;
 }
 
 
@@ -803,7 +803,7 @@ void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
     m_AdjustActualValue = cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent))
                          -cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_ConfigData.m_ReferenceAngle.m_nEntity, m_ConfigData.m_ReferenceAngle.m_sComponent));
     m_AdjustFrequency = m_pModule->m_pStorageSystem->getStoredValue(m_ConfigData.m_ReferenceFrequency.m_nEntity, m_ConfigData.m_ReferenceFrequency.m_sComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getphasecorrection;
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjphasecorrection;
 }
 
 
@@ -829,7 +829,7 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 void cAdjustmentModuleMeasProgram::adjustoffsetGetCorr()
 {
     m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getoffsetcorrection;
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjoffsetcorrection;
 }
 
 
@@ -1063,7 +1063,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case getgaincorrection:
+            case getadjgaincorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
@@ -1105,7 +1105,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case getoffsetcorrection:
+            case getadjoffsetcorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
@@ -1145,7 +1145,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case getphasecorrection:
+            case getadjphasecorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();

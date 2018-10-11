@@ -50,11 +50,11 @@ enum adjustmentmoduleCmds
     setadjustgainstatus,
     setadjustphasestatus,
     setadjustoffsetstatus,
-    getgaincorrection,
+    getadjgaincorrection,
     setgainnode,
-    getphasecorrection,
+    getadjphasecorrection,
     setphasenode,
-    getoffsetcorrection,
+    getadjoffsetcorrection,
     setoffsetnode,
     getauthorizationstatus
 };
