@@ -137,6 +137,13 @@ quint32 cPCBInterface::getGainCorrection(QString chnName, QString rngName, doubl
 }
 
 
+quint32 cPCBInterface::getAdjGainCorrection(QString chnName, QString rngName, double ampl)
+{
+    Q_D(cPCBInterface);
+    return d->getAdjGainCorrection(chnName, rngName, ampl);
+}
+
+
 quint32 cPCBInterface::getOffsetCorrection(QString chnName, QString rngName, double ampl)
 {
     Q_D(cPCBInterface);
@@ -144,10 +151,24 @@ quint32 cPCBInterface::getOffsetCorrection(QString chnName, QString rngName, dou
 }
 
 
+quint32 cPCBInterface::getAdjOffsetCorrection(QString chnName, QString rngName, double ampl)
+{
+    Q_D(cPCBInterface);
+    return d->getAdjOffsetCorrection(chnName, rngName, ampl);
+}
+
+
 quint32 cPCBInterface::getPhaseCorrection(QString chnName, QString rngName, double ampl)
 {
     Q_D(cPCBInterface);
     return d->getPhaseCorrection(chnName, rngName, ampl);
+}
+
+
+quint32 cPCBInterface::getAdjPhaseCorrection(QString chnName, QString rngName, double ampl)
+{
+    Q_D(cPCBInterface);
+    return d->getAdjPhaseCorrection(chnName, rngName, ampl);
 }
 
 

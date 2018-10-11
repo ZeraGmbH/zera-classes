@@ -49,8 +49,11 @@ public:
     virtual quint32 getOVRejection(QString chnName, QString rngName); // double
     virtual quint32 isAvail(QString chnName, QString rngName); // bool
     virtual quint32 getGainCorrection(QString chnName, QString rngName, double ampl); // double
+    virtual quint32 getAdjGainCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double
+    virtual quint32 getAdjOffsetCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
+    virtual quint32 getAdjPhaseCorrection(QString chnName, QString rngName, double ampl); // double
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
     virtual quint32 setMMode(QString mmode); // we set the sense mode we get  reply (ack, nak..)
     virtual quint32 adjustComputation(); // all correction coefficients will be computed
