@@ -750,16 +750,20 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand(QVariant va
 
 void cAdjustmentModuleMeasProgram::setAdjustInitStartCommand(QVariant var)
 {
-    QString sysName;
+    QString chnName;
     QStringList sl;
-    cAdjustChannelInfo* adjChannelinfo;
+    cAdjustIterators *pits; // pointer iterators
 
     sl = var.toString().split(',');
-    sysName = m_AliasChannelHash[sl.at(0)];
-    adjChannelinfo = m_adjustChannelInfoHash[sysName];
+    chnName = sl.at(0);
+    if (m_adjustIteratorHash.contains(chnName))
+    {
+        pits = m_adjustIteratorHash.take(chnName);
+        delete pits;
+    }
 
-    m_nAdjustGainIt = m_nAdjustOffsetIt = m_nAdjustPhaseIt = 0;
-    m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->adjustInit(sysName, sl.at(1))] = adjustinit;
+    pits = new cAdjustIterators();
+    m_adjustIteratorHash[chnName] = pits;
 }
 
 
@@ -781,11 +785,20 @@ void cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr()
 
 void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
 {
+    cAdjustIterators *pits;
     double Corr;
 
+    // we will not crash if the user forgot to initialize the iterators
+    // but we will get error messages from server if the iterator becomes
+    // greater than adjustment order
+    if (m_adjustIteratorHash.contains(m_sAdjustChannel))
+        pits = m_adjustIteratorHash[m_sAdjustChannel];
+    else
+        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+
     Corr = m_AdjustTargetValue * m_AdjustCorrection / m_AdjustActualValue ; // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_AdjustPCBInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
-    m_nAdjustGainIt++;
+    m_MsgNrCmdList[m_AdjustPCBInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
+    pits->m_nAdjustGainIt++;
 }
 
 
@@ -809,11 +822,17 @@ void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 
 void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 {
+    cAdjustIterators *pits;
     double Corr;
 
+    if (m_adjustIteratorHash.contains(m_sAdjustChannel))
+        pits = m_adjustIteratorHash[m_sAdjustChannel];
+    else
+        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+
     Corr = symAngle(m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection)); // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_AdjustPCBInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
-    m_nAdjustPhaseIt++;
+    m_MsgNrCmdList[m_AdjustPCBInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
+    pits->m_nAdjustPhaseIt++;
 }
 
 
@@ -835,11 +854,17 @@ void cAdjustmentModuleMeasProgram::adjustoffsetGetCorr()
 
 void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
 {
+    cAdjustIterators *pits;
     double Corr;
 
+    if (m_adjustIteratorHash.contains(m_sAdjustChannel))
+        pits = m_adjustIteratorHash[m_sAdjustChannel];
+    else
+        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+
     Corr = m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection); // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
-    m_nAdjustOffsetIt++;
+    m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
+    pits->m_nAdjustOffsetIt++;
 }
 
 
@@ -1049,32 +1074,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case adjustinit:
-                if (reply == ack)
-                {
-                }
-                else
-                {
-                    emit errMsg((tr(adjustinitPCBErrMSG)));
-#ifdef DEBUG
-                    qDebug() << adjustinitPCBErrMSG;
-#endif
-                    emit executionError();
-                }
-                break;
-
             case getadjgaincorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
-                    /*
-                    if (fabs(m_AdjustCorrection - 1.0) > 1e-7)
-                    {
-                        m_adjustAmplitudeMachine.stop();
-                        emit errMsg(tr(adjustinitPCBErrMSG));
-                        emit adjustError();
-                    }
-                    else*/
                     emit adjustamplitudeContinue();
                 }
                 else
@@ -1109,13 +1112,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
-                    /*
-                    if (fabs(m_AdjustCorrection) > 1e-7)
-                    {
-                        emit errMsg(tr(adjustinitPCBErrMSG));
-                        emit adjustError();
-                    }
-                    else*/
                     emit adjustoffsetContinue();
                 }
                 else
@@ -1149,13 +1145,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
-                    /*
-                    if (fabs(m_AdjustCorrection) > 1e-7)
-                    {
-                        emit errMsg(tr(adjustinitPCBErrMSG));
-                        emit adjustError();
-                    }
-                    else*/
                     emit adjustphaseContinue();
                 }
                 else
@@ -1194,6 +1183,11 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             }
         }
     }
+}
+
+cAdjustIterators::cAdjustIterators()
+{
+    m_nAdjustGainIt = m_nAdjustOffsetIt = m_nAdjustPhaseIt = 0;
 }
 
 }

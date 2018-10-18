@@ -46,7 +46,6 @@ enum adjustmentmoduleCmds
     readrangelist,
     adjustcomputation,
     adjuststorage,
-    adjustinit,
     setadjustgainstatus,
     setadjustphasestatus,
     setadjustoffsetstatus,
@@ -72,6 +71,17 @@ public:
     QString m_sAlias;
     QStringList m_sRangelist;
     Zera::Server::cPCBInterface* m_pPCBInterface;
+};
+
+
+class cAdjustIterators
+{
+public:
+    cAdjustIterators();
+
+    int m_nAdjustGainIt;
+    int m_nAdjustOffsetIt;
+    int m_nAdjustPhaseIt;
 };
 
 
@@ -132,6 +142,7 @@ private:
     QList<Zera::Server::cPCBInterface*> m_pcbInterfaceList; // a list of pcbinterfaces ... for clean up
     QHash<QString, cAdjustChannelInfo*> m_adjustChannelInfoHash;
     QHash<quint32, int> m_MsgNrCmdList;
+    QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
     int m_nAdjustGainIt;
     int m_nAdjustOffsetIt;
     int m_nAdjustPhaseIt;
