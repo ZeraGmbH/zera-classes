@@ -116,6 +116,7 @@ cAdjustValidator3i::cAdjustValidator3i(ADJUSTMENTMODULE::cAdjustmentModuleMeasPr
 cAdjustValidator3i::cAdjustValidator3i(const cAdjustValidator3i &ref)
 {
     m_adjustValidatorHash = ref.m_adjustValidatorHash;
+    m_pMeasprogram = ref.m_pMeasprogram;
 }
 
 
