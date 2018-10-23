@@ -816,7 +816,7 @@ void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
     m_AdjustActualValue = cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent))
                          -cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_ConfigData.m_ReferenceAngle.m_nEntity, m_ConfigData.m_ReferenceAngle.m_sComponent));
     m_AdjustFrequency = m_pModule->m_pStorageSystem->getStoredValue(m_ConfigData.m_ReferenceFrequency.m_nEntity, m_ConfigData.m_ReferenceFrequency.m_sComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjphasecorrection;
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
 
