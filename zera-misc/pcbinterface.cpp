@@ -130,45 +130,45 @@ quint32 cPCBInterface::isAvail(QString chnName, QString rngName)
 }
 
 
-quint32 cPCBInterface::getGainCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterface::getGainCorrection(QString chnName, QString rngName, double at)
 {
     Q_D(cPCBInterface);
-    return d->getGainCorrection(chnName, rngName, ampl);
+    return d->getGainCorrection(chnName, rngName, at);
 }
 
 
-quint32 cPCBInterface::getAdjGainCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterface::getAdjGainCorrection(QString chnName, QString rngName, double at)
 {
     Q_D(cPCBInterface);
-    return d->getAdjGainCorrection(chnName, rngName, ampl);
+    return d->getAdjGainCorrection(chnName, rngName, at);
 }
 
 
-quint32 cPCBInterface::getOffsetCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterface::getOffsetCorrection(QString chnName, QString rngName, double at)
 {
     Q_D(cPCBInterface);
-    return d->getOffsetCorrection(chnName, rngName, ampl);
+    return d->getOffsetCorrection(chnName, rngName, at);
 }
 
 
-quint32 cPCBInterface::getAdjOffsetCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterface::getAdjOffsetCorrection(QString chnName, QString rngName, double at)
 {
     Q_D(cPCBInterface);
-    return d->getAdjOffsetCorrection(chnName, rngName, ampl);
+    return d->getAdjOffsetCorrection(chnName, rngName, at);
 }
 
 
-quint32 cPCBInterface::getPhaseCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterface::getPhaseCorrection(QString chnName, QString rngName, double at)
 {
     Q_D(cPCBInterface);
-    return d->getPhaseCorrection(chnName, rngName, ampl);
+    return d->getPhaseCorrection(chnName, rngName, at);
 }
 
 
-quint32 cPCBInterface::getAdjPhaseCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterface::getAdjPhaseCorrection(QString chnName, QString rngName, double at)
 {
     Q_D(cPCBInterface);
-    return d->getAdjPhaseCorrection(chnName, rngName, ampl);
+    return d->getAdjPhaseCorrection(chnName, rngName, at);
 }
 
 
