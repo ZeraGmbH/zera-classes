@@ -266,7 +266,7 @@ private slots:
     void adjustoffsetGetCorr();
     void adjustoffsetSetNode();
 
-    void fetchAuhorizationStatus();
+    void fetchAuthorizationStatus();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
