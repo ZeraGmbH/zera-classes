@@ -186,6 +186,13 @@ quint32 cPCBInterface::adjustStorage()
 }
 
 
+quint32 cPCBInterface::adjustStorageClamp()
+{
+    Q_D(cPCBInterface);
+    return d->adjustStorageClamp();
+}
+
+
 quint32 cPCBInterface::adjustInit(QString chnName, QString rngName)
 {
     Q_D(cPCBInterface);

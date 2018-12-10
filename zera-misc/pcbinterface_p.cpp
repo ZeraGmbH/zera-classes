@@ -279,6 +279,17 @@ quint32 cPCBInterfacePrivate::adjustStorage()
 }
 
 
+quint32 cPCBInterfacePrivate::adjustStorageClamp()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:CLAM:WRIT;"));
+    m_MsgNrCmdList[msgnr] = adjuststorageclamp;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::adjustInit(QString chnName, QString rngName)
 {
     QString cmd;
@@ -723,6 +734,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case setphasenode:
         case setgainnode:
         case adjuststorage:
+        case adjuststorageclamp:
         case adjustinit:
         case setadjustgainstatus:
         case setadjustphasestatus:

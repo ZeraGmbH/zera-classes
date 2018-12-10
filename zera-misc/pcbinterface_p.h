@@ -35,6 +35,7 @@ enum pcbcommands
     setmeasuringmode,
     adjustcomputation,
     adjuststorage,
+    adjuststorageclamp,
     adjustinit,
     setadjustgainstatus,
     setadjustphasestatus,
@@ -107,6 +108,7 @@ public:
     virtual quint32 setMMode(QString mmode);
     virtual quint32 adjustComputation(); // all correction coefficients will be computed
     virtual quint32 adjustStorage(); // all correction data will be stored
+    virtual quint32 adjustStorageClamp(); // all clamp correction data will be stored
     virtual quint32 adjustInit(QString chnName, QString rngName);
     virtual quint32 setAdjustGainStatus(QString chnName, QString rngName, int stat);
     virtual quint32 setAdjustPhaseStatus(QString chnName, QString rngName, int stat);
