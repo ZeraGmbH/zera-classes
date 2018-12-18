@@ -5,6 +5,7 @@
 #include <QStringList>
 #include <QHash>
 
+#include "adjustmentmodulemeasprogram.h"
 #include "doublevalidator.h"
 #include "intvalidator.h"
 
@@ -29,7 +30,7 @@ public:
 class cAdjustValidator3d: public cParamValidator
 {
 public:
-    cAdjustValidator3d(){}
+    cAdjustValidator3d(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram);
     virtual ~cAdjustValidator3d();
 
     virtual void addValidator(QString chnName, QStringList rList, cDoubleValidator parVal);
@@ -39,13 +40,14 @@ public:
 
 private:
     QHash<QString, adjValidatorDatad*> m_adjustValidatorHash; // the channels name is the key
+    ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *m_pMeasprogram;
 };
 
 
 class cAdjustValidator3i: public cParamValidator
 {
 public:
-    cAdjustValidator3i(){}
+    cAdjustValidator3i(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram);
     cAdjustValidator3i(const cAdjustValidator3i& ref);
     virtual ~cAdjustValidator3i(){}
 
@@ -56,6 +58,7 @@ public:
 
 private:
     QHash<QString, adjValidatorDatai*> m_adjustValidatorHash; // the channels name is the key
+    ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *m_pMeasprogram;
 };
 
 
@@ -63,7 +66,7 @@ private:
 class cAdjustValidator2: public cParamValidator
 {
 public:
-    cAdjustValidator2(){}
+    cAdjustValidator2(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram);
     virtual ~cAdjustValidator2(){}
 
     virtual void addValidator(QString chnName, QStringList rList);
@@ -73,6 +76,7 @@ public:
 
 private:
     QHash<QString, QStringList*> m_adjustValidatorHash; // the channels name is the key
+    ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *m_pMeasprogram;
 };
 
 #endif // ADJUSTVALIDATOR

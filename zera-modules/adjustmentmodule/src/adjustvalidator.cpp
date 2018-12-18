@@ -1,8 +1,13 @@
 #include <QJsonArray>
 #include <QJsonObject>
 
-
+#include "adjustmentmodulemeasprogram.h"
 #include "adjustvalidator.h"
+
+cAdjustValidator3d::cAdjustValidator3d(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
+    :m_pMeasprogram(measprogram)
+{
+}
 
 cAdjustValidator3d::~cAdjustValidator3d()
 {
@@ -42,7 +47,7 @@ bool cAdjustValidator3d::isValidParam(QVariant &newValue)
             {
                 QVariant var;
                 var = (QVariant)(sl.at(2).toDouble());
-                if (m_adjustValidatorHash[key]->dValidator.isValidParam(var))
+                if ((m_adjustValidatorHash[key]->dValidator.isValidParam(var)) && (m_pMeasprogram->isAuthorized()))
                     return true;
             }
     }
@@ -57,6 +62,12 @@ void cAdjustValidator3d::exportMetaData(QJsonObject &jsObj)
 
     QJsonArray jsonArr = {"not subject"};
     jsObj.insert("Data", jsonArr);
+}
+
+
+cAdjustValidator2::cAdjustValidator2(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
+    :m_pMeasprogram(measprogram)
+{
 }
 
 
@@ -79,7 +90,7 @@ bool cAdjustValidator2::isValidParam(QVariant &newValue)
         QString key;
         key = sl.at(0);
         if (m_adjustValidatorHash.contains(key))
-            if (m_adjustValidatorHash[key]->contains(sl.at(1)))
+            if ((m_adjustValidatorHash[key]->contains(sl.at(1)))  && (m_pMeasprogram->isAuthorized()))
                 return true;
     }
 
@@ -96,9 +107,16 @@ void cAdjustValidator2::exportMetaData(QJsonObject &jsObj)
 }
 
 
+cAdjustValidator3i::cAdjustValidator3i(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
+    :m_pMeasprogram(measprogram)
+{
+}
+
+
 cAdjustValidator3i::cAdjustValidator3i(const cAdjustValidator3i &ref)
 {
     m_adjustValidatorHash = ref.m_adjustValidatorHash;
+    m_pMeasprogram = ref.m_pMeasprogram;
 }
 
 
@@ -125,7 +143,7 @@ bool cAdjustValidator3i::isValidParam(QVariant &newValue)
             if (m_adjustValidatorHash[key]->rangeList.contains(sl.at(1)))
             {
                 QVariant var = (QVariant)(sl.at(2).toInt());
-                if (m_adjustValidatorHash[key]->iValidator.isValidParam(var))
+                if ((m_adjustValidatorHash[key]->iValidator.isValidParam(var)) && (m_pMeasprogram->isAuthorized()))
                     return true;
             }
     }

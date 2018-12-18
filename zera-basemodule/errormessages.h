@@ -49,6 +49,7 @@
 #define adjuststoragePCBErrMSG "PCB adjustment storage failed"
 #define adjuststatusPCBErrMSG "PCB adjustment status setting failed"
 #define adjustinitPCBErrMSG "PCB adjustment init failed"
+#define readauthorizationErrMSG "PCB authorization status read failed"
 
 #define readdspgaincorrErrMsg "DSP read gain correction failed"
 #define readdspphasecorrErrMsg "DSP read phase correction failed"

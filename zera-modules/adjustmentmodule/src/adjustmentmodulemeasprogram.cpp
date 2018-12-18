@@ -35,6 +35,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     :m_pModule(module), m_pProxy(proxy), m_ConfigData(configdata)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
+    m_bAuthorized = true; // per default we are authorized
 
     // setting up statemachine for "activating" adjustment
     // m_rmConnectState.addTransition is done in rmConnect
@@ -228,7 +229,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     // first the validator for amplitude adjustment
     cDoubleValidator dValidator = cDoubleValidator(0, 2000,1e-7);
-    adjValidatord = new cAdjustValidator3d();
+    adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         sysName = m_ConfigData.m_AdjChannelList.at(i);
@@ -241,7 +242,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     m_pPARAdjustAmplitude->setValidator(adjValidatord);
 
     // validator for offset adjustment
-    adjValidatord = new cAdjustValidator3d();
+    adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         sysName = m_ConfigData.m_AdjChannelList.at(i);
@@ -255,7 +256,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     // validator for angle adjustment
     dValidator = cDoubleValidator(0, 360,1e-7);
-    adjValidatord = new cAdjustValidator3d();
+    adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         sysName = m_ConfigData.m_AdjChannelList.at(i);
@@ -270,7 +271,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     // validator for adjustment status setting
     cIntValidator iValidator = cIntValidator(0,255);
 
-    adjValidatori = new cAdjustValidator3i();
+    adjValidatori = new cAdjustValidator3i(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         adjChnInfo = m_adjustChannelInfoHash[m_ConfigData.m_AdjChannelList.at(i)];
@@ -284,7 +285,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     cAdjustValidator2* adjInitValidator;
 
-    adjInitValidator = new cAdjustValidator2();
+    adjInitValidator = new cAdjustValidator2(this);
     for (int i = 0; i < m_ConfigData.m_nAdjustmentChannelCount; i++)
     {
         adjChnInfo = m_adjustChannelInfoHash[m_ConfigData.m_AdjChannelList.at(i)];
@@ -416,6 +417,12 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
 void cAdjustmentModuleMeasProgram::deleteInterface()
 {
+}
+
+
+bool cAdjustmentModuleMeasProgram::isAuthorized()
+{
+    return m_bAuthorized;
 }
 
 
@@ -614,6 +621,8 @@ void cAdjustmentModuleMeasProgram::activationDone()
 {
     m_bActive = true;
     setInterfaceValidation();
+    connect(&m_AuthTimer, SIGNAL(timeout()),this,SLOT(fetchAuthorizationStatus()));
+    m_AuthTimer.start(5000);
     emit activated();
 }
 
@@ -742,16 +751,20 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand(QVariant va
 
 void cAdjustmentModuleMeasProgram::setAdjustInitStartCommand(QVariant var)
 {
-    QString sysName;
+    QString chnName;
     QStringList sl;
-    cAdjustChannelInfo* adjChannelinfo;
+    cAdjustIterators *pits; // pointer iterators
 
     sl = var.toString().split(',');
-    sysName = m_AliasChannelHash[sl.at(0)];
-    adjChannelinfo = m_adjustChannelInfoHash[sysName];
+    chnName = sl.at(0);
+    if (m_adjustIteratorHash.contains(chnName))
+    {
+        pits = m_adjustIteratorHash.take(chnName);
+        delete pits;
+    }
 
-    m_nAdjustGainIt = m_nAdjustOffsetIt = m_nAdjustPhaseIt = 0;
-    m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->adjustInit(sysName, sl.at(1))] = adjustinit;
+    pits = new cAdjustIterators();
+    m_adjustIteratorHash[chnName] = pits;
 }
 
 
@@ -767,17 +780,26 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 void cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr()
 {
     m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getGainCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getgaincorrection;
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjGainCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjgaincorrection;
 }
 
 
 void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
 {
+    cAdjustIterators *pits;
     double Corr;
 
+    // we will not crash if the user forgot to initialize the iterators
+    // but we will get error messages from server if the iterator becomes
+    // greater than adjustment order
+    if (m_adjustIteratorHash.contains(m_sAdjustChannel))
+        pits = m_adjustIteratorHash[m_sAdjustChannel];
+    else
+        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+
     Corr = m_AdjustTargetValue * m_AdjustCorrection / m_AdjustActualValue ; // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_AdjustPCBInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
-    m_nAdjustGainIt++;
+    m_MsgNrCmdList[m_AdjustPCBInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
+    pits->m_nAdjustGainIt++;
 }
 
 
@@ -792,20 +814,25 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 
 void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 {
-    m_AdjustActualValue = cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent))
-                         -cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_ConfigData.m_ReferenceAngle.m_nEntity, m_ConfigData.m_ReferenceAngle.m_sComponent));
+    m_AdjustActualValue = cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent));
     m_AdjustFrequency = m_pModule->m_pStorageSystem->getStoredValue(m_ConfigData.m_ReferenceFrequency.m_nEntity, m_ConfigData.m_ReferenceFrequency.m_sComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getphasecorrection;
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
 
 void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 {
+    cAdjustIterators *pits;
     double Corr;
 
-    Corr = symAngle(m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection)); // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_AdjustPCBInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
-    m_nAdjustPhaseIt++;
+    if (m_adjustIteratorHash.contains(m_sAdjustChannel))
+        pits = m_adjustIteratorHash[m_sAdjustChannel];
+    else
+        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+
+    Corr = symAngle((m_AdjustActualValue + m_AdjustCorrection) - m_AdjustTargetValue); // we simlpy correct the actualvalue before calculating corr
+    m_MsgNrCmdList[m_AdjustPCBInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
+    pits->m_nAdjustPhaseIt++;
 }
 
 
@@ -821,17 +848,33 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 void cAdjustmentModuleMeasProgram::adjustoffsetGetCorr()
 {
     m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getoffsetcorrection;
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjoffsetcorrection;
 }
 
 
 void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
 {
+    cAdjustIterators *pits;
     double Corr;
 
-    Corr = m_AdjustTargetValue - (m_AdjustActualValue + m_AdjustCorrection); // we simlpy correct the actualvalue before calculating corr
-    m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
-    m_nAdjustOffsetIt++;
+    if (m_adjustIteratorHash.contains(m_sAdjustChannel))
+        pits = m_adjustIteratorHash[m_sAdjustChannel];
+    else
+        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+
+    Corr = (m_AdjustActualValue + m_AdjustCorrection) - m_AdjustTargetValue; // we simlpy correct the actualvalue before calculating corr
+    m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
+    pits->m_nAdjustOffsetIt++;
+}
+
+
+void cAdjustmentModuleMeasProgram::fetchAuthorizationStatus()
+{
+    QList<QString> sysnameList;
+    sysnameList = m_AliasChannelHash.values();
+    m_AdjustPCBInterface = m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
+
+    m_MsgNrCmdList[m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
 }
 
 
@@ -985,7 +1028,9 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case adjustcomputation:
                 if (reply == ack)
+                {
                     emit computationContinue();
+                }
                 else
                 {
                     m_computationMachine.stop();
@@ -999,7 +1044,9 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case adjuststorage:
                 if (reply == ack)
+                {
                     emit storageContinue();
+                }
                 else
                 {
                     m_storageMachine.stop();
@@ -1015,7 +1062,8 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setadjustphasestatus:
             case setadjustoffsetstatus:
                 if (reply == ack)
-                    {} // nothing here to do
+                {
+                }
                 else
                 {
                     emit errMsg((tr(adjuststatusPCBErrMSG)));
@@ -1026,31 +1074,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case adjustinit:
-                if (reply == ack)
-                    {} // nothing here to do
-                else
-                {
-                    emit errMsg((tr(adjustinitPCBErrMSG)));
-#ifdef DEBUG
-                    qDebug() << adjustinitPCBErrMSG;
-#endif
-                    emit executionError();
-                }
-                break;
-
-            case getgaincorrection:
+            case getadjgaincorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
-                    /*
-                    if (fabs(m_AdjustCorrection - 1.0) > 1e-7)
-                    {
-                        m_adjustAmplitudeMachine.stop();
-                        emit errMsg(tr(adjustinitPCBErrMSG));
-                        emit adjustError();
-                    }
-                    else*/
                     emit adjustamplitudeContinue();
                 }
                 else
@@ -1081,17 +1108,11 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case getoffsetcorrection:
+            case getadjoffsetcorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
-                    if (fabs(m_AdjustCorrection) > 1e-7)
-                    {
-                        emit errMsg(tr(adjustinitPCBErrMSG));
-                        emit adjustError();
-                    }
-                    else
-                        emit adjustoffsetContinue();
+                    emit adjustoffsetContinue();
                 }
                 else
                 {
@@ -1111,26 +1132,19 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else
                 {
-                    emit errMsg(setGainNodeErrMsg);
+                    emit errMsg(setOffsetNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
-                    qDebug() << setGainNodeErrMsg;
+                    qDebug() << setOffsetNodeErrMsg;
 #endif
                     emit executionError();
                 }
                 break;
 
-            case getphasecorrection:
+            case getadjphasecorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
-                    /*
-                    if (fabs(m_AdjustCorrection) > 1e-7)
-                    {
-                        emit errMsg(tr(adjustinitPCBErrMSG));
-                        emit adjustError();
-                    }
-                    else*/
                     emit adjustphaseContinue();
                 }
                 else
@@ -1154,14 +1168,26 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     emit errMsg(setPhaseNodeErrMsg);
                     emit adjustError();
 #ifdef DEBUG
-                    qDebug() << setGainNodeErrMsg;
+                    qDebug() << setPhaseNodeErrMsg;
 #endif
                     emit executionError();
                 }
                 break;
+
+            case getauthorizationstatus:
+                if (reply == ack)
+                    m_bAuthorized = (answer.toInt() > 0);
+                else
+                    emit errMsg(readauthorizationErrMSG);
+
             }
         }
     }
+}
+
+cAdjustIterators::cAdjustIterators()
+{
+    m_nAdjustGainIt = m_nAdjustOffsetIt = m_nAdjustPhaseIt = 0;
 }
 
 }

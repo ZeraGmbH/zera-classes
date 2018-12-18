@@ -202,34 +202,67 @@ quint32 cPCBInterfacePrivate::isAvail(QString chnName, QString rngName)
 }
 
 
-quint32 cPCBInterfacePrivate::getGainCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterfacePrivate::getGainCorrection(QString chnName, QString rngName, double at)
 {
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:GAIN?").arg(chnName).arg(rngName), par= QString("%1;").arg(ampl));
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:GAIN?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
     m_MsgNrCmdList[msgnr] = getgaincorrection;
     return msgnr;
 }
 
 
-quint32 cPCBInterfacePrivate::getOffsetCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterfacePrivate::getAdjGainCorrection(QString chnName, QString rngName, double at)
 {
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:OFFS?").arg(chnName).arg(rngName), par= QString("%1;").arg(ampl));
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJG?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
+    m_MsgNrCmdList[msgnr] = getgaincorrection;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getOffsetCorrection(QString chnName, QString rngName, double at)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:OFFS?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
     m_MsgNrCmdList[msgnr] = getoffsetcorrection;
     return msgnr;
 }
 
 
-quint32 cPCBInterfacePrivate::getPhaseCorrection(QString chnName, QString rngName, double ampl)
+quint32 cPCBInterfacePrivate::getAdjOffsetCorrection(QString chnName, QString rngName, double at)
 {
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:PHAS?").arg(chnName).arg(rngName), par= QString("%1;").arg(ampl));
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJO?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
+    m_MsgNrCmdList[msgnr] = getoffsetcorrection;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getPhaseCorrection(QString chnName, QString rngName, double at)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:PHAS?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
+    m_MsgNrCmdList[msgnr] = getphasecorrection;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getAdjPhaseCorrection(QString chnName, QString rngName, double at)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJP?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
     m_MsgNrCmdList[msgnr] = getphasecorrection;
     return msgnr;
 }
@@ -540,6 +573,17 @@ quint32 cPCBInterfacePrivate::getAdjustmentStatus()
 }
 
 
+quint32 cPCBInterfacePrivate::getAuthorizationStatus()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("STAT:AUTH?"));
+    m_MsgNrCmdList[msgnr] = getauthorizationstatus;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getPCBErrorStatus()
 {
     QString cmd;
@@ -684,6 +728,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case getsamplerate:
         case getdspchannelsource:
         case getadjustmentstatus:
+        case getauthorizationstatus:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 

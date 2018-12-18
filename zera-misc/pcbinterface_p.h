@@ -56,6 +56,7 @@ enum pcbcommands
     getaliassource,
     getdspchannelsource,
     getadjustmentstatus,
+    getauthorizationstatus,
     getpcberrorstatus,
     getadjustmentchksum,
     getformfactorsource,
@@ -101,9 +102,12 @@ public:
     virtual quint32 getOVRejection(QString chnName, QString rngName); // double
     virtual quint32 getADCRejection(QString chnName, QString rngName); // double
     virtual quint32 isAvail(QString chnName, QString rngName); // bool
-    virtual quint32 getGainCorrection(QString chnName, QString rngName, double ampl); // double
-    virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double ampl); // double
-    virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double ampl); // double
+    virtual quint32 getGainCorrection(QString chnName, QString rngName, double at); // double
+    virtual quint32 getAdjGainCorrection(QString chnName, QString rngName, double at); // double
+    virtual quint32 getOffsetCorrection(QString chnName, QString rngName, double at); // double
+    virtual quint32 getAdjOffsetCorrection(QString chnName, QString rngName, double at); // double
+    virtual quint32 getPhaseCorrection(QString chnName, QString rngName, double at); // double
+    virtual quint32 getAdjPhaseCorrection(QString chnName, QString rngName, double at); // double
     virtual quint32 setRange(QString chnName, QString rngName); // reply (ack, nak..)
     virtual quint32 setMMode(QString mmode);
     virtual quint32 adjustComputation(); // all correction coefficients will be computed
@@ -141,6 +145,7 @@ public:
 
     // all commands to status interface
     virtual quint32 getAdjustmentStatus(); // int
+    virtual quint32 getAuthorizationStatus();
     virtual quint32 getPCBErrorStatus();
 
     // resource query more generell

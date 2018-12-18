@@ -17,9 +17,10 @@ else {
     include($$PWD/autobuilder.pri)
   }
 
-  exists(/home/plohmer/C++/zera-classes-project/project-paths.pri) {
-    include(/home/plohmer/C++/zera-classes-project/project-paths.pri)
+  exists(/home/plohmer/C++/zera-github-scripts/zera-classes-project/project-paths.pri) {
+    include(/home/plohmer/C++/zera-github-scripts//zera-classes-project/project-paths.pri)
   }
+
 }
 
 

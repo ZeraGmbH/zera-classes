@@ -6,6 +6,7 @@
 #include <QHash>
 #include <QStateMachine>
 #include <QState>
+#include <QTimer>
 #include <QFinalState>
 #include <pcbinterface.h>
 
@@ -45,16 +46,16 @@ enum adjustmentmoduleCmds
     readrangelist,
     adjustcomputation,
     adjuststorage,
-    adjustinit,
     setadjustgainstatus,
     setadjustphasestatus,
     setadjustoffsetstatus,
-    getgaincorrection,
+    getadjgaincorrection,
     setgainnode,
-    getphasecorrection,
+    getadjphasecorrection,
     setphasenode,
-    getoffsetcorrection,
-    setoffsetnode
+    getadjoffsetcorrection,
+    setoffsetnode,
+    getauthorizationstatus
 };
 
 
@@ -73,6 +74,17 @@ public:
 };
 
 
+class cAdjustIterators
+{
+public:
+    cAdjustIterators();
+
+    int m_nAdjustGainIt;
+    int m_nAdjustOffsetIt;
+    int m_nAdjustPhaseIt;
+};
+
+
 class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
@@ -82,6 +94,7 @@ public:
     virtual ~cAdjustmentModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
+    bool isAuthorized();
 
 signals:
     void computationContinue();
@@ -112,6 +125,7 @@ private:
     double m_AdjustCorrection;
     int m_AdjustEntity;
     QString m_AdjustComponent;
+    bool m_bAuthorized;
 
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);
@@ -128,6 +142,7 @@ private:
     QList<Zera::Server::cPCBInterface*> m_pcbInterfaceList; // a list of pcbinterfaces ... for clean up
     QHash<QString, cAdjustChannelInfo*> m_adjustChannelInfoHash;
     QHash<quint32, int> m_MsgNrCmdList;
+    QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
     int m_nAdjustGainIt;
     int m_nAdjustOffsetIt;
     int m_nAdjustPhaseIt;
@@ -199,6 +214,9 @@ private:
     QState m_adjustphaseSetNodeState;
     QFinalState m_adjustphaseFinishState;
 
+    // timer for cyclic eeprom access enable (authorization) query
+    QTimer m_AuthTimer;
+
 private slots:
     void setInterfaceValidation();
 
@@ -247,6 +265,8 @@ private slots:
     void setAdjustOffsetStartCommand(QVariant var);
     void adjustoffsetGetCorr();
     void adjustoffsetSetNode();
+
+    void fetchAuthorizationStatus();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
