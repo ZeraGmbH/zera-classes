@@ -195,6 +195,7 @@ private:
     QState m_storageTestState;
     QFinalState m_storageFinishState;
     int storageIt;
+    int storageType;
 
     // statemachine for amplitude adjustment
     QStateMachine m_adjustAmplitudeMachine;

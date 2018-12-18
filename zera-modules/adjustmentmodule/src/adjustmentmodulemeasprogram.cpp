@@ -675,9 +675,13 @@ void cAdjustmentModuleMeasProgram::computationFinished()
 
 void cAdjustmentModuleMeasProgram::storageStartCommand(QVariant var)
 {
-    if (var.toInt() == 1)
+    int par;
+    par = var.toInt();
+
+    if ((par == 1) || (par == 2))
     {
         storageIt = 0;
+        storageType = par;
         m_storageMachine.start();
     }
 }
@@ -686,7 +690,10 @@ void cAdjustmentModuleMeasProgram::storageStartCommand(QVariant var)
 void cAdjustmentModuleMeasProgram::storageStart()
 {
     // we have to start saving adjustment data for all particpating pcbservers
-    m_MsgNrCmdList[m_pcbInterfaceList.at(storageIt)->adjustStorage()] = adjuststorage;
+    if (storageType == 1)
+        m_MsgNrCmdList[m_pcbInterfaceList.at(storageIt)->adjustStorage()] = adjuststorage;
+    else
+        m_MsgNrCmdList[m_pcbInterfaceList.at(storageIt)->adjustStorageClamp()] = adjuststorage;
 }
 
 
