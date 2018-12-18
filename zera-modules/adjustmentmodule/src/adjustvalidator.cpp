@@ -4,11 +4,10 @@
 #include "adjustmentmodulemeasprogram.h"
 #include "adjustvalidator.h"
 
-<<<<<<< Updated upstream
-cAdjustValidator3d::cAdjustValidator3d(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
-=======
+namespace ADJUSTMENTMODULE
+{
+
 cAdjustValidator3d::cAdjustValidator3d(cAdjustmentModuleMeasProgram *measprogram)
->>>>>>> Stashed changes
     :m_pMeasprogram(measprogram)
 {
 }
@@ -69,11 +68,7 @@ void cAdjustValidator3d::exportMetaData(QJsonObject &jsObj)
 }
 
 
-<<<<<<< Updated upstream
-cAdjustValidator2::cAdjustValidator2(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram)
-=======
 cAdjustValidator2::cAdjustValidator2(cAdjustmentModuleMeasProgram *measprogram)
->>>>>>> Stashed changes
     :m_pMeasprogram(measprogram)
 {
 }
@@ -166,4 +161,6 @@ void cAdjustValidator3i::exportMetaData(QJsonObject &jsObj)
 
     QJsonArray jsonArr = {"not subject"};
     jsObj.insert("Data", jsonArr);
+}
+
 }

@@ -9,6 +9,9 @@
 #include "doublevalidator.h"
 #include "intvalidator.h"
 
+namespace ADJUSTMENTMODULE
+{
+
 class cAdjustmentModuleMeasProgram;
 
 class adjValidatorDatad
@@ -42,22 +45,14 @@ public:
 
 private:
     QHash<QString, adjValidatorDatad*> m_adjustValidatorHash; // the channels name is the key
-<<<<<<< Updated upstream
-    ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *m_pMeasprogram;
-=======
     cAdjustmentModuleMeasProgram *m_pMeasprogram;
->>>>>>> Stashed changes
 };
 
 
 class cAdjustValidator3i: public cParamValidator
 {
 public:
-<<<<<<< Updated upstream
-    cAdjustValidator3i(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram);
-=======
     cAdjustValidator3i(cAdjustmentModuleMeasProgram *measprogram);
->>>>>>> Stashed changes
     cAdjustValidator3i(const cAdjustValidator3i& ref);
     virtual ~cAdjustValidator3i(){}
 
@@ -68,11 +63,7 @@ public:
 
 private:
     QHash<QString, adjValidatorDatai*> m_adjustValidatorHash; // the channels name is the key
-<<<<<<< Updated upstream
-    ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *m_pMeasprogram;
-=======
     cAdjustmentModuleMeasProgram *m_pMeasprogram;
->>>>>>> Stashed changes
 };
 
 
@@ -80,11 +71,7 @@ private:
 class cAdjustValidator2: public cParamValidator
 {
 public:
-<<<<<<< Updated upstream
-    cAdjustValidator2(ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *measprogram);
-=======
     cAdjustValidator2(cAdjustmentModuleMeasProgram *measprogram);
->>>>>>> Stashed changes
     virtual ~cAdjustValidator2(){}
 
     virtual void addValidator(QString chnName, QStringList rList);
@@ -94,12 +81,9 @@ public:
 
 private:
     QHash<QString, QStringList*> m_adjustValidatorHash; // the channels name is the key
-<<<<<<< Updated upstream
-    ADJUSTMENTMODULE::cAdjustmentModuleMeasProgram *m_pMeasprogram;
-=======
     cAdjustmentModuleMeasProgram *m_pMeasprogram;
->>>>>>> Stashed changes
 };
 
+}
 #endif // ADJUSTVALIDATOR
 
