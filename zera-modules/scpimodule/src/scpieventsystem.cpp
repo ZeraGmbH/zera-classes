@@ -5,6 +5,7 @@
 
 #include <scpi.h>
 #include <ve_commandevent.h>
+#include <ve_storagesystem.h>
 #include <vcmp_componentdata.h>
 #include <vcmp_errordata.h>
 
@@ -83,23 +84,35 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             }
 
             // then it looks for parameter values
-            if (m_pModule->scpiClientInfoHash.contains(cName))
+            if (m_pModule->scpiParameterCmdInfoHash.contains(cName))
             {
                 QList<cSCPIClientInfo*> clientinfolist;
-                clientinfolist = m_pModule->scpiClientInfoHash.values();
+                clientinfolist = m_pModule->scpiParameterCmdInfoHash.values(cName);
 
                 for (int i = 0; i < clientinfolist.count(); i++)
                 {
                     cSCPIClientInfo* clientinfo;
                     clientinfo = clientinfolist.at(i);
-                    if (clientinfo->entityId() == entityId)
+
+                    QUuid clientId;
+                    clientId = t_cEvent->peerId();
+                    if (clientId.isNull() || clientId == clientinfo->getClient()->getClientId()) // test if this client sent command for this parameter
                     {
-                        m_pModule->scpiClientInfoHash.remove(cName, clientinfo);
-                        QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString)), clientinfo->getClient(), SLOT(removeSCPIClientInfo(QString)), Qt::QueuedConnection);
-                        emit clientinfoSignal(cName);
-                        disconnect(myConn);
-                        emit status(SCPI::ack);
-                        break;
+                        if (clientinfo->entityId() == entityId)
+                        {
+                            m_pModule->scpiParameterCmdInfoHash.remove(cName, clientinfo);
+                            QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString)), clientinfo->getClient(), SLOT(removeSCPIClientInfo(QString)), Qt::QueuedConnection);
+                            emit clientinfoSignal(cName);
+                            disconnect(myConn);
+                            if (clientinfo->parCmdType() == SCPIMODULE::parcmd)
+                                emit status(SCPI::ack);
+                            else
+                            {
+                                QString answer = m_pModule->m_pStorageSystem->getStoredValue(entityId, cName).toString();
+                                emit SignalAnswer(answer);
+                            }
+                            break;
+                        }
                     }
                 }
             }
@@ -145,10 +158,10 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                 entityId = eData->entityId();
 
                 // error notifications are sent for invalid parameters
-                if (m_pModule->scpiClientInfoHash.contains(cName))
+                if (m_pModule->scpiParameterCmdInfoHash.contains(cName))
                 {
                     QList<cSCPIClientInfo*> clientinfolist;
-                    clientinfolist = m_pModule->scpiClientInfoHash.values();
+                    clientinfolist = m_pModule->scpiParameterCmdInfoHash.values();
 
                     for (int i = 0; i < clientinfolist.count(); i++)
                     {
@@ -157,7 +170,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                         if (clientinfo->entityId() == entityId)
                         {
                             t_cEvent->accept();  // we caused the error event due to wrong parameter
-                            m_pModule->scpiClientInfoHash.remove(cName, clientinfo);
+                            m_pModule->scpiParameterCmdInfoHash.remove(cName, clientinfo);
                             QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString)), clientinfo->getClient(), SLOT(removeSCPIClientInfo(QString)), Qt::QueuedConnection);
                             emit clientinfoSignal(cName);
                             disconnect(myConn);
