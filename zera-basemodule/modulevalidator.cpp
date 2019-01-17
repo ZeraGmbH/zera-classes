@@ -44,17 +44,19 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                         if (param->isValidParameter(newval))
                         {
                             cData->setNewValue(newval);
-                            param->transaction(newval);
                             if (m_Parameter2ValidateHash[cName]->hasDeferredNotification())
                             {
                                 // in case of deferred notification the module will send a command event
-                                // with notification after all work is done
-                                // so we accept the command event here
-                                t_cEvent->accept();
+                                // or perhaps an error event for notification after all work is done
+
+                                param->transaction(t_cEvent->peerId(), newval);
+                                t_cEvent->accept(); // so we accept the command event here
                             }
                             else
                             {
-                                // otherwise we will convert the command events transaction into notification
+                                param->transaction(newval); // otherwise we "fire and forget" the new value
+
+                                // and convert the command events transaction into notification
                                 t_cEvent->setEventSubtype(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION);
                                 t_cEvent->eventData()->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
                                 t_cEvent->eventData()->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
