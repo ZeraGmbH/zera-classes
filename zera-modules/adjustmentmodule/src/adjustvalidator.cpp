@@ -163,4 +163,21 @@ void cAdjustValidator3i::exportMetaData(QJsonObject &jsObj)
     jsObj.insert("Data", jsonArr);
 }
 
+
+bool cAdjustValidatorFine::isValidParam(QVariant &)
+{
+    return true; // always good
+}
+
+
+void cAdjustValidatorFine::exportMetaData(QJsonObject &jsObj)
+{
+    jsObj.insert("Type", "ADJUSTDATA");
+
+    QJsonArray jsonArr = {"not subject"};
+    jsObj.insert("Data", jsonArr);
+}
+
+
+
 }

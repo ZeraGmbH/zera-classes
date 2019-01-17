@@ -84,6 +84,17 @@ private:
     cAdjustmentModuleMeasProgram *m_pMeasprogram;
 };
 
+
+class cAdjustValidatorFine: public cParamValidator
+{
+public:
+    cAdjustValidatorFine(){}
+    virtual ~cAdjustValidatorFine(){}
+
+    virtual bool isValidParam(QVariant& );
+    virtual void exportMetaData(QJsonObject& jsObj);
+};
+
 }
 #endif // ADJUSTVALIDATOR
 
