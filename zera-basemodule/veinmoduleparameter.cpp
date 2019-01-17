@@ -76,6 +76,11 @@ void cVeinModuleParameter::setValidator(cParamValidator *validator)
 void cVeinModuleParameter::transaction(QVariant newValue)
 {
     emit sigValueChanged(newValue);
-    // in case of deferred notification the event wa accepted by the module validator
-    // otherwise a notification will be sent later
+}
+
+
+void cVeinModuleParameter::transaction(QUuid clientId, QVariant newValue)
+{
+    mClientIdList.append(clientId); // in case of deferred notification the event was accepted by the module validator
+    emit sigValueChanged(newValue); // otherwise a notification will be sent later ... so we memorize the client id here
 }

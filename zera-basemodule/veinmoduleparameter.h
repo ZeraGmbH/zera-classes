@@ -5,6 +5,7 @@
 #include <QString>
 #include <QVariant>
 #include <QJsonArray>
+#include <QUuid>
 
 #include "veinmodulecomponent.h"
 
@@ -32,7 +33,8 @@ public:
     void setSCPIInfo(cSCPIInfo* scpiinfo);
     void setValidator(cParamValidator* validator);
 
-    void transaction(QVariant newValue); // we return true if transaction is valid
+    void transaction(QVariant newValue);
+    void transaction(QUuid clientId, QVariant newValue);
 
 private:
     bool m_bDeferredNotification; //
