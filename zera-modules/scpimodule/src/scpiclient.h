@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QHash>
 #include <QList>
+#include <QUuid>
 
 class QTcpSocket;
 
@@ -35,6 +36,7 @@ public:
     cSCPIStatus* getSCPIStatus(quint8 index);
     quint8 operationComplete();
     cIEEE4882* getIEEE4882();
+    QUuid getClientId();
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegate*> m_SCPIMeasureDelegateHash;
 
@@ -66,6 +68,7 @@ private:
     QList<cStatusBitSignal*> mStatusBitSignalList;
 
     QHash<cSCPIMeasure*, cSCPIMeasure*> m_SCPIMeasureTranslationHash;
+    QUuid mClientId;
 
     bool m_bAuthorisation;
     void setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList);

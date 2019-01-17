@@ -27,6 +27,8 @@ namespace SCPIMODULE
 cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface)
     :m_pModule(module), m_ConfigData(configdata), m_pSCPIInterface(iface)
 {
+    mClientId = QUuid::createUuid(); // we need an unique id in case we want to send deferred error notifications events
+
     m_bAuthorisation = false;
     m_sInputFifo = "";
 
@@ -65,6 +67,7 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList);
 
     connect(m_pModule->m_pSCPIEventSystem, SIGNAL(status(quint8)), this, SLOT(receiveStatus(quint8)));
+    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(SignalAnswer(QString)), this, SLOT(receiveAnswer(QString)));
 //    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(clientinfoSignal(QString)), this, SLOT(removeSCPIClientInfo(QString)));
 
     generateSCPIMeasureSystem();
@@ -74,7 +77,6 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
 
 cSCPIClient::~cSCPIClient()
 {
-
     for (int i = 0; i < mysConnectDelegateList.count(); i++)
     {
         cSignalConnectionDelegate* sCD;
@@ -215,6 +217,13 @@ void cSCPIClient::execCmd()
     }
 
 }
+
+
+QUuid cSCPIClient::getClientId()
+{
+    return mClientId;
+}
+
 
 void cSCPIClient::receiveStatus(quint8 stat)
 {
