@@ -55,7 +55,8 @@ enum adjustmentmoduleCmds
     setphasenode,
     getadjoffsetcorrection,
     setoffsetnode,
-    getauthorizationstatus
+    getauthorizationstatus,
+    sendtransparentcmd
 };
 
 
@@ -147,9 +148,6 @@ private:
     int m_nAdjustOffsetIt;
     int m_nAdjustPhaseIt;
 
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pHPWCountInfo; // the number of values we produce
-
     cVeinModuleParameter* m_pPARComputation;
     cVeinModuleParameter* m_pPARStorage;
     cVeinModuleParameter* m_pPARAdjustGainStatus;
@@ -159,6 +157,9 @@ private:
     cVeinModuleParameter* m_pPARAdjustAmplitude;
     cVeinModuleParameter* m_pPARAdjustPhase;
     cVeinModuleParameter* m_pPARAdjustOffset;
+    cVeinModuleParameter* m_pPARAdjustSend;
+    cVeinModuleParameter* m_pPARAdjustPCBData;
+    cVeinModuleParameter* m_pPARAdjustClampData;
 
     // statemachine for activating gets the following states
     QState m_rmConnectState; // we must connect first to resource manager
@@ -266,6 +267,10 @@ private slots:
     void setAdjustOffsetStartCommand(QVariant var);
     void adjustoffsetGetCorr();
     void adjustoffsetSetNode();
+
+    void transparentDataSend2Port(QVariant var);
+    void readwritePCBAdjustmentData(QVariant var);
+    void readwriteCLAMPAdjustmentData(QVariant var);
 
     void fetchAuthorizationStatus();
 

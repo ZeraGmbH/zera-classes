@@ -224,6 +224,8 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     cAdjustValidator3d* adjValidatord;
     cAdjustValidator3i* adjValidatori;
+    cAdjustValidatorFine* adjValidatorFine;
+
     cAdjustChannelInfo* adjChnInfo;
     QString sysName;
 
@@ -292,6 +294,9 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
         adjInitValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist);
     }
     m_pPARAdjustInit->setValidator(adjInitValidator);
+
+    adjValidatorFine = new cAdjustValidatorFine(); // we accept every thing here and test command when we work on it
+    m_pPARAdjustSend->setValidator(adjValidatorFine);
 }
 
 
@@ -400,7 +405,6 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     connect(m_pPARAdjustPhase, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustPhaseStartCommand(QVariant)));
 
-
     m_pPARAdjustOffset = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_Adjustoffset"),
                                                   QString("Component for setting 1 offset adjustment node"),
@@ -412,6 +416,40 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     scpiInfo = new cSCPIInfo("CALCULATE", "OFFSET", "10", m_pPARAdjustOffset->getName(), "0", "");
     m_pPARAdjustOffset->setSCPIInfo(scpiInfo);
     connect(m_pPARAdjustOffset, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustOffsetStartCommand(QVariant)));
+
+    m_pPARAdjustSend = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("PAR_AdjustSend"),
+                                                QString("Component for sending command to specified port"),
+                                                QVariant(QString("")),
+                                                true); // deferred notification necessary !!!!!
+
+    m_pModule->veinModuleParameterHash[key] = m_pPARAdjustSend;
+    // we will set the validator later after activation we will know the channel names and their ranges
+    scpiInfo = new cSCPIInfo("CALCULATE", "SEND", "10", m_pPARAdjustSend->getName(), "0", "");
+    m_pPARAdjustSend->setSCPIInfo(scpiInfo);
+    connect(m_pPARAdjustSend, SIGNAL(sigValueChanged(QVariant)), SLOT(transparentDataSend2Port(QVariant)));
+
+    m_pPARAdjustPCBData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   key = QString("PAR_AdjustPCBData"),
+                                                   QString("Component for reading and setting pcb adjustment data"),
+                                                   QVariant(QString("")),
+                                                   true); // deferred notification necessary !!!!!
+    m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPCBData;
+    // we will set the validator later after activation we will know the channel names and their ranges
+    scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "10", m_pPARAdjustPCBData->getName(), "0", "");
+    m_pPARAdjustPCBData->setSCPIInfo(scpiInfo);
+    connect(m_pPARAdjustPCBData, SIGNAL(sigValueChanged(QVariant)), SLOT(readwritePCBAdjustmentData(QVariant)));
+
+    m_pPARAdjustClampData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                     key = QString("PAR_AdjustCLAMPData"),
+                                                     QString("Component for reading and setting clamp adjustment data"),
+                                                     QVariant(QString("")),
+                                                     true); // deferred notification necessary !!!!!
+    m_pModule->veinModuleParameterHash[key] = m_pPARAdjustClampData;
+    // we will set the validator later after activation we will know the channel names and their ranges
+    scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "10", m_pPARAdjustClampData->getName(), "0", "");
+    m_pPARAdjustClampData->setSCPIInfo(scpiInfo);
+    connect(m_pPARAdjustClampData, SIGNAL(sigValueChanged(QVariant)), SLOT(readwriteCLAMPAdjustmentData(QVariant)));
 }
 
 
@@ -875,6 +913,35 @@ void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
 }
 
 
+void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
+{
+    QList<QString> sl;
+    int port;
+
+    sl = var.toString().split(',');
+    if (sl.count() == 2) // we expect a port number and a command
+    {
+        port = sl.at(0).toInt();
+        if (m_portChannelHash.contains(port))
+            m_MsgNrCmdList[m_adjustChannelInfoHash[m_portChannelHash[port]]->m_pPCBInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
+    }
+
+    m_pPARAdjustSend->setError();
+}
+
+
+void cAdjustmentModuleMeasProgram::readwritePCBAdjustmentData(QVariant var)
+{
+
+}
+
+
+void cAdjustmentModuleMeasProgram::readwriteCLAMPAdjustmentData(QVariant var)
+{
+
+}
+
+
 void cAdjustmentModuleMeasProgram::fetchAuthorizationStatus()
 {
     QList<QString> sysnameList;
@@ -1186,6 +1253,14 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     m_bAuthorized = (answer.toInt() > 0);
                 else
                     emit errMsg(readauthorizationErrMSG);
+                break;
+
+            case sendtransparentcmd:
+                if (reply == ack)
+                    m_pPARAdjustSend->setValue(answer);
+                else
+                    emit errMsg(transparentServerCmdErrMSG);
+                break;
 
             }
         }
