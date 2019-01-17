@@ -327,6 +327,13 @@ quint32 cPCBInterface::getAdjustmentChksum()
 }
 
 
+quint32 cPCBInterface::transparentCommand(QString cmd)
+{
+    Q_D(cPCBInterface);
+    return d->transparentCommand(cmd);
+}
+
+
 quint32 cPCBInterface::getSampleRate()
 {
     Q_D(cPCBInterface);

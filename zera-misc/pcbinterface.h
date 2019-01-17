@@ -109,6 +109,9 @@ public:
     virtual quint32 readSerialNr();
     virtual quint32 getAdjustmentChksum();
 
+    // sending a transparent command
+    virtual quint32 transparentCommand(QString cmd);
+
 signals:
     void tcpError(QAbstractSocket::SocketError errorCode);
     void serverAnswer(quint32 msgnr, quint8 reply, QVariant answer);

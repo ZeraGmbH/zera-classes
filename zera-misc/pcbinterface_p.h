@@ -73,7 +73,9 @@ enum pcbcommands
     getpcbversion,
     getfpgaversion,
     getctrlversion,
-    getserialnumber
+    getserialnumber,
+
+    transparentcommand
 };
 
 
@@ -161,6 +163,10 @@ public:
     virtual quint32 readCTRLVersion();
     virtual quint32 readSerialNr();
     virtual quint32 getAdjustmentChksum();
+
+    // sending a transparent command
+    virtual quint32 transparentCommand(QString cmd);
+
 
 
 protected slots:

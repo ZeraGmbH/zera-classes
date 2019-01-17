@@ -605,6 +605,17 @@ quint32 cPCBInterfacePrivate::getAdjustmentChksum()
     return msgnr;
 }
 
+
+quint32 cPCBInterfacePrivate::transparentCommand(QString cmd)
+{
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd);
+    m_MsgNrCmdList[msgnr] = transparentcommand;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::resourceAliasQuery(QString resourceType, QString resourceName)
 {
     QString cmd;
@@ -750,6 +761,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case getadjustmentchksum:
         case getpcberrorstatus:
         case getpowtypesource:
+        case transparentcommand:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
