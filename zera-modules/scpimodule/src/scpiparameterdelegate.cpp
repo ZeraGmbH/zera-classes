@@ -46,7 +46,8 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
     else
 
-        if (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) // test if we got an allowed cmd + 1 parameter
+        if ( (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
+             (cmd.isQuery(1) && ((scpiCmdType & SCPI::isQuery) > 0)) )     // test if we got an allowed query + 1 parameter
         {
             VeinComponent::ComponentData *cData;
             QVariant oldValue = m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName);
@@ -65,10 +66,15 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
             VeinEvent::CommandEvent *event;
             event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
+            event->setPeerId(client->getClientId());
 
             // we memorize : for component (componentname) the client to set something
-            cSCPIClientInfo *clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId);
-            m_pModule->scpiClientInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
+            cSCPIClientInfo *clientinfo;
+            if (cmd.isCommand(1))
+                clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
+            else
+                clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
+            m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
 
             QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString,cSCPIClientInfo*)), client, SLOT(addSCPIClientInfo(QString,cSCPIClientInfo*)));
             emit clientinfoSignal(m_pSCPICmdInfo->componentName, clientinfo);
