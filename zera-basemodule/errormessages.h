@@ -82,6 +82,8 @@
 #define interfaceETHErrMsg "Ethernet interface listen failed"
 #define interfaceSerialErrMsg "Serial interface not connected"
 
+#define transparentServerCmdErrMSG "Sending transparent server command failed"
+
 #define moduleActValueErrMsg "Actual Values not found"
 
 #define releaseNumberErrMsg "Release number not found"
