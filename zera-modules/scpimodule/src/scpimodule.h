@@ -50,7 +50,7 @@ public:
     virtual QByteArray getConfiguration() const;
     cSCPIServer* getSCPIServer();
 
-    QMultiHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
+    QMultiHash<QString, cSCPIClientInfo*> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
