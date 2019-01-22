@@ -923,7 +923,10 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
     {
         port = sl.at(0).toInt();
         if (m_portChannelHash.contains(port))
+        {
             m_MsgNrCmdList[m_adjustChannelInfoHash[m_portChannelHash[port]]->m_pPCBInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
+            return;
+        }
     }
 
     m_pPARAdjustSend->setError();
