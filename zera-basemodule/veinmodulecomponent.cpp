@@ -97,6 +97,7 @@ void cVeinModuleComponent::setError()
 
     errData = new VeinComponent::ErrorData();
 
+    errData->setEntityId(m_nEntityId);
     errData->setErrorDescription("");
     errData->setOriginalData(cData);
 
