@@ -108,7 +108,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                                 emit status(SCPI::ack);
                             else
                             {
-                                QString answer = m_pModule->m_pStorageSystem->getStoredValue(entityId, cName).toString();
+                                QString answer = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData())->newValue().toString();
                                 emit SignalAnswer(answer);
                             }
                             break;
