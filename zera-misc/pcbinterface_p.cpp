@@ -609,8 +609,14 @@ quint32 cPCBInterfacePrivate::getAdjustmentChksum()
 quint32 cPCBInterfacePrivate::transparentCommand(QString cmd)
 {
     quint32 msgnr;
+    QList<QString> sl;
 
-    msgnr = sendCommand(cmd);
+    sl = cmd.split(' ');
+    if (sl.count() <= 1)
+        msgnr = sendCommand(cmd);
+    else
+        msgnr = sendCommand(sl.at(0), sl.at(1));
+
     m_MsgNrCmdList[msgnr] = transparentcommand;
     return msgnr;
 }
