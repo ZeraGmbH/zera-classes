@@ -39,17 +39,22 @@ void cLambdaMeasDelegate::computeOutput()
 {
     double lambda;
 
-    if (input2 == 0)
-    {
-        lambda = qSNaN();
-    }
+    if (input1 == 0)
+        lambda = 0;
     else
     {
-        lambda = input1 / input2;
-        if (fabs(lambda) > 1.0)
-            lambda = 1.0;
-        // we would perhaps better create a complete new measurement module
-        // that compute P and S and then lambda
+        if (input2 == 0)
+        {
+            lambda = qSNaN();
+        }
+        else
+        {
+            lambda = input1 / input2;
+            if (fabs(lambda) > 1.0)
+                lambda = 1.0;
+            // we would perhaps better create a complete new measurement module
+            // that computes P and S and then lambda
+        }
     }
 
 #ifdef DEBUG
