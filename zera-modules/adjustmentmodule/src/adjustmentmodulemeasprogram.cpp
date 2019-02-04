@@ -1259,12 +1259,10 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 break;
 
             case sendtransparentcmd:
-                if (reply == ack)
-                    m_pPARAdjustSend->setValue(answer);
-                else
-                    emit errMsg(transparentServerCmdErrMSG);
+                // if (reply == ack)
+                // in any case we return the answer to client
+                m_pPARAdjustSend->setValue(answer);
                 break;
-
             }
         }
     }
