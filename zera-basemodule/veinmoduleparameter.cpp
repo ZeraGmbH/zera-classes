@@ -73,14 +73,30 @@ void cVeinModuleParameter::setValidator(cParamValidator *validator)
 }
 
 
-void cVeinModuleParameter::transaction(QVariant newValue)
+void cVeinModuleParameter::transaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd)
 {
-    emit sigValueChanged(newValue);
-}
+    mClientIdList.append(clientId);
 
-
-void cVeinModuleParameter::transaction(QUuid clientId, QVariant newValue)
-{
-    mClientIdList.append(clientId); // in case of deferred notification the event was accepted by the module validator
-    emit sigValueChanged(newValue); // otherwise a notification will be sent later ... so we memorize the client id here
+    if (vccmd == VeinComponent::ComponentData::Command::CCMD_FETCH)
+    {
+        if (hasDeferredNotification())
+        {
+            emit sigValueQuery();
+        }
+        else
+        {
+            setValue(oldValue); // this will send notification event
+        }
+    }
+    else
+    {
+        if (isValidParameter(newValue))
+        {
+            emit sigValueChanged(newValue);
+            if (!hasDeferredNotification())
+                setValue(newValue); // in case of no deferred if send the notification at once
+        }
+        else
+            setError(); // this will send an error notification
+    }
 }
