@@ -19,6 +19,7 @@ cModuleValidator::cModuleValidator(cBaseModule* module)
 
 void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 {
+    // is it an event for our module
     if (t_cEvent->eventData()->entityId() == m_pModule->m_nEntityId)
     {
         // is it a command event for setting component data
@@ -26,18 +27,45 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
         {
             // only transactions will be handled
             VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
-            if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::TRANSACTION && cData->eventCommand() != VeinComponent::ComponentData::Command::CCMD_FETCH)
+            if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::TRANSACTION)
             {
                 QString cName;
-                // does this componant data belong to our module
+                // does this component data belong to our module
                 if (m_keylist.indexOf(cName = cData->componentName()) != -1 )
                 {
                     // we only take new values if the old values are equal
                     if (cData->oldValue() == m_pModule->m_pStorageSystem->getStoredValue(m_pModule->m_nEntityId, cName))
                     {
                         cVeinModuleParameter *param;
-                        QVariant newval;
+
                         param = m_Parameter2ValidateHash[cName];
+                        param->transaction(t_cEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
+                    }
+                }
+            }
+        }
+
+        t_cEvent->accept(); // if it is for us we accept the event in any case.. the parameter will do the rest
+    }
+}
+
+
+/*
+
+                        if (cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_FETCH)
+                        {
+                            if (m_Parameter2ValidateHash[cName]->hasDeferredNotification())
+                            {
+
+                            }
+                            else
+
+
+
+                        }
+
+                        QVariant newval;
+
                         newval = cData->newValue();
 
                         // is newValue a valid parameter
@@ -90,7 +118,7 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
         }
     }
 }
-
+*/
 
 void cModuleValidator::setParameterHash(QHash<QString, cVeinModuleParameter *> &parameterhash)
 {
