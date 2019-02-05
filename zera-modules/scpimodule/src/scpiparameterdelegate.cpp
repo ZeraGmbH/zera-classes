@@ -35,6 +35,50 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
     scpiCmdType = getType();
     cSCPICommand cmd = sInput;
 
+    if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
+         (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
+         (cmd.isQuery(1) && ((scpiCmdType & SCPI::isQuery) > 0)) )     // test if we got an allowed query + 1 parameter
+    {
+        VeinComponent::ComponentData *cData;
+
+        cData = new VeinComponent::ComponentData();
+        cData->setEntityId(m_pSCPICmdInfo->entityId);
+        cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
+        cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
+        cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
+        cData->setComponentName(m_pSCPICmdInfo->componentName);
+        cData->setOldValue(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
+
+        if (cmd.isCommand(1))
+        {
+            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
+            cData->setNewValue(cmd.getParam(0));
+        }
+        else
+            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
+
+        VeinEvent::CommandEvent *event;
+        event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
+        event->setPeerId(client->getClientId());
+
+        // we memorize : for component (componentname) the client to set something
+        cSCPIClientInfo *clientinfo;
+        if (cmd.isCommand(1))
+            clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
+        else
+            clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
+
+        m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
+
+        QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString,cSCPIClientInfo*)), client, SLOT(addSCPIClientInfo(QString,cSCPIClientInfo*)));
+        emit clientinfoSignal(m_pSCPICmdInfo->componentName, clientinfo);
+        disconnect(myConn);
+
+        m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
+
+    }
+
+    /*
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) // test if we got an allowed query
     {
         QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
@@ -82,14 +126,15 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
             m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
         }
+        */
 
-        else
-        {
-            QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), client, SLOT(receiveStatus(quint8)));
-            emit signalStatus(SCPI::nak);
-            disconnect(myConn);
-            //client->receiveStatus(SCPI::nak);
-        }
+    else
+    {
+        QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), client, SLOT(receiveStatus(quint8)));
+        emit signalStatus(SCPI::nak);
+        disconnect(myConn);
+        //client->receiveStatus(SCPI::nak);
+    }
 
     return true;
 }
