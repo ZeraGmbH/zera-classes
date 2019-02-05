@@ -45,7 +45,6 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         cData->setEntityId(m_pSCPICmdInfo->entityId);
         cData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
         cData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
-        cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
         cData->setComponentName(m_pSCPICmdInfo->componentName);
         cData->setOldValue(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
 
