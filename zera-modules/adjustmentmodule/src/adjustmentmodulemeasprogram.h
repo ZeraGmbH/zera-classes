@@ -269,8 +269,10 @@ private slots:
     void adjustoffsetSetNode();
 
     void transparentDataSend2Port(QVariant var);
-    void readwritePCBAdjustmentData(QVariant var);
-    void readwriteCLAMPAdjustmentData(QVariant var);
+    void writePCBAdjustmentData(QVariant var);
+    void readPCBAdjustmentData();
+    void writeCLAMPAdjustmentData(QVariant var);
+    void readCLAMPAdjustmentData();
 
     void fetchAuthorizationStatus();
 

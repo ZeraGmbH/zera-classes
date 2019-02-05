@@ -438,7 +438,8 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "10", m_pPARAdjustPCBData->getName(), "0", "");
     m_pPARAdjustPCBData->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustPCBData, SIGNAL(sigValueChanged(QVariant)), SLOT(readwritePCBAdjustmentData(QVariant)));
+    connect(m_pPARAdjustPCBData, SIGNAL(sigValueChanged(QVariant)), SLOT(writePCBAdjustmentData(QVariant)));
+    connect(m_pPARAdjustPCBData, SIGNAL(sigValueQuery()), SLOT(readPCBAdjustmentData()));
 
     m_pPARAdjustClampData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_AdjustCLAMPData"),
@@ -449,7 +450,8 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "10", m_pPARAdjustClampData->getName(), "0", "");
     m_pPARAdjustClampData->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustClampData, SIGNAL(sigValueChanged(QVariant)), SLOT(readwriteCLAMPAdjustmentData(QVariant)));
+    connect(m_pPARAdjustClampData, SIGNAL(sigValueChanged(QVariant)), SLOT(writeCLAMPAdjustmentData(QVariant)));
+    connect(m_pPARAdjustClampData, SIGNAL(sigValueQuery()), SLOT(readCLAMPAdjustmentData()));
 }
 
 
@@ -933,15 +935,27 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
 }
 
 
-void cAdjustmentModuleMeasProgram::readwritePCBAdjustmentData(QVariant var)
+void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 {
-
+    m_pPARAdjustPCBData->setValue(QString("PCB ADJ Data write Test"));
 }
 
 
-void cAdjustmentModuleMeasProgram::readwriteCLAMPAdjustmentData(QVariant var)
+void cAdjustmentModuleMeasProgram::readPCBAdjustmentData()
 {
+    m_pPARAdjustPCBData->setValue(QString("PCB ADJ Data read Test"));
+}
 
+
+void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
+{
+    m_pPARAdjustClampData->setValue(QString("Clamp ADJ Data write Test"));
+}
+
+
+void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData()
+{
+    m_pPARAdjustClampData->setValue(QString("Clamp ADJ Data read Test"));
 }
 
 
