@@ -37,6 +37,7 @@ public:
 
 signals:
     void sigValueChanged(QVariant); // we connect here if we want to do something on changed values
+    void sigValueQuery(); // we connect here if we want to read a value before returning data from storage
 
 public slots:
     void setValue(QVariant value); // here we have to emit event for notification
