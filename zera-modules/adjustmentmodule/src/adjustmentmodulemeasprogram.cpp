@@ -297,6 +297,10 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     adjValidatorFine = new cAdjustValidatorFine(); // we accept every thing here and test command when we work on it
     m_pPARAdjustSend->setValidator(adjValidatorFine);
+    adjValidatorFine = new cAdjustValidatorFine();
+    m_pPARAdjustPCBData->setValidator(adjValidatorFine);
+    adjValidatorFine = new cAdjustValidatorFine();
+    m_pPARAdjustClampData->setValidator(adjValidatorFine);
 }
 
 
