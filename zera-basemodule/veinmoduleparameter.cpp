@@ -3,8 +3,8 @@
 #include "scpiinfo.h"
 
 
-cVeinModuleParameter::cVeinModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification)
-    :cVeinModuleComponent(entityId, eventsystem, name, description, initval), m_bDeferredNotification(deferredNotification)
+cVeinModuleParameter::cVeinModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification, bool deferredQueryNotification)
+    :cVeinModuleComponent(entityId, eventsystem, name, description, initval), m_bDeferredNotification(deferredNotification), m_bDeferredQueryNotification(deferredQueryNotification)
 {
     m_pValidator = 0;
 }
@@ -22,6 +22,12 @@ cVeinModuleParameter::~cVeinModuleParameter()
 bool cVeinModuleParameter::hasDeferredNotification()
 {
     return m_bDeferredNotification;
+}
+
+
+bool cVeinModuleParameter::hasDeferredQueryNotification()
+{
+    return m_bDeferredQueryNotification;
 }
 
 
@@ -79,9 +85,9 @@ void cVeinModuleParameter::transaction(QUuid clientId, QVariant newValue, QVaria
 
     if (vccmd == VeinComponent::ComponentData::Command::CCMD_FETCH)
     {
-        if (hasDeferredNotification())
+        if (hasDeferredQueryNotification())
         {
-            emit sigValueQuery();
+            emit sigValueQuery(newValue);
         }
         else
         {

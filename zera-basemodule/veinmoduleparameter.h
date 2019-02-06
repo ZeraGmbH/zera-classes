@@ -22,10 +22,11 @@ class cVeinModuleParameter: public cVeinModuleComponent
 {
     Q_OBJECT
 public:
-    cVeinModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification = false);
+    cVeinModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification = false, bool deferredQueryNotification = false);
     virtual ~cVeinModuleParameter();
 
     bool hasDeferredNotification();
+    bool hasDeferredQueryNotification();
     bool isValidParameter(QVariant& value);
 
     virtual void exportMetaData(QJsonObject &jsObj);
@@ -36,6 +37,7 @@ public:
 
 private:
     bool m_bDeferredNotification; //
+    bool m_bDeferredQueryNotification;
     cParamValidator* m_pValidator;
     cSCPIInfo* m_pscpiInfo;
 };
