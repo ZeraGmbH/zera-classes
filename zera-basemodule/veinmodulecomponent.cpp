@@ -98,7 +98,7 @@ void cVeinModuleComponent::setError()
     errData = new VeinComponent::ErrorData();
 
     errData->setEntityId(m_nEntityId);
-    errData->setErrorDescription("");
+    errData->setErrorDescription("Invalid parameter");
     errData->setOriginalData(cData);
 
     VeinEvent::CommandEvent *cEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, errData);
