@@ -421,37 +421,40 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                 key = QString("PAR_AdjustSend"),
                                                 QString("Component for sending command to specified port"),
                                                 QVariant(QString("")),
-                                                true); // deferred notification necessary !!!!!
+                                                false,
+                                                true); // deferred query notification necessary !!!!!
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustSend;
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "SEND", "10", m_pPARAdjustSend->getName(), "0", "");
     m_pPARAdjustSend->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustSend, SIGNAL(sigValueChanged(QVariant)), SLOT(transparentDataSend2Port(QVariant)));
+    connect(m_pPARAdjustSend, SIGNAL(sigValueQuery(QVariant)), SLOT(transparentDataSend2Port(QVariant)));
 
     m_pPARAdjustPCBData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_AdjustPCBData"),
                                                    QString("Component for reading and setting pcb adjustment data"),
                                                    QVariant(QString("")),
+                                                   false,
                                                    true); // deferred notification necessary !!!!!
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPCBData;
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "10", m_pPARAdjustPCBData->getName(), "0", "");
     m_pPARAdjustPCBData->setSCPIInfo(scpiInfo);
     connect(m_pPARAdjustPCBData, SIGNAL(sigValueChanged(QVariant)), SLOT(writePCBAdjustmentData(QVariant)));
-    connect(m_pPARAdjustPCBData, SIGNAL(sigValueQuery()), SLOT(readPCBAdjustmentData()));
+    connect(m_pPARAdjustPCBData, SIGNAL(sigValueQuery(QVariant)), SLOT(readPCBAdjustmentData(QVariant)));
 
     m_pPARAdjustClampData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_AdjustCLAMPData"),
                                                      QString("Component for reading and setting clamp adjustment data"),
                                                      QVariant(QString("")),
+                                                     false,
                                                      true); // deferred notification necessary !!!!!
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustClampData;
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "10", m_pPARAdjustClampData->getName(), "0", "");
     m_pPARAdjustClampData->setSCPIInfo(scpiInfo);
     connect(m_pPARAdjustClampData, SIGNAL(sigValueChanged(QVariant)), SLOT(writeCLAMPAdjustmentData(QVariant)));
-    connect(m_pPARAdjustClampData, SIGNAL(sigValueQuery()), SLOT(readCLAMPAdjustmentData()));
+    connect(m_pPARAdjustClampData, SIGNAL(sigValueQuery(QVariant)), SLOT(readCLAMPAdjustmentData(QVariant)));
 }
 
 
@@ -941,7 +944,7 @@ void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 }
 
 
-void cAdjustmentModuleMeasProgram::readPCBAdjustmentData()
+void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
 {
     m_pPARAdjustPCBData->setValue(QString("PCB ADJ Data read Test"));
 }
@@ -953,7 +956,7 @@ void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
 }
 
 
-void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData()
+void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData(QVariant)
 {
     m_pPARAdjustClampData->setValue(QString("Clamp ADJ Data read Test"));
 }
