@@ -24,6 +24,7 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
     {
         // is it a command event for setting component data
         if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
+
         {
             // only transactions will be handled
             VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
@@ -43,9 +44,9 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                     }
                 }
             }
-        }
 
-        t_cEvent->accept(); // if it is for us we accept the event in any case.. the parameter will do the rest
+            t_cEvent->accept(); // if it is for us we accept the event in any case.. the parameter will do the rest
+        }
     }
 }
 
