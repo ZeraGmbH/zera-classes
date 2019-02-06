@@ -41,11 +41,10 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 
                         param = m_Parameter2ValidateHash[cName];
                         param->transaction(t_cEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
+                        t_cEvent->accept(); // it is an event for us ... the parameter will do the rest
                     }
                 }
             }
-
-            t_cEvent->accept(); // if it is for us we accept the event in any case.. the parameter will do the rest
         }
     }
 }
