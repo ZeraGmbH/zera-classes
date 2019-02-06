@@ -48,11 +48,11 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         cData->setComponentName(m_pSCPICmdInfo->componentName);
         cData->setOldValue(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
 
-        if (cmd.isCommand(1))
-        {
-            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
+        if (!cmd.isQuery())
             cData->setNewValue(cmd.getParam(0));
-        }
+
+        if (cmd.isCommand(1))
+            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
         else
             cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
 
