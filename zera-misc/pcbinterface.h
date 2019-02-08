@@ -108,6 +108,8 @@ public:
     virtual quint32 readCTRLVersion();
     virtual quint32 readSerialNr();
     virtual quint32 getAdjustmentChksum();
+    virtual quint32 getPCBAdjustmentData();
+    virtual quint32 getClampAdjustmentData();
 
     // sending a transparent command
     virtual quint32 transparentCommand(QString cmd);

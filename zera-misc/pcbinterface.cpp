@@ -327,6 +327,20 @@ quint32 cPCBInterface::getAdjustmentChksum()
 }
 
 
+quint32 cPCBInterface::getPCBAdjustmentData()
+{
+    Q_D(cPCBInterface);
+    return d->getPCBAdjustmentData();
+}
+
+
+quint32 cPCBInterface::getClampAdjustmentData()
+{
+    Q_D(cPCBInterface);
+    return d->getClampAdjustmentData();
+}
+
+
 quint32 cPCBInterface::transparentCommand(QString cmd)
 {
     Q_D(cPCBInterface);

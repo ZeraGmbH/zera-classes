@@ -606,6 +606,28 @@ quint32 cPCBInterfacePrivate::getAdjustmentChksum()
 }
 
 
+quint32 cPCBInterfacePrivate::getPCBAdjustmentData()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ADJ:XML?"));
+    m_MsgNrCmdList[msgnr] = getadjustpcbxml;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::getClampAdjustmentData()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ADJ:CLAM:XML?"));
+    m_MsgNrCmdList[msgnr] = getadjustclampxml;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::transparentCommand(QString cmd)
 {
     quint32 msgnr;
@@ -765,6 +787,8 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case getctrlversion:
         case getserialnumber:
         case getadjustmentchksum:
+        case getadjustpcbxml:
+        case getadjustclampxml:
         case getpcberrorstatus:
         case getpowtypesource:
         case transparentcommand:
