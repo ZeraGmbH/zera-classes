@@ -950,7 +950,7 @@ void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 
 void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
 {
-    m_pPARAdjustPCBData->setValue(QString("PCB ADJ Data read Test"));
+    m_MsgNrCmdList[m_AdjustPCBInterface->getPCBAdjustmentData()] = getpcbadjustmentdata;
 }
 
 
@@ -962,7 +962,7 @@ void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
 
 void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData(QVariant)
 {
-    m_pPARAdjustClampData->setValue(QString("Clamp ADJ Data read Test"));
+    m_MsgNrCmdList[m_AdjustPCBInterface->getClampAdjustmentData()] = getclampadjustmentdata;
 }
 
 
@@ -1283,6 +1283,20 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 // if (reply == ack)
                 // in any case we return the answer to client
                 m_pPARAdjustSend->setValue(answer);
+                break;
+
+            case getpcbadjustmentdata:
+                if (reply == ack)
+                    m_pPARAdjustPCBData->setValue(answer);
+                else
+                    m_pPARAdjustPCBData->setError();
+                break;
+
+            case getclampadjustmentdata:
+                if (reply == ack)
+                    m_pPARAdjustClampData->setValue(answer);
+                else
+                    m_pPARAdjustClampData->setError();
                 break;
             }
         }

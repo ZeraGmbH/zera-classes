@@ -55,6 +55,8 @@ enum adjustmentmoduleCmds
     setphasenode,
     getadjoffsetcorrection,
     setoffsetnode,
+    getpcbadjustmentdata,
+    getclampadjustmentdata,
     getauthorizationstatus,
     sendtransparentcmd
 };
