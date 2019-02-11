@@ -15,7 +15,7 @@ class cPower3MeasDelegate : public QObject
     Q_OBJECT
 
 public:
-    cPower3MeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal = false);
+    cPower3MeasDelegate(cVeinModuleActvalue *pactvalue, cVeinModuleActvalue *qactvalue, cVeinModuleActvalue *sactvalue, bool withSignal = false);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -25,7 +25,9 @@ signals:
     void measuring(int);
 
 private:
-    cVeinModuleActvalue *m_pActValue;
+    cVeinModuleActvalue *m_ppActValue;
+    cVeinModuleActvalue *m_pqActValue;
+    cVeinModuleActvalue *m_psActValue;
     bool m_bSignal;
     QList<double> input1;
     QList<double> input2;

@@ -74,8 +74,8 @@ void cPower3ModuleMeasProgram::generateInterface()
     for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++)
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_HPW%1").arg(i+1),
-                                            QString("Component forwards harmonic power actual values"),
+                                            QString("ACT_HPP%1").arg(i+1),
+                                            QString("Component forwards harmonic power active values"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("L%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("W");
@@ -85,6 +85,33 @@ void cPower3ModuleMeasProgram::generateInterface()
 
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_HPQ%1").arg(i+1),
+                                            QString("Component forwards harmonic power reactive values"),
+                                            QVariant(0.0) );
+        pActvalue->setChannelName(QString("L%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
+        pActvalue->setUnit("Var");
+
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pActvalue->setSCPIInfo(pSCPIInfo);
+
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_HPS%1").arg(i+1),
+                                            QString("Component forwards harmonic power apparent values"),
+                                            QVariant(0.0) );
+        pActvalue->setChannelName(QString("L%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
+        pActvalue->setUnit("VA");
+
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pActvalue->setSCPIInfo(pSCPIInfo);
+
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
     }
 
     m_pHPWCountInfo = new cVeinModuleMetaData(QString("HPWCount"), QVariant(m_ConfigData.m_nPowerSystemCount));
@@ -122,11 +149,11 @@ void cPower3ModuleMeasProgram::searchActualValues()
 
             if (i == (m_ConfigData.m_nPowerSystemCount-1))
             {
-                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i), true);
+                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2),true);
                 connect(cPMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
             }
             else
-                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i));
+                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2));
 
             m_Power3MeasDelegateList.append(cPMD);
 

@@ -1,6 +1,7 @@
 #include <QDebug>
 
 #include <veinmoduleactvalue.h>
+#include <math.h>
 
 #include "debug.h"
 #include "power3measdelegate.h"
@@ -9,8 +10,8 @@
 namespace  POWER3MODULE
 {
 
-cPower3MeasDelegate::cPower3MeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal)
-    :m_pActValue(actvalue), m_bSignal(withSignal)
+cPower3MeasDelegate::cPower3MeasDelegate(cVeinModuleActvalue *pactvalue, cVeinModuleActvalue *qactvalue, cVeinModuleActvalue *sactvalue, bool withSignal)
+    :m_ppActValue(pactvalue), m_pqActValue(qactvalue), m_psActValue(sactvalue), m_bSignal(withSignal)
 {
 }
 
@@ -35,7 +36,7 @@ void cPower3MeasDelegate::actValueInput2(QVariant val)
 
 void cPower3MeasDelegate::computeOutput()
 {
-    QList<double> resultList;
+    QList<double> resultListP, resultListQ, resultListS;
 
     int n = input1.count() < input2.count() ? input1.count() : input2.count();
     n = n >> 1; // we always compute pairs of values
@@ -66,13 +67,18 @@ void cPower3MeasDelegate::computeOutput()
             resultReal = ((real1 * real2) + (im1 * im2)) / 2.0;
             resultIm = ((real1 * im2) - (real2 *im1)) / 2.0;
 
-            resultList.append(resultReal);
-            resultList.append(resultIm);
+            resultListP.append(resultReal);
+            resultListQ.append(resultIm);
+            resultListS.append(sqrt((resultReal * resultReal) + (resultIm * resultIm)));
         }
 
         QVariant list;
-        list = QVariant::fromValue<QList<double> >(resultList);
-        m_pActValue->setValue(list);
+        list = QVariant::fromValue<QList<double> >(resultListP);
+        m_ppActValue->setValue(list);
+        list = QVariant::fromValue<QList<double> >(resultListQ);
+        m_pqActValue->setValue(list);
+        list = QVariant::fromValue<QList<double> >(resultListS);
+        m_psActValue->setValue(list);
 
 #ifdef DEBUG
         QString ts;
