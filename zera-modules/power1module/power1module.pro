@@ -65,3 +65,6 @@ RESOURCES += \
 
 include(../../zera-classes.pri)
 
+DISTFILES += \
+    src/mt310s2-power1module4.xml
+
