@@ -31,9 +31,9 @@
             </dutinput>
             <refinput>
                 <n>3</n>
-                <inp1>fo0</inp1>
-                <inp2>fo1</inp2>
-                <inp3>fo2</inp3>
+                <inp1>fo1</inp1>
+                <inp2>fo2</inp2>
+                <inp3>fo3</inp3>
             </refinput>
             <interval>2.0</interval>
         </measure>
@@ -41,7 +41,7 @@
     <parameter>
         <measure>
             <dutinput>sh0</dutinput>
-            <refinput>fo0</refinput>
+            <refinput>fo1</refinput>
             <mode>mrate</mode>
             <dutconstant>10000</dutconstant>
             <refconstant>5e+08</refconstant>
