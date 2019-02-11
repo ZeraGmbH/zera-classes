@@ -7,11 +7,10 @@
         <measure>
             <inputentity>1060</inputentity>
             <system>
-                <n>4</n>
+                <n>3</n>
                 <pms1>ACT_FFT1,ACT_FFT4,P1(UL1xIL1)</pms1>
                 <pms2>ACT_FFT2,ACT_FFT5,P2(UL2xIL2)</pms2>
                 <pms3>ACT_FFT3,ACT_FFT6,P3(UL3xIL3)</pms3>
-                <pms4>ACT_FFT7,ACT_FFT8,P3(UNxIN)</pms4>
             </system>
         </measure>
     </configuration>
