@@ -128,11 +128,11 @@ cRangeMeasChannel::~cRangeMeasChannel()
 
 quint32 cRangeMeasChannel::setRange(QString range)
 {
-    m_sNewRange = range;
+    m_sNewRange = m_RangeInfoHash[range].name;
     m_sActRange = m_sNewRange;
     if (m_bActive)
     {
-        quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name);
+        quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_sActRange);
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
     }
