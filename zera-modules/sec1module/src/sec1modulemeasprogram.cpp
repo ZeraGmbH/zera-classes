@@ -1211,6 +1211,9 @@ void cSec1ModuleMeasProgram::activationDone()
 
     setValidators();
 
+    // we ask for the reference constant of the selected Input
+    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
+
     emit activated();
 }
 
