@@ -58,6 +58,7 @@ OTHER_FILES += \
     src/mt310s2-power1module.xml \
     src/mt310s2-power1module2.xml \
     src/mt310s2-power1module3.xml \
+    src/mt310s2-power1module4.xml \
     src/com5003-power1moduleREF.xml
 
 RESOURCES += \
@@ -65,6 +66,4 @@ RESOURCES += \
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/mt310s2-power1module4.xml
 
