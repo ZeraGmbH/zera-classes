@@ -2405,7 +2405,8 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     setActualValuesNames();
-    setFoutPowerModes();
+    setFrequencyScales();
+    setFoutConstants();
 
     emit m_pModule->parameterChanged();
 }
