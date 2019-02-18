@@ -55,6 +55,7 @@ enum sec1moduleCmds
 
     actualizeprogress,
     actualizestatus,
+    actualizeenergy,
 
     setsync,
     setmeaspulses,
@@ -70,7 +71,7 @@ enum sec1moduleCmds
 
     readintregister,
     resetintregister,
-    readmtcount
+    readvicount
 
 };
 
@@ -184,7 +185,9 @@ private:
     cVeinModuleParameter* m_pStartStopPar;
     cVeinModuleActvalue* m_pStatusAct;
     cVeinModuleActvalue* m_pProgressAct;
+    cVeinModuleActvalue* m_pEnergyAct;
     cVeinModuleActvalue* m_pResultAct;
+    cVeinModuleParameter* m_pContinousPar;
 
     cStringValidator *m_pDutConstanstUnitValidator;
     QString m_sDutConstantUnit;
@@ -208,9 +211,11 @@ private:
     double m_fResult; // error value in %
     quint32 m_nMTCNTStart;
     quint32 m_nMTCNTact;
-    quint32 m_nMTCNTfin;
+    quint32 m_nVIfin;
+    quint32 m_nVIAct;
     quint32 m_nTargetValue;
     double m_fProgress; // progress value in %
+    double m_fEnergy;
     quint32 m_nIntReg;
 
 private slots:
