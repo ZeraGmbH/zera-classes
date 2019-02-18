@@ -296,11 +296,20 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pStartStopPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_STARTSTOP"),
                                                QString("Component start/stops measurement"),
-                                               QVariant((double)0.0));
+                                               QVariant((int)0));
     m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:START").arg(modNr), "10", "PAR_STARTSTOP", "0", ""));
     m_pModule->veinModuleParameterHash[key] =  m_pStartStopPar; // for modules use
     iValidator = new cIntValidator(0, 1, 1);
     m_pStartStopPar->setValidator(iValidator);
+
+    m_pContinousPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("PAR_CONTINOUS"),
+                                               QString("Component enables/disables continous measurement"),
+                                               QVariant(int(0)));
+    m_pContinousPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:CONTINOUS").arg(modNr), "10", "PAR_CONTINOUS", "0", ""));
+    m_pModule->veinModuleParameterHash[key] =  m_pContinousPar; // for modules use
+    iValidator = new cIntValidator(0, 1, 1);
+    m_pContinousPar->setValidator(iValidator);
 
     // after configuration we still have to set the string validators
 
@@ -317,6 +326,13 @@ void cSec1ModuleMeasProgram::generateInterface()
                                              QVariant((double) 0.0));
     m_pModule->veinModuleActvalueList.append(m_pProgressAct); // and for the modules interface
     m_pProgressAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", "ACT_Progress", "0", ""));
+
+    m_pEnergyAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           QString("ACT_Energy"),
+                                           QString("Component holds energy since last start information"),
+                                           QVariant((double) 0.0));
+    m_pModule->veinModuleActvalueList.append(m_pEnergyAct); // and for the modules interface
+    m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", "ACT_Energy", "0", ""));
 
     m_pResultAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            QString("ACT_Result"),
@@ -553,6 +569,31 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
 
+            case actualizeenergy:
+            {
+                if (reply == ack)
+                {
+                    m_nVIAct = answer.toUInt(&ok);
+                    if (m_nStatus > ECALCSTATUS::ARMED)
+                        m_fEnergy = m_nVIAct / m_ConfigData.m_fRefConstant.m_fPar;
+                    else
+                        m_fEnergy = 0.0;
+
+                    m_pEnergyAct->setValue(m_fEnergy);
+                }
+                else
+                {
+                    {
+                        emit errMsg((tr(readsecregisterErrMsg)));
+#ifdef DEBUG
+                        qDebug() << readsecregisterErrMsg;
+#endif
+                        emit executionError();
+                    }
+                }
+                break;
+            }
+
 
             case actualizestatus:
             {
@@ -754,10 +795,10 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit executionError();
                 }
                 break;
-            case readmtcount:
+            case readvicount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    m_nMTCNTfin = answer.toLongLong(&ok);
+                    m_nVIfin = answer.toLongLong(&ok);
                     emit interruptContinue();
                 }
                 else
@@ -894,7 +935,7 @@ void cSec1ModuleMeasProgram::cmpDependencies()
         double test = constant;
         test *= m_ConfigData.m_fEnergy.m_fPar;
         test = floor(test);
-        quint32 itest = (quint32) test;
+        //quint32 itest = (quint32) test;
         m_ConfigData.m_nMRate.m_nPar = ceil(constant * m_ConfigData.m_fEnergy.m_fPar);
         m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / constant);
     }
@@ -1284,7 +1325,10 @@ void cSec1ModuleMeasProgram::setSlaveMux()
 
 void cSec1ModuleMeasProgram::setMasterMeasMode()
 {
-    m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::ERRORMEASMASTER)] = setmastermeasmode;
+    if (m_pContinousPar->getValue().toInt() == 0)
+        m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
+    else
+        m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::CONTERRORMASTER)] = setmastermeasmode;
 }
 
 
@@ -1330,7 +1374,7 @@ void cSec1ModuleMeasProgram::resetIntRegister()
 
 void cSec1ModuleMeasProgram::readMTCountact()
 {
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTfin)] = readmtcount;
+    m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTfin)] = readvicount;
 }
 
 
@@ -1338,13 +1382,18 @@ void cSec1ModuleMeasProgram::setECResult()
 {
     m_nStatus = ECALCSTATUS::READY;
     m_fProgress = 100.0;
-    m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nMTCNTfin) * 100.0 / m_nMTCNTfin;
+    m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nVIfin) * 100.0 / m_nVIfin;
+    m_fEnergy = 1.0 * m_nVIfin / m_ConfigData.m_fRefConstant.m_fPar;
     m_pStatusAct->setValue(QVariant(m_nStatus));
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_pResultAct->setValue(QVariant(m_fResult));
-    m_pStartStopPar->setValue(QVariant(0)); // restart enable
-    newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
-    m_ActualizeTimer.stop();
+    m_pEnergyAct->setValue(m_fEnergy);
+    if (m_pContinousPar->getValue().toInt() == 0)
+    {
+        m_pStartStopPar->setValue(QVariant(0)); // restart enable
+        newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
+        m_ActualizeTimer.stop();
+    }
 }
 
 
@@ -1472,6 +1521,7 @@ void cSec1ModuleMeasProgram::Actualize()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
+    m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
 }
 
 
