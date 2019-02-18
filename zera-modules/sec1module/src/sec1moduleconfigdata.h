@@ -12,6 +12,13 @@ namespace SEC1MODULE
 // used for configuration export
 
 
+struct boolParameter
+{
+    QString m_sKey;
+    quint8 m_nActive; // active or 1,0
+};
+
+
 struct doubleParameter
 {
     QString m_sKey;
@@ -51,6 +58,9 @@ public:
     double m_fMeasInterval; // measuring interval 0.2 .. 5.0 sec. (time between actualizations)
     doubleParameter m_fDutConstant;
     doubleParameter m_fRefConstant;
+    boolParameter m_bContinous;
+    doubleParameter m_fT0Value;
+    doubleParameter m_fT1Value;
     intParameter m_nTarget;
     doubleParameter m_fEnergy;
     intParameter m_nMRate;

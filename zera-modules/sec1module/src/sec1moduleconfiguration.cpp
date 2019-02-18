@@ -57,6 +57,9 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:target"] = setTarget;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:energy"] = setEnergy;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:mrate"] = setMRate;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:continous"] = setContinousMode;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:t0value"] = setT0Value;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:t1value"] = setT1Value;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -81,6 +84,12 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
     dPar = &m_pSec1ModulConfigData->m_fEnergy;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
 
+    dPar = &m_pSec1ModulConfigData->m_fT0Value;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
+
+    dPar = &m_pSec1ModulConfigData->m_fT1Value;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
+
     intParameter* iPar;
     iPar = &m_pSec1ModulConfigData->m_nTarget;
     m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nPar));
@@ -97,6 +106,11 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
 
     sPar = &m_pSec1ModulConfigData->m_sMode;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sPar);
+
+    boolParameter* bPar;
+
+    bPar = &m_pSec1ModulConfigData->m_bContinous;
+    m_pXMLReader->setValue(bPar->m_sKey, QString("1").arg(bPar->m_nActive));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -174,7 +188,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
                 }
             break;
         }
-
         case setEmbedded:
             m_pSec1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
@@ -213,6 +226,19 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             m_pSec1ModulConfigData->m_nMRate.m_sKey = key;
             m_pSec1ModulConfigData->m_nMRate.m_nPar = m_pXMLReader->getValue(key).toUInt(&ok);
             break;
+        case setContinousMode:
+            m_pSec1ModulConfigData->m_bContinous.m_sKey = key;
+            m_pSec1ModulConfigData->m_bContinous.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setT0Value:
+            m_pSec1ModulConfigData->m_fT0Value.m_sKey = key;
+            m_pSec1ModulConfigData->m_fT0Value.m_fPar = m_pXMLReader->getValue(key).toDouble();
+            break;
+        case setT1Value:
+            m_pSec1ModulConfigData->m_fT1Value.m_sKey = key;
+            m_pSec1ModulConfigData->m_fT1Value.m_fPar = m_pXMLReader->getValue(key).toDouble();
+            break;
+
         default:
             QString name;
             if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32))
