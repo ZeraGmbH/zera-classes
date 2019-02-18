@@ -49,6 +49,9 @@
             <target>500000</target>
             <energy>0.001</energy>
             <mrate>10</mrate>
+            <continous>0</continous>
+            <t0value>0.0</t0value>
+            <t1value>0.0</t1value>
         </measure>
     </parameter>
 </sec1modconfpar>
