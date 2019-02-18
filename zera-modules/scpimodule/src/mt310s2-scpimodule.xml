@@ -15,7 +15,7 @@
                 <device>/dev/ttyUSB0</device>
             </serialdevice>
             <device>
-                <name>COM5003</name>
+                <name>MT310S2</name>
                 <identification>Zera GmbH KÃ¶nigswinter, MT310S2, R1.0.1</identification>
             </device>
             <status>
