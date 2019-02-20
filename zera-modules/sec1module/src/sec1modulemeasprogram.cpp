@@ -1380,7 +1380,16 @@ void cSec1ModuleMeasProgram::readMTCountact()
 
 void cSec1ModuleMeasProgram::setECResult()
 {
-    m_nStatus = ECALCSTATUS::READY;
+    if (m_pContinousPar->getValue().toInt() == 0)
+    {
+        m_pStartStopPar->setValue(QVariant(0)); // restart enable
+        newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
+        m_ActualizeTimer.stop();
+        m_nStatus = ECALCSTATUS::READY;
+    }
+    else
+        m_nStatus = ECALCSTATUS::READY + ECALCSTATUS::STARTED;
+
     m_fProgress = 100.0;
     m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nVIfin) * 100.0 / m_nVIfin;
     m_fEnergy = 1.0 * m_nVIfin / m_ConfigData.m_fRefConstant.m_fPar;
@@ -1388,12 +1397,7 @@ void cSec1ModuleMeasProgram::setECResult()
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
-    if (m_pContinousPar->getValue().toInt() == 0)
-    {
-        m_pStartStopPar->setValue(QVariant(0)); // restart enable
-        newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
-        m_ActualizeTimer.stop();
-    }
+
 }
 
 
