@@ -288,7 +288,7 @@ void cSec1ModuleMeasProgram::generateInterface()
                                             key = QString("PAR_Energy"),
                                             QString("Component for reading and setting the modules energy value"),
                                             QVariant((double)0.0));
-    m_pEnergyPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:ENERGY").arg(modNr), "10", "PAR_Energy", "0", ""));
+    m_pEnergyPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:PARENERGY").arg(modNr), "10", "PAR_Energy", "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyPar; // for modules use
     dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-5);
     m_pEnergyPar->setValidator(dValidator);
@@ -332,7 +332,7 @@ void cSec1ModuleMeasProgram::generateInterface()
                                            QString("Component holds energy since last start information"),
                                            QVariant((double) 0.0));
     m_pModule->veinModuleActvalueList.append(m_pEnergyAct); // and for the modules interface
-    m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", "ACT_Energy", "0", ""));
+    m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ACTENERGY").arg(modNr), "2", "ACT_Energy", "0", ""));
 
     m_pResultAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            QString("ACT_Result"),
@@ -599,7 +599,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_nStatus = answer.toUInt(&ok) & 7;
+                    // once ready we leave status ready (continous mode)
+                    m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
                     m_pStatusAct->setValue(QVariant(m_nStatus));
                 }
                 else
