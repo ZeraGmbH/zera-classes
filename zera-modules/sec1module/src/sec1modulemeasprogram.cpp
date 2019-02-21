@@ -1511,6 +1511,8 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
     m_pDutConstanstUnitValidator->setValidator(sl);
     m_pEnergyAct->setUnit(getEnergyUnit());
     m_pEnergyPar->setUnit(getEnergyUnit());
+    m_pEnergyAct->setValue(0.0);
+    m_pResultAct->setValue(0.0);
     m_pModule->exportMetaData();
 
     emit m_pModule->parameterChanged();
