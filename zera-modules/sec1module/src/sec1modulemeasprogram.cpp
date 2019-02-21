@@ -1440,7 +1440,7 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
     }
     else
     {
-        if ((m_nStatus & (ECALCSTATUS::ARMED | m_nStatus == ECALCSTATUS::STARTED)) != 0)
+        if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0)
             m_nStatus = ECALCSTATUS::ABORT;
         m_pStatusAct->setValue(QVariant(m_nStatus));
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
