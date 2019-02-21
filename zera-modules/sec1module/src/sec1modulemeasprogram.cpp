@@ -850,6 +850,9 @@ void cSec1ModuleMeasProgram::setValidators()
 
     m_pDutConstanstUnitValidator = new cStringValidator(getDutConstUnitValidator());
     m_pDutConstantUnitPar->setValidator(m_pDutConstanstUnitValidator);
+
+    m_pEnergyAct->setUnit(getEnergyUnit());
+    m_pEnergyPar->setUnit(getEnergyUnit());
 }
 
 
@@ -868,6 +871,24 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
         sl << QString("I/kVAh") << QString("VAh/I");
 
     return sl;
+}
+
+
+QString cSec1ModuleMeasProgram::getEnergyUnit()
+{
+    QString s;
+    QString powType;
+
+    powType = mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+
+    if (powType.contains('P'))
+        s = QString("kWh");
+    if (powType.contains('Q'))
+        s = QString("kVarh");
+    if (powType.contains('S'))
+        s = QString("kVAh");
+
+    return s;
 }
 
 
@@ -1486,6 +1507,8 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
     sl = getDutConstUnitValidator();
     initDutConstantUnit(sl);
     m_pDutConstanstUnitValidator->setValidator(sl);
+    m_pEnergyAct->setUnit(getEnergyUnit());
+    m_pEnergyPar->setUnit(getEnergyUnit());
     m_pModule->exportMetaData();
 
     emit m_pModule->parameterChanged();

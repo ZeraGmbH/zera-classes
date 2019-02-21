@@ -196,6 +196,7 @@ private:
     void setValidators();
 
     QStringList getDutConstUnitValidator();
+    QString getEnergyUnit();
     void initDutConstantUnit(QStringList sl);
     void initDutConstantUnit();
 
