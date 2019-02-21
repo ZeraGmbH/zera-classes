@@ -294,22 +294,22 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pEnergyPar->setValidator(dValidator);
 
     m_pStartStopPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                               key = QString("PAR_STARTSTOP"),
+                                               key = QString("PAR_StartStop"),
                                                QString("Component start/stops measurement"),
                                                QVariant((int)0));
-    m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:START").arg(modNr), "10", "PAR_STARTSTOP", "0", ""));
+    m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:START").arg(modNr), "10", "PAR_StartStop", "0", ""));
     m_pModule->veinModuleParameterHash[key] =  m_pStartStopPar; // for modules use
     iValidator = new cIntValidator(0, 1, 1);
     m_pStartStopPar->setValidator(iValidator);
 
-    m_pContinousPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                               key = QString("PAR_CONTINOUS"),
-                                               QString("Component enables/disables continous measurement"),
-                                               QVariant(int(0)));
-    m_pContinousPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:CONTINOUS").arg(modNr), "10", "PAR_CONTINOUS", "0", ""));
-    m_pModule->veinModuleParameterHash[key] =  m_pContinousPar; // for modules use
+    m_pContinuousPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("PAR_Continuous"),
+                                                QString("Component enables/disables continuous measurement"),
+                                                QVariant(int(0)));
+    m_pContinuousPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:CONTINUOUS").arg(modNr), "10", "PAR_Continuous", "0", ""));
+    m_pModule->veinModuleParameterHash[key] =  m_pContinuousPar; // for modules use
     iValidator = new cIntValidator(0, 1, 1);
-    m_pContinousPar->setValidator(iValidator);
+    m_pContinuousPar->setValidator(iValidator);
 
     // after configuration we still have to set the string validators
 
@@ -1347,7 +1347,7 @@ void cSec1ModuleMeasProgram::setSlaveMux()
 
 void cSec1ModuleMeasProgram::setMasterMeasMode()
 {
-    if (m_pContinousPar->getValue().toInt() == 0)
+    if (m_pContinuousPar->getValue().toInt() == 0)
         m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
     else
         m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::CONTERRORMASTER)] = setmastermeasmode;
@@ -1402,7 +1402,7 @@ void cSec1ModuleMeasProgram::readMTCountact()
 
 void cSec1ModuleMeasProgram::setECResult()
 {
-    if (m_pContinousPar->getValue().toInt() == 0)
+    if (m_pContinuousPar->getValue().toInt() == 0)
     {
         m_pStartStopPar->setValue(QVariant(0)); // restart enable
         newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
@@ -1440,7 +1440,7 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
     }
     else
     {
-        if ((m_nStatus == ECALCSTATUS::ARMED) || (m_nStatus == ECALCSTATUS::STARTED) )
+        if ((m_nStatus & (ECALCSTATUS::ARMED | m_nStatus == ECALCSTATUS::STARTED)) != 0)
             m_nStatus = ECALCSTATUS::ABORT;
         m_pStatusAct->setValue(QVariant(m_nStatus));
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;

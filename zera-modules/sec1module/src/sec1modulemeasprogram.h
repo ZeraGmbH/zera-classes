@@ -187,7 +187,7 @@ private:
     cVeinModuleActvalue* m_pProgressAct;
     cVeinModuleActvalue* m_pEnergyAct;
     cVeinModuleActvalue* m_pResultAct;
-    cVeinModuleParameter* m_pContinousPar;
+    cVeinModuleParameter* m_pContinuousPar;
 
     cStringValidator *m_pDutConstanstUnitValidator;
     QString m_sDutConstantUnit;
