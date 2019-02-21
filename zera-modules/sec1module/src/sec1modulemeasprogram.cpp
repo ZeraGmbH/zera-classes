@@ -1454,6 +1454,8 @@ void cSec1ModuleMeasProgram::newMode(QVariant mode)
 {
     m_ConfigData.m_sMode.m_sPar = mode.toString();
     setInterfaceComponents();
+    m_pEnergyAct->setValue(0.0);
+    m_pResultAct->setValue(0.0);
 
     emit m_pModule->parameterChanged();
 }
