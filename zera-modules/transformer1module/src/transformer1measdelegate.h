@@ -11,6 +11,8 @@ class cVeinModuleActvalue;
 namespace TRANSFORMER1MODULE
 {
 
+const double c1_sqrt2 = 0.707106781;
+
 class cTransformer1MeasDelegate : public QObject
 {
     Q_OBJECT

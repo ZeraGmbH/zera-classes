@@ -25,7 +25,7 @@ void cTransformer1MeasDelegate::actValueInput1(QVariant val)
         inp1 = complex(list.at(0), list.at(1));
 
         // we forward primary input value
-        m_pActINSecondary->setValue(fabs(inp1));
+        m_pActINSecondary->setValue(fabs(inp1) * c1_sqrt2);
 
         // we compute vector as complex primary actual values
         m_fPrimVector = inp1 * (m_fPrimClampPrim / m_fPrimClampSec);
@@ -44,7 +44,7 @@ void cTransformer1MeasDelegate::actValueInput2(QVariant val)
         inp2 = complex(list.at(0), list.at(1));
 
         // we forward secondary input value
-        m_pActIXSecondary->setValue(fabs(inp2));
+        m_pActIXSecondary->setValue(fabs(inp2) * c1_sqrt2);
 
         // we compute vector as complex primary actual values
         m_fSecVector = inp2 * (m_fSecClampPrim / m_fSecClampSec);
@@ -110,7 +110,7 @@ void cTransformer1MeasDelegate::computeOutput()
     double dAngleError = userAtan(m_fPrimVector.im(), m_fPrimVector.re()) - userAtan(m_fSecVector.im(), m_fSecVector.re());
     m_pActTransformerAngleError->setValue(dAngleError);
 
-    double IXPrim = fabs(inp2) * dRatio;
+    double IXPrim = fabs(inp2) * dRatio * c1_sqrt2;
     m_pActIXPrimary->setValue(IXPrim);
 
 #ifdef DEBUG
