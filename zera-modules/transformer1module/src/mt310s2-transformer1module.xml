@@ -14,11 +14,11 @@
         </measure>
     </configuration>
     <parameter>
-        <primclampprim>1</primclampprim>
-        <primclampsec>1</primclampsec>
-        <secclampprim>1e+06</secclampprim>
-        <secclampsec>1</secclampsec>
-        <primdut>1.01111</primdut>
-        <secdut>1</secdut>
+        <primclampprim>1.1</primclampprim>
+        <primclampsec>1.2</primclampsec>
+        <secclampprim>1.3</secclampprim>
+        <secclampsec>1.4</secclampsec>
+        <primdut>2.0</primdut>
+        <secdut>2.1</secdut>
     </parameter>
 </trf1modconfpar>
