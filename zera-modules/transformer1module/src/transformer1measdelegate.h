@@ -17,7 +17,8 @@ class cTransformer1MeasDelegate : public QObject
 
 public:
     cTransformer1MeasDelegate(){}
-    cTransformer1MeasDelegate(cVeinModuleActvalue *acttrfError, cVeinModuleActvalue *acttrfAngleError, cVeinModuleActvalue *acttrfRatio, bool withSignal = false);
+    cTransformer1MeasDelegate(cVeinModuleActvalue *acttrfError, cVeinModuleActvalue *acttrfAngleError, cVeinModuleActvalue *acttrfRatio,
+                              cVeinModuleActvalue *actinsec, cVeinModuleActvalue *actixsec, cVeinModuleActvalue *ixprim, bool withSignal = false);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -36,8 +37,13 @@ private:
     cVeinModuleActvalue *m_pActTransformerError; // output is transmission error
     cVeinModuleActvalue *m_pActTransformerAngleError; // and angle error
     cVeinModuleActvalue *m_pActTransformerRatio; // and computed actual ratio
+    cVeinModuleActvalue *m_pActINSecondary;
+    cVeinModuleActvalue *m_pActIXSecondary;
+    cVeinModuleActvalue *m_pActIXPrimary;
 
     bool m_bSignal;
+
+    complex inp1, inp2;
 
     complex m_fPrimVector;
     complex m_fSecVector;

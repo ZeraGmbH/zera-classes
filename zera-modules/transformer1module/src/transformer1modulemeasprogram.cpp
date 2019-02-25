@@ -82,7 +82,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
                                             QString("Component forwards transformer transmission error value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("ERR%1").arg(i+1));
-        pActvalue->setUnit("");
+        pActvalue->setUnit("%");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
@@ -109,6 +109,45 @@ void cTransformer1ModuleMeasProgram::generateInterface()
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("");
+
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pActvalue->setSCPIInfo(pSCPIInfo);
+
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_INSecondary%1").arg(i+1),
+                                            QString("Component forwards reference N secondary input"),
+                                            QVariant(0.0) );
+        pActvalue->setChannelName(QString("INSEC%1").arg(i+1));
+        pActvalue->setUnit(QString(m_ConfigData.m_clampUnit[0]));
+
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pActvalue->setSCPIInfo(pSCPIInfo);
+
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_IXSecondary%1").arg(i+1),
+                                            QString("Component forwards decive under test secondary input"),
+                                            QVariant(0.0) );
+        pActvalue->setChannelName(QString("IXSEC%1").arg(i+1));
+        pActvalue->setUnit(QString(m_ConfigData.m_clampUnit[2]));
+
+        pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
+        pActvalue->setSCPIInfo(pSCPIInfo);
+
+        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+
+        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_IXPrimary%1").arg(i+1),
+                                            QString("Component forwards decive under test primary input"),
+                                            QVariant(0.0) );
+        pActvalue->setChannelName(QString("IXPRIM%1").arg(i+1));
+        pActvalue->setUnit(QString(m_ConfigData.m_clampUnit[4]));
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
@@ -231,11 +270,13 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
 
             if (i == (m_ConfigData.m_nTransformerSystemCount-1))
             {
-                cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2), true);
+                cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*6), m_ActValueList.at(i*6+1), m_ActValueList.at(i*6+2),
+                                                     m_ActValueList.at(i*6+3), m_ActValueList.at(i*6+4), m_ActValueList.at(i*6+5), true);
                 connect(cTMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
             }
             else
-                cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2));
+                cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*6), m_ActValueList.at(i*6+1), m_ActValueList.at(i*6+2),
+                                                     m_ActValueList.at(i*6+3), m_ActValueList.at(i*6+4), m_ActValueList.at(i*6+5));
 
             m_Transformer1MeasDelegateList.append(cTMD);
 
