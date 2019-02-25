@@ -211,8 +211,8 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pPrimDutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_DutPrimary"),
-                                                   QString("Component for setting the modules secondary clamp secondary value"),
-                                                   QVariant(m_ConfigData.secClampSec.m_fValue));
+                                                   QString("Component for setting the modules dut primary value"),
+                                                   QVariant(m_ConfigData.dutPrim.m_fValue));
     s = QString(m_ConfigData.m_clampUnit[4]);
     m_pPrimDutParameter->setUnit(s);
     m_pPrimDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTPRIMARY", "10", "PAR_DutPrimary", "0", s));
@@ -224,8 +224,8 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pSecDutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_DutSecondary"),
-                                                  QString("Component for setting the modules secondary clamp secondary value"),
-                                                  QVariant(m_ConfigData.secClampSec.m_fValue));
+                                                  QString("Component for setting the modules dut secondary value"),
+                                                  QVariant(m_ConfigData.dutSec.m_fValue));
     s = QString(m_ConfigData.m_clampUnit[5]);
     m_pSecDutParameter->setUnit(s);
     m_pSecDutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","DUTSECONDARY", "10", "PAR_DutSecondary", "0", s));
