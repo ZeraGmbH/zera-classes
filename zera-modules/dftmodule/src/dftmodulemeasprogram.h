@@ -93,6 +93,7 @@ private:
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
+    QList<int> rfieldActvalueIndexList;
     QString channelInfoRead; // the actual channel info we are working on
     quint32 m_nSRate; // number of samples / signal period
 
@@ -145,6 +146,7 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setRefChannelValidator();
+    void initRFieldMeasurement();
 
     cMovingwindowFilter* m_pMovingwindowFilter;
 

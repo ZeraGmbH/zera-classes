@@ -42,8 +42,11 @@ void cDftModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["dftmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
-    m_ConfigXMLMap["dftmodconfpar:configuration:measure:values:nr"] = setDftOrder;
-    m_ConfigXMLMap["dftmodconfpar:configuration:measure:values:n"] = setValueCount;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:dftvalues:nr"] = setDftOrder;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:dftvalues:n"] = setValueCount;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:rfield:val1"] = setrfieldChn1;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:rfield:val2"] = setrfieldChn2;
+    m_ConfigXMLMap["dftmodconfpar:configuration:measure:rfield:val3"] = setrfieldChn3;
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:movingwindow:time"] = setMovingwindowTime;
     m_ConfigXMLMap["dftmodconfpar:configuration:measure:refchannelon"] = setRefChannelOn;
@@ -116,7 +119,12 @@ void cDftModuleConfiguration::configXMLInfo(QString key)
             m_pDftModulConfigData->m_nValueCount = m_pXMLReader->getValue(key).toInt(&ok);
             // here we generate dynamic hash entries for value channel configuration
             for (int i = 0; i < m_pDftModulConfigData->m_nValueCount; i++)
-                m_ConfigXMLMap[QString("dftmodconfpar:configuration:measure:values:val%1").arg(i+1)] = setValue1+i;
+                m_ConfigXMLMap[QString("dftmodconfpar:configuration:measure:dftvalues:val%1").arg(i+1)] = setValue1+i;
+            break;
+        case setrfieldChn1:
+        case setrfieldChn2:
+        case setrfieldChn3:
+            m_pDftModulConfigData->m_rfieldChannelList.append(m_pXMLReader->getValue(key));
             break;
         case setMovingwindowBool:
             m_pDftModulConfigData->m_bmovingWindow = (m_pXMLReader->getValue(key).toInt(&ok) == 1);

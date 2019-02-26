@@ -21,7 +21,7 @@
 			</ethernet>
 		</connectivity>
                 <measure>
-                    <values>
+                    <dftvalues>
                         <nr>1</nr>
                         <n>9</n>
                         <val1>m0</val1>
@@ -33,7 +33,12 @@
                         <val7>m3</val7>
                         <val8>m4</val8>
                         <val9>m5</val9>
-                    </values>
+                    </dftvalues>
+                    <rfield>
+                        <val1>m0</val1>
+                        <val2>m1</val2>
+                        <val3>m2</val3>
+                    </rfield>
                     <movingwindow>
                         <on>1</on>
                         <time>0.5</time>

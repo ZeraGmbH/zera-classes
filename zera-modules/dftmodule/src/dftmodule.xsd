@@ -87,7 +87,7 @@
 
     <xs:complexType name="measuretype">
         <xs:sequence>
-            <xs:element name="values">
+            <xs:element name="dftvalues">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="nr" minOccurs="1" maxOccurs="1">
@@ -118,6 +118,15 @@
                         <xs:element name="val10" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="val11" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="val12" type="xs:string" minOccurs="0" maxOccurs="1"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="rfield">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="val1" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="val2" type="xs:string" minOccurs="1" maxOccurs="1"/>
+                        <xs:element name="val3" type="xs:string" minOccurs="1" maxOccurs="1"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
