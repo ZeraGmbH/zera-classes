@@ -764,7 +764,7 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
     if (m_bActive) // maybe we are deactivating !!!!
     {
         int i;
-        for (i = 0; i < m_ActValueList.count(); i++)
+        for (i = 0; i < m_ActValueList.count()-1; i++)
         {
             QList<double> dftResult;
             dftResult.append(actualValues->at(2*i));
