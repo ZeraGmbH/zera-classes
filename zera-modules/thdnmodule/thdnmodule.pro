@@ -48,11 +48,13 @@ HEADERS += \
 OTHER_FILES += \
     src/thdnmodule.xsd \
     src/com5003-thdnmodule.xml \
-    src/mt310s2-thdnmodule.xml
+    src/mt310s2-thdnmodule.xml \
+    src/mt310s2-thdnmodule2.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
 
 

@@ -20,19 +20,21 @@
         </connectivity>
         <measure>
             <values>
-                <n>6</n>
+                <n>8</n>
                 <val1>m0</val1>
                 <val2>m1</val2>
                 <val3>m2</val3>
                 <val4>m3</val4>
                 <val5>m4</val5>
                 <val6>m5</val6>
+                <val7>m6</val7>
+                <val8>m7</val8>
             </values>
             <movingwindow>
                 <on>1</on>
                 <time>0.5</time>
             </movingwindow>
-            <thd>N</thd>
+            <thd>R</thd>
         </measure>
     </configuration>
     <parameter>

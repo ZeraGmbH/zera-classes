@@ -24,6 +24,7 @@ enum moduleconfigstate
     setMeasureInterval,
     setMovingwindowBool,
     setMovingwindowTime,
+    setTHDType,
 
     setValue1 = 20
 };

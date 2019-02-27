@@ -17,6 +17,7 @@
 #include <modulevalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
+#include <math.h>
 
 #include "debug.h"
 #include "errormessages.h"
@@ -178,14 +179,14 @@ void cThdnModuleMeasProgram::generateInterface()
     for (int i = 0; i < n; i++)
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_THDN%1").arg(i+1),
-                                            QString("Component forwards the thdn actual value"),
+                                            QString("ACT_THD%1%2").arg(m_ConfigData.m_sTHDType).arg(i+1),
+                                            QString("Component forwards the thd%1 actual value").arg(m_ConfigData.m_sTHDType.toLower()),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pThdnCountInfo = new cVeinModuleMetaData(QString("THDNCount"), QVariant(n));
+    m_pThdnCountInfo = new cVeinModuleMetaData(QString("THD%1Count").arg(m_ConfigData.m_sTHDType), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pThdnCountInfo);
 
     m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -920,6 +921,16 @@ void cThdnModuleMeasProgram::dataReadDSP()
     if (m_bActive)
     {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        if (m_ConfigData.m_sTHDType == "R")
+        {
+            double thdn, thdr;
+            for (int i = 0; i < m_ModuleActualValues.length(); i++)
+            {
+                thdn = m_ModuleActualValues.at(i);
+                thdr = thdn / sqrt(1 + (thdn * thdn));
+                m_ModuleActualValues.replace(i, thdr);
+            }
+        }
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
 

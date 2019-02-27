@@ -85,6 +85,13 @@
     </xs:complexType>
 
 
+    <xs:simpleType name="thdtype">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[N,R]"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
     <xs:complexType name="measuretype">
         <xs:sequence>
             <xs:element name="values">
@@ -114,6 +121,7 @@
                 </xs:complexType>
             </xs:element>
             <xs:element name="movingwindow" type="movingwindowtype"/>
+            <xs:element name="thd" type="thdtype"/>
         </xs:sequence>
     </xs:complexType>
 
