@@ -926,8 +926,8 @@ void cThdnModuleMeasProgram::dataReadDSP()
             double thdn, thdr;
             for (int i = 0; i < m_ModuleActualValues.length(); i++)
             {
-                thdn = m_ModuleActualValues.at(i);
-                thdr = thdn / sqrt(1 + (thdn * thdn));
+                thdn = m_ModuleActualValues.at(i) / 100.0;
+                thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
                 m_ModuleActualValues.replace(i, thdr);
             }
         }
