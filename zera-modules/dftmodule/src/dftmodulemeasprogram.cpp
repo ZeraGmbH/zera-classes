@@ -197,12 +197,12 @@ void cDftModuleMeasProgram::generateInterface()
         }
     }
 
-    pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                        QString("ACT_RFIELD"),
-                                        QString("Component forwards the rotating field"),
-                                        QVariant("") );
-    m_ActValueList.append(pActvalue); // we add the component for our measurement
-    m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
+    m_pRFieldActualValue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   QString("ACT_RFIELD"),
+                                                   QString("Component forwards the rotating field"),
+                                                   QVariant("") );
+
+    m_pModule->veinModuleActvalueList.append(m_pRFieldActualValue); // we add the component for the modules interface
 
     m_pDFTPNCountInfo = new cVeinModuleMetaData(QString("DFTPNCount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pDFTPNCountInfo);
@@ -714,16 +714,15 @@ void cDftModuleMeasProgram::setActualValuesNames()
 void cDftModuleMeasProgram::setSCPIMeasInfo()
 {
     cSCPIInfo* pSCPIInfo;
-    int i;
 
-    for (i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
     {
         pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
         m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 
-    pSCPIInfo = pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", "8", m_ActValueList.at(i)->getName(), "0", "");
-    m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+    pSCPIInfo = pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", "8", m_pRFieldActualValue->getName(), "0", "");
+    m_pRFieldActualValue->setSCPIInfo(pSCPIInfo);
 }
 
 
@@ -763,8 +762,7 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
 {
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        int i;
-        for (i = 0; i < m_ActValueList.count()-1; i++)
+        for (int i = 0; i < m_ActValueList.count(); i++)
         {
             QList<double> dftResult;
             dftResult.append(actualValues->at(2*i));
@@ -779,9 +777,9 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         for (int j = 0; j < 3; j++)
             angle[j] = userAtan(actualValues->at(2*rfieldActvalueIndexList.at(j)), actualValues->at(2*rfieldActvalueIndexList.at(j)+1));
         if ((angle[0] < angle[1]) && (angle[1] < angle[2]))
-            m_ActValueList.at(i)->setValue("123");
+            m_pRFieldActualValue->setValue("123");
         else
-            m_ActValueList.at(i)->setValue("132");
+            m_pRFieldActualValue->setValue("132");
     }
 }
 
