@@ -77,7 +77,7 @@ void cPower3ModuleMeasProgram::generateInterface()
                                             QString("ACT_HPP%1").arg(i+1),
                                             QString("Component forwards harmonic power active values"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("L%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
+        pActvalue->setChannelName(QString("P%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("W");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
@@ -90,7 +90,7 @@ void cPower3ModuleMeasProgram::generateInterface()
                                             QString("ACT_HPQ%1").arg(i+1),
                                             QString("Component forwards harmonic power reactive values"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("L%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
+        pActvalue->setChannelName(QString("Q%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("Var");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
@@ -103,7 +103,7 @@ void cPower3ModuleMeasProgram::generateInterface()
                                             QString("ACT_HPS%1").arg(i+1),
                                             QString("Component forwards harmonic power apparent values"),
                                             QVariant(0.0) );
-        pActvalue->setChannelName(QString("L%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
+        pActvalue->setChannelName(QString("S%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("VA");
 
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
