@@ -1,3 +1,4 @@
+#include <QtGlobal>
 #include <QString>
 #include <QStateMachine>
 #include <rminterface.h>
@@ -1413,7 +1414,10 @@ void cSec1ModuleMeasProgram::setECResult()
         m_nStatus = ECALCSTATUS::READY + ECALCSTATUS::STARTED;
 
     m_fProgress = 100.0;
-    m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nVIfin) * 100.0 / m_nVIfin;
+    if (m_nVIfin == 0)
+        m_fResult = qQNaN();
+    else
+        m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nVIfin) * 100.0 / m_nVIfin;
     m_fEnergy = 1.0 * m_nVIfin / m_ConfigData.m_fRefConstant.m_fPar;
     m_pStatusAct->setValue(QVariant(m_nStatus));
     m_pProgressAct->setValue(QVariant(m_fProgress));
