@@ -1,7 +1,7 @@
 #ifndef USERATAN
 #define USERATAN
 
-double userAtan(double re, double im);
+double userAtan(double im, double re);
 
 #endif // USERATAN
 
