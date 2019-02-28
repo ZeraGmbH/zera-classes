@@ -775,7 +775,7 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         // rfield computation
         double angle[3];
         for (int j = 0; j < 3; j++)
-            angle[j] = userAtan(actualValues->at(2*rfieldActvalueIndexList.at(j)), actualValues->at(2*rfieldActvalueIndexList.at(j)+1));
+            angle[j] = userAtan(actualValues->at(2*rfieldActvalueIndexList.at(j)+1), actualValues->at(2*rfieldActvalueIndexList.at(j)));
         if ((angle[0] < angle[1]) && (angle[1] < angle[2]))
             m_pRFieldActualValue->setValue("123");
         else
