@@ -311,7 +311,7 @@ void cPower1ModuleMeasProgram::generateInterface()
                                                               key = QString("PAR_FOUTConstant%1").arg(i),
                                                               QString("Component for querying the modules frequency output constant"),
                                                               QVariant(0));
-            pFoutConstantParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MCONSTANT", "2", pFoutConstantParameter->getName(), "0", ""));
+            pFoutConstantParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutConstantParameter->getName(), "0", ""));
 
             m_FoutConstParameterList.append(pFoutConstantParameter);
             m_pModule->veinModuleParameterHash[key] = pFoutConstantParameter; // for modules use
