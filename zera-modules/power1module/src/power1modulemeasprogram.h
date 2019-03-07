@@ -135,6 +135,7 @@ private:
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<cVeinModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
     cVeinModuleMetaData* m_pPQSCountInfo; // the number of values we produce
     cVeinModuleMetaData* m_pFoutCount; // number of our frequence outputs
     cVeinModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
@@ -236,6 +237,7 @@ private:
 
     void setActualValuesNames();
     void setSCPIMeasInfo();
+    void setFoutMetaInfo();
     bool is2WireMode();
 
 private slots:

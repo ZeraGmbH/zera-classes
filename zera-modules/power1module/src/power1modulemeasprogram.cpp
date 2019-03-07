@@ -301,9 +301,21 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_pFoutCount = new cVeinModuleMetaData(QString("FOUTCount"), QVariant(m_ConfigData.m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
-    for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++);
-    {
+    cVeinModuleParameter* pFoutConstantParameter;
 
+    if (m_ConfigData.m_nFreqOutputCount > 0)
+    {
+        for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
+        {
+            pFoutConstantParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                              key = QString("PAR_FOUTConstant%1").arg(i),
+                                                              QString("Component for querying the modules frequency output constant"),
+                                                              QVariant(0));
+            pFoutConstantParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MCONSTANT", "8", pFoutConstantParameter->getName(), "0", ""));
+
+            m_FoutConstParameterList.append(pFoutConstantParameter);
+            m_pModule->veinModuleParameterHash[key] = pFoutConstantParameter; // for modules use
+        }
     }
 
     // a list with all possible measuring modes
@@ -323,8 +335,8 @@ void cPower1ModuleMeasProgram::generateInterface()
     // our parameters we deal with
     m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
-                                                               QString("Component for setting the modules measuring mode"),
-                                                               QVariant(m_ConfigData.m_sMeasuringMode.m_sValue));
+                                                         QString("Component for setting the modules measuring mode"),
+                                                         QVariant(m_ConfigData.m_sMeasuringMode.m_sValue));
 
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
 
@@ -1696,6 +1708,15 @@ void cPower1ModuleMeasProgram::setSCPIMeasInfo()
 }
 
 
+void cPower1ModuleMeasProgram::setFoutMetaInfo()
+{
+    for (int i = 0; i < m_ConfigData.m_FreqOutputConfList.count(); i++)
+    {
+        m_FoutConstParameterList.at(i)->setChannelName(m_FoutInfoHash[m_ConfigData.m_FreqOutputConfList.at(i).m_sName].alias);
+    }
+}
+
+
 bool cPower1ModuleMeasProgram::is2WireMode()
 {
     int mm = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode();
@@ -2062,6 +2083,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
 
     setActualValuesNames();
     setSCPIMeasInfo();
+    setFoutMetaInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
 
@@ -2304,15 +2326,17 @@ void cPower1ModuleMeasProgram::setFoutConstants()
 
     constant = m_ConfigData.m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * umax * imax); // imp./kwh
 
-    QList<QString> keylist = m_FoutInfoHash.keys();
-
-    if (keylist.count() > 0)
-        for (int i = 0; i < keylist.count(); i++)
+    if (m_ConfigData.m_nFreqOutputCount > 0)
+    {
+        QString key;
+        for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
         {
-            cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
+            key = m_ConfigData.m_FreqOutputConfList.at(i).m_sName;
+            cFoutInfo fi = m_FoutInfoHash[key];
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
-
+            m_FoutConstParameterList.at(i)->setValue(constant);
         }
+    }
 
     setFoutPowerModes();
 }
