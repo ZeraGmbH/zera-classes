@@ -25,7 +25,7 @@ INCLUDEPATH += ../../zera-basemodule \
     ../../zera-validator \
     ../interface
 
-TARGET = $$qtLibraryTarget(sec1module)
+TARGET = $$qtLibraryTarget(sem1module)
 
 INCLUDEPATH += "src"
 
