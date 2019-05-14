@@ -1,0 +1,68 @@
+#ifndef SEM1MODULECONFIGDATA_H
+#define SEM1MODULECONFIGDATA_H
+
+#include <QString>
+#include <QList>
+
+#include "socket.h"
+
+namespace SEM1MODULE
+{
+
+// used for configuration export
+
+
+struct boolParameter
+{
+    QString m_sKey;
+    quint8 m_nActive; // active or 1,0
+};
+
+
+struct doubleParameter
+{
+    QString m_sKey;
+    double m_fPar;
+};
+
+
+struct intParameter
+{
+    QString m_sKey;
+    quint32 m_nPar;
+};
+
+
+struct stringParameter
+{
+    QString m_sKey;
+    QString m_sPar;
+};
+
+
+class cSem1ModuleConfigData
+{
+public:
+    cSem1ModuleConfigData(){}
+    quint8 m_nDebugLevel;
+    quint8 m_nRefInpCount;
+    stringParameter m_sRefInput;
+    QList<QString> m_refInpList;
+    quint8 m_nActiveUnitCount;
+    QList<QString> m_ActiveUnitList;
+    quint8 m_nReactiveUnitCount;
+    QList<QString> m_ReactiveUnitList;
+    quint8 m_nApparentUnitCount;
+    QList<QString> m_ApparentUnitList;
+    bool m_bEmbedded;
+    double m_fActualizeInterval; // actualize interval 0.2 .. 5.0 sec. (time between actualizations)
+    intParameter m_nMeasTime; // time in sec. from 0 to 7200
+    boolParameter m_bTargeted;
+    cSocket m_RMSocket; // the sockets we can connect to
+    cSocket m_PCBServerSocket;
+    cSocket m_SECServerSocket;
+};
+
+}
+
+#endif // SEM1MODULECONFIGDATA_H
