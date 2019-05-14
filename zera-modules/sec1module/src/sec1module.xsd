@@ -242,8 +242,6 @@
             <xs:element name="energy" type="xs:float" minOccurs="1" maxOccurs="1"/>
             <xs:element name="mrate" type="impulstype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="continous" type="yesnotype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="t0value" type="xs:float" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="t1value" type="xs:float" minOccurs="1" maxOccurs="1"/>
          </xs:sequence>
     </xs:complexType>
 	

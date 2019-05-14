@@ -58,8 +58,6 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:energy"] = setEnergy;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:mrate"] = setMRate;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:continous"] = setContinousMode;
-    m_ConfigXMLMap["sec1modconfpar:parameter:measure:t0value"] = setT0Value;
-    m_ConfigXMLMap["sec1modconfpar:parameter:measure:t1value"] = setT1Value;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -82,12 +80,6 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
 
     dPar = &m_pSec1ModulConfigData->m_fEnergy;
-    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
-
-    dPar = &m_pSec1ModulConfigData->m_fT0Value;
-    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
-
-    dPar = &m_pSec1ModulConfigData->m_fT1Value;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
 
     intParameter* iPar;
@@ -229,14 +221,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
         case setContinousMode:
             m_pSec1ModulConfigData->m_bContinous.m_sKey = key;
             m_pSec1ModulConfigData->m_bContinous.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setT0Value:
-            m_pSec1ModulConfigData->m_fT0Value.m_sKey = key;
-            m_pSec1ModulConfigData->m_fT0Value.m_fPar = m_pXMLReader->getValue(key).toDouble();
-            break;
-        case setT1Value:
-            m_pSec1ModulConfigData->m_fT1Value.m_sKey = key;
-            m_pSec1ModulConfigData->m_fT1Value.m_fPar = m_pXMLReader->getValue(key).toDouble();
             break;
 
         default:

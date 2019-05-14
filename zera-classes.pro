@@ -35,5 +35,6 @@ SUBDIRS     = \
             zera-modules/efficiency1module \
             zera-modules/statusmodule \
             zera-modules/lambdamodule \
-            zera-modules/adjustmentmodule
+            zera-modules/adjustmentmodule \
+            zera-modules/sem1module
 

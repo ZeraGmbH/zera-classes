@@ -35,8 +35,6 @@ enum moduleconfigstate
     setEnergy,
     setMRate,
     setContinousMode,
-    setT0Value,
-    setT1Value,
 
     setDutInput1Name = 32,
     setRefInput1Name = 64,
