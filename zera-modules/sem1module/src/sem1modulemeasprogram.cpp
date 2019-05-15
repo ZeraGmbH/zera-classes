@@ -1212,7 +1212,7 @@ void cSem1ModuleMeasProgram::setMeaspulses()
 
 void cSem1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, QString("T1ms"))] = setmastermux; // to be discussed
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, QString("t1ms"))] = setmastermux; // to be discussed
 }
 
 
