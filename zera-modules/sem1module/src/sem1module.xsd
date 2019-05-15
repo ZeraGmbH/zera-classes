@@ -94,15 +94,15 @@
 
     <xs:simpleType name="unittype">
         <xs:restriction base="xs:string">
-            <xs:enumeration value="MWh"/>
-            <xs:enumeration value="kWh"/>
-            <xs:enumeration value="Wh"/>
-            <xs:enumeration value="MVarh"/>
-            <xs:enumeration value="kVarh"/>
-            <xs:enumeration value="Varh"/>
-            <xs:enumeration value="MVAh"/>
-            <xs:enumeration value="kVAh"/>
-            <xs:enumeration value="VAh"/>
+            <xs:enumeration value="MW"/>
+            <xs:enumeration value="kW"/>
+            <xs:enumeration value="W"/>
+            <xs:enumeration value="MVar"/>
+            <xs:enumeration value="kVar"/>
+            <xs:enumeration value="Var"/>
+            <xs:enumeration value="MVA"/>
+            <xs:enumeration value="kVA"/>
+            <xs:enumeration value="VA"/>
         </xs:restriction>
     </xs:simpleType>
 
