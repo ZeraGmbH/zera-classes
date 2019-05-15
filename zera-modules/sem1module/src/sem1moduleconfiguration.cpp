@@ -160,7 +160,7 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
             for (int i = 0; i < m_pSem1ModulConfigData->m_nApparentUnitCount; i++)
                 {
                     m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
-                    m_pSem1ModulConfigData->m_ReactiveUnitList.append(name);
+                    m_pSem1ModulConfigData->m_ApparentUnitList.append(name);
                 }
             break;
         }
