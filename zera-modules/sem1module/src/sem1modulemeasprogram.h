@@ -184,11 +184,11 @@ private:
     cVeinModuleParameter* m_pInputUnitPar;
     cVeinModuleParameter* m_pStartStopPar;
 
-    cVeinModuleActvalue* m_pStatusAct;
-    cVeinModuleActvalue* m_pTimeAct;
-    cVeinModuleActvalue* m_pEnergyAct;
-    cVeinModuleActvalue* m_pPowerAct;
-    cVeinModuleActvalue* m_pResultAct;
+    cVeinModuleParameter* m_pStatusAct;
+    cVeinModuleParameter* m_pTimeAct;
+    cVeinModuleParameter* m_pEnergyAct;
+    cVeinModuleParameter* m_pPowerAct;
+    cVeinModuleParameter* m_pResultAct;
 
     void setInterfaceComponents();
     void setValidators();
