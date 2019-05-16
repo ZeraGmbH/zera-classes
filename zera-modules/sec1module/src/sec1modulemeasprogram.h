@@ -183,10 +183,10 @@ private:
     cVeinModuleParameter* m_pTargetPar;
     cVeinModuleParameter* m_pEnergyPar;
     cVeinModuleParameter* m_pStartStopPar;
-    cVeinModuleActvalue* m_pStatusAct;
-    cVeinModuleActvalue* m_pProgressAct;
-    cVeinModuleActvalue* m_pEnergyAct;
-    cVeinModuleActvalue* m_pResultAct;
+    cVeinModuleParameter* m_pStatusAct;
+    cVeinModuleParameter* m_pProgressAct;
+    cVeinModuleParameter* m_pEnergyAct;
+    cVeinModuleParameter* m_pResultAct;
     cVeinModuleParameter* m_pContinuousPar;
 
     cStringValidator *m_pDutConstanstUnitValidator;
