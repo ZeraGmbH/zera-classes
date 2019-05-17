@@ -1258,6 +1258,7 @@ void cSem1ModuleMeasProgram::enableInterrupt()
 void cSem1ModuleMeasProgram::startMeasurement()
 {
     m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
+    m_nStatus = ECALCSTATUS::ARMED;
 }
 
 
