@@ -172,7 +172,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy:
     connect(&m_readTCountactState, SIGNAL(entered()), SLOT(readTCountact()));
     connect(&m_setEMResultState, SIGNAL(entered()), SLOT(setEMResult()));
 
-    // we need a hash for oue different energy input units
+    // we need a hash for our different energy input units
     mEnergyUnitFactorHash["MWh"] = 1000.0;
     mEnergyUnitFactorHash["kWh"] = 1.0;
     mEnergyUnitFactorHash["Wh"] = 0.001;
@@ -1382,6 +1382,13 @@ void cSem1ModuleMeasProgram::newRefInput(QVariant refinput)
 
     m_pModule->exportMetaData();
     emit m_pModule->parameterChanged();
+}
+
+
+void cSem1ModuleMeasProgram::newTargeted(QVariant targeted)
+{
+    m_ConfigData.m_bTargeted.m_nActive = targeted.toInt();
+    setInterfaceComponents();
 }
 
 
