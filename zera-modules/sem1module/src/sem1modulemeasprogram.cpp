@@ -1224,7 +1224,7 @@ void cSem1ModuleMeasProgram::setSlaveMux()
 
 void cSem1ModuleMeasProgram::setSlave2Mux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_Slave2Ecalculator.name, mREFSemInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_Slave2Ecalculator.name, QString("t1ms"))] = setslavemux;
 }
 
 
