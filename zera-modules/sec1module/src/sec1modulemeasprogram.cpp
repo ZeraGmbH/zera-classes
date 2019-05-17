@@ -322,21 +322,21 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
 
     m_pProgressAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                              QString("ACT_Progress"),
+                                              key = QString("ACT_Progress"),
                                               QString("Component holds progress information"),
                                               QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pProgressAct; // and for the modules interface
     m_pProgressAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", m_pProgressAct->getName(), "0", ""));
 
     m_pEnergyAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_Energy"),
+                                            key = QString("ACT_Energy"),
                                             QString("Component holds energy since last start information"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyAct; // and for the modules interface
-    m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ACTENERGY").arg(modNr), "2", m_pEnergyAct->getName(), "0", ""));
+    m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENERGY").arg(modNr), "2", m_pEnergyAct->getName(), "0", ""));
 
     m_pResultAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                            QString("ACT_Result"),
+                                            key = QString("ACT_Result"),
                                             QString("Component holds the result of last measurement"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pResultAct; // and for the modules interface
