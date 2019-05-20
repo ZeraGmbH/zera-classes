@@ -1309,6 +1309,7 @@ void cSem1ModuleMeasProgram::readVICountact()
 void cSem1ModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_Slave2Ecalculator.name, ECALCREG::MTCNTfin)] = readtcount;
+    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
 
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     m_ActualizeTimer.stop();
