@@ -53,6 +53,7 @@ enum sem1moduleCmds
     freeusermem,
 
     actualizestatus,
+    actualizeMTCnt,
     actualizeenergy,
     actualizepower,
 
