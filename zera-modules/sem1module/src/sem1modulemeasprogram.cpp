@@ -1202,9 +1202,9 @@ void cSem1ModuleMeasProgram::setSync2()
 void cSem1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pTargetedPar->getValue().toInt() == 0)
-        m_nMTCNTStart = (1<<32) - 1; // we simply set max. time -> approx. 50 days
+        m_nMTCNTStart = (1<<32) - 2; // we simply set max. time -> approx. 50 days
     else
-        m_nMTCNTStart = m_pMeasTimePar->getValue().toLongLong();
+        m_nMTCNTStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
     m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nMTCNTStart)] = setmeaspulses;
 }
