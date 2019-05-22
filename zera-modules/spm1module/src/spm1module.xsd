@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:simpleType name="yesnotype">
+            <xs:restriction base="xs:integer">
+                    <xs:maxInclusive value='1'/>
+                    <xs:minInclusive value='0'/>
+            </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="debugtype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='7'/>
+            <xs:minInclusive value='0'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="porttype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value='60000'/>
+            <xs:minExclusive value='1024'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="ipadresstype">
+        <xs:restriction base="xs:string">
+            <xs:pattern value = '\b(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b'/>
+        </xs:restriction>
+    </xs:simpleType>
+
+	
+    <xs:complexType name="connectivitytype">
+        <xs:sequence>
+            <xs:element name="debuglevel" type="debugtype"/>
+            <xs:element name="ethernet">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="resourcemanager">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="ip" type="ipadresstype"/>
+                                    <xs:element name="port" type="porttype"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="pcbserver">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="ip" type="ipadresstype"/>
+                                    <xs:element name="port" type="porttype"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                        <xs:element name="secserver">
+                            <xs:complexType>
+                                <xs:sequence>
+                                    <xs:element name="ip" type="ipadresstype"/>
+                                    <xs:element name="port" type="porttype"/>
+                                </xs:sequence>
+                            </xs:complexType>
+                        </xs:element>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:simpleType name="measureintervaltype">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="0.2"/>
+            <xs:maxInclusive value="5.0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="impulstype">
+        <xs:restriction base="xs:unsignedInt">
+            <xs:maxInclusive value="4294967295"/>
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="ntype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value="32"/>
+            <xs:minInclusive value="1"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="unittype">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MW"/>
+            <xs:enumeration value="kW"/>
+            <xs:enumeration value="W"/>
+            <xs:enumeration value="MVar"/>
+            <xs:enumeration value="kVar"/>
+            <xs:enumeration value="Var"/>
+            <xs:enumeration value="MVA"/>
+            <xs:enumeration value="kVA"/>
+            <xs:enumeration value="VA"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="unitstype">
+        <xs:sequence>
+            <xs:element name="n" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="1"/>
+                        <xs:maxInclusive value="12"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="unit1" type="unittype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="unit2" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit3" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit4" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit5" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit6" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit7" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit8" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit9" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit10" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit11" type="unittype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="unit12" type="unittype" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:simpleType name="meastimetype">
+        <xs:restriction base="xs:integer">
+            <xs:maxInclusive value="7200"/>
+            <xs:minInclusive value="0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="inputsignaltype">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="sh0"/>
+            <xs:enumeration value="sh1"/>
+            <xs:enumeration value="sh2"/>
+            <xs:enumeration value="sh3"/>
+            <xs:enumeration value="s00"/>
+            <xs:enumeration value="s01"/>
+            <xs:enumeration value="s02"/>
+            <xs:enumeration value="s03"/>
+            <xs:enumeration value="s04"/>
+            <xs:enumeration value="s05"/>
+            <xs:enumeration value="s06"/>
+            <xs:enumeration value="s07"/>
+            <xs:enumeration value="s08"/>
+            <xs:enumeration value="s09"/>
+            <xs:enumeration value="s010"/>
+            <xs:enumeration value="s011"/>
+            <xs:enumeration value="fo0"/>
+            <xs:enumeration value="fo1"/>
+            <xs:enumeration value="fo2"/>
+            <xs:enumeration value="fo3"/>
+            <xs:enumeration value="fi0"/>
+            <xs:enumeration value="fi1"/>
+            <xs:enumeration value="fi2"/>
+            <xs:enumeration value="fi3"/>
+            <xs:enumeration value="hk0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="refinputtype">
+        <xs:sequence>
+            <xs:element name="n" type="ntype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="inp1" type="inputsignaltype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="inp2" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp3" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp4" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp5" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp6" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp7" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp8" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp9" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp10" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp11" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp12" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp13" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp14" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp15" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp16" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp17" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp18" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp19" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp20" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp21" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp22" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp23" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp24" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp25" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp26" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp27" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp28" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp29" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp30" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp31" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="inp32" type="inputsignaltype" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="configurationmeasuretype">
+        <xs:sequence>
+            <xs:element name="embedded" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="refinput" type="refinputtype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="interval" type="measureintervaltype"/>
+            <xs:element name="activeunits" type="unitstype"/>
+            <xs:element name="reactiveunits" type="unitstype"/>
+            <xs:element name="apparentunits" type="unitstype"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="parametermeasuretype">
+        <xs:sequence>
+            <xs:element name="refinput" type="inputsignaltype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="targeted" type="yesnotype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="meastime" type="impulstype" minOccurs="1" maxOccurs="1"/>
+         </xs:sequence>
+    </xs:complexType>
+	
+
+    <xs:element name="spm1modconfpar">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="configuration">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="connectivity" type="connectivitytype"/>
+                            <xs:element name="measure" type="configurationmeasuretype"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="parameter">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="measure" type="parametermeasuretype"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+	
+</xs:schema> 
+
