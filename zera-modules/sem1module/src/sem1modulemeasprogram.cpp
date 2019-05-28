@@ -283,7 +283,7 @@ void cSem1ModuleMeasProgram::generateInterface()
                                                QString("Component for reading and setting the modules energy unit"),
                                                QVariant("Unknown"));
     m_pInputUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:TXUNIT").arg(modNr), "10", m_pInputUnitPar->getName(), "0", ""));
-    m_pModule->veinModuleParameterHash[key] = m_pT1InputPar; // for modules use
+    m_pModule->veinModuleParameterHash[key] = m_pInputUnitPar; // for modules use
 
     m_pStartStopPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_StartStop"),
@@ -852,6 +852,7 @@ void cSem1ModuleMeasProgram::setUnits()
     m_pEnergyAct->setUnit(s);
     m_pT0InputPar->setUnit(s);
     m_pT1InputPar->setUnit(s);
+    m_pInputUnitPar->setUnit(s);
 }
 
 
@@ -1166,6 +1167,7 @@ void cSem1ModuleMeasProgram::activationDone()
     setInterfaceComponents(); // actualize interface components
     setValidators();
     setUnits();
+    m_pModule->exportMetaData();
 
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
