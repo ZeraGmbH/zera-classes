@@ -544,12 +544,14 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                 {
                     m_nTCountAct = answer.toUInt(&ok);
+                    m_nTAct = m_nTCountAct * 0.001;
                     if (m_nStatus > ECALCSTATUS::ARMED)
-                        m_fPower = m_fEnergy *3600.0 / (m_nTCountAct * 0.001); // in kW
+                        m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in kW
                     else
                         m_fPower = 0.0;
 
                     m_pPowerAct->setValue(m_fPower);
+                    m_pTimeAct->setValue(m_nTAct);
                 }
                 else
                 {
@@ -852,7 +854,7 @@ void cSem1ModuleMeasProgram::setUnits()
     m_pEnergyAct->setUnit(s);
     m_pT0InputPar->setUnit(s);
     m_pT1InputPar->setUnit(s);
-    m_pInputUnitPar->setUnit(s);
+    m_pInputUnitPar->setValue(s);
 }
 
 
