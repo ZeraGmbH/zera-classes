@@ -178,7 +178,6 @@ private:
     cVeinModuleParameter* m_pRefConstantPar;
     cVeinModuleParameter* m_pTargetedPar;
     cVeinModuleParameter* m_pMeasTimePar;
-    cVeinModuleParameter* m_pRefConstantUnitPar;
 
     cVeinModuleParameter* m_pT0InputPar;
     cVeinModuleParameter* m_pT1InputPar;
