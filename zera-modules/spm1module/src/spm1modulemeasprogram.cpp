@@ -283,7 +283,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                                QString("Component for reading and setting the modules energy unit"),
                                                QVariant("Unknown"));
     m_pInputUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:TXUNIT").arg(modNr), "10", m_pInputUnitPar->getName(), "0", ""));
-    m_pModule->veinModuleParameterHash[key] = m_pT1InputPar; // for modules use
+    m_pModule->veinModuleParameterHash[key] = m_pInputUnitPar; // for modules use
 
     m_pStartStopPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_StartStop"),
@@ -542,14 +542,16 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case actualizepower:
             {
                 if (reply == ack)
-                {
+                {   
                     m_nTCountAct = answer.toUInt(&ok);
+                    m_nTAct = m_nTCountAct * 0.001;
                     if (m_nStatus > ECALCSTATUS::ARMED)
-                        m_fPower = m_fEnergy *3600.0 / (m_nTCountAct * 0.001); // in kW
+                        m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in kW
                     else
                         m_fPower = 0.0;
 
                     m_pPowerAct->setValue(m_fPower);
+                    m_pTimeAct->setValue(m_nTAct);
                 }
                 else
                 {
@@ -837,7 +839,7 @@ void cSpm1ModuleMeasProgram::setValidators()
     sValidator = new cStringValidator(m_REFAliasList);
     m_pRefInputPar->setValidator(sValidator);
 
-    sValidator = new cStringValidator(getEnergyUnitValidator());
+    sValidator = new cStringValidator(getPowerUnitValidator());
     m_pInputUnitPar->setValidator(sValidator);
 }
 
@@ -846,12 +848,14 @@ void cSpm1ModuleMeasProgram::setUnits()
 {
     QString s;
 
-    m_pPowerAct->setUnit(getPowerUnit());
+    s = getPowerUnit();
+    m_pPowerAct->setUnit(s);
+    m_pT0InputPar->setUnit(s);
+    m_pT1InputPar->setUnit(s);
+    m_pInputUnitPar->setValue(s);
 
     s = getEnergyUnit();
     m_pEnergyAct->setUnit(s);
-    m_pT0InputPar->setUnit(s);
-    m_pT1InputPar->setUnit(s);
 }
 
 
@@ -1166,6 +1170,7 @@ void cSpm1ModuleMeasProgram::activationDone()
     setInterfaceComponents(); // actualize interface components
     setValidators();
     setUnits();
+    m_pModule->exportMetaData();
 
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;

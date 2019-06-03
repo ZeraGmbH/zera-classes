@@ -178,7 +178,6 @@ private:
     cVeinModuleParameter* m_pRefConstantPar;
     cVeinModuleParameter* m_pTargetedPar;
     cVeinModuleParameter* m_pMeasTimePar;
-    cVeinModuleParameter* m_pRefConstantUnitPar;
 
     cVeinModuleParameter* m_pT0InputPar;
     cVeinModuleParameter* m_pT1InputPar;
@@ -211,13 +210,13 @@ private:
     quint32 m_nMTCNTStart;
     quint32 m_nMTCNTact;
     quint32 m_nVIfin;
-    quint32 m_nTfin;
     quint32 m_nVIAct;
+    quint32 m_nTfin;
     quint32 m_nTAct;
-    double m_fEnergy;
     quint32 m_nTCountAct;
+    double m_fEnergy;
     double m_fPower;
-    quint32 m_nIntReg;
+    quint32 m_nIntReg;    
 
 private slots:
     void resourceManagerConnect();
