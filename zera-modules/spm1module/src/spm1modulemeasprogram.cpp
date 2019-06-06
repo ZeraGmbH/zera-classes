@@ -173,15 +173,15 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, Zera::Proxy:
     connect(&m_setEMResultState, SIGNAL(entered()), SLOT(setEMResult()));
 
     // we need a hash for our different power input units
-    mEnergyUnitFactorHash["MW"] = 1000.0;
-    mEnergyUnitFactorHash["kW"] = 1.0;
-    mEnergyUnitFactorHash["W"] = 0.001;
-    mEnergyUnitFactorHash["MVar"] = 1000.0;
-    mEnergyUnitFactorHash["kVar"] = 1.0;
-    mEnergyUnitFactorHash["Var"] = 0.001;
-    mEnergyUnitFactorHash["MVA"] = 1000.0;
-    mEnergyUnitFactorHash["kVA"] = 1.0;
-    mEnergyUnitFactorHash["VA"] = 0.001;
+    mPowerUnitFactorHash["MW"] = 1000.0;
+    mPowerUnitFactorHash["kW"] = 1.0;
+    mPowerUnitFactorHash["W"] = 0.001;
+    mPowerUnitFactorHash["MVar"] = 1000.0;
+    mPowerUnitFactorHash["kVar"] = 1.0;
+    mPowerUnitFactorHash["Var"] = 0.001;
+    mPowerUnitFactorHash["MVA"] = 1000.0;
+    mPowerUnitFactorHash["kVA"] = 1.0;
+    mPowerUnitFactorHash["VA"] = 0.001;
 }
 
 
@@ -519,7 +519,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     m_nVIAct = answer.toUInt(&ok);
                     if (m_nStatus > ECALCSTATUS::ARMED)
-                        m_fEnergy = 1.0 * m_nVIAct / m_pRefConstantPar->getValue().toDouble();
+                        m_fEnergy = 1.0 * m_nVIAct / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                     else
                         m_fEnergy = 0.0;
 
@@ -1332,12 +1332,15 @@ void cSpm1ModuleMeasProgram::setEMResult()
 
     m_fEnergy = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
     time = m_nTfin * 0.001; // we measure time in sec's
-    PRef = m_fPower = m_fEnergy * 3600.0 / time;
-    PDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
+    PRef = m_fEnergy * 3600.0 / time;
+    PDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (PRef == 0)
         m_fResult = qQNaN();
     else
         m_fResult = (PDut - PRef) * 100.0 / PRef;
+
+    m_fEnergy /=  mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()];
+    m_fPower = m_fEnergy * 3600.0 / time;
 
     m_pTimeAct->setValue(QVariant(time));
     m_pResultAct->setValue(QVariant(m_fResult));
