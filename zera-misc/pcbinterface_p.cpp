@@ -617,6 +617,17 @@ quint32 cPCBInterfacePrivate::getPCBAdjustmentData()
 }
 
 
+quint32 cPCBInterfacePrivate::setPCBAdjustmentData(QString xmlpcb)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ADJ:XML"), par = xmlpcb);
+    m_MsgNrCmdList[msgnr] = setadjustpcbxml;
+    return msgnr;
+}
+
+
 quint32 cPCBInterfacePrivate::getClampAdjustmentData()
 {
     QString cmd;
@@ -624,6 +635,17 @@ quint32 cPCBInterfacePrivate::getClampAdjustmentData()
 
     msgnr = sendCommand(cmd = QString("SYST:ADJ:CLAM:XML?"));
     m_MsgNrCmdList[msgnr] = getadjustclampxml;
+    return msgnr;
+}
+
+
+quint32 cPCBInterfacePrivate::setClampAdjustmentData(QString xmlclamp)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ADJ:CLAM:XML"), par = xmlclamp);
+    m_MsgNrCmdList[msgnr] = setadjustclampxml;
     return msgnr;
 }
 
@@ -837,6 +859,8 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case setpllchannel:
         case setconstantsource:
         case setpowtypesource:
+        case setadjustpcbxml:
+        case setadjustclampxml:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }

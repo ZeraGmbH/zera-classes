@@ -60,7 +60,9 @@ enum pcbcommands
     getpcberrorstatus,
     getadjustmentchksum,
     getadjustpcbxml,
+    setadjustpcbxml,
     getadjustclampxml,
+    setadjustclampxml,
     getformfactorsource,
     getconstantsource,
     setconstantsource,
@@ -166,7 +168,9 @@ public:
     virtual quint32 readSerialNr();
     virtual quint32 getAdjustmentChksum();
     virtual quint32 getPCBAdjustmentData();
+    virtual quint32 setPCBAdjustmentData(QString xmlpcb);
     virtual quint32 getClampAdjustmentData();
+    virtual quint32 setClampAdjustmentData(QString xmlclamp);
 
     // sending a transparent command
     virtual quint32 transparentCommand(QString cmd);

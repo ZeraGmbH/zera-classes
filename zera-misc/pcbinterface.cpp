@@ -334,10 +334,24 @@ quint32 cPCBInterface::getPCBAdjustmentData()
 }
 
 
+quint32 cPCBInterface::setPCBAdjustmentData(QString xmlpcb)
+{
+    Q_D(cPCBInterface);
+    return d->setPCBAdjustmentData(xmlpcb);
+}
+
+
 quint32 cPCBInterface::getClampAdjustmentData()
 {
     Q_D(cPCBInterface);
     return d->getClampAdjustmentData();
+}
+
+
+quint32 cPCBInterface::setClampAdjustmentData(QString xmlclamp)
+{
+    Q_D(cPCBInterface);
+    return d->setClampAdjustmentData(xmlclamp);
 }
 
 
