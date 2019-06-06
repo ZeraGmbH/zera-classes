@@ -856,6 +856,8 @@ void cSpm1ModuleMeasProgram::setUnits()
 
     s = getEnergyUnit();
     m_pEnergyAct->setUnit(s);
+
+    m_pModule->exportMetaData();
 }
 
 
@@ -1170,7 +1172,6 @@ void cSpm1ModuleMeasProgram::activationDone()
     setInterfaceComponents(); // actualize interface components
     setValidators();
     setUnits();
-    m_pModule->exportMetaData();
 
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
@@ -1407,7 +1408,6 @@ void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
     setValidators();
     setUnits();
 
-    m_pModule->exportMetaData();
     emit m_pModule->parameterChanged();
 }
 
@@ -1416,6 +1416,8 @@ void cSpm1ModuleMeasProgram::newTargeted(QVariant targeted)
 {
     m_ConfigData.m_bTargeted.m_nActive = targeted.toInt();
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1423,6 +1425,8 @@ void cSpm1ModuleMeasProgram::newMeasTime(QVariant meastime)
 {
     m_ConfigData.m_nMeasTime.m_nPar = meastime.toInt();
     setInterfaceComponents();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1430,6 +1434,8 @@ void cSpm1ModuleMeasProgram::newT0Input(QVariant t0input)
 {
     m_pT0InputPar->setValue(t0input);
     setEMResult();
+
+    emit m_pModule->parameterChanged();
 }
 
 
@@ -1437,12 +1443,16 @@ void cSpm1ModuleMeasProgram::newT1Input(QVariant t1input)
 {
     m_pT1InputPar->setValue(t1input);
     setEMResult();
+
+    emit m_pModule->parameterChanged();
 }
 
 
 void cSpm1ModuleMeasProgram::newUnit(QVariant unit)
 {
     m_pInputUnitPar->setValue(unit.toString());
+
+    emit m_pModule->parameterChanged();
 }
 
 
