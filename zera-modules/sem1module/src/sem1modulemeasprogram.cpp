@@ -519,11 +519,11 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     m_nVIAct = answer.toUInt(&ok);
                     if (m_nStatus > ECALCSTATUS::ARMED)
-                        m_fEnergy = 1.0 * m_nVIAct / m_pRefConstantPar->getValue().toDouble();
+                        m_fEnergy = 1.0 * m_nVIAct / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                     else
                         m_fEnergy = 0.0;
 
-                    m_pEnergyAct->setValue(m_fEnergy); // in kWh
+                    m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                 }
                 else
                 {
@@ -546,7 +546,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     m_nTCountAct = answer.toUInt(&ok);
                     m_nTAct = m_nTCountAct * 0.001;
                     if (m_nStatus > ECALCSTATUS::ARMED)
-                        m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in kW
+                        m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in MW, kW, W depends on selected unit for user input
                     else
                         m_fPower = 0.0;
 
@@ -1336,7 +1336,7 @@ void cSem1ModuleMeasProgram::setEMResult()
     else
         m_fResult = (WDut - WRef) * 100.0 / WRef;
 
-    m_fEnergy = WRef;
+    m_fEnergy = WRef / mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     time = m_nTfin * 0.001; // we measure time in sec's
     m_fPower = m_fEnergy * 3600.0 / time;
 
