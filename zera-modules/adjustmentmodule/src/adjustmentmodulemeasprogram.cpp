@@ -944,11 +944,12 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
 
 void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 {
-    m_pPARAdjustPCBData->setValue(QString("PCB ADJ Data write Test"));
+    m_pPARAdjustPCBData->setValue(var);
+    m_MsgNrCmdList[m_AdjustPCBInterface->setPCBAdjustmentData(var.toString())] = setpcbadjustmentdata;
 }
 
 
-void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
+void cAdjustmentModuleMeasProgram::readPCBAdjustmentData()
 {
     m_MsgNrCmdList[m_AdjustPCBInterface->getPCBAdjustmentData()] = getpcbadjustmentdata;
 }
@@ -956,11 +957,12 @@ void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
 
 void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
 {
-    m_pPARAdjustClampData->setValue(QString("Clamp ADJ Data write Test"));
+    m_pPARAdjustClampData->setValue(var);
+    m_MsgNrCmdList[m_AdjustPCBInterface->setClampAdjustmentData(var.toString())] = setclampadjustmentdata;
 }
 
 
-void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData(QVariant)
+void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData()
 {
     m_MsgNrCmdList[m_AdjustPCBInterface->getClampAdjustmentData()] = getclampadjustmentdata;
 }

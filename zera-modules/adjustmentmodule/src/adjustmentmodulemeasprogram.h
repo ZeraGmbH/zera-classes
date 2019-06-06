@@ -56,7 +56,9 @@ enum adjustmentmoduleCmds
     getadjoffsetcorrection,
     setoffsetnode,
     getpcbadjustmentdata,
+    setpcbadjustmentdata,
     getclampadjustmentdata,
+    setclampadjustmentdata,
     getauthorizationstatus,
     sendtransparentcmd
 };
@@ -272,9 +274,9 @@ private slots:
 
     void transparentDataSend2Port(QVariant var);
     void writePCBAdjustmentData(QVariant var);
-    void readPCBAdjustmentData(QVariant);
+    void readPCBAdjustmentData();
     void writeCLAMPAdjustmentData(QVariant var);
-    void readCLAMPAdjustmentData(QVariant);
+    void readCLAMPAdjustmentData();
 
     void fetchAuthorizationStatus();
 
