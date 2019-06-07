@@ -908,15 +908,20 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
 
     powType = mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
 
-    // our default units always are k... because we calculate and measure with this
-    if (powType.contains('P'))
-        s = QString("kW");
-    if (powType.contains('Q'))
-        s = QString("kVar");
-    if (powType.contains('S'))
-        s = QString("kVA");
+    if (m_pInputUnitPar->getValue().toString() == "Unknown") // we are activated for the first time
+    {
+        // our default units always are k... because we calculate and measure with this
+        if (powType.contains('P'))
+            s = QString("kW");
+        if (powType.contains('Q'))
+            s = QString("kVar");
+        if (powType.contains('S'))
+            s = QString("kVA");
 
-    return s;
+        m_pInputUnitPar->setValue(s);
+    }
+
+    return m_pInputUnitPar->getValue().toString();
 }
 
 
