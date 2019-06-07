@@ -1451,6 +1451,8 @@ void cSpm1ModuleMeasProgram::newT1Input(QVariant t1input)
 void cSpm1ModuleMeasProgram::newUnit(QVariant unit)
 {
     m_pInputUnitPar->setValue(unit.toString());
+    setInterfaceComponents();
+    setUnits();
 
     emit m_pModule->parameterChanged();
 }
