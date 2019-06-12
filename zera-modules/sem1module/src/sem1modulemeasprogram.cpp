@@ -920,8 +920,15 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
 
         m_pInputUnitPar->setValue(s);
     }
+    QString sEnergyUnit = m_pInputUnitPar->getValue().toString();
+    QString sPowerUnit = sEnergyUnit;
+    // the solution to remove time-unit from energy-unit might look odd currently
+    // but in case 'h' will be replaced by 's' we are prepared
+    QString sTimeUnit = QString("h");
+    if (sEnergyUnit.right(sTimeUnit.length()) == sTimeUnit)
+      sPowerUnit = sEnergyUnit.left(sEnergyUnit.length() - sTimeUnit.length());
 
-    return m_pInputUnitPar->getValue().toString();
+    return sPowerUnit;
 }
 
 
