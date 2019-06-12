@@ -912,11 +912,11 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
     {
         // our default units always are k... because we calculate and measure with this
         if (powType.contains('P'))
-            s = QString("kW");
+            s = QString("kWh");
         if (powType.contains('Q'))
-            s = QString("kVar");
+            s = QString("kVarh");
         if (powType.contains('S'))
-            s = QString("kVA");
+            s = QString("kVAh");
 
         m_pInputUnitPar->setValue(s);
     }
