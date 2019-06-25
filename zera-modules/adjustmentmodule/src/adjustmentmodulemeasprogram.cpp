@@ -442,7 +442,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                    true); // deferred notification necessary !!!!!
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPCBData;
     // we will set the validator later after activation we will know the channel names and their ranges
-    scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "10", m_pPARAdjustPCBData->getName(), "0", "");
+    scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "18", m_pPARAdjustPCBData->getName(), "0", "");
     m_pPARAdjustPCBData->setSCPIInfo(scpiInfo);
     connect(m_pPARAdjustPCBData, SIGNAL(sigValueChanged(QVariant)), SLOT(writePCBAdjustmentData(QVariant)));
     connect(m_pPARAdjustPCBData, SIGNAL(sigValueQuery(QVariant)), SLOT(readPCBAdjustmentData(QVariant)));
