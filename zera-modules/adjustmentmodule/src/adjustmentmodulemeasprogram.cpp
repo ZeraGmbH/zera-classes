@@ -438,8 +438,8 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                    key = QString("PAR_AdjustPCBData"),
                                                    QString("Component for reading and setting pcb adjustment data"),
                                                    QVariant(QString("")),
-                                                   false,
-                                                   true); // deferred notification necessary !!!!!
+                                                   true,  // deferred command notification necessary !!!!!
+                                                   true); // deferred query notification necessary !!!!!
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPCBData;
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "18", m_pPARAdjustPCBData->getName(), "0", "");
@@ -451,8 +451,8 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                      key = QString("PAR_AdjustCLAMPData"),
                                                      QString("Component for reading and setting clamp adjustment data"),
                                                      QVariant(QString("")),
-                                                     false,
-                                                     true); // deferred notification necessary !!!!!
+                                                     true, // deferred command notification necessary !!!!!
+                                                     true); // deferred query notification necessary !!!!!
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustClampData;
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "18", m_pPARAdjustClampData->getName(), "0", "");
@@ -1290,7 +1290,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case getpcbadjustmentdata:
             case setpcbadjustmentdata:
                 if (reply == ack)
-                    m_pPARAdjustPCBData->setValue(answer);
+                    m_pPARAdjustPCBData->setValue(receivedPar);
                 else
                     m_pPARAdjustPCBData->setError();
                 break;
