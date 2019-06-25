@@ -37,7 +37,8 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
     if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
          (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
-         (cmd.isQuery(1) && ((scpiCmdType & SCPI::isQuery) > 0)) )     // test if we got an allowed query + 1 parameter
+         (cmd.isQuery(1) && ((scpiCmdType & SCPI::isQuery) > 0))  ||    // test if we got an allowed query + 1 parameter
+         ((scpiCmdType & SCPI::isXMLCmd) > 0) )
     {
         VeinComponent::ComponentData *cData;
 
