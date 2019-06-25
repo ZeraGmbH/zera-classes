@@ -455,7 +455,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                      true); // deferred notification necessary !!!!!
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustClampData;
     // we will set the validator later after activation we will know the channel names and their ranges
-    scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "10", m_pPARAdjustClampData->getName(), "0", "");
+    scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "18", m_pPARAdjustClampData->getName(), "0", "");
     m_pPARAdjustClampData->setSCPIInfo(scpiInfo);
     connect(m_pPARAdjustClampData, SIGNAL(sigValueChanged(QVariant)), SLOT(writeCLAMPAdjustmentData(QVariant)));
     connect(m_pPARAdjustClampData, SIGNAL(sigValueQuery(QVariant)), SLOT(readCLAMPAdjustmentData(QVariant)));
