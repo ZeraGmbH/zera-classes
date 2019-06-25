@@ -131,6 +131,7 @@ private:
     int m_AdjustEntity;
     QString m_AdjustComponent;
     bool m_bAuthorized;
+    QVariant receivedPar;
 
     void setAdjustEnvironment(QVariant var);
     double cmpPhase(QVariant var);

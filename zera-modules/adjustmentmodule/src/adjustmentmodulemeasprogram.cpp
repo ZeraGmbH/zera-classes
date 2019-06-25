@@ -944,7 +944,7 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
 
 void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 {
-    m_pPARAdjustPCBData->setValue(var);
+    receivedPar = var;
     m_MsgNrCmdList[m_AdjustPCBInterface->setPCBAdjustmentData(var.toString())] = setpcbadjustmentdata;
 }
 
@@ -1288,6 +1288,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 break;
 
             case getpcbadjustmentdata:
+            case setpcbadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustPCBData->setValue(answer);
                 else
@@ -1295,6 +1296,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 break;
 
             case getclampadjustmentdata:
+            case setclampadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustClampData->setValue(answer);
                 else
