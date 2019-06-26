@@ -186,6 +186,7 @@ private:
     cVeinModuleParameter* m_pStatusAct;
     cVeinModuleParameter* m_pProgressAct;
     cVeinModuleParameter* m_pEnergyAct;
+    cVeinModuleParameter* m_pEnergyFinalAct;
     cVeinModuleParameter* m_pResultAct;
     cVeinModuleParameter* m_pContinuousPar;
 
@@ -205,7 +206,7 @@ private:
     void cmpDependencies();
 
     // vars dealing with error measurement
-    bool m_brunning;
+    bool m_bFirstMeas;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
     quint32 m_nStatus; // idle, started, running, finished
     quint32 m_nStatusTest;

@@ -335,6 +335,14 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pEnergyAct; // and for the modules interface
     m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENERGY").arg(modNr), "2", m_pEnergyAct->getName(), "0", ""));
 
+
+    m_pEnergyFinalAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("ACT_EnergyFinal"),
+                                                 QString("Component holds energy from last measurement"),
+                                                 QVariant((double) 0.0));
+    m_pModule->veinModuleParameterHash[key] = m_pEnergyFinalAct; // and for the modules interface
+    m_pEnergyFinalAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENFINAL").arg(modNr), "2", m_pEnergyFinalAct->getName(), "0", ""));
+
     m_pResultAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Result"),
                                             QString("Component holds the result of last measurement"),
@@ -581,6 +589,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         m_fEnergy = 0.0;
 
                     m_pEnergyAct->setValue(m_fEnergy);
+                    if (m_bFirstMeas)
+                        m_pEnergyFinalAct->setValue(m_fEnergy);
                 }
                 else
                 {
@@ -839,6 +849,7 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 void cSec1ModuleMeasProgram::setValidators()
 {
     cStringValidator *sValidator;
+    QString s;
 
     sValidator = new cStringValidator(QStringList(m_ConfigData.m_ModeList));
     m_pModePar->setValidator(sValidator);
@@ -852,8 +863,10 @@ void cSec1ModuleMeasProgram::setValidators()
     m_pDutConstanstUnitValidator = new cStringValidator(getDutConstUnitValidator());
     m_pDutConstantUnitPar->setValidator(m_pDutConstanstUnitValidator);
 
-    m_pEnergyAct->setUnit(getEnergyUnit());
-    m_pEnergyPar->setUnit(getEnergyUnit());
+    s = getEnergyUnit();
+    m_pEnergyAct->setUnit(s);
+    m_pEnergyFinalAct->setUnit(s);
+    m_pEnergyPar->setUnit(s);
 }
 
 
@@ -1377,6 +1390,7 @@ void cSec1ModuleMeasProgram::startMeasurement()
 
 void cSec1ModuleMeasProgram::startMeasurementDone()
 {
+    m_bFirstMeas = true; // it is the first measurement after start
     m_nTargetValue = m_ConfigData.m_nTarget.m_nPar;
     Actualize(); // we acualize at once after started
     m_ActualizeTimer.start(m_ConfigData.m_fMeasInterval*1000.0); // and after configured interval
@@ -1403,6 +1417,8 @@ void cSec1ModuleMeasProgram::readMTCountact()
 
 void cSec1ModuleMeasProgram::setECResult()
 {
+    m_bFirstMeas = false;
+
     if (m_pContinuousPar->getValue().toInt() == 0)
     {
         m_pStartStopPar->setValue(QVariant(0)); // restart enable
@@ -1423,7 +1439,7 @@ void cSec1ModuleMeasProgram::setECResult()
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
-
+    m_pEnergyFinalAct->setValue(m_fEnergy);
 }
 
 
@@ -1459,6 +1475,7 @@ void cSec1ModuleMeasProgram::newMode(QVariant mode)
     m_ConfigData.m_sMode.m_sPar = mode.toString();
     setInterfaceComponents();
     m_pEnergyAct->setValue(0.0);
+    m_pEnergyFinalAct->setValue(0.0);
     m_pResultAct->setValue(0.0);
 
     emit m_pModule->parameterChanged();
@@ -1505,17 +1522,23 @@ void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 
 void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
+    QStringList sl;
+    QString s;
+
     m_ConfigData.m_sRefInput.m_sPar = mREFSecInputSelectionHash[refinput.toString()]->name;
     setInterfaceComponents();
 
     // if the reference input changes P <-> Q <-> S it is necessary to change dut constanst unit and its validator
-    QStringList sl;
+
     sl = getDutConstUnitValidator();
     initDutConstantUnit(sl);
     m_pDutConstanstUnitValidator->setValidator(sl);
-    m_pEnergyAct->setUnit(getEnergyUnit());
-    m_pEnergyPar->setUnit(getEnergyUnit());
+    s = getEnergyUnit();
+    m_pEnergyAct->setUnit(s);
+    m_pEnergyFinalAct->setUnit(s);
+    m_pEnergyPar->setUnit(s);
     m_pEnergyAct->setValue(0.0);
+    m_pEnergyFinalAct->setValue(0.0);
     m_pResultAct->setValue(0.0);
     m_pModule->exportMetaData();
 
