@@ -45,6 +45,11 @@
 #define readPCBFPGAVersionErrMSG "PCB FPGA version read failed"
 #define readPCBSerialNrErrMSG "PCB serial number read failed"
 #define readPCBErrMSG "PCB error messages read failed"
+#define readPCBXMLMSG "PCB xml data read failed"
+#define writePCBXMLMSG "PCB xml data write failed"
+#define readClampXMLMSG "Clamp xml data read failed"
+#define writeClampXMLMSG "Clamp xml data write failed"
+
 #define adjustcomputationPCBErrMSG "PCB adjustment computation failed"
 #define adjuststoragePCBErrMSG "PCB adjustment storage failed"
 #define adjuststatusPCBErrMSG "PCB adjustment status setting failed"
