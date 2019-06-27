@@ -50,14 +50,17 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         cData->setOldValue(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
 
         if (!cmd.isQuery())
+        {
             if ((scpiCmdType & SCPI::isXMLCmd) > 0)
                 cData->setNewValue(cmd.getParam()); // if we expect an xml command we take all text behind the command
             else
                 cData->setNewValue(cmd.getParam(0));
 
-        if (cmd.isCommand(1) || ((scpiCmdType & SCPI::isXMLCmd) > 0) )
             cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
+        }
+
         else
+
             cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
 
         VeinEvent::CommandEvent *event;
@@ -66,7 +69,7 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
         // we memorize : for component (componentname) the client to set something
         cSCPIClientInfo *clientinfo;
-        if ( cmd.isCommand(1) || ((scpiCmdType & SCPI::isXMLCmd) > 0) )
+        if (!cmd.isQuery())
             clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
         else
             clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
