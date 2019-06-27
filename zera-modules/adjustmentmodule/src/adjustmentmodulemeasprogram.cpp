@@ -1288,19 +1288,44 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 break;
 
             case getpcbadjustmentdata:
+                if (reply == ack)
+                    m_pPARAdjustPCBData->setValue(answer);
+                else
+                {
+                    m_pPARAdjustPCBData->setError();
+                    emit errMsg(readPCBXMLMSG);
+                }
+                break;
+
+
             case setpcbadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustPCBData->setValue(receivedPar);
                 else
+                {
                     m_pPARAdjustPCBData->setError();
+                    emit errMsg(writePCBXMLMSG);
+                }
                 break;
 
             case getclampadjustmentdata:
+                if (reply == ack)
+                    m_pPARAdjustClampData->setValue(answer);
+                else
+                {
+                    m_pPARAdjustClampData->setError();
+                    emit errMsg(readClampXMLMSG);
+                }
+                break;
+
             case setclampadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustClampData->setValue(answer);
                 else
+                {
                     m_pPARAdjustClampData->setError();
+                    emit errMsg(writeClampXMLMSG);
+                }
                 break;
             }
         }
