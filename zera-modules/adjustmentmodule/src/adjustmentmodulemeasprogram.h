@@ -275,9 +275,9 @@ private slots:
 
     void transparentDataSend2Port(QVariant var);
     void writePCBAdjustmentData(QVariant var);
-    void readPCBAdjustmentData();
+    void readPCBAdjustmentData(QVariant);
     void writeCLAMPAdjustmentData(QVariant var);
-    void readCLAMPAdjustmentData();
+    void readCLAMPAdjustmentData(QVariant);
 
     void fetchAuthorizationStatus();
 

@@ -949,7 +949,7 @@ void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 }
 
 
-void cAdjustmentModuleMeasProgram::readPCBAdjustmentData()
+void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
 {
     m_MsgNrCmdList[m_AdjustPCBInterface->getPCBAdjustmentData()] = getpcbadjustmentdata;
 }
@@ -962,7 +962,7 @@ void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
 }
 
 
-void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData()
+void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData(QVariant)
 {
     m_MsgNrCmdList[m_AdjustPCBInterface->getClampAdjustmentData()] = getclampadjustmentdata;
 }
