@@ -426,7 +426,7 @@ QString cBaseModule::getReleaseNr(QString path)
        do
        {
            line = stream.readLine();
-           if ( (start = line.indexOf("'release")+1) > 0)
+           if ( (start = line.indexOf("'release")+1) > 0 || (start = line.indexOf("'snapshot")+1) > 0)
            {
                 end = line.indexOf("'", start);
                 if ((releaseNrFound = (end > start)) == true)
