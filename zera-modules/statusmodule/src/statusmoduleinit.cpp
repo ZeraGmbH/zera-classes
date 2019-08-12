@@ -8,7 +8,7 @@
 #include <reply.h>
 #include <errormessages.h>
 #include <dspinterface.h>
-#include <veinmoduleactvalue.h>
+#include <veinmoduleparameter.h>
 #include <modulevalidator.h>
 #include <scpiinfo.h>
 
@@ -86,83 +86,84 @@ cStatusModuleInit::~cStatusModuleInit()
 
 void cStatusModuleInit::generateInterface()
 {
-    m_pPCBServerVersion = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                  QString("INF_PCBServerVersion"),
-                                                  QString("Component forwards the pcb server version"),
-                                                  QVariant(QString("") ));
+    QString key;
+    m_pPCBServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   key = QString("INF_PCBServerVersion"),
+                                                   QString("Component forwards the pcb server version"),
+                                                   QVariant(QString("")) );
 
-    m_pModule->veinModuleActvalueList.append(m_pPCBServerVersion);
-    m_pPCBServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCBSERVER", "2", "INF_PCBServerVersion", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pPCBServerVersion; // for modules use
+    m_pPCBServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCBSERVER", "2", key , "0", ""));
 
 
-    m_pCtrlVersion = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                              QString("INF_CTRLVersion"),
+    m_pCtrlVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                              key = QString("INF_CTRLVersion"),
                                               QString("Component forwards the controler version"),
                                               QVariant(QString("") ));
 
-    m_pModule->veinModuleActvalueList.append(m_pCtrlVersion);
-    m_pCtrlVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:CONTROLER", "2", "INF_CTRLVersion", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pCtrlVersion;
+    m_pCtrlVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:CONTROLER", "2", key, "0", ""));
 
 
-    m_pFPGAVersion = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                             QString("INF_FPGAVersion"),
-                                             QString("Component forwards the fpga version"),
-                                             QVariant(QString("") ));
-
-    m_pModule->veinModuleActvalueList.append(m_pFPGAVersion);
-    m_pFPGAVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:FPGA", "2", "INF_FPGAVersion", "0", ""));
-
-
-    m_pSerialNumber = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                              QString("INF_SerialNr"),
-                                              QString("Component forwards the devices serial number"),
+    m_pFPGAVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                              key = QString("INF_FPGAVersion"),
+                                              QString("Component forwards the fpga version"),
                                               QVariant(QString("") ));
 
-    m_pModule->veinModuleActvalueList.append(m_pSerialNumber);
-    m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "2", "INF_SerialNr", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pFPGAVersion;
+    m_pFPGAVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:FPGA", "2", key, "0", ""));
 
 
-    m_pDSPServerVersion = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                  QString("INF_DSPServerVersion"),
-                                                  QString("Component forwards the dsp server version"),
-                                                  QVariant(QString("") ));
-
-    m_pModule->veinModuleActvalueList.append(m_pDSPServerVersion);
-    m_pDSPServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSPSERVER", "2", "INF_DSPServerVersion", "0", ""));
-
-
-    m_pDSPProgramVersion = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                   QString("INF_DSPVersion"),
-                                                   QString("Component forwards the dsp software version"),
-                                                   QVariant(QString("") ));
-
-    m_pModule->veinModuleActvalueList.append(m_pDSPProgramVersion);
-    m_pDSPProgramVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSP", "2", "INF_DSPVersion", "0", ""));
-
-
-    m_pReleaseNumber = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                               QString("INF_ReleaseNr"),
-                                               QString("Component forwards the devices release number"),
+    m_pSerialNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("INF_SerialNr"),
+                                               QString("Component forwards the devices serial number"),
                                                QVariant(QString("") ));
 
-    m_pModule->veinModuleActvalueList.append(m_pReleaseNumber);
-    m_pReleaseNumber->setSCPIInfo(new cSCPIInfo("STATUS", "RELEASE", "2", "INF_ReleaseNr", "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pSerialNumber;
+    m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "2", key, "0", ""));
 
-    m_pAdjustmentStatus = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                QString("INF_Adjusted"),
-                                                QString("Component forwards information about device adjustment"),
-                                                QVariant(0));
 
-    m_pModule->veinModuleActvalueList.append(m_pAdjustmentStatus);
-    m_pAdjustmentStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ADJUSTMENT", "2", "INF_Adjusted", "0", ""));
+    m_pDSPServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   key = QString("INF_DSPServerVersion"),
+                                                   QString("Component forwards the dsp server version"),
+                                                   QVariant(QString("") ));
 
-    m_pAdjustmentChksum = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                  QString("INF_AdjChksum"),
-                                                  QString("Component forwards checksum of device adjustment data"),
-                                                  QVariant(0));
+    m_pModule->veinModuleParameterHash[key] = m_pDSPServerVersion;
+    m_pDSPServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSPSERVER", "2", key, "0", ""));
 
-    m_pModule->veinModuleActvalueList.append(m_pAdjustmentChksum);
-    m_pAdjustmentChksum->setSCPIInfo(new cSCPIInfo("STATUS", "ADJCHKSUM", "2", "INF_AdjChksum", "0", ""));
+
+    m_pDSPProgramVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                    key = QString("INF_DSPVersion"),
+                                                    QString("Component forwards the dsp software version"),
+                                                    QVariant(QString("") ));
+
+    m_pModule->veinModuleParameterHash[key] = m_pDSPProgramVersion;
+    m_pDSPProgramVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSP", "2", key, "0", ""));
+
+
+    m_pReleaseNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("INF_ReleaseNr"),
+                                                QString("Component forwards the devices release number"),
+                                                QVariant(QString("") ));
+
+    m_pModule->veinModuleParameterHash[key] = m_pReleaseNumber;
+    m_pReleaseNumber->setSCPIInfo(new cSCPIInfo("STATUS", "RELEASE", "2", key, "0", ""));
+
+    m_pAdjustmentStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   key = QString("INF_Adjusted"),
+                                                   QString("Component forwards information about device adjustment"),
+                                                   QVariant(0));
+
+    m_pModule->veinModuleParameterHash[key] = m_pAdjustmentStatus;
+    m_pAdjustmentStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ADJUSTMENT", "2", key, "0", ""));
+
+    m_pAdjustmentChksum = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   key = QString("INF_AdjChksum"),
+                                                   QString("Component forwards checksum of device adjustment data"),
+                                                   QVariant(0));
+
+    m_pModule->veinModuleParameterHash[key] = m_pAdjustmentChksum;
+    m_pAdjustmentChksum->setSCPIInfo(new cSCPIInfo("STATUS", "ADJCHKSUM", "2", key, "0", ""));
 }
 
 

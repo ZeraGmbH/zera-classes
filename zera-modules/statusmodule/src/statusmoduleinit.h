@@ -28,7 +28,7 @@ class QStateMachine;
 class QState;
 class QFinalState;
 class cDspMeasData;
-class cVeinModuleActvalue;
+class cVeinModuleParameter;
 
 namespace STATUSMODULE
 {
@@ -111,15 +111,15 @@ private:
     QString m_sAdjStatus;
     QString m_sAdjChksum;
 
-    cVeinModuleActvalue *m_pPCBServerVersion;
-    cVeinModuleActvalue *m_pCtrlVersion;
-    cVeinModuleActvalue *m_pFPGAVersion;
-    cVeinModuleActvalue *m_pSerialNumber;
-    cVeinModuleActvalue *m_pDSPServerVersion;
-    cVeinModuleActvalue *m_pDSPProgramVersion;
-    cVeinModuleActvalue *m_pReleaseNumber;
-    cVeinModuleActvalue *m_pAdjustmentStatus;
-    cVeinModuleActvalue *m_pAdjustmentChksum;
+    cVeinModuleParameter *m_pPCBServerVersion;
+    cVeinModuleParameter *m_pCtrlVersion;
+    cVeinModuleParameter *m_pFPGAVersion;
+    cVeinModuleParameter *m_pSerialNumber;
+    cVeinModuleParameter *m_pDSPServerVersion;
+    cVeinModuleParameter *m_pDSPProgramVersion;
+    cVeinModuleParameter *m_pReleaseNumber;
+    cVeinModuleParameter *m_pAdjustmentStatus;
+    cVeinModuleParameter *m_pAdjustmentChksum;
 
     QString findReleaseNr();
     void setInterfaceComponents();
