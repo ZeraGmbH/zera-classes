@@ -131,6 +131,7 @@ void cStatusModule::activationFinished()
 {
     // now we still have to export the json interface information, then we are ready
     exportMetaData();
+    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
     emit activationReady();
 }
 
