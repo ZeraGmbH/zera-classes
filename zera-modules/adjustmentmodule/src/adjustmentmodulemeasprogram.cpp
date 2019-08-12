@@ -182,6 +182,7 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
 {
     QStringList sl;
 
+    receivedPar = var;
     sl = var.toString().split(',');
     m_sAdjustChannel = sl.at(0);
     m_sAdjustRange = sl.at(1);
@@ -328,7 +329,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                              key = QString("PAR_Storage"),
                                              QString("Component for saving adjustment data"),
                                              QVariant(int(0)),
-                                             false); // no deferred notification necessary
+                                             true); // deferred notification necessary
 
     m_pModule->veinModuleParameterHash[key] = m_pPARStorage;
     scpiInfo = new cSCPIInfo("CALCULATE", "STORAGE", "10", m_pPARStorage->getName(), "0", "");
@@ -342,7 +343,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                   key = QString("PAR_AdjustGainStatus"),
                                                   QString("Component for setting gain adjustment status"),
                                                   QVariant(int(0)),
-                                                  false); // no deferred notification necessary
+                                                  true); // deferred notification necessary
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustGainStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "GSTATUS", "10", m_pPARAdjustGainStatus->getName(), "0", "");
@@ -353,7 +354,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                        key = QString("PAR_AdjustPhaseStatus"),
                                                        QString("Component for setting phase adjustment status"),
                                                        QVariant(int(0)),
-                                                       false); // no deferred notification necessary
+                                                       true); // deferred notification necessary
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPhaseStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "PSTATUS", "10", m_pPARAdjustPhaseStatus->getName(), "0", "");
@@ -364,7 +365,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                         key = QString("PAR_AdjustOffsetStatus"),
                                                         QString("Component for setting offset adjustment status"),
                                                         QVariant(int(0)),
-                                                        false); // no deferred notification necessary
+                                                        true); // deferred notification necessary
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustOffsetStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "OSTATUS", "10", m_pPARAdjustOffsetStatus->getName(), "0", "");
@@ -388,7 +389,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                      key = QString("PAR_AdjustAmplitude"),
                                                      QString("Component for setting 1 amplitude adjustment node"),
                                                      QVariant(QString("")),
-                                                     false); // no deferred notification necessary
+                                                     true); // deferred notification necessary
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustAmplitude;
     scpiInfo = new cSCPIInfo("CALCULATE", "AMPLITUDE", "10", m_pPARAdjustAmplitude->getName(), "0", "");
@@ -401,7 +402,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                  key = QString("PAR_AdjustPhase"),
                                                  QString("Component for setting 1 phase adjustment node"),
                                                  QVariant(QString("")),
-                                                 false); // no deferred notification necessary
+                                                 true); // no deferred notification necessary
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPhase;
     scpiInfo = new cSCPIInfo("CALCULATE", "PHASE", "10", m_pPARAdjustPhase->getName(), "0", "");
@@ -413,7 +414,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
                                                   key = QString("PAR_Adjustoffset"),
                                                   QString("Component for setting 1 offset adjustment node"),
                                                   QVariant(QString("")),
-                                                  false); // no deferred notification necessary
+                                                  true); // no deferred notification necessary
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustOffset;
     // we will set the validator later after activation we will know the channel names and their ranges
@@ -1155,14 +1156,14 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     qDebug() << adjuststoragePCBErrMSG;
 #endif
                     emit executionError();
+                    m_pPARStorage->setError();
                 }
                 break;
 
             case setadjustgainstatus:
-            case setadjustphasestatus:
-            case setadjustoffsetstatus:
                 if (reply == ack)
                 {
+                    m_pPARAdjustGainStatus->setValue(QVariant(0));
                 }
                 else
                 {
@@ -1171,8 +1172,43 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     qDebug() << adjuststatusPCBErrMSG;
 #endif
                     emit executionError();
+                    m_pPARAdjustGainStatus->setError();
                 }
                 break;
+
+            case setadjustphasestatus:
+                if (reply == ack)
+                {
+                    m_pPARAdjustPhaseStatus->setValue(QVariant(0));
+                }
+                else
+                {
+                    emit errMsg((tr(adjuststatusPCBErrMSG)));
+#ifdef DEBUG
+                    qDebug() << adjuststatusPCBErrMSG;
+#endif
+                    emit executionError();
+                    m_pPARAdjustPhaseStatus->setError();
+                }
+                break;
+
+
+            case setadjustoffsetstatus:
+                if (reply == ack)
+                {
+                    m_pPARAdjustOffsetStatus->setValue(QVariant(0));
+                }
+                else
+                {
+                    emit errMsg((tr(adjuststatusPCBErrMSG)));
+#ifdef DEBUG
+                    qDebug() << adjuststatusPCBErrMSG;
+#endif
+                    emit executionError();
+                    m_pPARAdjustOffsetStatus->setError();
+                }
+                break;
+
 
             case getadjgaincorrection:
                 if (reply == ack)
@@ -1182,13 +1218,13 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else
                 {
-                    m_adjustAmplitudeMachine.stop();
                     emit errMsg(readGainCorrErrMsg);
                     emit adjustError();
 #ifdef DEBUG
                     qDebug() << readGainCorrErrMsg;
 #endif
                     emit executionError();
+                    m_pPARAdjustAmplitude->setError();
                 }
                 break;
 
@@ -1196,6 +1232,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 if (reply == ack)
                 {
                     emit adjustamplitudeContinue();
+                    m_pPARAdjustAmplitude->setValue(receivedPar);
                 }
                 else
                 {
@@ -1205,6 +1242,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     qDebug() << setGainNodeErrMsg;
 #endif
                     emit executionError();
+                    m_pPARAdjustAmplitude->setError();
                 }
                 break;
 
@@ -1222,12 +1260,14 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     qDebug() << readOffsetCorrErrMsg;
 #endif
                     emit executionError();
+                    m_pPARAdjustOffset->setError();
                 }
                 break;
 
             case setoffsetnode:
                 if (reply == ack)
                 {
+                    m_pPARAdjustOffset->setValue(receivedPar);
                     emit adjustoffsetContinue();
                 }
                 else
@@ -1238,6 +1278,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     qDebug() << setOffsetNodeErrMsg;
 #endif
                     emit executionError();
+                    m_pPARAdjustOffset->setError();
                 }
                 break;
 
@@ -1255,12 +1296,14 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     qDebug() << readPhaseCorrErrMsg;
 #endif
                     emit executionError();
+                    m_pPARAdjustPhase->setError();
                 }
                 break;
 
             case setphasenode:
                 if (reply == ack)
                 {
+                    m_pPARAdjustPhase->setValue(receivedPar);
                     emit adjustphaseContinue();
                 }
                 else
@@ -1271,6 +1314,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     qDebug() << setPhaseNodeErrMsg;
 #endif
                     emit executionError();
+                    m_pPARAdjustPhase->setError();
                 }
                 break;
 
