@@ -20,6 +20,7 @@ signals:
     void activated(); // is emitted after the activist is completely activated
     void activationContinue(); // for activist progress in activation statemachine
     void activationLoop();
+    void activationRepeat();
     void activationSkip();
     void activationError();
     void deactivated();
