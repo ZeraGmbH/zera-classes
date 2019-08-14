@@ -105,11 +105,17 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                             emit clientinfoSignal(cName);
                             disconnect(myConn);
                             if (clientinfo->parCmdType() == SCPIMODULE::parcmd)
+                            {
+                                myConn = connect(this, SIGNAL(status(quint8)), clientinfo->getClient(), SLOT(receiveStatus(quint8)));
                                 emit status(SCPI::ack);
+                                disconnect(myConn);
+                            }
                             else
                             {
                                 QString answer = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData())->newValue().toString();
+                                myConn = connect(this, SIGNAL(SignalAnswer(QString)), clientinfo->getClient(), SLOT(receiveAnswer(QString)));
                                 emit SignalAnswer(answer);
+                                disconnect(myConn);
                             }
                             break;
                         }
@@ -174,7 +180,9 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                             QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString)), clientinfo->getClient(), SLOT(removeSCPIClientInfo(QString)), Qt::QueuedConnection);
                             emit clientinfoSignal(cName);
                             disconnect(myConn);
+                            myConn = connect(this, SIGNAL(status(quint8)), clientinfo->getClient(), SLOT(receiveStatus(quint8)));
                             emit status(SCPI::errval);
+                            disconnect(myConn);
                             break;
                         }
                     }
