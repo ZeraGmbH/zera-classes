@@ -66,10 +66,6 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList);
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList);
 
-    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(status(quint8)), this, SLOT(receiveStatus(quint8)));
-    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(SignalAnswer(QString)), this, SLOT(receiveAnswer(QString)));
-//    connect(m_pModule->m_pSCPIEventSystem, SIGNAL(clientinfoSignal(QString)), this, SLOT(removeSCPIClientInfo(QString)));
-
     generateSCPIMeasureSystem();
 
 }
