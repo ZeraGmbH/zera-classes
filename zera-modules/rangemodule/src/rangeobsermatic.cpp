@@ -57,7 +57,10 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 
     m_writeGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeGainCorrDoneState);
+    m_writeGainCorrState.addTransition(this, SIGNAL(activationRepeat()), &m_writeGainCorrRepeatState);
+    m_writeGainCorrRepeatState.addTransition(this, SIGNAL(activationContinue()), &m_writeGainCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrState);
+    m_writeCorrectionDSPMachine.addState(&m_writeGainCorrRepeatState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrDoneState);
     m_writeCorrectionDSPMachine.setInitialState(&m_writeGainCorrState);
     connect(&m_writeGainCorrState, SIGNAL(entered()), SLOT(writeGainCorr()));
@@ -454,9 +457,11 @@ void cRangeObsermatic::setRanges(bool force)
 
     }
 
-    if (change && !m_writeCorrectionDSPMachine.isRunning())
-
-        m_writeCorrectionDSPMachine.start(); // we write all correction after each range setting
+    if (change)
+        if (m_writeCorrectionDSPMachine.isRunning())
+            emit activationRepeat();
+        else
+            m_writeCorrectionDSPMachine.start(); // we write all correction after each range setting
 }
 
 

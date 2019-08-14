@@ -130,6 +130,7 @@ private:
     // statemachine for writing dsp correction data used for scaling
     QStateMachine m_writeCorrectionDSPMachine;
     QState m_writeGainCorrState;
+    QState m_writeGainCorrRepeatState;
     QFinalState m_writeGainCorrDoneState;
 
     // statemachine for reading status of all measurement channels
