@@ -54,12 +54,11 @@ OTHER_FILES += \
     src/power1module4.xml \
     src/power1moduleCED.xml \
     src/power1module2CED.xml \
-    src/power1module3CED.xml
+    src/power1module3CED.xml \
+    src/power1moduleREF.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
 
-DISTFILES += \
-    src/power1moduleREF.xml
