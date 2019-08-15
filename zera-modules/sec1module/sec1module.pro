@@ -46,11 +46,14 @@ HEADERS += \
 OTHER_FILES += \
     src/sec1module.xsd \
     src/com5003-sec1module.xml \
-    src/mt310s2-sec1module.xml
+    src/mt310s2-sec1module.xml \
+    src/com5003-sec1module2.xml
 
 RESOURCES += \
     resources.qrc
 
 include(../../zera-classes.pri)
+
+
 
 
