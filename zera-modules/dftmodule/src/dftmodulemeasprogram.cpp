@@ -154,8 +154,8 @@ void cDftModuleMeasProgram::start()
 
 void cDftModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
-    disconnect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, 0);
+    disconnect(this, SIGNAL(actualValues(QVector<float>*)), 0, 0);
+    disconnect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), 0, 0);
 }
 
 
