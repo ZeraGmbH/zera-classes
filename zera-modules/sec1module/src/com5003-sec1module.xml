@@ -25,9 +25,8 @@
             </modes>
             <embedded>1</embedded>
             <dutinput>
-                <n>2</n>
+                <n>1</n>
                 <inp1>sh0</inp1>
-                <inp2>hk0</inp2>
             </dutinput>
             <refinput>
                 <n>3</n>
