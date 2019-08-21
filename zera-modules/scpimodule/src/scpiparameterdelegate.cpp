@@ -52,8 +52,12 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         cData->setOldValue(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
 
         if (bQuery)
-            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
+        {
+            if (cmd.isQuery(1))
+                cData->setNewValue(cmd.getParam(0));
 
+            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
+        }
         else
         {
             if ((scpiCmdType & SCPI::isXMLCmd) > 0)
