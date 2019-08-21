@@ -31,13 +31,15 @@ cSCPIParameterDelegate::~cSCPIParameterDelegate()
 bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
     quint8 scpiCmdType;
+    bool bQuery;
 
     scpiCmdType = getType();
     cSCPICommand cmd = sInput;
 
-    if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
+    bQuery = cmd.isQuery() || cmd.isQuery(1); // we allow queries without or with 1 parameter
+
+    if ( (bQuery && ((scpiCmdType & SCPI::isQuery) > 0)) ||  // test if we got an allowed query
          (cmd.isCommand(1) && ((scpiCmdType & SCPI::isCmdwP) > 0)) ||  // test if we got an allowed cmd + 1 parameter
-         (cmd.isQuery(1) && ((scpiCmdType & SCPI::isQuery) > 0))  ||    // test if we got an allowed query + 1 parameter
          ((scpiCmdType & SCPI::isXMLCmd) > 0) ) // test if we expext an xml command
     {
         VeinComponent::ComponentData *cData;
@@ -49,7 +51,10 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         cData->setComponentName(m_pSCPICmdInfo->componentName);
         cData->setOldValue(m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName));
 
-        if (!cmd.isQuery())
+        if (bQuery)
+            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
+
+        else
         {
             if ((scpiCmdType & SCPI::isXMLCmd) > 0)
                 cData->setNewValue(cmd.getParam()); // if we expect an xml command we take all text behind the command
@@ -59,9 +64,6 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
             cData->setCommand(VeinComponent::ComponentData::Command::CCMD_SET);
         }
 
-        else
-
-            cData->setCommand(VeinComponent::ComponentData::Command::CCMD_FETCH);
 
         VeinEvent::CommandEvent *event;
         event = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::TRANSACTION, cData);
@@ -69,10 +71,10 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
         // we memorize : for component (componentname) the client to set something
         cSCPIClientInfo *clientinfo;
-        if (!cmd.isQuery())
-            clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
-        else
+        if (bQuery)
             clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
+        else
+            clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
 
