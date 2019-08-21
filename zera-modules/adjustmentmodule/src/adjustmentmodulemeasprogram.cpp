@@ -431,7 +431,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustSend;
     // we will set the validator later after activation we will know the channel names and their ranges
-    scpiInfo = new cSCPIInfo("CALCULATE", "SEND", "10", m_pPARAdjustSend->getName(), "0", "");
+    scpiInfo = new cSCPIInfo("CALCULATE", "SEND", "2", m_pPARAdjustSend->getName(), "0", "");
     m_pPARAdjustSend->setSCPIInfo(scpiInfo);
     connect(m_pPARAdjustSend, SIGNAL(sigValueQuery(QVariant)), SLOT(transparentDataSend2Port(QVariant)));
 
