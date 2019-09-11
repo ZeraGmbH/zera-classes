@@ -25,12 +25,11 @@
             </modes>
             <embedded>1</embedded>
             <dutinput>
-                <n>5</n>
-                <inp1>sh0</inp1>
-                <inp2>fi0</inp2>
-                <inp3>fi1</inp3>
-                <inp4>fi2</inp4>
-                <inp5>fi3</inp5>
+                <n>4</n>
+                <inp1>fi0</inp1>
+                <inp2>fi1</inp2>
+                <inp3>fi2</inp3>
+                <inp4>fi3</inp4>
             </dutinput>
             <refinput>
                 <n>3</n>
