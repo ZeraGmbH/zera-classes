@@ -414,7 +414,7 @@ void cRangeObsermatic::setRanges(bool force)
 
         if ( s != m_actChannelRangeList.at(i) || force)
         {
-            if (!change) // signal is only set once unless there is more than 1 range to change
+            if (!change) // signal is only set once regardingless there is more than 1 range to change
             {
 #ifdef DEBUG
                 qDebug() << "SIG_RANGING = 1";
@@ -429,6 +429,9 @@ void cRangeObsermatic::setRanges(bool force)
             {
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
+                // if we are in rangeautomatic we leave maxoverload set to disable range automatic until user intervention
+                if (!m_bRangeAutomatic)
+                    m_maxOvlList.replace(i, false);
             }
 
             m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
