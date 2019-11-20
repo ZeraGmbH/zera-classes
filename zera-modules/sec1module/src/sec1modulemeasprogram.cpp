@@ -1262,7 +1262,11 @@ void cSec1ModuleMeasProgram::setECResult()
 {
     m_nStatus = ECALCSTATUS::READY;
     m_fProgress = 100.0;
-    m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nMTCNTfin) * 100.0 / m_nTargetValue;
+
+    if (m_nMTCNTfin == 0)
+        m_fResult = qQNaN();
+    else
+        m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nMTCNTfin) * 100.0 / m_nMTCNTfin;
     m_pStatusAct->setValue(QVariant(m_nStatus));
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_pResultAct->setValue(QVariant(m_fResult));
