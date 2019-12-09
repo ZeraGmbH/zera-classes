@@ -414,13 +414,12 @@ void cRangeObsermatic::setRanges(bool force)
             change = true;
 
             // if we have an overload condition in channel we reset it before we set the new range
-            if (m_hardOvlList.at(i) && ! m_maxOvlList.at(i))
+            // but we don't do this if we are in range automatic and have an overload in max. range
+            if (m_hardOvlList.at(i) && !(m_maxOvlList.at(i) && m_bRangeAutomatic))
             {
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
-                // if we are in rangeautomatic we leave maxoverload set to disable range automatic until user intervention
-                if (!m_bRangeAutomatic)
-                    m_maxOvlList.replace(i, false);
+                m_maxOvlList.replace(i, false);
             }
 
             m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
