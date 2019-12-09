@@ -44,7 +44,7 @@ contains( CONFIG, plugin ) {
   }
 } else:unix:equals(TEMPLATE, "lib") {
   DESTDIR = $$PWD/libs
-  VERSION = 1.0.12
+  VERSION = 1.0.13
 
   target.path = /usr/lib
   INSTALLS += target
