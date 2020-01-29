@@ -20,6 +20,7 @@ namespace Proxy
 namespace SCPIMODULE
 {
 
+
 class SCPIModuleFactory : public QObject, public MeasurementModuleFactory
 {
     Q_OBJECT

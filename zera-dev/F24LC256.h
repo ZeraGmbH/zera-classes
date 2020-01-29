@@ -6,7 +6,7 @@
 
 class cF24LC256Private;
 
-class ZERA_DEVSHARED_EXPORT cF24LC256: public cI2CEEPromPrivate
+class ZERADEV_EXPORT cF24LC256: public cI2CEEPromPrivate
 {
 public:
     cF24LC256(QString devNode,int dLevel,short adr);

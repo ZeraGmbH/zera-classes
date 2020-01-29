@@ -21,7 +21,7 @@ class cGaussNode;
 /**
   @b class for a gauss matrix
   */
-class ZERA_MATHSHARED_EXPORT cGaussMatrix
+class ZERAMATH_EXPORT cGaussMatrix
 {
 public:
     /**

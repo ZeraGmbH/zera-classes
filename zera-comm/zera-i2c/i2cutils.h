@@ -16,7 +16,7 @@
   @param[in] i2cadr is sent debug information if desired
   @param[in] debugLevel decides what to write to syslog
   */
-int ZERA_I2CSHARED_EXPORT I2CTransfer( QString deviceNode, int i2cadr, int debugLevel, i2c_rdwr_ioctl_data* iodata);
+int ZERAI2C_EXPORT I2CTransfer( QString deviceNode, int i2cadr, int debugLevel, i2c_rdwr_ioctl_data* iodata);
 
 
 #endif // I2CUTILS_H

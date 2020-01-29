@@ -2,11 +2,10 @@
 #define ZERAVALIDATOR_GLOBAL_H
 
 #include <QtCore/qglobal.h>
+#include "zeravalidator_export.h"
 
-#if defined(ZERAVALIDATOR_LIBRARY)
-#  define ZERAVALIDATORSHARED_EXPORT Q_DECL_EXPORT
-#else
-#  define ZERAVALIDATORSHARED_EXPORT Q_DECL_IMPORT
-#endif
+
+#define ZERAVALIDATORSHARED_EXPORT ZERAVALIDATOR_EXPORT
+
 
 #endif // ZERAVALIDATOR_GLOBAL_H

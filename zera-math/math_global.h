@@ -2,6 +2,7 @@
 #define MATH_GLOBAL_H
 
 #include <QtCore/qglobal.h>
+#include <zeramath_export.h>
 
 /**
   @mainpage ZERA_MATH library holds mathematical calculations used with Zera devices.
@@ -9,11 +10,7 @@
 */
 
 
-#if defined(ZERA_MATH_LIBRARY)
-#  define ZERA_MATHSHARED_EXPORT Q_DECL_EXPORT
-#else
-#  define ZERA_MATHSHARED_EXPORT Q_DECL_IMPORT
-#endif
+
 
 
 #endif // MATH_GLOBAL_H

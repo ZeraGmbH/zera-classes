@@ -2,6 +2,7 @@
 #define DEV_GLOBAL_H
 
 #include <QtCore/qglobal.h>
+#include "zeradev_export.h"
 
 /**
   @mainpage ZERA_DEV library holds the stuff for device drivers used with Zera devices.
@@ -9,11 +10,7 @@
 */
 
 
-#if defined(ZERA_DEV_LIBRARY)
-#  define ZERA_DEVSHARED_EXPORT Q_DECL_EXPORT
-#else
-#  define ZERA_DEVSHARED_EXPORT Q_DECL_IMPORT
-#endif
+
 
 
 #endif // DEV_GLOBAL_H

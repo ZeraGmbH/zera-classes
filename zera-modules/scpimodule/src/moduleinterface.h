@@ -1,5 +1,5 @@
-#ifndef MODULEINTERFACE_H
-#define MODULEINTERFACE_H
+#ifndef SCPIMODULEINTERFACE_H
+#define SCPIMODULEINTERFACE_H
 
 #include <QObject>
 #include <QHash>
@@ -50,4 +50,4 @@ private:
 
 }
 
-#endif // MODULEINTERFACE_H
+#endif // SCPIMODULEINTERFACE_H

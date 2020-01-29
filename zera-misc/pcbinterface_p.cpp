@@ -32,7 +32,7 @@ quint32 cPCBInterfacePrivate::getDSPChannel(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:DSPC?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getdspchannel;
+    m_MsgNrCmdList[msgnr] = PCB::getdspchannel;
     return msgnr;
 }
 
@@ -43,7 +43,7 @@ quint32 cPCBInterfacePrivate::getStatus(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:STAT?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getstatus;
+    m_MsgNrCmdList[msgnr] = PCB::getstatus;
     return msgnr;
 }
 
@@ -54,7 +54,7 @@ quint32 cPCBInterfacePrivate::resetStatus(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:STAT:RES;").arg(chnName));
-    m_MsgNrCmdList[msgnr] = resetstatus;
+    m_MsgNrCmdList[msgnr] = PCB::resetstatus;
     return msgnr;
 }
 
@@ -65,7 +65,7 @@ quint32 cPCBInterfacePrivate::getAlias(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:ALI?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getalias;
+    m_MsgNrCmdList[msgnr] = PCB::getalias;
     return msgnr;
 }
 
@@ -76,7 +76,7 @@ quint32 cPCBInterfacePrivate::getType(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:TYPE?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = gettype;
+    m_MsgNrCmdList[msgnr] = PCB::gettype;
     return msgnr;
 }
 
@@ -87,7 +87,7 @@ quint32 cPCBInterfacePrivate::getUnit(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:UNIT?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getunit;
+    m_MsgNrCmdList[msgnr] = PCB::getunit;
     return  msgnr;
 }
 
@@ -98,7 +98,7 @@ quint32 cPCBInterfacePrivate::getRange(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:RANG?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getrange;
+    m_MsgNrCmdList[msgnr] = PCB::getrange;
     return msgnr;
 }
 
@@ -109,7 +109,7 @@ quint32 cPCBInterfacePrivate::getRangeList(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:RANG:CAT?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getrangelist;
+    m_MsgNrCmdList[msgnr] = PCB::getrangelist;
     return msgnr;
 }
 
@@ -120,7 +120,7 @@ quint32 cPCBInterfacePrivate::getAlias(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:ALI?").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = getalias2;
+    m_MsgNrCmdList[msgnr] = PCB::getalias2;
     return msgnr;
 }
 
@@ -131,7 +131,7 @@ quint32 cPCBInterfacePrivate::getType(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:TYPE?").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = gettype2;
+    m_MsgNrCmdList[msgnr] = PCB::gettype2;
     return msgnr;
 }
 
@@ -142,7 +142,7 @@ quint32 cPCBInterfacePrivate::getUrvalue(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:URV?").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = geturvalue;
+    m_MsgNrCmdList[msgnr] = PCB::geturvalue;
     return msgnr;
 }
 
@@ -153,7 +153,7 @@ quint32 cPCBInterfacePrivate::getUrvalue(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:URV?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = geturvalue2;
+    m_MsgNrCmdList[msgnr] = PCB::geturvalue2;
     return msgnr;
 }
 
@@ -164,7 +164,7 @@ quint32 cPCBInterfacePrivate::getRejection(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:REJ?").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = getrejection;
+    m_MsgNrCmdList[msgnr] = PCB::getrejection;
     return msgnr;
 }
 
@@ -175,7 +175,7 @@ quint32 cPCBInterfacePrivate::getOVRejection(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:OVR?").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = getovrejection;
+    m_MsgNrCmdList[msgnr] = PCB::getovrejection;
     return msgnr;
 }
 
@@ -186,7 +186,7 @@ quint32 cPCBInterfacePrivate::getADCRejection(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:ADCR?").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = getadcrejection;
+    m_MsgNrCmdList[msgnr] = PCB::getadcrejection;
     return msgnr;
 }
 
@@ -197,7 +197,7 @@ quint32 cPCBInterfacePrivate::isAvail(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:AVA?").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = isavail;
+    m_MsgNrCmdList[msgnr] = PCB::isavail;
     return msgnr;
 }
 
@@ -208,7 +208,7 @@ quint32 cPCBInterfacePrivate::getGainCorrection(QString chnName, QString rngName
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:GAIN?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
-    m_MsgNrCmdList[msgnr] = getgaincorrection;
+    m_MsgNrCmdList[msgnr] = PCB::getgaincorrection;
     return msgnr;
 }
 
@@ -219,7 +219,7 @@ quint32 cPCBInterfacePrivate::getAdjGainCorrection(QString chnName, QString rngN
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJG?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
-    m_MsgNrCmdList[msgnr] = getgaincorrection;
+    m_MsgNrCmdList[msgnr] = PCB::getgaincorrection;
     return msgnr;
 }
 
@@ -230,7 +230,7 @@ quint32 cPCBInterfacePrivate::getOffsetCorrection(QString chnName, QString rngNa
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:OFFS?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
-    m_MsgNrCmdList[msgnr] = getoffsetcorrection;
+    m_MsgNrCmdList[msgnr] = PCB::getoffsetcorrection;
     return msgnr;
 }
 
@@ -241,7 +241,7 @@ quint32 cPCBInterfacePrivate::getAdjOffsetCorrection(QString chnName, QString rn
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJO?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
-    m_MsgNrCmdList[msgnr] = getoffsetcorrection;
+    m_MsgNrCmdList[msgnr] = PCB::getoffsetcorrection;
     return msgnr;
 }
 
@@ -252,7 +252,7 @@ quint32 cPCBInterfacePrivate::getPhaseCorrection(QString chnName, QString rngNam
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:PHAS?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
-    m_MsgNrCmdList[msgnr] = getphasecorrection;
+    m_MsgNrCmdList[msgnr] = PCB::getphasecorrection;
     return msgnr;
 }
 
@@ -263,7 +263,7 @@ quint32 cPCBInterfacePrivate::getAdjPhaseCorrection(QString chnName, QString rng
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJP?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
-    m_MsgNrCmdList[msgnr] = getphasecorrection;
+    m_MsgNrCmdList[msgnr] = PCB::getphasecorrection;
     return msgnr;
 }
 
@@ -274,7 +274,7 @@ quint32 cPCBInterfacePrivate::setRange(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:RANG").arg(chnName), par = QString("%1;").arg(rngName));
-    m_MsgNrCmdList[msgnr] = setrange;
+    m_MsgNrCmdList[msgnr] = PCB::setrange;
     return msgnr;
 }
 
@@ -285,7 +285,7 @@ quint32 cPCBInterfacePrivate::setMMode(QString mmode)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:MMODE"), par = QString("%1;").arg(mmode));
-    m_MsgNrCmdList[msgnr] = setmeasuringmode;
+    m_MsgNrCmdList[msgnr] = PCB::setmeasuringmode;
     return msgnr;
 }
 
@@ -296,7 +296,7 @@ quint32 cPCBInterfacePrivate::adjustComputation()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:CORR:COMP;"));
-    m_MsgNrCmdList[msgnr] = adjustcomputation;
+    m_MsgNrCmdList[msgnr] = PCB::adjustcomputation;
     return msgnr;
 }
 
@@ -307,7 +307,7 @@ quint32 cPCBInterfacePrivate::adjustStorage()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:ADJ:FLAS:WRIT;"));
-    m_MsgNrCmdList[msgnr] = adjuststorage;
+    m_MsgNrCmdList[msgnr] = PCB::adjuststorage;
     return msgnr;
 }
 
@@ -318,7 +318,7 @@ quint32 cPCBInterfacePrivate::adjustStorageClamp()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:CLAM:WRIT;"));
-    m_MsgNrCmdList[msgnr] = adjuststorageclamp;
+    m_MsgNrCmdList[msgnr] = PCB::adjuststorageclamp;
     return msgnr;
 }
 
@@ -329,7 +329,7 @@ quint32 cPCBInterfacePrivate::adjustInit(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:init;").arg(chnName).arg(rngName));
-    m_MsgNrCmdList[msgnr] = adjustinit;
+    m_MsgNrCmdList[msgnr] = PCB::adjustinit;
     return msgnr;
 }
 
@@ -341,7 +341,7 @@ quint32 cPCBInterfacePrivate::setAdjustGainStatus(QString chnName, QString rngNa
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:gain:stat").arg(chnName).arg(rngName),
                         par = QString("%1;").arg(stat));
-    m_MsgNrCmdList[msgnr] = setadjustgainstatus;
+    m_MsgNrCmdList[msgnr] = PCB::setadjustgainstatus;
     return msgnr;
 }
 
@@ -353,7 +353,7 @@ quint32 cPCBInterfacePrivate::setAdjustPhaseStatus(QString chnName, QString rngN
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:phas:stat").arg(chnName).arg(rngName),
                         par = QString("%1;").arg(stat));
-    m_MsgNrCmdList[msgnr] = setadjustphasestatus;
+    m_MsgNrCmdList[msgnr] = PCB::setadjustphasestatus;
     return msgnr;
 }
 
@@ -365,7 +365,7 @@ quint32 cPCBInterfacePrivate::setAdjustOffsetStatus(QString chnName, QString rng
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:offs:stat").arg(chnName).arg(rngName),
                         par = QString("%1;").arg(stat));
-    m_MsgNrCmdList[msgnr] = setadjustoffsetstatus;
+    m_MsgNrCmdList[msgnr] = PCB::setadjustoffsetstatus;
     return msgnr;
 }
 
@@ -377,7 +377,7 @@ quint32 cPCBInterfacePrivate::setGainNode(QString chnName, QString rngName, int 
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:gain:node:%3").arg(chnName).arg(rngName).arg(nr),
                         par = QString("%1;%2;").arg(corr).arg(at));
-    m_MsgNrCmdList[msgnr] = setgainnode;
+    m_MsgNrCmdList[msgnr] = PCB::setgainnode;
     return msgnr;
 }
 
@@ -389,7 +389,7 @@ quint32 cPCBInterfacePrivate::setPhaseNode(QString chnName, QString rngName, int
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:phas:node:%3").arg(chnName).arg(rngName).arg(nr),
                         par = QString("%1;%2;").arg(corr).arg(at));
-    m_MsgNrCmdList[msgnr] = setphasenode;
+    m_MsgNrCmdList[msgnr] = PCB::setphasenode;
     return msgnr;
 }
 
@@ -401,7 +401,7 @@ quint32 cPCBInterfacePrivate::setOffsetNode(QString chnName, QString rngName, in
 
     msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:offs:node:%3").arg(chnName).arg(rngName).arg(nr),
                         par = QString("%1;%2;").arg(corr).arg(at));
-    m_MsgNrCmdList[msgnr] = setoffsetnode;
+    m_MsgNrCmdList[msgnr] = PCB::setoffsetnode;
     return msgnr;
 }
 
@@ -414,7 +414,7 @@ quint32 cPCBInterfacePrivate::getAliasSource(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SOUR:%1:ALI?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getaliassource;
+    m_MsgNrCmdList[msgnr] = PCB::getaliassource;
     return msgnr;
 }
 
@@ -425,7 +425,7 @@ quint32 cPCBInterfacePrivate::getDSPChannelSource(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SOUR:%1:DSPC?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getdspchannelsource;
+    m_MsgNrCmdList[msgnr] = PCB::getdspchannelsource;
     return msgnr;
 }
 
@@ -436,7 +436,7 @@ quint32 cPCBInterfacePrivate::getFormFactorSource(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SOUR:%1:FFAC?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getformfactorsource;
+    m_MsgNrCmdList[msgnr] = PCB::getformfactorsource;
     return msgnr;
 }
 
@@ -447,7 +447,7 @@ quint32 cPCBInterfacePrivate::getConstantSource(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SOUR:%1:CONS?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getconstantsource;
+    m_MsgNrCmdList[msgnr] = PCB::getconstantsource;
     return msgnr;
 }
 
@@ -458,7 +458,7 @@ quint32 cPCBInterfacePrivate::setConstantSource(QString chnName, double constant
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SOUR:%1:CONS").arg(chnName), par = QString("%1;").arg(constant));
-    m_MsgNrCmdList[msgnr] = setconstantsource;
+    m_MsgNrCmdList[msgnr] = PCB::setconstantsource;
     return msgnr;
 }
 
@@ -469,7 +469,7 @@ quint32 cPCBInterfacePrivate::getPowTypeSource(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SOUR:%1:POWT?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getpowtypesource;
+    m_MsgNrCmdList[msgnr] = PCB::getpowtypesource;
     return msgnr;
 }
 
@@ -480,7 +480,7 @@ quint32 cPCBInterfacePrivate::setPowTypeSource(QString chnName, QString ptype)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SOUR:%1:POWT").arg(chnName), par = QString("%1;").arg(ptype));
-    m_MsgNrCmdList[msgnr] = setpowtypesource;
+    m_MsgNrCmdList[msgnr] = PCB::setpowtypesource;
     return msgnr;
 }
 
@@ -491,7 +491,7 @@ quint32 cPCBInterfacePrivate::getAliasSample(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SAMP:%1:ALIAS?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getaliassample;
+    m_MsgNrCmdList[msgnr] = PCB::getaliassample;
     return msgnr;
 }
 
@@ -502,7 +502,7 @@ quint32 cPCBInterfacePrivate::getSampleRate()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SAMP:SRAT?"));
-    m_MsgNrCmdList[msgnr] = getsamplerate;
+    m_MsgNrCmdList[msgnr] = PCB::getsamplerate;
     return msgnr;
 }
 
@@ -513,7 +513,7 @@ quint32 cPCBInterfacePrivate::getRangeListSample(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SAMP:%1:RANG:CAT?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getrangelistsample;
+    m_MsgNrCmdList[msgnr] = PCB::getrangelistsample;
     return msgnr;
 }
 
@@ -524,7 +524,7 @@ quint32 cPCBInterfacePrivate::setRangeSample(QString chnName, QString rngName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SAMP:%1:RANG").arg(chnName), par = QString("%1;").arg(rngName));
-    m_MsgNrCmdList[msgnr] = setrangesample;
+    m_MsgNrCmdList[msgnr] = PCB::setrangesample;
     return msgnr;
 }
 
@@ -535,7 +535,7 @@ quint32 cPCBInterfacePrivate::setPLLChannel(QString samplechnName, QString pllch
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SAMP:%1:PLL").arg(samplechnName), par = QString("%1;").arg(pllchnName));
-    m_MsgNrCmdList[msgnr] = setpllchannel;
+    m_MsgNrCmdList[msgnr] = PCB::setpllchannel;
     return msgnr;
 }
 
@@ -546,7 +546,7 @@ quint32 cPCBInterfacePrivate::getAliasSchead(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SCHEAD:%1:ALIAS?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getaliassschead;
+    m_MsgNrCmdList[msgnr] = PCB::getaliassschead;
     return msgnr;
 }
 
@@ -557,7 +557,7 @@ quint32 cPCBInterfacePrivate::getAliasFrqinput(QString chnName)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("FRQINPUT:%1:ALIAS?").arg(chnName));
-    m_MsgNrCmdList[msgnr] = getaliasfrqinput;
+    m_MsgNrCmdList[msgnr] = PCB::getaliasfrqinput;
     return msgnr;
 }
 
@@ -568,7 +568,7 @@ quint32 cPCBInterfacePrivate::getAdjustmentStatus()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("STAT:ADJ?"));
-    m_MsgNrCmdList[msgnr] = getadjustmentstatus;
+    m_MsgNrCmdList[msgnr] = PCB::getadjustmentstatus;
     return msgnr;
 }
 
@@ -579,7 +579,7 @@ quint32 cPCBInterfacePrivate::getAuthorizationStatus()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("STAT:AUTH?"));
-    m_MsgNrCmdList[msgnr] = getauthorizationstatus;
+    m_MsgNrCmdList[msgnr] = PCB::getauthorizationstatus;
     return msgnr;
 }
 
@@ -590,7 +590,7 @@ quint32 cPCBInterfacePrivate::getPCBErrorStatus()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("STAT:PCB:ERR?"));
-    m_MsgNrCmdList[msgnr] = getpcberrorstatus;
+    m_MsgNrCmdList[msgnr] = PCB::getpcberrorstatus;
     return msgnr;
 }
 
@@ -601,7 +601,7 @@ quint32 cPCBInterfacePrivate::getAdjustmentChksum()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:ADJ:FLAS:CHKS?"));
-    m_MsgNrCmdList[msgnr] = getadjustmentchksum;
+    m_MsgNrCmdList[msgnr] = PCB::getadjustmentchksum;
     return msgnr;
 }
 
@@ -612,7 +612,7 @@ quint32 cPCBInterfacePrivate::getPCBAdjustmentData()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:ADJ:XML?"));
-    m_MsgNrCmdList[msgnr] = getadjustpcbxml;
+    m_MsgNrCmdList[msgnr] = PCB::getadjustpcbxml;
     return msgnr;
 }
 
@@ -623,7 +623,7 @@ quint32 cPCBInterfacePrivate::setPCBAdjustmentData(QString xmlpcb)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:ADJ:XML"), par = xmlpcb);
-    m_MsgNrCmdList[msgnr] = setadjustpcbxml;
+    m_MsgNrCmdList[msgnr] = PCB::setadjustpcbxml;
     return msgnr;
 }
 
@@ -634,7 +634,7 @@ quint32 cPCBInterfacePrivate::getClampAdjustmentData()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:ADJ:CLAM:XML?"));
-    m_MsgNrCmdList[msgnr] = getadjustclampxml;
+    m_MsgNrCmdList[msgnr] = PCB::getadjustclampxml;
     return msgnr;
 }
 
@@ -645,7 +645,7 @@ quint32 cPCBInterfacePrivate::setClampAdjustmentData(QString xmlclamp)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:ADJ:CLAM:XML"), par = xmlclamp);
-    m_MsgNrCmdList[msgnr] = setadjustclampxml;
+    m_MsgNrCmdList[msgnr] = PCB::setadjustclampxml;
     return msgnr;
 }
 
@@ -661,7 +661,7 @@ quint32 cPCBInterfacePrivate::transparentCommand(QString cmd)
     else
         msgnr = sendCommand(sl.at(0), sl.at(1));
 
-    m_MsgNrCmdList[msgnr] = transparentcommand;
+    m_MsgNrCmdList[msgnr] = PCB::transparentcommand;
     return msgnr;
 }
 
@@ -672,7 +672,7 @@ quint32 cPCBInterfacePrivate::resourceAliasQuery(QString resourceType, QString r
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("%1:%2:ALI?").arg(resourceType).arg(resourceName));
-    m_MsgNrCmdList[msgnr] = resourcealiasquery;
+    m_MsgNrCmdList[msgnr] = PCB::resourcealiasquery;
     return msgnr;
 }
 
@@ -683,7 +683,7 @@ quint32 cPCBInterfacePrivate::registerNotifier(QString query, QString notifier)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SERV:REG"), par = QString("%1;%2;").arg(query).arg(notifier));
-    m_MsgNrCmdList[msgnr] = regnotifier;
+    m_MsgNrCmdList[msgnr] = PCB::regnotifier;
     return msgnr;
 }
 
@@ -694,7 +694,7 @@ quint32 cPCBInterfacePrivate::unregisterNotifiers()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SERV:UNR;"));
-    m_MsgNrCmdList[msgnr] = unregnotifier;
+    m_MsgNrCmdList[msgnr] = PCB::unregnotifier;
     return msgnr;
 }
 
@@ -705,7 +705,7 @@ quint32 cPCBInterfacePrivate::readServerVersion()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:VERS:SERV?"));
-    m_MsgNrCmdList[msgnr] = getserverversion;
+    m_MsgNrCmdList[msgnr] = PCB::getserverversion;
     return msgnr;
 }
 
@@ -716,7 +716,7 @@ quint32 cPCBInterfacePrivate::readPCBVersion()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:VERS:PCB?"));
-    m_MsgNrCmdList[msgnr] = getpcbversion;
+    m_MsgNrCmdList[msgnr] = PCB::getpcbversion;
     return msgnr;
 }
 
@@ -727,7 +727,7 @@ quint32 cPCBInterfacePrivate::readFPGAVersion()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:VERS:FPGA?"));
-    m_MsgNrCmdList[msgnr] = getfpgaversion;
+    m_MsgNrCmdList[msgnr] = PCB::getfpgaversion;
     return msgnr;
 }
 
@@ -738,7 +738,7 @@ quint32 cPCBInterfacePrivate::readCTRLVersion()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:VERS:CTRL?"));
-    m_MsgNrCmdList[msgnr] = getctrlversion;
+    m_MsgNrCmdList[msgnr] = PCB::getctrlversion;
     return msgnr;
 }
 
@@ -749,7 +749,7 @@ quint32 cPCBInterfacePrivate::readSerialNr()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SYST:SER?"));
-    m_MsgNrCmdList[msgnr] = getserialnumber;
+    m_MsgNrCmdList[msgnr] = PCB::getserialnumber;
     return msgnr;
 }
 
@@ -775,7 +775,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         int lastCmd;
 
         if (lmsgnr == 0)
-            lastCmd = pcbinterrupt;
+            lastCmd = PCB::pcbinterrupt;
         else
             lastCmd = m_MsgNrCmdList.take(lmsgnr);
 
@@ -783,84 +783,84 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
 
         switch (lastCmd)
         {
-        case getdspchannel:
-        case getstatus:
-        case gettype2:
-        case getsamplerate:
-        case getdspchannelsource:
-        case getadjustmentstatus:
-        case getauthorizationstatus:
+        case PCB::getdspchannel:
+        case PCB::getstatus:
+        case PCB::gettype2:
+        case PCB::getsamplerate:
+        case PCB::getdspchannelsource:
+        case PCB::getadjustmentstatus:
+        case PCB::getauthorizationstatus:
             emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
             break;
 
-        case getalias:
-        case gettype:
-        case getunit:
-        case getrange:
-        case getalias2:
-        case getaliassource:
-        case getaliassample:
-        case getaliassschead:
-        case getaliasfrqinput:
-        case resourcealiasquery:
-        case getserverversion:
-        case getpcbversion:
-        case getfpgaversion:
-        case getctrlversion:
-        case getserialnumber:
-        case getadjustmentchksum:
-        case getadjustpcbxml:
-        case getadjustclampxml:
-        case getpcberrorstatus:
-        case getpowtypesource:
-        case transparentcommand:
+        case PCB::getalias:
+        case PCB::gettype:
+        case PCB::getunit:
+        case PCB::getrange:
+        case PCB::getalias2:
+        case PCB::getaliassource:
+        case PCB::getaliassample:
+        case PCB::getaliassschead:
+        case PCB::getaliasfrqinput:
+        case PCB::resourcealiasquery:
+        case PCB::getserverversion:
+        case PCB::getpcbversion:
+        case PCB::getfpgaversion:
+        case PCB::getctrlversion:
+        case PCB::getserialnumber:
+        case PCB::getadjustmentchksum:
+        case PCB::getadjustpcbxml:
+        case PCB::getadjustclampxml:
+        case PCB::getpcberrorstatus:
+        case PCB::getpowtypesource:
+        case PCB::transparentcommand:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
 
-        case getrangelist:
-        case getrangelistsample:
+        case PCB::getrangelist:
+        case PCB::getrangelistsample:
             emit q->serverAnswer(lmsgnr, lreply, returnStringList(lmsg));
             break;
 
-        case geturvalue:
-        case geturvalue2:
-        case getrejection:
-        case getovrejection:
-        case getadcrejection:
-        case getgaincorrection:
-        case getoffsetcorrection:
-        case getphasecorrection:
-        case getformfactorsource:
-        case getconstantsource:
+        case PCB::geturvalue:
+        case PCB::geturvalue2:
+        case PCB::getrejection:
+        case PCB::getovrejection:
+        case PCB::getadcrejection:
+        case PCB::getgaincorrection:
+        case PCB::getoffsetcorrection:
+        case PCB::getphasecorrection:
+        case PCB::getformfactorsource:
+        case PCB::getconstantsource:
             emit q->serverAnswer(lmsgnr, lreply, returnDouble(lmsg));
             break;
 
-        case isavail:
+        case PCB::isavail:
             emit q->serverAnswer(lmsgnr, lreply, returnBool(lmsg));
             break;
 
-        case setoffsetnode:
-        case setphasenode:
-        case setgainnode:
-        case adjuststorage:
-        case adjuststorageclamp:
-        case adjustinit:
-        case setadjustgainstatus:
-        case setadjustphasestatus:
-        case setadjustoffsetstatus:
-        case adjustcomputation:
-        case setmeasuringmode:
-        case setrange:
-        case resetstatus:
-        case regnotifier:
-        case unregnotifier:
-        case pcbinterrupt:
-        case setrangesample:
-        case setpllchannel:
-        case setconstantsource:
-        case setpowtypesource:
-        case setadjustpcbxml:
-        case setadjustclampxml:
+        case PCB::setoffsetnode:
+        case PCB::setphasenode:
+        case PCB::setgainnode:
+        case PCB::adjuststorage:
+        case PCB::adjuststorageclamp:
+        case PCB::adjustinit:
+        case PCB::setadjustgainstatus:
+        case PCB::setadjustphasestatus:
+        case PCB::setadjustoffsetstatus:
+        case PCB::adjustcomputation:
+        case PCB::setmeasuringmode:
+        case PCB::setrange:
+        case PCB::resetstatus:
+        case PCB::regnotifier:
+        case PCB::unregnotifier:
+        case PCB::pcbinterrupt:
+        case PCB::setrangesample:
+        case PCB::setpllchannel:
+        case PCB::setconstantsource:
+        case PCB::setpowtypesource:
+        case PCB::setadjustpcbxml:
+        case PCB::setadjustclampxml:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }

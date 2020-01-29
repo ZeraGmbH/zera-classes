@@ -9,7 +9,7 @@ namespace Zera
 {
 namespace Server
 {
-
+namespace PCB{
 enum pcbcommands
 {
     getdspchannel,
@@ -81,7 +81,7 @@ enum pcbcommands
 
     transparentcommand
 };
-
+}
 
 class cPCBInterface;
 

@@ -13,6 +13,7 @@ namespace Zera
 namespace Server
 {
 
+namespace SEC{
 enum seccommands
 {
     setecalcunit,
@@ -28,7 +29,7 @@ enum seccommands
     unregnotifier,
     intacknowledge
 };
-
+}
 
 class cSECInterface;
 

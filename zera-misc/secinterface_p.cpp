@@ -32,7 +32,7 @@ quint32 cSECInterfacePrivate::setECalcUnit(int n)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:SET"), par = QString("%1;").arg(n));
-    m_MsgNrCmdList[msgnr] = setecalcunit;
+    m_MsgNrCmdList[msgnr] = SEC::setecalcunit;
     return msgnr;
 }
 
@@ -43,7 +43,7 @@ quint32 cSECInterfacePrivate::freeECalcUnits()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:FREE"));
-    m_MsgNrCmdList[msgnr] = freeecalcunit;
+    m_MsgNrCmdList[msgnr] = SEC::freeecalcunit;
     return msgnr;
 }
 
@@ -54,7 +54,7 @@ quint32 cSECInterfacePrivate::writeRegister(QString chnname, quint8 reg, quint32
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:R%2").arg(chnname).arg(reg), par = QString("%1;").arg(value));
-    m_MsgNrCmdList[msgnr] = writeregister;
+    m_MsgNrCmdList[msgnr] = SEC::writeregister;
     return msgnr;
 }
 
@@ -65,7 +65,7 @@ quint32 cSECInterfacePrivate::readRegister(QString chnname, quint8 reg)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:R%2?").arg(chnname).arg(reg));
-    m_MsgNrCmdList[msgnr] = readregister;
+    m_MsgNrCmdList[msgnr] = SEC::readregister;
     return msgnr;
 }
 
@@ -76,7 +76,7 @@ quint32 cSECInterfacePrivate::setSync(QString chnname, QString syncChn)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:SYNC").arg(chnname), par = QString("%1;").arg(syncChn));
-    m_MsgNrCmdList[msgnr] = setsync;
+    m_MsgNrCmdList[msgnr] = SEC::setsync;
     return msgnr;
 }
 
@@ -87,7 +87,7 @@ quint32 cSECInterfacePrivate::setMux(QString chnname, QString inpname)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:MUX").arg(chnname), par = QString("%1;").arg(inpname));
-    m_MsgNrCmdList[msgnr] = setmux;
+    m_MsgNrCmdList[msgnr] = SEC::setmux;
     return msgnr;
 }
 
@@ -98,7 +98,7 @@ quint32 cSECInterfacePrivate::setCmdid(QString chnname, quint8 cmdid)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:CMDID").arg(chnname), par = QString("%1;").arg(cmdid));
-    m_MsgNrCmdList[msgnr] = setcmdid;
+    m_MsgNrCmdList[msgnr] = SEC::setcmdid;
     return msgnr;
 }
 
@@ -109,7 +109,7 @@ quint32 cSECInterfacePrivate::start(QString chnname)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:START").arg(chnname));
-    m_MsgNrCmdList[msgnr] = startecalc;
+    m_MsgNrCmdList[msgnr] = SEC::startecalc;
     return msgnr;
 }
 
@@ -120,7 +120,7 @@ quint32 cSECInterfacePrivate::stop(QString chnname)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:STOP").arg(chnname));
-    m_MsgNrCmdList[msgnr] = stopecalc;
+    m_MsgNrCmdList[msgnr] = SEC::stopecalc;
     return msgnr;
 }
 
@@ -131,7 +131,7 @@ quint32 cSECInterfacePrivate::intAck(QString chnname, quint8 interrupt)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("ECAL:%1:INT").arg(chnname), par = QString("%1;").arg(interrupt));
-    m_MsgNrCmdList[msgnr] = intacknowledge;
+    m_MsgNrCmdList[msgnr] = SEC::intacknowledge;
     return msgnr;
 }
 
@@ -142,7 +142,7 @@ quint32 cSECInterfacePrivate::registerNotifier(QString query)
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SERV:REG"), par = QString("%1;").arg(query));
-    m_MsgNrCmdList[msgnr] = regnotifier;
+    m_MsgNrCmdList[msgnr] = SEC::regnotifier;
     return msgnr;
 }
 
@@ -153,7 +153,7 @@ quint32 cSECInterfacePrivate::unregisterNotifiers()
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("SERV:UNR;"));
-    m_MsgNrCmdList[msgnr] = unregnotifier;
+    m_MsgNrCmdList[msgnr] = SEC::unregnotifier;
     return msgnr;
 }
 
@@ -181,18 +181,18 @@ void cSECInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
 
         switch (lastCmd)
         {
-        case setecalcunit:
-        case freeecalcunit:
-        case writeregister:
-        case readregister:
-        case setsync:
-        case setmux:
-        case setcmdid:
-        case startecalc:
-        case stopecalc:
-        case regnotifier:
-        case unregnotifier:
-        case intacknowledge:
+        case SEC::setecalcunit:
+        case SEC::freeecalcunit:
+        case SEC::writeregister:
+        case SEC::readregister:
+        case SEC::setsync:
+        case SEC::setmux:
+        case SEC::setcmdid:
+        case SEC::startecalc:
+        case SEC::stopecalc:
+        case SEC::regnotifier:
+        case SEC::unregnotifier:
+        case SEC::intacknowledge:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }

@@ -2,17 +2,17 @@
 #define XML_CONFIG_GLOBAL_H
 
 #include <QtCore/qglobal.h>
+#include "zeraxmlconfig_export.h"
+
 
 /**
   @mainpage ZERA XML config library
 */
 
 
-#if defined(ZERA_XML_CONFIG_LIBRARY)
-#  define ZERA_XML_CONFIGSHARED_EXPORT Q_DECL_EXPORT
-#else
-#  define ZERA_XML_CONFIGSHARED_EXPORT Q_DECL_IMPORT
-#endif
+
+#define ZERA_XML_CONFIGSHARED_EXPORT ZERAXMLCONFIG_EXPORT
+
 
 
 #endif // XML_CONFIG_GLOBAL_H

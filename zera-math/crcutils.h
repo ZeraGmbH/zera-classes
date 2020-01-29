@@ -21,7 +21,7 @@ class cMaxim1WireCRCPrivate; // forward
   cMaxim1WireCRC is a class to support crc generation introduced from MAXIM for 1 wire connections.
   crc is calculated with polynomial = x^8 + x^5 + x^4 + 1
   */
-class ZERA_MATHSHARED_EXPORT cMaxim1WireCRC
+class ZERAMATH_EXPORT cMaxim1WireCRC
 {
 public:
     /**
