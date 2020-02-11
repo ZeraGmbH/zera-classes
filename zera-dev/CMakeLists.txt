@@ -54,7 +54,7 @@ target_link_libraries(zeradev
 # announce headers - target perspective
 target_include_directories(zeradev
     PUBLIC
-    $<INSTALL_INTERFACE:include/zeradev>
+    $<INSTALL_INTERFACE:include/zera-classes/dev>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -71,7 +71,7 @@ generate_export_header(zeradev)
 #install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeradev_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeradev
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/dev
     )
 
 
@@ -103,14 +103,14 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeradevConfig.cmake"
 # install targets cmake-files
 install(EXPORT zeradevExport
     FILE zeradevTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeradev
     )
 
 # install public headers
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/dev
     )
 
 # spawn out some info on configuration

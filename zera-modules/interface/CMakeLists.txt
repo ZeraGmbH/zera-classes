@@ -93,7 +93,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/MeasurementModuleInterfaceConfig.cmak
 # install targets cmake-files
 install(EXPORT MeasurementModuleInterfaceExport
     FILE MeasurementModuleInterfaceTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MeasurementModuleInterface
     )
 

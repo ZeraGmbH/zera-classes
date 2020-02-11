@@ -105,7 +105,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeraxmlconfigConfig.cmake"
 # install targets cmake-files
 install(EXPORT zeraxmlconfigExport
     FILE zeraxmlconfigTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeraxmlconfig
     )
 

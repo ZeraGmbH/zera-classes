@@ -53,7 +53,7 @@ target_link_libraries(zerai2c
 # announce headers - target perspective
 target_include_directories(zerai2c
     PUBLIC
-    $<INSTALL_INTERFACE:include/zera-comm/zerai2c>
+    $<INSTALL_INTERFACE:include/zera-classes/i2c>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -71,7 +71,7 @@ generate_export_header(zerai2c)
 #install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zerai2c_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zerai2c
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/i2c
     )
 
 

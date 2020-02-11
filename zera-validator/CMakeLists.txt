@@ -108,7 +108,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeravalidatorConfig.cmake"
 # install targets cmake-files
 install(EXPORT zeravalidatorExport
     FILE zeravalidatorTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeravalidator
     )
 

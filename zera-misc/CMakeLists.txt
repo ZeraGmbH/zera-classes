@@ -59,7 +59,7 @@ target_link_libraries(zeramisc
 # announce headers - target perspective
 target_include_directories(zeramisc
     PUBLIC
-    $<INSTALL_INTERFACE:include/zeramisc>
+    $<INSTALL_INTERFACE:include/zera-classes/misc>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -77,7 +77,7 @@ generate_export_header(zeramisc)
 #install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeramisc_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeramisc
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc
     )
 
 
@@ -108,7 +108,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeramiscConfig.cmake"
 # install targets cmake-files
 install(EXPORT zeramiscExport
     FILE zeramiscTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeramisc
     )
 
