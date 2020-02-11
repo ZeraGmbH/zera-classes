@@ -37,6 +37,11 @@ file(GLOB RESOURCES
     ${PROJECT_SOURCE_DIR}/*.qrc
     )
 
+file(GLOB OTHER_FILES
+    ${PROJECT_SOURCE_DIR}/src/*.xml
+    ${PROJECT_SOURCE_DIR}/src/*.xsd
+)
+
 #create library 
 add_library(rmsmodule MODULE
     ${SOURCES}
@@ -87,7 +92,10 @@ write_basic_package_version_file(
     COMPATIBILITY SameMinorVersion
     )
 
-
+install(
+    FILES ${OTHER_FILES}
+    DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
+    )
 
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

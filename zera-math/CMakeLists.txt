@@ -53,7 +53,7 @@ target_link_libraries(zeramath
 # announce headers - target perspective
 target_include_directories(zeramath
     PUBLIC
-    $<INSTALL_INTERFACE:include/zeramath>
+    $<INSTALL_INTERFACE:include/zera-classes/math>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -70,7 +70,7 @@ generate_export_header(zeramath)
 #install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeramath_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeramath
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/math
     )
 
 
@@ -101,7 +101,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeramathConfig.cmake"
 # install targets cmake-files
 install(EXPORT zeramathExport
     FILE zeramathTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeramath
     )
 

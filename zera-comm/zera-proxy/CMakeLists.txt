@@ -62,7 +62,7 @@ target_link_libraries(zeraproxy
 # announce headers - target perspective
 target_include_directories(zeraproxy
     PUBLIC
-    $<INSTALL_INTERFACE:include/zeraproxy>
+    $<INSTALL_INTERFACE:include/zera-classes/proxy>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -79,7 +79,7 @@ generate_export_header(zeraproxy)
 #install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeraproxy_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeraproxy
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/proxy
     )
 
 

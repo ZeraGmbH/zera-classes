@@ -64,7 +64,7 @@ target_link_libraries(zerabasemodule
 # announce headers - target perspective
 target_include_directories(zerabasemodule
     PUBLIC
-    $<INSTALL_INTERFACE:include/zerabasemodule>
+    $<INSTALL_INTERFACE:include/zera-classes/basemodule>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -81,7 +81,7 @@ generate_export_header(zerabasemodule)
 #install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zerabasemodule_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zerabasemodule
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule
     )
 
 
@@ -114,14 +114,14 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zerabasemoduleConfig.cmake"
 # install targets cmake-files
 install(EXPORT zerabasemoduleExport
     FILE zerabasemoduleTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zerabasemodule
     )
 
 # install public headers
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-basemodules
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule
     )
 
 # spawn out some info on configuration

@@ -53,7 +53,7 @@ target_link_libraries(MeasurementModuleInterface
 # announce headers - target perspective
 target_include_directories(MeasurementModuleInterface
     PUBLIC
-    $<INSTALL_INTERFACE:include/MeasurementModuleInterface>
+    $<INSTALL_INTERFACE:include/zera-modules>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -93,7 +93,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/MeasurementModuleInterfaceConfig.cmak
 # install targets cmake-files
 install(EXPORT MeasurementModuleInterfaceExport
     FILE MeasurementModuleInterfaceTargets.cmake
-    NAMESPACE ZeraClasses
+    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/MeasurementModuleInterface
     )
 
