@@ -1,5 +1,6 @@
 #include <QFile>
 #include <QTextStream>
+#include <QString>
 
 #include <rminterface.h>
 #include <pcbinterface.h>
@@ -148,6 +149,14 @@ void cStatusModuleInit::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pReleaseNumber;
     m_pReleaseNumber->setSCPIInfo(new cSCPIInfo("STATUS", "RELEASE", "2", key, "0", ""));
+
+    m_pDeviceType = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("INF_DeviceType"),
+                                                QString("Component forwards the devices type"),
+                                                QVariant(QString()));
+
+    m_pModule->veinModuleParameterHash[key] = m_pDeviceType;
+    m_pDeviceType->setSCPIInfo(new cSCPIInfo("STATUS", "DEVTYPE", "2", key, "0", ""));
 
     m_pAdjustmentStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_Adjusted"),
@@ -344,6 +353,24 @@ QString cStatusModuleInit::findReleaseNr()
     return releaseNr;
 }
 
+QString cStatusModuleInit::findDeviceType()
+{
+    QString devType = QStringLiteral("unknown");
+    QString procKernelParamFilename = QStringLiteral("/proc/cmdline");
+    QFile file(procKernelParamFilename);
+    if(file.open(QIODevice::ReadOnly)) {
+        QStringList kernelParams = QString::fromLatin1(file.readAll()).split(QStringLiteral(" "));
+        QString paramSearch = QStringLiteral("zera_device=");
+        for(auto param : kernelParams) {
+            if(param.contains(paramSearch)) {
+                devType = param.replace(paramSearch, QString()).trimmed();
+                break;
+            }
+        }
+        file.close();
+    }
+    return devType;
+}
 
 void cStatusModuleInit::setInterfaceComponents()
 {
@@ -354,6 +381,7 @@ void cStatusModuleInit::setInterfaceComponents()
     m_pDSPServerVersion->setValue((QVariant(m_sDSPServerVersion)));
     m_pDSPProgramVersion->setValue(QVariant(m_sDSPProgramVersion));
     m_pReleaseNumber->setValue(QVariant(m_sReleaseNumber));
+    m_pDeviceType->setValue(QVariant(m_sDeviceType));
     m_pAdjustmentStatus->setValue(QVariant(m_sAdjStatus));
     m_pAdjustmentChksum->setValue(QVariant(m_sAdjChksum));
 }
@@ -451,6 +479,7 @@ void cStatusModuleInit::dspserverReadDSPProgramVersion()
 void cStatusModuleInit::activationDone()
 {
     m_sReleaseNumber = findReleaseNr();
+    m_sDeviceType = findDeviceType();
     setInterfaceComponents();
     emit activated();
 }

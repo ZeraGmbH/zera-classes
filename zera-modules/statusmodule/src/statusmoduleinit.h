@@ -110,6 +110,7 @@ private:
     QString m_sReleaseNumber;
     QString m_sAdjStatus;
     QString m_sAdjChksum;
+    QString m_sDeviceType;
 
     cVeinModuleParameter *m_pPCBServerVersion;
     cVeinModuleParameter *m_pCtrlVersion;
@@ -118,10 +119,12 @@ private:
     cVeinModuleParameter *m_pDSPServerVersion;
     cVeinModuleParameter *m_pDSPProgramVersion;
     cVeinModuleParameter *m_pReleaseNumber;
+    cVeinModuleParameter *m_pDeviceType;
     cVeinModuleParameter *m_pAdjustmentStatus;
     cVeinModuleParameter *m_pAdjustmentChksum;
 
     QString findReleaseNr();
+    QString findDeviceType();
     void setInterfaceComponents();
 
 private slots:
