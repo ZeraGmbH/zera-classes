@@ -60,11 +60,11 @@ set(MODULE_DIRS
 
 
 #zera_xml-config has an src folder with header files inside
-include_directories(${CMAKE_SOURCE_DIR}/zera-xml-config/src)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/zera-xml-config/src)
 
 #add all subfolders to include dirs
 foreach(TMP_DIR ${SUB_DIRS})
-include_directories(${CMAKE_SOURCE_DIR}/${TMP_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/${TMP_DIR})
 add_subdirectory(${TMP_DIR})
 endforeach()
 
