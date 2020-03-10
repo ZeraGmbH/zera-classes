@@ -42,7 +42,7 @@
     </configuration>
     <parameter>
         <measure>
-            <dutinput>sh0</dutinput>
+            <dutinput>fi0</dutinput>
             <refinput>fo0</refinput>
             <mode>energy</mode>
             <dutconstant>10000</dutconstant>
