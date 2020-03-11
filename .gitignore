@@ -14,6 +14,7 @@
 *_pch.h.cpp
 *_resource.rc
 *.user.pri
+*.txt.user
 *.qm
 .#*
 *.*#
