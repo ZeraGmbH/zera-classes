@@ -38,17 +38,22 @@
             <frequency>200000</frequency>
             <frequencyact>signalperiod</frequencyact>
             <output>
-                <n>2</n>
+                <n>3</n>
                 <fout1>
-                    <name>fo1</name>
+                    <name>fo0</name>
                     <source>pmss</source>
                     <type>+</type>
                 </fout1>
                 <fout2>
-                    <name>fo2</name>
+                    <name>fo1</name>
                     <source>pmss</source>
                     <type>-</type>
                 </fout2>
+                <fout3>
+                    <name>fo2</name>
+                    <source>pmss</source>
+                    <type>+-</type>
+                </fout3>
             </output>
         </frequencyoutput>
     </configuration>
