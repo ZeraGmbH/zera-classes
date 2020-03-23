@@ -37,7 +37,7 @@
                 <inp2>fo1</inp2>
                 <inp3>fo2</inp3>
             </refinput>
-            <interval>2.0</interval>
+            <interval>0.5</interval>
         </measure>
     </configuration>
     <parameter>
