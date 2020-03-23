@@ -26,7 +26,7 @@
                 <inp2>fo2</inp2>
                 <inp3>fo3</inp3>
             </refinput>
-            <interval>1.0</interval>
+            <interval>0.5</interval>
             <activeunits>
                 <n>3</n>
                 <unit1>MW</unit1>
