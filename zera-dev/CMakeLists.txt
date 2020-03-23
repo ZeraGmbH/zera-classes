@@ -48,6 +48,8 @@ target_link_libraries(zeradev
     PRIVATE
     Qt5::Core
     zerai2c
+    zeramath
+    zeramisc
     )
 
 
@@ -58,6 +60,7 @@ target_include_directories(zeradev
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/zera-misc
     )
 
 #set target Version
