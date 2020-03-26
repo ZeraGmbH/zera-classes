@@ -46,7 +46,8 @@ enum statusmoduleinitCmds
     readPCBServerAdjStatus,
     readPCBServerAdjChksum,
     readDSPServerVersion,
-    readDSPServerDSPProgramVersion
+    readDSPServerDSPProgramVersion,
+    writePCBServerSerialNumber
 };
 
 }
@@ -137,9 +138,11 @@ private slots:
     void dspserverConnect();
     void dspserverReadVersion();
     void dspserverReadDSPProgramVersion();
-    void activationDone();
 
+    void activationDone();
     void deactivationDone();
+
+    void newSerialNumber(QVariant serialNr);
 
     void catchChannelReply(quint32 msgnr);
 };

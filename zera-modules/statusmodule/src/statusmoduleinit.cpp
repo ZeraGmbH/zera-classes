@@ -10,6 +10,7 @@
 #include <dspinterface.h>
 #include <veinmoduleparameter.h>
 #include <modulevalidator.h>
+#include <regexvalidator.h>
 #include <scpiinfo.h>
 
 #include "debug.h"
@@ -115,13 +116,15 @@ void cStatusModuleInit::generateInterface()
 
 
     m_pSerialNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                               key = QString("INF_SerialNr"),
-                                               QString("Component forwards the devices serial number"),
+                                               key = QString("PAR_SerialNr"),
+                                               QString("Component for reading and writing the devices serial number"),
                                                QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pSerialNumber;
-    m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "2", key, "0", ""));
-
+    m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "10", key, "0", ""));
+    cRegExValidator *regValidator;
+    regValidator = new cRegExValidator("0[0-9]{8}");
+    m_pSerialNumber->setValidator(regValidator);
 
     m_pDSPServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_DSPServerVersion"),
@@ -261,6 +264,19 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     qDebug() << readPCBSerialNrErrMSG;
 #endif
                     emit activationError();
+                }
+                break;
+
+            case STATUSMODINIT::writePCBServerSerialNumber:
+                if (reply == ack)
+                {
+                }
+                else
+                {
+                    emit errMsg((tr(writePCBSerialNrErrMSG)));
+#ifdef DEBUG
+                    qDebug() << writePCBSerialNrErrMSG;
+#endif
                 }
                 break;
 
@@ -452,6 +468,7 @@ void cStatusModuleInit::activationDone()
 {
     m_sReleaseNumber = findReleaseNr();
     setInterfaceComponents();
+    connect(m_pSerialNumber, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newSerialNumber(QVariant)));
     emit activated();
 }
 
@@ -466,6 +483,13 @@ void cStatusModuleInit::deactivationDone()
     disconnect(m_pDSPInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
+}
+
+
+void cStatusModuleInit::newSerialNumber(QVariant serialNr)
+{
+    m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
+    emit m_pModule->parameterChanged();
 }
 
 }
