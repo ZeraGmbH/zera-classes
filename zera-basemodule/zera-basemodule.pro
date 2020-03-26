@@ -73,7 +73,8 @@ HEADERS += \
     basemoduleeventsystem.h \
     veinmodulecomponentinput.h \
     veinmoduleerrorcomponent.h \
-    movingwindowsqare.h
+    movingwindowsqare.h \
+    regexvalidator.h
 
 SOURCES += \
     basemeasprogram.cpp \
@@ -100,7 +101,8 @@ SOURCES += \
     basemoduleeventsystem.cpp \
     veinmoduleerrorcomponent.cpp \
     movingwindowsqare.cpp \
-    rangeinfo.cpp
+    rangeinfo.cpp \
+    regexvalidator.cpp
 
 
 
