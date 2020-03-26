@@ -320,6 +320,13 @@ quint32 cPCBInterface::readSerialNr()
 }
 
 
+quint32 cPCBInterface::writeSerialNr(QString serNr)
+{
+    Q_D(cPCBInterface);
+    return d->writeSerialNr(serNr);
+}
+
+
 quint32 cPCBInterface::getAdjustmentChksum()
 {
     Q_D(cPCBInterface);

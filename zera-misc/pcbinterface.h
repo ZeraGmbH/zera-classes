@@ -107,6 +107,7 @@ public:
     virtual quint32 readFPGAVersion();
     virtual quint32 readCTRLVersion();
     virtual quint32 readSerialNr();
+    virtual quint32 writeSerialNr(QString serNr);
     virtual quint32 getAdjustmentChksum();
     virtual quint32 getPCBAdjustmentData();
     virtual quint32 setPCBAdjustmentData(QString xmlpcb);
