@@ -11,14 +11,15 @@ namespace Server
 cPCBInterfacePrivate::cPCBInterfacePrivate(cPCBInterface *iface)
     :q_ptr(iface)
 {
-    m_pClient = 0;
+    m_pClient = nullptr;
 }
 
 
 void cPCBInterfacePrivate::setClient(Proxy::cProxyClient *client)
 {
-    if (m_pClient) // we avoid multiple connections
-        disconnect(m_pClient, 0, this, 0);
+    if (m_pClient) { // we avoid multiple connections
+        disconnect(m_pClient, nullptr, this, nullptr);
+    }
 
     m_pClient = client;
     connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cPCBInterfacePrivate::receiveAnswer);
@@ -771,7 +772,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
     {
         quint32 lmsgnr;
         QString lmsg = "";
-        int lreply = 0;
+        quint8 lreply = 0;
 
         lmsgnr = message->messagenr();
 
@@ -887,7 +888,7 @@ void cPCBInterfacePrivate::receiveError(QAbstractSocket::SocketError errorCode)
 }
 
 
-}
-}
+} // namespace Server
+} // namespace Zera
 
 
