@@ -754,6 +754,17 @@ quint32 cPCBInterfacePrivate::readSerialNr()
 }
 
 
+quint32 cPCBInterfacePrivate::writeSerialNr(QString serNr)
+{
+    QString cmd, par;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:SER"), par = QString("%1;").arg(serNr));
+    m_MsgNrCmdList[msgnr] = PCB::setserialnumber;
+    return msgnr;
+}
+
+
 void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
     if (message->has_reply())
@@ -861,6 +872,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::setpowtypesource:
         case PCB::setadjustpcbxml:
         case PCB::setadjustclampxml:
+        case PCB::setserialnumber:
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         }
