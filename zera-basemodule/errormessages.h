@@ -44,6 +44,7 @@
 #define readPCBCtrlVersionErrMSG "PCB Controler version read failed"
 #define readPCBFPGAVersionErrMSG "PCB FPGA version read failed"
 #define readPCBSerialNrErrMSG "PCB serial number read failed"
+#define writePCBSerialNrErrMSG "PCB serial number write failed"
 #define readPCBErrMSG "PCB error messages read failed"
 #define readPCBXMLMSG "PCB xml data read failed"
 #define writePCBXMLMSG "PCB xml data write failed"
