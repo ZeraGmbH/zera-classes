@@ -1,6 +1,6 @@
 #include <QJsonArray>
 #include <QJsonObject>
-#include <QRegExp>
+#include <QRegularExpression>
 
 #include "regexvalidator.h"
 
@@ -19,11 +19,7 @@ cRegExValidator::cRegExValidator(const cRegExValidator &ref)
 
 bool cRegExValidator::isValidParam(QVariant& newValue)
 {
-    QString s;
-
-    s = newValue.toString();
-    s.remove(QRegExp(m_sRegEx));
-    return (s.length() == 0);
+    return QRegularExpression(m_sRegEx).match(newValue.toString()).hasMatch();
 }
 
 
