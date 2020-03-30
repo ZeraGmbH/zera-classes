@@ -124,7 +124,7 @@ void cStatusModuleInit::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pSerialNumber;
     m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "10", key, "0", ""));
     cRegExValidator *regValidator;
-    regValidator = new cRegExValidator("0[0-9]{8}");
+    regValidator = new cRegExValidator("^\\d{9}$");
     m_pSerialNumber->setValidator(regValidator);
 
     m_pDSPServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
