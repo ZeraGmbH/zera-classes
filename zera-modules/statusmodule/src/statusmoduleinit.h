@@ -125,6 +125,8 @@ private:
     QString findReleaseNr();
     void setInterfaceComponents();
 
+    QVariant wantedSerialNr;
+
 private slots:
     void resourceManagerConnect();
     void sendRMIdent();
