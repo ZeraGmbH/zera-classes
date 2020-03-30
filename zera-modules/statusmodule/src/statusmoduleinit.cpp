@@ -42,7 +42,6 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_dspserverReadVersionState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverReadDSPProgramState);
     m_dspserverReadDSPProgramState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
-
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_pcbserverConnectionState);
@@ -119,7 +118,7 @@ void cStatusModuleInit::generateInterface()
     m_pSerialNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_SerialNr"),
                                                QString("Component for reading and writing the devices serial number"),
-                                               QVariant(QString("") ));
+                                               QVariant(QString("") ), true, false); // we select deferred notification
 
     m_pModule->veinModuleParameterHash[key] = m_pSerialNumber;
     m_pSerialNumber->setSCPIInfo(new cSCPIInfo("STATUS", "SERIAL", "10", key, "0", ""));
@@ -279,10 +278,14 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::writePCBServerSerialNumber:
                 if (reply == ack)
                 {
+                    m_sSerialNumber = wantedSerialNr.toString();
+                    m_pSerialNumber->setValue(wantedSerialNr); // m_pSerialNumber has deferred notification so this will send the event
+                    emit m_pModule->parameterChanged();
                 }
                 else
                 {
-                    emit errMsg((tr(writePCBSerialNrErrMSG)));
+                    m_pSerialNumber->setError(); // in case of error we send an error event
+                    emit errMsg(tr(writePCBSerialNrErrMSG));
 #ifdef DEBUG
                     qDebug() << writePCBSerialNrErrMSG;
 #endif
@@ -517,8 +520,8 @@ void cStatusModuleInit::deactivationDone()
 
 void cStatusModuleInit::newSerialNumber(QVariant serialNr)
 {
+    wantedSerialNr = serialNr;
     m_MsgNrCmdList[m_pPCBInterface->writeSerialNr(serialNr.toString())] = STATUSMODINIT::writePCBServerSerialNumber;
-    emit m_pModule->parameterChanged();
 }
 
 }
