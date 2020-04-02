@@ -273,8 +273,8 @@ qint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
     comData.nmsgs = 1;
 
     if(DEBUG2) {
-        syslog(LOG_INFO,"i2c read start: adr 0x%02X / len %i+1 (CRC)",
-                m_nI2CAdr, dataAndCrcLen-1);
+        syslog(LOG_INFO,"i2c read start: adr 0x%02X / len %i",
+                m_nI2CAdr, dataAndCrcLen);
     }
     int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
     if (!errVal) { // if no error
