@@ -13,7 +13,7 @@ struct THexFileMemRegion
     QByteArray ByteArrContent;
     // methods
     THexFileMemRegion();
-    THexFileMemRegion( int StartAddress, const QByteArray& byteArray);
+    THexFileMemRegion(quint32 StartAddress, const QByteArray& byteArray);
     THexFileMemRegion& operator = (const THexFileMemRegion& obj);
     bool operator == (const THexFileMemRegion& obj) const;
     quint32 GetMaxAddress();
@@ -23,11 +23,11 @@ struct THexFileMemRegion
 struct THexFileMessage
 {
     // data
-    ulong nLineNo;
+    quint32 nLineNo;
     QString sMsgText;				// either string
     // methods
     THexFileMessage(){}
-    THexFileMessage(ulong _nLineNo, const QString& _sMsgText);
+    THexFileMessage(quint32 _nLineNo, const QString& _sMsgText);
 };
 
 
@@ -44,7 +44,6 @@ public:
       @b Initialise the const variables
       */
     cIntelHexFileIOPrivate();
-    virtual ~cIntelHexFileIOPrivate(){}
     /**
       @b Read the entire file and parse for memory regions.
       @param fileName is the files full path name.
@@ -71,12 +70,12 @@ public:
 
 private:
     bool isHexText(const char c);
-    uchar Hex2Bin(const char* c);
-    uchar ASCII2Hex(char c);
+    quint8 Hex2Bin(const char* c);
+    quint8 ASCII2Hex(char c);
     QList<THexFileMemRegion> m_ListMemRegions;
     QList<THexFileMessage> m_sListErrWarn;
     QString m_strFileName;
-    uchar m_byteErasedByteValue;
+    quint8 m_byteErasedByteValue;
 };
 
 
