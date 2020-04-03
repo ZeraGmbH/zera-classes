@@ -9,7 +9,7 @@ THexFileMemRegion::THexFileMemRegion()
 }
 
 
-THexFileMemRegion::THexFileMemRegion(int StartAddress, const QByteArray& byteArray)
+THexFileMemRegion::THexFileMemRegion(quint32 StartAddress, const QByteArray& byteArray)
 {
     nStartAddress = StartAddress;
     ByteArrContent = byteArray;
@@ -32,11 +32,11 @@ bool THexFileMemRegion::operator == (const THexFileMemRegion& obj) const
 
 quint32 THexFileMemRegion::GetMaxAddress()
 {
-    return nStartAddress + ByteArrContent.size() - 1;
+    return nStartAddress + static_cast<quint32>(ByteArrContent.size() - 1);
 }
 
 
-THexFileMessage::THexFileMessage(ulong _nLineNo, const QString& _sMsgText)
+THexFileMessage::THexFileMessage(quint32 _nLineNo, const QString& _sMsgText)
 {
     nLineNo = _nLineNo;
     sMsgText = _sMsgText;
@@ -80,10 +80,9 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
     bool readHexError = false;
     m_strFileName = fileName;
     QFile file( fileName);
-    ulong nCurrInputLine = 1;
+    quint32 nCurrInputLine = 1;
 
-    if (file.open( QIODevice::ReadOnly))
-    {
+    if (file.open(QIODevice::ReadOnly)) {
         // Reset memory contents
         m_ListMemRegions.clear();
         m_sListErrWarn.clear();
@@ -93,42 +92,38 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
         char chHexDigit[3] = "00";
         bool bUpperHexDigit = true;
         bool bLastReceived = false;
-        long nByteRead = 0;
+        qint64 nByteRead = 0;
         quint32 nCurrDataPos = 0;
 
         // for all subsequent records
-        ulong nAddressExtension = 0;
+        quint32 nAddressExtension = 0;
 
         // Per record
         quint32 nCurrDataLen = 0;
         quint32 nCurrAddress = 0;
         enRecordType enCurrRecordType = RECTYPE_UNDEF;
-        uchar byteCheckSum = 0;
-        uchar DataBuff[256];
+        quint8 byteCheckSum = 0;
+        quint8 DataBuff[256];
 
-        do
-        {
+        do {
 #define BUFF_LEN 1024
             char FileBuffer[BUFF_LEN];
             nByteRead = file.readLine(FileBuffer, BUFF_LEN);
             if (nByteRead <= 0) // in case of error conditions
                 nByteRead = 0; // we read nothing
             else
-                for (long iByte =  0; iByte < nByteRead; iByte++)
-                {
+                for(qint64 iByte=0; iByte<nByteRead; iByte++) {
                     char chCurr = FileBuffer[iByte];
                     // Check <LF> for lin count
-                    if(chCurr == '\n')
+                    if(chCurr == '\n') {
                         nCurrInputLine++;
+                    }
                     // 1st check if we are inside of a block
-                    if (eHexField == HEX_UNDEF)
-                    {
+                    if (eHexField == HEX_UNDEF) {
                         // Start
-                        if (chCurr == ':')
-                        {
+                        if (chCurr == ':') {
                             // There is no more record expected
-                            if(!bLastReceived)
-                            {
+                            if(!bLastReceived) {
                                 // Init
                                 eHexField = HEX_LEN;
                                 bUpperHexDigit = true;
@@ -139,32 +134,26 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                 memset(DataBuff, 0, sizeof(DataBuff));
                                 nCurrDataPos = 0;
                             }
-                            else
-                            {
+                            else {
                                 // Error Msg
-
                                 m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Record found after end record\n")));
                                 readHexError = true;
-
                             }
                         }
                     }
-                    else
-                    {
+                    else {
                         // Within a frame all must be hex
-                        if (isHexText(chCurr))
-                        {
+                        if (isHexText(chCurr)) {
                             // Upper nibble
-                            if (bUpperHexDigit)
+                            if (bUpperHexDigit) {
                                 chHexDigit[0] = chCurr;
+                            }
                             // Lower nibble terminates a byte
-                            else
-                            {
+                            else {
                                 chHexDigit[1] = chCurr;
-                                uchar byteDecoded = Hex2Bin(chHexDigit);
+                                quint8 byteDecoded = Hex2Bin(chHexDigit);
                                 byteCheckSum += byteDecoded;
-                                switch(eHexField)
-                                {
+                                switch(eHexField) {
                                 // Keep upper nibble
                                 case HEX_LEN:
                                     // keep data length
@@ -174,7 +163,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                     break;
                                 case HEX_ADR0:
                                     // keep upper address
-                                    nCurrAddress = byteDecoded << 8;
+                                    nCurrAddress = static_cast<quint32>(byteDecoded << 8);
                                     // next field
                                     eHexField = HEX_ADR1;
                                     break;
@@ -186,8 +175,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                     break;
                                 case HEX_TYP:
                                     // keep record type
-                                    switch(byteDecoded)
-                                    {
+                                    switch(byteDecoded) {
                                     case 0:
                                         enCurrRecordType = RECTYPE_DATA;
                                         break;
@@ -198,7 +186,9 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                         enCurrRecordType = RECTYPE_EXT_SEG;
                                         break;
                                     case 3:
-                                        enCurrRecordType = RECTYPE_START_SEG;						      break;				                        			          case 4:
+                                        enCurrRecordType = RECTYPE_START_SEG;
+                                        break;
+                                    case 4:
                                         enCurrRecordType = RECTYPE_EXT_ADR;
                                         break;
                                     case 5:
@@ -225,24 +215,22 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                     DataBuff[nCurrDataPos] = byteDecoded;
                                     nCurrDataPos++;
                                     // next field
-                                    if (nCurrDataPos==nCurrDataLen)
+                                    if (nCurrDataPos==nCurrDataLen) {
                                         eHexField = HEX_CHK;
+                                    }
                                     break;
 
                                 case HEX_CHK:
                                     // Test Checksum
-                                    if (byteCheckSum == 0)
-                                    {
+                                    if (byteCheckSum == 0) {
                                         // The action is depending on record type
-                                        switch (enCurrRecordType)
-                                        {
+                                        switch (enCurrRecordType) {
                                         // Data
-                                        case RECTYPE_DATA:
-                                        {
+                                        case RECTYPE_DATA: {
                                             QByteArray byteArray;
-                                            byteArray.resize(nCurrDataLen);
+                                            byteArray.resize(static_cast<int>(nCurrDataLen));
                                             for (quint32 ByteNo = 0; ByteNo < nCurrDataLen; ByteNo++)
-                                                byteArray[ByteNo] = DataBuff[ByteNo];
+                                                byteArray[ByteNo] = static_cast<char>(DataBuff[ByteNo]);
                                             m_ListMemRegions.append(THexFileMemRegion(nAddressExtension+nCurrAddress, byteArray));
                                             break;
                                         }
@@ -254,8 +242,8 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 
                                             // Extended segment
                                         case RECTYPE_EXT_SEG:
-                                            nAddressExtension = DataBuff[0] << 12;
-                                            nAddressExtension += DataBuff[1] << 4;
+                                            nAddressExtension = static_cast<quint32>(DataBuff[0] << 12);
+                                            nAddressExtension += static_cast<quint32>(DataBuff[1] << 4);
                                             break;
 
                                             // Start segment (not supported)
@@ -266,8 +254,8 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 
                                             // Linear address record (upper 16Bit of linear address)
                                         case RECTYPE_EXT_ADR:
-                                            nAddressExtension = DataBuff[0] << 24;
-                                            nAddressExtension += DataBuff[1] << 16;
+                                            nAddressExtension = static_cast<quint32>(DataBuff[0] << 24);
+                                            nAddressExtension += static_cast<quint32>(DataBuff[1] << 16);
                                             break;
 
                                             // Start address (not supported)
@@ -281,8 +269,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                         }
 
                                     }
-                                    else
-                                    {
+                                    else {
                                         // Error Msg
                                         m_sListErrWarn.append(THexFileMessage(nCurrInputLine, QString("Checksum error ocurred\n")));
                                         readHexError = true;
@@ -296,11 +283,9 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                     break;
                                 }
                             }
-
                             bUpperHexDigit = !bUpperHexDigit;
                         }
-                        else
-                        {
+                        else {
                             // Error Msg
                             m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("Invalid character found in record\n")));
                             readHexError = true;
@@ -314,8 +299,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 
         file.close();
     }
-    else
-    {
+    else {
         // Error Msg
         m_sListErrWarn.append(THexFileMessage( nCurrInputLine, QString("File could not be opened\n")));
         readHexError = true;
@@ -331,26 +315,22 @@ void cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& n
 
     // Search regions affected
     QList<THexFileMemRegion> AffectedMemRegions;
-
-    for (int i = 0; i != m_ListMemRegions.count(); i++)
-    {
+    for (int i = 0; i != m_ListMemRegions.count(); i++) {
         THexFileMemRegion CurrEntry = m_ListMemRegions.at(i);
-        if( (CurrEntry.nStartAddress >= nStartAddressModuloBlockLen  &&  CurrEntry.nStartAddress <=  nMaxAdress) || ( CurrEntry.GetMaxAddress() >= nStartAddressModuloBlockLen && CurrEntry.GetMaxAddress() <=nMaxAdress) ) // die region gehört zu der erwarteten speicherseite
+        if( (CurrEntry.nStartAddress >= nStartAddressModuloBlockLen  &&  CurrEntry.nStartAddress <=  nMaxAdress) ||
+                (CurrEntry.GetMaxAddress() >= nStartAddressModuloBlockLen && CurrEntry.GetMaxAddress() <=nMaxAdress) ) { // die region gehört zu der erwarteten speicherseite
             AffectedMemRegions.append(CurrEntry);
+        }
     }
 
     // In case there is no region matching, we have to find the region larger than start address
-    if (AffectedMemRegions.count() == 0)
-    {
-        for (int i = 0; i != m_ListMemRegions.count(); i++)
-        {
+    if (AffectedMemRegions.count() == 0) {
+        for (int i = 0; i != m_ListMemRegions.count(); i++) {
             THexFileMemRegion CurrEntry = m_ListMemRegions.at(i);
-            if (CurrEntry.nStartAddress > nStartAddressModuloBlockLen)
-            {
+            if (CurrEntry.nStartAddress > nStartAddressModuloBlockLen) {
                 AffectedMemRegions.append(CurrEntry);
                 // Align adresses
-                while (nMaxAdress < CurrEntry.nStartAddress)
-                {
+                while (nMaxAdress < CurrEntry.nStartAddress) {
                     nMaxAdress += nBlockLen;
                     nStartAddressModuloBlockLen += nBlockLen;
                 }
@@ -359,17 +339,17 @@ void cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& n
         }
 
         // We finally found a first region: search for further affected (with new adresses)
-        if (AffectedMemRegions.count())
-        {
+        if (AffectedMemRegions.count()) {
             //	posNext = AffectedMemRegions.begin(); // die region haben wir ja schon
             THexFileMemRegion entry = AffectedMemRegions[0];
 
             int next = m_ListMemRegions.indexOf(entry) + 1;
-            while (next != m_ListMemRegions.count())
-            {
+            while (next != m_ListMemRegions.count()) {
                 THexFileMemRegion CurrEntry =  m_ListMemRegions.at(next);
-                if( (CurrEntry.nStartAddress >= nStartAddressModuloBlockLen  &&  CurrEntry.nStartAddress <=  nMaxAdress) || ( CurrEntry.GetMaxAddress() >= nStartAddressModuloBlockLen && CurrEntry.GetMaxAddress() <=nMaxAdress) ) // die region gehört zu der erwarteten speicherseite
+                if( (CurrEntry.nStartAddress >= nStartAddressModuloBlockLen  &&  CurrEntry.nStartAddress <=  nMaxAdress) ||
+                    (CurrEntry.GetMaxAddress() >= nStartAddressModuloBlockLen && CurrEntry.GetMaxAddress() <=nMaxAdress) ) { // die region gehört zu der erwarteten speicherseite
                     AffectedMemRegions.append(CurrEntry);
+                }
                 next++;
             }
         }
@@ -379,50 +359,53 @@ void cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& n
     byteArray.resize(0);
 
     // The byte array has to be filled by the regions found
-    if (AffectedMemRegions.count())
-    {
+    if (AffectedMemRegions.count()) {
         // At first we need to check for the memory range of the affected regions
         // Init conditions so that the first will change the ranges
         quint32 nRangeMinAddress = 0x7fffffff;
         quint32 nRangeMaxAddress = 0;
         int i;
-        for ( i = 0; i < AffectedMemRegions.count(); i++)
-        {
+        for (i = 0; i < AffectedMemRegions.count(); i++) {
             THexFileMemRegion CurrEntry = AffectedMemRegions[i];
-            if(CurrEntry.nStartAddress < nRangeMinAddress)
+            if(CurrEntry.nStartAddress < nRangeMinAddress) {
                 nRangeMinAddress = CurrEntry.nStartAddress;
-            if(CurrEntry.GetMaxAddress() > nRangeMaxAddress)
+            }
+            if(CurrEntry.GetMaxAddress() > nRangeMaxAddress) {
                 nRangeMaxAddress = CurrEntry.GetMaxAddress();
+            }
         }
 
         // Limit the range to the new adresses
-        if (nRangeMinAddress < nStartAddressModuloBlockLen)
+        if (nRangeMinAddress < nStartAddressModuloBlockLen) {
             nRangeMinAddress = nStartAddressModuloBlockLen;
-        if (nRangeMaxAddress > nMaxAdress)
+        }
+        if (nRangeMaxAddress > nMaxAdress) {
             nRangeMaxAddress = nMaxAdress;
+        }
 
         // Setup our array
-        byteArray.resize(nRangeMaxAddress-nRangeMinAddress+1);
-        for( i = 0; i < byteArray.size(); i++)
-            byteArray[i] = m_byteErasedByteValue;
+        byteArray.resize(static_cast<int>(nRangeMaxAddress-nRangeMinAddress+1));
+        for( i = 0; i < byteArray.size(); i++) {
+            byteArray[i] = static_cast<char>(m_byteErasedByteValue);
+        }
         // Calc offset
         nOffsetToModulo = nRangeMinAddress - nStartAddressModuloBlockLen;
 
         // Fill the array from affected
-        for ( i = 0; i < AffectedMemRegions.count(); i++)
-        {
+        for ( i = 0; i < AffectedMemRegions.count(); i++) {
             THexFileMemRegion CurrEntry = AffectedMemRegions[i];
-            ulong nFirstAddress;
+            quint32 nFirstAddress;
             // | curr |          or   |    curr     |
             //		| desired |           | desired |
-            if(CurrEntry.nStartAddress < nStartAddressModuloBlockLen)
+            if(CurrEntry.nStartAddress < nStartAddressModuloBlockLen) {
                 nFirstAddress = nStartAddressModuloBlockLen;
+            }
             //       | curr |		 or		    |  curr   |
             //     |  desired  |        | desired |
-            else
+            else {
                 nFirstAddress = CurrEntry.nStartAddress;
-            for(quint32 nCurrAddress = nFirstAddress; nCurrAddress <= CurrEntry.GetMaxAddress() && nCurrAddress <= nMaxAdress; nCurrAddress++)
-            {
+            }
+            for(quint32 nCurrAddress = nFirstAddress; nCurrAddress <= CurrEntry.GetMaxAddress() && nCurrAddress <= nMaxAdress; nCurrAddress++) {
                 byteArray[nCurrAddress - nStartAddressModuloBlockLen] = CurrEntry.ByteArrContent[nCurrAddress-CurrEntry.nStartAddress];
             }
         }
@@ -439,8 +422,7 @@ void cIntelHexFileIOPrivate::setunwrittenByteValue(quint8 value)
 QString cIntelHexFileIOPrivate::getErrorsWarnings()
 {
     QString s;
-    for (int i = 0; i < m_sListErrWarn.count(); i++ )
-    {
+    for (int i = 0; i < m_sListErrWarn.count(); i++ ) {
         s += QString("%1: %2\n").arg(m_sListErrWarn.at(i).nLineNo).arg(m_sListErrWarn.at(i).sMsgText);
     }
     return s;
@@ -455,10 +437,10 @@ bool cIntelHexFileIOPrivate::isHexText(const char c)
 }
 
 
-uchar cIntelHexFileIOPrivate::Hex2Bin(const char* c)
+quint8 cIntelHexFileIOPrivate::Hex2Bin(const char* c)
 {
-    uchar r;
-    r=ASCII2Hex(*c) << 4;
+    quint8 r;
+    r = static_cast<quint8>(ASCII2Hex(*c) << 4);
     c++;
     r |= ASCII2Hex(*c);
     return r;
@@ -466,10 +448,10 @@ uchar cIntelHexFileIOPrivate::Hex2Bin(const char* c)
 }
 
 
-uchar cIntelHexFileIOPrivate::ASCII2Hex(char c)
+quint8 cIntelHexFileIOPrivate::ASCII2Hex(char c)
 {
-    uchar uc;
-    uc = c - 0x30;
+    quint8 uc;
+    uc = static_cast<quint8>(c - 0x30);
     if (uc < 0xA)
         return uc;
     uc -=7;
