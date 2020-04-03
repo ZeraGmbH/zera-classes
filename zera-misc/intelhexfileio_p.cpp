@@ -412,6 +412,11 @@ void cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& n
     }
 }
 
+bool cIntelHexFileIOPrivate::isEmpty()
+{
+    return m_ListMemRegions.isEmpty();
+}
+
 
 void cIntelHexFileIOPrivate::setunwrittenByteValue(quint8 value)
 {
