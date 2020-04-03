@@ -22,6 +22,7 @@ set(REPO_VERSION ${PROJECT_VERSION})
 
 set(SUB_DIRS
     zera-math
+    zera-mcontroller-io
     zera-comm/zera-i2c
     zera-dev
     zera-xml-config
@@ -30,7 +31,6 @@ set(SUB_DIRS
     zera-modules/interface
     zera-validator
     zera-basemodule
-
 )
 
 set(MODULE_DIRS
