@@ -26,6 +26,12 @@ void cIntelHexFileIO::GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAd
 }
 
 
+bool cIntelHexFileIO::isEmpty()
+{
+    return d_ptr->isEmpty();
+}
+
+
 void cIntelHexFileIO::setunwrittenByteValue(quint8 value)
 {
     d_ptr->setunwrittenByteValue(value);

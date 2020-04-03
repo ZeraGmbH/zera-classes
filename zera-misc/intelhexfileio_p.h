@@ -66,6 +66,11 @@ public:
       start address of the memory block in byteArray is calculated.
       */
     void GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAddressModuloBlockLen, QByteArray& byteArray, quint32& nOffsetToModulo);
+    /**
+     * @brief isEmpty
+     * @return true if no memory reagions were read
+     */
+    bool isEmpty();
 
 
 private:
