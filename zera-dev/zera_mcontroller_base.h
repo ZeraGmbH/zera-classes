@@ -59,26 +59,26 @@ public:
      * @brief writeCommand: Write command and receive command response
      * @param hc: pointer to command struct
      * @param dataReceive: Buffer to receive data + crc
-     * @param dataAndCrcLenAndCrcLen: Expected Number of bytes to read (data + crc)
+     * @param dataAndCrcLen: Expected Number of bytes to read (data + crc)
      * @return -1 on error else number of bytes we can fetch as result data
      */
-    qint16 writeCommand(hw_cmd* hc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLenAndCrcLen=0);
+    qint16 writeCommand(hw_cmd* hc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLen=0);
     /**
      * @brief writeBootloaderCommand: Write bootloader command and receive command response
      * @param blc: pointer to bootloader command struct
      * @param dataReceive: Buffer to receive data + crc
-     * @param dataAndCrcLenAndCrcLen: Expected number of bytes to read (data + crc)
+     * @param dataAndCrcLen: Expected number of bytes to read (data + crc)
      * @return -1 on error else number of bytes we can fetch as result data
      */
-    qint16 writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLenAndCrcLen=0);
+    qint16 writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLen=0);
 private:
     /**
      * @brief readOutput: Read command result from controller
      * @param data: Buffer to receive data + crc
-     * @param dataAndCrcLenAndCrcLen: Number of bytes to read (data + crc)
+     * @param dataAndCrcLen: Number of bytes to read (data + crc)
      * @return -1 on error else number of bytes we can fetch
      */
-    qint16 readOutput(quint8 *data, quint16 dataAndCrcLenAndCrcLen);
+    qint16 readOutput(quint8 *data, quint16 dataAndCrcLen);
     /**
      * @brief GenCommand: Allocate & fill raw data to send in cmddata
      * @param hc: pointer to command struct

@@ -67,7 +67,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::mGetText(quint16 hwcmd, QStrin
     return ret;
 }
 
-qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint16 dataAndCrcLenAndCrcLen)
+qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint16 dataAndCrcLen)
 {
     qint16 rlen = -1; // return value ; < 0 means error
     quint8 inpBuf[5]; // the answer always has 5 bytes
@@ -100,7 +100,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
     }
     if (DEBUG2) {
         syslog(LOG_INFO,"i2c cmd start: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s / len %i",
-               m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLenAndCrcLen);
+               m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLen);
     }
 
     int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
@@ -119,15 +119,15 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
                 }
                 // Read cmd data?
                 if(dataReceive) {
-                    if(rlen == dataAndCrcLenAndCrcLen) {
+                    if(rlen == dataAndCrcLen) {
                         // readOutput logs -> no need to add logs here
-                        rlen = readOutput(dataReceive, dataAndCrcLenAndCrcLen);
+                        rlen = readOutput(dataReceive, dataAndCrcLen);
                     }
                     else if(DEBUG1) {
                         syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s / len %i",
-                               m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLenAndCrcLen);
+                               m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLen);
                         syslog(LOG_ERR, "i2c cmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
-                               m_nI2CAdr, dataAndCrcLenAndCrcLen, rlen);
+                               m_nI2CAdr, dataAndCrcLen, rlen);
                     }
                 }
             }
@@ -157,7 +157,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
 }
 
 
-qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive, quint16 dataAndCrcLenAndCrcLen)
+qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive, quint16 dataAndCrcLen)
 {
     qint16 rlen = -1; // length of data avaliable / < 0 signals error
     quint8 inpBuf[5]; // command response's length is always 5
@@ -188,8 +188,8 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
         }
     }
     if (DEBUG2) {
-        syslog(LOG_INFO,"i2c bootcmd start: addr 0x%02X / cmd 0x%04X / par %s / len %i",
-               m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLenAndCrcLen);
+        syslog(LOG_INFO,"i2c bootcmd start: addr 0x%02X / cmd 0x%02X / par %s / len %i",
+               m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLen);
     }
 
     int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
@@ -208,34 +208,34 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                 }
                 // Read cmd data?
                 if(dataReceive) {
-                    if(rlen == dataAndCrcLenAndCrcLen) {
+                    if(rlen == dataAndCrcLen) {
                         // readOutput logs -> no need to add logs here
-                        rlen = readOutput(dataReceive, dataAndCrcLenAndCrcLen);
+                        rlen = readOutput(dataReceive, dataAndCrcLen);
                     }
                     else if(DEBUG1) {
-                        syslog(LOG_ERR,"i2c bootcmd was: adr 0x%02X / cmd 0x%04X / par %s / len %i",
-                               m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLenAndCrcLen);
+                        syslog(LOG_ERR,"i2c bootcmd was: adr 0x%02X / cmd 0x%02X / par %s / len %i",
+                               m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLen);
                         syslog(LOG_ERR, "i2c bootcmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
-                               m_nI2CAdr, dataAndCrcLenAndCrcLen, rlen);
+                               m_nI2CAdr, dataAndCrcLen, rlen);
                     }
                 }
             }
             else if(DEBUG1) {
-                syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%04X / par %s",
+                syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
                        m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
                 syslog(LOG_ERR, "i2c bootcmd error: adr 0x%02X / mask 0x%04X",
                        m_nI2CAdr, blc->RM);
             }
         }
         else if (DEBUG1) {
-            syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%04X / par %s",
+            syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
                    m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
             syslog(LOG_ERR, "i2c bootcmd checksum error: adr 0x%02X / expected 0x%02X / received: 0x%02X",
                    m_nI2CAdr, expectedCrc, receivedCrc);
         }
     }
     else if (DEBUG1) {
-        syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%04X / par %s",
+        syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
                m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
         syslog(LOG_ERR, "i2c bootcmd failed: adr 0x%02X / error returned %i",
                m_nI2CAdr, errVal);
