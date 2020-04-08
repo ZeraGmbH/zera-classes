@@ -340,6 +340,10 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController)
     qint16 receivedDataLen = i2cController->writeBootloaderCommand(&bcmd, dataReceive, totalReceiveLen);
     outputReceivedData(dataReceive, receivedDataLen);
 
+    if(cmdResponseLen == 0 && receivedDataLen > 1) {
+        qInfo("bootcmd %02X can return data bytes (without CRC): %i ", cmdIdBoot, receivedDataLen-1);
+    }
+
     delete dataReceive;
     return totalReceiveLen == receivedDataLen;
 }
@@ -360,6 +364,9 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController)
     }
     qint16 receivedDataLen = i2cController->writeCommand(&hcmd, dataReceive, totalReceiveLen);
     outputReceivedData(dataReceive, receivedDataLen);
+    if(cmdResponseLen == 0 && receivedDataLen > 1) {
+        qInfo("cmd %04X can return data bytes (without CRC): %i", cmdIdHard, receivedDataLen-1);
+    }
 
     delete dataReceive;
     return totalReceiveLen == receivedDataLen;
