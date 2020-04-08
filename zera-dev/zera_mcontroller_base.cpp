@@ -118,7 +118,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
                            m_nI2CAdr, hc->RM, rlen);
                 }
                 // Read cmd data?
-                if(dataReceive) {
+                if(dataReceive && dataAndCrcLen) {
                     if(rlen == dataAndCrcLen) {
                         // readOutput logs -> no need to add logs here
                         rlen = readOutput(dataReceive, dataAndCrcLen);
@@ -207,7 +207,7 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                            m_nI2CAdr, blc->RM, rlen);
                 }
                 // Read cmd data?
-                if(dataReceive) {
+                if(dataReceive && dataAndCrcLen) {
                     if(rlen == dataAndCrcLen) {
                         // readOutput logs -> no need to add logs here
                         rlen = readOutput(dataReceive, dataAndCrcLen);
