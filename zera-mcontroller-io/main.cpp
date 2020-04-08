@@ -84,7 +84,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     QCommandLineOption cmdParamOption(QStringList() << "p" << "cmd-param", "Command parameter (hex) e.g '01AA'", "hex param");
     parser->addOption(cmdParamOption);
     // option for expected return data len (without crc)
-    QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return len (hex/without CRC)", "hex expected len");
+    QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return length (without CRC / default: 0)", "expected len");
     parser->addOption(cmdReturnedLenOption);
     // option for bootloader write flash
     QCommandLineOption cmdFlashWriteOption(QStringList() << "f" << "flash-filename", "Write intel-hex file to flash", "hex filename");
@@ -198,14 +198,19 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             // expected length of responded data
             optVal = parser->value(cmdReturnedLenOption);
             if(!optVal.isEmpty()) {
-                int iFullVal = optVal.toInt(&optOK, 16);
+                int iFullVal = optVal.toInt(&optOK, 10);
                 if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
-                    qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0x0000-0xFFFF]!", qPrintable(optVal));
+                    qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0-65535]!", qPrintable(optVal));
                     allOptsOK = false;
                 }
                 else {
                     cmdResponseLen = static_cast<quint16>(iFullVal);
                 }
+            }
+            else {
+                // We have to set default here: If a default value is set in
+                // cmdReturnedLenOption our cross plausi check below would fail
+                cmdResponseLen = 0;
             }
         }
     }
