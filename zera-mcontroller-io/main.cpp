@@ -45,7 +45,7 @@ static bool convertCmdParam(QString paramValue, QByteArray& binaryData)
     }
     if(ok) {
         binaryData.clear();
-        for(int byte=0; byte<paramValue.size(); ++byte) {
+        for(int byte=0; byte<paramValue.size()/2; ++byte) {
             QString strByte = paramValue.mid(byte*2, 2);
             binaryData.append(static_cast<char>(strByte.toInt(nullptr, 16)));
         }
