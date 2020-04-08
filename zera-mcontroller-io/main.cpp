@@ -345,7 +345,7 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController)
     }
 
     delete dataReceive;
-    return totalReceiveLen == receivedDataLen;
+    return (cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
 }
 
 /**
@@ -369,7 +369,7 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController)
     }
 
     delete dataReceive;
-    return totalReceiveLen == receivedDataLen;
+    return (cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
 }
 
 /**
