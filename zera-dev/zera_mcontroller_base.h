@@ -49,12 +49,12 @@ public:
     atmelRM loadFlash(cIntelHexFileIO& ihxFIO);
     atmelRM loadEEprom(cIntelHexFileIO& ihxFIO);
     /**
-     * @brief mGetText: Function to read strings (name,version..) from controller
+     * @brief readVariableLenText: Function to read strings with variable length (name,version..) from controller
      * @param hwcmd: [in] command id
      * @param answer: [out] String read from controller
      * @return done or error type information
      */
-    atmelRM mGetText(quint16 hwcmd, QString& answer);
+    atmelRM readVariableLenText(quint16 hwcmd, QString& answer);
     /**
      * @brief writeCommand: Write command and receive command response
      * @param hc: pointer to command struct

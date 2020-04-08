@@ -46,7 +46,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ih
     return loadMemory(blWriteEEPromBlock, ihxFIO);
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::mGetText(quint16 hwcmd, QString& answer)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hwcmd, QString& answer)
 {
     atmelRM ret = cmdexecfault;
 
