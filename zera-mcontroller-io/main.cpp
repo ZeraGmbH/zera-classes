@@ -33,7 +33,9 @@ static bool convertCmdParam(QString paramValue, QByteArray& binaryData)
 {
     bool ok = true;
     paramValue.replace(" ", "");
-    if(!QRegularExpression("^[0-9a-fA-F]+$").match(paramValue).hasMatch()) {
+    paramValue = paramValue.toUpper();
+    paramValue.replace("0X", "");
+    if(!QRegularExpression("^[0-9A-F]+$").match(paramValue).hasMatch()) {
         qWarning("%s is not a valid hexadecimal parameter!", qPrintable(paramValue));
         ok = false;
     }
@@ -81,7 +83,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     QCommandLineOption cmdDeviceNumOption(QStringList() << "d" << "device", "Logical device (hex) e.g '01' - if not set: bootloader cmd", "hex device no");
     parser->addOption(cmdDeviceNumOption);
     // option for param
-    QCommandLineOption cmdParamOption(QStringList() << "p" << "cmd-param", "Command parameter (hex) e.g '01AA'", "hex param");
+    QCommandLineOption cmdParamOption(QStringList() << "p" << "cmd-param", "Command parameter (hex) e.g '01AA' or '0x01 0xAA'", "hex param");
     parser->addOption(cmdParamOption);
     // option for expected return data len (without crc)
     QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return length (without CRC / default: 0)", "expected len");
