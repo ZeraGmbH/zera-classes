@@ -71,7 +71,6 @@ public:
      * @return -1 on error else number of bytes we can fetch as result data
      */
     qint16 writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLen=0);
-private:
     /**
      * @brief readOutput: Read command result from controller
      * @param data: Buffer to receive data + crc
@@ -79,6 +78,7 @@ private:
      * @return -1 on error else number of bytes we can fetch
      */
     qint16 readOutput(quint8 *data, quint16 dataAndCrcLen);
+private:
     /**
      * @brief GenCommand: Allocate & fill raw data to send in cmddata
      * @param hc: pointer to command struct
