@@ -48,10 +48,11 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ih
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::mGetText(quint16 hwcmd, QString& answer)
 {
-    quint8 PAR[1];
     atmelRM ret = cmdexecfault;
 
-    struct hw_cmd CMD(hwcmd, 0, PAR, 0 );
+    // Repsonse has variable length. So we need to get length first
+    // and call readOutput below
+    struct hw_cmd CMD(hwcmd, 0, nullptr, 0 );
     qint16 bytesToRead = writeCommand(&CMD);
 
     if ( bytesToRead > 0 && (CMD.RM == 0)) {
@@ -376,8 +377,9 @@ quint8* ZeraMcontrollerBase::GenAdressPointerParameter(quint8 adresspointerSize,
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(bl_cmdcode blwriteCmd, cIntelHexFileIO& ihxFIO)
 {
     atmelRM  ret = cmddone;
-    quint8 PAR[1];
-    struct bl_cmd blInfoCMD(blReadInfo, PAR, 0);
+    // Response has variable length. So we need to get length first
+    // and call readOutput below
+    struct bl_cmd blInfoCMD(blReadInfo, nullptr, 0);
 
     qint16 dataAndCrcLen = writeBootloaderCommand(&blInfoCMD);
 
