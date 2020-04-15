@@ -204,6 +204,14 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
             // Error mask ok?
             if (blc->RM == 0) {
                 rlen = static_cast<qint16>((inpBuf[2] << 8) + inpBuf[3]);
+                // This is one of my favorite 'make is complicated wherever
+                // you can' - and yes I was involved:
+                // Bootloader and Hardware protocol have different interpretation of length:
+                //   hardware-protocol: Len of data + crc
+                //   bootloader:        Len of data
+                if(rlen > 0) {
+                    ++rlen;
+                }
                 if(DEBUG2) {
                     syslog(LOG_INFO, "i2c bootcmd ok: adr 0x%02X / mask 0x%04X / len %i",
                            m_nI2CAdr, blc->RM, rlen);
