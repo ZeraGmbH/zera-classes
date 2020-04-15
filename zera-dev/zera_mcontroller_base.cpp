@@ -281,19 +281,26 @@ qint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
     }
     int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
     if (!errVal) { // if no error
+        QString i2cHexData;
+        quint16 iByte;
+        if (DEBUG1 || DEBUG2) {
+            for(iByte=0; iByte<dataAndCrcLen; iByte++) {
+               i2cHexData += QString("0x%1 ").arg(data[iByte], 2, 16, QLatin1Char('0'));
+            }
+        }
         // Checksum OK?
         quint8 expectedCrc = m_pCRCGenerator->CalcBlockCRC(data, dataAndCrcLen-1);
         quint8 receivedCrc = data[dataAndCrcLen-1];
         if (expectedCrc==receivedCrc) {
             rlen = static_cast<qint16>(dataAndCrcLen);
             if(DEBUG2) {
-                syslog(LOG_INFO, "i2c read ok: adr 0x%02X / len %i",
-                       m_nI2CAdr, rlen);
+                syslog(LOG_INFO, "i2c read ok: adr 0x%02X / len %i / data %s",
+                       m_nI2CAdr, rlen, qPrintable(i2cHexData));
             }
         }
         else if (DEBUG1) {
-            syslog(LOG_ERR, "i2c read checksum error: adr 0x%02X / expected 0x%02X / received: 0x%02X",
-                   m_nI2CAdr, expectedCrc, receivedCrc);
+            syslog(LOG_ERR, "i2c read checksum error: adr 0x%02X / expected 0x%02X / received: 0x%02X / data %s",
+                   m_nI2CAdr, expectedCrc, receivedCrc, qPrintable(i2cHexData));
         }
     }
     else if (DEBUG1) {
