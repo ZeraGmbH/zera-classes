@@ -9,8 +9,8 @@ static enum {
     CMD_UNDEF,
     CMD_BOOTLOADER_IO,
     CMD_BOOTLOADER_WRITE,
-    CMD_ZERA_HARD_IO
-
+    CMD_ZERA_HARD_IO,
+    CMD_READ_DATA
 } cmdType = CMD_UNDEF;
 static bool verboseOutput = false;
 static QString i2cDeviceName;
@@ -107,6 +107,9 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     ////////////////////////////////////////////////////////
     // Check and parse cmdline into internal data
 
+    ////////////////////////////////////////////////////////
+    // Common options for all activities
+
     // verbosity
     optVal = parser->value(verboseOption);
     iFullVal = optVal.toInt(&optOK);
@@ -144,8 +147,29 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         }
     }
 
+    ////////////////////////////////////////////////////////
+    // No cmdID: -> read data from previous
+    if(parser->value(cmdIdOption).isEmpty()) {
+        cmdType = CMD_READ_DATA;
+        // expected length of responded data
+        optVal = parser->value(cmdReturnedLenOption);
+        if(!optVal.isEmpty()) {
+            int iFullVal = optVal.toInt(&optOK, 10);
+            if(!optOK || iFullVal<1 || iFullVal>0xFFFF) {
+                qWarning("Expected length %s for read is invalid or out of limits [1-65536]!", qPrintable(optVal));
+                allOptsOK = false;
+            }
+            else {
+                cmdResponseLen = static_cast<quint16>(iFullVal);
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////
+    // With cmdID: -> IO
+    //
     // No device set -> bootloader cmd
-    if(parser->value(cmdDeviceNumOption).isEmpty()) {
+    else if(parser->value(cmdDeviceNumOption).isEmpty()) {
         // write flash?
         optVal = parser->value(cmdFlashWriteOption);
         if(!optVal.isEmpty()) {
@@ -177,19 +201,13 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             cmdType = CMD_BOOTLOADER_IO;
             // cmdID
             optVal = parser->value(cmdIdOption);
-            if(optVal.isEmpty()) {
-                qWarning("No bootloader cmd id set!");
+            int iFullVal = optVal.toInt(&optOK, 16);
+            if(!optOK || iFullVal<0 || iFullVal>0xFF) {
+                qWarning("Bootloader cmd ID %s is invalid or out of limits [0x00-0xFF]!", qPrintable(optVal));
                 allOptsOK = false;
             }
             else {
-                int iFullVal = optVal.toInt(&optOK, 16);
-                if(!optOK || iFullVal<0 || iFullVal>0xFF) {
-                    qWarning("Bootloader cmd ID %s is invalid or out of limits [0x00-0xFF]!", qPrintable(optVal));
-                    allOptsOK = false;
-                }
-                else {
-                    cmdIdBoot = static_cast<quint8>(iFullVal);
-                }
+                cmdIdBoot = static_cast<quint8>(iFullVal);
             }
             // cmd param
             if(!parser->value(cmdParamOption).isEmpty()) {
@@ -216,29 +234,26 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             }
         }
     }
+    ////////////////////////////////////////////////////////
+    // With cmdID: -> IO
+    //
     // device set -> hardware command
     else
     {
         cmdType = CMD_ZERA_HARD_IO;
         // cmdID
         optVal = parser->value(cmdIdOption);
-        if(optVal.isEmpty()) {
-            qWarning("No cmd id set!");
+        int iFullVal = optVal.toInt(&optOK, 16);
+        if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
+            qWarning("Cmd ID %s is invalid or out of limits [0x0000-0xFFFF]!", qPrintable(optVal));
             allOptsOK = false;
         }
         else {
-            int iFullVal = optVal.toInt(&optOK, 16);
-            if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
-                qWarning("Cmd ID %s is invalid or out of limits [0x0000-0xFFFF]!", qPrintable(optVal));
-                allOptsOK = false;
-            }
-            else {
-                cmdIdHard = static_cast<quint16>(iFullVal);
-            }
+            cmdIdHard = static_cast<quint16>(iFullVal);
         }
         // device no
         optVal = parser->value(cmdDeviceNumOption);
-        int iFullVal = optVal.toInt(&optOK, 16);
+        iFullVal = optVal.toInt(&optOK, 16);
         if(!optOK || iFullVal<0 || iFullVal>0xFF) {
             qWarning("Cmd device %s is invalid or out of limits [0x00-0xFF]!", qPrintable(optVal));
             allOptsOK = false;
@@ -288,6 +303,16 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             allOptsOK = false;
         }
         break;
+    case CMD_READ_DATA:
+        if(!parser->value(cmdParamOption).isEmpty()) {
+            qWarning("Setting parameter data for read data is not allowed!");
+            allOptsOK = false;
+        }
+        if(!parser->value(cmdDeviceNumOption).isEmpty()) {
+            qWarning("Setting device number for read data is not allowed!");
+            allOptsOK = false;
+        }
+        [[fallthrough]];
     case CMD_BOOTLOADER_IO:
     case CMD_ZERA_HARD_IO:
         if(!parser->value(cmdFlashWriteOption).isEmpty()) {
@@ -375,6 +400,26 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController)
 }
 
 /**
+ * @brief execReadData: Read data from previous command (for cmds with unknown length len taken from cmdResponseLen)
+ * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @return true on success
+ */
+static bool execReadData(ZeraMcontrollerBase* i2cController)
+{
+    quint8 *dataReceive = nullptr;
+    quint16 totalReceiveLen = 0;
+    if(cmdResponseLen) {
+        totalReceiveLen = cmdResponseLen+1;
+        dataReceive = new quint8[totalReceiveLen];
+    }
+    qint16 receivedDataLen = i2cController->readOutput(dataReceive, totalReceiveLen);
+    outputReceivedData(dataReceive, receivedDataLen);
+
+    delete dataReceive;
+    return totalReceiveLen == receivedDataLen;
+}
+
+/**
  * @brief execBootloaderWrite: Write data in flashHexData/eepromHexData
  * @param i2cController: pointer to ZeraMcontrollerBase object
  * @return true on success
@@ -420,6 +465,12 @@ int main(int argc, char *argv[])
             ok = execZeraHardIO(&i2cController);
             if(!ok) {
                 qWarning("cmd failed - see journalctl for more details!");
+            }
+            break;
+        case CMD_READ_DATA:
+            ok = execReadData(&i2cController);
+            if(!ok) {
+                qWarning("read data failed - see journalctl for more details!");
             }
             break;
         case CMD_BOOTLOADER_WRITE:
