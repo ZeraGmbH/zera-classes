@@ -458,6 +458,21 @@ static bool execBootloaderWrite(ZeraMcontrollerBase* i2cController, CommandLineD
 }
 
 
+/**
+ * @brief getErrorMaskText: Split error mask and create a loggable string
+ * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @return the log string
+ */
+static QString getErrorMaskText(ZeraMcontrollerBase *i2cController)
+{
+    quint16 errMaskHost = i2cController->getLastErrorMask() >> 16;
+    quint16 errMaskMController = i2cController->getLastErrorMask() & 0xFFFF;
+    QString strError;
+    strError.sprintf("host-mask 0x%04X / µC-mask 0x%04X", errMaskHost, errMaskMController);
+    return strError;
+}
+
+
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     switch(type) {
@@ -491,39 +506,29 @@ int main(int argc, char *argv[])
                     cmdLineData->i2cDeviceName,
                     cmdLineData->i2cAddr,
                     cmdLineData->verboseOutput ? 3 : 1);
-        quint16 errMaskHost = i2cController.getLastErrorMask() >> 16;
-        quint16 errMaskMController = i2cController.getLastErrorMask() & 0xFFFF;
         switch(cmdType) {
         case CMD_BOOTLOADER_IO:
             ok = execBootloaderIO(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("bootcmd failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
-                    errMaskHost,
-                    errMaskMController);
+                qWarning("bootcmd failed / see journalctl for more details / %s", qPrintable(getErrorMaskText(&i2cController)));
             }
             break;
         case CMD_ZERA_HARD_IO:
             ok = execZeraHardIO(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("cmd failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
-                    errMaskHost,
-                    errMaskMController);
+                qWarning("cmd failed / see journalctl for more details / %s", qPrintable(getErrorMaskText(&i2cController)));
             }
             break;
         case CMD_READ_DATA:
             ok = execReadData(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("read data failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
-                    errMaskHost,
-                    errMaskMController);
+                qWarning("read data failed / see journalctl for more details / %s", qPrintable(getErrorMaskText(&i2cController)));
             }
             break;
         case CMD_BOOTLOADER_WRITE:
             ok = execBootloaderWrite(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("boot write failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
-                    errMaskHost,
-                    errMaskMController);
+                qWarning("boot write failed / see journalctl for more details / %s", qPrintable(getErrorMaskText(&i2cController)));
             }
             break;
         case CMD_UNDEF:
