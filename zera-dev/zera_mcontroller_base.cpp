@@ -14,7 +14,8 @@ ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 deb
     : m_pCRCGenerator(new cMaxim1WireCRC()),
       m_sI2CDevNode(devnode),
       m_nI2CAdr(adr),
-      m_nDebugLevel(debuglevel)
+      m_nDebugLevel(debuglevel),
+      m_nLastErrorFlags(0)
 {
 }
 
@@ -26,8 +27,8 @@ ZeraMcontrollerBase::~ZeraMcontrollerBase()
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::startProgram()
 {
     atmelRM ret;
-    struct bl_cmd blStartProgramCMD(blStartProgram, nullptr, 0);
-    if ( (writeBootloaderCommand(&blStartProgramCMD) != 0) || (blStartProgramCMD.RM) ) {
+    struct bl_cmd blStartProgramCMD(BL_CMD_START_PROGRAM, nullptr, 0);
+    if ( writeBootloaderCommand(&blStartProgramCMD)!= 0 || m_nLastErrorFlags!=0 ) {
         ret = cmdexecfault;
     }
     else {
@@ -38,12 +39,12 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::startProgram()
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadFlash(cIntelHexFileIO &ihxFIO)
 {
-    return loadMemory(blWriteFlashBlock, ihxFIO);
+    return loadMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO);
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ihxFIO)
 {
-    return loadMemory(blWriteEEPromBlock, ihxFIO);
+    return loadMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO);
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hwcmd, QString& answer)
@@ -55,7 +56,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hw
     struct hw_cmd CMD(hwcmd, 0, nullptr, 0 );
     qint16 bytesToRead = writeCommand(&CMD);
 
-    if ( bytesToRead > 0 && (CMD.RM == 0)) {
+    if ( bytesToRead > 0 && m_nLastErrorFlags==0 ) {
         char *localAnsw = new char[bytesToRead];
         qint16 bytesRead = readOutput(reinterpret_cast<quint8*>(localAnsw), static_cast<quint16>(bytesToRead));
         if (bytesRead == bytesToRead) {
@@ -74,6 +75,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
     quint8 inpBuf[5]; // the answer always has 5 bytes
 
     GenCommand(hc);
+    m_nLastErrorFlags = 0;
 
     // Send command and receive response (= error + length of data available for further read)
     struct i2c_msg Msgs[2];
@@ -110,13 +112,13 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
         quint8 expectedCrc = m_pCRCGenerator->CalcBlockCRC(inpBuf, 4);
         quint8 receivedCrc = inpBuf[4];
         if (expectedCrc==receivedCrc) {
-            hc->RM = static_cast<quint16>(inpBuf[0] << 8) + inpBuf[1];
+            m_nLastErrorFlags |= static_cast<quint16>(inpBuf[0] << 8) + inpBuf[1];
             // Error mask ok?
-            if (hc->RM == 0) {
+            if (m_nLastErrorFlags == 0) {
                 rlen = static_cast<qint16>((inpBuf[2] << 8) + inpBuf[3]);
                 if(DEBUG2) {
-                    syslog(LOG_INFO, "i2c cmd ok: adr 0x%02X / mask 0x%04X / len %i",
-                           m_nI2CAdr, hc->RM, rlen);
+                    syslog(LOG_INFO, "i2c cmd ok: adr 0x%02X / len %i",
+                           m_nI2CAdr, rlen);
                 }
                 // Read cmd data?
                 if(dataReceive && dataAndCrcLen) {
@@ -125,11 +127,12 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
                         rlen = readOutput(dataReceive, dataAndCrcLen);
                     }
                     else if(DEBUG1) {
+                        rlen = -1;
+                        m_nLastErrorFlags |= PC_ERR_FLAG_LENGTH;
                         syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s / len %i",
                                m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLen);
                         syslog(LOG_ERR, "i2c cmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
                                m_nI2CAdr, dataAndCrcLen, rlen);
-                        rlen = -1;
                     }
                 }
             }
@@ -137,21 +140,27 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
                 syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
                        m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
                 syslog(LOG_ERR, "i2c cmd error: adr 0x%02X / mask 0x%04X",
-                       m_nI2CAdr, hc->RM);
+                       m_nI2CAdr, m_nLastErrorFlags);
             }
         }
-        else if (DEBUG1) {
-            syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
-                   m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
-            syslog(LOG_ERR, "i2c cmd checksum error: adr 0x%02X / expected 0x%02X / received: 0x%02X",
-                   m_nI2CAdr, expectedCrc, receivedCrc);
+        else {
+            m_nLastErrorFlags |= PC_ERR_FLAG_CRC;
+            if (DEBUG1) {
+                syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
+                       m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
+                syslog(LOG_ERR, "i2c cmd checksum error: adr 0x%02X / expected 0x%02X / received: 0x%02X",
+                       m_nI2CAdr, expectedCrc, receivedCrc);
+            }
         }
     }
-    else if (DEBUG1) {
-        syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
-               m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
-        syslog(LOG_ERR, "i2c cmd failed: adr 0x%02X / error returned %i",
-               m_nI2CAdr, errVal);
+    else {
+        m_nLastErrorFlags |= PC_ERR_FLAG_I2C_TRANSFER;
+        if (DEBUG1) {
+            syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
+                   m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
+            syslog(LOG_ERR, "i2c cmd failed: adr 0x%02X / error returned %i",
+                   m_nI2CAdr, errVal);
+        }
     }
     // GenCommand allocated mem for us -> cleanup
     delete hc->cmddata;
@@ -165,6 +174,7 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
     quint8 inpBuf[5]; // command response's length is always 5
 
     GenBootloaderCommand(blc);
+    m_nLastErrorFlags = 0;
 
     i2c_msg Msgs[2];
     // send cmd
@@ -200,9 +210,9 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
         quint8 expectedCrc = m_pCRCGenerator->CalcBlockCRC(inpBuf, 4);
         quint8 receivedCrc = inpBuf[4];
         if (expectedCrc==receivedCrc) {
-            blc->RM = static_cast<quint16>(inpBuf[0] << 8) + inpBuf[1];
+            m_nLastErrorFlags |= static_cast<quint16>(inpBuf[0] << 8) + inpBuf[1];
             // Error mask ok?
-            if (blc->RM == 0) {
+            if (m_nLastErrorFlags == 0) {
                 rlen = static_cast<qint16>((inpBuf[2] << 8) + inpBuf[3]);
                 // This is one of my favorite 'make is complicated wherever
                 // you can' - and yes I was involved:
@@ -213,8 +223,8 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                     ++rlen;
                 }
                 if(DEBUG2) {
-                    syslog(LOG_INFO, "i2c bootcmd ok: adr 0x%02X / mask 0x%04X / len %i",
-                           m_nI2CAdr, blc->RM, rlen);
+                    syslog(LOG_INFO, "i2c bootcmd ok: adr 0x%02X / len %i",
+                           m_nI2CAdr, rlen);
                 }
                 // Read cmd data?
                 if(dataReceive && dataAndCrcLen) {
@@ -223,26 +233,33 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                         rlen = readOutput(dataReceive, dataAndCrcLen);
                     }
                     else if(DEBUG1) {
+                        rlen = -1;
+                        m_nLastErrorFlags |= PC_ERR_FLAG_LENGTH;
                         syslog(LOG_ERR,"i2c bootcmd was: adr 0x%02X / cmd 0x%02X / par %s / len %i",
                                m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLen);
                         syslog(LOG_ERR, "i2c bootcmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
                                m_nI2CAdr, dataAndCrcLen, rlen);
-                        rlen = -1;
                     }
                 }
             }
-            else if(DEBUG1) {
-                syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
-                       m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
-                syslog(LOG_ERR, "i2c bootcmd error: adr 0x%02X / mask 0x%04X",
-                       m_nI2CAdr, blc->RM);
+            else {
+                m_nLastErrorFlags |= PC_ERR_FLAG_CRC;
+                if(DEBUG1) {
+                    syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
+                           m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
+                    syslog(LOG_ERR, "i2c bootcmd error: adr 0x%02X / mask 0x%04X",
+                           m_nI2CAdr, m_nLastErrorFlags);
+                }
             }
         }
-        else if (DEBUG1) {
-            syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
-                   m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
-            syslog(LOG_ERR, "i2c bootcmd checksum error: adr 0x%02X / expected 0x%02X / received: 0x%02X",
-                   m_nI2CAdr, expectedCrc, receivedCrc);
+        else {
+            m_nLastErrorFlags |= PC_ERR_FLAG_I2C_TRANSFER;
+            if (DEBUG1) {
+                syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
+                       m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
+                syslog(LOG_ERR, "i2c bootcmd checksum error: adr 0x%02X / expected 0x%02X / received: 0x%02X",
+                       m_nI2CAdr, expectedCrc, receivedCrc);
+            }
         }
     }
     else if (DEBUG1) {
@@ -261,6 +278,7 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
 qint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
 {
     qint16 rlen = -1; // return value ; < 0 means error
+    m_nLastErrorFlags = 0;
     // Parameter check: If something is wrong error is caused by a poor
     // implementor -> generate warning always
     if(!data) {
@@ -311,11 +329,19 @@ qint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
                    m_nI2CAdr, expectedCrc, receivedCrc, qPrintable(i2cHexData));
         }
     }
-    else if (DEBUG1) {
-        syslog(LOG_ERR, "i2c read failed: adr 0x%02X / error returned %i",
-               m_nI2CAdr, errVal);
+    else {
+        m_nLastErrorFlags |= PC_ERR_FLAG_I2C_TRANSFER;
+        if (DEBUG1) {
+            syslog(LOG_ERR, "i2c read failed: adr 0x%02X / error returned %i",
+                   m_nI2CAdr, errVal);
+        }
     }
     return rlen; // return -1  on error else length info
+}
+
+quint32 ZeraMcontrollerBase::getLastErrorMask()
+{
+    return m_nLastErrorFlags;
 }
 
 
@@ -391,16 +417,16 @@ quint8* ZeraMcontrollerBase::GenAdressPointerParameter(quint8 adresspointerSize,
 }
 
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(bl_cmdcode blwriteCmd, cIntelHexFileIO& ihxFIO)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, cIntelHexFileIO& ihxFIO)
 {
     atmelRM  ret = cmddone;
     // Response has variable length. So we need to get length first
     // and call readOutput below
-    struct bl_cmd blInfoCMD(blReadInfo, nullptr, 0);
+    struct bl_cmd blInfoCMD(BL_CMD_READ_INFO, nullptr, 0);
 
     qint16 dataAndCrcLen = writeBootloaderCommand(&blInfoCMD);
 
-    if ( (dataAndCrcLen > 5) && (blInfoCMD.RM == 0) ) { // we must get at least 6 bytes
+    if ( dataAndCrcLen > 5 && m_nLastErrorFlags == 0 ) { // we must get at least 6 bytes
         // we've got them and no error
         dataAndCrcLen++; // dataAndCrcLen is only data lenght but we also want the crc-byte
         quint8 blInput[255];
@@ -427,14 +453,14 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(bl_cmdcode blwriteC
                 quint8 adrParLen = BootloaderInfo.AdressPointerSize;
                 adrParameter = GenAdressPointerParameter(adrParLen, MemAdress);
 
-                struct bl_cmd blAdressCMD(blWriteAddressPointer, adrParameter, adrParLen);
+                struct bl_cmd blAdressCMD(BL_CMD_WRITE_ADDRESS_POINTER, adrParameter, adrParLen);
 
-                if ( (writeBootloaderCommand(&blAdressCMD) == 0) && (blAdressCMD.RM == 0) ) {
+                if ( writeBootloaderCommand(&blAdressCMD) == 0 && m_nLastErrorFlags == 0 ) {
                     // we were able to write the adress
                     quint8* memdat = reinterpret_cast<quint8*>(MemByteArray.data());
                     quint16 memlen = static_cast<quint16>(MemByteArray.count());
                     struct bl_cmd blwriteMemCMD(blwriteCmd, memdat, memlen);
-                    if ( (writeBootloaderCommand(&blwriteMemCMD) == 0) && (blwriteMemCMD.RM == 0) ) {
+                    if ( writeBootloaderCommand(&blwriteMemCMD) == 0 && m_nLastErrorFlags == 0 ) {
                         // we were able to write the data and expect the data to be in flash when sent over i2c
                         MemAdress += BootloaderInfo.MemPageSize;
                         // try to get next block from hex file

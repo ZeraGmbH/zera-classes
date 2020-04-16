@@ -14,6 +14,12 @@
 #include "protocol_zera_bootloader.h"
 #include "protocol_zera_hard.h"
 
+/** @brief PC-side error flags
+ */
+constexpr quint32 PC_ERR_FLAG_I2C_TRANSFER = 1<<16;
+constexpr quint32 PC_ERR_FLAG_CRC = 1<<17;
+constexpr quint32 PC_ERR_FLAG_LENGTH = 1<<18;
+
 /**
  * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol
  */
@@ -78,6 +84,11 @@ public:
      * @return -1 on error else number of bytes we can fetch
      */
     qint16 readOutput(quint8 *data, quint16 dataAndCrcLen);
+    /**
+     * @brief getLastErrorMask: Get error mask of last command performed
+     * @return error mask
+     */
+    quint32 getLastErrorMask();
 private:
     /**
      * @brief GenCommand: Allocate & fill raw data to send in cmddata
@@ -98,16 +109,17 @@ private:
     quint8* GenAdressPointerParameter(quint8 adresspointerSize, quint32 adr);
     /**
      * @brief loadMemory: Let bootloader write Intel hex/eep file to controller
-     * @param blwriteCmd: cmd id: either blWriteFlashBlock or blWriteEEPromBlock
+     * @param blwriteCmd: cmd id: either BL_CMD_WRITE_FLASH_BLOCK or BL_CMD_WRITE_EEPROM_BLOCK
      * @param ihxFIO: Intel hex file object
      * @return done or error type information
      */
-    atmelRM loadMemory(bl_cmdcode blwriteCmd, cIntelHexFileIO& ihxFIO);
+    atmelRM loadMemory(quint8 blwriteCmd, cIntelHexFileIO& ihxFIO);
 
     cMaxim1WireCRC *m_pCRCGenerator;
     QString m_sI2CDevNode;
     quint8 m_nI2CAdr;
     quint8 m_nDebugLevel;
+    quint32 m_nLastErrorFlags;
 };
 
 

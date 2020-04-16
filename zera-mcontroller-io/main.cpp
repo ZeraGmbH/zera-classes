@@ -445,13 +445,11 @@ static bool execBootloaderWrite(ZeraMcontrollerBase* i2cController, CommandLineD
     bool bAllOK = true;
     if(!cmdLineData->flashHexData.isEmpty()) {
         if(i2cController->loadFlash(cmdLineData->flashHexData) != ZeraMcontrollerBase::cmddone) {
-            qWarning("Flash write failed!");
             bAllOK = false;
         }
     }
-    if(!cmdLineData->eepromHexData.isEmpty()) {
+    if(bAllOK && !cmdLineData->eepromHexData.isEmpty()) {
         if(i2cController->loadEEprom(cmdLineData->eepromHexData) != ZeraMcontrollerBase::cmddone) {
-            qWarning("EEPROM write failed!");
             bAllOK = false;
         }
     }
@@ -475,29 +473,39 @@ int main(int argc, char *argv[])
                     cmdLineData->i2cDeviceName,
                     cmdLineData->i2cAddr,
                     cmdLineData->verboseOutput ? 3 : 1);
+        quint16 errMaskHost = i2cController.getLastErrorMask() >> 16;
+        quint16 errMaskMController = i2cController.getLastErrorMask() & 0xFFFF;
         switch(cmdType) {
         case CMD_BOOTLOADER_IO:
             ok = execBootloaderIO(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("bootcmd failed - see journalctl for more details!");
+                qWarning("bootcmd failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
+                    errMaskHost,
+                    errMaskMController);
             }
             break;
         case CMD_ZERA_HARD_IO:
             ok = execZeraHardIO(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("cmd failed - see journalctl for more details!");
+                qWarning("cmd failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
+                    errMaskHost,
+                    errMaskMController);
             }
             break;
         case CMD_READ_DATA:
             ok = execReadData(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("read data failed - see journalctl for more details!");
+                qWarning("read data failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
+                    errMaskHost,
+                    errMaskMController);
             }
             break;
         case CMD_BOOTLOADER_WRITE:
             ok = execBootloaderWrite(&i2cController, cmdLineData);
             if(!ok) {
-                qWarning("boot write failed - see journalctl for more details!");
+                qWarning("boot write failed / see journalctl for more details / host-mask 0x%04X / µC-mask 0x%04X",
+                    errMaskHost,
+                    errMaskMController);
             }
             break;
         case CMD_UNDEF:
