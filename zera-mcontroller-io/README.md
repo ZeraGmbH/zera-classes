@@ -60,8 +60,8 @@ Controller command examples for MT310s2
 Bootloader command examples (all devices - hopefully)
 -----------------------------------------------------
   __IMPORTANT NOTE__:
-Current implementation of bootloader (hope we find time to change this soon) require __exact__ sequence of commands -
-otherwise they stop processing further commands. Exact means:
+Current implementation of bootloader (hope we find time to change this soon) requires __exact__ sequence of commands -
+otherwise it stops processing further commands. 'Exact' means:
 * Do not read when bootloader waits for command
 * If a command supplies data to return, this __data must be read once only__
 
