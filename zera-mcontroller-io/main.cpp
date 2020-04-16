@@ -4,7 +4,7 @@
 #include <QRegularExpression>
 #include <zera_mcontroller_base.h>
 
-// All data extracted from command line params - yes as static globals
+// Type of commands performed
 static enum {
     CMD_UNDEF,
     CMD_BOOTLOADER_IO,
@@ -12,16 +12,20 @@ static enum {
     CMD_ZERA_HARD_IO,
     CMD_READ_DATA
 } cmdType = CMD_UNDEF;
-static bool verboseOutput = false;
-static QString i2cDeviceName;
-static quint8 i2cAddr = 0;
-static QByteArray paramData;
-static quint8 cmdIdBoot = 0;
-static quint16 cmdIdHard = 0;
-static quint8 cmdHardDevice = 0;
-static quint16 cmdResponseLen = 0;
-static cIntelHexFileIO flashHexData;
-static cIntelHexFileIO eepromHexData;
+
+// All data extracted from command line params
+struct CommandLineData {
+    bool verboseOutput = false;
+    QString i2cDeviceName;
+    quint8 i2cAddr = 0;
+    QByteArray paramData;
+    quint8 cmdIdBoot = 0;
+    quint16 cmdIdHard = 0;
+    quint8 cmdHardDevice = 0;
+    quint16 cmdResponseLen = 0;
+    cIntelHexFileIO flashHexData;
+    cIntelHexFileIO eepromHexData;
+};
 
 /**
  * @brief convertCmdParam: Convert hexadecimal command param sting to binary data
@@ -56,9 +60,11 @@ static bool convertCmdParam(QString paramValue, QByteArray& binaryData)
 /**
  * @brief parseCommandLine: Parse / check commandline params and fill our variables
  * @param coreApp: pointer to our application object
+ * @param parser: pointer to QCommandLineParser object
+ * @param cmdLineData: Data extracted from command line parameters
  * @return true on success
  */
-static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *parser)
+static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *parser, CommandLineData *cmdLineData)
 {
     parser->setApplicationDescription("zera-mcontroller-io");
     parser->addHelpOption();
@@ -118,16 +124,16 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         allOptsOK = false;
     }
     else {
-        verboseOutput = iFullVal != 0;
+        cmdLineData->verboseOutput = iFullVal != 0;
     }
     // i2c-dev
-    i2cDeviceName = parser->value(i2cDevNodeOption);
-    if(i2cDeviceName.isEmpty()) {
+    cmdLineData->i2cDeviceName = parser->value(i2cDevNodeOption);
+    if(cmdLineData->i2cDeviceName.isEmpty()) {
         qWarning("No i2c device set!");
         allOptsOK = false;
     }
-    else if(!QFile::exists(i2cDeviceName)) {
-        qWarning("I2c device does not %s exist!", qPrintable(i2cDeviceName));
+    else if(!QFile::exists(cmdLineData->i2cDeviceName)) {
+        qWarning("I2c device does not %s exist!", qPrintable(cmdLineData->i2cDeviceName));
         allOptsOK = false;
     }
     // i2c-addr (we assume 7bit)
@@ -143,7 +149,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             allOptsOK = false;
         }
         else {
-            i2cAddr = static_cast<quint8>(iFullVal);
+            cmdLineData->i2cAddr = static_cast<quint8>(iFullVal);
         }
     }
 
@@ -160,7 +166,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 allOptsOK = false;
             }
             else {
-                cmdResponseLen = static_cast<quint16>(iFullVal);
+                cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
             }
         }
     }
@@ -178,7 +184,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 qWarning("Flash file does not %s exist!", qPrintable(optVal));
                 allOptsOK = false;
             }
-            else if(!flashHexData.ReadHexFile(optVal)) {
+            else if(!cmdLineData->flashHexData.ReadHexFile(optVal)) {
                 qWarning("Flash file %s could not be read/converted!", qPrintable(optVal));
                 allOptsOK = false;
             }
@@ -191,7 +197,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 qWarning("EEPROM file does not %s exist!", qPrintable(optVal));
                 allOptsOK = false;
             }
-            else if(!eepromHexData.ReadHexFile(optVal)) {
+            else if(!cmdLineData->eepromHexData.ReadHexFile(optVal)) {
                 qWarning("EEPROM file %s could not be read/converted!", qPrintable(optVal));
                 allOptsOK = false;
             }
@@ -207,11 +213,11 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 allOptsOK = false;
             }
             else {
-                cmdIdBoot = static_cast<quint8>(iFullVal);
+                cmdLineData->cmdIdBoot = static_cast<quint8>(iFullVal);
             }
             // cmd param
             if(!parser->value(cmdParamOption).isEmpty()) {
-                if(!convertCmdParam(parser->value(cmdParamOption), paramData)) {
+                if(!convertCmdParam(parser->value(cmdParamOption), cmdLineData->paramData)) {
                     allOptsOK = false;
                 }
             }
@@ -224,13 +230,13 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                     allOptsOK = false;
                 }
                 else {
-                    cmdResponseLen = static_cast<quint16>(iFullVal);
+                    cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
                 }
             }
             else {
                 // We have to set default here: If a default value is set in
                 // cmdReturnedLenOption our cross plausi check below would fail
-                cmdResponseLen = 0;
+                cmdLineData->cmdResponseLen = 0;
             }
         }
     }
@@ -249,7 +255,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             allOptsOK = false;
         }
         else {
-            cmdIdHard = static_cast<quint16>(iFullVal);
+            cmdLineData->cmdIdHard = static_cast<quint16>(iFullVal);
         }
         // device no
         optVal = parser->value(cmdDeviceNumOption);
@@ -259,13 +265,13 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             allOptsOK = false;
         }
         else {
-            cmdHardDevice = static_cast<quint8>(iFullVal);
+            cmdLineData->cmdHardDevice = static_cast<quint8>(iFullVal);
         }
 
         // cmd param
         optVal = parser->value(cmdParamOption);
         if(!optVal.isEmpty()) {
-            if(!convertCmdParam(optVal, paramData)) {
+            if(!convertCmdParam(optVal, cmdLineData->paramData)) {
                 allOptsOK = false;
             }
         }
@@ -278,7 +284,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 allOptsOK = false;
             }
             else {
-                cmdResponseLen = static_cast<quint16>(iFullVal);
+                cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
             }
         }
     }
@@ -336,10 +342,11 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
  * @brief outputReceivedData: If verboseOutput is set, output data to stdout
  * @param dataReceive: Buffer with data
  * @param receivedDataLen: Buffer length
+ * @param cmdLineData: Data extracted from command line parameters
  */
-static void outputReceivedData(quint8 *dataReceive, qint16 receivedDataLen)
+static void outputReceivedData(quint8 *dataReceive, qint16 receivedDataLen, CommandLineData *cmdLineData)
 {
-    if(dataReceive && receivedDataLen > 1 && verboseOutput) {
+    if(dataReceive && receivedDataLen > 1 && cmdLineData->verboseOutput) {
         QString dataString;
         // Do not output crc
         for(qint16 byteNo=0; byteNo<receivedDataLen-1; ++byteNo) {
@@ -353,67 +360,75 @@ static void outputReceivedData(quint8 *dataReceive, qint16 receivedDataLen)
 /**
  * @brief execBootloaderIO: Execute bootloader command (data taken from cmdIdBoot/paramData/cmdResponseLen)
  * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param cmdLineData: Data extracted from command line parameters
  * @return true on success
  */
-static bool execBootloaderIO(ZeraMcontrollerBase* i2cController)
+static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
 {
-    bl_cmd bcmd(cmdIdBoot, reinterpret_cast<quint8*>(paramData.data()), static_cast<quint16>(paramData.size()));
+    bl_cmd bcmd(
+                cmdLineData->cmdIdBoot,
+                reinterpret_cast<quint8*>(cmdLineData->paramData.data()), static_cast<quint16>(cmdLineData->paramData.size()));
     quint8 *dataReceive = nullptr;
     quint16 totalReceiveLen = 0;
-    if(cmdResponseLen) {
-        totalReceiveLen = cmdResponseLen+1;
+    if(cmdLineData->cmdResponseLen) {
+        totalReceiveLen = cmdLineData->cmdResponseLen+1;
         dataReceive = new quint8[totalReceiveLen];
     }
     qint16 receivedDataLen = i2cController->writeBootloaderCommand(&bcmd, dataReceive, totalReceiveLen);
-    outputReceivedData(dataReceive, receivedDataLen);
+    outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
 
-    if(cmdResponseLen == 0 && receivedDataLen > 1) {
-        qInfo("bootcmd %02X can return data bytes (without CRC): %i ", cmdIdBoot, receivedDataLen-1);
+    if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
+        qInfo("bootcmd %02X can return data bytes (without CRC): %i ", cmdLineData->cmdIdBoot, receivedDataLen-1);
     }
 
     delete dataReceive;
-    return (cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
+    return (cmdLineData->cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
 }
 
 /**
  * @brief execZeraHardIO: Execute hardware command (data taken from cmdIdHard/paramData/cmdResponseLen)
  * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param cmdLineData: Data extracted from command line parameters
  * @return true on success
  */
-static bool execZeraHardIO(ZeraMcontrollerBase* i2cController)
+static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
 {
-    hw_cmd hcmd(cmdIdHard, cmdHardDevice, reinterpret_cast<quint8*>(paramData.data()), static_cast<quint16>(paramData.size()));
+    hw_cmd hcmd(
+                cmdLineData->cmdIdHard,
+                cmdLineData->cmdHardDevice,
+                reinterpret_cast<quint8*>(cmdLineData->paramData.data()), static_cast<quint16>(cmdLineData->paramData.size()));
     quint8 *dataReceive = nullptr;
     quint16 totalReceiveLen = 0;
-    if(cmdResponseLen) {
-        totalReceiveLen = cmdResponseLen+1;
+    if(cmdLineData->cmdResponseLen) {
+        totalReceiveLen = cmdLineData->cmdResponseLen+1;
         dataReceive = new quint8[totalReceiveLen];
     }
     qint16 receivedDataLen = i2cController->writeCommand(&hcmd, dataReceive, totalReceiveLen);
-    outputReceivedData(dataReceive, receivedDataLen);
-    if(cmdResponseLen == 0 && receivedDataLen > 1) {
-        qInfo("cmd %04X can return data bytes (without CRC): %i", cmdIdHard, receivedDataLen-1);
+    outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
+    if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
+        qInfo("cmd %04X can return data bytes (without CRC): %i", cmdLineData->cmdIdHard, receivedDataLen-1);
     }
 
     delete dataReceive;
-    return (cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
+    return (cmdLineData->cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
 }
 
 /**
  * @brief execReadData: Read data from previous command (for cmds with unknown length len taken from cmdResponseLen)
  * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param cmdLineData: Data extracted from command line parameters
  * @return true on success
  */
-static bool execReadData(ZeraMcontrollerBase* i2cController)
+static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
 {
     quint8 *dataReceive = nullptr;
     quint16 totalReceiveLen = 0;
-    if(cmdResponseLen) {
-        totalReceiveLen = cmdResponseLen+1;
+    if(cmdLineData->cmdResponseLen) {
+        totalReceiveLen = cmdLineData->cmdResponseLen+1;
         dataReceive = new quint8[totalReceiveLen];
     }
     qint16 receivedDataLen = i2cController->readOutput(dataReceive, totalReceiveLen);
-    outputReceivedData(dataReceive, receivedDataLen);
+    outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
 
     delete dataReceive;
     return totalReceiveLen == receivedDataLen;
@@ -422,19 +437,20 @@ static bool execReadData(ZeraMcontrollerBase* i2cController)
 /**
  * @brief execBootloaderWrite: Write data in flashHexData/eepromHexData
  * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param cmdLineData: Data extracted from command line parameters
  * @return true on success
  */
-static bool execBootloaderWrite(ZeraMcontrollerBase* i2cController)
+static bool execBootloaderWrite(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
 {
     bool bAllOK = true;
-    if(!flashHexData.isEmpty()) {
-        if(i2cController->loadFlash(flashHexData) != ZeraMcontrollerBase::cmddone) {
+    if(!cmdLineData->flashHexData.isEmpty()) {
+        if(i2cController->loadFlash(cmdLineData->flashHexData) != ZeraMcontrollerBase::cmddone) {
             qWarning("Flash write failed!");
             bAllOK = false;
         }
     }
-    if(!eepromHexData.isEmpty()) {
-        if(i2cController->loadEEprom(eepromHexData) != ZeraMcontrollerBase::cmddone) {
+    if(!cmdLineData->eepromHexData.isEmpty()) {
+        if(i2cController->loadEEprom(cmdLineData->eepromHexData) != ZeraMcontrollerBase::cmddone) {
             qWarning("EEPROM write failed!");
             bAllOK = false;
         }
@@ -448,33 +464,38 @@ int main(int argc, char *argv[])
 {
     QCoreApplication app(argc, argv);
     app.setApplicationVersion("0.0.1");
+
     QCommandLineParser parser;
+    CommandLineData *cmdLineData = new CommandLineData;
 
     bool ok = false;
-    if(parseCommandLine(&app, &parser)) {
+    if(parseCommandLine(&app, &parser, cmdLineData)) {
         // We output errors ALWAYS
-        ZeraMcontrollerBase i2cController(i2cDeviceName, i2cAddr, verboseOutput ? 3 : 1);
+        ZeraMcontrollerBase i2cController(
+                    cmdLineData->i2cDeviceName,
+                    cmdLineData->i2cAddr,
+                    cmdLineData->verboseOutput ? 3 : 1);
         switch(cmdType) {
         case CMD_BOOTLOADER_IO:
-            ok = execBootloaderIO(&i2cController);
+            ok = execBootloaderIO(&i2cController, cmdLineData);
             if(!ok) {
                 qWarning("bootcmd failed - see journalctl for more details!");
             }
             break;
         case CMD_ZERA_HARD_IO:
-            ok = execZeraHardIO(&i2cController);
+            ok = execZeraHardIO(&i2cController, cmdLineData);
             if(!ok) {
                 qWarning("cmd failed - see journalctl for more details!");
             }
             break;
         case CMD_READ_DATA:
-            ok = execReadData(&i2cController);
+            ok = execReadData(&i2cController, cmdLineData);
             if(!ok) {
                 qWarning("read data failed - see journalctl for more details!");
             }
             break;
         case CMD_BOOTLOADER_WRITE:
-            ok = execBootloaderWrite(&i2cController);
+            ok = execBootloaderWrite(&i2cController, cmdLineData);
             if(!ok) {
                 qWarning("boot write failed - see journalctl for more details!");
             }
@@ -484,5 +505,7 @@ int main(int argc, char *argv[])
             break;
         }
     }
+    delete cmdLineData;
+
     return ok ? 0 : -1;//app.exec();
 }
