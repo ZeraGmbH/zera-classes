@@ -2,6 +2,7 @@
 #include <QCommandLineParser>
 #include <QFile>
 #include <QRegularExpression>
+#include <QTextStream>
 #include <zera_mcontroller_base.h>
 
 // Type of commands performed
@@ -378,7 +379,7 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData
     outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
 
     if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
-        qInfo("bootcmd %02X can return data bytes (without CRC): %i ", cmdLineData->cmdIdBoot, receivedDataLen-1);
+        qInfo("bootcmd %02X can return data bytes: %i ", cmdLineData->cmdIdBoot, receivedDataLen-1);
     }
 
     delete dataReceive;
@@ -406,7 +407,7 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *
     qint16 receivedDataLen = i2cController->writeCommand(&hcmd, dataReceive, totalReceiveLen);
     outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
     if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
-        qInfo("cmd %04X can return data bytes (without CRC): %i", cmdLineData->cmdIdHard, receivedDataLen-1);
+        qInfo("cmd %04X can return data bytes: %i", cmdLineData->cmdIdHard, receivedDataLen-1);
     }
 
     delete dataReceive;
@@ -457,9 +458,26 @@ static bool execBootloaderWrite(ZeraMcontrollerBase* i2cController, CommandLineD
 }
 
 
+void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    switch(type) {
+        case QtInfoMsg: {
+            QTextStream cout(stdout, QIODevice::WriteOnly);
+            cout << msg << endl;
+            break;
+        }
+        default: {
+            QTextStream cout(stderr, QIODevice::WriteOnly);
+            cout << msg << endl;
+            break;
+        }
+    }
+}
+
 
 int main(int argc, char *argv[])
 {
+    qInstallMessageHandler(myMessageOutput);
     QCoreApplication app(argc, argv);
     app.setApplicationVersion("0.0.1");
 
