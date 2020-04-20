@@ -154,29 +154,9 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         }
     }
 
-    ////////////////////////////////////////////////////////
-    // No cmdID: -> read data from previous
+    ///////////////////////////////////////////////////////////
+    // No cmdID: -> read data from previous / bootloader write
     if(parser->value(cmdIdOption).isEmpty()) {
-        cmdType = CMD_READ_DATA;
-        // expected length of responded data
-        optVal = parser->value(cmdReturnedLenOption);
-        if(!optVal.isEmpty()) {
-            int iFullVal = optVal.toInt(&optOK, 10);
-            if(!optOK || iFullVal<1 || iFullVal>0xFFFF) {
-                qWarning("Expected length %s for read is invalid or out of limits [1-65536]!", qPrintable(optVal));
-                allOptsOK = false;
-            }
-            else {
-                cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
-            }
-        }
-    }
-
-    ////////////////////////////////////////////////////////
-    // With cmdID: -> IO
-    //
-    // No device set -> bootloader cmd
-    else if(parser->value(cmdDeviceNumOption).isEmpty()) {
         // write flash?
         optVal = parser->value(cmdFlashWriteOption);
         if(!optVal.isEmpty()) {
@@ -203,42 +183,62 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 allOptsOK = false;
             }
         }
-        // common bootloader command?
         if(cmdType != CMD_BOOTLOADER_WRITE) {
-            cmdType = CMD_BOOTLOADER_IO;
-            // cmdID
-            optVal = parser->value(cmdIdOption);
-            int iFullVal = optVal.toInt(&optOK, 16);
-            if(!optOK || iFullVal<0 || iFullVal>0xFF) {
-                qWarning("Bootloader cmd ID %s is invalid or out of limits [0x00-0xFF]!", qPrintable(optVal));
-                allOptsOK = false;
-            }
-            else {
-                cmdLineData->cmdIdBoot = static_cast<quint8>(iFullVal);
-            }
-            // cmd param
-            if(!parser->value(cmdParamOption).isEmpty()) {
-                if(!convertCmdParam(parser->value(cmdParamOption), cmdLineData->paramData)) {
-                    allOptsOK = false;
-                }
-            }
+            cmdType = CMD_READ_DATA;
             // expected length of responded data
             optVal = parser->value(cmdReturnedLenOption);
             if(!optVal.isEmpty()) {
                 int iFullVal = optVal.toInt(&optOK, 10);
-                if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
-                    qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0-65535]!", qPrintable(optVal));
+                if(!optOK || iFullVal<1 || iFullVal>0xFFFF) {
+                    qWarning("Expected length %s for read is invalid or out of limits [1-65536]!", qPrintable(optVal));
                     allOptsOK = false;
                 }
                 else {
                     cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
                 }
             }
-            else {
-                // We have to set default here: If a default value is set in
-                // cmdReturnedLenOption our cross plausi check below would fail
-                cmdLineData->cmdResponseLen = 0;
+        }
+    }
+
+    ////////////////////////////////////////////////////////
+    // With cmdID: -> IO
+    //
+    // No device set -> bootloader cmd
+    else if(parser->value(cmdDeviceNumOption).isEmpty()) {
+        // common bootloader command?
+        cmdType = CMD_BOOTLOADER_IO;
+        // cmdID
+        optVal = parser->value(cmdIdOption);
+        int iFullVal = optVal.toInt(&optOK, 16);
+        if(!optOK || iFullVal<0 || iFullVal>0xFF) {
+            qWarning("Bootloader cmd ID %s is invalid or out of limits [0x00-0xFF]!", qPrintable(optVal));
+            allOptsOK = false;
+        }
+        else {
+            cmdLineData->cmdIdBoot = static_cast<quint8>(iFullVal);
+        }
+        // cmd param
+        if(!parser->value(cmdParamOption).isEmpty()) {
+            if(!convertCmdParam(parser->value(cmdParamOption), cmdLineData->paramData)) {
+                allOptsOK = false;
             }
+        }
+        // expected length of responded data
+        optVal = parser->value(cmdReturnedLenOption);
+        if(!optVal.isEmpty()) {
+            int iFullVal = optVal.toInt(&optOK, 10);
+            if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
+                qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0-65535]!", qPrintable(optVal));
+                allOptsOK = false;
+            }
+            else {
+                cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+            }
+        }
+        else {
+            // We have to set default here: If a default value is set in
+            // cmdReturnedLenOption our cross plausi check below would fail
+            cmdLineData->cmdResponseLen = 0;
         }
     }
     ////////////////////////////////////////////////////////
