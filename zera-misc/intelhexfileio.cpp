@@ -20,9 +20,9 @@ bool cIntelHexFileIO::ReadHexFile(const QString& fileName)
 }
 
 
-void cIntelHexFileIO::GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAddressModuloBlockLen, QByteArray& byteArray, quint32& nOffsetToModulo)
+bool cIntelHexFileIO::GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAddressModuloBlockLen, QByteArray& byteArray, quint32& nOffsetToModulo)
 {
-    d_ptr->GetMemoryBlock( nBlockLen, nStartAddressModuloBlockLen, byteArray, nOffsetToModulo);
+    return d_ptr->GetMemoryBlock( nBlockLen, nStartAddressModuloBlockLen, byteArray, nOffsetToModulo);
 }
 
 

@@ -456,8 +456,8 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, 
             quint32 MemOffset;
             QByteArray MemByteArray;
 
-            ihxFIO.GetMemoryBlock( BootloaderInfo.MemPageSize, MemAdress, MemByteArray, MemOffset);
-            while ( (MemByteArray.count()) && (ret == cmddone) ) { // as long we get data from hexfile
+            while ( ihxFIO.GetMemoryBlock(BootloaderInfo.MemPageSize, MemAdress, MemByteArray, MemOffset) && // as long we get data from hexfile
+                    ret == cmddone ) {
                 // Set address pointer
                 quint8* adrParameter;
                 quint8 adrParLen = BootloaderInfo.AdressPointerSize;
@@ -471,8 +471,6 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, 
                     if ( writeBootloaderCommand(&blwriteMemCMD) == 0 && m_nLastErrorFlags == 0 ) {
                         // we were able to write the data and expect the data to be in flash when sent over i2c
                         MemAdress += BootloaderInfo.MemPageSize;
-                        // try to get next block from hex file
-                        ihxFIO.GetMemoryBlock( BootloaderInfo.MemPageSize, MemAdress, MemByteArray, MemOffset);
                     }
                     else {
                         ret = cmdexecfault;

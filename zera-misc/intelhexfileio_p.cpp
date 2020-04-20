@@ -309,7 +309,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 }
 
 
-void cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAddressModuloBlockLen, QByteArray& byteArray, quint32& nOffsetToModulo)
+bool cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAddressModuloBlockLen, QByteArray& byteArray, quint32& nOffsetToModulo)
 {
     quint32 nMaxAdress = nStartAddressModuloBlockLen + nBlockLen - 1;
 
@@ -410,6 +410,7 @@ void cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& n
             }
         }
     }
+    return !byteArray.isEmpty();
 }
 
 bool cIntelHexFileIOPrivate::isEmpty()
