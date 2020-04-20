@@ -39,12 +39,12 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::startProgram()
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadFlash(cIntelHexFileIO &ihxFIO)
 {
-    return loadMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO);
+    return loadMemory(BL_CMD_WRITE_FLASH_BLOCK, BL_CMD_READ_FLASH_BLOCK, ihxFIO);
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ihxFIO)
 {
-    return loadMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO);
+    return loadMemory(BL_CMD_WRITE_EEPROM_BLOCK, BL_CMD_READ_EEPROM_BLOCK, ihxFIO);
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hwcmd, QString& answer)
@@ -418,13 +418,13 @@ quint8* ZeraMcontrollerBase::GenAdressPointerParameter(quint8 adresspointerSize,
 }
 
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, cIntelHexFileIO& ihxFIO)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blWriteCmd, quint8 blReadCmd, cIntelHexFileIO& ihxFIO)
 {
-    atmelRM  ret = cmddone;
     // Just in case there is nothing to write we have nothing to do
     if(ihxFIO.isEmpty()) {
-        return ret;
+        return cmddone;
     }
+    atmelRM ret = cmdexecfault;
     // Get bootloader info (configuration)
     // Note: Response has variable length. So we need to get length first
     // and call readOutput below
@@ -437,8 +437,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, 
         if ( read == dataAndCrcLen) { // we got the reqired information from bootloader
             blInfo BootloaderInfo;
             quint8* dest = reinterpret_cast<quint8*>(&BootloaderInfo);
-            // Note: Bootloader response starts with zero-terminated version
-            // information. Swap-copy bytes following into BootloaderInfo
+            // Bootloader response starts with zero-terminated version information.
             size_t pos = strlen(reinterpret_cast<char*>(blInput));
             size_t i;
             // Transfer 16Bit config + 16Bit page-size to blInfo
@@ -452,43 +451,69 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, 
             }
             dest[i] = blInput[pos+1+i];
 
-            quint32 MemAdress = 0;
-            quint32 MemOffset;
-            QByteArray MemByteArray;
+            // Bootloaders for system-critical controllers can be configured
+            // with read commands so we can test that data arrived correctly.
+            bool bootloaderSupportsRead = BootloaderInfo.ConfigurationFlags & BL_CONFIG_FLAG_READ_CMDS_SUPPORTED;
+            // Max writes (TODO class-member/param??)
+            constexpr quint8 maxWritesBlockDefault = 3;
 
-            while ( ihxFIO.GetMemoryBlock(BootloaderInfo.MemPageSize, MemAdress, MemByteArray, MemOffset) && // as long we get data from hexfile
-                    ret == cmddone ) {
+            // Worker vars
+            quint32 memAddress = 0;
+            quint32 memOffset;
+            QByteArray memByteArrayWrite;
+            quint8 writesLeftover = maxWritesBlockDefault;
+
+            // loop all memory blocks (re-write in case of error and further writes left)
+            while ( (--writesLeftover>0 || ret == cmddone) &&
+                    ihxFIO.GetMemoryBlock(BootloaderInfo.MemPageSize, memAddress, memByteArrayWrite, memOffset) ) {
+                // expecting the worst saves us many else {}
+                ret = cmdexecfault;
                 // Set address pointer
                 quint8* adrParameter;
                 quint8 adrParLen = BootloaderInfo.AdressPointerSize;
-                adrParameter = GenAdressPointerParameter(adrParLen, MemAdress);
+                adrParameter = GenAdressPointerParameter(adrParLen, memAddress);
                 struct bl_cmd blAdressCMD(BL_CMD_WRITE_ADDRESS_POINTER, adrParameter, adrParLen);
                 if ( writeBootloaderCommand(&blAdressCMD) == 0 && m_nLastErrorFlags == 0 ) {
                     // write data
-                    quint8* memdat = reinterpret_cast<quint8*>(MemByteArray.data());
-                    quint16 memlen = static_cast<quint16>(MemByteArray.count());
-                    struct bl_cmd blwriteMemCMD(blwriteCmd, memdat, memlen);
-                    if ( writeBootloaderCommand(&blwriteMemCMD) == 0 && m_nLastErrorFlags == 0 ) {
-                        // we were able to write the data and expect the data to be in flash when sent over i2c
-                        MemAdress += BootloaderInfo.MemPageSize;
-                    }
-                    else {
-                        ret = cmdexecfault;
+                    quint8* memdat = reinterpret_cast<quint8*>(memByteArrayWrite.data());
+                    quint16 memlen = static_cast<quint16>(memByteArrayWrite.count());
+                    struct bl_cmd blWriteMemCMD(blWriteCmd, memdat, memlen);
+                    if ( writeBootloaderCommand(&blWriteMemCMD) == 0 && m_nLastErrorFlags == 0 ) {
+                        if(bootloaderSupportsRead) {
+                            // Set address pointer again (no non-auto inc magic)
+                            if ( writeBootloaderCommand(&blAdressCMD) == 0 && m_nLastErrorFlags == 0 ) {
+                                // read back data
+                                struct bl_cmd blReadMemCMD(blReadCmd, nullptr, 0);
+                                QByteArray memByteArrayRead(memByteArrayWrite.count() + 1/*crc*/, 0);
+                                quint8* memDatRead = reinterpret_cast<quint8*>(memByteArrayRead.data());
+                                quint16 memLenRead = static_cast<quint16>(memByteArrayRead.count());
+                                if ( writeBootloaderCommand(&blReadMemCMD, memDatRead, memLenRead) == memLenRead && m_nLastErrorFlags == 0 ) {
+                                    memByteArrayRead = memByteArrayRead.left(memlen); // remove crc
+                                    // block arrived correctly
+                                    if(memByteArrayRead == memByteArrayWrite) {
+                                        ret = cmddone;
+                                    }
+                                }
+                            }
+                        }
+                        // bootloader does not support read: we have to assume block arrived
+                        else {
+                            ret = cmddone;
+                        }
                     }
                 }
-                else {
-                    ret = cmdexecfault;
-                }
+                // GenAdressPointerParameter allocated adrParameter for us - cleanup
                 delete adrParameter;
+
+                // block transaction OK?
+                if(ret == cmddone) {
+                    // next block
+                    memAddress += BootloaderInfo.MemPageSize;
+                    // reset block repetition count
+                    writesLeftover = maxWritesBlockDefault;
+                }
             }
         }
-        else {
-            ret = cmdexecfault;
-        }
     }
-    else {
-        ret = cmdexecfault;
-    }
-
     return ret;
 }

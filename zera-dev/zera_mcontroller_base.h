@@ -109,11 +109,12 @@ private:
     quint8* GenAdressPointerParameter(quint8 adresspointerSize, quint32 adr);
     /**
      * @brief loadMemory: Let bootloader write Intel hex/eep file to controller
-     * @param blwriteCmd: cmd id: either BL_CMD_WRITE_FLASH_BLOCK or BL_CMD_WRITE_EEPROM_BLOCK
+     * @param blWriteCmd: write cmd id: either BL_CMD_WRITE_FLASH_BLOCK or BL_CMD_WRITE_EEPROM_BLOCK
+     * @param blReadCmd: read cmd id: either BL_CMD_READ_FLASH_BLOCK or BL_CMD_READ_EEPROM_BLOCK
      * @param ihxFIO: Intel hex file object
      * @return done or error type information
      */
-    atmelRM loadMemory(quint8 blwriteCmd, cIntelHexFileIO& ihxFIO);
+    atmelRM loadMemory(quint8 blWriteCmd, quint8 blReadCmd, cIntelHexFileIO& ihxFIO);
 
     cMaxim1WireCRC *m_pCRCGenerator;
     QString m_sI2CDevNode;
