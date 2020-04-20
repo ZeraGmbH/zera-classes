@@ -216,9 +216,10 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                 rlen = static_cast<qint16>((inpBuf[2] << 8) + inpBuf[3]);
                 // This is one of my favorite 'make is complicated wherever
                 // you can' - and yes I was involved:
-                // Bootloader and Hardware protocol have different interpretation of length:
+                // Bootloader and Hardware protocol interpret length differently:
                 //   hardware-protocol: Len of data + crc
-                //   bootloader:        Len of data
+                //   bootloader:        Len of data only
+                // Since this is a possible pitfall treat rlen same as writeCommand
                 if(rlen > 0) {
                     ++rlen;
                 }
@@ -420,22 +421,24 @@ quint8* ZeraMcontrollerBase::GenAdressPointerParameter(quint8 adresspointerSize,
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, cIntelHexFileIO& ihxFIO)
 {
     atmelRM  ret = cmddone;
-    // Response has variable length. So we need to get length first
+    // Just in case there is nothing to write we have nothing to do
+    if(ihxFIO.isEmpty()) {
+        return ret;
+    }
+    // Get bootloader info (configuration)
+    // Note: Response has variable length. So we need to get length first
     // and call readOutput below
     struct bl_cmd blInfoCMD(BL_CMD_READ_INFO, nullptr, 0);
-
     qint16 dataAndCrcLen = writeBootloaderCommand(&blInfoCMD);
-
-    if ( dataAndCrcLen > 5 && m_nLastErrorFlags == 0 ) { // we must get at least 6 bytes
+    if ( dataAndCrcLen > 6 && m_nLastErrorFlags == 0 ) { // we must get at least 7 bytes
         // we've got them and no error
-        dataAndCrcLen++; // dataAndCrcLen is only data lenght but we also want the crc-byte
         quint8 blInput[255];
         qint16 read = readOutput(blInput, static_cast<quint16>(dataAndCrcLen));
         if ( read == dataAndCrcLen) { // we got the reqired information from bootloader
             blInfo BootloaderInfo;
             quint8* dest = reinterpret_cast<quint8*>(&BootloaderInfo);
             // Note: Bootloader response starts with zero-terminated version
-            // information. Swap-copy bytes followin into BootloaderInfo
+            // information. Swap-copy bytes following into BootloaderInfo
             size_t pos = strlen(reinterpret_cast<char*>(blInput));
             size_t i;
             for (i = 0; i < 4; i++) {
@@ -449,14 +452,13 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, 
 
             ihxFIO.GetMemoryBlock( BootloaderInfo.MemPageSize, MemAdress, MemByteArray, MemOffset);
             while ( (MemByteArray.count()) && (ret == cmddone) ) { // as long we get data from hexfile
+                // Set address pointer
                 quint8* adrParameter;
                 quint8 adrParLen = BootloaderInfo.AdressPointerSize;
                 adrParameter = GenAdressPointerParameter(adrParLen, MemAdress);
-
                 struct bl_cmd blAdressCMD(BL_CMD_WRITE_ADDRESS_POINTER, adrParameter, adrParLen);
-
                 if ( writeBootloaderCommand(&blAdressCMD) == 0 && m_nLastErrorFlags == 0 ) {
-                    // we were able to write the adress
+                    // write data
                     quint8* memdat = reinterpret_cast<quint8*>(MemByteArray.data());
                     quint16 memlen = static_cast<quint16>(MemByteArray.count());
                     struct bl_cmd blwriteMemCMD(blwriteCmd, memdat, memlen);

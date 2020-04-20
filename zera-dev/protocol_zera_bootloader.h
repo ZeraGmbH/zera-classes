@@ -58,6 +58,13 @@ enum enConfFlags {
     blAutoIncr = 0, blReadCommandsAvail = 1
 };
 
+
+/**
+ * @brief Bootloader info configuration flags
+ */
+constexpr quint16 BL_CONFIG_FLAG_AUTO_INCREMENT = 1<<0;
+constexpr quint16 BL_CONFIG_FLAG_READ_CMDS_SUPPORTED = 1<<1;
+
 /**
  * @brief Bootloader configuration info structure reported by Read Info (ID 0x00) command
  */
