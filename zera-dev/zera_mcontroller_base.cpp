@@ -441,8 +441,14 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blwriteCmd, 
             // information. Swap-copy bytes following into BootloaderInfo
             size_t pos = strlen(reinterpret_cast<char*>(blInput));
             size_t i;
+            // Transfer 16Bit config + 16Bit page-size to blInfo
             for (i = 0; i < 4; i++) {
-                dest[i ^ 1] = blInput[pos+1+i]; // little endian ... big endian
+                // Controller sends 16Bit values big-endian
+                #if __BYTE_ORDER == __LITTLE_ENDIAN
+                    dest[i ^ 1] = blInput[pos+1+i];
+                #else
+                    dest[i] = blInput[pos+1+i];
+                #endif
             }
             dest[i] = blInput[pos+1+i];
 
