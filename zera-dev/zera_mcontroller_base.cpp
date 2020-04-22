@@ -296,18 +296,15 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                     }
                 }
             }
-            else {
-                m_nLastErrorFlags |= MASTER_ERR_FLAG_CRC;
-                if(DEBUG1) {
-                    syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
-                           m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
-                    syslog(LOG_ERR, "i2c bootcmd error: adr 0x%02X / %s",
-                           m_nI2CAdr, qPrintable(getErrorMaskText()));
-                }
+            else if(DEBUG1) {
+                syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
+                       m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
+                syslog(LOG_ERR, "i2c bootcmd error: adr 0x%02X / %s",
+                       m_nI2CAdr, qPrintable(getErrorMaskText()));
             }
         }
         else {
-            m_nLastErrorFlags |= MASTER_ERR_FLAG_I2C_TRANSFER;
+            m_nLastErrorFlags |= MASTER_ERR_FLAG_CRC;
             if (DEBUG1) {
                 syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
                        m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
@@ -316,11 +313,14 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
             }
         }
     }
-    else if (DEBUG1) {
-        syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
-               m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
-        syslog(LOG_ERR, "i2c bootcmd failed: adr 0x%02X / error returned %i",
-               m_nI2CAdr, errVal);
+    else  {
+        m_nLastErrorFlags |= MASTER_ERR_FLAG_I2C_TRANSFER;
+        if (DEBUG1) {
+            syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
+                   m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
+            syslog(LOG_ERR, "i2c bootcmd failed: adr 0x%02X / error returned %i",
+                   m_nI2CAdr, errVal);
+        }
     }
 
     // GenBootloaderCommand allocated mem for us -> cleanup
