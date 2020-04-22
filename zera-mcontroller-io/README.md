@@ -15,14 +15,17 @@ Options:
   -I, --i2c-address <hex address>              I2C address (hex) e.g '20'
   -c, --cmd-id <hex command id>                Command ID (hex) e.g '0001'
   -d, --device <hex device no>                 Logical device (hex) e.g '01' -
-                                                if not set: bootloader cmd
+                                               if not set: bootloader cmd
   -p, --cmd-param <hex param>                  Command parameter (hex) e.g
                                                '01AA' or '0x01 0xAA'
   -l, --return-len <expected len>              Expected data return length
                                                (decimal / without CRC / default:
                                                0)
-  -f, --flash-filename <hex filename>          Write intel-hex file to flash
-  -e, --eeprom-filename <hex filename>         Write intel-hex file to eeprom
+  -f, --flash-filename-write <hex filename>    Write intel-hex file to flash
+  -e, --eeprom-filename-write <hex filename>   Write intel-hex file to eeprom
+  -F, --flash-filename-verify <hex filename>   Verify intel-hex file with flash
+  -E, --eeprom-filename-verify <hex filename>  Verify intel-hex file with
+                                               eeprom
 ```
 
 
@@ -73,7 +76,17 @@ Working Examples:
   echo $BL_INFO
   ```
 
+* Write data to flash
+  ```sh
+  zera-mcontroller-io -i /dev/i2c-0 -I21 -f<hex-file-to-write>
+  ```
+
+* Verify data in flash
+  ```sh
+  zera-mcontroller-io -i /dev/i2c-0 -I21 -F<hex-file-to-write>
+  ```
+
 * Stop bootloader and start application
   ```sh
   zera-mcontroller-io -i /dev/i2c-0 -I21 -c1
-
+  ```
