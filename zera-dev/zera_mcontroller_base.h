@@ -54,6 +54,8 @@ public:
     atmelRM startProgram();
     atmelRM loadFlash(cIntelHexFileIO& ihxFIO);
     atmelRM loadEEprom(cIntelHexFileIO& ihxFIO);
+    atmelRM verifyFlash(cIntelHexFileIO& ihxFIO);
+    atmelRM verifyEEprom(cIntelHexFileIO& ihxFIO);
     /**
      * @brief readVariableLenText: Function to read strings with variable length (name,version..) from controller
      * @param hwcmd: [in] command id
@@ -119,7 +121,7 @@ private:
      * @param ihxFIO: Intel hex file object
      * @return done or error type information
      */
-    atmelRM loadMemory(quint8 blWriteCmd, quint8 blReadCmd, cIntelHexFileIO& ihxFIO);
+    atmelRM loadOrVerifyMemory(quint8 blCmd, cIntelHexFileIO& ihxFIO, bool verify);
     void appendMasterErrorFlags(QHash<quint32, QString>& errorFlagsText);
 
     cMaxim1WireCRC *m_pCRCGenerator;

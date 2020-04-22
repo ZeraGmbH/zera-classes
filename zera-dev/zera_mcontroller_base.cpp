@@ -64,12 +64,22 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::startProgram()
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadFlash(cIntelHexFileIO &ihxFIO)
 {
-    return loadMemory(BL_CMD_WRITE_FLASH_BLOCK, BL_CMD_READ_FLASH_BLOCK, ihxFIO);
+    return loadOrVerifyMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO, false);
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ihxFIO)
 {
-    return loadMemory(BL_CMD_WRITE_EEPROM_BLOCK, BL_CMD_READ_EEPROM_BLOCK, ihxFIO);
+    return loadOrVerifyMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO, false);
+}
+
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::verifyFlash(cIntelHexFileIO &ihxFIO)
+{
+    return loadOrVerifyMemory(BL_CMD_READ_FLASH_BLOCK, ihxFIO, true);
+}
+
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::verifyEEprom(cIntelHexFileIO &ihxFIO)
+{
+    return loadOrVerifyMemory(BL_CMD_READ_EEPROM_BLOCK, ihxFIO, true);
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hwcmd, QString& answer)
@@ -439,7 +449,7 @@ quint8* ZeraMcontrollerBase::GenAdressPointerParameter(quint8 adresspointerSize,
 }
 
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blWriteCmd, quint8 blReadCmd, cIntelHexFileIO& ihxFIO)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCmd, cIntelHexFileIO& ihxFIO, bool verify)
 {
     // Just in case there is nothing to write we have nothing to do
     if(ihxFIO.isEmpty()) {
@@ -472,21 +482,27 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blWriteCmd, 
             }
             dest[i] = blInput[pos+1+i];
 
-            // Bootloaders for system-critical controllers can be configured
-            // with read commands so we can test that data arrived correctly.
+            // In case of verify: Check if bootloader supports read commands
             bool bootloaderSupportsRead = BootloaderInfo.ConfigurationFlags & BL_CONFIG_FLAG_READ_CMDS_SUPPORTED;
-            // Max writes (TODO class-member/param??)
-            constexpr quint8 maxWritesBlockDefault = 3;
+            if(verify && !bootloaderSupportsRead) {
+                // It's not quite correct but this is the error we would get from µC
+                m_nLastErrorFlags |= BL_ERR_FLAG_CMD_INVALID;
+                syslog(LOG_WARNING, "ZeraMcontrollerBase::loadOrVerifyMemory: Bootloader does not support read commands -> cannot verify");
+                return cmdexecfault;
+            }
+
+            // Max tries per block (TODO class-member/param??)
+            const quint8 maxTriesBlockDefault = 3;
 
             // Worker vars
             quint32 memAddress = 0;
             quint32 memOffset;
-            QByteArray memByteArrayWrite;
-            quint8 writesLeftover = maxWritesBlockDefault;
+            QByteArray memByteArray;
+            quint8 triesLeftover = maxTriesBlockDefault;
 
             // loop all memory blocks (re-write in case of error and further writes left)
-            while ( (--writesLeftover>0 || ret == cmddone) &&
-                    ihxFIO.GetMemoryBlock(BootloaderInfo.MemPageSize, memAddress, memByteArrayWrite, memOffset) ) {
+            while ( (--triesLeftover>0 || ret == cmddone) &&
+                    ihxFIO.GetMemoryBlock(BootloaderInfo.MemPageSize, memAddress, memByteArray, memOffset) ) {
                 // expecting the worst saves us many else {}
                 ret = cmdexecfault;
                 // Set address pointer
@@ -495,31 +511,27 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blWriteCmd, 
                 adrParameter = GenAdressPointerParameter(adrParLen, memAddress);
                 struct bl_cmd blAdressCMD(BL_CMD_WRITE_ADDRESS_POINTER, adrParameter, adrParLen);
                 if ( writeBootloaderCommand(&blAdressCMD) == 0 && m_nLastErrorFlags == 0 ) {
-                    // write data
-                    quint8* memdat = reinterpret_cast<quint8*>(memByteArrayWrite.data());
-                    quint16 memlen = static_cast<quint16>(memByteArrayWrite.count());
-                    struct bl_cmd blWriteMemCMD(blWriteCmd, memdat, memlen);
-                    if ( writeBootloaderCommand(&blWriteMemCMD) == 0 && m_nLastErrorFlags == 0 ) {
-                        if(bootloaderSupportsRead) {
-                            // Set address pointer again (no non-auto inc magic)
-                            if ( writeBootloaderCommand(&blAdressCMD) == 0 && m_nLastErrorFlags == 0 ) {
-                                // read back data
-                                struct bl_cmd blReadMemCMD(blReadCmd, nullptr, 0);
-                                QByteArray memByteArrayRead(memByteArrayWrite.count() + 1/*crc*/, 0);
-                                quint8* memDatRead = reinterpret_cast<quint8*>(memByteArrayRead.data());
-                                quint16 memLenRead = static_cast<quint16>(memByteArrayRead.count());
-                                if ( writeBootloaderCommand(&blReadMemCMD, memDatRead, memLenRead) == memLenRead && m_nLastErrorFlags == 0 ) {
-                                    memByteArrayRead = memByteArrayRead.left(memlen); // remove crc
-                                    // block arrived correctly
-                                    if(memByteArrayRead == memByteArrayWrite) {
-                                        ret = cmddone;
-                                    }
-                                }
-                            }
+                    quint8* memdat = reinterpret_cast<quint8*>(memByteArray.data());
+                    quint16 memlen = static_cast<quint16>(memByteArray.count());
+                    // write block
+                    if(!verify) {
+                        struct bl_cmd blWriteMemCMD(blCmd, memdat, memlen);
+                        if ( writeBootloaderCommand(&blWriteMemCMD) == 0 && m_nLastErrorFlags == 0 ) {
+                             ret = cmddone;
                         }
-                        // bootloader does not support read: we have to assume block arrived
-                        else {
-                            ret = cmddone;
+                    }
+                    // verify block
+                    else {
+                        struct bl_cmd blReadMemCMD(blCmd, nullptr, 0);
+                        QByteArray memByteArrayRead(memByteArray.count() + 1/*crc*/, 0);
+                        quint8* memDatRead = reinterpret_cast<quint8*>(memByteArrayRead.data());
+                        quint16 memLenRead = static_cast<quint16>(memByteArrayRead.count());
+                        if ( writeBootloaderCommand(&blReadMemCMD, memDatRead, memLenRead) == memLenRead && m_nLastErrorFlags == 0 ) {
+                            memByteArrayRead = memByteArrayRead.left(memlen); // remove crc
+                            // block arrived correctly
+                            if(memByteArrayRead == memByteArray) {
+                                ret = cmddone;
+                            }
                         }
                     }
                 }
@@ -531,7 +543,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blWriteCmd, 
                     // next block
                     memAddress += BootloaderInfo.MemPageSize;
                     // reset block repetition count
-                    writesLeftover = maxWritesBlockDefault;
+                    triesLeftover = maxTriesBlockDefault;
                 }
             }
         }
