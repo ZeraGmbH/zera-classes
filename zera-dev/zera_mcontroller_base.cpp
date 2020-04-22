@@ -178,13 +178,15 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
                         // readOutput logs -> no need to add logs here
                         rlen = readOutput(dataReceive, dataAndCrcLen);
                     }
-                    else if(DEBUG1) {
+                    else {
+                        if(DEBUG1) {
+                            syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s / len %i",
+                                   m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLen);
+                            syslog(LOG_ERR, "i2c cmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
+                                   m_nI2CAdr, dataAndCrcLen, rlen);
+                        }
                         rlen = -1;
                         m_nLastErrorFlags |= MASTER_ERR_FLAG_LENGTH;
-                        syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s / len %i",
-                               m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLen);
-                        syslog(LOG_ERR, "i2c cmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
-                               m_nI2CAdr, dataAndCrcLen, rlen);
                     }
                 }
             }
@@ -286,13 +288,15 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                         // readOutput logs -> no need to add logs here
                         rlen = readOutput(dataReceive, dataAndCrcLen);
                     }
-                    else if(DEBUG1) {
+                    else {
+                        if(DEBUG1) {
+                            syslog(LOG_ERR,"i2c bootcmd was: adr 0x%02X / cmd 0x%02X / par %s / len %i",
+                                   m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLen);
+                            syslog(LOG_ERR, "i2c bootcmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
+                                   m_nI2CAdr, dataAndCrcLen, rlen);
+                        }
                         rlen = -1;
                         m_nLastErrorFlags |= MASTER_ERR_FLAG_LENGTH;
-                        syslog(LOG_ERR,"i2c bootcmd was: adr 0x%02X / cmd 0x%02X / par %s / len %i",
-                               m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLen);
-                        syslog(LOG_ERR, "i2c bootcmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
-                               m_nI2CAdr, dataAndCrcLen, rlen);
                     }
                 }
             }
