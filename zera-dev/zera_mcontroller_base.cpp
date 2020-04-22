@@ -64,22 +64,38 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::startProgram()
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadFlash(cIntelHexFileIO &ihxFIO)
 {
-    return loadOrVerifyMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO, false);
+    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO, false);
+    if(result != cmddone) {
+        m_nLastErrorFlags |= MASTER_ERR_FLAG_FLASH_WRITE;
+    }
+    return result;
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ihxFIO)
 {
-    return loadOrVerifyMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO, false);
+    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO, false);
+    if(result != cmddone) {
+        m_nLastErrorFlags |= MASTER_ERR_FLAG_EERPOM_WRITE;
+    }
+    return result;
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::verifyFlash(cIntelHexFileIO &ihxFIO)
 {
-    return loadOrVerifyMemory(BL_CMD_READ_FLASH_BLOCK, ihxFIO, true);
+    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_FLASH_BLOCK, ihxFIO, true);
+    if(result != cmddone) {
+        m_nLastErrorFlags |= MASTER_ERR_FLAG_FLASH_VERIFY;
+    }
+    return result;
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::verifyEEprom(cIntelHexFileIO &ihxFIO)
 {
-    return loadOrVerifyMemory(BL_CMD_READ_EEPROM_BLOCK, ihxFIO, true);
+    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_EEPROM_BLOCK, ihxFIO, true);
+    if(result != cmddone) {
+        m_nLastErrorFlags |= MASTER_ERR_FLAG_EERPOM_VERIFY;
+    }
+    return result;
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hwcmd, QString& answer)
@@ -528,7 +544,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
                         quint16 memLenRead = static_cast<quint16>(memByteArrayRead.count());
                         if ( writeBootloaderCommand(&blReadMemCMD, memDatRead, memLenRead) == memLenRead && m_nLastErrorFlags == 0 ) {
                             memByteArrayRead = memByteArrayRead.left(memlen); // remove crc
-                            // block arrived correctly
+                            // block verified correctly
                             if(memByteArrayRead == memByteArray) {
                                 ret = cmddone;
                             }
@@ -553,9 +569,13 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
 
 void ZeraMcontrollerBase::appendMasterErrorFlags(QHash<quint32, QString> &errorFlagsText)
 {
-    errorFlagsText.insert(MASTER_ERR_FLAG_I2C_TRANSFER, QStringLiteral("MASTER_ERR_FLAG_I2C_TRANSFER"));
-    errorFlagsText.insert(MASTER_ERR_FLAG_CRC,          QStringLiteral("MASTER_ERR_FLAG_CRC"));
-    errorFlagsText.insert(MASTER_ERR_FLAG_LENGTH,       QStringLiteral("MASTER_ERR_FLAG_LENGTH"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_I2C_TRANSFER,  QStringLiteral("MASTER_ERR_FLAG_I2C_TRANSFER"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_CRC,           QStringLiteral("MASTER_ERR_FLAG_CRC"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_LENGTH,        QStringLiteral("MASTER_ERR_FLAG_LENGTH"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_FLASH_WRITE,   QStringLiteral("MASTER_ERR_FLAG_FLASH_WRITE"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_EERPOM_WRITE,  QStringLiteral("MASTER_ERR_FLAG_EERPOM_WRITE"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_FLASH_VERIFY,  QStringLiteral("MASTER_ERR_FLAG_FLASH_VERIFY"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_EERPOM_VERIFY, QStringLiteral("MASTER_ERR_FLAG_EERPOM_VERIFY"));
 }
 
 

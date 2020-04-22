@@ -19,6 +19,10 @@
 constexpr quint32 MASTER_ERR_FLAG_I2C_TRANSFER = 1<<16;
 constexpr quint32 MASTER_ERR_FLAG_CRC = 1<<17;
 constexpr quint32 MASTER_ERR_FLAG_LENGTH = 1<<18;
+constexpr quint32 MASTER_ERR_FLAG_FLASH_WRITE = 1<<19;
+constexpr quint32 MASTER_ERR_FLAG_EERPOM_WRITE = 1<<20;
+constexpr quint32 MASTER_ERR_FLAG_FLASH_VERIFY = 1<<21;
+constexpr quint32 MASTER_ERR_FLAG_EERPOM_VERIFY = 1<<22;
 
 /**
  * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol
