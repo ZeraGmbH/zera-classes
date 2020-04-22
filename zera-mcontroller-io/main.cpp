@@ -98,16 +98,16 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return length (decimal / without CRC / default: 0)", "expected len");
     parser->addOption(cmdReturnedLenOption);
     // option for bootloader write flash
-    QCommandLineOption cmdFlashWriteOption(QStringList() << "f" << "flash-filename", "Write intel-hex file to flash", "hex filename");
+    QCommandLineOption cmdFlashWriteOption(QStringList() << "f" << "flash-filename-write", "Write intel-hex file to flash", "hex filename");
     parser->addOption(cmdFlashWriteOption);
     // option for bootloader write eeprom
-    QCommandLineOption cmdEepromWriteOption(QStringList() << "e" << "eeprom-filename", "Write intel-hex file to eeprom", "hex filename");
+    QCommandLineOption cmdEepromWriteOption(QStringList() << "e" << "eeprom-filename-write", "Write intel-hex file to eeprom", "hex filename");
     parser->addOption(cmdEepromWriteOption);
     // option for bootloader verify flash
-    QCommandLineOption cmdFlashVerifyOption(QStringList() << "F" << "flash-filename", "Verify intel-hex file with flash", "hex filename");
+    QCommandLineOption cmdFlashVerifyOption(QStringList() << "F" << "flash-filename-verify", "Verify intel-hex file with flash", "hex filename");
     parser->addOption(cmdFlashVerifyOption);
     // option for bootloader verify eeprom
-    QCommandLineOption cmdEepromVerifyOption(QStringList() << "E" << "eeprom-filename", "Verify intel-hex file with eeprom", "hex filename");
+    QCommandLineOption cmdEepromVerifyOption(QStringList() << "E" << "eeprom-filename-verify", "Verify intel-hex file with eeprom", "hex filename");
     parser->addOption(cmdEepromVerifyOption);
 
     parser->process(*coreApp);
@@ -351,6 +351,10 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         }
         if(!parser->value(cmdDeviceNumOption).isEmpty()) {
             qWarning("Setting device number for read data is not allowed!");
+            allOptsOK = false;
+        }
+        if(parser->value(cmdReturnedLenOption).isEmpty()) {
+            qWarning("Read data must have an expected length!");
             allOptsOK = false;
         }
         [[fallthrough]];
