@@ -332,15 +332,15 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         break;
     case CMD_BOOTLOADER_HEX_FILE_IO:
         if(!parser->value(cmdIdOption).isEmpty()) {
-            qWarning("Setting command id for bootloader file write is not allowed!");
+            qWarning("Setting command id for bootloader file I/O is not allowed!");
             allOptsOK = false;
         }
         if(!parser->value(cmdParamOption).isEmpty()) {
-            qWarning("Setting parameter data for bootloader file write is not allowed!");
+            qWarning("Setting parameter data for bootloader file I/O is not allowed!");
             allOptsOK = false;
         }
         if(!parser->value(cmdReturnedLenOption).isEmpty()) {
-            qWarning("Setting expected returned data length for bootloader file write is not allowed!");
+            qWarning("Setting expected returned data length for bootloader file I/O is not allowed!");
             allOptsOK = false;
         }
         break;

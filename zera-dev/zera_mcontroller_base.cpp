@@ -598,7 +598,7 @@ QString ZeraMcontrollerBase::getErrorMaskText()
     for(int iFlag = 0; iFlag<32; ++iFlag) {
         if(m_nLastErrorFlags & (1<<iFlag)) {
             if(!strFlags.isEmpty()) {
-                strFlags += QStringLiteral("|");
+                strFlags += QStringLiteral(" | ");
             }
             strFlags += m_bBootCmd ? m_errorFlagsBootText[1<<iFlag] : m_errorFlagsText[1<<iFlag];
         }
