@@ -9,7 +9,7 @@
 static enum {
     CMD_UNDEF,
     CMD_BOOTLOADER_IO,
-    CMD_BOOTLOADER_WRITE,
+    CMD_BOOTLOADER_HEX_FILE_IO,
     CMD_ZERA_HARD_IO,
     CMD_READ_DATA
 } cmdType = CMD_UNDEF;
@@ -24,8 +24,10 @@ struct CommandLineData {
     quint16 cmdIdHard = 0;
     quint8 cmdHardDevice = 0;
     quint16 cmdResponseLen = 0;
-    cIntelHexFileIO flashHexData;
-    cIntelHexFileIO eepromHexData;
+    cIntelHexFileIO flashHexDataWrite;
+    cIntelHexFileIO eepromHexDataWrite;
+    cIntelHexFileIO flashHexDataVerify;
+    cIntelHexFileIO eepromHexDataVerify;
 };
 
 /**
@@ -101,6 +103,12 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     // option for bootloader write eeprom
     QCommandLineOption cmdEepromWriteOption(QStringList() << "e" << "eeprom-filename", "Write intel-hex file to eeprom", "hex filename");
     parser->addOption(cmdEepromWriteOption);
+    // option for bootloader verify flash
+    QCommandLineOption cmdFlashVerifyOption(QStringList() << "F" << "flash-filename", "Verify intel-hex file with flash", "hex filename");
+    parser->addOption(cmdFlashVerifyOption);
+    // option for bootloader verify eeprom
+    QCommandLineOption cmdEepromVerifyOption(QStringList() << "E" << "eeprom-filename", "Verify intel-hex file with eeprom", "hex filename");
+    parser->addOption(cmdEepromVerifyOption);
 
     parser->process(*coreApp);
 
@@ -160,30 +168,56 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         // write flash?
         optVal = parser->value(cmdFlashWriteOption);
         if(!optVal.isEmpty()) {
-            cmdType = CMD_BOOTLOADER_WRITE;
+            cmdType = CMD_BOOTLOADER_HEX_FILE_IO;
             if(!QFile::exists(optVal)) {
-                qWarning("Flash file does not %s exist!", qPrintable(optVal));
+                qWarning("Flash file for write does not %s exist!", qPrintable(optVal));
                 allOptsOK = false;
             }
-            else if(!cmdLineData->flashHexData.ReadHexFile(optVal)) {
-                qWarning("Flash file %s could not be read/converted!", qPrintable(optVal));
+            else if(!cmdLineData->flashHexDataWrite.ReadHexFile(optVal)) {
+                qWarning("Flash for write file %s could not be read/converted!", qPrintable(optVal));
                 allOptsOK = false;
             }
         }
         // write eeprom?
         optVal = parser->value(cmdEepromWriteOption);
         if(!optVal.isEmpty()) {
-            cmdType = CMD_BOOTLOADER_WRITE;
+            cmdType = CMD_BOOTLOADER_HEX_FILE_IO;
             if(!QFile::exists(optVal)) {
-                qWarning("EEPROM file does not %s exist!", qPrintable(optVal));
+                qWarning("EEPROM file for write does not %s exist!", qPrintable(optVal));
                 allOptsOK = false;
             }
-            else if(!cmdLineData->eepromHexData.ReadHexFile(optVal)) {
-                qWarning("EEPROM file %s could not be read/converted!", qPrintable(optVal));
+            else if(!cmdLineData->eepromHexDataWrite.ReadHexFile(optVal)) {
+                qWarning("EEPROM file for write %s could not be read/converted!", qPrintable(optVal));
                 allOptsOK = false;
             }
         }
-        if(cmdType != CMD_BOOTLOADER_WRITE) {
+        // verify flash?
+        optVal = parser->value(cmdFlashVerifyOption);
+        if(!optVal.isEmpty()) {
+            cmdType = CMD_BOOTLOADER_HEX_FILE_IO;
+            if(!QFile::exists(optVal)) {
+                qWarning("Flash file for verify does not %s exist!", qPrintable(optVal));
+                allOptsOK = false;
+            }
+            else if(!cmdLineData->flashHexDataVerify.ReadHexFile(optVal)) {
+                qWarning("Flash for verify file %s could not be read/converted!", qPrintable(optVal));
+                allOptsOK = false;
+            }
+        }
+        // verify eeprom?
+        optVal = parser->value(cmdEepromVerifyOption);
+        if(!optVal.isEmpty()) {
+            cmdType = CMD_BOOTLOADER_HEX_FILE_IO;
+            if(!QFile::exists(optVal)) {
+                qWarning("EEPROM file for verify does not %s exist!", qPrintable(optVal));
+                allOptsOK = false;
+            }
+            else if(!cmdLineData->eepromHexDataVerify.ReadHexFile(optVal)) {
+                qWarning("EEPROM file for verify %s could not be read/converted!", qPrintable(optVal));
+                allOptsOK = false;
+            }
+        }
+        if(cmdType != CMD_BOOTLOADER_HEX_FILE_IO) {
             cmdType = CMD_READ_DATA;
             // expected length of responded data
             optVal = parser->value(cmdReturnedLenOption);
@@ -296,7 +330,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         qWarning("parseCommandLine(): Command type is undefined. This should never happen!");
         allOptsOK = false;
         break;
-    case CMD_BOOTLOADER_WRITE:
+    case CMD_BOOTLOADER_HEX_FILE_IO:
         if(!parser->value(cmdIdOption).isEmpty()) {
             qWarning("Setting command id for bootloader file write is not allowed!");
             allOptsOK = false;
@@ -436,21 +470,31 @@ static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cm
 }
 
 /**
- * @brief execBootloaderWrite: Write data in flashHexData/eepromHexData
+ * @brief execBootloaderHexFileIO: Write/Verify data in flashHexData/eepromHexData
  * @param i2cController: pointer to ZeraMcontrollerBase object
  * @param cmdLineData: Data extracted from command line parameters
  * @return true on success
  */
-static bool execBootloaderWrite(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
+static bool execBootloaderHexFileIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
 {
     bool bAllOK = true;
-    if(!cmdLineData->flashHexData.isEmpty()) {
-        if(i2cController->loadFlash(cmdLineData->flashHexData) != ZeraMcontrollerBase::cmddone) {
+    if(!cmdLineData->flashHexDataWrite.isEmpty()) {
+        if(i2cController->loadFlash(cmdLineData->flashHexDataWrite) != ZeraMcontrollerBase::cmddone) {
             bAllOK = false;
         }
     }
-    if(bAllOK && !cmdLineData->eepromHexData.isEmpty()) {
-        if(i2cController->loadEEprom(cmdLineData->eepromHexData) != ZeraMcontrollerBase::cmddone) {
+    if(bAllOK && !cmdLineData->eepromHexDataWrite.isEmpty()) {
+        if(i2cController->loadEEprom(cmdLineData->eepromHexDataWrite) != ZeraMcontrollerBase::cmddone) {
+            bAllOK = false;
+        }
+    }
+    if(!cmdLineData->flashHexDataVerify.isEmpty()) {
+        if(i2cController->verifyFlash(cmdLineData->flashHexDataVerify) != ZeraMcontrollerBase::cmddone) {
+            bAllOK = false;
+        }
+    }
+    if(bAllOK && !cmdLineData->eepromHexDataVerify.isEmpty()) {
+        if(i2cController->verifyEEprom(cmdLineData->eepromHexDataVerify) != ZeraMcontrollerBase::cmddone) {
             bAllOK = false;
         }
     }
@@ -510,8 +554,8 @@ int main(int argc, char *argv[])
                 qWarning("read data failed / see journalctl for more details / %s", qPrintable(i2cController.getErrorMaskText()));
             }
             break;
-        case CMD_BOOTLOADER_WRITE:
-            ok = execBootloaderWrite(&i2cController, cmdLineData);
+        case CMD_BOOTLOADER_HEX_FILE_IO:
+            ok = execBootloaderHexFileIO(&i2cController, cmdLineData);
             if(!ok) {
                 qWarning("boot write failed / see journalctl for more details / %s", qPrintable(i2cController.getErrorMaskText()));
             }
