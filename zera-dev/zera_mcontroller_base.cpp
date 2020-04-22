@@ -1,6 +1,7 @@
 #include <syslog.h>
 #include <crcutils.h>
 #include <QString>
+#include <QHash>
 
 #include "zera_mcontroller_base.h"
 #include "i2cutils.h"
@@ -10,13 +11,37 @@
 #define DEBUG2 (m_nDebugLevel & 2) // log all i2c transfers
 //#define DEBUG3 (m_nDebugLevel & 4) // log all client connect/disconnects
 
+QHash<quint32, QString> ZeraMcontrollerBase::m_errorFlagsText;
+QHash<quint32, QString> ZeraMcontrollerBase::m_errorFlagsBootText;
+
 ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 debuglevel)
     : m_pCRCGenerator(new cMaxim1WireCRC()),
       m_sI2CDevNode(devnode),
       m_nI2CAdr(adr),
       m_nDebugLevel(debuglevel),
-      m_nLastErrorFlags(0)
+      m_nLastErrorFlags(0),
+      m_bBootCmd(false)
 {
+    if(m_errorFlagsText.isEmpty()) {
+        m_errorFlagsText.insert(HW_ERR_FLAG_CRC,              QStringLiteral("HW_ERR_FLAG_CRC"));
+        m_errorFlagsText.insert(HW_ERR_FLAG_LENGTH,           QStringLiteral("HW_ERR_FLAG_LENGTH"));
+        m_errorFlagsText.insert(HW_ERR_CMD_FOR_DEV_NOT_AVAIL, QStringLiteral("HW_ERR_CMD_FOR_DEV_NOT_AVAIL"));
+        m_errorFlagsText.insert(HW_ERR_FLAG_EXECUTE,          QStringLiteral("HW_ERR_FLAG_EXECUTE"));
+        m_errorFlagsText.insert(HW_ERR_LAYER2,                QStringLiteral("HW_ERR_LAYER2"));
+        m_errorFlagsText.insert(HW_ERR_PARAM_INVALID,         QStringLiteral("HW_ERR_PARAM_INVALID"));
+        m_errorFlagsText.insert(HW_ERR_ASCII_HEX,             QStringLiteral("HW_ERR_ASCII_HEX"));
+        appendMasterErrorFlags(m_errorFlagsText);
+    }
+    if(m_errorFlagsBootText.isEmpty()) {
+        m_errorFlagsBootText.insert(BL_ERR_FLAG_BUFFER_OVERFLOW, QStringLiteral("BL_ERR_FLAG_BUFFER_OVERFLOW"));
+        m_errorFlagsBootText.insert(BL_ERR_FLAG_HEX_INVALID,     QStringLiteral("BL_ERR_FLAG_HEX_INVALID"));
+        m_errorFlagsBootText.insert(BL_ERR_FLAG_LENGTH,          QStringLiteral("BL_ERR_FLAG_LENGTH"));
+        m_errorFlagsBootText.insert(BL_ERR_FLAG_CRC,             QStringLiteral("BL_ERR_FLAG_CRC"));
+        m_errorFlagsBootText.insert(BL_ERR_FLAG_CMD_INVALID,     QStringLiteral("BL_ERR_FLAG_CMD_INVALID"));
+        m_errorFlagsBootText.insert(BL_ERR_FLAG_ADR_RANGE,       QStringLiteral("BL_ERR_FLAG_ADR_RANGE"));
+        m_errorFlagsBootText.insert(BL_ERR_FLAG_EXECUTE,         QStringLiteral("BL_ERR_FLAG_EXECUTE"));
+        appendMasterErrorFlags(m_errorFlagsBootText);
+    }
 }
 
 ZeraMcontrollerBase::~ZeraMcontrollerBase()
@@ -75,6 +100,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
     quint8 inpBuf[5]; // the answer always has 5 bytes
 
     GenCommand(hc);
+    m_bBootCmd = false;
     m_nLastErrorFlags = 0;
 
     // Send command and receive response (= error + length of data available for further read)
@@ -128,7 +154,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
                     }
                     else if(DEBUG1) {
                         rlen = -1;
-                        m_nLastErrorFlags |= PC_ERR_FLAG_LENGTH;
+                        m_nLastErrorFlags |= MASTER_ERR_FLAG_LENGTH;
                         syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s / len %i",
                                m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLen);
                         syslog(LOG_ERR, "i2c cmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
@@ -144,7 +170,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
             }
         }
         else {
-            m_nLastErrorFlags |= PC_ERR_FLAG_CRC;
+            m_nLastErrorFlags |= MASTER_ERR_FLAG_CRC;
             if (DEBUG1) {
                 syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
                        m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
@@ -154,7 +180,7 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
         }
     }
     else {
-        m_nLastErrorFlags |= PC_ERR_FLAG_I2C_TRANSFER;
+        m_nLastErrorFlags |= MASTER_ERR_FLAG_I2C_TRANSFER;
         if (DEBUG1) {
             syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
                    m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
@@ -174,6 +200,7 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
     quint8 inpBuf[5]; // command response's length is always 5
 
     GenBootloaderCommand(blc);
+    m_bBootCmd = true;
     m_nLastErrorFlags = 0;
 
     i2c_msg Msgs[2];
@@ -235,7 +262,7 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                     }
                     else if(DEBUG1) {
                         rlen = -1;
-                        m_nLastErrorFlags |= PC_ERR_FLAG_LENGTH;
+                        m_nLastErrorFlags |= MASTER_ERR_FLAG_LENGTH;
                         syslog(LOG_ERR,"i2c bootcmd was: adr 0x%02X / cmd 0x%02X / par %s / len %i",
                                m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLen);
                         syslog(LOG_ERR, "i2c bootcmd returned wrong length: adr 0x%02X / expected len %i / received len %i",
@@ -244,7 +271,7 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                 }
             }
             else {
-                m_nLastErrorFlags |= PC_ERR_FLAG_CRC;
+                m_nLastErrorFlags |= MASTER_ERR_FLAG_CRC;
                 if(DEBUG1) {
                     syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
                            m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
@@ -254,7 +281,7 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
             }
         }
         else {
-            m_nLastErrorFlags |= PC_ERR_FLAG_I2C_TRANSFER;
+            m_nLastErrorFlags |= MASTER_ERR_FLAG_I2C_TRANSFER;
             if (DEBUG1) {
                 syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
                        m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
@@ -331,7 +358,7 @@ qint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
         }
     }
     else {
-        m_nLastErrorFlags |= PC_ERR_FLAG_I2C_TRANSFER;
+        m_nLastErrorFlags |= MASTER_ERR_FLAG_I2C_TRANSFER;
         if (DEBUG1) {
             syslog(LOG_ERR, "i2c read failed: adr 0x%02X / error returned %i",
                    m_nI2CAdr, errVal);
@@ -512,6 +539,13 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blWriteCmd, 
     return ret;
 }
 
+void ZeraMcontrollerBase::appendMasterErrorFlags(QHash<quint32, QString> &errorFlagsText)
+{
+    errorFlagsText.insert(MASTER_ERR_FLAG_I2C_TRANSFER, QStringLiteral("MASTER_ERR_FLAG_I2C_TRANSFER"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_CRC,          QStringLiteral("MASTER_ERR_FLAG_CRC"));
+    errorFlagsText.insert(MASTER_ERR_FLAG_LENGTH,       QStringLiteral("MASTER_ERR_FLAG_LENGTH"));
+}
+
 
 quint32 ZeraMcontrollerBase::getLastErrorMask()
 {
@@ -521,10 +555,22 @@ quint32 ZeraMcontrollerBase::getLastErrorMask()
 
 QString ZeraMcontrollerBase::getErrorMaskText()
 {
-    quint16 errMaskHost = m_nLastErrorFlags >> 16;
+    quint16 errMaskMaster = m_nLastErrorFlags >> 16;
     quint16 errMaskMController = m_nLastErrorFlags & 0xFFFF;
     QString strError;
-    strError.sprintf("host-mask 0x%04X / µC-mask 0x%04X", errMaskHost, errMaskMController);
+    QString strFlags;
+    for(int iFlag = 0; iFlag<32; ++iFlag) {
+        if(m_nLastErrorFlags & (1<<iFlag)) {
+            if(!strFlags.isEmpty()) {
+                strFlags += QStringLiteral("|");
+            }
+            strFlags += m_bBootCmd ? m_errorFlagsBootText[1<<iFlag] : m_errorFlagsText[1<<iFlag];
+        }
+    }
+    strError.sprintf("host-mask 0x%04X: / µC-mask 0x%04X / %s",
+                     errMaskMaster,
+                     errMaskMController,
+                     qPrintable(strFlags));
     return strError;
 }
 

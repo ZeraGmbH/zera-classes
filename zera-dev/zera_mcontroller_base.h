@@ -14,11 +14,11 @@
 #include "protocol_zera_bootloader.h"
 #include "protocol_zera_hard.h"
 
-/** @brief PC-side error flags
+/** @brief Master-side error flags
  */
-constexpr quint32 PC_ERR_FLAG_I2C_TRANSFER = 1<<16;
-constexpr quint32 PC_ERR_FLAG_CRC = 1<<17;
-constexpr quint32 PC_ERR_FLAG_LENGTH = 1<<18;
+constexpr quint32 MASTER_ERR_FLAG_I2C_TRANSFER = 1<<16;
+constexpr quint32 MASTER_ERR_FLAG_CRC = 1<<17;
+constexpr quint32 MASTER_ERR_FLAG_LENGTH = 1<<18;
 
 /**
  * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol
@@ -120,12 +120,16 @@ private:
      * @return done or error type information
      */
     atmelRM loadMemory(quint8 blWriteCmd, quint8 blReadCmd, cIntelHexFileIO& ihxFIO);
+    void appendMasterErrorFlags(QHash<quint32, QString>& errorFlagsText);
 
     cMaxim1WireCRC *m_pCRCGenerator;
     QString m_sI2CDevNode;
     quint8 m_nI2CAdr;
     quint8 m_nDebugLevel;
     quint32 m_nLastErrorFlags;
+    static QHash<quint32, QString> m_errorFlagsText;
+    static QHash<quint32, QString> m_errorFlagsBootText;
+    bool m_bBootCmd;
 };
 
 
