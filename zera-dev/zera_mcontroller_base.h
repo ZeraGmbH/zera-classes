@@ -89,6 +89,11 @@ public:
      * @return error mask
      */
     quint32 getLastErrorMask();
+    /**
+     * @brief getErrorMaskText: Split error mask and create a loggable string
+     * @return the log string
+     */
+    QString getErrorMaskText();
 private:
     /**
      * @brief GenCommand: Allocate & fill raw data to send in cmddata

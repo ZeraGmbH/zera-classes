@@ -139,8 +139,8 @@ qint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint
             else if(DEBUG1) {
                 syslog(LOG_ERR,"i2c cmd was: adr 0x%02X / cmd 0x%04X / dev 0x%02X / par %s",
                        m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam));
-                syslog(LOG_ERR, "i2c cmd error: adr 0x%02X / mask 0x%04X",
-                       m_nI2CAdr, m_nLastErrorFlags);
+                syslog(LOG_ERR, "i2c cmd error: adr 0x%02X / %s",
+                       m_nI2CAdr, qPrintable(getErrorMaskText()));
             }
         }
         else {
@@ -248,8 +248,8 @@ qint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRece
                 if(DEBUG1) {
                     syslog(LOG_ERR,"i2c bootcmd was: addr 0x%02X / cmd 0x%02X / par %s",
                            m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam));
-                    syslog(LOG_ERR, "i2c bootcmd error: adr 0x%02X / mask 0x%04X",
-                           m_nI2CAdr, m_nLastErrorFlags);
+                    syslog(LOG_ERR, "i2c bootcmd error: adr 0x%02X / %s",
+                           m_nI2CAdr, qPrintable(getErrorMaskText()));
                 }
             }
         }
@@ -339,12 +339,6 @@ qint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
     }
     return rlen; // return -1  on error else length info
 }
-
-quint32 ZeraMcontrollerBase::getLastErrorMask()
-{
-    return m_nLastErrorFlags;
-}
-
 
 void ZeraMcontrollerBase::GenCommand(hw_cmd* hc)
 {
@@ -517,3 +511,21 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadMemory(quint8 blWriteCmd, 
     }
     return ret;
 }
+
+
+quint32 ZeraMcontrollerBase::getLastErrorMask()
+{
+    return m_nLastErrorFlags;
+}
+
+
+QString ZeraMcontrollerBase::getErrorMaskText()
+{
+    quint16 errMaskHost = m_nLastErrorFlags >> 16;
+    quint16 errMaskMController = m_nLastErrorFlags & 0xFFFF;
+    QString strError;
+    strError.sprintf("host-mask 0x%04X / µC-mask 0x%04X", errMaskHost, errMaskMController);
+    return strError;
+}
+
+
