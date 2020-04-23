@@ -383,12 +383,12 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
  * @param receivedDataLen: Buffer length
  * @param cmdLineData: Data extracted from command line parameters
  */
-static void outputReceivedData(quint8 *dataReceive, qint16 receivedDataLen, CommandLineData *cmdLineData)
+static void outputReceivedData(quint8 *dataReceive, quint16 receivedDataLen, CommandLineData *cmdLineData)
 {
     if(dataReceive && receivedDataLen > 1 && cmdLineData->verboseOutput) {
         QString dataString;
         // Do not output crc
-        for(qint16 byteNo=0; byteNo<receivedDataLen-1; ++byteNo) {
+        for(quint16 byteNo=0; byteNo<receivedDataLen-1; ++byteNo) {
             dataString += QString("0x%1 ").arg(dataReceive[byteNo], 2, 16, QLatin1Char('0'));
         }
         dataString = dataString.trimmed();
@@ -413,7 +413,7 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData
         totalReceiveLen = cmdLineData->cmdResponseLen+1;
         dataReceive = new quint8[totalReceiveLen];
     }
-    qint16 receivedDataLen = i2cController->writeBootloaderCommand(&bcmd, dataReceive, totalReceiveLen);
+    quint16 receivedDataLen = i2cController->writeBootloaderCommand(&bcmd, dataReceive, totalReceiveLen);
     outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
 
     if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
@@ -421,7 +421,7 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData
     }
 
     delete dataReceive;
-    return (cmdLineData->cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
+    return i2cController->getLastErrorMask() == 0;
 }
 
 /**
@@ -442,14 +442,14 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *
         totalReceiveLen = cmdLineData->cmdResponseLen+1;
         dataReceive = new quint8[totalReceiveLen];
     }
-    qint16 receivedDataLen = i2cController->writeCommand(&hcmd, dataReceive, totalReceiveLen);
+    quint16 receivedDataLen = i2cController->writeCommand(&hcmd, dataReceive, totalReceiveLen);
     outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
     if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
         qInfo("cmd %04X can return data bytes: %i", cmdLineData->cmdIdHard, receivedDataLen-1);
     }
 
     delete dataReceive;
-    return (cmdLineData->cmdResponseLen==0 && receivedDataLen>=0) || totalReceiveLen == receivedDataLen;
+    return i2cController->getLastErrorMask() == 0;
 }
 
 /**
@@ -466,11 +466,11 @@ static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cm
         totalReceiveLen = cmdLineData->cmdResponseLen+1;
         dataReceive = new quint8[totalReceiveLen];
     }
-    qint16 receivedDataLen = i2cController->readOutput(dataReceive, totalReceiveLen);
+    quint16 receivedDataLen = i2cController->readOutput(dataReceive, totalReceiveLen);
     outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
 
     delete dataReceive;
-    return totalReceiveLen == receivedDataLen;
+    return i2cController->getLastErrorMask() == 0;
 }
 
 /**

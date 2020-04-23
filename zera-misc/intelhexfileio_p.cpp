@@ -163,7 +163,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                     break;
                                 case HEX_ADR0:
                                     // keep upper address
-                                    nCurrAddress = static_cast<quint32>(byteDecoded << 8);
+                                    nCurrAddress = static_cast<quint32>((byteDecoded) << 8);
                                     // next field
                                     eHexField = HEX_ADR1;
                                     break;
@@ -242,8 +242,8 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 
                                             // Extended segment
                                         case RECTYPE_EXT_SEG:
-                                            nAddressExtension = static_cast<quint32>(DataBuff[0] << 12);
-                                            nAddressExtension += static_cast<quint32>(DataBuff[1] << 4);
+                                            nAddressExtension = (static_cast<quint32>(DataBuff[0]) << 12);
+                                            nAddressExtension += (static_cast<quint32>(DataBuff[1] << 4));
                                             break;
 
                                             // Start segment (not supported)
@@ -254,8 +254,8 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
 
                                             // Linear address record (upper 16Bit of linear address)
                                         case RECTYPE_EXT_ADR:
-                                            nAddressExtension = static_cast<quint32>(DataBuff[0] << 24);
-                                            nAddressExtension += static_cast<quint32>(DataBuff[1] << 16);
+                                            nAddressExtension = (static_cast<quint32>(DataBuff[0]) << 24);
+                                            nAddressExtension += (static_cast<quint32>(DataBuff[1]) << 16);
                                             break;
 
                                             // Start address (not supported)

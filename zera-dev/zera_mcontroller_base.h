@@ -19,10 +19,13 @@
 constexpr quint32 MASTER_ERR_FLAG_I2C_TRANSFER = 1<<16;
 constexpr quint32 MASTER_ERR_FLAG_CRC = 1<<17;
 constexpr quint32 MASTER_ERR_FLAG_LENGTH = 1<<18;
-constexpr quint32 MASTER_ERR_FLAG_FLASH_WRITE = 1<<19;
-constexpr quint32 MASTER_ERR_FLAG_EERPOM_WRITE = 1<<20;
-constexpr quint32 MASTER_ERR_FLAG_FLASH_VERIFY = 1<<21;
-constexpr quint32 MASTER_ERR_FLAG_EERPOM_VERIFY = 1<<22;
+constexpr quint32 MASTER_ERR_FLAG_VERIFY_BLOCK = 1<<19;
+constexpr quint32 MASTER_ERR_FLAG_FLASH_WRITE = 1<<20;
+constexpr quint32 MASTER_ERR_FLAG_EERPOM_WRITE = 1<<21;
+constexpr quint32 MASTER_ERR_FLAG_FLASH_VERIFY = 1<<22;
+constexpr quint32 MASTER_ERR_FLAG_EERPOM_VERIFY = 1<<23;
+
+constexpr quint32 MASTER_ERR_FLAG_CODER_IS_AN_IDIOT = 1<<31;
 
 /**
  * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol
@@ -74,7 +77,7 @@ public:
      * @param dataAndCrcLen: Expected Number of bytes to read (data + crc)
      * @return -1 on error else number of bytes we can fetch as result data
      */
-    qint16 writeCommand(hw_cmd* hc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLen=0);
+    quint16 writeCommand(hw_cmd* hc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLen=0);
     /**
      * @brief writeBootloaderCommand: Write bootloader command and receive command response
      * @param blc: pointer to bootloader command struct
@@ -82,14 +85,14 @@ public:
      * @param dataAndCrcLen: number of bytes to read (data + crc / == 0 do not read data)
      * @return -1 on error else number of bytes (data+crc) dataAndCrcLen==0 we can fetch / dataAndCrcLen!=0 we have fetched
      */
-    qint16 writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLen=0);
+    quint16 writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive=nullptr, quint16 dataAndCrcLen=0);
     /**
      * @brief readOutput: Read command result from controller
      * @param data: Buffer to receive data + crc
      * @param dataAndCrcLen: Number of bytes to read (data + crc / == 0 do not read data)
      * @return -1 on error else number of bytes (data+crc) dataAndCrcLen==0 we can fetch / dataAndCrcLen!=0 we have fetched
      */
-    qint16 readOutput(quint8 *data, quint16 dataAndCrcLen);
+    quint16 readOutput(quint8 *data, quint16 dataAndCrcLen);
     /**
      * @brief getLastErrorMask: Get error mask of last command performed
      * @return error mask
