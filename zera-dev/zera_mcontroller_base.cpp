@@ -239,8 +239,8 @@ quint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRec
     // Logging data
     QString i2cHexParam;
     quint16 iByte;
-    if (DEBUG1 || DEBUG2) {
-        for(iByte=0; iByte<blc->plen; iByte++) {
+    if (blc->par && (DEBUG1 || DEBUG2)) {
+        for(iByte=0; iByte<blc->paramOrRequestedLen; iByte++) {
            i2cHexParam += QString("0x%1 ").arg(blc->par[iByte], 2, 16, QLatin1Char('0'));
         }
     }
@@ -425,23 +425,21 @@ void ZeraMcontrollerBase::GenCommand(hw_cmd* hc)
 
 void ZeraMcontrollerBase::GenBootloaderCommand(bl_cmd* blc)
 {
-    if(!blc->par && blc->plen > 0) {
-        syslog(LOG_WARNING, "ZeraMcontrollerBase::GenBootloaderCommand: No parameter data set but plen=%u", blc->plen);
-        blc->plen = 0;
-    }
-    quint16 len = 4 + blc->plen;
+    quint16 len = 4;
+    if(blc->par)
+        len += blc->paramOrRequestedLen;
     quint8* p = new quint8[len];
     blc->cmddata = p;
 
     // cmd code
     *p++ = blc->cmdcode;
-    // cmd len
-    *p++ = blc->plen >> 8;
-    *p++ = blc->plen & 0xFF;
+    // data len
+    *p++ = blc->paramOrRequestedLen >> 8;
+    *p++ = blc->paramOrRequestedLen & 0xFF;
     // parameter
     quint8* ppar = blc->par;
     if(ppar) {
-        for (int i = 0; i < blc->plen; i++) {
+        for (int i = 0; i < blc->paramOrRequestedLen; i++) {
             *p++ = *ppar++;
         }
     }
@@ -528,10 +526,10 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
                     }
                     // verify block
                     else {
-                        struct bl_cmd blReadMemCMD(blCmd, nullptr, 0);
                         QByteArray memByteArrayRead(memByteArray.count() + 1/*crc*/, 0);
                         quint8* memDatRead = reinterpret_cast<quint8*>(memByteArrayRead.data());
                         quint16 memLenRead = static_cast<quint16>(memByteArrayRead.count());
+                        struct bl_cmd blReadMemCMD(blCmd, nullptr, memByteArray.count());
                         writeBootloaderCommand(&blReadMemCMD, memDatRead, memLenRead);
                         if ( m_nLastErrorFlags == 0 ) {
                             memByteArrayRead = memByteArrayRead.left(memlen); // remove crc

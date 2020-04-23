@@ -38,15 +38,15 @@ constexpr quint16 BL_ERR_FLAG_EXECUTE = 1<<6;
  */
 struct bl_cmd
 {
-    bl_cmd(quint8 _cmdcode, quint8* _par, quint16 _plen)
+    bl_cmd(quint8 _cmdcode, quint8* _par, quint16 _paramOrRequestedLen)
         : cmdlen(0), cmddata(nullptr) {
         cmdcode = _cmdcode;
         par = _par;
-        plen = _plen;
+        paramOrRequestedLen = _paramOrRequestedLen;
     }
     quint8 cmdcode;
     quint8* par;
-    quint16 plen;
+    quint16 paramOrRequestedLen;
     quint16 cmdlen;
     quint8* cmddata;
 };
