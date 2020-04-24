@@ -25,6 +25,8 @@ Options:
   -F, --flash-filename-verify <hex filename>   Verify intel-hex file with flash
   -E, --eeprom-filename-verify <hex filename>  Verify intel-hex file with
                                                eeprom
+  -m, --max-write-block-count <max tries>      Maximum block write count
+                                               [1..255] / default: 2
 ```
 
 
