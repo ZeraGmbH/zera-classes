@@ -24,6 +24,7 @@ struct CommandLineData {
     quint16 cmdIdHard = 0;
     quint8 cmdHardDevice = 0;
     quint16 cmdResponseLen = 0;
+    bool variableResponseLen = false;
     cIntelHexFileIO flashHexDataWrite;
     cIntelHexFileIO eepromHexDataWrite;
     cIntelHexFileIO flashHexDataVerify;
@@ -95,7 +96,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     QCommandLineOption cmdParamOption(QStringList() << "p" << "cmd-param", "Command parameter (hex) e.g '01AA' or '0x01 0xAA'", "hex param");
     parser->addOption(cmdParamOption);
     // option for expected return data len (without crc)
-    QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return length (decimal / without CRC / default: 0)", "expected len");
+    QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return length (decimal / without CRC / default: 0 / variable x)", "expected len");
     parser->addOption(cmdReturnedLenOption);
     // option for bootloader write flash
     QCommandLineOption cmdFlashWriteOption(QStringList() << "f" << "flash-filename-write", "Write intel-hex file to flash", "hex filename");
@@ -222,13 +223,19 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             // expected length of responded data
             optVal = parser->value(cmdReturnedLenOption);
             if(!optVal.isEmpty()) {
-                int iFullVal = optVal.toInt(&optOK, 10);
-                if(!optOK || iFullVal<1 || iFullVal>0xFFFF) {
-                    qWarning("Expected length %s for read is invalid or out of limits [1-65536]!", qPrintable(optVal));
+                if(optVal == QStringLiteral("x")) {
+                    qWarning("Expected length cannot be set variable for read!");
                     allOptsOK = false;
                 }
                 else {
-                    cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+                    int iFullVal = optVal.toInt(&optOK, 10);
+                    if(!optOK || iFullVal<1 || iFullVal>0xFFFF) {
+                        qWarning("Expected length %s for read is invalid or out of limits [1-65536]!", qPrintable(optVal));
+                        allOptsOK = false;
+                    }
+                    else {
+                        cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+                    }
                 }
             }
         }
@@ -260,13 +267,18 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         // expected length of responded data
         optVal = parser->value(cmdReturnedLenOption);
         if(!optVal.isEmpty()) {
-            int iFullVal = optVal.toInt(&optOK, 10);
-            if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
-                qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0-65535]!", qPrintable(optVal));
-                allOptsOK = false;
+            if(optVal == QStringLiteral("x")) {
+                cmdLineData->variableResponseLen = true;
             }
             else {
-                cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+                int iFullVal = optVal.toInt(&optOK, 10);
+                if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
+                    qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0-65535]!", qPrintable(optVal));
+                    allOptsOK = false;
+                }
+                else {
+                    cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+                }
             }
         }
         else {
@@ -313,13 +325,18 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         // expected length of responded data
         optVal = parser->value(cmdReturnedLenOption);
         if(!optVal.isEmpty()) {
-            int iFullVal = optVal.toInt(&optOK, 10);
-            if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
-                qWarning("Expected length %s for cmd is invalid or out of limits [0-65536]!", qPrintable(optVal));
-                allOptsOK = false;
+            if(optVal == QStringLiteral("x")) {
+                cmdLineData->variableResponseLen = true;
             }
             else {
-                cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+                int iFullVal = optVal.toInt(&optOK, 10);
+                if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
+                    qWarning("Expected length %s for cmd is invalid or out of limits [0-65536]!", qPrintable(optVal));
+                    allOptsOK = false;
+                }
+                else {
+                    cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+                }
             }
         }
     }
@@ -414,9 +431,12 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData
         dataReceive = new quint8[totalReceiveLen];
     }
     quint16 receivedDataLen = i2cController->writeBootloaderCommand(&bcmd, dataReceive, totalReceiveLen);
+    if(cmdLineData->variableResponseLen && receivedDataLen > 1) {
+        dataReceive = new quint8[receivedDataLen];
+        receivedDataLen = i2cController->readOutput(dataReceive, receivedDataLen);
+    }
     outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
-
-    if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
+    if(!cmdLineData->variableResponseLen && cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
         qInfo("bootcmd %02X can return data bytes: %i ", cmdLineData->cmdIdBoot, receivedDataLen-1);
     }
 
@@ -443,8 +463,12 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *
         dataReceive = new quint8[totalReceiveLen];
     }
     quint16 receivedDataLen = i2cController->writeCommand(&hcmd, dataReceive, totalReceiveLen);
+    if(cmdLineData->variableResponseLen && receivedDataLen > 1) {
+        dataReceive = new quint8[receivedDataLen];
+        receivedDataLen = i2cController->readOutput(dataReceive, receivedDataLen);
+    }
     outputReceivedData(dataReceive, receivedDataLen, cmdLineData);
-    if(cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
+    if(!cmdLineData->variableResponseLen && cmdLineData->cmdResponseLen == 0 && receivedDataLen > 1) {
         qInfo("cmd %04X can return data bytes: %i", cmdLineData->cmdIdHard, receivedDataLen-1);
     }
 
