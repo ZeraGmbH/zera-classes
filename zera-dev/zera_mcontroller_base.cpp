@@ -517,6 +517,10 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
             // loop all memory blocks (re-write in case of error and further writes left)
             while ( (m_nLastErrorFlags == 0 || (!verify && triesLeftover>0 && (m_nLastErrorFlags | BL_ERR_FLAG_EXECUTE) != 0)) &&
                     ihxFIO.GetMemoryBlock(BootloaderInfo.MemPageSize, memAddress, memByteArray, memOffset) ) {
+                // on retry: spawn warning
+                if(triesLeftover != maxBlockWriteTries) {
+                    syslog(LOG_WARNING, "Bootloader reported memory at address 0x%04X was not written correctly - retry", memAddress);
+                }
                 --triesLeftover;
                 // Reset error flags here is OK/necessary because of:
                 // * we need reset in case of repetitions
