@@ -20,11 +20,14 @@ Options:
   -l, --return-len <expected len>              Expected data return length
                                                (decimal / without CRC / default:
                                                0 / variable x)
-  -f, --flash-filename-write <hex filename>    Write intel-hex file to flash
-  -e, --eeprom-filename-write <hex filename>   Write intel-hex file to eeprom
-  -F, --flash-filename-verify <hex filename>   Verify intel-hex file with flash
-  -E, --eeprom-filename-verify <hex filename>  Verify intel-hex file with
-                                               eeprom
+  -f, --flash-filename-write <hex filename>    Write hex file to flash
+  -e, --eeprom-filename-write <hex filename>   Write hex file to eeprom
+  -F, --flash-filename-verify <hex filename>   Verify hex file with flash
+                                               (bootloader must support read
+                                               commands)
+  -E, --eeprom-filename-verify <hex filename>  Verify hex file with eeprom
+                                               (bootloader must support read
+                                               commands)
   -m, --max-write-block-count <max tries>      Maximum block write count
                                                [1..255] / default: 2
 ```

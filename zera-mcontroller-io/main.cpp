@@ -100,16 +100,16 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return length (decimal / without CRC / default: 0 / variable x)", "expected len");
     parser->addOption(cmdReturnedLenOption);
     // option for bootloader write flash
-    QCommandLineOption cmdFlashWriteOption(QStringList() << "f" << "flash-filename-write", "Write intel-hex file to flash", "hex filename");
+    QCommandLineOption cmdFlashWriteOption(QStringList() << "f" << "flash-filename-write", "Write hex file to flash", "hex filename");
     parser->addOption(cmdFlashWriteOption);
     // option for bootloader write eeprom
-    QCommandLineOption cmdEepromWriteOption(QStringList() << "e" << "eeprom-filename-write", "Write intel-hex file to eeprom", "hex filename");
+    QCommandLineOption cmdEepromWriteOption(QStringList() << "e" << "eeprom-filename-write", "Write hex file to eeprom", "hex filename");
     parser->addOption(cmdEepromWriteOption);
     // option for bootloader verify flash
-    QCommandLineOption cmdFlashVerifyOption(QStringList() << "F" << "flash-filename-verify", "Verify intel-hex file with flash", "hex filename");
+    QCommandLineOption cmdFlashVerifyOption(QStringList() << "F" << "flash-filename-verify", "Verify hex file with flash (bootloader must support read commands)", "hex filename");
     parser->addOption(cmdFlashVerifyOption);
     // option for bootloader verify eeprom
-    QCommandLineOption cmdEepromVerifyOption(QStringList() << "E" << "eeprom-filename-verify", "Verify intel-hex file with eeprom", "hex filename");
+    QCommandLineOption cmdEepromVerifyOption(QStringList() << "E" << "eeprom-filename-verify", "Verify hex file with eeprom (bootloader must support read commands)", "hex filename");
     parser->addOption(cmdEepromVerifyOption);
     // option for maximum block write trials in case of error
     QCommandLineOption cmdWriteTriesOption(QStringList() << "m" << "max-write-block-count", "Maximum block write count [1..255] / default: 2", "max tries");
