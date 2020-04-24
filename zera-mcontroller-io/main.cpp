@@ -432,7 +432,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
  */
 static void outputReceivedData(quint8 *dataReceive, quint16 receivedDataLen, CommandLineData *cmdLineData)
 {
-    if(dataReceive && receivedDataLen > 1 && cmdLineData->verboseOutput) {
+    if(dataReceive && receivedDataLen > 1) {
         QString dataString;
         // Do not output crc
         for(quint16 byteNo=0; byteNo<receivedDataLen-1; ++byteNo) {
