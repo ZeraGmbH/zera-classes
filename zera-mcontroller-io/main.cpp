@@ -228,7 +228,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                     allOptsOK = false;
                 }
                 else {
-                    int iFullVal = optVal.toInt(&optOK, 10);
+                    iFullVal = optVal.toInt(&optOK, 10);
                     if(!optOK || iFullVal<1 || iFullVal>0xFFFF) {
                         qWarning("Expected length %s for read is invalid or out of limits [1-65536]!", qPrintable(optVal));
                         allOptsOK = false;
@@ -250,7 +250,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         cmdType = CMD_BOOTLOADER_IO;
         // cmdID
         optVal = parser->value(cmdIdOption);
-        int iFullVal = optVal.toInt(&optOK, 16);
+        iFullVal = optVal.toInt(&optOK, 16);
         if(!optOK || iFullVal<0 || iFullVal>0xFF) {
             qWarning("Bootloader cmd ID %s is invalid or out of limits [0x00-0xFF]!", qPrintable(optVal));
             allOptsOK = false;
@@ -271,7 +271,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 cmdLineData->variableResponseLen = true;
             }
             else {
-                int iFullVal = optVal.toInt(&optOK, 10);
+                iFullVal = optVal.toInt(&optOK, 10);
                 if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
                     qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0-65535]!", qPrintable(optVal));
                     allOptsOK = false;
@@ -296,7 +296,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         cmdType = CMD_ZERA_HARD_IO;
         // cmdID
         optVal = parser->value(cmdIdOption);
-        int iFullVal = optVal.toInt(&optOK, 16);
+        iFullVal = optVal.toInt(&optOK, 16);
         if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
             qWarning("Cmd ID %s is invalid or out of limits [0x0000-0xFFFF]!", qPrintable(optVal));
             allOptsOK = false;
@@ -329,7 +329,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 cmdLineData->variableResponseLen = true;
             }
             else {
-                int iFullVal = optVal.toInt(&optOK, 10);
+                iFullVal = optVal.toInt(&optOK, 10);
                 if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
                     qWarning("Expected length %s for cmd is invalid or out of limits [0-65536]!", qPrintable(optVal));
                     allOptsOK = false;
