@@ -77,8 +77,8 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     // define command line param options
 
     // option for verbosity
-    QCommandLineOption verboseOption(QStringList() << "v" << "verbose", "Debug output flags Bit0: error Bit1 data [0..3]", "flags");
-    verboseOption.setDefaultValue("1");
+    QCommandLineOption verboseOption(QStringList() << "v" << "verbose", "1: More verbose syslog", "flags");
+    verboseOption.setDefaultValue("0");
     parser->addOption(verboseOption);
     // option for i2c device node
     QCommandLineOption i2cDevNodeOption(QStringList() << "i" << "i2c-devnode", "I2C device node e.g '/dev/i2c-3'", "filename with full path");
