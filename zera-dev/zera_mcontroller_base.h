@@ -50,6 +50,11 @@ public:
      */
     ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 debuglevel);
     virtual ~ZeraMcontrollerBase();
+    /**
+     * @brief setMaxWriteMemRetry: Set maximum writes in case of auto-verify
+     * @param _maxBlockWriteTries: Max block writes in case of auto-verify errors (FWIW: 0 will run 256 times!!)
+     */
+    void setMaxWriteMemRetry(quint8 _maxBlockWriteTries);
     /* bootloader is common to all controllers and should never change for
      * compatibility -> complete interface to control bootloader
      * can be implemented in base class
@@ -139,6 +144,7 @@ private:
     static QHash<quint32, QString> m_errorFlagsText;
     static QHash<quint32, QString> m_errorFlagsBootText;
     bool m_bBootCmd;
+    quint8 maxBlockWriteTries;
 };
 
 

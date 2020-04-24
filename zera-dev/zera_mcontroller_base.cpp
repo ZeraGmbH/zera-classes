@@ -20,7 +20,8 @@ ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 deb
       m_nI2CAdr(adr),
       m_nDebugLevel(debuglevel),
       m_nLastErrorFlags(0),
-      m_bBootCmd(false)
+      m_bBootCmd(false),
+      maxBlockWriteTries(2)
 {
     if(m_errorFlagsText.isEmpty()) {
         m_errorFlagsText.insert(HW_ERR_FLAG_CRC,              QStringLiteral("HW_ERR_FLAG_CRC"));
@@ -47,6 +48,11 @@ ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 deb
 ZeraMcontrollerBase::~ZeraMcontrollerBase()
 {
     delete m_pCRCGenerator;
+}
+
+void ZeraMcontrollerBase::setMaxWriteMemRetry(quint8 _maxBlockWriteTries)
+{
+    maxBlockWriteTries = _maxBlockWriteTries;
 }
 
 ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::startProgram()
@@ -499,17 +505,24 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
                 // It's not quite correct but this is the error we would get from µC
                 m_nLastErrorFlags |= BL_ERR_FLAG_CMD_INVALID;
                 syslog(LOG_WARNING, "ZeraMcontrollerBase::loadOrVerifyMemory: Bootloader does not support read commands -> cannot verify");
-                return cmdexecfault;
+                return cmdexecfault; // TODO remove - not necessary: block loop won't start
             }
 
             // Worker vars
             quint32 memAddress = 0;
             quint32 memOffset;
             QByteArray memByteArray;
+            quint8 triesLeftover = maxBlockWriteTries;
 
             // loop all memory blocks (re-write in case of error and further writes left)
-            while ( m_nLastErrorFlags == 0 &&
+            while ( (m_nLastErrorFlags == 0 || (!verify && triesLeftover>0 && (m_nLastErrorFlags | BL_ERR_FLAG_EXECUTE) != 0)) &&
                     ihxFIO.GetMemoryBlock(BootloaderInfo.MemPageSize, memAddress, memByteArray, memOffset) ) {
+                --triesLeftover;
+                // Reset error flags here is OK/necessary because of:
+                // * we need reset in case of repetitions
+                // * on first block and subsequent blocks without m_nLastErrorFlags is 0 anyway because
+                //   loop stops on other errors than write + BL_ERR_FLAG_EXECUTE
+                m_nLastErrorFlags = 0;
                 // Set address pointer
                 quint8* adrParameter;
                 quint8 adrParLen = BootloaderInfo.AdressPointerSize;
@@ -541,8 +554,13 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
                 }
                 // GenAdressPointerParameter allocated adrParameter for us - cleanup
                 delete adrParameter;
-                // next block
-                memAddress += BootloaderInfo.MemPageSize;
+
+                // no error: next block
+                if ( m_nLastErrorFlags == 0 ) {
+                    memAddress += BootloaderInfo.MemPageSize;
+                    // reset block repetition count
+                    triesLeftover = maxBlockWriteTries;
+                }
             }
         }
     }
