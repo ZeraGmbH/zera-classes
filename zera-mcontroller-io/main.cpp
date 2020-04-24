@@ -29,6 +29,7 @@ struct CommandLineData {
     cIntelHexFileIO eepromHexDataWrite;
     cIntelHexFileIO flashHexDataVerify;
     cIntelHexFileIO eepromHexDataVerify;
+    quint8 maxWriteBlockCount = 2;
 };
 
 /**
@@ -110,6 +111,9 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     // option for bootloader verify eeprom
     QCommandLineOption cmdEepromVerifyOption(QStringList() << "E" << "eeprom-filename-verify", "Verify intel-hex file with eeprom", "hex filename");
     parser->addOption(cmdEepromVerifyOption);
+    // option for maximum block write trials in case of error
+    QCommandLineOption cmdWriteTriesOption(QStringList() << "m" << "max-write-block-count", "Maximum block write count [1..255] / default: 2", "max tries");
+    parser->addOption(cmdWriteTriesOption);
 
     parser->process(*coreApp);
 
@@ -178,6 +182,17 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
                 qWarning("Flash for write file %s could not be read/converted!", qPrintable(optVal));
                 allOptsOK = false;
             }
+            optVal = parser->value(cmdWriteTriesOption);
+            if(!optVal.isEmpty()) {
+                iFullVal = optVal.toInt(&optOK, 10);
+                if(!optOK || iFullVal<1 || iFullVal>255) {
+                    qWarning("Max block write count for flash %s is invalid or out of limits [1-255]!", qPrintable(optVal));
+                    allOptsOK = false;
+                }
+                else {
+                    cmdLineData->maxWriteBlockCount = static_cast<quint8>(iFullVal);
+                }
+            }
         }
         // write eeprom?
         optVal = parser->value(cmdEepromWriteOption);
@@ -190,6 +205,17 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             else if(!cmdLineData->eepromHexDataWrite.ReadHexFile(optVal)) {
                 qWarning("EEPROM file for write %s could not be read/converted!", qPrintable(optVal));
                 allOptsOK = false;
+            }
+            optVal = parser->value(cmdWriteTriesOption);
+            if(!optVal.isEmpty()) {
+                iFullVal = optVal.toInt(&optOK, 10);
+                if(!optOK || iFullVal<1 || iFullVal>255) {
+                    qWarning("Max block write count for EEPROM %s is invalid or out of limits [1-255]!", qPrintable(optVal));
+                    allOptsOK = false;
+                }
+                else {
+                    cmdLineData->maxWriteBlockCount = static_cast<quint8>(iFullVal);
+                }
             }
         }
         // verify flash?
@@ -385,6 +411,10 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             qWarning("Setting eeprom file option for I/O command is not allowed!");
             allOptsOK = false;
         }
+        if(!parser->value(cmdWriteTriesOption).isEmpty()) {
+            qWarning("Setting max block write count for I/O command is not allowed!");
+            allOptsOK = false;
+        }
         break;
     }
     if(!allOptsOK) {
@@ -506,6 +536,7 @@ static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cm
 static bool execBootloaderHexFileIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
 {
     bool bAllOK = true;
+    i2cController->setMaxWriteMemRetry(cmdLineData->maxWriteBlockCount);
     if(!cmdLineData->flashHexDataWrite.isEmpty()) {
         if(i2cController->loadFlash(cmdLineData->flashHexDataWrite) != ZeraMcontrollerBase::cmddone) {
             bAllOK = false;
