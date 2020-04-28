@@ -20,6 +20,14 @@ Options:
   -l, --return-len <expected len>              Expected data return length
                                                (decimal / without CRC / default:
                                                0 / variable x)
+  -a, --convert-data-ascii <data-convert>      0: ouput data hex / 1: try to
+                                               convert received data to ASCII /
+                                               default 0
+  -A, --convert-param-ascii <param-convert>    0: hex param e.g '0x01 0xA5' /
+                                               1: interpret param data as ASCII
+                                               / 2: interpret param data as
+                                               ASCII + append trailing 0-byte /
+                                               default 0
   -f, --flash-filename-write <hex filename>    Write hex file to flash
   -e, --eeprom-filename-write <hex filename>   Write hex file to eeprom
   -F, --flash-filename-verify <hex filename>   Verify hex file with flash
@@ -28,8 +36,9 @@ Options:
   -E, --eeprom-filename-verify <hex filename>  Verify hex file with eeprom
                                                (bootloader must support read
                                                commands)
-  -m, --max-write-block-count <max tries>      Maximum block write count
-                                               [1..255] / default: 2
+  -m, --max-write-block-count <max tries>      Maximum memory block writes in
+                                               case of write error [1..255] /
+                                               default: 2
 ```
 
 
@@ -46,14 +55,18 @@ Controller command examples for MT310s2
   zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c1 -l9
   ```
 
-* Read serialnumber: Read data by cmd with unknown data length
+* Read serialnumber: Read data by cmd with unknown data length / convert result to ASCII
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c1 -lx
+  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c1 -lx -a1
   ```
 
 * Write serialnumber: Cmd with parameter / no data returned
   ```sh
   zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c6 -p'0x30 0x35 0x30 0x30 0x35 0x39 0x34 0x37 0x39'
+  ```
+  or as ASCII
+  ```sh
+  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c6 -A1 -p050059479
   ```
 
 * Start bootloader: Cmd without parameter / no data returned
@@ -78,9 +91,9 @@ Working Examples:
   BL_INFO=`zera-mcontroller-io -i /dev/i2c-0 -I21 -l$BL_INFO_LEN`
   echo $BL_INFO
   ```
-  or more simple with '-lx'
+  or more simple with '-lx' and return bootloader version as ASCII
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -c0 -lx
+  zera-mcontroller-io -i /dev/i2c-0 -I21 -c0 -lx -a1
   ```
 
 * Write data to flash
