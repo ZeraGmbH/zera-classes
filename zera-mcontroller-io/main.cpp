@@ -25,6 +25,7 @@ struct CommandLineData {
     quint8 cmdHardDevice = 0;
     quint16 cmdResponseLen = 0;
     bool variableResponseLen = false;
+    bool convertDataToAscii = false;
     cIntelHexFileIO flashHexDataWrite;
     cIntelHexFileIO eepromHexDataWrite;
     cIntelHexFileIO flashHexDataVerify;
@@ -33,40 +34,115 @@ struct CommandLineData {
 };
 
 /**
- * @brief convertCmdParam: Convert hexadecimal command param sting to binary data
- * @param paramValue [IN]: hexadecimal parameter string
+ * @brief parseParamInputDataParameters: Convert command param input to binary data
+ * @param paramValue [IN]: parameter string
+ * @param paramAscii [IN]: empty or "0": interpret param as hex / "1": interpret param as ASCII "2": ASCII with trailing 0 / else error
  * @param binaryData [OUT]: binary parameter data
  * @return true on success
  */
-static bool convertCmdParam(QString paramValue, QByteArray& binaryData)
+static bool parseParamInputDataParameters(QString paramValue, QString paramAscii, QByteArray& binaryData)
 {
     bool ok = true;
-    paramValue.replace(" ", "");
-    paramValue = paramValue.toUpper();
-    paramValue.replace("0X", "");
-    if(!QRegularExpression("^[0-9A-F]+$").match(paramValue).hasMatch()) {
-        qWarning("%s is not a valid hexadecimal parameter!", qPrintable(paramValue));
-        ok = false;
-    }
-    if(paramValue.size() % 1) {
-        qWarning("%s has odd length %i!", qPrintable(paramValue), paramValue.size());
-        ok = false;
-    }
-    if(ok) {
-        binaryData.clear();
-        for(int byte=0; byte<paramValue.size()/2; ++byte) {
-            QString strByte = paramValue.mid(byte*2, 2);
-            binaryData.append(static_cast<char>(strByte.toInt(nullptr, 16)));
+    binaryData.clear();
+    if(!paramValue.isEmpty()) {
+        // Hex param input
+        if(paramAscii.isEmpty() || paramAscii == QStringLiteral("0")) {
+            paramValue.replace(" ", "");
+            paramValue = paramValue.toUpper();
+            paramValue.replace("0X", "");
+            if(!QRegularExpression("^[0-9A-F]+$").match(paramValue).hasMatch()) {
+                qWarning("%s is not a valid hexadecimal parameter!", qPrintable(paramValue));
+                ok = false;
+            }
+            if(paramValue.size() % 1) {
+                qWarning("%s has odd length %i!", qPrintable(paramValue), paramValue.size());
+                ok = false;
+            }
+            if(ok) {
+                for(int byte=0; byte<paramValue.size()/2; ++byte) {
+                    QString strByte = paramValue.mid(byte*2, 2);
+                    binaryData.append(static_cast<char>(strByte.toInt(nullptr, 16)));
+                }
+            }
+        }
+        // ASCII param input
+        else if (paramAscii == QStringLiteral("1")){
+            binaryData = paramValue.toLatin1();
+        }
+        // ASCII+0 param input
+        else if (paramAscii == QStringLiteral("2")){
+            binaryData = paramValue.toLatin1();
+            binaryData.append(static_cast<char>(0));
+        }
+        else {
+            qWarning("Invalid value for param ASCII-conversion %s!", qPrintable(paramAscii));
+            ok = false;
         }
     }
     return ok;
 }
 
 /**
+ * @brief parseDataLenParam: Parse data return len param
+ * @param lenParam: string from commandline
+ * @param cmdLineData: pointer to CommandLineData object
+ * @param minLen: minimum allowed length
+ * @param maxLen: maximum allowed length
+ * @return: true: parsed successfully
+ */
+static bool parseDataLenParam(QString lenParam, CommandLineData *cmdLineData, int minLen, int maxLen)
+{
+    bool allOptsOK = true;
+    cmdLineData->cmdResponseLen = 0;
+    if(!lenParam.isEmpty()) {
+        if(lenParam == QStringLiteral("x")) {
+            cmdLineData->variableResponseLen = true;
+        }
+        else {
+            bool optOK;
+            int iFullVal = lenParam.toInt(&optOK, 10);
+            if(!optOK || iFullVal<minLen || iFullVal>maxLen) {
+                qWarning("Expected length %s is invalid or out of limits [%i-%i]!", qPrintable(lenParam), minLen, maxLen);
+                allOptsOK = false;
+            }
+            else {
+                cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
+            }
+        }
+    }
+    return allOptsOK;
+}
+
+/**
+ * @brief parseConvertOutputToAsciiParam: Parse ASCII-conversion for output param
+ * @param dataASCIIParam: string from commandline
+ * @param cmdLineData: pointer to CommandLineData object
+ * @return: true: parsed successfully
+ */
+static bool parseConvertOutputToAsciiParam(QString dataASCIIParam, CommandLineData *cmdLineData)
+{
+    bool allOptsOK = true;
+    // ASCII conversion returned data?
+    if(!dataASCIIParam.isEmpty()) {
+        if(dataASCIIParam == QStringLiteral("0")) {
+            cmdLineData->convertDataToAscii = false;
+        }
+        else if(dataASCIIParam == QStringLiteral("1")) {
+            cmdLineData->convertDataToAscii = true;
+        }
+        else {
+            qWarning("ASCII data conversion parameter %s is invalid [0-1]!", qPrintable(dataASCIIParam));
+            allOptsOK = false;
+        }
+    }
+    return allOptsOK;
+}
+
+/**
  * @brief parseCommandLine: Parse / check commandline params and fill our variables
  * @param coreApp: pointer to our application object
  * @param parser: pointer to QCommandLineParser object
- * @param cmdLineData: Data extracted from command line parameters
+ * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
 static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *parser, CommandLineData *cmdLineData)
@@ -93,12 +169,18 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     // option for device num
     QCommandLineOption cmdDeviceNumOption(QStringList() << "d" << "device", "Logical device (hex) e.g '01' - if not set: bootloader cmd", "hex device no");
     parser->addOption(cmdDeviceNumOption);
-    // option for param
+    // option for param (input data)
     QCommandLineOption cmdParamOption(QStringList() << "p" << "cmd-param", "Command parameter (hex) e.g '01AA' or '0x01 0xAA'", "hex param");
     parser->addOption(cmdParamOption);
     // option for expected return data len (without crc)
     QCommandLineOption cmdReturnedLenOption(QStringList() << "l" << "return-len", "Expected data return length (decimal / without CRC / default: 0 / variable x)", "expected len");
     parser->addOption(cmdReturnedLenOption);
+    // option to convert received data to ASCII
+    QCommandLineOption cmdConvertOutputAsciiOption(QStringList() << "a" << "convert-data-ascii", "0: ouput data hex / 1: try to convert received data to ASCII / default 0", "data-convert");
+    parser->addOption(cmdConvertOutputAsciiOption);
+    // option to convert param from ASCII
+    QCommandLineOption cmdConvertParamAsciiOption(QStringList() << "A" << "convert-param-ascii", "0: hex param e.g '0x01 0xA5' / 1: interpret param data as ASCII / 2: interpret param data as ASCII + append trailing 0-byte / default 0", "param-convert");
+    parser->addOption(cmdConvertParamAsciiOption);
     // option for bootloader write flash
     QCommandLineOption cmdFlashWriteOption(QStringList() << "f" << "flash-filename-write", "Write hex file to flash", "hex filename");
     parser->addOption(cmdFlashWriteOption);
@@ -112,7 +194,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
     QCommandLineOption cmdEepromVerifyOption(QStringList() << "E" << "eeprom-filename-verify", "Verify hex file with eeprom (bootloader must support read commands)", "hex filename");
     parser->addOption(cmdEepromVerifyOption);
     // option for maximum block write trials in case of error
-    QCommandLineOption cmdWriteTriesOption(QStringList() << "m" << "max-write-block-count", "Maximum block write count [1..255] / default: 2", "max tries");
+    QCommandLineOption cmdWriteTriesOption(QStringList() << "m" << "max-write-block-count", "Maximum memory block writes in case of write error [1..255] / default: 2", "max tries");
     parser->addOption(cmdWriteTriesOption);
 
     parser->process(*coreApp);
@@ -247,22 +329,16 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         if(cmdType != CMD_BOOTLOADER_HEX_FILE_IO) {
             cmdType = CMD_READ_DATA;
             // expected length of responded data
-            optVal = parser->value(cmdReturnedLenOption);
-            if(!optVal.isEmpty()) {
-                if(optVal == QStringLiteral("x")) {
-                    qWarning("Expected length cannot be set variable for read!");
-                    allOptsOK = false;
-                }
-                else {
-                    iFullVal = optVal.toInt(&optOK, 10);
-                    if(!optOK || iFullVal<1 || iFullVal>0xFFFF) {
-                        qWarning("Expected length %s for read is invalid or out of limits [1-65536]!", qPrintable(optVal));
-                        allOptsOK = false;
-                    }
-                    else {
-                        cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
-                    }
-                }
+            if(parser->value(cmdReturnedLenOption) == QStringLiteral("x")) {
+                qWarning("Variable length cannot be for data read only!");
+                allOptsOK = false;
+            }
+            else if(!parseDataLenParam(parser->value(cmdReturnedLenOption), cmdLineData, 1, 0xFFFF)) {
+                allOptsOK = false;
+            }
+            // ASCII conversion returned data?
+            if(!parseConvertOutputToAsciiParam(parser->value(cmdConvertOutputAsciiOption), cmdLineData)) {
+                allOptsOK = false;
             }
         }
     }
@@ -285,32 +361,16 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
             cmdLineData->cmdIdBoot = static_cast<quint8>(iFullVal);
         }
         // cmd param
-        if(!parser->value(cmdParamOption).isEmpty()) {
-            if(!convertCmdParam(parser->value(cmdParamOption), cmdLineData->paramData)) {
-                allOptsOK = false;
-            }
+        if(!parseParamInputDataParameters(parser->value(cmdParamOption), parser->value(cmdConvertParamAsciiOption), cmdLineData->paramData)) {
+            allOptsOK = false;
         }
         // expected length of responded data
-        optVal = parser->value(cmdReturnedLenOption);
-        if(!optVal.isEmpty()) {
-            if(optVal == QStringLiteral("x")) {
-                cmdLineData->variableResponseLen = true;
-            }
-            else {
-                iFullVal = optVal.toInt(&optOK, 10);
-                if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
-                    qWarning("Expected length %s for bootloader cmd is invalid or out of limits [0-65535]!", qPrintable(optVal));
-                    allOptsOK = false;
-                }
-                else {
-                    cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
-                }
-            }
+        if(!parseDataLenParam(parser->value(cmdReturnedLenOption), cmdLineData, 0, 0xFFFF)) {
+            allOptsOK = false;
         }
-        else {
-            // We have to set default here: If a default value is set in
-            // cmdReturnedLenOption our cross plausi check below would fail
-            cmdLineData->cmdResponseLen = 0;
+        // ASCII conversion returned data?
+        if(!parseConvertOutputToAsciiParam(parser->value(cmdConvertOutputAsciiOption), cmdLineData)) {
+            allOptsOK = false;
         }
     }
     ////////////////////////////////////////////////////////
@@ -340,30 +400,17 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         else {
             cmdLineData->cmdHardDevice = static_cast<quint8>(iFullVal);
         }
-
         // cmd param
-        optVal = parser->value(cmdParamOption);
-        if(!optVal.isEmpty()) {
-            if(!convertCmdParam(optVal, cmdLineData->paramData)) {
-                allOptsOK = false;
-            }
+        if(!parseParamInputDataParameters(parser->value(cmdParamOption), parser->value(cmdConvertParamAsciiOption), cmdLineData->paramData)) {
+            allOptsOK = false;
         }
         // expected length of responded data
-        optVal = parser->value(cmdReturnedLenOption);
-        if(!optVal.isEmpty()) {
-            if(optVal == QStringLiteral("x")) {
-                cmdLineData->variableResponseLen = true;
-            }
-            else {
-                iFullVal = optVal.toInt(&optOK, 10);
-                if(!optOK || iFullVal<0 || iFullVal>0xFFFF) {
-                    qWarning("Expected length %s for cmd is invalid or out of limits [0-65536]!", qPrintable(optVal));
-                    allOptsOK = false;
-                }
-                else {
-                    cmdLineData->cmdResponseLen = static_cast<quint16>(iFullVal);
-                }
-            }
+        if(!parseDataLenParam(parser->value(cmdReturnedLenOption), cmdLineData, 0, 0xFFFF)) {
+            allOptsOK = false;
+        }
+        // ASCII conversion returned data?
+        if(!parseConvertOutputToAsciiParam(parser->value(cmdConvertOutputAsciiOption), cmdLineData)) {
+            allOptsOK = false;
         }
     }
 
@@ -384,6 +431,14 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         }
         if(!parser->value(cmdReturnedLenOption).isEmpty()) {
             qWarning("Setting expected returned data length for bootloader file I/O is not allowed!");
+            allOptsOK = false;
+        }
+        if(!parser->value(cmdConvertParamAsciiOption).isEmpty()) {
+            qWarning("Setting parameter conversion for bootloader file I/O is not allowed!");
+            allOptsOK = false;
+        }
+        if(!parser->value(cmdConvertOutputAsciiOption).isEmpty()) {
+            qWarning("Setting returned data conversion for bootloader file I/O is not allowed!");
             allOptsOK = false;
         }
         break;
@@ -425,20 +480,34 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
 }
 
 /**
- * @brief outputReceivedData: If verboseOutput is set, output data to stdout
+ * @brief outputReceivedData: Output received data to stdout
  * @param dataReceive: Buffer with data
  * @param receivedDataLen: Buffer length
- * @param cmdLineData: Data extracted from command line parameters
+ * @param cmdLineData: pointer to CommandLineData object
  */
 static void outputReceivedData(quint8 *dataReceive, quint16 receivedDataLen, CommandLineData *cmdLineData)
 {
     if(dataReceive && receivedDataLen > 1) {
         QString dataString;
-        // Do not output crc
-        for(quint16 byteNo=0; byteNo<receivedDataLen-1; ++byteNo) {
-            dataString += QString("0x%1 ").arg(dataReceive[byteNo], 2, 16, QLatin1Char('0'));
+        if(!cmdLineData->convertDataToAscii) {
+            // Do not output crc
+            for(quint16 byteNo=0; byteNo<receivedDataLen-1; ++byteNo) {
+                dataString += QString("0x%1 ").arg(dataReceive[byteNo], 2, 16, QLatin1Char('0'));
+            }
+            dataString = dataString.trimmed();
         }
-        dataString = dataString.trimmed();
+        else {
+            for(quint16 byteNo=0; byteNo<receivedDataLen-1; ++byteNo) {
+                quint8 byteVal = dataReceive[byteNo];
+                // \0 terminator?
+                if(byteVal == 0) {
+                    break;
+                }
+                else {
+                    dataString.append(static_cast<QChar>(byteVal));
+                }
+            }
+        }
         qInfo("%s", qPrintable(dataString));
     }
 }
@@ -446,7 +515,7 @@ static void outputReceivedData(quint8 *dataReceive, quint16 receivedDataLen, Com
 /**
  * @brief execBootloaderIO: Execute bootloader command (data taken from cmdIdBoot/paramData/cmdResponseLen)
  * @param i2cController: pointer to ZeraMcontrollerBase object
- * @param cmdLineData: Data extracted from command line parameters
+ * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
 static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
@@ -477,7 +546,7 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData
 /**
  * @brief execZeraHardIO: Execute hardware command (data taken from cmdIdHard/paramData/cmdResponseLen)
  * @param i2cController: pointer to ZeraMcontrollerBase object
- * @param cmdLineData: Data extracted from command line parameters
+ * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
 static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
@@ -509,7 +578,7 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *
 /**
  * @brief execReadData: Read data from previous command (for cmds with unknown length len taken from cmdResponseLen)
  * @param i2cController: pointer to ZeraMcontrollerBase object
- * @param cmdLineData: Data extracted from command line parameters
+ * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
 static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
@@ -530,7 +599,7 @@ static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cm
 /**
  * @brief execBootloaderHexFileIO: Write/Verify data in flashHexData/eepromHexData
  * @param i2cController: pointer to ZeraMcontrollerBase object
- * @param cmdLineData: Data extracted from command line parameters
+ * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
 static bool execBootloaderHexFileIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
@@ -560,7 +629,12 @@ static bool execBootloaderHexFileIO(ZeraMcontrollerBase* i2cController, CommandL
     return bAllOK;
 }
 
-
+/**
+ * @brief myMessageOutput: Adjust Qt's defaults for message handling for qInfo and qWarning
+ * @param type
+ * @param context
+ * @param msg
+ */
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     switch(type) {
