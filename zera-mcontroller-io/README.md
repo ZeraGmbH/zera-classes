@@ -80,7 +80,7 @@ Working Examples:
   ```
   or more simple with '-lx'
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -lx
+  zera-mcontroller-io -i /dev/i2c-0 -I21 -c0 -lx
   ```
 
 * Write data to flash
