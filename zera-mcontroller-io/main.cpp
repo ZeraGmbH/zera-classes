@@ -4,6 +4,7 @@
 #include <QRegularExpression>
 #include <QTextStream>
 #include <zera_mcontroller_base.h>
+#include <csignal>
 
 // Type of commands performed
 static enum {
@@ -651,6 +652,21 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     }
 }
 
+void signalHandler(int sig)
+{
+    switch(sig) {
+    case SIGHUP:
+        qWarning("Application received SIGHUP signal - ignore");
+        break;
+    case SIGINT:
+        qWarning("Application received SIGINT signal - ignore");
+        break;
+    case SIGTERM:
+        qWarning("Application received SIGTERM signal - ignore");
+        break;
+    }
+}
+
 
 int main(int argc, char *argv[])
 {
@@ -663,6 +679,11 @@ int main(int argc, char *argv[])
 
     bool ok = false;
     if(parseCommandLine(&app, &parser, cmdLineData)) {
+        // Continue on signals
+        signal(SIGHUP, signalHandler);
+        signal(SIGINT, signalHandler);
+        signal(SIGTERM, signalHandler);
+
         // We output errors ALWAYS
         ZeraMcontrollerBase i2cController(
                     cmdLineData->i2cDeviceName,
