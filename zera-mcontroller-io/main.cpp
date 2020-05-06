@@ -257,7 +257,7 @@ static bool parseCommandLine(QCoreApplication* coreApp, QCommandLineParser *pars
         if(!optVal.isEmpty()) {
             cmdType = CMD_BOOTLOADER_HEX_FILE_IO;
             if(!QFile::exists(optVal)) {
-                qWarning("Flash file for write does not %s exist!", qPrintable(optVal));
+                qWarning("Flash file for write %s does not exist!", qPrintable(optVal));
                 allOptsOK = false;
             }
             else if(!cmdLineData->flashHexDataWrite.ReadHexFile(optVal)) {
