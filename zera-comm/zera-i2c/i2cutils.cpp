@@ -35,7 +35,7 @@ int I2CTransfer(QString deviceNode,int i2cadr, int debugLevel, i2c_rdwr_ioctl_da
     }
     if (ioctl(fd,I2C_RDWR,iodata) < 0) {
         if (debugLevel & 1) {
-            syslog(LOG_ERR,"error read/write i2c slave at adress: %d / ioctl(fd,I2C_RDWR,iodata) error: %i / %s\n",
+            syslog(LOG_ERR,"error read/write i2c slave at adress: 0x%02X / ioctl(fd,I2C_RDWR,iodata) error: %i / %s\n",
                    i2cadr, errno, strerror(errno));
         }
         close(fd);
@@ -43,7 +43,7 @@ int I2CTransfer(QString deviceNode,int i2cadr, int debugLevel, i2c_rdwr_ioctl_da
     }
 
     if (debugLevel & 2) {
-        syslog(LOG_INFO,"read/write i2c slave at adress: %d done\n",
+        syslog(LOG_INFO,"read/write i2c slave at adress: 0x%02X done\n",
                i2cadr);
     }
     close(fd);
