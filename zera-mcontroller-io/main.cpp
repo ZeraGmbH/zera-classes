@@ -638,6 +638,7 @@ static bool execBootloaderHexFileIO(ZeraMcontrollerBase* i2cController, CommandL
  */
 void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
+    Q_UNUSED(context)
     switch(type) {
         case QtInfoMsg: {
             QTextStream cout(stdout, QIODevice::WriteOnly);
