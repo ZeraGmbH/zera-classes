@@ -33,6 +33,7 @@ endif(BUILD_MODULES)
 set(SUB_DIRS
     ${SUB_DIRS_MODULES}
     zera-math
+    zera-intel-hex-checker
     zera-mcontroller-io
     zera-comm/zera-i2c
     zera-dev
