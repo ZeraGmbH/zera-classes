@@ -21,7 +21,6 @@ target_link_libraries(zera-mcontroller-io
     zeradev
     zeramath
     zeramisc
-    zeraproxy
     zerai2c
 )
 
