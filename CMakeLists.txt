@@ -18,19 +18,26 @@ set(PROJECT_VERSION_PATCH "8")
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(REPO_VERSION ${PROJECT_VERSION})
 
+option(BUILD_MODULES "Build modules for modulemanager" ON)
 
+if(BUILD_MODULES)
+    set(SUB_DIRS_MODULES
+        zera-modules/interface
+        zera-validator
+        zera-basemodule
+        zera-xml-config
+        zera-comm/zera-proxy
+    )
+endif(BUILD_MODULES)
 
 set(SUB_DIRS
+    ${SUB_DIRS_MODULES}
     zera-math
+    zera-intel-hex-checker
     zera-mcontroller-io
     zera-comm/zera-i2c
     zera-dev
-    zera-xml-config
-    zera-comm/zera-proxy
     zera-misc
-    zera-modules/interface
-    zera-validator
-    zera-basemodule
 )
 
 set(MODULE_DIRS
@@ -59,19 +66,21 @@ set(MODULE_DIRS
 )
 
 
-#zera_xml-config has an src folder with header files inside
+# zera_xml-config has an src folder with header files inside
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/zera-xml-config/src)
 
-#add all subfolders to include dirs
+# add all subfolders to include dirs
 foreach(TMP_DIR ${SUB_DIRS})
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/${TMP_DIR})
-add_subdirectory(${TMP_DIR})
+    include_directories(${CMAKE_CURRENT_SOURCE_DIR}/${TMP_DIR})
+    add_subdirectory(${TMP_DIR})
 endforeach()
 
-#add module dirs for build
-foreach(TMP_DIR ${MODULE_DIRS})
-add_subdirectory(${TMP_DIR})
-endforeach()
+if(BUILD_MODULES)
+    # add module dirs for build
+    foreach(TMP_DIR ${MODULE_DIRS})
+        add_subdirectory(${TMP_DIR})
+    endforeach()
+endif(BUILD_MODULES)
 
 
 

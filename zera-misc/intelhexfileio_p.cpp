@@ -114,6 +114,10 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
             else
                 for(qint64 iByte=0; iByte<nByteRead; iByte++) {
                     char chCurr = FileBuffer[iByte];
+                    // accept hex letters case-insensitive
+                    if(chCurr >= 'a' && chCurr <= 'f') {
+                        chCurr -= 0x20;
+                    }
                     // Check <LF> for lin count
                     if(chCurr == '\n') {
                         nCurrInputLine++;

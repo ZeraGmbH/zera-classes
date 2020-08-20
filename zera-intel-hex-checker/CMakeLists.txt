@@ -2,29 +2,26 @@
 find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
 
 # create executable
-add_executable(zera-mcontroller-io
+add_executable(zera-intel-hex-checker
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
-target_include_directories(zera-mcontroller-io
+target_include_directories(zera-intel-hex-checker
    PRIVATE
    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-   ${CMAKE_SOURCE_DIR}/zera-dev
    ${CMAKE_SOURCE_DIR}/zera-math
    ${CMAKE_SOURCE_DIR}/zera-misc
 )
 
 # link dependencies
-target_link_libraries(zera-mcontroller-io
+target_link_libraries(zera-intel-hex-checker
     PRIVATE
     Qt5::Core
-    zeradev
     zeramath
     zeramisc
-    zerai2c
 )
 
 # install application
-install(TARGETS zera-mcontroller-io
+install(TARGETS zera-intel-hex-checker
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
