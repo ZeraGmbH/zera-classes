@@ -22,6 +22,7 @@ find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
 if(BUILD_MODULES)
     # modules require zera-protobuf
     find_package(zeraprotobuf REQUIRED)
+    find_package(Qt5 COMPONENTS Network CONFIG REQUIRED)
 
     # sourcefiles required to build modules
     set(SOURCES_FOR_MODULE
@@ -78,7 +79,8 @@ add_library(zeramisc SHARED
 )
 
 if(BUILD_MODULES)
-    set(DEPS_FOR_MIDULE
+    set(DEPS_FOR_MODULE
+        Qt5::Network
         zeraproxy
         VeinMeta::zeraprotobuf
     )
@@ -87,7 +89,7 @@ endif(BUILD_MODULES)
 target_link_libraries(zeramisc 
     PRIVATE
     Qt5::Core
-    ${DEPS_FOR_MIDULE}
+    ${DEPS_FOR_MODULE}
 )
 
 # announce headers - target perspective
