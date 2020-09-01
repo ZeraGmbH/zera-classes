@@ -17,7 +17,7 @@ include(FeatureSummary)
 include(GNUInstallDirs)
 
 # Find dependecies
-find_package(Qt5 COMPONENTS Gui Network CONFIG REQUIRED)
+find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
 
 if(BUILD_MODULES)
     # modules require zera-protobuf
@@ -86,8 +86,7 @@ endif(BUILD_MODULES)
 
 target_link_libraries(zeramisc 
     PRIVATE
-    Qt5::Gui
-    Qt5::Network
+    Qt5::Core
     ${DEPS_FOR_MIDULE}
 )
 
