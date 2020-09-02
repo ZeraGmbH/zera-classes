@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
     }
     else {
         qWarning("No filename set in -i parameter!");
+        parser.showHelp();
     }
     return ok ? 0 : -1;//app.exec();
 }
