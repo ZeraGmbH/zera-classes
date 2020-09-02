@@ -25,6 +25,11 @@ bool cIntelHexFileIO::GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAd
     return d_ptr->GetMemoryBlock( nBlockLen, nStartAddressModuloBlockLen, byteArray, nOffsetToModulo);
 }
 
+quint32 cIntelHexFileIO::getByteCountStuffed()
+{
+    return d_ptr->getByteCountStuffed();
+}
+
 
 bool cIntelHexFileIO::isEmpty()
 {

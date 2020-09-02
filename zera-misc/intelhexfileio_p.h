@@ -66,6 +66,7 @@ public:
       start address of the memory block in byteArray is calculated.
       */
     bool GetMemoryBlock(const quint32& nBlockLen, quint32& nStartAddressModuloBlockLen, QByteArray& byteArray, quint32& nOffsetToModulo);
+    quint32 getByteCountStuffed();
     /**
      * @brief isEmpty
      * @return true if no memory reagions were read
@@ -87,6 +88,7 @@ private:
     QList<THexFileMessage> m_sListErrWarn;
     QString m_strFileName;
     quint8 m_byteErasedByteValue;
+    quint16 m_countBytesStuffed;
 };
 
 

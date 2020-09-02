@@ -70,9 +70,10 @@ enum enRecordType
 
 
 
-cIntelHexFileIOPrivate::cIntelHexFileIOPrivate()
+cIntelHexFileIOPrivate::cIntelHexFileIOPrivate() :
+    m_byteErasedByteValue(0xff),
+    m_countBytesStuffed(0)
 {
-    m_byteErasedByteValue = 0xff;
 }
 
 bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
@@ -81,6 +82,7 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
     m_strFileName = fileName;
     QFile file( fileName);
     quint32 nCurrInputLine = 1;
+    m_countBytesStuffed = 0;
 
     if (file.open(QIODevice::ReadOnly)) {
         // Reset memory contents
@@ -236,6 +238,8 @@ bool cIntelHexFileIOPrivate::ReadHexFile(const QString& fileName)
                                             for (quint32 ByteNo = 0; ByteNo < nCurrDataLen; ByteNo++)
                                                 byteArray[ByteNo] = static_cast<char>(DataBuff[ByteNo]);
                                             m_ListMemRegions.append(THexFileMemRegion(nAddressExtension+nCurrAddress, byteArray));
+                                            if(m_countBytesStuffed < nAddressExtension+nCurrAddress + nCurrDataLen)
+                                                m_countBytesStuffed = nAddressExtension+nCurrAddress + nCurrDataLen;
                                             break;
                                         }
 
@@ -417,6 +421,11 @@ bool cIntelHexFileIOPrivate::GetMemoryBlock(const quint32& nBlockLen, quint32& n
     return !byteArray.isEmpty();
 }
 
+quint32 cIntelHexFileIOPrivate::getByteCountStuffed()
+{
+    return m_countBytesStuffed;
+}
+
 bool cIntelHexFileIOPrivate::isEmpty()
 {
     return m_ListMemRegions.isEmpty();
@@ -426,12 +435,12 @@ bool cIntelHexFileIOPrivate::contains(const QByteArray &byteArray)
 {
     bool found = false;
     if(byteArray.length()) {
-        for(auto memRegion : m_ListMemRegions) {
-            found = memRegion.ByteArrContent.contains(byteArray);
-            if(found) {
-                break;
-            }
-        }
+        QByteArray mem;
+        quint32 nStartAddressModuloBlockLen = 0;
+        quint32 dummyModuloOffset = 0;
+        // get whole mem in one chunk
+        GetMemoryBlock(m_countBytesStuffed, nStartAddressModuloBlockLen, mem, dummyModuloOffset);
+        found = mem.contains(byteArray);
     }
     else {
         qWarning("cIntelHexFileIO: Cannot search for an empty memory region!");
