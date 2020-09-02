@@ -31,6 +31,11 @@ bool cIntelHexFileIO::isEmpty()
     return d_ptr->isEmpty();
 }
 
+bool cIntelHexFileIO::contains(const QByteArray &byteArray)
+{
+    return d_ptr->contains(byteArray);
+}
+
 
 void cIntelHexFileIO::setunwrittenByteValue(quint8 value)
 {

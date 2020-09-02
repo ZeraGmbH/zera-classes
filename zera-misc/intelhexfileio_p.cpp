@@ -422,6 +422,23 @@ bool cIntelHexFileIOPrivate::isEmpty()
     return m_ListMemRegions.isEmpty();
 }
 
+bool cIntelHexFileIOPrivate::contains(const QByteArray &byteArray)
+{
+    bool found = false;
+    if(byteArray.length()) {
+        for(auto memRegion : m_ListMemRegions) {
+            found = memRegion.ByteArrContent.contains(byteArray);
+            if(found) {
+                break;
+            }
+        }
+    }
+    else {
+        qWarning("cIntelHexFileIO: Cannot search for an empty memory region!");
+    }
+    return found;
+}
+
 
 void cIntelHexFileIOPrivate::setunwrittenByteValue(quint8 value)
 {

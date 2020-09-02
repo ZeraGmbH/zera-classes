@@ -71,6 +71,12 @@ public:
      * @return true if no memory reagions were read
      */
     bool isEmpty();
+    /**
+     * @brief Check if hex-file contains memory block
+     * @param byteArray containing memory block to check for
+     * @return true memory block found
+     */
+    bool contains(const QByteArray &byteArray);
 
 
 private:
