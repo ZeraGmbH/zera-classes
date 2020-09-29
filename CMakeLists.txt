@@ -18,10 +18,10 @@ set(PROJECT_VERSION_PATCH "1")
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(REPO_VERSION ${PROJECT_VERSION})
 
-option(BUILD_MODULES "Build modules for modulemanager" ON)
+option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
 option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging on PC" OFF)
 
-if(BUILD_MODULES)
+if(ZC_BUILD_MODULES)
     set(SUB_DIRS_MODULES
         zera-modules/interface
         zera-validator
@@ -29,7 +29,7 @@ if(BUILD_MODULES)
         zera-xml-config
         zera-comm/zera-proxy
     )
-endif(BUILD_MODULES)
+endif(ZC_BUILD_MODULES)
 
 set(SUB_DIRS
     ${SUB_DIRS_MODULES}
@@ -76,12 +76,12 @@ foreach(TMP_DIR ${SUB_DIRS})
     add_subdirectory(${TMP_DIR})
 endforeach()
 
-if(BUILD_MODULES)
+if(ZC_BUILD_MODULES)
     # add module dirs for build
     foreach(TMP_DIR ${MODULE_DIRS})
         add_subdirectory(${TMP_DIR})
     endforeach()
-endif(BUILD_MODULES)
+endif(ZC_BUILD_MODULES)
 
 
 

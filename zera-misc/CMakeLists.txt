@@ -19,7 +19,7 @@ include(GNUInstallDirs)
 # Find dependecies
 find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
 
-if(BUILD_MODULES)
+if(ZC_BUILD_MODULES)
     # modules require zera-protobuf
     find_package(zeraprotobuf REQUIRED)
     find_package(Qt5 COMPONENTS Network CONFIG REQUIRED)
@@ -55,7 +55,7 @@ if(BUILD_MODULES)
         pcbinterface.h
         pcbinterface_p.h
     )
-endif(BUILD_MODULES)
+endif(ZC_BUILD_MODULES)
 
 # common + optional sources
 set(SOURCES
@@ -78,13 +78,13 @@ add_library(zeramisc SHARED
     ${HEADER}
 )
 
-if(BUILD_MODULES)
+if(ZC_BUILD_MODULES)
     set(DEPS_FOR_MODULE
         Qt5::Network
         zeraproxy
         VeinMeta::zeraprotobuf
     )
-endif(BUILD_MODULES)
+endif(ZC_BUILD_MODULES)
 
 target_link_libraries(zeramisc 
     PRIVATE
