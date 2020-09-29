@@ -38,10 +38,12 @@ file(GLOB RESOURCES
     ${PROJECT_SOURCE_DIR}/*.qrc
     )
 
-file(GLOB OTHER_FILES
-    ${PROJECT_SOURCE_DIR}/src/*.xml
-    ${PROJECT_SOURCE_DIR}/src/*.xsd
-)
+if(NOT ZC_NO_CONFIG_INSTALL)
+    file(GLOB OTHER_FILES
+        ${PROJECT_SOURCE_DIR}/src/*.xml
+        ${PROJECT_SOURCE_DIR}/src/*.xsd
+    )
+endif()
 
 #create library 
 add_library(power1module MODULE
