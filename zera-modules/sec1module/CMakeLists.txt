@@ -93,10 +93,12 @@ write_basic_package_version_file(
     COMPATIBILITY SameMinorVersion
     )
 
-install(
-    FILES ${OTHER_FILES}
-    DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
-    )
+if(NOT ZC_NO_CONFIG_INSTALL)
+    install(
+        FILES ${OTHER_FILES}
+        DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
+        )
+endif()
 
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

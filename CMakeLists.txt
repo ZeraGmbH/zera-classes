@@ -19,6 +19,7 @@ set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT
 set(REPO_VERSION ${PROJECT_VERSION})
 
 option(BUILD_MODULES "Build modules for modulemanager" ON)
+option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging on PC" OFF)
 
 if(BUILD_MODULES)
     set(SUB_DIRS_MODULES
