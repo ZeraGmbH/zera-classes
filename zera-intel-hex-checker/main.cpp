@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
             }
         }
         else {
-            QStringList warningList = hexIntelHexData.getErrorsWarnings().split('\n', Qt::SkipEmptyParts);
+            QStringList warningList = hexIntelHexData.getErrorsWarnings().split('\n', QString::SkipEmptyParts);
             for(auto str : warningList) {
                 qWarning(qPrintable(str), "");
             }
