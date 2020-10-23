@@ -90,7 +90,6 @@ private:
     QHash<quint32, int> m_MsgNrCmdList;
     QTimer m_AdjustTimer;
     bool m_bAdjustTrigger;
-    quint8 m_nAdjStatus;
 
     cVeinModuleComponent *m_pAdjustmentInfo;
 
