@@ -77,6 +77,14 @@
     </xs:simpleType>
 
 
+    <xs:simpleType name="errorlimitvaltype">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="-100.0"/>
+            <xs:maxInclusive value="100.0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
     <xs:simpleType name="inputsignaltype">
         <xs:restriction base="xs:string">
             <xs:enumeration value="sh0"/>
@@ -242,7 +250,9 @@
             <xs:element name="energy" type="xs:float" minOccurs="1" maxOccurs="1"/>
             <xs:element name="mrate" type="impulstype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="continous" type="yesnotype" minOccurs="1" maxOccurs="1"/>
-         </xs:sequence>
+            <xs:element name="upperlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="lowerlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
     </xs:complexType>
 	
 
