@@ -189,6 +189,11 @@ private:
     cVeinModuleParameter* m_pEnergyFinalAct;
     cVeinModuleParameter* m_pResultAct;
     cVeinModuleParameter* m_pContinuousPar;
+    cVeinModuleParameter* m_pUpperLimitPar;
+    cVeinModuleParameter* m_pLowerLimitPar;
+    cVeinModuleParameter* m_pRatingAct;
+
+
 
     cStringValidator *m_pDutConstanstUnitValidator;
     QString m_sDutConstantUnit;
@@ -211,6 +216,7 @@ private:
     quint32 m_nStatus; // idle, started, running, finished
     quint32 m_nStatusTest;
     double m_fResult; // error value in %
+    int m_nRating;
     quint32 m_nMTCNTStart;
     quint32 m_nMTCNTact;
     quint32 m_nVIfin;
@@ -271,6 +277,9 @@ private slots:
     void newMRate(QVariant mrate);
     void newTarget(QVariant target);
     void newEnergy(QVariant energy);
+    void newUpperLimit(QVariant limit);
+    void newLowerLimit(QVariant limit);
+
 
     void Actualize();
     bool found(QList<QString>& list, QString searched);
