@@ -58,6 +58,8 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:energy"] = setEnergy;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:mrate"] = setMRate;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:continous"] = setContinousMode;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:upperlimit"] = setUpperLimit;
+    m_ConfigXMLMap["sec1modconfpar:parameter:measure:upperlimit"] = setLowerLimit;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -103,6 +105,12 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
 
     bPar = &m_pSec1ModulConfigData->m_bContinous;
     m_pXMLReader->setValue(bPar->m_sKey, QString("1").arg(bPar->m_nActive));
+
+    dPar = &m_pSec1ModulConfigData->m_fUpperLimit;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
+
+    dPar = &m_pSec1ModulConfigData->m_fLowerLimit;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -222,7 +230,14 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             m_pSec1ModulConfigData->m_bContinous.m_sKey = key;
             m_pSec1ModulConfigData->m_bContinous.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
             break;
-
+        case setUpperLimit:
+            m_pSec1ModulConfigData->m_fUpperLimit.m_sKey = key;
+            m_pSec1ModulConfigData->m_fUpperLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setLowerLimit:
+            m_pSec1ModulConfigData->m_fLowerLimit.m_sKey = key;
+            m_pSec1ModulConfigData->m_fLowerLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
         default:
             QString name;
             if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32))
