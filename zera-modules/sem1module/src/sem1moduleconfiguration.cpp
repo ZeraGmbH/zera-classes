@@ -53,6 +53,8 @@ void cSem1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sem1modconfpar:parameter:measure:refinput"] = setRefInput;
     m_ConfigXMLMap["sem1modconfpar:parameter:measure:targeted"] = setTargeted;
     m_ConfigXMLMap["sem1modconfpar:parameter:measure:meastime"] = setMeasTime;
+    m_ConfigXMLMap["sem1modconfpar:parameter:measure:upperlimit"] = setUpperLimit;
+    m_ConfigXMLMap["sem1modconfpar:parameter:measure:lowerlimit"] = setLowerLimit;
 
     if (m_pXMLReader->loadSchema(defaultXSDFile))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -74,6 +76,13 @@ QByteArray cSem1ModuleConfiguration::exportConfiguration()
     intParameter* iPar;
     iPar = &m_pSem1ModulConfigData->m_nMeasTime;
     m_pXMLReader->setValue(iPar->m_sKey, QString("%1").arg(iPar->m_nPar));
+
+    doubleParameter* dPar;
+    dPar = &m_pSem1ModulConfigData->m_fUpperLimit;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
+
+    dPar = &m_pSem1ModulConfigData->m_fLowerLimit;
+    m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
 
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
@@ -182,6 +191,15 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
             m_pSem1ModulConfigData->m_nMeasTime.m_sKey = key;
             m_pSem1ModulConfigData->m_nMeasTime.m_nPar = m_pXMLReader->getValue(key).toInt(&ok);
             break;
+        case setUpperLimit:
+            m_pSem1ModulConfigData->m_fUpperLimit.m_sKey = key;
+            m_pSem1ModulConfigData->m_fUpperLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+        case setLowerLimit:
+            m_pSem1ModulConfigData->m_fLowerLimit.m_sKey = key;
+            m_pSem1ModulConfigData->m_fLowerLimit.m_fPar = m_pXMLReader->getValue(key).toDouble(&ok);
+            break;
+
         default:
             QString name;
             if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32))

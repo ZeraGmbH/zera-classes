@@ -189,6 +189,9 @@ private:
     cVeinModuleParameter* m_pEnergyAct;
     cVeinModuleParameter* m_pPowerAct;
     cVeinModuleParameter* m_pResultAct;
+    cVeinModuleParameter* m_pUpperLimitPar;
+    cVeinModuleParameter* m_pLowerLimitPar;
+    cVeinModuleParameter* m_pRatingAct;
 
     void setInterfaceComponents();
     void setValidators();
@@ -207,6 +210,7 @@ private:
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
     quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
+    int m_nRating; // 0 means bad .... 1 is good
     quint32 m_nMTCNTStart;
     quint32 m_nMTCNTact;
     quint32 m_nVIfin;
@@ -259,6 +263,7 @@ private slots:
     void readVICountact();
     void readTCountact();
     void setEMResult();
+    void setRating();
 
     void newStartStop(QVariant startstop);
     void newRefConstant(QVariant refconst);
@@ -268,6 +273,8 @@ private slots:
     void newT0Input(QVariant t0input);
     void newT1Input(QVariant t1input);
     void newUnit(QVariant unit);
+    void newUpperLimit(QVariant limit);
+    void newLowerLimit(QVariant limit);
 
     void Actualize();
     bool found(QList<QString>& list, QString searched);

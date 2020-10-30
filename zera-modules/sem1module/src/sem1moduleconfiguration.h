@@ -30,6 +30,8 @@ enum moduleconfigstate
     setRefInput,
     setTargeted,
     setMeasTime,
+    setUpperLimit,
+    setLowerLimit,
 
     setRefInput1Name = 32,
     setActiveUnit1Name = 64,
