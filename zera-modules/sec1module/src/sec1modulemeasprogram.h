@@ -216,7 +216,7 @@ private:
     quint32 m_nStatus; // idle, started, running, finished
     quint32 m_nStatusTest;
     double m_fResult; // error value in %
-    int m_nRating;
+    int m_nRating; // -1 means not yet measured , 0 means bad , 1 is good
     quint32 m_nMTCNTStart;
     quint32 m_nMTCNTact;
     quint32 m_nVIfin;
@@ -266,6 +266,7 @@ private slots:
     void resetIntRegister();
     void readMTCountact();
     void setECResult();
+    void setRating();
 
     void newStartStop(QVariant startstop);
     void newMode(QVariant mode);
