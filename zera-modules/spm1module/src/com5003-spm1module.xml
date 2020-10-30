@@ -52,6 +52,8 @@
             <refinput>fo1</refinput>
             <targeted>1</targeted>
             <meastime>120</meastime>
+            <upperlimit>10.0</upperlimit>
+            <lowerlimit>-10.0</lowerlimit>
         </measure>
     </parameter>
 </spm1modconfpar>
