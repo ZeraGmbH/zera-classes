@@ -51,6 +51,8 @@
             <energy>0.001</energy>
             <mrate>10</mrate>
             <continous>0</continous>
+            <upperlimit>10.0</upperlimit>
+            <lowerlimit>-10.0</lowerlimit>
         </measure>
     </parameter>
 </sec1modconfpar>
