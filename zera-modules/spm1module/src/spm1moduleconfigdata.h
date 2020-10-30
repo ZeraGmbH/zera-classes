@@ -58,6 +58,8 @@ public:
     double m_fActualizeInterval; // actualize interval 0.2 .. 5.0 sec. (time between actualizations)
     intParameter m_nMeasTime; // time in sec. from 0 to 7200
     boolParameter m_bTargeted;
+    doubleParameter m_fUpperLimit;
+    doubleParameter m_fLowerLimit;
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
     cSocket m_SECServerSocket;
