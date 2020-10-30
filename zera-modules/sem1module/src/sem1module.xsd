@@ -77,6 +77,14 @@
     </xs:simpleType>
 
 
+    <xs:simpleType name="errorlimitvaltype">
+        <xs:restriction base="xs:decimal">
+            <xs:minInclusive value="-100.0"/>
+            <xs:maxInclusive value="100.0"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
     <xs:simpleType name="impulstype">
         <xs:restriction base="xs:unsignedInt">
             <xs:maxInclusive value="4294967295"/>
@@ -228,6 +236,8 @@
             <xs:element name="refinput" type="inputsignaltype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="targeted" type="yesnotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="meastime" type="impulstype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="upperlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="lowerlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>
          </xs:sequence>
     </xs:complexType>
 	
