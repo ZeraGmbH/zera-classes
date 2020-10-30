@@ -328,6 +328,31 @@ void cSem1ModuleMeasProgram::generateInterface()
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pResultAct; // and for the modules interface
     m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", m_pResultAct->getName(), "0", "%"));
+
+    m_pUpperLimitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("PAR_Uplimit"),
+                                                QString("Component for reading and setting the modules upper error limit"),
+                                                QVariant((double)10.0));
+    m_pUpperLimitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:UPLIMIT").arg(modNr), "10", m_pUpperLimitPar->getName(), "0", "%"));
+    m_pModule->veinModuleParameterHash[key] = m_pUpperLimitPar; // for modules use
+    dValidator = new cDoubleValidator(-100.0, 100.0, 0.01);
+    m_pUpperLimitPar->setValidator(dValidator);
+
+    m_pLowerLimitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("PAR_Lolimit"),
+                                                QString("Component for reading and setting the modules lower error limit"),
+                                                QVariant((double)-10.0));
+    m_pLowerLimitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:LOLIMIT").arg(modNr), "10", m_pLowerLimitPar->getName(), "0", "%"));
+    m_pModule->veinModuleParameterHash[key] = m_pLowerLimitPar; // for modules use
+    dValidator = new cDoubleValidator(-100.0, 100.0, 0.01);
+    m_pLowerLimitPar->setValidator(dValidator);
+
+    m_pRatingAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("ACT_Rating"),
+                                               QString("Component holds the rating for the last measurement"),
+                                               QVariant((int) -1));
+    m_pModule->veinModuleParameterHash[key] = m_pRatingAct; // and for the modules interface
+    m_pRatingAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RATING").arg(modNr), "2", m_pRatingAct->getName(), "0", ""));
 }
 
 
@@ -1178,6 +1203,8 @@ void cSem1ModuleMeasProgram::activationDone()
     connect(m_pT0InputPar, SIGNAL(sigValueChanged(QVariant)), this , SLOT(newT0Input(QVariant)));
     connect(m_pT1InputPar, SIGNAL(sigValueChanged(QVariant)), this , SLOT(newT1Input(QVariant)));
     connect(m_pInputUnitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newUnit(QVariant)));
+    connect(m_pUpperLimitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newUpperLimit(QVariant)));
+    connect(m_pLowerLimitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newLowerLimit(QVariant)));
 
     setInterfaceComponents(); // actualize interface components
     setValidators();
@@ -1344,9 +1371,15 @@ void cSem1ModuleMeasProgram::setEMResult()
     WRef = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
     WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (WRef == 0)
+    {
         m_fResult = qQNaN();
+        m_nRating = -1;
+    }
     else
+    {
         m_fResult = (WDut - WRef) * 100.0 / WRef;
+        setRating();
+    }
 
     m_fEnergy = WRef / mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     time = m_nTfin * 0.001; // we measure time in sec's
@@ -1356,6 +1389,22 @@ void cSem1ModuleMeasProgram::setEMResult()
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(QVariant(m_fEnergy));
     m_pPowerAct->setValue(QVariant(m_fPower));
+}
+
+
+void cSem1ModuleMeasProgram::setRating()
+{
+    if (m_nStatus & ECALCSTATUS::READY)
+    {
+        if ( (m_fResult >= m_ConfigData.m_fLowerLimit.m_fPar) && (m_fResult <= m_ConfigData.m_fUpperLimit.m_fPar))
+            m_nRating = 1;
+        else
+            m_nRating = 0;
+    }
+    else
+        m_nRating = -1;
+
+    m_pRatingAct->setValue(QVariant(m_nRating));
 }
 
 
@@ -1466,6 +1515,25 @@ void cSem1ModuleMeasProgram::newUnit(QVariant unit)
     emit m_pModule->parameterChanged();
 }
 
+
+void cSem1ModuleMeasProgram::newUpperLimit(QVariant limit)
+{
+    bool ok;
+    m_ConfigData.m_fUpperLimit.m_fPar = limit.toDouble(&ok);
+    setRating();
+
+    emit m_pModule->parameterChanged();
+}
+
+
+void cSem1ModuleMeasProgram::newLowerLimit(QVariant limit)
+{
+    bool ok;
+    m_ConfigData.m_fLowerLimit.m_fPar = limit.toDouble(&ok);
+    setRating();
+
+    emit m_pModule->parameterChanged();
+}
 
 void cSem1ModuleMeasProgram::Actualize()
 {
