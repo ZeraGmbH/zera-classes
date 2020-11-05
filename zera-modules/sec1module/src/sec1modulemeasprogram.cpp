@@ -870,6 +870,8 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     m_pTargetPar->setValue(QVariant(m_ConfigData.m_nTarget.m_nPar));
     m_pEnergyPar->setValue(QVariant(m_ConfigData.m_fEnergy.m_fPar));
     m_pProgressAct->setValue(QVariant(double(0.0)));
+    m_pUpperLimitPar->setValue(QVariant(m_ConfigData.m_fUpperLimit.m_fPar));
+    m_pLowerLimitPar->setValue(QVariant(m_ConfigData.m_fLowerLimit.m_fPar));
 }
 
 
@@ -1635,6 +1637,7 @@ void cSec1ModuleMeasProgram::newUpperLimit(QVariant limit)
 {
     bool ok;
     m_ConfigData.m_fUpperLimit.m_fPar = limit.toDouble(&ok);
+    setInterfaceComponents();
     setRating();
 
     emit m_pModule->parameterChanged();
@@ -1645,6 +1648,7 @@ void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
 {
     bool ok;
     m_ConfigData.m_fLowerLimit.m_fPar = limit.toDouble(&ok);
+    setInterfaceComponents();
     setRating();
 
     emit m_pModule->parameterChanged();
