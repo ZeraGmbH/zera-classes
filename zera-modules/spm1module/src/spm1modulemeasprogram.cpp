@@ -853,6 +853,8 @@ void cSpm1ModuleMeasProgram::setInterfaceComponents()
     m_pRefInputPar->setValue(QVariant(mREFSpmInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias));
     m_pTargetedPar->setValue(QVariant(m_ConfigData.m_bTargeted.m_nActive));
     m_pMeasTimePar->setValue(QVariant(m_ConfigData.m_nMeasTime.m_nPar));
+    m_pUpperLimitPar->setValue(QVariant(m_ConfigData.m_fUpperLimit.m_fPar));
+    m_pLowerLimitPar->setValue(QVariant(m_ConfigData.m_fLowerLimit.m_fPar));
 }
 
 
@@ -1516,6 +1518,7 @@ void cSpm1ModuleMeasProgram::newUpperLimit(QVariant limit)
     bool ok;
     m_ConfigData.m_fUpperLimit.m_fPar = limit.toDouble(&ok);
     setRating();
+    setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
 }
@@ -1526,6 +1529,7 @@ void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
     bool ok;
     m_ConfigData.m_fLowerLimit.m_fPar = limit.toDouble(&ok);
     setRating();
+    setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
 }
