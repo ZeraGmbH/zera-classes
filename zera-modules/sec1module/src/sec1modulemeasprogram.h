@@ -149,8 +149,7 @@ private:
     QStateMachine m_InterrupthandlingStateMachine;
     QState m_readIntRegisterState;
     QState m_readMTCountactState;
-    QState m_setECResultState;
-    QState m_resetIntRegisterState;
+    QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
 
     Zera::Proxy::cProxyClient* m_pRMClient;
@@ -268,6 +267,7 @@ private slots:
     void readMTCountact();
     void setECResult();
     void setRating();
+    void setECResultAndResetInt();
 
     void newStartStop(QVariant startstop);
     void newMode(QVariant mode);
