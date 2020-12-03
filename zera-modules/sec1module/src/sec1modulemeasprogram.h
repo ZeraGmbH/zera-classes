@@ -148,9 +148,10 @@ private:
     // statemachine for interrupthandling;
     QStateMachine m_InterrupthandlingStateMachine;
     QState m_readIntRegisterState;
-    QState m_resetIntRegisterState;
     QState m_readMTCountactState;
-    QFinalState m_setECResultState;
+    QState m_setECResultState;
+    QState m_resetIntRegisterState;
+    QFinalState m_FinalState;
 
     Zera::Proxy::cProxyClient* m_pRMClient;
     Zera::Proxy::cProxyClient* m_pSECClient;
