@@ -128,11 +128,12 @@ cRangeMeasChannel::~cRangeMeasChannel()
 
 quint32 cRangeMeasChannel::setRange(QString range)
 {
-    m_sNewRange = m_RangeInfoHash[range].name;
-    m_sActRange = m_sNewRange;
+    m_sNewRange = range; // alias !!!!
+    m_sActRange = range;
+
     if (m_bActive)
     {
-        quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_sActRange);
+        quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
     }
@@ -145,7 +146,7 @@ quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
     if (m_bActive)
     {
-        quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_sActRange, amplitude);
+        quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readgaincorrection;
         return msgnr;
     }
@@ -158,7 +159,7 @@ quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
     if (m_bActive)
     {
-        quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_sActRange, amplitude);
+        quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readoffsetcorrection;
         return msgnr;
     }
@@ -198,7 +199,7 @@ quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 {
     if (m_bActive)
     {
-        quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_sActRange, frequency);
+        quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, frequency);
         m_MsgNrCmdList[msgnr] = readphasecorrection;
         return msgnr;
     }
