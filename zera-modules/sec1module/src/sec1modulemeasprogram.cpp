@@ -154,21 +154,20 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
 
     // setting up statemachine for interrupt handling
 
-    m_readIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_resetIntRegisterState);
-    m_resetIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_readMTCountactState);
-    m_readMTCountactState.addTransition(this, SIGNAL(interruptContinue()), &m_setECResultState);
+    m_readIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_readMTCountactState);
+    m_readMTCountactState.addTransition(this, SIGNAL(interruptContinue()), &m_calcResultAndResetIntState);
+    m_calcResultAndResetIntState.addTransition(this, SIGNAL(interruptContinue()), &m_FinalState);
 
     m_InterrupthandlingStateMachine.addState(&m_readIntRegisterState);
-    m_InterrupthandlingStateMachine.addState(&m_resetIntRegisterState);
     m_InterrupthandlingStateMachine.addState(&m_readMTCountactState);
-    m_InterrupthandlingStateMachine.addState(&m_setECResultState);
+    m_InterrupthandlingStateMachine.addState(&m_calcResultAndResetIntState);
+    m_InterrupthandlingStateMachine.addState(&m_FinalState);
 
     m_InterrupthandlingStateMachine.setInitialState(&m_readIntRegisterState);
 
     connect(&m_readIntRegisterState, SIGNAL(entered()), SLOT(readIntRegister()));
-    connect(&m_resetIntRegisterState, SIGNAL(entered()), SLOT(resetIntRegister()));
     connect(&m_readMTCountactState, SIGNAL(entered()), SLOT(readMTCountact()));
-    connect(&m_setECResultState, SIGNAL(entered()), SLOT(setECResult()));
+    connect(&m_calcResultAndResetIntState, SIGNAL(entered()), SLOT(setECResultAndResetInt()));
 }
 
 
@@ -1483,6 +1482,13 @@ void cSec1ModuleMeasProgram::setECResult()
     m_pEnergyFinalAct->setValue(m_fEnergy);
 }
 
+void cSec1ModuleMeasProgram::setECResultAndResetInt()
+{
+    // just calc -> no communication with ec
+    setECResult();
+    // enable next int
+    resetIntRegister();
+}
 
 void cSec1ModuleMeasProgram::setRating()
 {
