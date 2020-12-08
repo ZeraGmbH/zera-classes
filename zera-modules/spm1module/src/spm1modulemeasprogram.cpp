@@ -958,8 +958,7 @@ void cSpm1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
-    if ((m_nStatus == ECALCSTATUS::ARMED) || (m_nStatus == ECALCSTATUS::STARTED) )
-    {
+    if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0) {
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
         m_nStatus = ECALCSTATUS::ABORT;
         m_pStatusAct->setValue(QVariant(m_nStatus));
