@@ -1484,8 +1484,24 @@ void cSec1ModuleMeasProgram::setECResult()
 
 void cSec1ModuleMeasProgram::setECResultAndResetInt()
 {
-    // just calc -> no communication with ec
-    setECResult();
+    // Remember:
+    // * this function is called when m_InterrupthandlingStateMachine enters
+    //   m_calcResultAndResetIntState.
+    // * m_InterrupthandlingStateMachine is started by receipt of async sec
+    //   interrupt and runs it's linear states (and should not be aborted).
+    //
+    // Problem:
+    // If an abort is requested (by user or change of ranges) while this machine
+    // is running, setECResult will overwrite m_nStatus and calculate values based on
+    // unpredicatble (sec was possibly stopped) crap values.
+    //
+    // Test case:
+    // * Start a continous measurement with high result frequency and abort it either by
+    //   requesting abort or changing the ranges
+    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+        // just calc -> no communication with ec
+        setECResult();
+    }
     // enable next int
     resetIntRegister();
 }
