@@ -74,6 +74,23 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationDoneState);
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+
+    // Adjustment re-read on clamp add / remove
+    m_pcbserverReReadAdjStatusState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReReadAdjChksumState);
+    m_pcbserverReReadAdjChksumState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReReadDoneState);
+    // Terminate re-read state machine on error (ehm - how do activists handle this? Did not find a trace)
+    m_pcbserverReReadAdjStatusState.addTransition(this, SIGNAL(activationError()), &m_pcbserverReReadDoneState);
+    m_pcbserverReReadAdjChksumState.addTransition(this, SIGNAL(activationError()), &m_pcbserverReReadDoneState);
+
+    m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjStatusState);
+    m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjChksumState);
+    m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadDoneState);
+    m_stateMachineAdjustmentReRead.setInitialState(&m_pcbserverReReadAdjStatusState);
+
+    connect(&m_pcbserverReReadAdjStatusState, SIGNAL(entered()), SLOT(pcbserverReadAdjStatus()));
+    connect(&m_pcbserverReReadAdjChksumState, SIGNAL(entered()), SLOT(pcbserverReadAdjChksum()));
+    connect(&m_pcbserverReReadDoneState, SIGNAL(entered()), SLOT(setInterfaceComponents()));
+
 }
 
 
@@ -298,8 +315,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     m_sAdjStatus = answer.toString();
                     emit activationContinue();
                 }
-                else
-                {
+                else {
                     emit errMsg((tr(readadjstatusErrMsg)));
 #ifdef DEBUG
                     qDebug() << readadjstatusErrMsg;
@@ -501,12 +517,16 @@ void cStatusModuleInit::activationDone()
     m_sDeviceType = findDeviceType();
     setInterfaceComponents();
     connect(m_pSerialNumber, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newSerialNumber(QVariant)));
+    m_bActive = true;
     emit activated();
 }
 
 
 void cStatusModuleInit::deactivationDone()
 {
+    // m_deactivationMachine contains one state only and this is the handler - so:
+    m_bActive = false;
+
     m_pProxy->releaseConnection(m_pRMClient);
     m_pProxy->releaseConnection(m_pDSPClient);
     m_pProxy->releaseConnection(m_pPCBClient);
