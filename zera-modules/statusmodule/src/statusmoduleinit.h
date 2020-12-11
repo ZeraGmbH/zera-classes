@@ -98,6 +98,12 @@ private:
     QState m_dspserverReadDSPProgramState;
     QFinalState m_activationDoneState; // here we still read the release version
 
+    // statemachine for adjustment-status // -checksum re-read
+    QStateMachine m_stateMachineAdjustmentReRead;
+    QState m_pcbserverReReadAdjStatusState;
+    QState m_pcbserverReReadAdjChksumState;
+    QFinalState m_pcbserverReReadDoneState;
+
     // statemachine for deactivating
     QState m_freeResourceState;
     QFinalState m_deactivationDoneState;
@@ -126,11 +132,11 @@ private:
 
     QString findReleaseNr();
     QString findDeviceType();
-    void setInterfaceComponents();
 
     QVariant wantedSerialNr;
 
 private slots:
+    void setInterfaceComponents();
     void resourceManagerConnect();
     void sendRMIdent();
     void pcbserverConnect();
