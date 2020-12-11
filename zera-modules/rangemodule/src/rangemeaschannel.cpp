@@ -945,13 +945,13 @@ void cRangeMeasChannel::setRangeListAlias()
         for (int i = 0; i < riLen-1; i++)
             for (int j = i; j < riLen; j++)
                 if (riList.at(i).type < riList.at(j).type)
-                    riList.swap(i, j);
+                    riList.swapItemsAt(i, j);
 
         // second we sort the range alias according to upper range values but grouped with types
         for (int i = 0; i < riLen-1; i++)
             for (int j = i; j < riLen; j++)
                 if ( (riList.at(i).urvalue < riList.at(j).urvalue) && (riList.at(i).type == riList.at(j).type) )
-                    riList.swap(i, j);
+                    riList.swapItemsAt(i, j);
     }
 
     s = riList.at(0).alias;
