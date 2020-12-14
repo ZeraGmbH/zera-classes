@@ -45,6 +45,8 @@ enum statusmoduleinitCmds
     readPCBServerSerialNumber,
     readPCBServerAdjStatus,
     readPCBServerAdjChksum,
+    registernotifier,
+    unregisternotifiers,
     readDSPServerVersion,
     readDSPServerDSPProgramVersion,
     writePCBServerSerialNumber
@@ -93,6 +95,7 @@ private:
     QState m_pcbserverReadSerialNrState;
     QState m_pcbserverReadAdjStatusState;
     QState m_pcbserverReadAdjChksumState;
+    QState m_pcbserverRegisterClampCatalogNotifierState;
     QState m_dspserverConnectionState;
     QState m_dspserverReadVersionState;
     QState m_dspserverReadDSPProgramState;
@@ -105,7 +108,7 @@ private:
     QFinalState m_pcbserverReReadDoneState;
 
     // statemachine for deactivating
-    QState m_freeResourceState;
+    QState m_pcbserverUnregisterClampCatalogNotifierState;
     QFinalState m_deactivationDoneState;
 
     QString m_sPCBServerVersion;
@@ -146,6 +149,8 @@ private slots:
     void pcbserverReadSerialNr();
     void pcbserverReadAdjStatus();
     void pcbserverReadAdjChksum();
+    void registerClampCatalogNotifier();
+    void unregisterClampCatalogNotifier();
     void dspserverConnect();
     void dspserverReadVersion();
     void dspserverReadDSPProgramVersion();
