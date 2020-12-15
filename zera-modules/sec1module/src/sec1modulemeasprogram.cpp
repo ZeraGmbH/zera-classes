@@ -22,6 +22,7 @@
 #include "sec1module.h"
 #include "sec1modulemeasprogram.h"
 #include "sec1moduleconfigdata.h"
+#include "unithelper.h"
 
 namespace SEC1MODULE
 {
@@ -918,19 +919,9 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
-    QString s;
-    QString powType;
+    QString powerType = mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
 
-    powType = mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
-
-    if (powType.contains('P'))
-        s = QString("kWh");
-    if (powType.contains('Q'))
-        s = QString("kVarh");
-    if (powType.contains('S'))
-        s = QString("kVAh");
-
-    return s;
+    return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
 
 
