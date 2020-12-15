@@ -22,6 +22,8 @@
 #include "sem1module.h"
 #include "sem1modulemeasprogram.h"
 #include "sem1moduleconfigdata.h"
+#include "unithelper.h"
+
 
 namespace SEM1MODULE
 {
@@ -901,12 +903,10 @@ QStringList cSem1ModuleMeasProgram::getEnergyUnitValidator()
 
 QString cSem1ModuleMeasProgram::getEnergyUnit()
 {
-    QString s;
+    QString powerType = mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
-    s = getPowerUnit();
-    s.append("h");
-
-    return s;
+    return cUnitHelper::getNewEnergyUnit(powerType, currentPowerUnit, 3600);
 }
 
 
@@ -930,32 +930,10 @@ QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 
 QString cSem1ModuleMeasProgram::getPowerUnit()
 {
-    QString s;
-    QString powType;
+    QString powerType = mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
-    powType = mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
-
-    if (m_pInputUnitPar->getValue().toString() == "Unknown") // we are activated for the first time
-    {
-        // our default units always are k... because we calculate and measure with this
-        if (powType.contains('P'))
-            s = QString("kWh");
-        if (powType.contains('Q'))
-            s = QString("kVarh");
-        if (powType.contains('S'))
-            s = QString("kVAh");
-
-        m_pInputUnitPar->setValue(s);
-    }
-    QString sEnergyUnit = m_pInputUnitPar->getValue().toString();
-    QString sPowerUnit = sEnergyUnit;
-    // the solution to remove time-unit from energy-unit might look odd currently
-    // but in case 'h' will be replaced by 's' we are prepared
-    QString sTimeUnit = QString("h");
-    if (sEnergyUnit.right(sTimeUnit.length()) == sTimeUnit)
-      sPowerUnit = sEnergyUnit.left(sEnergyUnit.length() - sTimeUnit.length());
-
-    return sPowerUnit;
+    return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
 
 

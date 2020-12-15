@@ -22,6 +22,7 @@
 #include "spm1module.h"
 #include "spm1modulemeasprogram.h"
 #include "spm1moduleconfigdata.h"
+#include "unithelper.h"
 
 namespace SPM1MODULE
 {
@@ -932,25 +933,10 @@ QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
 
 QString cSpm1ModuleMeasProgram::getPowerUnit()
 {
-    QString s;
-    QString powType;
+    QString powerType = mREFSpmInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
-    powType = mREFSpmInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
-
-    if (m_pInputUnitPar->getValue().toString() == "Unknown") // we are activated for the first time
-    {
-        // our default units always are k... because we calculate and measure with this
-        if (powType.contains('P'))
-            s = QString("kW");
-        if (powType.contains('Q'))
-            s = QString("kVar");
-        if (powType.contains('S'))
-            s = QString("kVA");
-
-        m_pInputUnitPar->setValue(s);
-    }
-
-    return m_pInputUnitPar->getValue().toString();
+    return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
 
 
