@@ -222,16 +222,37 @@ void cIEEE4882::setStatusByte(quint8 stb, quint8)
 
 void cIEEE4882::setIdentification(QString ident)
 {
-    QString releaseNr;
-    releaseNr = m_pModule->getReleaseNr(ReleaseInfoFilePath);
-    if (releaseNr == "")
-        m_sIdentification = ident;
-    else
-    {
-        QStringList sl;
-        sl = ident.split(',');
-        m_sIdentification = QString("%1, %2, %3").arg(sl[0]).arg(sl[1]).arg(releaseNr);
+    QStringList splitIdent = ident.split(',');
+
+    QString companyName;
+    if(splitIdent.size() >= 1) {
+        companyName = splitIdent[0].simplified();
     }
+    if(companyName.isEmpty()) {
+        companyName = QStringLiteral("ZERA GmbH Koenigswinter");
+    }
+
+    QString model;
+    if(splitIdent.size() >= 2) {
+        model = splitIdent[1].simplified();
+    }
+    if(model.isEmpty()) {
+        model = QStringLiteral("unknown");
+    }
+
+    QString releaseNr = m_pModule->getReleaseNr(ReleaseInfoFilePath);
+    if(releaseNr.isEmpty() && splitIdent.size() >= 3) { // fallback to xml-config
+        releaseNr = splitIdent[2].simplified();
+    }
+    if(releaseNr.isEmpty()) {
+        releaseNr = QStringLiteral("unknown");
+    }
+
+    QString serialNr = m_pModule->getSerialNr(SerialNoInfoFilePath);
+    if(serialNr.isEmpty()) { // was zera-setup2 completed??
+        serialNr = QStringLiteral("unknown");
+    }
+    m_sIdentification = QString("%1, %2, %3, %4").arg(companyName).arg(model).arg(serialNr).arg(releaseNr);
 }
 
 

@@ -6,7 +6,8 @@
 #include <QVector>
 
 
-#define ReleaseInfoFilePath "/opt/zera/conf/CHANGELOG"
+#define ReleaseInfoFilePath  "/opt/zera/conf/CHANGELOG"
+#define SerialNoInfoFilePath "/opt/zera/conf/serialnumber"
 
 namespace SCPIMODULE
 {
@@ -123,7 +124,7 @@ private:
 
     QVector<int> m_ErrEventQueue;
 
-    void setIdentification(QString ident);
+    void setIdentification(QString ident); // ident: default from <device>-scpimodule.xml
     QString RegOutput(quint8 reg);
     QString mGetScpiError();
 
