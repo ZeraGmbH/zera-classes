@@ -22,5 +22,5 @@ std::shared_ptr<google::protobuf::Message> cProxyProtobufWrapper::byteArrayToPro
 
 QByteArray cProxyProtobufWrapper::protobufToByteArray(const google::protobuf::Message &pMessage)
 {
-    return QByteArray(pMessage.SerializeAsString().c_str(), pMessage.ByteSize());
+    return QByteArray(pMessage.SerializeAsString().c_str(), pMessage.ByteSizeLong());
 }
