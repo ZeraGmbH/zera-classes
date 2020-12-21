@@ -334,7 +334,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARStorage;
     scpiInfo = new cSCPIInfo("CALCULATE", "STORAGE", "10", m_pPARStorage->getName(), "0", "");
     m_pPARStorage->setSCPIInfo(scpiInfo);
-    iValidator = new cIntValidator(0,1);
+    iValidator = new cIntValidator(1,2);
     m_pPARStorage->setValidator(iValidator);
     connect(m_pPARStorage, SIGNAL(sigValueChanged(QVariant)), SLOT(storageStartCommand(QVariant)));
 
