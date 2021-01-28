@@ -884,6 +884,12 @@ void cSem1ModuleMeasProgram::setUnits()
     m_pT0InputPar->setUnit(s);
     m_pT1InputPar->setUnit(s);
     m_pInputUnitPar->setValue(s);
+    // In case measurement is running, values are updated properly on next
+    // interrupt (tested with vf-debugger). For a measuremnt finished we have to
+    // recalc results with new units
+    if(m_nStatus == ECALCSTATUS::READY) {
+        setEMResult();
+    }
     m_pModule->exportMetaData();
 }
 
