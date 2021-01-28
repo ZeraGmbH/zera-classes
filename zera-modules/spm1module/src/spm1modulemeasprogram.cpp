@@ -1251,7 +1251,7 @@ void cSpm1ModuleMeasProgram::setSync2()
 void cSpm1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pTargetedPar->getValue().toInt() == 0)
-        m_nMTCNTStart = std::numeric_limits<quint32>::max(); // we simply set max. time -> approx. 50 days
+        m_nMTCNTStart = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
     else
         m_nMTCNTStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
