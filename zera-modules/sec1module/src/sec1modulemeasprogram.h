@@ -269,6 +269,7 @@ private slots:
     void setRating();
     void setECResultAndResetInt();
 
+    // vein change handlers
     void newStartStop(QVariant startstop);
     void newMode(QVariant mode);
     void newDutConstant(QVariant dutconst);

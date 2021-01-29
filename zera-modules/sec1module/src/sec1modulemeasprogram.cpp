@@ -581,16 +581,14 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                 {
                     m_nMTCNTact = answer.toUInt(&ok);
-                    if (m_nStatus > ECALCSTATUS::ARMED)
-                    {
+                    // keep actual values on (pending) abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
                         m_fProgress = ((1.0 * m_nMTCNTStart - 1.0 * m_nMTCNTact)/ m_nMTCNTStart)*100.0;
-                        if (m_fProgress > 100.0)
+                        if (m_fProgress > 100.0) {
                             m_fProgress = 100.0;
+                        }
+                        m_pProgressAct->setValue(QVariant(m_fProgress));
                     }
-                    else
-                        m_fProgress = 0.0;
-
-                    m_pProgressAct->setValue(QVariant(m_fProgress));
                 }
                 else
                 {
@@ -607,17 +605,18 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case actualizeenergy:
             {
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_nVIAct = answer.toUInt(&ok);
-                    if (m_nStatus > ECALCSTATUS::ARMED)
+                    // keep last values on (pending) abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
                         m_fEnergy = m_nVIAct / m_ConfigData.m_fRefConstant.m_fPar;
-                    else
-                        m_fEnergy = 0.0;
-
-                    m_pEnergyAct->setValue(m_fEnergy);
-                    if (m_bFirstMeas)
-                        m_pEnergyFinalAct->setValue(m_fEnergy);
+                        m_pEnergyAct->setValue(m_fEnergy);
+                        if (m_bFirstMeas) {
+                            // keep in final until a result is calculated in
+                            // setECResult
+                            m_pEnergyFinalAct->setValue(m_fEnergy);
+                        }
+                    }
                 }
                 else
                 {
@@ -637,9 +636,12 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    // once ready we leave status ready (continous mode)
-                    m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
-                    m_pStatusAct->setValue(QVariant(m_nStatus));
+                    // don't override pending abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        // once ready we leave status ready (continous mode)
+                        m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
+                        m_pStatusAct->setValue(QVariant(m_nStatus));
+                    }
                 }
                 else
                 {
@@ -1406,15 +1408,20 @@ void cSec1ModuleMeasProgram::enableInterrupt()
 
 void cSec1ModuleMeasProgram::startMeasurement()
 {
-    m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
     m_nStatus = ECALCSTATUS::ARMED;
+    m_bFirstMeas = true; // it is the first measurement after start
+    m_nTargetValue = m_ConfigData.m_nTarget.m_nPar;
+    m_fEnergy = 0.0;
+    m_pEnergyAct->setValue(m_fEnergy);
+    m_fProgress = 0.0;
+    m_pProgressAct->setValue(QVariant(m_fProgress));
+    // All preparations done: do start
+    m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
 }
 
 
-void cSec1ModuleMeasProgram::startMeasurementDone()
+void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMeasurementMachine
 {
-    m_bFirstMeas = true; // it is the first measurement after start
-    m_nTargetValue = m_ConfigData.m_nTarget.m_nPar;
     Actualize(); // we acualize at once after started
     m_ActualizeTimer.start(m_ConfigData.m_fMeasInterval*1000.0); // and after configured interval
 }
