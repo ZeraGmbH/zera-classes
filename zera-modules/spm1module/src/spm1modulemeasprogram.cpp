@@ -543,13 +543,12 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_nVIAct = answer.toUInt(&ok);
-                    if (m_nStatus > ECALCSTATUS::ARMED)
+                    // keep last values on (pending) abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        m_nVIAct = answer.toUInt(&ok);
                         m_fEnergy = 1.0 * m_nVIAct / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
-                    else
-                        m_fEnergy = 0.0;
-
-                    m_pEnergyAct->setValue(m_fEnergy); // in kWh
+                        m_pEnergyAct->setValue(m_fEnergy); // in kWh
+                    }
                 }
                 else
                 {
@@ -569,15 +568,15 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {   
-                    m_nTCountAct = answer.toUInt(&ok);
-                    m_nTAct = m_nTCountAct * 0.001;
-                    if (m_nStatus > ECALCSTATUS::ARMED)
+                    // keep last values on (pending) abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        m_nTCountAct = answer.toUInt(&ok);
+                        m_nTAct = m_nTCountAct * 0.001;
                         m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in kW
-                    else
-                        m_fPower = 0.0;
+                        m_pPowerAct->setValue(m_fPower);
+                        m_pTimeAct->setValue(m_nTAct);
+                    }
 
-                    m_pPowerAct->setValue(m_fPower);
-                    m_pTimeAct->setValue(m_nTAct);
                 }
                 else
                 {
@@ -1315,6 +1314,10 @@ void cSpm1ModuleMeasProgram::startMeasurementDone()
 {
     Actualize(); // we actualize at once after started
     m_ActualizeTimer.start(m_ConfigData.m_fActualizeInterval*1000.0); // and after configured interval
+    m_fEnergy = 0.0;
+    m_pEnergyAct->setValue(m_fEnergy);
+    m_fPower = 0.0;
+    m_pPowerAct->setValue(m_fPower);
 }
 
 
