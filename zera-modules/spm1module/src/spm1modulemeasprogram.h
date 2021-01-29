@@ -53,7 +53,7 @@ enum spm1moduleCmds
     freeusermem,
 
     actualizestatus,
-    actualizeMTCnt,
+    actualizeMTCnt, // Can this go??
     actualizeenergy,
     actualizepower,
 
@@ -211,13 +211,12 @@ private:
     quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
     int m_nRating; // 0 means bad .... 1 is good
-    quint32 m_nMTCNTStart;
-    quint32 m_nMTCNTact;
-    quint32 m_nVIfin;
-    quint32 m_nVIAct;
-    quint32 m_nTfin;
-    quint32 m_nTAct;
-    quint32 m_nTCountAct;
+    quint32 m_nMTCNTact; // can this go?
+    quint32 m_nTimerCountMax;
+    quint32 m_nEnergyCounterFinal;
+    quint32 m_nEnergyCounterActual;
+    double m_fTimeSecondsActual;
+    double m_fTimeSecondsFinal;
     double m_fEnergy;
     double m_fPower;
     quint32 m_nIntReg;    
