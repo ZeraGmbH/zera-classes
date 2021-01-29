@@ -544,10 +544,10 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_nVIAct = answer.toUInt(&ok);
+                    m_nEnergyCounterActual = answer.toUInt(&ok);
                     // keep last values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-                        m_fEnergy = 1.0 * m_nVIAct / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
+                        m_fEnergy = 1.0 * m_nEnergyCounterActual / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                     }
                 }
@@ -571,11 +571,10 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     // keep actual values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-                        m_nTCountAct = answer.toUInt(&ok);
-                        m_nTAct = m_nTCountAct * 0.001;
-                        m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in MW, kW, W depends on selected unit for user input
+                        m_fTimeSecondsActual = double(answer.toUInt(&ok)) * 0.001;
+                        m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // in MW, kW, W depends on selected unit for user input
                         m_pPowerAct->setValue(m_fPower);
-                        m_pTimeAct->setValue(m_nTAct);
+                        m_pTimeAct->setValue(m_fTimeSecondsActual);
                     }
                 }
                 else
@@ -817,7 +816,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readvicount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    m_nVIfin = answer.toLongLong(&ok);
+                    m_nEnergyCounterFinal = answer.toLongLong(&ok);
                     emit interruptContinue();
                 }
                 else
@@ -832,7 +831,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readtcount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    m_nTfin = answer.toLongLong(&ok);
+                    m_fTimeSecondsFinal = double(answer.toLongLong(&ok)) * 0.001;
                     emit interruptContinue();
                 }
                 else
@@ -1250,11 +1249,11 @@ void cSem1ModuleMeasProgram::setSync2()
 void cSem1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pTargetedPar->getValue().toInt() == 0)
-        m_nMTCNTStart = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
+        m_nTimerCountMax = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
     else
-        m_nMTCNTStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
+        m_nTimerCountMax = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nMTCNTStart)] = setmeaspulses;
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nTimerCountMax)] = setmeaspulses;
 }
 
 
@@ -1358,12 +1357,14 @@ void cSem1ModuleMeasProgram::setEMResult()
     double time;
 
     // * Did it wrong first time: Targeted means certain duration
-    // * On non-targeted (Start/Stop) m_nVIfin is never set
+    // * On non-targeted (Start/Stop) m_nEnergyCounterFinal is never set
     if(m_ConfigData.m_bTargeted.m_nActive) {
-        WRef = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
+        WRef = 1.0 * m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
+        time = m_fTimeSecondsFinal;
     }
     else {
-        WRef = 1.0 * m_nVIAct / m_pRefConstantPar->getValue().toDouble();
+        WRef = 1.0 * m_nEnergyCounterActual / m_pRefConstantPar->getValue().toDouble();
+        time = m_fTimeSecondsActual;
     }
     WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (WRef == 0)
@@ -1378,7 +1379,6 @@ void cSem1ModuleMeasProgram::setEMResult()
     }
 
     m_fEnergy = WRef / mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
-    time = m_nTfin * 0.001; // we measure time in sec's
     m_fPower = m_fEnergy * 3600.0 / time;
 
     m_pTimeAct->setValue(QVariant(time));

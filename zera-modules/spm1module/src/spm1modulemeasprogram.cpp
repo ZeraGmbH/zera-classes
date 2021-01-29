@@ -545,8 +545,8 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     // keep last values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-                        m_nVIAct = answer.toUInt(&ok);
-                        m_fEnergy = 1.0 * m_nVIAct / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
+                        m_nEnergyCounterActual = answer.toUInt(&ok);
+                        m_fEnergy = 1.0 * m_nEnergyCounterActual / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in kWh
                     }
                 }
@@ -570,11 +570,10 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {   
                     // keep last values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-                        m_nTCountAct = answer.toUInt(&ok);
-                        m_nTAct = m_nTCountAct * 0.001;
-                        m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in kW
+                        m_fTimeSecondsActual = double(answer.toUInt(&ok)) * 0.001;
+                        m_fPower = m_fEnergy * 3600.0 / (m_fTimeSecondsActual); // in kW
                         m_pPowerAct->setValue(m_fPower);
-                        m_pTimeAct->setValue(m_nTAct);
+                        m_pTimeAct->setValue(m_fTimeSecondsActual);
                     }
 
                 }
@@ -612,7 +611,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
 
-            case actualizeMTCnt:
+            case actualizeMTCnt: // m_nMTCNTact is not used can this go?
             {
                 if (reply == ack)
                 {
@@ -814,7 +813,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readvicount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    m_nVIfin = answer.toLongLong(&ok);
+                    m_nEnergyCounterFinal = answer.toLongLong(&ok);
                     emit interruptContinue();
                 }
                 else
@@ -829,7 +828,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readtcount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    m_nTfin = answer.toLongLong(&ok);
+                    m_fTimeSecondsFinal = double(answer.toLongLong(&ok)) * 0.001;
                     emit interruptContinue();
                 }
                 else
@@ -1250,11 +1249,11 @@ void cSpm1ModuleMeasProgram::setSync2()
 void cSpm1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pTargetedPar->getValue().toInt() == 0)
-        m_nMTCNTStart = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
+        m_nTimerCountMax = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
     else
-        m_nMTCNTStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
+        m_nTimerCountMax = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nMTCNTStart)] = setmeaspulses;
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nTimerCountMax)] = setmeaspulses;
 }
 
 
@@ -1358,14 +1357,16 @@ void cSpm1ModuleMeasProgram::setEMResult()
     double time;
 
     // * Did it wrong first time: Targeted means certain duration
-    // * On non-targeted (Start/Stop) m_nVIfin is never set
+    // * On non-targeted (Start/Stop) m_nEnergyCounterFinal/m_nTimerConterFinal are never set
     if(m_ConfigData.m_bTargeted.m_nActive) {
-        m_fEnergy = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
+        m_fEnergy = 1.0 * m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
+        time = m_fTimeSecondsFinal;
     }
     else{
-        m_fEnergy = 1.0 * m_nVIAct / m_pRefConstantPar->getValue().toDouble();
+        m_fEnergy = 1.0 * m_nEnergyCounterActual / m_pRefConstantPar->getValue().toDouble();
+        time = m_fTimeSecondsActual;
     }
-    time = m_nTfin * 0.001; // we measure time in sec's
+
     PRef = m_fEnergy * 3600.0 / time;
     PDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (PRef == 0)
