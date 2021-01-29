@@ -545,12 +545,11 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                 {
                     m_nVIAct = answer.toUInt(&ok);
-                    if (m_nStatus > ECALCSTATUS::ARMED)
+                    // keep last values on (pending) abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
                         m_fEnergy = 1.0 * m_nVIAct / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
-                    else
-                        m_fEnergy = 0.0;
-
-                    m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
+                        m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
+                    }
                 }
                 else
                 {
@@ -570,15 +569,14 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_nTCountAct = answer.toUInt(&ok);
-                    m_nTAct = m_nTCountAct * 0.001;
-                    if (m_nStatus > ECALCSTATUS::ARMED)
+                    // keep actual values on (pending) abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        m_nTCountAct = answer.toUInt(&ok);
+                        m_nTAct = m_nTCountAct * 0.001;
                         m_fPower = m_fEnergy *3600.0 / (m_nTAct); // in MW, kW, W depends on selected unit for user input
-                    else
-                        m_fPower = 0.0;
-
-                    m_pPowerAct->setValue(m_fPower);
-                    m_pTimeAct->setValue(m_nTAct);
+                        m_pPowerAct->setValue(m_fPower);
+                        m_pTimeAct->setValue(m_nTAct);
+                    }
                 }
                 else
                 {
@@ -597,9 +595,12 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    // once ready we leave status ready (continous mode)
-                    m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
-                    m_pStatusAct->setValue(QVariant(m_nStatus));
+                    // don't override pending abort
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        // once ready we leave status ready (continous mode)
+                        m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
+                        m_pStatusAct->setValue(QVariant(m_nStatus));
+                    }
                 }
                 else
                 {
@@ -1306,6 +1307,10 @@ void cSem1ModuleMeasProgram::startMeasurement()
 {
     m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
     m_nStatus = ECALCSTATUS::ARMED;
+    m_fEnergy = 0.0;
+    m_pEnergyAct->setValue(m_fEnergy);
+    m_fPower = 0.0;
+    m_pPowerAct->setValue(m_fPower);
 }
 
 
