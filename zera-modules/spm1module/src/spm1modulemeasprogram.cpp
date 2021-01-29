@@ -267,7 +267,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                              QVariant((double)0.0));
     m_pT0InputPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:T0INPUT").arg(modNr), "10", m_pT0InputPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pT0InputPar; // for modules use
-    cDoubleValidator *dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-5);
+    cDoubleValidator *dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-7);
     m_pT0InputPar->setValidator(dValidator);
 
     m_pT1InputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -276,7 +276,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                              QVariant((double)0.0));
     m_pT1InputPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:T1INPUT").arg(modNr), "10", m_pT1InputPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pT1InputPar; // for modules use
-    dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-5);
+    dValidator = new cDoubleValidator(0.0, 1.0e7, 1e-7);
     m_pT1InputPar->setValidator(dValidator);
 
     m_pInputUnitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
