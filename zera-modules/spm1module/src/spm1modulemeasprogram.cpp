@@ -1354,8 +1354,14 @@ void cSpm1ModuleMeasProgram::setEMResult()
     double PDut;
     double time;
 
-
-    m_fEnergy = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
+    // * Did it wrong first time: Targeted means certain duration
+    // * On non-targeted (Start/Stop) m_nVIfin is never set
+    if(m_ConfigData.m_bTargeted.m_nActive) {
+        m_fEnergy = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
+    }
+    else{
+        m_fEnergy = 1.0 * m_nVIAct / m_pRefConstantPar->getValue().toDouble();
+    }
     time = m_nTfin * 0.001; // we measure time in sec's
     PRef = m_fEnergy * 3600.0 / time;
     PDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()];

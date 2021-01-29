@@ -1352,8 +1352,14 @@ void cSem1ModuleMeasProgram::setEMResult()
     double WDut;
     double time;
 
-
-    WRef = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
+    // * Did it wrong first time: Targeted means certain duration
+    // * On non-targeted (Start/Stop) m_nVIfin is never set
+    if(m_ConfigData.m_bTargeted.m_nActive) {
+        WRef = 1.0 * m_nVIfin / m_pRefConstantPar->getValue().toDouble();
+    }
+    else {
+        WRef = 1.0 * m_nVIAct / m_pRefConstantPar->getValue().toDouble();
+    }
     WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (WRef == 0)
     {
