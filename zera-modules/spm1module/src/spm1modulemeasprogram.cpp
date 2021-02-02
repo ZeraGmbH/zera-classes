@@ -974,6 +974,7 @@ void cSpm1ModuleMeasProgram::handleSECInterrupt()
     if (!m_finalResultStateMachine.isRunning()) {
         m_finalResultStateMachine.setInitialState(&m_readIntRegisterState);
         m_finalResultStateMachine.start();
+        m_ActualizeTimer.stop();
     }
 }
 
@@ -1364,7 +1365,6 @@ void cSpm1ModuleMeasProgram::readTCountact()
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
     }
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
-    m_ActualizeTimer.stop();
     m_nStatus = ECALCSTATUS::READY;
     m_pStatusAct->setValue(QVariant(m_nStatus));
 }
@@ -1452,6 +1452,7 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
                 if (!m_finalResultStateMachine.isRunning()) {
                     m_finalResultStateMachine.setInitialState(&m_stopToLatchState);
                     m_finalResultStateMachine.start();
+                    m_ActualizeTimer.stop();
                 }
             }
         }
