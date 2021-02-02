@@ -153,13 +153,20 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy:
     connect(&m_startMeasurementState, SIGNAL(entered()), SLOT(startMeasurement()));
     connect(&m_startMeasurementDoneState, SIGNAL(entered()), SLOT(startMeasurementDone()));
 
-    // setting up statemachine for interrupt handling
-
-    m_readIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_resetIntRegisterState);
+    // setting up statemachine m_InterrupthandlingStateMachine
+    // mode targeted:
+    // * for interrupt handling (Interrupt is thrown on measurement finished)
+    // * initial state m_resetIntRegisterState
+    // mode non targeted (Start/Stop):
+    // * on user stop this machine is started.
+    // * initial state m_stopToLatchState
+    m_stopToLatchState.addTransition(this, SIGNAL(interruptContinue()), &m_readVICountactState); // non targeted: initial state
+    m_readIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_resetIntRegisterState); // targeted: initial state
     m_resetIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_readVICountactState);
     m_readVICountactState.addTransition(this, SIGNAL(interruptContinue()), &m_readTCountactState);
     m_readTCountactState.addTransition(this, SIGNAL(interruptContinue()), &m_setEMResultState);
 
+    m_InterrupthandlingStateMachine.addState(&m_stopToLatchState);
     m_InterrupthandlingStateMachine.addState(&m_readIntRegisterState);
     m_InterrupthandlingStateMachine.addState(&m_resetIntRegisterState);
     m_InterrupthandlingStateMachine.addState(&m_readVICountactState);
@@ -168,6 +175,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy:
 
     m_InterrupthandlingStateMachine.setInitialState(&m_readIntRegisterState);
 
+    connect(&m_stopToLatchState, SIGNAL(entered()), SLOT(stopToLatch()));
     connect(&m_readIntRegisterState, SIGNAL(entered()), SLOT(readIntRegister()));
     connect(&m_resetIntRegisterState, SIGNAL(entered()), SLOT(resetIntRegister()));
     connect(&m_readVICountactState, SIGNAL(entered()), SLOT(readVICountact()));
@@ -722,8 +730,12 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
 
             case stopmeas:
-                if (reply == ack)
-                {
+            case stopmeaslatch:
+                if (reply == ack) {
+                    if(cmd == stopmeaslatch) {
+                        // m_InterrupthandlingStateMachine next state
+                        emit interruptContinue();
+                    }
                 }
                 else
                 {
@@ -959,8 +971,10 @@ void cSem1ModuleMeasProgram::handleChangedREFConst()
 
 void cSem1ModuleMeasProgram::handleSECInterrupt()
 {
-    if (!m_InterrupthandlingStateMachine.isRunning())
+    if (!m_InterrupthandlingStateMachine.isRunning()) {
+        m_InterrupthandlingStateMachine.setInitialState(&m_readIntRegisterState);
         m_InterrupthandlingStateMachine.start();
+    }
 }
 
 
@@ -1319,6 +1333,11 @@ void cSem1ModuleMeasProgram::startMeasurementDone()
 }
 
 
+void cSem1ModuleMeasProgram::stopToLatch()
+{
+    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeaslatch;
+}
+
 void cSem1ModuleMeasProgram::readIntRegister()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::INTREG)] = readintregister;
@@ -1340,8 +1359,10 @@ void cSem1ModuleMeasProgram::readVICountact()
 void cSem1ModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_Slave2Ecalculator.name, ECALCREG::MTCNTfin)] = readtcount;
-    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
-
+    // non targeted has been stopped already in stopToLatch()
+    if(m_ConfigData.m_bTargeted.m_nActive) {
+        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
+    }
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
     m_ActualizeTimer.stop();
     m_nStatus = ECALCSTATUS::READY;
@@ -1355,16 +1376,9 @@ void cSem1ModuleMeasProgram::setEMResult()
     double WDut;
     double time;
 
-    // * Did it wrong first time: Targeted means certain duration
-    // * On non-targeted (Start/Stop) m_nEnergyCounterFinal is never set
-    if(m_ConfigData.m_bTargeted.m_nActive) {
-        WRef = 1.0 * m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
-        time = m_fTimeSecondsFinal;
-    }
-    else {
-        WRef = 1.0 * m_nEnergyCounterActual / m_pRefConstantPar->getValue().toDouble();
-        time = m_fTimeSecondsActual;
-    }
+    WRef = 1.0 * m_nEnergyCounterFinal / m_pRefConstantPar->getValue().toDouble();
+    time = m_fTimeSecondsFinal;
+
     WDut = (m_pT1InputPar->getValue().toDouble() - m_pT0InputPar->getValue().toDouble()) * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()];
     if (WRef == 0)
     {
@@ -1434,8 +1448,10 @@ void cSem1ModuleMeasProgram::newStartStop(QVariant startstop)
             {
                 // if we are not "targeted" we handle pressing stop as if the
                 // measurement became ready and an interrupt occured
-                if (!m_InterrupthandlingStateMachine.isRunning())
+                if (!m_InterrupthandlingStateMachine.isRunning()) {
+                    m_InterrupthandlingStateMachine.setInitialState(&m_stopToLatchState);
                     m_InterrupthandlingStateMachine.start();
+                }
             }
         }
     }

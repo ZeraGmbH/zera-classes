@@ -69,6 +69,7 @@ enum sem1moduleCmds
     stopmeas,
     fetchrefconstant,
 
+    stopmeaslatch,
     readintregister,
     resetintregister,
     readvicount,
@@ -148,6 +149,7 @@ private:
 
     // statemachine for interrupthandling;
     QStateMachine m_InterrupthandlingStateMachine;
+    QState m_stopToLatchState;
     QState m_readIntRegisterState;
     QState m_resetIntRegisterState;
     QState m_readVICountactState;
@@ -257,6 +259,7 @@ private slots:
     void startMeasurement();
     void startMeasurementDone();
 
+    void stopToLatch();
     void readIntRegister();
     void resetIntRegister();
     void readVICountact();
