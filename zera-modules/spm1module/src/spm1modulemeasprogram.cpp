@@ -885,7 +885,7 @@ void cSpm1ModuleMeasProgram::setUnits()
     // In case measurement is running, values are updated properly on next
     // interrupt (tested with vf-debugger). For a measuremnt finished we have to
     // recalc results with new units
-    if(m_nStatus & ECALCSTATUS::READY) {
+    if(m_bActive && m_nStatus & ECALCSTATUS::READY) {
         setEMResult();
     }
     m_pModule->exportMetaData();
@@ -1176,8 +1176,6 @@ void cSpm1ModuleMeasProgram::activationDone()
         mREFSpmInputSelectionHash[siInfo->alias] = siInfo;
     }
 
-    m_bActive = true;
-
     connect(&m_ActualizeTimer, SIGNAL(timeout()), this, SLOT(Actualize()));
 
     connect(m_pStartStopPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
@@ -1198,6 +1196,7 @@ void cSpm1ModuleMeasProgram::activationDone()
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
 
+    m_bActive = true;
     emit activated();
 }
 
