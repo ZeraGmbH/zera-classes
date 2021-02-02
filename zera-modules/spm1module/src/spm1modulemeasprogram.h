@@ -148,12 +148,12 @@ private:
     QFinalState m_startMeasurementDoneState; // here we start it
 
     // statemachine for interrupthandling;
-    QStateMachine m_InterrupthandlingStateMachine;
+    QStateMachine m_finalResultStateMachine;
     QState m_stopToLatchState;
     QState m_readIntRegisterState;
     QState m_resetIntRegisterState;
-    QState m_readVICountactState;
-    QState m_readTCountactState;
+    QState m_readFinalEnergyCounterState;
+    QState m_readFinalTimeCounterState;
     QFinalState m_setEMResultState;
 
     Zera::Proxy::cProxyClient* m_pRMClient;
