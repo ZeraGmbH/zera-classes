@@ -1290,7 +1290,6 @@ void cSec1ModuleMeasProgram::activationDone()
         mDUTSecInputSelectionHash[siInfo->alias] = siInfo;
     }
 
-    m_bActive = true;
     connect(&m_ActualizeTimer, SIGNAL(timeout()), this, SLOT(Actualize()));
     connect(m_pStartStopPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
     connect(m_pModePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
@@ -1307,7 +1306,6 @@ void cSec1ModuleMeasProgram::activationDone()
     connect(m_pLowerLimitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newLowerLimit(QVariant)));
 
 
-
     initDutConstantUnit();
     setInterfaceComponents(); // actualize interface components
 
@@ -1316,6 +1314,7 @@ void cSec1ModuleMeasProgram::activationDone()
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
 
+    m_bActive = true;
     emit activated();
 }
 
