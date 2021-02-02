@@ -153,8 +153,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     connect(&m_startMeasurementState, SIGNAL(entered()), SLOT(startMeasurement()));
     connect(&m_startMeasurementDoneState, SIGNAL(entered()), SLOT(startMeasurementDone()));
 
-    // setting up statemachine for interrupt handling
-
+    // setting up statemachine for interrupt handling (Interrupt is thrown on measuremnt finished)
     m_readIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_readMTCountactState);
     m_readMTCountactState.addTransition(this, SIGNAL(interruptContinue()), &m_calcResultAndResetIntState);
     m_calcResultAndResetIntState.addTransition(this, SIGNAL(interruptContinue()), &m_FinalState);
