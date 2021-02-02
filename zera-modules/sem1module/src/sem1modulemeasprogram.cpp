@@ -553,8 +553,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                 {
                     m_nEnergyCounterActual = answer.toUInt(&ok);
-                    // keep last values on (pending) abort
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    // Ignore post final responses
+                    if(!m_finalResultStateMachine.isRunning()) {
                         m_fEnergy = 1.0 * m_nEnergyCounterActual / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                     }
@@ -577,8 +577,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    // keep actual values on (pending) abort
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    // Ignore post final responses
+                    if(!m_finalResultStateMachine.isRunning()) {
                         m_fTimeSecondsActual = double(answer.toUInt(&ok)) * 0.001;
                         m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // in MW, kW, W depends on selected unit for user input
                         m_pPowerAct->setValue(m_fPower);
@@ -602,8 +602,8 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    // don't override pending abort
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    // Ignore post final responses (and don't override abort status)
+                    if(!m_finalResultStateMachine.isRunning()) {
                         // once ready we leave status ready (continous mode)
                         m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
                         m_pStatusAct->setValue(QVariant(m_nStatus));
