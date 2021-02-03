@@ -1560,6 +1560,9 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     bool ok;
     m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
     setInterfaceComponents();
+    if(m_bActive && m_nStatus & ECALCSTATUS::READY) {
+        setECResult();
+    }
 
     emit m_pModule->parameterChanged();
 }
@@ -1569,6 +1572,9 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
 {
     m_sDutConstantUnit = dutconstunit.toString();
     setInterfaceComponents(); // to compute the dependencies
+    if(m_bActive && m_nStatus & ECALCSTATUS::READY) {
+        setECResult();
+    }
 
     emit m_pModule->parameterChanged();
 }
