@@ -1442,19 +1442,6 @@ void cSec1ModuleMeasProgram::readMTCountact()
 
 void cSec1ModuleMeasProgram::setECResult()
 {
-    m_bFirstMeas = false;
-
-    if (m_pContinuousPar->getValue().toInt() == 0)
-    {
-        m_pStartStopPar->setValue(QVariant(0)); // restart enable
-        newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
-        m_ActualizeTimer.stop();
-        m_nStatus = ECALCSTATUS::READY;
-    }
-    else
-        m_nStatus = ECALCSTATUS::READY + ECALCSTATUS::STARTED;
-
-    m_fProgress = 100.0;
     if (m_nVIfin == 0)
     {
         m_fResult = qQNaN();
@@ -1484,14 +1471,26 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
     //
     // Problem:
     // If an abort is requested (by user or change of ranges) while this machine
-    // is running, setECResult will overwrite m_nStatus and calculate values based on
+    // is running, code below will overwrite m_nStatus and calculate values based on
     // unpredicatble (sec was possibly stopped) crap values.
     //
     // Test case:
     // * Start a continous measurement with high result frequency and abort it either by
     //   requesting abort or changing the ranges
     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-        // just calc -> no communication with ec
+        m_bFirstMeas = false;
+
+        if (m_pContinuousPar->getValue().toInt() == 0)
+        {
+            m_pStartStopPar->setValue(QVariant(0)); // restart enable
+            newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
+            m_ActualizeTimer.stop();
+            m_nStatus = ECALCSTATUS::READY;
+        }
+        else
+            m_nStatus = ECALCSTATUS::READY + ECALCSTATUS::STARTED;
+
+        m_fProgress = 100.0;
         setECResult();
     }
     // enable next int
