@@ -1408,7 +1408,6 @@ void cSec1ModuleMeasProgram::startMeasurement()
 {
     m_nStatus = ECALCSTATUS::ARMED;
     m_bFirstMeas = true; // it is the first measurement after start
-    m_nTargetValue = m_ConfigData.m_nTarget.m_nPar;
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
     m_fProgress = 0.0;
@@ -1465,7 +1464,7 @@ void cSec1ModuleMeasProgram::setECResult()
     }
     else
     {
-        m_fResult = (1.0 * m_nTargetValue - 1.0 * m_nVIfin) * 100.0 / m_nVIfin;
+        m_fResult = (1.0 * m_ConfigData.m_nTarget.m_nPar - 1.0 * m_nVIfin) * 100.0 / m_nVIfin;
         setRating();
     }
 

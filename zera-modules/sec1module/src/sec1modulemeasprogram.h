@@ -221,7 +221,6 @@ private:
     quint32 m_nMTCNTact;
     quint32 m_nVIfin;
     quint32 m_nVIAct;
-    quint32 m_nTargetValue;
     double m_fProgress; // progress value in %
     double m_fEnergy;
     quint32 m_nIntReg;
