@@ -612,7 +612,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
-                            // setECResult
                             m_pEnergyFinalAct->setValue(m_fEnergy);
                         }
                     }
@@ -979,7 +978,6 @@ void cSec1ModuleMeasProgram::cmpDependencies()
        // we calculate the new target value
        m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / constant);
        m_ConfigData.m_fEnergy.m_fPar = m_ConfigData.m_nMRate.m_nPar / constant;
-
     }
 
     else
