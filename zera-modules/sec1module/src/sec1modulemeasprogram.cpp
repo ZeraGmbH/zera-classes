@@ -579,9 +579,9 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_nMTCNTact = answer.toUInt(&ok);
                     // keep actual values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        m_nMTCNTact = answer.toUInt(&ok);
                         m_fProgress = ((1.0 * m_nMTCNTStart - 1.0 * m_nMTCNTact)/ m_nMTCNTStart)*100.0;
                         if (m_fProgress > 100.0) {
                             m_fProgress = 100.0;
@@ -605,9 +605,9 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case actualizeenergy:
             {
                 if (reply == ack) {
-                    m_nVIAct = answer.toUInt(&ok);
                     // keep last values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        m_nVIAct = answer.toUInt(&ok);
                         m_fEnergy = m_nVIAct / m_ConfigData.m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
@@ -943,8 +943,8 @@ void cSec1ModuleMeasProgram::handleChangedREFConst()
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
     if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0) {
-        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
         m_nStatus = ECALCSTATUS::ABORT;
+        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
         m_pStatusAct->setValue(QVariant(m_nStatus));
         m_pStartStopPar->setValue(QVariant(0));
         m_ActualizeTimer.stop();
@@ -1454,8 +1454,6 @@ void cSec1ModuleMeasProgram::setECResult()
     }
 
     m_fEnergy = 1.0 * m_nVIfin / m_ConfigData.m_fRefConstant.m_fPar;
-    m_pStatusAct->setValue(QVariant(m_nStatus));
-    m_pProgressAct->setValue(QVariant(m_fProgress));
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
@@ -1491,8 +1489,12 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             m_nStatus = ECALCSTATUS::READY + ECALCSTATUS::STARTED;
 
         m_fProgress = 100.0;
+        m_pStatusAct->setValue(QVariant(m_nStatus));
+        m_pProgressAct->setValue(QVariant(m_fProgress));
+
         setECResult();
     }
+
     // enable next int
     resetIntRegister();
 }
