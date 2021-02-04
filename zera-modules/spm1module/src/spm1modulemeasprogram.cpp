@@ -622,25 +622,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
             }
 
-            case actualizeMTCnt: // m_nMTCNTact is not used can this go?
-            {
-                if (reply == ack)
-                {
-                    m_nMTCNTact = answer.toUInt(&ok);
-                }
-                else
-                {
-                    {
-                        emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                        qDebug() << readsecregisterErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
-                break;
-            }
-
             case setsync:
                 if (reply == ack)
                 {
@@ -1556,7 +1537,6 @@ void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
 void cSpm1ModuleMeasProgram::Actualize()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeMTCnt;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_Slave2Ecalculator.name, ECALCREG::MTCNTact)] = actualizepower;
 }

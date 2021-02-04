@@ -53,7 +53,6 @@ enum sem1moduleCmds
     freeusermem,
 
     actualizestatus,
-    actualizeMTCnt,
     actualizeenergy,
     actualizepower,
 
@@ -213,7 +212,6 @@ private:
     quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
     int m_nRating; // 0 means bad .... 1 is good
-    quint32 m_nMTCNTact; // can this go?
     quint32 m_nTimerCountStart;
     quint32 m_nEnergyCounterFinal;
     quint32 m_nEnergyCounterActual;
