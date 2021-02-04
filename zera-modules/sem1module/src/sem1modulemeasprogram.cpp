@@ -1263,11 +1263,11 @@ void cSem1ModuleMeasProgram::setSync2()
 void cSem1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pTargetedPar->getValue().toInt() == 0)
-        m_nTimerCountMax = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
+        m_nTimerCountStart = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
     else
-        m_nTimerCountMax = m_pMeasTimePar->getValue().toLongLong() * 1000;
+        m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nTimerCountMax)] = setmeaspulses;
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nTimerCountStart)] = setmeaspulses;
 }
 
 
