@@ -837,7 +837,18 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readvicount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    m_nVIfin = answer.toLongLong(&ok);
+                    // On high frequency continuous measurements chances are high
+                    // that an abort comes in while we fetch final energy counter.
+                    // All aborts (user / change ranges) stop measurement and that
+                    // latches incomplete counter values.
+                    // We have an abort check in setECResultAndResetInt but that is
+                    // not enough. Test case:
+                    // * Run high frequency continous measurement
+                    // * Stop it (all OK up here)
+                    // * Change DUT constant/unit -> Crap results
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        m_nVIfin = answer.toLongLong(&ok);
+                    }
                     emit interruptContinue();
                 }
                 else
@@ -1559,7 +1570,12 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     bool ok;
     m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
     setInterfaceComponents();
-    if(m_bActive && m_nStatus & ECALCSTATUS::READY) {
+    quint32 flagsForRecalc = ECALCSTATUS::READY;
+    if (m_pContinuousPar->getValue().toInt() != 0) {
+        // continuous measurement keeps last result on abort
+        flagsForRecalc |= ECALCSTATUS::ABORT;
+    }
+    if(m_bActive && (m_nStatus & flagsForRecalc)) {
         setECResult();
     }
 
@@ -1571,7 +1587,12 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
 {
     m_sDutConstantUnit = dutconstunit.toString();
     setInterfaceComponents(); // to compute the dependencies
-    if(m_bActive && m_nStatus & ECALCSTATUS::READY) {
+    quint32 flagsForRecalc = ECALCSTATUS::READY;
+    if (m_pContinuousPar->getValue().toInt() != 0) {
+        // continuous measurement keeps last result on abort
+        flagsForRecalc |= ECALCSTATUS::ABORT;
+    }
+    if(m_bActive && (m_nStatus & flagsForRecalc)) {
         setECResult();
     }
 
