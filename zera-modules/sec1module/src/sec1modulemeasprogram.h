@@ -214,13 +214,12 @@ private:
     bool m_bFirstMeas;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
     quint32 m_nStatus; // idle, started, running, finished
-    quint32 m_nStatusTest;
     double m_fResult; // error value in %
     int m_nRating; // -1 means not yet measured , 0 means bad , 1 is good
-    quint32 m_nMTCNTStart;
-    quint32 m_nMTCNTact;
-    quint32 m_nVIfin;
-    quint32 m_nVIAct;
+    quint32 m_nDUTPulseCounterStart;
+    quint32 m_nDUTPulseCounterActual;
+    quint32 m_nEnergyCounterFinal;
+    quint32 m_nEnergyCounterActual;
     double m_fProgress; // progress value in %
     double m_fEnergy;
     quint32 m_nIntReg;

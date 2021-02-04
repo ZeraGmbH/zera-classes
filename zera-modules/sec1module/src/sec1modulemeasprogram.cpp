@@ -581,8 +581,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     // keep actual values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-                        m_nMTCNTact = answer.toUInt(&ok);
-                        m_fProgress = ((1.0 * m_nMTCNTStart - 1.0 * m_nMTCNTact)/ m_nMTCNTStart)*100.0;
+                        m_nDUTPulseCounterActual = answer.toUInt(&ok);
+                        m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * m_nDUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
                         if (m_fProgress > 100.0) {
                             m_fProgress = 100.0;
                         }
@@ -607,8 +607,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) {
                     // keep last values on (pending) abort
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-                        m_nVIAct = answer.toUInt(&ok);
-                        m_fEnergy = m_nVIAct / m_ConfigData.m_fRefConstant.m_fPar;
+                        m_nEnergyCounterActual = answer.toUInt(&ok);
+                        m_fEnergy = m_nEnergyCounterActual / m_ConfigData.m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
@@ -847,7 +847,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // * Stop it (all OK up here)
                     // * Change DUT constant/unit -> Crap results
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-                        m_nVIfin = answer.toLongLong(&ok);
+                        m_nEnergyCounterFinal = answer.toLongLong(&ok);
                     }
                     emit interruptContinue();
                 }
@@ -1371,10 +1371,10 @@ void cSec1ModuleMeasProgram::setSync()
 void cSec1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pDutInputPar->getValue().toString().contains("HK"))
-        m_nMTCNTStart = 1;
+        m_nDUTPulseCounterStart = 1;
     else
-        m_nMTCNTStart = m_pMRatePar->getValue().toLongLong();
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nMTCNTStart)] = setmeaspulses;
+        m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
 }
 
 
@@ -1453,18 +1453,18 @@ void cSec1ModuleMeasProgram::readMTCountact()
 
 void cSec1ModuleMeasProgram::setECResult()
 {
-    if (m_nVIfin == 0)
+    if (m_nEnergyCounterFinal == 0)
     {
         m_fResult = qQNaN();
         m_nRating = -1;
     }
     else
     {
-        m_fResult = (1.0 * m_ConfigData.m_nTarget.m_nPar - 1.0 * m_nVIfin) * 100.0 / m_nVIfin;
+        m_fResult = (1.0 * m_ConfigData.m_nTarget.m_nPar - 1.0 * m_nEnergyCounterFinal) * 100.0 / m_nEnergyCounterFinal;
         setRating();
     }
 
-    m_fEnergy = 1.0 * m_nVIfin / m_ConfigData.m_fRefConstant.m_fPar;
+    m_fEnergy = 1.0 * m_nEnergyCounterFinal / m_ConfigData.m_fRefConstant.m_fPar;
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
