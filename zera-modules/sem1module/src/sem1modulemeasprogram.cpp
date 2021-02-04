@@ -156,17 +156,13 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy:
     // setting up statemachine m_finalResultStateMachine
     // mode targeted:
     // * for interrupt handling (Interrupt is thrown on measurement finished)
-    // * initial state m_resetIntRegisterState
     // mode non targeted (Start/Stop):
     // * on user stop this machine is started.
-    // * initial state m_stopToLatchState
-    m_stopToLatchState.addTransition(this, SIGNAL(interruptContinue()), &m_readFinalEnergyCounterState); // non targeted: initial state
     m_readIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_resetIntRegisterState); // targeted: initial state
     m_resetIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_readFinalEnergyCounterState);
     m_readFinalEnergyCounterState.addTransition(this, SIGNAL(interruptContinue()), &m_readFinalTimeCounterState);
     m_readFinalTimeCounterState.addTransition(this, SIGNAL(interruptContinue()), &m_setEMResultState);
 
-    m_finalResultStateMachine.addState(&m_stopToLatchState);
     m_finalResultStateMachine.addState(&m_readIntRegisterState);
     m_finalResultStateMachine.addState(&m_resetIntRegisterState);
     m_finalResultStateMachine.addState(&m_readFinalEnergyCounterState);
@@ -175,7 +171,6 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy:
 
     m_finalResultStateMachine.setInitialState(&m_readIntRegisterState);
 
-    connect(&m_stopToLatchState, SIGNAL(entered()), SLOT(stopToLatch()));
     connect(&m_readIntRegisterState, SIGNAL(entered()), SLOT(readIntRegister()));
     connect(&m_resetIntRegisterState, SIGNAL(entered()), SLOT(resetIntRegister()));
     connect(&m_readFinalEnergyCounterState, SIGNAL(entered()), SLOT(readVICountact()));
@@ -711,12 +706,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 break;
 
             case stopmeas:
-            case stopmeaslatch:
                 if (reply == ack) {
-                    if(cmd == stopmeaslatch) {
-                        // m_finalResultStateMachine next state
-                        emit interruptContinue();
-                    }
                 }
                 else
                 {
@@ -1315,11 +1305,6 @@ void cSem1ModuleMeasProgram::startMeasurementDone()
 }
 
 
-void cSem1ModuleMeasProgram::stopToLatch()
-{
-    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeaslatch;
-}
-
 void cSem1ModuleMeasProgram::readIntRegister()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::INTREG)] = readintregister;
@@ -1341,7 +1326,7 @@ void cSem1ModuleMeasProgram::readVICountact()
 void cSem1ModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_Slave2Ecalculator.name, ECALCREG::MTCNTfin)] = readtcount;
-    // non targeted has been stopped already in stopToLatch()
+    // non targeted has been stopped already in newStartStop()
     if(m_ConfigData.m_bTargeted.m_nActive) {
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
     }
@@ -1417,9 +1402,9 @@ void cSem1ModuleMeasProgram::newStartStop(QVariant startstop)
     {
         if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0)
         {
+            m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
             if (m_ConfigData.m_bTargeted.m_nActive > 0)
             {
-                m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
                 m_nStatus = ECALCSTATUS::ABORT;
                 m_pStatusAct->setValue(QVariant(m_nStatus));
                 m_pStartStopPar->setValue(QVariant(0));
@@ -1430,7 +1415,6 @@ void cSem1ModuleMeasProgram::newStartStop(QVariant startstop)
                 // if we are not "targeted" we handle pressing stop as if the
                 // measurement became ready and an interrupt occured
                 if (!m_finalResultStateMachine.isRunning()) {
-                    m_finalResultStateMachine.setInitialState(&m_stopToLatchState);
                     m_finalResultStateMachine.start();
                     m_ActualizeTimer.stop();
                 }
