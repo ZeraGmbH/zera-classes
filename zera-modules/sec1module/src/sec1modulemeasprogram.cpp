@@ -168,6 +168,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     connect(&m_readIntRegisterState, SIGNAL(entered()), SLOT(readIntRegister()));
     connect(&m_readMTCountactState, SIGNAL(entered()), SLOT(readMTCountact()));
     connect(&m_calcResultAndResetIntState, SIGNAL(entered()), SLOT(setECResultAndResetInt()));
+    connect(&m_FinalState, SIGNAL(entered()), SLOT(checkForRestart()));
 }
 
 
@@ -1393,7 +1394,7 @@ void cSec1ModuleMeasProgram::setSlaveMux()
 
 void cSec1ModuleMeasProgram::setMasterMeasMode()
 {
-    if (m_pContinuousPar->getValue().toInt() == 0)
+    if (m_pContinuousPar->getValue().toInt() == 0 || m_pDutInputPar->getValue().toString().contains("HK"))
         m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
     else
         m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::CONTERRORMASTER)] = setmastermeasmode;
@@ -1416,9 +1417,9 @@ void cSec1ModuleMeasProgram::enableInterrupt()
 void cSec1ModuleMeasProgram::startMeasurement()
 {
     m_nStatus = ECALCSTATUS::ARMED;
-    m_bFirstMeas = true; // it is the first measurement after start
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
+    m_pEnergyFinalAct->setValue(m_fEnergy);
     m_fProgress = 0.0;
     m_pProgressAct->setValue(QVariant(m_fProgress));
     // All preparations done: do start
@@ -1496,9 +1497,9 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             m_ActualizeTimer.stop();
             m_nStatus = ECALCSTATUS::READY;
         }
-        else
+        else {
             m_nStatus = ECALCSTATUS::READY + ECALCSTATUS::STARTED;
-
+        }
         m_fProgress = 100.0;
         m_pStatusAct->setValue(QVariant(m_nStatus));
         m_pProgressAct->setValue(QVariant(m_fProgress));
@@ -1508,6 +1509,26 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
 
     // enable next int
     resetIntRegister();
+}
+
+void cSec1ModuleMeasProgram::checkForRestart()
+{
+    if(m_nMeasurementsToGo > 0) {
+        --m_nMeasurementsToGo;
+    }
+    // Continuous measurement on HK is performaed as multiple measurement
+    bool bContinuousHK = m_pContinuousPar->getValue().toInt() != 0 &&
+        m_pDutInputPar->getValue().toString().contains("HK");
+
+    if((bContinuousHK || m_nMeasurementsToGo > 0) && !m_startMeasurementMachine.isRunning()) {
+        // Note:
+        // We don't need the whole start state machine here
+        // There is too much magic in startMeasurement so we cannnot use it here either
+        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
+        m_nStatus = ECALCSTATUS::ARMED | ECALCSTATUS::READY;
+        m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
+        startMeasurementDone();
+    }
 }
 
 void cSec1ModuleMeasProgram::setRating()
@@ -1532,6 +1553,8 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
     int ss = startstop.toInt(&ok);
     if (ss > 0) // we get started
     {
+        m_bFirstMeas = true; // it is the first measurement
+        m_nMeasurementsToGo = 1; // Once we support multiple measurement this needs to be set properly
         if (!m_startMeasurementMachine.isRunning())
             m_startMeasurementMachine.start();
         // setsync

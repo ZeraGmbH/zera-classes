@@ -223,6 +223,7 @@ private:
     double m_fProgress; // progress value in %
     double m_fEnergy;
     quint32 m_nIntReg;
+    qint32 m_nMeasurementsToGo;
 
 private slots:
     void resourceManagerConnect();
@@ -266,6 +267,7 @@ private slots:
     void setECResult();
     void setRating();
     void setECResultAndResetInt();
+    void checkForRestart();
 
     // vein change handlers
     void newStartStop(QVariant startstop);
