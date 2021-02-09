@@ -11,6 +11,7 @@
 
 #include "basemeasprogram.h"
 #include "secinputinfo.h"
+#include "secinterface.h"
 #include "ecalcinfo.h"
 
 namespace Zera
@@ -79,7 +80,6 @@ enum sec1moduleCmds
 
 class cSec1Module;
 class cSec1ModuleConfigData;
-
 
 class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
@@ -192,7 +192,8 @@ private:
     cVeinModuleParameter* m_pUpperLimitPar;
     cVeinModuleParameter* m_pLowerLimitPar;
     cVeinModuleParameter* m_pRatingAct;
-
+    cVeinModuleParameter* m_pMeasCountPar;
+    cVeinModuleParameter* m_pMeasNumAct;
 
 
     cStringValidator *m_pDutConstanstUnitValidator;
@@ -224,6 +225,8 @@ private:
     double m_fEnergy;
     quint32 m_nIntReg;
     qint32 m_nMeasurementsToGo;
+    quint32 m_nMeasurementNo;
+    static constexpr quint32 m_nMulMeasStoredMax = 300; // config?
 
 private slots:
     void resourceManagerConnect();
