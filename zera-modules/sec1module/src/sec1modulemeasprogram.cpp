@@ -311,6 +311,15 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] =  m_pContinuousPar; // for modules use
     iValidator = new cIntValidator(0, 1, 1);
     m_pContinuousPar->setValidator(iValidator);
+    m_pMeasCountPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           key = QString("PAR_MeasCount"),
+                                           QString("Component for setting the number of measurements"),
+                                           QVariant((int)1));
+    m_pMeasCountPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MCOUNT").arg(modNr), "10", m_pMeasCountPar->getName(), "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pMeasCountPar; // for modules use
+    iValidator = new cIntValidator(1, m_nMulMeasStoredMax, 1);
+    m_pMeasCountPar->setValidator(iValidator);
+
 
     // after configuration we still have to set the string validators
 
@@ -375,6 +384,13 @@ void cSec1ModuleMeasProgram::generateInterface()
                                                QVariant((int) -1));
     m_pModule->veinModuleParameterHash[key] = m_pRatingAct; // and for the modules interface
     m_pRatingAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RATING").arg(modNr), "2", m_pRatingAct->getName(), "0", ""));
+
+    m_pMeasNumAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("ACT_MeasNum"),
+                                               QString("Multiple measurements: Count"),
+                                               QVariant((int) 0));
+    m_pModule->veinModuleParameterHash[key] = m_pMeasNumAct; // and for the modules interface
+    m_pMeasNumAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MEASNUM").arg(modNr), "2", m_pMeasNumAct->getName(), "0", ""));
 
 }
 
@@ -1492,9 +1508,6 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
 
         if (m_pContinuousPar->getValue().toInt() == 0)
         {
-            m_pStartStopPar->setValue(QVariant(0)); // restart enable
-            newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
-            m_ActualizeTimer.stop();
             m_nStatus = ECALCSTATUS::READY;
         }
         else {
@@ -1504,6 +1517,8 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
         m_pStatusAct->setValue(QVariant(m_nStatus));
         m_pProgressAct->setValue(QVariant(m_fProgress));
 
+        ++m_nMeasurementNo;
+        m_pMeasNumAct->setValue(m_nMeasurementNo);
         setECResult();
     }
 
@@ -1513,17 +1528,32 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
 
 void cSec1ModuleMeasProgram::checkForRestart()
 {
-    if(m_nMeasurementsToGo > 0) {
-        --m_nMeasurementsToGo;
-    }
-    // Continuous measurement on HK is performaed as multiple measurement
-    bool bContinuousHK = m_pContinuousPar->getValue().toInt() != 0 &&
-        m_pDutInputPar->getValue().toString().contains("HK");
+    bool bRestartRequired = false;
+    bool bStopRequired = false;
 
-    if((bContinuousHK || m_nMeasurementsToGo > 0) && !m_startMeasurementMachine.isRunning()) {
-        // Note:
-        // We don't need the whole start state machine here
-        // There is too much magic in startMeasurement so we cannnot use it here either
+    if(m_pContinuousPar->getValue().toInt() != 0) {
+        // Continuous measurement on HK is performed as multiple measurement
+        if(m_pDutInputPar->getValue().toString().contains("HK")) {
+            bRestartRequired = true;
+        }
+    }
+    else {
+        if(m_nMeasurementsToGo > 0) {
+            bRestartRequired = --m_nMeasurementsToGo > 0;
+        }
+        if(!bRestartRequired) { // either or
+            bStopRequired = true;
+        }
+    }
+
+    if(bStopRequired) {
+        m_pStartStopPar->setValue(QVariant(0)); // restart enable
+        newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
+    }
+    else if(bRestartRequired) {
+        // Notes on re-start:
+        // * We don't need the whole start state machine here
+        // * There is too much magic in startMeasurement so we cannnot use it here either
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
         m_nStatus = ECALCSTATUS::ARMED | ECALCSTATUS::READY;
         m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
@@ -1554,7 +1584,9 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
     if (ss > 0) // we get started
     {
         m_bFirstMeas = true; // it is the first measurement
-        m_nMeasurementsToGo = 1; // Once we support multiple measurement this needs to be set properly
+        m_nMeasurementsToGo = m_pMeasCountPar->getValue().toInt();
+        m_nMeasurementNo = 0;
+        m_pMeasNumAct->setValue(m_nMeasurementNo);
         if (!m_startMeasurementMachine.isRunning())
             m_startMeasurementMachine.start();
         // setsync
