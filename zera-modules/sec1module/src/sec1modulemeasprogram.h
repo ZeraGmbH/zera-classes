@@ -216,7 +216,7 @@ private:
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
     quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
-    int m_nRating; // -1 means not yet measured , 0 means bad , 1 is good
+    ECALCRESULT::enResultTypes m_eRating;
     quint32 m_nDUTPulseCounterStart;
     quint32 m_nDUTPulseCounterActual;
     quint32 m_nEnergyCounterFinal;

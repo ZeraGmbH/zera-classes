@@ -11,6 +11,7 @@
 
 #include "basemeasprogram.h"
 #include "secinputinfo.h"
+#include "secinterface.h"
 #include "ecalcinfo.h"
 
 namespace Zera
@@ -209,7 +210,7 @@ private:
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
     quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
-    int m_nRating; // 0 means bad .... 1 is good
+    ECALCRESULT::enResultTypes m_eRating;
     quint32 m_nTimerCountStart; // master / time counts down
     quint32 m_nEnergyCounterActual; // slave / energy counts up
     quint32 m_nEnergyCounterFinal;

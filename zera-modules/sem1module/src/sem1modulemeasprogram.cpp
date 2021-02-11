@@ -1349,7 +1349,7 @@ void cSem1ModuleMeasProgram::setEMResult()
     if (WRef == 0)
     {
         m_fResult = qQNaN();
-        m_nRating = -1;
+        m_eRating = ECALCRESULT::RESULT_UNFINISHED;
     }
     else
     {
@@ -1372,14 +1372,14 @@ void cSem1ModuleMeasProgram::setRating()
     if (m_nStatus & ECALCSTATUS::READY)
     {
         if ( (m_fResult >= m_ConfigData.m_fLowerLimit.m_fPar) && (m_fResult <= m_ConfigData.m_fUpperLimit.m_fPar))
-            m_nRating = 1;
+            m_eRating = ECALCRESULT::RESULT_PASSED;
         else
-            m_nRating = 0;
+            m_eRating = ECALCRESULT::RESULT_FAILED;
     }
     else
-        m_nRating = -1;
+        m_eRating = ECALCRESULT::RESULT_UNFINISHED;
 
-    m_pRatingAct->setValue(QVariant(m_nRating));
+    m_pRatingAct->setValue(int(m_eRating));
 }
 
 
