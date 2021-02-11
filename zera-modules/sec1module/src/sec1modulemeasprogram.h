@@ -194,6 +194,8 @@ private:
     cVeinModuleParameter* m_pRatingAct;
     cVeinModuleParameter* m_pMeasCountPar;
     cVeinModuleParameter* m_pMeasNumAct;
+    cVeinModuleParameter* m_pMulCountAct;
+    cVeinModuleParameter* m_pMulResultArray;
 
 
     cStringValidator *m_pDutConstanstUnitValidator;
@@ -211,6 +213,8 @@ private:
     void handleSECInterrupt();
     void cmpDependencies();
 
+    void multiResultToVein();
+
     // vars dealing with error measurement
     bool m_bFirstMeas;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
@@ -227,6 +231,29 @@ private:
     qint32 m_nMeasurementsToGo;
     quint32 m_nMeasurementNo;
     static constexpr quint32 m_nMulMeasStoredMax = 300; // config?
+    // TODO: Move MultipleResultHelper to a more common place
+    class MultipleResultHelper {
+    public:
+        void clear();
+        void append(const double fResult,
+                    const enum ECALCRESULT::enResultTypes eRating,
+                    const double fLowerLimit,
+                    const double fUpperLimit);
+        quint32 getCountTotal();
+        const QJsonArray &getJSONArray();
+        const QJsonObject getJSONStatistics();
+    private:
+        double m_fMeanValue = qQNaN();
+        double m_fStdDevn = qQNaN();
+        double m_fStdDevn1 = qQNaN();
+        QJsonArray m_jsonArray;
+        int m_iCountPass = 0;
+        int m_iCountFail = 0;
+        int m_iCountUnfinish = 0;
+        double m_fAccumulSum = 0.0;
+        double m_fStdDevAccumulSquare = 0.0;
+    };
+    MultipleResultHelper m_multipleResultHelper;
 
 private slots:
     void resourceManagerConnect();

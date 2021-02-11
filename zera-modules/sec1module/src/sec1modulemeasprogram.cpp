@@ -1,6 +1,7 @@
 #include <QtGlobal>
 #include <QString>
 #include <QStateMachine>
+#include <QJsonDocument>
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <secinterface.h>
@@ -392,6 +393,19 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pMeasNumAct; // and for the modules interface
     m_pMeasNumAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MEASNUM").arg(modNr), "2", m_pMeasNumAct->getName(), "0", ""));
 
+    m_pMulCountAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("ACT_MulCount"),
+                                               QString("Multiple measurements: Count stored"),
+                                               QVariant((int) 0));
+    m_pModule->veinModuleParameterHash[key] = m_pMulCountAct; // and for the modules interface
+    m_pMulCountAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:MULCOUNT").arg(modNr), "2", m_pMulCountAct->getName(), "0", ""));
+
+    m_pMulResultArray = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("ACT_MulResult"),
+                                               QString("Multiple measurements: JSON result array / statistics"),
+                                               QVariant(QString()));
+    m_pModule->veinModuleParameterHash[key] = m_pMulResultArray; // and for the modules interface
+    m_pMulResultArray->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STJARRAY").arg(modNr), "2", m_pMulResultArray->getName(), "0", ""));
 }
 
 
@@ -1033,6 +1047,15 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     }
 }
 
+void cSec1ModuleMeasProgram::multiResultToVein()
+{
+    QJsonObject jsonObject = m_multipleResultHelper.getJSONStatistics();
+    jsonObject.insert("values", m_multipleResultHelper.getJSONArray());
+    QJsonDocument jsonDoc(jsonObject);
+    m_pMulResultArray->setValue(QString::fromUtf8(jsonDoc.toJson(QJsonDocument::Compact)));
+    m_pMulCountAct->setValue(m_multipleResultHelper.getCountTotal());
+}
+
 
 void cSec1ModuleMeasProgram::resourceManagerConnect()
 {
@@ -1520,6 +1543,18 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
         ++m_nMeasurementNo;
         m_pMeasNumAct->setValue(m_nMeasurementNo);
         setECResult();
+        if(m_multipleResultHelper.getCountTotal() < m_nMulMeasStoredMax) {
+            // TODO: Once we have fancy vf-cpp and want to re-use result array
+            // with statistics below, the following should be split into a
+            // seperate module/library/?
+
+            // append to our result list
+            m_multipleResultHelper.append(m_fResult,
+                                          m_eRating,
+                                          m_ConfigData.m_fLowerLimit.m_fPar,
+                                          m_ConfigData.m_fUpperLimit.m_fPar);
+            multiResultToVein();
+        }
     }
 
     // enable next int
@@ -1587,6 +1622,8 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
         m_nMeasurementsToGo = m_pMeasCountPar->getValue().toInt();
         m_nMeasurementNo = 0;
         m_pMeasNumAct->setValue(m_nMeasurementNo);
+        m_multipleResultHelper.clear();
+        multiResultToVein();
         if (!m_startMeasurementMachine.isRunning())
             m_startMeasurementMachine.start();
         // setsync
@@ -1768,19 +1805,94 @@ bool cSec1ModuleMeasProgram::found(QList<QString> &list, QString searched)
     return false;
 }
 
+void cSec1ModuleMeasProgram::MultipleResultHelper::clear()
+{
+    m_fAccumulSum = 0.0;
+    m_fMeanValue = qQNaN();
+    m_fStdDevn = qQNaN();
+    m_fStdDevn1 = qQNaN();
+    m_fStdDevAccumulSquare = 0.0;
+    m_jsonArray = QJsonArray();
+    m_iCountPass = 0;
+    m_iCountUnfinish = 0;
+    m_iCountFail = 0;
 }
 
+void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
+                                                          const ECALCRESULT::enResultTypes eRating,
+                                                          const double fLowerLimit,
+                                                          const double fUpperLimit)
+{
+    // -> json - short names to reduce size
+    QJsonObject jsonObject {
+        { "LL", fLowerLimit },
+        { "UL", fUpperLimit },
+        { "V", fResult },
+        { "R", int(eRating) }
+    };
+    m_jsonArray.append(jsonObject);
+    // some statistics
+    switch(eRating) {
+    case ECALCRESULT::RESULT_UNFINISHED:
+        ++m_iCountUnfinish;
+        break;
+    case ECALCRESULT::RESULT_PASSED:
+        ++m_iCountPass;
+        break;
+    default:
+        ++m_iCountFail;
+        break;
+    }
+    double value = fResult;
+    // use +/- 100% for inf/nan/unfinished in statistics
+    if(qIsNaN(value)) {
+        value = -100.0;
+    }
+    else if(qIsInf(value)) {
+        value = 100.0;
+    }
+    if(eRating == ECALCRESULT::RESULT_UNFINISHED) { // can this happen ? / should we store it with -100% ?
+        value = -100.0;
+    }
+    // standard deviations (there have been loads of discusson about the n or
+    // n-1 in the past. To avoid that: calc both
+    m_fAccumulSum += value;
+    double fResultCount = m_jsonArray.count();
+    m_fMeanValue = m_fAccumulSum / fResultCount;
+    double currDev = value - m_fMeanValue;
+    m_fStdDevAccumulSquare += currDev * currDev;
+    m_fStdDevn = sqrt(m_fStdDevAccumulSquare / fResultCount);
+    if(m_jsonArray.count() > 1) {
+        m_fStdDevn1 = sqrt(m_fStdDevAccumulSquare / (fResultCount - 1.0));
+    }
+    else {
+        m_fStdDevn1 = qQNaN();
+    }
+}
 
+const QJsonArray &cSec1ModuleMeasProgram::MultipleResultHelper::getJSONArray()
+{
+    return m_jsonArray;
+}
 
+const QJsonObject cSec1ModuleMeasProgram::MultipleResultHelper::getJSONStatistics()
+{
+    QJsonObject jsonObject {
+        {QStringLiteral("countPass"), m_iCountPass },
+        {QStringLiteral("countFail"), m_iCountFail},
+        {QStringLiteral("countUnfinish"), m_iCountUnfinish },
+        {QStringLiteral("mean"), m_fMeanValue  },
+        {QStringLiteral("stddevN"), m_fStdDevn  },
+        {QStringLiteral("stddevN1"), m_fStdDevn1  }
+    };
+    return jsonObject;
+}
 
+quint32 cSec1ModuleMeasProgram::MultipleResultHelper::getCountTotal()
+{
+    return m_jsonArray.count();
+}
 
-
-
-
-
-
-
-
-
+}
 
 
