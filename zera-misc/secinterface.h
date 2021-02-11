@@ -25,6 +25,10 @@ namespace ECALCINT {
     enum { MTposEdge = 1, MTnegEdge = 2, MTCount0 = 4};
 }
 
+namespace ECALCRESULT {
+    enum enResultTypes { RESULT_UNFINISHED = -1, RESULT_FAILED = 0, RESULT_PASSED = 1};
+}
+
 
 namespace Zera
 {
