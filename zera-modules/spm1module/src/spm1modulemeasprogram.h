@@ -275,8 +275,8 @@ private slots:
     void newLowerLimit(QVariant limit);
 
     void Actualize();
+    void stopMeasuerment(bool bAbort);
     bool found(QList<QString>& list, QString searched);
-
 };
 }
 

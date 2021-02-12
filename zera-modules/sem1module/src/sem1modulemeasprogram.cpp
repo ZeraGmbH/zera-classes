@@ -545,24 +545,20 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case actualizeenergy:
             {
-                if (reply == ack)
-                {
-                    m_nEnergyCounterActual = answer.toUInt(&ok);
-                    // Ignore post final responses
-                    if(!m_finalResultStateMachine.isRunning()) {
+                if (reply == ack) {
+                    // keep last values on (pending) abort / ignore post final responses
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
+                        m_nEnergyCounterActual = answer.toUInt(&ok);
                         m_fEnergy = 1.0 * m_nEnergyCounterActual / (m_pRefConstantPar->getValue().toDouble() * mEnergyUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in MWh, kWh, Wh depends on selected unit for user input
                     }
                 }
-                else
-                {
-                    {
-                        emit errMsg((tr(readsecregisterErrMsg)));
+                else {
+                    emit errMsg((tr(readsecregisterErrMsg)));
 #ifdef DEBUG
-                        qDebug() << readsecregisterErrMsg;
+                    qDebug() << readsecregisterErrMsg;
 #endif
-                        emit executionError();
-                    }
+                    emit executionError();
                 }
                 break;
             }
@@ -570,49 +566,41 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case actualizepower:
             {
-                if (reply == ack)
-                {
-                    // Ignore post final responses
-                    if(!m_finalResultStateMachine.isRunning()) {
+                if (reply == ack) {
+                    // keep last values on (pending) abort / ignore post final responses
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_fTimeSecondsActual = double(answer.toUInt(&ok)) * 0.001;
                         m_fPower = m_fEnergy * 3600.0 / m_fTimeSecondsActual; // in MW, kW, W depends on selected unit for user input
                         m_pPowerAct->setValue(m_fPower);
                         m_pTimeAct->setValue(m_fTimeSecondsActual);
                     }
                 }
-                else
-                {
-                    {
-                        emit errMsg((tr(readsecregisterErrMsg)));
+                else {
+                    emit errMsg((tr(readsecregisterErrMsg)));
 #ifdef DEBUG
-                        qDebug() << readsecregisterErrMsg;
+                    qDebug() << readsecregisterErrMsg;
 #endif
-                        emit executionError();
-                    }
+                    emit executionError();
                 }
                 break;
             }
 
             case actualizestatus:
             {
-                if (reply == ack)
-                {
-                    // Ignore post final responses (and don't override abort status)
-                    if(!m_finalResultStateMachine.isRunning()) {
+                if (reply == ack) {
+                    // keep last values on (pending) abort / ignore post final responses
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         // once ready we leave status ready (continous mode)
                         m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
                         m_pStatusAct->setValue(QVariant(m_nStatus));
                     }
                 }
-                else
-                {
-                    {
-                        emit errMsg((tr(readsecregisterErrMsg)));
+                else {
+                    emit errMsg((tr(readsecregisterErrMsg)));
 #ifdef DEBUG
-                        qDebug() << readsecregisterErrMsg;
+                    qDebug() << readsecregisterErrMsg;
 #endif
-                        emit executionError();
-                    }
+                    emit executionError();
                 }
                 break;
             }
@@ -799,7 +787,18 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readvicount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    m_nEnergyCounterFinal = answer.toLongLong(&ok);
+                    // On high frequency measurements chances are high
+                    // that an abort comes in while we fetch final energy counter.
+                    // All aborts (user / change ranges) stop measurement and that
+                    // latches incomplete counter values.
+                    // We have an abort check in setECResultAndResetInt but that is
+                    // not enough. Test case:
+                    // * Run high frequency continous measurement
+                    // * Stop it (all OK up here)
+                    // * Change DUT constant/unit -> Crap results
+                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                        m_nEnergyCounterFinal = answer.toLongLong(&ok);
+                    }
                     emit interruptContinue();
                 }
                 else
@@ -930,13 +929,7 @@ void cSem1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
-    if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0) {
-        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
-        m_nStatus = ECALCSTATUS::ABORT;
-        m_pStatusAct->setValue(QVariant(m_nStatus));
-        m_pStartStopPar->setValue(QVariant(0));
-        m_ActualizeTimer.stop();
-    }
+    stopMeasuerment(true);
 }
 
 
@@ -1400,24 +1393,16 @@ void cSem1ModuleMeasProgram::newStartStop(QVariant startstop)
     }
     else
     {
-        if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0)
-        {
+        if (m_ConfigData.m_bTargeted.m_nActive > 0) {
+            stopMeasuerment(true);
+        }
+        else {
             m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
-            if (m_ConfigData.m_bTargeted.m_nActive > 0)
-            {
-                m_nStatus = ECALCSTATUS::ABORT;
-                m_pStatusAct->setValue(QVariant(m_nStatus));
-                m_pStartStopPar->setValue(QVariant(0));
-                m_ActualizeTimer.stop();
-            }
-            else
-            {
-                // if we are not "targeted" we handle pressing stop as if the
-                // measurement became ready and an interrupt occured
-                if (!m_finalResultStateMachine.isRunning()) {
-                    m_finalResultStateMachine.start();
-                    m_ActualizeTimer.stop();
-                }
+            m_ActualizeTimer.stop();
+            // if we are not "targeted" we handle pressing stop as if the
+            // measurement became ready and an interrupt occured
+            if (!m_finalResultStateMachine.isRunning()) {
+                m_finalResultStateMachine.start();
             }
         }
     }
@@ -1519,6 +1504,17 @@ void cSem1ModuleMeasProgram::Actualize()
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_Slave2Ecalculator.name, ECALCREG::MTCNTact)] = actualizepower;
+}
+
+void cSem1ModuleMeasProgram::stopMeasuerment(bool bAbort)
+{
+    if(bAbort) {
+        m_nStatus = ECALCSTATUS::ABORT;
+        m_pStatusAct->setValue(QVariant(m_nStatus));
+    }
+    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
+    m_pStartStopPar->setValue(QVariant(0));
+    m_ActualizeTimer.stop();
 }
 
 
