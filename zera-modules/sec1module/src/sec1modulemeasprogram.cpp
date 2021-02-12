@@ -984,13 +984,7 @@ void cSec1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
-    if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0) {
-        m_nStatus = ECALCSTATUS::ABORT;
-        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
-        m_pStatusAct->setValue(QVariant(m_nStatus));
-        m_pStartStopPar->setValue(QVariant(0));
-        m_ActualizeTimer.stop();
-    }
+    stopMeasuerment(true);
 }
 
 
@@ -1566,24 +1560,26 @@ void cSec1ModuleMeasProgram::checkForRestart()
     bool bRestartRequired = false;
     bool bStopRequired = false;
 
-    if(m_pContinuousPar->getValue().toInt() != 0) {
-        // Continuous measurement on HK is performed as multiple measurement
-        if(m_pDutInputPar->getValue().toString().contains("HK")) {
-            bRestartRequired = true;
+    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+        if(m_pContinuousPar->getValue().toInt() != 0) {
+            // Continuous measurement on HK is performed as multiple measurement
+            if(m_pDutInputPar->getValue().toString().contains("HK")) {
+                bRestartRequired = true;
+            }
+        }
+        else {
+            if(m_nMeasurementsToGo > 0) {
+                bRestartRequired = --m_nMeasurementsToGo > 0;
+            }
+            if(!bRestartRequired) { // either or
+                bStopRequired = true;
+            }
         }
     }
-    else {
-        if(m_nMeasurementsToGo > 0) {
-            bRestartRequired = --m_nMeasurementsToGo > 0;
-        }
-        if(!bRestartRequired) { // either or
-            bStopRequired = true;
-        }
-    }
+    // ECALCSTATUS::ABORT: stopMeasuerment(true) has stopped already -> no need to stop here again
 
     if(bStopRequired) {
-        m_pStartStopPar->setValue(QVariant(0)); // restart enable
-        newStartStop(QVariant(0)); // we don't get a signal from notification of setvalue ....
+        stopMeasuerment(false);
     }
     else if(bRestartRequired) {
         // Notes on re-start:
@@ -1633,14 +1629,8 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
         // meas mode setzen + arm
         // m_ActualizeTimer.start(m_ConfigData.m_fMeasInterval*1000.0);
     }
-    else
-    {
-        if ((m_nStatus & (ECALCSTATUS::ARMED | ECALCSTATUS::STARTED)) != 0)
-            m_nStatus = ECALCSTATUS::ABORT;
-        m_pStatusAct->setValue(QVariant(m_nStatus));
-        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
-        m_pStartStopPar->setValue(QVariant(0));
-        m_ActualizeTimer.stop();
+    else {
+        stopMeasuerment(true);
     }
 }
 
@@ -1794,6 +1784,17 @@ void cSec1ModuleMeasProgram::Actualize()
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
+}
+
+void cSec1ModuleMeasProgram::stopMeasuerment(bool bAbort)
+{
+    if(bAbort) {
+        m_nStatus = ECALCSTATUS::ABORT;
+        m_pStatusAct->setValue(QVariant(m_nStatus));
+    }
+    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
+    m_pStartStopPar->setValue(QVariant(0));
+    m_ActualizeTimer.stop();
 }
 
 
