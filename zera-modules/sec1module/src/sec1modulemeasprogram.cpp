@@ -403,7 +403,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pMulResultArray = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("ACT_MulResult"),
                                                QString("Multiple measurements: JSON result array / statistics"),
-                                               QVariant(QString()));
+                                               QVariant(multiResultToJson()));
     m_pModule->veinModuleParameterHash[key] = m_pMulResultArray; // and for the modules interface
     m_pMulResultArray->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STJARRAY").arg(modNr), "2", m_pMulResultArray->getName(), "0", ""));
 }
@@ -1041,12 +1041,17 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     }
 }
 
-void cSec1ModuleMeasProgram::multiResultToVein()
+const QString cSec1ModuleMeasProgram::multiResultToJson()
 {
     QJsonObject jsonObject = m_multipleResultHelper.getJSONStatistics();
     jsonObject.insert("values", m_multipleResultHelper.getJSONArray());
     QJsonDocument jsonDoc(jsonObject);
-    m_pMulResultArray->setValue(QString::fromUtf8(jsonDoc.toJson(QJsonDocument::Compact)));
+    return QString::fromUtf8(jsonDoc.toJson(QJsonDocument::Compact));
+}
+
+void cSec1ModuleMeasProgram::multiResultToVein()
+{
+    m_pMulResultArray->setValue(multiResultToJson());
     m_pMulCountAct->setValue(m_multipleResultHelper.getCountTotal());
 }
 
