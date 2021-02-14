@@ -230,7 +230,7 @@ private:
     quint32 m_nIntReg;
     qint32 m_nMeasurementsToGo;
     quint32 m_nMeasurementNo;
-    static constexpr quint32 m_nMulMeasStoredMax = 300; // config?
+    static constexpr quint32 m_nMulMeasStoredMax = 400; // config?
     // TODO: Move MultipleResultHelper to a more common place
     class MultipleResultHelper {
     public:
