@@ -213,6 +213,7 @@ private:
     void handleSECInterrupt();
     void cmpDependencies();
 
+    const QString multiResultToJson();
     void multiResultToVein();
 
     // vars dealing with error measurement
