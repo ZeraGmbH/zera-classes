@@ -258,10 +258,10 @@ void cSpm1ModuleMeasProgram::generateInterface()
     m_pMeasTimePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_MeasTime"),
                                               QString("Component for reading and setting the modules measuring time"),
-                                              QVariant((double)0.0));
+                                              QVariant((quint32)10));
     m_pMeasTimePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MTIME").arg(modNr), "10", m_pMeasTimePar->getName(), "0", "sec"));
     m_pModule->veinModuleParameterHash[key] = m_pMeasTimePar; // for modules use
-    iValidator = new cIntValidator(0, 4294967, 1); // we count 32bit in ms ....
+    iValidator = new cIntValidator(1, Zera::Server::cSECInterface::maxSecCounterInitVal / 1000, 1); // counter in ms
     m_pMeasTimePar->setValidator(iValidator);
 
     m_pT0InputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -1229,7 +1229,7 @@ void cSpm1ModuleMeasProgram::setSync2()
 void cSpm1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pTargetedPar->getValue().toInt() == 0)
-        m_nTimerCountStart = std::numeric_limits<quint32>::max() - 1; // we simply set max. time -> approx. 50 days
+        m_nTimerCountStart = Zera::Server::cSECInterface::maxSecCounterInitVal; // we simply set max. time -> approx. 50 days
     else
         m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
 
