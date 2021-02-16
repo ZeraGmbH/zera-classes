@@ -67,6 +67,7 @@ public:
 
     virtual quint32 registerNotifier(QString query); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
+    static constexpr quint32 maxSecCounterInitVal = std::numeric_limits<quint32>::max() - 1;
 
 signals:
     void tcpError(QAbstractSocket::SocketError errorCode);
