@@ -13,6 +13,7 @@
 #include "secinputinfo.h"
 #include "secinterface.h"
 #include "ecalcinfo.h"
+#include "clientactivecomponent.h"
 
 namespace Zera
 {
@@ -197,6 +198,9 @@ private:
     cVeinModuleParameter* m_pMulCountAct;
     cVeinModuleParameter* m_pMulResultArray;
 
+    cVeinModuleParameter* m_pClientNotifierPar;
+    ClientActiveComponent m_ClientActiveNotifier;
+
 
     cStringValidator *m_pDutConstanstUnitValidator;
     QString m_sDutConstantUnit;
@@ -231,7 +235,12 @@ private:
     quint32 m_nIntReg;
     qint32 m_nMeasurementsToGo;
     quint32 m_nMeasurementNo;
-    static constexpr quint32 m_nMulMeasStoredMax = 400; // config?
+
+    // Some decisions - we have enough of configration params around
+    static constexpr quint32 m_nMulMeasStoredMax = 400;
+    static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
+    static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
+
     // TODO: Move MultipleResultHelper to a more common place
     /**
      * @brief Class MultipleResultHelper: Collect multple results / calculate statistics / out as JSON
@@ -353,8 +362,8 @@ private slots:
     void newUpperLimit(QVariant limit);
     void newLowerLimit(QVariant limit);
 
-
     void Actualize();
+    void clientActivationChanged(bool bActive);
     void stopMeasuerment(bool bAbort);
     bool found(QList<QString>& list, QString searched);
 

@@ -186,6 +186,8 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, Zera::Proxy:
     mPowerUnitFactorHash["MVA"] = 1000.0;
     mPowerUnitFactorHash["kVA"] = 1.0;
     mPowerUnitFactorHash["VA"] = 0.001;
+
+    m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
 }
 
 
@@ -357,6 +359,19 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                                QVariant((int) -1));
     m_pModule->veinModuleParameterHash[key] = m_pRatingAct; // and for the modules interface
     m_pRatingAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RATING").arg(modNr), "2", m_pRatingAct->getName(), "0", ""));
+
+    m_pClientNotifierPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           key = QString("PAR_ClientActiveNotify"),
+                                           QString("By changing this component, a client asks us for max actualize performance"),
+                                           QVariant((quint32)0));
+    // unfortunately we cannot live without SCPI and validator here...
+    m_pClientNotifierPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ACTIVEPING").arg(modNr), "10", m_pClientNotifierPar->getName(), "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pClientNotifierPar; // for modules use
+    iValidator = new cIntValidator(0, std::numeric_limits<quint32>::max(), 1);
+    m_pClientNotifierPar->setValidator(iValidator);
+    m_ClientActiveNotifier.init(m_pClientNotifierPar);
+    connect(&m_ClientActiveNotifier, &ClientActiveComponent::clientActiveStateChanged, this, &cSpm1ModuleMeasProgram::clientActivationChanged);
+
 }
 
 
@@ -1292,7 +1307,7 @@ void cSpm1ModuleMeasProgram::startMeasurement()
 void cSpm1ModuleMeasProgram::startMeasurementDone()
 {
     Actualize(); // we actualize at once after started
-    m_ActualizeTimer.start(m_ConfigData.m_fActualizeInterval*1000.0); // and after configured interval
+    m_ActualizeTimer.start(); // and after current interval
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
     m_fPower = 0.0;
@@ -1392,7 +1407,7 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
         // master -> Input mux setzen
         // slave1 + slave2 -> Input mux setzen
         // meas mode setzen + arm
-        // m_ActualizeTimer.start(m_ConfigData.m_fMeasInterval*1000.0);
+        // m_ActualizeTimer.start();
     }
     else
     {
@@ -1507,6 +1522,12 @@ void cSpm1ModuleMeasProgram::Actualize()
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_Slave2Ecalculator.name, ECALCREG::MTCNTact)] = actualizepower;
+}
+
+void cSpm1ModuleMeasProgram::clientActivationChanged(bool bActive)
+{
+    // Adjust our m_ActualizeTimer timeout to our client's needs
+    m_ActualizeTimer.setInterval(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
 }
 
 

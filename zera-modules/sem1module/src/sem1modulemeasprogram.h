@@ -13,6 +13,7 @@
 #include "secinputinfo.h"
 #include "secinterface.h"
 #include "ecalcinfo.h"
+#include "clientactivecomponent.h"
 
 namespace Zera
 {
@@ -193,6 +194,9 @@ private:
     cVeinModuleParameter* m_pLowerLimitPar;
     cVeinModuleParameter* m_pRatingAct;
 
+    cVeinModuleParameter* m_pClientNotifierPar;
+    ClientActiveComponent m_ClientActiveNotifier;
+
     void setInterfaceComponents();
     void setValidators();
     void setUnits();
@@ -219,6 +223,10 @@ private:
     double m_fEnergy;
     double m_fPower;
     quint32 m_nIntReg;
+
+    // Some decisions - we have enough of configration params around
+    static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
+    static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
 
 private slots:
     void resourceManagerConnect();
@@ -275,6 +283,7 @@ private slots:
     void newLowerLimit(QVariant limit);
 
     void Actualize();
+    void clientActivationChanged(bool bActive);
     void stopMeasuerment(bool bAbort);
     bool found(QList<QString>& list, QString searched);
 

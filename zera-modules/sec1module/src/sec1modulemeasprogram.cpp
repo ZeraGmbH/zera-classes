@@ -170,6 +170,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     connect(&m_readMTCountactState, SIGNAL(entered()), SLOT(readMTCountact()));
     connect(&m_calcResultAndResetIntState, SIGNAL(entered()), SLOT(setECResultAndResetInt()));
     connect(&m_FinalState, SIGNAL(entered()), SLOT(checkForRestart()));
+
+    m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
 }
 
 
@@ -321,6 +323,17 @@ void cSec1ModuleMeasProgram::generateInterface()
     iValidator = new cIntValidator(1, m_nMulMeasStoredMax, 1);
     m_pMeasCountPar->setValidator(iValidator);
 
+    m_pClientNotifierPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           key = QString("PAR_ClientActiveNotify"),
+                                           QString("By changing this component, a client asks us for max actualize performance"),
+                                           QVariant((quint32)0));
+    // unfortunately we cannot live without SCPI and validator here...
+    m_pClientNotifierPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ACTIVEPING").arg(modNr), "10", m_pClientNotifierPar->getName(), "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pClientNotifierPar; // for modules use
+    iValidator = new cIntValidator(0, std::numeric_limits<quint32>::max(), 1);
+    m_pClientNotifierPar->setValidator(iValidator);
+    m_ClientActiveNotifier.init(m_pClientNotifierPar);
+    connect(&m_ClientActiveNotifier, &ClientActiveComponent::clientActiveStateChanged, this, &cSec1ModuleMeasProgram::clientActivationChanged);
 
     // after configuration we still have to set the string validators
 
@@ -1468,7 +1481,7 @@ void cSec1ModuleMeasProgram::startMeasurement()
 void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMeasurementMachine
 {
     Actualize(); // we acualize at once after started
-    m_ActualizeTimer.start(m_ConfigData.m_fMeasInterval*1000.0); // and after configured interval
+    m_ActualizeTimer.start(); // and after current interval
 }
 
 
@@ -1632,7 +1645,7 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
         // master -> Input mux setzen
         // slave -> Input mux setzen
         // meas mode setzen + arm
-        // m_ActualizeTimer.start(m_ConfigData.m_fMeasInterval*1000.0);
+        // m_ActualizeTimer.start();
     }
     else {
         stopMeasuerment(true);
@@ -1789,6 +1802,12 @@ void cSec1ModuleMeasProgram::Actualize()
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
+}
+
+void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
+{
+    // Adjust our m_ActualizeTimer timeout to our client's needs
+    m_ActualizeTimer.setInterval(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
 }
 
 void cSec1ModuleMeasProgram::stopMeasuerment(bool bAbort)
