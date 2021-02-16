@@ -48,7 +48,6 @@ void cSem1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sem1modconfpar:configuration:measure:reactiveunits:n"] = setReactiveUnitCount;
     m_ConfigXMLMap["sem1modconfpar:configuration:measure:apparentunits:n"] = setApparentUnitCount;
     m_ConfigXMLMap["sem1modconfpar:configuration:measure:embedded"] = setEmbedded;
-    m_ConfigXMLMap["sem1modconfpar:configuration:measure:interval"] = setActualizeInterval;
 
     m_ConfigXMLMap["sem1modconfpar:parameter:measure:refinput"] = setRefInput;
     m_ConfigXMLMap["sem1modconfpar:parameter:measure:targeted"] = setTargeted;
@@ -175,9 +174,6 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
         }
         case setEmbedded:
             m_pSem1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
-            break;
-        case setActualizeInterval:
-            m_pSem1ModulConfigData->m_fActualizeInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setRefInput:
             m_pSem1ModulConfigData->m_sRefInput.m_sKey = key;

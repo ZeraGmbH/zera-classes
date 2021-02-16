@@ -20,7 +20,6 @@ enum moduleconfigstate
     setPCBServerPort,
     setSEMServerIp,
     setSEMServerPort,
-    setActualizeInterval,
     setRefInputCount,
     setActiveUnitCount,
     setReactiveUnitCount,

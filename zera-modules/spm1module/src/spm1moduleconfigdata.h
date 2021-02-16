@@ -55,7 +55,6 @@ public:
     quint8 m_nApparentUnitCount;
     QList<QString> m_ApparentUnitList;
     bool m_bEmbedded;
-    double m_fActualizeInterval; // actualize interval 0.2 .. 5.0 sec. (time between actualizations)
     intParameter m_nMeasTime; // time in sec. from 0 to 7200
     boolParameter m_bTargeted;
     doubleParameter m_fUpperLimit;

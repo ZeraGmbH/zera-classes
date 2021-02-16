@@ -69,14 +69,6 @@
     </xs:complexType>
 
 
-    <xs:simpleType name="measureintervaltype">
-        <xs:restriction base="xs:decimal">
-            <xs:minInclusive value="0.2"/>
-            <xs:maxInclusive value="5.0"/>
-        </xs:restriction>
-    </xs:simpleType>
-
-
     <xs:simpleType name="errorlimitvaltype">
         <xs:restriction base="xs:decimal">
             <xs:minInclusive value="-100.0"/>
@@ -234,7 +226,6 @@
             <xs:element name="embedded" type="yesnotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="dutinput" type="dutinputtype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="refinput" type="refinputtype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="interval" type="measureintervaltype"/>
         </xs:sequence>
     </xs:complexType>
 
