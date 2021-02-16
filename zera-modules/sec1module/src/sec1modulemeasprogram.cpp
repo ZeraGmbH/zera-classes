@@ -1857,10 +1857,10 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
     else if(qIsInf(value)) {
         value = 100.0;
     }
-    if(eRating == ECALCRESULT::RESULT_UNFINISHED) { // can this happen ? / should we store it with -100% ?
+    if(eRating == ECALCRESULT::RESULT_UNFINISHED) { // can this happen ?
         value = -100.0;
     }
-    // standard deviations (there have been loads of discusson about the n or
+    // standard deviations: There have been loads of discussons about the n or
     // n-1 in the past. To avoid that: calc both
     m_fAccumulSum += value;
     double fResultCount = m_jsonArray.count();

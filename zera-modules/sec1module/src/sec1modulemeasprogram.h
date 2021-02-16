@@ -233,15 +233,50 @@ private:
     quint32 m_nMeasurementNo;
     static constexpr quint32 m_nMulMeasStoredMax = 400; // config?
     // TODO: Move MultipleResultHelper to a more common place
+    /**
+     * @brief Class MultipleResultHelper: Collect multple results / calculate statistics / out as JSON
+     */
     class MultipleResultHelper {
     public:
+        /**
+         * @brief clear: Clear resulr array / reset statistics
+         */
         void clear();
+        /**
+         * @brief append: Add a reault to our array / update statistics
+         * @param fResult: Result value
+         * @param eRating: Result evaluation - see ECALCRESULT::enResultTypes
+         * @param fLowerLimit: Lower limit, the result was caclulated with
+         * @param fUpperLimit: Upper limit, the result was caclulated with
+         */
         void append(const double fResult,
                     const enum ECALCRESULT::enResultTypes eRating,
                     const double fLowerLimit,
                     const double fUpperLimit);
+        /**
+         * @brief getCountTotal
+         * @return Number of results in array
+         */
         quint32 getCountTotal();
+        /**
+         * @brief getJSONArray: return JSON result array
+         * @return JSON array as: { "LL": <LowerLimit>,
+         *                          "UL": <UpperLimit>,
+         *                          "V" : ResultValue,
+         *                          "R" : <Rating(Evaluation)>
+         *                        }
+         */
         const QJsonArray &getJSONArray();
+        /**
+         * @brief getJSONStatistics: return JSON object containing simple statistic values
+         * @return { "countPass: <count of passed results>,
+         *           "countFail": <count of passed results>,
+         *           "countUnfinish": <count of unfinished results>,
+         *           "mean"; <mean (average) value,
+         *           "stddevN": <statndard deviantion / n in denominator,
+         *           "stddevN1": <statndard deviantion / (n-1) in denominator,
+         *          }
+         */
         const QJsonObject getJSONStatistics();
     private:
         double m_fMeanValue = qQNaN();
@@ -251,6 +286,10 @@ private:
         int m_iCountPass = 0;
         int m_iCountFail = 0;
         int m_iCountUnfinish = 0;
+        /**
+         * @note To avoid iterating whole result list to calculate statistics
+         * we keep accumulated sums required
+         */
         double m_fAccumulSum = 0.0;
         double m_fStdDevAccumulSquare = 0.0;
     };
