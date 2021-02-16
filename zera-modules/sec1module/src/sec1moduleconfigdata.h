@@ -55,7 +55,6 @@ public:
     QList<QString> m_ModeList;
     bool m_bEmbedded;
     stringParameter m_sMode;
-    double m_fMeasInterval; // measuring interval 0.2 .. 5.0 sec. (time between actualizations)
     doubleParameter m_fDutConstant;
     doubleParameter m_fRefConstant;
     boolParameter m_bContinous;

@@ -20,7 +20,6 @@ enum moduleconfigstate
     setPCBServerPort,
     setSECServerIp,
     setSECServerPort,
-    setMeasureInterval,
     setDutInputCount,
     setRefInputCount,
     setModeCount,

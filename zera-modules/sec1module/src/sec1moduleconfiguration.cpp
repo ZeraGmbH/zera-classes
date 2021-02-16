@@ -47,7 +47,6 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:modes:n"] = setModeCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:embedded"] = setEmbedded;
-    m_ConfigXMLMap["sec1modconfpar:configuration:measure:interval"] = setMeasureInterval;
 
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutinput"] = setDutInputPar;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:refinput"] = setRefInputPar;
@@ -190,9 +189,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
         }
         case setEmbedded:
             m_pSec1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
-            break;
-        case setMeasureInterval:
-            m_pSec1ModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
             break;
         case setDutInputPar:
             m_pSec1ModulConfigData->m_sDutInput.m_sKey = key;
