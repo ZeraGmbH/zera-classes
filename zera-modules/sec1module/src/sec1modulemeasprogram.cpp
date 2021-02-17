@@ -1814,7 +1814,9 @@ void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
 
 void cSec1ModuleMeasProgram::stopMeasuerment(bool bAbort)
 {
-    if(bAbort) {
+    // Do not post-abort a measurement finished properly e.g by changing
+    // ranges...
+    if(bAbort && m_nStatus != ECALCSTATUS::READY) {
         m_nStatus = ECALCSTATUS::ABORT;
         m_pStatusAct->setValue(QVariant(m_nStatus));
     }

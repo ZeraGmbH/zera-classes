@@ -216,6 +216,7 @@ private:
     void handleChangedREFConst();
     void handleSECInterrupt();
     void cmpDependencies();
+    void stopMeasuerment(bool bAbort);
 
     const QString multiResultToJson();
     void multiResultToVein();
@@ -378,7 +379,6 @@ private slots:
 
     void Actualize();
     void clientActivationChanged(bool bActive);
-    void stopMeasuerment(bool bAbort);
     bool found(QList<QString>& list, QString searched);
 
 };
