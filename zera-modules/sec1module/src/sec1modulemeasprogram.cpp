@@ -1057,7 +1057,8 @@ void cSec1ModuleMeasProgram::cmpDependencies()
 const QString cSec1ModuleMeasProgram::multiResultToJson()
 {
     QJsonObject jsonObject = m_multipleResultHelper.getJSONStatistics();
-    jsonObject.insert("values", m_multipleResultHelper.getJSONArray());
+    jsonObject.insert("limits", m_multipleResultHelper.getJSONLimitsArray());
+    jsonObject.insert("values", m_multipleResultHelper.getJSONResultArray());
     QJsonDocument jsonDoc(jsonObject);
     return QString::fromUtf8(jsonDoc.toJson(QJsonDocument::Compact));
 }
@@ -1837,10 +1838,13 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::clear()
     m_fStdDevn = qQNaN();
     m_fStdDevn1 = qQNaN();
     m_fStdDevAccumulSquare = 0.0;
-    m_jsonArray = QJsonArray();
+    m_jsonResultArray = QJsonArray();
     m_iCountPass = 0;
     m_iCountUnfinish = 0;
     m_iCountFail = 0;
+    m_jsonLimitArray = QJsonArray();
+    m_fLastLowerLimit = qQNaN();
+    m_fLastUpperLimit = qQNaN();
 }
 
 void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
@@ -1848,14 +1852,24 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
                                                           const double fLowerLimit,
                                                           const double fUpperLimit)
 {
-    // -> json - short names to reduce size
-    QJsonObject jsonObject {
-        { "LL", fLowerLimit },
-        { "UL", fUpperLimit },
+    // limits
+    // note: limits are not results of a calculation so we can comape on equality
+    if(m_fLastLowerLimit != fLowerLimit || m_fLastUpperLimit != fUpperLimit) {
+        QJsonObject jsonObjectLimits {
+            { "IDX", m_jsonResultArray.count() /* value not added yet */ },
+            { "LL", fLowerLimit },
+            { "UL", fUpperLimit }
+        };
+        m_jsonLimitArray.append(jsonObjectLimits);
+        m_fLastLowerLimit = fLowerLimit;
+        m_fLastUpperLimit = fUpperLimit;
+    }
+    // results - short names to reduce size
+    QJsonObject jsonObjectValue {
         { "V", fResult },
         { "R", int(eRating) }
     };
-    m_jsonArray.append(jsonObject);
+    m_jsonResultArray.append(jsonObjectValue);
     // some statistics
     switch(eRating) {
     case ECALCRESULT::RESULT_UNFINISHED:
@@ -1882,12 +1896,12 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
     // standard deviations: There have been loads of discussons about the n or
     // n-1 in the past. To avoid that: calc both
     m_fAccumulSum += value;
-    double fResultCount = m_jsonArray.count();
+    double fResultCount = m_jsonResultArray.count();
     m_fMeanValue = m_fAccumulSum / fResultCount;
     double currDev = value - m_fMeanValue;
     m_fStdDevAccumulSquare += currDev * currDev;
     m_fStdDevn = sqrt(m_fStdDevAccumulSquare / fResultCount);
-    if(m_jsonArray.count() > 1) {
+    if(m_jsonResultArray.count() > 1) {
         m_fStdDevn1 = sqrt(m_fStdDevAccumulSquare / (fResultCount - 1.0));
     }
     else {
@@ -1895,9 +1909,14 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
     }
 }
 
-const QJsonArray &cSec1ModuleMeasProgram::MultipleResultHelper::getJSONArray()
+const QJsonArray &cSec1ModuleMeasProgram::MultipleResultHelper::getJSONResultArray()
 {
-    return m_jsonArray;
+    return m_jsonResultArray;
+}
+
+const QJsonArray &cSec1ModuleMeasProgram::MultipleResultHelper::getJSONLimitsArray()
+{
+    return m_jsonLimitArray;
 }
 
 const QJsonObject cSec1ModuleMeasProgram::MultipleResultHelper::getJSONStatistics()
@@ -1915,7 +1934,7 @@ const QJsonObject cSec1ModuleMeasProgram::MultipleResultHelper::getJSONStatistic
 
 quint32 cSec1ModuleMeasProgram::MultipleResultHelper::getCountTotal()
 {
-    return m_jsonArray.count();
+    return m_jsonResultArray.count();
 }
 
 }
