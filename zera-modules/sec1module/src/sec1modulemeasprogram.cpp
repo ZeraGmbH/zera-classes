@@ -171,8 +171,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     connect(&m_readMTCountactState, SIGNAL(entered()), SLOT(readMTCountact()));
     connect(&m_calcResultAndResetIntState, SIGNAL(entered()), SLOT(setECResultAndResetInt()));
     connect(&m_FinalState, SIGNAL(entered()), SLOT(checkForRestart()));
-
-    m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
 }
 
 
@@ -323,6 +321,16 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pMeasCountPar; // for modules use
     iValidator = new cIntValidator(1, m_nMulMeasStoredMax, 1);
     m_pMeasCountPar->setValidator(iValidator);
+
+    m_pMeasWait = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                           key = QString("PAR_MeasWait"),
+                                           QString("Number seconds to wait on multiple measurements between measurements"),
+                                           QVariant((int)0));
+    m_pMeasWait->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MWAIT").arg(modNr), "10", m_pMeasWait->getName(), "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pMeasWait; // for modules use
+    iValidator = new cIntValidator(0, std::numeric_limits<int>::max()/1000 /* ms */, 1);
+    m_pMeasWait->setValidator(iValidator);
+    m_pMeasWait->setUnit("sec");
 
     m_pClientNotifierPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_ClientActiveNotify"),
@@ -624,8 +632,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    // keep actual values on (pending) abort
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    if(!ignorePendingActualResponse()) {
                         m_nDUTPulseCounterActual = answer.toUInt(&ok);
                         m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * m_nDUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
                         if (m_fProgress > 100.0) {
@@ -650,8 +657,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case actualizeenergy:
             {
                 if (reply == ack) {
-                    // keep last values on (pending) abort
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    if(!ignorePendingActualResponse()) {
                         m_nEnergyCounterActual = answer.toUInt(&ok);
                         m_fEnergy = m_nEnergyCounterActual / m_ConfigData.m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
@@ -679,8 +685,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    // don't override pending abort
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    if(!ignorePendingActualResponse()) {
                         // once ready we leave status ready (continous mode)
                         m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
                         m_pStatusAct->setValue(QVariant(m_nStatus));
@@ -1055,6 +1060,17 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     }
 }
 
+void cSec1ModuleMeasProgram::startNext()
+{
+    // Notes on re-start:
+    // * We don't need the whole start state machine here
+    // * There is too much magic in startMeasurement so we cannnot use it here either
+    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
+    m_nStatus = ECALCSTATUS::ARMED | ECALCSTATUS::READY;
+    m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
+    startMeasurementDone();
+}
+
 const QString cSec1ModuleMeasProgram::multiResultToJson()
 {
     QJsonObject jsonObject = m_multipleResultHelper.getJSONStatistics();
@@ -1068,6 +1084,15 @@ void cSec1ModuleMeasProgram::multiResultToVein()
 {
     m_pMulResultArray->setValue(multiResultToJson());
     m_pMulCountAct->setValue(m_multipleResultHelper.getCountTotal());
+}
+
+bool cSec1ModuleMeasProgram::ignorePendingActualResponse()
+{
+    // There are many async events after which we must not handle
+    // pending responses on actualize queries:
+    // * a result interrupt (->wait)
+    // * abort either by user or by change of ranges
+    return (m_nStatus & (ECALCSTATUS::ABORT | ECALCSTATUS::WAIT)) != 0;
 }
 
 
@@ -1352,7 +1377,11 @@ void cSec1ModuleMeasProgram::activationDone()
         mDUTSecInputSelectionHash[siInfo->alias] = siInfo;
     }
 
-    connect(&m_ActualizeTimer, SIGNAL(timeout()), this, SLOT(Actualize()));
+    m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
+    connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSec1ModuleMeasProgram::Actualize);
+    m_WaitMultiTimer.setSingleShot(true);
+    connect(&m_WaitMultiTimer, &QTimer::timeout, this, &cSec1ModuleMeasProgram::startNext);
+
     connect(m_pStartStopPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
     connect(m_pModePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
     connect(m_pDutConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstant(QVariant)));
@@ -1579,11 +1608,14 @@ void cSec1ModuleMeasProgram::checkForRestart()
 {
     bool bRestartRequired = false;
     bool bStopRequired = false;
+    // ZERA specials:
+    bool bContinuous = m_pContinuousPar->getValue().toInt() != 0;
+    bool bInputHK = m_pDutInputPar->getValue().toString().contains("HK");
 
     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
-        if(m_pContinuousPar->getValue().toInt() != 0) {
+        if(bContinuous) {
             // Continuous measurement on HK is performed as multiple measurement
-            if(m_pDutInputPar->getValue().toString().contains("HK")) {
+            if(bInputHK) {
                 bRestartRequired = true;
             }
         }
@@ -1597,18 +1629,22 @@ void cSec1ModuleMeasProgram::checkForRestart()
         }
     }
     // ECALCSTATUS::ABORT: stopMeasuerment(true) has stopped already -> no need to stop here again
-
     if(bStopRequired) {
         stopMeasuerment(false);
     }
     else if(bRestartRequired) {
-        // Notes on re-start:
-        // * We don't need the whole start state machine here
-        // * There is too much magic in startMeasurement so we cannnot use it here either
-        m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
-        m_nStatus = ECALCSTATUS::ARMED | ECALCSTATUS::READY;
-        m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
-        startMeasurementDone();
+        int waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
+        // No wait for HK / continuous / zero wait time
+        if(bInputHK || bContinuous || waitTimeMs == 0) {
+            startNext();
+        }
+        // and zzz...
+        else {
+            m_nStatus =  ECALCSTATUS::READY | ECALCSTATUS::WAIT;
+            m_pStatusAct->setValue(QVariant(m_nStatus));
+            m_WaitStartDateTime = QDateTime::currentDateTime();
+            m_WaitMultiTimer.start(waitTimeMs);
+        }
     }
 }
 
@@ -1801,9 +1837,18 @@ void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
 
 void cSec1ModuleMeasProgram::Actualize()
 {
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
+    if((m_nStatus & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
+        m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
+        m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
+        m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
+    }
+    else { // wait: actualize progress
+        double waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
+        QDateTime now = QDateTime::currentDateTime();
+        double elapsedMs = m_WaitStartDateTime.msecsTo(now);
+        m_fProgress = elapsedMs / (waitTimeMs / 100+0);
+        m_pProgressAct->setValue(QVariant(m_fProgress));
+    }
 }
 
 void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
@@ -1823,6 +1868,7 @@ void cSec1ModuleMeasProgram::stopMeasuerment(bool bAbort)
     m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer.stop();
+    m_WaitMultiTimer.stop();
 }
 
 
