@@ -268,14 +268,22 @@ private:
          */
         quint32 getCountTotal();
         /**
-         * @brief getJSONArray: return JSON result array
-         * @return JSON array as: { "LL": <LowerLimit>,
-         *                          "UL": <UpperLimit>,
-         *                          "V" : ResultValue,
+         * @brief getJSONResultArray: return JSON result array
+         * @return JSON array as: { "V" : ResultValue,
          *                          "R" : <Rating(Evaluation)>
          *                        }
          */
-        const QJsonArray &getJSONArray();
+        const QJsonArray &getJSONResultArray();
+        /**
+         * @brief getJSONResultLimits: return JSON result limit array
+         * @note In most cases (constant limits during measurement) limit array
+         * has one entry only
+         * @return JSON array as: { "IDX": <start-index in results>
+         *                          "LL": <LowerLimit>,
+         *                          "UL": <UpperLimit>,
+         *                        }
+         */
+        const QJsonArray &getJSONLimitsArray();
         /**
          * @brief getJSONStatistics: return JSON object containing simple statistic values
          * @return { "countPass: <count of passed results>,
@@ -291,10 +299,14 @@ private:
         double m_fMeanValue = qQNaN();
         double m_fStdDevn = qQNaN();
         double m_fStdDevn1 = qQNaN();
-        QJsonArray m_jsonArray;
+        QJsonArray m_jsonResultArray;
         int m_iCountPass = 0;
         int m_iCountFail = 0;
         int m_iCountUnfinish = 0;
+
+        QJsonArray m_jsonLimitArray;
+        double m_fLastLowerLimit = qQNaN();
+        double m_fLastUpperLimit = qQNaN();
         /**
          * @note To avoid iterating whole result list to calculate statistics
          * we keep accumulated sums required
