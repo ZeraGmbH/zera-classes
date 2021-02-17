@@ -632,7 +632,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    if(!ignorePendingActualResponse()) {
+                    // Still running and not waiting for next?
+                    if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
                         m_nDUTPulseCounterActual = answer.toUInt(&ok);
                         m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * m_nDUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
                         if (m_fProgress > 100.0) {
@@ -657,7 +658,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case actualizeenergy:
             {
                 if (reply == ack) {
-                    if(!ignorePendingActualResponse()) {
+                    // Still running and not waiting for next?
+                    if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
                         m_nEnergyCounterActual = answer.toUInt(&ok);
                         m_fEnergy = m_nEnergyCounterActual / m_ConfigData.m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
@@ -685,7 +687,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    if(!ignorePendingActualResponse()) {
+                    // Still running and not waiting for next?
+                    if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
                         // once ready we leave status ready (continous mode)
                         m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
                         m_pStatusAct->setValue(QVariant(m_nStatus));
@@ -896,7 +899,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // * Run high frequency continous measurement
                     // * Stop it (all OK up here)
                     // * Change DUT constant/unit -> Crap results
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    if(m_bMeasurementRunning) {
                         m_nEnergyCounterFinal = answer.toLongLong(&ok);
                     }
                     emit interruptContinue();
@@ -1003,7 +1006,7 @@ void cSec1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
     m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
-    stopMeasuerment(true);
+    stopMeasurement(true);
 }
 
 
@@ -1085,16 +1088,6 @@ void cSec1ModuleMeasProgram::multiResultToVein()
     m_pMulResultArray->setValue(multiResultToJson());
     m_pMulCountAct->setValue(m_multipleResultHelper.getCountTotal());
 }
-
-bool cSec1ModuleMeasProgram::ignorePendingActualResponse()
-{
-    // There are many async events after which we must not handle
-    // pending responses on actualize queries:
-    // * a result interrupt (->wait)
-    // * abort either by user or by change of ranges
-    return (m_nStatus & (ECALCSTATUS::ABORT | ECALCSTATUS::WAIT)) != 0;
-}
-
 
 void cSec1ModuleMeasProgram::resourceManagerConnect()
 {
@@ -1504,6 +1497,7 @@ void cSec1ModuleMeasProgram::startMeasurement()
     m_pEnergyFinalAct->setValue(m_fEnergy);
     m_fProgress = 0.0;
     m_pProgressAct->setValue(QVariant(m_fProgress));
+    m_bMeasurementRunning = true;
     // All preparations done: do start
     m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
 }
@@ -1569,7 +1563,7 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
     // Test case:
     // * Start a continous measurement with high result frequency and abort it either by
     //   requesting abort or changing the ranges
-    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+    if(m_bMeasurementRunning) {
         m_bFirstMeas = false;
 
         if (m_pContinuousPar->getValue().toInt() == 0)
@@ -1612,7 +1606,8 @@ void cSec1ModuleMeasProgram::checkForRestart()
     bool bContinuous = m_pContinuousPar->getValue().toInt() != 0;
     bool bInputHK = m_pDutInputPar->getValue().toString().contains("HK");
 
-    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+    // Still running?
+    if(m_bMeasurementRunning) {
         if(bContinuous) {
             // Continuous measurement on HK is performed as multiple measurement
             if(bInputHK) {
@@ -1628,9 +1623,9 @@ void cSec1ModuleMeasProgram::checkForRestart()
             }
         }
     }
-    // ECALCSTATUS::ABORT: stopMeasuerment(true) has stopped already -> no need to stop here again
+    // ECALCSTATUS::ABORT: stopMeasurement(true) has stopped already -> no need to stop here again
     if(bStopRequired) {
-        stopMeasuerment(false);
+        stopMeasurement(false);
     }
     else if(bRestartRequired) {
         int waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
@@ -1686,7 +1681,7 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
         // m_ActualizeTimer.start();
     }
     else {
-        stopMeasuerment(true);
+        stopMeasurement(true);
     }
 }
 
@@ -1837,17 +1832,19 @@ void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
 
 void cSec1ModuleMeasProgram::Actualize()
 {
-    if((m_nStatus & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
-        m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
-    }
-    else { // wait: actualize progress
-        double waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
-        QDateTime now = QDateTime::currentDateTime();
-        double elapsedMs = m_WaitStartDateTime.msecsTo(now);
-        m_fProgress = elapsedMs / (waitTimeMs / 100+0);
-        m_pProgressAct->setValue(QVariant(m_fProgress));
+    if(m_bMeasurementRunning) { // still running
+        if((m_nStatus & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
+            m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
+            m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
+            m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
+        }
+        else { // wait: actualize progress
+            double waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
+            QDateTime now = QDateTime::currentDateTime();
+            double elapsedMs = m_WaitStartDateTime.msecsTo(now);
+            m_fProgress = elapsedMs / (waitTimeMs / 100+0);
+            m_pProgressAct->setValue(QVariant(m_fProgress));
+        }
     }
 }
 
@@ -1857,14 +1854,15 @@ void cSec1ModuleMeasProgram::clientActivationChanged(bool bActive)
     m_ActualizeTimer.setInterval(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
 }
 
-void cSec1ModuleMeasProgram::stopMeasuerment(bool bAbort)
+void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     // Do not post-abort a measurement finished properly e.g by changing
     // ranges...
-    if(bAbort && m_nStatus != ECALCSTATUS::READY) {
+    if(bAbort && m_bMeasurementRunning) {
         m_nStatus = ECALCSTATUS::ABORT;
         m_pStatusAct->setValue(QVariant(m_nStatus));
     }
+    m_bMeasurementRunning = false;
     m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer.stop();

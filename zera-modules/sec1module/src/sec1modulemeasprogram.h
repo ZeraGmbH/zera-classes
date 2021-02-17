@@ -209,6 +209,7 @@ private:
 
     // vars dealing with error measurement
     bool m_bFirstMeas;
+    bool m_bMeasurementRunning = false;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
     quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
@@ -320,12 +321,10 @@ private:
     void handleChangedREFConst();
     void handleSECInterrupt();
     void cmpDependencies();
-    void stopMeasuerment(bool bAbort);
+    void stopMeasurement(bool bAbort);
 
     const QString multiResultToJson();
     void multiResultToVein();
-
-    bool ignorePendingActualResponse();
 
 private slots:
     void resourceManagerConnect();
