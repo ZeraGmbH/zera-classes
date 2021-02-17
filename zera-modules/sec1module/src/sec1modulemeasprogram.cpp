@@ -2,6 +2,7 @@
 #include <QString>
 #include <QStateMachine>
 #include <QJsonDocument>
+#include <QDateTime>
 #include <rminterface.h>
 #include <pcbinterface.h>
 #include <secinterface.h>
@@ -1864,10 +1865,13 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
         m_fLastLowerLimit = fLowerLimit;
         m_fLastUpperLimit = fUpperLimit;
     }
-    // results - short names to reduce size
+    // results - short names / date/time format to reduce size
+    QDateTime now = QDateTime::currentDateTime();
+    QString dtString = now.toString("yyyyMMddhhmmss");
     QJsonObject jsonObjectValue {
         { "V", fResult },
-        { "R", int(eRating) }
+        { "R", int(eRating) },
+        { "T", dtString }
     };
     m_jsonResultArray.append(jsonObjectValue);
     // some statistics

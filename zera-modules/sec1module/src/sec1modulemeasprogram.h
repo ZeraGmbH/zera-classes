@@ -269,8 +269,10 @@ private:
         quint32 getCountTotal();
         /**
          * @brief getJSONResultArray: return JSON result array
+         * @note field names are as short as possible to reduce size
          * @return JSON array as: { "V" : ResultValue,
          *                          "R" : <Rating(Evaluation)>
+         *                          "T" : <Date/Time of result in short format 'yyyyMMddhhmmss'>
          *                        }
          */
         const QJsonArray &getJSONResultArray();
