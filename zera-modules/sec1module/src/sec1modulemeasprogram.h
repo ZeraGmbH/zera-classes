@@ -8,6 +8,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <QDateTime>
 
 #include "basemeasprogram.h"
 #include "secinputinfo.h"
@@ -194,6 +195,7 @@ private:
     cVeinModuleParameter* m_pLowerLimitPar;
     cVeinModuleParameter* m_pRatingAct;
     cVeinModuleParameter* m_pMeasCountPar;
+    cVeinModuleParameter* m_pMeasWait;
     cVeinModuleParameter* m_pMeasNumAct;
     cVeinModuleParameter* m_pMulCountAct;
     cVeinModuleParameter* m_pMulResultArray;
@@ -204,22 +206,6 @@ private:
 
     cStringValidator *m_pDutConstanstUnitValidator;
     QString m_sDutConstantUnit;
-
-    void setInterfaceComponents();
-    void setValidators();
-
-    QStringList getDutConstUnitValidator();
-    QString getEnergyUnit();
-    void initDutConstantUnit(QStringList sl);
-    void initDutConstantUnit();
-
-    void handleChangedREFConst();
-    void handleSECInterrupt();
-    void cmpDependencies();
-    void stopMeasuerment(bool bAbort);
-
-    const QString multiResultToJson();
-    void multiResultToVein();
 
     // vars dealing with error measurement
     bool m_bFirstMeas;
@@ -234,14 +220,17 @@ private:
     double m_fProgress; // progress value in %
     double m_fEnergy;
     quint32 m_nIntReg;
-    qint32 m_nMeasurementsToGo;
-    quint32 m_nMeasurementNo;
 
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nMulMeasStoredMax = 400;
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
     static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
 
+    // Multiple measurements
+    qint32 m_nMeasurementsToGo;
+    quint32 m_nMeasurementNo;
+    QTimer m_WaitMultiTimer;
+    QDateTime m_WaitStartDateTime;
     // TODO: Move MultipleResultHelper to a more common place
     /**
      * @brief Class MultipleResultHelper: Collect multple results / calculate statistics / out as JSON
@@ -319,6 +308,25 @@ private:
     };
     MultipleResultHelper m_multipleResultHelper;
 
+    // methods
+    void setInterfaceComponents();
+    void setValidators();
+
+    QStringList getDutConstUnitValidator();
+    QString getEnergyUnit();
+    void initDutConstantUnit(QStringList sl);
+    void initDutConstantUnit();
+
+    void handleChangedREFConst();
+    void handleSECInterrupt();
+    void cmpDependencies();
+    void stopMeasuerment(bool bAbort);
+
+    const QString multiResultToJson();
+    void multiResultToVein();
+
+    bool ignorePendingActualResponse();
+
 private slots:
     void resourceManagerConnect();
     void sendRMIdent();
@@ -378,9 +386,9 @@ private slots:
     void newLowerLimit(QVariant limit);
 
     void Actualize();
+    void startNext();
     void clientActivationChanged(bool bActive);
     bool found(QList<QString>& list, QString searched);
-
 };
 }
 
