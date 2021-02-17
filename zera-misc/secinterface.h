@@ -18,7 +18,18 @@ namespace ECALCCMDID {
 }
 
 namespace ECALCSTATUS {
-    enum { IDLE, ARMED, STARTED = 2, READY = 4, ABORT = 8};
+    /* Note: SEC currently uses 7 least significant bits. Since we need additional
+     * bits to signal states (e.g wait), we use topmost bits for that.
+     */
+    enum {
+        // SEC bits:
+        ARMED   = (1<<0),
+        STARTED = (1<<1),
+        READY   = (1<<2),
+        ABORT   = (1<<3),
+        // module-specific bits - see note above
+        WAIT    = (1<<31)
+    };
 }
 
 namespace ECALCINT {

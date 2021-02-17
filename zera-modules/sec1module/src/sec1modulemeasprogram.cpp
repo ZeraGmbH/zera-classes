@@ -341,7 +341,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pStatusAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Status"),
                                             QString("Component holds status information"),
-                                            QVariant((int) ECALCSTATUS::IDLE) );
+                                            QVariant((int)0) );
     m_pModule->veinModuleParameterHash[key] =  m_pStatusAct; // for modules use
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
 
