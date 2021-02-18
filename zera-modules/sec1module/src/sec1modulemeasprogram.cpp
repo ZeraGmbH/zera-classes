@@ -1940,7 +1940,7 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
     else if(qIsInf(value)) {
         value = 100.0;
     }
-    if(eRating == ECALCRESULT::RESULT_UNFINISHED) { // can this happen ?
+    if(eRating == ECALCRESULT::RESULT_UNFINISHED) { // yes have seen that on HK
         value = -100.0;
     }
     // standard deviations: There have been loads of discussons about the n or
