@@ -70,7 +70,7 @@
 
 
     <xs:simpleType name="errorlimitvaltype">
-        <xs:restriction base="xs:decimal">
+        <xs:restriction base="xs:float">
             <xs:minInclusive value="-100.0"/>
             <xs:maxInclusive value="100.0"/>
         </xs:restriction>
