@@ -1703,12 +1703,7 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     bool ok;
     m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
     setInterfaceComponents();
-    quint32 flagsForRecalc = ECALCSTATUS::READY;
-    if (m_pContinuousPar->getValue().toInt() != 0) {
-        // continuous measurement keeps last result on abort
-        flagsForRecalc |= ECALCSTATUS::ABORT;
-    }
-    if(m_bActive && (m_nStatus & flagsForRecalc)) {
+    if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
         setECResult();
     }
 
