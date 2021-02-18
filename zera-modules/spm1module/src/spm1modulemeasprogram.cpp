@@ -801,15 +801,10 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readvicount:
                 if (reply == ack) // we only continue if sec server acknowledges
                 {
-                    // On high frequency measurements chances are high
-                    // that an abort comes in while we fetch final energy counter.
-                    // All aborts (user / change ranges) stop measurement and that
-                    // latches incomplete counter values.
-                    // We have an abort check in setECResultAndResetInt but that is
-                    // not enough. Test case:
-                    // * Run high frequency continous measurement
-                    // * Stop it (all OK up here)
-                    // * Change DUT constant/unit -> Crap results
+                    // Although we do not have high frequency measurements,
+                    // incorporate still running check as we learned from sec1
+                    // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
+                    // case readvicount
                     if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
                         m_nEnergyCounterFinal = answer.toLongLong(&ok);
                     }
