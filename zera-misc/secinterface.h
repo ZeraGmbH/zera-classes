@@ -28,7 +28,8 @@ namespace ECALCSTATUS {
         READY   = (1<<2),
         ABORT   = (1<<3),
         // module-specific bits - see note above
-        WAIT    = (1<<31)
+        WAIT    = (1<<30),
+        NOOP    = (1<<31) // on 32 Bit (QML) clients the causes trouble
     };
 }
 
