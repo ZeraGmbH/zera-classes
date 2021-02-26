@@ -301,11 +301,9 @@ private:
         double m_fLastLowerLimit = qQNaN();
         double m_fLastUpperLimit = qQNaN();
         /**
-         * @note To avoid iterating whole result list to calculate statistics
-         * we keep accumulated sums required
+         * @note To avoid one iteration of all results we keep accumulated sum
          */
         double m_fAccumulSum = 0.0;
-        double m_fStdDevAccumulSquare = 0.0;
     };
     MultipleResultHelper m_multipleResultHelper;
 

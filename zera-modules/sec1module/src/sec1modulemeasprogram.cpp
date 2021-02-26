@@ -1879,7 +1879,6 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::clear()
     m_fMeanValue = qQNaN();
     m_fStdDevn = qQNaN();
     m_fStdDevn1 = qQNaN();
-    m_fStdDevAccumulSquare = 0.0;
     m_jsonResultArray = QJsonArray();
     m_iCountPass = 0;
     m_iCountUnfinish = 0;
@@ -1938,16 +1937,22 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
     if(eRating == ECALCRESULT::RESULT_UNFINISHED) { // yes have seen that on HK
         value = -100.0;
     }
-    // standard deviations: There have been loads of discussons about the n or
-    // n-1 in the past. To avoid that: calc both
+    // mean value
     m_fAccumulSum += value;
     double fResultCount = m_jsonResultArray.count();
     m_fMeanValue = m_fAccumulSum / fResultCount;
-    double currDev = value - m_fMeanValue;
-    m_fStdDevAccumulSquare += currDev * currDev;
-    m_fStdDevn = sqrt(m_fStdDevAccumulSquare / fResultCount);
+
+    // standard deviations: There have been loads of discussons about the n or
+    // n-1 in the past. To avoid that: calc both
+    double quadratDevSum = 0.0;
+    for(int idx=0; idx<m_jsonResultArray.count(); ++idx) {
+        double currValue = m_jsonResultArray[idx].toObject()["V"].toDouble();
+        double currDeviation = currValue - m_fMeanValue;
+        quadratDevSum += currDeviation * currDeviation;
+    }
+    m_fStdDevn = sqrt(quadratDevSum / fResultCount);
     if(m_jsonResultArray.count() > 1) {
-        m_fStdDevn1 = sqrt(m_fStdDevAccumulSquare / (fResultCount - 1.0));
+        m_fStdDevn1 = sqrt(quadratDevSum / (fResultCount - 1.0));
     }
     else {
         m_fStdDevn1 = qQNaN();
