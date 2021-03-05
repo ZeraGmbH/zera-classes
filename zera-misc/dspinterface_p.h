@@ -100,8 +100,8 @@ private:
 
     QStringList CycCmdList, IntCmdList;
     QList<cDspMeasData*> m_DspMemoryDataList; // eine liste mit zeigern auf dsp speicher
-    cDspMeasData* actMemGroup;
-    DSPDATA::dType actMemType;
+    QHash<quint32, cDspMeasData*> m_MsgNrMeasData;
+    QHash<quint32, DSPDATA::dType> m_MsgNrMemType;
 };
 
 }

@@ -297,10 +297,10 @@ quint32 cDSPInterfacePrivate::dataAcquisition(cDspMeasData *memgroup)
     QString cmd, par;
     quint32 msgnr;
 
-    actMemGroup = memgroup;
-    actMemType = DSPDATA::dFloat;
     msgnr = sendCommand(cmd = QString("MEAS"), par = QString("%1").arg(memgroup->VarList(DSPDATA::vDspResult)));
     m_MsgNrCmdList[msgnr] = dataacquisition;
+    m_MsgNrMeasData[msgnr] = memgroup;
+    m_MsgNrMemType[msgnr] = DSPDATA::dFloat;
     return msgnr;
 }
 
@@ -310,10 +310,10 @@ quint32 cDSPInterfacePrivate::dspMemoryRead(cDspMeasData *memgroup, DSPDATA::dTy
     QString cmd, par;
     quint32 msgnr;
 
-    actMemGroup = memgroup;
-    actMemType = type;
     msgnr = sendCommand(cmd = QString("MEM:READ"), par = QString("%1").arg(memgroup->VarList(DSPDATA::vDspALL)));
     m_MsgNrCmdList[msgnr] = dspmemoryread;
+    m_MsgNrMeasData[msgnr] = memgroup;
+    m_MsgNrMemType[msgnr] = type;
     return msgnr;
 }
 
@@ -495,10 +495,13 @@ void cDSPInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
             emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
             break;
         case dataacquisition:
-        case dspmemoryread:
+        case dspmemoryread: {
+            cDspMeasData* actMemGroup = m_MsgNrMeasData.take(lmsgnr);
+            DSPDATA::dType actMemType = m_MsgNrMemType.take(lmsgnr);
             setVarData(actMemGroup, lmsg, actMemType);
             emit q->serverAnswer(lmsgnr, 0, returnString(lmsg));
             break;
+        }
 
         }
     }
