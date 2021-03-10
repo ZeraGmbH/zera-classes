@@ -193,7 +193,7 @@ void cFftModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
 
     cDoubleValidator *dValidator;
-    dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+    dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
     m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,

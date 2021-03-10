@@ -375,7 +375,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     {
         m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", unit));
         cDoubleValidator *dValidator;
-        dValidator = new cDoubleValidator(0.1, 100.0, 0.1);
+        dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
         m_pIntegrationParameter->setValidator(dValidator);
     }
     else
