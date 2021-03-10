@@ -8,20 +8,15 @@ cMovingwindowFilter::cMovingwindowFilter(float time)
     m_pinitFilterState = new QState(m_pactiveState);
     m_psetupFilterState = new QState(m_pactiveState);
     m_pbuildupFilterState = new QState(m_pactiveState);
-    m_pbuildupFilter2State = new QState(m_pactiveState);
-    m_pbuildupFilter3State = new QState(m_pactiveState);
     m_preadyFilterState = new QState(m_pactiveState);
     m_pdoFilterState = new QState(m_pactiveState);
     m_pFinishState = new QFinalState();
 
     m_pactiveState->addTransition(this, SIGNAL(finishFilter()), m_pFinishState);
     m_pinitFilterState->addTransition(this, SIGNAL(newActualValues()), m_psetupFilterState);
-    m_psetupFilterState->addTransition(this, SIGNAL(newActualValues()), m_pbuildupFilterState);
+    m_psetupFilterState->addTransition(this, SIGNAL(timerInitialized()), m_pbuildupFilterState);
     m_pbuildupFilterState->addTransition(this, SIGNAL(newActualValues()), m_pbuildupFilterState);
-    m_pbuildupFilterState->addTransition(&m_integrationTimer, SIGNAL(timeout()), m_pbuildupFilter2State);
-    m_pbuildupFilter2State->addTransition(this, SIGNAL(newActualValues()), m_pbuildupFilter3State);
-    m_pbuildupFilter2State->addTransition(this, SIGNAL(filterInitialized()), m_preadyFilterState);
-    m_pbuildupFilter3State->addTransition(this, SIGNAL(filterInitialized()), m_preadyFilterState);
+    m_pbuildupFilterState->addTransition(&m_integrationTimer, SIGNAL(timeout()), m_preadyFilterState);
     m_preadyFilterState->addTransition(this, SIGNAL(newActualValues()), m_pdoFilterState);
     m_pdoFilterState->addTransition(this, SIGNAL(newActualValues()), m_pdoFilterState);
     connect(&m_FilterStatemachine, SIGNAL(stopped()), this, SLOT(restartFilter()));
@@ -34,8 +29,6 @@ cMovingwindowFilter::cMovingwindowFilter(float time)
     connect(m_pinitFilterState, SIGNAL(entered()), SLOT(initFilter()));
     connect(m_psetupFilterState, SIGNAL(entered()), SLOT(setupFilter()));
     connect(m_pbuildupFilterState, SIGNAL(entered()), SLOT(buildupFilter()));
-    connect(m_pbuildupFilter2State, SIGNAL(entered()), SLOT(buildupFilter2()));
-    connect(m_pbuildupFilter3State, SIGNAL(entered()), SLOT(buildupFilter3()));
     connect(m_pdoFilterState, SIGNAL(entered()), SLOT(doFilter()));
     connect(m_pFinishState, SIGNAL(entered()), SLOT(stopFilter()));
 
@@ -93,30 +86,14 @@ void cMovingwindowFilter::setupFilter()
     m_integrationTimer.start((int)(m_fintegrationTime * 1000.0)); // while timer is running we'll fill the fifo
     m_FifoSum.fill(0.0, m_pActualValues->size());
     m_ActualValues.resize(m_pActualValues->size());
-    // addnewValues();
+    emit timerInitialized();
+
 }
 
 
 void cMovingwindowFilter::buildupFilter()
 {
     addnewValues(); // we must add the new values while building up our filter
-}
-
-
-void cMovingwindowFilter::buildupFilter2()
-{
-    // in cases that we have a base integrationtime in dsp of 1 sec and the moving window is also
-    // 1 sec. there might arise problem that we have nothing in our fifo .....
-    // buildupFilter2 ensures that there is at least 1 set of actual values stored in fifo
-    if (m_ActValueFifoList.count() > 0 )
-        emit filterInitialized();
-}
-
-void cMovingwindowFilter::buildupFilter3()
-{
-    // otherwise next new actual values will be set in fifo
-    addnewValues();
-    emit filterInitialized();
 }
 
 
