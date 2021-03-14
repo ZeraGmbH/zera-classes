@@ -282,21 +282,31 @@ private:
          * @return { "countPass: <count of passed results>,
          *           "countFail": <count of passed results>,
          *           "countUnfinish": <count of unfinished results>,
-         *           "mean"; <mean (average) value,
+         *           "mean": <mean (average) value,
+         *           "range": <maxError - minError>
+         *           "idxMin": <index of min error>
+         *           "idxMax": <index of max error>
          *           "stddevN": <statndard deviantion / n in denominator,
          *           "stddevN1": <statndard deviantion / (n-1) in denominator,
          *          }
          */
         const QJsonObject getJSONStatistics();
     private:
+        // mean / stddev
         double m_fMeanValue = qQNaN();
         double m_fStdDevn = qQNaN();
         double m_fStdDevn1 = qQNaN();
+        // range
+        int m_iIdxMinValue = -1;
+        int m_iIdxMaxValue = -1;
+        double m_fMinError = qQNaN();
+        double m_fMaxError = qQNaN();
+        // results / counters
         QJsonArray m_jsonResultArray;
         int m_iCountPass = 0;
         int m_iCountFail = 0;
         int m_iCountUnfinish = 0;
-
+        // error estimation limits
         QJsonArray m_jsonLimitArray;
         double m_fLastLowerLimit = qQNaN();
         double m_fLastUpperLimit = qQNaN();
