@@ -301,20 +301,30 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_pFoutCount = new cVeinModuleMetaData(QString("FOUTCount"), QVariant(m_ConfigData.m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
-    cVeinModuleParameter* pFoutConstantParameter;
+    cVeinModuleParameter* pFoutParameter;
 
     if (m_ConfigData.m_nFreqOutputCount > 0)
     {
         for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
         {
-            pFoutConstantParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            // Note: Although components are 'PAR_' they are not changable currently
+            pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_FOUTConstant%1").arg(i),
                                                               QString("Component for querying the modules frequency output constant"),
                                                               QVariant(0));
-            pFoutConstantParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutConstantParameter->getName(), "0", ""));
+            pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
-            m_FoutConstParameterList.append(pFoutConstantParameter);
-            m_pModule->veinModuleParameterHash[key] = pFoutConstantParameter; // for modules use
+            m_FoutConstParameterList.append(pFoutParameter);
+            m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
+
+            QString foutName =  m_ConfigData.m_FreqOutputConfList.at(i).m_sPlug;
+            pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                              key = QString("PAR_FOUT%1").arg(i),
+                                                              QString("Component for querying the modules output"),
+                                                              QVariant(foutName));
+            pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1OUT").arg(i), "2", pFoutParameter->getName(), "0", ""));
+
+            m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
         }
     }
 

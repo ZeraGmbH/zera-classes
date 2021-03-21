@@ -309,6 +309,10 @@ void cPower2ModuleMeasProgram::generateInterface()
 
     m_pPQSCountInfo = new cVeinModuleMetaData(QString("PQSCount"), QVariant(12));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
+    m_pNomFrequencyInfo =  new cVeinModuleMetaData(QString("NominalFrequency"), QVariant(m_ConfigData.m_nNominalFrequency));
+    m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
+    m_pFoutCount = new cVeinModuleMetaData(QString("FOUTCount"), QVariant(m_ConfigData.m_nFreqOutputCount));
+    m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
     // a list with all possible measuring modes
     m_MeasuringModeInfoHash["4LW"] = cMeasModeInfo(tr("4LW"), "P", "W", actPower, m4lw);

@@ -167,6 +167,7 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:name").arg(i+1)] = setfreqout1Name+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:source").arg(i+1)] = setfreqout1Source+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:type").arg(i+1)] = setfreqout1Type+i;
+                    m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:plug").arg(i+1)] = setfreqout1Plug+i;
                     freqoutconfiguration fconf;
                     m_pPower1ModulConfigData->m_FreqOutputConfList.append(fconf);
                 }
@@ -244,6 +245,17 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
                 if (s == "-")
                     fconf.m_nFoutMode = negPower;
 
+                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+            }
+
+            else
+
+            if ((cmd >= setfreqout1Plug) && (cmd < setfreqout1Plug + 8))
+            {
+                cmd -= setfreqout1Plug;
+                freqoutconfiguration fconf;
+                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf.m_sPlug = m_pXMLReader->getValue(key);
                 m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
             }
 
