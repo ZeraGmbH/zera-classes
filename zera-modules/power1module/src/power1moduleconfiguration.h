@@ -53,7 +53,12 @@ enum moduleconfigstate
     setfreqout3Type,
     setfreqout4Type,
 
-    setnext = setfreqout1Type + 8
+    setfreqout1Plug = setfreqout1Type + 8,
+    setfreqout2Plug,
+    setfreqout3Plug,
+    setfreqout4Plug,
+
+    setnext = setfreqout1Plug + 8
 };
 
 
