@@ -88,6 +88,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_pcbserverReReadAdjStatusState.addTransition(this, SIGNAL(activationError()), &m_pcbserverReReadDoneState);
     m_pcbserverReReadAdjChksumState.addTransition(this, SIGNAL(activationError()), &m_pcbserverReReadDoneState);
 
+    m_pcbserverUnregisterClampCatalogNotifierState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjStatusState);
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjChksumState);
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadDoneState);
