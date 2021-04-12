@@ -23,7 +23,7 @@ namespace TRANSFORMER1MODULE
 {
 
 cTransformer1Module::cTransformer1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cTransformer1ModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number transformer errors from configured input dft values");
@@ -60,12 +60,6 @@ cTransformer1Module::cTransformer1Module(quint8 modnr, Zera::Proxy::cProxy* prox
 }
 
 
-cTransformer1Module::~cTransformer1Module()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cTransformer1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cTransformer1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     cTransformer1ModuleConfigData* pConfData;
-    pConfData = qobject_cast<cTransformer1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cTransformer1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cTransformer1ModuleMeasProgram(this, *pConfData);

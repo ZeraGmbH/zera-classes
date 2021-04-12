@@ -36,7 +36,6 @@ Q_OBJECT
 
 public:
     cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cOsciModule();
     virtual QByteArray getConfiguration() const;
 
 protected:

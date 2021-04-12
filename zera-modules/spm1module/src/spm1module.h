@@ -43,7 +43,6 @@ Q_OBJECT
 
 public:
     cSpm1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cSpm1Module();
     virtual QByteArray getConfiguration() const;
 
 protected:

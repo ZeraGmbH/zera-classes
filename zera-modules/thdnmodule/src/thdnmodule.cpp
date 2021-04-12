@@ -24,7 +24,7 @@ namespace THDNMODULE
 {
 
 cThdnModule::cThdnModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cThdnModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cThdnModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures thdn values for configured channels");
@@ -61,12 +61,6 @@ cThdnModule::cThdnModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 }
 
 
-cThdnModule::~cThdnModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cThdnModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cThdnModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cThdnModuleConfigData* pConfData;
-    pConfData = qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pProxy, *pConfData);

@@ -20,7 +20,7 @@ namespace SAMPLEMODULE
 {
 
 cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cSampleModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");
@@ -57,12 +57,6 @@ cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entit
 }
 
 
-cSampleModule::~cSampleModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cSampleModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -95,7 +89,7 @@ void cSampleModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cSampleModuleConfigData *pConfData;
-    pConfData = qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // first we build a list of our pll meas channels, that hold informations for other activists
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++)

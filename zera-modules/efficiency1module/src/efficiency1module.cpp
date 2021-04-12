@@ -23,7 +23,7 @@ namespace EFFICIENCY1MODULE
 {
 
 cEfficiency1Module::cEfficiency1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cEfficiency1ModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cEfficiency1ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
@@ -60,12 +60,6 @@ cEfficiency1Module::cEfficiency1Module(quint8 modnr, Zera::Proxy::cProxy* proxy,
 }
 
 
-cEfficiency1Module::~cEfficiency1Module()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cEfficiency1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -85,7 +79,7 @@ void cEfficiency1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     cEfficiency1ModuleConfigData* pConfData;
-    pConfData = qobject_cast<cEfficiency1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cEfficiency1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cEfficiency1ModuleMeasProgram(this, *pConfData);

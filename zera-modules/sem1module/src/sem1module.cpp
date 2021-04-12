@@ -20,7 +20,7 @@ namespace SEM1MODULE
 {
 
 cSem1Module::cSem1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cSem1ModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSem1ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module povides a configurable error calculator");
@@ -57,12 +57,6 @@ cSem1Module::cSem1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 }
 
 
-cSem1Module::~cSem1Module()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cSem1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -81,7 +75,7 @@ void cSem1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     cSem1ModuleConfigData *pConfData;
-    pConfData = qobject_cast<cSem1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cSem1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we only have this activist
     m_pMeasProgram = new cSem1ModuleMeasProgram(this, m_pProxy, *pConfData);

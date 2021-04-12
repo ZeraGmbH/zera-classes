@@ -38,7 +38,6 @@ Q_OBJECT
 
 public:
     cBurden1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cBurden1Module();
     virtual QByteArray getConfiguration() const;
 
 protected:

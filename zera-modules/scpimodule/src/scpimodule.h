@@ -46,7 +46,6 @@ class cSCPIModule : public cBaseModule
 
 public:
     cSCPIModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
-    virtual ~cSCPIModule();
     virtual QByteArray getConfiguration() const;
     cSCPIServer* getSCPIServer();
 

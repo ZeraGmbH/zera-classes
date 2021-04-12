@@ -16,7 +16,7 @@ namespace STATUSMODULE
 {
 
 cStatusModule::cStatusModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cStatusModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cStatusModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for reading and providing system Status information");
@@ -53,12 +53,6 @@ cStatusModule::cStatusModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entit
 }
 
 
-cStatusModule::~cStatusModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cStatusModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -77,7 +71,7 @@ void cStatusModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cStatusModuleConfigData *pConfData;
-    pConfData = qobject_cast<cStatusModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cStatusModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we only have to read some status information from pcb- and dspserver
     m_pStatusModuleInit = new cStatusModuleInit(this, m_pProxy, *pConfData);

@@ -23,17 +23,11 @@ namespace RANGEMODULE
 {
 
 cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cRangeModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for range handling,\n range setting, automatic, adjustment and scaling");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
-}
-
-
-cRangeModule::~cRangeModule()
-{
-    delete m_pConfiguration;
 }
 
 
@@ -69,7 +63,7 @@ void cRangeModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cRangeModuleConfigData *pConfData;
-    pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     m_pChannelCountInfo = new cVeinModuleMetaData(QString("ChannelCount"), QVariant(pConfData->m_nChannelCount));
     veinModuleMetaDataList.append(m_pChannelCountInfo);

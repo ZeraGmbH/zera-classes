@@ -35,7 +35,6 @@ Q_OBJECT
 
 public:
     cThdnModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cThdnModule();
     virtual QByteArray getConfiguration() const;
 
 protected:

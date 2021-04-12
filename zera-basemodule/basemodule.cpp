@@ -27,7 +27,7 @@
 #include "scpiinfo.h"
 
 
-cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, cBaseModuleConfiguration* modcfg, QObject* parent)
+cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject* parent)
     :ZeraModules::VirtualModule(parent), m_pProxy(proxy), m_nEntityId(entityId), m_pStorageSystem(storagesystem), m_pConfiguration(modcfg), m_nModuleNr(modnr)
 {
     QString s;
@@ -58,7 +58,7 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
     m_pStateIDLEConfXML = new QState(m_pStateIdle); // when we configure within idle
     m_pStateIDLEConfSetup = new QState(m_pStateIdle); // same
     m_pStateIDLEIdle->addTransition(this, SIGNAL(sigConfiguration()), m_pStateIDLEConfXML);
-    m_pStateIDLEConfXML->addTransition(m_pConfiguration, SIGNAL(configXMLDone()), m_pStateIDLEConfSetup);
+    m_pStateIDLEConfXML->addTransition(m_pConfiguration.get(), SIGNAL(configXMLDone()), m_pStateIDLEConfSetup);
     m_pStateIDLEConfSetup->addTransition(this, SIGNAL(sigConfDone()), m_pStateIDLEIdle);
     m_pStateIdle->setInitialState(m_pStateIDLEIdle);
     connect(m_pStateIDLEIdle, SIGNAL(entered()), SLOT(entryIDLEIdle()));
@@ -84,7 +84,7 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
     m_pStateRUNDone->addTransition(this, SIGNAL(sigConfiguration()), m_pStateRUNDeactivate);
     m_pStateRUNDeactivate->addTransition(this, SIGNAL(deactivationReady()), m_pStateRUNUnset);
     m_pStateRUNUnset->addTransition(this, SIGNAL(sigReconfigureContinue()), m_pStateRUNConfXML);
-    m_pStateRUNConfXML->addTransition(m_pConfiguration, SIGNAL(configXMLDone()), m_pStateRUNConfSetup);
+    m_pStateRUNConfXML->addTransition(m_pConfiguration.get(), SIGNAL(configXMLDone()), m_pStateRUNConfSetup);
     m_pStateRUNConfSetup->addTransition(this, SIGNAL(sigConfDone()), m_pStateRUNStart );
     m_pStateRun->setInitialState(m_pStateRUNStart);
     connect(m_pStateRUNStart, SIGNAL(entered()), SLOT(entryRunStart()));
@@ -108,7 +108,7 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
     m_pStateSTOPDone->addTransition(this, SIGNAL(sigConfiguration()), m_pStateSTOPDeactivate);
     m_pStateSTOPDeactivate->addTransition(this, SIGNAL(deactivationReady()), m_pStateSTOPUnset);
     m_pStateSTOPUnset->addTransition(this, SIGNAL(sigReconfigureContinue()), m_pStateSTOPConfXML);
-    m_pStateSTOPConfXML->addTransition(m_pConfiguration, SIGNAL(configXMLDone()), m_pStateSTOPConfSetup);
+    m_pStateSTOPConfXML->addTransition(m_pConfiguration.get(), SIGNAL(configXMLDone()), m_pStateSTOPConfSetup);
     m_pStateSTOPConfSetup->addTransition(this, SIGNAL(sigConfDone()), m_pStateSTOPStart );
     m_pStateStop->setInitialState(m_pStateSTOPStart);
     connect(m_pStateSTOPStart, SIGNAL(entered()), SLOT(entryStopStart()));

@@ -27,19 +27,13 @@ namespace SCPIMODULE
 {
 
 cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseModule(modnr, proxi, entityId, storagesystem, new cSCPIModuleConfiguration(), parent)
+    :cBaseModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_pSCPIEventSystem = new cSCPIEventSystem(this);
-}
-
-
-cSCPIModule::~cSCPIModule()
-{
-    delete m_pConfiguration;
 }
 
 
@@ -69,7 +63,7 @@ void cSCPIModule::setupModule()
     cBaseModule::setupModule();
 
     cSCPIModuleConfigData *pConfData;
-    pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cSCPIModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we only have this activist
     m_pSCPIServer = new cSCPIServer(this, *pConfData);

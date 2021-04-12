@@ -23,7 +23,7 @@ namespace LAMBDAMODULE
 {
 
 cLambdaModule::cLambdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cLambdaModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cLambdaModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
@@ -60,12 +60,6 @@ cLambdaModule::cLambdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entit
 }
 
 
-cLambdaModule::~cLambdaModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cLambdaModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cLambdaModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cLambdaModuleConfigData* pConfData;
-    pConfData = qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cLambdaModuleMeasProgram(this, *pConfData);

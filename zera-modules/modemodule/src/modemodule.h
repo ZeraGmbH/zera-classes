@@ -37,7 +37,6 @@ Q_OBJECT
 
 public:
     cModeModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
-    virtual ~cModeModule();
     virtual QByteArray getConfiguration() const;
 
 protected:

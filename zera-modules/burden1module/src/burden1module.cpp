@@ -23,7 +23,7 @@ namespace BURDEN1MODULE
 {
 
 cBurden1Module::cBurden1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cBurden1ModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cBurden1ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number burden and powerfactor from configured input dft values");
@@ -60,12 +60,6 @@ cBurden1Module::cBurden1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int ent
 }
 
 
-cBurden1Module::~cBurden1Module()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cBurden1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cBurden1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     cBurden1ModuleConfigData* pConfData;
-    pConfData = qobject_cast<cBurden1ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cBurden1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cBurden1ModuleMeasProgram(this, *pConfData);

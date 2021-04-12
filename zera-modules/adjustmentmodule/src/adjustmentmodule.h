@@ -38,7 +38,6 @@ Q_OBJECT
 
 public:
     cAdjustmentModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cAdjustmentModule();
     virtual QByteArray getConfiguration() const;
 
 protected:
