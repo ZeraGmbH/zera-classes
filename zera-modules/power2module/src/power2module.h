@@ -36,7 +36,6 @@ Q_OBJECT
 
 public:
     cPower2Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cPower2Module();
     virtual QByteArray getConfiguration() const;
 
 protected:

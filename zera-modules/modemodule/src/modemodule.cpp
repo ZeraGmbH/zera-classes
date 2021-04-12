@@ -16,7 +16,7 @@ namespace MODEMODULE
 {
 
 cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cModeModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cModeModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for setting measuring mode and resetting dsp adjustment data");
@@ -53,12 +53,6 @@ cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 }
 
 
-cModeModule::~cModeModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cModeModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -77,7 +71,7 @@ void cModeModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cModeModuleConfigData *pConfData;
-    pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we only have to initialize the pcb's measuring mode
     m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, *pConfData);

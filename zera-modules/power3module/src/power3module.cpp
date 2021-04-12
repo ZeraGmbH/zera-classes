@@ -23,7 +23,7 @@ namespace POWER3MODULE
 {
 
 cPower3Module::cPower3Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cPower3ModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower3ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");
@@ -60,12 +60,6 @@ cPower3Module::cPower3Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entit
 }
 
 
-cPower3Module::~cPower3Module()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cPower3Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cPower3Module::setupModule()
     cBaseMeasModule::setupModule();
 
     cPower3ModuleConfigData* pConfData;
-    pConfData = qobject_cast<cPower3ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cPower3ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cPower3ModuleMeasProgram(this, *pConfData);

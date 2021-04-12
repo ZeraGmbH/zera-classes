@@ -38,7 +38,6 @@ Q_OBJECT
 
 public:
     cLambdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cLambdaModule();
     virtual QByteArray getConfiguration() const;
 
 protected:

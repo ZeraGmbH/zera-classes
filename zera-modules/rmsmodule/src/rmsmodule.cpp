@@ -24,7 +24,7 @@ namespace RMSMODULE
 {
 
 cRmsModule::cRmsModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, new cRmsModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures true rms values for configured channels");
@@ -61,12 +61,6 @@ cRmsModule::cRmsModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, V
 }
 
 
-cRmsModule::~cRmsModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cRmsModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cRmsModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cRmsModuleConfigData* pConfData;
-    pConfData = qobject_cast<cRmsModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cRmsModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cRmsModuleMeasProgram(this, m_pProxy, *pConfData);

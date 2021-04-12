@@ -25,7 +25,7 @@ namespace DFTMODULE
 {
 
 cDftModule::cDftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, new cDftModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cDftModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured order dft values for configured channels");
@@ -62,12 +62,6 @@ cDftModule::cDftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, V
 }
 
 
-cDftModule::~cDftModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cDftModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -87,7 +81,7 @@ void cDftModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cDftModuleConfigData* pConfData;
-    pConfData = qobject_cast<cDftModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cDftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cDftModuleMeasProgram(this, m_pProxy, *pConfData);

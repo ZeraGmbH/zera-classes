@@ -25,7 +25,7 @@ namespace POWER2MODULE
 {
 
 cPower2Module::cPower2Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, new cPower2ModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower2ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures +/- power with configured measuring and integration modes");
@@ -62,12 +62,6 @@ cPower2Module::cPower2Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entit
 }
 
 
-cPower2Module::~cPower2Module()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cPower2Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -88,7 +82,7 @@ void cPower2Module::setupModule()
     cBaseMeasModule::setupModule();
 
     cPower2ModuleConfigData* pConfData;
-    pConfData = qobject_cast<cPower2ModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cPower2ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cPower2ModuleMeasProgram(this, m_pProxy, *pConfData);

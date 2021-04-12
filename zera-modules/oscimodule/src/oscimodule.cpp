@@ -25,7 +25,7 @@ namespace OSCIMODULE
 {
 
 cOsciModule::cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cOsciModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cOsciModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures oscillograms for configured channels");
@@ -62,12 +62,6 @@ cOsciModule::cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId,
 }
 
 
-cOsciModule::~cOsciModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cOsciModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -87,7 +81,7 @@ void cOsciModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cOsciModuleConfigData* pConfData;
-    pConfData = qobject_cast<cOsciModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cOsciModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cOsciModuleMeasProgram(this, m_pProxy, *pConfData);

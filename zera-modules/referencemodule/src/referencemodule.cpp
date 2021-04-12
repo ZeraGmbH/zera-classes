@@ -19,7 +19,7 @@ namespace REFERENCEMODULE
 {
 
 cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cReferenceModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures reference actual values for configured channels");
@@ -59,12 +59,6 @@ cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int
 }
 
 
-cReferenceModule::~cReferenceModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cReferenceModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -97,7 +91,7 @@ void cReferenceModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cReferenceModuleConfigData *pConfData;
-    pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // setting of mode has been done by seperate mode module
     // first we build a list of our meas channels

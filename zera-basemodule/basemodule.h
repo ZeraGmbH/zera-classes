@@ -13,6 +13,7 @@
 #include "xmlsettings.h"
 #include "moduleactivist.h"
 
+#include <memory>
 
 namespace VeinEvent
 {
@@ -51,7 +52,7 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, cBaseModuleConfiguration* modcfg, QObject *parent = 0);
+    cBaseModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject *parent = 0);
     virtual ~cBaseModule();
     virtual QList<const QState*> getActualStates() const; // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
@@ -127,7 +128,7 @@ protected:
     QByteArray m_xmlconfString;
     Zera::Proxy::cProxy* m_pProxy; // the proxi for all our connections (to rm, dsp- pcb- server)
     QList<cModuleActivist*> m_ModuleActivistList;
-    cBaseModuleConfiguration *m_pConfiguration; // our xml configuration
+    std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration; // our xml configuration
     QString m_sModuleName;
     QString m_sModuleDescription;
     QString m_sSCPIModuleName;

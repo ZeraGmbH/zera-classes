@@ -23,7 +23,7 @@ namespace ADJUSTMENTMODULE
 {
 
 cAdjustmentModule::cAdjustmentModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cAdjustmentModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module supports commands for adjustment for a configured number of measuring channels");
@@ -60,12 +60,6 @@ cAdjustmentModule::cAdjustmentModule(quint8 modnr, Zera::Proxy::cProxy* proxy, i
 }
 
 
-cAdjustmentModule::~cAdjustmentModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cAdjustmentModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cAdjustmentModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cAdjustmentModuleConfigData* pConfData;
-    pConfData = qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the job
     m_pMeasProgram = new cAdjustmentModuleMeasProgram(this, m_pProxy, *pConfData);

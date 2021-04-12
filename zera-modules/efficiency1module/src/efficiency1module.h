@@ -38,7 +38,6 @@ Q_OBJECT
 
 public:
     cEfficiency1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    virtual ~cEfficiency1Module();
     virtual QByteArray getConfiguration() const;
 
 protected:

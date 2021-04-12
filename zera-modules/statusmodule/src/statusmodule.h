@@ -38,7 +38,6 @@ Q_OBJECT
 
 public:
     cStatusModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
-    virtual ~cStatusModule();
     virtual QByteArray getConfiguration() const;
 
 protected:

@@ -24,7 +24,7 @@ namespace FFTMODULE
 {
 
 cFftModule::cFftModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, new cFftModuleConfiguration(), parent)
+    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cFftModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of fft values for configured channels");
@@ -61,12 +61,6 @@ cFftModule::cFftModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, V
 }
 
 
-cFftModule::~cFftModule()
-{
-    delete m_pConfiguration;
-}
-
-
 QByteArray cFftModule::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
@@ -86,7 +80,7 @@ void cFftModule::setupModule()
     cBaseMeasModule::setupModule();
 
     cFftModuleConfigData* pConfData;
-    pConfData = qobject_cast<cFftModuleConfiguration*>(m_pConfiguration)->getConfigurationData();
+    pConfData = qobject_cast<cFftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cFftModuleMeasProgram(this, m_pProxy, *pConfData);
