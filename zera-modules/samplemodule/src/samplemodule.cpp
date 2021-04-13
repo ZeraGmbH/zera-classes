@@ -121,7 +121,7 @@ void cSampleModule::setupModule()
     connect(m_pPllObsermatic, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pProxy, *pConfData);
+    m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pProxy, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

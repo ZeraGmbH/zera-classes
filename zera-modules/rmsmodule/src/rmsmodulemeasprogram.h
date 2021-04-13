@@ -67,7 +67,7 @@ class cRmsModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, cRmsModuleConfigData& configdata);
+    cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cRmsModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -86,9 +86,9 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    cRmsModule* m_pModule;
-    cRmsModuleConfigData& m_ConfigData;
+    cRmsModuleConfigData* getConfData();
 
+    cRmsModule* m_pModule;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read

@@ -83,7 +83,7 @@ class cEfficiency1ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cEfficiency1ModuleMeasProgram(cEfficiency1Module* module, cEfficiency1ModuleConfigData& configdata);
+    cEfficiency1ModuleMeasProgram(cEfficiency1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cEfficiency1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -93,9 +93,9 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 private:
-    cEfficiency1Module* m_pModule;
-    cEfficiency1ModuleConfigData& m_ConfigData;
+    cEfficiency1ModuleConfigData* getConfData();
 
+    cEfficiency1Module* m_pModule;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pEFFCountInfo; // the number of values we produce
     cVeinModuleComponent* m_pMeasureSignal;

@@ -22,14 +22,15 @@
 #include "errormessages.h"
 #include "reply.h"
 #include "rmsmodule.h"
+#include "rmsmoduleconfiguration.h"
 #include "rmsmoduleconfigdata.h"
 #include "rmsmodulemeasprogram.h"
 
 namespace RMSMODULE
 {
 
-cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, cRmsModuleConfigData& configdata)
-    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configdata)
+cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
@@ -138,9 +139,9 @@ cRmsModuleMeasProgram::~cRmsModuleMeasProgram()
 
 void cRmsModuleMeasProgram::start()
 {
-    if (m_ConfigData.m_bmovingWindow)
+    if (getConfData()->m_bmovingWindow)
     {
-        m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
         connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
     }
@@ -163,9 +164,9 @@ void cRmsModuleMeasProgram::generateInterface()
     cVeinModuleActvalue *pActvalue;
     int n,p;
     n = p = 0; //
-    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
+        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (sl.count() == 1) // in this case we have phase,neutral value
         {
@@ -203,17 +204,17 @@ void cRmsModuleMeasProgram::generateInterface()
     QString s, unit;
     bool btime;
 
-    btime = (m_ConfigData.m_sIntegrationMode == "time");
+    btime = (getConfData()->m_sIntegrationMode == "time");
 
     if (btime)
     {
-        val = QVariant(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
         s = QString("Component for setting the modules integration time");
         unit = QString("sec");
     }
     else
     {
-        val = QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue);
+        val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
         s = QString("Component for setting the modules integration period");
         unit = QString("period");
     }
@@ -294,26 +295,26 @@ void cRmsModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*m_ActValueList.count()+1) ); // clear the whole filter incl. count
-        if (m_ConfigData.m_sIntegrationMode == "time")
+        if (getConfData()->m_sIntegrationMode == "time")
         {
-            if (m_ConfigData.m_bmovingWindow)
-                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fmovingwindowInterval*1000.0)); // initial ti time
+            if (getConfData()->m_bmovingWindow)
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
             else
-                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
 
             m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         }
         else
         {
-            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)); // initial ti time
+            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
         }
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
 
     // we compute or copy our wanted actual values
-    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
+        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         // we have 1 or 2 entries for each value
         if (sl.count() == 1)
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
@@ -327,7 +328,7 @@ void cRmsModuleMeasProgram::setDspCmdList()
     // and filter them
     m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,VALXRMS,FILTER)").arg(m_ActValueList.count())); // we add results to filter
 
-    if (m_ConfigData.m_sIntegrationMode == "time")
+    if (getConfData()->m_sIntegrationMode == "time")
     {
         // in case intergration mode is time
         m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
@@ -715,12 +716,17 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     }
 }
 
+cRmsModuleConfigData *cRmsModuleMeasProgram::getConfData()
+{
+    return qobject_cast<cRmsModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
 
 void cRmsModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
+        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         QString s, name;
         QString s1,s2,s3,s4;
         // we have 1 or 2 entries for each value
@@ -743,7 +749,7 @@ void cRmsModuleMeasProgram::setActualValuesNames()
         }
 
         m_ActValueList.at(i)->setChannelName(name);
-        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(m_ConfigData.m_valueChannelList.at(i)).unit);
+        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).unit);
     }
 }
 
@@ -752,7 +758,7 @@ void cRmsModuleMeasProgram::setSCPIMeasInfo()
 {
     cSCPIInfo* pSCPIInfo;
 
-    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
         pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
         m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
@@ -775,10 +781,10 @@ void cRmsModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    mi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+    mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
+        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         for (int j = 0; j < sl.count(); j++)
         {
             QString s = sl.at(j);
@@ -789,7 +795,7 @@ void cRmsModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient);
     m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
@@ -907,7 +913,7 @@ void cRmsModuleMeasProgram::readDspChannelDone()
 
 void cRmsModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = m_pProxy->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
+    m_pDspClient = m_pProxy->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
     connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
@@ -956,7 +962,7 @@ void cRmsModuleMeasProgram::activateDSPdone()
     setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
-    if (m_ConfigData.m_sIntegrationMode == "time")
+    if (getConfData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
     else
         connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
@@ -1028,9 +1034,9 @@ void cRmsModuleMeasProgram::dataReadDSP()
 #ifdef DEBUG
         bool ok;
         QString s;
-        for (int i = 0; i < m_ConfigData.m_valueChannelList.count(); i++)
+        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
         {
-            QStringList sl = m_ConfigData.m_valueChannelList.at(i).split('-');
+            QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
             QString ts;
 
             if (sl.count() == 1)
@@ -1055,14 +1061,14 @@ void cRmsModuleMeasProgram::dataReadDSP()
 void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     bool ok;
-    m_ConfigData.m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
-    if (m_ConfigData.m_sIntegrationMode == "time")
+    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
+    if (getConfData()->m_sIntegrationMode == "time")
     {
-        if (m_ConfigData.m_bmovingWindow)
-            m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        if (getConfData()->m_bmovingWindow)
+            m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
         {
-            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
+            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
                                                                                     .arg(0), DSPDATA::dInt);
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
@@ -1076,10 +1082,10 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cRmsModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
     bool ok;
-    m_ConfigData.m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
-    if (m_ConfigData.m_sIntegrationMode == "period")
+    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
+    if (getConfData()->m_sIntegrationMode == "period")
     {
-        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
                                     .arg(0), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }

@@ -68,7 +68,7 @@ class cFftModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, cFftModuleConfigData& configdata);
+    cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cFftModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -87,8 +87,9 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    cFftModuleConfigData* getConfData();
+
     cFftModule* m_pModule;
-    cFftModuleConfigData& m_ConfigData;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pFFTCountInfo;
     cVeinModuleMetaData* m_pFFTOrderInfo;

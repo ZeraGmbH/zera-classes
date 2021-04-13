@@ -79,7 +79,7 @@ class cLambdaModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cLambdaModuleMeasProgram(cLambdaModule* module, cLambdaModuleConfigData& configdata);
+    cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cLambdaModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -89,9 +89,9 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 private:
-    cLambdaModule* m_pModule;
-    cLambdaModuleConfigData& m_ConfigData;
+    cLambdaModuleConfigData* getConfData();
 
+    cLambdaModule* m_pModule;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pLAMBDACountInfo; // the number of values we produce
     cVeinModuleComponent* m_pMeasureSignal;

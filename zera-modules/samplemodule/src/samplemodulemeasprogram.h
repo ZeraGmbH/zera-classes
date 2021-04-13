@@ -55,7 +55,7 @@ class cSampleModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cSampleModuleMeasProgram(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configData);
+    cSampleModuleMeasProgram(cSampleModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSampleModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -74,10 +74,11 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    cSampleModuleConfigData* getConfData();
+
     cSampleModule* m_pModule; // the module we live in
     quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
-    cSampleModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;

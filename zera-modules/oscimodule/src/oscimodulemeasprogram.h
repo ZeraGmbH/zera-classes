@@ -66,7 +66,7 @@ class cOsciModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, cOsciModuleConfigData& configdata);
+    cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cOsciModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -85,8 +85,9 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    cOsciModuleConfigData* getConfData();
+
     cOsciModule* m_pModule;
-    cOsciModuleConfigData& m_ConfigData;
 
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pOsciCountInfo;

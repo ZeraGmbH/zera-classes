@@ -83,7 +83,7 @@ class cTransformer1ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cTransformer1ModuleMeasProgram(cTransformer1Module* module, cTransformer1ModuleConfigData& configdata);
+    cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cTransformer1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -93,9 +93,9 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 private:
-    cTransformer1Module* m_pModule;
-    cTransformer1ModuleConfigData& m_ConfigData;
+    cTransformer1ModuleConfigData* getConfData();
 
+    cTransformer1Module* m_pModule;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pTRSCountInfo; // the number of transformer system we are configured for
     cVeinModuleComponent* m_pMeasureSignal;

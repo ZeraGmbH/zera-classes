@@ -58,7 +58,7 @@ class cRangeModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cRangeModuleMeasProgram(cRangeModule* module,Zera::Proxy::cProxy* proxy, cRangeModuleConfigData& configData);
+    cRangeModuleMeasProgram(cRangeModule* module,Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -78,6 +78,8 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    cRangeModuleConfigData* getConfData();
+
     cRangeModule* m_pModule; // the module we live in
     bool m_bRanging;
     bool m_bIgnore;
@@ -87,7 +89,6 @@ private:
     cVeinModuleComponent *m_pMeasureSignal;
     QList<cVeinModuleActvalue*> m_ActValueList;
 
-    cRangeModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;

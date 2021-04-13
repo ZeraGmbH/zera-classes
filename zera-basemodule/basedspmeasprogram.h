@@ -7,7 +7,7 @@ class cBaseDspMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cBaseDspMeasProgram(Zera::Proxy::cProxy* proxy);
+    cBaseDspMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseDspMeasProgram();
 
 protected:

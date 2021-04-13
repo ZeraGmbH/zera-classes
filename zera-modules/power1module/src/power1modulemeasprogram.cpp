@@ -25,14 +25,15 @@
 #include "measmodeinfo.h"
 #include "power1module.h"
 #include "power1moduleconfigdata.h"
+#include "power1moduleconfiguration.h"
 #include "power1modulemeasprogram.h"
 
 
 namespace POWER1MODULE
 {
 
-cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::Proxy::cProxy* proxy, cPower1ModuleConfigData &configdata)
-    :cBaseDspMeasProgram(proxy), m_pModule(module), m_ConfigData(configdata)
+cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
@@ -261,9 +262,9 @@ cPower1ModuleMeasProgram::~cPower1ModuleMeasProgram()
 
 void cPower1ModuleMeasProgram::start()
 {
-    if (m_ConfigData.m_bmovingWindow)
+    if (getConfData()->m_bmovingWindow)
     {
-        m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
         connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
     }
@@ -296,16 +297,16 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     m_pPQSCountInfo = new cVeinModuleMetaData(QString("PQSCount"), QVariant(4));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new cVeinModuleMetaData(QString("NominalFrequency"), QVariant(m_ConfigData.m_nNominalFrequency));
+    m_pNomFrequencyInfo =  new cVeinModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
-    m_pFoutCount = new cVeinModuleMetaData(QString("FOUTCount"), QVariant(m_ConfigData.m_nFreqOutputCount));
+    m_pFoutCount = new cVeinModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
     cVeinModuleParameter* pFoutParameter;
 
-    if (m_ConfigData.m_nFreqOutputCount > 0)
+    if (getConfData()->m_nFreqOutputCount > 0)
     {
-        for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
+        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
         {
             // Note: Although components are 'PAR_' they are not changable currently
             pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -317,7 +318,7 @@ void cPower1ModuleMeasProgram::generateInterface()
             m_FoutConstParameterList.append(pFoutParameter);
             m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
 
-            QString foutName =  m_ConfigData.m_FreqOutputConfList.at(i).m_sPlug;
+            QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sPlug;
             pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_FOUT%1").arg(i),
                                                               QString("Component for querying the modules output"),
@@ -346,12 +347,12 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Component for setting the modules measuring mode"),
-                                                         QVariant(m_ConfigData.m_sMeasuringMode.m_sValue));
+                                                         QVariant(getConfData()->m_sMeasuringMode.m_sValue));
 
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
 
     cStringValidator *sValidator;
-    sValidator = new cStringValidator(m_ConfigData.m_sMeasmodeList);
+    sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
 
     m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
@@ -360,17 +361,17 @@ void cPower1ModuleMeasProgram::generateInterface()
     QString s, unit;
     bool btime;
 
-    btime = (m_ConfigData.m_sIntegrationMode == "time");
+    btime = (getConfData()->m_sIntegrationMode == "time");
 
     if (btime)
     {
-        val = QVariant(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
         s = QString("Component for setting the modules integration time");
         unit = QString("sec");
     }
     else
     {
-        val = QVariant(m_ConfigData.m_nMeasIntervalPeriod.m_nValue);
+        val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
         s = QString("Component for setting the modules integration period");
         unit = QString("period");
     }
@@ -438,7 +439,7 @@ void cPower1ModuleMeasProgram::setDspVarList()
 
     // and one for the frequency output scale values, we need 1 value for each configured output
     m_pfreqScaleDSP = m_pDSPInterFace->getMemHandle("FrequencyScale");
-    m_pfreqScaleDSP->addVarItem( new cDspVar("FREQSCALE", m_ConfigData.m_nFreqOutputCount, DSPDATA::vDspParam));
+    m_pfreqScaleDSP->addVarItem( new cDspVar("FREQSCALE", getConfData()->m_nFreqOutputCount, DSPDATA::vDspParam));
 
     // and one for nominal power in case that measuring mode is qref
     m_pNomPower = m_pDSPInterFace->getMemHandle("QRefScale");
@@ -466,22 +467,22 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode())); // initial measuring mode
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode())); // initial measuring mode
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(FAK,0.5)"));
 
-        if (m_ConfigData.m_sIntegrationMode == "time")
+        if (getConfData()->m_sIntegrationMode == "time")
         {
 
-            if (m_ConfigData.m_bmovingWindow)
-                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fmovingwindowInterval*1000.0)); // initial ti time
+            if (getConfData()->m_bmovingWindow)
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
             else
-                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
 
             m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
         }
         else
         {
-            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)); // initial ti time
+            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
         }
 
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
@@ -489,10 +490,10 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
 
-    for (int i = 0; i < m_ConfigData.m_nMeasModeCount; i++)
+    for (int i = 0; i < getConfData()->m_nMeasModeCount; i++)
     {
         QStringList sl;
-        int mmode = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasmodeList.at(i)].getCode();
+        int mmode = m_MeasuringModeInfoHash[getConfData()->m_sMeasmodeList.at(i)].getCode();
         switch (mmode)
         {
         case m4lw:
@@ -501,19 +502,19 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0110)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0110)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(0).split(',');
             // our first measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
 
-            sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(1).split(',');
             // our second measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
 
-            sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(2).split(',');
             // our third measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
@@ -529,7 +530,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0111)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0111)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(0).split(',');
             // our first measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
@@ -544,7 +545,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             //m_pDSPInterFace->addCycListItem( s = QString("ROTATE(MEASSIGNAL2,270.0)"));
             //m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
 
-            sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(1).split(',');
             // our second measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
@@ -559,7 +560,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             //m_pDSPInterFace->addCycListItem( s = QString("ROTATE(MEASSIGNAL2,270.0)"));
             //m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
 
-            sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(2).split(',');
             // our third measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
@@ -584,9 +585,9 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0112)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
             // we need the information of all our system at the same time
-            sl1 = m_ConfigData.m_sMeasSystemList.at(0).split(',');
-            sl2 = m_ConfigData.m_sMeasSystemList.at(1).split(',');
-            sl3 = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+            sl1 = getConfData()->m_sMeasSystemList.at(0).split(',');
+            sl2 = getConfData()->m_sMeasSystemList.at(1).split(',');
+            sl3 = getConfData()->m_sMeasSystemList.at(2).split(',');
 
             // our first measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
@@ -644,7 +645,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0113)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0113)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(0).split(',');
             // our first measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = "RMS(MEASSIGNAL1,TEMP1)");
@@ -652,7 +653,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "RMS(MEASSIGNAL1,TEMP2)");
             m_pDSPInterFace->addCycListItem( s = "MULVVV(TEMP1,TEMP2,VALPQS)");
 
-            sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(1).split(',');
             // our second measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = "RMS(MEASSIGNAL1,TEMP1)");
@@ -660,7 +661,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "RMS(MEASSIGNAL1,TEMP2)");
             m_pDSPInterFace->addCycListItem( s = "MULVVV(TEMP1,TEMP2,VALPQS+1)");
 
-            sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(2).split(',');
             // our third measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = "RMS(MEASSIGNAL1,TEMP1)");
@@ -677,7 +678,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0114)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0114)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(0).split(',');
             // our first measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
@@ -686,7 +687,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
             m_pDSPInterFace->addCycListItem( s = "ADDVVG(TEMP1,TEMP2,VALPQS)"); // geometrical sum is our actual value
 
-            sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(1).split(',');
             // our second measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
@@ -695,7 +696,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
             m_pDSPInterFace->addCycListItem( s = "ADDVVG(TEMP1,TEMP2,VALPQS+1)"); // geometrical sum is our actual value
 
-            sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(2).split(',');
             // our third measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
@@ -714,9 +715,9 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0115)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
             // we need the information of all our system at the same time
-            sl1 = m_ConfigData.m_sMeasSystemList.at(0).split(',');
-            sl2 = m_ConfigData.m_sMeasSystemList.at(1).split(',');
-            sl3 = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+            sl1 = getConfData()->m_sMeasSystemList.at(0).split(',');
+            sl2 = getConfData()->m_sMeasSystemList.at(1).split(',');
+            sl3 = getConfData()->m_sMeasSystemList.at(2).split(',');
 
             // our first measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
@@ -745,9 +746,9 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0116)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
             // we need the information of all our system at the same time
-            sl1 = m_ConfigData.m_sMeasSystemList.at(0).split(',');
-            sl2 = m_ConfigData.m_sMeasSystemList.at(1).split(',');
-            sl3 = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+            sl1 = getConfData()->m_sMeasSystemList.at(0).split(',');
+            sl2 = getConfData()->m_sMeasSystemList.at(1).split(',');
+            sl3 = getConfData()->m_sMeasSystemList.at(2).split(',');
 
             // our first measuring system
             m_pDSPInterFace->addCycListItem( s = QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
@@ -794,15 +795,15 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
             m_nPMSIndex = 0;
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (m_ConfigData.m_sM2WSystem == "pms2")
+            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
+            if (getConfData()->m_sM2WSystem == "pms2")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
                 m_nPMSIndex = 1;
             }
-            if (m_ConfigData.m_sM2WSystem == "pms3")
+            if (getConfData()->m_sM2WSystem == "pms3")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
                 m_nPMSIndex = 2;
             }
 
@@ -829,15 +830,15 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
             m_nPMSIndex = 0;
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (m_ConfigData.m_sM2WSystem == "pms2")
+            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
+            if (getConfData()->m_sM2WSystem == "pms2")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
                 m_nPMSIndex = 1;
             }
-            if (m_ConfigData.m_sM2WSystem == "pms3")
+            if (getConfData()->m_sM2WSystem == "pms3")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
                 m_nPMSIndex = 2;
             }
 
@@ -874,15 +875,15 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             QStringList sl;
             m_nPMSIndex = 0;
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (m_ConfigData.m_sM2WSystem == "pms2")
+            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
+            if (getConfData()->m_sM2WSystem == "pms2")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
                 m_nPMSIndex = 1;
             }
-            if (m_ConfigData.m_sM2WSystem == "pms3")
+            if (getConfData()->m_sM2WSystem == "pms3")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
                 m_nPMSIndex = 2;
             }
 
@@ -912,15 +913,15 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             QStringList sl;
             m_nPMSIndex = 0;
 
-            sl = m_ConfigData.m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (m_ConfigData.m_sM2WSystem == "pms2")
+            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
+            if (getConfData()->m_sM2WSystem == "pms2")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(1).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
                 m_nPMSIndex = 1;
             }
-            if (m_ConfigData.m_sM2WSystem == "pms3")
+            if (getConfData()->m_sM2WSystem == "pms3")
             {
-                sl = m_ConfigData.m_sMeasSystemList.at(2).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
                 m_nPMSIndex = 2;
             }
 
@@ -970,17 +971,17 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
 
     // so... let's now set our frequency outputs if he have some
-    if (m_ConfigData.m_sFreqActualizationMode == "signalperiod")
+    if (getConfData()->m_sFreqActualizationMode == "signalperiod")
     {
-        if (m_ConfigData.m_nFreqOutputCount > 0)
+        if (getConfData()->m_nFreqOutputCount > 0)
         {
-            for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
+            for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
             {
                 // which actualvalue do we take as source (offset)
-                quint8 actvalueIndex = m_ConfigData.m_FreqOutputConfList.at(i).m_nSource;
-                QString foutSystemName =  m_ConfigData.m_FreqOutputConfList.at(i).m_sName;
+                quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
+                QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
                 // here we set abs, plus or minus and which frequency output has to be set
-                quint16 freqpar = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
+                quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
                 // frequenzausgang berechnen lassen
                 m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQS+%2,FREQSCALE+%3)")
                                                  .arg(freqpar)
@@ -990,7 +991,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         }
     }
 
-    if (m_ConfigData.m_sIntegrationMode == "time")
+    if (getConfData()->m_sIntegrationMode == "time")
     {
         m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
         m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
@@ -1001,17 +1002,17 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) );
             m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
 
-            if (m_ConfigData.m_sFreqActualizationMode == "integrationtime")
+            if (getConfData()->m_sFreqActualizationMode == "integrationtime")
             {
-                if (m_ConfigData.m_nFreqOutputCount > 0)
+                if (getConfData()->m_nFreqOutputCount > 0)
                 {
-                    for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
+                    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
                     {
                         // which actualvalue do we take as source (offset)
-                        quint8 actvalueIndex = m_ConfigData.m_FreqOutputConfList.at(i).m_nSource;
-                        QString foutSystemName =  m_ConfigData.m_FreqOutputConfList.at(i).m_sName;
+                        quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
+                        QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
                         // here we set abs, plus or minus and which frequency output has to be set
-                        quint16 freqpar = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
+                        quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
                         // frequenzausgang berechnen lassen
                         m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQSCALE+%3)")
                                                          .arg(freqpar)
@@ -1037,17 +1038,17 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) );
             m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
 
-            if (m_ConfigData.m_sFreqActualizationMode == "integrationtime")
+            if (getConfData()->m_sFreqActualizationMode == "integrationtime")
             {
-                if (m_ConfigData.m_nFreqOutputCount > 0)
+                if (getConfData()->m_nFreqOutputCount > 0)
                 {
-                    for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
+                    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
                     {
                         // which actualvalue do we take as source (offset)
-                        quint8 actvalueIndex = m_ConfigData.m_FreqOutputConfList.at(i).m_nSource;
-                        QString foutSystemName =  m_ConfigData.m_FreqOutputConfList.at(i).m_sName;
+                        quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
+                        QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
                         // here we set abs, plus or minus and which frequency output has to be set
-                        quint16 freqpar = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
+                        quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
                         // frequenzausgang berechnen lassen
                         m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQSCALE+%3)")
                                                          .arg(freqpar)
@@ -1262,7 +1263,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 ok = false;
                 if ((reply == ack) && (answer.toString().contains("SENSE"))) // we need sense  at least
                 {
-                    if (m_ConfigData.m_nFreqOutputCount > 0)
+                    if (getConfData()->m_nFreqOutputCount > 0)
                     {
                         if (answer.toString().contains("SOURCE")) // maybe we also need source
                             ok = true;
@@ -1691,12 +1692,17 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
     }
 }
 
+cPower1ModuleConfigData *cPower1ModuleMeasProgram::getConfData()
+{
+    return qobject_cast<cPower1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
 
 void cPower1ModuleMeasProgram::setActualValuesNames()
 {
     QString powIndicator = "123S";
 
-    cMeasModeInfo mminfo = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
+    cMeasModeInfo mminfo = m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue];
 
     for (int i = 0; i < 4; i++)
     {
@@ -1720,16 +1726,16 @@ void cPower1ModuleMeasProgram::setSCPIMeasInfo()
 
 void cPower1ModuleMeasProgram::setFoutMetaInfo()
 {
-    for (int i = 0; i < m_ConfigData.m_FreqOutputConfList.count(); i++)
+    for (int i = 0; i < getConfData()->m_FreqOutputConfList.count(); i++)
     {
-        m_FoutConstParameterList.at(i)->setChannelName(m_FoutInfoHash[m_ConfigData.m_FreqOutputConfList.at(i).m_sName].alias);
+        m_FoutConstParameterList.at(i)->setChannelName(m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName].alias);
     }
 }
 
 
 bool cPower1ModuleMeasProgram::is2WireMode()
 {
-    int mm = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode();
+    int mm = m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode();
     return ((mm == m2lw) || (mm == m2lb) || (mm == m2ls) || (mm == m2lsg));
 }
 
@@ -1749,10 +1755,10 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     // as this is our entry point when activating the module, we do some initialization first
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
-    mi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < m_ConfigData.m_sMeasSystemList.count(); i++)
+    mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
+    for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++)
     {
-        QStringList sl = m_ConfigData.m_sMeasSystemList.at(i).split(',');
+        QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
         for (int j = 0; j < sl.count(); j++)
         {
             QString s = sl.at(j);
@@ -1763,12 +1769,12 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
 
     m_FoutInfoHash.clear();
     cFoutInfo fi;
-    fi.pcbServersocket = m_ConfigData.m_PCBServerSocket; // the default from configuration file
-    if (m_ConfigData.m_nFreqOutputCount > 0)
+    fi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
+    if (getConfData()->m_nFreqOutputCount > 0)
     {
-        for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
+        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
         {
-            QString name = m_ConfigData.m_FreqOutputConfList.at(i).m_sName;
+            QString name = getConfData()->m_FreqOutputConfList.at(i).m_sName;
             if (!m_FoutInfoHash.contains(name))
                 m_FoutInfoHash[name] = fi; //
         }
@@ -1778,7 +1784,7 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient);
     m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
@@ -1830,7 +1836,7 @@ void cPower1ModuleMeasProgram::readResourceSenseInfoDone()
 
 void cPower1ModuleMeasProgram::readResourceSource()
 {
-    if (m_ConfigData.m_nFreqOutputCount > 0) // do we have any frequency output
+    if (getConfData()->m_nFreqOutputCount > 0) // do we have any frequency output
         m_MsgNrCmdList[m_pRMInterface->getResources("SOURCE")] = readresourcesource; // then we read the needed info
     else
         emit activationSkip(); // otherwise we will skip
@@ -1980,7 +1986,7 @@ void cPower1ModuleMeasProgram::readSenseChannelInformationDone()
 
 void cPower1ModuleMeasProgram::readSourceChannelInformation()
 {
-    if (m_ConfigData.m_nFreqOutputCount > 0) // we only have to read information if really configured
+    if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
         infoReadList = m_FoutInfoHash.keys(); // we have to read information for all channels in this list
         emit activationContinue();
@@ -2047,7 +2053,7 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone()
 
 void cPower1ModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = m_pProxy->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
+    m_pDspClient = m_pProxy->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
     connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
@@ -2097,7 +2103,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
 
     m_pMeasureSignal->setValue(QVariant(1));
 
-    if (m_ConfigData.m_sIntegrationMode == "time")
+    if (getConfData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
     else
         connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
@@ -2140,7 +2146,7 @@ void cPower1ModuleMeasProgram::freeUSERMem()
 
 void cPower1ModuleMeasProgram::freeFreqOutputs()
 {
-    if (m_ConfigData.m_nFreqOutputCount > 0) // we only have to read information if really configured
+    if (getConfData()->m_nFreqOutputCount > 0) // we only have to read information if really configured
     {
         infoReadList = m_FoutInfoHash.keys(); // we have to read information for all channels in this list
         emit deactivationContinue();
@@ -2232,7 +2238,7 @@ void cPower1ModuleMeasProgram::dataReadDSP()
 
         for (int i = 0; i < 4; i++) // we have fixed 4 values
         {
-            cMeasModeInfo mminfo  = m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue];
+            cMeasModeInfo mminfo  = m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue];
             ts = QString("%1%2:%3[%4];").arg(mminfo.getActvalName())
                     .arg(powIndicator[i])
                     .arg(m_ModuleActualValues.at(i))
@@ -2269,20 +2275,20 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
     QStringList sl;
     umax = imax = 0.0;
 
-    if (m_ConfigData.m_nFreqOutputCount > 0) // we only do something here if we really have a frequency output
+    if (getConfData()->m_nFreqOutputCount > 0) // we only do something here if we really have a frequency output
     {
 
         if (is2WireMode()) // in case we are in 2 wire mode we take umax imax from driving system
         {
-            sl = m_ConfigData.m_sMeasSystemList.at(m_nPMSIndex).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(m_nPMSIndex).split(',');
             umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
             imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
         }
         else // we have to consider all channels
-            for (int i = 0; i < m_ConfigData.m_sMeasSystemList.count(); i++)
+            for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++)
             {
 
-                sl = m_ConfigData.m_sMeasSystemList.at(i).split(',');
+                sl = getConfData()->m_sMeasSystemList.at(i).split(',');
                 if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > umax)
                     umax = d;
                 if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > imax)
@@ -2297,11 +2303,11 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
         else
             cfak = 3.0;
 
-        for (int i = 0; i< m_ConfigData.m_nFreqOutputCount; i++)
+        for (int i = 0; i< getConfData()->m_nFreqOutputCount; i++)
         {
             double frScale;
-            cFoutInfo fi = m_FoutInfoHash[m_ConfigData.m_FreqOutputConfList.at(i).m_sName];
-            frScale = fi.formFactor * m_ConfigData.m_nNominalFrequency / (cfak * umax * imax);
+            cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
+            frScale = fi.formFactor * getConfData()->m_nNominalFrequency / (cfak * umax * imax);
             datalist += QString("%1,").arg(frScale, 0, 'g', 7);
         }
 
@@ -2334,14 +2340,14 @@ void cPower1ModuleMeasProgram::setFoutConstants()
     else
         cfak = 3.0;
 
-    constant = m_ConfigData.m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * umax * imax); // imp./kwh
+    constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * umax * imax); // imp./kwh
 
-    if (m_ConfigData.m_nFreqOutputCount > 0)
+    if (getConfData()->m_nFreqOutputCount > 0)
     {
         QString key;
-        for (int i = 0; i < m_ConfigData.m_nFreqOutputCount; i++)
+        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
         {
-            key = m_ConfigData.m_FreqOutputConfList.at(i).m_sName;
+            key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
             cFoutInfo fi = m_FoutInfoHash[key];
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
             m_FoutConstParameterList.at(i)->setValue(constant);
@@ -2362,7 +2368,7 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
             QString powtype;
             int foutmode;
 
-            foutmode = m_ConfigData.m_FreqOutputConfList.at(i).m_nFoutMode;
+            foutmode = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode;
             switch (foutmode)
             {
             case posPower:
@@ -2375,7 +2381,7 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
                 powtype = "";
             }
 
-            powtype += m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getActvalName();
+            powtype += m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getActvalName();
 
             cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
             m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
@@ -2386,17 +2392,17 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     bool ok;
-    m_ConfigData.m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
-    if (m_ConfigData.m_sIntegrationMode == "time")
+    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
+    if (getConfData()->m_sIntegrationMode == "time")
     {
-        if (m_ConfigData.m_bmovingWindow)
-            m_pMovingwindowFilter->setIntegrationtime(m_ConfigData.m_fMeasIntervalTime.m_fValue);
+        if (getConfData()->m_bmovingWindow)
+            m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
         {
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                            .arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
+                                                            .arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
                                                             .arg(0)
-                                                            .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+                                                            .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
             m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
         }
     }
@@ -2408,13 +2414,13 @@ void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
     bool ok;
-    m_ConfigData.m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
-    if (m_ConfigData.m_sIntegrationMode == "period")
+    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
+    if (getConfData()->m_sIntegrationMode == "period")
     {
         m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                        .arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)
+                                                        .arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
                                                         .arg(0)
-                                                        .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+                                                        .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     }
 
@@ -2424,26 +2430,26 @@ void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 
 void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 {
-    m_ConfigData.m_sMeasuringMode.m_sValue = mm.toString();
+    getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
 
-    if (m_ConfigData.m_sIntegrationMode == "time")
+    if (getConfData()->m_sIntegrationMode == "time")
     {
-        if (m_ConfigData.m_bmovingWindow)
+        if (getConfData()->m_bmovingWindow)
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                            .arg(m_ConfigData.m_fmovingwindowInterval*1000)
+                                                            .arg(getConfData()->m_fmovingwindowInterval*1000)
                                                             .arg(0)
-                                                            .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+                                                            .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
         else
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                            .arg(m_ConfigData.m_fMeasIntervalTime.m_fValue*1000)
+                                                            .arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
                                                             .arg(0)
-                                                            .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+                                                            .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
     }
     else
         m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                        .arg(m_ConfigData.m_nMeasIntervalPeriod.m_nValue)
+                                                        .arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
                                                         .arg(0)
-                                                        .arg(m_MeasuringModeInfoHash[m_ConfigData.m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
+                                                        .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
 
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
     setActualValuesNames();

@@ -22,14 +22,15 @@
 #include "sem1module.h"
 #include "sem1modulemeasprogram.h"
 #include "sem1moduleconfigdata.h"
+#include "sem1moduleconfiguration.h"
 #include "unithelper.h"
 
 
 namespace SEM1MODULE
 {
 
-cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy::cProxy* proxy, cSem1ModuleConfigData& configData)
-    :cBaseMeasProgram(proxy), m_pModule(module), m_ConfigData(configData)
+cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface
     m_pRMInterface = new Zera::Server::cRMInterface();
@@ -196,10 +197,10 @@ cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
 {
     int n;
 
-    n = m_ConfigData.m_refInpList.count();
+    n = getConfData()->m_refInpList.count();
     for (int i = 0; i < n; i++)
     {
-        siInfo = mREFSemInputInfoHash.take(m_ConfigData.m_refInpList.at(i));
+        siInfo = mREFSemInputInfoHash.take(getConfData()->m_refInpList.at(i));
         delete siInfo;
     }
 
@@ -493,13 +494,13 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     m_MasterEcalculator.name = sl.at(0);
                     m_MasterEcalculator.secIFace = m_pSECInterface;
-                    m_MasterEcalculator.secServersocket = m_ConfigData.m_SECServerSocket;
+                    m_MasterEcalculator.secServersocket = getConfData()->m_SECServerSocket;
                     m_SlaveEcalculator.name = sl.at(1);
                     m_SlaveEcalculator.secIFace = m_pSECInterface;
-                    m_SlaveEcalculator.secServersocket = m_ConfigData.m_SECServerSocket;
+                    m_SlaveEcalculator.secServersocket = getConfData()->m_SECServerSocket;
                     m_Slave2Ecalculator.name = sl.at(2);
                     m_Slave2Ecalculator.secIFace = m_pSECInterface;
-                    m_Slave2Ecalculator.secServersocket = m_ConfigData.m_SECServerSocket;
+                    m_Slave2Ecalculator.secServersocket = getConfData()->m_SECServerSocket;
                     emit activationContinue();
                 }
                 else
@@ -840,14 +841,19 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
     }
 }
 
+cSem1ModuleConfigData *cSem1ModuleMeasProgram::getConfData()
+{
+    return qobject_cast<cSem1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
 
 void cSem1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pRefInputPar->setValue(QVariant(mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias));
-    m_pTargetedPar->setValue(QVariant(m_ConfigData.m_bTargeted.m_nActive));
-    m_pMeasTimePar->setValue(QVariant(m_ConfigData.m_nMeasTime.m_nPar));
-    m_pUpperLimitPar->setValue(QVariant(m_ConfigData.m_fUpperLimit.m_fPar));
-    m_pLowerLimitPar->setValue(QVariant(m_ConfigData.m_fLowerLimit.m_fPar));
+    m_pRefInputPar->setValue(QVariant(mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias));
+    m_pTargetedPar->setValue(QVariant(getConfData()->m_bTargeted.m_nActive));
+    m_pMeasTimePar->setValue(QVariant(getConfData()->m_nMeasTime.m_nPar));
+    m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
+    m_pLowerLimitPar->setValue(QVariant(getConfData()->m_fLowerLimit.m_fPar));
 }
 
 
@@ -900,7 +906,7 @@ QStringList cSem1ModuleMeasProgram::getEnergyUnitValidator()
 
 QString cSem1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
     return cUnitHelper::getNewEnergyUnit(powerType, currentPowerUnit, 3600);
@@ -912,14 +918,14 @@ QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
     QStringList sl;
     QString powType;
 
-    powType = mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    powType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
 
     if (powType.contains('P'))
-        sl = m_ConfigData.m_ActiveUnitList;
+        sl = getConfData()->m_ActiveUnitList;
     if (powType.contains('Q'))
-        sl = m_ConfigData.m_ReactiveUnitList;
+        sl = getConfData()->m_ReactiveUnitList;
     if (powType.contains('S'))
-        sl = m_ConfigData.m_ApparentUnitList;
+        sl = getConfData()->m_ApparentUnitList;
 
     return sl;
 }
@@ -927,7 +933,7 @@ QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 
 QString cSem1ModuleMeasProgram::getPowerUnit()
 {
-    QString powerType = mREFSemInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
@@ -937,7 +943,7 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
 void cSem1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
     stopMeasuerment(true);
 }
 
@@ -955,7 +961,7 @@ void cSem1ModuleMeasProgram::handleSECInterrupt()
 void cSem1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
     resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
@@ -989,13 +995,13 @@ void cSem1ModuleMeasProgram::readResourceTypes()
     //m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
     // instead of taking all resourcetypes we take predefined types if we found them in our config
 
-    if (found(m_ConfigData.m_refInpList, "fi"))
+    if (found(getConfData()->m_refInpList, "fi"))
         m_ResourceTypeList.append("FRQINPUT");
-    if (found(m_ConfigData.m_refInpList, "fo"))
+    if (found(getConfData()->m_refInpList, "fo"))
         m_ResourceTypeList.append("SOURCE");
-    if (found(m_ConfigData.m_refInpList, "sh"))
+    if (found(getConfData()->m_refInpList, "sh"))
         m_ResourceTypeList.append("SCHEAD");
-    if (found(m_ConfigData.m_refInpList, "hk"))
+    if (found(getConfData()->m_refInpList, "hk"))
         m_ResourceTypeList.append("HKEY");
 
     emit activationContinue();
@@ -1022,14 +1028,14 @@ void cSem1ModuleMeasProgram::testSemInputs()
     QList<QString> InputNameList;
     qint32 nref;
 
-    nref = m_ConfigData.m_refInpList.count();
+    nref = getConfData()->m_refInpList.count();
 
     // first we build up a list with properties for all configured Inputs
     for (int i = 0; i < nref; i++)
     {
-        // siInfo.muxchannel = m_ConfigData.m_refInpList.at(i).m_nMuxerCode;
+        // siInfo.muxchannel = getConfData()->m_refInpList.at(i).m_nMuxerCode;
         siInfo = new cSecInputInfo();
-        mREFSemInputInfoHash[m_ConfigData.m_refInpList.at(i)] = siInfo;
+        mREFSemInputInfoHash[getConfData()->m_refInpList.at(i)] = siInfo;
     }
 
     InputNameList = mREFSemInputInfoHash.keys();
@@ -1073,7 +1079,7 @@ void cSem1ModuleMeasProgram::testSemInputs()
 void cSem1ModuleMeasProgram::ecalcServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pSECClient = m_pProxy->getConnection(m_ConfigData.m_SECServerSocket.m_sIP, m_ConfigData.m_SECServerSocket.m_nPort);
+    m_pSECClient = m_pProxy->getConnection(getConfData()->m_SECServerSocket.m_sIP, getConfData()->m_SECServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
     m_ecalcServerConnectState.addTransition(m_pSECClient, SIGNAL(connected()), &m_fetchECalcUnitsState);
@@ -1092,7 +1098,7 @@ void cSem1ModuleMeasProgram::fetchECalcUnits()
 void cSem1ModuleMeasProgram::pcbServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pPCBClient = m_pProxy->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
+    m_pPCBClient = m_pProxy->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pPCBInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readREFInputsState);
@@ -1114,7 +1120,7 @@ void cSem1ModuleMeasProgram::readREFInputAlias()
     m_sIt = m_sItList.takeFirst();
     siInfo = mREFSemInputInfoHash.take(m_sIt); // if set some info that could be useful later
     siInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    siInfo->pcbServersocket = m_ConfigData.m_PCBServerSocket;
+    siInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
     //m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readrefInputalias;
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
@@ -1135,9 +1141,9 @@ void cSem1ModuleMeasProgram::readREFInputDone()
 
 void cSem1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if ( (m_ConfigData.m_nRefInpCount > 0) && m_ConfigData.m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
+    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
     {
-        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(m_ConfigData.m_sRefInput.m_sPar),QString("%1").arg(irqPCBNotifier))] = setpcbrefconstantnotifier;
+        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar),QString("%1").arg(irqPCBNotifier))] = setpcbrefconstantnotifier;
         // todo also configure the query for setting this notifier .....very flexible
     }
     else
@@ -1155,12 +1161,12 @@ void cSem1ModuleMeasProgram::activationDone()
 {
     int nref;
 
-    nref = m_ConfigData.m_refInpList.count();
+    nref = getConfData()->m_refInpList.count();
     if (nref > 0)
     for (int i = 0; i < nref; i++)
     {
-        m_REFAliasList.append(mREFSemInputInfoHash[m_ConfigData.m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        siInfo = mREFSemInputInfoHash[m_ConfigData.m_refInpList.at(i)]; // change the hash for access via alias
+        m_REFAliasList.append(mREFSemInputInfoHash[getConfData()->m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
+        siInfo = mREFSemInputInfoHash[getConfData()->m_refInpList.at(i)]; // change the hash for access via alias
         mREFSemInputSelectionHash[siInfo->alias] = siInfo;
     }
 
@@ -1182,7 +1188,7 @@ void cSem1ModuleMeasProgram::activationDone()
     setUnits();
 
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
 
     m_bActive = true;
     emit activated();
@@ -1329,7 +1335,7 @@ void cSem1ModuleMeasProgram::readTCountact()
 {
     m_MsgNrCmdList[m_pSECInterface->readRegister(m_Slave2Ecalculator.name, ECALCREG::MTCNTfin)] = readtcount;
     // non targeted has been stopped already in newStartStop()
-    if(m_ConfigData.m_bTargeted.m_nActive) {
+    if(getConfData()->m_bTargeted.m_nActive) {
         m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
     }
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
@@ -1373,7 +1379,7 @@ void cSem1ModuleMeasProgram::setRating()
 {
     if (m_nStatus & ECALCSTATUS::READY)
     {
-        if ( (m_fResult >= m_ConfigData.m_fLowerLimit.m_fPar) && (m_fResult <= m_ConfigData.m_fUpperLimit.m_fPar))
+        if ( (m_fResult >= getConfData()->m_fLowerLimit.m_fPar) && (m_fResult <= getConfData()->m_fUpperLimit.m_fPar))
             m_eRating = ECALCRESULT::RESULT_PASSED;
         else
             m_eRating = ECALCRESULT::RESULT_FAILED;
@@ -1402,7 +1408,7 @@ void cSem1ModuleMeasProgram::newStartStop(QVariant startstop)
     }
     else
     {
-        if (m_ConfigData.m_bTargeted.m_nActive > 0) {
+        if (getConfData()->m_bTargeted.m_nActive > 0) {
             stopMeasuerment(true);
         }
         else {
@@ -1430,7 +1436,7 @@ void cSem1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSem1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    m_ConfigData.m_sRefInput.m_sPar = mREFSemInputSelectionHash[refinput.toString()]->name;
+    getConfData()->m_sRefInput.m_sPar = mREFSemInputSelectionHash[refinput.toString()]->name;
     setInterfaceComponents();
     // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
 
@@ -1443,7 +1449,7 @@ void cSem1ModuleMeasProgram::newRefInput(QVariant refinput)
 
 void cSem1ModuleMeasProgram::newTargeted(QVariant targeted)
 {
-    m_ConfigData.m_bTargeted.m_nActive = targeted.toInt();
+    getConfData()->m_bTargeted.m_nActive = targeted.toInt();
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1452,7 +1458,7 @@ void cSem1ModuleMeasProgram::newTargeted(QVariant targeted)
 
 void cSem1ModuleMeasProgram::newMeasTime(QVariant meastime)
 {
-    m_ConfigData.m_nMeasTime.m_nPar = meastime.toInt();
+    getConfData()->m_nMeasTime.m_nPar = meastime.toInt();
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1490,7 +1496,7 @@ void cSem1ModuleMeasProgram::newUnit(QVariant unit)
 void cSem1ModuleMeasProgram::newUpperLimit(QVariant limit)
 {
     bool ok;
-    m_ConfigData.m_fUpperLimit.m_fPar = limit.toDouble(&ok);
+    getConfData()->m_fUpperLimit.m_fPar = limit.toDouble(&ok);
     setInterfaceComponents();
     setRating();
 
@@ -1501,7 +1507,7 @@ void cSem1ModuleMeasProgram::newUpperLimit(QVariant limit)
 void cSem1ModuleMeasProgram::newLowerLimit(QVariant limit)
 {
     bool ok;
-    m_ConfigData.m_fLowerLimit.m_fPar = limit.toDouble(&ok);
+    getConfData()->m_fLowerLimit.m_fPar = limit.toDouble(&ok);
     setInterfaceComponents();
     setRating();
 

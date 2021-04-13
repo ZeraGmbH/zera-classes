@@ -18,13 +18,14 @@
 #include "lambdamodule.h"
 #include "lambdamodulemeasprogram.h"
 #include "lambdameasdelegate.h"
+#include "lambdamoduleconfiguration.h"
 
 
 namespace LAMBDAMODULE
 {
 
-cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, cLambdaModuleConfigData& configdata)
-    :m_pModule(module), m_ConfigData(configdata)
+cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
@@ -65,13 +66,18 @@ void cLambdaModuleMeasProgram::stop()
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
+cLambdaModuleConfigData *cLambdaModuleMeasProgram::getConfData()
+{
+    return qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
 
 void cLambdaModuleMeasProgram::generateInterface()
 {
     cVeinModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
 
-    for (int i = 0; i < m_ConfigData.m_nLambdaSystemCount; i++)
+    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++)
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Lambda%1").arg(i+1),
@@ -87,7 +93,7 @@ void cLambdaModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pLAMBDACountInfo = new cVeinModuleMetaData(QString("LambdaCount"), QVariant(m_ConfigData.m_nLambdaSystemCount));
+    m_pLAMBDACountInfo = new cVeinModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -111,16 +117,16 @@ void cLambdaModuleMeasProgram::searchActualValues()
     error = false;
     QList<cVeinModuleComponentInput*> inputList;
 
-    for (int i = 0; i < m_ConfigData.m_nLambdaSystemCount; i++)
+    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if ( (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputPEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputP)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputSEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputS)) )
+        if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
+             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) )
         {
             cLambdaMeasDelegate* cLMD;
             cVeinModuleComponentInput *vmci;
 
-            if (i == (m_ConfigData.m_nLambdaSystemCount-1))
+            if (i == (getConfData()->m_nLambdaSystemCount-1))
             {
                 cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i), true);
                 connect(cLMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
@@ -130,11 +136,11 @@ void cLambdaModuleMeasProgram::searchActualValues()
 
             m_LambdaMeasDelegateList.append(cLMD);
 
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputPEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputP);
+            vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cLMD, SLOT(actValueInput1(QVariant)));
 
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_lambdaSystemConfigList.at(i).m_nInputSEntity, m_ConfigData.m_lambdaSystemConfigList.at(i).m_sInputS);
+            vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cLMD, SLOT(actValueInput2(QVariant)));
         }

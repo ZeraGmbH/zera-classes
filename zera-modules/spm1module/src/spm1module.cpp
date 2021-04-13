@@ -74,11 +74,8 @@ void cSpm1Module::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
 
-    cSpm1ModuleConfigData *pConfData;
-    pConfData = qobject_cast<cSpm1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we only have this activist
-    m_pMeasProgram = new cSpm1ModuleMeasProgram(this, m_pProxy, *pConfData);
+    m_pMeasProgram = new cSpm1ModuleMeasProgram(this, m_pProxy, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

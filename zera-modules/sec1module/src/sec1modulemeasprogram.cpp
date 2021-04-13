@@ -24,13 +24,14 @@
 #include "sec1module.h"
 #include "sec1modulemeasprogram.h"
 #include "sec1moduleconfigdata.h"
+#include "sec1moduleconfiguration.h"
 #include "unithelper.h"
 
 namespace SEC1MODULE
 {
 
-cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, cSec1ModuleConfigData& configData)
-    :cBaseMeasProgram(proxy), m_pModule(module), m_ConfigData(configData)
+cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface
     m_pRMInterface = new Zera::Server::cRMInterface();
@@ -178,17 +179,17 @@ cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
 {
     int n;
 
-    n = m_ConfigData.m_refInpList.count();
+    n = getConfData()->m_refInpList.count();
     for (int i = 0; i < n; i++)
     {
-        siInfo = mREFSecInputInfoHash.take(m_ConfigData.m_refInpList.at(i)); // change the hash for access via alias
+        siInfo = mREFSecInputInfoHash.take(getConfData()->m_refInpList.at(i)); // change the hash for access via alias
         delete siInfo;
     }
 
-    n = m_ConfigData.m_dutInpList.count();
+    n = getConfData()->m_dutInpList.count();
     for (int i = 0; i < n; i++)
     {
-        siInfo = mDUTSecInputInfoHash.take(m_ConfigData.m_dutInpList.at(i)); // change the hash for access via alias
+        siInfo = mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i)); // change the hash for access via alias
         delete siInfo;
     }
 
@@ -549,10 +550,10 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     m_MasterEcalculator.name = sl.at(0);
                     m_MasterEcalculator.secIFace = m_pSECInterface;
-                    m_MasterEcalculator.secServersocket = m_ConfigData.m_SECServerSocket;
+                    m_MasterEcalculator.secServersocket = getConfData()->m_SECServerSocket;
                     m_SlaveEcalculator.name = sl.at(1);
                     m_SlaveEcalculator.secIFace = m_pSECInterface;
-                    m_SlaveEcalculator.secServersocket = m_ConfigData.m_SECServerSocket;
+                    m_SlaveEcalculator.secServersocket = getConfData()->m_SECServerSocket;
                     emit activationContinue();
                 }
                 else
@@ -661,7 +662,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
                         m_nEnergyCounterActual = answer.toUInt(&ok);
-                        m_fEnergy = m_nEnergyCounterActual / m_ConfigData.m_fRefConstant.m_fPar;
+                        m_fEnergy = m_nEnergyCounterActual / getConfData()->m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
                         if (m_bFirstMeas) {
                             // keep in final until a result is calculated in
@@ -919,23 +920,28 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
     }
 }
 
+cSec1ModuleConfigData *cSec1ModuleMeasProgram::getConfData()
+{
+    return qobject_cast<cSec1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
 
 void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pModePar->setValue(QVariant(m_ConfigData.m_sMode.m_sPar));
+    m_pModePar->setValue(QVariant(getConfData()->m_sMode.m_sPar));
 
     cmpDependencies(); // dependant on mode we calculate parameters by ourself
 
-    m_pDutInputPar->setValue(QVariant(mDUTSecInputInfoHash[m_ConfigData.m_sDutInput.m_sPar]->alias));
-    m_pRefInputPar->setValue(QVariant(mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias));
-    m_pDutConstantPar->setValue(QVariant(m_ConfigData.m_fDutConstant.m_fPar));
-    m_pRefConstantPar->setValue(QVariant(m_ConfigData.m_fRefConstant.m_fPar));
-    m_pMRatePar->setValue(QVariant(m_ConfigData.m_nMRate.m_nPar));
-    m_pTargetPar->setValue(QVariant(m_ConfigData.m_nTarget.m_nPar));
-    m_pEnergyPar->setValue(QVariant(m_ConfigData.m_fEnergy.m_fPar));
+    m_pDutInputPar->setValue(QVariant(mDUTSecInputInfoHash[getConfData()->m_sDutInput.m_sPar]->alias));
+    m_pRefInputPar->setValue(QVariant(mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias));
+    m_pDutConstantPar->setValue(QVariant(getConfData()->m_fDutConstant.m_fPar));
+    m_pRefConstantPar->setValue(QVariant(getConfData()->m_fRefConstant.m_fPar));
+    m_pMRatePar->setValue(QVariant(getConfData()->m_nMRate.m_nPar));
+    m_pTargetPar->setValue(QVariant(getConfData()->m_nTarget.m_nPar));
+    m_pEnergyPar->setValue(QVariant(getConfData()->m_fEnergy.m_fPar));
     m_pProgressAct->setValue(QVariant(double(0.0)));
-    m_pUpperLimitPar->setValue(QVariant(m_ConfigData.m_fUpperLimit.m_fPar));
-    m_pLowerLimitPar->setValue(QVariant(m_ConfigData.m_fLowerLimit.m_fPar));
+    m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
+    m_pLowerLimitPar->setValue(QVariant(getConfData()->m_fLowerLimit.m_fPar));
 }
 
 
@@ -944,7 +950,7 @@ void cSec1ModuleMeasProgram::setValidators()
     cStringValidator *sValidator;
     QString s;
 
-    sValidator = new cStringValidator(QStringList(m_ConfigData.m_ModeList));
+    sValidator = new cStringValidator(QStringList(getConfData()->m_ModeList));
     m_pModePar->setValidator(sValidator);
 
     sValidator = new cStringValidator(m_DUTAliasList);
@@ -968,7 +974,7 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
     QStringList sl;
     QString powType;
 
-    powType = mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    powType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
 
     if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
@@ -983,7 +989,7 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = mREFSecInputInfoHash[m_ConfigData.m_sRefInput.m_sPar]->alias;
+    QString powerType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
 
     return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
@@ -1005,7 +1011,7 @@ void cSec1ModuleMeasProgram::initDutConstantUnit()
 void cSec1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
     stopMeasurement(true);
 }
 
@@ -1023,9 +1029,9 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     double constant;
     bool energyPerImpulse;
 
-    mode = m_ConfigData.m_sMode.m_sPar;
+    mode = getConfData()->m_sMode.m_sPar;
 
-    constant = m_ConfigData.m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
+    constant = getConfData()->m_fDutConstant.m_fPar; // assumed I/kxxx because all computation is based on this
     energyPerImpulse = m_sDutConstantUnit.contains(QString("/I"));
 
     if (energyPerImpulse)
@@ -1034,8 +1040,8 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     if (mode == "mrate")
     {
        // we calculate the new target value
-       m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / constant);
-       m_ConfigData.m_fEnergy.m_fPar = m_ConfigData.m_nMRate.m_nPar / constant;
+       getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
+       getConfData()->m_fEnergy.m_fPar = getConfData()->m_nMRate.m_nPar / constant;
     }
 
     else
@@ -1044,22 +1050,22 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     {
         // we calcute the new mrate and target
         double test = constant;
-        test *= m_ConfigData.m_fEnergy.m_fPar;
+        test *= getConfData()->m_fEnergy.m_fPar;
         test = floor(test);
         //quint32 itest = (quint32) test;
-        m_ConfigData.m_nMRate.m_nPar = ceil(constant * m_ConfigData.m_fEnergy.m_fPar);
-        m_ConfigData.m_nTarget.m_nPar = floor(m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / constant);
+        getConfData()->m_nMRate.m_nPar = ceil(constant * getConfData()->m_fEnergy.m_fPar);
+        getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
     }
 
     else
 
     if (mode == "target")
     {
-        constant = m_ConfigData.m_nMRate.m_nPar * m_ConfigData.m_fRefConstant.m_fPar / m_ConfigData.m_nTarget.m_nPar;
+        constant = getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / getConfData()->m_nTarget.m_nPar;
         if (energyPerImpulse)
             constant = (1.0/constant) * 1000.0;
-        m_ConfigData.m_fDutConstant.m_fPar = constant;
-        m_ConfigData.m_fEnergy.m_fPar = m_ConfigData.m_nMRate.m_nPar / m_ConfigData.m_fDutConstant.m_fPar;
+        getConfData()->m_fDutConstant.m_fPar = constant;
+        getConfData()->m_fEnergy.m_fPar = getConfData()->m_nMRate.m_nPar / getConfData()->m_fDutConstant.m_fPar;
     }
 }
 
@@ -1092,7 +1098,7 @@ void cSec1ModuleMeasProgram::multiResultToVein()
 void cSec1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
     resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
@@ -1126,13 +1132,13 @@ void cSec1ModuleMeasProgram::readResourceTypes()
     //m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
     // instead of taking all resourcetypes we take predefined types if we found them in our config
 
-    if (found(m_ConfigData.m_dutInpList, "fi") || found(m_ConfigData.m_refInpList, "fi"))
+    if (found(getConfData()->m_dutInpList, "fi") || found(getConfData()->m_refInpList, "fi"))
         m_ResourceTypeList.append("FRQINPUT");
-    if (found(m_ConfigData.m_dutInpList, "fo") || found(m_ConfigData.m_refInpList, "fo"))
+    if (found(getConfData()->m_dutInpList, "fo") || found(getConfData()->m_refInpList, "fo"))
         m_ResourceTypeList.append("SOURCE");
-    if (found(m_ConfigData.m_dutInpList, "sh") || found(m_ConfigData.m_refInpList, "sh"))
+    if (found(getConfData()->m_dutInpList, "sh") || found(getConfData()->m_refInpList, "sh"))
         m_ResourceTypeList.append("SCHEAD");
-    if (found(m_ConfigData.m_dutInpList, "hk") || found(m_ConfigData.m_refInpList, "hk"))
+    if (found(getConfData()->m_dutInpList, "hk") || found(getConfData()->m_refInpList, "hk"))
     m_ResourceTypeList.append("HKEY");
 
     emit activationContinue();
@@ -1159,14 +1165,14 @@ void cSec1ModuleMeasProgram::testSecInputs()
     QList<QString> InputNameList;
     qint32 nref;
 
-    nref = m_ConfigData.m_refInpList.count();
+    nref = getConfData()->m_refInpList.count();
 
     // first we build up a list with properties for all configured Inputs
     for (int i = 0; i < nref; i++)
     {
-        // siInfo.muxchannel = m_ConfigData.m_refInpList.at(i).m_nMuxerCode;
+        // siInfo.muxchannel = getConfData()->m_refInpList.at(i).m_nMuxerCode;
         siInfo = new cSecInputInfo();
-        mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i)] = siInfo;
+        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i)] = siInfo;
     }
 
     InputNameList = mREFSecInputInfoHash.keys();
@@ -1192,11 +1198,11 @@ void cSec1ModuleMeasProgram::testSecInputs()
         }
     }
 
-    for (int i = 0; i < m_ConfigData.m_dutInpList.count(); i++)
+    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
     {
-        // siInfo.muxchannel = m_ConfigData.m_dutInpList.at(i).m_nMuxerCode;
+        // siInfo.muxchannel = getConfData()->m_dutInpList.at(i).m_nMuxerCode;
         siInfo = new cSecInputInfo();
-        mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i)] = siInfo;
+        mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)] = siInfo;
     }
 
     qint32 ndut;
@@ -1244,7 +1250,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
 void cSec1ModuleMeasProgram::ecalcServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pSECClient = m_pProxy->getConnection(m_ConfigData.m_SECServerSocket.m_sIP, m_ConfigData.m_SECServerSocket.m_nPort);
+    m_pSECClient = m_pProxy->getConnection(getConfData()->m_SECServerSocket.m_sIP, getConfData()->m_SECServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
     m_ecalcServerConnectState.addTransition(m_pSECClient, SIGNAL(connected()), &m_fetchECalcUnitsState);
@@ -1263,7 +1269,7 @@ void cSec1ModuleMeasProgram::fetchECalcUnits()
 void cSec1ModuleMeasProgram::pcbServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pPCBClient = m_pProxy->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
+    m_pPCBClient = m_pProxy->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pPCBInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readREFInputsState);
@@ -1285,7 +1291,7 @@ void cSec1ModuleMeasProgram::readREFInputAlias()
     m_sIt = m_sItList.takeFirst();
     siInfo = mREFSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
     siInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    siInfo->pcbServersocket = m_ConfigData.m_PCBServerSocket;
+    siInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
     //m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readrefInputalias;
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
@@ -1316,7 +1322,7 @@ void cSec1ModuleMeasProgram::readDUTInputAlias()
     m_sIt = m_sItList.takeFirst();
     siInfo = mDUTSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
     siInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    siInfo->pcbServersocket = m_ConfigData.m_PCBServerSocket;
+    siInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
     m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readdutInputalias;
 }
 
@@ -1333,9 +1339,9 @@ void cSec1ModuleMeasProgram::readDUTInputDone()
 
 void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if ( (m_ConfigData.m_nRefInpCount > 0) && m_ConfigData.m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
+    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
     {
-        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(m_ConfigData.m_sRefInput.m_sPar),QString("%1").arg(irqPCBNotifier))] = setpcbrefconstantnotifier;
+        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar),QString("%1").arg(irqPCBNotifier))] = setpcbrefconstantnotifier;
         // todo also configure the query for setting this notifier .....very flexible
     }
     else
@@ -1353,20 +1359,20 @@ void cSec1ModuleMeasProgram::activationDone()
 {
     int nref;
 
-    nref = m_ConfigData.m_refInpList.count();
+    nref = getConfData()->m_refInpList.count();
     if (nref > 0)
     for (int i = 0; i < nref; i++)
     {
         // we could
-        m_REFAliasList.append(mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        siInfo = mREFSecInputInfoHash[m_ConfigData.m_refInpList.at(i)]; // change the hash for access via alias
+        m_REFAliasList.append(mREFSecInputInfoHash[getConfData()->m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
+        siInfo = mREFSecInputInfoHash[getConfData()->m_refInpList.at(i)]; // change the hash for access via alias
         mREFSecInputSelectionHash[siInfo->alias] = siInfo;
     }
 
-    for (int i = 0; i < m_ConfigData.m_dutInpList.count(); i++)
+    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
     {
-        m_DUTAliasList.append(mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        siInfo = mDUTSecInputInfoHash[m_ConfigData.m_dutInpList.at(i)]; // change the hash for access via alias
+        m_DUTAliasList.append(mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)]->alias); // build up a fixed sorted list of alias
+        siInfo = mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)]; // change the hash for access via alias
         mDUTSecInputSelectionHash[siInfo->alias] = siInfo;
     }
 
@@ -1396,7 +1402,7 @@ void cSec1ModuleMeasProgram::activationDone()
     setValidators();
 
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(m_ConfigData.m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
 
     m_bActive = true;
     emit activated();
@@ -1537,11 +1543,11 @@ void cSec1ModuleMeasProgram::setECResult()
     }
     else
     {
-        m_fResult = (1.0 * m_ConfigData.m_nTarget.m_nPar - 1.0 * m_nEnergyCounterFinal) * 100.0 / m_nEnergyCounterFinal;
+        m_fResult = (1.0 * getConfData()->m_nTarget.m_nPar - 1.0 * m_nEnergyCounterFinal) * 100.0 / m_nEnergyCounterFinal;
         setRating();
     }
 
-    m_fEnergy = 1.0 * m_nEnergyCounterFinal / m_ConfigData.m_fRefConstant.m_fPar;
+    m_fEnergy = 1.0 * m_nEnergyCounterFinal / getConfData()->m_fRefConstant.m_fPar;
     m_pResultAct->setValue(QVariant(m_fResult));
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
@@ -1588,8 +1594,8 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             // append to our result list
             m_multipleResultHelper.append(m_fResult,
                                           m_eRating,
-                                          m_ConfigData.m_fLowerLimit.m_fPar,
-                                          m_ConfigData.m_fUpperLimit.m_fPar);
+                                          getConfData()->m_fLowerLimit.m_fPar,
+                                          getConfData()->m_fUpperLimit.m_fPar);
             multiResultToVein();
         }
     }
@@ -1647,7 +1653,7 @@ void cSec1ModuleMeasProgram::setRating()
 {
     if (m_nStatus & ECALCSTATUS::READY)
     {
-        if ( (m_fResult >= m_ConfigData.m_fLowerLimit.m_fPar) && (m_fResult <= m_ConfigData.m_fUpperLimit.m_fPar))
+        if ( (m_fResult >= getConfData()->m_fLowerLimit.m_fPar) && (m_fResult <= getConfData()->m_fUpperLimit.m_fPar))
             m_eRating = ECALCRESULT::RESULT_PASSED;
         else
             m_eRating = ECALCRESULT::RESULT_FAILED;
@@ -1688,7 +1694,7 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
 
 void cSec1ModuleMeasProgram::newMode(QVariant mode)
 {
-    m_ConfigData.m_sMode.m_sPar = mode.toString();
+    getConfData()->m_sMode.m_sPar = mode.toString();
     setInterfaceComponents();
     m_pEnergyAct->setValue(0.0);
     m_pEnergyFinalAct->setValue(0.0);
@@ -1701,7 +1707,7 @@ void cSec1ModuleMeasProgram::newMode(QVariant mode)
 void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
 {
     bool ok;
-    m_ConfigData.m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
+    getConfData()->m_fDutConstant.m_fPar = dutconst.toDouble(&ok);
     setInterfaceComponents();
     if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
         setECResult();
@@ -1731,7 +1737,7 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
 void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
 {
     bool ok;
-    m_ConfigData.m_fRefConstant.m_fPar = refconst.toDouble(&ok);
+    getConfData()->m_fRefConstant.m_fPar = refconst.toDouble(&ok);
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1740,7 +1746,7 @@ void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 {
-    m_ConfigData.m_sDutInput.m_sPar = mDUTSecInputSelectionHash[dutinput.toString()]->name;
+    getConfData()->m_sDutInput.m_sPar = mDUTSecInputSelectionHash[dutinput.toString()]->name;
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1752,7 +1758,7 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
     QStringList sl;
     QString s;
 
-    m_ConfigData.m_sRefInput.m_sPar = mREFSecInputSelectionHash[refinput.toString()]->name;
+    getConfData()->m_sRefInput.m_sPar = mREFSecInputSelectionHash[refinput.toString()]->name;
     setInterfaceComponents();
 
     // if the reference input changes P <-> Q <-> S it is necessary to change dut constanst unit and its validator
@@ -1776,7 +1782,7 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 void cSec1ModuleMeasProgram::newMRate(QVariant mrate)
 {
     bool ok;
-    m_ConfigData.m_nMRate.m_nPar = mrate.toInt(&ok);
+    getConfData()->m_nMRate.m_nPar = mrate.toInt(&ok);
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1786,7 +1792,7 @@ void cSec1ModuleMeasProgram::newMRate(QVariant mrate)
 void cSec1ModuleMeasProgram::newTarget(QVariant target)
 {
     bool ok;
-    m_ConfigData.m_nTarget.m_nPar = target.toInt(&ok);
+    getConfData()->m_nTarget.m_nPar = target.toInt(&ok);
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1796,7 +1802,7 @@ void cSec1ModuleMeasProgram::newTarget(QVariant target)
 void cSec1ModuleMeasProgram::newEnergy(QVariant energy)
 {
     bool ok;
-    m_ConfigData.m_fEnergy.m_fPar = energy.toDouble(&ok);
+    getConfData()->m_fEnergy.m_fPar = energy.toDouble(&ok);
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1806,7 +1812,7 @@ void cSec1ModuleMeasProgram::newEnergy(QVariant energy)
 void cSec1ModuleMeasProgram::newUpperLimit(QVariant limit)
 {
     bool ok;
-    m_ConfigData.m_fUpperLimit.m_fPar = limit.toDouble(&ok);
+    getConfData()->m_fUpperLimit.m_fPar = limit.toDouble(&ok);
     setInterfaceComponents();
     setRating();
 
@@ -1817,7 +1823,7 @@ void cSec1ModuleMeasProgram::newUpperLimit(QVariant limit)
 void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
 {
     bool ok;
-    m_ConfigData.m_fLowerLimit.m_fPar = limit.toDouble(&ok);
+    getConfData()->m_fLowerLimit.m_fPar = limit.toDouble(&ok);
     setInterfaceComponents();
     setRating();
 
