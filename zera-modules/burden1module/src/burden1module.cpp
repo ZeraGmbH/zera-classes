@@ -79,11 +79,8 @@ void cBurden1Module::setupModule()
 
     cBaseMeasModule::setupModule();
 
-    cBurden1ModuleConfigData* pConfData;
-    pConfData = qobject_cast<cBurden1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cBurden1ModuleMeasProgram(this, *pConfData);
+    m_pMeasProgram = new cBurden1ModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

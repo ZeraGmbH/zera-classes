@@ -5,8 +5,10 @@
 #include <QStringList>
 #include <QVector>
 #include <QHash>
+#include <memory>
 
 #include "moduleactivist.h"
+#include "basemoduleconfiguration.h"
 
 class cBaseModule;
 class cSocket;
@@ -31,7 +33,7 @@ class cBaseMeasProgram: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasProgram(Zera::Proxy::cProxy* proxy);
+    cBaseMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseMeasProgram();
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
@@ -45,6 +47,7 @@ public slots:
 
 protected:
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
+    std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
     Zera::Server::cRMInterface* m_pRMInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
     // we hold an interface for every channel because it could be possible that our measuring

@@ -18,13 +18,14 @@
 #include "power3module.h"
 #include "power3modulemeasprogram.h"
 #include "power3measdelegate.h"
+#include "power3moduleconfiguration.h"
 
 
 namespace POWER3MODULE
 {
 
-cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, cPower3ModuleConfigData& configdata)
-    :m_pModule(module), m_ConfigData(configdata)
+cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
@@ -65,13 +66,18 @@ void cPower3ModuleMeasProgram::stop()
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
+cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
+{
+    return qobject_cast<cPower3ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
 
 void cPower3ModuleMeasProgram::generateInterface()
 {
     cVeinModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
 
-    for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++)
+    for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++)
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_HPP%1").arg(i+1),
@@ -114,7 +120,7 @@ void cPower3ModuleMeasProgram::generateInterface()
 
     }
 
-    m_pHPWCountInfo = new cVeinModuleMetaData(QString("HPWCount"), QVariant(m_ConfigData.m_nPowerSystemCount));
+    m_pHPWCountInfo = new cVeinModuleMetaData(QString("HPWCount"), QVariant(getConfData()->m_nPowerSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pHPWCountInfo);
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -138,16 +144,16 @@ void cPower3ModuleMeasProgram::searchActualValues()
     error = false;
     QList<cVeinModuleComponentInput*> inputList;
 
-    for (int i = 0; i < m_ConfigData.m_nPowerSystemCount; i++)
+    for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if ( (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputI)) )
+        if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU)) &&
+             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI)) )
         {
             cPower3MeasDelegate* cPMD;
             cVeinModuleComponentInput *vmci;
 
-            if (i == (m_ConfigData.m_nPowerSystemCount-1))
+            if (i == (getConfData()->m_nPowerSystemCount-1))
             {
                 cPMD = new cPower3MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2),true);
                 connect(cPMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
@@ -157,11 +163,11 @@ void cPower3ModuleMeasProgram::searchActualValues()
 
             m_Power3MeasDelegateList.append(cPMD);
 
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputU);
+            vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput1(QVariant)));
 
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_nModuleId, m_ConfigData.m_powerSystemConfigList.at(i).m_sInputI);
+            vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
             inputList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput2(QVariant)));
         }

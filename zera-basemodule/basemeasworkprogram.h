@@ -6,16 +6,18 @@
 #include <QStringList>
 #include <QVector>
 #include <QHash>
+#include <memory>
 
 #include "moduleactivist.h"
 #include "basemoduleeventsystem.h"
+#include "basemoduleconfiguration.h"
 
 class cBaseMeasWorkProgram: public cModuleActivist
 {
     Q_OBJECT
 
 public:
-    cBaseMeasWorkProgram();
+    cBaseMeasWorkProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseMeasWorkProgram();
     virtual void generateInterface() = 0; // here we export our interface (entities)
     virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
@@ -31,6 +33,7 @@ public slots:
 protected:
     QVector<float> m_ModuleActualValues; // a modules actual values
     cBaseModuleEventSystem *m_pEventSystem;
+    std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
 };
 
 

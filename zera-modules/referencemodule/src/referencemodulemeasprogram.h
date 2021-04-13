@@ -53,7 +53,7 @@ class cReferenceModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cReferenceModuleMeasProgram(cReferenceModule* module, Zera::Proxy::cProxy* proxy, cReferenceModuleConfigData& configData);
+    cReferenceModuleMeasProgram(cReferenceModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cReferenceModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -72,10 +72,11 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    cReferenceModuleConfigData* getConfData();
+
     cReferenceModule* m_pModule; // the module we live in
     quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
-    cReferenceModuleConfigData& m_ConfigData;
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;

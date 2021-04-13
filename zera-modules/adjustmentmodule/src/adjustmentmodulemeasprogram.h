@@ -95,7 +95,7 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, cAdjustmentModuleConfigData& configdata);
+    cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cAdjustmentModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -117,9 +117,10 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 private:
+    cAdjustmentModuleConfigData* getConfData();
+
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
-    cAdjustmentModuleConfigData& m_ConfigData;
     Zera::Server::cPCBInterface* m_AdjustPCBInterface; //we use the following 7 parameters globally defined for easier
     QString m_sAdjustSysName; // use within statemachines ... we have to keep in mind that adjustment
     QString m_sAdjustChannel; // commands can only be used in sequence not in parallel

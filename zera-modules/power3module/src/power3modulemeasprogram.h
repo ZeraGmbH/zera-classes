@@ -83,7 +83,7 @@ class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cPower3ModuleMeasProgram(cPower3Module* module, cPower3ModuleConfigData& configdata);
+    cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cPower3ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -93,9 +93,9 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 private:
-    cPower3Module* m_pModule;
-    cPower3ModuleConfigData& m_ConfigData;
+    cPower3ModuleConfigData* getConfData();
 
+    cPower3Module* m_pModule;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pHPWCountInfo; // the number of values we produce
     cVeinModuleComponent* m_pMeasureSignal;

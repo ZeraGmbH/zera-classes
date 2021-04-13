@@ -106,7 +106,7 @@ class cPower2ModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cPower2ModuleMeasProgram(cPower2Module* module, Zera::Proxy::cProxy* proxy, cPower2ModuleConfigData& configdata);
+    cPower2ModuleMeasProgram(cPower2Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cPower2ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -125,9 +125,9 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    cPower2Module* m_pModule;
-    cPower2ModuleConfigData& m_ConfigData;
+    cPower2ModuleConfigData* getConfData();
 
+    cPower2Module* m_pModule;
     QHash<QString,cMeasModeInfo> m_MeasuringModeInfoHash; // a list of all measuring modes we know with additional info
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel

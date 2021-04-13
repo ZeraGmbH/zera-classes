@@ -1,7 +1,7 @@
 #include "basemeasprogram.h"
 
-cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy)
-    :m_pProxy(proxy)
+cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    : m_pProxy(proxy), m_pConfiguration(pConfiguration)
 {
 }
 

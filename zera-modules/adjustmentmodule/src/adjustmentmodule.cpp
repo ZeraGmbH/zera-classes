@@ -79,11 +79,8 @@ void cAdjustmentModule::setupModule()
 
     cBaseMeasModule::setupModule();
 
-    cAdjustmentModuleConfigData* pConfData;
-    pConfData = qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the job
-    m_pMeasProgram = new cAdjustmentModuleMeasProgram(this, m_pProxy, *pConfData);
+    m_pMeasProgram = new cAdjustmentModuleMeasProgram(this, m_pProxy, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

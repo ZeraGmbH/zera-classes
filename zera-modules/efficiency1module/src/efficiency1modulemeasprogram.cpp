@@ -18,13 +18,14 @@
 #include "efficiency1module.h"
 #include "efficiency1modulemeasprogram.h"
 #include "efficiency1measdelegate.h"
+#include "efficiency1moduleconfiguration.h"
 
 
 namespace EFFICIENCY1MODULE
 {
 
-cEfficiency1ModuleMeasProgram::cEfficiency1ModuleMeasProgram(cEfficiency1Module* module, cEfficiency1ModuleConfigData& configdata)
-    :m_pModule(module), m_ConfigData(configdata)
+cEfficiency1ModuleMeasProgram::cEfficiency1ModuleMeasProgram(cEfficiency1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
     m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
 
@@ -65,6 +66,11 @@ void cEfficiency1ModuleMeasProgram::start()
 void cEfficiency1ModuleMeasProgram::stop()
 {
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
+}
+
+cEfficiency1ModuleConfigData *cEfficiency1ModuleMeasProgram::getConfData()
+{
+    return qobject_cast<cEfficiency1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
 
@@ -109,19 +115,19 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
 
     error = false;
 
-    for (int i = 0; i < m_ConfigData.m_PowerInputConfiguration.m_nPowerSystemCount; i++)
+    for (int i = 0; i < getConfData()->m_PowerInputConfiguration.m_nPowerSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if (!m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_PowerInputConfiguration.m_nModuleId,
-                                                        m_ConfigData.m_PowerInputConfiguration.powerInputList.at(i)))
+        if (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_PowerInputConfiguration.m_nModuleId,
+                                                        getConfData()->m_PowerInputConfiguration.powerInputList.at(i)))
             error = true;
     }
 
-    for (int i = 0; i < m_ConfigData.m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
+    for (int i = 0; i < getConfData()->m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
     {
         // we first test that wanted input components exist
-        if (!m_pModule->m_pStorageSystem->hasStoredValue(m_ConfigData.m_PowerOutputConfiguration.m_nModuleId,
-                                                        m_ConfigData.m_PowerOutputConfiguration.powerInputList.at(i)))
+        if (!m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_PowerOutputConfiguration.m_nModuleId,
+                                                        getConfData()->m_PowerOutputConfiguration.powerInputList.at(i)))
             error = true;
     }
 
@@ -137,17 +143,17 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
 
         m_Efficiency1MeasDelegateList.append(cEMD);
 
-        for (int i = 0; i < m_ConfigData.m_PowerInputConfiguration.m_nPowerSystemCount; i++)
+        for (int i = 0; i < getConfData()->m_PowerInputConfiguration.m_nPowerSystemCount; i++)
         {
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_PowerInputConfiguration.m_nModuleId, m_ConfigData.m_PowerInputConfiguration.powerInputList.at(i));
+            vmci = new cVeinModuleComponentInput(getConfData()->m_PowerInputConfiguration.m_nModuleId, getConfData()->m_PowerInputConfiguration.powerInputList.at(i));
             cEMD->addInputPowerValue(vmci);
             vmciList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cEMD, SLOT(actValueInput1(QVariant)));
         }
 
-        for (int i = 0; i < m_ConfigData.m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
+        for (int i = 0; i < getConfData()->m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
         {
-            vmci = new cVeinModuleComponentInput(m_ConfigData.m_PowerOutputConfiguration.m_nModuleId, m_ConfigData.m_PowerOutputConfiguration.powerInputList.at(i));
+            vmci = new cVeinModuleComponentInput(getConfData()->m_PowerOutputConfiguration.m_nModuleId, getConfData()->m_PowerOutputConfiguration.powerInputList.at(i));
             cEMD->addOutputPowerValue(vmci);
             vmciList.append(vmci);
             connect(vmci, SIGNAL(sigValueChanged(QVariant)), cEMD, SLOT(actValueInput2(QVariant)));

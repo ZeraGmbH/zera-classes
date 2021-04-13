@@ -88,7 +88,7 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy::cProxy* proxy, cSem1ModuleConfigData& configData);
+    cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSem1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -102,9 +102,9 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
-    cSem1Module* m_pModule; // the module we live in
-    cSem1ModuleConfigData& m_ConfigData;
+    cSem1ModuleConfigData* getConfData();
 
+    cSem1Module* m_pModule; // the module we live in
     Zera::Server::cSECInterface* m_pSECInterface;
     Zera::Server::cPCBInterface* m_pPCBInterface;
 

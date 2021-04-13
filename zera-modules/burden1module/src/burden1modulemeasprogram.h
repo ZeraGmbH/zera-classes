@@ -78,7 +78,7 @@ class cBurden1ModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cBurden1ModuleMeasProgram(cBurden1Module* module, cBurden1ModuleConfigData& configdata);
+    cBurden1ModuleMeasProgram(cBurden1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBurden1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -88,9 +88,9 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 private:
-    cBurden1Module* m_pModule;
-    cBurden1ModuleConfigData& m_ConfigData;
+    cBurden1ModuleConfigData* getConfData();
 
+    cBurden1Module* m_pModule;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
     cVeinModuleMetaData* m_pBRSCountInfo; // the number of Burden system we are configured for
     cVeinModuleComponent* m_pMeasureSignal;
