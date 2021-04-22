@@ -80,7 +80,6 @@ public slots:
     void catchChannelNewRangeList();
 
 signals:
-    void readStatusContinue();
 
 private:
     cRangeModule *m_pModule;
@@ -134,11 +133,6 @@ private:
     QState m_writeGainCorrState;
     QState m_writeGainCorrRepeatState;
     QFinalState m_writeGainCorrDoneState;
-
-    // statemachine for reading status of all measurement channels
-    QStateMachine m_readStatusMachine;
-    QState m_readStatusState;
-    QFinalState m_analyzeStatusState;
 
     bool m_bRangeAutomatic;
     bool m_bGrouping;

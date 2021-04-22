@@ -31,6 +31,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
 {
     m_brangeSet =false;
     m_nWaitAfterRanging = 0;
+    m_nReadStatusPending = 0;
     m_nRangeSetPending = 0;
 
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
@@ -65,13 +66,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     connect(&m_writeGainCorrState, SIGNAL(entered()), SLOT(writeGainCorr()));
     connect(&m_writeGainCorrDoneState, SIGNAL(entered()), SLOT(writeGainCorrDone()));
 
-    m_readStatusState.addTransition(this, SIGNAL(readStatusContinue()), &m_analyzeStatusState);
-    m_readStatusMachine.addState(&m_readStatusState);
-    m_readStatusMachine.addState(&m_analyzeStatusState);
-    m_readStatusMachine.setInitialState(&m_readStatusState);
-    connect(&m_readStatusState, SIGNAL(entered()), SLOT(readStatus()));
-    connect(&m_analyzeStatusState, SIGNAL(entered()), SLOT(analyzeStatus()));
-
 }
 
 
@@ -104,8 +98,6 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
             rangeAutomatic(); // let rangeautomatic do its job
             groupHandling(); // and look for grouping channels if necessary
             setRanges(); // set the new ranges now
-            if (!m_readStatusMachine.isRunning()) // we only start if not running
-                m_readStatusMachine.start();
         }
     }
 }
@@ -423,15 +415,7 @@ void cRangeObsermatic::setRanges(bool force)
 
             change = true;
 
-            // if we have an overload condition in channel we reset it before we set the new range
-            // but we don't do this if we are in range automatic and have an overload in max. range
-            if (m_hardOvlList.at(i) && !(m_maxOvlList.at(i) && m_bRangeAutomatic))
-            {
-                m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
-                m_hardOvlList.replace(i, false);
-                m_maxOvlList.replace(i, false);
-            }
-
+            // set range
             m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
             m_nRangeSetPending++;
             m_actChannelRangeList.replace(i, s);
@@ -444,6 +428,22 @@ void cRangeObsermatic::setRanges(bool force)
             m_RangeActRejectionComponentList.at(i)->setValue(pmChn->getUrValue());
             // we additional set information of channels actual urvalue incl. reserve
             m_RangeActOVLRejectionComponentList.at(i)->setValue(pmChn->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
+
+            // reset hard overload AFTER change of range. We do this in case of
+            // * hard overload: no explanation required - righty?
+            // * soft overload: In many cases particularly when running on
+            //   sources switching load with ramps our soft detection is faster
+            //   and hard overloads are generated later (while we are changing
+            //   range already)
+            // Avoid resetting hard-overload in max range + range-automatic: It
+            // would cause a infinite loop: We reset hard-overload -> hardware
+            // sets it / we reset hard-overload -> hardware...
+            if ((m_hardOvlList.at(i) || m_softOvlList.at(i)) && !(m_maxOvlList.at(i) && m_bRangeAutomatic))
+            {
+                m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
+                m_hardOvlList.replace(i, false);
+                m_maxOvlList.replace(i, false);
+            }
 
 #ifdef DEBUG
             qDebug() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);
@@ -463,16 +463,25 @@ void cRangeObsermatic::setRanges(bool force)
                 m_actChannelRangeNotifierList.replace(i, (m_actChannelRangeList.at(i)));
             }
         }
-
-
-
     }
 
-    if (change)
-        if (m_writeCorrectionDSPMachine.isRunning())
+    if (change) {
+        if (m_writeCorrectionDSPMachine.isRunning()) {
             emit activationRepeat();
-        else
+        }
+        else {
             m_writeCorrectionDSPMachine.start(); // we write all correction after each range setting
+        }
+    }
+    // setRanges (=this function :) is called
+    // * periodically in ActionHandler
+    // * here and there on special occasions
+    // =>
+    // * readStatus is called periodically
+    // * since readStatus/analyzeStatus ignore pending status-queries, we
+    //   make sure that we receive an overload status AFTER range changes
+    //   finished.
+    readStatus(); // get overload status
 }
 
 
@@ -648,10 +657,7 @@ void cRangeObsermatic::writeGainCorrDone()
 void cRangeObsermatic::readStatus()
 {
     cRangeMeasChannel *pmChn;
-
-    if (m_bActive)
-    {
-        m_nReadStatusPending = 0;
+    if(m_bActive) {
         for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we read status from all channels
         {
             pmChn = m_RangeMeasChannelList.at(i);
@@ -852,9 +858,8 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
         if (m_nReadStatusPending > 0)
         {
             m_nReadStatusPending--;
-            if (m_nReadStatusPending == 0)
-            {
-                emit readStatusContinue();
+            if (m_nReadStatusPending == 0) {
+                analyzeStatus();
             }
         }
         break;
