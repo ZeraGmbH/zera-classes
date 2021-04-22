@@ -97,7 +97,6 @@ private:
     QList<bool> m_softOvlList; // here we enter software detected overloads
     QList<bool> m_hardOvlList; // what do you think ?
     QList<bool> m_maxOvlList; // here we enter overloads that occured in maximum range
-    bool m_bRanging;
     quint32 m_nWaitAfterRanging;
     quint32 m_nRangeSetPending;
     quint32 m_nReadStatusPending;
