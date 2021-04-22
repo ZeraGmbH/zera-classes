@@ -167,7 +167,9 @@ quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
         return 1;
 }
 
-
+// This caused a bit of confusion so write it down:
+// com5003d/mt310d reads (global) critical status for each channnel and
+// check only that bit belonging to the channnel
 quint32 cRangeMeasChannel::readStatus()
 {
     if (m_bActive)

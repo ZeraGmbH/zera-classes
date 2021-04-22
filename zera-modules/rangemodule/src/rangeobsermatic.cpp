@@ -86,13 +86,13 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
         else
         {
             m_ActualValues = *actualValues;
-            // qDebug() << "range obsermatic new actual values";
+            // qInfo() << "range obsermatic new actual values";
 
 #ifdef DEBUG
-            qDebug() << QString("PEAK %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
+            qInfo() << QString("PEAK %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
                      << QString("%1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
 #endif
-            // qDebug() << QString("RMS %1 ; %2 ; %3").arg(m_ActualValues[6]).arg(m_ActualValues[7]).arg(m_ActualValues[8]);
+            // qInfo() << QString("RMS %1 ; %2 ; %3").arg(m_ActualValues[6]).arg(m_ActualValues[7]).arg(m_ActualValues[8]);
 
             rangeObservation(); // first we test for overload conditions
             rangeAutomatic(); // let rangeautomatic do its job
@@ -244,13 +244,21 @@ void cRangeObsermatic::rangeObservation()
 
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        if ( (pmChn->isRMSOverload(m_ActualValues[nrActValues+i])) || (pmChn->isADCOverload(m_ActualValues[2 * nrActValues + 1 + i])) || m_hardOvlList.at(i)) // if any overload ?
-        {
+        bool rmsOverload = pmChn->isRMSOverload(m_ActualValues[nrActValues+i]);
+        bool adcOverLoad = pmChn->isADCOverload(m_ActualValues[2 * nrActValues + 1 + i]);
+        bool hardOverLoad = m_hardOvlList.at(i);
+        if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
+            qInfo("Overload channel %i / Range %s: RMS %i / ADC %i / Hard %i",
+                  i,
+                  qPrintable(m_actChannelRangeList.at(i)),
+                  rmsOverload,
+                  adcOverLoad,
+                  hardOverLoad);
             markOverload = true;
             // we mark each overload condition if possible (range automatic) we unmark it
             // but there was an edge on this entity
 
-                // if an overload is recovered by rangeautomatic during running measurement
+            // if an overload is recovered by rangeautomatic during running measurement
 
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
             QString s = pmChn->getMaxRange(sPar.m_sPar);
@@ -408,7 +416,7 @@ void cRangeObsermatic::setRanges(bool force)
             if (!change) // signal is only set once regardingless there is more than 1 range to change
             {
 #ifdef DEBUG
-                qDebug() << "SIG_RANGING = 1";
+                qInfo("Ranging started");
 #endif
                 m_pRangingSignal->setValue(QVariant(int(1)));
             }
@@ -440,13 +448,16 @@ void cRangeObsermatic::setRanges(bool force)
             // sets it / we reset hard-overload -> hardware...
             if ((m_hardOvlList.at(i) || m_softOvlList.at(i)) && !(m_maxOvlList.at(i) && m_bRangeAutomatic))
             {
+#ifdef DEBUG
+                qInfo("Reset overload channel %i", i+1);
+#endif
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
             }
 
 #ifdef DEBUG
-            qDebug() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);
+            qInfo() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);
 #endif
         }
 
@@ -530,7 +541,7 @@ void cRangeObsermatic::dspserverConnect()
 
 void cRangeObsermatic::readGainCorr()
 {
-    // qDebug() << "readGainCorr";
+    // qInfo() << "readGainCorr";
     m_pGainCorrection2DSP = m_pDSPInterFace->getMemHandle("SCALEMEM");
     m_pGainCorrection2DSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
     m_pfScale =  m_pDSPInterFace->data(m_pGainCorrection2DSP, "GAINCORRECTION2");
@@ -642,7 +653,7 @@ void cRangeObsermatic::deactivationDone()
 
 void cRangeObsermatic::writeGainCorr()
 {
-    // qDebug() << "writeGainCorr";
+    // qInfo() << "writeGainCorr";
     if (m_bActive)
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
 }
@@ -650,7 +661,7 @@ void cRangeObsermatic::writeGainCorr()
 
 void cRangeObsermatic::writeGainCorrDone()
 {
-    // qDebug() << "writeGainCorrDone";
+    // qInfo() << "writeGainCorrDone";
 }
 
 
@@ -664,6 +675,9 @@ void cRangeObsermatic::readStatus()
             m_MsgNrCmdList[pmChn->readStatus()] = readstatus;
             m_nReadStatusPending++;
         }
+#ifdef DEBUG
+        qInfo("readStatus / m_nReadStatusPending: %i", m_nReadStatusPending);
+#endif
     }
 }
 
@@ -671,12 +685,14 @@ void cRangeObsermatic::readStatus()
 void cRangeObsermatic::analyzeStatus()
 {
     cRangeMeasChannel *pmChn;
-
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we test all channels
     {
         pmChn = m_RangeMeasChannelList.at(i);
         m_hardOvlList.replace(i, pmChn->isHWOverload());
     }
+#ifdef DEBUG
+    qInfo() << "Status analyzed:" << m_hardOvlList;
+#endif
 }
 
 
@@ -739,14 +755,14 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
 
     if ( (m_bRangeAutomatic = (rauto.toInt(&ok) == 1)) )
     {
-        //qDebug() << "Range Automatic on";
+        //qInfo() << "Range Automatic on";
         rangeAutomatic(); // call once if switched to automatic
         groupHandling(); // check for grouping
         setRanges();
     }
     else
     {
-        //qDebug() << "Range Automatic off";
+        //qInfo() << "Range Automatic off";
     }
 
     emit m_pModule->parameterChanged();
@@ -823,7 +839,7 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
                 {
                     emit errMsg((tr(readdspgaincorrErrMsg)));
 #ifdef DEBUG
-                    qDebug() << readdspgaincorrErrMsg;
+                    qInfo() << readdspgaincorrErrMsg;
 #endif
                     emit activationError();
                 }
@@ -835,7 +851,7 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
                 {
                     emit errMsg((tr(writedspgaincorrErrMsg)));
 #ifdef DEBUG
-                    qDebug() << writedspgaincorrErrMsg;
+                    qInfo() << writedspgaincorrErrMsg;
 #endif
                     // emit activationError();
                     emit executionError(); // we also emit exec error because
@@ -877,7 +893,7 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
                 if (m_nRangeSetPending == 0)
                 {
 #ifdef DEBUG
-                    qDebug() << "SIG_RANGING = 0";
+                    qInfo("Ranging finished");
 #endif
                     m_pRangingSignal->setValue(QVariant(0));
                     m_nWaitAfterRanging = 1;
