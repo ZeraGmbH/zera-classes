@@ -30,7 +30,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     :m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dsprmsocket), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
 {
     m_brangeSet =false;
-    m_bRanging = false;
     m_nWaitAfterRanging = 0;
     m_nRangeSetPending = 0;
 
@@ -84,7 +83,7 @@ cRangeObsermatic::~cRangeObsermatic()
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 {
-    if (!m_bRanging)
+    if (m_nRangeSetPending == 0)
     {
         if (m_nWaitAfterRanging > 0)
         {
@@ -435,7 +434,6 @@ void cRangeObsermatic::setRanges(bool force)
 
             m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
             m_nRangeSetPending++;
-            m_bRanging = true;
             m_actChannelRangeList.replace(i, s);
 
             // we set the scaling factor here
@@ -877,7 +875,6 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
                     qDebug() << "SIG_RANGING = 0";
 #endif
                     m_pRangingSignal->setValue(QVariant(0));
-                    m_bRanging = false;
                     m_nWaitAfterRanging = 1;
                 }
             }
