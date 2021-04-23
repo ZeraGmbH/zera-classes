@@ -29,7 +29,7 @@ namespace RANGEMODULE
 cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* proxy, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar)
     :m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dsprmsocket), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
 {
-    m_brangeSet =false;
+    m_brangeSet = false;
     m_nWaitAfterRanging = 0;
     m_nReadStatusPending = 0;
     m_nRangeSetPending = 0;
@@ -77,14 +77,11 @@ cRangeObsermatic::~cRangeObsermatic()
 
 void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
 {
-    if (m_nRangeSetPending == 0)
-    {
-        if (m_nWaitAfterRanging > 0)
-        {
+    if (m_nRangeSetPending == 0) {
+        if (m_nWaitAfterRanging > 0) {
             m_nWaitAfterRanging--;
         }
-        else
-        {
+        else {
             m_ActualValues = *actualValues;
             // qInfo() << "range obsermatic new actual values";
 
@@ -112,8 +109,7 @@ void cRangeObsermatic::generateInterface()
     cVeinModuleComponent *pComponent;
     cVeinModuleParameter *pParameter;
 
-    for (int i = 0; i < m_ChannelNameList.count(); i++)
-    {
+    for (int i = 0; i < m_ChannelNameList.count(); i++) {
 
         pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_Channel%1Range").arg(i+1),
@@ -166,11 +162,9 @@ void cRangeObsermatic::generateInterface()
         m_maxOvlList.append(false);
     }
 
-    if (m_GroupList.count() > 0)
-    {
+    if (m_GroupList.count() > 0) {
         QString sep = ";";
-        for (int i = 0; i < m_GroupList.count(); i++)
-        {
+        for (int i = 0; i < m_GroupList.count(); i++) {
 
           QString s = m_GroupList.at(i).join(sep);
 
@@ -179,8 +173,7 @@ void cRangeObsermatic::generateInterface()
         }
     }
 
-    if (m_ConfPar.m_bRangeAuto)
-    {
+    if (m_ConfPar.m_bRangeAuto) {
         m_pParRangeAutomaticOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                              QString("PAR_RangeAutomatic"),
                                                              QString("Component for switching on/off the range automatic"),
@@ -189,8 +182,7 @@ void cRangeObsermatic::generateInterface()
         m_pModule->veinModuleParameterHash["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
     }
 
-    if (m_ConfPar.m_bGrouping)
-    {
+    if (m_ConfPar.m_bGrouping) {
         m_pParGroupingOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        QString("PAR_ChannelGrouping"),
                                                        QString("Component for switching on/off channel grouping"),
@@ -199,8 +191,7 @@ void cRangeObsermatic::generateInterface()
         m_pModule->veinModuleParameterHash["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
     }
 
-    if (m_ConfPar.m_bOverload)
-    {
+    if (m_ConfPar.m_bOverload) {
         m_pParOverloadOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        QString("PAR_Overload"),
                                                        QString("Component for reading and resetting overload"),
@@ -238,8 +229,7 @@ void cRangeObsermatic::rangeObservation()
     nrActValues = m_RangeMeasChannelList.count();
     cRangeMeasChannel *pmChn;
 
-    for (int i = 0; i < nrActValues; i++) // we test all channels
-    {
+    for (int i = 0; i < nrActValues; i++) { // we test all channels
         pmChn = m_RangeMeasChannelList.at(i);
 
         // for test overload we take the rms value with/without dc depending on configuration
@@ -274,8 +264,7 @@ void cRangeObsermatic::rangeObservation()
             m_RangeOVLComponentList.at(i)->setValue(QVariant(1)); // set interface overload
             m_softOvlList.replace(i, true); //
         }
-        else
-        {
+        else {
             m_RangeOVLComponentList.at(i)->setValue(QVariant(0));
             m_softOvlList.replace(i, false);
         }
@@ -283,11 +272,14 @@ void cRangeObsermatic::rangeObservation()
 
     disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
 
-    if (markOverload)
+    if (markOverload) {
         m_pParOverloadOnOff->setValue(QVariant(1));
-    else
-        if (m_brangeSet) // only after manuell setting of range
+    }
+    else {
+        if (m_brangeSet) { // only after manuell setting of range
             m_pParOverloadOnOff->setValue(QVariant(0));
+        }
+    }
 
     m_brangeSet = false;
 
@@ -297,59 +289,53 @@ void cRangeObsermatic::rangeObservation()
 
 void cRangeObsermatic::rangeAutomatic()
 {
-    if (m_bRangeAutomatic)
-    {
+    if (m_bRangeAutomatic) {
         bool unmarkOverload = true;
         cRangeMeasChannel *pmChn;
 
-        for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we test all channels
-        {
-            if (!m_maxOvlList.at(i)) // no range automatic if there was overload in max range
-            {
+        for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we test all channels
+            if (!m_maxOvlList.at(i)) { // no range automatic if there was overload in max range
                 pmChn = m_RangeMeasChannelList.at(i);
 
-                if (!m_hardOvlList.at(i))
-                {
-                    if (!m_softOvlList.at(i))
-                    {
+                if (!m_hardOvlList.at(i)) {
+                    if (!m_softOvlList.at(i)) {
                         stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
                         sPar.m_sPar = pmChn->getOptRange(m_ActualValues[i], sPar.m_sPar);
                         m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
                     }
                 }
 
-                else
-                {
+                else {
                     unmarkOverload = false;
                     m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 }
             }
-
-            else
+            else {
                 unmarkOverload = false;
+            }
         }
 
-        if (unmarkOverload) // if we could recover all overloads
+        if (unmarkOverload) { // if we could recover all overloads
             m_pParOverloadOnOff->setValue(QVariant(int(0)));
+        }
     }
 }
 
 
 void cRangeObsermatic::groupHandling()
 {
-    if (m_bGrouping)
-    {
+    if (m_bGrouping) {
         QStringList grouplist;
         QList<int> indexList;
-        for (int i = 0; i < m_GroupList.count(); i++)
-        {
+        for (int i = 0; i < m_GroupList.count(); i++) {
             indexList.clear();
             grouplist = m_GroupList.at(i); // we fetch 1 list of all our grouplists
-            for(int j = 0; j < grouplist.count(); j++)
-                if (m_ChannelAliasList.contains(grouplist.at(j))) // and look if all channels of that grouplist are present
+            for(int j = 0; j < grouplist.count(); j++) {
+                if (m_ChannelAliasList.contains(grouplist.at(j))) { // and look if all channels of that grouplist are present
                     indexList.append(m_ChannelAliasList.indexOf(grouplist.at(j)));
-            if (grouplist.count() == indexList.count())
-            {
+                }
+            }
+            if (grouplist.count() == indexList.count()) {
                 // we found all entries of grouplist in our alias list, means group is completely present
                 // so we can group now
                 double maxUrValue= 0.0;
@@ -357,18 +343,16 @@ void cRangeObsermatic::groupHandling()
                 int maxIndex = 0;
 
                 // first we search for the range with max upper range value
-                for (int j = 0; j < indexList.count(); j++)
-                {
+                for (int j = 0; j < indexList.count(); j++) {
                     int k = indexList.at(j);
                     rngUrValue = m_RangeMeasChannelList.at(k)->getUrValue(m_ConfPar.m_senseChannelRangeParameter.at(k).m_sPar);
-                    if (maxUrValue < rngUrValue)
-                    {
+                    if (maxUrValue < rngUrValue) {
                         bool allPossible =true;
-                        for (int l = 0; l <indexList.count(); l++)
+                        for (int l = 0; l <indexList.count(); l++) {
                             allPossible = allPossible && m_RangeMeasChannelList.at(indexList.at(l))->isPossibleRange(m_ConfPar.m_senseChannelRangeParameter.at(k).m_sPar);
+                        }
                         // but we only take the new maximum value if all channels support this range
-                        if (allPossible)
-                        {
+                        if (allPossible) {
                             maxUrValue = rngUrValue;
                             maxIndex = indexList.at(j); //
                         }
@@ -377,14 +361,12 @@ void cRangeObsermatic::groupHandling()
 
                 // then we set all channels in grouplist to that range
                 QString newRange = m_ConfPar.m_senseChannelRangeParameter.at(maxIndex).m_sPar;
-                for (int j = 0; j < indexList.count(); j++)
-                {
+                for (int j = 0; j < indexList.count(); j++) {
                     int k = indexList.at(j);
                     stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(k);
                     sPar.m_sPar = newRange;
                     m_ConfPar.m_senseChannelRangeParameter.replace(k, sPar);
                 }
-
             }
         }
     }
@@ -399,28 +381,23 @@ void cRangeObsermatic::setRanges(bool force)
     bool change;
 
     change = false;
-    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we set all channels if needed
-    {
+    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we set all channels if needed
         s = m_ConfPar.m_senseChannelRangeParameter.at(i).m_sPar;
         pmChn = m_RangeMeasChannelList.at(i);
-        if (! pmChn->isPossibleRange(s)) // we test whether this range is possible, otherwise we take the max. range
-        {
+        if (! pmChn->isPossibleRange(s)) { // we test whether this range is possible, otherwise we take the max. range
             stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
             s = pmChn->getMaxRange(sPar.m_sPar);
             sPar.m_sPar = s;
             m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
         }
 
-        if ( s != m_actChannelRangeList.at(i) || force)
-        {
-            if (!change) // signal is only set once regardingless there is more than 1 range to change
-            {
+        if ( s != m_actChannelRangeList.at(i) || force) {
+            if (!change) { // signal is only set once regardingless there is more than 1 range to change
 #ifdef DEBUG
                 qInfo("Ranging started");
 #endif
                 m_pRangingSignal->setValue(QVariant(int(1)));
             }
-
             change = true;
 
             // set range
@@ -446,8 +423,7 @@ void cRangeObsermatic::setRanges(bool force)
             // Avoid resetting hard-overload in max range + range-automatic: It
             // would cause a infinite loop: We reset hard-overload -> hardware
             // sets it / we reset hard-overload -> hardware...
-            if ((m_hardOvlList.at(i) || m_softOvlList.at(i)) && !(m_maxOvlList.at(i) && m_bRangeAutomatic))
-            {
+            if ((m_hardOvlList.at(i) || m_softOvlList.at(i)) && !(m_maxOvlList.at(i) && m_bRangeAutomatic)) {
 #ifdef DEBUG
                 qInfo("Reset overload channel %i", i+1);
 #endif
@@ -461,8 +437,7 @@ void cRangeObsermatic::setRanges(bool force)
 #endif
         }
 
-        else
-        {
+        else {
             // the parameter delegate had memorized that there will be a deferred notification
             // so we have to give this even in case nothing has changed. otherwise there will
             // remain pending synchronisation marks...but we must remember when we have sent notification
@@ -499,9 +474,8 @@ void cRangeObsermatic::setRanges(bool force)
 QList<int> cRangeObsermatic::getGroupIndexList(int index)
 {
     QList<int> indexlist;
-    QString s = m_ChannelAliasList.at(index); // we search for this channel alias
-    if (m_bGrouping)
-    {
+    if (m_bGrouping) {
+        QString s = m_ChannelAliasList.at(index); // we search for this channel alias
         QStringList grouplist;
         for (int i = 0; i < m_GroupList.count(); i++)
         {
@@ -517,8 +491,9 @@ QList<int> cRangeObsermatic::getGroupIndexList(int index)
             // if we have a channel that is not included in a grouping list
             indexlist.append(index);
     }
-    else
+    else {
         indexlist.append(index); // we return 1 index at least
+    }
 
     return indexlist;
 }
@@ -528,8 +503,9 @@ void cRangeObsermatic::dspserverConnect()
 {
     // the alias list is correctly filled when activating range obsermatic
     // the module has first activated the channels before activating rangeobsermatic
-    for (int i = 0; i < m_ChannelNameList.count(); i++)
+    for (int i = 0; i < m_ChannelNameList.count(); i++) {
         m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
+    }
 
     m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
@@ -557,19 +533,22 @@ void cRangeObsermatic::readGainCorrDone()
 
     // we already read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
-    for (int i = 0; i < m_ChannelNameList.count(); i++)
+    for (int i = 0; i < m_ChannelNameList.count(); i++) {
         connect(m_RangeParameterList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(newRange(QVariant)));
+    }
 
-    if (m_ConfPar.m_bRangeAuto)
+    if (m_ConfPar.m_bRangeAuto) {
         connect(m_pParRangeAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRangeAuto(QVariant)));
-    if (m_ConfPar.m_bGrouping)
+    }
+    if (m_ConfPar.m_bGrouping) {
         connect(m_pParGroupingOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newGrouping(QVariant)));
-    if (m_ConfPar.m_bOverload)
+    }
+    if (m_ConfPar.m_bOverload) {
         connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
+    }
 
     cRangeMeasChannel *pmChn;
-    for (int i = 0; i < m_RangeMeasChannelList.count(); i++)
-    {
+    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
         pmChn = m_RangeMeasChannelList.at(i);
         m_RangeOVLRejectionComponentList.at(i)->setValue(pmChn->getMaxRangeUrvalueMax());
     }
@@ -578,8 +557,7 @@ void cRangeObsermatic::readGainCorrDone()
 
     cStringValidator *sValidator;
     cSCPIInfo *scpiInfo;
-    for (int i = 0; i < m_ChannelNameList.count(); i++)
-    {
+    for (int i = 0; i < m_ChannelNameList.count(); i++) {
         QString s1, s2;
         sValidator = new cStringValidator(m_RangeMeasChannelList.at(i)->getRangeListAlias());
         m_RangeParameterList.at(i)->setValidator(sValidator);
@@ -603,25 +581,21 @@ void cRangeObsermatic::readGainCorrDone()
 
         m_RangeActOVLRejectionComponentList.at(i)->setChannelName(s1);
         m_RangeActOVLRejectionComponentList.at(i)->setUnit(s2);
-
     }
 
-    if (m_ConfPar.m_bRangeAuto)
-    {
+    if (m_ConfPar.m_bRangeAuto) {
         scpiInfo = new cSCPIInfo("CONFIGURATION", "RNGAUTO", "10", m_pParRangeAutomaticOnOff->getName(), "0", "");
         m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
         m_pParRangeAutomaticOnOff->setSCPIInfo(scpiInfo);
     }
 
-    if (m_ConfPar.m_bGrouping)
-    {
+    if (m_ConfPar.m_bGrouping) {
         scpiInfo = new cSCPIInfo("CONFIGURATION", "GROUPING", "10", m_pParGroupingOnOff->getName(), "0", "");
         m_pParGroupingOnOff->setValidator(new cBoolValidator());
         m_pParGroupingOnOff->setSCPIInfo(scpiInfo);
     }
 
-    if (m_ConfPar.m_bOverload)
-    {
+    if (m_ConfPar.m_bOverload) {
         scpiInfo = new cSCPIInfo("SENSE", "OVERLOAD", "10", m_pParOverloadOnOff->getName(), "0", "");
         m_pParOverloadOnOff->setValidator(new cBoolValidator());
         m_pParOverloadOnOff->setSCPIInfo(scpiInfo);
@@ -654,8 +628,9 @@ void cRangeObsermatic::deactivationDone()
 void cRangeObsermatic::writeGainCorr()
 {
     // qInfo() << "writeGainCorr";
-    if (m_bActive)
+    if (m_bActive) {
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pGainCorrection2DSP)] = writegain2corr;
+    }
 }
 
 
@@ -669,8 +644,7 @@ void cRangeObsermatic::readStatus()
 {
     cRangeMeasChannel *pmChn;
     if(m_bActive) {
-        for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we read status from all channels
-        {
+        for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we read status from all channels
             pmChn = m_RangeMeasChannelList.at(i);
             m_MsgNrCmdList[pmChn->readStatus()] = readstatus;
             m_nReadStatusPending++;
@@ -685,8 +659,7 @@ void cRangeObsermatic::readStatus()
 void cRangeObsermatic::analyzeStatus()
 {
     cRangeMeasChannel *pmChn;
-    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we test all channels
-    {
+    for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we test all channels
         pmChn = m_RangeMeasChannelList.at(i);
         m_hardOvlList.replace(i, pmChn->isHWOverload());
     }
@@ -701,8 +674,7 @@ void cRangeObsermatic::newRange(QVariant range)
 {
     cVeinModuleParameter *pParameter = qobject_cast<cVeinModuleParameter*>(sender()); // get sender of updated signal
     int index = m_RangeParameterList.indexOf(pParameter); // which channel is it
-    if (true /*!m_bRangeAutomatic*/)
-    {
+    if (true /*!m_bRangeAutomatic*/) {
         QString s;
         s = range.toString();
 
@@ -713,23 +685,21 @@ void cRangeObsermatic::newRange(QVariant range)
         // if we find 1 channel in a group that hasn't the wanted range we reset grouping !
         // let's first test if all channels have the wanted range
 
-        for (int i = 0; i < chnIndexlist.count(); i++)
-        {
+        for (int i = 0; i < chnIndexlist.count(); i++) {
             index = chnIndexlist.at(i);
-            if ( m_RangeMeasChannelList.at(index)->isPossibleRange(s))
-            {
+            if (m_RangeMeasChannelList.at(index)->isPossibleRange(s)) {
                 stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
                 sPar.m_sPar = s;
                 m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
                 m_brangeSet = true;
                 m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
             }
-            else
-            {
+            else {
                 m_ConfPar.m_nGroupAct.m_nActive = 0;
                 m_bGrouping = false;
-                if (m_ConfPar.m_bGrouping)
+                if (m_ConfPar.m_bGrouping) {
                     m_pParGroupingOnOff->setValue(0);
+                }
             }
         }
 
@@ -750,18 +720,15 @@ void cRangeObsermatic::newRange(QVariant range)
 void cRangeObsermatic::newRangeAuto(QVariant rauto)
 {
     bool ok;
-
     m_ConfPar.m_nRangeAutoAct.m_nActive = rauto.toInt(&ok);
 
-    if ( (m_bRangeAutomatic = (rauto.toInt(&ok) == 1)) )
-    {
+    if ( (m_bRangeAutomatic = (rauto.toInt(&ok) == 1)) ) {
         //qInfo() << "Range Automatic on";
         rangeAutomatic(); // call once if switched to automatic
         groupHandling(); // check for grouping
         setRanges();
     }
-    else
-    {
+    else {
         //qInfo() << "Range Automatic off";
     }
 
@@ -773,11 +740,9 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
 void cRangeObsermatic::newGrouping(QVariant rgrouping)
 {
     bool ok;
-
     m_ConfPar.m_nGroupAct.m_nActive = rgrouping.toInt(&ok);
 
-    if ( (m_bGrouping = (rgrouping.toInt(&ok) == 1)) )
-    {
+    if ( (m_bGrouping = (rgrouping.toInt(&ok) == 1)) ) {
         groupHandling(); // call once if switched to grouphandling
         setRanges();
     }
@@ -788,17 +753,13 @@ void cRangeObsermatic::newGrouping(QVariant rgrouping)
 // called when overload is reset
 void cRangeObsermatic::newOverload(QVariant overload)
 {
-    bool ok;
-
     disconnect(m_pParOverloadOnOff, 0, this, 0); // we don't want a signal here
 
-    if (overload.toInt(&ok) == 0) // allthough there is a validation for this value we only accept 0 here
-    {
-        if (m_ConfPar.m_bOverload) // we do something only if configured overload handling
-        {
+    bool ok;
+    if (overload.toInt(&ok) == 0) { // allthough there is a validation for this value we only accept 0 here
+        if (m_ConfPar.m_bOverload) { // we do something only if configured overload handling
             cRangeMeasChannel *pmChn;
-            for (int i = 0; i < m_RangeMeasChannelList.count(); i++) // we reset all channels
-            {
+            for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we reset all channels
                 pmChn = m_RangeMeasChannelList.at(i);
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
@@ -820,23 +781,19 @@ void cRangeObsermatic::newOverload(QVariant overload)
 
 void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant)
 {
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) { // 0 was reserved for async. messages
         // that we will ignore
     }
-    else
-    {
+    else {
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
-            switch (cmd)
-            {
+            switch (cmd) {
             case readgain2corr:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(readdspgaincorrErrMsg)));
 #ifdef DEBUG
                     qInfo() << readdspgaincorrErrMsg;
@@ -845,10 +802,10 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
                 }
                 break;
             case writegain2corr:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(writedspgaincorrErrMsg)));
 #ifdef DEBUG
                     qInfo() << writedspgaincorrErrMsg;
@@ -866,13 +823,11 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
 void cRangeObsermatic::catchChannelReply(quint32 msgnr)
 {
     int cmd = m_MsgNrCmdList.take(msgnr);
-    switch (cmd)
-    {
+    switch (cmd) {
     case resetstatus: // for the moment we do nothing here
         break;
     case readstatus:
-        if (m_nReadStatusPending > 0)
-        {
+        if (m_nReadStatusPending > 0) {
             m_nReadStatusPending--;
             if (m_nReadStatusPending == 0) {
                 analyzeStatus();
@@ -881,17 +836,14 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
         break;
 
     default:
-        if ((cmd >= setrange) && (cmd <= setrange +32))
-        {
+        if ((cmd >= setrange) && (cmd <= setrange +32)) {
             cmd -= setrange;
             // this is our synchronization..setValue emits notification
             m_RangeParameterList.at(cmd)->setValue(QVariant(m_actChannelRangeList.at(cmd)));
             m_actChannelRangeNotifierList.replace(cmd, (m_actChannelRangeList.at(cmd)));
-            if (m_nRangeSetPending > 0)
-            {
+            if (m_nRangeSetPending > 0) {
                 m_nRangeSetPending--;
-                if (m_nRangeSetPending == 0)
-                {
+                if (m_nRangeSetPending == 0) {
 #ifdef DEBUG
                     qInfo("Ranging finished");
 #endif
