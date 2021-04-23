@@ -261,8 +261,29 @@ QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
         const cRangeInfo& ri = riList.at(i);
         double newUrvalue = ri.urvalue;
         double ovrRecectionFactor = ri.ovrejection / ri.rejection;
-        if (((newUrvalue * sqrt2 * ovrRecectionFactor) >= ampl) && (newUrvalue < newAmpl) && (ri.type == actRngType))
-        {
+        // reduce keep area a bit to avoid overload because overload
+        // passes maximum range and that wastes our time unnecessesarily
+        double ovrRecectionFactorKeepRange = ovrRecectionFactor * 0.99;
+        double ovrRecectionFactorEnterRange = ovrRecectionFactor * 0.98;
+        // Decision areas are:
+        //
+        // ------- Max allowed to keep range
+        //     hysteresis area: keep range
+        // ------- Reduced max
+        //     if value is in this area we can enter range
+        //
+        // ------- zero
+
+        // actual range?
+        if(rngAlias == ri.alias) {
+            // are we in hysteresis area?
+            if(ampl > newUrvalue * sqrt2 * ovrRecectionFactorEnterRange &&  ampl < newUrvalue * sqrt2 * ovrRecectionFactorKeepRange) {
+                p=i;
+                // let's keep actual range
+                break;
+            }
+        }
+        if ((newUrvalue * sqrt2 * ovrRecectionFactorEnterRange >= ampl) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
             newAmpl = newUrvalue;
             p=i;
         }
