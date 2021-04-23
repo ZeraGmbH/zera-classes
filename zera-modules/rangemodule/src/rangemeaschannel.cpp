@@ -239,31 +239,6 @@ bool cRangeMeasChannel::isADCOverload(double ampl)
 }
 
 
-QString cRangeMeasChannel::getOptRange(double ampl)
-{
-    QList<cRangeInfo> riList = m_RangeInfoHash.values();
-    double newAmpl = 1e32;
-    int i, p = -1;
-
-    for (i = 0; i < riList.count(); i++) {
-        const cRangeInfo& ri = riList.at(i);
-        double newUrvalue = ri.urvalue;
-        double ovrRecectionFactor = ri.ovrejection / ri.rejection;
-        if (((newUrvalue * sqrt2 * ovrRecectionFactor) >= ampl) && (newUrvalue < newAmpl)) {
-            newAmpl = newUrvalue;
-            p=i;
-        }
-    }
-
-    if (p > -1) {
-        return riList.at(p).alias;
-    }
-    else {
-        return getMaxRange(); // we return maximum range in case of overload condtion
-    }
-}
-
-
 QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
 {
     qint32 actRngType = -1;
