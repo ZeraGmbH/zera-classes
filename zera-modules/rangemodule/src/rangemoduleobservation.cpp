@@ -58,16 +58,13 @@ void cRangeModuleObservation::deleteInterface()
 
 void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) { // 0 was reserved for async. messages
         QString sintnr;
         // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
+        bool ok;
         int service = sintnr.toInt(&ok);
-        switch (service)
-        {
+        switch (service) {
         case 1:
             // we got a sense:mmode notifier
             // let's look what to do
@@ -75,16 +72,14 @@ void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             break;
         }
     }
-    else
-    {
+    else  {
         int cmd = m_MsgNrCmdList.take(msgnr);
-        switch (cmd)
-        {
+        switch (cmd) {
         case registernotifier:
-            if (reply == ack) // we only continue pcb server acknowledges
+            if (reply == ack) { // we only continue pcb server acknowledges
                 emit activationContinue();
-            else
-            {
+            }
+            else {
                 emit errMsg((tr(registerpcbnotifierErrMsg)));
 #ifdef DEBUG
                 qDebug() << registerpcbnotifierErrMsg;
@@ -93,10 +88,10 @@ void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             }
             break;
         case unregisternotifiers:
-            if (reply == ack) // we only continue pcb server acknowledges
+            if (reply == ack) { // we only continue pcb server acknowledges
                 emit deactivationContinue();
-            else
-            {
+            }
+            else {
                 emit errMsg((tr(unregisterpcbnotifierErrMsg)));
 #ifdef DEBUG
                 qDebug() << unregisterpcbnotifierErrMsg;

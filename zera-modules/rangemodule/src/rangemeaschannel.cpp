@@ -131,82 +131,81 @@ quint32 cRangeMeasChannel::setRange(QString range)
     m_sNewRange = range; // alias !!!!
     m_sActRange = range;
 
-    if (m_bActive)
-    {
+    if (m_bActive) {
         quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
     }
-    else
+    else {
         return 1;
+    }
 }
 
 
 quint32 cRangeMeasChannel::readGainCorrection(double amplitude)
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         quint32 msgnr = m_pPCBInterface->getGainCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readgaincorrection;
         return msgnr;
     }
-    else
+    else {
         return 1;
+    }
 }
 
 
 quint32 cRangeMeasChannel::readOffsetCorrection(double amplitude)
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         quint32 msgnr = m_pPCBInterface->getOffsetCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, amplitude);
         m_MsgNrCmdList[msgnr] = readoffsetcorrection;
         return msgnr;
     }
-    else
+    else {
         return 1;
+    }
 }
 
 // This caused a bit of confusion so write it down:
-// com5003d/mt310d reads (global) critical status for each channnel and
+// com5003d / mt310d read (global) critical status for each channnel and
 // check only that bit belonging to the channnel
 quint32 cRangeMeasChannel::readStatus()
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         quint32 msgnr = m_pPCBInterface->getStatus(m_sName);
         m_MsgNrCmdList[msgnr] = readmeaschannelstatus;
         return msgnr;
     }
-    else
+    else {
         return 1;
+    }
 }
 
 
 quint32 cRangeMeasChannel::resetStatus()
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         quint32 msgnr = m_pPCBInterface->resetStatus(m_sName);
         m_MsgNrCmdList[msgnr] = resetmeaschannelstatus;
         return msgnr;
     }
-    else
+    else {
         return 1;
-
+    }
 }
 
 
 quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         quint32 msgnr = m_pPCBInterface->getPhaseCorrection(m_sName, m_RangeInfoHash[m_sActRange].name, frequency);
         m_MsgNrCmdList[msgnr] = readphasecorrection;
         return msgnr;
     }
-    else
+    else {
         return 1;
+    }
 }
 
 
@@ -228,7 +227,8 @@ bool cRangeMeasChannel::isRMSOverload(double ampl)
 {
     cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
     // qDebug() << QString("Ampl: %1; Rng: %2").arg(ampl).arg(ri.alias);
-    return ((ri.urvalue * ri.ovrejection / ri.rejection) < ampl);
+    double ovrRecectionFactor = ri.ovrejection / ri.rejection;
+    return ((ri.urvalue * ovrRecectionFactor) < ampl);
 }
 
 
@@ -243,58 +243,62 @@ QString cRangeMeasChannel::getOptRange(double ampl)
 {
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
     double newAmpl = 1e32;
-    double newUrvalue;
     int i, p = -1;
 
-    for (i = 0; i < riList.count(); i++)
-    {
+    for (i = 0; i < riList.count(); i++) {
         const cRangeInfo& ri = riList.at(i);
-        newUrvalue = ri.urvalue;
-        if (((newUrvalue * sqrt2 *ri.ovrejection /ri.rejection ) >= ampl) && (newUrvalue < newAmpl))
-        {
+        double newUrvalue = ri.urvalue;
+        double ovrRecectionFactor = ri.ovrejection / ri.rejection;
+        if (((newUrvalue * sqrt2 * ovrRecectionFactor) >= ampl) && (newUrvalue < newAmpl)) {
             newAmpl = newUrvalue;
             p=i;
         }
     }
 
-    if (p > -1)
+    if (p > -1) {
         return riList.at(p).alias;
-    else
+    }
+    else {
         return getMaxRange(); // we return maximum range in case of overload condtion
+    }
 }
 
 
 QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
 {
     qint32 actRngType = -1;
-    if (m_RangeInfoHash.contains(rngAlias))
+    if (m_RangeInfoHash.contains(rngAlias)) {
         // if we know this rngalias we take that's type for searching max range
         actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
-    else
+    }
+    else {
         // if we already set a range we could take the actual range for searching
-        if (m_RangeInfoHash.contains(m_sActRange))
+        if (m_RangeInfoHash.contains(m_sActRange)) {
             actRngType = m_RangeInfoHash[m_sActRange].type;
+        }
+    }
 
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
     double newAmpl = 1e32;
-    double newUrvalue;
     int i, p = -1;
 
-    for (i = 0; i < riList.count(); i++)
-    {
+    for (i = 0; i < riList.count(); i++) {
         const cRangeInfo& ri = riList.at(i);
-        newUrvalue = ri.urvalue;
-        if (((newUrvalue * sqrt2 *ri.ovrejection /ri.rejection ) >= ampl) && (newUrvalue < newAmpl) && (ri.type == actRngType))
+        double newUrvalue = ri.urvalue;
+        double ovrRecectionFactor = ri.ovrejection / ri.rejection;
+        if (((newUrvalue * sqrt2 * ovrRecectionFactor) >= ampl) && (newUrvalue < newAmpl) && (ri.type == actRngType))
         {
             newAmpl = newUrvalue;
             p=i;
         }
     }
 
-    if (p > -1)
+    if (p > -1) {
         return riList.at(p).alias;
-    else
+    }
+    else {
         return getMaxRange(rngAlias); // we return maximum range in case of overload condtion
+    }
 }
 
 
@@ -305,11 +309,9 @@ QString cRangeMeasChannel::getMaxRange()
     double newUrvalue;
     int i, p = -1;
 
-    for (i = 0; i < riList.count(); i++)
-    {
+    for (i = 0; i < riList.count(); i++) {
         newUrvalue = riList.at(i).urvalue;
-        if (newUrvalue > newAmpl)
-        {
+        if (newUrvalue > newAmpl) {
             newAmpl = newUrvalue;
             p=i;
         }
@@ -322,36 +324,32 @@ QString cRangeMeasChannel::getMaxRange()
 QString cRangeMeasChannel::getMaxRange(QString rngAlias)
 {
     qint32 actRngType = -1;
-    if (m_RangeInfoHash.contains(rngAlias))
+    if (m_RangeInfoHash.contains(rngAlias)) {
         // if we know this rngalias we take that's type for searching max range
         actRngType = m_RangeInfoHash[rngAlias].type; // the type of actual range
-    else
+    }
+    else {
         // if we already set a range we could take the actual range for searching
-        if (m_RangeInfoHash.contains(m_sActRange))
+        if (m_RangeInfoHash.contains(m_sActRange)) {
             actRngType = m_RangeInfoHash[m_sActRange].type;
+        }
+    }
 
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
     double newAmpl = -1.0;
-    double newUrvalue;
     int i, p = -1;
 
-    for (i = 0; i < riList.count(); i++)
-    {
+    for (i = 0; i < riList.count(); i++) {
         const cRangeInfo& ri = riList.at(i);
-
-        newUrvalue = ri.urvalue;
-        if (actRngType >=0)
-        {
-            if ((newUrvalue > newAmpl) && (ri.type == actRngType))
-            {
+        double newUrvalue = ri.urvalue;
+        if (actRngType >=0) {
+            if ((newUrvalue > newAmpl) && (ri.type == actRngType)) {
                 newAmpl = newUrvalue;
                 p=i;
             }
         }
-        else
-        {
-            if ((newUrvalue > newAmpl))
-            {
+        else {
+            if ((newUrvalue > newAmpl)) {
                 newAmpl = newUrvalue;
                 p=i;
             }
@@ -456,19 +454,16 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     bool ok;
     int errcount;
 
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) {// 0 was reserved for async. messages
         QString sintnr;
         // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
-        switch (service)
-        {
+        switch (service) {
         case 1:
             // we got a sense:chn:range:cat notifier
             // so we have to read the new range list and properties
-            if (!m_rangeQueryMachine.isRunning())
-            {
+            if (!m_rangeQueryMachine.isRunning()) {
                 setActionErrorcount(0);
                 m_rangeQueryMachine.start();
             }
@@ -479,14 +474,13 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     else
     {
         int cmd = m_MsgNrCmdList.take(msgnr);
-
         switch (cmd)
         {
         case sendmeaschannelrmident:
-            if (reply == ack) // we only continue if resource manager acknowledges
+            if (reply == ack) { // we only continue if resource manager acknowledges
                 emit activationContinue();
-            else
-            {
+            }
+            else {
                 emit errMsg(tr(rmidentErrMSG));
     #ifdef DEBUG
                 qDebug() << rmidentErrMSG;
@@ -496,10 +490,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readresourcetypes:
-            if ((reply == ack) && (answer.toString().contains("SENSE")))
+            if ((reply == ack) && (answer.toString().contains("SENSE"))) {
                 emit activationContinue();
-            else
-            {
+            }
+            else {
                 emit errMsg((tr(resourcetypeErrMsg)));
     #ifdef DEBUG
                 qDebug() << resourcetypeErrMsg;
@@ -509,10 +503,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readresource:
-            if ((reply == ack) && (answer.toString().contains(m_sName)))
+            if ((reply == ack) && (answer.toString().contains(m_sName))) {
                 emit activationContinue();
-            else
-            {
+            }
+            else {
                 emit errMsg((tr(resourceErrMsg)));
     #ifdef DEBUG
                 qDebug() << resourceErrMsg;
@@ -529,20 +523,17 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
 
             sl = answer.toString().split(';');
-            if ((reply ==ack) && (sl.length() >= 4))
-            {
+            if ((reply ==ack) && (sl.length() >= 4)) {
                 max = sl.at(0).toInt(&ok1); // fixed position
                 free = sl.at(1).toInt(&ok2);
                 m_sDescription = sl.at(2);
                 m_nPort = sl.at(3).toInt(&ok3);
 
-                if (ok1 && ok2 && ok3 && ((max == free) == 1))
-                {
+                if (ok1 && ok2 && ok3 && ((max == free) == 1)) {
                     emit activationContinue();
                 }
 
-                else
-                {
+                else {
                     emit errMsg((tr(resourceInfoErrMsg)));
     #ifdef DEBUG
                     qDebug() << resourceInfoErrMsg;
@@ -551,23 +542,20 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
             }
 
-            else
-            {
+            else {
                 emit errMsg((tr(resourceInfoErrMsg)));
     #ifdef DEBUG
                 qDebug() << resourceInfoErrMsg;
     #endif
                 emit activationError();
             }
-
             break;
-
         }
         case claimresource:
-            if (reply == ack)
+            if (reply == ack) {
                 emit activationContinue();
-            else
-            {
+            }
+            else {
                 emit errMsg((tr(claimresourceErrMsg)));
     #ifdef DEBUG
                 qDebug() << claimresourceErrMsg;
@@ -577,10 +565,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case freeresource:
-            if (reply == ack || reply == nack) // we accept nack here also
+            if (reply == ack || reply == nack) { // we accept nack here also
                 emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
-            else
-            {
+            }
+            else {
                 emit errMsg((tr(freeresourceErrMsg)));
     #ifdef DEBUG
                 qDebug() << freeresourceErrMsg;
@@ -590,9 +578,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case unregisterNotifiers:
-            if (reply == ack)
+            if (reply == ack) {
                 emit deactivationContinue();
-            {
+            }
+            else {
                 emit errMsg((tr(unregisterpcbnotifierErrMsg)));
     #ifdef DEBUG
                 qDebug() << unregisterpcbnotifierErrMsg;
@@ -602,13 +591,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readdspchannel:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_nDspChannel = answer.toInt(&ok);
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readdspchannelErrMsg)));
     #ifdef DEBUG
                 qDebug() << readdspchannelErrMsg;
@@ -618,13 +605,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readchnalias:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_sAlias = answer.toString();
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readaliasErrMsg)));
     #ifdef DEBUG
                 qDebug() << readaliasErrMsg;
@@ -634,13 +619,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readsamplerate:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_nSampleRate = answer.toInt(&ok);
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readsamplerateErrMsg)));
     #ifdef DEBUG
                 qDebug() << readsamplerateErrMsg;
@@ -650,13 +633,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readunit:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_sUnit = answer.toString();
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readunitErrMsg)));
     #ifdef DEBUG
                 qDebug() << readunitErrMsg;
@@ -666,13 +647,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readrangelist:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 m_RangeNameList = answer.toStringList();
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangelistErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangelistErrMsg;
@@ -682,13 +661,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readrngalias:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.alias = answer.toString();
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangealiasErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangealiasErrMsg;
@@ -698,13 +675,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readtype:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.type = answer.toInt(&ok);
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangetypeErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangetypeErrMsg;
@@ -714,13 +689,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readurvalue:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.urvalue = answer.toDouble(&ok);
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangeurvalueErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangeurvalueErrMsg;
@@ -730,13 +703,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readrejection:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.rejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangerejectionErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangerejectionErrMsg;
@@ -746,13 +717,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readovrejection:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.ovrejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangeovrejectionErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangeovrejectionErrMsg;
@@ -762,13 +731,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readadcrejection:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.adcrejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangeadcrejectionErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangeadcrejectionErrMsg;
@@ -778,13 +745,11 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case readisavail:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 ri.avail = answer.toBool();
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(readrangeavailErrMsg)));
     #ifdef DEBUG
                 qDebug() << readrangeavailErrMsg;
@@ -794,70 +759,67 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
 
         case setmeaschannelrange:
-            if (reply == ack)
+            if (reply == ack) {
                 m_sActRange = m_sNewRange;
-            else
-            {
+            }
+            else {
                 errcount = m_ActionErrorcountHash.take(setmeaschannelrange);
                 errcount++;
                 m_ActionErrorcountHash[setmeaschannelrange] = errcount;
-                if (errcount > 1)
-                {
+                if (errcount > 1) {
                     emit errMsg((tr(setRangeErrMsg)));
     #ifdef DEBUG
                     qDebug() << setRangeErrMsg;
     #endif
                     emit executionError();
                 }
-            }; // perhaps some error output
+            } // perhaps some error output
             emit cmdDone(msgnr);
             break;
 
         case readgaincorrection:
-            if (reply == ack)
+            if (reply == ack) {
                 m_fGainCorrection = answer.toDouble(&ok);
-            else
-            {
+            }
+            else {
                 errcount = m_ActionErrorcountHash.take(readgaincorrection);
                 errcount++;
                 m_ActionErrorcountHash[readgaincorrection] = errcount;
-                if (errcount > 1)
-                {
+                if (errcount > 1) {
                     emit errMsg((tr(readGainCorrErrMsg)));
     #ifdef DEBUG
                     qDebug() << readGainCorrErrMsg;
     #endif
                     emit executionError();
                 }
-            };
+            }
             emit cmdDone(msgnr);
             break;
 
         case readoffsetcorrection:
-            if (reply == ack)
+            if (reply == ack) {
                 m_fOffsetCorrection = answer.toDouble(&ok);
-            else
-            {
+            }
+            else {
                 errcount = m_ActionErrorcountHash.take(readoffsetcorrection);
                 errcount++;
                 m_ActionErrorcountHash[readoffsetcorrection] = errcount;
-                if (errcount > 1)
-                {
+                if (errcount > 1) {
                     emit errMsg((tr(readOffsetCorrErrMsg)));
     #ifdef DEBUG
                     qDebug() << readOffsetCorrErrMsg;
     #endif
                     emit executionError();
                 }
-            };
+            }
             emit cmdDone(msgnr);
             break;
 
         case readphasecorrection:
-            if (reply == ack)
+            if (reply == ack) {
                 m_fPhaseCorrection = answer.toDouble(&ok);
-            else
-            {
+            }
+            else {
                 errcount = m_ActionErrorcountHash.take(readphasecorrection);
                 errcount++;
                 m_ActionErrorcountHash[readphasecorrection] = errcount;
@@ -869,66 +831,61 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     #endif
                     emit executionError();
                 }
-            };
+            }
             emit cmdDone(msgnr);
             break;
 
         case readmeaschannelstatus:
-            if (reply == ack)
+            if (reply == ack) {
                 m_nStatus = answer.toInt(&ok);
-            else
-            {
+            }
+            else {
                 emit errMsg((tr(readChannelStatusErrMsg)));
     #ifdef DEBUG
                 qDebug() << readChannelStatusErrMsg;
     #endif
                 emit executionError();
-            };
+            }
             emit cmdDone(msgnr);
             break;
 
         case resetmeaschannelstatus:
-            if (reply == ack)
-                {}
-            else
-            {
+            if (reply == ack) {
+            }
+            else {
                 emit errMsg((tr(resetChannelStatusErrMsg)));
     #ifdef DEBUG
                 qDebug() << resetChannelStatusErrMsg;
     #endif
                 emit executionError();
-            }; // perhaps some error output
+            } // perhaps some error output
             emit cmdDone(msgnr);
             break;
 
         case resetmeaschannelstatus2:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(resetChannelStatusErrMsg)));
     #ifdef DEBUG
                 qDebug() << resetChannelStatusErrMsg;
     #endif
                 emit activationError();
-            }; // perhaps some error output
+            } // perhaps some error output
             break;
 
         case registerNotifier:
-            if (reply == ack)
-            {
+            if (reply == ack) {
                 emit activationContinue();
             }
-            else
-            {
+            else {
                 emit errMsg((tr(registerpcbnotifierErrMsg)));
     #ifdef DEBUG
                 qDebug() << registerpcbnotifierErrMsg;
     #endif
                 emit activationError();
-            }; // perhaps some error output
+            } // perhaps some error output
             break;
         }
     }
@@ -941,26 +898,33 @@ void cRangeMeasChannel::setRangeListAlias()
     QList<cRangeInfo> riList = m_RangeInfoHash.values();
     int riLen;
 
-    if ( (riLen = riList.count()) > 1) // nothing to sort if we only have 1 range
-    {
+    if ( (riLen = riList.count()) > 1) {// nothing to sort if we only have 1 range
         // first we sort the range alias according to range type
-        for (int i = 0; i < riLen-1; i++)
-            for (int j = i; j < riLen; j++)
-                if (riList.at(i).type < riList.at(j).type)
+        for (int i = 0; i < riLen-1; i++) {
+            for (int j = i; j < riLen; j++) {
+                if (riList.at(i).type < riList.at(j).type) {
                     riList.swapItemsAt(i, j);
+                }
+            }
+        }
 
         // second we sort the range alias according to upper range values but grouped with types
-        for (int i = 0; i < riLen-1; i++)
-            for (int j = i; j < riLen; j++)
-                if ( (riList.at(i).urvalue < riList.at(j).urvalue) && (riList.at(i).type == riList.at(j).type) )
+        for (int i = 0; i < riLen-1; i++) {
+            for (int j = i; j < riLen; j++) {
+                if ( (riList.at(i).urvalue < riList.at(j).urvalue) && (riList.at(i).type == riList.at(j).type) ) {
                     riList.swapItemsAt(i, j);
+                }
+            }
+        }
     }
 
     s = riList.at(0).alias;
 
-    if (riLen > 1)
-        for (int i = 1; i < riList.count(); i++)
+    if (riLen > 1) {
+        for (int i = 1; i < riList.count(); i++) {
             s = s + ";" + riList.at(i).alias;
+        }
+    }
 
     m_sRangeListAlias = s;
 }
@@ -1083,10 +1047,12 @@ void cRangeMeasChannel::resetStatusSlot()
 
 void cRangeMeasChannel::setNotifierRangeCat()
 {
-    if (m_bExtend)
+    if (m_bExtend) {
         m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName),"1")] = registerNotifier;
-    else
+    }
+    else {
         emit activationContinue();
+    }
 }
 
 
@@ -1179,18 +1145,19 @@ void cRangeMeasChannel::rangeQueryLoop()
     m_RangeInfoHashWorking[ri.alias] = ri; // for each range we append cRangeinfo per alias
 
     m_RangeQueryIt++;
-    if (m_RangeQueryIt < m_RangeNameList.count()) // another range ?
+    if (m_RangeQueryIt < m_RangeNameList.count()) { // another range ?
         emit activationLoop();
-    else
-    {
+    }
+    else {
         QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHashWorking.begin();
-        while (it != m_RangeInfoHashWorking.end()) // we delete all unused ranges
-        {
+        while (it != m_RangeInfoHashWorking.end()) { // we delete all unused ranges
             ri = it.value();
-            if (ri.avail)
+            if (ri.avail) {
                 ++it;
-            else
+            }
+            else {
                 it = m_RangeInfoHashWorking.erase(it); // in case range is not avail
+            }
         }
 
         m_RangeInfoHash = m_RangeInfoHashWorking;
