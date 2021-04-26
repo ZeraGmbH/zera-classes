@@ -17,6 +17,8 @@ cVeinModuleErrorComponent::cVeinModuleErrorComponent(int entityId, VeinEvent::Ev
 
 void cVeinModuleErrorComponent::setValue(QVariant value, int dest)
 {
+    // to syslog or debug console
+    qWarning("Module %s reported error: %s", qPrintable(m_sModuleName), qPrintable(value.toString()));
     QJsonObject jsObj;
     QString tf = "yyyy/MM/dd HH:mm:ss";
 
