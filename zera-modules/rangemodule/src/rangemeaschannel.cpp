@@ -257,33 +257,36 @@ QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
     double newAmpl = 1e32;
     int i, p = -1;
 
+    // Decision areas are:
+    //-------- Rejection
+    // ------- keepRangeLimit
+    //     if value is inside hysteresis area: keep range
+    // ------- enterRangeLimit
+    //     if value is in this area we can enter range
+    //
+    // ------- zero
+
+    // keep area < 1: avoid overload because overload passes maximum range and
+    // that wastes our time unnecessesarily
+    const double keepRangeLimit = 0.99;
+    const double enterRangeLimit = 0.98;
+
     for (i = 0; i < riList.count(); i++) {
         const cRangeInfo& ri = riList.at(i);
         double newUrvalue = ri.urvalue;
-        double ovrRecectionFactor = ri.ovrejection / ri.rejection;
-        // reduce keep area a bit to avoid overload because overload
-        // passes maximum range and that wastes our time unnecessesarily
-        double ovrRecectionFactorKeepRange = ovrRecectionFactor * 0.99;
-        double ovrRecectionFactorEnterRange = ovrRecectionFactor * 0.98;
-        // Decision areas are:
-        //
-        // ------- Max allowed to keep range
-        //     hysteresis area: keep range
-        // ------- Reduced max
-        //     if value is in this area we can enter range
-        //
-        // ------- zero
-
+        double ovrRecectionFactor = ri.ovrejection / ri.rejection; // typically 1.25
         // actual range?
         if(rngAlias == ri.alias) {
             // are we in hysteresis area?
-            if(ampl > newUrvalue * sqrt2 * ovrRecectionFactorEnterRange &&  ampl < newUrvalue * sqrt2 * ovrRecectionFactorKeepRange) {
-                p=i;
+            if(ampl > newUrvalue * sqrt2 * ovrRecectionFactor * enterRangeLimit &&
+                    ampl < newUrvalue * sqrt2 * ovrRecectionFactor * keepRangeLimit) {
                 // let's keep actual range
+                p=i;
                 break;
             }
         }
-        if ((newUrvalue * sqrt2 * ovrRecectionFactorEnterRange >= ampl) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
+        // (re-)enter range
+        if ((ampl <= newUrvalue * sqrt2 * ovrRecectionFactor * enterRangeLimit) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
             newAmpl = newUrvalue;
             p=i;
         }
@@ -293,7 +296,7 @@ QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
         return riList.at(p).alias;
     }
     else {
-        return getMaxRange(rngAlias); // we return maximum range in case of overload condtion
+        return getMaxRange(rngAlias); // we return maximum range in case of overload condition
     }
 }
 
