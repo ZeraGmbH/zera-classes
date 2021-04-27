@@ -269,7 +269,7 @@ QString cRangeMeasChannel::getOptRange(double ampl, QString rngAlias)
     // keep area < 1: avoid overload because overload passes maximum range and
     // that wastes our time unnecessesarily
     const double keepRangeLimit = 0.99;
-    const double enterRangeLimit = 0.98;
+    const double enterRangeLimit = 0.95;
 
     for (i = 0; i < riList.count(); i++) {
         const cRangeInfo& ri = riList.at(i);
