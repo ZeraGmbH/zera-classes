@@ -127,6 +127,7 @@ protected slots:
 
 private:
     cPower1ModuleConfigData* getConfData();
+    QStringList get2WChannnelInfoAndSetPmsIndex();
 
     cPower1Module* m_pModule;
     QHash<QString,cMeasModeInfo> m_MeasuringModeInfoHash; // a list of all measuring modes we know with additional info

@@ -793,19 +793,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0117)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0117)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            m_nPMSIndex = 0;
-
-            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (getConfData()->m_sM2WSystem == "pms2")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-                m_nPMSIndex = 1;
-            }
-            if (getConfData()->m_sM2WSystem == "pms3")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-                m_nPMSIndex = 2;
-            }
+            sl = get2WChannnelInfoAndSetPmsIndex();
 
             // first we set all our actual values to 0
             m_pDSPInterFace->addCycListItem( s = "SETVAL(VALPQS,0.0)");
@@ -828,19 +816,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0118)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0118)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            m_nPMSIndex = 0;
-
-            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (getConfData()->m_sM2WSystem == "pms2")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-                m_nPMSIndex = 1;
-            }
-            if (getConfData()->m_sM2WSystem == "pms3")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-                m_nPMSIndex = 2;
-            }
+            sl = get2WChannnelInfoAndSetPmsIndex();
 
             // first we set all our actual values to 0
             m_pDSPInterFace->addCycListItem( s = "SETVAL(VALPQS,0.0)");
@@ -872,20 +848,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0119)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0119)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            QStringList sl;
-            m_nPMSIndex = 0;
-
-            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (getConfData()->m_sM2WSystem == "pms2")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-                m_nPMSIndex = 1;
-            }
-            if (getConfData()->m_sM2WSystem == "pms3")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-                m_nPMSIndex = 2;
-            }
+            sl = get2WChannnelInfoAndSetPmsIndex();
 
             // first we set all our actual values to 0
             m_pDSPInterFace->addCycListItem( s = "SETVAL(VALPQS,0.0)");
@@ -910,20 +873,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0120)");
             m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0120)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
-            QStringList sl;
-            m_nPMSIndex = 0;
-
-            sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-            if (getConfData()->m_sM2WSystem == "pms2")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-                m_nPMSIndex = 1;
-            }
-            if (getConfData()->m_sM2WSystem == "pms3")
-            {
-                sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-                m_nPMSIndex = 2;
-            }
+            sl = get2WChannnelInfoAndSetPmsIndex();
 
             // first we set all our actual values to 0
             m_pDSPInterFace->addCycListItem( s = "SETVAL(VALPQS,0.0)");
@@ -1695,6 +1645,23 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 cPower1ModuleConfigData *cPower1ModuleMeasProgram::getConfData()
 {
     return qobject_cast<cPower1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
+QStringList cPower1ModuleMeasProgram::get2WChannnelInfoAndSetPmsIndex()
+{
+    m_nPMSIndex = 0;
+    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
+    if (getConfData()->m_sM2WSystem == "pms2")
+    {
+        sl = getConfData()->m_sMeasSystemList.at(1).split(',');
+        m_nPMSIndex = 1;
+    }
+    if (getConfData()->m_sM2WSystem == "pms3")
+    {
+        sl = getConfData()->m_sMeasSystemList.at(2).split(',');
+        m_nPMSIndex = 2;
+    }
+    return sl;
 }
 
 
