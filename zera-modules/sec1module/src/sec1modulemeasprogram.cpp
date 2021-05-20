@@ -640,6 +640,9 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         if (m_fProgress > 100.0) {
                             m_fProgress = 100.0;
                         }
+                        if(m_fProgress < 0.0) {
+                            m_fProgress = 0.0;
+                        }
                         m_pProgressAct->setValue(QVariant(m_fProgress));
                     }
                 }
