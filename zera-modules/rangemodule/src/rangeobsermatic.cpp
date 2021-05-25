@@ -424,9 +424,7 @@ void cRangeObsermatic::setRanges(bool force)
             // would cause a infinite loop: We reset hard-overload -> hardware
             // sets it / we reset hard-overload -> hardware...
             if ((m_hardOvlList.at(i) || m_softOvlList.at(i)) && !(m_maxOvlList.at(i) && m_bRangeAutomatic)) {
-#ifdef DEBUG
-                qInfo("Reset overload channel %i", i+1);
-#endif
+                qInfo("Reset overload channel %i", i);
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
