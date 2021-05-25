@@ -499,7 +499,7 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
     // Avoid resetting hard-overload in max range + range-automatic: It
     // would cause a infinite loop: We reset hard-overload -> hardware
     // sets it / we reset hard-overload -> hardware...
-    return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && !(m_maxOvlList.at(channel) && m_bRangeAutomatic);
+    return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (!m_bRangeAutomatic || !m_maxOvlList.at(channel));
 }
 
 
