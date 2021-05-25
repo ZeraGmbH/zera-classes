@@ -55,7 +55,6 @@ public:
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes
     QStringList m_sMeasSystemList; // our measuring systems "m0,m1" ....
-    QString m_sM2WSystem; // the system on which 2wire measuring mode shall work on
     QString m_sIntegrationMode; // we integrate over time or periods
     quint32 m_nNominalFrequency; // our nominal frequency output for full range power
     QString m_sFreqActualizationMode; // signalperiod or integrationtime
@@ -63,6 +62,7 @@ public:
     QList<freqoutconfiguration> m_FreqOutputConfList; // a list of configuration values for each frequency output
 
     stringParameter m_sMeasuringMode;
+    stringParameter m_sM2WSystem; // the system on which 2wire measuring mode shall work on
     doubleParameter m_fMeasIntervalTime; // measuring interval 0.1 .. 100.0 sec.
     intParameter m_nMeasIntervalPeriod; // measuring periods 1 .. 10000
     double m_fmovingwindowInterval;

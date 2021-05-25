@@ -344,18 +344,28 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "S", "VA", appPower, mqref);
 
     // our parameters we deal with
+    // MMode
     m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Component for setting the modules measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
-
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
-
     cStringValidator *sValidator;
     sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
-
     m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
+
+    // 2WPhase
+    QString configuredPhase = getConfData()->m_sM2WSystem.m_sValue;
+    configuredPhase = configuredPhase.replace("pms", "");
+    m_pPhaseFor2Wire = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("PAR_Phase2WireMM"),
+                                                QString("Select phase for 2-wire measuring modes"),
+                                                QVariant(configuredPhase.toInt()));
+    m_pPhaseFor2Wire->setSCPIInfo(new cSCPIInfo("CONFIGURATION","PHASE2W", "10", "PAR_Phase2WireMM", "0", ""));
+    cIntValidator* iValidator = new cIntValidator(1, 3);
+    m_pPhaseFor2Wire->setValidator(iValidator);
+    m_pModule->veinModuleParameterHash[key] = m_pPhaseFor2Wire; // for modules use
 
     QVariant val;
     QString s, unit;
@@ -1651,12 +1661,12 @@ QStringList cPower1ModuleMeasProgram::get2WChannnelInfoAndSetPmsIndex()
 {
     m_nPMSIndex = 0;
     QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-    if (getConfData()->m_sM2WSystem == "pms2")
+    if (getConfData()->m_sM2WSystem.m_sValue == "pms2")
     {
         sl = getConfData()->m_sMeasSystemList.at(1).split(',');
         m_nPMSIndex = 1;
     }
-    if (getConfData()->m_sM2WSystem == "pms3")
+    if (getConfData()->m_sM2WSystem.m_sValue == "pms3")
     {
         sl = getConfData()->m_sMeasSystemList.at(2).split(',');
         m_nPMSIndex = 2;
@@ -2076,6 +2086,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
         connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
 
     connect(m_pMeasuringmodeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMeasMode(QVariant)));
+    connect(m_pPhaseFor2Wire, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPhaseFor2Wire(QVariant)));
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
@@ -2424,6 +2435,19 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
     setFoutConstants();
 
     emit m_pModule->parameterChanged();
+}
+
+void cPower1ModuleMeasProgram::newPhaseFor2Wire(QVariant phase)
+{
+    QString sM2WSystem = QString("pms%1").arg(phase.toInt());
+    getConfData()->m_sM2WSystem.m_sValue = sM2WSystem;
+    if(is2WireMode()) {
+        // we handle change of phase same as change of mmode
+        newMeasMode(QVariant(getConfData()->m_sMeasuringMode.m_sValue));
+    }
+    else {
+        emit m_pModule->parameterChanged();
+    }
 }
 
 }

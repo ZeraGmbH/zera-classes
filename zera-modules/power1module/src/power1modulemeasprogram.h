@@ -142,6 +142,7 @@ private:
     cVeinModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
     cVeinModuleParameter* m_pIntegrationParameter;
     cVeinModuleParameter* m_pMeasuringmodeParameter;
+    cVeinModuleParameter* m_pPhaseFor2Wire;
     cVeinModuleParameter* m_pConstantParameter;
     cVeinModuleComponent* m_pMeasureSignal;
 
@@ -311,6 +312,7 @@ private slots:
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);
     void newMeasMode(QVariant mm);
+    void newPhaseFor2Wire(QVariant phase);
 };
 
 }

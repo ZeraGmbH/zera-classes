@@ -85,6 +85,9 @@ QByteArray cPower1ModuleConfiguration::exportConfiguration()
     stringParameter* sPar;
     sPar = &m_pPower1ModulConfigData->m_sMeasuringMode;
     m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sValue);
+    sPar = &m_pPower1ModulConfigData->m_sM2WSystem;
+    m_pXMLReader->setValue(sPar->m_sKey, sPar->m_sValue);
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -141,9 +144,6 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         case setMeasSystem3:
             m_pPower1ModulConfigData->m_sMeasSystemList.replace(2, m_pXMLReader->getValue(key));
             break;
-        case set2WMeasSystem:
-            m_pPower1ModulConfigData->m_sM2WSystem = m_pXMLReader->getValue(key);
-            break;
         case setIntegrationMode:
             m_pPower1ModulConfigData->m_sIntegrationMode = m_pXMLReader->getValue(key);
             break;
@@ -176,6 +176,10 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         case setMeasuringMode:
             m_pPower1ModulConfigData->m_sMeasuringMode.m_sKey = key;
             m_pPower1ModulConfigData->m_sMeasuringMode.m_sValue = m_pXMLReader->getValue(key);
+            break;
+        case set2WMeasSystem:
+            m_pPower1ModulConfigData->m_sM2WSystem.m_sKey = key;
+            m_pPower1ModulConfigData->m_sM2WSystem.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setMeasureIntervalTime:
             m_pPower1ModulConfigData->m_fMeasIntervalTime.m_sKey = key;
