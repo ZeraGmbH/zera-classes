@@ -95,6 +95,7 @@ private:
     QHash<QString,cStringValidator*> m_ChannelRangeValidatorHash;
     QList<bool> m_softOvlList; // here we enter software detected overloads
     QList<bool> m_hardOvlList; // what do you think ?
+    QList<bool> m_groupOvlList; // distinct group overloads: one in a group causes reset for all in the group
     QList<bool> m_maxOvlList; // here we enter overloads that occured in maximum range
     quint32 m_nWaitAfterRanging;
     quint32 m_nRangeSetPending;
@@ -144,6 +145,7 @@ private:
     void setRanges(bool force = false); // here we really set ranges
     QList<int> getGroupIndexList(int index);
     bool requiresOverloadReset(int channel);
+    void startOverloadReset(int channel);
 
 private slots:
     void dspserverConnect();

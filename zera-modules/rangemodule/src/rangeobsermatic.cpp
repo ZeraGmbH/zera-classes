@@ -159,6 +159,7 @@ void cRangeObsermatic::generateInterface()
 
         m_softOvlList.append(false);
         m_hardOvlList.append(false);
+        m_groupOvlList.append(false);
         m_maxOvlList.append(false);
     }
 
@@ -324,6 +325,10 @@ void cRangeObsermatic::rangeAutomatic()
 
 void cRangeObsermatic::groupHandling()
 {
+    // preset group overload flags in any case
+    for(auto &entry : m_groupOvlList) {
+        entry = false;
+    }
     if (m_bGrouping) {
         QStringList grouplist;
         QList<int> indexList;
@@ -342,6 +347,7 @@ void cRangeObsermatic::groupHandling()
                 double rngUrValue;
                 int maxIndex = 0;
 
+                bool groupNeedsOverloadReset = false;
                 // first we search for the range with max upper range value
                 for (int j = 0; j < indexList.count(); j++) {
                     int k = indexList.at(j);
@@ -357,15 +363,35 @@ void cRangeObsermatic::groupHandling()
                             maxIndex = indexList.at(j); //
                         }
                     }
+                    if(requiresOverloadReset(k)) {
+                        groupNeedsOverloadReset = true;
+                    }
                 }
 
-                // then we set all channels in grouplist to that range
+                // then we set all channels in grouplist to that range and pass overload
+                // to all channels in the group
+                //
+                // Background on group extra overload flags:
+                // Prerequisite: Channels detect overload (of any kind) non syncronously.
+                // An example what happend and made extra group handling necessary:
+                // 1. Obsermatic detects I1 overload and presets I1 to max range
+                // 2. Grouping presets ALL current ranges to max range
+                // 3. setRange switches all current ranges to max but resets overload only
+                //    for I1
+                // 3. Next Obsermatic detects late I2+I3 overloads. Since ranges are already
+                //    in max range no overload reset will be sent to I2+I3 so they end up in
+                //    max range with overload -> range automatic stops until user resets
+                //    overload manually
                 QString newRange = m_ConfPar.m_senseChannelRangeParameter.at(maxIndex).m_sPar;
                 for (int j = 0; j < indexList.count(); j++) {
                     int k = indexList.at(j);
                     stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(k);
                     sPar.m_sPar = newRange;
                     m_ConfPar.m_senseChannelRangeParameter.replace(k, sPar);
+                    if(groupNeedsOverloadReset) {
+                        qInfo("Group overload channel %i set.", k);
+                        m_groupOvlList.replace(k, true);
+                    }
                 }
             }
         }
@@ -415,11 +441,12 @@ void cRangeObsermatic::setRanges(bool force)
             m_RangeActOVLRejectionComponentList.at(i)->setValue(pmChn->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
 
             // reset hard overload AFTER change of range.
-            if (requiresOverloadReset(i)) {
+            if (requiresOverloadReset(i) || m_groupOvlList.at(i)) {
                 qInfo("Reset overload channel %i", i);
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
+                m_groupOvlList.replace(i, false);
             }
 
 #ifdef DEBUG
@@ -768,6 +795,7 @@ void cRangeObsermatic::newOverload(QVariant overload)
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
+                m_groupOvlList.replace(i, false);
                 m_pComponentOverloadMax->setValue(0);
             }
 
