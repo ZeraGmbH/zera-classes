@@ -143,6 +143,7 @@ private:
     void groupHandling();
     void setRanges(bool force = false); // here we really set ranges
     QList<int> getGroupIndexList(int index);
+    bool requiresOverloadReset(int channel);
 
 private slots:
     void dspserverConnect();

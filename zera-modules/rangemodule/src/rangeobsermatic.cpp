@@ -414,16 +414,8 @@ void cRangeObsermatic::setRanges(bool force)
             // we additional set information of channels actual urvalue incl. reserve
             m_RangeActOVLRejectionComponentList.at(i)->setValue(pmChn->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
 
-            // reset hard overload AFTER change of range. We do this in case of
-            // * hard overload: no explanation required - righty?
-            // * soft overload: In many cases particularly when running on
-            //   sources switching load with ramps our soft detection is faster
-            //   and hard overloads are generated later (while we are changing
-            //   range already)
-            // Avoid resetting hard-overload in max range + range-automatic: It
-            // would cause a infinite loop: We reset hard-overload -> hardware
-            // sets it / we reset hard-overload -> hardware...
-            if ((m_hardOvlList.at(i) || m_softOvlList.at(i)) && !(m_maxOvlList.at(i) && m_bRangeAutomatic)) {
+            // reset hard overload AFTER change of range.
+            if (requiresOverloadReset(i)) {
                 qInfo("Reset overload channel %i", i);
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
@@ -494,6 +486,20 @@ QList<int> cRangeObsermatic::getGroupIndexList(int index)
     }
 
     return indexlist;
+}
+
+bool cRangeObsermatic::requiresOverloadReset(int channel)
+{
+    // We need overload reset in case of
+    // * hard overload: no explanation required - righty?
+    // * soft overload: In many cases particularly when running on
+    //   sources switching load with ramps our soft detection is faster
+    //   and hard overloads are generated later (while we are changing
+    //   range already)
+    // Avoid resetting hard-overload in max range + range-automatic: It
+    // would cause a infinite loop: We reset hard-overload -> hardware
+    // sets it / we reset hard-overload -> hardware...
+    return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && !(m_maxOvlList.at(channel) && m_bRangeAutomatic);
 }
 
 
