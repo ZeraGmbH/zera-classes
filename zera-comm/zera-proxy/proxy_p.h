@@ -6,10 +6,10 @@
 #include <QString>
 #include <QHostAddress>
 #include <xiqnetpeer.h>
+#include <xiqnetwrapper.h>
 #include <netmessages.pb.h>
 
 #include "proxy.h"
-#include "proxyprotobufwrapper.h"
 
 
 namespace Zera
@@ -60,7 +60,7 @@ private:
     Q_DISABLE_COPY(cProxyPrivate)
     Q_DECLARE_PUBLIC(cProxy)
 
-    cProxyProtobufWrapper protobufWrapper;
+    XiQNetWrapper protobufWrapper;
     cProxyNetPeer *searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
     QHash<cProxyClientPrivate*, cProxyConnection*> m_ConnectionHash; // holds network connection for each client
     QHash<QByteArray, cProxyClientPrivate*> m_ClientHash; // information for faster redirecting
