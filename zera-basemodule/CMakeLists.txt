@@ -23,7 +23,6 @@ find_package(Qt5 COMPONENTS Core Gui Network CONFIG REQUIRED)
 find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_package(VfComponent REQUIRED)
-find_package(zeraprotobuf REQUIRED)
 
 
 #sum up project Files 
@@ -57,7 +56,6 @@ target_link_libraries(zerabasemodule
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
-    VeinMeta::zeraprotobuf
     )
 
 

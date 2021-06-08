@@ -20,8 +20,6 @@ include(GNUInstallDirs)
 find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
 
 if(ZC_BUILD_MODULES)
-    # modules require zera-protobuf
-    find_package(zeraprotobuf REQUIRED)
     find_package(Qt5 COMPONENTS Network CONFIG REQUIRED)
 
     # sourcefiles required to build modules
@@ -82,7 +80,6 @@ if(ZC_BUILD_MODULES)
     set(DEPS_FOR_MODULE
         Qt5::Network
         zeraproxy
-        VeinMeta::zeraprotobuf
     )
 endif(ZC_BUILD_MODULES)
 
