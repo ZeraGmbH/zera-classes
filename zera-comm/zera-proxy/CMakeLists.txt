@@ -22,8 +22,6 @@ include(GNUInstallDirs)
 #Find dependecies
 find_package(Qt5 COMPONENTS Gui Network CONFIG REQUIRED)
 find_package(xiqnet REQUIRED)
-find_package(zeraprotobuf REQUIRED)
-
 
 
 #sum up project Files 
@@ -49,13 +47,9 @@ add_library(zeraproxy SHARED
 
 
 target_link_libraries(zeraproxy 
-    PRIVATE
-    Qt5::Gui
+    PUBLIC
     Qt5::Network
     VeinMeta::xiqnet
-    VeinMeta::zeraprotobuf 
-    #VeinMeta::VfComponent
-    #VeinMeta::VfHelpers
     )
 
 
