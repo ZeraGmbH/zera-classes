@@ -209,14 +209,6 @@ quint32 cRangeMeasChannel::readPhaseCorrection(double frequency)
 }
 
 
-bool cRangeMeasChannel::isPossibleRange(QString range, double ampl)
-{
-    cRangeInfo& ri = m_RangeInfoHash[range];
-    return ((ri.urvalue * ri.ovrejection *sqrt2 / ri.rejection) >= ampl);
-    // return (m_RangeInfoHash[range].urvalue * sqrt2 >= ampl);
-}
-
-
 bool cRangeMeasChannel::isPossibleRange(QString range)
 {
     return m_RangeInfoHash.contains(range);

@@ -82,7 +82,6 @@ public:
     double getOVRRejection();
     double getMaxRangeUrvalueMax(); // returns the max. upper range value including reserve of channel including overload reserve
     double getRangeUrvalueMax(); // returns the max. upper range value including reserve of actual range
-    bool isPossibleRange(QString range, double ampl); // test if range is possible with ampl
     bool isPossibleRange(QString range); // returns true if range is available
     bool isRMSOverload(double ampl); // test if ampl is overload condition
     bool isADCOverload(double ampl); // test if ampl is adc overload condition
