@@ -558,9 +558,8 @@ void cRangeObsermatic::readGainCorr()
 
 void cRangeObsermatic::readGainCorrDone()
 {
-    newRangeAuto(m_ConfPar.m_nRangeAutoAct.m_nActive);
-    newGrouping(m_ConfPar.m_nGroupAct.m_nActive);
-    setRanges(); // so we set our scaling factors if not already done
+    // our initial range set from configuration
+    setRanges(true);
 
     // we already read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
