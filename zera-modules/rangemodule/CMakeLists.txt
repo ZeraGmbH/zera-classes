@@ -47,14 +47,19 @@ file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/src/*.xsd
 )
 
-#create library 
+# check for valid config files / display in qt-creator
+add_custom_target(rangemodule-configs ALL
+    DEPENDS ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    SOURCES ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    )
+
+# create library
 add_library(rangemodule MODULE
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
     )
-
-
 
 target_link_libraries(rangemodule 
     PRIVATE
@@ -70,9 +75,7 @@ target_link_libraries(rangemodule
     zeramisc
     zeraxmlconfig
     zeravalidator 
-   
     )
-
 
 # announce headers - target perspective
 target_include_directories(rangemodule
