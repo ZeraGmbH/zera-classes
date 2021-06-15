@@ -39,8 +39,11 @@ file(GLOB RESOURCES
     )
 
 
-file(GLOB OTHER_FILES
+file(GLOB CONFIG_FILES
     ${PROJECT_SOURCE_DIR}/src/*.xml
+)
+
+file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/src/*.xsd
 )
 
@@ -95,9 +98,10 @@ write_basic_package_version_file(
     COMPATIBILITY SameMinorVersion
     )
 
+
 if(NOT ZC_NO_CONFIG_INSTALL)
     install(
-        FILES ${OTHER_FILES}
+        FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
         DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
         )
 endif()
