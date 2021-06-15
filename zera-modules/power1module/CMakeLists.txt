@@ -5,14 +5,12 @@ project(zera-power1module LANGUAGES CXX
     VERSION ${REPO_VERSION}
 )
 
-
 #Automoc and RCC ON. Needed in QT projects
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 #C++ 11 Flag
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 
 #Adding cmake functions like feature_summary()
 include(FeatureSummary)
@@ -23,7 +21,6 @@ find_package(Qt5 COMPONENTS Core Gui Network CONFIG REQUIRED)
 find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_Package(VfComponent REQUIRED)
-
 
 #sum up project Files 
 file(GLOB SOURCES 
@@ -38,21 +35,27 @@ file(GLOB RESOURCES
     ${PROJECT_SOURCE_DIR}/*.qrc
     )
 
-if(NOT ZC_NO_CONFIG_INSTALL)
-    file(GLOB OTHER_FILES
-        ${PROJECT_SOURCE_DIR}/src/*.xml
-        ${PROJECT_SOURCE_DIR}/src/*.xsd
-    )
-endif()
+file(GLOB CONFIG_FILES
+    ${PROJECT_SOURCE_DIR}/src/*.xml
+)
 
-#create library 
+file(GLOB CONFIG_VALIDATOR
+    ${PROJECT_SOURCE_DIR}/src/*.xsd
+)
+
+# check for valid config files / display in qt-creator
+add_custom_target(power1module-configs ALL
+    DEPENDS ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    SOURCES ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    )
+
+# create library
 add_library(power1module MODULE
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
     )
-
-
 
 target_link_libraries(power1module 
     PRIVATE
@@ -70,7 +73,6 @@ target_link_libraries(power1module
     zeravalidator 
     )
 
-
 # announce headers - target perspective
 target_include_directories(power1module
     PUBLIC
@@ -79,7 +81,6 @@ target_include_directories(power1module
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
-
 
 # install library
 install(TARGETS power1module
@@ -95,10 +96,12 @@ write_basic_package_version_file(
     COMPATIBILITY SameMinorVersion
     )
 
-install(
-    FILES ${OTHER_FILES}
-    DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
-    )
+if(NOT ZC_NO_CONFIG_INSTALL)
+    install(
+        FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
+        DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
+        )
+endif()
 
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
