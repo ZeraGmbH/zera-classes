@@ -441,12 +441,15 @@ void cRangeObsermatic::setRanges(bool force)
             m_RangeActOVLRejectionComponentList.at(i)->setValue(pmChn->getRangeUrvalueMax()); // we additional set information of channels actual urvalue incl. reserve
 
             // reset hard overload AFTER change of range.
-            if (requiresOverloadReset(i) || m_groupOvlList.at(i)) {
+            if (requiresOverloadReset(i) || m_groupOvlList.at(i) || force) {
                 qInfo("Reset overload channel %i", i);
                 m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
                 m_groupOvlList.replace(i, false);
+                if (m_ConfPar.m_bOverload) {
+                    m_pComponentOverloadMax->setValue(0);
+                }
             }
 
 #ifdef DEBUG
@@ -778,20 +781,8 @@ void cRangeObsermatic::newOverload(QVariant overload)
 
     bool ok;
     if (overload.toInt(&ok) == 0) { // allthough there is a validation for this value we only accept 0 here
-        if (m_ConfPar.m_bOverload) { // we do something only if configured overload handling
-            cRangeMeasChannel *pmChn;
-            for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we reset all channels
-                pmChn = m_RangeMeasChannelList.at(i);
-                m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
-                m_hardOvlList.replace(i, false);
-                m_maxOvlList.replace(i, false);
-                m_groupOvlList.replace(i, false);
-                m_pComponentOverloadMax->setValue(0);
-            }
-
-            // and then we force setting new ranges
-            setRanges(true);
-        }
+        // and then we force setting new ranges
+        setRanges(true);
     }
 
     // in each case we reset overload here
