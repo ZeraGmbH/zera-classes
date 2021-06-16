@@ -181,14 +181,12 @@ void cRangeObsermatic::generateInterface()
 
     m_pModule->veinModuleParameterHash["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
 
-    if (m_ConfPar.m_bGrouping) {
-        m_pParGroupingOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                       QString("PAR_ChannelGrouping"),
-                                                       QString("Component for switching on/off channel grouping"),
-                                                       QVariant(0));
+    m_pParGroupingOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   QString("PAR_ChannelGrouping"),
+                                                   QString("Component for switching on/off channel grouping"),
+                                                   QVariant(0));
 
-        m_pModule->veinModuleParameterHash["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
-    }
+    m_pModule->veinModuleParameterHash["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
 
     m_pParOverloadOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    QString("PAR_Overload"),
@@ -565,9 +563,7 @@ void cRangeObsermatic::readGainCorrDone()
     }
 
     connect(m_pParRangeAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRangeAuto(QVariant)));
-    if (m_ConfPar.m_bGrouping) {
-        connect(m_pParGroupingOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newGrouping(QVariant)));
-    }
+    connect(m_pParGroupingOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newGrouping(QVariant)));
     connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
 
     cRangeMeasChannel *pmChn;
@@ -610,11 +606,9 @@ void cRangeObsermatic::readGainCorrDone()
     m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
     m_pParRangeAutomaticOnOff->setSCPIInfo(scpiInfo);
 
-    if (m_ConfPar.m_bGrouping) {
-        scpiInfo = new cSCPIInfo("CONFIGURATION", "GROUPING", "10", m_pParGroupingOnOff->getName(), "0", "");
-        m_pParGroupingOnOff->setValidator(new cBoolValidator());
-        m_pParGroupingOnOff->setSCPIInfo(scpiInfo);
-    }
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "GROUPING", "10", m_pParGroupingOnOff->getName(), "0", "");
+    m_pParGroupingOnOff->setValidator(new cBoolValidator());
+    m_pParGroupingOnOff->setSCPIInfo(scpiInfo);
 
     scpiInfo = new cSCPIInfo("SENSE", "OVERLOAD", "10", m_pParOverloadOnOff->getName(), "0", "");
     m_pParOverloadOnOff->setValidator(new cBoolValidator());
@@ -715,9 +709,7 @@ void cRangeObsermatic::newRange(QVariant range)
         }
         else {
             m_ConfPar.m_nGroupAct.m_nActive = 0;
-            if (m_ConfPar.m_bGrouping) {
-                m_pParGroupingOnOff->setValue(0);
-            }
+            m_pParGroupingOnOff->setValue(0);
         }
     }
 
