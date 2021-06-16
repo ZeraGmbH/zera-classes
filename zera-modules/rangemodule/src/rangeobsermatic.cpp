@@ -290,7 +290,7 @@ void cRangeObsermatic::rangeObservation()
 
 void cRangeObsermatic::rangeAutomatic()
 {
-    if (m_bRangeAutomatic) {
+    if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
         bool unmarkOverload = true;
         cRangeMeasChannel *pmChn;
 
@@ -329,7 +329,7 @@ void cRangeObsermatic::groupHandling()
     for(auto &entry : m_groupOvlList) {
         entry = false;
     }
-    if (m_bGrouping) {
+    if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
         QStringList grouplist;
         QList<int> indexList;
         for (int i = 0; i < m_GroupList.count(); i++) {
@@ -491,7 +491,7 @@ void cRangeObsermatic::setRanges(bool force)
 QList<int> cRangeObsermatic::getGroupIndexList(int index)
 {
     QList<int> indexlist;
-    if (m_bGrouping) {
+    if (m_ConfPar.m_nGroupAct.m_nActive == 1) {
         QString s = m_ChannelAliasList.at(index); // we search for this channel alias
         QStringList grouplist;
         for (int i = 0; i < m_GroupList.count(); i++)
@@ -526,7 +526,7 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
     // Avoid resetting hard-overload in max range + range-automatic: It
     // would cause a infinite loop: We reset hard-overload -> hardware
     // sets it / we reset hard-overload -> hardware...
-    return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (!m_bRangeAutomatic || !m_maxOvlList.at(channel));
+    return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
 
@@ -704,43 +704,35 @@ void cRangeObsermatic::newRange(QVariant range)
 {
     cVeinModuleParameter *pParameter = qobject_cast<cVeinModuleParameter*>(sender()); // get sender of updated signal
     int index = m_RangeParameterList.indexOf(pParameter); // which channel is it
-    if (true /*!m_bRangeAutomatic*/) {
-        QString s;
-        s = range.toString();
 
-        QList<int> chnIndexlist = getGroupIndexList(index);
-        // in case of active grouping we have to set all the ranges in that group if possible
-        // so we fetch a list of index for all channels in group ,in case of inactive grouping
-        // the list will contain only 1 index
-        // if we find 1 channel in a group that hasn't the wanted range we reset grouping !
-        // let's first test if all channels have the wanted range
+    QString s;
+    s = range.toString();
 
-        for (int i = 0; i < chnIndexlist.count(); i++) {
-            index = chnIndexlist.at(i);
-            if (m_RangeMeasChannelList.at(index)->isPossibleRange(s)) {
-                stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
-                sPar.m_sPar = s;
-                m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
-                m_brangeSet = true;
-                m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
-            }
-            else {
-                m_ConfPar.m_nGroupAct.m_nActive = 0;
-                m_bGrouping = false;
-                if (m_ConfPar.m_bGrouping) {
-                    m_pParGroupingOnOff->setValue(0);
-                }
+    QList<int> chnIndexlist = getGroupIndexList(index);
+    // in case of active grouping we have to set all the ranges in that group if possible
+    // so we fetch a list of index for all channels in group ,in case of inactive grouping
+    // the list will contain only 1 index
+    // if we find 1 channel in a group that hasn't the wanted range we reset grouping !
+    // let's first test if all channels have the wanted range
+
+    for (int i = 0; i < chnIndexlist.count(); i++) {
+        index = chnIndexlist.at(i);
+        if (m_RangeMeasChannelList.at(index)->isPossibleRange(s)) {
+            stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(index);
+            sPar.m_sPar = s;
+            m_ConfPar.m_senseChannelRangeParameter.replace(index, sPar);
+            m_brangeSet = true;
+            m_actChannelRangeNotifierList.replace(index,QString("")); // this will assure that a notification will be sent after setRanges()
+        }
+        else {
+            m_ConfPar.m_nGroupAct.m_nActive = 0;
+            if (m_ConfPar.m_bGrouping) {
+                m_pParGroupingOnOff->setValue(0);
             }
         }
-
-        setRanges();
-
-        // earlier we actualized the components (entities) from here
-        // it could be that we had to switch also other channels
-        // or that we could not switch them because of overload conditions
-
-        // but for sync. purpose we must set components later , after the ranges have been set
     }
+
+    setRanges();
 
     emit m_pModule->parameterChanged();
 }
@@ -751,8 +743,7 @@ void cRangeObsermatic::newRangeAuto(QVariant rauto)
 {
     bool ok;
     m_ConfPar.m_nRangeAutoAct.m_nActive = rauto.toInt(&ok);
-
-    if ( (m_bRangeAutomatic = (rauto.toInt(&ok) == 1)) ) {
+    if (m_ConfPar.m_nRangeAutoAct.m_nActive == 1) {
         //qInfo() << "Range Automatic on";
         rangeAutomatic(); // call once if switched to automatic
         groupHandling(); // check for grouping
@@ -772,7 +763,7 @@ void cRangeObsermatic::newGrouping(QVariant rgrouping)
     bool ok;
     m_ConfPar.m_nGroupAct.m_nActive = rgrouping.toInt(&ok);
 
-    if ( (m_bGrouping = (rgrouping.toInt(&ok) == 1)) ) {
+    if ( m_ConfPar.m_nGroupAct.m_nActive == 1 ) {
         groupHandling(); // call once if switched to grouphandling
         setRanges();
     }
