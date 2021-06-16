@@ -192,21 +192,19 @@ void cRangeObsermatic::generateInterface()
         m_pModule->veinModuleParameterHash["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
     }
 
-    if (m_ConfPar.m_bOverload) {
-        m_pParOverloadOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                       QString("PAR_Overload"),
-                                                       QString("Component for reading and resetting overload"),
+    m_pParOverloadOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   QString("PAR_Overload"),
+                                                   QString("Component for reading and resetting overload"),
+                                                   QVariant(0));
+
+    m_pModule->veinModuleParameterHash["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
+
+    m_pComponentOverloadMax = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                       QString("INF_OverloadMax"),
+                                                       QString("Component signals maximum range overload condition"),
                                                        QVariant(0));
 
-        m_pModule->veinModuleParameterHash["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
-
-        m_pComponentOverloadMax = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                           QString("INF_OverloadMax"),
-                                                           QString("Component signals maximum range overload condition"),
-                                                           QVariant(0));
-
-        m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
-    }
+    m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
 
     m_pRangingSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Ranging"),
@@ -447,9 +445,7 @@ void cRangeObsermatic::setRanges(bool force)
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
                 m_groupOvlList.replace(i, false);
-                if (m_ConfPar.m_bOverload) {
-                    m_pComponentOverloadMax->setValue(0);
-                }
+                m_pComponentOverloadMax->setValue(0);
             }
 
 #ifdef DEBUG
@@ -576,9 +572,7 @@ void cRangeObsermatic::readGainCorrDone()
     if (m_ConfPar.m_bGrouping) {
         connect(m_pParGroupingOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newGrouping(QVariant)));
     }
-    if (m_ConfPar.m_bOverload) {
-        connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
-    }
+    connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
 
     cRangeMeasChannel *pmChn;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
@@ -628,11 +622,9 @@ void cRangeObsermatic::readGainCorrDone()
         m_pParGroupingOnOff->setSCPIInfo(scpiInfo);
     }
 
-    if (m_ConfPar.m_bOverload) {
-        scpiInfo = new cSCPIInfo("SENSE", "OVERLOAD", "10", m_pParOverloadOnOff->getName(), "0", "");
-        m_pParOverloadOnOff->setValidator(new cBoolValidator());
-        m_pParOverloadOnOff->setSCPIInfo(scpiInfo);
-    }
+    scpiInfo = new cSCPIInfo("SENSE", "OVERLOAD", "10", m_pParOverloadOnOff->getName(), "0", "");
+    m_pParOverloadOnOff->setValidator(new cBoolValidator());
+    m_pParOverloadOnOff->setSCPIInfo(scpiInfo);
 
     m_pParRangeAutomaticOnOff->setValue(m_ConfPar.m_nRangeAutoAct.m_nActive);
     m_pParGroupingOnOff->setValue(m_ConfPar.m_nGroupAct.m_nActive);

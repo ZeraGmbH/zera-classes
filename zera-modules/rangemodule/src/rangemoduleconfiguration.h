@@ -30,7 +30,6 @@ enum moduleconfigstate
     setAdjustInterval,
     setGroupingBool,
     setRangeAutomaticBool,
-    setOverloadBool,
 
     setDefaultRange1 = 40, // max. 32 channels
     setSenseChannel1 = 72, // dito

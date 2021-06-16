@@ -21,7 +21,6 @@
         <sense>
             <withgrouping>1</withgrouping>
             <withrangeauto>1</withrangeauto>
-            <withoverload>1</withoverload>
             <channel>
                 <n>8</n>
                 <ch1>m0</ch1>

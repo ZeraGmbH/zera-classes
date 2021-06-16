@@ -260,7 +260,6 @@
                                 <xs:sequence>
                                     <xs:element name="withgrouping" type="yesnotype" minOccurs="1" maxOccurs="1"/>
                                     <xs:element name="withrangeauto" type="yesnotype" minOccurs="1" maxOccurs="1"/>
-                                    <xs:element name="withoverload" type="yesnotype" minOccurs="1" maxOccurs="1"/>
                                     <xs:element name="channel" type="channeltype"/>
                                     <xs:element name="subdc" type="subdctype"/>
                                     <xs:element name="extend" type="extendtype"/>
