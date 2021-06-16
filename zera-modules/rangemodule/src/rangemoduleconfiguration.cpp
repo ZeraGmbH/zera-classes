@@ -45,7 +45,6 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:withgrouping"] = setGroupingBool;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:withrangeauto"] = setRangeAutomaticBool;
-    m_ConfigXMLMap["rangemodconfpar:configuration:sense:withoverload"] = setOverloadBool;
 
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:channel:n"] = setChannelCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:subdc:n"] = setSubdcCount;
@@ -185,9 +184,6 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
             break;
         case setRangeAutomaticBool:
             m_pRangeModulConfigData->m_ObsermaticConfPar.m_bRangeAuto = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
-            break;
-        case setOverloadBool:
-            m_pRangeModulConfigData->m_ObsermaticConfPar.m_bOverload = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setMeasureInterval:
             m_pRangeModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);
