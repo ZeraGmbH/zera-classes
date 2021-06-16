@@ -5,14 +5,12 @@ project(zera-referencemodule LANGUAGES CXX
     VERSION ${REPO_VERSION}
 )
 
-
 #Automoc and RCC ON. Needed in QT projects
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 #C++ 11 Flag
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
 
 #Adding cmake functions like feature_summary()
 include(FeatureSummary)
@@ -23,7 +21,6 @@ find_package(Qt5 COMPONENTS Core Gui Network CONFIG REQUIRED)
 find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_Package(VfComponent REQUIRED)
-
 
 #sum up project Files 
 file(GLOB SOURCES 
@@ -38,19 +35,27 @@ file(GLOB RESOURCES
     ${PROJECT_SOURCE_DIR}/*.qrc
     )
 
-file(GLOB OTHER_FILES
+file(GLOB CONFIG_FILES
     ${PROJECT_SOURCE_DIR}/src/*.xml
+)
+
+file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/src/*.xsd
 )
 
-#create library 
+# check for valid config files / display in qt-creator
+add_custom_target(referencemodule-configs ALL
+    DEPENDS ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    SOURCES ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    )
+
+# create library
 add_library(referencemodule MODULE
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
     )
-
-
 
 target_link_libraries(referencemodule 
     PRIVATE
@@ -68,7 +73,6 @@ target_link_libraries(referencemodule
     zeravalidator 
     )
 
-
 # announce headers - target perspective
 target_include_directories(referencemodule
     PUBLIC
@@ -77,7 +81,6 @@ target_include_directories(referencemodule
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
-
 
 # install library
 install(TARGETS referencemodule
@@ -95,7 +98,7 @@ write_basic_package_version_file(
 
 if(NOT ZC_NO_CONFIG_INSTALL)
     install(
-        FILES ${OTHER_FILES}
+        FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
         DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
         )
 endif()
