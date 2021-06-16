@@ -43,8 +43,6 @@ void cRangeModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["rangemodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
 
-    m_ConfigXMLMap["rangemodconfpar:configuration:sense:withgrouping"] = setGroupingBool;
-
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:channel:n"] = setChannelCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:subdc:n"] = setSubdcCount;
     m_ConfigXMLMap["rangemodconfpar:configuration:sense:extend:n"] = setExtendCount;
@@ -177,9 +175,6 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
         case setRangeAutomatic:
             m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct.m_sKey = key;
             m_pRangeModulConfigData->m_ObsermaticConfPar.m_nRangeAutoAct.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
-        case setGroupingBool:
-            m_pRangeModulConfigData->m_ObsermaticConfPar.m_bGrouping = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setMeasureInterval:
             m_pRangeModulConfigData->m_fMeasInterval = m_pXMLReader->getValue(key).toDouble(&ok);

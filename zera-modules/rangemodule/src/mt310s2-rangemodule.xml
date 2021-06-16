@@ -19,7 +19,6 @@
             </ethernet>
         </connectivity>
         <sense>
-            <withgrouping>1</withgrouping>
             <channel>
                 <n>8</n>
                 <ch1>m0</ch1>

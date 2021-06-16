@@ -26,7 +26,6 @@ struct stringParameter
 
 struct cObsermaticConfPar
 {
-    bool m_bGrouping; //  grouping or not
     boolParameter m_nGroupAct; // grouping active or not 1,0
     boolParameter m_nRangeAutoAct; // range automatic active or not 1,0
     QList<stringParameter> m_senseChannelRangeParameter;
