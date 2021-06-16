@@ -20,7 +20,6 @@
         </connectivity>
         <sense>
             <withgrouping>1</withgrouping>
-            <withrangeauto>1</withrangeauto>
             <channel>
                 <n>6</n>
                 <ch1>m0</ch1>

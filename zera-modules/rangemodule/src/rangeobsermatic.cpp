@@ -174,14 +174,12 @@ void cRangeObsermatic::generateInterface()
         }
     }
 
-    if (m_ConfPar.m_bRangeAuto) {
-        m_pParRangeAutomaticOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                             QString("PAR_RangeAutomatic"),
-                                                             QString("Component for switching on/off the range automatic"),
-                                                             QVariant(0));
+    m_pParRangeAutomaticOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                         QString("PAR_RangeAutomatic"),
+                                                         QString("Component for switching on/off the range automatic"),
+                                                         QVariant(0));
 
-        m_pModule->veinModuleParameterHash["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
-    }
+    m_pModule->veinModuleParameterHash["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
 
     if (m_ConfPar.m_bGrouping) {
         m_pParGroupingOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -566,9 +564,7 @@ void cRangeObsermatic::readGainCorrDone()
         connect(m_RangeParameterList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(newRange(QVariant)));
     }
 
-    if (m_ConfPar.m_bRangeAuto) {
-        connect(m_pParRangeAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRangeAuto(QVariant)));
-    }
+    connect(m_pParRangeAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRangeAuto(QVariant)));
     if (m_ConfPar.m_bGrouping) {
         connect(m_pParGroupingOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newGrouping(QVariant)));
     }
@@ -610,11 +606,9 @@ void cRangeObsermatic::readGainCorrDone()
         m_RangeActOVLRejectionComponentList.at(i)->setUnit(s2);
     }
 
-    if (m_ConfPar.m_bRangeAuto) {
-        scpiInfo = new cSCPIInfo("CONFIGURATION", "RNGAUTO", "10", m_pParRangeAutomaticOnOff->getName(), "0", "");
-        m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
-        m_pParRangeAutomaticOnOff->setSCPIInfo(scpiInfo);
-    }
+    scpiInfo = new cSCPIInfo("CONFIGURATION", "RNGAUTO", "10", m_pParRangeAutomaticOnOff->getName(), "0", "");
+    m_pParRangeAutomaticOnOff->setValidator(new cBoolValidator());
+    m_pParRangeAutomaticOnOff->setSCPIInfo(scpiInfo);
 
     if (m_ConfPar.m_bGrouping) {
         scpiInfo = new cSCPIInfo("CONFIGURATION", "GROUPING", "10", m_pParGroupingOnOff->getName(), "0", "");
