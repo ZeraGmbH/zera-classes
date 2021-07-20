@@ -185,6 +185,14 @@ void cStatusModuleInit::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pDeviceType;
     m_pDeviceType->setSCPIInfo(new cSCPIInfo("STATUS", "DEVTYPE", "2", key, "0", ""));
 
+    m_pCPUInfo = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                key = QString("INF_CpuInfo"),
+                                                QString("Component forwards CPU/SOM info"),
+                                                QVariant(QString("")));
+
+    m_pModule->veinModuleParameterHash[key] = m_pCPUInfo;
+    m_pCPUInfo->setSCPIInfo(new cSCPIInfo("STATUS", "CPUINFO", "2", key, "0", ""));
+
     m_pAdjustmentStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_Adjusted"),
                                                    QString("Component forwards information about device adjustment"),
@@ -433,6 +441,27 @@ QString cStatusModuleInit::findDeviceType()
     return devType;
 }
 
+QString cStatusModuleInit::findCpuInfo()
+{
+    QString cpuInfo;
+    QString eepromDumpFile = QStringLiteral("/tmp/varsom-eeprom.dump");
+    QFile file(eepromDumpFile);
+    if(file.open(QIODevice::ReadOnly)) {
+        QByteArray eepromDump = file.readAll();
+        file.close();
+        // valid dump?
+        if(eepromDump.count() >= 64 && eepromDump.left(4) == QByteArray("WARI")) {
+            // structure taken from u-boot-variscite / mx6var_eeprom_v1.h
+            QString partNumber = eepromDump.mid(4, 16);
+            QString assembly = eepromDump.mid(20, 16);
+            QString date = eepromDump.mid(36, 16);
+            //int version = eepromDump.at(52);
+            cpuInfo = QString("{\"PartNumber\":\"%1\",\"Assembly\":\"%2\",\"Date\":\"%3\"}").arg(partNumber).arg(assembly).arg(date);
+        }
+    }
+    return cpuInfo;
+}
+
 void cStatusModuleInit::setInterfaceComponents()
 {
     m_pPCBServerVersion->setValue(QVariant(m_sPCBServerVersion));
@@ -443,6 +472,7 @@ void cStatusModuleInit::setInterfaceComponents()
     m_pDSPProgramVersion->setValue(QVariant(m_sDSPProgramVersion));
     m_pReleaseNumber->setValue(QVariant(m_sReleaseNumber));
     m_pDeviceType->setValue(QVariant(m_sDeviceType));
+    m_pCPUInfo->setValue(QVariant(m_sCPUInfo));
     m_pAdjustmentStatus->setValue(QVariant(m_sAdjStatus));
     m_pAdjustmentChksum->setValue(QVariant(m_sAdjChksum));
 }
@@ -552,6 +582,7 @@ void cStatusModuleInit::activationDone()
 {
     m_sReleaseNumber = findReleaseNr();
     m_sDeviceType = findDeviceType();
+    m_sCPUInfo = findCpuInfo();
     setInterfaceComponents();
     connect(m_pSerialNumber, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newSerialNumber(QVariant)));
     m_bActive = true;
