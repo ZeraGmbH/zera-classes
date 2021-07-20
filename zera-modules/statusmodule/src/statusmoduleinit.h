@@ -121,6 +121,7 @@ private:
     QString m_sAdjStatus;
     QString m_sAdjChksum;
     QString m_sDeviceType;
+    QString m_sCPUInfo;
 
     cVeinModuleParameter *m_pPCBServerVersion;
     cVeinModuleParameter *m_pCtrlVersion;
@@ -130,11 +131,13 @@ private:
     cVeinModuleParameter *m_pDSPProgramVersion;
     cVeinModuleParameter *m_pReleaseNumber;
     cVeinModuleParameter *m_pDeviceType;
+    cVeinModuleParameter *m_pCPUInfo;
     cVeinModuleParameter *m_pAdjustmentStatus;
     cVeinModuleParameter *m_pAdjustmentChksum;
 
     QString findReleaseNr();
     QString findDeviceType();
+    QString findCpuInfo();
 
     QVariant wantedSerialNr;
 
