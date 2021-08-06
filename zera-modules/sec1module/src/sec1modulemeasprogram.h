@@ -211,6 +211,8 @@ private:
 
     cStringValidator *m_pDutConstanstUnitValidator;
     QString m_sDutConstantUnit;
+    // memorising DUT Constant scaling factor in case DUT constant changes
+    double m_dutConstantScalingMem = 1;
 
     // vars dealing with error measurement
     bool m_bFirstMeas;
@@ -387,6 +389,22 @@ private slots:
     void newStartStop(QVariant startstop);
     void newMode(QVariant mode);
     void newDutConstant(QVariant dutconst);
+    /**
+     * @brief newDutConstantScale
+     *
+     * caluclates dut constatn scale factor from
+     * PAR_DutConstantUScaleNum
+     * PAR_DutConstantUScaleDenom
+     * PAR_DutConstantIScaleNum
+     * PAR_DutConstantIScaleDenom
+     *
+     * is also connected to m_pDutTypeMeasurePoint
+     *
+     * @param uINumDenomValue: new Num or denum value
+     * @param numDenomId: (0): is Numerator (1 or ...) is Denominator
+     * @param transType: Transformer type (U) Voltage (I) Current
+     */
+    void newDutConstantScale(QVariant uINumDenomValue, const QString componentName);
     void newDutConstantUnit(QVariant dutconstunit);
     void newRefConstant(QVariant refconst);
     void newDutInput(QVariant dutinput);
