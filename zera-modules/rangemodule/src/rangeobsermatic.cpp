@@ -13,6 +13,7 @@
 #include <proxyclient.h>
 #include <stringvalidator.h>
 #include <regexvalidator.h>
+#include <intvalidator.h>
 #include <boolvalidator.h>
 #include <scpiinfo.h>
 
@@ -259,10 +260,11 @@ void cRangeObsermatic::rangeObservation()
 
     for (int i = 0; i < nrActValues; i++) { // we test all channels
         pmChn = m_RangeMeasChannelList.at(i);
-
+        // the overload observation must consider the prescaling
+        float prescalingFac=getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        bool rmsOverload = pmChn->isRMSOverload(m_ActualValues[nrActValues+i]);
+        bool rmsOverload = pmChn->isRMSOverload(m_ActualValues[nrActValues+i]*prescalingFac);
         bool adcOverLoad = pmChn->isADCOverload(m_ActualValues[2 * nrActValues + 1 + i]);
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
@@ -435,6 +437,11 @@ void cRangeObsermatic::setRanges(bool force)
 
     change = false;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) { // we set all channels if needed
+
+
+        // check if channel is in groupe
+        float preScalingFactor=1;
+        preScalingFactor=getPreScale(i);
         s = m_ConfPar.m_senseChannelRangeParameter.at(i).m_sPar;
         pmChn = m_RangeMeasChannelList.at(i);
         if (! pmChn->isPossibleRange(s)) { // we test whether this range is possible, otherwise we take the max. range
@@ -460,7 +467,9 @@ void cRangeObsermatic::setRanges(bool force)
 
             // we set the scaling factor here
             chn = pmChn->getDSPChannelNr();
-            m_pfScale[chn] = pmChn->getUrValue() / pmChn->getRejection();
+
+            // The scaling factor is multplied with the inverse presaling value
+            m_pfScale[chn] = (pmChn->getUrValue() / pmChn->getRejection()) * (1/preScalingFactor);
 
             // we first set information of channels actual urvalue
             m_RangeActRejectionComponentList.at(i)->setValue(pmChn->getUrValue());
@@ -557,6 +566,41 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
     return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
+float cRangeObsermatic::getPreScale(int p_idx)
+{
+    float retVal=1;
+    int groupe=-1;
+    for(int k = 0; k < m_GroupList.length();k++){
+        int lengthAllGroups = (k+1)*m_GroupList[k].length();
+        if((p_idx+1) < lengthAllGroups){
+            groupe=k;
+            break;
+        }
+    }
+
+    if(groupe < m_RangeGroupePreScalingList.length() && groupe > -1)
+    {
+        if(m_RangeGroupePreScalingEnabledList.at(groupe)->getValue().toBool() == true){
+            QString equation=m_RangeGroupePreScalingList.at(groupe)->getValue().toString();
+            QStringList fac=equation.split("*");
+            if(fac.length()>0){
+                float num=fac.at(0).split("/")[0].toFloat();
+                float denom=fac.at(0).split("/")[1].toFloat();
+                retVal=num/denom;
+            }
+            if(fac.length()>1){
+                if(fac.at(1) == "(sqrt(3))"){
+                    retVal = retVal*sqrt(3);
+                }else if(fac.at(1) == "(1/sqrt(3))"){
+                    retVal= retVal/sqrt(3);
+                }
+            }
+        }
+    }
+    qInfo("Pre Scaling is %f", retVal);
+    return retVal;
+}
+
 
 void cRangeObsermatic::dspserverConnect()
 {
@@ -593,6 +637,11 @@ void cRangeObsermatic::readGainCorrDone()
     // lets now connect signals so we become alive
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
         connect(m_RangeParameterList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(newRange(QVariant)));
+    }
+
+    for (int i = 0; i < m_RangeGroupePreScalingList.length(); i++) {
+        connect(m_RangeGroupePreScalingList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(preScalingChanged(QVariant)));
+        connect(m_RangeGroupePreScalingEnabledList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(preScalingChanged(QVariant)));
     }
 
     connect(m_pParRangeAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRangeAuto(QVariant)));
@@ -800,6 +849,12 @@ void cRangeObsermatic::newOverload(QVariant overload)
     m_pParOverloadOnOff->setValue(0);
 
     connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
+}
+
+void cRangeObsermatic::preScalingChanged(QVariant unused)
+{
+    Q_UNUSED(unused)
+    setRanges(true);
 }
 
 
