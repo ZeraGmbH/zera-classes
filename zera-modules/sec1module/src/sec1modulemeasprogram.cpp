@@ -1091,6 +1091,10 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     if (energyPerImpulse)
         constant = (1.0/constant) * 1000.0; // if xxx/I we calculate in I/kxxx
 
+    // We can be sure DUT constant is in I/kxxx here. Therefor the constant is scaled here in case
+    // an instrument transformer is used.
+    constant=constant*m_dutConstantScalingMem;
+
     if (mode == "mrate")
     {
        // we calculate the new target value
@@ -1438,6 +1442,24 @@ void cSec1ModuleMeasProgram::activationDone()
     connect(m_pStartStopPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
     connect(m_pModePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
     connect(m_pDutConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstant(QVariant)));
+    connect(m_pDutConstantUScaleNum, &cVeinModuleParameter::sigValueChanged,[this](QVariant val){
+        this->newDutConstantScale(val,m_pDutConstantUScaleDenom->getName());
+    });
+    connect(m_pDutConstantUScaleDenom, &cVeinModuleParameter::sigValueChanged,[this](QVariant val){
+
+        this->newDutConstantScale(val,m_pDutConstantUScaleDenom->getName());
+    });
+    connect(m_pDutConstantIScaleNum, &cVeinModuleParameter::sigValueChanged,[this](QVariant val){
+        this->newDutConstantScale(val,m_pDutConstantIScaleNum->getName());
+    });
+    connect(m_pDutConstantIScaleDenom, &cVeinModuleParameter::sigValueChanged,[this](QVariant val){
+
+        this->newDutConstantScale(val,m_pDutConstantIScaleDenom->getName());
+    });
+    connect(m_pDutTypeMeasurePoint, &cVeinModuleParameter::sigValueChanged,[this](QVariant val){
+
+        this->newDutConstantScale(val,m_pDutTypeMeasurePoint->getName());
+    });
     connect(m_pDutConstantUnitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstantUnit(QVariant)));
     connect(m_pRefConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefConstant(QVariant)));
     connect(m_pDutInputPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutInput(QVariant)));
@@ -1768,6 +1790,49 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     }
 
     emit m_pModule->parameterChanged();
+}
+
+void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString componentName)
+{
+    //parameters are not used because of combined calculation
+    //the values are avaialable for logging/Debugging or future applications.
+    Q_UNUSED(value)
+    Q_UNUSED(componentName)
+
+
+    QString conf=m_pDutTypeMeasurePoint->getValue().toString();
+
+    float numVal=1;
+    float denVal=1;
+    if(conf != "CpIpUp" && conf != "CsIsUs"){
+        QStringList uNumeratorElements=m_pDutConstantUScaleNum->getValue().toString().split("/");
+        QStringList uDenominatorElements=m_pDutConstantUScaleDenom->getValue().toString().split("/");
+        QString iNumerator=m_pDutConstantIScaleDenom->getValue().toString();
+        QString iDenominator=m_pDutConstantIScaleDenom->getValue().toString();
+        // parse string equation to float value (see validator)
+        numVal=uNumeratorElements[0].toFloat()*iNumerator.toFloat();
+        if(uNumeratorElements.length()>1){
+            if(uNumeratorElements[1]=="sqrt(3)"){
+                numVal=numVal*sqrt(3);
+            }
+        }
+
+        // parse string equation to float value (see validator)
+        denVal=uDenominatorElements[0].toFloat()*iDenominator.toFloat();
+        if(uDenominatorElements.length()>1){
+            if(uDenominatorElements[1]=="sqrt(3)"){
+                denVal=denVal*sqrt(3);
+            }
+        }
+    }
+    if(conf != "CpIsUs"){
+        m_dutConstantScalingMem=denVal/numVal;
+    }else if(conf != "CsIpUp"){
+        m_dutConstantScalingMem=numVal/denVal;
+    }else{
+        m_dutConstantScalingMem=1;
+    }
+
 }
 
 
