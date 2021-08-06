@@ -570,13 +570,16 @@ float cRangeObsermatic::getPreScale(int p_idx)
 {
     float retVal=1;
     int groupe=-1;
+    int groupeUpperLimit=0;
     for(int k = 0; k < m_GroupList.length();k++){
-        int lengthAllGroups = (k+1)*m_GroupList[k].length();
-        if((p_idx+1) < lengthAllGroups){
+        groupeUpperLimit += m_GroupList[k].length();
+        if(p_idx < groupeUpperLimit){
             groupe=k;
             break;
         }
     }
+
+
 
     if(groupe < m_RangeGroupePreScalingList.length() && groupe > -1)
     {
