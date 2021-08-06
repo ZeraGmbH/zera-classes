@@ -98,9 +98,10 @@ void cVeinModuleParameter::transaction(QUuid clientId, QVariant newValue, QVaria
     {
         if (isValidParameter(newValue))
         {
-            emit sigValueChanged(newValue);
+
             if (!hasDeferredNotification())
                 setValue(newValue); // in case of no deferred if send the notification at once
+            emit sigValueChanged(newValue);
         }
         else
             setError(); // this will send an error notification
