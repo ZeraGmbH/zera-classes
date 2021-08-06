@@ -110,6 +110,8 @@ private:
     QList<cVeinModuleComponent*> m_RangeOVLRejectionComponentList;
     QList<cVeinModuleComponent*> m_RangeActRejectionComponentList;
     QList<cVeinModuleComponent*> m_RangeActOVLRejectionComponentList;
+    QList<cVeinModuleParameter*> m_RangeGroupePreScalingList;
+    QList<cVeinModuleParameter*> m_RangeGroupePreScalingEnabledList;
 
     cVeinModuleParameter* m_pParRangeAutomaticOnOff;
     cVeinModuleParameter* m_pParGroupingOnOff;

@@ -164,67 +164,37 @@ void cRangeObsermatic::generateInterface()
         m_maxOvlList.append(false);
     }
 
+    for(int i=0; i < m_GroupList.length();++i){
 
-     // Add Parameter for preScalig values (e.g external instrument transfomer)
-     pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                          key = QString("PAR_UPreScaling"),
-                                          QString("Scaling factor for extern voltage transformers"),
-                                          QVariant("1/1"),
-                                          false);
+        pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                             key = QString("PAR_PreScalingGroupe%1").arg(i),
+                                             QString("Scaling factor for groupe k (see configuration)"),
+                                             QVariant("1/1"),
+                                             false);
 
-     pParameter->setValidator(new cRegExValidator("^[1-9]{1,4}\\/[1-9]{1,4}$"));
-
-     pParameter->setUnit("");
-     pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
-     pParameter->setValidator(new cRegExValidator("^[1-9]{1,4}\\/[1-9]{1,4}$"));
-
-     m_pModule->veinModuleParameterHash[key] = pParameter; // for modules use
+        pParameter->setUnit("");
+        pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
+        pParameter->setValidator(new cRegExValidator("^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$"));
 
 
-     pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                          key = QString("PAR_IPreScaling"),
-                                          QString("Scaling factor for extern current transformers"),
-                                          QVariant("1/1"),
-                                          false);
+        m_RangeGroupePreScalingList.append(pParameter);
+        m_pModule->veinModuleParameterHash[key] = pParameter;
 
-     // all SCPI infos must be set else segfault.
-     // TODO: Figure out what cmdtype and reftype is.
-     pParameter->setUnit("");
-     pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
-     pParameter->setValidator(new cRegExValidator("^[1-9]{1,4}\\/[1-9]{1,4}$"));
+        // activate preScaling for U and I
+        pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                             key = QString("PAR_PreScalingEnabledGroupe%1").arg(i),
+                                             QString("Enable prescaling for groupe"),
+                                             QVariant(0),
+                                             false);
 
-     m_pModule->veinModuleParameterHash[key] = pParameter; // for modules use
+        pParameter->setValidator(new cBoolValidator());
+        pParameter->setUnit("");
+        pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
 
-     // activate preScaling for U and I
-     pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                          key = QString("PAR_UPreScalingEnabled"),
-                                          QString("Scaling factor for extern voltage transformers"),
-                                          QVariant(true),
-                                          false);
+        m_RangeGroupePreScalingEnabledList.append(pParameter);
+        m_pModule->veinModuleParameterHash[key] = pParameter;
 
-
-     pParameter->setValidator(new cBoolValidator());
-
-
-     pParameter->setUnit("");
-     pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
-     pParameter->setValidator(new cRegExValidator("^[1-9]{1,4}\\/[1-9]{1,4}$"));
-
-     m_pModule->veinModuleParameterHash[key] = pParameter; // for modules use
-
-     pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                          key = QString("PAR_IPreScalingEnabled"),
-                                          QString("Scaling factor for extern current transformers"),
-                                          QVariant(true),
-                                          false); // we prefer deferred notification for synchronization purpose
-     pParameter->setValidator(new cBoolValidator());
-     pParameter->setUnit("");
-     pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
-     pParameter->setValidator(new cRegExValidator("^[1-9]{1,4}\\/[1-9]{1,4}$"));
-
-     m_pModule->veinModuleParameterHash[key] = pParameter; // for modules use
-
-
+    }
 
     if (m_GroupList.count() > 0) {
         QString sep = ";";
