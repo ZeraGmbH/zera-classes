@@ -12,6 +12,7 @@
 #include <scpiinfo.h>
 #include <modulevalidator.h>
 #include <doublevalidator.h>
+#include <regexvalidator.h>
 #include <intvalidator.h>
 #include <stringvalidator.h>
 #include <veinmoduleparameter.h>
@@ -261,6 +262,56 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantPar; // for modules use
     dValidator = new cDoubleValidator(1e-6, 1.0e20, 1e-5);
     m_pDutConstantPar->setValidator(dValidator);
+
+    m_pDutConstantUScaleNum = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("PAR_DutConstantUScaleNum"),
+                                                 QString("Component to cale the dut constant in case tranformers are used (U fraction numerator)"),
+                                                 QVariant("1"));
+    m_pDutConstantUScaleNum->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTUSCALENUM").arg(modNr), "10", key, "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutConstantUScaleNum; // for modules use
+    //Match x or x/sqrt(3)
+    m_pDutConstantUScaleNum->setValidator(new cRegExValidator("^[1-9][0-9]*(\\/sqrt\\(3\\))?$"));
+
+
+    m_pDutConstantUScaleDenom = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("PAR_DutConstantUScaleDenom"),
+                                                 QString("Component to cale the dut constant in case tranformers are used (U fraction denominator)"),
+                                                 QVariant("1"));
+    m_pDutConstantUScaleDenom->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTUSCALEDENOM").arg(modNr), "10", key, "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutConstantUScaleDenom; // for modules use
+    //Match x or x/sqrt(3)
+    m_pDutConstantUScaleDenom->setValidator(new cRegExValidator("^[1-9][0-9]*(\\/sqrt\\(3\\))?$"));
+
+    m_pDutConstantIScaleNum = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("PAR_DutConstantIScaleNum"),
+                                                 QString("Component to cale the dut constant in case tranformers are used (I fraction numerator)"),
+                                                 QVariant("1"));
+    m_pDutConstantIScaleNum->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALENUM").arg(modNr), "10", key, "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutConstantIScaleNum; // for modules use
+    //Match x or x/sqrt(3)
+    m_pDutConstantIScaleNum->setValidator(new cRegExValidator("^[1-9][0-9]*$"));
+
+
+    m_pDutConstantIScaleDenom = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("PAR_DutConstantIScaleDenom"),
+                                                 QString("Component to cale the dut constant in case tranformers are used (I fraction denominator)"),
+                                                 QVariant("1"));
+    m_pDutConstantIScaleDenom->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALEDENOM").arg(modNr), "10", key, "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutConstantIScaleDenom; // for modules use
+    //Match x or x/sqrt(3)
+    m_pDutConstantIScaleDenom->setValidator(new cRegExValidator("^[1-9][0-9]*?$"));
+
+
+    m_pDutTypeMeasurePoint = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                 key = QString("PAR_DutTypeMeasurePoint"),
+                                                 QString("Component to cale the dut constant in case tranformers are used (I fraction denominator)"),
+                                                 QVariant("CsIsUs"));
+    m_pDutTypeMeasurePoint->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALEDENOM").arg(modNr), "10", key, "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pDutTypeMeasurePoint; // for modules use
+    //Match x or x/sqrt(3)
+    m_pDutTypeMeasurePoint->setValidator(new cStringValidator({"CpIpUp","CpIsUs","CsIpUp","CsIsUs"}));
+
+
 
     m_pDutConstantUnitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_DUTConstUnit"),

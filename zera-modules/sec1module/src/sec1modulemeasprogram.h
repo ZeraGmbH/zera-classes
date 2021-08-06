@@ -180,6 +180,11 @@ private:
     cVeinModuleParameter* m_pRefInputPar;
     cVeinModuleParameter* m_pRefConstantPar;
     cVeinModuleParameter* m_pDutConstantPar;
+    cVeinModuleParameter* m_pDutConstantUScaleDenom;
+    cVeinModuleParameter* m_pDutConstantUScaleNum;
+    cVeinModuleParameter* m_pDutConstantIScaleDenom;
+    cVeinModuleParameter* m_pDutTypeMeasurePoint;
+    cVeinModuleParameter* m_pDutConstantIScaleNum;
     cVeinModuleParameter* m_pDutConstantUnitPar;
     cVeinModuleParameter* m_pMRatePar;
     cVeinModuleParameter* m_pTargetPar;
