@@ -168,7 +168,7 @@ void cRangeObsermatic::generateInterface()
     for(int i=0; i < m_GroupList.length();++i){
 
         pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                             key = QString("PAR_PreScalingGroupe%1").arg(i),
+                                             key = QString("PAR_PreScalingGroup%1").arg(i),
                                              QString("Scaling factor for groupe k (see configuration)"),
                                              QVariant("1/1"),
                                              false);
@@ -183,7 +183,7 @@ void cRangeObsermatic::generateInterface()
 
         // activate preScaling for U and I
         pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                             key = QString("PAR_PreScalingEnabledGroupe%1").arg(i),
+                                             key = QString("PAR_PreScalingEnabledGroup%1").arg(i),
                                              QString("Enable prescaling for groupe"),
                                              QVariant(0),
                                              false);
