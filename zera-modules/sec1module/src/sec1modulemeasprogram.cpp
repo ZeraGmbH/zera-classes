@@ -1807,7 +1807,7 @@ void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString co
     if(conf != "CpIpUp" && conf != "CsIsUs"){
         QStringList uNumeratorElements=m_pDutConstantUScaleNum->getValue().toString().split("/");
         QStringList uDenominatorElements=m_pDutConstantUScaleDenom->getValue().toString().split("/");
-        QString iNumerator=m_pDutConstantIScaleDenom->getValue().toString();
+        QString iNumerator=m_pDutConstantIScaleNum->getValue().toString();
         QString iDenominator=m_pDutConstantIScaleDenom->getValue().toString();
         // parse string equation to float value (see validator)
         numVal=uNumeratorElements[0].toFloat()*iNumerator.toFloat();
@@ -1825,13 +1825,14 @@ void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString co
             }
         }
     }
-    if(conf != "CpIsUs"){
+    if(conf == "CpIsUs"){
         m_dutConstantScalingMem=denVal/numVal;
-    }else if(conf != "CsIpUp"){
+    }else if(conf == "CsIpUp"){
         m_dutConstantScalingMem=numVal/denVal;
     }else{
         m_dutConstantScalingMem=1;
     }
+    cmpDependencies();
 
 }
 
