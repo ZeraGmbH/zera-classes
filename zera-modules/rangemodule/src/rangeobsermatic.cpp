@@ -587,8 +587,8 @@ float cRangeObsermatic::getPreScale(int p_idx)
             QString equation=m_RangeGroupePreScalingList.at(groupe)->getValue().toString();
             QStringList fac=equation.split("*");
             if(fac.length()>0){
-                float num=fac.at(0).split("/")[0].toFloat();
-                float denom=fac.at(0).split("/")[1].toFloat();
+                float num=fac.at(0).split("/")[1].toFloat();
+                float denom=fac.at(0).split("/")[0].toFloat();
                 retVal=num/denom;
             }
             if(fac.length()>1){
