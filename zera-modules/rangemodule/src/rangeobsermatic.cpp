@@ -600,7 +600,7 @@ float cRangeObsermatic::getPreScale(int p_idx)
             }
         }
     }
-    qInfo("Pre Scaling is %f", retVal);
+   // qInfo("Pre Scaling is %f", retVal);
     return retVal;
 }
 
