@@ -330,7 +330,7 @@ void cRangeObsermatic::rangeAutomatic()
                 if (!m_hardOvlList.at(i)) {
                     if (!m_softOvlList.at(i)) {
                         stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-                        sPar.m_sPar = pmChn->getOptRange(m_ActualValues[i], sPar.m_sPar);
+                        sPar.m_sPar = pmChn->getOptRange(m_ActualValues[i]*getPreScale(i), sPar.m_sPar);
                         m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
                     }
                 }
