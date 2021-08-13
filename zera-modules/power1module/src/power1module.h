@@ -6,8 +6,10 @@
 #include <QState>
 #include <QFinalState>
 #include <QList>
+#include <memory> // std header for smart pointer
 
 #include "basemeasmodule.h"
+#include "basemoduleeventsystem.h"
 
 namespace Zera {
 namespace Server {
@@ -38,9 +40,13 @@ public:
     cPower1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
 
+    std::shared_ptr<cBaseModuleEventSystem> getPEventSystem() const;
+
+
 protected:
     cPower1ModuleObservation *m_pPower1ModuleObservation;
     cPower1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
+    std::shared_ptr<cBaseModuleEventSystem> m_pEventSystem; // event system for input components
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
