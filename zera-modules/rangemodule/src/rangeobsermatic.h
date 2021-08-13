@@ -112,6 +112,7 @@ private:
     QList<cVeinModuleComponent*> m_RangeActOVLRejectionComponentList;
     QList<cVeinModuleParameter*> m_RangeGroupePreScalingList;
     QList<cVeinModuleParameter*> m_RangeGroupePreScalingEnabledList;
+    QList<cVeinModuleComponent*> m_RangeGroupePreScalingEnabledInfo;
 
     cVeinModuleParameter* m_pParRangeAutomaticOnOff;
     cVeinModuleParameter* m_pParGroupingOnOff;
@@ -152,7 +153,7 @@ private:
      * Reads prescaling factor for groupe with p_id
      * p_idx is equal channel position in m_RangeMeasChannelList
      *
-     * @param id: groupe id
+     * @param p_idx: channel id
      * @return scalingfactor
      */
     float getPreScale(int p_idx);
