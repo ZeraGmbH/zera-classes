@@ -181,6 +181,26 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:complexType name="scalingType">
+        <xs:sequence>
+            <xs:element name="uscale" minOccurs="1" maxOccurs="1">
+            	<xs:complexType>
+            	<xs:sequence>
+            		<xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            		<xs:element name="inputcomponent" type="xs:string" minOccurs="1" maxOccurs="1"/>
+     		</xs:sequence>
+	        </xs:complexType>	
+            </xs:element>
+            <xs:element name="iscale" minOccurs="1" maxOccurs="1">
+            	<xs:complexType>
+            	<xs:sequence>
+            		<xs:element name="inputentity" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            		<xs:element name="inputcomponent" type="xs:string" minOccurs="1" maxOccurs="1"/>
+     		</xs:sequence>
+	        </xs:complexType>	
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:complexType name="foutxType">
         <xs:sequence>
@@ -188,6 +208,7 @@
             <xs:element name="source" type="pmsType" minOccurs="1" maxOccurs="1"/>
             <xs:element name="type" type="foutxtypeType" minOccurs="1" maxOccurs="1"/>
             <xs:element name="plug" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="scaling" type="scalingType" minOccurs="0" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 
