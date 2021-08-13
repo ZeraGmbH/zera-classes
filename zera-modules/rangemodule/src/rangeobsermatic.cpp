@@ -195,6 +195,15 @@ void cRangeObsermatic::generateInterface()
         m_RangeGroupePreScalingEnabledList.append(pParameter);
         m_pModule->veinModuleParameterHash[key] = pParameter;
 
+        pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                              QString("INF_PreScalingInfoGroup%1").arg(i+1),
+                                              QString("Component forwards the channels actual range possible peak rejection"),
+                                              QVariant(double(1.0)) );
+
+
+        m_RangeGroupePreScalingEnabledInfo.append(pComponent);
+        m_pModule->veinModuleComponentList.append(pComponent);
+
     }
 
     if (m_GroupList.count() > 0) {
@@ -583,22 +592,7 @@ float cRangeObsermatic::getPreScale(int p_idx)
 
     if(groupe < m_RangeGroupePreScalingList.length() && groupe > -1)
     {
-        if(m_RangeGroupePreScalingEnabledList.at(groupe)->getValue().toBool() == true){
-            QString equation=m_RangeGroupePreScalingList.at(groupe)->getValue().toString();
-            QStringList fac=equation.split("*");
-            if(fac.length()>0){
-                float num=fac.at(0).split("/")[1].toFloat();
-                float denom=fac.at(0).split("/")[0].toFloat();
-                retVal=num/denom;
-            }
-            if(fac.length()>1){
-                if(fac.at(1) == "(sqrt(3))"){
-                    retVal = retVal*sqrt(3);
-                }else if(fac.at(1) == "(1/sqrt(3))"){
-                    retVal= retVal/sqrt(3);
-                }
-            }
-        }
+        retVal=m_RangeGroupePreScalingEnabledInfo.at(groupe)->getValue().toFloat();
     }
    // qInfo("Pre Scaling is %f", retVal);
     return retVal;
@@ -857,6 +851,30 @@ void cRangeObsermatic::newOverload(QVariant overload)
 void cRangeObsermatic::preScalingChanged(QVariant unused)
 {
     Q_UNUSED(unused)
+    for(int i=0;i<m_RangeGroupePreScalingEnabledInfo.length();++i){
+        float factor=1;
+        if(i < m_RangeGroupePreScalingList.length())
+        {
+            if(m_RangeGroupePreScalingEnabledList.at(i)->getValue().toBool() == true){
+                QString equation=m_RangeGroupePreScalingList.at(i)->getValue().toString();
+                QStringList fac=equation.split("*");
+                if(fac.length()>0){
+                    float num=fac.at(0).split("/")[1].toFloat();
+                    float denom=fac.at(0).split("/")[0].toFloat();
+                    factor=num/denom;
+                }
+                if(fac.length()>1){
+                    if(fac.at(1) == "(sqrt(3))"){
+                        factor = factor*sqrt(3);
+                    }else if(fac.at(1) == "(1/sqrt(3))"){
+                        factor = factor/sqrt(3);
+                    }
+                }
+            }
+        }
+
+        m_RangeGroupePreScalingEnabledInfo.at(i)->setValue(factor);
+    }
     setRanges(true);
 }
 
