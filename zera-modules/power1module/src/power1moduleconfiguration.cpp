@@ -168,6 +168,10 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:source").arg(i+1)] = setfreqout1Source+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:type").arg(i+1)] = setfreqout1Type+i;
                     m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:plug").arg(i+1)] = setfreqout1Plug+i;
+                    m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:uscale:inputentity").arg(i+1)] = setfreqout1UScaleEntity + i;
+                    m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:uscale:inputcomponent").arg(i+1)] = setfreqout1UScaleComponent + i;
+                    m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:iscale:inputentity").arg(i+1)] = setfreqout1IScaleEntity + i;
+                    m_ConfigXMLMap[QString("pow1modconfpar:configuration:frequencyoutput:output:fout%1:scaling:iscale:inputcomponent").arg(i+1)] = setfreqout1IScaleComponent + i;
                     freqoutconfiguration fconf;
                     m_pPower1ModulConfigData->m_FreqOutputConfList.append(fconf);
                 }
@@ -256,6 +260,50 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
                 freqoutconfiguration fconf;
                 fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
                 fconf.m_sPlug = m_pXMLReader->getValue(key);
+                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+            }
+
+            else
+
+            if ((cmd >= setfreqout1UScaleEntity) && (cmd < setfreqout1UScaleEntity + 8))
+            {
+                cmd -= setfreqout1UScaleEntity;
+                freqoutconfiguration fconf;
+                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf.m_uscale.m_entityId = m_pXMLReader->getValue(key).toInt();
+                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+            }
+
+            else
+
+            if ((cmd >= setfreqout1UScaleComponent) && (cmd < setfreqout1UScaleComponent + 8))
+            {
+                cmd -= setfreqout1UScaleComponent;
+                freqoutconfiguration fconf;
+                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf.m_uscale.m_componentName = m_pXMLReader->getValue(key);
+                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+            }
+
+            else
+
+            if ((cmd >= setfreqout1IScaleEntity) && (cmd < setfreqout1IScaleEntity + 8))
+            {
+                cmd -= setfreqout1IScaleEntity;
+                freqoutconfiguration fconf;
+                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf.m_iscale.m_entityId = m_pXMLReader->getValue(key).toInt();
+                m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
+            }
+
+            else
+
+            if ((cmd >= setfreqout1IScaleComponent) && (cmd < setfreqout1IScaleComponent + 8))
+            {
+                cmd -= setfreqout1IScaleComponent;
+                freqoutconfiguration fconf;
+                fconf = m_pPower1ModulConfigData->m_FreqOutputConfList.at(cmd);
+                fconf.m_iscale.m_componentName = m_pXMLReader->getValue(key);
                 m_pPower1ModulConfigData->m_FreqOutputConfList.replace(cmd, fconf);
             }
 

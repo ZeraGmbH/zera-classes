@@ -32,6 +32,7 @@ enum moduleconfigstate
     setFrequencyActualizationMode,
     setFrequencyOutputCount,
 
+
     setMeasuringMode,
     setMeasureIntervalTime,
     setMeasureIntervalPeriod,
@@ -58,7 +59,27 @@ enum moduleconfigstate
     setfreqout3Plug,
     setfreqout4Plug,
 
-    setnext = setfreqout1Plug + 8
+    setnext = setfreqout1Plug + 8,
+
+    setfreqout1UScaleEntity = setnext+8,
+    setfreqout2UScaleEntity,
+    setfreqout3UScaleEntity,
+    setfreqout4UScaleEntity,
+
+    setfreqout1UScaleComponent = setfreqout1UScaleEntity + 8,
+    setfreqout2UScaleComponent,
+    setfreqout3UScaleComponent,
+    setfreqout4UScaleComponent,
+
+    setfreqout1IScaleEntity = setfreqout1UScaleComponent+8,
+    setfreqout2IScaleEntity,
+    setfreqout3IScaleEntity,
+    setfreqout4IScaleEntity,
+
+    setfreqout1IScaleComponent = setfreqout1IScaleEntity + 8,
+    setfreqout2IScaleComponent,
+    setfreqout3IScaleComponent,
+    setfreqout4IScaleComponent
 };
 
 
