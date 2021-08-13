@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QPair>
 #include <QHash>
 #include <QStateMachine>
 #include <QState>
@@ -12,6 +13,7 @@
 #include "measchannelinfo.h"
 #include "measmodeinfo.h"
 #include "foutinfo.h"
+
 
 class cDspMeasData;
 class QStateMachine;
@@ -23,6 +25,7 @@ class cVeinModuleParameter;
 class cVeinModuleMetaData;
 class cVeinModuleActvalue;
 class cMovingwindowFilter;
+class cVeinModuleComponentInput;
 
 
 namespace Zera {
@@ -72,7 +75,6 @@ enum power1moduleCmds
     freeusermem,
     freeresourcesource,
     unregisterrangenotifiers,
-
     readurvalue,
     setfrequencyscales,
     setchannelrangenotifier,
@@ -143,6 +145,8 @@ private:
     cVeinModuleParameter* m_pMeasuringmodeParameter;
     cVeinModuleParameter* m_pConstantParameter;
     cVeinModuleComponent* m_pMeasureSignal;
+
+    QList<QPair<cVeinModuleComponentInput*,cVeinModuleComponentInput*>> m_pScalingInputs; //scaling component list
 
     QList<QString> infoReadList; // a list of all channel info we have to read
     QString infoRead; // the actual channel info we are working on
@@ -310,6 +314,8 @@ private slots:
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);
     void newMeasMode(QVariant mm);
+
+    void updatePreScaling(QVariant p_newValue);
 };
 
 }
