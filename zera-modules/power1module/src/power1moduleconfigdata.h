@@ -33,12 +33,20 @@ struct stringParameter
 };
 
 
+struct scaling
+{
+    int m_entityId = -1;
+    QString m_componentName = "";
+};
+
 struct freqoutconfiguration
 {
     QString m_sName; // system name of the used frequency output
     int m_nSource; // from xml we get pms1,2,3,s and convert to 0 .. 3
     int m_nFoutMode; // from xml we get +-,+,- we convert this to foutmodes
     QString m_sPlug; // name of external plug if not connected: empty
+    scaling m_uscale; // u actual value pre scaling provider
+    scaling m_iscale; // i actual value pre scaling provider
 };
 
 
