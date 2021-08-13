@@ -196,7 +196,7 @@ void cRangeObsermatic::generateInterface()
         m_pModule->veinModuleParameterHash[key] = pParameter;
 
         pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                              QString("INF_PreScalingInfoGroup%1").arg(i+1),
+                                              QString("INF_PreScalingInfoGroup%1").arg(i),
                                               QString("Component forwards the channels actual range possible peak rejection"),
                                               QVariant(double(1.0)) );
 

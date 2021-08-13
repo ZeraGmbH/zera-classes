@@ -14,6 +14,7 @@
 #include <veinmodulecomponent.h>
 #include <veinmoduleparameter.h>
 #include <veinmoduleactvalue.h>
+#include <veinmodulecomponentinput.h>
 #include <modulevalidator.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
@@ -304,6 +305,8 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     cVeinModuleParameter* pFoutParameter;
 
+    QList<cVeinModuleComponentInput*> inputList;
+
     if (getConfData()->m_nFreqOutputCount > 0)
     {
         for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
@@ -326,6 +329,37 @@ void cPower1ModuleMeasProgram::generateInterface()
             pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1OUT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
             m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
+
+            // This code seems to identify fout channels using the list positions.
+            // If no scaling Information is provided we will add null pointers to keep the positions correct
+            cVeinModuleComponentInput* pUScaleInput=nullptr;
+            cVeinModuleComponentInput* pIScaleInput=nullptr;
+            if(getConfData()->m_FreqOutputConfList.length() > i){
+                int entityId=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
+                QString componentName=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
+                if(entityId != -1 && componentName != ""){
+                    pUScaleInput= new cVeinModuleComponentInput(entityId,componentName);
+                    pUScaleInput->setValue(1);
+                    inputList.append(pUScaleInput);
+                }
+                entityId=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
+                componentName=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
+
+                if(entityId != -1 && componentName != ""){
+                    pIScaleInput= new cVeinModuleComponentInput(entityId,componentName);
+                    pIScaleInput->setValue(1);
+                    inputList.append(pIScaleInput);
+                }
+            }
+            QPair<cVeinModuleComponentInput*,cVeinModuleComponentInput*> tmpScalePair(pUScaleInput,pIScaleInput);
+            m_pScalingInputs.append(tmpScalePair);
+        }
+        m_pModule->getPEventSystem()->setInputList(inputList);
+        for(QPair<cVeinModuleComponentInput*,cVeinModuleComponentInput*> ele : m_pScalingInputs){
+            if(ele.first != nullptr && ele.second != nullptr){
+                connect(ele.first,&cVeinModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
+                connect(ele.second,&cVeinModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
+            }
         }
     }
 
@@ -2308,6 +2342,15 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
             double frScale;
             cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
             frScale = fi.formFactor * getConfData()->m_nNominalFrequency / (cfak * umax * imax);
+
+            if(m_pScalingInputs.length() > i){
+                if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
+                    double scale=m_pScalingInputs.at(i).first->value().toDouble()*m_pScalingInputs.at(i).second->value().toDouble();
+                    frScale=frScale*scale;
+                }
+            }
+
+
             datalist += QString("%1,").arg(frScale, 0, 'g', 7);
         }
 
@@ -2342,11 +2385,19 @@ void cPower1ModuleMeasProgram::setFoutConstants()
 
     constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * umax * imax); // imp./kwh
 
+
     if (getConfData()->m_nFreqOutputCount > 0)
     {
         QString key;
         for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
         {
+            //calculate prescaling factor for Fout
+            if(m_pScalingInputs.length() > i){
+                if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
+                    double scale=m_pScalingInputs.at(i).first->value().toDouble()*m_pScalingInputs.at(i).second->value().toDouble();
+                    constant=constant*scale;
+                }
+            }
             key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
             cFoutInfo fi = m_FoutInfoHash[key];
             m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
@@ -2457,6 +2508,13 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
     setFoutConstants();
 
     emit m_pModule->parameterChanged();
+}
+
+void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
+{
+    Q_UNUSED(p_newValue);
+    setFoutConstants();
+    setFrequencyScales();
 }
 
 }
