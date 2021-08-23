@@ -863,11 +863,12 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
                     float denom=fac.at(0).split("/")[0].toFloat();
                     factor=num/denom;
                 }
+                // the correction factor is the inverse of the transformer ratio
                 if(fac.length()>1){
                     if(fac.at(1) == "(sqrt(3))"){
-                        factor = factor*sqrt(3);
-                    }else if(fac.at(1) == "(1/sqrt(3))"){
                         factor = factor/sqrt(3);
+                    }else if(fac.at(1) == "(1/sqrt(3))"){
+                        factor = factor*sqrt(3);
                     }
                 }
             }
