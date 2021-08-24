@@ -6,7 +6,7 @@
         </connectivity>
         <measure>
             <system>
-                <n>3</n>
+                <n>4</n>
                 <lambda1>
                     <p>
                         <inputentity>1070</inputentity>
@@ -37,6 +37,16 @@
                         <component>ACT_PQS3</component>
                     </s>
                 </lambda3>
+                <lambda4>
+                    <p>
+                        <inputentity>1070</inputentity>
+                        <component>ACT_PQS4</component>
+                    </p>
+                    <s>
+                        <inputentity>1072</inputentity>
+                        <component>ACT_PQS4</component>
+                    </s>
+                </lambda4>
             </system>
         </measure>
     </configuration>
