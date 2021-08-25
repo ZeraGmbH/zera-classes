@@ -375,7 +375,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["2LB"] = cMeasModeInfo(tr("2LB"), "Q", "Var", reactPower, m2lb);
     m_MeasuringModeInfoHash["2LS"] = cMeasModeInfo(tr("2LS"), "S", "VA", appPower, m2ls);
     m_MeasuringModeInfoHash["2LSg"] = cMeasModeInfo(tr("2LSg"), "S", "VA", appPower, m2lsg);
-    m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "S", "VA", appPower, mqref);
+    m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "P", "W", actPower, mqref);
 
     // our parameters we deal with
     m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
