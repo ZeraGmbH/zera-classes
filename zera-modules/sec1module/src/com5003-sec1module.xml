@@ -50,6 +50,7 @@
             <continous>0</continous>
             <upperlimit>10.0</upperlimit>
             <lowerlimit>-10.0</lowerlimit>
+            <resultunit>%</resultunit>
         </measure>
     </parameter>
 </sec1modconfpar>

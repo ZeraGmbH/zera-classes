@@ -1004,6 +1004,7 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     m_pProgressAct->setValue(QVariant(double(0.0)));
     m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
     m_pLowerLimitPar->setValue(QVariant(getConfData()->m_fLowerLimit.m_fPar));
+    m_pResultUnit->setValue(QVariant(getConfData()->m_sResultUnit.m_sPar));
 }
 
 

@@ -50,8 +50,9 @@
             <energy>0.001</energy>
             <mrate>77500</mrate>
             <continous>0</continous>
-            <upperlimit>0.001</upperlimit>
-            <lowerlimit>-0.001</lowerlimit>
+            <upperlimit>10</upperlimit>
+            <lowerlimit>-10</lowerlimit>
+            <resultunit>ppm</resultunit>
         </measure>
     </parameter>
 </sec1modconfpar>
