@@ -198,6 +198,7 @@ private:
     cVeinModuleParameter* m_pContinuousPar;
     cVeinModuleParameter* m_pUpperLimitPar;
     cVeinModuleParameter* m_pLowerLimitPar;
+    cVeinModuleParameter* m_pResultUnit;
     cVeinModuleParameter* m_pRatingAct;
     cVeinModuleParameter* m_pMeasCountPar;
     cVeinModuleParameter* m_pMeasWait;
@@ -255,11 +256,13 @@ private:
          * @param eRating: Result evaluation - see ECALCRESULT::enResultTypes
          * @param fLowerLimit: Lower limit, the result was caclulated with
          * @param fUpperLimit: Upper limit, the result was caclulated with
+         * @param fMaxError: Max error to set for e.g NaN
          */
         void append(const double fResult,
                     const enum ECALCRESULT::enResultTypes eRating,
                     const double fLowerLimit,
-                    const double fUpperLimit);
+                    const double fUpperLimit,
+                    const double fMaxError);
         /**
          * @brief getCountTotal
          * @return Number of results in array
@@ -340,6 +343,7 @@ private:
 
     const QString multiResultToJson();
     void multiResultToVein();
+    double getUnitFactor();
 
 private slots:
     void resourceManagerConnect();

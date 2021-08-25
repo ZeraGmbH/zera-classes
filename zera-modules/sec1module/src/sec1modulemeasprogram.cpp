@@ -453,6 +453,14 @@ void cSec1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(-100.0, 100.0, 1e-6);
     m_pLowerLimitPar->setValidator(dValidator);
 
+    m_pResultUnit = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                              key = QString("PAR_ResultUnit"),
+                                              QString("Component for reading and setting result unit"),
+                                              QVariant(s = "%"));
+    m_pResultUnit->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:RESULTUNIT").arg(modNr), "10", m_pResultUnit->getName(), "0", ""));
+    m_pModule->veinModuleParameterHash[key] = m_pResultUnit; // for modules use
+    m_pResultUnit->setValidator(new cStringValidator((QStringList() << "%" << "ppm" )));
+
     m_pRatingAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("ACT_Rating"),
                                                QString("Component holds the rating for the last measurement"),
@@ -1153,6 +1161,15 @@ void cSec1ModuleMeasProgram::multiResultToVein()
     m_pMulCountAct->setValue(m_multipleResultHelper.getCountTotal());
 }
 
+double cSec1ModuleMeasProgram::getUnitFactor()
+{
+    double factor = 100.0;
+    if(m_pResultUnit->getValue() == QStringLiteral("ppm")) {
+        factor = 1e6;
+    }
+    return factor;
+}
+
 void cSec1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
@@ -1619,7 +1636,7 @@ void cSec1ModuleMeasProgram::setECResult()
     }
     else
     {
-        m_fResult = (1.0 * getConfData()->m_nTarget.m_nPar - 1.0 * m_nEnergyCounterFinal) * 100.0 / m_nEnergyCounterFinal;
+        m_fResult = (1.0 * getConfData()->m_nTarget.m_nPar - 1.0 * m_nEnergyCounterFinal) * getUnitFactor() / m_nEnergyCounterFinal;
         setRating();
     }
 
@@ -1671,7 +1688,8 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
             m_multipleResultHelper.append(m_fResult,
                                           m_eRating,
                                           getConfData()->m_fLowerLimit.m_fPar,
-                                          getConfData()->m_fUpperLimit.m_fPar);
+                                          getConfData()->m_fUpperLimit.m_fPar,
+                                          getUnitFactor());
             multiResultToVein();
         }
     }
@@ -2021,7 +2039,8 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::clear()
 void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
                                                           const ECALCRESULT::enResultTypes eRating,
                                                           const double fLowerLimit,
-                                                          const double fUpperLimit)
+                                                          const double fUpperLimit,
+                                                          const double fMaxError)
 {
     // limits
     // note: limits are not results of a calculation so we can comape on equality
@@ -2059,13 +2078,13 @@ void cSec1ModuleMeasProgram::MultipleResultHelper::append(const double fResult,
     double value = fResult;
     // use +/- 100% for inf/nan/unfinished in statistics
     if(qIsNaN(value)) {
-        value = -100.0;
+        value = -fMaxError;
     }
     else if(qIsInf(value)) {
-        value = 100.0;
+        value = fMaxError;
     }
     if(eRating == ECALCRESULT::RESULT_UNFINISHED) { // yes have seen that on HK
-        value = -100.0;
+        value = -fMaxError;
     }
     // value has been added above
     int iResultCount = m_jsonResultArray.count();
