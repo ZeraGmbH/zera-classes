@@ -229,6 +229,12 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:simpleType name="resultunittype">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="%"/>
+            <xs:enumeration value="ppm"/>
+        </xs:restriction>
+    </xs:simpleType>
 
     <xs:complexType name="parametermeasuretype">
         <xs:sequence>
@@ -243,6 +249,7 @@
             <xs:element name="continous" type="yesnotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="upperlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="lowerlimit" type="errorlimitvaltype" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="resultunit" type="resultunittype" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
     </xs:complexType>
 	

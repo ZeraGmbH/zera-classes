@@ -65,6 +65,7 @@ public:
     intParameter m_nMRate;
     doubleParameter m_fUpperLimit;
     doubleParameter m_fLowerLimit;
+    stringParameter m_sResultUnit;
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
     cSocket m_SECServerSocket;

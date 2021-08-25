@@ -36,6 +36,7 @@ enum moduleconfigstate
     setContinousMode,
     setUpperLimit,
     setLowerLimit,
+    setResultUnit,
 
     setDutInput1Name = 32,
     setRefInput1Name = 64,
