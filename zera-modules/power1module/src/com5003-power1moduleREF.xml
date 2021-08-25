@@ -36,7 +36,7 @@
             </movingwindow>
         </measure>
         <frequencyoutput>
-            <frequency>200000</frequency>
+            <frequency>1000000</frequency>
             <frequencyact>signalperiod</frequencyact>
             <output>
                 <n>1</n>
