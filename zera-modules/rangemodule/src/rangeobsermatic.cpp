@@ -201,7 +201,7 @@ void cRangeObsermatic::generateInterface()
                                               QVariant(double(1.0)) );
 
 
-        m_RangeGroupePreScalingEnabledInfo.append(pComponent);
+        m_RangeGroupePreScalingInfo.append(pComponent);
         m_pModule->veinModuleComponentList.append(pComponent);
 
     }
@@ -591,7 +591,7 @@ float cRangeObsermatic::getPreScale(int p_idx)
 
     if(groupe < m_RangeGroupePreScalingList.length() && groupe > -1)
     {
-        retVal=m_RangeGroupePreScalingEnabledInfo.at(groupe)->getValue().toFloat();
+        retVal=m_RangeGroupePreScalingInfo.at(groupe)->getValue().toFloat();
     }
    // qInfo("Pre Scaling is %f", retVal);
     return retVal;
@@ -850,7 +850,7 @@ void cRangeObsermatic::newOverload(QVariant overload)
 void cRangeObsermatic::preScalingChanged(QVariant unused)
 {
     Q_UNUSED(unused)
-    for(int i=0;i<m_RangeGroupePreScalingEnabledInfo.length();++i){
+    for(int i=0;i<m_RangeGroupePreScalingInfo.length();++i){
         float factor=1;
         if(i < m_RangeGroupePreScalingList.length())
         {
@@ -873,7 +873,7 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
             }
         }
 
-        m_RangeGroupePreScalingEnabledInfo.at(i)->setValue(factor);
+        m_RangeGroupePreScalingInfo.at(i)->setValue(factor);
     }
     setRanges(true);
 }
