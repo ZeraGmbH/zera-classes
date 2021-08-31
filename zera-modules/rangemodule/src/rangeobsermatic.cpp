@@ -579,15 +579,14 @@ float cRangeObsermatic::getPreScale(int p_idx)
 {
     float retVal=1;
     int groupe=-1;
-    int groupeUpperLimit=0;
-    for(int k = 0; k < m_GroupList.length();k++){
-        groupeUpperLimit += m_GroupList[k].length();
-        if(p_idx < groupeUpperLimit){
-            groupe=k;
-            break;
+    if(p_idx < m_ChannelAliasList.length()){
+        QString alias=m_ChannelAliasList.at(p_idx);
+        for(int k = 0; k < m_GroupList.length();k++){
+            if(m_GroupList[k].contains(alias)){
+                groupe=k;
+            }
         }
     }
-
 
 
     if(groupe < m_RangeGroupePreScalingList.length() && groupe > -1)
