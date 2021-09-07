@@ -15,8 +15,7 @@ QHash<quint32, QString> ZeraMcontrollerBase::m_errorFlagsText;
 QHash<quint32, QString> ZeraMcontrollerBase::m_errorFlagsBootText;
 
 ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 debuglevel)
-    : m_pCRCGenerator(new cMaxim1WireCRC()),
-      m_sI2CDevNode(devnode),
+    : m_sI2CDevNode(devnode),
       m_nI2CAdr(adr),
       m_nDebugLevel(debuglevel),
       m_nLastErrorFlags(0),
@@ -43,11 +42,6 @@ ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 deb
         m_errorFlagsBootText.insert(BL_ERR_FLAG_EXECUTE,         QStringLiteral("BL_ERR_FLAG_EXECUTE"));
         appendMasterErrorFlags(m_errorFlagsBootText);
     }
-}
-
-ZeraMcontrollerBase::~ZeraMcontrollerBase()
-{
-    delete m_pCRCGenerator;
 }
 
 void ZeraMcontrollerBase::setMaxWriteMemRetry(quint8 _maxBlockWriteTries)
@@ -158,7 +152,7 @@ quint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quin
     int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
     if (!errVal) { // if no error
         // Checksum OK?
-        quint8 expectedCrc = m_pCRCGenerator->CalcBlockCRC(inpBuf, 4);
+        quint8 expectedCrc = cMaxim1WireCRC::CalcBlockCRC(inpBuf, 4);
         quint8 receivedCrc = inpBuf[4];
         if (expectedCrc==receivedCrc) {
             m_nLastErrorFlags |= (static_cast<quint16>(inpBuf[0]) << 8) + inpBuf[1];
@@ -258,7 +252,7 @@ quint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRec
     int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
     if (!errVal) { // no error?
         // Checksum OK?
-        quint8 expectedCrc = m_pCRCGenerator->CalcBlockCRC(inpBuf, 4);
+        quint8 expectedCrc = cMaxim1WireCRC::CalcBlockCRC(inpBuf, 4);
         quint8 receivedCrc = inpBuf[4];
         if (expectedCrc==receivedCrc) {
             m_nLastErrorFlags |= (static_cast<quint16>(inpBuf[0]) << 8) + inpBuf[1];
@@ -370,7 +364,7 @@ quint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
             }
         }
         // Checksum OK?
-        quint8 expectedCrc = m_pCRCGenerator->CalcBlockCRC(data, dataAndCrcLen-1);
+        quint8 expectedCrc = cMaxim1WireCRC::CalcBlockCRC(data, dataAndCrcLen-1);
         quint8 receivedCrc = data[dataAndCrcLen-1];
         if (expectedCrc==receivedCrc) {
             dataReturnAndCrcLen = dataAndCrcLen;
@@ -423,7 +417,7 @@ void ZeraMcontrollerBase::GenCommand(hw_cmd* hc)
         }
     }
     // CRC
-    *p = m_pCRCGenerator->CalcBlockCRC(hc->cmddata, static_cast<quint32>(len-1));
+    *p = cMaxim1WireCRC::CalcBlockCRC(hc->cmddata, static_cast<quint32>(len-1));
     // keep cmd total len
     hc->cmdlen = len;
 }
@@ -450,7 +444,7 @@ void ZeraMcontrollerBase::GenBootloaderCommand(bl_cmd* blc)
         }
     }
     // CRC
-    *p = m_pCRCGenerator->CalcBlockCRC(blc->cmddata, len-1);
+    *p = cMaxim1WireCRC::CalcBlockCRC(blc->cmddata, len-1);
     // keep cmd total len
     blc->cmdlen = len;
 }

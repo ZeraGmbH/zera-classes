@@ -13,9 +13,6 @@
 *******************************************************************************************/
 
 
-class cMaxim1WireCRCPrivate; // forward
-
-
 /**
   @brief
   cMaxim1WireCRC is a class to support crc generation introduced from MAXIM for 1 wire connections.
@@ -25,22 +22,19 @@ class ZERAMATH_EXPORT cMaxim1WireCRC
 {
 public:
     /**
-      @b Initialise the const variables
-      */
-    cMaxim1WireCRC();
-    /**
       @b Calculate the crc
       @param block points to data for which crc shall be calculated
       @param blocklen defines the length of the datafield
+      @return crc of block
       */
-    quint8 CalcBlockCRC(quint8* block,quint32 blocklen);
-private:
+    static quint8 CalcBlockCRC(quint8* block,quint32 blocklen);
     /**
-      @b D'pointer to the private library internal structure
-
-      this is used to hide the internal structure, and thus make the library ABI safe
+      @b Calculate the crc
+      @param crc current checksum
+      @param byte to calc next crc for
+      @return next crc
       */
-    cMaxim1WireCRCPrivate* d_ptr;
+    static quint8 CalcByteCRC(quint8 crc, quint8 data);
 };
 
 #endif // CRCUTILS_H
