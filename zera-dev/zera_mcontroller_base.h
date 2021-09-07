@@ -49,7 +49,6 @@ public:
      * @param debuglevel: control verbosity of log output
      */
     ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 debuglevel);
-    virtual ~ZeraMcontrollerBase();
     /**
      * @brief setMaxWriteMemRetry: Set maximum writes in case of auto-verify
      * @param _maxBlockWriteTries: Max block writes in case of auto-verify errors (FWIW: 0 will run 256 times!!)
@@ -136,7 +135,6 @@ private:
     atmelRM loadOrVerifyMemory(quint8 blCmd, cIntelHexFileIO& ihxFIO, bool verify);
     void appendMasterErrorFlags(QHash<quint32, QString>& errorFlagsText);
 
-    cMaxim1WireCRC *m_pCRCGenerator;
     QString m_sI2CDevNode;
     quint8 m_nI2CAdr;
     quint8 m_nDebugLevel;
