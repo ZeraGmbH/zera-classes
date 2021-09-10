@@ -22,33 +22,33 @@ cStatusModule::cStatusModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entit
     m_sModuleDescription = QString("This module is responsible for reading and providing system Status information");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
-    m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationNext()), &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationFinishedState);
+    m_ActivationStartState.addTransition(this, &cStatusModule::activationContinue, &m_ActivationExecState);
+    m_ActivationExecState.addTransition(this, &cStatusModule::activationContinue, &m_ActivationDoneState);
+    m_ActivationDoneState.addTransition(this, &cStatusModule::activationNext, &m_ActivationExecState);
+    m_ActivationDoneState.addTransition(this, &cStatusModule::activationContinue, &m_ActivationFinishedState);
     m_ActivationMachine.addState(&m_ActivationStartState);
     m_ActivationMachine.addState(&m_ActivationExecState);
     m_ActivationMachine.addState(&m_ActivationDoneState);
     m_ActivationMachine.addState(&m_ActivationFinishedState);
     m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, SIGNAL(entered()), SLOT(activationStart()));
-    connect(&m_ActivationExecState, SIGNAL(entered()), SLOT(activationExec()));
-    connect(&m_ActivationDoneState, SIGNAL(entered()), SLOT(activationDone()));
-    connect(&m_ActivationFinishedState, SIGNAL(entered()), SLOT(activationFinished()));
+    connect(&m_ActivationStartState, &QState::entered, this, &cStatusModule::activationStart);
+    connect(&m_ActivationExecState, &QState::entered, this, &cStatusModule::activationExec);
+    connect(&m_ActivationDoneState, &QState::entered, this, &cStatusModule::activationDone);
+    connect(&m_ActivationFinishedState, &QState::entered, this, &cStatusModule::activationFinished);
 
-    m_DeactivationStartState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationNext()), &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationFinishedState);
+    m_DeactivationStartState.addTransition(this, &cStatusModule::deactivationContinue, &m_DeactivationExecState);
+    m_DeactivationExecState.addTransition(this, &cStatusModule::deactivationContinue, &m_DeactivationDoneState);
+    m_DeactivationDoneState.addTransition(this, &cStatusModule::deactivationNext, &m_DeactivationExecState);
+    m_DeactivationDoneState.addTransition(this, &cStatusModule::deactivationContinue, &m_DeactivationFinishedState);
     m_DeactivationMachine.addState(&m_DeactivationStartState);
     m_DeactivationMachine.addState(&m_DeactivationExecState);
     m_DeactivationMachine.addState(&m_DeactivationDoneState);
     m_DeactivationMachine.addState(&m_DeactivationFinishedState);
     m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, SIGNAL(entered()), SLOT(deactivationStart()));
-    connect(&m_DeactivationExecState, SIGNAL(entered()), SLOT(deactivationExec()));
-    connect(&m_DeactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
-    connect(&m_DeactivationFinishedState, SIGNAL(entered()), SLOT(deactivationFinished()));
+    connect(&m_DeactivationStartState, &QState::entered, this, &cStatusModule::deactivationStart);
+    connect(&m_DeactivationExecState, &QState::entered, this, &cStatusModule::deactivationExec);
+    connect(&m_DeactivationDoneState, &QState::entered, this, &cStatusModule::deactivationDone);
+    connect(&m_DeactivationFinishedState, &QState::entered, this, &cStatusModule::deactivationFinished);
 
 }
 
@@ -76,9 +76,9 @@ void cStatusModule::setupModule()
     // we only have to read some status information from pcb- and dspserver
     m_pStatusModuleInit = new cStatusModuleInit(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pStatusModuleInit);
-    connect(m_pStatusModuleInit, SIGNAL(activated()), this, SIGNAL(activationContinue()));
-    connect(m_pStatusModuleInit, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pStatusModuleInit, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    connect(m_pStatusModuleInit, &cStatusModuleInit::activated, this, &cStatusModule::activationContinue);
+    connect(m_pStatusModuleInit, &cStatusModuleInit::deactivated, this, &cStatusModule::deactivationContinue);
+    connect(m_pStatusModuleInit, &cStatusModuleInit::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

@@ -30,18 +30,18 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_pPCBInterface = new Zera::Server::cPCBInterface();
     m_pDSPInterface = new Zera::Server::cDSPInterface();
 
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectionState);
+    m_IdentifyState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverConnectionState);
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
-    m_pcbserverReadVersionState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReadCtrlVersionState);
-    m_pcbserverReadCtrlVersionState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReadFPGAVersionState);
-    m_pcbserverReadFPGAVersionState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReadSerialNrState);
-    m_pcbserverReadSerialNrState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReadAdjStatusState);
-    m_pcbserverReadAdjStatusState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReadAdjChksumState);
-    m_pcbserverReadAdjChksumState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverRegisterClampCatalogNotifierState);
-    m_pcbserverRegisterClampCatalogNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectionState);
+    m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
+    m_pcbserverReadCtrlVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadFPGAVersionState);
+    m_pcbserverReadFPGAVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadSerialNrState);
+    m_pcbserverReadSerialNrState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadAdjStatusState);
+    m_pcbserverReadAdjStatusState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadAdjChksumState);
+    m_pcbserverReadAdjChksumState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterClampCatalogNotifierState);
+    m_pcbserverRegisterClampCatalogNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_dspserverConnectionState);
     // m_dspserverConnectionState.addTransition is done in dspserverConnection
-    m_dspserverReadVersionState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverReadDSPProgramState);
-    m_dspserverReadDSPProgramState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_dspserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_dspserverReadDSPProgramState);
+    m_dspserverReadDSPProgramState.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -59,45 +59,45 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_pcbserverConnectionState, SIGNAL(entered()), SLOT(pcbserverConnect()));
-    connect(&m_pcbserverReadVersionState, SIGNAL(entered()), SLOT(pcbserverReadVersion()));
-    connect(&m_pcbserverReadCtrlVersionState, SIGNAL(entered()), SLOT(pcbserverReadCtrlVersion()));
-    connect(&m_pcbserverReadFPGAVersionState, SIGNAL(entered()), SLOT(pcbserverReadFPGAVersion()));
-    connect(&m_pcbserverReadSerialNrState, SIGNAL(entered()), SLOT(pcbserverReadSerialNr()));
-    connect(&m_pcbserverReadAdjStatusState, SIGNAL(entered()), SLOT(pcbserverReadAdjStatus()));
-    connect(&m_pcbserverReadAdjChksumState, SIGNAL(entered()), SLOT(pcbserverReadAdjChksum()));
-    connect(&m_pcbserverRegisterClampCatalogNotifierState, SIGNAL(entered()), SLOT(registerClampCatalogNotifier()));
-    connect(&m_dspserverConnectionState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_dspserverReadVersionState, SIGNAL(entered()), SLOT(dspserverReadVersion()));
-    connect(&m_dspserverReadDSPProgramState, SIGNAL(entered()), SLOT(dspserverReadDSPProgramVersion()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_resourceManagerConnectState, &QState::entered, this, &cStatusModuleInit::resourceManagerConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cStatusModuleInit::sendRMIdent);
+    connect(&m_pcbserverConnectionState, &QState::entered, this, &cStatusModuleInit::pcbserverConnect);
+    connect(&m_pcbserverReadVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadVersion);
+    connect(&m_pcbserverReadCtrlVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadCtrlVersion);
+    connect(&m_pcbserverReadFPGAVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadFPGAVersion);
+    connect(&m_pcbserverReadSerialNrState, &QState::entered, this, &cStatusModuleInit::pcbserverReadSerialNr);
+    connect(&m_pcbserverReadAdjStatusState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjStatus);
+    connect(&m_pcbserverReadAdjChksumState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjChksum);
+    connect(&m_pcbserverRegisterClampCatalogNotifierState, &QState::entered, this, &cStatusModuleInit::registerClampCatalogNotifier);
+    connect(&m_dspserverConnectionState, &QState::entered, this, &cStatusModuleInit::dspserverConnect);
+    connect(&m_dspserverReadVersionState, &QState::entered, this, &cStatusModuleInit::dspserverReadVersion);
+    connect(&m_dspserverReadDSPProgramState, &QState::entered, this, &cStatusModuleInit::dspserverReadDSPProgramVersion);
+    connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterClampCatalogNotifierState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_pcbserverUnregisterClampCatalogNotifierState);
 
-    connect(&m_pcbserverUnregisterClampCatalogNotifierState, SIGNAL(entered()), SLOT(unregisterClampCatalogNotifier()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_pcbserverUnregisterClampCatalogNotifierState, &QState::entered, this, &cStatusModuleInit::unregisterClampCatalogNotifier);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cStatusModuleInit::deactivationDone);
 
     // Adjustment re-read on clamp add / remove
-    m_pcbserverReReadAdjStatusState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReReadAdjChksumState);
-    m_pcbserverReReadAdjChksumState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverReReadDoneState);
+    m_pcbserverReReadAdjStatusState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReReadAdjChksumState);
+    m_pcbserverReReadAdjChksumState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReReadDoneState);
     // Terminate re-read state machine on error (ehm - how do activists handle this? Did not find a trace)
-    m_pcbserverReReadAdjStatusState.addTransition(this, SIGNAL(activationError()), &m_pcbserverReReadDoneState);
-    m_pcbserverReReadAdjChksumState.addTransition(this, SIGNAL(activationError()), &m_pcbserverReReadDoneState);
+    m_pcbserverReReadAdjStatusState.addTransition(this, &cStatusModuleInit::activationError, &m_pcbserverReReadDoneState);
+    m_pcbserverReReadAdjChksumState.addTransition(this, &cStatusModuleInit::activationError, &m_pcbserverReReadDoneState);
 
-    m_pcbserverUnregisterClampCatalogNotifierState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_pcbserverUnregisterClampCatalogNotifierState.addTransition(this, &cStatusModuleInit::deactivationContinue, &m_deactivationDoneState);
 
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjStatusState);
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjChksumState);
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadDoneState);
     m_stateMachineAdjustmentReRead.setInitialState(&m_pcbserverReReadAdjStatusState);
 
-    connect(&m_pcbserverReReadAdjStatusState, SIGNAL(entered()), SLOT(pcbserverReadAdjStatus()));
-    connect(&m_pcbserverReReadAdjChksumState, SIGNAL(entered()), SLOT(pcbserverReadAdjChksum()));
-    connect(&m_pcbserverReReadDoneState, SIGNAL(entered()), SLOT(setInterfaceComponents()));
+    connect(&m_pcbserverReReadAdjStatusState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjStatus);
+    connect(&m_pcbserverReReadAdjChksumState, &QState::entered, this, &cStatusModuleInit::pcbserverReadAdjChksum);
+    connect(&m_pcbserverReReadDoneState, &QState::entered, this, &cStatusModuleInit::setInterfaceComponents);
 
 }
 
@@ -484,8 +484,8 @@ void cStatusModuleInit::resourceManagerConnect()
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
-    m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -500,10 +500,10 @@ void cStatusModuleInit::sendRMIdent()
 void cStatusModuleInit::pcbserverConnect()
 {
     m_pPCBClient = m_pProxy->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
-    m_pcbserverConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_pcbserverReadVersionState);
+    m_pcbserverConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_pcbserverReadVersionState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pPCBClient);
 }
 
@@ -560,8 +560,8 @@ void cStatusModuleInit::dspserverConnect()
     // we set up our dsp server connection
     m_pDSPClient = m_pProxy->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
     m_pDSPInterface->setClient(m_pDSPClient);
-    m_dspserverConnectionState.addTransition(m_pDSPClient, SIGNAL(connected()), &m_dspserverReadVersionState);
-    connect(m_pDSPInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::Proxy::cProxyClient::connected, &m_dspserverReadVersionState);
+    connect(m_pDSPInterface, &Zera::Server::cDSPInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pDSPClient);
 }
 
@@ -584,7 +584,7 @@ void cStatusModuleInit::activationDone()
     m_sDeviceType = findDeviceType();
     m_sCPUInfo = findCpuInfo();
     setInterfaceComponents();
-    connect(m_pSerialNumber, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newSerialNumber(QVariant)));
+    connect(m_pSerialNumber, &cVeinModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
     m_bActive = true;
     emit activated();
 }
