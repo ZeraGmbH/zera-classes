@@ -12,8 +12,8 @@ namespace SEC1MODULE
 cSec1ModuleConfiguration::cSec1ModuleConfiguration()
 {
     m_pSec1ModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSec1ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSec1ModuleConfiguration::completeConfiguration);
 }
 
 
