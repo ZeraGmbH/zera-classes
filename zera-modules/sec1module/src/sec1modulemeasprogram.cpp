@@ -39,32 +39,32 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     m_pSECInterface = new Zera::Server::cSECInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_testSEC1ResourceState);
-    m_testSEC1ResourceState.addTransition(this, SIGNAL(activationContinue()), &m_setECResourceState); // test presence of sec1 resource
-    m_setECResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState); // claim 2 ecalculator units
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourcesState); // read all resources types
-    m_readResourcesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState); // init read resources
-    m_readResourceState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceState); // read their resources into list
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_testSecInputsState); // go on if done
-    m_testSecInputsState.addTransition(this, SIGNAL(activationContinue()), &m_ecalcServerConnectState); // test all configured Inputs
-    //m_ecalcServerConnectState.addTransition(this, SIGNAL(activationContinue()), &m_fetchECalcUnitsState); // connect to ecalc server
+    m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
+    m_testSEC1ResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
+    m_setECResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourceTypesState); // claim 2 ecalculator units
+    m_readResourceTypesState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourcesState); // read all resources types
+    m_readResourcesState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
+    m_readResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
+    m_readResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSecInputsState); // go on if done
+    m_testSecInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_ecalcServerConnectState); // test all configured Inputs
+    //m_ecalcServerConnectState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_fetchECalcUnitsState); // connect to ecalc server
     //transition from this state to m_fetch....is done in ecalcServerConnect
-    m_fetchECalcUnitsState.addTransition(this, SIGNAL(activationContinue()), &m_pcbServerConnectState); // connect to pcbserver
+    m_fetchECalcUnitsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState); // connect to pcbserver
 
 
-    //m_pcbServerConnectState.addTransition(this, SIGNAL(activationContinue()), &m_pcbServerConnectState);
+    //m_pcbServerConnectState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_pcbServerConnectState);
     //transition from this state to m_readREFInputsState....is done in pcbServerConnect
-    m_readREFInputsState.addTransition(this, SIGNAL(activationContinue()), &m_readREFInputAliasState);
-    m_readREFInputAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readREFInputDoneState);
-    m_readREFInputDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readREFInputAliasState);
-    m_readREFInputDoneState.addTransition(this, SIGNAL(activationContinue()), &m_readDUTInputsState);
-    m_readDUTInputsState.addTransition(this, SIGNAL(activationContinue()), &m_readDUTInputAliasState);
-    m_readDUTInputAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readDUTInputDoneState);
-    m_readDUTInputDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readDUTInputAliasState);
-    m_readDUTInputDoneState.addTransition(this, SIGNAL(activationContinue()), &m_setpcbREFConstantNotifierState);
+    m_readREFInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readREFInputAliasState);
+    m_readREFInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readREFInputDoneState);
+    m_readREFInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readREFInputAliasState);
+    m_readREFInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputsState);
+    m_readDUTInputsState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputAliasState);
+    m_readDUTInputAliasState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readDUTInputDoneState);
+    m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readDUTInputAliasState);
+    m_readDUTInputDoneState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setpcbREFConstantNotifierState);
 
-    m_setpcbREFConstantNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_setsecINTNotifierState);
-    m_setsecINTNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setpcbREFConstantNotifierState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setsecINTNotifierState);
+    m_setsecINTNotifierState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -89,30 +89,30 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
 
     m_activationMachine.setInitialState(&resourceManagerConnectState);
 
-    connect(&resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_testSEC1ResourceState, SIGNAL(entered()), SLOT(testSEC1Resource()));
-    connect(&m_setECResourceState, SIGNAL(entered()), SLOT(setECResource()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourcesState, SIGNAL(entered()), SLOT(readResources()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_testSecInputsState, SIGNAL(entered()), SLOT(testSecInputs()));
-    connect(&m_ecalcServerConnectState, SIGNAL(entered()), SLOT(ecalcServerConnect()));
-    connect(&m_fetchECalcUnitsState, SIGNAL(entered()), SLOT(fetchECalcUnits()));
-    connect(&m_pcbServerConnectState, SIGNAL(entered()), SLOT(pcbServerConnect()));
-    connect(&m_readREFInputsState, SIGNAL(entered()), SLOT(readREFInputs()));
-    connect(&m_readREFInputAliasState, SIGNAL(entered()), SLOT(readREFInputAlias()));
-    connect(&m_readREFInputDoneState, SIGNAL(entered()), SLOT(readREFInputDone()));
-    connect(&m_readDUTInputsState, SIGNAL(entered()), SLOT(readDUTInputs()));
-    connect(&m_readDUTInputAliasState, SIGNAL(entered()), SLOT(readDUTInputAlias()));
-    connect(&m_readDUTInputDoneState, SIGNAL(entered()), SLOT(readDUTInputDone()));
-    connect(&m_setpcbREFConstantNotifierState, SIGNAL(entered()), SLOT(setpcbREFConstantNotifier()));
-    connect(&m_setsecINTNotifierState, SIGNAL(entered()), SLOT(setsecINTNotifier()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&resourceManagerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::resourceManagerConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cSec1ModuleMeasProgram::sendRMIdent);
+    connect(&m_testSEC1ResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::testSEC1Resource);
+    connect(&m_setECResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResource);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cSec1ModuleMeasProgram::readResourceTypes);
+    connect(&m_readResourcesState, &QState::entered, this, &cSec1ModuleMeasProgram::readResources);
+    connect(&m_readResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::readResource);
+    connect(&m_testSecInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::testSecInputs);
+    connect(&m_ecalcServerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::ecalcServerConnect);
+    connect(&m_fetchECalcUnitsState, &QState::entered, this, &cSec1ModuleMeasProgram::fetchECalcUnits);
+    connect(&m_pcbServerConnectState, &QState::entered, this, &cSec1ModuleMeasProgram::pcbServerConnect);
+    connect(&m_readREFInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::readREFInputs);
+    connect(&m_readREFInputAliasState, &QState::entered, this, &cSec1ModuleMeasProgram::readREFInputAlias);
+    connect(&m_readREFInputDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::readREFInputDone);
+    connect(&m_readDUTInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputs);
+    connect(&m_readDUTInputAliasState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputAlias);
+    connect(&m_readDUTInputDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::readDUTInputDone);
+    connect(&m_setpcbREFConstantNotifierState, &QState::entered, this, &cSec1ModuleMeasProgram::setpcbREFConstantNotifier);
+    connect(&m_setsecINTNotifierState, &QState::entered, this, &cSec1ModuleMeasProgram::setsecINTNotifier);
+    connect(&m_activationDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::activationDone);
 
     // setting up statemachine to free the occupied resources
-    m_freeECalculatorState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeECResource);
-    m_freeECResource.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_freeECalculatorState.addTransition(this, &cSec1ModuleMeasProgram::deactivationContinue, &m_freeECResource);
+    m_freeECResource.addTransition(this, &cSec1ModuleMeasProgram::deactivationContinue, &m_deactivationDoneState);
 
     m_deactivationMachine.addState(&m_freeECalculatorState);
     m_deactivationMachine.addState(&m_freeECResource);
@@ -120,20 +120,20 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
 
     m_deactivationMachine.setInitialState(&m_freeECalculatorState);
 
-    connect(&m_freeECalculatorState, SIGNAL(entered()), SLOT(freeECalculator()));
-    connect(&m_freeECResource, SIGNAL(entered()), SLOT(freeECResource()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_freeECalculatorState, &QState::entered, this, &cSec1ModuleMeasProgram::freeECalculator);
+    connect(&m_freeECResource, &QState::entered, this, &cSec1ModuleMeasProgram::freeECResource);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::deactivationDone);
 
     // setting up statemachine used when starting a measurement
 
-    m_setsyncState.addTransition(this, SIGNAL(setupContinue()), &m_setMeaspulsesState);
-    m_setMeaspulsesState.addTransition(this, SIGNAL(setupContinue()), &m_setMasterMuxState);
-    m_setMasterMuxState.addTransition(this, SIGNAL(setupContinue()), &m_setSlaveMuxState);
-    m_setSlaveMuxState.addTransition(this, SIGNAL(setupContinue()), &m_setMasterMeasModeState);
-    m_setMasterMeasModeState.addTransition(this, SIGNAL(setupContinue()), &m_setSlaveMeasModeState);
-    m_setSlaveMeasModeState.addTransition(this, SIGNAL(setupContinue()), &m_enableInterruptState);
-    m_enableInterruptState.addTransition(this, SIGNAL(setupContinue()), &m_startMeasurementState);
-    m_startMeasurementState.addTransition(this, SIGNAL(setupContinue()), &m_startMeasurementDoneState);
+    m_setsyncState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_setMeaspulsesState);
+    m_setMeaspulsesState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_setMasterMuxState);
+    m_setMasterMuxState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_setSlaveMuxState);
+    m_setSlaveMuxState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_setMasterMeasModeState);
+    m_setMasterMeasModeState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_setSlaveMeasModeState);
+    m_setSlaveMeasModeState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_enableInterruptState);
+    m_enableInterruptState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_startMeasurementState);
+    m_startMeasurementState.addTransition(this, &cSec1ModuleMeasProgram::setupContinue, &m_startMeasurementDoneState);
 
     m_startMeasurementMachine.addState(&m_setsyncState);
     m_startMeasurementMachine.addState(&m_setMeaspulsesState);
@@ -147,20 +147,20 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
 
     m_startMeasurementMachine.setInitialState(&m_setsyncState);
 
-    connect(&m_setsyncState, SIGNAL(entered()), SLOT(setSync()));
-    connect(&m_setMeaspulsesState, SIGNAL(entered()), SLOT(setMeaspulses()));
-    connect(&m_setMasterMuxState, SIGNAL(entered()), SLOT(setMasterMux()));
-    connect(&m_setSlaveMuxState, SIGNAL(entered()), SLOT(setSlaveMux()));
-    connect(&m_setMasterMeasModeState, SIGNAL(entered()), SLOT(setMasterMeasMode()));
-    connect(&m_setSlaveMeasModeState, SIGNAL(entered()), SLOT(setSlaveMeasMode()));
-    connect(&m_enableInterruptState, SIGNAL(entered()), SLOT(enableInterrupt()));
-    connect(&m_startMeasurementState, SIGNAL(entered()), SLOT(startMeasurement()));
-    connect(&m_startMeasurementDoneState, SIGNAL(entered()), SLOT(startMeasurementDone()));
+    connect(&m_setsyncState, &QState::entered, this, &cSec1ModuleMeasProgram::setSync);
+    connect(&m_setMeaspulsesState, &QState::entered, this, &cSec1ModuleMeasProgram::setMeaspulses);
+    connect(&m_setMasterMuxState, &QState::entered, this, &cSec1ModuleMeasProgram::setMasterMux);
+    connect(&m_setSlaveMuxState, &QState::entered, this, &cSec1ModuleMeasProgram::setSlaveMux);
+    connect(&m_setMasterMeasModeState, &QState::entered, this, &cSec1ModuleMeasProgram::setMasterMeasMode);
+    connect(&m_setSlaveMeasModeState, &QState::entered, this, &cSec1ModuleMeasProgram::setSlaveMeasMode);
+    connect(&m_enableInterruptState, &QState::entered, this, &cSec1ModuleMeasProgram::enableInterrupt);
+    connect(&m_startMeasurementState, &QState::entered, this, &cSec1ModuleMeasProgram::startMeasurement);
+    connect(&m_startMeasurementDoneState, &QState::entered, this, &cSec1ModuleMeasProgram::startMeasurementDone);
 
     // setting up statemachine for interrupt handling (Interrupt is thrown on measuremnt finished)
-    m_readIntRegisterState.addTransition(this, SIGNAL(interruptContinue()), &m_readMTCountactState);
-    m_readMTCountactState.addTransition(this, SIGNAL(interruptContinue()), &m_calcResultAndResetIntState);
-    m_calcResultAndResetIntState.addTransition(this, SIGNAL(interruptContinue()), &m_FinalState);
+    m_readIntRegisterState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_readMTCountactState);
+    m_readMTCountactState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_calcResultAndResetIntState);
+    m_calcResultAndResetIntState.addTransition(this, &cSec1ModuleMeasProgram::interruptContinue, &m_FinalState);
 
     m_InterrupthandlingStateMachine.addState(&m_readIntRegisterState);
     m_InterrupthandlingStateMachine.addState(&m_readMTCountactState);
@@ -169,10 +169,10 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
 
     m_InterrupthandlingStateMachine.setInitialState(&m_readIntRegisterState);
 
-    connect(&m_readIntRegisterState, SIGNAL(entered()), SLOT(readIntRegister()));
-    connect(&m_readMTCountactState, SIGNAL(entered()), SLOT(readMTCountact()));
-    connect(&m_calcResultAndResetIntState, SIGNAL(entered()), SLOT(setECResultAndResetInt()));
-    connect(&m_FinalState, SIGNAL(entered()), SLOT(checkForRestart()));
+    connect(&m_readIntRegisterState, &QState::entered, this, &cSec1ModuleMeasProgram::readIntRegister);
+    connect(&m_readMTCountactState, &QState::entered, this, &cSec1ModuleMeasProgram::readMTCountact);
+    connect(&m_calcResultAndResetIntState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResultAndResetInt);
+    connect(&m_FinalState, &QState::entered, this, &cSec1ModuleMeasProgram::checkForRestart);
 }
 
 
@@ -1175,8 +1175,8 @@ void cSec1ModuleMeasProgram::resourceManagerConnect()
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
-    resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -1327,8 +1327,8 @@ void cSec1ModuleMeasProgram::ecalcServerConnect()
     m_pSECClient = m_pProxy->getConnection(getConfData()->m_SECServerSocket.m_sIP, getConfData()->m_SECServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
-    m_ecalcServerConnectState.addTransition(m_pSECClient, SIGNAL(connected()), &m_fetchECalcUnitsState);
-    connect(m_pSECInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::Proxy::cProxyClient::connected, &m_fetchECalcUnitsState);
+    connect(m_pSECInterface, &Zera::Server::cSECInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pSECClient);
 }
@@ -1346,8 +1346,8 @@ void cSec1ModuleMeasProgram::pcbServerConnect()
     m_pPCBClient = m_pProxy->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pPCBInterface->setClient(m_pPCBClient); //
-    m_pcbServerConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readREFInputsState);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_readREFInputsState);
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pPCBClient);
 }
@@ -1455,9 +1455,9 @@ void cSec1ModuleMeasProgram::activationDone()
     m_WaitMultiTimer.setSingleShot(true);
     connect(&m_WaitMultiTimer, &QTimer::timeout, this, &cSec1ModuleMeasProgram::startNext);
 
-    connect(m_pStartStopPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newStartStop(QVariant)));
-    connect(m_pModePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMode(QVariant)));
-    connect(m_pDutConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstant(QVariant)));
+    connect(m_pStartStopPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newStartStop);
+    connect(m_pModePar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newMode);
+    connect(m_pDutConstantPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstant);
     connect(m_pDutConstantUScaleNum, &cVeinModuleParameter::sigValueChanged,[this](QVariant val){
         this->newDutConstantScale(val,m_pDutConstantUScaleDenom->getName());
     });
@@ -1476,16 +1476,16 @@ void cSec1ModuleMeasProgram::activationDone()
 
         this->newDutConstantScale(val,m_pDutTypeMeasurePoint->getName());
     });
-    connect(m_pDutConstantUnitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutConstantUnit(QVariant)));
-    connect(m_pRefConstantPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefConstant(QVariant)));
-    connect(m_pDutInputPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newDutInput(QVariant)));
-    connect(m_pRefInputPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefInput(QVariant)));
-    connect(m_pMRatePar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMRate(QVariant)));
-    connect(m_pTargetPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newTarget(QVariant)));
-    connect(m_pEnergyPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newEnergy(QVariant)));
+    connect(m_pDutConstantUnitPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstantUnit);
+    connect(m_pRefConstantPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newRefConstant);
+    connect(m_pDutInputPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutInput);
+    connect(m_pRefInputPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newRefInput);
+    connect(m_pMRatePar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newMRate);
+    connect(m_pTargetPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newTarget);
+    connect(m_pEnergyPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newEnergy);
 
-    connect(m_pUpperLimitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newUpperLimit(QVariant)));
-    connect(m_pLowerLimitPar, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newLowerLimit(QVariant)));
+    connect(m_pUpperLimitPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newUpperLimit);
+    connect(m_pLowerLimitPar, &cVeinModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newLowerLimit);
 
 
     initDutConstantUnit();
