@@ -163,7 +163,6 @@ private slots:
 
     void newSerialNumber(QVariant serialNr);
 
-    void catchChannelReply(quint32 msgnr);
 };
 
 }
