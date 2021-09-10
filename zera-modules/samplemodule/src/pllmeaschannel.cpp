@@ -19,21 +19,21 @@ cPllMeasChannel::cPllMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, 
 
     // setting up statemachine for "activating" pll meas channel
     // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionState);
+    m_IdentifyState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cPllMeasChannel::activationContinue, &m_pcbConnectionState);
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
-    m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readUnitState);
-    m_readUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
-    m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties1State);
-    m_readRangeProperties1State.addTransition(this, SIGNAL(activationContinue()), &m_readRangeProperties2State);
-    m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_readRangeProperties3State);
-    m_readRangeProperties3State.addTransition(this, SIGNAL(activationLoop()), &m_readRangeProperties1State);
-    m_readRangeProperties3State.addTransition(this, SIGNAL(activationContinue()), &m_setSenseChannelRangeNotifierState);
-    m_setSenseChannelRangeNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readDspChannelState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readChnAliasState);
+    m_readChnAliasState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readSampleRateState);
+    m_readSampleRateState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readUnitState);
+    m_readUnitState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangelistState);
+    m_readRangelistState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangeProperties1State);
+    m_readRangeProperties1State.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRangeProperties2State);
+    m_readRangeProperties2State.addTransition(&m_rangeQueryMachine, &QStateMachine::finished, &m_readRangeProperties3State);
+    m_readRangeProperties3State.addTransition(this, &cPllMeasChannel::activationLoop, &m_readRangeProperties1State);
+    m_readRangeProperties3State.addTransition(this, &cPllMeasChannel::activationContinue, &m_setSenseChannelRangeNotifierState);
+    m_setSenseChannelRangeNotifierState.addTransition(this, &cPllMeasChannel::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_readResourceTypesState);
@@ -51,37 +51,37 @@ cPllMeasChannel::cPllMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, 
     m_activationMachine.addState((&m_setSenseChannelRangeNotifierState));
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_rmConnectState);
-    connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
-    connect(&m_pcbConnectionState, SIGNAL(entered()), SLOT(pcbConnection()));
-    connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
-    connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
-    connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
-    connect(&m_readUnitState, SIGNAL(entered()), SLOT(readUnit()));
-    connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
-    connect(&m_readRangeProperties1State, SIGNAL(entered()), SLOT(readRangeProperties1()));
-    connect(&m_readRangeProperties3State, SIGNAL(entered()), SLOT(readRangeProperties3()));
-    connect(&m_setSenseChannelRangeNotifierState, SIGNAL(entered()), SLOT(setSenseChannelRangeNotifier()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_rmConnectState, &QState::entered, this, &cPllMeasChannel::rmConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cPllMeasChannel::sendRMIdent);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cPllMeasChannel::readResourceTypes);
+    connect(&m_readResourceState, &QState::entered, this, &cPllMeasChannel::readResource);
+    connect(&m_readResourceInfoState, &QState::entered, this, &cPllMeasChannel::readResourceInfo);
+    connect(&m_pcbConnectionState, &QState::entered, this, &cPllMeasChannel::pcbConnection);
+    connect(&m_readDspChannelState, &QState::entered, this, &cPllMeasChannel::readDspChannel);
+    connect(&m_readChnAliasState, &QState::entered, this, &cPllMeasChannel::readChnAlias);
+    connect(&m_readSampleRateState, &QState::entered, this, &cPllMeasChannel::readSampleRate);
+    connect(&m_readUnitState, &QState::entered, this, &cPllMeasChannel::readUnit);
+    connect(&m_readRangelistState, &QState::entered, this, &cPllMeasChannel::readRangelist);
+    connect(&m_readRangeProperties1State, &QState::entered, this, &cPllMeasChannel::readRangeProperties1);
+    connect(&m_readRangeProperties3State, &QState::entered, this, &cPllMeasChannel::readRangeProperties3);
+    connect(&m_setSenseChannelRangeNotifierState, &QState::entered, this, &cPllMeasChannel::setSenseChannelRangeNotifier);
+    connect(&m_activationDoneState, &QState::entered, this, &cPllMeasChannel::activationDone);
 
     // setting up statemachine for "deactivating" pll meas channel
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cPllMeasChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cPllMeasChannel::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cPllMeasChannel::deactivationDone);
 
     // setting up statemachine for querying the pll meas channels ranges properties
-    m_readRngAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readTypeState);
-    m_readTypeState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueState);
-    m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readRejectionState);
-    m_readRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readOVRejectionState);
-    m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
-    m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
+    m_readRngAliasState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readTypeState);
+    m_readTypeState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readUrvalueState);
+    m_readUrvalueState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readRejectionState);
+    m_readRejectionState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readOVRejectionState);
+    m_readOVRejectionState.addTransition(this, &cPllMeasChannel::activationContinue, &m_readisAvailState);
+    m_readisAvailState.addTransition(this, &cPllMeasChannel::activationContinue, &m_rangeQueryDoneState);
 
 
     m_rangeQueryMachine.addState(&m_readRngAliasState);
@@ -94,13 +94,13 @@ cPllMeasChannel::cPllMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, 
 
     m_rangeQueryMachine.setInitialState(&m_readRngAliasState);
 
-    connect(&m_readRngAliasState, SIGNAL(entered()), SLOT(readRngAlias()));
-    connect(&m_readTypeState, SIGNAL(entered()), SLOT(readType()));
-    connect(&m_readUrvalueState, SIGNAL(entered()), SLOT(readUrvalue()));
-    connect(&m_readRejectionState, SIGNAL(entered()), SLOT(readRejection()));
-    connect(&m_readOVRejectionState, SIGNAL(entered()), SLOT(readOVRejection()));
-    connect(&m_readisAvailState, SIGNAL(entered()), SLOT(readisAvail()));
-    connect(&m_rangeQueryDoneState, SIGNAL(entered()), SLOT(rangeQueryDone()));
+    connect(&m_readRngAliasState, &QState::entered, this, &cPllMeasChannel::readRngAlias);
+    connect(&m_readTypeState, &QState::entered, this, &cPllMeasChannel::readType);
+    connect(&m_readUrvalueState, &QState::entered, this, &cPllMeasChannel::readUrvalue);
+    connect(&m_readRejectionState, &QState::entered, this, &cPllMeasChannel::readRejection);
+    connect(&m_readOVRejectionState, &QState::entered, this, &cPllMeasChannel::readOVRejection);
+    connect(&m_readisAvailState, &QState::entered, this, &cPllMeasChannel::readisAvail);
+    connect(&m_rangeQueryDoneState, &QState::entered, this, &cPllMeasChannel::rangeQueryDone);
 
 }
 
@@ -462,12 +462,12 @@ void cPllMeasChannel::rmConnect()
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-    m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
     // todo insert timer for timeout
 
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -512,10 +512,10 @@ void cPllMeasChannel::readResourceInfo()
 void cPllMeasChannel::pcbConnection()
 {
     m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readDspChannelState);
+    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_readDspChannelState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pPCBClient);
 }
 

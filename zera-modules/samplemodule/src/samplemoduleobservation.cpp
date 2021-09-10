@@ -17,24 +17,24 @@ cSampleModuleObservation::cSampleModuleObservation(cSampleModule* module, Zera::
 
     // setting up statemachine for "activating" samplemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_setNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setNotifierState.addTransition(this, &cSampleModuleObservation::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbConnectState);
     m_activationMachine.addState(&m_setNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_pcbConnectState);
 
-    connect(&m_pcbConnectState, SIGNAL(entered()), SLOT(pcbConnect()));
-    connect(&m_setNotifierState, SIGNAL(entered()), SLOT(setNotifier()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_pcbConnectState, &QState::entered, this, &cSampleModuleObservation::pcbConnect);
+    connect(&m_setNotifierState, &QState::entered, this, &cSampleModuleObservation::setNotifier);
+    connect(&m_activationDoneState, &QState::entered, this, &cSampleModuleObservation::activationDone);
 
-    m_resetNotifierState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_resetNotifierState.addTransition(this, &cSampleModuleObservation::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_resetNotifierState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState((&m_resetNotifierState));
 
-    connect(&m_resetNotifierState, SIGNAL(entered()), SLOT(resetNotifier()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_resetNotifierState, &QState::entered, this, &cSampleModuleObservation::resetNotifier);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cSampleModuleObservation::deactivationDone);
 }
 
 
@@ -113,10 +113,10 @@ void cSampleModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 void cSampleModuleObservation::pcbConnect()
 {
     m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
-    m_pcbConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setNotifierState);
+    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSampleModuleObservation::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pPCBClient);
 }
 
