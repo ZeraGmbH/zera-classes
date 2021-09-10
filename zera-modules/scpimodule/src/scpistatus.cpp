@@ -44,6 +44,7 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
 
 void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString input)
 {
+    Q_UNUSED(client)
     cSCPICommand cmd;
 
     cmd = input;
