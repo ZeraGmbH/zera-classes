@@ -14,7 +14,7 @@ ZeraModules::VirtualModule* Transformer1ModuleFactory::createModule(Zera::Proxy:
 void Transformer1ModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
     m_ModuleList.removeAll(module);
-    connect(module, SIGNAL(deactivationReady()), module, SIGNAL(moduleDeactivated()));
+    connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
     if (!module->m_DeactivationMachine.isRunning())
         module->m_DeactivationMachine.start();
 }

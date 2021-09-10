@@ -12,8 +12,8 @@ namespace TRANSFORMER1MODULE
 cTransformer1ModuleConfiguration::cTransformer1ModuleConfiguration()
 {
     m_pTransformer1ModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cTransformer1ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cTransformer1ModuleConfiguration::completeConfiguration);
 }
 
 
