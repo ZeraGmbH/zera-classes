@@ -52,20 +52,20 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 
     // we set up our IDLE state here
 
-    m_pStateIdle->addTransition(this, SIGNAL(sigRun()), m_pStateRun); // after sigRun we leave idle
-    m_pStateIdle->addTransition(this, SIGNAL(sigStop()), m_pStateStop); // same for sigStop
+    m_pStateIdle->addTransition(this, &cBaseModule::sigRun, m_pStateRun); // after sigRun we leave idle
+    m_pStateIdle->addTransition(this, &cBaseModule::sigStop, m_pStateStop); // same for sigStop
     m_pStateIDLEIdle = new QState(m_pStateIdle); // the initial state for idle
     m_pStateIDLEConfXML = new QState(m_pStateIdle); // when we configure within idle
     m_pStateIDLEConfSetup = new QState(m_pStateIdle); // same
-    m_pStateIDLEIdle->addTransition(this, SIGNAL(sigConfiguration()), m_pStateIDLEConfXML);
-    m_pStateIDLEConfXML->addTransition(m_pConfiguration.get(), SIGNAL(configXMLDone()), m_pStateIDLEConfSetup);
-    m_pStateIDLEConfSetup->addTransition(this, SIGNAL(sigConfDone()), m_pStateIDLEIdle);
+    m_pStateIDLEIdle->addTransition(this, &cBaseModule::sigConfiguration, m_pStateIDLEConfXML);
+    m_pStateIDLEConfXML->addTransition(m_pConfiguration.get(), &cBaseModuleConfiguration::configXMLDone, m_pStateIDLEConfSetup);
+    m_pStateIDLEConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateIDLEIdle);
     m_pStateIdle->setInitialState(m_pStateIDLEIdle);
-    connect(m_pStateIDLEIdle, SIGNAL(entered()), SLOT(entryIDLEIdle()));
-    connect(m_pStateIdle, SIGNAL(entered()), SLOT(entryIdle()));
-    connect(m_pStateIdle, SIGNAL(exited()), SLOT(exitIdle()));
-    connect(m_pStateIDLEConfXML, SIGNAL(entered()), SLOT(entryConfXML()));
-    connect(m_pStateIDLEConfSetup, SIGNAL(entered()), SLOT(entryConfSetup()));
+    connect(m_pStateIDLEIdle, &QState::entered, this, &cBaseModule::entryIDLEIdle);
+    connect(m_pStateIdle, &QState::entered, this, &cBaseModule::entryIdle);
+    connect(m_pStateIdle, &QState::exited, this, &cBaseModule::exitIdle);
+    connect(m_pStateIDLEConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
+    connect(m_pStateIDLEConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     // we set up our CONFIGURE state here
     // we have nothing to do here because we have some additional states
@@ -73,50 +73,49 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
 
     // we set up our RUN state here
 
-    m_pStateRun->addTransition(this, SIGNAL(sigRunFailed()), m_pStateIdle); // in case of error we fall back to idle
+    m_pStateRun->addTransition(this, &cBaseModule::sigRunFailed, m_pStateIdle); // in case of error we fall back to idle
     m_pStateRUNStart = new QState(m_pStateRun);
     m_pStateRUNDone = new QState(m_pStateRun);
     m_pStateRUNDeactivate = new QState(m_pStateRun);
     m_pStateRUNUnset = new QState(m_pStateRun);
     m_pStateRUNConfXML = new QState(m_pStateRun);
     m_pStateRUNConfSetup = new QState(m_pStateRun);
-    m_pStateRUNStart->addTransition(this, SIGNAL(activationReady()), m_pStateRUNDone);
-    m_pStateRUNDone->addTransition(this, SIGNAL(sigConfiguration()), m_pStateRUNDeactivate);
-    m_pStateRUNDeactivate->addTransition(this, SIGNAL(deactivationReady()), m_pStateRUNUnset);
-    m_pStateRUNUnset->addTransition(this, SIGNAL(sigReconfigureContinue()), m_pStateRUNConfXML);
-    m_pStateRUNConfXML->addTransition(m_pConfiguration.get(), SIGNAL(configXMLDone()), m_pStateRUNConfSetup);
-    m_pStateRUNConfSetup->addTransition(this, SIGNAL(sigConfDone()), m_pStateRUNStart );
+    m_pStateRUNStart->addTransition(this, &cBaseModule::activationReady, m_pStateRUNDone);
+    m_pStateRUNDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateRUNDeactivate);
+    m_pStateRUNDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateRUNUnset);
+    m_pStateRUNUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateRUNConfXML);
+    m_pStateRUNConfXML->addTransition(m_pConfiguration.get(), &cBaseModuleConfiguration::configXMLDone, m_pStateRUNConfSetup);
+    m_pStateRUNConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateRUNStart );
     m_pStateRun->setInitialState(m_pStateRUNStart);
-    connect(m_pStateRUNStart, SIGNAL(entered()), SLOT(entryRunStart()));
-    connect(m_pStateRUNDone, SIGNAL(entered()), SLOT(entryRunDone()));
-    connect(m_pStateRUNDeactivate, SIGNAL(entered()), SLOT(entryRunDeactivate()));
-    connect(m_pStateRUNUnset, SIGNAL(entered()), SLOT(entryRunUnset()));
-    connect(m_pStateRUNConfXML, SIGNAL(entered()), SLOT(entryConfXML()));
-    connect(m_pStateRUNConfSetup, SIGNAL(entered()), SLOT(entryConfSetup()));
-
+    connect(m_pStateRUNStart, &QState::entered, this, &cBaseModule::entryRunStart);
+    connect(m_pStateRUNDone, &QState::entered, this, &cBaseModule::entryRunDone);
+    connect(m_pStateRUNDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate);
+    connect(m_pStateRUNUnset, &QState::entered, this, &cBaseModule::entryRunUnset);
+    connect(m_pStateRUNConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
+    connect(m_pStateRUNConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     // we set up our STOP state here
 
-    m_pStateStop->addTransition(this, SIGNAL(sigStopFailed()), m_pStateIdle); // in case of error we fall back to idle
+    m_pStateStop->addTransition(this, &cBaseModule::sigStopFailed, m_pStateIdle); // in case of error we fall back to idle
     m_pStateSTOPStart = new QState(m_pStateStop);
     m_pStateSTOPDone = new QState(m_pStateStop);
     m_pStateSTOPDeactivate = new QState(m_pStateStop);
     m_pStateSTOPUnset = new QState(m_pStateStop);
     m_pStateSTOPConfXML = new QState(m_pStateStop);
     m_pStateSTOPConfSetup = new QState(m_pStateStop);
-    m_pStateSTOPStart->addTransition(this, SIGNAL(activationReady()), m_pStateSTOPDone);
-    m_pStateSTOPDone->addTransition(this, SIGNAL(sigConfiguration()), m_pStateSTOPDeactivate);
-    m_pStateSTOPDeactivate->addTransition(this, SIGNAL(deactivationReady()), m_pStateSTOPUnset);
-    m_pStateSTOPUnset->addTransition(this, SIGNAL(sigReconfigureContinue()), m_pStateSTOPConfXML);
-    m_pStateSTOPConfXML->addTransition(m_pConfiguration.get(), SIGNAL(configXMLDone()), m_pStateSTOPConfSetup);
-    m_pStateSTOPConfSetup->addTransition(this, SIGNAL(sigConfDone()), m_pStateSTOPStart );
+    m_pStateSTOPStart->addTransition(this, &cBaseModule::activationReady, m_pStateSTOPDone);
+    m_pStateSTOPDone->addTransition(this, &cBaseModule::sigConfiguration, m_pStateSTOPDeactivate);
+    m_pStateSTOPDeactivate->addTransition(this, &cBaseModule::deactivationReady, m_pStateSTOPUnset);
+    m_pStateSTOPUnset->addTransition(this, &cBaseModule::sigReconfigureContinue, m_pStateSTOPConfXML);
+    m_pStateSTOPConfXML->addTransition(m_pConfiguration.get(), &cBaseModuleConfiguration::configXMLDone, m_pStateSTOPConfSetup);
+    m_pStateSTOPConfSetup->addTransition(this, &cBaseModule::sigConfDone, m_pStateSTOPStart );
     m_pStateStop->setInitialState(m_pStateSTOPStart);
-    connect(m_pStateSTOPStart, SIGNAL(entered()), SLOT(entryStopStart()));
-    connect(m_pStateSTOPDone, SIGNAL(entered()), SLOT(entryStopDone()));
-    connect(m_pStateSTOPDeactivate, SIGNAL(entered()), SLOT(entryRunDeactivate())); // we use same slot as run
-    connect(m_pStateSTOPUnset, SIGNAL(entered()), SLOT(entryRunUnset()));  // we use same slot as run
-    connect(m_pStateSTOPConfXML, SIGNAL(entered()), SLOT(entryConfXML()));
-    connect(m_pStateSTOPConfSetup, SIGNAL(entered()), SLOT(entryConfSetup()));
+    connect(m_pStateSTOPStart, &QState::entered, this, &cBaseModule::entryStopStart);
+    connect(m_pStateSTOPDone, &QState::entered, this, &cBaseModule::entryStopDone);
+    connect(m_pStateSTOPDeactivate, &QState::entered, this, &cBaseModule::entryRunDeactivate); // we use same slot as run
+    connect(m_pStateSTOPUnset, &QState::entered, this, &cBaseModule::entryRunUnset);  // we use same slot as run
+    connect(m_pStateSTOPConfXML, &QState::entered, this, &cBaseModule::entryConfXML);
+    connect(m_pStateSTOPConfSetup, &QState::entered, this, &cBaseModule::entryConfSetup);
 
     m_pStateMachine->addState(m_pStateIdle);
     m_pStateMachine->addState(m_pStateConfigure);
@@ -128,33 +127,33 @@ cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId,
     m_pStateMachine->start();
 
     // now we set up our machines for activating, deactivating a module
-    m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationNext()), &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationFinishedState);
+    m_ActivationStartState.addTransition(this, &cBaseModule::activationContinue, &m_ActivationExecState);
+    m_ActivationExecState.addTransition(this, &cBaseModule::activationContinue, &m_ActivationDoneState);
+    m_ActivationDoneState.addTransition(this, &cBaseModule::activationNext, &m_ActivationExecState);
+    m_ActivationDoneState.addTransition(this, &cBaseModule::activationContinue, &m_ActivationFinishedState);
     m_ActivationMachine.addState(&m_ActivationStartState);
     m_ActivationMachine.addState(&m_ActivationExecState);
     m_ActivationMachine.addState(&m_ActivationDoneState);
     m_ActivationMachine.addState(&m_ActivationFinishedState);
     m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, SIGNAL(entered()), SLOT(activationStart()));
-    connect(&m_ActivationExecState, SIGNAL(entered()), SLOT(activationExec()));
-    connect(&m_ActivationDoneState, SIGNAL(entered()), SLOT(activationDone()));
-    connect(&m_ActivationFinishedState, SIGNAL(entered()), SLOT(activationFinished()));
+    connect(&m_ActivationStartState, &QState::entered, this, &cBaseModule::activationStart);
+    connect(&m_ActivationExecState, &QState::entered, this, &cBaseModule::activationExec);
+    connect(&m_ActivationDoneState, &QState::entered, this, &cBaseModule::activationDone);
+    connect(&m_ActivationFinishedState, &QState::entered, this, &cBaseModule::activationFinished);
 
-    m_DeactivationStartState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationNext()), &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationFinishedState);
+    m_DeactivationStartState.addTransition(this, &cBaseModule::deactivationContinue, &m_DeactivationExecState);
+    m_DeactivationExecState.addTransition(this, &cBaseModule::deactivationContinue, &m_DeactivationDoneState);
+    m_DeactivationDoneState.addTransition(this, &cBaseModule::deactivationNext, &m_DeactivationExecState);
+    m_DeactivationDoneState.addTransition(this, &cBaseModule::deactivationContinue, &m_DeactivationFinishedState);
     m_DeactivationMachine.addState(&m_DeactivationStartState);
     m_DeactivationMachine.addState(&m_DeactivationExecState);
     m_DeactivationMachine.addState(&m_DeactivationDoneState);
     m_DeactivationMachine.addState(&m_DeactivationFinishedState);
     m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, SIGNAL(entered()), SLOT(deactivationStart()));
-    connect(&m_DeactivationExecState, SIGNAL(entered()), SLOT(deactivationExec()));
-    connect(&m_DeactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
-    connect(&m_DeactivationFinishedState, SIGNAL(entered()), SLOT(deactivationFinished()));
+    connect(&m_DeactivationStartState, &QState::entered, this, &cBaseModule::deactivationStart);
+    connect(&m_DeactivationExecState, &QState::entered, this, &cBaseModule::deactivationExec);
+    connect(&m_DeactivationDoneState, &QState::entered, this, &cBaseModule::deactivationDone);
+    connect(&m_DeactivationFinishedState, &QState::entered, this, &cBaseModule::deactivationFinished);
 }
 
 

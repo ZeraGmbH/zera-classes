@@ -12,25 +12,25 @@ cMovingwindowFilter::cMovingwindowFilter(float time)
     m_pdoFilterState = new QState(m_pactiveState);
     m_pFinishState = new QFinalState();
 
-    m_pactiveState->addTransition(this, SIGNAL(finishFilter()), m_pFinishState);
-    m_pinitFilterState->addTransition(this, SIGNAL(newActualValues()), m_psetupFilterState);
-    m_psetupFilterState->addTransition(this, SIGNAL(timerInitialized()), m_pbuildupFilterState);
-    m_pbuildupFilterState->addTransition(this, SIGNAL(newActualValues()), m_pbuildupFilterState);
-    m_pbuildupFilterState->addTransition(&m_integrationTimer, SIGNAL(timeout()), m_preadyFilterState);
-    m_preadyFilterState->addTransition(this, SIGNAL(newActualValues()), m_pdoFilterState);
-    m_pdoFilterState->addTransition(this, SIGNAL(newActualValues()), m_pdoFilterState);
-    connect(&m_FilterStatemachine, SIGNAL(stopped()), this, SLOT(restartFilter()));
+    m_pactiveState->addTransition(this, &cMovingwindowFilter::finishFilter, m_pFinishState);
+    m_pinitFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_psetupFilterState);
+    m_psetupFilterState->addTransition(this, &cMovingwindowFilter::timerInitialized, m_pbuildupFilterState);
+    m_pbuildupFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pbuildupFilterState);
+    m_pbuildupFilterState->addTransition(&m_integrationTimer, &QTimer::timeout, m_preadyFilterState);
+    m_preadyFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pdoFilterState);
+    m_pdoFilterState->addTransition(this, &cMovingwindowFilter::newActualValues, m_pdoFilterState);
+    connect(&m_FilterStatemachine, &QStateMachine::stopped, this, &cMovingwindowFilter::restartFilter);
 
     m_FilterStatemachine.addState(m_pactiveState);
     m_FilterStatemachine.addState(m_pFinishState);
     m_FilterStatemachine.setInitialState(m_pactiveState);
     m_pactiveState->setInitialState(m_pinitFilterState);
 
-    connect(m_pinitFilterState, SIGNAL(entered()), SLOT(initFilter()));
-    connect(m_psetupFilterState, SIGNAL(entered()), SLOT(setupFilter()));
-    connect(m_pbuildupFilterState, SIGNAL(entered()), SLOT(buildupFilter()));
-    connect(m_pdoFilterState, SIGNAL(entered()), SLOT(doFilter()));
-    connect(m_pFinishState, SIGNAL(entered()), SLOT(stopFilter()));
+    connect(m_pinitFilterState, &QState::entered, this, &cMovingwindowFilter::initFilter);
+    connect(m_psetupFilterState, &QState::entered, this, &cMovingwindowFilter::setupFilter);
+    connect(m_pbuildupFilterState, &QState::entered, this, &cMovingwindowFilter::buildupFilter);
+    connect(m_pdoFilterState, &QState::entered, this, &cMovingwindowFilter::doFilter);
+    connect(m_pFinishState, &QState::entered, this, &cMovingwindowFilter::stopFilter);
 
     m_FilterStatemachine.start();
 }
