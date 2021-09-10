@@ -79,7 +79,6 @@ private:
 
 
 private slots:
-    void scpiModuleReconfigure();
 
 };
 
