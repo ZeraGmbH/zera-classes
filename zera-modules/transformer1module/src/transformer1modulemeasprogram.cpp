@@ -60,13 +60,11 @@ cTransformer1ModuleMeasProgram::~cTransformer1ModuleMeasProgram()
 
 void cTransformer1ModuleMeasProgram::start()
 {
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cTransformer1ModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
 cTransformer1ModuleConfigData *cTransformer1ModuleMeasProgram::getConfData()
