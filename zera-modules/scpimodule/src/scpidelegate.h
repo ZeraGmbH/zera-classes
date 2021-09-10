@@ -23,7 +23,7 @@ public:
     virtual ~cSCPIDelegate(){}
 
     void setCommand(cSCPI *scpiCmdInterface);
-    virtual bool executeSCPI(const QString&, QString&);
+    virtual bool executeSCPI(const QString&, QString&) { return true; }; // cSCPIObject requires an override
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput) = 0;
 
 signals:
