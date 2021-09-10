@@ -29,26 +29,26 @@ namespace BURDEN1MODULE
 cBurden1ModuleMeasProgram::cBurden1ModuleMeasProgram(cBurden1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
-    m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_searchActualValuesState.addTransition(this, &cBurden1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_searchActualValuesState);
     m_activationMachine.addState(&m_activationDoneState);
 
     m_activationMachine.setInitialState(&m_searchActualValuesState);
 
-    connect(&m_searchActualValuesState, SIGNAL(entered()), SLOT(searchActualValues()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activateDone()));
+    connect(&m_searchActualValuesState, &QState::entered, this, &cBurden1ModuleMeasProgram::searchActualValues);
+    connect(&m_activationDoneState, &QState::entered, this, &cBurden1ModuleMeasProgram::activateDone);
 
     // setting up statemachine deactivation
-    m_deactivateState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivateDoneState);
+    m_deactivateState.addTransition(this, &cBurden1ModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
 
     m_deactivationMachine.addState(&m_deactivateState);
     m_deactivationMachine.addState(&m_deactivateDoneState);
 
     m_deactivationMachine.setInitialState(&m_deactivateState);
 
-    connect(&m_deactivateState, SIGNAL(entered()), SLOT(deactivateMeas()));
-    connect(&m_deactivateDoneState, SIGNAL(entered()), SLOT(deactivateMeasDone()));
+    connect(&m_deactivateState, &QState::entered, this, &cBurden1ModuleMeasProgram::deactivateMeas);
+    connect(&m_deactivateDoneState, &QState::entered, this, &cBurden1ModuleMeasProgram::deactivateMeasDone);
 }
 
 
@@ -223,7 +223,7 @@ void cBurden1ModuleMeasProgram::searchActualValues()
             if (i == (getConfData()->m_nBurdenSystemCount-1))
             {
                 cBMD = new cBurden1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2), getConfData()->m_Unit, true);
-                connect(cBMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
+                connect(cBMD, &cBurden1MeasDelegate::measuring, this, &cBurden1ModuleMeasProgram::setMeasureSignal);
             }
             else
                 cBMD = new cBurden1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2), getConfData()->m_Unit);
@@ -232,11 +232,11 @@ void cBurden1ModuleMeasProgram::searchActualValues()
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cBMD, SLOT(actValueInput1(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cBMD, &cBurden1MeasDelegate::actValueInput1);
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cBMD, SLOT(actValueInput2(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cBMD,  &cBurden1MeasDelegate::actValueInput2);
         }
         else
             error = true;
@@ -256,11 +256,11 @@ void cBurden1ModuleMeasProgram::activateDone()
 {
     setParameters();
 
-    connect(m_pNominalBurdenParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalBurden(QVariant)));
-    connect(m_pNominalRangeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalRange(QVariant)));
-    connect(m_pNominalRangeFactorParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newNominalFactorRange(QVariant)));
-    connect(m_pWireLengthParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newWireLength(QVariant)));
-    connect(m_pWireCrosssectionParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newWireCrosssection(QVariant)));
+    connect(m_pNominalBurdenParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalBurden);
+    connect(m_pNominalRangeParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalRange);
+    connect(m_pNominalRangeFactorParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalFactorRange);
+    connect(m_pWireLengthParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newWireLength);
+    connect(m_pWireCrosssectionParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newWireCrosssection);
 
     m_bActive = true;
     emit activated();
