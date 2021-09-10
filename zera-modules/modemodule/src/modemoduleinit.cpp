@@ -22,22 +22,22 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy
     m_pPCBInterface = new Zera::Server::cPCBInterface();
     m_pDSPInterface = new Zera::Server::cDSPInterface();
 
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceState);
-    m_claimResourceState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectionState);
+    m_IdentifyState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cModeModuleInit::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cModeModuleInit::activationContinue, &m_claimResourceState);
+    m_claimResourceState.addTransition(this, &cModeModuleInit::activationContinue, &m_pcbserverConnectionState);
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
-    m_setModeState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectionState);
+    m_setModeState.addTransition(this, &cModeModuleInit::activationContinue, &m_dspserverConnectionState);
     // m_dspserverConnectionState.addTransition is done in dspserverConnection
-    m_writeGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeGainCorr2State);
-    m_writeGainCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_writePhaseCorrState);
-    m_writePhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writePhaseCorr2State);
-    m_writePhaseCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorrState);
-    m_writeOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorr2State);
-    m_writeOffsetCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_setSubDCState);
-    m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_setSamplingSystemState);
-    m_setSamplingSystemState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_writeGainCorrState.addTransition(this, &cModeModuleInit::activationContinue, &m_writeGainCorr2State);
+    m_writeGainCorr2State.addTransition(this, &cModeModuleInit::activationContinue, &m_writePhaseCorrState);
+    m_writePhaseCorrState.addTransition(this, &cModeModuleInit::activationContinue, &m_writePhaseCorr2State);
+    m_writePhaseCorr2State.addTransition(this, &cModeModuleInit::activationContinue, &m_writeOffsetCorrState);
+    m_writeOffsetCorrState.addTransition(this, &cModeModuleInit::activationContinue, &m_writeOffsetCorr2State);
+    m_writeOffsetCorr2State.addTransition(this, &cModeModuleInit::activationContinue, &m_setSubDCState);
+    m_setSubDCState.addTransition(this, &cModeModuleInit::activationContinue, &m_setSamplingSystemState);
+    m_setSamplingSystemState.addTransition(this, &cModeModuleInit::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -58,31 +58,31 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy
     m_activationMachine.addState(&m_setSamplingSystemState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
-    connect(&m_resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
-    connect(&m_claimResourceState, SIGNAL(entered()), SLOT(claimResource()));
-    connect(&m_pcbserverConnectionState, SIGNAL(entered()), SLOT(pcbserverConnect()));
-    connect(&m_setModeState, SIGNAL(entered()), SLOT(setMode()));
-    connect(&m_dspserverConnectionState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_writeGainCorrState, SIGNAL(entered()), SLOT(writeGainCorr()));
-    connect(&m_writeGainCorr2State, SIGNAL(entered()), SLOT(writeGainCorr2()));
-    connect(&m_writePhaseCorrState, SIGNAL(entered()), SLOT(writePhaseCorr()));
-    connect(&m_writePhaseCorr2State, SIGNAL(entered()), SLOT(writePhaseCorr2()));
-    connect(&m_writeOffsetCorrState, SIGNAL(entered()), SLOT(writeOffsetCorr()));
-    connect(&m_writeOffsetCorr2State, SIGNAL(entered()), SLOT(writeOffsetCorr2()));
-    connect(&m_setSubDCState, SIGNAL(entered()), SLOT(setSubDC()));
-    connect(&m_setSamplingSystemState, SIGNAL(entered()), SLOT(setSamplingsytem()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_resourceManagerConnectState, &QState::entered, this, &cModeModuleInit::resourceManagerConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cModeModuleInit::sendRMIdent);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cModeModuleInit::readResourceTypes);
+    connect(&m_readResourceState, &QState::entered, this, &cModeModuleInit::readResource);
+    connect(&m_readResourceInfoState, &QState::entered, this, &cModeModuleInit::readResourceInfo);
+    connect(&m_claimResourceState, &QState::entered, this, &cModeModuleInit::claimResource);
+    connect(&m_pcbserverConnectionState, &QState::entered, this, &cModeModuleInit::pcbserverConnect);
+    connect(&m_setModeState, &QState::entered, this, &cModeModuleInit::setMode);
+    connect(&m_dspserverConnectionState, &QState::entered, this, &cModeModuleInit::dspserverConnect);
+    connect(&m_writeGainCorrState, &QState::entered, this, &cModeModuleInit::writeGainCorr);
+    connect(&m_writeGainCorr2State, &QState::entered, this, &cModeModuleInit::writeGainCorr2);
+    connect(&m_writePhaseCorrState, &QState::entered, this, &cModeModuleInit::writePhaseCorr);
+    connect(&m_writePhaseCorr2State, &QState::entered, this, &cModeModuleInit::writePhaseCorr2);
+    connect(&m_writeOffsetCorrState, &QState::entered, this, &cModeModuleInit::writeOffsetCorr);
+    connect(&m_writeOffsetCorr2State, &QState::entered, this, &cModeModuleInit::writeOffsetCorr2);
+    connect(&m_setSubDCState, &QState::entered, this, &cModeModuleInit::setSubDC);
+    connect(&m_setSamplingSystemState, &QState::entered, this, &cModeModuleInit::setSamplingsytem);
+    connect(&m_activationDoneState, &QState::entered, this, &cModeModuleInit::activationDone);
 
-    m_freeResourceState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_freeResourceState.addTransition(this, &cModeModuleInit::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_freeResourceState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_freeResourceState);
-    connect(&m_freeResourceState, SIGNAL(entered()), SLOT(freeResource()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_freeResourceState, &QState::entered, this, &cModeModuleInit::freeResource);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cModeModuleInit::deactivationDone);
 }
 
 
@@ -317,8 +317,8 @@ void cModeModuleInit::resourceManagerConnect()
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
-    m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -357,10 +357,10 @@ void cModeModuleInit::claimResource()
 void cModeModuleInit::pcbserverConnect()
 {
     m_pPCBClient = m_pProxy->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_nPort);
-    m_pcbserverConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setModeState);
+    m_pcbserverConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_setModeState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pPCBClient);
 }
 
@@ -376,8 +376,8 @@ void cModeModuleInit::dspserverConnect()
     // we set up our dsp server connection
     m_pDSPClient = m_pProxy->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
     m_pDSPInterface->setClient(m_pDSPClient);
-    m_dspserverConnectionState.addTransition(m_pDSPClient, SIGNAL(connected()), &m_writeGainCorrState);
-    connect(m_pDSPInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::Proxy::cProxyClient::connected, &m_writeGainCorrState);
+    connect(m_pDSPInterface, &Zera::Server::cDSPInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pDSPClient);
 }
 
