@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QJsonArray>
 #include <QStateMachine>
+#include "veinmoduleerrorcomponent.h"
 
 // pure virtual class for all objects living in a module, which generate an interface
 // and/or which can do something after it got activated
@@ -32,8 +33,7 @@ signals:
     void setupContinue();
     void interruptContinue();
     void executionError();
-    void errMsg(QVariant);
-    void errMsg(QVariant, int);
+    void errMsg(QVariant value, int dest = globalDest);
 
 
 public slots:
