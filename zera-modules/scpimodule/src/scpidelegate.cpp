@@ -17,10 +17,4 @@ void cSCPIDelegate::setCommand(cSCPI *scpiCmdInterface)
 }
 
 
-bool cSCPIDelegate::executeSCPI(const QString &, QString &)
-{
-    return true;
-}
-
-
 }
