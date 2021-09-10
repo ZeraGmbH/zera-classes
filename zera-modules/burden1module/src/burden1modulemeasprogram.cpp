@@ -60,13 +60,11 @@ cBurden1ModuleMeasProgram::~cBurden1ModuleMeasProgram()
 
 void cBurden1ModuleMeasProgram::start()
 {
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cBurden1ModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
 cBurden1ModuleConfigData *cBurden1ModuleMeasProgram::getConfData()
