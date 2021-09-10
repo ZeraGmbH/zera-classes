@@ -29,26 +29,26 @@ namespace TRANSFORMER1MODULE
 cTransformer1ModuleMeasProgram::cTransformer1ModuleMeasProgram(cTransformer1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
-    m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_searchActualValuesState.addTransition(this, &cTransformer1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_searchActualValuesState);
     m_activationMachine.addState(&m_activationDoneState);
 
     m_activationMachine.setInitialState(&m_searchActualValuesState);
 
-    connect(&m_searchActualValuesState, SIGNAL(entered()), SLOT(searchActualValues()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activateDone()));
+    connect(&m_searchActualValuesState, &QState::entered, this, &cTransformer1ModuleMeasProgram::searchActualValues);
+    connect(&m_activationDoneState, &QState::entered, this, &cTransformer1ModuleMeasProgram::activateDone);
 
     // setting up statemachine deactivation
-    m_deactivateState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivateDoneState);
+    m_deactivateState.addTransition(this, &cTransformer1ModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
 
     m_deactivationMachine.addState(&m_deactivateState);
     m_deactivationMachine.addState(&m_deactivateDoneState);
 
     m_deactivationMachine.setInitialState(&m_deactivateState);
 
-    connect(&m_deactivateState, SIGNAL(entered()), SLOT(deactivateMeas()));
-    connect(&m_deactivateDoneState, SIGNAL(entered()), SLOT(deactivateMeasDone()));
+    connect(&m_deactivateState, &QState::entered, this, &cTransformer1ModuleMeasProgram::deactivateMeas);
+    connect(&m_deactivateDoneState, &QState::entered, this, &cTransformer1ModuleMeasProgram::deactivateMeasDone);
 }
 
 
@@ -276,7 +276,7 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
             {
                 cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*6), m_ActValueList.at(i*6+1), m_ActValueList.at(i*6+2),
                                                      m_ActValueList.at(i*6+3), m_ActValueList.at(i*6+4), m_ActValueList.at(i*6+5), true);
-                connect(cTMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
+                connect(cTMD, &cTransformer1MeasDelegate::measuring, this, &cTransformer1ModuleMeasProgram::setMeasureSignal);
             }
             else
                 cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*6), m_ActValueList.at(i*6+1), m_ActValueList.at(i*6+2),
@@ -286,11 +286,11 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputPrimaryVector);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cTMD, SLOT(actValueInput1(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cTMD, &cTransformer1MeasDelegate::actValueInput1);
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_transformerSystemConfigList.at(i).m_sInputSecondaryVector);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cTMD, SLOT(actValueInput2(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cTMD, &cTransformer1MeasDelegate::actValueInput2);
         }
         else
             error = true;
@@ -310,12 +310,12 @@ void cTransformer1ModuleMeasProgram::activateDone()
 {
     setParameters();
 
-    connect(m_pPrimClampPrimParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPrimClampPrim(QVariant)));
-    connect(m_pPrimClampSecParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPrimClampSec(QVariant)));
-    connect(m_pSecClampPrimParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newSecClampPrim(QVariant)));
-    connect(m_pSecClampSecParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newSecClampSec(QVariant)));
-    connect(m_pPrimDutParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPrimDut(QVariant)));
-    connect(m_pSecDutParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newSecDut(QVariant)));
+    connect(m_pPrimClampPrimParameter, &cVeinModuleParameter::sigValueChanged, this, &cTransformer1ModuleMeasProgram::newPrimClampPrim);
+    connect(m_pPrimClampSecParameter, &cVeinModuleParameter::sigValueChanged, this, &cTransformer1ModuleMeasProgram::newPrimClampSec);
+    connect(m_pSecClampPrimParameter, &cVeinModuleParameter::sigValueChanged, this, &cTransformer1ModuleMeasProgram::newSecClampPrim);
+    connect(m_pSecClampSecParameter, &cVeinModuleParameter::sigValueChanged, this, &cTransformer1ModuleMeasProgram::newSecClampSec);
+    connect(m_pPrimDutParameter, &cVeinModuleParameter::sigValueChanged, this, &cTransformer1ModuleMeasProgram::newPrimDut);
+    connect(m_pSecDutParameter, &cVeinModuleParameter::sigValueChanged, this, &cTransformer1ModuleMeasProgram::newSecDut);
 
     m_bActive = true;
     emit activated();
