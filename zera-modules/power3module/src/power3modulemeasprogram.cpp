@@ -27,26 +27,26 @@ namespace POWER3MODULE
 cPower3ModuleMeasProgram::cPower3ModuleMeasProgram(cPower3Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
-    m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_searchActualValuesState.addTransition(this, &cPower3ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_searchActualValuesState);
     m_activationMachine.addState(&m_activationDoneState);
 
     m_activationMachine.setInitialState(&m_searchActualValuesState);
 
-    connect(&m_searchActualValuesState, SIGNAL(entered()), SLOT(searchActualValues()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activateDone()));
+    connect(&m_searchActualValuesState, &QState::entered, this, &cPower3ModuleMeasProgram::searchActualValues);
+    connect(&m_activationDoneState, &QState::entered, this, &cPower3ModuleMeasProgram::activateDone);
 
     // setting up statemachine deactivation
-    m_deactivateState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivateDoneState);
+    m_deactivateState.addTransition(this, &cPower3ModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
 
     m_deactivationMachine.addState(&m_deactivateState);
     m_deactivationMachine.addState(&m_deactivateDoneState);
 
     m_deactivationMachine.setInitialState(&m_deactivateState);
 
-    connect(&m_deactivateState, SIGNAL(entered()), SLOT(deactivateMeas()));
-    connect(&m_deactivateDoneState, SIGNAL(entered()), SLOT(deactivateMeasDone()));
+    connect(&m_deactivateState, &QState::entered, this, &cPower3ModuleMeasProgram::deactivateMeas);
+    connect(&m_deactivateDoneState, &QState::entered, this, &cPower3ModuleMeasProgram::deactivateMeasDone);
 }
 
 
@@ -154,7 +154,7 @@ void cPower3ModuleMeasProgram::searchActualValues()
             if (i == (getConfData()->m_nPowerSystemCount-1))
             {
                 cPMD = new cPower3MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2),true);
-                connect(cPMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
+                connect(cPMD, &cPower3MeasDelegate::measuring, this, &cPower3ModuleMeasProgram::setMeasureSignal);
             }
             else
                 cPMD = new cPower3MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2));
@@ -163,11 +163,11 @@ void cPower3ModuleMeasProgram::searchActualValues()
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput1(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput1);
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cPMD, SLOT(actValueInput2(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput2);
         }
         else
             error = true;

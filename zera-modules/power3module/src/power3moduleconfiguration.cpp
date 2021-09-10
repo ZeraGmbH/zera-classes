@@ -12,8 +12,8 @@ namespace POWER3MODULE
 cPower3ModuleConfiguration::cPower3ModuleConfiguration()
 {
     m_pPower3ModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cPower3ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cPower3ModuleConfiguration::completeConfiguration);
 }
 
 
