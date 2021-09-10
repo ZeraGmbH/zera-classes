@@ -130,13 +130,15 @@ target_link_libraries(scpimodule
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
-    #MeasurementModuleInterface
+    MeasurementModuleInterface
     zerabasemodule
     zeraproxy
     zeramisc
     zeraxmlconfig
     zeravalidator 
     Zera::SCPI
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 # announce headers - target perspective
