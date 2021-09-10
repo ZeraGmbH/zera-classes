@@ -27,26 +27,26 @@ namespace EFFICIENCY1MODULE
 cEfficiency1ModuleMeasProgram::cEfficiency1ModuleMeasProgram(cEfficiency1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
-    m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_searchActualValuesState.addTransition(this, &cEfficiency1ModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_searchActualValuesState);
     m_activationMachine.addState(&m_activationDoneState);
 
     m_activationMachine.setInitialState(&m_searchActualValuesState);
 
-    connect(&m_searchActualValuesState, SIGNAL(entered()), SLOT(searchActualValues()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activateDone()));
+    connect(&m_searchActualValuesState, &QState::entered, this, &cEfficiency1ModuleMeasProgram::searchActualValues);
+    connect(&m_activationDoneState, &QState::entered, this, &cEfficiency1ModuleMeasProgram::activateDone);
 
     // setting up statemachine deactivation
-    m_deactivateState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivateDoneState);
+    m_deactivateState.addTransition(this, &cEfficiency1ModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
 
     m_deactivationMachine.addState(&m_deactivateState);
     m_deactivationMachine.addState(&m_deactivateDoneState);
 
     m_deactivationMachine.setInitialState(&m_deactivateState);
 
-    connect(&m_deactivateState, SIGNAL(entered()), SLOT(deactivateMeas()));
-    connect(&m_deactivateDoneState, SIGNAL(entered()), SLOT(deactivateMeasDone()));
+    connect(&m_deactivateState, &QState::entered, this, &cEfficiency1ModuleMeasProgram::deactivateMeas);
+    connect(&m_deactivateDoneState, &QState::entered, this, &cEfficiency1ModuleMeasProgram::deactivateMeasDone);
 }
 
 
@@ -137,7 +137,7 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
         cVeinModuleComponentInput *vmci;
 
         cEMD = new cEfficiency1MeasDelegate(m_ActValueList.at(0), true);
-        connect(cEMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
+        connect(cEMD, &cEfficiency1MeasDelegate::measuring, this, &cEfficiency1ModuleMeasProgram::setMeasureSignal);
 
         m_Efficiency1MeasDelegateList.append(cEMD);
 
@@ -146,7 +146,7 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
             vmci = new cVeinModuleComponentInput(getConfData()->m_PowerInputConfiguration.m_nModuleId, getConfData()->m_PowerInputConfiguration.powerInputList.at(i));
             cEMD->addInputPowerValue(vmci);
             vmciList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cEMD, SLOT(actValueInput1(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cEMD, &cEfficiency1MeasDelegate::actValueInput1);
         }
 
         for (int i = 0; i < getConfData()->m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
@@ -154,7 +154,7 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
             vmci = new cVeinModuleComponentInput(getConfData()->m_PowerOutputConfiguration.m_nModuleId, getConfData()->m_PowerOutputConfiguration.powerInputList.at(i));
             cEMD->addOutputPowerValue(vmci);
             vmciList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cEMD, SLOT(actValueInput2(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cEMD, &cEfficiency1MeasDelegate::actValueInput2);
         }
 
         m_pEventSystem->setInputList(vmciList);

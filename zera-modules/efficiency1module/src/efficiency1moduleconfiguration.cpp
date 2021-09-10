@@ -12,8 +12,8 @@ namespace EFFICIENCY1MODULE
 cEfficiency1ModuleConfiguration::cEfficiency1ModuleConfiguration()
 {
     m_pEfficiency1ModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cEfficiency1ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cEfficiency1ModuleConfiguration::completeConfiguration);
 }
 
 
