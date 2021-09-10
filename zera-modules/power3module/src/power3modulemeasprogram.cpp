@@ -57,13 +57,11 @@ cPower3ModuleMeasProgram::~cPower3ModuleMeasProgram()
 
 void cPower3ModuleMeasProgram::start()
 {
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cPower3ModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
 cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
