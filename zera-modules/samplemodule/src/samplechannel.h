@@ -105,13 +105,8 @@ private slots:
     void readResourceInfo();
     void claimResource();
     void pcbConnection();
-    void readDspChannel();
     void readChnAlias();
-    void readSampleRate();
-    void readUnit();
     void readRangelist();
-    void readRangeProperties1();
-    void readRangeProperties3();
     void activationDone();
 
     void deactivationInit();
