@@ -91,13 +91,11 @@ cSampleModuleMeasProgram::~cSampleModuleMeasProgram()
 
 void cSampleModuleMeasProgram::start()
 {
-    //connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cSampleModuleMeasProgram::stop()
 {
-    //disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
