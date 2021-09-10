@@ -25,19 +25,19 @@ namespace SAMPLEMODULE
 cPllObsermatic::cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& confData)
     :m_pModule(module), m_pProxy(proxy), m_ConfPar(confData)
 {
-    m_getPllMeasChannelsState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_getPllMeasChannelsState.addTransition(this, &cPllObsermatic::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_getPllMeasChannelsState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_getPllMeasChannelsState);
-    connect(&m_getPllMeasChannelsState, SIGNAL(entered()), SLOT(getPllMeasChannels()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_getPllMeasChannelsState, &QState::entered, this, &cPllObsermatic::getPllMeasChannels);
+    connect(&m_activationDoneState, &QState::entered, this, &cPllObsermatic::activationDone);
 
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cPllObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cPllObsermatic::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cPllObsermatic::deactivationDone);
 }
 
 
@@ -164,8 +164,8 @@ void cPllObsermatic::activationDone()
 {
     m_pParPllAutomaticOnOff->setValue(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive);
 
-    connect(m_pParPllAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllAuto(QVariant)));
-    connect(m_pPllChannel, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPllChannel(QVariant)));
+    connect(m_pParPllAutomaticOnOff, &cVeinModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllAuto);
+    connect(m_pPllChannel, &cVeinModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllChannel);
 
     setPllChannelValidator();
     newPllChannel(QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar)); // we set our default channel here

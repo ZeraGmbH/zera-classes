@@ -26,33 +26,33 @@ cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entit
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
-    m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationNext()), &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationFinishedState);
+    m_ActivationStartState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationExecState);
+    m_ActivationExecState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationDoneState);
+    m_ActivationDoneState.addTransition(this, &cSampleModule::activationNext, &m_ActivationExecState);
+    m_ActivationDoneState.addTransition(this, &cSampleModule::activationContinue, &m_ActivationFinishedState);
     m_ActivationMachine.addState(&m_ActivationStartState);
     m_ActivationMachine.addState(&m_ActivationExecState);
     m_ActivationMachine.addState(&m_ActivationDoneState);
     m_ActivationMachine.addState(&m_ActivationFinishedState);
     m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, SIGNAL(entered()), SLOT(activationStart()));
-    connect(&m_ActivationExecState, SIGNAL(entered()), SLOT(activationExec()));
-    connect(&m_ActivationDoneState, SIGNAL(entered()), SLOT(activationDone()));
-    connect(&m_ActivationFinishedState, SIGNAL(entered()), SLOT(activationFinished()));
+    connect(&m_ActivationStartState, &QState::entered, this, &cSampleModule::activationStart);
+    connect(&m_ActivationExecState, &QState::entered, this, &cSampleModule::activationExec);
+    connect(&m_ActivationDoneState, &QState::entered, this, &cSampleModule::activationDone);
+    connect(&m_ActivationFinishedState, &QState::entered, this, &cSampleModule::activationFinished);
 
-    m_DeactivationStartState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationNext()), &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationFinishedState);
+    m_DeactivationStartState.addTransition(this, &cSampleModule::deactivationContinue, &m_DeactivationExecState);
+    m_DeactivationExecState.addTransition(this, &cSampleModule::deactivationContinue, &m_DeactivationDoneState);
+    m_DeactivationDoneState.addTransition(this, &cSampleModule::deactivationNext, &m_DeactivationExecState);
+    m_DeactivationDoneState.addTransition(this, &cSampleModule::deactivationContinue, &m_DeactivationFinishedState);
     m_DeactivationMachine.addState(&m_DeactivationStartState);
     m_DeactivationMachine.addState(&m_DeactivationExecState);
     m_DeactivationMachine.addState(&m_DeactivationDoneState);
     m_DeactivationMachine.addState(&m_DeactivationFinishedState);
     m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, SIGNAL(entered()), SLOT(deactivationStart()));
-    connect(&m_DeactivationExecState, SIGNAL(entered()), SLOT(deactivationExec()));
-    connect(&m_DeactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
-    connect(&m_DeactivationFinishedState, SIGNAL(entered()), SLOT(deactivationFinished()));
+    connect(&m_DeactivationStartState, &QState::entered, this, &cSampleModule::deactivationStart);
+    connect(&m_DeactivationExecState, &QState::entered, this, &cSampleModule::deactivationExec);
+    connect(&m_DeactivationDoneState, &QState::entered, this, &cSampleModule::deactivationDone);
+    connect(&m_DeactivationFinishedState, &QState::entered, this, &cSampleModule::deactivationFinished);
 
 }
 
@@ -99,9 +99,9 @@ void cSampleModule::setupModule()
                                                         pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i), i+1);
         m_pllMeasChannelList.append(pllchn);
         m_ModuleActivistList.append(pllchn);
-        connect(pllchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
-        connect(pllchn, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-        connect(pllchn, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+        connect(pllchn, &cPllMeasChannel::activated, this, &cSampleModule::activationContinue);
+        connect(pllchn, &cPllMeasChannel::deactivated, this, &cSampleModule::deactivationContinue);
+        connect(pllchn, &cPllMeasChannel::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
     }
 
     // next we instantiate an object of sample channel so we can switch sample frequency ranges
@@ -109,29 +109,29 @@ void cSampleModule::setupModule()
 
     m_sampleChannelList.append(schn); // we hold a list although we only have 1
     m_ModuleActivistList.append(schn);
-    connect(schn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
-    connect(schn, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(schn, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    connect(schn, &cSampleChannel::activated, this, &cSampleModule::activationContinue);
+    connect(schn, &cSampleChannel::deactivated, this, &cSampleModule::deactivationContinue);
+    connect(schn, &cSampleChannel::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
 
     // we need some program that does the pll handling (observation, automatic, setting)
     m_pPllObsermatic = new cPllObsermatic(this, m_pProxy, *pConfData);
     m_ModuleActivistList.append(m_pPllObsermatic);
-    connect(m_pPllObsermatic, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pPllObsermatic, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pPllObsermatic, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    connect(m_pPllObsermatic, &cPllObsermatic::activated, this, &cSampleModule::activationContinue);
+    connect(m_pPllObsermatic, &cPllObsermatic::deactivated, this, &cSampleModule::deactivationContinue);
+    connect(m_pPllObsermatic, &cPllObsermatic::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
 
     // at last we need some program that does the measuring on dsp
     m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pProxy, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
-    connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    connect(m_pMeasProgram, &cSampleModuleMeasProgram::activated, this, &cSampleModule::activationContinue);
+    connect(m_pMeasProgram, &cSampleModuleMeasProgram::deactivated, this, &cSampleModule::deactivationContinue);
+    connect(m_pMeasProgram, &cSampleModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
     //
     m_pSampleModuleObservation = new cSampleModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pSampleModuleObservation);
-    connect(m_pSampleModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pSampleModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pSampleModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    connect(m_pSampleModuleObservation, &cSampleModuleObservation::activated, this, &cSampleModule::activationContinue);
+    connect(m_pSampleModuleObservation, &cSampleModuleObservation::deactivated, this, &cSampleModule::deactivationContinue);
+    connect(m_pSampleModuleObservation, &cSampleModuleObservation::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -177,17 +177,17 @@ void cSampleModule::activationDone()
 void cSampleModule::activationFinished()
 {
     // we connect the measurement output to our pll obsermatic module
-    connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pPllObsermatic, SLOT(ActionHandler(QVector<float>*)));
+    connect(m_pMeasProgram, &cSampleModuleMeasProgram::actualValues, m_pPllObsermatic, &cPllObsermatic::ActionHandler);
 
     // if we get informed we have to reconfigure
-    connect(m_pSampleModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(sampleModuleReconfigure()));
+    connect(m_pSampleModuleObservation, &cSampleModuleObservation::moduleReconfigure, this, &cSampleModule::sampleModuleReconfigure);
 
     // we have to connect all cmddone from our pll meas channel to pll obsermatic
     // this is also used for synchronizing purpose
     for (int i = 0; i < m_pllMeasChannelList.count(); i ++)
     {
         cPllMeasChannel* pllchn = m_pllMeasChannelList.at(i);
-        connect(pllchn, SIGNAL(cmdDone(quint32)), m_pPllObsermatic, SLOT(catchChannelReply(quint32)));
+        connect(pllchn, &cPllMeasChannel::cmdDone, m_pPllObsermatic, &cPllObsermatic::catchChannelReply);
     }
 
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
@@ -202,10 +202,10 @@ void cSampleModule::activationFinished()
 void cSampleModule::deactivationStart()
 {
     // we first disconnect all what we connected when activation took place
-    disconnect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pPllObsermatic, SLOT(ActionHandler(QVector<float>*)));
+    disconnect(m_pMeasProgram, &cSampleModuleMeasProgram::actualValues, m_pPllObsermatic, &cPllObsermatic::ActionHandler);
 
     // if we get informed we have to reconfigure
-    disconnect(m_pSampleModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(sampleModuleReconfigure()));
+    disconnect(m_pSampleModuleObservation, &cSampleModuleObservation::moduleReconfigure, this, &cSampleModule::sampleModuleReconfigure);
 
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();

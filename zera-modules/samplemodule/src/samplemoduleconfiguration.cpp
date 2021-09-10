@@ -12,8 +12,8 @@ namespace SAMPLEMODULE
 cSampleModuleConfiguration::cSampleModuleConfiguration()
 {
     m_pSampleModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSampleModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSampleModuleConfiguration::completeConfiguration);
 }
 
 

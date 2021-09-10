@@ -26,14 +26,14 @@ cSampleChannel::cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy,
 
     // setting up statemachine for "activating" sample channel
     // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceState);
-    m_claimResourceState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionState);
+    m_IdentifyState.addTransition(this, &cSampleChannel::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cSampleChannel::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cSampleChannel::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cSampleChannel::activationContinue, &m_claimResourceState);
+    m_claimResourceState.addTransition(this, &cSampleChannel::activationContinue, &m_pcbConnectionState);
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
-    m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readChnAliasState.addTransition(this, &cSampleChannel::activationContinue, &m_readRangelistState);
+    m_readRangelistState.addTransition(this, &cSampleChannel::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -48,24 +48,24 @@ cSampleChannel::cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy,
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_rmConnectState);
 
-    connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
-    connect(&m_claimResourceState, SIGNAL(entered()), SLOT(claimResource()));
-    connect(&m_pcbConnectionState, SIGNAL(entered()), SLOT(pcbConnection()));
-    connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
-    connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_rmConnectState, &QState::entered, this, &cSampleChannel::rmConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cSampleChannel::sendRMIdent);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cSampleChannel::readResourceTypes);
+    connect(&m_readResourceState, &QState::entered, this, &cSampleChannel::readResource);
+    connect(&m_readResourceInfoState, &QState::entered, this, &cSampleChannel::readResourceInfo);
+    connect(&m_claimResourceState, &QState::entered, this, &cSampleChannel::claimResource);
+    connect(&m_pcbConnectionState, &QState::entered, this, &cSampleChannel::pcbConnection);
+    connect(&m_readChnAliasState, &QState::entered, this, &cSampleChannel::readChnAlias);
+    connect(&m_readRangelistState, &QState::entered, this, &cSampleChannel::readRangelist);
+    connect(&m_activationDoneState, &QState::entered, this, &cSampleChannel::activationDone);
 
     // setting up statemachine for "deactivating" meas channel
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cSampleChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cSampleChannel::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cSampleChannel::deactivationDone);
 }
 
 
@@ -284,12 +284,12 @@ void cSampleChannel::rmConnect()
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
-    m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
     // todo insert timer for timeout
 
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -337,10 +337,10 @@ void cSampleChannel::claimResource()
 void cSampleChannel::pcbConnection()
 {
     m_pPCBClient = m_pProxy->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readChnAliasState);
+    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_readChnAliasState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pPCBClient);
 }
 
@@ -362,7 +362,7 @@ void cSampleChannel::activationDone()
     setChannelNameMetaInfo(); // we set our real name now
     setRangeValidator(); // and the list of possible ranges
 
-    connect(m_pChannelRange, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newPLLRange(QVariant)));
+    connect(m_pChannelRange, &cVeinModuleParameter::sigValueChanged, this, &cSampleChannel::newPLLRange);
     emit activated();
 }
 
