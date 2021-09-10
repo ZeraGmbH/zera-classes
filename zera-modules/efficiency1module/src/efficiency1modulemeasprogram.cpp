@@ -59,13 +59,11 @@ cEfficiency1ModuleMeasProgram::~cEfficiency1ModuleMeasProgram()
 
 void cEfficiency1ModuleMeasProgram::start()
 {
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cEfficiency1ModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
 }
 
 cEfficiency1ModuleConfigData *cEfficiency1ModuleMeasProgram::getConfData()
