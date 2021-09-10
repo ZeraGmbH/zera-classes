@@ -48,22 +48,22 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
 
     m_pTcpServer = new QTcpServer();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
-    connect(m_pTcpServer, SIGNAL(newConnection()), this, SLOT(addSCPIClient()));
-    connect(m_pTcpServer, SIGNAL(acceptError(QAbstractSocket::SocketError)), this, SLOT(TCPError(QAbstractSocket::SocketError)));
+    connect(m_pTcpServer, &QTcpServer::newConnection, this, &cSCPIServer::addSCPIClient);
+    connect(m_pTcpServer, &QTcpServer::acceptError, this, &cSCPIServer::TCPError);
 
-    m_setupTCPServerState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setupTCPServerState.addTransition(this, &cSCPIServer::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_setupTCPServerState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_setupTCPServerState);
-    connect(&m_setupTCPServerState, SIGNAL(entered()), SLOT(setupTCPServer()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_setupTCPServerState, &QState::entered, this, &cSCPIServer::setupTCPServer);
+    connect(&m_activationDoneState, &QState::entered, this, &cSCPIServer::activationDone);
 
-    m_shutdownTCPServerState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_shutdownTCPServerState.addTransition(this, &cSCPIServer::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_shutdownTCPServerState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_shutdownTCPServerState);
-    connect(&m_shutdownTCPServerState, SIGNAL(entered()), SLOT(shutdownTCPServer()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_shutdownTCPServerState, &QState::entered, this, &cSCPIServer::shutdownTCPServer);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cSCPIServer::deactivationDone);
 
 }
 
@@ -99,7 +99,7 @@ void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
     cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
-    connect(client, SIGNAL(destroyed(QObject*)), this, SLOT(deleteSCPIClient(QObject*)));
+    connect(client,& cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
     m_SCPIClientList.append(client);
     if (m_SCPIClientList.count() == 1)
         client->setAuthorisation(true);
@@ -152,7 +152,7 @@ void cSCPIServer::setupTCPServer()
 
     if (m_ConfigData.m_SerialDevice.m_nOn == 1)
     {
-        connect(&m_SerialTestTimer, SIGNAL(timeout()), this, SLOT(testSerial()));
+        connect(&m_SerialTestTimer, &QTimer::timeout, this, &cSCPIServer::testSerial);
         m_SerialTestTimer.start(2000);
     }
 

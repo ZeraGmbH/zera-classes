@@ -15,7 +15,7 @@ cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, c
     :m_pSerial(serial), cSCPIClient(module, configdata, iface)
 {
     // so now we can start our connection
-    connect(m_pSerial, SIGNAL(readyRead()), this, SLOT(cmdInput()));
+    connect(m_pSerial, &QSerialPort::readyRead, this, &cSCPISerialClient::cmdInput);
 }
 
 

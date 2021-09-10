@@ -17,7 +17,7 @@ public:
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
 
 signals:
-    void executeSCPI(cSCPIClient* client, int cmdCode, const QString &sInput);
+    void signalExecuteSCPI(cSCPIClient* client, int cmdCode, const QString &sInput);
 
 private:
     quint16 m_nCmdCode;

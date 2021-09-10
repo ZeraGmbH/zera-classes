@@ -20,7 +20,7 @@ public:
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
 
 signals:
-    void executeSCPI(cSCPIClient* client, int cmdCode, int statIndex, const QString &sInput);
+    void signalExecuteSCPI(cSCPIClient* client, int cmdCode, int statIndex, const QString &sInput);
 
 private:
     quint8 m_nCmdCode;

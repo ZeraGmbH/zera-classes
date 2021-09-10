@@ -15,7 +15,7 @@ cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(QString cmdParent, QString cmd, q
 
 bool cSCPIInterfaceDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
-    emit executeSCPI(client, m_nCmdCode, sInput);
+    emit signalExecuteSCPI(client, m_nCmdCode, sInput);
     return true;
 }
 

@@ -61,7 +61,7 @@ bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
     }
     else
     {
-        QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), client, SLOT(receiveStatus(quint8)));
+        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
         emit signalStatus(SCPI::nak);
         disconnect(myConn);
     }
@@ -98,19 +98,19 @@ bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
             switch (m_nMeasCode)
             {
             case SCPIModelType::measure:
-                connect(measure, SIGNAL(sigMeasDone(QString)), this, SLOT(receiveAnswer(QString)));
+                connect(measure, &cSCPIMeasure::sigMeasDone, this, &cSCPIMeasureDelegate::receiveAnswer);
                 break;
             case SCPIModelType::configure:
-                connect(measure, SIGNAL(sigConfDone()), this, SLOT(receiveDone()));
+                connect(measure, &cSCPIMeasure::sigConfDone, this, &cSCPIMeasureDelegate::receiveDone);
                 break;
             case SCPIModelType::read:
-                connect(measure, SIGNAL(sigReadDone(QString)), this, SLOT(receiveAnswer(QString)));
+                connect(measure, &cSCPIMeasure::sigReadDone, this, &cSCPIMeasureDelegate::receiveAnswer);
                 break;
             case SCPIModelType::init:
-                connect(measure, SIGNAL(sigInitDone()), this, SLOT(receiveDone()));
+                connect(measure, &cSCPIMeasure::sigInitDone, this, &cSCPIMeasureDelegate::receiveDone);
                 break;
             case SCPIModelType::fetch:
-                connect(measure, SIGNAL(sigFetchDone(QString)), this, SLOT(receiveAnswer(QString)));
+                connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::receiveAnswer);
                 break;
             }
 
@@ -119,7 +119,7 @@ bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
     }
     else
     {
-        QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), client, SLOT(receiveStatus(quint8)));
+        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
         emit signalStatus(SCPI::nak);
         disconnect(myConn);
     }
@@ -141,7 +141,7 @@ void cSCPIMeasureDelegate::receiveDone()
     m_nPending--;
     if (m_nPending == 0)
     {
-        QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), m_pClient, SLOT(receiveStatus(quint8)));
+        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, m_pClient, &cSCPIClient::receiveStatus);
         emit signalStatus(SCPI::ack);
         disconnect(myConn);
     }
@@ -156,7 +156,7 @@ void cSCPIMeasureDelegate::receiveAnswer(QString s)
     m_nPending--;
     if (m_nPending == 0)
     {
-        QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), m_pClient, SLOT(receiveAnswer(QString)));
+        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalAnswer, m_pClient, &cSCPIClient::receiveAnswer);
         emit signalAnswer(m_sAnswer);
         disconnect(myConn);
     }
