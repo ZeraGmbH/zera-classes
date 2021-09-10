@@ -48,14 +48,17 @@ add_library(zerabasemodule SHARED
 
 
 target_link_libraries(zerabasemodule 
-    PRIVATE
+    PUBLIC
     Qt5::Gui
     Qt5::Network
+    MeasurementModuleInterface
     zeravalidator
     zeraxmlconfig
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 
