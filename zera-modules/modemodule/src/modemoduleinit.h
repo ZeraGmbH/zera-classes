@@ -135,8 +135,6 @@ private slots:
 
     void freeResource();
     void deactivationDone();
-
-    void catchChannelReply(quint32 msgnr);
 };
 
 }
