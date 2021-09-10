@@ -107,8 +107,6 @@ private:
     QFinalState m_deactivateDoneState;
 
 private slots:
-    void setInterfaceActualValues(QVector<float> *actualValues);
-
     void searchActualValues();
     void activateDone();
 
