@@ -107,8 +107,6 @@ private slots:
 
     void newPllChannel(QVariant channel);
     void newPllAuto(QVariant pllauto);
-
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
 };
 
 }
