@@ -27,26 +27,26 @@ namespace LAMBDAMODULE
 cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module)
 {
-    m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_searchActualValuesState.addTransition(this, &cLambdaModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_searchActualValuesState);
     m_activationMachine.addState(&m_activationDoneState);
 
     m_activationMachine.setInitialState(&m_searchActualValuesState);
 
-    connect(&m_searchActualValuesState, SIGNAL(entered()), SLOT(searchActualValues()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activateDone()));
+    connect(&m_searchActualValuesState, &QState::entered, this, &cLambdaModuleMeasProgram::searchActualValues);
+    connect(&m_activationDoneState, &QState::entered, this, &cLambdaModuleMeasProgram::activateDone);
 
     // setting up statemachine deactivation
-    m_deactivateState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivateDoneState);
+    m_deactivateState.addTransition(this, &cLambdaModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
 
     m_deactivationMachine.addState(&m_deactivateState);
     m_deactivationMachine.addState(&m_deactivateDoneState);
 
     m_deactivationMachine.setInitialState(&m_deactivateState);
 
-    connect(&m_deactivateState, SIGNAL(entered()), SLOT(deactivateMeas()));
-    connect(&m_deactivateDoneState, SIGNAL(entered()), SLOT(deactivateMeasDone()));
+    connect(&m_deactivateState, &QState::entered, this, &cLambdaModuleMeasProgram::deactivateMeas);
+    connect(&m_deactivateDoneState, &QState::entered, this, &cLambdaModuleMeasProgram::deactivateMeasDone);
 }
 
 
@@ -127,7 +127,7 @@ void cLambdaModuleMeasProgram::searchActualValues()
             if (i == (getConfData()->m_nLambdaSystemCount-1))
             {
                 cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i), true);
-                connect(cLMD, SIGNAL(measuring(int)), this, SLOT(setMeasureSignal(int)));
+                connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
             }
             else
                 cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i));
@@ -136,11 +136,11 @@ void cLambdaModuleMeasProgram::searchActualValues()
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cLMD, SLOT(actValueInput1(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
 
             vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
             inputList.append(vmci);
-            connect(vmci, SIGNAL(sigValueChanged(QVariant)), cLMD, SLOT(actValueInput2(QVariant)));
+            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
         }
         else
             error = true;

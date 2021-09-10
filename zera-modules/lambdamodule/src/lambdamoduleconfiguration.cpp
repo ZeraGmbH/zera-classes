@@ -12,8 +12,8 @@ namespace LAMBDAMODULE
 cLambdaModuleConfiguration::cLambdaModuleConfiguration()
 {
     m_pLambdaModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cLambdaModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cLambdaModuleConfiguration::completeConfiguration);
 }
 
 
