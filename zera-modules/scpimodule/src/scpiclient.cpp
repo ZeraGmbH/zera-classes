@@ -47,20 +47,20 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     m_pIEEE4882 = new cIEEE4882(m_pModule, this, m_ConfigData.m_sDeviceIdentification, 50);
 
     // we connect the cascaded scpi operation status systems
-    connect(scpiOperMeasStatus, SIGNAL(event(quint8, quint8)), scpiOperStatus, SLOT(SetConditionBit(quint8, quint8)));
+    connect(scpiOperMeasStatus, &cSCPIStatus::event, scpiOperStatus, &cSCPIStatus::SetConditionBit);
     // and we connect operationstatus and questionable status with ieee488 status byte
-    connect(scpiOperStatus, SIGNAL(event(quint8, quint8)), m_pIEEE4882, SLOT(setStatusByte(quint8, quint8)));
-    connect(scpiQuestStatus, SIGNAL(event(quint8, quint8)), m_pIEEE4882, SLOT(setStatusByte(quint8, quint8)));
+    connect(scpiOperStatus, &cSCPIStatus::event, m_pIEEE4882, &cIEEE4882::setStatusByte);
+    connect(scpiQuestStatus, &cSCPIStatus::event, m_pIEEE4882, &cIEEE4882::setStatusByte);
 
     // and we need this connections for setting status conditions as result of common commands
-    connect(m_pIEEE4882, SIGNAL(setQuestionableCondition(quint16)), scpiQuestStatus, SLOT(setCondition(quint16)));
-    connect(m_pIEEE4882, SIGNAL(setOperationCondition(quint16)), scpiOperStatus, SLOT(setCondition(quint16)));
-    connect(m_pIEEE4882, SIGNAL(setOperationMeasureCondition(quint16)), scpiOperMeasStatus, SLOT(setCondition(quint16)));
+    connect(m_pIEEE4882, &cIEEE4882::setQuestionableCondition, scpiQuestStatus, &cSCPIStatus::setCondition);
+    connect(m_pIEEE4882, &cIEEE4882::setOperationCondition, scpiOperStatus, &cSCPIStatus::setCondition);
+    connect(m_pIEEE4882, &cIEEE4882::setOperationMeasureCondition, scpiOperMeasStatus, &cSCPIStatus::setCondition);
 
     // and we must connect event error signals of scpi status systems to common status
-    connect(scpiQuestStatus, SIGNAL(eventError(int)), m_pIEEE4882, SLOT(AddEventError(int)));
-    connect(scpiOperStatus, SIGNAL(eventError(int)), m_pIEEE4882, SLOT(AddEventError(int)));
-    connect(scpiOperMeasStatus, SIGNAL(eventError(int)), m_pIEEE4882, SLOT(AddEventError(int)));
+    connect(scpiQuestStatus, &cSCPIStatus::eventError, m_pIEEE4882, &cIEEE4882::AddEventError);
+    connect(scpiOperStatus, &cSCPIStatus::eventError, m_pIEEE4882, &cIEEE4882::AddEventError);
+    connect(scpiOperMeasStatus, &cSCPIStatus::eventError, m_pIEEE4882, &cIEEE4882::AddEventError);
 
     setSignalConnections(scpiQuestStatus, m_ConfigData.m_QuestionableStatDescriptorList);
     setSignalConnections(scpiOperStatus, m_ConfigData.m_OperationStatDescriptorList);

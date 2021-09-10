@@ -30,7 +30,7 @@ bool cInterfaceInterface::setupInterface()
     delegate = new cSCPIInterfaceDelegate(QString("DEVICE"), QString("IFACE"), SCPI::isQuery, deviceinterfacecmd);
     m_scpiInterfaceDelegateList.append(delegate);
     m_pSCPIInterface->addSCPICommand(delegate);
-    connect(delegate, SIGNAL(executeSCPI(cSCPIClient*, int, const QString&)), this, SLOT(executeCmd(cSCPIClient*, int, const QString&)));
+    connect(delegate, &cSCPIInterfaceDelegate::signalExecuteSCPI, this, &cInterfaceInterface::executeCmd);
 
     // for module integrity we also have to add this command to the scpi command list (exported at INF_ModuleInterface
     cSCPIInfo *scpiInfo;
@@ -44,7 +44,7 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
 {
     cSCPICommand cmd = sInput;
 
-    QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
+    QMetaObject::Connection myConn = connect(this, &cInterfaceInterface::signalAnswer, client, &cSCPIClient::receiveAnswer);
 
     switch (cmdCode)
     {

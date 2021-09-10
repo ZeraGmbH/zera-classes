@@ -47,7 +47,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
     QString sError;
     bool ok;
 
-    QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
+    QMetaObject::Connection myConn = connect(this, &cIEEE4882::signalAnswer, client, &cSCPIClient::receiveAnswer);
 
     switch (cmdCode)
     {
@@ -327,7 +327,7 @@ void cIEEE4882::SetSTB(quint8 b)
         m_nSTB |= (1 << STBrqs); // we set the request service bit in stb
         if (((m_nSTB & m_nSRE) & (1 << STBrqs)) != 0)
         {
-            QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), m_pClient, SLOT(receiveAnswer(QString)));
+            QMetaObject::Connection myConn = connect(this, &cIEEE4882::signalAnswer, m_pClient, &cSCPIClient::receiveAnswer);
             emit signalAnswer("SRQ");
             disconnect(myConn);
             //m_pClient->receiveAnswer("SRQ");

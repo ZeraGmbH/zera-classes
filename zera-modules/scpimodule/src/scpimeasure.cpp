@@ -267,60 +267,60 @@ void cSCPIMeasure::initialize()
 {
     m_bInitPending = false;
 
-    m_measureState.addTransition(this, SIGNAL(measContinue()), &m_measureConfigureState);
-    m_measureConfigureState.addTransition(this, SIGNAL(measContinue()), &m_measureInitState);
-    m_measureInitState.addTransition(this, SIGNAL(measContinue()), &m_measureFetchState);
-    m_measureFetchState.addTransition(this, SIGNAL(measContinue()), &m_measureDoneState);
+    m_measureState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureConfigureState);
+    m_measureConfigureState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureInitState);
+    m_measureInitState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureFetchState);
+    m_measureFetchState.addTransition(this, &cSCPIMeasure::measContinue, &m_measureDoneState);
     m_MeasureStateMachine.addState(&m_measureState);
     m_MeasureStateMachine.addState(&m_measureConfigureState);
     m_MeasureStateMachine.addState(&m_measureInitState);
     m_MeasureStateMachine.addState(&m_measureFetchState);
     m_MeasureStateMachine.addState(&m_measureDoneState);
-    connect(&m_measureState, SIGNAL(entered()), SLOT(measure()));
-    connect(&m_measureConfigureState, SIGNAL(entered()), SLOT(measureConfigure()));
-    connect(&m_measureInitState, SIGNAL(entered()), SLOT(measureInit()));
-    connect(&m_measureFetchState, SIGNAL(entered()), SLOT(measureFetch()));
-    connect(&m_measureDoneState, SIGNAL(entered()), SLOT(measureDone()));
+    connect(&m_measureState, &QState::entered, this, &cSCPIMeasure::measure);
+    connect(&m_measureConfigureState, &QState::entered, this, &cSCPIMeasure::measureConfigure);
+    connect(&m_measureInitState, &QState::entered, this, &cSCPIMeasure::measureInit);
+    connect(&m_measureFetchState, &QState::entered, this, &cSCPIMeasure::measureFetch);
+    connect(&m_measureDoneState, &QState::entered, this, &cSCPIMeasure::measureDone);
     m_MeasureStateMachine.setInitialState(&m_measureState);
 
-    m_confConfigureState.addTransition(this, SIGNAL(confContinue()), &m_confConfigureDoneState);
+    m_confConfigureState.addTransition(this, &cSCPIMeasure::confContinue, &m_confConfigureDoneState);
     m_ConfigureStateMachine.addState(&m_confConfigureState);
     m_ConfigureStateMachine.addState(&m_confConfigureDoneState);
-    connect(&m_confConfigureState, SIGNAL(entered()), SLOT(configure()));
-    connect(&m_confConfigureDoneState, SIGNAL(entered()), SLOT(configureDone()));
+    connect(&m_confConfigureState, &QState::entered, this, &cSCPIMeasure::configure);
+    connect(&m_confConfigureDoneState, &QState::entered, this, &cSCPIMeasure::configureDone);
     m_ConfigureStateMachine.setInitialState(&m_confConfigureState);
 
-    m_readState.addTransition(this, SIGNAL(readContinue()), &m_readInitState);
-    m_readInitState.addTransition(this, SIGNAL(readContinue()), &m_readFetchState);
-    m_readFetchState.addTransition(this, SIGNAL(readContinue()), &m_readDoneState);
+    m_readState.addTransition(this, &cSCPIMeasure::readContinue, &m_readInitState);
+    m_readInitState.addTransition(this, &cSCPIMeasure::readContinue, &m_readFetchState);
+    m_readFetchState.addTransition(this, &cSCPIMeasure::readContinue, &m_readDoneState);
     m_ReadStateMachine.addState(&m_readState);
     m_ReadStateMachine.addState(&m_readInitState);
     m_ReadStateMachine.addState(&m_readFetchState);
     m_ReadStateMachine.addState(&m_readDoneState);
-    connect(&m_readState, SIGNAL(entered()), SLOT(read()));
-    connect(&m_readInitState, SIGNAL(entered()), SLOT(readInit()));
-    connect(&m_readFetchState, SIGNAL(entered()), SLOT(readFetch()));
-    connect(&m_readDoneState, SIGNAL(entered()), SLOT(readDone()));
+    connect(&m_readState, &QState::entered, this, &cSCPIMeasure::read);
+    connect(&m_readInitState, &QState::entered, this, &cSCPIMeasure::readInit);
+    connect(&m_readFetchState, &QState::entered, this, &cSCPIMeasure::readFetch);
+    connect(&m_readDoneState, &QState::entered, this, &cSCPIMeasure::readDone);
     m_ReadStateMachine.setInitialState(&m_readState);
 
-    m_initInitState.addTransition(this, SIGNAL(initContinue()), &m_initDoneState);
+    m_initInitState.addTransition(this, &cSCPIMeasure::initContinue, &m_initDoneState);
     m_InitStateMachine.addState(&m_initInitState);
     m_InitStateMachine.addState(&m_initDoneState);
-    connect(&m_initInitState, SIGNAL(entered()), SLOT(init()));
-    connect(&m_initDoneState, SIGNAL(entered()), SLOT(initDone()));
+    connect(&m_initInitState, &QState::entered, this, &cSCPIMeasure::init);
+    connect(&m_initDoneState, &QState::entered, this, &cSCPIMeasure::initDone);
     m_InitStateMachine.setInitialState(&m_initInitState);
 
-    m_fetchState.addTransition(this, SIGNAL(fetchContinue()), &m_fetchSyncState);
-    m_fetchSyncState.addTransition(this, SIGNAL(fetchContinue()), &m_fetchFetchState);
-    m_fetchFetchState.addTransition(this, SIGNAL(fetchContinue()), &m_fetchDoneState);
+    m_fetchState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchSyncState);
+    m_fetchSyncState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchFetchState);
+    m_fetchFetchState.addTransition(this, &cSCPIMeasure::fetchContinue, &m_fetchDoneState);
     m_FetchStateMachine.addState(&m_fetchState);
     m_FetchStateMachine.addState(&m_fetchSyncState);
     m_FetchStateMachine.addState(&m_fetchFetchState);
     m_FetchStateMachine.addState(&m_fetchDoneState);
-    connect(&m_fetchState, SIGNAL(entered()), SLOT(fetch()));
-    connect(&m_fetchSyncState, SIGNAL(entered()), SLOT(fetchSync()));
-    connect(&m_fetchFetchState, SIGNAL(entered()), SLOT(fetchFetch()));
-    connect(&m_fetchDoneState, SIGNAL(entered()), SLOT(fetchDone()));
+    connect(&m_fetchState, &QState::entered, this, &cSCPIMeasure::fetch);
+    connect(&m_fetchSyncState, &QState::entered, this, &cSCPIMeasure::fetchSync);
+    connect(&m_fetchFetchState, &QState::entered, this, &cSCPIMeasure::fetchFetch);
+    connect(&m_fetchDoneState, &QState::entered, this, &cSCPIMeasure::fetchDone);
     m_FetchStateMachine.setInitialState(&m_fetchState);
 }
 

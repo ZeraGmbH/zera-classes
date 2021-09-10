@@ -57,7 +57,7 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
 
 void cSCPIStatus::executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput)
 {
-    QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
+    QMetaObject::Connection myConn = connect(this, &cSCPIStatus::signalAnswer, client, &cSCPIClient::receiveAnswer);
 
     switch (cmdCode)
     {

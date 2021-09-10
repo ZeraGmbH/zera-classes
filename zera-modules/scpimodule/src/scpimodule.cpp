@@ -68,9 +68,9 @@ void cSCPIModule::setupModule()
     // we only have this activist
     m_pSCPIServer = new cSCPIServer(this, *pConfData);
     m_ModuleActivistList.append(m_pSCPIServer);
-    connect(m_pSCPIServer, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pSCPIServer, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pSCPIServer, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    connect(m_pSCPIServer, &cSCPIServer::activated, this, &cSCPIModule::activationContinue);
+    connect(m_pSCPIServer, &cSCPIServer::deactivated, this, &cSCPIModule::deactivationContinue);
+    connect(m_pSCPIServer, &cSCPIServer::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
 
     // we already post meta information here because setting up interface looks for valid meta info
     exportMetaData();

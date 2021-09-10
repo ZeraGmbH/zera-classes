@@ -12,8 +12,8 @@ cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIMod
     :m_pSocket(socket), cSCPIClient(module, configdata, iface)
 {
     // so now we can start our connection
-    connect(m_pSocket, SIGNAL(readyRead()), this, SLOT(cmdInput()));
-    connect(m_pSocket, SIGNAL(disconnected()), this, SLOT(deleteLater()));
+    connect(m_pSocket, &QTcpSocket::readyRead, this, &cSCPIEthClient::cmdInput);
+    connect(m_pSocket, &QTcpSocket::disconnected, this, &cSCPIEthClient::deleteLater);
 }
 
 

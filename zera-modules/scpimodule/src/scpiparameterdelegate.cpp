@@ -82,7 +82,7 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
 
-        QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString,cSCPIClientInfo*)), client, SLOT(addSCPIClientInfo(QString,cSCPIClientInfo*)));
+        QMetaObject::Connection myConn = connect(this, &cSCPIParameterDelegate::clientinfoSignal, client, &cSCPIClient::addSCPIClientInfo);
         emit clientinfoSignal(m_pSCPICmdInfo->componentName, clientinfo);
         disconnect(myConn);
 
@@ -93,7 +93,7 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
     /*
     if (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) // test if we got an allowed query
     {
-        QMetaObject::Connection myConn = connect(this, SIGNAL(signalAnswer(QString)), client, SLOT(receiveAnswer(QString)));
+        QMetaObject::Connection myConn = connect(this, &cSCPIParameterDelegate::signalAnswer, client, &cSCPIClient::receiveAnswer);
         QString answer = m_pModule->m_pStorageSystem->getStoredValue(m_pSCPICmdInfo->entityId, m_pSCPICmdInfo->componentName).toString();
         emit signalAnswer(answer);
         disconnect(myConn);
@@ -132,7 +132,7 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
                 clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
             m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
 
-            QMetaObject::Connection myConn = connect(this, SIGNAL(clientinfoSignal(QString,cSCPIClientInfo*)), client, SLOT(addSCPIClientInfo(QString,cSCPIClientInfo*)));
+            QMetaObject::Connection myConn = connect(this, &cSCPIParameterDelegate::clientinfoSignal, client, &cSCPIClient::addSCPIClientInfo);
             emit clientinfoSignal(m_pSCPICmdInfo->componentName, clientinfo);
             disconnect(myConn);
 
@@ -142,7 +142,7 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
     else
     {
-        QMetaObject::Connection myConn = connect(this, SIGNAL(signalStatus(quint8)), client, SLOT(receiveStatus(quint8)));
+        QMetaObject::Connection myConn = connect(this, &cSCPIParameterDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
         emit signalStatus(SCPI::nak);
         disconnect(myConn);
         //client->receiveStatus(SCPI::nak);

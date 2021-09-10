@@ -11,7 +11,7 @@ cSCPIStatusDelegate::cSCPIStatusDelegate(QString cmdParent, QString cmd, quint8 
 
 bool cSCPIStatusDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
-    emit executeSCPI(client, m_nCmdCode, m_nStatusIndex, sInput);
+    emit signalExecuteSCPI(client, m_nCmdCode, m_nStatusIndex, sInput);
     return true;
 }
 
