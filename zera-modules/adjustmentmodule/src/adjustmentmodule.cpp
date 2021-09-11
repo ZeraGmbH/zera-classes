@@ -29,33 +29,33 @@ cAdjustmentModule::cAdjustmentModule(quint8 modnr, Zera::Proxy::cProxy* proxy, i
     m_sModuleDescription = QString("This module supports commands for adjustment for a configured number of measuring channels");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
-    m_ActivationStartState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationExecState);
-    m_ActivationExecState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationDoneState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationNext()), &m_ActivationExecState);
-    m_ActivationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_ActivationFinishedState);
+    m_ActivationStartState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationExecState);
+    m_ActivationExecState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationDoneState);
+    m_ActivationDoneState.addTransition(this, &cAdjustmentModule::activationNext, &m_ActivationExecState);
+    m_ActivationDoneState.addTransition(this, &cAdjustmentModule::activationContinue, &m_ActivationFinishedState);
     m_ActivationMachine.addState(&m_ActivationStartState);
     m_ActivationMachine.addState(&m_ActivationExecState);
     m_ActivationMachine.addState(&m_ActivationDoneState);
     m_ActivationMachine.addState(&m_ActivationFinishedState);
     m_ActivationMachine.setInitialState(&m_ActivationStartState);
-    connect(&m_ActivationStartState, SIGNAL(entered()), SLOT(activationStart()));
-    connect(&m_ActivationExecState, SIGNAL(entered()), SLOT(activationExec()));
-    connect(&m_ActivationDoneState, SIGNAL(entered()), SLOT(activationDone()));
-    connect(&m_ActivationFinishedState, SIGNAL(entered()), SLOT(activationFinished()));
+    connect(&m_ActivationStartState, &QState::entered, this, &cAdjustmentModule::activationStart);
+    connect(&m_ActivationExecState, &QState::entered, this, &cAdjustmentModule::activationExec);
+    connect(&m_ActivationDoneState, &QState::entered, this, &cAdjustmentModule::activationDone);
+    connect(&m_ActivationFinishedState, &QState::entered, this, &cAdjustmentModule::activationFinished);
 
-    m_DeactivationStartState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationExecState);
-    m_DeactivationExecState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationDoneState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationNext()), &m_DeactivationExecState);
-    m_DeactivationDoneState.addTransition(this, SIGNAL(deactivationContinue()), &m_DeactivationFinishedState);
+    m_DeactivationStartState.addTransition(this, &cAdjustmentModule::deactivationContinue, &m_DeactivationExecState);
+    m_DeactivationExecState.addTransition(this, &cAdjustmentModule::deactivationContinue, &m_DeactivationDoneState);
+    m_DeactivationDoneState.addTransition(this, &cAdjustmentModule::deactivationNext, &m_DeactivationExecState);
+    m_DeactivationDoneState.addTransition(this, &cAdjustmentModule::deactivationContinue, &m_DeactivationFinishedState);
     m_DeactivationMachine.addState(&m_DeactivationStartState);
     m_DeactivationMachine.addState(&m_DeactivationExecState);
     m_DeactivationMachine.addState(&m_DeactivationDoneState);
     m_DeactivationMachine.addState(&m_DeactivationFinishedState);
     m_DeactivationMachine.setInitialState(&m_DeactivationStartState);
-    connect(&m_DeactivationStartState, SIGNAL(entered()), SLOT(deactivationStart()));
-    connect(&m_DeactivationExecState, SIGNAL(entered()), SLOT(deactivationExec()));
-    connect(&m_DeactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
-    connect(&m_DeactivationFinishedState, SIGNAL(entered()), SLOT(deactivationFinished()));
+    connect(&m_DeactivationStartState, &QState::entered, this, &cAdjustmentModule::deactivationStart);
+    connect(&m_DeactivationExecState, &QState::entered, this, &cAdjustmentModule::deactivationExec);
+    connect(&m_DeactivationDoneState, &QState::entered, this, &cAdjustmentModule::deactivationDone);
+    connect(&m_DeactivationFinishedState, &QState::entered, this, &cAdjustmentModule::deactivationFinished);
 
 }
 
@@ -82,9 +82,9 @@ void cAdjustmentModule::setupModule()
     // we need some program that does the job
     m_pMeasProgram = new cAdjustmentModuleMeasProgram(this, m_pProxy, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
-    connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    connect(m_pMeasProgram, &cAdjustmentModuleMeasProgram::activated, this, &cAdjustmentModule::activationContinue);
+    connect(m_pMeasProgram, &cAdjustmentModuleMeasProgram::deactivated, this, &cAdjustmentModule::deactivationContinue);
+    connect(m_pMeasProgram, &cAdjustmentModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
 
     emit addEventSystem(m_pMeasProgram->getEventSystem());
 

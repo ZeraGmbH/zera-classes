@@ -12,8 +12,8 @@ namespace ADJUSTMENTMODULE
 cAdjustmentModuleConfiguration::cAdjustmentModuleConfiguration()
 {
     m_pAdjustmentModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cAdjustmentModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cAdjustmentModuleConfiguration::completeConfiguration);
 }
 
 
