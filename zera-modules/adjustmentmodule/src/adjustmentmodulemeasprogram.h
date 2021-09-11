@@ -236,7 +236,6 @@ private slots:
     void readResourceInfoLoop();
     void pcbConnection();
     void pcbConnectionLoop();
-    void readDspChannel();
     void readChnAlias();
     void readChnAliasLoop();
     void readRangelist();
