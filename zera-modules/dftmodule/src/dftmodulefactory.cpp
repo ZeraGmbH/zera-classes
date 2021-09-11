@@ -15,7 +15,7 @@ ZeraModules::VirtualModule* DftModuleFactory::createModule(Zera::Proxy::cProxy* 
 void DftModuleFactory::destroyModule(ZeraModules::VirtualModule *module)
 {
     m_ModuleList.removeAll(module);
-    connect(module, SIGNAL(deactivationReady()), module, SIGNAL(moduleDeactivated()));
+    connect(module, &ZeraModules::VirtualModule::deactivationReady, module, &ZeraModules::VirtualModule::moduleDeactivated);
     if (!module->m_DeactivationMachine.isRunning())
         module->m_DeactivationMachine.start();
 }

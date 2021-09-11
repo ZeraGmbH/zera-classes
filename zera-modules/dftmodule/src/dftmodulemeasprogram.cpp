@@ -39,27 +39,27 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cP
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfosState);
-    m_readResourceInfosState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoDoneState);
-    m_readResourceInfoDoneState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectState);
-    m_readResourceInfoDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceInfoState);
-    m_pcbserverConnectState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelInformationState);
-    m_readChannelInformationState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelAliasState);
-    m_readChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readChannelUnitState);
-    m_readChannelUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelState);
-    m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readDspChannelDoneState);
-    m_readDspChannelDoneState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectState);
-    m_readDspChannelDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readChannelAliasState);
+    m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceInfosState);
+    m_readResourceInfosState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceInfoDoneState);
+    m_readResourceInfoDoneState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_pcbserverConnectState);
+    m_readResourceInfoDoneState.addTransition(this, &cDftModuleMeasProgram::activationLoop, &m_readResourceInfoState);
+    m_pcbserverConnectState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readSampleRateState);
+    m_readSampleRateState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readChannelInformationState);
+    m_readChannelInformationState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readChannelAliasState);
+    m_readChannelAliasState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readChannelUnitState);
+    m_readChannelUnitState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readDspChannelState);
+    m_readDspChannelState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readDspChannelDoneState);
+    m_readDspChannelDoneState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_dspserverConnectState);
+    m_readDspChannelDoneState.addTransition(this, &cDftModuleMeasProgram::activationLoop, &m_readChannelAliasState);
 
-    m_claimPGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_claimUSERMemState);
-    m_claimUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_var2DSPState);
-    m_var2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_cmd2DSPState);
-    m_cmd2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_activateDSPState);
-    m_activateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_loadDSPDoneState);
+    m_claimPGRMemState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_claimUSERMemState);
+    m_claimUSERMemState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_var2DSPState);
+    m_var2DSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_cmd2DSPState);
+    m_cmd2DSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_activateDSPState);
+    m_activateDSPState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -85,32 +85,32 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cP
 
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_readResourceInfosState, SIGNAL(entered()), SLOT(readResourceInfos()));
-    connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
-    connect(&m_readResourceInfoDoneState, SIGNAL(entered()), SLOT(readResourceInfoDone()));
-    connect(&m_pcbserverConnectState, SIGNAL(entered()), SLOT(pcbserverConnect()));
-    connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
-    connect(&m_readChannelInformationState, SIGNAL(entered()), SLOT(readChannelInformation()));
-    connect(&m_readChannelAliasState, SIGNAL(entered()), SLOT(readChannelAlias()));
-    connect(&m_readChannelUnitState, SIGNAL(entered()), SLOT(readChannelUnit()));
-    connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
-    connect(&m_readDspChannelDoneState, SIGNAL(entered()), SLOT(readDspChannelDone()));
-    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_claimPGRMemState, SIGNAL(entered()), SLOT(claimPGRMem()));
-    connect(&m_claimUSERMemState, SIGNAL(entered()), SLOT(claimUSERMem()));
-    connect(&m_var2DSPState, SIGNAL(entered()), SLOT(varList2DSP()));
-    connect(&m_cmd2DSPState, SIGNAL(entered()), SLOT(cmdList2DSP()));
-    connect(&m_activateDSPState, SIGNAL(entered()), SLOT(activateDSP()));
-    connect(&m_loadDSPDoneState, SIGNAL(entered()), SLOT(activateDSPdone()));
+    connect(&m_resourceManagerConnectState, &QState::entered, this, &cDftModuleMeasProgram::resourceManagerConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cDftModuleMeasProgram::sendRMIdent);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cDftModuleMeasProgram::readResourceTypes);
+    connect(&m_readResourceState, &QState::entered, this, &cDftModuleMeasProgram::readResource);
+    connect(&m_readResourceInfosState, &QState::entered, this, &cDftModuleMeasProgram::readResourceInfos);
+    connect(&m_readResourceInfoState, &QState::entered, this, &cDftModuleMeasProgram::readResourceInfo);
+    connect(&m_readResourceInfoDoneState, &QState::entered, this, &cDftModuleMeasProgram::readResourceInfoDone);
+    connect(&m_pcbserverConnectState, &QState::entered, this, &cDftModuleMeasProgram::pcbserverConnect);
+    connect(&m_readSampleRateState, &QState::entered, this, &cDftModuleMeasProgram::readSampleRate);
+    connect(&m_readChannelInformationState, &QState::entered, this, &cDftModuleMeasProgram::readChannelInformation);
+    connect(&m_readChannelAliasState, &QState::entered, this, &cDftModuleMeasProgram::readChannelAlias);
+    connect(&m_readChannelUnitState, &QState::entered, this, &cDftModuleMeasProgram::readChannelUnit);
+    connect(&m_readDspChannelState, &QState::entered, this, &cDftModuleMeasProgram::readDspChannel);
+    connect(&m_readDspChannelDoneState, &QState::entered, this, &cDftModuleMeasProgram::readDspChannelDone);
+    connect(&m_dspserverConnectState, &QState::entered, this, &cDftModuleMeasProgram::dspserverConnect);
+    connect(&m_claimPGRMemState, &QState::entered, this, &cDftModuleMeasProgram::claimPGRMem);
+    connect(&m_claimUSERMemState, &QState::entered, this, &cDftModuleMeasProgram::claimUSERMem);
+    connect(&m_var2DSPState, &QState::entered, this, &cDftModuleMeasProgram::varList2DSP);
+    connect(&m_cmd2DSPState, &QState::entered, this, &cDftModuleMeasProgram::cmdList2DSP);
+    connect(&m_activateDSPState, &QState::entered, this, &cDftModuleMeasProgram::activateDSP);
+    connect(&m_loadDSPDoneState, &QState::entered, this, &cDftModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
-    m_freePGRMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_unloadDSPDoneState);
+    m_deactivateDSPState.addTransition(this, &cDftModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
+    m_freePGRMemState.addTransition(this, &cDftModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
+    m_freeUSERMemState.addTransition(this, &cDftModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
     m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
@@ -118,18 +118,18 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cP
 
     m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
-    connect(&m_deactivateDSPState, SIGNAL(entered()), SLOT(deactivateDSP()));
-    connect(&m_freePGRMemState, SIGNAL(entered()), SLOT(freePGRMem()));
-    connect(&m_freeUSERMemState, SIGNAL(entered()), SLOT(freeUSERMem()));
-    connect(&m_unloadDSPDoneState, SIGNAL(entered()), SLOT(deactivateDSPdone()));
+    connect(&m_deactivateDSPState, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSP);
+    connect(&m_freePGRMemState, &QState::entered, this, &cDftModuleMeasProgram::freePGRMem);
+    connect(&m_freeUSERMemState, &QState::entered, this, &cDftModuleMeasProgram::freeUSERMem);
+    connect(&m_unloadDSPDoneState, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSPdone);
 
     // setting up statemachine for data acquisition
-    m_dataAcquisitionState.addTransition(this, SIGNAL(dataAquisitionContinue()), &m_dataAcquisitionDoneState);
+    m_dataAcquisitionState.addTransition(this, &cDftModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
-    connect(&m_dataAcquisitionState, SIGNAL(entered()), SLOT(dataAcquisitionDSP()));
-    connect(&m_dataAcquisitionDoneState, SIGNAL(entered()), SLOT(dataReadDSP()));
+    connect(&m_dataAcquisitionState, &QState::entered, this, &cDftModuleMeasProgram::dataAcquisitionDSP);
+    connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cDftModuleMeasProgram::dataReadDSP);
 }
 
 
@@ -146,18 +146,18 @@ void cDftModuleMeasProgram::start()
     if (getConfData()->m_bmovingWindow)
     {
         m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
-        connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
-        connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+        connect(this, &cDftModuleMeasProgram::actualValues, m_pMovingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(m_pMovingwindowFilter, &cMovingwindowFilter::actualValues, this, &cDftModuleMeasProgram::setInterfaceActualValues);
     }
     else
-        connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+        connect(this, &cDftModuleMeasProgram::actualValues, this, &cDftModuleMeasProgram::setInterfaceActualValues);
 }
 
 
 void cDftModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), 0, 0);
-    disconnect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), 0, 0);
+    disconnect(this, &cDftModuleMeasProgram::actualValues, 0, 0);
+    disconnect(m_pMovingwindowFilter, &cMovingwindowFilter::actualValues, 0, 0);
 }
 
 
@@ -810,11 +810,11 @@ void cDftModuleMeasProgram::resourceManagerConnect()
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // todo insert timer for timeout and/or connect error conditions.....
     // and then we set resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
 }
 
@@ -877,8 +877,8 @@ void cDftModuleMeasProgram::pcbserverConnect()
         pcbIFace->setClient(pcbClient);
         mi.pcbIFace = pcbIFace;
         m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, SIGNAL(connected()), this, SLOT(monitorConnection())); // here we wait until all connections are established
-        connect(pcbIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+        connect(pcbClient, &Zera::Proxy::cProxyClient::connected, this, &cDftModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+        connect(pcbIFace, &Zera::Server::cPCBInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
         m_pProxy->startConnection(pcbClient);
     }
 }
@@ -932,8 +932,8 @@ void cDftModuleMeasProgram::dspserverConnect()
 {
     m_pDspClient = m_pProxy->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
-    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_claimPGRMemState);
+    connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pDspClient);
 }
 
@@ -981,8 +981,8 @@ void cDftModuleMeasProgram::activateDSPdone()
     initRFieldMeasurement();
 
     m_pMeasureSignal->setValue(QVariant(1));
-    connect(m_pIntegrationTimeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
-    connect(m_pRefChannelParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRefChannel(QVariant)));
+    connect(m_pIntegrationTimeParameter, &cVeinModuleParameter::sigValueChanged, this, &cDftModuleMeasProgram::newIntegrationtime);
+    connect(m_pRefChannelParameter, &cVeinModuleParameter::sigValueChanged, this, &cDftModuleMeasProgram::newRefChannel);
 
     emit activated();
 }
