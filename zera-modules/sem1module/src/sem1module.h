@@ -79,8 +79,6 @@ private slots:
     void deactivationDone();
     void deactivationFinished();
 
-    void sem1ModuleReconfigure();
-
 };
 
 }
