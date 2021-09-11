@@ -215,13 +215,11 @@ cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
 
 void cSem1ModuleMeasProgram::start()
 {
-    //connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
 void cSem1ModuleMeasProgram::stop()
 {
-    //disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
 }
 
 
