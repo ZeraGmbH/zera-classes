@@ -40,22 +40,22 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 
     // setting up statemachine for "activating" adjustment
     // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoLoopState);
-    m_readResourceInfoLoopState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionState);
-    m_readResourceInfoLoopState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceInfoState);
-    m_pcbConnectionState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionLoopState);
-    m_pcbConnectionLoopState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
-    m_pcbConnectionLoopState.addTransition(this, SIGNAL(activationLoop()), &m_pcbConnectionState);
-    m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasLoopState);
-    m_readChnAliasLoopState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistState);
-    m_readChnAliasLoopState.addTransition(this, SIGNAL(activationLoop()), &m_readChnAliasState);
-    m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRangelistLoopState);
-    m_readRangelistLoopState.addTransition(this, SIGNAL(activationContinue()), &m_searchActualValuesState);
-    m_readRangelistLoopState.addTransition(this, SIGNAL(activationLoop()), &m_readRangelistState);
-    m_searchActualValuesState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
+    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionState);
+    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readResourceInfoState);
+    m_pcbConnectionState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionLoopState);
+    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasState);
+    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_pcbConnectionState);
+    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
+    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistState);
+    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readChnAliasState);
+    m_readRangelistState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistLoopState);
+    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_searchActualValuesState);
+    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readRangelistState);
+    m_searchActualValuesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -74,91 +74,91 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 
     m_activationMachine.setInitialState(&m_rmConnectState);
 
-    connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
-    connect(&m_readResourceInfoLoopState, SIGNAL(entered()), SLOT(readResourceInfoLoop()));
-    connect(&m_pcbConnectionState, SIGNAL(entered()), SLOT(pcbConnection()));
-    connect(&m_pcbConnectionLoopState, SIGNAL(entered()), SLOT(pcbConnectionLoop()));
-    connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
-    connect(&m_readChnAliasLoopState, SIGNAL(entered()), SLOT(readChnAliasLoop()));
-    connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
-    connect(&m_readRangelistLoopState, SIGNAL(entered()), SLOT(readRangelistLoop()));
-    connect(&m_searchActualValuesState, SIGNAL(entered()), SLOT(searchActualValues()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_rmConnectState, &QState::entered, this, &cAdjustmentModuleMeasProgram::rmConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cAdjustmentModuleMeasProgram::sendRMIdent);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceTypes);
+    connect(&m_readResourceState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResource);
+    connect(&m_readResourceInfoState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfo);
+    connect(&m_readResourceInfoLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfoLoop);
+    connect(&m_pcbConnectionState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnection);
+    connect(&m_pcbConnectionLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnectionLoop);
+    connect(&m_readChnAliasState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAlias);
+    connect(&m_readChnAliasLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAliasLoop);
+    connect(&m_readRangelistState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelist);
+    connect(&m_readRangelistLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelistLoop);
+    connect(&m_searchActualValuesState, &QState::entered, this, &cAdjustmentModuleMeasProgram::searchActualValues);
+    connect(&m_activationDoneState, &QState::entered, this, &cAdjustmentModuleMeasProgram::activationDone);
 
     // setting up statemachine deactivation
-    m_deactivateState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivateDoneState);
+    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
 
     m_deactivationMachine.addState(&m_deactivateState);
     m_deactivationMachine.addState(&m_deactivateDoneState);
 
     m_deactivationMachine.setInitialState(&m_deactivateState);
 
-    connect(&m_deactivateState, SIGNAL(entered()), SLOT(deactivateMeas()));
-    connect(&m_deactivateDoneState, SIGNAL(entered()), SLOT(deactivateMeasDone()));
+    connect(&m_deactivateState, &QState::entered, this, &cAdjustmentModuleMeasProgram::deactivateMeas);
+    connect(&m_deactivateDoneState, &QState::entered, this, &cAdjustmentModuleMeasProgram::deactivateMeasDone);
 
-    m_computationStartState.addTransition(this, SIGNAL(computationContinue()), &m_computationTestState);
-    m_computationTestState.addTransition(this, SIGNAL(computationContinue()), &m_computationStartState);
-    m_computationTestState.addTransition(this, SIGNAL(computationDone()), &m_computationFinishState);
+    m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationTestState);
+    m_computationTestState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationStartState);
+    m_computationTestState.addTransition(this, &cAdjustmentModuleMeasProgram::computationDone, &m_computationFinishState);
     m_computationMachine.addState(&m_computationStartState);
     m_computationMachine.addState(&m_computationTestState);
     m_computationMachine.addState(&m_computationFinishState);
     m_computationMachine.setInitialState(&m_computationStartState);
 
-    connect(&m_computationStartState, SIGNAL(entered()), SLOT(computationStart()));
-    connect(&m_computationTestState, SIGNAL(entered()), SLOT(computationTest()));
-    connect(&m_computationFinishState, SIGNAL(entered()), SLOT(computationFinished()));
+    connect(&m_computationStartState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationStart);
+    connect(&m_computationTestState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationTest);
+    connect(&m_computationFinishState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationFinished);
 
-    m_storageStartState.addTransition(this, SIGNAL(storageContinue()), &m_storageTestState);
-    m_storageTestState.addTransition(this, SIGNAL(storageContinue()), &m_storageStartState);
-    m_storageTestState.addTransition(this, SIGNAL(storageDone()), &m_storageFinishState);
+    m_storageStartState.addTransition(this, &cAdjustmentModuleMeasProgram::storageContinue, &m_storageTestState);
+    m_storageTestState.addTransition(this, &cAdjustmentModuleMeasProgram::storageContinue, &m_storageStartState);
+    m_storageTestState.addTransition(this, &cAdjustmentModuleMeasProgram::storageDone, &m_storageFinishState);
     m_storageMachine.addState(&m_storageStartState);
     m_storageMachine.addState(&m_storageTestState);
     m_storageMachine.addState(&m_storageFinishState);
     m_storageMachine.setInitialState(&m_storageStartState);
 
-    connect(&m_storageStartState, SIGNAL(entered()), SLOT(storageStart()));
-    connect(&m_storageTestState, SIGNAL(entered()), SLOT(storageTest()));
-    connect(&m_storageFinishState, SIGNAL(entered()), SLOT(storageFinished()));
+    connect(&m_storageStartState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageStart);
+    connect(&m_storageTestState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageTest);
+    connect(&m_storageFinishState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageFinished);
 
-    m_adjustamplitudeGetCorrState.addTransition(this, SIGNAL(adjustamplitudeContinue()), &m_adjustamplitudeSetNodeState);
-    m_adjustamplitudeGetCorrState.addTransition(this, SIGNAL(adjustError()), &m_adjustamplitudeFinishState);
-    m_adjustamplitudeSetNodeState.addTransition(this, SIGNAL(adjustamplitudeContinue()), &m_adjustamplitudeFinishState);
-    m_adjustamplitudeSetNodeState.addTransition(this, SIGNAL(adjustError()), &m_adjustamplitudeFinishState);
+    m_adjustamplitudeGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustamplitudeContinue, &m_adjustamplitudeSetNodeState);
+    m_adjustamplitudeGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustamplitudeFinishState);
+    m_adjustamplitudeSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustamplitudeContinue, &m_adjustamplitudeFinishState);
+    m_adjustamplitudeSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustamplitudeFinishState);
     m_adjustAmplitudeMachine.addState(&m_adjustamplitudeGetCorrState);
     m_adjustAmplitudeMachine.addState(&m_adjustamplitudeSetNodeState);
     m_adjustAmplitudeMachine.addState(&m_adjustamplitudeFinishState);
     m_adjustAmplitudeMachine.setInitialState(&m_adjustamplitudeGetCorrState);
 
-    connect(&m_adjustamplitudeGetCorrState, SIGNAL(entered()), SLOT(adjustamplitudeGetCorr()));
-    connect(&m_adjustamplitudeSetNodeState, SIGNAL(entered()), SLOT(adjustamplitudeSetNode()));
+    connect(&m_adjustamplitudeGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr);
+    connect(&m_adjustamplitudeSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeSetNode);
 
-    m_adjustoffsetGetCorrState.addTransition(this, SIGNAL(adjustoffsetContinue()), &m_adjustoffsetSetNodeState);
-    m_adjustoffsetGetCorrState.addTransition(this, SIGNAL(adjustError()), &m_adjustoffsetFinishState);
-    m_adjustoffsetSetNodeState.addTransition(this, SIGNAL(adjustoffsetContinue()), &m_adjustoffsetFinishState);
-    m_adjustoffsetSetNodeState.addTransition(this, SIGNAL(adjustError()), &m_adjustoffsetFinishState);
+    m_adjustoffsetGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetSetNodeState);
+    m_adjustoffsetGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
+    m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetFinishState);
+    m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
     m_adjustOffsetMachine.addState(&m_adjustoffsetGetCorrState);
     m_adjustOffsetMachine.addState(&m_adjustoffsetSetNodeState);
     m_adjustOffsetMachine.addState(&m_adjustoffsetFinishState);
     m_adjustOffsetMachine.setInitialState(&m_adjustoffsetGetCorrState);
 
-    connect(&m_adjustoffsetGetCorrState, SIGNAL(entered()), SLOT(adjustoffsetGetCorr()));
-    connect(&m_adjustoffsetSetNodeState, SIGNAL(entered()), SLOT(adjustoffsetSetNode()));
+    connect(&m_adjustoffsetGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustoffsetGetCorr);
+    connect(&m_adjustoffsetSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustoffsetSetNode);
 
-    m_adjustphaseGetCorrState.addTransition(this, SIGNAL(adjustphaseContinue()), &m_adjustphaseSetNodeState);
-    m_adjustphaseGetCorrState.addTransition(this, SIGNAL(adjustError()), &m_adjustphaseFinishState);
-    m_adjustphaseSetNodeState.addTransition(this, SIGNAL(adjustphaseContinue()), &m_adjustphaseFinishState);
-    m_adjustphaseSetNodeState.addTransition(this, SIGNAL(adjustError()), &m_adjustphaseFinishState);
+    m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustphaseContinue, &m_adjustphaseSetNodeState);
+    m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustphaseFinishState);
+    m_adjustphaseSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustphaseContinue, &m_adjustphaseFinishState);
+    m_adjustphaseSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustphaseFinishState);
     m_adjustPhaseMachine.addState(&m_adjustphaseGetCorrState);
     m_adjustPhaseMachine.addState(&m_adjustphaseSetNodeState);
     m_adjustPhaseMachine.addState(&m_adjustphaseFinishState);
     m_adjustPhaseMachine.setInitialState(&m_adjustphaseGetCorrState);
 
-    connect(&m_adjustphaseGetCorrState, SIGNAL(entered()), SLOT(adjustphaseGetCorr()));
-    connect(&m_adjustphaseSetNodeState, SIGNAL(entered()), SLOT(adjustphaseSetNode()));
+    connect(&m_adjustphaseGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustphaseGetCorr);
+    connect(&m_adjustphaseSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustphaseSetNode);
 }
 
 
@@ -328,7 +328,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pPARComputation->setSCPIInfo(scpiInfo);
     iValidator = new cIntValidator(0,1);
     m_pPARComputation->setValidator(iValidator);
-    connect(m_pPARComputation, SIGNAL(sigValueChanged(QVariant)), SLOT(computationStartCommand(QVariant)));
+    connect(m_pPARComputation, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::computationStartCommand);
 
 
     m_pPARStorage = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -342,7 +342,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pPARStorage->setSCPIInfo(scpiInfo);
     iValidator = new cIntValidator(1,2);
     m_pPARStorage->setValidator(iValidator);
-    connect(m_pPARStorage, SIGNAL(sigValueChanged(QVariant)), SLOT(storageStartCommand(QVariant)));
+    connect(m_pPARStorage, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::storageStartCommand);
 
 
     m_pPARAdjustGainStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -354,7 +354,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustGainStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "GSTATUS", "10", m_pPARAdjustGainStatus->getName(), "0", "");
     m_pPARAdjustGainStatus->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustGainStatus, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustGainStatusStartCommand(QVariant)));
+    connect(m_pPARAdjustGainStatus, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand);
 
     m_pPARAdjustPhaseStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_AdjustPhaseStatus"),
@@ -365,7 +365,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPhaseStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "PSTATUS", "10", m_pPARAdjustPhaseStatus->getName(), "0", "");
     m_pPARAdjustPhaseStatus->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustPhaseStatus, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustPhaseStatusStartCommand(QVariant)));
+    connect(m_pPARAdjustPhaseStatus, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand);
 
     m_pPARAdjustOffsetStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_AdjustOffsetStatus"),
@@ -376,7 +376,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustOffsetStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "OSTATUS", "10", m_pPARAdjustOffsetStatus->getName(), "0", "");
     m_pPARAdjustOffsetStatus->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustOffsetStatus, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustOffsetStatusStartCommand(QVariant)));
+    connect(m_pPARAdjustOffsetStatus, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand);
 
 
     m_pPARAdjustInit = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -388,7 +388,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustInit;
     scpiInfo = new cSCPIInfo("CALCULATE", "INIT", "10", m_pPARAdjustInit->getName(), "0", "");
     m_pPARAdjustInit->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustInit, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustInitStartCommand(QVariant)));
+    connect(m_pPARAdjustInit, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustInitStartCommand);
 
 
     m_pPARAdjustAmplitude = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -401,7 +401,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     scpiInfo = new cSCPIInfo("CALCULATE", "AMPLITUDE", "10", m_pPARAdjustAmplitude->getName(), "0", "");
     m_pPARAdjustAmplitude->setSCPIInfo(scpiInfo);
     // we will set the validator later after activation we will know the channel names and their ranges
-    connect(m_pPARAdjustAmplitude, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustAmplitudeStartCommand(QVariant)));
+    connect(m_pPARAdjustAmplitude, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand);
 
 
     m_pPARAdjustPhase = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -414,7 +414,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     scpiInfo = new cSCPIInfo("CALCULATE", "PHASE", "10", m_pPARAdjustPhase->getName(), "0", "");
     m_pPARAdjustPhase->setSCPIInfo(scpiInfo);
     // we will set the validator later after activation we will know the channel names and their ranges
-    connect(m_pPARAdjustPhase, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustPhaseStartCommand(QVariant)));
+    connect(m_pPARAdjustPhase, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand);
 
     m_pPARAdjustOffset = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_Adjustoffset"),
@@ -426,7 +426,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "OFFSET", "10", m_pPARAdjustOffset->getName(), "0", "");
     m_pPARAdjustOffset->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustOffset, SIGNAL(sigValueChanged(QVariant)), SLOT(setAdjustOffsetStartCommand(QVariant)));
+    connect(m_pPARAdjustOffset, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand);
 
     m_pPARAdjustSend = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_AdjustSend"),
@@ -439,7 +439,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "SEND", "2", m_pPARAdjustSend->getName(), "0", "");
     m_pPARAdjustSend->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustSend, SIGNAL(sigValueQuery(QVariant)), SLOT(transparentDataSend2Port(QVariant)));
+    connect(m_pPARAdjustSend, &cVeinModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::transparentDataSend2Port);
 
     m_pPARAdjustPCBData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_AdjustPCBData"),
@@ -451,8 +451,8 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "18", m_pPARAdjustPCBData->getName(), "0", "");
     m_pPARAdjustPCBData->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustPCBData, SIGNAL(sigValueChanged(QVariant)), SLOT(writePCBAdjustmentData(QVariant)));
-    connect(m_pPARAdjustPCBData, SIGNAL(sigValueQuery(QVariant)), SLOT(readPCBAdjustmentData(QVariant)));
+    connect(m_pPARAdjustPCBData, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writePCBAdjustmentData);
+    connect(m_pPARAdjustPCBData, &cVeinModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readPCBAdjustmentData);
 
     m_pPARAdjustClampData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_AdjustCLAMPData"),
@@ -464,8 +464,8 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "18", m_pPARAdjustClampData->getName(), "0", "");
     m_pPARAdjustClampData->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustClampData, SIGNAL(sigValueChanged(QVariant)), SLOT(writeCLAMPAdjustmentData(QVariant)));
-    connect(m_pPARAdjustClampData, SIGNAL(sigValueQuery(QVariant)), SLOT(readCLAMPAdjustmentData(QVariant)));
+    connect(m_pPARAdjustClampData, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData);
+    connect(m_pPARAdjustClampData, &cVeinModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
 }
 
 
@@ -485,12 +485,12 @@ void cAdjustmentModuleMeasProgram::rmConnect()
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
     // todo insert timer for timeout
 
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
 }
 
@@ -554,11 +554,11 @@ void cAdjustmentModuleMeasProgram::pcbConnection()
         m_portChannelHash[port] = sChannel;
         pcbclient = m_pProxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
         m_pcbClientList.append(pcbclient);
-        m_pcbConnectionState.addTransition(pcbclient, SIGNAL(connected()), &m_pcbConnectionLoopState);
+        m_pcbConnectionState.addTransition(pcbclient, &Zera::Proxy::cProxyClient::connected, &m_pcbConnectionLoopState);
         pcbInterface = new Zera::Server::cPCBInterface();
         m_pcbInterfaceList.append(pcbInterface);
         pcbInterface->setClient(pcbclient);
-        connect(pcbInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+        connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
         adjustChannelInfo->m_pPCBInterface = pcbInterface;
         m_pProxy->startConnection((pcbclient));
     }
@@ -675,7 +675,7 @@ void cAdjustmentModuleMeasProgram::activationDone()
 {
     m_bActive = true;
     setInterfaceValidation();
-    connect(&m_AuthTimer, SIGNAL(timeout()),this,SLOT(fetchAuthorizationStatus()));
+    connect(&m_AuthTimer, &QTimer::timeout, this , &cAdjustmentModuleMeasProgram::fetchAuthorizationStatus);
     m_AuthTimer.start(5000);
     emit activated();
 }
