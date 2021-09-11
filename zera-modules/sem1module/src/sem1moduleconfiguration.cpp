@@ -12,8 +12,8 @@ namespace SEM1MODULE
 cSem1ModuleConfiguration::cSem1ModuleConfiguration()
 {
     m_pSem1ModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cSem1ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSem1ModuleConfiguration::completeConfiguration);
 }
 
 
