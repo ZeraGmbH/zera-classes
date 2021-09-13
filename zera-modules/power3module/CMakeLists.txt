@@ -62,7 +62,7 @@ add_library(power3module MODULE
 target_link_libraries(power3module 
     PRIVATE
     Qt5::Core
-    Qt5::Core
+    Qt5::Gui
     Qt5::Network
     VeinMeta::VfEvent
     VeinMeta::VfHelpers

@@ -49,7 +49,7 @@ add_library(zeravalidator SHARED
 
 target_link_libraries(zeravalidator 
     PRIVATE
-    Qt5::Core
+    Qt5::Gui
     VeinMeta::VfEvent
     VeinMeta::VfComponent
     VeinMeta::VfHelpers

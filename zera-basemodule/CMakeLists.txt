@@ -49,7 +49,7 @@ add_library(zerabasemodule SHARED
 
 target_link_libraries(zerabasemodule 
     PUBLIC
-    Qt5::Core
+    Qt5::Gui
     Qt5::Network
     MeasurementModuleInterface
     zeravalidator

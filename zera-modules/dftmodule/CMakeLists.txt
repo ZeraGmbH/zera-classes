@@ -60,7 +60,7 @@ add_library(dftmodule MODULE
 target_link_libraries(dftmodule 
     PRIVATE
     Qt5::Core
-    Qt5::Core
+    Qt5::Gui
     Qt5::Network
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
