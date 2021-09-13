@@ -23,7 +23,7 @@ void cPCBInterfacePrivate::setClient(Proxy::cProxyClient *client)
 
     m_pClient = client;
     connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cPCBInterfacePrivate::receiveAnswer);
-    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
+    connect(m_pClient, &Proxy::cProxyClient::tcpError, this, &cPCBInterfacePrivate::receiveError);
 }
 
 

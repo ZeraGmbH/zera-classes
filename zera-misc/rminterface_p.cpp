@@ -22,7 +22,7 @@ void cRMInterfacePrivate::setClient(Proxy::cProxyClient *client)
         disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
     connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cRMInterfacePrivate::receiveAnswer);
-    connect(m_pClient, SIGNAL(tcpError(QAbstractSocket::SocketError)), this, SLOT(receiveError(QAbstractSocket::SocketError)));
+    connect(m_pClient, &Zera::Proxy::cProxyClient::tcpError, this, &cRMInterfacePrivate::receiveError);
 }
 
 
