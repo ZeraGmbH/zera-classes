@@ -53,6 +53,8 @@ target_link_libraries(zeravalidator
     VeinMeta::VfEvent
     VeinMeta::VfComponent
     VeinMeta::VfHelpers
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 

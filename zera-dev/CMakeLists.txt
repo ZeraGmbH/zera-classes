@@ -50,6 +50,8 @@ target_link_libraries(zeradev
     zerai2c
     zeramath
     zeramisc
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 

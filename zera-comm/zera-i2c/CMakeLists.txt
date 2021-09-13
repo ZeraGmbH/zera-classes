@@ -47,6 +47,8 @@ add_library(zerai2c SHARED
 target_link_libraries(zerai2c 
     PRIVATE
     Qt5::Core
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 
