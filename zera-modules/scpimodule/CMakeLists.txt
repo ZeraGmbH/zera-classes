@@ -124,7 +124,7 @@ add_library(scpimodule MODULE
 target_link_libraries(scpimodule 
     PRIVATE
     Qt5::Core
-    Qt5::Gui
+    Qt5::Core
     Qt5::Network
     Qt5::SerialPort
     VeinMeta::VfEvent

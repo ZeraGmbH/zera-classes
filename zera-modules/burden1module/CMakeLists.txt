@@ -62,7 +62,7 @@ add_library(burden1module MODULE
 target_link_libraries(burden1module 
     PRIVATE
     Qt5::Core
-    Qt5::Gui
+    Qt5::Core
     Qt5::Network
     VeinMeta::VfEvent
     VeinMeta::VfHelpers

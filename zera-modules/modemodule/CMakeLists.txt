@@ -60,7 +60,7 @@ add_library(modemodule MODULE
 target_link_libraries(modemodule 
     PRIVATE
     Qt5::Core
-    Qt5::Gui
+    Qt5::Core
     Qt5::Network
     VeinMeta::VfEvent
     VeinMeta::VfHelpers

@@ -64,7 +64,7 @@ add_library(rangemodule MODULE
 target_link_libraries(rangemodule 
     PRIVATE
     Qt5::Core
-    Qt5::Gui
+    Qt5::Core
     Qt5::Network
     VeinMeta::VfComponent
     VeinMeta::VfHelpers

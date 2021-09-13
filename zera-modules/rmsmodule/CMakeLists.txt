@@ -60,7 +60,7 @@ add_library(rmsmodule MODULE
 target_link_libraries(rmsmodule 
     PRIVATE
     Qt5::Core
-    Qt5::Gui
+    Qt5::Core
     Qt5::Network
     VeinMeta::VfEvent
     VeinMeta::VfHelpers

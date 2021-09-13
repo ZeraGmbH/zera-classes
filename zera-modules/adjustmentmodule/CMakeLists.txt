@@ -62,7 +62,7 @@ add_library(adjustmentmodule MODULE
 target_link_libraries(adjustmentmodule 
     PRIVATE
     Qt5::Core
-    Qt5::Gui
+    Qt5::Core
     Qt5::Network
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
