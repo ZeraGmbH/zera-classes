@@ -40,9 +40,9 @@ cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
         netClient = new cProxyNetPeer(this);
         netClient->setWrapper(&protobufWrapper);
         connect(netClient, &cProxyNetPeer::sigMessageReceived, this, &cProxyPrivate::receiveMessage);
-        connect(netClient, SIGNAL(sigSocketError(QAbstractSocket::SocketError)), this, SLOT(receiveTcpError(QAbstractSocket::SocketError)));
-        connect(netClient, SIGNAL(sigConnectionEstablished()), this, SLOT(registerConnection()));
-        connect(netClient, SIGNAL(sigConnectionClosed()), this, SLOT(registerDisConnection()));
+        connect(netClient, &cProxyNetPeer::sigSocketError, this, &cProxyPrivate::receiveTcpError);
+        connect(netClient, &cProxyNetPeer::sigConnectionEstablished, this, &cProxyPrivate::registerConnection);
+        connect(netClient, &cProxyNetPeer::sigConnectionClosed, this, &cProxyPrivate::registerDisConnection);
         // netClient->startConnection(ipadress, port);
     }
 
