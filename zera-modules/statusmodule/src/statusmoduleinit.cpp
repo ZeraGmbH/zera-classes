@@ -57,7 +57,11 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_activationMachine.addState(&m_dspserverReadVersionState);
     m_activationMachine.addState(&m_dspserverReadDSPProgramState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    if(!m_ConfigData.m_bDemo) {
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    } else {
+        m_activationMachine.setInitialState(&m_activationDoneState);
+    }
 
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cStatusModuleInit::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cStatusModuleInit::sendRMIdent);
@@ -76,7 +80,11 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterClampCatalogNotifierState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_pcbserverUnregisterClampCatalogNotifierState);
+    if(!m_ConfigData.m_bDemo) {
+        m_deactivationMachine.setInitialState(&m_pcbserverUnregisterClampCatalogNotifierState);
+    } else {
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    }
 
     connect(&m_pcbserverUnregisterClampCatalogNotifierState, &QState::entered, this, &cStatusModuleInit::unregisterClampCatalogNotifier);
     connect(&m_deactivationDoneState, &QState::entered, this, &cStatusModuleInit::deactivationDone);
@@ -462,6 +470,12 @@ QString cStatusModuleInit::findCpuInfo()
     return cpuInfo;
 }
 
+void cStatusModuleInit::setupDemoOperation()
+{
+    m_sSerialNumber = QStringLiteral("123456789");
+    m_sAdjStatus = "0";
+}
+
 void cStatusModuleInit::setInterfaceComponents()
 {
     m_pPCBServerVersion->setValue(QVariant(m_sPCBServerVersion));
@@ -580,11 +594,18 @@ void cStatusModuleInit::dspserverReadDSPProgramVersion()
 
 void cStatusModuleInit::activationDone()
 {
-    m_sReleaseNumber = findReleaseNr();
-    m_sDeviceType = findDeviceType();
-    m_sCPUInfo = findCpuInfo();
+    if(!m_ConfigData.m_bDemo) {
+        m_sReleaseNumber = findReleaseNr();
+        m_sDeviceType = findDeviceType();
+        m_sCPUInfo = findCpuInfo();
+    }
+    else {
+        setupDemoOperation();
+    }
     setInterfaceComponents();
-    connect(m_pSerialNumber, &cVeinModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
+    if(!m_ConfigData.m_bDemo) {
+        connect(m_pSerialNumber, &cVeinModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
+    }
     m_bActive = true;
     emit activated();
 }

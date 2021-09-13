@@ -13,6 +13,7 @@ namespace STATUSMODULE
 
 enum moduleconfigstate
 {
+    setDemo,
     setDebugLevel,
     setRMIp,
     setRMPort,
