@@ -19,6 +19,8 @@ target_link_libraries(zera-intel-hex-checker
     Qt5::Core
     zeramath
     zeramisc
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
 )
 
 # install application

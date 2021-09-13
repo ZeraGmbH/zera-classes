@@ -50,6 +50,8 @@ target_link_libraries(zeraproxy
     PUBLIC
     Qt5::Network
     VeinMeta::xiqnet
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 

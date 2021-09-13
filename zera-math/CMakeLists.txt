@@ -47,6 +47,8 @@ add_library(zeramath SHARED
 target_link_libraries(zeramath 
     PRIVATE
     Qt5::Core
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 

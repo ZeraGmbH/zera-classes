@@ -49,6 +49,8 @@ target_link_libraries(zeraxmlconfig
     PRIVATE
     Qt5::Core
     Qt5::XmlPatterns
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 

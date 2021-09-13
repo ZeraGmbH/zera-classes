@@ -87,6 +87,8 @@ target_link_libraries(zeramisc
     PRIVATE
     Qt5::Core
     ${DEPS_FOR_MODULE}
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
 )
 
 # announce headers - target perspective

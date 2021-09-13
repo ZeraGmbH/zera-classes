@@ -73,6 +73,8 @@ target_link_libraries(sem1module
     zeramisc
     zeraxmlconfig
     zeravalidator 
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
 # announce headers - target perspective
