@@ -13,6 +13,7 @@ namespace RANGEMODULE
 
 enum moduleconfigstate
 {
+    setDemo,
     setDebugLevel,
     setRMIp,
     setRMPort,
