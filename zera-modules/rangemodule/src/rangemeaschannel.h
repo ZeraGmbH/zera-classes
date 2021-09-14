@@ -157,7 +157,7 @@ private:
 
     void setRangeListAlias();
     void setActionErrorcount(int Count);
-    void setDemoInitialValues();
+    void setupDemoOperation();
 
 private slots:
     void rmConnect();
