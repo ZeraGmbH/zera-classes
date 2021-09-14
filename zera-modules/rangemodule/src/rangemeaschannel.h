@@ -59,7 +59,7 @@ class cRangeMeasChannel:public cBaseMeasChannel
 
 
 public:
-    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend = false);
+    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend, bool demo);
     ~cRangeMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -99,6 +99,7 @@ protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
+    bool m_bDemo;
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key
     QHash<QString, cRangeInfo> m_RangeInfoHashWorking;
@@ -156,6 +157,7 @@ private:
 
     void setRangeListAlias();
     void setActionErrorcount(int Count);
+    void setDemoInitialValues();
 
 private slots:
     void rmConnect();

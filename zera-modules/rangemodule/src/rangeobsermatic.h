@@ -67,7 +67,7 @@ class cRangeObsermatic: public cModuleActivist
     Q_OBJECT
 
 public:
-    cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar);
+    cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -82,6 +82,7 @@ public slots:
 signals:
 
 private:
+    bool m_bDemo;
     cRangeModule *m_pModule;
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cSocket *m_pDSPSocket;
@@ -147,6 +148,7 @@ private:
     QList<int> getGroupIndexList(int index);
     bool requiresOverloadReset(int channel);
     void startOverloadReset(int channel);
+    void setDemoInitialValues();
     /**
      * @brief getPreScale
      *

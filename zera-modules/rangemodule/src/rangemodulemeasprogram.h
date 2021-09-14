@@ -58,7 +58,7 @@ class cRangeModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cRangeModuleMeasProgram(cRangeModule* module,Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cRangeModuleMeasProgram(cRangeModule* module,Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool demo);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
@@ -81,6 +81,7 @@ private:
     cRangeModuleConfigData* getConfData();
 
     cRangeModule* m_pModule; // the module we live in
+    bool m_bDemo;
     bool m_bRanging;
     bool m_bIgnore;
     quint16 m_nSamples;
