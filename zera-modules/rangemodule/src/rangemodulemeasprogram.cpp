@@ -20,8 +20,8 @@
 namespace RANGEMODULE
 {
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
-    :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool demo)
+    :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module), m_bDemo(demo)
 {
     // we have to instantiate a working resource manager and dspserver interface
     m_pRMInterface = new Zera::Server::cRMInterface();
@@ -468,14 +468,21 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
 
 void cRangeModuleMeasProgram::resourceManagerConnect()
 {
-    // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
-    resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pRMClient);
+    if(!m_bDemo) {
+        // first we try to get a connection to resource manager over proxy
+        m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+        // and then we set connection resource manager interface's connection
+        m_pRMInterface->setClient(m_pRMClient); //
+        resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+        connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+        // todo insert timer for timeout and/or connect error conditions
+        m_pProxy->startConnection(m_pRMClient);
+    }
+    else {
+        // make state machine finish
+        resourceManagerConnectState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
+        emit activationContinue();
+    }
 }
 
 

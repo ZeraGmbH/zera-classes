@@ -25,6 +25,7 @@ namespace RANGEMODULE
 cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
     :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()), parent)
 {
+    m_bDemo = false;
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for range handling,\n range setting, automatic, adjustment and scaling");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
@@ -64,6 +65,7 @@ void cRangeModule::setupModule()
 
     cRangeModuleConfigData *pConfData;
     pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    m_bDemo = pConfData->m_bDemo;
 
     m_pChannelCountInfo = new cVeinModuleMetaData(QString("ChannelCount"), QVariant(pConfData->m_nChannelCount));
     veinModuleMetaDataList.append(m_pChannelCountInfo);
@@ -82,7 +84,10 @@ void cRangeModule::setupModule()
         extend = pConfData->m_ExtendChannelList.contains(channel); // let's test if this channel is range extendable
         cRangeMeasChannel* pchn = new cRangeMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
-                                                        pConfData->m_senseChannelList.at(i), i+1, extend);
+                                                        pConfData->m_senseChannelList.at(i),
+                                                        i+1,
+                                                        extend,
+                                                        m_bDemo);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, SIGNAL(activated()), this, SIGNAL(activationContinue()));
@@ -92,7 +97,13 @@ void cRangeModule::setupModule()
 
     // we need some program that does the range handling (observation, automatic, setting and grouping)
     // it will also do the scaling job
-    m_pRangeObsermatic = new cRangeObsermatic(this, m_pProxy, &(pConfData->m_DSPServerSocket), pConfData->m_GroupList, pConfData->m_senseChannelList, pConfData->m_ObsermaticConfPar);
+    m_pRangeObsermatic = new cRangeObsermatic(this,
+                                              m_pProxy,
+                                              &(pConfData->m_DSPServerSocket),
+                                              pConfData->m_GroupList,
+                                              pConfData->m_senseChannelList,
+                                              pConfData->m_ObsermaticConfPar,
+                                              m_bDemo);
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pRangeObsermatic, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
@@ -107,26 +118,29 @@ void cRangeModule::setupModule()
         connect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
     }
 
-    // we also need some program for adjustment
-    m_pAdjustment = new cAdjustManagement(this, m_pProxy, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
-    m_ModuleActivistList.append(m_pAdjustment);
-    connect(m_pAdjustment, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pAdjustment, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    if(!m_bDemo) {
+        // we also need some program for adjustment
+        m_pAdjustment = new cAdjustManagement(this, m_pProxy, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
+        m_ModuleActivistList.append(m_pAdjustment);
+        connect(m_pAdjustment, SIGNAL(activated()), SIGNAL(activationContinue()));
+        connect(m_pAdjustment, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+        connect(m_pAdjustment, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    }
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pConfiguration, m_bDemo);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
-    //
-    m_pRangeModuleObservation = new cRangeModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pRangeModuleObservation);
-    connect(m_pRangeModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pRangeModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pRangeModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
+    if(!m_bDemo) {
+        m_pRangeModuleObservation = new cRangeModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+        m_ModuleActivistList.append(m_pRangeModuleObservation);
+        connect(m_pRangeModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
+        connect(m_pRangeModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
+        connect(m_pRangeModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
+    }
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 }
@@ -170,22 +184,23 @@ void cRangeModule::activationDone()
 
 void cRangeModule::activationFinished()
 {
-    // we connect the measurement output to our adjustment module
-    connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pAdjustment, SLOT(ActionHandler(QVector<float>*)));
-    // and to the range obsermatic
-    connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pRangeObsermatic, SLOT(ActionHandler(QVector<float>*)));
-    // we connect a signal that range has changed to measurement for synchronizing purpose
-    connect(m_pRangeObsermatic->m_pRangingSignal, SIGNAL(sigValueChanged(QVariant)),  m_pMeasProgram, SLOT(syncRanging(QVariant)));
+    if(!m_bDemo) {
+        // we connect the measurement output to our adjustment module
+        connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pAdjustment, SLOT(ActionHandler(QVector<float>*)));
+        // and to the range obsermatic
+        connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pRangeObsermatic, SLOT(ActionHandler(QVector<float>*)));
+        // we connect a signal that range has changed to measurement for synchronizing purpose
+        connect(m_pRangeObsermatic->m_pRangingSignal, SIGNAL(sigValueChanged(QVariant)),  m_pMeasProgram, SLOT(syncRanging(QVariant)));
 
-    // if we get informed we have to reconfigure
-    connect(m_pRangeModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rangeModuleReconfigure()));
+        // if we get informed we have to reconfigure
+        connect(m_pRangeModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rangeModuleReconfigure()));
 
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
-    {
-        cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
-        connect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
+        for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
+        {
+            cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
+            connect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
+        }
     }
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
     // now we still have to export the json interface information

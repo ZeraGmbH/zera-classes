@@ -75,6 +75,7 @@ private:
     cVeinModuleMetaData* m_pChannelCountInfo;
     cVeinModuleMetaData* m_pGroupCountInfo;
     qint32 m_nActivationIt;
+    bool m_bDemo;
 
 private slots:
 

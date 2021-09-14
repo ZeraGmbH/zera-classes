@@ -12,8 +12,8 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend)
-    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bExtend(extend)
+cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend, bool demo)
+    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bDemo(demo), m_bExtend(extend)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -131,6 +131,9 @@ quint32 cRangeMeasChannel::setRange(QString range)
     m_sNewRange = range; // alias !!!!
     m_sActRange = range;
 
+    if(m_bDemo) {
+        return 0;
+    }
     if (m_bActive) {
         quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
@@ -930,32 +933,109 @@ void cRangeMeasChannel::setActionErrorcount(int Count)
     m_ActionErrorcountHash[setmeaschannelrange] = Count;
 }
 
+void cRangeMeasChannel::setDemoInitialValues()
+{
+    // Set dummy channel info
+    bool isVoltagePhase = false;
+    switch (m_nChannelNr)
+    {
+    case 1:
+        m_sAlias = "UL1";
+        isVoltagePhase = true;
+        break;
+    case 2:
+        m_sAlias = "UL2";
+        isVoltagePhase = true;
+        break;
+    case 3:
+        m_sAlias = "UL3";
+        isVoltagePhase = true;
+        break;
+    case 4:
+        m_sAlias = "IL1";
+        break;
+    case 5:
+        m_sAlias = "IL2";
+        break;
+    case 6:
+        m_sAlias = "IL3";
+        break;
+    case 7:
+        m_sAlias = "UAUX";
+        isVoltagePhase = true;
+        break;
+    case 8:
+        m_sAlias = "IAUX";
+        break;
+    }
+    QVector<double> nominalRanges;
+    if(isVoltagePhase) {
+        m_sUnit = "V";
+        nominalRanges = QVector<double>() << 480.0 << 240.0 << 120.0 << 60.0 << 0.5;
+    }
+    else {
+        m_sUnit = "A";
+        nominalRanges = QVector<double>() << 1000.0 << 100.0 << 1.0 << 0.1 << 0.01 << 0.001;
+    }
+    for(auto rangeVal : nominalRanges) {
+        cRangeInfo rangeInfo;
+        QString unitPrefix;
+        double rangeValDisplay = rangeVal;
+        if(rangeVal < 1) {
+            unitPrefix = "m";
+            rangeValDisplay *= 1000.0;
+        }
+        rangeInfo.alias.setNum(int(rangeValDisplay));
+        rangeInfo.alias += unitPrefix+m_sUnit;
+        if(m_sActRange.isEmpty()) {
+            m_sActRange = rangeInfo.alias;
+        }
+        rangeInfo.avail = true;
+        rangeInfo.urvalue = rangeVal;
+        rangeInfo.rejection = 1.0;
+        rangeInfo.ovrejection = 1.25;
+        // ?? name
+        rangeInfo.type = 1;
+        m_RangeInfoHash[rangeInfo.alias] = rangeInfo;
+    }
+    setRangeListAlias();
+}
+
 
 void cRangeMeasChannel::rmConnect()
 {
-    // we instantiate a working resource manager interface first
-    // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-    m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
-    // todo insert timer for timeout
+    if(!m_bDemo) {
+        // we instantiate a working resource manager interface first
+        // so first we try to get a connection to resource manager over proxy
+        m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+        m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+        // and then we set connection resource manager interface's connection
+        m_pRMInterface->setClient(m_pRMClient); //
+        // todo insert timer for timeout
 
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnection(m_pRMClient);
-    // resource manager liste sense abfragen
-    // bin ich da drin ?
-    // nein -> fehler activierung
-    // ja -> socket von rm besorgen
-    // resource bei rm belegen
-    // beim pcb proxy server interface beantragen
+        connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+        m_pProxy->startConnection(m_pRMClient);
+        // resource manager liste sense abfragen
+        // bin ich da drin ?
+        // nein -> fehler activierung
+        // ja -> socket von rm besorgen
+        // resource bei rm belegen
+        // beim pcb proxy server interface beantragen
 
-    // quint8 m_nDspChannel; dsp kanal erfragen
-    // QString m_sAlias; kanal alias erfragen
-    // eine liste aller möglichen bereichen erfragen
-    // d.h. (avail = 1 und type =1
-    // und von diesen dann
-    // alias, urvalue, rejection und ovrejection abfragen
+        // quint8 m_nDspChannel; dsp kanal erfragen
+        // QString m_sAlias; kanal alias erfragen
+        // eine liste aller möglichen bereichen erfragen
+        // d.h. (avail = 1 und type =1
+        // und von diesen dann
+        // alias, urvalue, rejection und ovrejection abfragen
+    }
+    else {
+        // add bits not done due to missing server responses
+        setDemoInitialValues();
+        // make state machine finish
+        m_rmConnectState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_activationDoneState);
+        emit activationContinue();
+    }
 }
 
 
