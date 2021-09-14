@@ -933,7 +933,7 @@ void cRangeMeasChannel::setActionErrorcount(int Count)
     m_ActionErrorcountHash[setmeaschannelrange] = Count;
 }
 
-void cRangeMeasChannel::setDemoInitialValues()
+void cRangeMeasChannel::setupDemoOperation()
 {
     // Set dummy channel info
     bool isVoltagePhase = false;
@@ -1031,7 +1031,7 @@ void cRangeMeasChannel::rmConnect()
     }
     else {
         // add bits not done due to missing server responses
-        setDemoInitialValues();
+        setupDemoOperation();
         // make state machine finish
         m_rmConnectState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_activationDoneState);
         emit activationContinue();

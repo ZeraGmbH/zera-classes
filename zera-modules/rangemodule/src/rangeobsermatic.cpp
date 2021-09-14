@@ -489,6 +489,7 @@ void cRangeObsermatic::setRanges(bool force)
             }
             else {
                 m_actChannelRangeList.replace(i, s);
+                m_DemoTimer.start(1000);
             }
 
             // we first set information of channels actual urvalue
@@ -590,7 +591,7 @@ bool cRangeObsermatic::requiresOverloadReset(int channel)
     return (m_hardOvlList.at(channel) || m_softOvlList.at(channel)) && (m_ConfPar.m_nRangeAutoAct.m_nActive != 1 || !m_maxOvlList.at(channel));
 }
 
-void cRangeObsermatic::setDemoInitialValues()
+void cRangeObsermatic::setupDemoOperation()
 {
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
         // This is done usually in dspserverConnect which we omitted
@@ -599,6 +600,7 @@ void cRangeObsermatic::setDemoInitialValues()
         m_RangeParameterList.at(i)->setValue(QVariant(m_actChannelRangeList.at(i)));
         m_actChannelRangeNotifierList.replace(i, (m_actChannelRangeList.at(i)));
     }
+    connect(&m_DemoTimer, &QTimer::timeout, this, &cRangeObsermatic::demoTimerTimeout);
 }
 
 float cRangeObsermatic::getPreScale(int p_idx)
@@ -656,7 +658,7 @@ void cRangeObsermatic::readGainCorrDone()
     setRanges(true);
     // add bits not done due to missing server responses
     if(m_bDemo) {
-        setDemoInitialValues();
+        setupDemoOperation();
     }
 
     // we already read all gain2corrections, set default ranges, default automatic, grouping and scaling values
@@ -947,6 +949,14 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
             }
         }
     }
+}
+
+void cRangeObsermatic::demoTimerTimeout()
+{
+    /*rangeObservation(); // first we test for overload conditions
+    rangeAutomatic(); // let rangeautomatic do its job*/
+    groupHandling(); // and look for grouping channels if necessary
+    setRanges(); // set the new ranges now
 }
 
 

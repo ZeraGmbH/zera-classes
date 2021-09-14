@@ -21,6 +21,7 @@
 #include <QFinalState>
 #include <QVariant>
 #include <QStringList>
+#include <QTimer>
 
 #include <moduleactivist.h>
 
@@ -139,6 +140,8 @@ private:
     QState m_writeGainCorrRepeatState;
     QFinalState m_writeGainCorrDoneState;
 
+    QTimer m_DemoTimer;
+
     bool m_brangeSet; // we set this here after we selected a new range and enable resetting stored overloadcondition
 
     void rangeObservation();
@@ -148,7 +151,7 @@ private:
     QList<int> getGroupIndexList(int index);
     bool requiresOverloadReset(int channel);
     void startOverloadReset(int channel);
-    void setDemoInitialValues();
+    void setupDemoOperation();
     /**
      * @brief getPreScale
      *
@@ -180,6 +183,7 @@ private slots:
     void preScalingChanged(QVariant unused);
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
+    void demoTimerTimeout();
 };
 
 }
