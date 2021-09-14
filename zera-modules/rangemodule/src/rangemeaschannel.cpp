@@ -653,7 +653,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case readrngalias:
             if (reply == ack) {
-                ri.alias = answer.toString();
+                m_CurrRangeInfo.alias = answer.toString();
                 emit activationContinue();
             }
             else {
@@ -667,7 +667,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case readtype:
             if (reply == ack) {
-                ri.type = answer.toInt(&ok);
+                m_CurrRangeInfo.type = answer.toInt(&ok);
                 emit activationContinue();
             }
             else {
@@ -681,7 +681,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case readurvalue:
             if (reply == ack) {
-                ri.urvalue = answer.toDouble(&ok);
+                m_CurrRangeInfo.urvalue = answer.toDouble(&ok);
                 emit activationContinue();
             }
             else {
@@ -695,7 +695,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case readrejection:
             if (reply == ack) {
-                ri.rejection = answer.toDouble(&ok);
+                m_CurrRangeInfo.rejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
             else {
@@ -709,7 +709,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case readovrejection:
             if (reply == ack) {
-                ri.ovrejection = answer.toDouble(&ok);
+                m_CurrRangeInfo.ovrejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
             else {
@@ -723,7 +723,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case readadcrejection:
             if (reply == ack) {
-                ri.adcrejection = answer.toDouble(&ok);
+                m_CurrRangeInfo.adcrejection = answer.toDouble(&ok);
                 emit activationContinue();
             }
             else {
@@ -737,7 +737,7 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
         case readisavail:
             if (reply == ack) {
-                ri.avail = answer.toBool();
+                m_CurrRangeInfo.avail = answer.toBool();
                 emit activationContinue();
             }
             else {
@@ -1132,8 +1132,8 @@ void cRangeMeasChannel::readisAvail()
 
 void cRangeMeasChannel::rangeQueryLoop()
 {
-    ri.name = m_RangeNameList.at(m_RangeQueryIt);
-    m_RangeInfoHashWorking[ri.alias] = ri; // for each range we append cRangeinfo per alias
+    m_CurrRangeInfo.name = m_RangeNameList.at(m_RangeQueryIt);
+    m_RangeInfoHashWorking[m_CurrRangeInfo.alias] = m_CurrRangeInfo; // for each range we append cRangeinfo per alias
 
     m_RangeQueryIt++;
     if (m_RangeQueryIt < m_RangeNameList.count()) { // another range ?
@@ -1142,8 +1142,8 @@ void cRangeMeasChannel::rangeQueryLoop()
     else {
         QHash<QString, cRangeInfo>::iterator it = m_RangeInfoHashWorking.begin();
         while (it != m_RangeInfoHashWorking.end()) { // we delete all unused ranges
-            ri = it.value();
-            if (ri.avail) {
+            m_CurrRangeInfo= it.value();
+            if (m_CurrRangeInfo.avail) {
                 ++it;
             }
             else {

@@ -149,7 +149,7 @@ private:
     QFinalState m_rangeQueryDoneState;
 
     qint32 m_RangeQueryIt;
-    cRangeInfo ri;
+    cRangeInfo m_CurrRangeInfo;
 
     Zera::Proxy::cProxyClient* m_pRMClient;
     Zera::Proxy::cProxyClient* m_pPCBClient;
