@@ -74,7 +74,11 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationResetNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    if(!m_bDemo) {
+        m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    } else {
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    }
     connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
     connect(&m_deactivationResetNotifiersState, SIGNAL(entered()), SLOT(deactivationResetNotifiers()));
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
@@ -1150,11 +1154,13 @@ void cRangeMeasChannel::deactivationResetNotifiers()
 
 void cRangeMeasChannel::deactivationDone()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
-    m_pProxy->releaseConnection(m_pPCBClient);
-    // and disconnect for our servers afterwards
-    disconnect(m_pRMInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    if(!m_bDemo) {
+        m_pProxy->releaseConnection(m_pRMClient);
+        m_pProxy->releaseConnection(m_pPCBClient);
+        // and disconnect for our servers afterwards
+        disconnect(m_pRMInterface, 0, this, 0);
+        disconnect(m_pPCBInterface, 0, this, 0);
+    }
     emit deactivated();
 }
 

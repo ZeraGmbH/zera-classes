@@ -212,20 +212,22 @@ void cRangeModule::activationFinished()
 
 void cRangeModule::deactivationStart()
 {
-    // we first disconnect all what we connected when activation took place
-    disconnect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pAdjustment, SLOT(ActionHandler(QVector<float>*)));
-    disconnect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pRangeObsermatic, SLOT(ActionHandler(QVector<float>*)));
-    disconnect(m_pRangeObsermatic->m_pRangingSignal, SIGNAL(sigValueChanged(QVariant)),  m_pMeasProgram, SLOT(syncRanging(QVariant)));
+    if(!m_bDemo) {
+        // we first disconnect all what we connected when activation took place
+        disconnect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pAdjustment, SLOT(ActionHandler(QVector<float>*)));
+        disconnect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pRangeObsermatic, SLOT(ActionHandler(QVector<float>*)));
+        disconnect(m_pRangeObsermatic->m_pRangingSignal, SIGNAL(sigValueChanged(QVariant)),  m_pMeasProgram, SLOT(syncRanging(QVariant)));
 
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
-    {
-        cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
-        disconnect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
-        disconnect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
+        for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
+        {
+            cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
+            disconnect(pchn, SIGNAL(cmdDone(quint32)), m_pRangeObsermatic, SLOT(catchChannelReply(quint32)));
+            disconnect(pchn, SIGNAL(newRangeList()), m_pRangeObsermatic, SLOT(catchChannelNewRangeList()));
+        }
+
+        // if we get informed we have to reconfigure
+        disconnect(m_pRangeModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rangeModuleReconfigure()));
     }
-
-    // if we get informed we have to reconfigure
-    disconnect(m_pRangeModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rangeModuleReconfigure()));
 
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();

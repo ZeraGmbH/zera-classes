@@ -47,8 +47,11 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
-
-    m_activationMachine.setInitialState(&resourceManagerConnectState);
+    if(!m_bDemo) {
+        m_activationMachine.setInitialState(&resourceManagerConnectState);
+    } else {
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    }
 
     connect(&resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
     connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
@@ -68,8 +71,11 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
-
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(!m_bDemo) {
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    } else {
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    }
 
     connect(&m_deactivateDSPState, SIGNAL(entered()), SLOT(deactivateDSP()));
     connect(&m_freePGRMemState, SIGNAL(entered()), SLOT(freePGRMem()));
@@ -468,21 +474,14 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
 
 void cRangeModuleMeasProgram::resourceManagerConnect()
 {
-    if(!m_bDemo) {
-        // first we try to get a connection to resource manager over proxy
-        m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-        // and then we set connection resource manager interface's connection
-        m_pRMInterface->setClient(m_pRMClient); //
-        resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-        connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-        // todo insert timer for timeout and/or connect error conditions
-        m_pProxy->startConnection(m_pRMClient);
-    }
-    else {
-        // make state machine finish
-        resourceManagerConnectState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
-        emit activationContinue();
-    }
+    // first we try to get a connection to resource manager over proxy
+    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    // and then we set connection resource manager interface's connection
+    m_pRMInterface->setClient(m_pRMClient); //
+    resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    // todo insert timer for timeout and/or connect error conditions
+    m_pProxy->startConnection(m_pRMClient);
 }
 
 

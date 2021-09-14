@@ -40,28 +40,30 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     for (int i = 0; i < m_ChannelNameList.count(); i++)
         m_ActualValues.append(0.0);
 
-    if(!m_bDemo) {
-        m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
-        m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrDoneState);
-        m_activationMachine.addState(&m_dspserverConnectState);
-        m_activationMachine.addState(&m_readGainCorrState);
-        m_activationMachine.addState(&m_readGainCorrDoneState);
+    m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrDoneState);
+    m_activationMachine.addState(&m_dspserverConnectState);
+    m_activationMachine.addState(&m_readGainCorrState);
+    m_activationMachine.addState(&m_readGainCorrDoneState);
+    if(!m_bDemo) {
         m_activationMachine.setInitialState(&m_dspserverConnectState);
-        connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
-        connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
-        connect(&m_readGainCorrDoneState, SIGNAL(entered()), SLOT(readGainCorrDone()));
     }
     else { // Demo: reach final immedately
-        m_activationMachine.addState(&m_readGainCorrDoneState);
         m_activationMachine.setInitialState(&m_readGainCorrDoneState);
-        connect(&m_readGainCorrDoneState, SIGNAL(entered()), SLOT(readGainCorrDone()));
     }
+    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
+    connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
+    connect(&m_readGainCorrDoneState, SIGNAL(entered()), SLOT(readGainCorrDone()));
 
     m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    if(!m_bDemo) {
+        m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    } else {
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    }
     connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
     connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
 
@@ -953,8 +955,8 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
 
 void cRangeObsermatic::demoTimerTimeout()
 {
-    /*rangeObservation(); // first we test for overload conditions
-    rangeAutomatic(); // let rangeautomatic do its job*/
+    //rangeObservation(); // first we test for overload conditions
+    rangeAutomatic(); // let rangeautomatic do its job
     groupHandling(); // and look for grouping channels if necessary
     setRanges(); // set the new ranges now
 }
