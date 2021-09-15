@@ -32,15 +32,7 @@
                 <ch8>m7</ch8>
             </channel>
             <subdc>
-                <n>8</n>
-                <ch1>m0</ch1>
-                <ch2>m1</ch2>
-                <ch3>m2</ch3>
-                <ch4>m3</ch4>
-                <ch5>m4</ch5>
-                <ch6>m5</ch6>
-                <ch7>m6</ch7>
-                <ch8>m7</ch8>
+                <n>0</n>
             </subdc>
             <extend>
                 <n>0</n>
@@ -71,13 +63,13 @@
     <parameter>
         <sense>
             <m0>
-                <range>250V</range>
+                <range>100V</range>
             </m0>
             <m1>
-                <range>250V</range>
+                <range>100V</range>
             </m1>
             <m2>
-                <range>250V</range>
+                <range>100V</range>
             </m2>
             <m3>
                 <range>10A</range>
