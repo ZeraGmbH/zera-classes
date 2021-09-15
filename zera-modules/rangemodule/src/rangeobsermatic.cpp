@@ -490,6 +490,7 @@ void cRangeObsermatic::setRanges(bool force)
                 m_pfScale[chn] = (pmChn->getUrValue() / pmChn->getRejection()) * (1/preScalingFactor);
             }
             else {
+                pmChn->setRange(s);
                 m_actChannelRangeList.replace(i, s);
                 m_DemoTimer.start(1000);
             }
