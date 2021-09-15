@@ -80,6 +80,8 @@ public slots:
     void catchChannelReply(quint32 msgnr);
     void catchChannelNewRangeList();
 
+    void demoActValues(QVector<float> *actualValues);
+
 signals:
 
 private:

@@ -6,6 +6,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <QTimer>
 
 #include <basedspmeasprogram.h>
 
@@ -63,6 +64,9 @@ public:
     virtual void generateInterface(); // here we export our interface (entities)
     virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
+signals:
+    void sigDemoActualValues(QVector<float> *actualValues);
+
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
@@ -117,6 +121,9 @@ private:
     QFinalState m_dataAcquisitionDoneState;
 
     Zera::Proxy::cProxyClient* m_pRMClient;
+
+    QTimer m_demoPeriodicTimer;
+
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
@@ -140,6 +147,8 @@ private slots:
 
     void dataAcquisitionDSP();
     void dataReadDSP();
+
+    void handleDemoPeriodicTimer();
 
 };
 
