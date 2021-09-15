@@ -979,7 +979,7 @@ void cRangeMeasChannel::setupDemoOperation()
     }
     else {
         m_sUnit = "A";
-        nominalRanges = QVector<double>() << 1000.0 << 100.0 << 1.0 << 0.1 << 0.01 << 0.001;
+        nominalRanges = QVector<double>() << 1000.0 << 100.0 << 10.0 << 1.0 << 0.1 << 0.01 << 0.001;
     }
     for(auto rangeVal : nominalRanges) {
         cRangeInfo rangeInfo;
