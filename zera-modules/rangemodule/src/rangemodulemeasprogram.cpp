@@ -117,7 +117,6 @@ void cRangeModuleMeasProgram::start()
 
 void cRangeModuleMeasProgram::stop()
 {
-    //disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
     if(m_bDemo) {
         m_demoPeriodicTimer.stop();
     }
