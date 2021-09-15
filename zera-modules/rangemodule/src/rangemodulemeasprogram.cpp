@@ -89,6 +89,12 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, SIGNAL(entered()), SLOT(dataAcquisitionDSP()));
     connect(&m_dataAcquisitionDoneState, SIGNAL(entered()), SLOT(dataReadDSP()));
+
+    if(!m_bDemo) {
+        // Demo timer for dummy actual values
+        m_demoPeriodicTimer.setSingleShot(false);
+        connect(&m_demoPeriodicTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
+    }
 }
 
 
@@ -103,12 +109,18 @@ void cRangeModuleMeasProgram::start()
 {
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
     connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    if(m_bDemo) {
+        m_demoPeriodicTimer.start(1000/*getConfData()->m_fMeasInterval*/);
+    }
 }
 
 
 void cRangeModuleMeasProgram::stop()
 {
     //disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
+    if(m_bDemo) {
+        m_demoPeriodicTimer.stop();
+    }
 }
 
 
@@ -592,6 +604,34 @@ void cRangeModuleMeasProgram::dataReadDSP()
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
+}
+
+void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
+{
+    QVector<float> actualValues;
+    for (int channel=0; channel<m_ActValueList.count(); ++channel) {
+        // a bit of a hack: We expect MT310s2 channel order
+        bool isVoltage;
+        switch(channel) {
+        case 0:
+        case 1:
+        case 2:
+        case 6:
+            isVoltage = true;
+            break;
+        default:
+            isVoltage = false;
+            break;
+        }
+        // To make range-automatic testable, we set fixed values
+        double baseAmplitude = isVoltage ? 230.0*sqrt2 : 10.0*sqrt2;
+        double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+        double randOffset = 0.02 * randPlusMinusOne;
+        double randAmplitude = (1+randOffset) * baseAmplitude;
+        m_ActValueList.at(channel)->setValue(QVariant(randAmplitude));
+        actualValues.append(randAmplitude);
+    }
+    emit sigDemoActualValues(&actualValues);
 }
 
 }

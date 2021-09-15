@@ -141,8 +141,13 @@ void cRangeModule::setupModule()
         connect(m_pRangeModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
         connect(m_pRangeModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
     }
+    else {
+        connect(m_pMeasProgram, &cRangeModuleMeasProgram::sigDemoActualValues, m_pRangeObsermatic, &cRangeObsermatic::demoActValues);
+    }
+
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
+
 }
 
 

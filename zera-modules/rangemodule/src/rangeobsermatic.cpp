@@ -958,7 +958,14 @@ void cRangeObsermatic::demoTimerTimeout()
 {
     m_pRangingSignal->setValue(QVariant(0));
 
-    //rangeObservation(); // first we test for overload conditions
+    rangeAutomatic(); // let rangeautomatic do its job
+    groupHandling(); // and look for grouping channels if necessary
+    setRanges(); // set the new ranges now
+}
+
+void cRangeObsermatic::demoActValues(QVector<float> *actualValues)
+{
+    m_ActualValues = *actualValues;
     rangeAutomatic(); // let rangeautomatic do its job
     groupHandling(); // and look for grouping channels if necessary
     setRanges(); // set the new ranges now
