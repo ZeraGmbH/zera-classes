@@ -42,7 +42,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
 
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
-    m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readGainCorrDoneState);
+    m_readGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_readGainCorrDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readGainCorrDoneState);
@@ -52,11 +52,11 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     else { // Demo: reach final immedately
         m_activationMachine.setInitialState(&m_readGainCorrDoneState);
     }
-    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
-    connect(&m_readGainCorrDoneState, SIGNAL(entered()), SLOT(readGainCorrDone()));
+    connect(&m_dspserverConnectState, &QState::entered, this, &cRangeObsermatic::dspserverConnect);
+    connect(&m_readGainCorrState, &QState::entered, this, &cRangeObsermatic::readGainCorr);
+    connect(&m_readGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::readGainCorrDone);
 
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cRangeObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     if(!m_bDemo) {
@@ -64,18 +64,18 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     } else {
         m_deactivationMachine.setInitialState(&m_deactivationDoneState);
     }
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cRangeObsermatic::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cRangeObsermatic::deactivationDone);
 
-    m_writeGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeGainCorrDoneState);
-    m_writeGainCorrState.addTransition(this, SIGNAL(activationRepeat()), &m_writeGainCorrRepeatState);
-    m_writeGainCorrRepeatState.addTransition(this, SIGNAL(activationContinue()), &m_writeGainCorrState);
+    m_writeGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_writeGainCorrDoneState);
+    m_writeGainCorrState.addTransition(this, &cRangeObsermatic::activationRepeat, &m_writeGainCorrRepeatState);
+    m_writeGainCorrRepeatState.addTransition(this, &cRangeObsermatic::activationContinue, &m_writeGainCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrRepeatState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrDoneState);
     m_writeCorrectionDSPMachine.setInitialState(&m_writeGainCorrState);
-    connect(&m_writeGainCorrState, SIGNAL(entered()), SLOT(writeGainCorr()));
-    connect(&m_writeGainCorrDoneState, SIGNAL(entered()), SLOT(writeGainCorrDone()));
+    connect(&m_writeGainCorrState, &QState::entered, this, &cRangeObsermatic::writeGainCorr);
+    connect(&m_writeGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::writeGainCorrDone);
 }
 
 
@@ -330,7 +330,7 @@ void cRangeObsermatic::rangeObservation()
 
     m_brangeSet = false;
 
-    connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
+    connect(m_pParOverloadOnOff, &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
 }
 
 
@@ -639,8 +639,8 @@ void cRangeObsermatic::dspserverConnect()
 
     m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_readGainCorrState);
-    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_readGainCorrState);
+    connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pDspClient);
 }
 
@@ -667,17 +667,17 @@ void cRangeObsermatic::readGainCorrDone()
     // we already read all gain2corrections, set default ranges, default automatic, grouping and scaling values
     // lets now connect signals so we become alive
     for (int i = 0; i < m_ChannelNameList.count(); i++) {
-        connect(m_RangeParameterList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(newRange(QVariant)));
+        connect(m_RangeParameterList.at(i), &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::newRange);
     }
 
     for (int i = 0; i < m_RangeGroupePreScalingList.length(); i++) {
-        connect(m_RangeGroupePreScalingList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(preScalingChanged(QVariant)));
-        connect(m_RangeGroupePreScalingEnabledList.at(i), SIGNAL(sigValueChanged(QVariant)), SLOT(preScalingChanged(QVariant)));
+        connect(m_RangeGroupePreScalingList.at(i), &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::preScalingChanged);
+        connect(m_RangeGroupePreScalingEnabledList.at(i), &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::preScalingChanged);
     }
 
-    connect(m_pParRangeAutomaticOnOff, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newRangeAuto(QVariant)));
-    connect(m_pParGroupingOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newGrouping(QVariant)));
-    connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
+    connect(m_pParRangeAutomaticOnOff, &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::newRangeAuto);
+    connect(m_pParGroupingOnOff, &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::newGrouping);
+    connect(m_pParOverloadOnOff, &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
 
     cRangeMeasChannel *pmChn;
     for (int i = 0; i < m_RangeMeasChannelList.count(); i++) {
@@ -879,7 +879,7 @@ void cRangeObsermatic::newOverload(QVariant overload)
     // in each case we reset overload here
     m_pParOverloadOnOff->setValue(0);
 
-    connect(m_pParOverloadOnOff, SIGNAL(sigValueChanged(QVariant)), SLOT(newOverload(QVariant)));
+    connect(m_pParOverloadOnOff, &cVeinModuleParameter::sigValueChanged, this, &cRangeObsermatic::newOverload);
 }
 
 void cRangeObsermatic::preScalingChanged(QVariant unused)

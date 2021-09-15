@@ -28,10 +28,10 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
         m_subDCChannelList.append(m_pModule->getMeasChannel(m_subdcChannelNameList.at(i)));
 
     // and then set up our state machines
-    m_readGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readPhaseCorrState);
-    m_readPhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_readOffsetCorrState);
-    m_readOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_setSubDCState);
-    m_setSubDCState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readGainCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_readPhaseCorrState);
+    m_readPhaseCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_readOffsetCorrState);
+    m_readOffsetCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_setSubDCState);
+    m_setSubDCState.addTransition(this, &cAdjustManagement::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_pcbserverConnectState);
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
@@ -40,42 +40,42 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
     m_activationMachine.addState(&m_setSubDCState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_pcbserverConnectState);
-    connect(&m_pcbserverConnectState, SIGNAL(entered()), SLOT(pcbserverConnect()));
-    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_readGainCorrState, SIGNAL(entered()), SLOT(readGainCorr()));
-    connect(&m_readPhaseCorrState, SIGNAL(entered()), SLOT(readPhaseCorr()));
-    connect(&m_readOffsetCorrState, SIGNAL(entered()), SLOT(readOffsetCorr()));
-    connect(&m_setSubDCState, SIGNAL(entered()), SLOT(setSubDC()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_pcbserverConnectState, &QState::entered, this, &cAdjustManagement::pcbserverConnect);
+    connect(&m_dspserverConnectState, &QState::entered, this, &cAdjustManagement::dspserverConnect);
+    connect(&m_readGainCorrState, &QState::entered, this, &cAdjustManagement::readGainCorr);
+    connect(&m_readPhaseCorrState, &QState::entered, this, &cAdjustManagement::readPhaseCorr);
+    connect(&m_readOffsetCorrState, &QState::entered, this, &cAdjustManagement::readOffsetCorr);
+    connect(&m_setSubDCState, &QState::entered, this, &cAdjustManagement::setSubDC);
+    connect(&m_activationDoneState, &QState::entered, this, &cAdjustManagement::activationDone);
 
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cAdjustManagement::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cAdjustManagement::deactivationInit);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cAdjustManagement::deactivationDone);
 
-    m_writeGainCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writePhaseCorrState);
-    m_writePhaseCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeOffsetCorrState);
-    m_writeOffsetCorrState.addTransition(this, SIGNAL(activationContinue()), &m_writeCorrDoneState);
+    m_writeGainCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_writePhaseCorrState);
+    m_writePhaseCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_writeOffsetCorrState);
+    m_writeOffsetCorrState.addTransition(this, &cAdjustManagement::activationContinue, &m_writeCorrDoneState);
     m_writeCorrectionDSPMachine.addState(&m_writeGainCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writePhaseCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writeOffsetCorrState);
     m_writeCorrectionDSPMachine.addState(&m_writeCorrDoneState);
     m_writeCorrectionDSPMachine.setInitialState(&m_writeGainCorrState);
-    connect(&m_writeGainCorrState, SIGNAL(entered()), SLOT(writeGainCorr()));
-    connect(&m_writePhaseCorrState, SIGNAL(entered()), SLOT(writePhaseCorr()));
-    connect(&m_writeOffsetCorrState, SIGNAL(entered()), SLOT(writeOffsetCorr()));
+    connect(&m_writeGainCorrState, &QState::entered, this, &cAdjustManagement::writeGainCorr);
+    connect(&m_writePhaseCorrState, &QState::entered, this, &cAdjustManagement::writePhaseCorr);
+    connect(&m_writeOffsetCorrState, &QState::entered, this, &cAdjustManagement::writeOffsetCorr);
 
-    m_getGainCorr1State.addTransition(this, SIGNAL(activationContinue()), &m_getGainCorr2State);
-    m_getGainCorr2State.addTransition(this, SIGNAL(repeatStateMachine()), &m_getGainCorr1State);
-    m_getGainCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_getPhaseCorr1State);
-    m_getPhaseCorr1State.addTransition(this, SIGNAL(activationContinue()), &m_getPhaseCorr2State);
-    m_getPhaseCorr2State.addTransition(this, SIGNAL(repeatStateMachine()), &m_getPhaseCorr1State);
-    m_getPhaseCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_getOffsetCorr1State);
-    m_getOffsetCorr1State.addTransition(this, SIGNAL(activationContinue()), &m_getOffsetCorr2State);
-    m_getOffsetCorr2State.addTransition(this, SIGNAL(repeatStateMachine()), &m_getOffsetCorr1State);
-    m_getOffsetCorr2State.addTransition(this, SIGNAL(activationContinue()), &m_adjustDoneState);
+    m_getGainCorr1State.addTransition(this, &cAdjustManagement::activationContinue, &m_getGainCorr2State);
+    m_getGainCorr2State.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getGainCorr1State);
+    m_getGainCorr2State.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorr1State);
+    m_getPhaseCorr1State.addTransition(this, &cAdjustManagement::activationContinue, &m_getPhaseCorr2State);
+    m_getPhaseCorr2State.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getPhaseCorr1State);
+    m_getPhaseCorr2State.addTransition(this, &cAdjustManagement::activationContinue, &m_getOffsetCorr1State);
+    m_getOffsetCorr1State.addTransition(this, &cAdjustManagement::activationContinue, &m_getOffsetCorr2State);
+    m_getOffsetCorr2State.addTransition(this, &cAdjustManagement::repeatStateMachine, &m_getOffsetCorr1State);
+    m_getOffsetCorr2State.addTransition(this, &cAdjustManagement::activationContinue, &m_adjustDoneState);
     m_adjustMachine.addState(&m_getGainCorr1State);
     m_adjustMachine.addState(&m_getGainCorr2State);
     m_adjustMachine.addState(&m_getPhaseCorr1State);
@@ -84,13 +84,13 @@ cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy*
     m_adjustMachine.addState(&m_getOffsetCorr2State);
     m_adjustMachine.addState(&m_adjustDoneState);
     m_adjustMachine.setInitialState(&m_getGainCorr1State);
-    connect(&m_getGainCorr1State, SIGNAL(entered()), SLOT(getGainCorr1()));
-    connect(&m_getGainCorr2State, SIGNAL(entered()), SLOT(getGainCorr2()));
-    connect(&m_getPhaseCorr1State, SIGNAL(entered()), SLOT(getPhaseCorr1()));
-    connect(&m_getPhaseCorr2State, SIGNAL(entered()), SLOT(getPhaseCorr2()));
-    connect(&m_getOffsetCorr1State, SIGNAL(entered()), SLOT(getOffsetCorr1()));
-    connect(&m_getOffsetCorr2State, SIGNAL(entered()), SLOT(getOffsetCorr2()));
-    connect(&m_adjustDoneState, SIGNAL(entered()), SLOT(getCorrDone()));
+    connect(&m_getGainCorr1State, &QState::entered, this, &cAdjustManagement::getGainCorr1);
+    connect(&m_getGainCorr2State, &QState::entered, this, &cAdjustManagement::getGainCorr2);
+    connect(&m_getPhaseCorr1State, &QState::entered, this, &cAdjustManagement::getPhaseCorr1);
+    connect(&m_getPhaseCorr2State, &QState::entered, this, &cAdjustManagement::getPhaseCorr2);
+    connect(&m_getOffsetCorr1State, &QState::entered, this, &cAdjustManagement::getOffsetCorr1);
+    connect(&m_getOffsetCorr2State, &QState::entered, this, &cAdjustManagement::getOffsetCorr2);
+    connect(&m_adjustDoneState, &QState::entered, this, &cAdjustManagement::getCorrDone);
 }
 
 
@@ -134,13 +134,13 @@ void cAdjustManagement::pcbserverConnect()
 {
     // we connect cmddone of our meas channels so we get informed if commands are finished
     for (int i = 0; i < m_ChannelList.count(); i++)
-        connect(m_ChannelList.at(i), SIGNAL(cmdDone(quint32)), SLOT(catchChannelReply(quint32)));
+        connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
 
     // we set up our pcb server connection
     m_pPCBClient = m_pProxy->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
     m_pPCBInterface->setClient(m_pPCBClient);
-    m_pcbserverConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_dspserverConnectState);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_pcbserverConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_dspserverConnectState);
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pPCBClient);
 }
 
@@ -150,8 +150,8 @@ void cAdjustManagement::dspserverConnect()
     // we set up our dsp server connection
     m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_readGainCorrState);
-    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_readGainCorrState);
+    connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pDspClient);
 }
 
@@ -209,7 +209,7 @@ void cAdjustManagement::setSubDC()
 void cAdjustManagement::activationDone()
 {
     m_AdjustTimer.start(m_fAdjInterval*1000.0);
-    connect(&m_AdjustTimer, SIGNAL(timeout()), this, SLOT(adjustPrepare()));
+    connect(&m_AdjustTimer, &QTimer::timeout, this, &cAdjustManagement::adjustPrepare);
     m_bActive = true;
     emit activated();
 }
