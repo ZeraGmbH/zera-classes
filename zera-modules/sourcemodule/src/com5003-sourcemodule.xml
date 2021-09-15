@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<statusmodconfpar>
+    <configuration>
+        <connectivity>
+            <debuglevel>0</debuglevel>
+        </connectivity>
+    </configuration>
+</statusmodconfpar>
