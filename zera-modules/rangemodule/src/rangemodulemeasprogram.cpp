@@ -90,7 +90,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     connect(&m_dataAcquisitionState, SIGNAL(entered()), SLOT(dataAcquisitionDSP()));
     connect(&m_dataAcquisitionDoneState, SIGNAL(entered()), SLOT(dataReadDSP()));
 
-    if(!m_bDemo) {
+    if(m_bDemo) {
         // Demo timer for dummy actual values
         m_demoPeriodicTimer.setSingleShot(false);
         connect(&m_demoPeriodicTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
