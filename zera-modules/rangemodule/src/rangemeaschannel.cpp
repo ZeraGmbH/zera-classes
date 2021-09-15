@@ -20,19 +20,19 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
 
     // setting up statemachine for "activating" meas channel
     // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
-    m_readResourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceState);
-    m_claimResourceState.addTransition(this, SIGNAL(activationContinue()), &m_pcbConnectionState);
+    m_IdentifyState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_claimResourceState);
+    m_claimResourceState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_pcbConnectionState);
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_readDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readChnAliasState);
-    m_readChnAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readUnitState);
-    m_readUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readRangeAndProperties);
-    m_readRangeAndProperties.addTransition(&m_rangeQueryMachine, SIGNAL(finished()), &m_resetStatusState);
-    m_resetStatusState.addTransition(this, SIGNAL(activationContinue()), &m_setNotifierRangeCat);
-    m_setNotifierRangeCat.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_readDspChannelState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readChnAliasState);
+    m_readChnAliasState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readSampleRateState);
+    m_readSampleRateState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readUnitState);
+    m_readUnitState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readRangeAndProperties);
+    m_readRangeAndProperties.addTransition(&m_rangeQueryMachine, &QStateMachine::finished, &m_resetStatusState);
+    m_resetStatusState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_setNotifierRangeCat);
+    m_setNotifierRangeCat.addTransition(this, &cRangeMeasChannel::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -52,25 +52,25 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
 
     m_activationMachine.setInitialState(&m_rmConnectState);
 
-    connect(&m_rmConnectState, SIGNAL(entered()), SLOT(rmConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceState, SIGNAL(entered()), SLOT(readResource()));
-    connect(&m_readResourceInfoState, SIGNAL(entered()), SLOT(readResourceInfo()));
-    connect(&m_claimResourceState, SIGNAL(entered()), SLOT(claimResource()));
-    connect(&m_pcbConnectionState, SIGNAL(entered()), SLOT(pcbConnection()));
-    connect(&m_readDspChannelState, SIGNAL(entered()), SLOT(readDspChannel()));
-    connect(&m_readChnAliasState, SIGNAL(entered()), SLOT(readChnAlias()));
-    connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
-    connect(&m_readUnitState, SIGNAL(entered()), SLOT(readUnit()));
-    connect(&m_readRangeAndProperties, SIGNAL(entered()), SLOT(readRangeAndProperties()));
-    connect(&m_resetStatusState, SIGNAL(entered()), SLOT(resetStatusSlot()));
-    connect(&m_setNotifierRangeCat, SIGNAL(entered()), SLOT(setNotifierRangeCat()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_rmConnectState, &QState::entered, this, &cRangeMeasChannel::rmConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cRangeMeasChannel::sendRMIdent);
+    connect(&m_readResourceTypesState, &QState::entered, this, &cRangeMeasChannel::readResourceTypes);
+    connect(&m_readResourceState, &QState::entered, this, &cRangeMeasChannel::readResource);
+    connect(&m_readResourceInfoState, &QState::entered, this, &cRangeMeasChannel::readResourceInfo);
+    connect(&m_claimResourceState, &QState::entered, this, &cRangeMeasChannel::claimResource);
+    connect(&m_pcbConnectionState, &QState::entered, this, &cRangeMeasChannel::pcbConnection);
+    connect(&m_readDspChannelState, &QState::entered, this, &cRangeMeasChannel::readDspChannel);
+    connect(&m_readChnAliasState, &QState::entered, this, &cRangeMeasChannel::readChnAlias);
+    connect(&m_readSampleRateState, &QState::entered, this, &cRangeMeasChannel::readSampleRate);
+    connect(&m_readUnitState, &QState::entered, this, &cRangeMeasChannel::readUnit);
+    connect(&m_readRangeAndProperties, &QState::entered, this, &cRangeMeasChannel::readRangeAndProperties);
+    connect(&m_resetStatusState, &QState::entered, this, &cRangeMeasChannel::resetStatusSlot);
+    connect(&m_setNotifierRangeCat, &QState::entered, this, &cRangeMeasChannel::setNotifierRangeCat);
+    connect(&m_activationDoneState, &QState::entered, this, &cRangeMeasChannel::activationDone);
 
     // setting up statemachine for "deactivating" meas channel
-    m_deactivationInitState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationResetNotifiersState);
-    m_deactivationResetNotifiersState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_deactivationInitState.addTransition(this, &cRangeMeasChannel::deactivationContinue, &m_deactivationResetNotifiersState);
+    m_deactivationResetNotifiersState.addTransition(this, &cRangeMeasChannel::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationResetNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
@@ -79,21 +79,21 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
     } else {
         m_deactivationMachine.setInitialState(&m_deactivationDoneState);
     }
-    connect(&m_deactivationInitState, SIGNAL(entered()), SLOT(deactivationInit()));
-    connect(&m_deactivationResetNotifiersState, SIGNAL(entered()), SLOT(deactivationResetNotifiers()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_deactivationInitState, &QState::entered, this, &cRangeMeasChannel::deactivationInit);
+    connect(&m_deactivationResetNotifiersState, &QState::entered, this, &cRangeMeasChannel::deactivationResetNotifiers);
+    connect(&m_deactivationDoneState, &QState::entered, this, &cRangeMeasChannel::deactivationDone);
 
     // setting up statemachine for querying the meas channels ranges and their properties
-    m_readRangelistState.addTransition(this, SIGNAL(activationContinue()), &m_readRngAliasState);
-    m_readRngAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readTypeState);
-    m_readTypeState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueState);
-    m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readRejectionState);
-    m_readRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readOVRejectionState);
-    m_readOVRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readADCRejectionState);
-    m_readADCRejectionState.addTransition(this, SIGNAL(activationContinue()), &m_readisAvailState);
-    m_readisAvailState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryLoopState);
-    m_rangeQueryLoopState.addTransition(this, SIGNAL(activationContinue()), &m_rangeQueryDoneState);
-    m_rangeQueryLoopState.addTransition(this, SIGNAL(activationLoop()), &m_readRngAliasState);
+    m_readRangelistState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readRngAliasState);
+    m_readRngAliasState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readTypeState);
+    m_readTypeState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readUrvalueState);
+    m_readUrvalueState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readRejectionState);
+    m_readRejectionState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readOVRejectionState);
+    m_readOVRejectionState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readADCRejectionState);
+    m_readADCRejectionState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readisAvailState);
+    m_readisAvailState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_rangeQueryLoopState);
+    m_rangeQueryLoopState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_rangeQueryDoneState);
+    m_rangeQueryLoopState.addTransition(this, &cRangeMeasChannel::activationLoop, &m_readRngAliasState);
 
     m_rangeQueryMachine.addState(&m_readRangelistState);
     m_rangeQueryMachine.addState(&m_readRngAliasState);
@@ -108,17 +108,17 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
 
     m_rangeQueryMachine.setInitialState(&m_readRangelistState);
 
-    connect(&m_readRangelistState, SIGNAL(entered()), SLOT(readRangelist()));
-    connect(&m_readRngAliasState, SIGNAL(entered()), SLOT(readRngAlias()));
-    connect(&m_readTypeState, SIGNAL(entered()), SLOT(readType()));
-    connect(&m_readUrvalueState, SIGNAL(entered()), SLOT(readUrvalue()));
-    connect(&m_readRejectionState, SIGNAL(entered()), SLOT(readRejection()));
-    connect(&m_readOVRejectionState, SIGNAL(entered()), SLOT(readOVRejection()));
-    connect(&m_readADCRejectionState, SIGNAL(entered()), SLOT(readADCRejection()));
-    connect(&m_readisAvailState, SIGNAL(entered()), SLOT(readisAvail()));
-    connect(&m_rangeQueryLoopState, SIGNAL(entered()), SLOT(rangeQueryLoop()));
+    connect(&m_readRangelistState, &QState::entered, this, &cRangeMeasChannel::readRangelist);
+    connect(&m_readRngAliasState, &QState::entered, this, &cRangeMeasChannel::readRngAlias);
+    connect(&m_readTypeState, &QState::entered, this, &cRangeMeasChannel::readType);
+    connect(&m_readUrvalueState, &QState::entered, this, &cRangeMeasChannel::readUrvalue);
+    connect(&m_readRejectionState, &QState::entered, this, &cRangeMeasChannel::readRejection);
+    connect(&m_readOVRejectionState, &QState::entered, this, &cRangeMeasChannel::readOVRejection);
+    connect(&m_readADCRejectionState, &QState::entered, this, &cRangeMeasChannel::readADCRejection);
+    connect(&m_readisAvailState, &QState::entered, this, &cRangeMeasChannel::readisAvail);
+    connect(&m_rangeQueryLoopState, &QState::entered, this, &cRangeMeasChannel::rangeQueryLoop);
 
-    connect(&m_rangeQueryMachine, SIGNAL(finished()), this, SIGNAL(newRangeList()));
+    connect(&m_rangeQueryMachine, &QStateMachine::finished, this, &cRangeMeasChannel::newRangeList);
     setActionErrorcount(1);
 }
 
@@ -1012,12 +1012,12 @@ void cRangeMeasChannel::rmConnect()
         // we instantiate a working resource manager interface first
         // so first we try to get a connection to resource manager over proxy
         m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-        m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+        m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
         m_pRMInterface->setClient(m_pRMClient); //
         // todo insert timer for timeout
 
-        connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+        connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
         m_pProxy->startConnection(m_pRMClient);
         // resource manager liste sense abfragen
         // bin ich da drin ?
@@ -1076,10 +1076,10 @@ void cRangeMeasChannel::claimResource()
 void cRangeMeasChannel::pcbConnection()
 {
     m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readDspChannelState);
+    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_readDspChannelState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pPCBClient);
 }
 

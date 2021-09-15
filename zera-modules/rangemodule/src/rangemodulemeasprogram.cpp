@@ -31,12 +31,12 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     m_bIgnore = false;
     m_ChannelList = getConfData()->m_senseChannelList;
 
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectState);
-    m_claimPGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_claimUSERMemState);
-    m_claimUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_var2DSPState);
-    m_var2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_cmd2DSPState);
-    m_cmd2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_activateDSPState);
-    m_activateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_loadDSPDoneState);
+    m_IdentifyState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_dspserverConnectState);
+    m_claimPGRMemState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_claimUSERMemState);
+    m_claimUSERMemState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_var2DSPState);
+    m_var2DSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_cmd2DSPState);
+    m_cmd2DSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_activateDSPState);
+    m_activateDSPState.addTransition(this, &cRangeModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
     m_activationMachine.addState(&resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -53,20 +53,20 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
         m_activationMachine.setInitialState(&m_loadDSPDoneState);
     }
 
-    connect(&resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_claimPGRMemState, SIGNAL(entered()), SLOT(claimPGRMem()));
-    connect(&m_claimUSERMemState, SIGNAL(entered()), SLOT(claimUSERMem()));
-    connect(&m_var2DSPState, SIGNAL(entered()), SLOT(varList2DSP()));
-    connect(&m_cmd2DSPState, SIGNAL(entered()), SLOT(cmdList2DSP()));
-    connect(&m_activateDSPState, SIGNAL(entered()), SLOT(activateDSP()));
-    connect(&m_loadDSPDoneState, SIGNAL(entered()), SLOT(activateDSPdone()));
+    connect(&resourceManagerConnectState, &QState::entered, this, &cRangeModuleMeasProgram::resourceManagerConnect);
+    connect(&m_IdentifyState, &QState::entered, this, &cRangeModuleMeasProgram::sendRMIdent);
+    connect(&m_dspserverConnectState, &QState::entered, this, &cRangeModuleMeasProgram::dspserverConnect);
+    connect(&m_claimPGRMemState, &QState::entered, this, &cRangeModuleMeasProgram::claimPGRMem);
+    connect(&m_claimUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::claimUSERMem);
+    connect(&m_var2DSPState, &QState::entered, this, &cRangeModuleMeasProgram::varList2DSP);
+    connect(&m_cmd2DSPState, &QState::entered, this, &cRangeModuleMeasProgram::cmdList2DSP);
+    connect(&m_activateDSPState, &QState::entered, this, &cRangeModuleMeasProgram::activateDSP);
+    connect(&m_loadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
-    m_freePGRMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_unloadDSPDoneState);
+    m_deactivateDSPState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
+    m_freePGRMemState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
+    m_freeUSERMemState.addTransition(this, &cRangeModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
     m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
@@ -77,18 +77,18 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
         m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
     }
 
-    connect(&m_deactivateDSPState, SIGNAL(entered()), SLOT(deactivateDSP()));
-    connect(&m_freePGRMemState, SIGNAL(entered()), SLOT(freePGRMem()));
-    connect(&m_freeUSERMemState, SIGNAL(entered()), SLOT(freeUSERMem()));
-    connect(&m_unloadDSPDoneState, SIGNAL(entered()), SLOT(deactivateDSPdone()));
+    connect(&m_deactivateDSPState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSP);
+    connect(&m_freePGRMemState, &QState::entered, this, &cRangeModuleMeasProgram::freePGRMem);
+    connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
+    connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
     // setting up statemachine for data acquisition
-    m_dataAcquisitionState.addTransition(this, SIGNAL(dataAquisitionContinue()), &m_dataAcquisitionDoneState);
+    m_dataAcquisitionState.addTransition(this, &cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
-    connect(&m_dataAcquisitionState, SIGNAL(entered()), SLOT(dataAcquisitionDSP()));
-    connect(&m_dataAcquisitionDoneState, SIGNAL(entered()), SLOT(dataReadDSP()));
+    connect(&m_dataAcquisitionState, &QState::entered, this, &cRangeModuleMeasProgram::dataAcquisitionDSP);
+    connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
     if(m_bDemo) {
         // Demo timer for dummy actual values
@@ -107,8 +107,8 @@ cRangeModuleMeasProgram::~cRangeModuleMeasProgram()
 
 void cRangeModuleMeasProgram::start()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), this, 0);
-    connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    disconnect(this, &cRangeModuleMeasProgram::actualValues, this, 0);
+    connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
     if(m_bDemo) {
         m_demoPeriodicTimer.start(1000/*getConfData()->m_fMeasInterval*/);
     }
@@ -490,8 +490,8 @@ void cRangeModuleMeasProgram::resourceManagerConnect()
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_pRMInterface->setClient(m_pRMClient); //
-    resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -507,8 +507,8 @@ void cRangeModuleMeasProgram::dspserverConnect()
 {
     m_pDspClient = m_pProxy->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
-    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_claimPGRMemState);
+    connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pDspClient);
 }
 
