@@ -956,6 +956,8 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
 
 void cRangeObsermatic::demoTimerTimeout()
 {
+    m_pRangingSignal->setValue(QVariant(0));
+
     //rangeObservation(); // first we test for overload conditions
     rangeAutomatic(); // let rangeautomatic do its job
     groupHandling(); // and look for grouping channels if necessary
