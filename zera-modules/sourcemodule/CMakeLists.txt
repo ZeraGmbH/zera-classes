@@ -15,12 +15,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #Adding cmake functions like feature_summary()
 include(FeatureSummary)
 include(GNUInstallDirs)
+include(FindPkgConfig)
 
 #Find dependecies
 find_package(Qt5 COMPONENTS Core Gui Network CONFIG REQUIRED)
 find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_Package(VfComponent REQUIRED)
+pkg_check_modules(XERCES xerces-c REQUIRED)
 
 #sum up project Files 
 file(GLOB SOURCES 
@@ -45,6 +47,31 @@ file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/src/*.xsd
 )
 
+# auto-generate c++ xml access from xsd
+add_custom_command(
+    OUTPUT
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.hxx
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+    COMMAND
+        xsdcxx cxx-tree --std c++11 --generate-serialization --output-dir "${PROJECT_BINARY_DIR}" ${CONFIG_VALIDATOR}
+    DEPENDS
+        ${CONFIG_VALIDATOR}
+)
+
+add_custom_target(sourcemodule-config-wrappers ALL
+    DEPENDS
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.hxx
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+)
+
+set_property(
+    SOURCE
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.hxx
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+    PROPERTY SKIP_AUTOMOC ON
+)
+
+
 # check for valid config files / display in qt-creator
 add_custom_target(sourcemodule-configs ALL
     DEPENDS ${CONFIG_VALIDATOR} ${CONFIG_FILES}
@@ -57,6 +84,7 @@ add_library(sourcemodule MODULE
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
+    ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
 
 target_link_libraries(sourcemodule 
@@ -64,6 +92,7 @@ target_link_libraries(sourcemodule
     Qt5::Core
     Qt5::Core
     Qt5::Network
+    ${XERCES_LIBRARIES}
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
@@ -72,7 +101,7 @@ target_link_libraries(sourcemodule
     zeraproxy
     zeramisc
     zeraxmlconfig
-    zeravalidator 
+    zeravalidator
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

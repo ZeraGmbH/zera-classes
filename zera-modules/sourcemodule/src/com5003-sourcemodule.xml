@@ -1,8 +1,4 @@
 <?xml version="1.0"?>
-<statusmodconfpar>
-    <configuration>
-        <connectivity>
-            <debuglevel>0</debuglevel>
-        </connectivity>
-    </configuration>
-</statusmodconfpar>
+<configuration>
+    <max_count_sources>4</max_count_sources>
+</configuration>
