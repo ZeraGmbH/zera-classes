@@ -34,6 +34,8 @@ bool cReader::loadSchema(QString filePath)
         d->data.clear();
         d->schemaFilePath=filePath;
         retVal = true;
+    } else {
+        qWarning("[zera-xml-config] schema file %s was not found!", qPrintable(filePath));
     }
     return retVal;
 }
