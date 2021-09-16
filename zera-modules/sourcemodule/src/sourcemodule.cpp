@@ -20,12 +20,11 @@ cSourceModule::cSourceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entit
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationMachine.setInitialState(&m_ActivationFinishedState);
-    connect(&m_ActivationFinishedState, SIGNAL(entered()), SLOT(activationFinished()));
+    connect(&m_ActivationFinishedState, &QState::entered, this, &cSourceModule::activationFinished);
 
     m_DeactivationMachine.setInitialState(&m_DeactivationFinishedState);
-    connect(&m_DeactivationFinishedState, SIGNAL(entered()), SLOT(deactivationFinished()));
+    connect(&m_DeactivationFinishedState, &QState::entered, this, &cSourceModule::deactivationFinished);
 }
-
 
 QByteArray cSourceModule::getConfiguration() const
 {
