@@ -63,11 +63,11 @@ bool cReader::loadXML(QString filePath)
             }
         }
         else {
-            qDebug() << "[zera-xml-config] XML is invalid: " << filePath;
+            qWarning("[zera-xml-config] %s is invalid", qPrintable(filePath));
         }
     }
     else {
-        qDebug() << "[zera-xml-config] schema is invalid";
+        qWarning("[zera-xml-config] %s is invalid", qPrintable(filePath));
     }
     emit finishedParsingXML(retVal);
     return retVal;
@@ -102,12 +102,12 @@ bool cReader::loadXMLFromString(QString xmlString)
             }
         }
         else {
-            qDebug() << "[zera-xml-config] XML is invalid: " << xmlString;
+            qWarning("[zera-xml-config] %s is invalid", qPrintable(xmlString));
         }
         xmlDevice.close();
     }
     else {
-        qDebug() << "[zera-xml-config] schema is invalid";
+        qWarning() << "[zera-xml-config] schema is invalid";
     }
     emit finishedParsingXML(retVal);
     schemaFile.close();
@@ -198,7 +198,7 @@ bool cReader::xml2Config(QIODevice *xmlData)
     /* Error handling. */
     if(xmlReader.hasError()) {
         retVal = false;
-        qDebug()<<"[zera-xml-config] Error parsing XML: "<<xmlReader.errorString();
+        qWarning("[zera-xml-config] Error parsing XML: %s", qPrintable(xmlReader.errorString()));
     }
     return retVal;
 }
