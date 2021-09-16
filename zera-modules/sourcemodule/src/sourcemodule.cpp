@@ -8,9 +8,6 @@
 
 #include "sourcemodule.h"
 #include "sourcemoduleconfiguration.h"
-#include "sourcemoduleconfigdata.h"
-#include "sourcemoduleprogram.h"
-
 
 namespace SOURCEMODULE
 {
@@ -47,14 +44,7 @@ void cSourceModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseModule::setupModule();
 
-    // we only have this activist
-    m_pProgram = new cSourceModuleProgram(this, m_pProxy, m_pConfiguration);
-    m_ModuleActivistList.append(m_pProgram);
-    /*connect(m_pProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));*/
-
-    // For now m_ModuleActivistList is empty
+    // no modules to activate yet - TODO after demo implementation
     for (int i = 0; i < m_ModuleActivistList.count(); i++) {
         m_ModuleActivistList.at(i)->generateInterface();
     }
