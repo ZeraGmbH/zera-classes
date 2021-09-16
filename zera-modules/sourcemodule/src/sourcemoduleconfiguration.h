@@ -6,21 +6,13 @@
 #include <QByteArray>
 #include <QHash>
 
-#include "basemoduleconfiguration.h"
+#include <basemoduleconfiguration.h>
+#include <sourcemodule-config.hxx>
 
 namespace SOURCEMODULE
 {
 
-enum moduleconfigstate
-{
-    setDebugLevel,
-};
-
-
-
-class cSourceModuleConfigData;
-
-const QString defaultXSDFile = "://src/sourcemodule.xsd";
+//const QString defaultXSDFile = "://src/sourcemodule-config.xsd";
 
 // Sourcemoduleconfiguration holds configuration data as well as parameter
 
@@ -29,17 +21,15 @@ class cSourceModuleConfiguration: public cBaseModuleConfiguration
     Q_OBJECT
 public:
     cSourceModuleConfiguration();
-    ~cSourceModuleConfiguration();
     virtual void setConfiguration(QByteArray xmlString);
     virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    cSourceModuleConfigData* getConfigurationData();
+    std::unique_ptr<configuration>& GetConfig();
 
-protected slots:
-    virtual void configXMLInfo(QString key);
-    virtual void completeConfiguration(bool ok);
+protected slots: // for the sake of cXMLSettings - we introduced m_xsdGeneratedConfig
+    virtual void configXMLInfo(QString key) {};
 
 private:
-    cSourceModuleConfigData *m_pStatusModulConfigData;  // configuration
+    std::unique_ptr<configuration> m_xsdGeneratedConfig; // configuration
 };
 
 }
