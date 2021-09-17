@@ -1,5 +1,4 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/sourcemodule-config.xsd</file>
     </qresource>
 </RCC>
