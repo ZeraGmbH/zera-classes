@@ -12,8 +12,6 @@
 namespace SOURCEMODULE
 {
 
-//const QString defaultXSDFile = "://src/sourcemodule-config.xsd";
-
 // Sourcemoduleconfiguration holds configuration data as well as parameter
 
 class cSourceModuleConfiguration: public cBaseModuleConfiguration
