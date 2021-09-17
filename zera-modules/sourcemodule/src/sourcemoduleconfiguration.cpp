@@ -1,9 +1,8 @@
 #include <QPoint>
 #include <QString>
 #include <xmlconfigreader.h>
-
 #include "sourcemoduleconfiguration.h"
-#include "socket.h"
+
 
 namespace SOURCEMODULE
 {
@@ -34,10 +33,11 @@ QByteArray cSourceModuleConfiguration::exportConfiguration()
 {
     std::stringstream oStream;
     configuration_(oStream, *m_xsdGeneratedConfig);
-    return QByteArray::fromStdString(oStream.str());
+    QByteArray xmlExport = QByteArray::fromStdString(oStream.str());
+    return xmlExport;
 }
 
-configuration *cSourceModuleConfiguration::getConfigXMLWrapper()
+configuration* cSourceModuleConfiguration::getConfigXMLWrapper()
 {
     return m_xsdGeneratedConfig.get();
 }
