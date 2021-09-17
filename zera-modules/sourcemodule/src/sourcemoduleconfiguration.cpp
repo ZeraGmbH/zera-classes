@@ -37,10 +37,9 @@ QByteArray cSourceModuleConfiguration::exportConfiguration()
     return QByteArray::fromStdString(oStream.str());
 }
 
-
-std::unique_ptr<configuration> &cSourceModuleConfiguration::GetConfig()
+configuration *cSourceModuleConfiguration::getConfigXMLWrapper()
 {
-    return m_xsdGeneratedConfig;
+    return m_xsdGeneratedConfig.get();
 }
 
 }

@@ -31,6 +31,11 @@ QByteArray cSourceModule::getConfiguration() const
     return m_pConfiguration->exportConfiguration();
 }
 
+configuration *cSourceModule::getConfigXMLWrapper()
+{
+    return static_cast<cSourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
+}
+
 
 void cSourceModule::doConfiguration(QByteArray xmlConfigData)
 {
