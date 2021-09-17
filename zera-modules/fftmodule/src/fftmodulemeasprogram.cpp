@@ -218,11 +218,6 @@ void cFftModuleMeasProgram::generateInterface()
 }
 
 
-void cFftModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cFftModuleMeasProgram::setDspVarList()
 {
     m_nfftLen = 2 << (int)(floor(log((getConfData()->m_nFftOrder << 1) -1)/log(2.0))); // our fft length

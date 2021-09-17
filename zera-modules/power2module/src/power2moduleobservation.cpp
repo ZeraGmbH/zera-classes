@@ -52,12 +52,6 @@ void cPower2ModuleObservation::generateInterface()
 }
 
 
-void cPower2ModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cPower2ModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

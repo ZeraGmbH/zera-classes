@@ -50,12 +50,6 @@ void cReferenceModuleObservation::generateInterface()
 }
 
 
-void cReferenceModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cReferenceModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

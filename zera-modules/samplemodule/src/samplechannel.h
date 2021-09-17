@@ -44,7 +44,6 @@ public:
     cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configdata, quint8 chnnr);
     ~cSampleChannel();
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready

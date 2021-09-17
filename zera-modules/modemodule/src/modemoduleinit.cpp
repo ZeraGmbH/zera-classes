@@ -100,12 +100,6 @@ void cModeModuleInit::generateInterface()
 }
 
 
-void cModeModuleInit::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages

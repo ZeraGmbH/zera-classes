@@ -71,7 +71,6 @@ public:
     cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
     cVeinModuleComponent *m_pRangingSignal;
 

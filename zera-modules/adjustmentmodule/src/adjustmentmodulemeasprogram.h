@@ -98,7 +98,6 @@ public:
     cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cAdjustmentModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
     bool isAuthorized();
 
 signals:

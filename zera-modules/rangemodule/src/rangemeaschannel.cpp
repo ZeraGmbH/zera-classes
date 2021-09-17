@@ -442,11 +442,6 @@ void cRangeMeasChannel::generateInterface()
 }
 
 
-void cRangeMeasChannel::deleteInterface()
-{
-}
-
-
 void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

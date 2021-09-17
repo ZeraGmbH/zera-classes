@@ -126,12 +126,6 @@ void cPllMeasChannel::generateInterface()
 }
 
 
-void cPllMeasChannel::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 quint32 cPllMeasChannel::setyourself4PLL(QString samplesysname)
 {
     if (m_bActive)

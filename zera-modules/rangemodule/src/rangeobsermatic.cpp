@@ -262,11 +262,6 @@ void cRangeObsermatic::generateInterface()
 }
 
 
-void cRangeObsermatic::deleteInterface()
-{
-}
-
-
 void cRangeObsermatic::rangeObservation()
 {   
     bool markOverload =false;

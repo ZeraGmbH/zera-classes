@@ -62,7 +62,6 @@ public:
     cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval);
     virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values

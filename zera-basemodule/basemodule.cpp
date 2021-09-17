@@ -331,9 +331,7 @@ void cBaseModule::unsetModule()
 
     if (m_ModuleActivistList.count() > 0)
     {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++)
-        {
-            m_ModuleActivistList.at(i)->deleteInterface();
+        for (int i = 0; i < m_ModuleActivistList.count(); i++) {
             delete m_ModuleActivistList.at(i);
         }
         m_ModuleActivistList.clear();

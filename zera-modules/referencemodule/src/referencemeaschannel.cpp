@@ -136,12 +136,6 @@ void cReferenceMeasChannel::generateInterface()
 }
 
 
-void cReferenceMeasChannel::deleteInterface()
-{
-    // so nothing to delete
-}
-
-
 void cReferenceMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

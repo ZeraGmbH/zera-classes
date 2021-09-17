@@ -51,12 +51,6 @@ void cThdnModuleObservation::generateInterface()
 }
 
 
-void cThdnModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cThdnModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

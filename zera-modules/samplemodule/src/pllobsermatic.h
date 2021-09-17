@@ -59,7 +59,6 @@ public:
     cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& confData);
     virtual ~cPllObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 
 public slots:

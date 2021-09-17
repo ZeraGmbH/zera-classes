@@ -51,12 +51,6 @@ void cFftModuleObservation::generateInterface()
 }
 
 
-void cFftModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cFftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

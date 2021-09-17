@@ -20,7 +20,6 @@ public:
     cBaseMeasWorkProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseMeasWorkProgram();
     virtual void generateInterface() = 0; // here we export our interface (entities)
-    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
     cBaseModuleEventSystem* getEventSystem();
 
 signals:

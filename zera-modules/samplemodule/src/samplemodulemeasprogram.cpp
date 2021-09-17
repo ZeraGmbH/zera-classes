@@ -105,12 +105,6 @@ void cSampleModuleMeasProgram::generateInterface()
 }
 
 
-void cSampleModuleMeasProgram::deleteInterface()
-{
-    // ....so we have nothing to delete
-}
-
-
 void cSampleModuleMeasProgram::setDspVarList()
 {
 

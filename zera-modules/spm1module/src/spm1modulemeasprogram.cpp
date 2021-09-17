@@ -374,11 +374,6 @@ void cSpm1ModuleMeasProgram::generateInterface()
 }
 
 
-void cSpm1ModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

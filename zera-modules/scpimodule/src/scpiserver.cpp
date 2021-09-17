@@ -83,12 +83,6 @@ void cSCPIServer::generateInterface()
 }
 
 
-void cSCPIServer::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 cModuleInterface *cSCPIServer::getModuleInterface()
 {
     return m_pModuleInterface;

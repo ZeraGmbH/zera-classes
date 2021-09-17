@@ -189,11 +189,6 @@ void cOsciModuleMeasProgram::generateInterface()
 }
 
 
-void cOsciModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cOsciModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

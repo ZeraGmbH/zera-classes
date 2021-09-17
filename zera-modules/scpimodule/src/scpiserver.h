@@ -35,7 +35,6 @@ public:
     virtual ~cSCPIServer();
 
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
     cModuleInterface* getModuleInterface();
 
 private:

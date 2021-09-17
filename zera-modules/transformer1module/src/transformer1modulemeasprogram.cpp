@@ -251,11 +251,6 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 }
 
 
-void cTransformer1ModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cTransformer1ModuleMeasProgram::searchActualValues()
 {
     bool error;

@@ -442,11 +442,6 @@ void cPower1ModuleMeasProgram::generateInterface()
 }
 
 
-void cPower1ModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cPower1ModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values
