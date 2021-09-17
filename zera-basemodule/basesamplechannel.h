@@ -30,7 +30,6 @@ class cBaseSampleChannel: public cModuleActivist
 public:
     cBaseSampleChannel(Zera::Proxy::cProxy* proxy, QString name, quint8 chnnr);
     virtual ~cBaseSampleChannel(){}
-    virtual void generateInterface() = 0; // here we export our interface (entities)
 
     QString getName();
     QString getAlias();

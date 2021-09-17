@@ -19,7 +19,6 @@ class cBaseMeasWorkProgram: public cModuleActivist
 public:
     cBaseMeasWorkProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseMeasWorkProgram();
-    virtual void generateInterface() = 0; // here we export our interface (entities)
     cBaseModuleEventSystem* getEventSystem();
 
 signals:
