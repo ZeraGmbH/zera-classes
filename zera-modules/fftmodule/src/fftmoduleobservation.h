@@ -38,7 +38,6 @@ public:
     cFftModuleObservation(cFftModule* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
     virtual ~cFftModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 signals:
     void moduleReconfigure(); // we emit a signal for module reconfiguration when we recognize significant changes

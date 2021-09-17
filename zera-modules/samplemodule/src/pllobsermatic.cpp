@@ -95,11 +95,6 @@ void cPllObsermatic::generateInterface()
 }
 
 
-void cPllObsermatic::deleteInterface()
-{
-}
-
-
 void cPllObsermatic::pllAutomatic()
 {
     if (m_bActive && (m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) ) // was automatic configured

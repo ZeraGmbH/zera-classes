@@ -163,12 +163,6 @@ void cRangeModuleMeasProgram::generateInterface()
 }
 
 
-void cRangeModuleMeasProgram::deleteInterface()
-{
-    // the module will delete the interface when unsetting .....
-}
-
-
 void cRangeModuleMeasProgram::setDspVarList()
 {
 

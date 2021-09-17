@@ -251,11 +251,6 @@ void cRmsModuleMeasProgram::generateInterface()
 }
 
 
-void cRmsModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cRmsModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

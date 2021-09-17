@@ -219,12 +219,6 @@ void cStatusModuleInit::generateInterface()
 }
 
 
-void cStatusModuleInit::deleteInterface()
-{
-    // we have nothing to delete ...will be done if basemodule is destroyed
-}
-
-
 void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) // 0 was reserved for async. messages

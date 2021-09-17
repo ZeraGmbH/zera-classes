@@ -97,11 +97,6 @@ void cSampleChannel::generateInterface()
 
 
 
-void cSampleChannel::deleteInterface()
-{
-}
-
-
 void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     int cmd = m_MsgNrCmdList.take(msgnr);

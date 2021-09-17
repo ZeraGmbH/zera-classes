@@ -51,12 +51,6 @@ void cOsciModuleObservation::generateInterface()
 }
 
 
-void cOsciModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cOsciModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

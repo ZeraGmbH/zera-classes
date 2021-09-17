@@ -51,12 +51,6 @@ void cRmsModuleObservation::generateInterface()
 }
 
 
-void cRmsModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cRmsModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

@@ -50,12 +50,6 @@ void cRangeModuleObservation::generateInterface()
 }
 
 
-void cRangeModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages

@@ -40,7 +40,6 @@ public slots:
     virtual void activate(); // here we query our properties and activate ourself
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
-    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
 protected:
     bool m_bActive;

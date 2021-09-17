@@ -32,7 +32,6 @@ public:
     cBaseMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     virtual ~cBaseMeasChannel(){}
     virtual void generateInterface() = 0; // here we export our interface (entities)
-    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
     quint8 getDSPChannelNr();
     quint16 getSampleRate();

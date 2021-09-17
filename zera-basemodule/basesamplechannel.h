@@ -31,7 +31,6 @@ public:
     cBaseSampleChannel(Zera::Proxy::cProxy* proxy, QString name, quint8 chnnr);
     virtual ~cBaseSampleChannel(){}
     virtual void generateInterface() = 0; // here we export our interface (entities)
-    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
     QString getName();
     QString getAlias();

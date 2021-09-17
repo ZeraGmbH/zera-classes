@@ -102,11 +102,6 @@ void cEfficiency1ModuleMeasProgram::generateInterface()
 }
 
 
-void cEfficiency1ModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cEfficiency1ModuleMeasProgram::searchActualValues()
 {
     bool error;

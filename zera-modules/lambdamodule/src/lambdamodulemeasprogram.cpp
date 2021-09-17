@@ -103,11 +103,6 @@ void cLambdaModuleMeasProgram::generateInterface()
 }
 
 
-void cLambdaModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error;

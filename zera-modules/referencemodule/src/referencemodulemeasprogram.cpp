@@ -105,12 +105,6 @@ void cReferenceModuleMeasProgram::generateInterface()
 }
 
 
-void cReferenceModuleMeasProgram::deleteInterface()
-{
-    // so nothing to delete
-}
-
-
 void cReferenceModuleMeasProgram::setDspVarList()
 {
 

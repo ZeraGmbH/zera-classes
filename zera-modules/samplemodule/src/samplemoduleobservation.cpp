@@ -51,12 +51,6 @@ void cSampleModuleObservation::generateInterface()
 }
 
 
-void cSampleModuleObservation::deleteInterface()
-{
-    // so we have nothing to delete
-}
-
-
 void cSampleModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

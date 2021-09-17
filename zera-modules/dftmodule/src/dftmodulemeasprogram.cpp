@@ -245,11 +245,6 @@ void cDftModuleMeasProgram::generateInterface()
 }
 
 
-void cDftModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cDftModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

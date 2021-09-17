@@ -469,11 +469,6 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 }
 
 
-void cAdjustmentModuleMeasProgram::deleteInterface()
-{
-}
-
-
 bool cAdjustmentModuleMeasProgram::isAuthorized()
 {
     return m_bAuthorized;

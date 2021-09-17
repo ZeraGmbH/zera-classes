@@ -36,7 +36,6 @@ public:
     cBaseMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseMeasProgram();
     virtual void generateInterface() = 0; // here we export our interface (entities)
-    virtual void deleteInterface() = 0; // we delete interface in case of reconfiguration
 
 signals:
     void actualValues(QVector<float>*);

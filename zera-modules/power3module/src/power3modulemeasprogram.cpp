@@ -130,11 +130,6 @@ void cPower3ModuleMeasProgram::generateInterface()
 }
 
 
-void cPower3ModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cPower3ModuleMeasProgram::searchActualValues()
 {
     bool error;

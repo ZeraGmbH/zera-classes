@@ -106,12 +106,6 @@ void cReferenceAdjustment::generateInterface()
 }
 
 
-void cReferenceAdjustment::deleteInterface()
-{
-    // at the moment no interface
-}
-
-
 void cReferenceAdjustment::pcbserverConnect()
 {
     cSocket sock = m_pConfigData->m_PCBServerSocket;

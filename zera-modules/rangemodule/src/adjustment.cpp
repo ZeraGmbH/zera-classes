@@ -124,12 +124,6 @@ void cAdjustManagement::generateInterface()
 }
 
 
-void cAdjustManagement::deleteInterface()
-{
-    // at the moment no interface
-}
-
-
 void cAdjustManagement::pcbserverConnect()
 {
     // we connect cmddone of our meas channels so we get informed if commands are finished

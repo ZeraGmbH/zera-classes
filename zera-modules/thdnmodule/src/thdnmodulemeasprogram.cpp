@@ -212,11 +212,6 @@ void cThdnModuleMeasProgram::generateInterface()
 }
 
 
-void cThdnModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cThdnModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values

@@ -70,7 +70,6 @@ public:
     cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cRmsModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-    virtual void deleteInterface(); // we delete interface in case of reconfiguration
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values

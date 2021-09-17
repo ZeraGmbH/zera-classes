@@ -489,11 +489,6 @@ void cSec1ModuleMeasProgram::generateInterface()
 }
 
 
-void cSec1ModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     bool ok;

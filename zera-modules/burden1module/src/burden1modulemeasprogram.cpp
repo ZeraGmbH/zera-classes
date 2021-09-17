@@ -197,11 +197,6 @@ void cBurden1ModuleMeasProgram::generateInterface()
 }
 
 
-void cBurden1ModuleMeasProgram::deleteInterface()
-{
-}
-
-
 void cBurden1ModuleMeasProgram::searchActualValues()
 {
     bool error;
