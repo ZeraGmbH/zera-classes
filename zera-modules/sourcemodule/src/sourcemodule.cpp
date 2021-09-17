@@ -8,6 +8,7 @@
 
 #include "sourcemodule.h"
 #include "sourcemoduleconfiguration.h"
+#include "sourcemoduleprogram.h"
 
 namespace SOURCEMODULE
 {
@@ -42,7 +43,9 @@ void cSourceModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseModule::setupModule();
 
-    // no modules to activate yet - TODO after demo implementation
+    m_pProgram = new cSourceModuleProgram(this, m_pConfiguration);
+    m_ModuleActivistList.append(m_pProgram);
+
     for (int i = 0; i < m_ModuleActivistList.count(); i++) {
         m_ModuleActivistList.at(i)->generateInterface();
     }
