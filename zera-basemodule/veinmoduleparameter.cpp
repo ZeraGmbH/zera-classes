@@ -4,9 +4,12 @@
 
 
 cVeinModuleParameter::cVeinModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification, bool deferredQueryNotification)
-    :cVeinModuleComponent(entityId, eventsystem, name, description, initval), m_bDeferredNotification(deferredNotification), m_bDeferredQueryNotification(deferredQueryNotification)
+    :cVeinModuleComponent(entityId, eventsystem, name, description, initval),
+      m_bDeferredNotification(deferredNotification),
+      m_bDeferredQueryNotification(deferredQueryNotification),
+      m_pscpiInfo(nullptr),
+      m_pValidator(nullptr)
 {
-    m_pValidator = 0;
 }
 
 
