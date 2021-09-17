@@ -16,9 +16,21 @@ void cSourceModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
-    std::istringstream stdStream(xmlString.toStdString());
+    // We feed xml contents so have to set xsd props for absolute path of xsd
+    // That took a while to understand why we had to use flags xml_schema::flags::dont_validate
+    QString configPath = QStringLiteral(ZC_CONFIG_PATH);
+    if(!configPath.endsWith("/")) {
+        configPath += "/";
+    }
+    QString xsdLocation = QStringLiteral("file://") + configPath + QStringLiteral("sourcemodule-config.xsd");
+    xml_schema::properties props;
+    // taken from: https://www.codesynthesis.com/projects/xsd/documentation/cxx/tree/guide/#5.1
+    props.no_namespace_schema_location(xsdLocation.toStdString());
+    props.schema_location ("http://www.w3.org/XML/1998/namespace", "xml.xsd");
+
     try {
-        m_xsdGeneratedConfig = configuration_(stdStream, xml_schema::flags::dont_validate);
+        std::istringstream stdStream(xmlString.toStdString());
+        m_xsdGeneratedConfig = configuration_(stdStream, 0, props);
         m_bConfigured = true;
         emit configXMLDone();
     }
