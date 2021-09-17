@@ -131,7 +131,7 @@ write_basic_package_version_file(
 
 install(
     FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
-    DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
+    DESTINATION ${SET_ZC_CONFIG_PATH}
     )
 
 
