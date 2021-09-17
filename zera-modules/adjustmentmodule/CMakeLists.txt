@@ -22,8 +22,8 @@ find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_Package(VfComponent REQUIRED)
 
-#sum up project Files 
-file(GLOB SOURCES 
+#sum up project Files
+file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/*.cpp
     )
@@ -33,7 +33,7 @@ file(GLOB HEADER
      ${PROJECT_SOURCE_DIR}/*.h
     )
 
-file(GLOB RESOURCES 
+file(GLOB RESOURCES
     ${PROJECT_SOURCE_DIR}/*.qrc
     )
 
@@ -59,7 +59,7 @@ add_library(adjustmentmodule MODULE
     ${RESOURCES}
     )
 
-target_link_libraries(adjustmentmodule 
+target_link_libraries(adjustmentmodule
     PRIVATE
     Qt5::Core
     Qt5::Gui
@@ -73,7 +73,7 @@ target_link_libraries(adjustmentmodule
     zeramath
     zeramisc
     zeraxmlconfig
-    zeravalidator 
+    zeravalidator
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -105,7 +105,7 @@ write_basic_package_version_file(
 if(NOT ZC_NO_CONFIG_INSTALL)
     install(
         FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
-        DESTINATION ${CMAKE_INSTALL_SYSCONFDIR}/zera/modules
+        DESTINATION ${SET_ZC_CONFIG_PATH}
         )
 endif()
 
