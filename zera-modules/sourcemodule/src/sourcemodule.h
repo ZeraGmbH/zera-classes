@@ -8,6 +8,7 @@
 #include <QList>
 
 #include "basemeasmodule.h"
+#include "sourcemoduleconfiguration.h"
 
 
 namespace Zera {
@@ -39,6 +40,7 @@ Q_OBJECT
 public:
     cSourceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
+    configuration* getConfigXMLWrapper();
 
 protected:
     cSourceModuleProgram *m_pProgram; // our program, lets say the working horse

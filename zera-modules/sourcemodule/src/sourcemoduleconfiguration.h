@@ -23,7 +23,7 @@ public:
     cSourceModuleConfiguration();
     virtual void setConfiguration(QByteArray xmlString);
     virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
-    std::unique_ptr<configuration>& GetConfig();
+    configuration* getConfigXMLWrapper();
 
 protected slots: // for the sake of cXMLSettings - we introduced m_xsdGeneratedConfig
     virtual void configXMLInfo(QString key) {};
