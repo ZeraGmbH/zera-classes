@@ -28,11 +28,12 @@ private:
     configuration* getConfigXMLWrapper();
 
     cSourceModule* m_pModule; // the module we live in
-    cVeinModuleParameter* m_pVeinMaxCountParameter;
+    cVeinModuleActvalue* m_pVeinMaxCountAct;
+    cVeinModuleParameter* m_pVeinDemoSourceCount;
 
 private slots:
     // vein change handlers
-    void newMaxCount(QVariant maxCount);
+    void newDemoSourceCount(QVariant maxCount);
 
 };
 }
