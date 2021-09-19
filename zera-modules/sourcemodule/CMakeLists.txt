@@ -40,11 +40,11 @@ file(GLOB RESOURCES
     )
 
 file(GLOB CONFIG_FILES
-    ${PROJECT_SOURCE_DIR}/src/*.xml
+    ${PROJECT_SOURCE_DIR}/configs/*.xml
 )
 
 file(GLOB CONFIG_VALIDATOR
-    ${PROJECT_SOURCE_DIR}/src/*.xsd
+    ${PROJECT_SOURCE_DIR}/configs/*.xsd
 )
 
 # auto-generate c++ xml access from xsd
