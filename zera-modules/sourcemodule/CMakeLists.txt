@@ -47,6 +47,10 @@ file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/configs/*.xsd
 )
 
+file(GLOB SOURCE_CAPABILITIES
+    ${PROJECT_SOURCE_DIR}/capabilities/*.json
+)
+
 # auto-generate c++ xml access from xsd
 add_custom_command(
     OUTPUT
@@ -77,6 +81,21 @@ add_custom_target(sourcemodule-configs ALL
     DEPENDS ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     SOURCES ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    )
+
+# Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
+# Note 2: In case we make COMMAND in target below conditional on JSONLINT,
+#         qt-creator does not display source-capabilities. That's what the
+#         'echo' dance is for
+find_program (JSONLINT NAMES jsonlint-php echo)
+if(${JSONLINT} MATCHES ".*echo.*")
+    message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
+endif()
+
+# check for valid capabilities / display in qt-creator
+add_custom_target(source-capabilities ALL
+    SOURCES ${SOURCE_CAPABILITIES}
+    COMMAND ${JSONLINT} ${SOURCE_CAPABILITIES}
     )
 
 # create library
@@ -130,8 +149,12 @@ write_basic_package_version_file(
     )
 
 install(
-    FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
-    DESTINATION ${SET_ZC_CONFIG_PATH}
+    FILES
+        ${CONFIG_FILES}
+        ${CONFIG_VALIDATOR}
+        ${SOURCE_CAPABILITIES}
+    DESTINATION
+        ${SET_ZC_CONFIG_PATH}
     )
 
 
