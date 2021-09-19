@@ -1,0 +1,29 @@
+{
+  "CountUPhases": 3,
+  "CountIPhases": 3,
+  "Protocol": "ZERA-MT3000",
+
+  "U1": {
+    "minVal": 0.001,
+    "maxVal": 300.0,
+    "supportsHarmonics": false
+  },
+  "U2": {
+    "sameAs": "U1"
+  }, 
+  "U3": {
+    "sameAs": "U1"
+  },
+
+  "I1": {
+    "minVal": 0.001,
+    "maxVal": 20.0,
+    "supportsHarmonics": false
+  },
+  "I2": {
+    "sameAs": "I1"
+  },
+  "I3": {
+    "sameAs": "I1"
+  }
+}
