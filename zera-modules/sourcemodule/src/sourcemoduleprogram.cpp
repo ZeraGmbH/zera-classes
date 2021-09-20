@@ -80,14 +80,14 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
 
 void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 {
-    m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceInfo()));
+    m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
 
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
-    m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(""));
+    m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
 
 
