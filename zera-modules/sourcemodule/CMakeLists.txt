@@ -152,7 +152,6 @@ install(
     FILES
         ${CONFIG_FILES}
         ${CONFIG_VALIDATOR}
-        ${SOURCE_CAPABILITIES}
     DESTINATION
         ${SET_ZC_CONFIG_PATH}
     )

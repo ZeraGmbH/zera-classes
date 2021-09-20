@@ -4,6 +4,7 @@
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
 
+
 class cVeinModuleParameter;
 class cVeinModuleActvalue;
 
@@ -11,6 +12,7 @@ namespace SOURCEMODULE
 {
 
 class cSourceModule;
+class cSourceDeviceManager;
 
 class cSourceModuleProgram: public cBaseMeasWorkProgram
 {
@@ -18,6 +20,7 @@ class cSourceModuleProgram: public cBaseMeasWorkProgram
 
 public:
     cSourceModuleProgram(cSourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    virtual ~cSourceModuleProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 
 public slots: // Make cBaseMeasWorkProgram happy...
@@ -27,13 +30,18 @@ public slots: // Make cBaseMeasWorkProgram happy...
 private:
     configuration* getConfigXMLWrapper();
 
+    cSourceDeviceManager* m_pSourceDeviceManager;
+
     cSourceModule* m_pModule; // the module we live in
     cVeinModuleActvalue* m_pVeinMaxCountAct;
     cVeinModuleParameter* m_pVeinDemoSourceCount;
 
 private slots:
+    void onSourceDeviceAdded(int slotPosition);
+    void onSourceDeviceRemoved(int slotPosition);
+
     // vein change handlers
-    void newDemoSourceCount(QVariant maxCount);
+    void newDemoSourceCount(QVariant demoCount);
 
 };
 }
