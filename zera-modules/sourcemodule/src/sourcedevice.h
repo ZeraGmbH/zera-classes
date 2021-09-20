@@ -7,8 +7,6 @@ class cIOInterface;
 
 namespace SOURCEMODULE
 {
-extern QString randomString(int length);
-
 class cSourceDevice : public QObject
 {
     Q_OBJECT
@@ -23,10 +21,13 @@ public:
     // requests
     void close();
 
-    // queries
+    // getter
     cIOInterface* ioInterface();
     QString name();
-    QString capabilities();
+    QString deviceInfo();
+
+    // setter
+    void setName(QString name);
 
 signals:
     void sigClosed(cSourceDevice* sourceDevice);

@@ -38,6 +38,7 @@ void cSourceConnectTransaction::startConnect()
 void cSourceConnectTransaction::demoConnectTimeout()
 {
     m_sourceDeviceIdentified = new cSourceDevice(m_IOInterface, cSourceDevice::SOURCE_DEMO);
+    m_sourceDeviceIdentified->setName("Demo");
     emit sigTransactionFinished(this);
 }
 

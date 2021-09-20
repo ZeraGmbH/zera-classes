@@ -48,7 +48,7 @@ file(GLOB CONFIG_VALIDATOR
 )
 
 file(GLOB SOURCE_CAPABILITIES
-    ${PROJECT_SOURCE_DIR}/capabilities/*.json
+    ${PROJECT_SOURCE_DIR}/deviceinfo/*.json
 )
 
 # auto-generate c++ xml access from xsd
@@ -85,7 +85,7 @@ add_custom_target(sourcemodule-configs ALL
 
 # Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
 # Note 2: In case we make COMMAND in target below conditional on JSONLINT,
-#         qt-creator does not display source-capabilities. That's what the
+#         qt-creator does not display source-deviceinfo. That's what the
 #         'echo' dance is for
 find_program (JSONLINT NAMES jsonlint-php echo)
 if(${JSONLINT} MATCHES ".*echo.*")
@@ -93,7 +93,7 @@ if(${JSONLINT} MATCHES ".*echo.*")
 endif()
 
 # check for valid capabilities / display in qt-creator
-add_custom_target(source-capabilities ALL
+add_custom_target(source-deviceinfo ALL
     SOURCES ${SOURCE_CAPABILITIES}
     COMMAND ${JSONLINT} ${SOURCE_CAPABILITIES}
     )

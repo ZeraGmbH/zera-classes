@@ -18,11 +18,11 @@ public:
     explicit cIOInterface(enum IOType ioType, QString deviceFilename, QObject *parent = nullptr);
     virtual ~cIOInterface();
 
-    // queries
+    // getter
     const enum IOType type();
     QString deviceFileName();
 
-    // external requests
+    // requests
     void requestExternalDisconnect();
     void startTransaction(cIOTransaktionInfo& transaction);
 

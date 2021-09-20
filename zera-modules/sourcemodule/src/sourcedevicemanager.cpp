@@ -36,7 +36,7 @@ int cSourceDeviceManager::activeSlotCount()
 }
 
 
-cSourceDevice *cSourceDeviceManager::getSourceDevice(int slotNo)
+cSourceDevice *cSourceDeviceManager::sourceDevice(int slotNo)
 {
     cSourceDevice* sourceDevice = nullptr;
     if(slotNo < m_sourceDeviceSlots.count()) {

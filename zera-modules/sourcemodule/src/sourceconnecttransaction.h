@@ -16,8 +16,12 @@ class cSourceConnectTransaction : public QObject
     Q_OBJECT
 public:
     explicit cSourceConnectTransaction(cIOInterface *interface, QObject *parent = nullptr);
-    cSourceDevice* sourceDeviceFound();
+
+    // requests
     void startConnect();
+
+    // getter
+    cSourceDevice* sourceDeviceFound();
 
 private:
     cIOInterface* m_IOInterface;
