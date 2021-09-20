@@ -34,6 +34,7 @@ private:
 
     cSourceModule* m_pModule; // the module we live in
     cVeinModuleActvalue* m_pVeinMaxCountAct;
+    cVeinModuleActvalue* m_pVeinCountAct;
     cVeinModuleParameter* m_pVeinDemoSourceCount;
 
     QVector<cVeinModuleActvalue*> m_arrVeinSourceDeviceInfo;

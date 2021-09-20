@@ -44,6 +44,12 @@ void cSourceModuleProgram::generateInterface()
                                                     QVariant(config->max_count_sources()) );
     m_pModule->veinModuleActvalueList.append(m_pVeinMaxCountAct); // auto delete / meta-data / scpi
 
+    m_pVeinCountAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                    QString("ACT_CountSources"),
+                                                    QString("Component containing count of active sources"),
+                                                    QVariant(0) );
+    m_pModule->veinModuleActvalueList.append(m_pVeinCountAct); // auto delete / meta-data / scpi
+
     m_pVeinDemoSourceCount = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_DemoSources"),
                                                        QString("Component for setting number of demo sources"),
@@ -74,11 +80,13 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
 
 void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 {
+    m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceInfo()));
 }
 
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
+    m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(""));
 }
 
