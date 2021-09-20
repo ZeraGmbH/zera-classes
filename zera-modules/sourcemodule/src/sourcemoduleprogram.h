@@ -36,6 +36,8 @@ private:
     cVeinModuleActvalue* m_pVeinMaxCountAct;
     cVeinModuleParameter* m_pVeinDemoSourceCount;
 
+    QVector<cVeinModuleActvalue*> m_arrVeinSourceDeviceInfo;
+
 private slots:
     void onSourceDeviceAdded(int slotPosition);
     void onSourceDeviceRemoved(int slotPosition);

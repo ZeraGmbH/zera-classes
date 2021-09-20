@@ -1,4 +1,5 @@
 {
+  "Name": "%name%",
   "CountUPhases": 3,
   "CountIPhases": 3,
   "Protocol": "ZERA-MT3000",

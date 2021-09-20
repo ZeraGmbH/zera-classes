@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>capabilities/MT3000.json</file>
+        <file>deviceinfo/MT3000.json</file>
     </qresource>
 </RCC>

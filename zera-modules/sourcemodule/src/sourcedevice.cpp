@@ -8,8 +8,7 @@ namespace SOURCEMODULE
 cSourceDevice::cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent) :
     QObject(parent),
     m_IOInterface(interface),
-    m_type(type),
-    m_deviceName(randomString(4))
+    m_type(type)
 {
     connect(interface, &cIOInterface::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
 }
@@ -42,21 +41,32 @@ QString cSourceDevice::name()
     return m_deviceName;
 }
 
-QString cSourceDevice::capabilities()
+QString cSourceDevice::deviceInfo()
 {
     QString capabilityFileName;
+    // If we ever make it to FG, we need dynamic contents...
     switch(m_type) {
     case SOURCE_DEMO:
     case SOURCE_MT3000:
-        capabilityFileName = QStringLiteral("://capabilities/MT3000.json");
+        capabilityFileName = QStringLiteral("://deviceinfo/MT3000.json");
         break;
     }
     QFile capabilityFile(capabilityFileName);
     capabilityFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
     QString capabilityFileContent = capabilityFile.readAll();
     capabilityFile.close();
+
+    capabilityFileContent.replace("%name%", name());
+    capabilityFileContent.replace("\n", "").replace(" ", "");
     return capabilityFileContent;
 }
+
+
+void cSourceDevice::setName(QString name)
+{
+    m_deviceName = name;
+}
+
 
 void cSourceDevice::onInterfaceClosed(cIOInterface *ioInterface)
 {

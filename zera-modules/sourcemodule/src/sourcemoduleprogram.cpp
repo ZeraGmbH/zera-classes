@@ -31,23 +31,38 @@ void cSourceModuleProgram::generateInterface()
 {
     QString key;
     configuration* config = getConfigXMLWrapper();
-    m_pSourceDeviceManager = new cSourceDeviceManager(config->max_count_sources());
+    int maxSources = config->max_count_sources();
+
+    // common components
+    m_pSourceDeviceManager = new cSourceDeviceManager(maxSources);
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotAdded, this, &cSourceModuleProgram::onSourceDeviceAdded);
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved, this, &cSourceModuleProgram::onSourceDeviceRemoved);
 
     m_pVeinMaxCountAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                        QString("ACT_MaxSources"),
-                                        QString("Component with max source devices handled"),
-                                        QVariant(config->max_count_sources()) );
+                                                    QString("ACT_MaxSources"),
+                                                    QString("Component with max source devices handled"),
+                                                    QVariant(config->max_count_sources()) );
     m_pModule->veinModuleActvalueList.append(m_pVeinMaxCountAct); // auto delete / meta-data / scpi
 
     m_pVeinDemoSourceCount = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                           key = QString("PAR_DemoSources"),
-                                                           QString("Component for setting number of demo sources"),
-                                                           QVariant(int(0)));
-    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0,4));
+                                                       key = QString("PAR_DemoSources"),
+                                                       QString("Component for setting number of demo sources"),
+                                                       QVariant(int(0)));
+    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
     connect(m_pVeinDemoSourceCount, &cVeinModuleParameter::sigValueChanged, this, &cSourceModuleProgram::newDemoSourceCount);
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
+
+    // per source components
+    cVeinModuleActvalue* pVeinAct;
+    for(int souceCount=0; souceCount<maxSources; souceCount++) {
+        // device info
+        pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_DeviceInfo%1").arg(souceCount),
+                                            QString("Component with source info/capabiliities"),
+                                            QVariant("") );
+        m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
+        m_arrVeinSourceDeviceInfo.append(pVeinAct);
+    }
 }
 
 
@@ -59,12 +74,12 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
 
 void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 {
-
+    m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceInfo()));
 }
 
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
-
+    m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(""));
 }
 
 
@@ -100,7 +115,7 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
         bool removeFront = randomBool();
         if(removeFront) {
             for(int slotNo=0; sourcesToRemove && slotNo<getConfigXMLWrapper()->max_count_sources(); slotNo++) {
-                cSourceDevice* source = m_pSourceDeviceManager->getSourceDevice(slotNo);
+                cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
                     source->ioInterface()->requestExternalDisconnect();
                     sourcesToRemove--;
@@ -109,7 +124,7 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
         }
         else {
             for(int slotNo=getConfigXMLWrapper()->max_count_sources()-1; sourcesToRemove && slotNo>=0; slotNo--) {
-                cSourceDevice* source = m_pSourceDeviceManager->getSourceDevice(slotNo);
+                cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
                     source->ioInterface()->requestExternalDisconnect();
                     sourcesToRemove--;

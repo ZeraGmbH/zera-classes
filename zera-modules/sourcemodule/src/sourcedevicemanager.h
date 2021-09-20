@@ -18,10 +18,12 @@ class cSourceDeviceManager : public QObject
 public:
     cSourceDeviceManager(int countSlots, QObject *parent = 0);
 
+    // requests
     void startSourceIdentification(cIOInterface *interface);
 
+    // getter
     int activeSlotCount();
-    cSourceDevice* getSourceDevice(int slotNo);
+    cSourceDevice* sourceDevice(int slotNo);
 
 signals:
     void sigSlotAdded(int slotNo);
