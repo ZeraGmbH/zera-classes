@@ -12,9 +12,11 @@ class cSourceDevice : public QObject
     Q_OBJECT
 public:
     enum SourceType { // TODO replace by protocol
-        SOURCE_DEMO,
+        SOURCE_DEMO = 0,
         SOURCE_MT3000,
         SOURCE_MT400_20,
+
+        SOURCE_TYPE_COUNT
     };
     explicit cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent = nullptr);
     virtual ~cSourceDevice();
@@ -37,6 +39,7 @@ private:
     cIOInterface* m_IOInterface;
 
     SourceType m_type;
+    SourceType m_demoType;
     QString m_deviceName;
 };
 

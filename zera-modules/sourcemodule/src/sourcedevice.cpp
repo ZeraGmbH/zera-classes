@@ -5,12 +5,27 @@
 namespace SOURCEMODULE
 {
 
+static enum cSourceDevice::SourceType sDemoTypeCounter(cSourceDevice::SOURCE_DEMO);
+
 cSourceDevice::cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent) :
     QObject(parent),
     m_IOInterface(interface),
     m_type(type)
 {
     connect(interface, &cIOInterface::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
+
+    // demo only stuff
+    if(type == SOURCE_DEMO) {
+        int nextDemoType = sDemoTypeCounter;
+        nextDemoType++;
+        if(nextDemoType == SOURCE_TYPE_COUNT) {
+            nextDemoType = 0;
+        }
+        if(nextDemoType == SOURCE_DEMO) {
+            nextDemoType++;
+        }
+        m_demoType = sDemoTypeCounter = cSourceDevice::SourceType(nextDemoType);
+    }
 }
 
 cSourceDevice::~cSourceDevice()
@@ -27,7 +42,10 @@ void cSourceDevice::close()
     case SOURCE_MT3000:
     case SOURCE_MT400_20:
         // TODO - maybe some sequence?
-        Q_ASSERT(false);
+        qWarning("Using source type not implemented yet");
+        break;
+    case SOURCE_TYPE_COUNT:
+        qFatal("Do not use SOURCE_TYPE_COUNT");
         break;
     }
 }
@@ -73,8 +91,12 @@ void cSourceDevice::onInterfaceClosed(cIOInterface *ioInterface)
         emit sigClosed(this);
         break;
     case SOURCE_MT3000:
+    case SOURCE_MT400_20:
         // TODO
-        Q_ASSERT(false);
+        qWarning("Using source type not implemented yet");
+        break;
+    case SOURCE_TYPE_COUNT:
+        qFatal("Do not use SOURCE_TYPE_COUNT");
         break;
     }
 }
