@@ -1,21 +1,9 @@
 {
   "Name": "%name%",
-  "CountUPhases": 3,
+  "CountUPhases": 0,
   "CountIPhases": 3,
   "HasReferenceMeter": false,
-  "Protocol": "ZERA-MT3000",
-
-  "U1": {
-    "minVal": 0.001,
-    "maxVal": 300.0,
-    "supportsHarmonics": false
-  },
-  "U2": {
-    "sameAs": "U1"
-  }, 
-  "U3": {
-    "sameAs": "U1"
-  },
+  "Protocol": "ZERA-MT400",
 
   "I1": {
     "minVal": 0.001,
