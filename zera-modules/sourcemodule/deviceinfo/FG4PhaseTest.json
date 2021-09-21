@@ -1,0 +1,37 @@
+{
+  "Name": "FG4PhaseDemo",
+  "CountUPhases": 4,
+  "CountIPhases": 4,
+  "HasReferenceMeter": true,
+  "Protocol": "JustForTest",
+
+  "U1": {
+    "minVal": 0.001,
+    "maxVal": 300.0,
+    "supportsHarmonics": false
+  },
+  "U2": {
+    "sameAs": "U1"
+  }, 
+  "U3": {
+    "sameAs": "U1"
+  },
+  "U4": {
+    "sameAs": "U1"
+  },
+
+  "I1": {
+    "minVal": 0.001,
+    "maxVal": 20.0,
+    "supportsHarmonics": false
+  },
+  "I2": {
+    "sameAs": "I1"
+  },
+  "I3": {
+    "sameAs": "I1"
+  },
+  "I4": {
+    "sameAs": "I1"
+  }
+}

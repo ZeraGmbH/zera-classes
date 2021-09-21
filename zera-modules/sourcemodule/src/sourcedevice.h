@@ -16,6 +16,8 @@ public:
         SOURCE_MT3000,
         SOURCE_MT400_20,
 
+        SOURCE_DEMO_FG_4PHASE,
+
         SOURCE_TYPE_COUNT
     };
     explicit cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent = nullptr);
