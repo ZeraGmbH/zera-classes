@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
+        <file>deviceinfo/FG4PhaseTest.json</file>
         <file>deviceinfo/MT400-20.json</file>
         <file>deviceinfo/MT3000.json</file>
     </qresource>
