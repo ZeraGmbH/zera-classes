@@ -24,11 +24,7 @@ public:
 
     // getter
     cIOInterface* ioInterface();
-    QString name();
     QString deviceInfo();
-
-    // setter
-    void setName(QString name);
 
 signals:
     void sigClosed(cSourceDevice* sourceDevice);

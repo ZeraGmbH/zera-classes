@@ -37,22 +37,23 @@ cIOInterface* cSourceDevice::ioInterface()
     return m_IOInterface;
 }
 
-QString cSourceDevice::name()
-{
-    return m_deviceName;
-}
-
 QString cSourceDevice::deviceInfo()
 {
     QString capabilityFileName;
     // If we ever make it to FG, we need dynamic contents...
-    switch(m_type) {
-    case SOURCE_DEMO:
+    switch(m_type != SOURCE_DEMO ? m_type : m_demoType) {
     case SOURCE_MT3000:
         capabilityFileName = QStringLiteral("://deviceinfo/MT3000.json");
         break;
     case SOURCE_MT400_20:
         capabilityFileName = QStringLiteral("://deviceinfo/MT400-20.json");
+        break;
+
+    case SOURCE_DEMO:
+        qFatal("Do not use SOURCE_DEMO");
+        break;
+    case SOURCE_TYPE_COUNT:
+        qFatal("Do not use SOURCE_TYPE_COUNT");
         break;
     }
     QFile capabilityFile(capabilityFileName);
@@ -60,17 +61,9 @@ QString cSourceDevice::deviceInfo()
     QString capabilityFileContent = capabilityFile.readAll();
     capabilityFile.close();
 
-    capabilityFileContent.replace("%name%", name());
     capabilityFileContent.replace("\n", "").replace(" ", "");
     return capabilityFileContent;
 }
-
-
-void cSourceDevice::setName(QString name)
-{
-    m_deviceName = name;
-}
-
 
 void cSourceDevice::onInterfaceClosed(cIOInterface *ioInterface)
 {
