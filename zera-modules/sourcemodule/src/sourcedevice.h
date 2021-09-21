@@ -14,6 +14,7 @@ public:
     enum SourceType { // TODO replace by protocol
         SOURCE_DEMO,
         SOURCE_MT3000,
+        SOURCE_MT400_20,
     };
     explicit cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent = nullptr);
     virtual ~cSourceDevice();

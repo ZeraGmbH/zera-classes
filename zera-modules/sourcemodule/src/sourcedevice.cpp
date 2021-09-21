@@ -25,6 +25,7 @@ void cSourceDevice::close()
         m_IOInterface->requestExternalDisconnect();
         break;
     case SOURCE_MT3000:
+    case SOURCE_MT400_20:
         // TODO - maybe some sequence?
         Q_ASSERT(false);
         break;
@@ -49,6 +50,9 @@ QString cSourceDevice::deviceInfo()
     case SOURCE_DEMO:
     case SOURCE_MT3000:
         capabilityFileName = QStringLiteral("://deviceinfo/MT3000.json");
+        break;
+    case SOURCE_MT400_20:
+        capabilityFileName = QStringLiteral("://deviceinfo/MT400-20.json");
         break;
     }
     QFile capabilityFile(capabilityFileName);
