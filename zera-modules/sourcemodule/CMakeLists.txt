@@ -47,7 +47,7 @@ file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/configs/*.xsd
 )
 
-file(GLOB SOURCE_CAPABILITIES
+file(GLOB SOURCE_CONFIGS
     ${PROJECT_SOURCE_DIR}/deviceinfo/*.json
 )
 
@@ -93,10 +93,22 @@ if(${JSONLINT} MATCHES ".*echo.*")
 endif()
 
 # check for valid capabilities / display in qt-creator
-add_custom_target(source-deviceinfo ALL
-    SOURCES ${SOURCE_CAPABILITIES}
-    COMMAND ${JSONLINT} ${SOURCE_CAPABILITIES}
+add_custom_target(source-deviceinfo-dont-forget-qrc ALL
+    SOURCES ${SOURCE_CONFIGS}
+    COMMAND ${JSONLINT} ${SOURCE_CONFIGS}
     )
+
+# check if all configs made it into resource.qrc
+foreach(sourceconfigfile ${SOURCE_CONFIGS})
+    get_filename_component(filename ${sourceconfigfile} NAME)
+    file(STRINGS ${PROJECT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
+    if(NOT lines)
+        message(FATAL_ERROR "${filename} was not added to resource.qrc - source will not work!!")
+        list(APPEND HEADERS_HAVING_Q_OBJECT "${header}")
+    endif()
+endforeach()
+
+
 
 # create library
 add_library(sourcemodule MODULE
