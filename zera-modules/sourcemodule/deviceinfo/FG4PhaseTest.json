@@ -8,7 +8,7 @@
   "U1": {
     "minVal": 0.001,
     "maxVal": 300.0,
-    "supportsHarmonics": false
+    "supportsHarmonics": true
   },
   "U2": {
     "sameAs": "U1"
@@ -23,7 +23,7 @@
   "I1": {
     "minVal": 0.001,
     "maxVal": 20.0,
-    "supportsHarmonics": false
+    "supportsHarmonics": true
   },
   "I2": {
     "sameAs": "I1"
