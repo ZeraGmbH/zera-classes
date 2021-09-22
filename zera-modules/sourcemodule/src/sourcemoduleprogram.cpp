@@ -65,7 +65,7 @@ void cSourceModuleProgram::generateInterface()
         pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_DeviceInfo%1").arg(souceCount),
                                             QString("Component with source info/capabiliities"),
-                                            QVariant("") );
+                                            QVariant("{}") );
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
         m_arrVeinSourceDeviceInfo.append(pVeinAct);
     }
@@ -86,7 +86,7 @@ void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
-    m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(""));
+    m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant("{}"));
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
 
