@@ -1,7 +1,7 @@
 {
   "Name": "FG4PhaseDemo",
-  "CountUPhases": 4,
-  "CountIPhases": 4,
+  "UPhaseMax": 4,
+  "IPhaseMax": 4,
   "HasReferenceMeter": true,
   "Protocol": "JustForTest",
 
