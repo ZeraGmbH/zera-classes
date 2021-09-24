@@ -8,6 +8,8 @@
   "I1": {
     "minVal": 0.001,
     "maxVal": 20.0,
+    "minStepVal": 0.001,
+    "minStepValAngle": 0.001,
     "supportsHarmonics": false
   },
   "I2": {
