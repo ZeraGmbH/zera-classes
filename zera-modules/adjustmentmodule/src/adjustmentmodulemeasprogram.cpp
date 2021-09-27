@@ -964,7 +964,7 @@ void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
 
 void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
 {
-    m_pPARAdjustClampData->setValue(var);
+    receivedPar = var;
     m_MsgNrCmdList[m_AdjustPCBInterface->setClampAdjustmentData(var.toString())] = setclampadjustmentdata;
 }
 
@@ -1370,7 +1370,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
             case setclampadjustmentdata:
                 if (reply == ack)
-                    m_pPARAdjustClampData->setValue(answer);
+                    m_pPARAdjustClampData->setValue(receivedPar);
                 else
                 {
                     m_pPARAdjustClampData->setError();
