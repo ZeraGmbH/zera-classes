@@ -47,7 +47,7 @@ file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/configs/*.xsd
 )
 
-file(GLOB SOURCE_CONFIGS
+file(GLOB SOURCE_DEVINFO
     ${PROJECT_SOURCE_DIR}/deviceinfo/*.json
 )
 
@@ -92,14 +92,14 @@ if(${JSONLINT} MATCHES ".*echo.*")
     message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
 endif()
 
-# check for valid capabilities / display in qt-creator
+# check for valid devinfo / display in qt-creator
 add_custom_target(source-deviceinfo-dont-forget-qrc ALL
-    SOURCES ${SOURCE_CONFIGS}
-    COMMAND ${JSONLINT} ${SOURCE_CONFIGS}
+    SOURCES ${SOURCE_DEVINFO}
+    COMMAND ${JSONLINT} ${SOURCE_DEVINFO}
     )
 
 # check if all configs made it into resource.qrc
-foreach(sourceconfigfile ${SOURCE_CONFIGS})
+foreach(sourceconfigfile ${SOURCE_DEVINFO})
     get_filename_component(filename ${sourceconfigfile} NAME)
     file(STRINGS ${PROJECT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
     if(NOT lines)
