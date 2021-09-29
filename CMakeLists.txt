@@ -37,6 +37,7 @@ set(SUB_DIRS
     ${SUB_DIRS_MODULES}
     zera-math
     zera-intel-hex-checker
+    zera-json-params
     zera-mcontroller-io
     zera-comm/zera-i2c
     zera-dev
