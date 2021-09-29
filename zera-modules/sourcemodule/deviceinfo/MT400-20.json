@@ -22,8 +22,8 @@
         },
         "angle": {
             "type": "float",
-            "min": 359.999,
-            "max": 0.0,
+            "min": 0.0,
+            "max": 359.999,
             "decimals": 3
         },
         "phase_onoff": {

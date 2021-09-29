@@ -224,7 +224,15 @@ void cZeraJsonParams::validateParamData(QJsonObject::ConstIterator iter, bool in
                 }
             }
         }
-        // TODO defaults out of limit / min < max / valid data types for other??
+        // max > min - a classic late night bug introduced
+        if(paramObject.contains("max") && paramObject.contains("min")) {
+            if(paramObject["max"].toDouble() < paramObject["min"].toDouble()) {
+                errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                               key + " max < min");
+                errList.push_back(error);
+            }
+        }
+        // TODO defaults out of limit / valid data types for other??
     }
     else {
         errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
