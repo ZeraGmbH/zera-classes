@@ -1,35 +1,107 @@
 {
-  "Name": "MT3000",
-  "UPhaseMax": 3,
-  "IPhaseMax": 3,
-  "HasReferenceMeter": false,
-  "Protocol": "ZERA-MT3000",
+    "Name": "MT3000",
+    "HasReferenceMeter": false,
 
-  "U1": {
-    "minVal": 0.001,
-    "maxVal": 300.0,
-    "minStepVal": 0.001,
-    "minStepValAngle": 0.001,
-    "supportsHarmonics": false
-  },
-  "U2": {
-    "sameAs": "U1"
-  }, 
-  "U3": {
-    "sameAs": "U1"
-  },
+    "params": {
+        "on": {
+            "ptype": "bool",
+            "default": false
+        }
+    },
 
-  "I1": {
-    "minVal": 0.001,
-    "maxVal": 20.0,
-    "minStepVal": 0.001,
-    "minStepValAngle": 0.001,
-    "supportsHarmonics": false
-  },
-  "I2": {
-    "sameAs": "I1"
-  },
-  "I3": {
-    "sameAs": "I1"
-  }
+    "param_templates": {
+        "voltage_rms": {
+            "type": "float",
+            "min": 40.0,
+            "max": 300.0,
+            "decimals": 3,
+            "default": 230.0
+        },
+        "current_rms": {
+            "type": "float",
+            "min": 0.001,
+            "max": 20.0,
+            "decimals": 3,
+            "default": 5.0
+        },
+        "angle": {
+            "type": "float",
+            "min": 359.999,
+            "max": 0.0,
+            "decimals": 3
+        },
+        "phase_onoff": {
+            "type": "bool",
+            "default": true
+        }
+    },
+
+    "Frequency": {
+        "params": {
+            "val": {
+                "type": "float",
+                "min": 16.0,
+                "max": 70.0,
+                "decimals": 3,
+                "default": 50.0
+            },
+            "type": {
+                "type": "strlist",
+                "list": [ "var", "sync" ],
+                "default": "var"
+            }
+        }
+    },
+    
+    "UPhaseMax": 3,
+    "U1": {
+        "params": {
+            "rms": { "param_template": "voltage_rms" },
+            "angle": { "param_template": "angle", "default": 0.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "U2": {
+        "params": {
+            "rms": { "param_template": "voltage_rms" },
+            "angle": { "param_template": "angle", "default": 120.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "U3": {
+        "params": {
+            "rms": { "param_template": "voltage_rms" },
+            "angle": { "param_template": "angle", "default": 240.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+
+    "IPhaseMax": 3,
+    "I1": {
+        "params": {
+            "rms": { "param_template": "current_rms" },
+            "angle": { "param_template": "angle", "default": 0.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "I2": {
+        "params": {
+            "rms": { "param_template": "current_rms" },
+            "angle": { "param_template": "angle", "default": 120.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "I3": {
+        "params": {
+            "rms": { "param_template": "current_rms" },
+            "angle": { "param_template": "angle", "default": 240.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    }
 }
