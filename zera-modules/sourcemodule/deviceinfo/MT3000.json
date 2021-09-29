@@ -4,7 +4,7 @@
 
     "params": {
         "on": {
-            "ptype": "bool",
+            "type": "bool",
             "default": false
         }
     },
