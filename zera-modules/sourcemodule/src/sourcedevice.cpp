@@ -78,10 +78,10 @@ QString cSourceDevice::deviceInfo()
         qFatal("Do not use SOURCE_TYPE_COUNT");
         break;
     }
-    cZeraJsonParams::ErrList errList = m_ZeraJsonParams.loadJsonFromFiles(deviceInfoFileName, QString() /*TODO*/);
+    cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParams.loadJsonFromFiles(deviceInfoFileName, QString() /*TODO*/);
     QString devInfo = "{}";
     if(errList.isEmpty()) {
-        devInfo = m_ZeraJsonParams.exportJsonStructure();
+        devInfo = m_ZeraJsonParams.exportJson();
     }
     else {
         // TODO handle error list

@@ -1,13 +1,13 @@
-#include "zera-json-params.h"
+#include "zera-json-params-structure.h"
 #include <QFile>
 #include <QJsonObject>
 
 
-cZeraJsonParams::cZeraJsonParams()
+cZeraJsonParamsStructure::cZeraJsonParamsStructure()
 {
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::loadJson(const QByteArray &jsonStructure, const QByteArray &jsonParamState,
+cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadJson(const QByteArray &jsonStructure, const QByteArray &jsonParamState,
                                                    const QString &jsonStructureErrHint, const QString &jsonParamStateErrHint)
 {
     ErrList errList;
@@ -46,7 +46,7 @@ cZeraJsonParams::ErrList cZeraJsonParams::loadJson(const QByteArray &jsonStructu
     return errList;
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::loadJsonFromFiles(const QString &filenameJsonStructure, const QString &filenameJsonParamState)
+cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadJsonFromFiles(const QString &filenameJsonStructure, const QString &filenameJsonParamState)
 {
    ErrList errList;
    QFile jsonStructureFile(filenameJsonStructure);
@@ -77,16 +77,16 @@ cZeraJsonParams::ErrList cZeraJsonParams::loadJsonFromFiles(const QString &filen
    return errList;
 }
 
-QByteArray cZeraJsonParams::exportJsonStructure(QJsonDocument::JsonFormat format)
+QByteArray cZeraJsonParamsStructure::exportJson(QJsonDocument::JsonFormat format)
 {
     return m_jsonStructure.toJson(format);
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::exportJsonStructureFile(const QString &filenameJsonStructure, QJsonDocument::JsonFormat format)
+cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::exportJsonFile(const QString &filenameJsonStructure, QJsonDocument::JsonFormat format)
 {
     ErrList errList;
     QFile jsonStructureFile(filenameJsonStructure);
-    QByteArray jsonData = exportJsonStructure(format);
+    QByteArray jsonData = exportJson(format);
     if(jsonStructureFile.open(QIODevice::WriteOnly)) {
         jsonStructureFile.write(jsonData);
         jsonStructureFile.close();
@@ -98,42 +98,7 @@ cZeraJsonParams::ErrList cZeraJsonParams::exportJsonStructureFile(const QString 
     return errList;
 }
 
-QByteArray cZeraJsonParams::exportJsonParamState(QJsonDocument::JsonFormat format)
-{
-    return m_jsonParamState.toJson(format);
-}
-
-cZeraJsonParams::ErrList cZeraJsonParams::exportJsonParamStateFile(const QString &filenameJsonParamState, QJsonDocument::JsonFormat format)
-{
-    ErrList errList;
-    QFile jsonJsonParamState(filenameJsonParamState);
-    QByteArray jsonData = exportJsonParamState(format);
-    if(jsonJsonParamState.open(QIODevice::WriteOnly)) {
-        jsonJsonParamState.write(jsonData);
-        jsonJsonParamState.close();
-    }
-    else {
-        errEntry error(ERR_FILE_IO, filenameJsonParamState);
-        errList.push_back(error);
-    }
-    return errList;
-}
-
-cZeraJsonParams::ErrList cZeraJsonParams::param(const QStringList &paramPath, QVariant& value)
-{
-    ErrList errList;
-    // TODO
-    return errList;
-}
-
-cZeraJsonParams::ErrList cZeraJsonParams::setParam(const QStringList &paramPath, QVariant value)
-{
-    ErrList errList;
-    // TODO
-    return errList;
-}
-
-void cZeraJsonParams::resolveJsonParamTemplates(QJsonObject &jsonStructObj, ErrList& errList)
+void cZeraJsonParamsStructure::resolveJsonParamTemplates(QJsonObject &jsonStructObj, ErrList& errList)
 {
     // Find "param_templates" object and start recursive resolve
     QJsonValue paramTemplateValue = jsonStructObj["param_templates"];
@@ -156,7 +121,7 @@ void cZeraJsonParams::resolveJsonParamTemplates(QJsonObject &jsonStructObj, ErrL
     }
 }
 
-bool cZeraJsonParams::resolveJsonParamTemplatesRecursive(QJsonObject& jsonStructObj, const QJsonObject jsonParamTemplatesObj, ErrList& errList)
+bool cZeraJsonParamsStructure::resolveJsonParamTemplatesRecursive(QJsonObject& jsonStructObj, const QJsonObject jsonParamTemplatesObj, ErrList& errList)
 {
     bool objectChanged = false;
     for(QJsonObject::Iterator sub=jsonStructObj.begin(); sub!=jsonStructObj.end(); sub++) {
@@ -202,8 +167,8 @@ bool cZeraJsonParams::resolveJsonParamTemplatesRecursive(QJsonObject& jsonStruct
     return objectChanged;
 }
 
-QSet<QString> cZeraJsonParams::m_svalidParamEntryKeys = QSet<QString>() << "type" << "min" << "max" << "decimals" << "default" << "list";
-QHash<QString, QStringList> cZeraJsonParams::m_svalidParamTypes {
+QSet<QString> cZeraJsonParamsStructure::m_svalidParamEntryKeys = QSet<QString>() << "type" << "min" << "max" << "decimals" << "default" << "list";
+QHash<QString, QStringList> cZeraJsonParamsStructure::m_svalidParamTypes {
     { "bool",  QStringList() << "default"},
     { "int",   QStringList() << "min" << "max" << "default"},
     { "float", QStringList() << "min" << "max" << "decimals" << "default"},
@@ -212,7 +177,7 @@ QHash<QString, QStringList> cZeraJsonParams::m_svalidParamTypes {
 };
 
 
-void cZeraJsonParams::validateParamData(QJsonObject::ConstIterator iter, bool inTemplate, cZeraJsonParams::ErrList &errList)
+void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter, bool inTemplate, cZeraJsonParamsStructure::ErrList &errList)
 {
     QJsonValue value = iter.value();
     QString key = iter.key();
@@ -270,7 +235,7 @@ void cZeraJsonParams::validateParamData(QJsonObject::ConstIterator iter, bool in
     }
 }
 
-void cZeraJsonParams::validateResolvedParamDataRecursive(QJsonObject &jsonStructObj, cZeraJsonParams::ErrList &errList)
+void cZeraJsonParamsStructure::validateResolvedParamDataRecursive(QJsonObject &jsonStructObj, cZeraJsonParamsStructure::ErrList &errList)
 {
     for(QJsonObject::Iterator sub=jsonStructObj.begin(); sub!=jsonStructObj.end(); sub++) {
         QString key = sub.key();
@@ -294,7 +259,7 @@ void cZeraJsonParams::validateResolvedParamDataRecursive(QJsonObject &jsonStruct
     }
 }
 
-cZeraJsonParams::errEntry::errEntry(cZeraJsonParams::errorTypes errType, QString strInfo) :
+cZeraJsonParamsStructure::errEntry::errEntry(cZeraJsonParamsStructure::errorTypes errType, QString strInfo) :
     m_errType(errType),
     m_strInfo(strInfo)
 {
