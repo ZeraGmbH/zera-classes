@@ -77,19 +77,40 @@ cZeraJsonParams::ErrList cZeraJsonParams::loadJsonFromFiles(const QString &filen
    return errList;
 }
 
-QByteArray cZeraJsonParams::exportJsonParamState()
+QByteArray cZeraJsonParams::exportJsonStructure(QJsonDocument::JsonFormat format)
 {
-    return m_jsonParamState.toJson();
+    return m_jsonStructure.toJson(format);
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::exportJsonParamStateFile(const QString &filenameJsonParamState)
+cZeraJsonParams::ErrList cZeraJsonParams::exportJsonStructureFile(const QString &filenameJsonStructure, QJsonDocument::JsonFormat format)
 {
     ErrList errList;
-    QFile jsonStructureFile(filenameJsonParamState);
-    QByteArray jsonData = exportJsonParamState();
+    QFile jsonStructureFile(filenameJsonStructure);
+    QByteArray jsonData = exportJsonStructure(format);
     if(jsonStructureFile.open(QIODevice::WriteOnly)) {
         jsonStructureFile.write(jsonData);
         jsonStructureFile.close();
+    }
+    else {
+        errEntry error(ERR_FILE_IO, filenameJsonStructure);
+        errList.push_back(error);
+    }
+    return errList;
+}
+
+QByteArray cZeraJsonParams::exportJsonParamState(QJsonDocument::JsonFormat format)
+{
+    return m_jsonParamState.toJson(format);
+}
+
+cZeraJsonParams::ErrList cZeraJsonParams::exportJsonParamStateFile(const QString &filenameJsonParamState, QJsonDocument::JsonFormat format)
+{
+    ErrList errList;
+    QFile jsonJsonParamState(filenameJsonParamState);
+    QByteArray jsonData = exportJsonParamState(format);
+    if(jsonJsonParamState.open(QIODevice::WriteOnly)) {
+        jsonJsonParamState.write(jsonData);
+        jsonJsonParamState.close();
     }
     else {
         errEntry error(ERR_FILE_IO, filenameJsonParamState);
