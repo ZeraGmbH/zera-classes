@@ -6,10 +6,14 @@ cZeraJsonParamsState::cZeraJsonParamsState()
 {
 }
 
+bool cZeraJsonParamsState::isValid()
+{
+    return !m_jsonObjParamState.isEmpty();
+}
+
 cZeraJsonParamsState::ErrList cZeraJsonParamsState::loadJson(const QByteArray &jsonData, cZeraJsonParamsStructure *paramStructure, const QString &errHint)
 {
     ErrList errList;
-
     if(paramStructure && paramStructure->isValid()) {
         QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
         if(jsonDoc.isNull() || !jsonDoc.isObject()) {
@@ -22,13 +26,18 @@ cZeraJsonParamsState::ErrList cZeraJsonParamsState::loadJson(const QByteArray &j
         errEntry error(ERR_INVALID_STRUCTURE, errHint.isEmpty() ? jsonData : errHint);
         errList.push_back(error);
     }
-
     return errList;
 }
 
 QByteArray cZeraJsonParamsState::exportJson(QJsonDocument::JsonFormat format)
 {
-    return m_jsonParamState.toJson(format);
+    QByteArray jsonData = "{}";
+    if(isValid()) {
+        QJsonDocument jsonDoc;
+        jsonDoc.setObject(m_jsonObjParamState);
+        jsonData = jsonDoc.toJson(format);
+    }
+    return jsonData;
 }
 
 cZeraJsonParamsState::ErrList cZeraJsonParamsState::param(const QStringList &paramPath, QVariant& value)

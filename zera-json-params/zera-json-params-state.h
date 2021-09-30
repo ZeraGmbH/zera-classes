@@ -33,13 +33,13 @@ public:
     ErrList loadJson(const QByteArray& jsonData, cZeraJsonParamsStructure* paramStructure, const QString &errHint = QString());
     QByteArray exportJson(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
 
-    ErrList param(const QStringList &paramPath, QVariant& value);
+    ErrList param(const QStringList &paramPath, QVariant& value); // QJsonObject??
     ErrList setParam(const QStringList& paramPath, QVariant value);
 
 private:
 
-    QJsonDocument m_jsonParamState;
-    cZeraJsonParamsStructure* m_paramStructure = nullptr;
+    QJsonObject m_jsonObjParamState;
+    cZeraJsonParamsStructure* m_paramStructure = nullptr; // shall we keep this really?
 };
 
 #endif // ZERA_JSON_PARAMS_STATE_H
