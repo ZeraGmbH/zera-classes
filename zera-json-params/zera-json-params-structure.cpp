@@ -20,7 +20,8 @@ cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadJson(const QByte
         // Note: param templates are validated during resolve activity
         resolveJsonParamTemplates(jsonObj, errList);
         // now params are complete for validation
-        validateResolvedParamDataRecursive(jsonObj, errList);
+        QStringList jsonStructurePathList;
+        validateResolvedParamDataRecursive(jsonObj, jsonStructurePathList, errList);
         if(errList.isEmpty()) {
             m_jsonObjStructure = jsonObj;
         }
@@ -63,7 +64,7 @@ void cZeraJsonParamsStructure::resolveJsonParamTemplates(QJsonObject &jsonStruct
             QJsonObject jsonParamTemplatesObj = paramTemplateValue.toObject();
             // validate param_templates
             for(QJsonObject::ConstIterator iter=jsonParamTemplatesObj.begin(); iter!=jsonParamTemplatesObj.end(); ++iter) {
-                validateParamData(iter, true, errList);
+                validateParamData(iter, true, QStringList()<<"param_templates", errList);
             }
             resolveJsonParamTemplatesRecursive(jsonStructObj, jsonParamTemplatesObj, errList);
             if(errList.isEmpty()) {
@@ -133,10 +134,14 @@ QHash<QString, QStringList> cZeraJsonParamsStructure::m_svalidParamTypes {
 };
 
 
-void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter, bool inTemplate, cZeraJsonParamsStructure::ErrList &errList)
+void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter, bool inTemplate, QStringList jsonStructurePathList, cZeraJsonParamsStructure::ErrList &errList)
 {
     QJsonValue value = iter.value();
     QString key = iter.key();
+    QString treePosPrint = key;
+    if(!jsonStructurePathList.isEmpty()) {
+        treePosPrint = jsonStructurePathList.join(".") + "." + treePosPrint;
+    }
     if(!inTemplate || value.isObject()) {
         QJsonObject paramObject = value.toObject();
         QString type = paramObject["type"].toString();
@@ -144,7 +149,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
         if(type.isEmpty()) {
             validType = false;
             if(!inTemplate) { // for templates param type is useful but not mandatory
-                errEntry error(ERR_INVALID_PARAM_DEFINITION, key + ".type : null");
+                errEntry error(ERR_INVALID_PARAM_DEFINITION, treePosPrint + ".type : null");
                 errList.push_back(error);
             }
         }
@@ -152,7 +157,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
             if(!m_svalidParamTypes.contains(type)) {
                 validType = false;
                 errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                               key + ".type" + " : " + type + " invalid");
+                               treePosPrint + ".type" + " : " + type + " invalid");
                 errList.push_back(error);
             }
         }
@@ -161,7 +166,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
             QString entryKey = iterEntries.key();
             if(!m_svalidParamEntryKeys.contains(entryKey)) {
                 errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                               key + "." + entryKey);
+                               treePosPrint + "." + entryKey);
                 errList.push_back(error);
             }
             // type specific
@@ -170,7 +175,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
                 QStringList typeParams = m_svalidParamTypes[type]; // safe see checked above
                 if(!typeParams.contains(entryKey)) {
                     errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                                   key + "." + entryKey + " not allowed for type " + type);
+                                   treePosPrint + "." + entryKey + " not allowed for type " + type);
                     errList.push_back(error);
                 }
             }
@@ -182,7 +187,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
             for(auto paramRequired : typeParams) {
                 if(!paramObject.contains(paramRequired)) {
                     errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                                   key + "." + paramRequired + " missing for type " + type);
+                                   treePosPrint + "." + paramRequired + " missing for type " + type);
                     errList.push_back(error);
                 }
             }
@@ -193,19 +198,19 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
             double max = paramObject["max"].toDouble();
             if(max < min) {
                 errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                               key + ".max < " + key + ".min");
+                               treePosPrint + ".max < min");
                 errList.push_back(error);
             }
             else if(paramObject.contains("default")) {
                 double dbldefault = paramObject["default"].toDouble();
                 if(dbldefault < min) {
                     errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                                   key + ".default < " + key + ".min");
+                                   treePosPrint + ".default < min");
                     errList.push_back(error);
                 }
                 if(dbldefault > max) {
                     errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                                   key + ".default > " + key + ".max");
+                                   treePosPrint + ".default > max");
                     errList.push_back(error);
                 }
             }
@@ -219,7 +224,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
     }
 }
 
-void cZeraJsonParamsStructure::validateResolvedParamDataRecursive(QJsonObject &jsonStructObj, cZeraJsonParamsStructure::ErrList &errList)
+void cZeraJsonParamsStructure::validateResolvedParamDataRecursive(QJsonObject &jsonStructObj, QStringList jsonStructurePathList, cZeraJsonParamsStructure::ErrList &errList)
 {
     for(QJsonObject::Iterator sub=jsonStructObj.begin(); sub!=jsonStructObj.end(); sub++) {
         QString key = sub.key();
@@ -227,7 +232,9 @@ void cZeraJsonParamsStructure::validateResolvedParamDataRecursive(QJsonObject &j
             if(sub.value().isObject()) {
                 QJsonObject subObj = sub.value().toObject();
                 for(QJsonObject::ConstIterator iter=subObj.begin(); iter!=subObj.end(); ++iter) {
-                    validateParamData(iter, false, errList);
+                    jsonStructurePathList.push_back(key);
+                    validateParamData(iter, false, jsonStructurePathList, errList);
+                    jsonStructurePathList.pop_back();
                 }
             }
         }
@@ -238,7 +245,9 @@ void cZeraJsonParamsStructure::validateResolvedParamDataRecursive(QJsonObject &j
         else if(jsonStructObj[key].isObject() && !jsonStructObj[key].isNull()) {
             QJsonValueRef subValue = jsonStructObj[key];
             QJsonObject subObject = subValue.toObject();
-            validateResolvedParamDataRecursive(subObject, errList);
+            jsonStructurePathList.push_back(key);
+            validateResolvedParamDataRecursive(subObject, jsonStructurePathList, errList);
+            jsonStructurePathList.pop_back();
         }
     }
 }
