@@ -8,7 +8,6 @@ cZeraJsonParamsStructure::cZeraJsonParamsStructure()
 cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadJson(const QByteArray &jsonData, const QString &errHint)
 {
     ErrList errList;
-
     QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
     if(jsonDoc.isNull() || !jsonDoc.isObject()) {
         errEntry error(ERR_INVALID_JSON, errHint.isEmpty() ? jsonData : errHint);
@@ -22,7 +21,7 @@ cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadJson(const QByte
         // now params are complete for validation
         validateResolvedParamDataRecursive(jsonObj, errList);
         if(errList.isEmpty()) {
-            m_jsonDoc.setObject(jsonObj);
+            m_jsonObjStructure = jsonObj;
         }
     }
     return errList;
@@ -30,17 +29,28 @@ cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadJson(const QByte
 
 bool cZeraJsonParamsStructure::isValid()
 {
-    // maybe a bit over enthusiastic...
-    return !m_jsonDoc.isNull() && !m_jsonDoc.isEmpty() && m_jsonDoc.isObject();
+    return !m_jsonObjStructure.isEmpty();
 }
 
 QByteArray cZeraJsonParamsStructure::exportJson(QJsonDocument::JsonFormat format)
 {
     QByteArray jsonData = "{}";
     if(isValid()) {
-        jsonData = m_jsonDoc.toJson(format);
+        QJsonDocument jsonDoc;
+        jsonDoc.setObject(m_jsonObjStructure);
+        jsonData = jsonDoc.toJson(format);
     }
     return jsonData;
+}
+
+QByteArray cZeraJsonParamsStructure::createDefaultJsonState()
+{
+
+}
+
+cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::validateJsonState(const QByteArray &jsonData)
+{
+
 }
 
 void cZeraJsonParamsStructure::resolveJsonParamTemplates(QJsonObject &jsonStructObj, ErrList& errList)
