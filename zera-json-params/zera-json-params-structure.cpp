@@ -238,10 +238,6 @@ void cZeraJsonParamsStructure::validateResolvedParamDataRecursive(QJsonObject &j
                 }
             }
         }
-        // param_templates were validated already on resolveJsonParamTemplates
-        else if(key == QStringLiteral("param_templates")) {
-            continue;
-        }
         else if(jsonStructObj[key].isObject() && !jsonStructObj[key].isNull()) {
             QJsonValueRef subValue = jsonStructObj[key];
             QJsonObject subObject = subValue.toObject();
