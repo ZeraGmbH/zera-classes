@@ -166,10 +166,23 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
             }
             // type specific
             if(validType && entryKey != "type") {
+                // check if parameter is allowed for type
                 QStringList typeParams = m_svalidParamTypes[type]; // safe see checked above
                 if(!typeParams.contains(entryKey)) {
                     errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
                                    key + "." + entryKey + " not allowed for type " + type);
+                    errList.push_back(error);
+                }
+            }
+        }
+        // all properties are mandatory in resolved structure - otherwise we
+        // need to plaster checks all over the place
+        if(validType && !inTemplate) {
+            QStringList typeParams = m_svalidParamTypes[type];
+            for(auto paramRequired : typeParams) {
+                if(!paramObject.contains(paramRequired)) {
+                    errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                                   key + "." + paramRequired + " missing for type " + type);
                     errList.push_back(error);
                 }
             }
