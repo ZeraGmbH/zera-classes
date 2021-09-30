@@ -7,93 +7,97 @@ cZeraJsonParams::cZeraJsonParams()
 {
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::loadJson(const QByteArray &jsonStructure, const QByteArray &jsonParams,
-                                                   const QString &jsonStructureErrHint, const QString &jsonParamsErrHint)
+cZeraJsonParams::ErrList cZeraJsonParams::loadJson(const QByteArray &jsonStructure, const QByteArray &jsonParamState,
+                                                   const QString &jsonStructureErrHint, const QString &jsonParamStateErrHint)
 {
     ErrList errList;
+    // json parse stucture
     QJsonDocument jsonDocStructure = QJsonDocument::fromJson(jsonStructure);
     if(jsonDocStructure.isNull()) {
         errEntry error(ERR_INVALID_JSON, jsonStructureErrHint.isEmpty() ? jsonStructure : jsonStructureErrHint);
         errList.push_back(error);
     }
-    QJsonDocument jsonDocParams;
-    if(!jsonParams.isEmpty()) {
-        jsonDocParams = QJsonDocument::fromJson(jsonParams);
-        if(jsonDocParams.isNull()) {
-            errEntry error(ERR_INVALID_JSON, jsonParamsErrHint.isEmpty() ? jsonParams : jsonParamsErrHint);
+    // json parse param state
+    QJsonDocument jsonDocParamState;
+    if(!jsonParamState.isEmpty()) {
+        jsonDocParamState = QJsonDocument::fromJson(jsonParamState);
+        if(jsonDocParamState.isNull()) {
+            errEntry error(ERR_INVALID_JSON, jsonParamStateErrHint.isEmpty() ? jsonParamState : jsonParamStateErrHint);
             errList.push_back(error);
         }
     }
+    // resolve param state templates & validate
     if(errList.isEmpty()) {
         if(jsonDocStructure.isObject()) {
             QJsonObject jsonObjStructure = jsonDocStructure.object();
-            resolveJSONParamTemplates(jsonObjStructure, errList);
+            // Note: param templates are validated during resolve activity
+            resolveJsonParamTemplates(jsonObjStructure, errList);
             // now params are complete for validation
-            validateCompletParamDataRecursive(jsonObjStructure, errList);
+            validateResolvedParamDataRecursive(jsonObjStructure, errList);
 
             m_jsonStructure.setObject(jsonObjStructure);
         }
         else {
-            errEntry error(ERR_INVALID_JSON, jsonParamsErrHint.isEmpty() ? jsonParams : jsonParamsErrHint);
+            errEntry error(ERR_INVALID_JSON, jsonParamStateErrHint.isEmpty() ? jsonParamState : jsonParamStateErrHint);
             errList.push_back(error);
         }
     }
     return errList;
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::loadJsonFromFiles(const QString &filenameJSONStructure, const QString &filenameJSONParams)
+cZeraJsonParams::ErrList cZeraJsonParams::loadJsonFromFiles(const QString &filenameJsonStructure, const QString &filenameJsonParamState)
 {
    ErrList errList;
-   QFile jsonStructureFile(filenameJSONStructure);
+   QFile jsonStructureFile(filenameJsonStructure);
    if(jsonStructureFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
        QByteArray jsonStructure = jsonStructureFile.readAll();
        jsonStructureFile.close();
 
        QByteArray jsonParams;
-       if(!filenameJSONParams.isEmpty()) {
-           QFile jsonParamsFile(filenameJSONParams);
+       if(!filenameJsonParamState.isEmpty()) {
+           QFile jsonParamsFile(filenameJsonParamState);
            if(jsonParamsFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
                jsonParams = jsonParamsFile.readAll();
                jsonParamsFile.close();
            }
            else {
-               errEntry error(ERR_FILE_IO, filenameJSONParams);
+               errEntry error(ERR_FILE_IO, filenameJsonParamState);
                errList.push_back(error);
            }
        }
        if(errList.isEmpty()) {
-           errList = loadJson(jsonStructure, jsonParams, filenameJSONStructure, filenameJSONParams);
+           errList = loadJson(jsonStructure, jsonParams, filenameJsonStructure, filenameJsonParamState);
        }
    }
    else {
-       errEntry error(ERR_FILE_IO, filenameJSONStructure);
+       errEntry error(ERR_FILE_IO, filenameJsonStructure);
        errList.push_back(error);
    }
    return errList;
 }
 
-QByteArray cZeraJsonParams::exportJson()
+QByteArray cZeraJsonParams::exportJsonParamState()
 {
-    return m_jsonParams.toJson();
+    return m_jsonParamState.toJson();
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::exportJsonFile(const QString &filenameJSON)
+cZeraJsonParams::ErrList cZeraJsonParams::exportJsonParamStateFile(const QString &filenameJsonParamState)
 {
     ErrList errList;
-    QFile jsonStructureFile(filenameJSON);
-    QByteArray jsonData = exportJson();
+    QFile jsonStructureFile(filenameJsonParamState);
+    QByteArray jsonData = exportJsonParamState();
     if(jsonStructureFile.open(QIODevice::WriteOnly)) {
         jsonStructureFile.write(jsonData);
         jsonStructureFile.close();
     }
     else {
-        errEntry error(ERR_FILE_IO, filenameJSON);
+        errEntry error(ERR_FILE_IO, filenameJsonParamState);
         errList.push_back(error);
     }
     return errList;
 }
 
-cZeraJsonParams::ErrList cZeraJsonParams::param(const QStringList &paramPath, QVariant& val)
+cZeraJsonParams::ErrList cZeraJsonParams::param(const QStringList &paramPath, QVariant& value)
 {
     ErrList errList;
     // TODO
@@ -107,7 +111,7 @@ cZeraJsonParams::ErrList cZeraJsonParams::setParam(const QStringList &paramPath,
     return errList;
 }
 
-void cZeraJsonParams::resolveJSONParamTemplates(QJsonObject &jsonStructObj, ErrList& errList)
+void cZeraJsonParams::resolveJsonParamTemplates(QJsonObject &jsonStructObj, ErrList& errList)
 {
     // Find "param_templates" object and start recursive resolve
     QJsonValue paramTemplateValue = jsonStructObj["param_templates"];
@@ -118,7 +122,7 @@ void cZeraJsonParams::resolveJSONParamTemplates(QJsonObject &jsonStructObj, ErrL
             for(QJsonObject::ConstIterator iter=jsonParamTemplatesObj.begin(); iter!=jsonParamTemplatesObj.end(); ++iter) {
                 validateParamData(iter, true, errList);
             }
-            resolveJSONParamTemplatesRecursive(jsonStructObj, jsonParamTemplatesObj, errList);
+            resolveJsonParamTemplatesRecursive(jsonStructObj, jsonParamTemplatesObj, errList);
         }
         else {
             errEntry error(ERR_INVALID_PARAM_TEMPLATE, QStringLiteral("param_templates"));
@@ -127,7 +131,7 @@ void cZeraJsonParams::resolveJSONParamTemplates(QJsonObject &jsonStructObj, ErrL
     }
 }
 
-bool cZeraJsonParams::resolveJSONParamTemplatesRecursive(QJsonObject& jsonStructObj, const QJsonObject jsonParamTemplatesObj, ErrList& errList)
+bool cZeraJsonParams::resolveJsonParamTemplatesRecursive(QJsonObject& jsonStructObj, const QJsonObject jsonParamTemplatesObj, ErrList& errList)
 {
     bool objectChanged = false;
     for(QJsonObject::Iterator sub=jsonStructObj.begin(); sub!=jsonStructObj.end(); sub++) {
@@ -163,7 +167,7 @@ bool cZeraJsonParams::resolveJSONParamTemplatesRecursive(QJsonObject& jsonStruct
         else if(jsonStructObj[key].isObject() && !jsonStructObj[key].isNull()) {
             QJsonValueRef subValue = jsonStructObj[key];
             QJsonObject subObject = subValue.toObject();
-            if(resolveJSONParamTemplatesRecursive(subObject, jsonParamTemplatesObj, errList)) {
+            if(resolveJsonParamTemplatesRecursive(subObject, jsonParamTemplatesObj, errList)) {
                 jsonStructObj[key] = subObject;
                 objectChanged = true;
             }
@@ -241,7 +245,7 @@ void cZeraJsonParams::validateParamData(QJsonObject::ConstIterator iter, bool in
     }
 }
 
-void cZeraJsonParams::validateCompletParamDataRecursive(QJsonObject &jsonStructObj, cZeraJsonParams::ErrList &errList)
+void cZeraJsonParams::validateResolvedParamDataRecursive(QJsonObject &jsonStructObj, cZeraJsonParams::ErrList &errList)
 {
     for(QJsonObject::Iterator sub=jsonStructObj.begin(); sub!=jsonStructObj.end(); sub++) {
         QString key = sub.key();
@@ -253,14 +257,14 @@ void cZeraJsonParams::validateCompletParamDataRecursive(QJsonObject &jsonStructO
                 }
             }
         }
-        // param_templates were validated already on resolveJSONParamTemplates
+        // param_templates were validated already on resolveJsonParamTemplates
         else if(key == QStringLiteral("param_templates")) {
             continue;
         }
         else if(jsonStructObj[key].isObject() && !jsonStructObj[key].isNull()) {
             QJsonValueRef subValue = jsonStructObj[key];
             QJsonObject subObject = subValue.toObject();
-            validateCompletParamDataRecursive(subObject, errList);
+            validateResolvedParamDataRecursive(subObject, errList);
         }
     }
 }
