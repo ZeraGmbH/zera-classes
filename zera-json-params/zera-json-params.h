@@ -36,8 +36,10 @@ public:
                      const QString &jsonStructureErrHint = QString(), const QString &jsonParamStateErrHint = QString());
     ErrList loadJsonFromFiles(const QString& filenameJsonStructure, const QString& filenameJsonParamState);
 
-    QByteArray exportJsonParamState();
-    ErrList exportJsonParamStateFile(const QString& filenameJsonParamState);
+    QByteArray exportJsonStructure(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
+    ErrList exportJsonStructureFile(const QString& filenameJsonStructure, QJsonDocument::JsonFormat format = QJsonDocument::Compact);
+    QByteArray exportJsonParamState(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
+    ErrList exportJsonParamStateFile(const QString& filenameJsonParamState, QJsonDocument::JsonFormat format = QJsonDocument::Compact);
 
     ErrList param(const QStringList &paramPath, QVariant& value);
     ErrList setParam(const QStringList& paramPath, QVariant value);
