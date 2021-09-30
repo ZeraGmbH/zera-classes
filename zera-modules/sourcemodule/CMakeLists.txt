@@ -133,6 +133,7 @@ target_link_libraries(sourcemodule
     zeramisc
     zeraxmlconfig
     zeravalidator
+    zera-json-params
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
