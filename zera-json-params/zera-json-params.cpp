@@ -34,8 +34,9 @@ cZeraJsonParams::ErrList cZeraJsonParams::loadJson(const QByteArray &jsonStructu
             resolveJsonParamTemplates(jsonObjStructure, errList);
             // now params are complete for validation
             validateResolvedParamDataRecursive(jsonObjStructure, errList);
-
-            m_jsonStructure.setObject(jsonObjStructure);
+            if(errList.isEmpty()) {
+                m_jsonStructure.setObject(jsonObjStructure);
+            }
         }
         else {
             errEntry error(ERR_INVALID_JSON, jsonParamStateErrHint.isEmpty() ? jsonParamState : jsonParamStateErrHint);
