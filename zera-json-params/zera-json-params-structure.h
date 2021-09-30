@@ -1,5 +1,5 @@
-#ifndef ZERA_JSON_PARAMS_H
-#define ZERA_JSON_PARAMS_H
+#ifndef ZERA_JSON_PARAMS_STRUCTURE_H
+#define ZERA_JSON_PARAMS_STRUCTURE_H
 
 #include <QByteArray>
 #include <QString>
@@ -7,7 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-class cZeraJsonParams
+class cZeraJsonParamsStructure
 {
 public:
     enum errorTypes {
@@ -17,10 +17,6 @@ public:
         ERR_INVALID_PARAM_TEMPLATE,
         ERR_INVALID_PARAM_TEMPLATE_DEFINITION,
         ERR_INVALID_PARAM_DEFINITION,
-
-        ERR_INVALID_PARAM_PATH,
-        ERR_PARAM_DOES_NOT_EXIST,
-        ERR_INVALID_VALUE
     };
     struct errEntry {
         errEntry(enum errorTypes errType, QString strInfo);
@@ -30,19 +26,14 @@ public:
 
     typedef QList<errEntry> ErrList;
 
-    cZeraJsonParams();
+    cZeraJsonParamsStructure();
 
     ErrList loadJson(const QByteArray& jsonStructure, const QByteArray& jsonParamState,
                      const QString &jsonStructureErrHint = QString(), const QString &jsonParamStateErrHint = QString());
     ErrList loadJsonFromFiles(const QString& filenameJsonStructure, const QString& filenameJsonParamState);
 
-    QByteArray exportJsonStructure(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
-    ErrList exportJsonStructureFile(const QString& filenameJsonStructure, QJsonDocument::JsonFormat format = QJsonDocument::Compact);
-    QByteArray exportJsonParamState(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
-    ErrList exportJsonParamStateFile(const QString& filenameJsonParamState, QJsonDocument::JsonFormat format = QJsonDocument::Compact);
-
-    ErrList param(const QStringList &paramPath, QVariant& value);
-    ErrList setParam(const QStringList& paramPath, QVariant value);
+    QByteArray exportJson(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
+    ErrList exportJsonFile(const QString& filenameJsonStructure, QJsonDocument::JsonFormat format = QJsonDocument::Compact);
 
 private:
     void resolveJsonParamTemplates(QJsonObject& jsonStructObj, ErrList& errList);
@@ -51,9 +42,8 @@ private:
     void validateResolvedParamDataRecursive(QJsonObject& jsonStructObj, ErrList& errList);
 
     QJsonDocument m_jsonStructure;
-    QJsonDocument m_jsonParamState;
     static QSet<QString> m_svalidParamEntryKeys;
     static QHash<QString, QStringList> m_svalidParamTypes;
 };
 
-#endif // ZERA_JSON_PARAMS_H
+#endif // ZERA_JSON_PARAMS_STRUCTURE_H

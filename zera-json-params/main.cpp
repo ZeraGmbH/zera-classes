@@ -1,6 +1,6 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
-#include <zera-json-params.h>
+#include <zera-json-params-structure.h>
 
 int main(int argc, char *argv[])
 {
@@ -24,8 +24,8 @@ int main(int argc, char *argv[])
     QString jsonOutputFileName = parser.value(cmdCheckJSONOutput);
     bool ok = !jsonStructureFileName.isEmpty();
     if(ok) {
-        cZeraJsonParams jsonParams;
-        cZeraJsonParams::ErrList errList = jsonParams.loadJsonFromFiles(jsonStructureFileName, jsonInputFileName);
+        cZeraJsonParamsStructure jsonParams;
+        cZeraJsonParamsStructure::ErrList errList = jsonParams.loadJsonFromFiles(jsonStructureFileName, jsonInputFileName);
         if(errList.isEmpty() && !jsonOutputFileName.isEmpty()) {
 
         }

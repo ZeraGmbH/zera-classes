@@ -2,7 +2,7 @@
 #define CSOURCEDEVICE_H
 
 #include <QObject>
-#include <zera-json-params.h>
+#include <zera-json-params-structure.h>
 
 class cIOInterface;
 
@@ -39,7 +39,7 @@ private slots:
 
 private:
     cIOInterface* m_IOInterface; // WE own the interface
-    cZeraJsonParams m_ZeraJsonParams;
+    cZeraJsonParamsStructure m_ZeraJsonParams;
 
     SourceType m_type;
     SourceType m_demoType;
