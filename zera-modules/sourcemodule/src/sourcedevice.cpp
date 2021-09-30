@@ -58,17 +58,17 @@ cIOInterface* cSourceDevice::ioInterface()
 
 QString cSourceDevice::deviceInfo()
 {
-    QString capabilityFileName;
+    QString deviceInfoFileName;
     // If we ever make it to FG, we need dynamic contents...
     switch(m_type != SOURCE_DEMO ? m_type : m_demoType) {
     case SOURCE_MT3000:
-        capabilityFileName = QStringLiteral("://deviceinfo/MT3000.json");
+        deviceInfoFileName = QStringLiteral("://deviceinfo/MT3000.json");
         break;
     case SOURCE_MT400_20:
-        capabilityFileName = QStringLiteral("://deviceinfo/MT400-20.json");
+        deviceInfoFileName = QStringLiteral("://deviceinfo/MT400-20.json");
         break;
     case SOURCE_DEMO_FG_4PHASE:
-        capabilityFileName = QStringLiteral("://deviceinfo/FG4PhaseTest.json");
+        deviceInfoFileName = QStringLiteral("://deviceinfo/FG4PhaseTest.json");
         break;
 
     case SOURCE_DEMO:
@@ -78,13 +78,15 @@ QString cSourceDevice::deviceInfo()
         qFatal("Do not use SOURCE_TYPE_COUNT");
         break;
     }
-    QFile capabilityFile(capabilityFileName);
-    capabilityFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
-    QString capabilityFileContent = capabilityFile.readAll();
-    capabilityFile.close();
-
-    capabilityFileContent.replace("\n", "").replace(" ", "");
-    return capabilityFileContent;
+    cZeraJsonParams::ErrList errList = m_ZeraJsonParams.loadJsonFromFiles(deviceInfoFileName, QString() /*TODO*/);
+    QString devInfo = "{}";
+    if(errList.isEmpty()) {
+        devInfo = m_ZeraJsonParams.exportJsonStructure();
+    }
+    else {
+        // TODO handle error list
+    }
+    return devInfo;
 }
 
 void cSourceDevice::onInterfaceClosed(cIOInterface *ioInterface)
