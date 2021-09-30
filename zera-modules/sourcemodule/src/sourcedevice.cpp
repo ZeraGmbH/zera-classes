@@ -78,14 +78,22 @@ QString cSourceDevice::deviceInfo()
         qFatal("Do not use SOURCE_TYPE_COUNT");
         break;
     }
-    cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParams.loadJsonFromFiles(deviceInfoFileName, QString() /*TODO*/);
+
     QString devInfo = "{}";
-    if(errList.isEmpty()) {
-        devInfo = m_ZeraJsonParams.exportJson();
+    QFile deviceInfoFile(deviceInfoFileName);
+    if(deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
+        QByteArray jsondeviceInfoData = deviceInfoFile.readAll();
+        deviceInfoFile.close();
+
+        cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParams.loadJson(jsondeviceInfoData, deviceInfoFileName);
+        if(errList.isEmpty()) {
+            devInfo = m_ZeraJsonParams.exportJson();
+        }
+        else {
+            // TODO handle error list
+        }
     }
-    else {
-        // TODO handle error list
-    }
+
     return devInfo;
 }
 

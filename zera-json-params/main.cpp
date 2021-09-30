@@ -1,5 +1,6 @@
 #include <QCoreApplication>
 #include <QCommandLineParser>
+#include <QFile>
 #include <zera-json-params-structure.h>
 
 int main(int argc, char *argv[])
@@ -20,15 +21,23 @@ int main(int argc, char *argv[])
     parser.process(app);
 
     QString jsonStructureFileName = parser.value(cmdCheckJSONStructure);
-    QString jsonInputFileName = parser.value(cmdCheckJSONInput);
-    QString jsonOutputFileName = parser.value(cmdCheckJSONOutput);
+    QString jsonStateInputFileName = parser.value(cmdCheckJSONInput);
+    QString jsonStateOutputFileName = parser.value(cmdCheckJSONOutput);
     bool ok = !jsonStructureFileName.isEmpty();
     if(ok) {
-        cZeraJsonParamsStructure jsonParams;
-        cZeraJsonParamsStructure::ErrList errList = jsonParams.loadJsonFromFiles(jsonStructureFileName, jsonInputFileName);
-        if(errList.isEmpty() && !jsonOutputFileName.isEmpty()) {
+        QFile jsonStructureFile(jsonStructureFileName);
+        ok = jsonStructureFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
+        if(ok) {
+            QByteArray jsonStructureData = jsonStructureFile.readAll();
+            jsonStructureFile.close();
 
+            cZeraJsonParamsStructure jsonParams;
+            cZeraJsonParamsStructure::ErrList errList = jsonParams.loadJson(jsonStructureData, jsonStructureFileName);
+            if(errList.isEmpty() && !jsonStateOutputFileName.isEmpty()) {
+
+            }
         }
+
     }
     else {
         qWarning("No filename set in -s parameter!");
