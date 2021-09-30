@@ -123,6 +123,9 @@ void cZeraJsonParams::resolveJsonParamTemplates(QJsonObject &jsonStructObj, ErrL
                 validateParamData(iter, true, errList);
             }
             resolveJsonParamTemplatesRecursive(jsonStructObj, jsonParamTemplatesObj, errList);
+            if(errList.isEmpty()) {
+                jsonStructObj.remove("param_templates");
+            }
         }
         else {
             errEntry error(ERR_INVALID_PARAM_TEMPLATE, QStringLiteral("param_templates"));
@@ -147,6 +150,7 @@ bool cZeraJsonParams::resolveJsonParamTemplatesRecursive(QJsonObject& jsonStruct
                         QString specEntryKey = specEntry.key();
                         if(jsonStructObj[specEntryKey].isNull()) { // specs can be overriden
                             jsonStructObj.insert(specEntryKey, specEntry.value());
+                            jsonStructObj.remove("param_template");
                             objectChanged = true;
                         }
                     }
@@ -212,8 +216,7 @@ void cZeraJsonParams::validateParamData(QJsonObject::ConstIterator iter, bool in
         for(QJsonObject::ConstIterator iterEntries=paramObject.begin(); iterEntries!=paramObject.end(); iterEntries++) {
             // valid data keys?
             QString entryKey = iterEntries.key();
-            if(!m_svalidParamEntryKeys.contains(entryKey) &&
-                    (!inTemplate && entryKey != "param_template")) {
+            if(!m_svalidParamEntryKeys.contains(entryKey)) {
                 errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
                                key + "." + entryKey);
                 errList.push_back(error);
@@ -221,7 +224,7 @@ void cZeraJsonParams::validateParamData(QJsonObject::ConstIterator iter, bool in
             // type specific
             if(validType && entryKey != "type") {
                 QStringList typeParams = m_svalidParamTypes[type]; // safe see checked above
-                if(!typeParams.contains(entryKey) && entryKey != "param_template") {
+                if(!typeParams.contains(entryKey)) {
                     errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
                                    key + "." + entryKey + " not allowed for type " + type);
                     errList.push_back(error);
