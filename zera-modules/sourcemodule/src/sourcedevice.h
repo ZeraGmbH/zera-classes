@@ -42,7 +42,6 @@ private:
 
     SourceType m_type;
     SourceType m_demoType;
-    QString m_deviceName;
 };
 
 }
