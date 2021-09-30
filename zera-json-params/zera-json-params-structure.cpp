@@ -187,12 +187,27 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
                 }
             }
         }
-        // max > min - a classic late night bug introduced
+        // max > min / default out of limit - classic late night bugs introduced
         if(paramObject.contains("max") && paramObject.contains("min")) {
-            if(paramObject["max"].toDouble() < paramObject["min"].toDouble()) {
+            double min = paramObject["min"].toDouble();
+            double max = paramObject["max"].toDouble();
+            if(max < min) {
                 errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                               key + " max < min");
+                               key + ".max < " + key + ".min");
                 errList.push_back(error);
+            }
+            else if(paramObject.contains("default")) {
+                double dbldefault = paramObject["default"].toDouble();
+                if(dbldefault < min) {
+                    errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                                   key + ".default < " + key + ".min");
+                    errList.push_back(error);
+                }
+                if(dbldefault > max) {
+                    errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                                   key + ".default > " + key + ".max");
+                    errList.push_back(error);
+                }
             }
         }
         // TODO defaults out of limit / valid data types for other??
