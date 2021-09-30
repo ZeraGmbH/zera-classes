@@ -31,14 +31,16 @@ public:
     ErrList loadJson(const QByteArray& jsonData, const QString &errHint = QString());
     QByteArray exportJson(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
 
-    QByteArray  createDefaultJsonState();
+    QByteArray createDefaultJsonState();
     ErrList validateJsonState(const QByteArray& jsonData);
 
 private:
     void resolveJsonParamTemplates(QJsonObject& jsonStructObj, ErrList& errList);
     bool resolveJsonParamTemplatesRecursive(QJsonObject& jsonStructObj, const QJsonObject jsonParamTemplatesObj, ErrList& errList);
-    void validateParamData(QJsonObject::ConstIterator iter, bool inTemplate, ErrList& errList);
-    void validateResolvedParamDataRecursive(QJsonObject& jsonStructObj, ErrList& errList);
+    void validateParamData(QJsonObject::ConstIterator iter, bool inTemplate, QStringList jsonStructurePathList, ErrList& errList);
+    void validateResolvedParamDataRecursive(QJsonObject& jsonStructObj, QStringList jsonStructurePathList, ErrList& errList);
+    void createDefaultJsonStateRecursive(
+            QJsonObject& jsonStateObj, QJsonObject jsonStructObj, QStringList jsonStructurePathList, ErrList& errList);
 
     QJsonObject m_jsonObjStructure;
     static QSet<QString> m_svalidParamEntryKeys;
