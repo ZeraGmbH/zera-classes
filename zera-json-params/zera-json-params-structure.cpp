@@ -1,5 +1,6 @@
 #include "zera-json-params-structure.h"
 #include <QJsonObject>
+#include <QSet>
 
 cZeraJsonParamsStructure::cZeraJsonParamsStructure()
 {
