@@ -77,7 +77,6 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zera-json-paramsConfig.cmake"
 # install targets cmake-files
 install(EXPORT zera-json-paramsExport
     FILE zera-json-paramsTargets.cmake
-    NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-json-params
     )
 
