@@ -1,4 +1,4 @@
-#include "jsonmerge.h"
+#include "zera-json-merge.h"
 #include <QJsonArray>
 
 void cJSONMerge::mergeJson(QJsonObject &src, const QJsonObject& other)

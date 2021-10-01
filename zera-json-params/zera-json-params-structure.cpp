@@ -1,6 +1,7 @@
 #include "zera-json-params-structure.h"
+#include "zera-json-merge.h"
+#include "zera-json-export.h"
 #include <QSet>
-#include "jsonexport.h"
 
 cZeraJsonParamsStructure::cZeraJsonParamsStructure()
 {
