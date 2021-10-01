@@ -54,3 +54,21 @@ cZeraJsonParamsState::errEntry::errEntry(cZeraJsonParamsState::errorTypes errTyp
     m_strInfo(strInfo)
 {
 }
+
+QString cZeraJsonParamsState::errEntry::strID()
+{
+    QString str;
+    switch(m_errType) {
+    case ERR_INVALID_JSON:
+        str = "Invalid JSON";
+    case ERR_INVALID_STRUCTURE:
+        str = "Invalid parameter structure";
+    case ERR_INVALID_PARAM_PATH:
+        str = "Invalid parameter path";
+    case ERR_PARAM_DOES_NOT_EXIST:
+        str = "Parameter does not exist";
+    case ERR_INVALID_VALUE:
+        str = "Invalid parameter value";
+    }
+    return str;
+}

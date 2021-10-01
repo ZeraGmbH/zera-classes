@@ -248,3 +248,19 @@ cZeraJsonParamsStructure::errEntry::errEntry(cZeraJsonParamsStructure::errorType
     m_strInfo(strInfo)
 {
 }
+
+QString cZeraJsonParamsStructure::errEntry::strID()
+{
+    QString str;
+    switch(m_errType) {
+    case ERR_INVALID_JSON:
+        str = "Invalid JSON";
+    case ERR_INVALID_PARAM_TEMPLATE:
+        str = "Invalid parameter template";
+    case ERR_INVALID_PARAM_TEMPLATE_DEFINITION:
+        str = "Invalid parameter template defintion";
+    case ERR_INVALID_PARAM_DEFINITION:
+        str = "Invalid parameter template defintion";
+    }
+    return str;
+}
