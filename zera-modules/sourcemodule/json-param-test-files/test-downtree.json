@@ -1,0 +1,91 @@
+{
+    "params": {
+        "root": {
+            "type": "bool",
+            "default": false
+        }
+    },
+
+    "param_templates": {
+        "voltage_rms": {
+            "type": "float",
+            "min": -40.0,
+            "max": 300.0,
+            "decimals": 3,
+            "default": 230.0
+        },
+        "current_rms": {
+            "type": "float",
+            "min": 0.001,
+            "max": 20.0,
+            "decimals": 3,
+            "default": 5.0
+        },
+        "angle": {
+            "type": "float",
+            "min": 0.0,
+            "max": 359.999,
+            "decimals": 3
+        },
+        "phase_onoff": {
+            "type": "bool",
+            "default": true
+        }
+    },
+
+    "h2": {
+        "params": {
+            "rms": { "param_template": "voltage_rms" },
+            "angle": { "param_template": "angle", "default": 0.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "h21": {
+            "params": {
+                "rms": { "param_template": "voltage_rms" },
+                "angle": { "param_template": "angle", "default": 1.0 },
+                "on": { "param_template": "phase_onoff" }
+            },
+            "h22": {
+                "params": {
+                    "rms": { "param_template": "voltage_rms" },
+                    "angle": { "param_template": "angle", "default": 2.0 },
+                    "on": { "param_template": "phase_onoff" }
+                },
+                "h23": {
+                    "params": {
+                        "rms": { "param_template": "voltage_rms" },
+                        "angle": { "param_template": "angle", "default": 3.0 },
+                        "on": { "param_template": "phase_onoff" }
+                    }
+                }
+            }
+        }
+    },
+
+    "UPhaseMax": 3,
+    "U1": {
+        "params": {
+            "rms": { "param_template": "voltage_rms" },
+            "angle": { "param_template": "angle", "default": 0.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "U2": {
+        "params": {
+            "rms": { "param_template": "voltage_rms" },
+            "angle": { "param_template": "angle", "default": 120.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    },
+    "U3": {
+        "params": {
+            "rms": { "param_template": "voltage_rms" },
+            "angle": { "param_template": "angle", "default": 240.0 },
+            "on": { "param_template": "phase_onoff" }
+        },
+        "supportsHarmonics": false
+    }
+
+}
