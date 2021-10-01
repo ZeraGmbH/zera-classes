@@ -5,8 +5,9 @@
 #include "sourcemoduleconfiguration.h"
 
 
-class cVeinModuleParameter;
 class cVeinModuleActvalue;
+class cVeinModuleParameter;
+class cJsonParamValidator;
 
 namespace SOURCEMODULE
 {
@@ -38,6 +39,8 @@ private:
     cVeinModuleParameter* m_pVeinDemoSourceCount;
 
     QVector<cVeinModuleActvalue*> m_arrVeinSourceDeviceInfo;
+    QVector<cVeinModuleParameter*> m_arrVeinSourceDeviceParameter;
+    QVector<cJsonParamValidator*> m_arrVeinSourceDeviceParameterValidators;
 
 private slots:
     void onSourceDeviceAdded(int slotPosition);

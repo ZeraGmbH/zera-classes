@@ -34,6 +34,16 @@ cSourceDevice::~cSourceDevice()
 {
 }
 
+cZeraJsonParamsStructure *cSourceDevice::paramsStructure()
+{
+    return &m_ZeraJsonParamsStructure;
+}
+
+cZeraJsonParamsState *cSourceDevice::paramsState()
+{
+    return &m_ZeraJsonParamsState;
+}
+
 void cSourceDevice::close()
 {
     switch(m_type) {

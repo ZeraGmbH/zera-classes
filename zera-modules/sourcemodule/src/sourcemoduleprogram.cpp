@@ -2,6 +2,7 @@
 #include <veinmoduleparameter.h>
 #include <modulevalidator.h>
 #include <intvalidator.h>
+#include <jsonparamvalidator.h>
 
 #include "basedspmeasprogram.h"
 #include "sourcemoduleprogram.h"
@@ -60,6 +61,8 @@ void cSourceModuleProgram::generateInterface()
 
     // per source components
     cVeinModuleActvalue* pVeinAct;
+    cVeinModuleParameter* pVeinParam;
+    cJsonParamValidator *jsonValidator;
     for(int souceCount=0; souceCount<maxSources; souceCount++) {
         // device info
         pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -68,6 +71,19 @@ void cSourceModuleProgram::generateInterface()
                                             QVariant("{}") );
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
         m_arrVeinSourceDeviceInfo.append(pVeinAct);
+
+
+        // device params
+        pVeinParam = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                            key = QString("PAR_SourceState%1").arg(souceCount),
+                                                            QString("Component all source parameters in JSON format"),
+                                                            QVariant("{}"));
+        //pVeinParam->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
+        jsonValidator = new cJsonParamValidator();
+        m_arrVeinSourceDeviceParameterValidators.append(jsonValidator);
+        pVeinParam->setValidator(jsonValidator);
+        m_pModule->veinModuleParameterHash[key] = pVeinParam; // auto delete / meta-data / scpi
+        m_arrVeinSourceDeviceParameter.append(pVeinParam);
     }
 }
 
@@ -81,12 +97,14 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
 void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 {
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceInfo()));
+    m_arrVeinSourceDeviceParameterValidators[slotPosition]->setJSonParameterState(m_pSourceDeviceManager->sourceDevice(slotPosition)->paramsStructure());
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
 
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QVariant("{}"));
+    m_arrVeinSourceDeviceParameterValidators[slotPosition]->setJSonParameterState(nullptr);
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
 

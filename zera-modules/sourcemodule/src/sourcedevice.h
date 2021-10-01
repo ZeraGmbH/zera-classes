@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <zera-json-params-structure.h>
+#include <zera-json-params-state.h>
 
 class cIOInterface;
 
@@ -23,6 +24,8 @@ public:
     };
     explicit cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent = nullptr);
     virtual ~cSourceDevice();
+    cZeraJsonParamsStructure* paramsStructure();
+    cZeraJsonParamsState* paramsState();
 
     // requests
     void close();
@@ -39,7 +42,8 @@ private slots:
 
 private:
     cIOInterface* m_IOInterface; // WE own the interface
-    cZeraJsonParamsStructure m_ZeraJsonParams;
+    cZeraJsonParamsStructure m_ZeraJsonParamsStructure;
+    cZeraJsonParamsState m_ZeraJsonParamsState;
 
     SourceType m_type;
     SourceType m_demoType;
