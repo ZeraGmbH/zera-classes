@@ -32,7 +32,7 @@ public:
 
     // getter
     cIOInterface* ioInterface();
-    QString deviceInfo();
+    QJsonObject deviceInfo();
 
 signals:
     void sigClosed(cSourceDevice* sourceDevice);
