@@ -24,6 +24,8 @@ option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging 
 if(ZC_BUILD_MODULES)
     set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
     add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
+    set(SET_ZC_DEV_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/configs/devices")
+    add_definitions(-DZC_DEV_CONFIG_PATH="${SET_ZC_DEV_CONFIG_PATH}")
     set(SUB_DIRS_MODULES
         zera-modules/interface
         zera-validator
