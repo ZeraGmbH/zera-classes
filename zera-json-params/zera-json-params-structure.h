@@ -21,6 +21,7 @@ public:
     };
     struct errEntry {
         errEntry(enum errorTypes errType, QString strInfo);
+        QString strID();
         enum errorTypes m_errType;
         QString m_strInfo;
     };
