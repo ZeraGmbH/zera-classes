@@ -4,7 +4,6 @@
 #include <QByteArray>
 #include <QString>
 #include <QVariant>
-#include <QJsonDocument>
 #include <QJsonObject>
 class cZeraJsonParamsStructure;
 
@@ -14,8 +13,7 @@ public:
     cZeraJsonParamsState();
 
     enum errorTypes {
-        ERR_INVALID_JSON = 0,
-        ERR_INVALID_STRUCTURE,
+        ERR_INVALID_STRUCTURE = 0,
 
         ERR_INVALID_PARAM_PATH,
         ERR_PARAM_DOES_NOT_EXIST,
@@ -31,8 +29,8 @@ public:
 
     bool isValid();
 
-    ErrList loadJson(const QByteArray& jsonData, cZeraJsonParamsStructure* paramStructure, const QString &errHint = QString());
-    QByteArray exportJson(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
+    ErrList loadState(QJsonObject& jsonState, cZeraJsonParamsStructure* paramStructure);
+    const QJsonObject& jsonState();
 
     ErrList param(const QStringList &paramPath, QVariant& value); // QJsonObject??
     ErrList setParam(const QStringList& paramPath, QVariant value);
