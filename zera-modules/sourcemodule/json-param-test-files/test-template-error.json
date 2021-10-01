@@ -1,0 +1,28 @@
+{
+    "param_templates": {
+        "voltage_rms": {
+            "type": "float",
+            "min": 0.0,
+            "max": -10.0,
+            "decimals": 3,
+            "default": 230.0
+        },
+        "current_rms": {
+            "type": "undefined",
+            "min": 0.001,
+            "max": 20.0,
+            "decimals": 3,
+            "default": 5.0
+        },
+        "angle": {
+            "type": "float",
+            "min": "abc",
+            "max": 359.999,
+            "decimals": 3
+        },
+        "phase_onoff": {
+            "type": "bool",
+            "default": true
+        }
+    }
+}

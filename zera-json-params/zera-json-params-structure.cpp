@@ -95,7 +95,7 @@ bool cZeraJsonParamsStructure::resolveJsonParamTemplatesRecursive(QJsonObject& j
                     }
                 }
                 else {
-                    errEntry error(ERR_INVALID_PARAM_DEFINITION, key + " : " + linkTo);
+                    errEntry error(ERR_INVALID_PARAM_DEFINITION, key + " : '" + linkTo + "' not found");
                     errList.push_back(error);
                 }
             }
@@ -144,7 +144,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
         if(type.isEmpty()) {
             validType = false;
             if(!inTemplate) { // for templates param type is useful but not mandatory
-                errEntry error(ERR_INVALID_PARAM_DEFINITION, treePosPrint + ".type : null");
+                errEntry error(ERR_INVALID_PARAM_DEFINITION, treePosPrint + ".type : missing");
                 errList.push_back(error);
             }
         }
@@ -152,7 +152,7 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
             if(!m_svalidParamTypes.contains(type)) {
                 validType = false;
                 errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                               treePosPrint + ".type" + " : " + type + " invalid");
+                               treePosPrint + ".type" + " : " + type + " invalid type");
                 errList.push_back(error);
             }
         }
@@ -161,17 +161,19 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
             QString entryKey = iterEntries.key();
             if(!m_svalidParamEntryKeys.contains(entryKey)) {
                 errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                               treePosPrint + "." + entryKey);
+                               treePosPrint + "." + entryKey + " invalid property");
                 errList.push_back(error);
             }
-            // type specific
-            if(validType && entryKey != "type") {
-                // check if parameter is allowed for type
-                QStringList typeParams = m_svalidParamTypes[type]; // safe see checked above
-                if(!typeParams.contains(entryKey)) {
-                    errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
-                                   treePosPrint + "." + entryKey + " not allowed for type " + type);
-                    errList.push_back(error);
+            else {
+                // type specific
+                if(validType && entryKey != "type") {
+                    // check if parameter is allowed for type
+                    QStringList typeParams = m_svalidParamTypes[type]; // safe see checked above
+                    if(!typeParams.contains(entryKey)) {
+                        errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                                       treePosPrint + "." + entryKey + " not allowed for type " + type);
+                        errList.push_back(error);
+                    }
                 }
             }
         }
@@ -187,8 +189,36 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
                 }
             }
         }
+        // checks on default
+        if(paramObject.contains("default")) {
+            if(type == "bool") {
+                if(!paramObject["default"].isBool()) {
+                    errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                                   treePosPrint + ".default not a bool");
+                    errList.push_back(error);
+                }
+            }
+            else if(type == "int" || type == "float") {
+                if(!paramObject["default"].isDouble()) {
+                    errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                                   treePosPrint + ".default not a number");
+                    errList.push_back(error);
+                }
+            }
+            //
+        }
         // max > min / default out of limit - classic late night bugs introduced
         if(paramObject.contains("max") && paramObject.contains("min")) {
+            if(!paramObject["min"].isDouble()) {
+                errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                               treePosPrint + ".min not a number");
+                errList.push_back(error);
+            }
+            if(!paramObject["max"].isDouble()) {
+                errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                               treePosPrint + ".max not a number");
+                errList.push_back(error);
+            }
             double min = paramObject["min"].toDouble();
             double max = paramObject["max"].toDouble();
             if(max < min) {
@@ -196,7 +226,8 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
                                treePosPrint + ".max < min");
                 errList.push_back(error);
             }
-            else if(paramObject.contains("default")) {
+
+            if(paramObject.contains("default")) {
                 double dbldefault = paramObject["default"].toDouble();
                 if(dbldefault < min) {
                     errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
@@ -210,7 +241,22 @@ void cZeraJsonParamsStructure::validateParamData(QJsonObject::ConstIterator iter
                 }
             }
         }
-        // TODO defaults out of limit / valid data types for other??
+        if(paramObject.contains("decimals")) {
+            if(!paramObject["decimals"].isDouble()) {
+                errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                               treePosPrint + ".decimals not a number");
+                errList.push_back(error);
+            }
+            else {
+                double dblDecimals = paramObject["decimals"].toDouble();
+                if(dblDecimals<0.0 || dblDecimals>10.0) {
+                    errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,
+                                   treePosPrint + ".decimals out of range");
+                    errList.push_back(error);
+                }
+            }
+        }
+        // TODO valid data types for other?? / maximum tree depth
     }
     else {
         errEntry error(inTemplate ? ERR_INVALID_PARAM_TEMPLATE_DEFINITION : ERR_INVALID_PARAM_DEFINITION,

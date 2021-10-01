@@ -1,0 +1,110 @@
+{
+    "params": {
+        "valid-float": {
+            "type": "float",
+            "min": 0.0,
+            "max": 10.0,
+            "decimals": 3,
+            "default": 10.0
+        },
+        "valid-int": {
+            "type": "int",
+            "min": 0.0,
+            "max": 10.0,
+            "default": 0.0
+        },
+        "valid-bool": {
+            "type": "bool",
+            "default": false
+        },
+
+        "type-missing": {
+            "default": false
+        },
+
+        "invalid-type": {
+            "type": "foo",
+            "default": false
+        },
+
+        "invalid-property": {
+            "type": "float",
+            "min": 0.0,
+            "max": 10.0,
+            "decimals": 3,
+            "default": 0.0,
+            "foo": "bar"
+        },
+
+        "invalid-type-property-bool": {
+            "type": "bool",
+            "default": 230.0
+        },
+        "invalid-type-property-int": {
+            "type": "int",
+            "min": 0.0,
+            "max": 10.0,
+            "decimals": 3,
+            "default": 230.0
+        },
+
+        "bool-default-invalid": {
+            "type": "bool",
+            "default": "foo"
+        },
+
+        "min>max": {
+            "type": "float",
+            "min": 10.0,
+            "max": 0.0,
+            "decimals": 3,
+            "default": 0.0
+        },
+
+        "min-missing": {
+            "type": "float",
+            "max": 0.0,
+            "decimals": 3,
+            "default": 230.0
+        },
+
+        "max-missing": {
+            "type": "float",
+            "min": 0.0,
+            "decimals": 3,
+            "default": 230.0
+        },
+
+        "decimals-missing": {
+            "type": "float",
+            "min": 0.0,
+            "min": 1.0,
+            "default": 230.0
+        },
+
+        "default-missing": {
+            "type": "float",
+            "min": 0.0,
+            "min": 1.0,
+            "decimals": 3.0
+        },
+
+        "data-type-min-max-decimal-default": {
+            "type": "float",
+            "min": "",
+            "max": "",
+            "decimals": "",
+            "default": ""
+        },
+
+        "decimals-out-of-range": {
+            "type": "float",
+            "min": 0.0,
+            "max": 10.0,
+            "decimals": 11,
+            "default": 5.0
+        }
+
+
+    }
+}
