@@ -276,8 +276,8 @@ void cZeraJsonParamsStructure::validateResolvedParamDataRecursive(QJsonObject &j
         QString key = sub.key();
         if(key == QStringLiteral("params")) {
             if(sub.value().isObject()) {
-                QJsonObject subObj = sub.value().toObject();
-                for(QJsonObject::ConstIterator iter=subObj.begin(); iter!=subObj.end(); ++iter) {
+                QJsonObject paramsObj = sub.value().toObject();
+                for(QJsonObject::ConstIterator iter=paramsObj.begin(); iter!=paramsObj.end(); ++iter) {
                     jsonStructurePathList.push_back(key);
                     validateParamData(iter, false, jsonStructurePathList, errList);
                     jsonStructurePathList.pop_back();
