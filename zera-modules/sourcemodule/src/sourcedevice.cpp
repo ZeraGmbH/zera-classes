@@ -1,4 +1,6 @@
 #include <QFile>
+#include <QJsonDocument>
+#include <zera-json-export.h>
 #include "sourcedevice.h"
 #include "iointerface.h"
 
@@ -85,9 +87,10 @@ QString cSourceDevice::deviceInfo()
         QByteArray jsondeviceInfoData = deviceInfoFile.readAll();
         deviceInfoFile.close();
 
-        cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParams.loadJson(jsondeviceInfoData, deviceInfoFileName);
+        QJsonObject jsonDeviceInfoStructure = QJsonDocument::fromJson(jsondeviceInfoData).object();
+        cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParamsStructure.loadStructure(jsonDeviceInfoStructure);
         if(errList.isEmpty()) {
-            devInfo = m_ZeraJsonParams.exportJson();
+            devInfo = cJsonExport::exportJson(m_ZeraJsonParamsStructure.jsonStructure());
         }
         else {
             // TODO handle error list
