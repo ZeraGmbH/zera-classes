@@ -11,27 +11,22 @@ bool cZeraJsonParamsState::isValid()
     return !m_jsonObjParamState.isEmpty();
 }
 
-cZeraJsonParamsState::ErrList cZeraJsonParamsState::loadJson(const QByteArray &jsonData, cZeraJsonParamsStructure *paramStructure, const QString &errHint)
+cZeraJsonParamsState::ErrList cZeraJsonParamsState::loadState(QJsonObject& jsonState, cZeraJsonParamsStructure* paramStructure)
 {
     ErrList errList;
     if(paramStructure && paramStructure->isValid()) {
-        QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
-        if(jsonDoc.isNull() || !jsonDoc.isObject()) {
-            errEntry error(ERR_INVALID_JSON, errHint.isEmpty() ? jsonData : errHint);
-            errList.push_back(error);
-        }
         // TODO: let structure validate state data
     }
     else {
-        errEntry error(ERR_INVALID_STRUCTURE, errHint.isEmpty() ? jsonData : errHint);
+        errEntry error(ERR_INVALID_STRUCTURE, QString());
         errList.push_back(error);
     }
     return errList;
 }
 
-QByteArray cZeraJsonParamsState::exportJson(QJsonDocument::JsonFormat format)
+const QJsonObject &cZeraJsonParamsState::jsonState()
 {
-    return cJsonExport::exportJson(m_jsonObjParamState, format);
+
 }
 
 cZeraJsonParamsState::ErrList cZeraJsonParamsState::param(const QStringList &paramPath, QVariant& value)
@@ -59,8 +54,6 @@ QString cZeraJsonParamsState::errEntry::strID()
 {
     QString str;
     switch(m_errType) {
-    case ERR_INVALID_JSON:
-        str = "Invalid JSON";
     case ERR_INVALID_STRUCTURE:
         str = "Invalid parameter structure";
     case ERR_INVALID_PARAM_PATH:

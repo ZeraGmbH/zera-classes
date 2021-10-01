@@ -7,7 +7,7 @@
 class cJsonExport
 {
 public:
-    static QByteArray exportJson(const QJsonObject& jsonObj, QJsonDocument::JsonFormat format);
+    static QByteArray exportJson(const QJsonObject& jsonObj, QJsonDocument::JsonFormat format = QJsonDocument::Compact);
 };
 
 #endif // ZERA_JSON_EXPORT_H

@@ -34,15 +34,16 @@ int main(int argc, char *argv[])
             QByteArray jsonStructureData = jsonStructureFile.readAll();
             jsonStructureFile.close();
 
+            QJsonObject jsonStructureRaw = QJsonDocument::fromJson(jsonStructureData).object();
             // load structure
             cZeraJsonParamsStructure jsonParamStructure;
-            cZeraJsonParamsStructure::ErrList errListStructure = jsonParamStructure.loadJson(jsonStructureData, jsonStructureFileName);
+            cZeraJsonParamsStructure::ErrList errListStructure = jsonParamStructure.loadStructure(jsonStructureRaw);
             cZeraJsonParamsState::ErrList errListState;
 
-            QByteArray stateDataLoaded;
+            QJsonObject jsonStateDataLoaded;
             if(errListStructure.isEmpty()) { // valid structure is mandatory for state
                 if(jsonStateInputFileName.isEmpty()) { // no state input set: create default
-                    stateDataLoaded = jsonParamStructure.createDefaultJsonState();
+                    jsonStateDataLoaded = jsonParamStructure.createDefaultJsonState();
                 }
                 else { // load state
                     QFile jsonStateFile(jsonStateInputFileName);
@@ -50,8 +51,10 @@ int main(int argc, char *argv[])
                     if(ok) {
                         QByteArray jsonStateData = jsonStateFile.readAll();
                         jsonStateFile.close();
+
+                        QJsonObject jsonStateObj = QJsonDocument::fromJson(jsonStateData).object();
                         cZeraJsonParamsState jsonParamState;
-                        errListState = jsonParamState.loadJson(jsonStateData, &jsonParamStructure, jsonStateInputFileName);
+                        errListState = jsonParamState.loadState(jsonStateObj, &jsonParamStructure);
                         if(!errListState.isEmpty()) {
                             ok = false;
                             qWarning("Errors occured loading json param state file %s", qPrintable(jsonStateInputFileName));

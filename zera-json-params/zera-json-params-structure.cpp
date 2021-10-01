@@ -7,27 +7,26 @@ cZeraJsonParamsStructure::cZeraJsonParamsStructure()
 {
 }
 
-cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadJson(const QByteArray &jsonData, const QString &errHint)
+cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::loadStructure(QJsonObject jsonStructure)
 {
     ErrList errList;
-    QJsonDocument jsonDoc = QJsonDocument::fromJson(jsonData);
-    if(jsonDoc.isNull() || !jsonDoc.isObject()) {
-        errEntry error(ERR_INVALID_JSON, errHint.isEmpty() ? jsonData : errHint);
-        errList.push_back(error);
-    }
     // resolve param state templates & validate
     if(errList.isEmpty()) {
-        QJsonObject jsonObj = jsonDoc.object();
         // Note: param templates are validated during resolve activity
-        resolveJsonParamTemplates(jsonObj, errList);
+        resolveJsonParamTemplates(jsonStructure, errList);
         // now params are complete for validation
         QStringList jsonStructurePathList;
-        validateResolvedParamDataRecursive(jsonObj, jsonStructurePathList, errList);
+        validateResolvedParamDataRecursive(jsonStructure, jsonStructurePathList, errList);
         if(errList.isEmpty()) {
-            m_jsonObjStructure = jsonObj;
+            m_jsonObjStructure = jsonStructure;
         }
     }
     return errList;
+}
+
+const QJsonObject &cZeraJsonParamsStructure::jsonStructure()
+{
+    return m_jsonObjStructure;
 }
 
 bool cZeraJsonParamsStructure::isValid()
@@ -35,17 +34,12 @@ bool cZeraJsonParamsStructure::isValid()
     return !m_jsonObjStructure.isEmpty();
 }
 
-QByteArray cZeraJsonParamsStructure::exportJson(QJsonDocument::JsonFormat format)
-{
-    return cJsonExport::exportJson(m_jsonObjStructure, format);
-}
-
-QByteArray cZeraJsonParamsStructure::createDefaultJsonState(QJsonDocument::JsonFormat format)
+QJsonObject cZeraJsonParamsStructure::createDefaultJsonState()
 {
     QJsonObject jsonStateObj;
     QStringList jsonStructurePathList;
     createDefaultJsonStateRecursive(jsonStateObj, m_jsonObjStructure, jsonStructurePathList);
-    return cJsonExport::exportJson(jsonStateObj, format);
+    return jsonStateObj;
 }
 
 cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::validateJsonState(const QJsonObject &jsonState)
@@ -345,8 +339,6 @@ QString cZeraJsonParamsStructure::errEntry::strID()
 {
     QString str;
     switch(m_errType) {
-    case ERR_INVALID_JSON:
-        str = "Invalid JSON";
     case ERR_INVALID_PARAM_TEMPLATE:
         str = "Invalid parameter template";
     case ERR_INVALID_PARAM_TEMPLATE_DEFINITION:

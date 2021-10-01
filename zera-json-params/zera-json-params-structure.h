@@ -4,7 +4,6 @@
 #include <QByteArray>
 #include <QString>
 #include <QVariant>
-#include <QJsonDocument>
 #include <QJsonObject>
 
 class cZeraJsonParamsStructure
@@ -13,9 +12,7 @@ public:
     cZeraJsonParamsStructure();
 
     enum errorTypes {
-        ERR_INVALID_JSON = 0,
-
-        ERR_INVALID_PARAM_TEMPLATE,
+        ERR_INVALID_PARAM_TEMPLATE = 0,
         ERR_INVALID_PARAM_TEMPLATE_DEFINITION,
         ERR_INVALID_PARAM_DEFINITION,
     };
@@ -29,10 +26,10 @@ public:
 
     bool isValid();
 
-    ErrList loadJson(const QByteArray& jsonData, const QString &errHint = QString());
-    QByteArray exportJson(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
+    ErrList loadStructure(QJsonObject jsonStructure);
+    const QJsonObject& jsonStructure();
 
-    QByteArray createDefaultJsonState(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
+    QJsonObject createDefaultJsonState();
 
     ErrList validateJsonState(const QJsonObject &jsonState);
 
