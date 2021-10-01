@@ -68,7 +68,7 @@ cIOInterface* cSourceDevice::ioInterface()
     return m_IOInterface;
 }
 
-QString cSourceDevice::deviceInfo()
+QJsonObject cSourceDevice::deviceInfo()
 {
     QString deviceInfoFileName;
     // If we ever make it to FG, we need dynamic contents...
@@ -91,7 +91,7 @@ QString cSourceDevice::deviceInfo()
         break;
     }
 
-    QString devInfo = "{}";
+    QJsonObject devInfo;
     QFile deviceInfoFile(deviceInfoFileName);
     if(deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
         QByteArray jsondeviceInfoData = deviceInfoFile.readAll();
@@ -100,7 +100,7 @@ QString cSourceDevice::deviceInfo()
         QJsonObject jsonDeviceInfoStructure = QJsonDocument::fromJson(jsondeviceInfoData).object();
         cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParamsStructure.loadStructure(jsonDeviceInfoStructure);
         if(errList.isEmpty()) {
-            devInfo = cJsonExport::exportJson(m_ZeraJsonParamsStructure.jsonStructure());
+            devInfo = m_ZeraJsonParamsStructure.jsonStructure();
         }
         else {
             // TODO handle error list
