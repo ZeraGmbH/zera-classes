@@ -75,6 +75,9 @@ int main(int argc, char *argv[])
                 }
             }
         }
+        else {
+            qWarning("zera-json-params-cli: %s could not be opened", qPrintable(jsonStructureFileName));
+        }
     }
     else {
         qWarning("No filename set in -s parameter!");
