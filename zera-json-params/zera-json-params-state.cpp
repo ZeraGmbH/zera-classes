@@ -1,6 +1,6 @@
 #include "zera-json-params-state.h"
 #include "zera-json-params-structure.h"
-#include <QJsonObject>
+#include "jsonexport.h"
 
 cZeraJsonParamsState::cZeraJsonParamsState()
 {
@@ -31,13 +31,7 @@ cZeraJsonParamsState::ErrList cZeraJsonParamsState::loadJson(const QByteArray &j
 
 QByteArray cZeraJsonParamsState::exportJson(QJsonDocument::JsonFormat format)
 {
-    QByteArray jsonData = "{}";
-    if(isValid()) {
-        QJsonDocument jsonDoc;
-        jsonDoc.setObject(m_jsonObjParamState);
-        jsonData = jsonDoc.toJson(format);
-    }
-    return jsonData;
+    return cJsonExport::exportJson(m_jsonObjParamState, format);
 }
 
 cZeraJsonParamsState::ErrList cZeraJsonParamsState::param(const QStringList &paramPath, QVariant& value)
