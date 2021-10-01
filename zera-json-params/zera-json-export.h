@@ -1,5 +1,5 @@
-#ifndef CJSONEXPORT_H
-#define CJSONEXPORT_H
+#ifndef ZERA_JSON_EXPORT_H
+#define ZERA_JSON_EXPORT_H
 
 #include <QJsonObject>
 #include <QJsonDocument>
@@ -10,4 +10,4 @@ public:
     static QByteArray exportJson(const QJsonObject& jsonObj, QJsonDocument::JsonFormat format);
 };
 
-#endif // CJSONEXPORT_H
+#endif // ZERA_JSON_EXPORT_H

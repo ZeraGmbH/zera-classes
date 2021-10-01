@@ -1,5 +1,5 @@
-#ifndef CJSONMERGE_H
-#define CJSONMERGE_H
+#ifndef ZERA_JSON_MERGE_H
+#define ZERA_JSON_MERGE_H
 
 #include <QJsonObject>
 
@@ -9,4 +9,4 @@ public:
     static void mergeJson(QJsonObject& src, const QJsonObject& other);
 };
 
-#endif // CJSONMERGE_H
+#endif // ZERA_JSON_MERGE_H

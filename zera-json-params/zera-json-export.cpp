@@ -1,4 +1,4 @@
-#include "jsonexport.h"
+#include "zera-json-export.h"
 
 QByteArray cJsonExport::exportJson(const QJsonObject& jsonObj, QJsonDocument::JsonFormat format)
 {
