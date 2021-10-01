@@ -33,7 +33,8 @@ public:
     QByteArray exportJson(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
 
     QByteArray createDefaultJsonState(QJsonDocument::JsonFormat format = QJsonDocument::Compact);
-    ErrList validateJsonState(const QByteArray& jsonData);
+
+    ErrList validateJsonState(const QJsonObject &jsonState);
 
 private:
     void resolveJsonParamTemplates(QJsonObject& jsonStructObj, ErrList& errList);

@@ -48,7 +48,7 @@ QByteArray cZeraJsonParamsStructure::createDefaultJsonState(QJsonDocument::JsonF
     return cJsonExport::exportJson(jsonStateObj, format);
 }
 
-cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::validateJsonState(const QByteArray &jsonData)
+cZeraJsonParamsStructure::ErrList cZeraJsonParamsStructure::validateJsonState(const QJsonObject &jsonState)
 {
     ErrList errList;
     // TODO
