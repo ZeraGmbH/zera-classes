@@ -27,6 +27,7 @@ if(ZC_BUILD_MODULES)
     set(SUB_DIRS_MODULES
         zera-modules/interface
         zera-validator
+        zera-json-params
         zera-basemodule
         zera-xml-config
         zera-comm/zera-proxy
@@ -37,7 +38,6 @@ set(SUB_DIRS
     ${SUB_DIRS_MODULES}
     zera-math
     zera-intel-hex-checker
-    zera-json-params
     zera-mcontroller-io
     zera-comm/zera-i2c
     zera-dev
@@ -76,6 +76,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/zera-xml-config/src)
 
 # add all subfolders to include dirs
 foreach(TMP_DIR ${SUB_DIRS})
+    message(STATUS "SUBDIR: " ${TMP_DIR})
     include_directories(${CMAKE_CURRENT_SOURCE_DIR}/${TMP_DIR})
     add_subdirectory(${TMP_DIR})
 endforeach()

@@ -54,6 +54,7 @@ target_link_libraries(zerabasemodule
     MeasurementModuleInterface
     zeravalidator
     zeraxmlconfig
+    zera-json-params
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
