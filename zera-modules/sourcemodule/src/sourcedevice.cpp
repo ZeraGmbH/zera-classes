@@ -107,7 +107,7 @@ QJsonObject cSourceDevice::deviceState()
     }
     else {
         QString stateFileName = deviceFileName();
-        QString statePath(ZC_DEV_CONFIG_PATH);
+        QString statePath(ZC_DEV_STATE_PATH);
         if(!statePath.endsWith("/")) {
             statePath += "/";
         }
