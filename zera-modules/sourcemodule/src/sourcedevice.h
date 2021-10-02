@@ -33,6 +33,7 @@ public:
     // getter
     cIOInterface* ioInterface();
     QJsonObject deviceInfo();
+    QJsonObject deviceState();
 
 signals:
     void sigClosed(cSourceDevice* sourceDevice);
@@ -41,6 +42,8 @@ private slots:
     void onInterfaceClosed(cIOInterface *ioInterface);
 
 private:
+    QString deviceFileName();
+
     cIOInterface* m_IOInterface; // WE own the interface
     cZeraJsonParamsStructure m_ZeraJsonParamsStructure;
     cZeraJsonParamsState m_ZeraJsonParamsState;

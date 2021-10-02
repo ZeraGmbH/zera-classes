@@ -97,6 +97,7 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
 void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 {
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceInfo());
+    m_arrVeinSourceDeviceParameter[slotPosition]->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceState());
     m_arrVeinSourceDeviceParameterValidators[slotPosition]->setJSonParameterState(m_pSourceDeviceManager->sourceDevice(slotPosition)->paramsStructure());
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
@@ -104,6 +105,7 @@ void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
     m_arrVeinSourceDeviceInfo[slotPosition]->setValue(QJsonObject());
+    m_arrVeinSourceDeviceParameter[slotPosition]->setValue(QJsonObject());
     m_arrVeinSourceDeviceParameterValidators[slotPosition]->setJSonParameterState(nullptr);
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
