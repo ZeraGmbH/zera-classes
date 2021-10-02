@@ -24,12 +24,12 @@ option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging 
 # we for build test / auto struct/state creation and ir must be added
 # BEFORE zera-basemodule which depends on it
 set(SUB_DIRS_BASE zera-json-params)
+set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
+add_definitions(-DZC_DEV_STATE_PATH="${SET_ZC_DEV_STATE_PATH}")
 
 if(ZC_BUILD_MODULES)
     set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
     add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
-    set(SET_ZC_DEV_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/configs/devices")
-    add_definitions(-DZC_DEV_CONFIG_PATH="${SET_ZC_DEV_CONFIG_PATH}")
     set(SUB_DIRS_MODULES
         zera-modules/interface
         zera-validator
