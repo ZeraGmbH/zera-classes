@@ -1,6 +1,5 @@
 #include <QFile>
 #include <QJsonDocument>
-#include <zera-json-export.h>
 #include "sourcedevice.h"
 #include "iointerface.h"
 

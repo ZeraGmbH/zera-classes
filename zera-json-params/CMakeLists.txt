@@ -16,7 +16,6 @@ add_library(zera-json-params SHARED
     ${CMAKE_CURRENT_SOURCE_DIR}/zera-json-params-structure.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/zera-json-params-state.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/zera-json-merge.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/zera-json-export.cpp
 )
 
 # announce headers - target perspective
