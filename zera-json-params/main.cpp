@@ -15,10 +15,10 @@ int main(int argc, char *argv[])
     QCommandLineOption cmdCheckJSONStructure(QStringList() << "s" << "json-struture", "JSON parameter structure file name", "json structure filename");
     parser.addOption(cmdCheckJSONStructure);
     // option for JSON state input
-    QCommandLineOption cmdCheckJSONInput(QStringList() << "i" << "json-input", "JSON parameter state input file name", "json input filename");
+    QCommandLineOption cmdCheckJSONInput(QStringList() << "t" << "json-state", "JSON parameter state input file name", "json input filename");
     parser.addOption(cmdCheckJSONInput);
     // option for JSON state output
-    QCommandLineOption cmdCheckJSONOutput(QStringList() << "o" << "json-output", "JSON parameter state output file name (stout if not set)", "json output filename");
+    QCommandLineOption cmdCheckJSONOutput(QStringList() << "o" << "json-output", "JSON parameter state output file name", "json output filename");
     parser.addOption(cmdCheckJSONOutput);
     parser.process(app);
 
@@ -38,28 +38,22 @@ int main(int argc, char *argv[])
             // load structure
             cZeraJsonParamsStructure jsonParamStructure;
             cZeraJsonParamsStructure::ErrList errListStructure = jsonParamStructure.loadStructure(jsonStructureRaw);
-            cZeraJsonParamsState::ErrList errListState;
 
-            QJsonObject jsonStateDataLoaded;
             if(errListStructure.isEmpty()) { // valid structure is mandatory for state
-                if(jsonStateInputFileName.isEmpty()) { // no state input set: create default
-                    jsonStateDataLoaded = jsonParamStructure.createDefaultJsonState();
-                }
-                else { // load state
+                QJsonObject jsonStateDataLoaded;
+                if(!jsonStateInputFileName.isEmpty()) {
                     QFile jsonStateFile(jsonStateInputFileName);
                     ok = jsonStateFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
                     if(ok) {
                         QByteArray jsonStateData = jsonStateFile.readAll();
                         jsonStateFile.close();
-
-                        QJsonObject jsonStateObj = QJsonDocument::fromJson(jsonStateData).object();
-                        cZeraJsonParamsState jsonParamState;
-                        errListState = jsonParamState.loadState(jsonStateObj, &jsonParamStructure);
-                        if(!errListState.isEmpty()) {
+                        jsonStateDataLoaded = QJsonDocument::fromJson(jsonStateData).object();
+                        errListStructure = jsonParamStructure.validateJsonState(jsonStateDataLoaded);
+                        if(!errListStructure.isEmpty()) {
                             ok = false;
-                            qWarning("Errors occured loading json param state file %s", qPrintable(jsonStateInputFileName));
-                            while(!errListState.isEmpty()) {
-                                cZeraJsonParamsState::errEntry err = errListState.takeFirst();
+                            qWarning("Errors occured validating parameter file %s", qPrintable(jsonStateInputFileName));
+                            while(!errListStructure.isEmpty()) {
+                                cZeraJsonParamsStructure::errEntry err = errListStructure.takeFirst();
                                 qWarning("%s: %s", qPrintable(err.strID()), qPrintable(err.m_strInfo));
                             }
                         }
@@ -68,7 +62,12 @@ int main(int argc, char *argv[])
                         qWarning("Could not load parameter state file %s", qPrintable(jsonStateInputFileName));
                     }
                 }
-
+                if(ok && !jsonStateOutputFileName.isEmpty()) {
+                    if(jsonStateDataLoaded.isEmpty()) {
+                        qInfo("Loading default parameter state");
+                        jsonStateDataLoaded = jsonParamStructure.createDefaultJsonState();
+                    }
+                }
             }
             else {
                 qWarning("Errors occured loading json param structure file %s", qPrintable(jsonStructureFileName));
@@ -82,7 +81,7 @@ int main(int argc, char *argv[])
             qWarning("zera-json-params-cli: %s could not be opened", qPrintable(jsonStructureFileName));
         }
     }
-    else {
+    else { // valid structure is mandatory for state
         qWarning("No filename set in -s parameter!");
         parser.showHelp(-1);
     }
