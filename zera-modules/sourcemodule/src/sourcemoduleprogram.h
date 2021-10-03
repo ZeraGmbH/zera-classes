@@ -18,7 +18,6 @@ class cSourceDeviceManager;
 class cSourceModuleProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
-
 public:
     cSourceModuleProgram(cSourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSourceModuleProgram();
@@ -30,6 +29,7 @@ public slots: // Make cBaseMeasWorkProgram happy...
 
 private:
     configuration* getConfigXMLWrapper();
+    void sourceStatusChanged(QVariant value);
 
     cSourceDeviceManager* m_pSourceDeviceManager;
 
@@ -38,9 +38,14 @@ private:
     cVeinModuleActvalue* m_pVeinCountAct;
     cVeinModuleParameter* m_pVeinDemoSourceCount;
 
-    QVector<cVeinModuleActvalue*> m_arrVeinSourceDeviceInfo;
-    QVector<cVeinModuleParameter*> m_arrVeinSourceDeviceParameter;
-    QVector<cJsonParamValidator*> m_arrVeinSourceDeviceParameterValidators;
+    struct SoureData
+    {
+        cVeinModuleActvalue* m_veinSourceDeviceInfo;
+        cVeinModuleParameter* m_veinSourceDeviceParameter;
+        cJsonParamValidator* m_veinSourceDeviceParameterValidator;
+    };
+    QVector<SoureData> m_arrSouceData;
+    QHash<cVeinModuleParameter*, int> m_senderSlotHash;
 
 private slots:
     void onSourceDeviceAdded(int slotPosition);
@@ -48,6 +53,7 @@ private slots:
 
     // vein change handlers
     void newDemoSourceCount(QVariant demoCount);
+
 
 };
 }
