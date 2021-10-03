@@ -54,6 +54,7 @@ void cSourceDevice::close()
     case SOURCE_MT3000:
     case SOURCE_MT400_20:
     case SOURCE_DEMO_FG_4PHASE:
+    case SOURCE_MT_SINGLE_PHASE:
         // TODO - maybe some sequence?
         qWarning("Using source type not implemented yet");
         break;
@@ -156,6 +157,7 @@ void cSourceDevice::onInterfaceClosed(cIOInterface *ioInterface)
     case SOURCE_MT3000:
     case SOURCE_MT400_20:
     case SOURCE_DEMO_FG_4PHASE:
+    case SOURCE_MT_SINGLE_PHASE:
         // TODO
         qWarning("Using source type not implemented yet");
         break;
@@ -178,6 +180,9 @@ QString cSourceDevice::deviceFileName()
         break;
     case SOURCE_DEMO_FG_4PHASE:
         fileName = QStringLiteral("FG4PhaseTest.json");
+        break;
+    case SOURCE_MT_SINGLE_PHASE:
+        fileName = QStringLiteral("MT-Single-Phase.json");
         break;
 
     case SOURCE_DEMO:

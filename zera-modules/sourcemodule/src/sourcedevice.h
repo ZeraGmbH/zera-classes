@@ -17,6 +17,7 @@ public:
         SOURCE_DEMO = 0,
         SOURCE_MT3000,
         SOURCE_MT400_20,
+        SOURCE_MT_SINGLE_PHASE,
 
         SOURCE_DEMO_FG_4PHASE,
 
