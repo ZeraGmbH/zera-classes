@@ -26,7 +26,7 @@ public:
     cSourceDevice* sourceDevice(int slotNo);
 
 signals:
-    void sigSlotAdded(int slotNo);
+    void sigSlotAdded(int slotNo, cSourceDevice* device);
     void sigSlotRemoved(int slotNo);
 
 private slots:

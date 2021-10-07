@@ -2,12 +2,16 @@
 #define CSOURCEDEVICE_H
 
 #include <QObject>
+#include <QTimer>
 #include <zera-json-params-structure.h>
+#include "sourcedevicestatus.h"
 
 class cIOInterface;
 
 namespace SOURCEMODULE
 {
+class cSourceVeinInterface;
+
 class cSourceDevice : public QObject
 {
     Q_OBJECT
@@ -24,31 +28,42 @@ public:
     };
     explicit cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent = nullptr);
     virtual ~cSourceDevice();
-    cZeraJsonParamsStructure* paramsStructure();
 
     // requests
     void close();
 
     // getter
     cIOInterface* ioInterface();
-    QJsonObject deviceParamInfo();
-    QJsonObject deviceParamState();
+
+    // setter
+    void setVeinInterface(cSourceVeinInterface* veinInterface);
 
 signals:
     void sigClosed(cSourceDevice* sourceDevice);
+
+public slots:
+    void newVeinParamStatus(QVariant paramState);
+    void timeoutDemoTransaction();
 
 private slots:
     void onInterfaceClosed(cIOInterface *ioInterface);
 
 private:
     QString deviceFileName();
+    const QJsonObject deviceParamInfo();
+    const QJsonObject deviceParamState();
 
-    cIOInterface* m_IOInterface; // WE own the interface
+    cIOInterface* m_IOInterface = nullptr; // WE own the interface
     cZeraJsonParamsStructure m_ZeraJsonParamsStructure;
-    QJsonObject m_paramState;
+    QJsonObject m_currParamState;
+    QJsonObject m_requestedParamState;
+    cSourceDeviceStatus  m_deviceStatus;
+    cSourceVeinInterface* m_veinInterface = nullptr;
 
     SourceType m_type;
+
     SourceType m_demoType;
+    QTimer m_demoTransactionTimer;
 };
 
 }
