@@ -69,7 +69,7 @@ cIOInterface* cSourceDevice::ioInterface()
     return m_IOInterface;
 }
 
-QJsonObject cSourceDevice::deviceInfo()
+QJsonObject cSourceDevice::deviceParamInfo()
 {
     QJsonObject devInfo;
     if(!m_ZeraJsonParamsStructure.isValid()) {
@@ -100,7 +100,7 @@ QJsonObject cSourceDevice::deviceInfo()
     return devInfo;
 }
 
-QJsonObject cSourceDevice::deviceState()
+QJsonObject cSourceDevice::deviceParamState()
 {
     QJsonObject jsonState;
     if(m_ZeraJsonParamsState.isValid()) {
@@ -113,9 +113,9 @@ QJsonObject cSourceDevice::deviceState()
             statePath += "/";
         }
         stateFileName = statePath + stateFileName;
-        // in case our client calls deviceState first make sure we have a structure
+        // in case our client calls deviceParamState first make sure we have a structure
         if(!m_ZeraJsonParamsStructure.isValid()) {
-            deviceInfo();
+            deviceParamInfo();
         }
         QFile deviceStateFile(stateFileName);
         if(deviceStateFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
