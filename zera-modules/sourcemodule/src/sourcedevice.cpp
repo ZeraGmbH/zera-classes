@@ -96,9 +96,9 @@ void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
     m_veinInterface->veinDeviceInfo()->setValue(deviceParamInfo());
+    m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
     m_veinInterface->veinDeviceParameter()->setValue(deviceParamState());
     m_veinInterface->veinDeviceParameterValidator()->setJSonParameterState(&m_ZeraJsonParamsStructure);
-    m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
 
     connect(m_veinInterface->veinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::newVeinParamStatus);
 }
