@@ -3,7 +3,6 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <zera-json-params-structure.h>
-#include <zera-json-params-state.h>
 
 int main(int argc, char *argv[])
 {

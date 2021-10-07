@@ -39,11 +39,6 @@ cZeraJsonParamsStructure *cSourceDevice::paramsStructure()
     return &m_ZeraJsonParamsStructure;
 }
 
-cZeraJsonParamsState *cSourceDevice::paramsState()
-{
-    return &m_ZeraJsonParamsState;
-}
-
 void cSourceDevice::close()
 {
     switch(m_type) {
@@ -103,8 +98,8 @@ QJsonObject cSourceDevice::deviceParamInfo()
 QJsonObject cSourceDevice::deviceParamState()
 {
     QJsonObject jsonState;
-    if(m_ZeraJsonParamsState.isValid()) {
-        jsonState = m_ZeraJsonParamsState.state();
+    if(!m_paramState.isEmpty()) {
+        return m_paramState;
     }
     else {
         QString stateFileName = deviceFileName();
@@ -117,6 +112,7 @@ QJsonObject cSourceDevice::deviceParamState()
         if(!m_ZeraJsonParamsStructure.isValid()) {
             deviceParamInfo();
         }
+        // try to load state file and validate it
         QFile deviceStateFile(stateFileName);
         if(deviceStateFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
             QByteArray jsonStateData = deviceStateFile.readAll();
@@ -129,7 +125,7 @@ QJsonObject cSourceDevice::deviceParamState()
         }
         if(jsonState.isEmpty()) {
             // State either not there or corrupt: Heal ourselves and create
-            // sane default
+            // sane default state file
             QDir dir;
             dir.mkpath(statePath);
             jsonState = m_ZeraJsonParamsStructure.createDefaultJsonState();
@@ -142,7 +138,7 @@ QJsonObject cSourceDevice::deviceParamState()
                 qWarning("Default state file %s could not be written", qPrintable(stateFileName));
             }
         }
-        m_ZeraJsonParamsState.setState(jsonState);
+        m_paramState = jsonState;
     }
     return jsonState;
 }
