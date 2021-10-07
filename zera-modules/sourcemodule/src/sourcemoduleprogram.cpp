@@ -114,8 +114,8 @@ void cSourceModuleProgram::sourceStatusChanged(QVariant value)
 
 void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
 {
-    m_arrSouceData[slotPosition].m_veinSourceDeviceInfo->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceInfo());
-    m_arrSouceData[slotPosition].m_veinSourceDeviceParameter->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceState());
+    m_arrSouceData[slotPosition].m_veinSourceDeviceInfo->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceParamInfo());
+    m_arrSouceData[slotPosition].m_veinSourceDeviceParameter->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceParamState());
     m_arrSouceData[slotPosition].m_veinSourceDeviceParameterValidator->setJSonParameterState(m_pSourceDeviceManager->sourceDevice(slotPosition)->paramsStructure());
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
