@@ -3,8 +3,7 @@
 
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
-
-
+#include "sourceveininterface.h"
 class cVeinModuleActvalue;
 class cVeinModuleParameter;
 class cJsonParamValidator;
@@ -13,6 +12,7 @@ namespace SOURCEMODULE
 {
 
 class cSourceModule;
+class cSourceDevice;
 class cSourceDeviceManager;
 
 class cSourceModuleProgram: public cBaseMeasWorkProgram
@@ -29,32 +29,24 @@ public slots: // Make cBaseMeasWorkProgram happy...
 
 private:
     configuration* getConfigXMLWrapper();
-    void sourceStatusChanged(QVariant value);
 
     cSourceDeviceManager* m_pSourceDeviceManager;
 
     cSourceModule* m_pModule; // the module we live in
+
     cVeinModuleActvalue* m_pVeinMaxCountAct;
     cVeinModuleActvalue* m_pVeinCountAct;
+
     cVeinModuleParameter* m_pVeinDemoSourceCount;
 
-    struct SoureData
-    {
-        cVeinModuleActvalue* m_veinSourceDeviceInfo;
-        cVeinModuleParameter* m_veinSourceDeviceParameter;
-        cJsonParamValidator* m_veinSourceDeviceParameterValidator;
-    };
-    QVector<SoureData> m_arrSouceData;
-    QHash<cVeinModuleParameter*, int> m_senderSlotHash;
+    QVector<cSourceVeinInterface*> m_arrVeinSourceInterfaces;
 
 private slots:
-    void onSourceDeviceAdded(int slotPosition);
+    void onSourceDeviceAdded(int slotPosition, cSourceDevice *device);
     void onSourceDeviceRemoved(int slotPosition);
 
     // vein change handlers
     void newDemoSourceCount(QVariant demoCount);
-
-
 };
 }
 

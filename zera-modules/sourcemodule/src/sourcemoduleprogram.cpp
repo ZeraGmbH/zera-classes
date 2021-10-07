@@ -9,6 +9,7 @@
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
 #include "sourcedevice.h"
+#include "sourceveininterface.h"
 #include "iointerface.h"
 #include <random>
 
@@ -25,8 +26,10 @@ cSourceModuleProgram::cSourceModuleProgram(cSourceModule* module, std::shared_pt
 cSourceModuleProgram::~cSourceModuleProgram()
 {
     delete m_pSourceDeviceManager;
+    while(m_arrVeinSourceInterfaces.size()) {
+        delete m_arrVeinSourceInterfaces.takeLast();
+    }
 }
-
 
 void cSourceModuleProgram::generateInterface()
 {
@@ -64,30 +67,35 @@ void cSourceModuleProgram::generateInterface()
     cVeinModuleParameter* pVeinParam;
     cJsonParamValidator *jsonValidator;
     for(int souceCount=0; souceCount<maxSources; souceCount++) {
-        struct SoureData sourceData;
+        cSourceVeinInterface* sourceVeinInterface = new cSourceVeinInterface;
         // device info (Don' movit down - our clients need it first!!)
         pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_DeviceInfo%1").arg(souceCount),
                                             QString("Component with source info/capabiliities"),
                                             QJsonObject());
+        sourceVeinInterface->setVeinDeviceInfo(pVeinAct);
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
-        sourceData.m_veinSourceDeviceInfo = pVeinAct;
+
+        pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            QString("ACT_DeviceState%1").arg(souceCount),
+                                            QString("Component with source status"),
+                                            QJsonObject());
+        sourceVeinInterface->setVeinDeviceState(pVeinAct);
+        m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
         // device param
         pVeinParam = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                             key = QString("PAR_SourceState%1").arg(souceCount),
                                                             QString("Component all source parameters in JSON format"),
-                                                            QJsonObject());
+                                                            QJsonObject(),true); // defferered for now
+        sourceVeinInterface->setVeinDeviceParameter(pVeinParam);
         //pVeinParam->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
         jsonValidator = new cJsonParamValidator();
-        sourceData.m_veinSourceDeviceParameterValidator = jsonValidator;
+        sourceVeinInterface->setVeinDeviceParameterValidator(jsonValidator);
         pVeinParam->setValidator(jsonValidator);
         m_pModule->veinModuleParameterHash[key] = pVeinParam; // auto delete / meta-data / scpi
-        sourceData.m_veinSourceDeviceParameter = pVeinParam;
-        m_senderSlotHash[pVeinParam] = souceCount;
-        connect(pVeinParam, &cVeinModuleParameter::sigValueChanged, this, &cSourceModuleProgram::sourceStatusChanged);
 
-        m_arrSouceData.append(sourceData);
+        m_arrVeinSourceInterfaces.append(sourceVeinInterface);
     }
 }
 
@@ -97,39 +105,21 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
     return static_cast<cSourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
 }
 
-void cSourceModuleProgram::sourceStatusChanged(QVariant value)
+void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition, cSourceDevice* device)
 {
-    cVeinModuleParameter* sender = qobject_cast<cVeinModuleParameter *>(QObject::sender());
-    if(sender) {
-        // TODO: This is just to see if our communication works as expected
-        sender->setValue(value);
-        int slotPosition = m_senderSlotHash[sender];
-        qWarning("Status changed: Slot %i", slotPosition);
-    }
-    else {
-        qWarning("cSourceModuleProgram::sourceStatusChanged: Sender not found");
-    }
-}
-
-
-void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition)
-{
-    m_arrSouceData[slotPosition].m_veinSourceDeviceInfo->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceParamInfo());
-    m_arrSouceData[slotPosition].m_veinSourceDeviceParameter->setValue(m_pSourceDeviceManager->sourceDevice(slotPosition)->deviceParamState());
-    m_arrSouceData[slotPosition].m_veinSourceDeviceParameterValidator->setJSonParameterState(m_pSourceDeviceManager->sourceDevice(slotPosition)->paramsStructure());
+    device->setVeinInterface(m_arrVeinSourceInterfaces[slotPosition]);
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
 
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
-    m_arrSouceData[slotPosition].m_veinSourceDeviceInfo->setValue(QJsonObject());
-    m_arrSouceData[slotPosition].m_veinSourceDeviceParameter->setValue(QJsonObject());
-    m_arrSouceData[slotPosition].m_veinSourceDeviceParameterValidator->setJSonParameterState(nullptr);
+    Q_UNUSED(slotPosition)
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
 }
 
 
 static bool randomBool() {
+    // https://stackoverflow.com/questions/43329352/generating-random-boolean/43329456
     static auto gen = std::bind(std::uniform_int_distribution<>(0,1),std::default_random_engine());
     return gen();
 }
@@ -156,8 +146,6 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
     }
     else {
         int sourcesToRemove = activeSlotCount - iDemoCount;
-        // https://stackoverflow.com/questions/43329352/generating-random-boolean/43329456
-        static auto genRandomBool = std::bind(std::uniform_int_distribution<>(0,1),std::default_random_engine());
         bool removeFront = randomBool();
         if(removeFront) {
             for(int slotNo=0; sourcesToRemove && slotNo<getConfigXMLWrapper()->max_count_sources(); slotNo++) {
