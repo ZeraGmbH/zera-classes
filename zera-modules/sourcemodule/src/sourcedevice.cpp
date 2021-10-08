@@ -214,8 +214,8 @@ QString cSourceDevice::deviceFileName()
     case SOURCE_DEMO_FG_4PHASE:
         fileName = QStringLiteral("FG4PhaseTest.json");
         break;
-    case SOURCE_MT_SINGLE_PHASE:
-        fileName = QStringLiteral("MT-Single-Phase.json");
+    case SOURCE_MT507:
+        fileName = QStringLiteral("MT507.json");
         break;
 
     case SOURCE_DEMO:
