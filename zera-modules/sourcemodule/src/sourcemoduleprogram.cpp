@@ -87,7 +87,7 @@ void cSourceModuleProgram::generateInterface()
         pVeinParam = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                             key = QString("PAR_SourceState%1").arg(souceCount),
                                                             QString("Component all source parameters in JSON format"),
-                                                            QJsonObject(),true); // defferered for now
+                                                            QJsonObject());
         sourceVeinInterface->setVeinDeviceParameter(pVeinParam);
         //pVeinParam->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
         jsonValidator = new cJsonParamValidator();
