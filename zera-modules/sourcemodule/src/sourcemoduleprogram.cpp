@@ -97,10 +97,6 @@ void cSourceModuleProgram::generateInterface()
 
         m_arrVeinSourceInterfaces.append(sourceVeinInterface);
     }
-    // Temporary hack to get all demos sources up to gather feedback
-    QVariant tempDemosCount(4);
-    m_pVeinDemoSourceCount->setValue(tempDemosCount);
-    newDemoSourceCount(tempDemosCount);
 }
 
 
