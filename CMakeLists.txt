@@ -21,9 +21,6 @@ set(REPO_VERSION ${PROJECT_VERSION})
 option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
 option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging on PC" OFF)
 
-# we for build test / auto struct/state creation and ir must be added
-# BEFORE zera-basemodule which depends on it
-set(SUB_DIRS_BASE zera-json-params)
 set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
 add_definitions(-DZC_DEV_STATE_PATH="${SET_ZC_DEV_STATE_PATH}")
 
@@ -40,7 +37,6 @@ if(ZC_BUILD_MODULES)
 endif(ZC_BUILD_MODULES)
 
 set(SUB_DIRS
-    ${SUB_DIRS_BASE}
     ${SUB_DIRS_MODULES}
     zera-math
     zera-intel-hex-checker
