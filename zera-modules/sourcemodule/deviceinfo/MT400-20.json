@@ -42,7 +42,7 @@
                 "default": 50.0
             },
             "type": {
-                "type": "strlist",
+                "type": "oneof-list",
                 "list": [ "sync" ],
                 "default": "sync"
             }

@@ -46,7 +46,7 @@
                 "default": 50.0
             },
             "type": {
-                "type": "strlist",
+                "type": "oneof-list",
                 "list": [ "var", "sync" ],
                 "default": "var"
             }
