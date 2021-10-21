@@ -22,6 +22,7 @@ find_package(Qt5 COMPONENTS Core Gui Network CONFIG REQUIRED)
 find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_Package(VfComponent REQUIRED)
+find_Package(zera-json-params REQUIRED)
 pkg_check_modules(XERCES xerces-c REQUIRED)
 
 #sum up project Files 
