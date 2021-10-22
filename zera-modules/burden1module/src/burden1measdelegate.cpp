@@ -95,13 +95,15 @@ void cBurden1MeasDelegate::computeOutput()
 
     // computation of burden, powerfactor and rel. burden !!! vectors are complex !!!
 
+    double nominalRange=m_fNominalRange*m_fNominalRangeFactor;
+
     if (m_sMode == "V")
     {
-        m_fActBurden = ((m_fNominalRange * m_fNominalRange) * ieff) / (ueff + (Rwire * ieff));
+        m_fActBurden = ((nominalRange * nominalRange) * ieff) / (ueff + (Rwire * ieff));
     }
     else
     {
-        m_fActBurden = (m_fNominalRange * m_fNominalRange) * ((ueff/ieff) + Rwire);
+        m_fActBurden = (nominalRange * nominalRange) * ((ueff/ieff) + Rwire);
     }
 
     double deltaW = userAtan(m_fCurrentVector.im(), m_fCurrentVector.re()) - userAtan(m_fVoltageVector.im(), m_fVoltageVector.re());

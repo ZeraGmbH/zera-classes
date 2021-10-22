@@ -342,6 +342,7 @@ void cBurden1ModuleMeasProgram::setParameters()
         tmd->setNominalRange(getConfData()->nominalRange.m_fValue);
         tmd->setWireLength(getConfData()->wireLength.m_fValue);
         tmd->setWireCrosssection(getConfData()->wireCrosssection.m_fValue);
+        tmd->setNominalRangeFactor(getConfData()->nominalRangeFactor.m_sPar);
     }
 }
 
