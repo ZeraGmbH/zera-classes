@@ -179,6 +179,8 @@ if(${GTest_FOUND})
              COMMAND sourcemodule-unittest)
 
     add_executable(sourcemodule-unittest
+        tests/unittest-deviceinfo.cpp
+        ${RESOURCES}
     )
 
     target_link_libraries(sourcemodule-unittest
