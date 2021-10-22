@@ -18,7 +18,7 @@ const QJsonObject &cSourceDeviceStatus::jsonStatus()
 
 void cSourceDeviceStatus::reset()
 {
-    QString deviceInfoFileName = QStringLiteral("://deviceinfo/DefaultDeviceStatus.json");
+    QString deviceInfoFileName = QStringLiteral("://devicestatus/DefaultDeviceStatus.json");
     QFile deviceInfoFile(deviceInfoFileName);
     deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
     QByteArray jsondeviceInfoData = deviceInfoFile.readAll();

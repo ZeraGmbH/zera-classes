@@ -6,6 +6,6 @@
         <file>deviceinfo/MT507.json</file>
     </qresource>
     <qresource prefix="/">
-        <file>deviceinfo/DefaultDeviceStatus.json</file>
+        <file>devicestatus/DefaultDeviceStatus.json</file>
     </qresource>
 </RCC>
