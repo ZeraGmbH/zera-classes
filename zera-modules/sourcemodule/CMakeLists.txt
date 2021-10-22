@@ -170,6 +170,25 @@ install(
         ${SET_ZC_CONFIG_PATH}
     )
 
+find_package(GTest)
+if(${GTest_FOUND})
+    message(STATUS "building with unittest")
+    enable_testing()
+
+    add_test(NAME    sourcemodule-unittest
+             COMMAND sourcemodule-unittest)
+
+    add_executable(sourcemodule-unittest
+    )
+
+    target_link_libraries(sourcemodule-unittest
+        gtest
+        gtest_main
+        Qt5::Core
+        zera-json-params
+    )
+endif()
+
 
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
