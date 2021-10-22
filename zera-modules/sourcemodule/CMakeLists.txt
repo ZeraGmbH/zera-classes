@@ -172,7 +172,7 @@ install(
 
 find_package(GTest)
 if(${GTest_FOUND})
-    message(STATUS "building with unittest")
+    message(STATUS "unittest sourcemodule")
     enable_testing()
 
     add_test(NAME    sourcemodule-unittest
