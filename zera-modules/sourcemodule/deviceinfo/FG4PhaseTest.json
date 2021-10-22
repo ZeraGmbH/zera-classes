@@ -14,21 +14,21 @@
 
     "param_templates": {
         "voltage_rms": {
-            "type": "float",
+            "type": "number",
             "min": 40.0,
             "max": 300.0,
             "decimals": 3,
             "default": 230.0
         },
         "current_rms": {
-            "type": "float",
+            "type": "number",
             "min": 0.001,
             "max": 200.0,
             "decimals": 3,
             "default": 10.0
         },
         "angle": {
-            "type": "float",
+            "type": "number",
             "min": 0.0,
             "max": 359.999,
             "decimals": 3
@@ -42,7 +42,7 @@
     "Frequency": {
         "params": {
             "val": {
-                "type": "float",
+                "type": "number",
                 "min": 16.0,
                 "max": 70.0,
                 "decimals": 3,

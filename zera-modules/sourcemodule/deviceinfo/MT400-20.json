@@ -14,14 +14,14 @@
 
     "param_templates": {
         "current_rms": {
-            "type": "float",
+            "type": "number",
             "min": 0.001,
             "max": 20.0,
             "decimals": 3,
             "default": 1.0
         },
         "angle": {
-            "type": "float",
+            "type": "number",
             "min": 0.0,
             "max": 359.999,
             "decimals": 3
@@ -35,7 +35,7 @@
     "Frequency": {
         "params": {
             "val": {
-                "type": "float",
+                "type": "number",
                 "min": 16.0,
                 "max": 70.0,
                 "decimals": 3,
