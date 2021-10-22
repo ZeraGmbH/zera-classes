@@ -5,14 +5,14 @@
     "HasReferenceMeter": true,
     "Protocol": "JustForTest",
     
-    "params": {
+    "zj_params": {
         "on": {
             "type": "bool",
             "default": false
         }
     },
 
-    "param_templates": {
+    "zj_param_templates": {
         "voltage_rms": {
             "type": "number",
             "min": 40.0,
@@ -40,7 +40,7 @@
     },
 
     "Frequency": {
-        "params": {
+        "zj_params": {
             "val": {
                 "type": "number",
                 "min": 16.0,
@@ -58,68 +58,68 @@
     
     "UPhaseMax": 4,
     "U1": {
-        "params": {
-            "rms": { "param_template": "voltage_rms" },
-            "angle": { "param_template": "angle", "default": 0.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "voltage_rms" },
+            "angle": { "zj_param_template": "angle", "default": 0.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     },
     "U2": {
-        "params": {
-            "rms": { "param_template": "voltage_rms" },
-            "angle": { "param_template": "angle", "default": 120.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "voltage_rms" },
+            "angle": { "zj_param_template": "angle", "default": 120.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     },
     "U3": {
-        "params": {
-            "rms": { "param_template": "voltage_rms" },
-            "angle": { "param_template": "angle", "default": 240.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "voltage_rms" },
+            "angle": { "zj_param_template": "angle", "default": 240.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     },
     "U4": {
-        "params": {
-            "rms": { "param_template": "voltage_rms" },
-            "angle": { "param_template": "angle", "default": 0.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "voltage_rms" },
+            "angle": { "zj_param_template": "angle", "default": 0.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     },
 
     "IPhaseMax": 4,
     "I1": {
-        "params": {
-            "rms": { "param_template": "current_rms" },
-            "angle": { "param_template": "angle", "default": 0.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "current_rms" },
+            "angle": { "zj_param_template": "angle", "default": 0.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     },
     "I2": {
-        "params": {
-            "rms": { "param_template": "current_rms" },
-            "angle": { "param_template": "angle", "default": 120.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "current_rms" },
+            "angle": { "zj_param_template": "angle", "default": 120.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     },
     "I3": {
-        "params": {
-            "rms": { "param_template": "current_rms" },
-            "angle": { "param_template": "angle", "default": 240.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "current_rms" },
+            "angle": { "zj_param_template": "angle", "default": 240.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     },
     "I4": {
-        "params": {
-            "rms": { "param_template": "current_rms" },
-            "angle": { "param_template": "angle", "default": 0.0 },
-            "on": { "param_template": "phase_onoff" }
+        "zj_params": {
+            "rms": { "zj_param_template": "current_rms" },
+            "angle": { "zj_param_template": "angle", "default": 0.0 },
+            "on": { "zj_param_template": "phase_onoff" }
         },
         "supportsHarmonics": true
     }
