@@ -70,6 +70,8 @@ void cBurden1MeasDelegate::setNominalRangeFactor(QVariant val)
         m_fNominalRangeFactor = sqrt(3.0);
     if (m_sNominalRangeFactor == "1/sqrt(3)")
         m_fNominalRangeFactor = 1.0 / sqrt(3.0);
+    if (m_sNominalRangeFactor == "1/3")
+        m_fNominalRangeFactor = 1.0/3.0;
 }
 
 

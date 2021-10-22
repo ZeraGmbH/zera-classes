@@ -141,7 +141,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     m_pNominalRangeFactorParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RFACTOR", "10", "PAR_NominalRangeFactor", "0", ""));
 
     cStringValidator *sValidator;
-    sValidator = new cStringValidator(QString("1;sqrt(3);1/sqrt(3)"));
+    sValidator = new cStringValidator(QString("1;sqrt(3);1/sqrt(3);1/3"));
     m_pNominalRangeFactorParameter->setValidator(sValidator);
     m_pModule->veinModuleParameterHash[key] = m_pNominalRangeFactorParameter; // for modules use
 
