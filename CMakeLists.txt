@@ -90,7 +90,11 @@ if(ZC_BUILD_MODULES)
     endforeach()
 endif(ZC_BUILD_MODULES)
 
-
+find_package(GTest)
+if(${GTest_FOUND})
+    message(STATUS "building with unittest")
+    enable_testing()
+endif()
 
 
 
