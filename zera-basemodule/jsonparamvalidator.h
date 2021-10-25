@@ -2,18 +2,17 @@
 #define CJSONVALIDATORNOSCHEMA_H
 
 #include "paramvalidator.h"
-class cZeraJsonParamsStructure;
-class cZeraJsonParamsState;
+#include <zera-json-params-state.h>
 
 class cJsonParamValidator : public cParamValidator
 {
 public:
     cJsonParamValidator();
+    void setJSonParameterStructure(const QJsonObject& jsonParamStructure);
     virtual bool isValidParam(QVariant &newValue) override;
     virtual void exportMetaData(QJsonObject& jsObj)  override;
-    void setJSonParameterState(cZeraJsonParamsStructure *pParamStructure);
 private:
-    cZeraJsonParamsStructure *m_pParamStructure = nullptr;
+    cZeraJsonParamsState m_paramState;
 };
 
 #endif // CJSONVALIDATORNOSCHEMA_H
