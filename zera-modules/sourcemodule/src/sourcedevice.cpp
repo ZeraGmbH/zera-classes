@@ -81,8 +81,10 @@ void cSourceDevice::newVeinParamStatus(QVariant paramState)
 
 void cSourceDevice::timeoutDemoTransaction()
 {
+    // TODO introduce common place for code below for demo and real transactions
     m_deviceStatus.setBusy(false);
     m_currParamState = m_requestedParamState;
+    saveState();
     // TODO add some random warnings and erros
     m_veinInterface->veinDeviceParameter()->setValue(m_currParamState);
     m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
