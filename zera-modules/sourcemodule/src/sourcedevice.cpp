@@ -3,6 +3,7 @@
 #include <QJsonDocument>
 #include <veinmoduleactvalue.h>
 #include <veinmoduleparameter.h>
+#include <zera-json-params-structure.h>
 #include <jsonparamvalidator.h>
 #include "sourcedevice.h"
 #include "sourceveininterface.h"
@@ -95,18 +96,17 @@ cIOInterface* cSourceDevice::ioInterface()
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
-    m_veinInterface->veinDeviceInfo()->setValue(deviceParamInfo());
+    m_veinInterface->veinDeviceInfo()->setValue(deviceParamStructure());
     m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
     m_veinInterface->veinDeviceParameter()->setValue(deviceParamState());
-    m_veinInterface->veinDeviceParameterValidator()->setJSonParameterState(&m_ZeraJsonParamsStructure);
+    m_veinInterface->veinDeviceParameterValidator()->setJSonParameterStructure(deviceParamStructure());
 
     connect(m_veinInterface->veinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::newVeinParamStatus);
 }
 
-const QJsonObject cSourceDevice::deviceParamInfo()
+const QJsonObject cSourceDevice::deviceParamStructure()
 {
-    QJsonObject devInfo;
-    if(!m_ZeraJsonParamsStructure.isValid()) {
+    if(m_jsonParamsStructure.isEmpty()) {
         QString deviceInfoFileName = QStringLiteral("://deviceinfo/") + deviceFileName();
         QFile deviceInfoFile(deviceInfoFileName);
         if(deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
@@ -114,72 +114,67 @@ const QJsonObject cSourceDevice::deviceParamInfo()
             deviceInfoFile.close();
 
             QJsonObject jsonDeviceInfoStructure = QJsonDocument::fromJson(jsondeviceInfoData).object();
-            cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParamsStructure.loadStructure(jsonDeviceInfoStructure);
-            if(errList.isEmpty()) {
-                devInfo = m_ZeraJsonParamsStructure.jsonStructure();
-            }
-            else {
-                // TODO remove error handling once we check(create?) structure at build time
-                qWarning("Errors occured loading json param structure file %s", qPrintable(deviceInfoFileName));
-                while(!errList.isEmpty()) {
-                    cZeraJsonParamsStructure::errEntry err = errList.takeFirst();
-                    qWarning("%s: %s", qPrintable(err.strID()), qPrintable(err.m_strInfo));
-                }
-            }
+            cZeraJsonParamsStructure jsonParamsStructure;
+            // structures are tested at build time so we can trust them
+            jsonParamsStructure.loadStructure(jsonDeviceInfoStructure);
+            m_jsonParamsStructure = jsonParamsStructure.jsonStructure();
         }
     }
-    else {
-        devInfo = m_ZeraJsonParamsStructure.jsonStructure();
-    }
-    return devInfo;
+    return m_jsonParamsStructure;
 }
 
 const QJsonObject cSourceDevice::deviceParamState()
 {
-    QJsonObject jsonState;
-    if(!m_currParamState.isEmpty()) {
-        return m_currParamState;
-    }
-    else {
-        QString stateFileName = deviceFileName();
-        QString statePath(ZC_DEV_STATE_PATH);
-        if(!statePath.endsWith("/")) {
-            statePath += "/";
-        }
-        stateFileName = statePath + stateFileName;
-        // in case our client calls deviceParamState first make sure we have a structure
-        if(!m_ZeraJsonParamsStructure.isValid()) {
-            deviceParamInfo();
-        }
-        // try to load state file and validate it
-        QFile deviceStateFile(stateFileName);
+    if(m_currParamState.isEmpty()) {
+        cZeraJsonParamsState jsonParamsState;
+        jsonParamsState.setStructure(deviceParamStructure());
+        // try to load persistent state file and validate it
+        QFile deviceStateFile(stateFileName());
         if(deviceStateFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
             QByteArray jsonStateData = deviceStateFile.readAll();
             deviceStateFile.close();
             QJsonObject jsonDeviceStateFromFile = QJsonDocument::fromJson(jsonStateData).object();
-            cZeraJsonParamsStructure::ErrList errList = m_ZeraJsonParamsStructure.validateJsonState(jsonDeviceStateFromFile);
+            cZeraJsonParamsState::ErrList errList = jsonParamsState.validateJsonState(jsonDeviceStateFromFile);
             if(errList.isEmpty()) {
-                jsonState = jsonDeviceStateFromFile;
+                // Override on state
+                jsonDeviceStateFromFile.insert("on", false);
+                m_currParamState = jsonDeviceStateFromFile;
             }
         }
-        if(jsonState.isEmpty()) {
+        if(m_currParamState.isEmpty()) {
             // State either not there or corrupt: Heal ourselves and create
             // sane default state file
-            QDir dir;
-            dir.mkpath(statePath);
-            jsonState = m_ZeraJsonParamsStructure.createDefaultJsonState();
-            if(deviceStateFile.open(QIODevice::WriteOnly)) {
-                QJsonDocument doc(jsonState);
-                deviceStateFile.write(doc.toJson(QJsonDocument::Indented));
-                deviceStateFile.close();
-            }
-            else {
-                qWarning("Default state file %s could not be written", qPrintable(stateFileName));
-            }
+            m_currParamState = jsonParamsState.createDefaultJsonState();
+            saveState();
         }
-        m_currParamState = jsonState;
     }
-    return jsonState;
+    return m_currParamState;
+}
+
+QString cSourceDevice::stateFileName()
+{
+    QString fileName = deviceFileName();
+    QString statePath(ZC_DEV_STATE_PATH);
+    if(!statePath.endsWith("/")) {
+        statePath += "/";
+    }
+    QDir dir; // make sure path exists
+    dir.mkpath(statePath);
+    fileName = statePath + fileName;
+    return fileName;
+}
+
+void cSourceDevice::saveState()
+{
+    QFile deviceStateFile(stateFileName());
+    if(deviceStateFile.open(QIODevice::WriteOnly)) {
+        QJsonDocument doc(m_currParamState);
+        deviceStateFile.write(doc.toJson(QJsonDocument::Indented));
+        deviceStateFile.close();
+    }
+    else {
+        qWarning("Default state file %s could not be written", qPrintable(stateFileName()));
+    }
 }
 
 void cSourceDevice::onInterfaceClosed(cIOInterface *ioInterface)
@@ -188,7 +183,7 @@ void cSourceDevice::onInterfaceClosed(cIOInterface *ioInterface)
     // hard-close by interface close is the only option cleanup vein here
     m_veinInterface->veinDeviceInfo()->setValue(QJsonObject());
     m_veinInterface->veinDeviceParameter()->setValue(QJsonObject());
-    m_veinInterface->veinDeviceParameterValidator()->setJSonParameterState(nullptr);
+    m_veinInterface->veinDeviceParameterValidator()->setJSonParameterStructure(QJsonObject());
     m_veinInterface->veinDeviceState()->setValue(QJsonObject());
 
     // in case interface is gone, there is not much left to do but clean up
