@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QVariant>
 #include "sourcedevicestatus.h"
 
 class cIOInterface;
