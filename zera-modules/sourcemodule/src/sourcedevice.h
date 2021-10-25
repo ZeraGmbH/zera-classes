@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QTimer>
-#include <zera-json-params-structure.h>
 #include "sourcedevicestatus.h"
 
 class cIOInterface;
@@ -38,6 +37,8 @@ public:
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
 
+    void saveState();
+
 signals:
     void sigClosed(cSourceDevice* sourceDevice);
 
@@ -50,13 +51,16 @@ private slots:
 
 private:
     QString deviceFileName();
-    const QJsonObject deviceParamInfo();
+    const QJsonObject deviceParamStructure();
     const QJsonObject deviceParamState();
+    QString stateFileName();
 
     cIOInterface* m_IOInterface = nullptr; // WE own the interface
-    cZeraJsonParamsStructure m_ZeraJsonParamsStructure;
+
+    QJsonObject m_jsonParamsStructure;
     QJsonObject m_currParamState;
     QJsonObject m_requestedParamState;
+
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
 
