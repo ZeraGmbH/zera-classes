@@ -22,12 +22,15 @@ public:
 
         PERIODIC_ACTION_COUNT
     };
-    cSourceAction();
+    cSourceAction(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
+private:
+    QJsonObject m_jsonSourceParamStructure;
+    QJsonObject m_jsonSourceParamState;
 };
 
 
-typedef QMap<cSourceAction, cSourceAction::ActionTypes> tActionMap;
-typedef QMap<cSourceAction, cSourceAction::PeriodicActionTypes> tPeriodicActionMap;
+typedef QMap<cSourceAction::ActionTypes, cSourceAction> tActionMap;
+typedef QMap<cSourceAction::PeriodicActionTypes, cSourceAction> tPeriodicActionMap;
 
 class cSourceActionGenerator
 {
