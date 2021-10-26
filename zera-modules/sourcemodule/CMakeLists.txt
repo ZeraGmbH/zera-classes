@@ -23,6 +23,7 @@ find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_Package(VfComponent REQUIRED)
 find_Package(zera-json-params REQUIRED)
+find_package(serialportasyncblock REQUIRED)
 pkg_check_modules(XERCES xerces-c REQUIRED)
 
 #sum up project Files 
@@ -133,6 +134,7 @@ target_link_libraries(source_static
     zeraxmlconfig
     zeravalidator
     zera-json-params
+    serialportasyncblock
     )
 
 target_include_directories(source_static
