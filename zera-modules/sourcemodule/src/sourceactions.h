@@ -4,7 +4,7 @@
 #include <QMap>
 #include <QJsonObject>
 
-class cSourceAction
+class cSourceActionTypes
 {
 public:
     enum ActionTypes {
@@ -14,14 +14,20 @@ public:
         SET_HARMONICS,
         SET_REGULATOR,
         SWITCH_PHASES,
+        LOAD_ACTION_COUNT,
 
-        ACTION_COUNT
+        PERIODIC_FIRST = LOAD_ACTION_COUNT,
+        QUERY_STATUS = PERIODIC_FIRST,
+        PERIODIC_LAST
     };
-    enum PeriodicActionTypes {
-        QUERY_STATUS = 0,
+    static int getLoadActionTypeCount() { return LOAD_ACTION_COUNT; }
+    static int getPeriodicActionTypeCount() { return PERIODIC_LAST - PERIODIC_FIRST; }
+};
 
-        PERIODIC_ACTION_COUNT
-    };
+
+class cSourceAction
+{
+public:
     cSourceAction(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
 private:
     QJsonObject m_jsonSourceParamStructure;
@@ -29,14 +35,13 @@ private:
 };
 
 
-typedef QMap<cSourceAction::ActionTypes, cSourceAction> tActionMap;
-typedef QMap<cSourceAction::PeriodicActionTypes, cSourceAction> tPeriodicActionMap;
+typedef QMap<cSourceActionTypes::ActionTypes, cSourceAction> tActionMap;
 
 class cSourceActionGenerator
 {
 public:
-    static tActionMap GenerateActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
-    static tPeriodicActionMap GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
+    static tActionMap GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
+    static tActionMap GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure);
 };
 
 #endif // CSOURCEACTION_H
