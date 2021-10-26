@@ -19,7 +19,7 @@ public:
     virtual ~cIOInterface();
 
     // getter
-    const enum IOType type();
+    enum IOType type();
     QString deviceFileName();
 
     // requests

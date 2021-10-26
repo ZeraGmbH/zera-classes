@@ -11,7 +11,7 @@ cIOInterface::~cIOInterface()
 {
 }
 
-const cIOInterface::IOType cIOInterface::type()
+cIOInterface::IOType cIOInterface::type()
 {
     return m_ioType;
 }
