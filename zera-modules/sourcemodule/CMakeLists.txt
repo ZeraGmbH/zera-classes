@@ -178,15 +178,42 @@ if(${GTest_FOUND})
     add_test(NAME    sourcemodule-unittest
              COMMAND sourcemodule-unittest)
 
-    add_executable(sourcemodule-unittest
-        tests/unittest-deviceinfo.cpp
-        ${RESOURCES}
+    file(GLOB UNITTESTS
+        tests/unittest-*.cpp
     )
 
+    add_executable(sourcemodule-unittest
+        ${UNITTESTS}
+        ${SOURCES}
+        ${RESOURCES}
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+    )
+
+    target_include_directories(sourcemodule-unittest
+        PUBLIC
+        $<INSTALL_INTERFACE:include/sourcemodule>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
+
     target_link_libraries(sourcemodule-unittest
+        PUBLIC
         gtest
         gtest_main
         Qt5::Core
+        Qt5::Core
+        Qt5::Network
+        ${XERCES_LIBRARIES}
+        VeinMeta::VfEvent
+        VeinMeta::VfHelpers
+        VeinMeta::VfComponent
+        MeasurementModuleInterface
+        zerabasemodule
+        zeraproxy
+        zeramisc
+        zeraxmlconfig
+        zeravalidator
         zera-json-params
     )
 endif()
