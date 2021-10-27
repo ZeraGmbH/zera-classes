@@ -30,24 +30,26 @@ tSourceActionMap cSourceActionGenerator::GeneratePeriodicActionMap(const QJsonOb
     return map;
 }
 
+static void appendToActionList(tSourceActionList& list, tSourceActionMap::Iterator iter)
+{
+    tSourceListEntry listEntry;
+    listEntry.action = iter.value();
+    listEntry.actionType = iter.key();
+    list.append(listEntry);
+}
+
 tSourceActionList cSourceActionSorter::SortActionMap(tSourceActionMap sourceActionMap, const QList<cSourceActionTypes::ActionTypes> sortToFrontList)
 {
     tSourceActionList sortedList;
     for(auto sortFrontEntry : sortToFrontList) { // append front sort
         auto iter = sourceActionMap.find(sortFrontEntry);
         if(iter != sourceActionMap.end()) {
-            tSourceListEntry listEntry;
-            listEntry.action = iter.value();
-            listEntry.actionType = iter.key();
-            sortedList.append(listEntry);
+            appendToActionList(sortedList, iter);
             sourceActionMap.erase(iter);
         }
     }
     for(auto iter = sourceActionMap.begin(); iter != sourceActionMap.end(); ++iter) { // append remaining
-        tSourceListEntry listEntry;
-        listEntry.action = iter.value();
-        listEntry.actionType = iter.key();
-        sortedList.append(listEntry);
+        appendToActionList(sortedList, iter);
     }
     return sortedList;
 }
