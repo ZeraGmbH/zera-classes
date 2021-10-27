@@ -35,13 +35,14 @@ private:
 };
 
 
-typedef QMap<cSourceActionTypes::ActionTypes, cSourceAction> tActionMap;
+typedef QMap<cSourceActionTypes::ActionTypes, cSourceAction> tSourceActionMap;
+
 
 class cSourceActionGenerator
 {
 public:
-    static tActionMap GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
-    static tActionMap GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure);
+    static tSourceActionMap GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
+    static tSourceActionMap GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure);
 };
 
 #endif // CSOURCEACTION_H

@@ -6,9 +6,9 @@ cSourceAction::cSourceAction(QJsonObject jsonSourceParamStructure, QJsonObject j
 {
 }
 
-tActionMap cSourceActionGenerator::GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState)
+tSourceActionMap cSourceActionGenerator::GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState)
 {
-    tActionMap map;
+    tSourceActionMap map;
     for(int type=0; type<cSourceActionTypes::getLoadActionTypeCount(); ++type) {
         cSourceAction action(jsonSourceParamStructure, jsonSourceParamState);
         map.insert(cSourceActionTypes::ActionTypes(type), action);
@@ -16,9 +16,9 @@ tActionMap cSourceActionGenerator::GenerateLoadActionMap(const QJsonObject jsonS
     return map;
 }
 
-tActionMap cSourceActionGenerator::GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure)
+tSourceActionMap cSourceActionGenerator::GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure)
 {
-    tActionMap map;
+    tSourceActionMap map;
     for(int type=cSourceActionTypes::PERIODIC_FIRST; type<int(cSourceActionTypes::PERIODIC_LAST); ++type) {
         cSourceAction action(jsonSourceParamStructure, QJsonObject());
         map.insert(cSourceActionTypes::ActionTypes(type), action);
