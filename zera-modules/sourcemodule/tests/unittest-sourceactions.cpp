@@ -11,3 +11,40 @@ TEST(TEST_SOURCEACTIONS, PERIODIC_ACTIONS_COMPLETE) {
     tSourceActionMap periodicActionMap = cSourceActionGenerator::GeneratePeriodicActionMap(QJsonObject());
     EXPECT_EQ(periodicActionMap.count(), cSourceActionTypes::getPeriodicActionTypeCount());
 }
+
+TEST(TEST_SOURCEACTIONS, SORT_KEEP_SIZE) {
+    tSourceActionMap actionMap;
+    cSourceAction dummyAction;
+    // no cSourceActionGenerator dependency -> create manually
+    actionMap[cSourceActionTypes::SET_RMS] = dummyAction;
+    actionMap[cSourceActionTypes::SET_ANGLE] = dummyAction;
+    actionMap[cSourceActionTypes::SET_FREQUENCY] = dummyAction;
+    tSourceActionList actionList = cSourceActionSorter::SortActionMap(actionMap, QList<cSourceActionTypes::ActionTypes>());
+    EXPECT_EQ(actionMap.count(), actionList.count());
+}
+
+TEST(TEST_SOURCEACTIONS, SORT_TO_FRONT) {
+    tSourceActionMap actionMap;
+    cSourceAction dummyAction;
+    actionMap[cSourceActionTypes::SET_RMS] = dummyAction;
+    actionMap[cSourceActionTypes::SET_ANGLE] = dummyAction;
+    actionMap[cSourceActionTypes::SET_FREQUENCY] = dummyAction;
+    tSourceActionList actionList = cSourceActionSorter::SortActionMap(
+                actionMap, QList<cSourceActionTypes::ActionTypes>() << cSourceActionTypes::SET_FREQUENCY);
+    EXPECT_EQ(actionList.count() == 3 && actionList[0].actionType == cSourceActionTypes::SET_FREQUENCY, true);
+    EXPECT_EQ(actionList.count() == 3 && actionList[1].actionType == cSourceActionTypes::SET_RMS, true);
+    EXPECT_EQ(actionList.count() == 3 && actionList[2].actionType == cSourceActionTypes::SET_ANGLE, true);
+}
+
+TEST(TEST_SOURCEACTIONS, SORT_KEEP_SEQUENCE) {
+    cSourceAction dummyAction;
+    tSourceActionMap actionMap;
+    actionMap[cSourceActionTypes::SET_RMS] = dummyAction;
+    actionMap[cSourceActionTypes::SET_ANGLE] = dummyAction;
+    actionMap[cSourceActionTypes::SET_FREQUENCY] = dummyAction;
+    tSourceActionList actionList = cSourceActionSorter::SortActionMap(
+                actionMap, QList<cSourceActionTypes::ActionTypes>());
+    EXPECT_EQ(actionList.count() == 3 && actionList[0].actionType == cSourceActionTypes::SET_RMS, true);
+    EXPECT_EQ(actionList.count() == 3 && actionList[1].actionType == cSourceActionTypes::SET_ANGLE, true);
+    EXPECT_EQ(actionList.count() == 3 && actionList[2].actionType == cSourceActionTypes::SET_FREQUENCY, true);
+}

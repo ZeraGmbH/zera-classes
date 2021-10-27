@@ -29,3 +29,10 @@ tSourceActionMap cSourceActionGenerator::GeneratePeriodicActionMap(const QJsonOb
     }
     return map;
 }
+
+tSourceActionList cSourceActionSorter::SortActionMap(const tSourceActionMap sourceActionMap, const QList<cSourceActionTypes::ActionTypes> sortToFrontList)
+{
+    tSourceActionList sortedList;
+
+    return sortedList;
+}
