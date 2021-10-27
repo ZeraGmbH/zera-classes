@@ -57,7 +57,7 @@ typedef QList<tSourceListEntry> tSourceActionList;
 class cSourceActionSorter
 {
 public:
-    static tSourceActionList SortActionMap(const tSourceActionMap sourceActionMap, const QList<cSourceActionTypes::ActionTypes> sortToFrontList);
+    static tSourceActionList SortActionMap(tSourceActionMap sourceActionMap, const QList<cSourceActionTypes::ActionTypes> sortToFrontList);
 };
 
 #endif // CSOURCEACTION_H
