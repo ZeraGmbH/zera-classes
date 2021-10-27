@@ -28,6 +28,7 @@ public:
 class cSourceAction
 {
 public:
+    cSourceAction();
     cSourceAction(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
 private:
     QJsonObject m_jsonSourceParamStructure;
@@ -36,7 +37,6 @@ private:
 
 
 typedef QMap<cSourceActionTypes::ActionTypes, cSourceAction> tSourceActionMap;
-
 
 class cSourceActionGenerator
 {

@@ -1,5 +1,9 @@
 #include "sourceactions.h"
 
+cSourceAction::cSourceAction()
+{
+}
+
 cSourceAction::cSourceAction(QJsonObject jsonSourceParamStructure, QJsonObject jsonSourceParamState) :
     m_jsonSourceParamStructure(jsonSourceParamStructure),
     m_jsonSourceParamState(jsonSourceParamState)
