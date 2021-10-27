@@ -2,6 +2,7 @@
 #define CSOURCEACTION_H
 
 #include <QMap>
+#include <QList>
 #include <QJsonObject>
 
 class cSourceActionTypes
@@ -10,7 +11,7 @@ public:
     enum ActionTypes {
         SET_RMS = 0,
         SET_ANGLE,
-        SET_FREQUNCY,
+        SET_FREQUENCY,
         SET_HARMONICS,
         SET_REGULATOR,
         SWITCH_PHASES,
@@ -43,6 +44,20 @@ class cSourceActionGenerator
 public:
     static tSourceActionMap GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
     static tSourceActionMap GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure);
+};
+
+
+struct tSourceListEntry {
+    cSourceActionTypes::ActionTypes actionType;
+    cSourceAction action;
+};
+
+typedef QList<tSourceListEntry> tSourceActionList;
+
+class cSourceActionSorter
+{
+public:
+    static tSourceActionList SortActionMap(const tSourceActionMap sourceActionMap, const QList<cSourceActionTypes::ActionTypes> sortToFrontList);
 };
 
 #endif // CSOURCEACTION_H
