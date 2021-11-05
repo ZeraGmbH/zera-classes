@@ -1,4 +1,4 @@
-#include "sourceinterfacezeraserial.h"
+#include "sourceinterface.h"
 
 class cSourceInterfaceZeraSerialPrivate
 {
