@@ -43,7 +43,7 @@ class cSourceInterfaceBase : public QObject
 {
     Q_OBJECT
 public:
-    virtual SourceInterfaceType interfaceType() { return SOURCE_INTERFACE_BASE; }
+    virtual SourceInterfaceType type() { return SOURCE_INTERFACE_BASE; }
     /**
      * @brief sendAndReceive
      * @param dataSend
@@ -52,6 +52,7 @@ public:
      */
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive);
 signals:
+    void sigDisconnected(cSourceInterfaceBase *ioInterface);
     void ioFinished(int transactionID); // users connect this signal
     void ioFinishedToQueue(int transactionID); // sub classes emit this to ensure queue
 
@@ -71,8 +72,9 @@ class cSourceInterfaceDemo : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
-    virtual SourceInterfaceType interfaceType() override { return SOURCE_INTERFACE_DEMO; }
+    virtual SourceInterfaceType type() override { return SOURCE_INTERFACE_DEMO; }
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
+    void simulateExternalDisconnect();
 protected:
     explicit cSourceInterfaceDemo(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
@@ -88,7 +90,7 @@ class cSourceInterfaceZeraSerial : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
-    virtual SourceInterfaceType interfaceType() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
+    virtual SourceInterfaceType type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
     // wrappers - see https://github.com/ZeraGmbH/qtiohelper / QT += serialportasyncblock
     bool open(QString portName); // e.g "ttyUSB0" not "/dev/ttyUSB0" !!

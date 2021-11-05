@@ -1,11 +1,11 @@
 #include "sourceconnecttransaction.h"
-#include "iointerface.h"
+#include "sourceinterface.h"
 #include "sourcedevice.h"
 
 namespace SOURCEMODULE
 {
 
-cSourceConnectTransaction::cSourceConnectTransaction(cIOInterface *interface, QObject *parent) :
+cSourceConnectTransaction::cSourceConnectTransaction(cSourceInterfaceBase *interface, QObject *parent) :
     QObject(parent),
     m_IOInterface(interface),
     m_sourceDeviceIdentified(nullptr)
@@ -23,11 +23,11 @@ cSourceDevice *cSourceConnectTransaction::sourceDeviceFound()
 void cSourceConnectTransaction::startConnect()
 {
     switch(m_IOInterface->type()) {
-    case cIOInterface::IO_DEMO:
+    case SOURCE_INTERFACE_DEMO:
         m_demoTimer.start(1000);
         break;
 
-    case cIOInterface::IO_ASYNC_SERIAL:
+    case SOURCE_INTERFACE_ASYNCSERIAL:
         // TODO
         Q_ASSERT(false);
         break;

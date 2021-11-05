@@ -10,7 +10,7 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevice.h"
 #include "sourceveininterface.h"
-#include "iointerface.h"
+#include "sourceinterface.h"
 #include <random>
 
 namespace SOURCEMODULE
@@ -139,8 +139,8 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
     if(iDemoCount > activeSlotCount) {
         int sourcesToAdd = iDemoCount - activeSlotCount;
         while(sourcesToAdd) {
-            cIOInterface* demoInterface = new cIOInterface(cIOInterface::IO_DEMO, randomString(16));
-            m_pSourceDeviceManager->startSourceIdentification(demoInterface);
+            cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+            m_pSourceDeviceManager->startSourceIdentification(interface);
             sourcesToAdd--;
         }
     }
@@ -151,7 +151,7 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
             for(int slotNo=0; sourcesToRemove && slotNo<getConfigXMLWrapper()->max_count_sources(); slotNo++) {
                 cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
-                    source->ioInterface()->requestExternalDisconnect();
+                    static_cast<cSourceInterfaceDemo*>(source->ioInterface())->simulateExternalDisconnect();
                     sourcesToRemove--;
                 }
             }
@@ -160,7 +160,7 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
             for(int slotNo=getConfigXMLWrapper()->max_count_sources()-1; sourcesToRemove && slotNo>=0; slotNo--) {
                 cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
-                    source->ioInterface()->requestExternalDisconnect();
+                    static_cast<cSourceInterfaceDemo*>(source->ioInterface())->simulateExternalDisconnect();
                     sourcesToRemove--;
                 }
             }
