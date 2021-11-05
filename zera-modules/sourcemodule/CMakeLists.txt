@@ -110,15 +110,15 @@ foreach(sourceconfigfile ${SOURCE_DEVINFO})
     endif()
 endforeach()
 
-# create interim static library to let module & unittest share all code
-add_library(source_static STATIC
+# create library
+add_library(sourcemodule MODULE
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
     ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
 
-target_link_libraries(source_static
+target_link_libraries(sourcemodule
     PUBLIC
     Qt5::Core
     Qt5::Core
@@ -135,25 +135,16 @@ target_link_libraries(source_static
     zeravalidator
     zera-json-params
     serialportasyncblock
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
     )
 
-target_include_directories(source_static
+target_include_directories(sourcemodule
     PUBLIC
     $<INSTALL_INTERFACE:include/sourcemodule>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
-# create the module library
-add_library(sourcemodule MODULE
-    )
-
-target_link_libraries(sourcemodule
-    PUBLIC
-    source_static
-    # ask linker to help us finding unresolved symbols
-    "-Wl,--no-undefined"
     )
 
 # announce headers - target perspective
@@ -200,7 +191,11 @@ if(${GTest_FOUND})
     )
 
     add_executable(sourcemodule-unittest
+        ${SOURCES}
+        ${HEADER}
+        ${RESOURCES}
         ${UNITTESTS}
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
 
     target_include_directories(sourcemodule-unittest
@@ -215,7 +210,21 @@ if(${GTest_FOUND})
         PUBLIC
         gtest
         gtest_main
-        source_static
+        Qt5::Core
+        Qt5::Core
+        Qt5::Network
+        ${XERCES_LIBRARIES}
+        VeinMeta::VfEvent
+        VeinMeta::VfHelpers
+        VeinMeta::VfComponent
+        MeasurementModuleInterface
+        zerabasemodule
+        zeraproxy
+        zeramisc
+        zeraxmlconfig
+        zeravalidator
+        zera-json-params
+        serialportasyncblock
     )
 endif()
 
