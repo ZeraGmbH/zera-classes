@@ -44,6 +44,8 @@ class cSourceInterfaceBase : public QObject
     Q_OBJECT
 public:
     virtual SourceInterfaceType type() { return SOURCE_INTERFACE_BASE; }
+    virtual bool open(QString strDeviceInfo);
+    virtual void close();
     /**
      * @brief sendAndReceive
      * @param dataSend
@@ -92,8 +94,9 @@ class cSourceInterfaceZeraSerial : public cSourceInterfaceBase
 public:
     virtual SourceInterfaceType type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
+    virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
+    virtual void close() override;
     // wrappers - see https://github.com/ZeraGmbH/qtiohelper / QT += serialportasyncblock
-    bool open(QString portName); // e.g "ttyUSB0" not "/dev/ttyUSB0" !!
     void setReadTimeoutNextIo(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal = 0);
     void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
 protected:
