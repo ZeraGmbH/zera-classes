@@ -2,7 +2,6 @@
 #define CSOURCECONNECTTRANSACTION_H
 
 #include <QObject>
-#include <QTimer>
 
 class cSourceInterfaceBase;
 
@@ -10,32 +9,26 @@ namespace SOURCEMODULE
 {
 class cSourceDevice;
 
-
 class cSourceConnectTransaction : public QObject
 {
     Q_OBJECT
 public:
     explicit cSourceConnectTransaction(cSourceInterfaceBase *interface, QObject *parent = nullptr);
-
     // requests
     void startConnect();
-
     // getter
     cSourceDevice* sourceDeviceFound();
-
-private:
-    cSourceInterfaceBase* m_IOInterface;
-    cSourceDevice* m_sourceDeviceIdentified;
-
-    QTimer m_demoTimer;
-    // TODO: Info on fail data
-
 signals:
     void sigTransactionFinished(cSourceConnectTransaction* transaction);
+private:
+    void sendReceiveSourceID();
 
+    cSourceInterfaceBase* m_IOInterface;
+    cSourceDevice* m_sourceDeviceIdentified;
+    QByteArray m_receivedData;
+    int m_currentSourceTested = 0;
 private slots:
-    void demoConnectTimeout();
-
+    void onIoFinished(int transactionID);
 };
 
 }
