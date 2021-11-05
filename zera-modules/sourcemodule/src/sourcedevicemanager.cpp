@@ -24,8 +24,10 @@ void cSourceDeviceManager::startSourceIdentification(cSourceInterfaceBase* inter
 void cSourceDeviceManager::onIdentificationTransactionFinished(cSourceConnectTransaction *transaction)
 {
     disconnect(transaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
-
-    addSource(transaction->sourceDeviceFound());
+    cSourceDevice *sourceDeviceFound = transaction->sourceDeviceFound();
+    if(sourceDeviceFound) {
+        addSource(sourceDeviceFound);
+    }
     delete transaction;
 }
 
