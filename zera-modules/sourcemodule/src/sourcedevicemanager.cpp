@@ -1,6 +1,6 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevice.h"
-#include "iointerface.h"
+#include "sourceinterface.h"
 #include "sourceconnecttransaction.h"
 
 namespace SOURCEMODULE
@@ -13,7 +13,7 @@ cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
 {
 }
 
-void cSourceDeviceManager::startSourceIdentification(cIOInterface* interface)
+void cSourceDeviceManager::startSourceIdentification(cSourceInterfaceBase* interface)
 {
     cSourceConnectTransaction* connectTransaction = new cSourceConnectTransaction(interface);
     connect(connectTransaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);

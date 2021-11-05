@@ -120,7 +120,7 @@ TEST(TEST_SOURCEINTERFACE, IO_DEMO_FINISH_ID) {
 TEST(TEST_SOURCEINTERFACE, IO_TYPES_SET_PROPERLY) {
     for(int type = 0; type<SOURCE_INTERFACE_TYPE_COUNT; type++) {
         cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(type));
-        EXPECT_EQ(SourceInterfaceType(type), interface->interfaceType());
+        EXPECT_EQ(SourceInterfaceType(type), interface->type());
         delete interface;
     }
 }

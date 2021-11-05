@@ -6,7 +6,7 @@
 #include <QVariant>
 #include "sourcedevicestatus.h"
 
-class cIOInterface;
+class cSourceInterfaceBase;
 
 namespace SOURCEMODULE
 {
@@ -26,14 +26,14 @@ public:
 
         SOURCE_TYPE_COUNT
     };
-    explicit cSourceDevice(cIOInterface* interface, SourceType type, QObject *parent = nullptr);
+    explicit cSourceDevice(cSourceInterfaceBase* interface, SourceType type, QObject *parent = nullptr);
     virtual ~cSourceDevice();
 
     // requests
     void close();
 
     // getter
-    cIOInterface* ioInterface();
+    cSourceInterfaceBase* ioInterface();
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
@@ -48,7 +48,7 @@ public slots:
     void timeoutDemoTransaction();
 
 private slots:
-    void onInterfaceClosed(cIOInterface *ioInterface);
+    void onInterfaceClosed(cSourceInterfaceBase *ioInterface);
 
 private:
     QString deviceFileName();
@@ -56,7 +56,7 @@ private:
     const QJsonObject deviceParamState();
     QString stateFileName();
 
-    cIOInterface* m_IOInterface = nullptr; // WE own the interface
+    cSourceInterfaceBase* m_IOInterface = nullptr; // WE own the interface
 
     QJsonObject m_jsonParamsStructure;
     QJsonObject m_currParamState;

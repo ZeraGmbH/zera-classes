@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 
-class cIOInterface;
+class cSourceInterfaceBase;
 
 namespace SOURCEMODULE
 {
@@ -15,7 +15,7 @@ class cSourceConnectTransaction : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceConnectTransaction(cIOInterface *interface, QObject *parent = nullptr);
+    explicit cSourceConnectTransaction(cSourceInterfaceBase *interface, QObject *parent = nullptr);
 
     // requests
     void startConnect();
@@ -24,7 +24,7 @@ public:
     cSourceDevice* sourceDeviceFound();
 
 private:
-    cIOInterface* m_IOInterface;
+    cSourceInterfaceBase* m_IOInterface;
     cSourceDevice* m_sourceDeviceIdentified;
 
     QTimer m_demoTimer;

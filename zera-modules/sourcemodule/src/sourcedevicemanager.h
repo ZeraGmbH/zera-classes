@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-class cIOInterface;
+class cSourceInterfaceBase;
 
 namespace SOURCEMODULE
 {
@@ -19,7 +19,7 @@ public:
     cSourceDeviceManager(int countSlots, QObject *parent = 0);
 
     // requests
-    void startSourceIdentification(cIOInterface *interface);
+    void startSourceIdentification(cSourceInterfaceBase *interface);
 
     // getter
     int activeSlotCount();

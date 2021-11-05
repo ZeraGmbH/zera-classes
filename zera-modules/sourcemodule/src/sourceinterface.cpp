@@ -22,7 +22,7 @@ cSourceInterfaceBase *cSourceInterfaceFactory::createSourceInterface(SourceInter
         interface = new cSourceInterfaceZeraSerial(parent);
         break;
     case SOURCE_INTERFACE_TYPE_COUNT:
-        Q_ASSERT(false);
+        qCritical("Do not use SOURCE_INTERFACE_TYPE_COUNT");
         break;
     }
     return interface;
@@ -39,6 +39,10 @@ int cSourceInterfaceBase::sendAndReceive(QByteArray, QByteArray*)
     return 0;
 }
 
+cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBase(parent)
+{
+}
+
 int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
 {
     int transactionID = m_transactionIDGenerator.nextTransactionID();
@@ -46,6 +50,8 @@ int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
     return transactionID;
 }
 
-cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBase(parent)
+void cSourceInterfaceDemo::simulateExternalDisconnect()
 {
+    emit sigDisconnected(this);
 }
+
