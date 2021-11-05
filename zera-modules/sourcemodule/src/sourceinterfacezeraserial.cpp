@@ -34,15 +34,26 @@ cSourceInterfaceZeraSerial::cSourceInterfaceZeraSerial(QObject *parent) :
     m_serialIO.enableDebugMessages(true);
 }
 
-bool cSourceInterfaceZeraSerial::open(QString portName)
+bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
 {
-    m_serialIO.setPortName(portName);
-    // hard code settings for now
-    m_serialIO.setBaudRate(9600);
-    m_serialIO.setDataBits(QSerialPort::Data7);
-    m_serialIO.setParity(QSerialPort::EvenParity);
-    m_serialIO.setStopBits(QSerialPort::OneStop);
-    return m_serialIO.open(QIODevice::ReadWrite);
+    bool open = false;
+    QStringList splitList = strDeviceInfo.split("/", Qt::SkipEmptyParts);
+    if(splitList.count() >= 0) {
+        QString portName = splitList.last();
+        m_serialIO.setPortName(portName);
+        // hard code settings for now
+        m_serialIO.setBaudRate(9600);
+        m_serialIO.setDataBits(QSerialPort::Data7);
+        m_serialIO.setParity(QSerialPort::EvenParity);
+        m_serialIO.setStopBits(QSerialPort::OneStop);
+        open = m_serialIO.open(QIODevice::ReadWrite);
+    }
+    return open;
+}
+
+void cSourceInterfaceZeraSerial::close()
+{
+    m_serialIO.close();
 }
 
 int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray dataSend, QByteArray *pDataReceive)
