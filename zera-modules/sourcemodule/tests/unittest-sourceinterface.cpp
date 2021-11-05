@@ -45,8 +45,9 @@ TEST(TEST_IO_AND_TIMEOUT_TEST, START_CALLED) {
     };
     std::function<void(int)> funcIoFinished = [](int){};
     std::function<void()> funcTimeout = [](){};
-    cSourceInterfaceBase interface;
-    ioAndTimeoutTest(&interface, funcIoStart, funcIoFinished, funcTimeout);
+    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    delete interface;
     EXPECT_EQ(startCalled, true);
 }
 
@@ -57,56 +58,69 @@ TEST(TEST_IO_AND_TIMEOUT_TEST, TIMEOUT_CALLED) {
     std::function<void()> funcTimeout = [&](){
         timeout = true;
     };
-    cSourceInterfaceBase interface;
-    ioAndTimeoutTest(&interface, funcIoStart, funcIoFinished, funcTimeout);
+    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    delete interface;
     EXPECT_EQ(timeout, true);
 }
 
 // Now interface basic tests
 TEST(TEST_SOURCEINTERFACE, TRANSACTION_ID_BASE) {
-    cSourceInterfaceBase interface;
+    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
     QByteArray dummyArray;
-    int transactionID = interface.sendAndReceive(QByteArray(), &dummyArray);
+    int transactionID = interface->sendAndReceive(QByteArray(), &dummyArray);
+    delete interface;
     EXPECT_EQ(transactionID, 0);
 }
 
 TEST(TEST_SOURCEINTERFACE, TRANSACTION_ID_DEMO) {
-    cSourceInterfaceDemo interface;
+    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     QByteArray dummyArray;
-    int transactionID = interface.sendAndReceive(QByteArray(), &dummyArray);
+    int transactionID = interface->sendAndReceive(QByteArray(), &dummyArray);
     EXPECT_EQ(transactionID, 1);
-    transactionID = interface.sendAndReceive(QByteArray(), &dummyArray);
+    transactionID = interface->sendAndReceive(QByteArray(), &dummyArray);
+    delete interface;
     EXPECT_EQ(transactionID, 2);
 }
 
 TEST(TEST_SOURCEINTERFACE, IO_DEMO_FINISH) {
-    cSourceInterfaceDemo interface;
+    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     QByteArray dummyReceive;
     bool finishCalled = false;
     std::function<void()> funcIoStart = [&](){
-        interface.sendAndReceive(QByteArray(), &dummyReceive);
+        interface->sendAndReceive(QByteArray(), &dummyReceive);
         EXPECT_EQ(finishCalled, false); // Ensure queued
     };
     std::function<void(int)> funcIoFinished = [&](int){
         finishCalled = true;
     };
     std::function<void()> funcTimeout = [](){};
-    ioAndTimeoutTest(&interface, funcIoStart, funcIoFinished, funcTimeout);
+    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    delete interface;
     EXPECT_EQ(finishCalled, true);
 }
 
 TEST(TEST_SOURCEINTERFACE, IO_DEMO_FINISH_ID) {
-    cSourceInterfaceDemo interface;
+    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     QByteArray dummyReceive;
     int startId = 0;
     std::function<void()> funcIoStart = [&](){
-        startId = interface.sendAndReceive(QByteArray(), &dummyReceive);
+        startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
     };
     int finishId = 0;
     std::function<void(int)> funcIoFinished = [&](int id){
         finishId = id;
     };
     std::function<void()> funcTimeout = [](){};
-    ioAndTimeoutTest(&interface, funcIoStart, funcIoFinished, funcTimeout);
+    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    delete interface;
     EXPECT_EQ(startId, finishId);
+}
+
+TEST(TEST_SOURCEINTERFACE, IO_TYPES_SET_PROPERLY) {
+    for(int type = 0; type<SOURCE_INTERFACE_TYPE_COUNT; type++) {
+        cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(type));
+        EXPECT_EQ(SourceInterfaceType(type), interface->interfaceType());
+        delete interface;
+    }
 }
