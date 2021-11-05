@@ -46,7 +46,7 @@ class cSourceInterfaceDemo : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
-    virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive);
+    virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
 };
 
 #endif // SOURCEINTERFACEBASE_H
