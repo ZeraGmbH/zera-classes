@@ -24,6 +24,7 @@ find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_package(VfComponent REQUIRED)
 find_package(zera-json-params REQUIRED)
+find_Package(VfCpp REQUIRED)
 
 
 #sum up project Files 
@@ -59,6 +60,7 @@ target_link_libraries(zerabasemodule
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
+    VeinMeta::VfCpp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

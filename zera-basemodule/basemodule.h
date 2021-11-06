@@ -12,6 +12,7 @@
 
 #include "xmlsettings.h"
 #include "moduleactivist.h"
+#include <vf-cpp-rpc.h>
 
 #include <memory>
 
@@ -75,6 +76,7 @@ public:
     QList<cVeinModuleActvalue*> veinModuleActvalueList; // actvalues are components that need an interface
     QHash<QString, cVeinModuleParameter*> veinModuleParameterHash; // parameters are components that need an interface and validation
     QList<cSCPIInfo*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
+    QHash<QString, VfCpp::cVeinModuleRpc::Ptr> veinModuleRpcList; // vein RPCs
 
 signals:
     void sigRun();

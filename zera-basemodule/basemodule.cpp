@@ -307,6 +307,8 @@ void cBaseModule::unsetModule()
         veinModuleActvalueList.clear();
     }
 
+    veinModuleRpcList.clear();
+
     if (scpiCommandList.count() > 0)
     {
         for (int i = 0; i < scpiCommandList.count(); i++)
@@ -398,7 +400,6 @@ void cBaseModule::exportMetaData()
     m_pModuleInterfaceComponent->setValue(QVariant(ba));
 
 }
-
 
 quint16 cBaseModule::getModuleNr()
 {
