@@ -67,7 +67,7 @@ void cSourceModuleProgram::generateInterface()
     m_sharedPtrRpcScanInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              this, "RPC_ScanInterface",
                                              VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}}),
-                                             true,
+                                             false, // !!! threaded on: signals do not reach theit slots
                                              false));
     m_pModule->veinModuleRpcList[m_sharedPtrRpcScanInterface->rpcName()] = m_sharedPtrRpcScanInterface;
 
