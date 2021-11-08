@@ -2,6 +2,7 @@
 #define CSOURCECONNECTTRANSACTION_H
 
 #include <QObject>
+#include <QUuid>
 
 class cSourceInterfaceBase;
 
@@ -13,17 +14,19 @@ class cSourceConnectTransaction : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceConnectTransaction(cSourceInterfaceBase *interface, QObject *parent = nullptr);
+    explicit cSourceConnectTransaction(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent = nullptr);
     // requests
     void startScan();
     // getter
     cSourceDevice* sourceDeviceFound();
+    QUuid getUuid();
 signals:
     void sigTransactionFinished(cSourceConnectTransaction* transaction);
 private:
     void sendReceiveSourceID();
 
     cSourceInterfaceBase* m_IOInterface;
+    QUuid m_uuid;
     cSourceDevice* m_sourceDeviceIdentified;
     QByteArray m_receivedData;
     int m_currentSourceTested = 0;

@@ -5,9 +5,10 @@
 namespace SOURCEMODULE
 {
 
-cSourceConnectTransaction::cSourceConnectTransaction(cSourceInterfaceBase *interface, QObject *parent) :
+cSourceConnectTransaction::cSourceConnectTransaction(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent) :
     QObject(parent),
     m_IOInterface(interface),
+    m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
     connect(m_IOInterface, &cSourceInterfaceBase::ioFinished, this, &cSourceConnectTransaction::onIoFinished);
@@ -38,6 +39,11 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
 cSourceDevice *cSourceConnectTransaction::sourceDeviceFound()
 {
     return m_sourceDeviceIdentified;
+}
+
+QUuid cSourceConnectTransaction::getUuid()
+{
+    return m_uuid;
 }
 
 void cSourceConnectTransaction::sendReceiveSourceID()
