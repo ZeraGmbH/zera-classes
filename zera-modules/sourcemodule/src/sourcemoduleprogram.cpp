@@ -67,7 +67,9 @@ void cSourceModuleProgram::generateInterface()
     VfCpp::cVeinModuleRpc::Ptr sharedpointerRpc;
     sharedpointerRpc = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              this, "RPC_ScanInterface",
-                                             VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}})));
+                                             VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}}),
+                                             true,
+                                             false));
     m_pModule->veinModuleRpcList[sharedpointerRpc->rpcName()] = sharedpointerRpc;
 
     // per source components
@@ -110,6 +112,20 @@ void cSourceModuleProgram::generateInterface()
 QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
 {
     bool ok = false;
+    QString deviceInfo = p_params["p_deviceInfo"].toString();
+    int interfaceType = p_params["p_type"].toInt(&ok);
+    QUuid veinUuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
+    ok = ok && interfaceType > SOURCE_INTERFACE_BASE && interfaceType < SOURCE_INTERFACE_TYPE_COUNT;
+    if(ok) {
+        cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(interfaceType));
+        ok = interface->open(deviceInfo);
+        if(ok) {
+            m_pSourceDeviceManager->startSourceIdentification(interface);
+        }
+    }
+    if(!ok) {
+
+    }
     return ok;
 }
 
@@ -153,8 +169,13 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
     if(iDemoCount > activeSlotCount) {
         int sourcesToAdd = iDemoCount - activeSlotCount;
         while(sourcesToAdd) {
-            cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-            m_pSourceDeviceManager->startSourceIdentification(interface);
+            // simulate vein rpc call
+            QVariantMap p_params;
+            p_params["p_deviceInfo"] = QVariant("Demo");
+            p_params["p_type"] = int(SOURCE_INTERFACE_DEMO);
+            QUuid veinUUid = QUuid::createUuid();
+            p_params[VeinComponent::RemoteProcedureData::s_callIdString] = veinUUid;
+            RPC_ScanInterface(p_params);
             sourcesToAdd--;
         }
     }
