@@ -34,12 +34,6 @@ cSourceInterfaceBase::cSourceInterfaceBase(QObject *parent) : QObject(parent)
     connect(this, &cSourceInterfaceBase::ioFinishedToQueue, this, &cSourceInterfaceBase::ioFinished, Qt::QueuedConnection);
 }
 
-bool cSourceInterfaceBase::open(QString strDeviceInfo)
-{
-    Q_UNUSED(strDeviceInfo)
-    return true;
-}
-
 void cSourceInterfaceBase::close()
 {
 }
