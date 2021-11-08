@@ -120,7 +120,7 @@ QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
         cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(interfaceType));
         ok = interface->open(deviceInfo);
         if(ok) {
-            m_pSourceDeviceManager->startSourceIdentification(interface);
+            m_pSourceDeviceManager->startSourceScan(interface);
         }
     }
     if(!ok) {

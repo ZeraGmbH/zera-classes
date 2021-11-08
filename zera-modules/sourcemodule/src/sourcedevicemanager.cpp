@@ -13,11 +13,11 @@ cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
 {
 }
 
-void cSourceDeviceManager::startSourceIdentification(cSourceInterfaceBase* interface)
+void cSourceDeviceManager::startSourceScan(cSourceInterfaceBase* interface)
 {
     cSourceConnectTransaction* connectTransaction = new cSourceConnectTransaction(interface);
     connect(connectTransaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
-    connectTransaction->startConnect();
+    connectTransaction->startScan();
 }
 
 

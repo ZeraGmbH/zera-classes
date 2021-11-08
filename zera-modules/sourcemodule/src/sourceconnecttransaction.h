@@ -15,7 +15,7 @@ class cSourceConnectTransaction : public QObject
 public:
     explicit cSourceConnectTransaction(cSourceInterfaceBase *interface, QObject *parent = nullptr);
     // requests
-    void startConnect();
+    void startScan();
     // getter
     cSourceDevice* sourceDeviceFound();
 signals:
