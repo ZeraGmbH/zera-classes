@@ -3,6 +3,7 @@
 #include <modulevalidator.h>
 #include <intvalidator.h>
 #include <jsonparamvalidator.h>
+#include <vf-cpp-rpc.h>
 
 #include "basedspmeasprogram.h"
 #include "sourcemoduleprogram.h"
@@ -62,6 +63,13 @@ void cSourceModuleProgram::generateInterface()
     connect(m_pVeinDemoSourceCount, &cVeinModuleParameter::sigValueChanged, this, &cSourceModuleProgram::newDemoSourceCount);
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
 
+    // RPC
+    VfCpp::cVeinModuleRpc::Ptr sharedpointerRpc;
+    sharedpointerRpc = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                             this, "RPC_ScanInterface",
+                                             VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}})));
+    m_pModule->veinModuleRpcList[sharedpointerRpc->rpcName()] = sharedpointerRpc;
+
     // per source components
     cVeinModuleActvalue* pVeinAct;
     cVeinModuleParameter* pVeinParam;
@@ -97,6 +105,12 @@ void cSourceModuleProgram::generateInterface()
 
         m_arrVeinSourceInterfaces.append(sourceVeinInterface);
     }
+}
+
+QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
+{
+    bool ok = false;
+    return ok;
 }
 
 
