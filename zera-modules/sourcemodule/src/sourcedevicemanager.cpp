@@ -13,11 +13,21 @@ cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
 {
 }
 
-void cSourceDeviceManager::startSourceScan(cSourceInterfaceBase* interface)
+void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceType, const QString deviceInfo, const QUuid uuid)
 {
-    cSourceConnectTransaction* connectTransaction = new cSourceConnectTransaction(interface, QUuid::createUuid() /* just temp */);
-    connect(connectTransaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
-    connectTransaction->startScan();
+    bool started = false;
+    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(interfaceType));
+    if(interface) {
+        started = interface->open(deviceInfo);
+        if(started) {
+            cSourceConnectTransaction* connectTransaction = new cSourceConnectTransaction(interface, uuid);
+            connect(connectTransaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
+            connectTransaction->startScan();
+        }
+    }
+    if(!started) {
+        emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("Could not open Interface"));
+    }
 }
 
 
@@ -25,8 +35,35 @@ void cSourceDeviceManager::onIdentificationTransactionFinished(cSourceConnectTra
 {
     disconnect(transaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
     cSourceDevice *sourceDeviceFound = transaction->sourceDeviceFound();
-    if(sourceDeviceFound) {
-        addSource(sourceDeviceFound);
+    // add to first free slot
+    bool slotAdded = false;
+    if(sourceDeviceFound && m_activeSlotCount < m_sourceDeviceSlots.count()) {
+        // find free slot
+        for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
+            auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
+            if(sourceDeviceCurr == nullptr) {
+                slotAdded = true;
+                sourceDeviceCurr = sourceDeviceFound;
+                m_activeSlotCount++;
+                connect(sourceDeviceFound, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
+                emit sigSourceScanFinished(slotNo, sourceDeviceFound, transaction->getUuid(), QString());
+                break;
+            }
+        }
+    }
+    // cleanup if something went wrong
+    if(!slotAdded) {
+        QString erorDesc;
+        if(sourceDeviceFound) {
+            delete sourceDeviceFound;
+            sourceDeviceFound = nullptr;
+            erorDesc = QStringLiteral("Slots full");
+        }
+        else {
+            erorDesc = QStringLiteral("No source device found");
+        }
+        // we need to notify failures
+        emit sigSourceScanFinished(-1, sourceDeviceFound, transaction->getUuid(), erorDesc);
     }
     delete transaction;
 }
@@ -45,29 +82,6 @@ cSourceDevice *cSourceDeviceManager::sourceDevice(int slotNo)
         sourceDevice = m_sourceDeviceSlots.at(slotNo);
     }
     return sourceDevice;
-}
-
-
-void cSourceDeviceManager::addSource(cSourceDevice *sourceDevice)
-{
-    bool slotAdded = false;
-    if(m_activeSlotCount < m_sourceDeviceSlots.count()) {
-        // find free slot
-        for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
-            auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
-            if(sourceDeviceCurr == nullptr) {
-                slotAdded = true;
-                sourceDeviceCurr = sourceDevice;
-                m_activeSlotCount++;
-                connect(sourceDevice, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
-                emit sigSourceScanFinished(slotNo, sourceDevice);
-                break;
-            }
-        }
-    }
-    if(!slotAdded) {
-        qWarning("Could not add source device to source device manager!");
-    }
 }
 
 

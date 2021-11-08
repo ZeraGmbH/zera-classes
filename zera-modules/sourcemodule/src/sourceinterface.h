@@ -44,7 +44,7 @@ class cSourceInterfaceBase : public QObject
     Q_OBJECT
 public:
     virtual SourceInterfaceType type() { return SOURCE_INTERFACE_BASE; }
-    virtual bool open(QString) { return false; /* cannot open base */}
+    virtual bool open(QString) { return false; }
     virtual void close();
     /**
      * @brief sendAndReceive
@@ -75,7 +75,7 @@ class cSourceInterfaceDemo : public cSourceInterfaceBase
     Q_OBJECT
 public:
     virtual SourceInterfaceType type() override { return SOURCE_INTERFACE_DEMO; }
-    virtual bool open(QString) override { return true; }
+    virtual bool open(QString) override { return true; };
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
     void simulateExternalDisconnect();
 protected:
