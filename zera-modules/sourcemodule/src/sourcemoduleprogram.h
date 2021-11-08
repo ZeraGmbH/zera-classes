@@ -1,6 +1,7 @@
 #ifndef SOURCEMODULEPROGRAM_H
 #define SOURCEMODULEPROGRAM_H
 
+#include <vf-cpp-rpc.h>
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
 #include "sourceveininterface.h"
@@ -26,6 +27,7 @@ public:
 public slots: // Make cBaseMeasWorkProgram happy...
     virtual void start() {}
     virtual void stop() {}
+    QVariant RPC_ScanInterface(QVariantMap p_params);
 
 private:
     configuration* getConfigXMLWrapper();

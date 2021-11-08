@@ -25,6 +25,7 @@ find_Package(VfComponent REQUIRED)
 find_Package(zera-json-params REQUIRED)
 find_package(serialportasyncblock REQUIRED)
 pkg_check_modules(XERCES xerces-c REQUIRED)
+find_Package(VfCpp REQUIRED)
 
 #sum up project Files 
 file(GLOB SOURCES 
@@ -127,6 +128,7 @@ target_link_libraries(sourcemodule
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
+    VeinMeta::VfCpp
     MeasurementModuleInterface
     zerabasemodule
     zeraproxy
