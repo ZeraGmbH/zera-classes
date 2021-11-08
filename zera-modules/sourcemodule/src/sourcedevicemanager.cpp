@@ -15,7 +15,7 @@ cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
 
 void cSourceDeviceManager::startSourceScan(cSourceInterfaceBase* interface)
 {
-    cSourceConnectTransaction* connectTransaction = new cSourceConnectTransaction(interface);
+    cSourceConnectTransaction* connectTransaction = new cSourceConnectTransaction(interface, QUuid::createUuid() /* just temp */);
     connect(connectTransaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
     connectTransaction->startScan();
 }
