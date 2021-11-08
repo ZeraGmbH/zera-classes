@@ -60,7 +60,7 @@ void cSourceDeviceManager::addSource(cSourceDevice *sourceDevice)
                 sourceDeviceCurr = sourceDevice;
                 m_activeSlotCount++;
                 connect(sourceDevice, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
-                emit sigSlotAdded(slotNo, sourceDevice);
+                emit sigSourceScanFinished(slotNo, sourceDevice);
                 break;
             }
         }

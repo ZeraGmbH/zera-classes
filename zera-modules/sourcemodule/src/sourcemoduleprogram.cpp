@@ -40,7 +40,7 @@ void cSourceModuleProgram::generateInterface()
 
     // common components
     m_pSourceDeviceManager = new cSourceDeviceManager(maxSources);
-    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotAdded, this, &cSourceModuleProgram::onSourceDeviceAdded);
+    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished, this, &cSourceModuleProgram::onSourceScanFinished);
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved, this, &cSourceModuleProgram::onSourceDeviceRemoved);
 
     m_pVeinMaxCountAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -134,7 +134,7 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
     return static_cast<cSourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
 }
 
-void cSourceModuleProgram::onSourceDeviceAdded(int slotPosition, cSourceDevice* device)
+void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice* device)
 {
     device->setVeinInterface(m_arrVeinSourceInterfaces[slotPosition]);
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));

@@ -46,7 +46,7 @@ private:
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
 
 private slots:
-    void onSourceDeviceAdded(int slotPosition, cSourceDevice *device);
+    void onSourceScanFinished(int slotPosition, cSourceDevice *device);
     void onSourceDeviceRemoved(int slotPosition);
 
     // vein change handlers
