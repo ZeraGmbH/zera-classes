@@ -43,6 +43,8 @@ private:
 
     QVector<cSourceVeinInterface*> m_arrVeinSourceInterfaces;
 
+    VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
+
 private slots:
     void onSourceDeviceAdded(int slotPosition, cSourceDevice *device);
     void onSourceDeviceRemoved(int slotPosition);

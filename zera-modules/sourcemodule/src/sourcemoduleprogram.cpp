@@ -64,13 +64,12 @@ void cSourceModuleProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
 
     // RPC
-    VfCpp::cVeinModuleRpc::Ptr sharedpointerRpc;
-    sharedpointerRpc = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_sharedPtrRpcScanInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              this, "RPC_ScanInterface",
                                              VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}}),
                                              true,
                                              false));
-    m_pModule->veinModuleRpcList[sharedpointerRpc->rpcName()] = sharedpointerRpc;
+    m_pModule->veinModuleRpcList[m_sharedPtrRpcScanInterface->rpcName()] = m_sharedPtrRpcScanInterface;
 
     // per source components
     cVeinModuleActvalue* pVeinAct;
@@ -169,7 +168,7 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
     if(iDemoCount > activeSlotCount) {
         int sourcesToAdd = iDemoCount - activeSlotCount;
         while(sourcesToAdd) {
-            // simulate vein rpc call
+            // simulate vein rpc call on source add
             QVariantMap p_params;
             p_params["p_deviceInfo"] = QVariant("Demo");
             p_params["p_type"] = int(SOURCE_INTERFACE_DEMO);
