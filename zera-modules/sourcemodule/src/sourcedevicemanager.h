@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include "sourceinterface.h"
 
 class cSourceInterfaceBase;
 
@@ -19,14 +20,14 @@ public:
     cSourceDeviceManager(int countSlots, QObject *parent = 0);
 
     // requests
-    void startSourceScan(cSourceInterfaceBase *interface);
+    void startSourceScan(const SourceInterfaceType interfaceType,  const QString deviceInfo, const QUuid uuid);
 
     // getter
     int activeSlotCount();
     cSourceDevice* sourceDevice(int slotNo);
 
 signals:
-    void sigSourceScanFinished(int slotNo, cSourceDevice* device);
+    void sigSourceScanFinished(int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg);
     void sigSlotRemoved(int slotNo);
 
 private slots:
@@ -34,8 +35,6 @@ private slots:
     void onRemoveSource(cSourceDevice *sourceDevice);
 
 private:
-    void addSource(cSourceDevice* sourceDevice);
-
     QVector<cSourceDevice*> m_sourceDeviceSlots;
     int m_activeSlotCount;
 };

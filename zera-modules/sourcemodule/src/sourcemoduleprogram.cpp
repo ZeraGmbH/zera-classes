@@ -40,7 +40,7 @@ void cSourceModuleProgram::generateInterface()
 
     // common components
     m_pSourceDeviceManager = new cSourceDeviceManager(maxSources);
-    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished, this, &cSourceModuleProgram::onSourceScanFinished);
+    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished, this, &cSourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved, this, &cSourceModuleProgram::onSourceDeviceRemoved);
 
     m_pVeinMaxCountAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -69,7 +69,7 @@ void cSourceModuleProgram::generateInterface()
                                              VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}}),
                                              false, // !!! threaded on: signals do not reach theit slots
                                              false));
-    m_pModule->veinModuleRpcList[m_sharedPtrRpcScanInterface->rpcName()] = m_sharedPtrRpcScanInterface;
+    m_pModule->veinModuleRpcList[m_sharedPtrRpcScanInterface->rpcName()] = m_sharedPtrRpcScanInterface; // for module's event handling
 
     // per source components
     cVeinModuleActvalue* pVeinAct;
@@ -110,22 +110,11 @@ void cSourceModuleProgram::generateInterface()
 
 QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
 {
-    bool ok = false;
+    int interfaceType = p_params["p_type"].toInt();
     QString deviceInfo = p_params["p_deviceInfo"].toString();
-    int interfaceType = p_params["p_type"].toInt(&ok);
     QUuid veinUuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
-    ok = ok && interfaceType > SOURCE_INTERFACE_BASE && interfaceType < SOURCE_INTERFACE_TYPE_COUNT;
-    if(ok) {
-        cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(interfaceType));
-        ok = interface->open(deviceInfo);
-        if(ok) {
-            m_pSourceDeviceManager->startSourceScan(interface);
-        }
-    }
-    if(!ok) {
-
-    }
-    return ok;
+    m_pSourceDeviceManager->startSourceScan(SourceInterfaceType(interfaceType), deviceInfo, veinUuid);
+    return true;
 }
 
 
@@ -134,10 +123,17 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
     return static_cast<cSourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
 }
 
-void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice* device)
+void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice* device, QUuid uuid, QString errMsg)
 {
-    device->setVeinInterface(m_arrVeinSourceInterfaces[slotPosition]);
-    m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
+    bool sourceAdded = slotPosition >= 0 && device;
+    if(sourceAdded) {
+        device->setVeinInterface(m_arrVeinSourceInterfaces[slotPosition]);
+        m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
+    }
+    m_sharedPtrRpcScanInterface->sendRpcResult(uuid,
+                                               sourceAdded ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
+                                               errMsg,
+                                               sourceAdded);
 }
 
 void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
