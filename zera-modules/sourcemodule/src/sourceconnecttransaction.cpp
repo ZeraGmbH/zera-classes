@@ -90,12 +90,12 @@ void cSourceConnectTransaction::onIoFinished(int transactionID)
     }
 }
 
-void cSourceConnectTransaction::startConnect()
+void cSourceConnectTransaction::startScan()
 {
     m_currentSourceTested = 0;
     if(m_sourceDeviceIdentified) {
         // we are one shot
-        qCritical("Do not call cSourceConnectTransaction::startConnect more than once per instance!");
+        qCritical("Do not call cSourceConnectTransaction::startScan more than once per instance!");
         delete m_sourceDeviceIdentified;
         m_sourceDeviceIdentified = nullptr;
     }

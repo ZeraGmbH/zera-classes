@@ -19,7 +19,7 @@ public:
     cSourceDeviceManager(int countSlots, QObject *parent = 0);
 
     // requests
-    void startSourceIdentification(cSourceInterfaceBase *interface);
+    void startSourceScan(cSourceInterfaceBase *interface);
 
     // getter
     int activeSlotCount();
