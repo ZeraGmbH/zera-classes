@@ -1,6 +1,7 @@
 #include "sourcescanner.h"
 #include "sourceinterface.h"
 #include "sourcedevice.h"
+#include <QUuid>
 
 namespace SOURCEMODULE
 {

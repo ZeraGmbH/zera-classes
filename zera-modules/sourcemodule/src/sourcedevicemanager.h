@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QString>
+#include <QUuid>
 #include "sourceinterface.h"
 
 class cSourceInterfaceBase;

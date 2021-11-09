@@ -1,6 +1,7 @@
 #ifndef SOURCEMODULEPROGRAM_H
 #define SOURCEMODULEPROGRAM_H
 
+#include <QUuid>
 #include <vf-cpp-rpc.h>
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
