@@ -159,11 +159,20 @@ QString randomString(int length) {
 
 void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
 {
-    int activeSlotCount = m_pSourceDeviceManager->activeSlotCount();
-    int iDemoCount = demoCount.toInt();
-    if(iDemoCount > activeSlotCount) {
-        int sourcesToAdd = iDemoCount - activeSlotCount;
-        while(sourcesToAdd) {
+    // how many demo sources are there
+    int iCurrentDemoCount = 0;
+    for(int slotNo=0; slotNo<getConfigXMLWrapper()->max_count_sources(); slotNo++) {
+        cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
+        if(source && source->isDemo()) {
+            iCurrentDemoCount++;
+        }
+    }
+    int reqestedDemoCount = demoCount.toInt();
+    int demoDiff = reqestedDemoCount - iCurrentDemoCount;
+    int maxSlots = getConfigXMLWrapper()->max_count_sources();
+    if(demoDiff > 0) {
+        int activeSlotCount = m_pSourceDeviceManager->activeSlotCount();
+        while(demoDiff && activeSlotCount < maxSlots) {
             // simulate vein rpc call on source add
             QVariantMap p_params;
             p_params["p_deviceInfo"] = QVariant("Demo");
@@ -171,27 +180,32 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
             QUuid veinUUid = QUuid::createUuid();
             p_params[VeinComponent::RemoteProcedureData::s_callIdString] = veinUUid;
             RPC_ScanInterface(p_params);
-            sourcesToAdd--;
+            demoDiff--;
+            activeSlotCount++;
         }
     }
-    else {
-        int sourcesToRemove = activeSlotCount - iDemoCount;
+    if(demoDiff < 0) {
+        demoDiff = -demoDiff;
         bool removeFront = randomBool();
         if(removeFront) {
-            for(int slotNo=0; sourcesToRemove && slotNo<getConfigXMLWrapper()->max_count_sources(); slotNo++) {
+            for(int slotNo=0; demoDiff && slotNo<maxSlots; slotNo++) {
                 cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
-                    static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
-                    sourcesToRemove--;
+                    if(source->isDemo()) {
+                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
+                        demoDiff--;
+                    }
                 }
             }
         }
         else {
-            for(int slotNo=getConfigXMLWrapper()->max_count_sources()-1; sourcesToRemove && slotNo>=0; slotNo--) {
+            for(int slotNo=maxSlots-1; demoDiff && slotNo>=0; slotNo--) {
                 cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
-                    static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
-                    sourcesToRemove--;
+                    if(source->isDemo()) {
+                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
+                        demoDiff--;
+                    }
                 }
             }
         }

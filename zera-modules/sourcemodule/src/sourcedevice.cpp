@@ -96,6 +96,11 @@ QSharedPointer<cSourceInterfaceBase> cSourceDevice::ioInterface()
     return m_spIoInterface;
 }
 
+bool cSourceDevice::isDemo()
+{
+    return m_spIoInterface->type() == SOURCE_INTERFACE_DEMO;
+}
+
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
