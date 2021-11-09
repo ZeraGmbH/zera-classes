@@ -32,7 +32,7 @@ signals:
     void sigSlotRemoved(int slotNo);
 
 private slots:
-    void onIdentificationTransactionFinished(QSharedPointer<cSourceScanner> transaction);
+    void onScanFinished(QSharedPointer<cSourceScanner> transaction);
     void onRemoveSource(cSourceDevice *sourceDevice);
 
 private:

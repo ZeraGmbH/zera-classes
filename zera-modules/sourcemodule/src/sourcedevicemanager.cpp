@@ -26,7 +26,7 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
             // that scanner finishes and deletes itself after completion (our shared reference is gone)
             connectTransaction->setScannerReference(connectTransaction);
             connect(connectTransaction.get(), &cSourceScanner::sigTransactionFinished,
-                    this, &cSourceDeviceManager::onIdentificationTransactionFinished,
+                    this, &cSourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);
             connectTransaction->startScan();
         }
@@ -37,9 +37,9 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
 }
 
 
-void cSourceDeviceManager::onIdentificationTransactionFinished(QSharedPointer<cSourceScanner> transaction)
+void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transaction)
 {
-    disconnect(transaction.get(), &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
+    disconnect(transaction.get(), &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onScanFinished);
     cSourceDevice *sourceDeviceFound = transaction->sourceDeviceFound();
     // add to first free slot
     bool slotAdded = false;
