@@ -34,15 +34,17 @@ cSourceModuleProgram::~cSourceModuleProgram()
 
 void cSourceModuleProgram::generateInterface()
 {
-    QString key;
+    // source manager
     configuration* config = getConfigXMLWrapper();
     int maxSources = config->max_count_sources();
+    m_pSourceDeviceManager = new cSourceDeviceManager(maxSources);
+    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished,
+            this, &cSourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
+    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved,
+            this, &cSourceModuleProgram::onSourceDeviceRemoved);
 
     // common components
-    m_pSourceDeviceManager = new cSourceDeviceManager(maxSources);
-    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished, this, &cSourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
-    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved, this, &cSourceModuleProgram::onSourceDeviceRemoved);
-
+    QString key;
     m_pVeinMaxCountAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                     QString("ACT_MaxSources"),
                                                     QString("Component with max source devices handled"),
