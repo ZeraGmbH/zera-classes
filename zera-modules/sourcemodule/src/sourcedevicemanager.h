@@ -22,6 +22,7 @@ public:
 
     // requests
     void startSourceScan(const SourceInterfaceType interfaceType,  const QString deviceInfo, const QUuid uuid);
+    bool removeSource(int slotNo);
 
     // getter
     int activeSlotCount();
