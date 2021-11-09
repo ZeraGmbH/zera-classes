@@ -14,9 +14,9 @@ namespace SOURCEMODULE
 
 static enum cSourceDevice::SourceType sDemoTypeCounter(cSourceDevice::SOURCE_DEMO);
 
-cSourceDevice::cSourceDevice(cSourceInterfaceBase *interface, SourceType type, QObject *parent) :
+cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SourceType type, QObject *parent) :
     QObject(parent),
-    m_IOInterface(interface),
+    m_spIoInterface(interface),
     m_type(type)
 {
     // Currently we keep source type here as an enum. This should not be the final solution
@@ -26,7 +26,7 @@ cSourceDevice::cSourceDevice(cSourceInterfaceBase *interface, SourceType type, Q
     // with a sequence of I/O transacition which we pass to our interface. That is the plan
     // currently...
 
-    connect(interface, &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
+    connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
 
     // demo only stuff
     if(type == SOURCE_DEMO) {
@@ -52,7 +52,7 @@ void cSourceDevice::close()
     switch(m_type) {
     case SOURCE_DEMO:
         // no housekeeping
-        static_cast<cSourceInterfaceDemo*>(m_IOInterface)->simulateExternalDisconnect();
+        static_cast<cSourceInterfaceDemo*>(m_spIoInterface.get())->simulateExternalDisconnect();
         break;
     default:
         // TODO - maybe some sequence?
@@ -90,9 +90,9 @@ void cSourceDevice::timeoutDemoTransaction()
     m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
 }
 
-cSourceInterfaceBase *cSourceDevice::ioInterface()
+QSharedPointer<cSourceInterfaceBase> cSourceDevice::ioInterface()
 {
-    return m_IOInterface;
+    return m_spIoInterface;
 }
 
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
@@ -179,7 +179,7 @@ void cSourceDevice::saveState()
     }
 }
 
-void cSourceDevice::onInterfaceClosed(cSourceInterfaceBase *ioInterface)
+void cSourceDevice::onInterfaceClosed()
 {
     // Once we really have a soft close vein reset has to go there. Now that
     // hard-close by interface close is the only option cleanup vein here
@@ -189,7 +189,7 @@ void cSourceDevice::onInterfaceClosed(cSourceInterfaceBase *ioInterface)
     m_veinInterface->veinDeviceState()->setValue(QJsonObject());
 
     // in case interface is gone, there is not much left to do but clean up
-    delete ioInterface;
+    m_spIoInterface = nullptr;
     disconnect(m_veinInterface->veinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::newVeinParamStatus);
     emit sigClosed(this);
 }

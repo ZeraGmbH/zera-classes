@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QVariant>
+#include <QSharedPointer>
 #include "sourcedevicestatus.h"
 
 class cSourceInterfaceBase;
@@ -26,14 +27,14 @@ public:
 
         SOURCE_TYPE_COUNT
     };
-    explicit cSourceDevice(cSourceInterfaceBase* interface, SourceType type, QObject *parent = nullptr);
+    explicit cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SourceType type, QObject *parent = nullptr);
     virtual ~cSourceDevice();
 
     // requests
     void close();
 
     // getter
-    cSourceInterfaceBase* ioInterface();
+    QSharedPointer<cSourceInterfaceBase> ioInterface();
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
@@ -48,7 +49,7 @@ public slots:
     void timeoutDemoTransaction();
 
 private slots:
-    void onInterfaceClosed(cSourceInterfaceBase *ioInterface);
+    void onInterfaceClosed();
 
 private:
     QString deviceFileName();
@@ -56,7 +57,7 @@ private:
     const QJsonObject deviceParamState();
     QString stateFileName();
 
-    cSourceInterfaceBase* m_IOInterface = nullptr; // WE own the interface
+    QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
 
     QJsonObject m_jsonParamsStructure;
     QJsonObject m_currParamState;

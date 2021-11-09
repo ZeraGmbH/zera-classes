@@ -181,7 +181,7 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
             for(int slotNo=0; sourcesToRemove && slotNo<getConfigXMLWrapper()->max_count_sources(); slotNo++) {
                 cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
-                    static_cast<cSourceInterfaceDemo*>(source->ioInterface())->simulateExternalDisconnect();
+                    static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
                     sourcesToRemove--;
                 }
             }
@@ -190,7 +190,7 @@ void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
             for(int slotNo=getConfigXMLWrapper()->max_count_sources()-1; sourcesToRemove && slotNo>=0; slotNo--) {
                 cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
                 if(source) {
-                    static_cast<cSourceInterfaceDemo*>(source->ioInterface())->simulateExternalDisconnect();
+                    static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
                     sourcesToRemove--;
                 }
             }

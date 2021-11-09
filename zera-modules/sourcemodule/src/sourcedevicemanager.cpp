@@ -16,7 +16,8 @@ cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
 void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceType, const QString deviceInfo, const QUuid uuid)
 {
     bool started = false;
-    cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(interfaceType));
+    QSharedPointer<cSourceInterfaceBase> interface =
+            QSharedPointer<cSourceInterfaceBase>(cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(interfaceType)));
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
