@@ -12,7 +12,6 @@
 #include "sourcedevice.h"
 #include "sourceveininterface.h"
 #include "sourceinterface.h"
-#include <random>
 
 namespace SOURCEMODULE
 {
@@ -145,73 +144,9 @@ void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 }
 
 
-static bool randomBool() {
-    // https://stackoverflow.com/questions/43329352/generating-random-boolean/43329456
-    static auto gen = std::bind(std::uniform_int_distribution<>(0,1),std::default_random_engine());
-    return gen();
-}
-
-QString randomString(int length) {
-    QString strRnd;
-    for(int cchar=0; cchar<length;cchar++) {
-        strRnd += QString("%1").arg(randomBool());
-    }
-    return strRnd;
-}
-
 void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
 {
-    // how many demo sources are there
-    int iCurrentDemoCount = 0;
-    for(int slotNo=0; slotNo<getConfigXMLWrapper()->max_count_sources(); slotNo++) {
-        cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
-        if(source && source->isDemo()) {
-            iCurrentDemoCount++;
-        }
-    }
-    int reqestedDemoCount = demoCount.toInt();
-    int demoDiff = reqestedDemoCount - iCurrentDemoCount;
-    int maxSlots = getConfigXMLWrapper()->max_count_sources();
-    if(demoDiff > 0) {
-        int activeSlotCount = m_pSourceDeviceManager->activeSlotCount();
-        while(demoDiff && activeSlotCount < maxSlots) {
-            // simulate vein rpc call on source add
-            QVariantMap p_params;
-            p_params["p_deviceInfo"] = QVariant("Demo");
-            p_params["p_type"] = int(SOURCE_INTERFACE_DEMO);
-            QUuid veinUUid = QUuid::createUuid();
-            p_params[VeinComponent::RemoteProcedureData::s_callIdString] = veinUUid;
-            RPC_ScanInterface(p_params);
-            demoDiff--;
-            activeSlotCount++;
-        }
-    }
-    if(demoDiff < 0) {
-        demoDiff = -demoDiff;
-        bool removeFront = randomBool();
-        if(removeFront) {
-            for(int slotNo=0; demoDiff && slotNo<maxSlots; slotNo++) {
-                cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
-                if(source) {
-                    if(source->isDemo()) {
-                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
-                        demoDiff--;
-                    }
-                }
-            }
-        }
-        else {
-            for(int slotNo=maxSlots-1; demoDiff && slotNo>=0; slotNo--) {
-                cSourceDevice* source = m_pSourceDeviceManager->sourceDevice(slotNo);
-                if(source) {
-                    if(source->isDemo()) {
-                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
-                        demoDiff--;
-                    }
-                }
-            }
-        }
-    }
+    m_pSourceDeviceManager->setDemoCount(demoCount.toInt());
 }
 
 }

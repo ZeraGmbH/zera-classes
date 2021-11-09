@@ -2,6 +2,7 @@
 #include "sourcedevice.h"
 #include "sourceinterface.h"
 #include "sourcescanner.h"
+#include <random>
 
 namespace SOURCEMODULE
 {
@@ -9,7 +10,8 @@ namespace SOURCEMODULE
 cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
     QObject(parent),
     m_sourceDeviceSlots(QVector<cSourceDevice*>(countSlots, nullptr)),
-    m_activeSlotCount(0)
+    m_activeSlotCount(0),
+    m_demoCount(0)
 {
 }
 
@@ -39,12 +41,68 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
     }
 }
 
+
+static bool randomBool() {
+    // https://stackoverflow.com/questions/43329352/generating-random-boolean/43329456
+    static auto gen = std::bind(std::uniform_int_distribution<>(0,1),std::default_random_engine());
+    return gen();
+}
+
+QString randomString(int length) {
+    QString strRnd;
+    for(int cchar=0; cchar<length;cchar++) {
+        strRnd += QString("%1").arg(randomBool());
+    }
+    return strRnd;
+}
+
+void cSourceDeviceManager::setDemoCount(int demoCount)
+{
+    int demoDiff = demoCount - m_demoCount;
+    int maxSlots = m_sourceDeviceSlots.size();
+    if(demoDiff > 0) {
+        while(demoDiff && m_activeSlotCount < maxSlots) {
+            startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
+            demoDiff--;
+        }
+    }
+    else if(demoDiff < 0) {
+        demoDiff = -demoDiff;
+        bool removeFront = randomBool();
+        if(removeFront) {
+            for(int slotNo=0; demoDiff && slotNo<maxSlots; slotNo++) {
+                cSourceDevice* source = m_sourceDeviceSlots[slotNo];
+                if(source) {
+                    if(source->isDemo()) {
+                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
+                        demoDiff--;
+                    }
+                }
+            }
+        }
+        else {
+            for(int slotNo=maxSlots-1; demoDiff && slotNo>=0; slotNo--) {
+                cSourceDevice* source = m_sourceDeviceSlots[slotNo];
+                if(source) {
+                    if(source->isDemo()) {
+                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
+                        demoDiff--;
+                    }
+                }
+            }
+        }
+    }
+}
+
 bool cSourceDeviceManager::removeSource(int slotNo)
 {
     bool removed = false;
     auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
     if(sourceDeviceCurr) {
         m_activeSlotCount--;
+        if(sourceDeviceCurr->isDemo()) {
+            m_demoCount--;
+        }
         disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
         delete sourceDeviceCurr;
         sourceDeviceCurr = nullptr;
@@ -69,6 +127,9 @@ void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transac
                 slotAdded = true;
                 sourceDeviceCurr = sourceDeviceFound;
                 m_activeSlotCount++;
+                if(sourceDeviceCurr->isDemo()) {
+                    m_demoCount++;
+                }
                 connect(sourceDeviceFound, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
                 emit sigSourceScanFinished(slotNo, sourceDeviceFound, transaction->getUuid(), QString());
                 break;
@@ -95,6 +156,11 @@ void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transac
 int cSourceDeviceManager::activeSlotCount()
 {
     return m_activeSlotCount;
+}
+
+int cSourceDeviceManager::demoCount()
+{
+    return m_demoCount;
 }
 
 
