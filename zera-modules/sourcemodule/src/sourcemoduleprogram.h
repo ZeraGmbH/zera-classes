@@ -32,6 +32,7 @@ public slots: // Make cBaseMeasWorkProgram happy...
 
 private:
     configuration* getConfigXMLWrapper();
+    void updateDemoCount();
 
     cSourceDeviceManager* m_pSourceDeviceManager;
 
@@ -45,6 +46,8 @@ private:
     QVector<cSourceVeinInterface*> m_arrVeinSourceInterfaces;
 
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
+
+    bool m_bDeafenDemoChange = false;
 
 private slots:
     void onSourceScanFinished(int slotPosition, cSourceDevice *device, QUuid uuid, QString errMsg);

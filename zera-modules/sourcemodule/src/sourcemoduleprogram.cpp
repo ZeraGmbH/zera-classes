@@ -124,12 +124,20 @@ configuration *cSourceModuleProgram::getConfigXMLWrapper()
     return static_cast<cSourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
 }
 
+void cSourceModuleProgram::updateDemoCount()
+{
+    m_bDeafenDemoChange = true;
+    m_pVeinDemoSourceCount->setValue(m_pSourceDeviceManager->demoCount());
+    m_bDeafenDemoChange = false;
+}
+
 void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice* device, QUuid uuid, QString errMsg)
 {
     bool sourceAdded = slotPosition >= 0 && device;
     if(sourceAdded) {
         device->setVeinInterface(m_arrVeinSourceInterfaces[slotPosition]);
         m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
+        updateDemoCount();
     }
     m_sharedPtrRpcScanInterface->sendRpcResult(uuid,
                                                sourceAdded ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
@@ -141,12 +149,15 @@ void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
 {
     Q_UNUSED(slotPosition)
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
+    updateDemoCount();
 }
 
 
 void cSourceModuleProgram::newDemoSourceCount(QVariant demoCount)
 {
-    m_pSourceDeviceManager->setDemoCount(demoCount.toInt());
+    if(!m_bDeafenDemoChange) {
+        m_pSourceDeviceManager->setDemoCount(demoCount.toInt());
+    }
 }
 
 }
