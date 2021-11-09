@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QUuid>
 #include <QSharedPointer>
+#include "sourcedevice.h"
 
 class cSourceInterfaceBase;
 
@@ -30,6 +31,7 @@ private slots:
     void onIoFinished(int transactionID);
 private:
     void sendReceiveSourceID();
+    QByteArray extractVersion(cSourceDevice::SourceType sourceType);
 
     QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
     QUuid m_uuid;

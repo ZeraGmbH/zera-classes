@@ -27,7 +27,7 @@ public:
 
         SOURCE_TYPE_COUNT
     };
-    explicit cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SourceType type, QObject *parent = nullptr);
+    explicit cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SourceType type, QString version);
     virtual ~cSourceDevice();
 
     // requests
@@ -52,10 +52,10 @@ private slots:
     void onInterfaceClosed();
 
 private:
-    QString deviceFileName();
+    QString jsonDeviceStructureFileName();
     const QJsonObject deviceParamStructure();
     const QJsonObject deviceParamState();
-    QString stateFileName();
+    QString jsonStateFileName();
 
     QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
 
@@ -67,9 +67,10 @@ private:
     cSourceVeinInterface* m_veinInterface = nullptr;
 
     SourceType m_type;
+    QString m_version;
 
     SourceType m_demoType;
-    QTimer m_demoTransactionTimer;
+    QTimer m_demoOnOffDeleayTimer;
 };
 
 }

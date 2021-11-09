@@ -14,10 +14,11 @@ namespace SOURCEMODULE
 
 static enum cSourceDevice::SourceType sDemoTypeCounter(cSourceDevice::SOURCE_DEMO);
 
-cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SourceType type, QObject *parent) :
-    QObject(parent),
+cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SourceType type, QString version) :
+    QObject(nullptr),
     m_spIoInterface(interface),
-    m_type(type)
+    m_type(type),
+    m_version(version)
 {
     // Currently we keep source type here as an enum. This should not be the final solution
     // because we'll end up in spagetti when adding more source units.
@@ -39,7 +40,7 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sou
             nextDemoType++;
         }
         m_demoType = sDemoTypeCounter = cSourceDevice::SourceType(nextDemoType);
-        connect(&m_demoTransactionTimer, &QTimer::timeout, this, &cSourceDevice::timeoutDemoTransaction);
+        connect(&m_demoOnOffDeleayTimer, &QTimer::timeout, this, &cSourceDevice::timeoutDemoTransaction);
     }
 }
 
@@ -71,10 +72,10 @@ void cSourceDevice::newVeinParamStatus(QVariant paramState)
     m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
     if(m_type == SOURCE_DEMO) {
         if(m_requestedParamState.value("on").toBool()) {
-            m_demoTransactionTimer.start(3000);
+            m_demoOnOffDeleayTimer.start(3000);
         }
         else {
-            m_demoTransactionTimer.start(1000);
+            m_demoOnOffDeleayTimer.start(1000);
         }
     }
 }
@@ -109,7 +110,7 @@ void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 const QJsonObject cSourceDevice::deviceParamStructure()
 {
     if(m_jsonParamsStructure.isEmpty()) {
-        QString deviceInfoFileName = QStringLiteral("://deviceinfo/") + deviceFileName();
+        QString deviceInfoFileName = QStringLiteral("://deviceinfo/") + jsonDeviceStructureFileName();
         QFile deviceInfoFile(deviceInfoFileName);
         if(deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
             QByteArray jsondeviceInfoData = deviceInfoFile.readAll();
@@ -131,7 +132,7 @@ const QJsonObject cSourceDevice::deviceParamState()
         cZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(deviceParamStructure());
         // try to load persistent state file and validate it
-        QFile deviceStateFile(stateFileName());
+        QFile deviceStateFile(jsonStateFileName());
         if(deviceStateFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
             QByteArray jsonStateData = deviceStateFile.readAll();
             deviceStateFile.close();
@@ -153,9 +154,9 @@ const QJsonObject cSourceDevice::deviceParamState()
     return m_currParamState;
 }
 
-QString cSourceDevice::stateFileName()
+QString cSourceDevice::jsonStateFileName()
 {
-    QString fileName = deviceFileName();
+    QString fileName = jsonDeviceStructureFileName();
     QString statePath(ZC_DEV_STATE_PATH);
     if(!statePath.endsWith("/")) {
         statePath += "/";
@@ -168,14 +169,14 @@ QString cSourceDevice::stateFileName()
 
 void cSourceDevice::saveState()
 {
-    QFile deviceStateFile(stateFileName());
+    QFile deviceStateFile(jsonStateFileName());
     if(deviceStateFile.open(QIODevice::WriteOnly)) {
         QJsonDocument doc(m_currParamState);
         deviceStateFile.write(doc.toJson(QJsonDocument::Indented));
         deviceStateFile.close();
     }
     else {
-        qWarning("Default state file %s could not be written", qPrintable(stateFileName()));
+        qWarning("Default state file %s could not be written", qPrintable(jsonStateFileName()));
     }
 }
 
@@ -194,7 +195,7 @@ void cSourceDevice::onInterfaceClosed()
     emit sigClosed(this);
 }
 
-QString cSourceDevice::deviceFileName()
+QString cSourceDevice::jsonDeviceStructureFileName()
 {
     QString fileName;
     // Notes:
