@@ -1,17 +1,17 @@
-#include "sourceconnecttransaction.h"
+#include "sourcescanner.h"
 #include "sourceinterface.h"
 #include "sourcedevice.h"
 
 namespace SOURCEMODULE
 {
 
-cSourceConnectTransaction::cSourceConnectTransaction(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent) :
+cSourceScanner::cSourceScanner(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent) :
     QObject(parent),
     m_IOInterface(interface),
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
-    connect(m_IOInterface, &cSourceInterfaceBase::ioFinished, this, &cSourceConnectTransaction::onIoFinished);
+    connect(m_IOInterface, &cSourceInterfaceBase::ioFinished, this, &cSourceScanner::onIoFinished);
 }
 
 struct deviceDetectInfo
@@ -36,17 +36,17 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
     << deviceDetectInfo("", "TS", "FG")
     ;
 
-cSourceDevice *cSourceConnectTransaction::sourceDeviceFound()
+cSourceDevice *cSourceScanner::sourceDeviceFound()
 {
     return m_sourceDeviceIdentified;
 }
 
-QUuid cSourceConnectTransaction::getUuid()
+QUuid cSourceScanner::getUuid()
 {
     return m_uuid;
 }
 
-void cSourceConnectTransaction::sendReceiveSourceID()
+void cSourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     m_receivedData.clear();
@@ -63,7 +63,7 @@ void cSourceConnectTransaction::sendReceiveSourceID()
     m_IOInterface->sendAndReceive(dataSend, &m_receivedData);
 }
 
-void cSourceConnectTransaction::onIoFinished(int transactionID)
+void cSourceScanner::onIoFinished(int transactionID)
 {
     bool validFound = false;
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
@@ -96,12 +96,12 @@ void cSourceConnectTransaction::onIoFinished(int transactionID)
     }
 }
 
-void cSourceConnectTransaction::startScan()
+void cSourceScanner::startScan()
 {
     m_currentSourceTested = 0;
     if(m_sourceDeviceIdentified) {
         // we are one shot
-        qCritical("Do not call cSourceConnectTransaction::startScan more than once per instance!");
+        qCritical("Do not call cSourceScanner::startScan more than once per instance!");
         delete m_sourceDeviceIdentified;
         m_sourceDeviceIdentified = nullptr;
     }

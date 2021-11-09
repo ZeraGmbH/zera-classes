@@ -11,7 +11,7 @@ namespace SOURCEMODULE
 {
 
 class cSourceDevice;
-class cSourceConnectTransaction;
+class cSourceScanner;
 
 class cSourceDeviceManager : public QObject
 {
@@ -31,7 +31,7 @@ signals:
     void sigSlotRemoved(int slotNo);
 
 private slots:
-    void onIdentificationTransactionFinished(cSourceConnectTransaction* transaction);
+    void onIdentificationTransactionFinished(cSourceScanner* transaction);
     void onRemoveSource(cSourceDevice *sourceDevice);
 
 private:

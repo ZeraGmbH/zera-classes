@@ -1,5 +1,5 @@
-#ifndef CSOURCECONNECTTRANSACTION_H
-#define CSOURCECONNECTTRANSACTION_H
+#ifndef cSourceScanner_H
+#define cSourceScanner_H
 
 #include <QObject>
 #include <QUuid>
@@ -10,18 +10,18 @@ namespace SOURCEMODULE
 {
 class cSourceDevice;
 
-class cSourceConnectTransaction : public QObject
+class cSourceScanner : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceConnectTransaction(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent = nullptr);
+    explicit cSourceScanner(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent = nullptr);
     // requests
     void startScan();
     // getter
     cSourceDevice* sourceDeviceFound();
     QUuid getUuid();
 signals:
-    void sigTransactionFinished(cSourceConnectTransaction* transaction);
+    void sigTransactionFinished(cSourceScanner* transaction);
 private:
     void sendReceiveSourceID();
 
@@ -35,4 +35,4 @@ private slots:
 };
 
 }
-#endif // CSOURCECONNECTTRANSACTION_H
+#endif // cSourceScanner_H
