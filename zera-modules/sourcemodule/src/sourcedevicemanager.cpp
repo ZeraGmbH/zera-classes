@@ -106,6 +106,4 @@ void cSourceDeviceManager::onRemoveSource(cSourceDevice *sourceDevice)
 }
 
 
-
-
 }

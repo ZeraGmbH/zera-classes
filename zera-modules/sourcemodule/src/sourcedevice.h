@@ -35,6 +35,7 @@ public:
 
     // getter
     QSharedPointer<cSourceInterfaceBase> ioInterface();
+    bool isDemo();
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
