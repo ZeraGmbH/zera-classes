@@ -38,7 +38,7 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
 {
     bool open = false;
     QStringList splitList = strDeviceInfo.split("/", Qt::SkipEmptyParts);
-    if(splitList.count() >= 0) {
+    if(splitList.count() > 0) {
         QString portName = splitList.last();
         m_serialIO.setPortName(portName);
         // hard code settings for now
