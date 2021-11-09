@@ -36,6 +36,21 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
     }
 }
 
+bool cSourceDeviceManager::removeSource(int slotNo)
+{
+    bool removed = false;
+    auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
+    if(sourceDeviceCurr) {
+        m_activeSlotCount--;
+        disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
+        delete sourceDeviceCurr;
+        sourceDeviceCurr = nullptr;
+        emit sigSlotRemoved(slotNo);
+        removed = true;
+    }
+    return removed;
+}
+
 
 void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transaction)
 {
@@ -95,11 +110,7 @@ void cSourceDeviceManager::onRemoveSource(cSourceDevice *sourceDevice)
     for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
         auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
-            m_activeSlotCount--;
-            disconnect(sourceDevice, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
-            delete sourceDeviceCurr;
-            sourceDeviceCurr = nullptr;
-            emit sigSlotRemoved(slotNo);
+            removeSource(slotNo);
             break;
         }
     }
