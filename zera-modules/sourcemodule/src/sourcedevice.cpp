@@ -195,7 +195,6 @@ void cSourceDevice::onInterfaceClosed()
     m_veinInterface->veinDeviceState()->setValue(QJsonObject());
 
     // in case interface is gone, there is not much left to do but clean up
-    m_spIoInterface = nullptr;
     disconnect(m_veinInterface->veinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::newVeinParamStatus);
     emit sigClosed(this);
 }
