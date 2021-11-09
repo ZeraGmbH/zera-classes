@@ -21,8 +21,13 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
-            cSourceScanner* connectTransaction = new cSourceScanner(interface, uuid);
-            connect(connectTransaction, &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
+            QSharedPointer<cSourceScanner> connectTransaction = QSharedPointer<cSourceScanner>(new cSourceScanner(interface, uuid));
+            // in case our module=we are killed while scan is pending we have to make sure
+            // that scanner finishes and deletes itself after completion (our shared reference is gone)
+            connectTransaction->setScannerReference(connectTransaction);
+            connect(connectTransaction.get(), &cSourceScanner::sigTransactionFinished,
+                    this, &cSourceDeviceManager::onIdentificationTransactionFinished,
+                    Qt::QueuedConnection);
             connectTransaction->startScan();
         }
     }
@@ -32,9 +37,9 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
 }
 
 
-void cSourceDeviceManager::onIdentificationTransactionFinished(cSourceScanner *transaction)
+void cSourceDeviceManager::onIdentificationTransactionFinished(QSharedPointer<cSourceScanner> transaction)
 {
-    disconnect(transaction, &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
+    disconnect(transaction.get(), &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
     cSourceDevice *sourceDeviceFound = transaction->sourceDeviceFound();
     // add to first free slot
     bool slotAdded = false;
@@ -66,7 +71,6 @@ void cSourceDeviceManager::onIdentificationTransactionFinished(cSourceScanner *t
         // we need to notify failures
         emit sigSourceScanFinished(-1, sourceDeviceFound, transaction->getUuid(), erorDesc);
     }
-    delete transaction;
 }
 
 

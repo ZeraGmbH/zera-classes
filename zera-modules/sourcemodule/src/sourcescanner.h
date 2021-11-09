@@ -16,13 +16,18 @@ class cSourceScanner : public QObject
     Q_OBJECT
 public:
     explicit cSourceScanner(QSharedPointer<cSourceInterfaceBase> interface, QUuid uuid);
+    virtual ~cSourceScanner();
     // requests
     void startScan();
     // getter
     cSourceDevice* sourceDeviceFound();
     QUuid getUuid();
+    // keep alive ensurance
+    void setScannerReference(QSharedPointer<cSourceScanner> scannerReference);
 signals:
-    void sigTransactionFinished(cSourceScanner* transaction);
+    void sigTransactionFinished(QSharedPointer<cSourceScanner> transaction);
+private slots:
+    void onIoFinished(int transactionID);
 private:
     void sendReceiveSourceID();
 
@@ -31,8 +36,7 @@ private:
     cSourceDevice* m_sourceDeviceIdentified;
     QByteArray m_receivedData;
     int m_currentSourceTested = 0;
-private slots:
-    void onIoFinished(int transactionID);
+    QSharedPointer<cSourceScanner> m_scannerReference;
 };
 
 }

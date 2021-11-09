@@ -14,6 +14,10 @@ cSourceScanner::cSourceScanner(QSharedPointer<cSourceInterfaceBase> interface, Q
     connect(m_spIoInterface.get(), &cSourceInterfaceBase::ioFinished, this, &cSourceScanner::onIoFinished);
 }
 
+cSourceScanner::~cSourceScanner()
+{
+}
+
 struct deviceDetectInfo
 {
     deviceDetectInfo(QByteArray prefix, QByteArray queryStr, QByteArray expectedResponse) {
@@ -46,6 +50,15 @@ QUuid cSourceScanner::getUuid()
     return m_uuid;
 }
 
+void cSourceScanner::setScannerReference(QSharedPointer<cSourceScanner> scannerReference)
+{
+    cSourceScanner* scannerToSet = scannerReference.get();
+    if(scannerToSet && scannerToSet != this) {
+        qFatal("Do not set reference to other scanner!");
+    }
+    m_scannerReference = scannerReference;
+}
+
 void cSourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
@@ -67,6 +80,7 @@ void cSourceScanner::onIoFinished(int transactionID)
 {
     bool validFound = false;
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
+    bool ourJobIsDone = false;
     if(transactionID) { // receiving transaction id = 0 -> I/O problems -> don't try next
         if(m_spIoInterface->type() != SOURCE_INTERFACE_DEMO) {
             deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
@@ -85,14 +99,20 @@ void cSourceScanner::onIoFinished(int transactionID)
         else {
             // TODO
         }
-        emit sigTransactionFinished(this);
+        emit sigTransactionFinished(m_scannerReference);
+        ourJobIsDone = true;
     }
     else if(transactionID && moreChances) {
         m_currentSourceTested++;
         sendReceiveSourceID(); // delay??
     }
     else {
-        emit sigTransactionFinished(this); // notify: we failed :(
+        emit sigTransactionFinished(m_scannerReference); // notify: we failed :(
+        ourJobIsDone = true;
+    }
+    if(ourJobIsDone) {
+        // we are ready to die
+        setScannerReference(nullptr);
     }
 }
 
