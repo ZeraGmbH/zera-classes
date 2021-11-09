@@ -1,7 +1,7 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevice.h"
 #include "sourceinterface.h"
-#include "sourceconnecttransaction.h"
+#include "sourcescanner.h"
 
 namespace SOURCEMODULE
 {
@@ -20,8 +20,8 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
-            cSourceConnectTransaction* connectTransaction = new cSourceConnectTransaction(interface, uuid);
-            connect(connectTransaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
+            cSourceScanner* connectTransaction = new cSourceScanner(interface, uuid);
+            connect(connectTransaction, &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
             connectTransaction->startScan();
         }
     }
@@ -31,9 +31,9 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
 }
 
 
-void cSourceDeviceManager::onIdentificationTransactionFinished(cSourceConnectTransaction *transaction)
+void cSourceDeviceManager::onIdentificationTransactionFinished(cSourceScanner *transaction)
 {
-    disconnect(transaction, &cSourceConnectTransaction::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
+    disconnect(transaction, &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onIdentificationTransactionFinished);
     cSourceDevice *sourceDeviceFound = transaction->sourceDeviceFound();
     // add to first free slot
     bool slotAdded = false;

@@ -21,7 +21,7 @@ cSourceDevice::cSourceDevice(cSourceInterfaceBase *interface, SourceType type, Q
 {
     // Currently we keep source type here as an enum. This should not be the final solution
     // because we'll end up in spagetti when adding more source units.
-    // In the future type will be replaced by protocol and cSourceConnectTransaction will
+    // In the future type will be replaced by protocol and cSourceScanner will
     // give us that so in case a parameter json comes in we'll pass it to protocol, that returns
     // with a sequence of I/O transacition which we pass to our interface. That is the plan
     // currently...
@@ -200,7 +200,7 @@ QString cSourceDevice::deviceFileName()
     // Notes:
     // * If we ever make it to FG, we need dynamic contents...
     // * As written above, these type of decisions should go somwhere else e.g
-    //   cSourceConnectTransaction
+    //   cSourceScanner
     switch(m_type != SOURCE_DEMO ? m_type : m_demoType) {
     case SOURCE_MT3000:
         fileName = QStringLiteral("MT3000.json");
