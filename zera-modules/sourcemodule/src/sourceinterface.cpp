@@ -34,6 +34,10 @@ cSourceInterfaceBase::cSourceInterfaceBase(QObject *parent) : QObject(parent)
     connect(this, &cSourceInterfaceBase::ioFinishedToQueue, this, &cSourceInterfaceBase::ioFinished, Qt::QueuedConnection);
 }
 
+cSourceInterfaceBase::~cSourceInterfaceBase()
+{
+}
+
 void cSourceInterfaceBase::close()
 {
 }
@@ -56,6 +60,6 @@ int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
 
 void cSourceInterfaceDemo::simulateExternalDisconnect()
 {
-    emit sigDisconnected(this);
+    emit sigDisconnected();
 }
 

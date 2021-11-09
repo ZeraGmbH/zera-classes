@@ -5,13 +5,13 @@
 namespace SOURCEMODULE
 {
 
-cSourceScanner::cSourceScanner(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent) :
-    QObject(parent),
-    m_IOInterface(interface),
+cSourceScanner::cSourceScanner(QSharedPointer<cSourceInterfaceBase> interface, QUuid uuid) :
+    QObject(nullptr),
+    m_spIoInterface(interface),
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
-    connect(m_IOInterface, &cSourceInterfaceBase::ioFinished, this, &cSourceScanner::onIoFinished);
+    connect(m_spIoInterface.get(), &cSourceInterfaceBase::ioFinished, this, &cSourceScanner::onIoFinished);
 }
 
 struct deviceDetectInfo
@@ -52,15 +52,15 @@ void cSourceScanner::sendReceiveSourceID()
     m_receivedData.clear();
     // interface specifics
     QByteArray globalPrepend;
-    if(m_IOInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
-        static_cast<cSourceInterfaceZeraSerial*>(m_IOInterface)->setBlockEndCriteriaNextIo();
+    if(m_spIoInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
+        static_cast<cSourceInterfaceZeraSerial*>(m_spIoInterface.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\n'
         if(m_currentSourceTested == 0) {
             globalPrepend = "\n";
         }
     }
     QByteArray dataSend = globalPrepend + deviceDetectInfoCurrent.prefix + deviceDetectInfoCurrent.queryStr;
-    m_IOInterface->sendAndReceive(dataSend, &m_receivedData);
+    m_spIoInterface->sendAndReceive(dataSend, &m_receivedData);
 }
 
 void cSourceScanner::onIoFinished(int transactionID)
@@ -68,7 +68,7 @@ void cSourceScanner::onIoFinished(int transactionID)
     bool validFound = false;
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
     if(transactionID) { // receiving transaction id = 0 -> I/O problems -> don't try next
-        if(m_IOInterface->type() != SOURCE_INTERFACE_DEMO) {
+        if(m_spIoInterface->type() != SOURCE_INTERFACE_DEMO) {
             deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
             if(m_receivedData.contains(deviceDetectInfoCurrent.expectedResponse)) {
                 validFound = true;
@@ -79,8 +79,8 @@ void cSourceScanner::onIoFinished(int transactionID)
         }
     }
     if(validFound) {
-        if(m_IOInterface->type() == SOURCE_INTERFACE_DEMO) {
-            m_sourceDeviceIdentified = new cSourceDevice(m_IOInterface, cSourceDevice::SOURCE_DEMO);
+        if(m_spIoInterface->type() == SOURCE_INTERFACE_DEMO) {
+            m_sourceDeviceIdentified = new cSourceDevice(m_spIoInterface, cSourceDevice::SOURCE_DEMO);
         }
         else {
             // TODO

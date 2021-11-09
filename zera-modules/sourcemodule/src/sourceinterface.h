@@ -43,6 +43,7 @@ class cSourceInterfaceBase : public QObject
 {
     Q_OBJECT
 public:
+    virtual ~cSourceInterfaceBase();
     virtual SourceInterfaceType type() { return SOURCE_INTERFACE_BASE; }
     virtual bool open(QString) { return false; }
     virtual void close();
@@ -54,7 +55,7 @@ public:
      */
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive);
 signals:
-    void sigDisconnected(cSourceInterfaceBase *ioInterface);
+    void sigDisconnected();
     void ioFinished(int transactionID); // users connect this signal
     void ioFinishedToQueue(int transactionID); // sub classes emit this to ensure queue
 

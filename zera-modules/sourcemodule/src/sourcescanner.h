@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QUuid>
+#include <QSharedPointer>
 
 class cSourceInterfaceBase;
 
@@ -14,7 +15,7 @@ class cSourceScanner : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceScanner(cSourceInterfaceBase *interface, QUuid uuid, QObject *parent = nullptr);
+    explicit cSourceScanner(QSharedPointer<cSourceInterfaceBase> interface, QUuid uuid);
     // requests
     void startScan();
     // getter
@@ -25,7 +26,7 @@ signals:
 private:
     void sendReceiveSourceID();
 
-    cSourceInterfaceBase* m_IOInterface;
+    QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
     QUuid m_uuid;
     cSourceDevice* m_sourceDeviceIdentified;
     QByteArray m_receivedData;
