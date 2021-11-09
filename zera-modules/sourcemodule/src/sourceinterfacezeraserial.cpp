@@ -18,7 +18,7 @@ public:
     struct TBlockEndCriteria
     {
         int iBlockLenReceive = 0;
-        QByteArray endBlock = QByteArray("\n");
+        QByteArray endBlock = QByteArray("\r");
     };
     const TBlockEndCriteria defaultBlockEndCriteria;
     TBlockEndCriteria nextBlockEndCriteria;
@@ -43,9 +43,9 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
         m_serialIO.setPortName(portName);
         // hard code settings for now
         m_serialIO.setBaudRate(9600);
-        m_serialIO.setDataBits(QSerialPort::Data7);
-        m_serialIO.setParity(QSerialPort::EvenParity);
-        m_serialIO.setStopBits(QSerialPort::OneStop);
+        m_serialIO.setDataBits(QSerialPort::Data8);
+        m_serialIO.setParity(QSerialPort::NoParity);
+        m_serialIO.setStopBits(QSerialPort::TwoStop);
         open = m_serialIO.open(QIODevice::ReadWrite);
     }
     return open;
