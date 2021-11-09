@@ -139,6 +139,8 @@ void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transac
     // cleanup if something went wrong
     if(!slotAdded) {
         QString erorDesc;
+        // although we check at entry startSourceScan we have to recheck here
+        // because startSourceScan cannot update m_activeSlotCount - scan can fail
         if(sourceDeviceFound) {
             delete sourceDeviceFound;
             sourceDeviceFound = nullptr;
