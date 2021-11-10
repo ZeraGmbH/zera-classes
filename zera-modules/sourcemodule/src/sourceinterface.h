@@ -94,6 +94,7 @@ class cSourceInterfaceZeraSerial : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
+    virtual ~cSourceInterfaceZeraSerial();
     virtual SourceInterfaceType type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
