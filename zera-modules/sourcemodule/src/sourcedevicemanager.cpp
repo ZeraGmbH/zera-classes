@@ -59,9 +59,8 @@ QString randomString(int length) {
 void cSourceDeviceManager::setDemoCount(int demoCount)
 {
     int demoDiff = demoCount - m_demoCount;
-    int maxSlots = m_sourceDeviceSlots.size();
     if(demoDiff > 0) {
-        while(demoDiff && m_activeSlotCount < maxSlots) {
+        while(demoDiff && m_activeSlotCount < slotCount()) {
             startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
             demoDiff--;
         }
@@ -70,7 +69,7 @@ void cSourceDeviceManager::setDemoCount(int demoCount)
         demoDiff = -demoDiff;
         bool removeFront = randomBool();
         if(removeFront) {
-            for(int slotNo=0; demoDiff && slotNo<maxSlots; slotNo++) {
+            for(int slotNo=0; demoDiff && slotNo<slotCount(); slotNo++) {
                 cSourceDevice* source = m_sourceDeviceSlots[slotNo];
                 if(source) {
                     if(source->isDemo()) {
@@ -81,7 +80,7 @@ void cSourceDeviceManager::setDemoCount(int demoCount)
             }
         }
         else {
-            for(int slotNo=maxSlots-1; demoDiff && slotNo>=0; slotNo--) {
+            for(int slotNo=slotCount()-1; demoDiff && slotNo>=0; slotNo--) {
                 cSourceDevice* source = m_sourceDeviceSlots[slotNo];
                 if(source) {
                     if(source->isDemo()) {
@@ -112,6 +111,10 @@ bool cSourceDeviceManager::removeSource(int slotNo)
     return removed;
 }
 
+int cSourceDeviceManager::slotCount()
+{
+    return m_sourceDeviceSlots.size();
+}
 
 void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transaction)
 {

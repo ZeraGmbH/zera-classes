@@ -21,11 +21,12 @@ public:
     cSourceDeviceManager(int countSlots, QObject *parent = 0);
 
     // requests
-    void startSourceScan(const SourceInterfaceType interfaceType,  const QString deviceInfo, const QUuid uuid);
+    void startSourceScan(const SourceInterfaceType interfaceType, const QString deviceInfo, const QUuid uuid);
     void setDemoCount(int demoCount);
     bool removeSource(int slotNo);
 
     // getter
+    int slotCount();
     int activeSlotCount();
     int demoCount();
     cSourceDevice* sourceDevice(int slotNo);
