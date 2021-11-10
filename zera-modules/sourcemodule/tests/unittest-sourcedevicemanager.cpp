@@ -12,14 +12,14 @@ static int removed = 0;
 using SOURCEMODULE::cSourceDeviceManager;
 using SOURCEMODULE::cSourceDevice;
 
-static void testWithEvents(cSourceDeviceManager* devManager,
+static void testDeviceManagerEvents(cSourceDeviceManager* devManager,
                            int countAddGood, int countAddBad, int countRemove, int countAddPost = 0)
 {
     goodAdded = 0;
     badAdded = 0;
     removed = 0;
 
-    char const *p = "abc";
+    char const *p = "devicemanager-test";
     char const **dummyParam = { &p };
     int argc = 1;
     QCoreApplication loop(argc, const_cast<char**>(dummyParam));
@@ -78,7 +78,7 @@ static void testWithEvents(cSourceDeviceManager* devManager,
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD) {
     cSourceDeviceManager devManager(2);
-    testWithEvents(&devManager, 2, 0, 0);
+    testDeviceManagerEvents(&devManager, 2, 0, 0);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 0);
     EXPECT_EQ(removed, 0);
@@ -88,7 +88,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD) {
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_BASE_BAD) {
     cSourceDeviceManager devManager(2);
-    testWithEvents(&devManager, 0, 2, 0);
+    testDeviceManagerEvents(&devManager, 0, 2, 0);
     EXPECT_EQ(goodAdded, 0);
     EXPECT_EQ(badAdded, 2);
     EXPECT_EQ(removed, 0);
@@ -98,7 +98,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_BASE_BAD) {
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS) {
     cSourceDeviceManager devManager(2);
-    testWithEvents(&devManager, 3, 0, 0);
+    testDeviceManagerEvents(&devManager, 3, 0, 0);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 1);
     EXPECT_EQ(removed, 0);
@@ -111,7 +111,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS_POST) {
     // CREATE_MORE_THAN_SLOTS sends out all scans and the checks are performed
     // after creation. Here we check the entry by:
     cSourceDeviceManager devManager(2);
-    testWithEvents(&devManager, 2, 0, 0, 2);
+    testDeviceManagerEvents(&devManager, 2, 0, 0, 2);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 2);
     EXPECT_EQ(devManager.activeSlotCount(), 2);
@@ -120,7 +120,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS_POST) {
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD_AND_REMOVE) {
     cSourceDeviceManager devManager(2);
-    testWithEvents(&devManager, 2, 0, 2);
+    testDeviceManagerEvents(&devManager, 2, 0, 2);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 0);
     EXPECT_EQ(removed, 2);
