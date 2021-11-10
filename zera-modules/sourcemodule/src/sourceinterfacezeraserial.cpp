@@ -56,6 +56,11 @@ void cSourceInterfaceZeraSerial::close()
     m_serialIO.close();
 }
 
+cSourceInterfaceZeraSerial::~cSourceInterfaceZeraSerial()
+{
+    close();
+}
+
 int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray dataSend, QByteArray *pDataReceive)
 {
     // set read timeout
