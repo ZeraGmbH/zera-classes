@@ -1,4 +1,5 @@
 #include "sourceinterface.h"
+#include "filedisappearwatcher.h"
 
 class cSourceInterfaceZeraSerialPrivate
 {
@@ -23,6 +24,8 @@ public:
     const TBlockEndCriteria defaultBlockEndCriteria;
     TBlockEndCriteria nextBlockEndCriteria;
     bool nextBlockEndCriteriaWasSet = false;
+
+    cFileDisappearWatcher m_disappearWatcher;
 };
 
 cSourceInterfaceZeraSerial::cSourceInterfaceZeraSerial(QObject *parent) :
@@ -30,6 +33,8 @@ cSourceInterfaceZeraSerial::cSourceInterfaceZeraSerial(QObject *parent) :
     d_ptr(new cSourceInterfaceZeraSerialPrivate())
 {
     connect(&m_serialIO, &QSerialPortAsyncBlock::ioFinished, this, &cSourceInterfaceZeraSerial::onIoFinished);
+    connect(&d_ptr->m_disappearWatcher, &cFileDisappearWatcher::sigFileRemoved,
+            this, &cSourceInterfaceZeraSerial::onDeviceFileGone, Qt::QueuedConnection);
     // TBD: we need a vein logger
     m_serialIO.enableDebugMessages(true);
 }
@@ -47,6 +52,9 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
         m_serialIO.setParity(QSerialPort::NoParity);
         m_serialIO.setStopBits(QSerialPort::TwoStop);
         open = m_serialIO.open(QIODevice::ReadWrite);
+        if(open) {
+            d_ptr->m_disappearWatcher.watchFile(strDeviceInfo);
+        }
     }
     return open;
 }
@@ -54,6 +62,7 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
 void cSourceInterfaceZeraSerial::close()
 {
     m_serialIO.close();
+    d_ptr->m_disappearWatcher.resetFiles();
 }
 
 cSourceInterfaceZeraSerial::~cSourceInterfaceZeraSerial()
@@ -107,4 +116,10 @@ void cSourceInterfaceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive,
 void cSourceInterfaceZeraSerial::onIoFinished()
 {
     emit ioFinishedToQueue(m_currentTransactionID);
+}
+
+void cSourceInterfaceZeraSerial::onDeviceFileGone(QString)
+{
+    close();
+    emit sigDisconnected();
 }

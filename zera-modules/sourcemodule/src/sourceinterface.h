@@ -107,6 +107,7 @@ protected:
     friend class cSourceInterfaceFactory;
 private slots:
     void onIoFinished();
+    void onDeviceFileGone(QString);
 private:
     cSourceInterfaceZeraSerialPrivate *d_ptr;
     Q_DECLARE_PRIVATE(cSourceInterfaceZeraSerial)
