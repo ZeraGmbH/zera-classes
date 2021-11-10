@@ -122,7 +122,6 @@ add_library(sourcemodule MODULE
 target_link_libraries(sourcemodule
     PUBLIC
     Qt5::Core
-    Qt5::Core
     Qt5::Network
     ${XERCES_LIBRARIES}
     VeinMeta::VfEvent
@@ -212,7 +211,6 @@ if(${GTest_FOUND})
         PUBLIC
         gtest
         gtest_main
-        Qt5::Core
         Qt5::Core
         Qt5::Network
         ${XERCES_LIBRARIES}
