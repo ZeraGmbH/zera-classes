@@ -40,7 +40,7 @@ void cSourceModuleProgram::generateInterface()
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished,
             this, &cSourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved,
-            this, &cSourceModuleProgram::onSourceDeviceRemoved);
+            this, &cSourceModuleProgram::onSourceDeviceRemoved, Qt::QueuedConnection);
 
     // common components
     QString key;
