@@ -32,10 +32,7 @@ static void testWithEvents(cSourceDeviceManager* devManager,
     bool postAddRequired = countAddPost > 0;
 
     QObject::connect(devManager, &cSourceDeviceManager::sigSourceScanFinished,
-                     [&](int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg) {
-        Q_UNUSED(slotNo)
-        Q_UNUSED(uuid)
-        Q_UNUSED(errMsg)
+                     [&](int, cSourceDevice* device, QUuid, QString) {
         if(device) {
             goodAdded++;
         }
@@ -48,8 +45,7 @@ static void testWithEvents(cSourceDeviceManager* devManager,
             }
         }
     });
-    QObject::connect(devManager, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo) {
-        Q_UNUSED(slotNo)
+    QObject::connect(devManager, &cSourceDeviceManager::sigSlotRemoved, [&](int) {
         removed++;
     });
 
@@ -131,5 +127,4 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD_AND_REMOVE) {
     EXPECT_EQ(devManager.activeSlotCount(), 0);
     EXPECT_EQ(devManager.demoCount(), 0);
 }
-
 
