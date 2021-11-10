@@ -19,6 +19,7 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
 {
     if(m_activeSlotCount >= m_sourceDeviceSlots.count()) {
         emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("No free slots"));
+        return;
     }
     bool started = false;
     QSharedPointer<cSourceInterfaceBase> interface =
