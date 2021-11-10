@@ -145,9 +145,8 @@ void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice*
                                                sourceAdded);
 }
 
-void cSourceModuleProgram::onSourceDeviceRemoved(int slotPosition)
+void cSourceModuleProgram::onSourceDeviceRemoved(int)
 {
-    Q_UNUSED(slotPosition)
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->activeSlotCount()));
     updateDemoCount();
 }

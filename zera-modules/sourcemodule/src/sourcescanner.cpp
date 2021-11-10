@@ -76,9 +76,8 @@ void cSourceScanner::sendReceiveSourceID()
     m_spIoInterface->sendAndReceive(dataSend, &m_receivedData);
 }
 
-QByteArray cSourceScanner::extractVersion(cSourceDevice::SourceType sourceType)
+QByteArray cSourceScanner::extractVersion(cSourceDevice::SourceType /* not used yet */)
 {
-    Q_UNUSED(sourceType) // be prepared for other algos
     int pos;
     for(pos=m_receivedData.length()-1; pos>=0; --pos) {
         QByteRef curr = m_receivedData[pos];
