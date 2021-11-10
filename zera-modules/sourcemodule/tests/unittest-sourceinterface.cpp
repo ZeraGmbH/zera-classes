@@ -3,13 +3,13 @@
 #include <QTimer>
 #include <QCoreApplication>
 
-static void ioAndTimeoutTest(
+static void testInterfaceEvents(
         cSourceInterfaceBase* interface,
         std::function<void()>& funcIoStart,
         std::function<void(int transactionId)>& funcIoFinished,
         std::function<void()>& funcTimeout)
 {
-    char const *p = "abc";
+    char const *p = "sourceinterface-test";
     char const **dummyParam = { &p };
     int argc = 1;
     QCoreApplication loop(argc, const_cast<char**>(dummyParam));
@@ -37,7 +37,7 @@ static void ioAndTimeoutTest(
     loop.exec();
 }
 
-// yeah we test ioAndTimeoutTest first
+// yeah we test testInterfaceEvents first
 TEST(TEST_IO_AND_TIMEOUT_TEST, START_CALLED) {
     bool startCalled = false;
     std::function<void()> funcIoStart = [&](){
@@ -46,7 +46,7 @@ TEST(TEST_IO_AND_TIMEOUT_TEST, START_CALLED) {
     std::function<void(int)> funcIoFinished = [](int){};
     std::function<void()> funcTimeout = [](){};
     cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
-    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    testInterfaceEvents(interface, funcIoStart, funcIoFinished, funcTimeout);
     delete interface;
     EXPECT_EQ(startCalled, true);
 }
@@ -59,7 +59,7 @@ TEST(TEST_IO_AND_TIMEOUT_TEST, TIMEOUT_CALLED) {
         timeout = true;
     };
     cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
-    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    testInterfaceEvents(interface, funcIoStart, funcIoFinished, funcTimeout);
     delete interface;
     EXPECT_EQ(timeout, true);
 }
@@ -95,7 +95,7 @@ TEST(TEST_SOURCEINTERFACE, IO_DEMO_FINISH) {
         finishCalled = true;
     };
     std::function<void()> funcTimeout = [](){};
-    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    testInterfaceEvents(interface, funcIoStart, funcIoFinished, funcTimeout);
     delete interface;
     EXPECT_EQ(finishCalled, true);
 }
@@ -112,7 +112,7 @@ TEST(TEST_SOURCEINTERFACE, IO_DEMO_FINISH_ID) {
         finishId = id;
     };
     std::function<void()> funcTimeout = [](){};
-    ioAndTimeoutTest(interface, funcIoStart, funcIoFinished, funcTimeout);
+    testInterfaceEvents(interface, funcIoStart, funcIoFinished, funcTimeout);
     delete interface;
     EXPECT_EQ(startId, finishId);
 }
