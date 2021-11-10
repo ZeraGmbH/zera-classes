@@ -9,10 +9,11 @@ static int goodAdded = 0;
 static int badAdded = 0;
 static int removed = 0;
 
-#define DeviceManager SOURCEMODULE::cSourceDeviceManager
-#define SourceDevice SOURCEMODULE::cSourceDevice
+using SOURCEMODULE::cSourceDeviceManager;
+using SOURCEMODULE::cSourceDevice;
 
-static void testWithEvents(DeviceManager* devManager, int countAddGood, int countAddBad, int countRemove, int countAddPost = 0)
+static void testWithEvents(cSourceDeviceManager* devManager,
+                           int countAddGood, int countAddBad, int countRemove, int countAddPost = 0)
 {
     goodAdded = 0;
     badAdded = 0;
@@ -30,7 +31,8 @@ static void testWithEvents(DeviceManager* devManager, int countAddGood, int coun
 
     bool postAddRequired = countAddPost > 0;
 
-    QObject::connect(devManager, &DeviceManager::sigSourceScanFinished, [&](int slotNo, SourceDevice* device, QUuid uuid, QString errMsg) {
+    QObject::connect(devManager, &cSourceDeviceManager::sigSourceScanFinished,
+                     [&](int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg) {
         Q_UNUSED(slotNo)
         Q_UNUSED(uuid)
         Q_UNUSED(errMsg)
@@ -46,7 +48,7 @@ static void testWithEvents(DeviceManager* devManager, int countAddGood, int coun
             }
         }
     });
-    QObject::connect(devManager, &DeviceManager::sigSlotRemoved, [&](int slotNo) {
+    QObject::connect(devManager, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo) {
         Q_UNUSED(slotNo)
         removed++;
     });
@@ -79,7 +81,7 @@ static void testWithEvents(DeviceManager* devManager, int countAddGood, int coun
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD) {
-    DeviceManager devManager(2);
+    cSourceDeviceManager devManager(2);
     testWithEvents(&devManager, 2, 0, 0);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 0);
@@ -89,7 +91,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD) {
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_BASE_BAD) {
-    DeviceManager devManager(2);
+    cSourceDeviceManager devManager(2);
     testWithEvents(&devManager, 0, 2, 0);
     EXPECT_EQ(goodAdded, 0);
     EXPECT_EQ(badAdded, 2);
@@ -99,7 +101,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_BASE_BAD) {
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS) {
-    DeviceManager devManager(2);
+    cSourceDeviceManager devManager(2);
     testWithEvents(&devManager, 3, 0, 0);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 1);
@@ -112,7 +114,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS_POST) {
     // We have two checks for slots full: At entry and after source was created
     // CREATE_MORE_THAN_SLOTS sends out all scans and the checks are performed
     // after creation. Here we check the entry by:
-    DeviceManager devManager(2);
+    cSourceDeviceManager devManager(2);
     testWithEvents(&devManager, 2, 0, 0, 2);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 2);
@@ -121,7 +123,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS_POST) {
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD_AND_REMOVE) {
-    DeviceManager devManager(2);
+    cSourceDeviceManager devManager(2);
     testWithEvents(&devManager, 2, 0, 2);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 0);
