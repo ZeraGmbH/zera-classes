@@ -8,6 +8,7 @@
 #include "sourcedevice.h"
 #include "sourceveininterface.h"
 #include "sourceinterface.h"
+#include "sourceiotransactiongenerator.h"
 
 namespace SOURCEMODULE
 {
@@ -70,6 +71,9 @@ void cSourceDevice::newVeinParamStatus(QVariant paramState)
     m_requestedParamState = paramState.toJsonObject();
     m_deviceStatus.setBusy(true);
     m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
+    // transactionList is not necessary for demo but let's create it here for
+    // debug purpose
+    tSourceIoTransactionList transactionList = m_ioTransactionGenerator.generateIoTransactionList(m_requestedParamState);
     if(m_type == SOURCE_DEMO) {
         if(m_requestedParamState.value("on").toBool()) {
             m_demoOnOffDeleayTimer.start(3000);
@@ -77,6 +81,9 @@ void cSourceDevice::newVeinParamStatus(QVariant paramState)
         else {
             m_demoOnOffDeleayTimer.start(1000);
         }
+    }
+    else {
+        startActions(transactionList);
     }
 }
 
@@ -106,10 +113,15 @@ void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
     m_veinInterface = veinInterface;
     m_veinInterface->veinDeviceInfo()->setValue(deviceParamStructure());
     m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
-    m_veinInterface->veinDeviceParameter()->setValue(deviceParamState());
+    m_veinInterface->veinDeviceParameter()->setValue(initialDeviceParamState());
     m_veinInterface->veinDeviceParameterValidator()->setJSonParameterStructure(deviceParamStructure());
 
     connect(m_veinInterface->veinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::newVeinParamStatus);
+}
+
+void cSourceDevice::startActions(tSourceIoTransactionList transactionList)
+{
+
 }
 
 const QJsonObject cSourceDevice::deviceParamStructure()
@@ -126,12 +138,13 @@ const QJsonObject cSourceDevice::deviceParamStructure()
             // structures are tested at build time so we can trust them
             jsonParamsStructure.loadStructure(jsonDeviceInfoStructure);
             m_jsonParamsStructure = jsonParamsStructure.jsonStructure();
+            m_ioTransactionGenerator.setParamsStructure(m_jsonParamsStructure);
         }
     }
     return m_jsonParamsStructure;
 }
 
-const QJsonObject cSourceDevice::deviceParamState()
+const QJsonObject cSourceDevice::initialDeviceParamState()
 {
     if(m_currParamState.isEmpty()) {
         cZeraJsonParamsState jsonParamsState;

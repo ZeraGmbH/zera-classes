@@ -3,7 +3,7 @@
 
 // Check all actions are generated
 TEST(TEST_SOURCEACTIONS, ACTIONS_COMPLETE) {
-    tSourceActionMap actionMap = cSourceActionGenerator::GenerateLoadActionMap(QJsonObject(), QJsonObject());
+    tSourceActionTypeList actionMap = cSourceActionGenerator::GenerateLoadActionList(QJsonObject());
     EXPECT_EQ(actionMap.count(), cSourceActionTypes::getLoadActionTypeCount());
 }
 
@@ -12,49 +12,70 @@ TEST(TEST_SOURCEACTIONS, ACTIONS_COMPLETE) {
 TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
     QJsonObject offParamState;
     offParamState.insert("on", false);
-    tSourceActionMap actionMap = cSourceActionGenerator::GenerateLoadActionMap(QJsonObject(), offParamState);
+    tSourceActionTypeList actionMap = cSourceActionGenerator::GenerateLoadActionList(offParamState);
     EXPECT_EQ(actionMap.count(), 1);
     EXPECT_EQ(actionMap.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_ACTIONS_COMPLETE) {
-    tSourceActionMap periodicActionMap = cSourceActionGenerator::GeneratePeriodicActionMap(QJsonObject());
+    tSourceActionTypeList periodicActionMap = cSourceActionGenerator::GeneratePeriodicActionList();
     EXPECT_EQ(periodicActionMap.count(), cSourceActionTypes::getPeriodicActionTypeCount());
 }
 
+typedef QList<int> tTestList;
+
 TEST(TEST_SOURCEACTIONS, SORT_KEEP_SIZE) {
-    tSourceActionMap actionMap;
-    cSourceAction dummyAction;
-    // no cSourceActionGenerator dependency -> create manually
-    actionMap[cSourceActionTypes::SET_RMS] = dummyAction;
-    actionMap[cSourceActionTypes::SET_ANGLE] = dummyAction;
-    actionMap[cSourceActionTypes::SET_FREQUENCY] = dummyAction;
-    tSourceActionList actionList = cSourceActionSorter::SortActionMap(actionMap, QList<cSourceActionTypes::ActionTypes>());
-    EXPECT_EQ(actionMap.count(), actionList.count());
+    tTestList actionList;
+    actionList.append(1);
+    actionList.append(2);
+    actionList.append(3);
+    actionList.append(4);
+
+    tTestList actionListSorted = listSortCustom(actionList, tTestList(), true);
+    EXPECT_EQ(actionList.count(), actionListSorted.count());
 }
 
 TEST(TEST_SOURCEACTIONS, SORT_TO_FRONT) {
-    tSourceActionMap actionMap;
-    cSourceAction dummyAction;
-    actionMap[cSourceActionTypes::SET_RMS] = dummyAction;
-    actionMap[cSourceActionTypes::SET_ANGLE] = dummyAction;
-    actionMap[cSourceActionTypes::SET_FREQUENCY] = dummyAction;
-    tSourceActionList actionList = cSourceActionSorter::SortActionMap(
-                actionMap, QList<cSourceActionTypes::ActionTypes>() << cSourceActionTypes::SET_FREQUENCY);
-    EXPECT_EQ(actionList.count() == 3 && actionList[0].actionType == cSourceActionTypes::SET_FREQUENCY, true);
-    EXPECT_EQ(actionList.count() == 3 && actionList[1].actionType == cSourceActionTypes::SET_RMS, true);
-    EXPECT_EQ(actionList.count() == 3 && actionList[2].actionType == cSourceActionTypes::SET_ANGLE, true);
+    tTestList actionList;
+    actionList.append(1);
+    actionList.append(2);
+    actionList.append(3);
+    actionList.append(4);
+    int entryCount = actionList.count();
+
+    tTestList actionListSorted = listSortCustom(actionList, tTestList() << 3 << 4, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 3, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 4, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 1, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[3] == 2, true);
+}
+
+TEST(TEST_SOURCEACTIONS, SORT_TO_BACK) {
+    tTestList actionList;
+    actionList.append(1);
+    actionList.append(2);
+    actionList.append(3);
+    actionList.append(4);
+    int entryCount = actionList.count();
+
+    tTestList actionListSorted = listSortCustom(actionList, tTestList() << 1 << 2, false);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 3, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 4, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 1, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[3] == 2, true);
 }
 
 TEST(TEST_SOURCEACTIONS, SORT_KEEP_SEQUENCE) {
-    cSourceAction dummyAction;
-    tSourceActionMap actionMap;
-    actionMap[cSourceActionTypes::SET_RMS] = dummyAction;
-    actionMap[cSourceActionTypes::SET_ANGLE] = dummyAction;
-    actionMap[cSourceActionTypes::SET_FREQUENCY] = dummyAction;
-    tSourceActionList actionList = cSourceActionSorter::SortActionMap(
-                actionMap, QList<cSourceActionTypes::ActionTypes>());
-    EXPECT_EQ(actionList.count() == 3 && actionList[0].actionType == cSourceActionTypes::SET_RMS, true);
-    EXPECT_EQ(actionList.count() == 3 && actionList[1].actionType == cSourceActionTypes::SET_ANGLE, true);
-    EXPECT_EQ(actionList.count() == 3 && actionList[2].actionType == cSourceActionTypes::SET_FREQUENCY, true);
+    tTestList actionList;
+    actionList.append(1);
+    actionList.append(2);
+    actionList.append(3);
+    actionList.append(4);
+    int entryCount = actionList.count();
+
+    tTestList actionListSorted = listSortCustom(actionList, tTestList(), true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 1, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 2, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 3, true);
+    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[3] == 4, true);
 }

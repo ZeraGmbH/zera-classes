@@ -6,6 +6,7 @@
 #include <QVariant>
 #include <QSharedPointer>
 #include "sourcedevicestatus.h"
+#include "sourceiotransactiongenerator.h"
 
 class cSourceInterfaceBase;
 
@@ -39,8 +40,8 @@ public:
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
-
-    void saveState();
+    void startActions(tSourceIoTransactionList transactionList);
+    void saveState(); // persistency
 
 signals:
     void sigClosed(cSourceDevice* sourceDevice);
@@ -55,7 +56,7 @@ private slots:
 private:
     QString jsonDeviceStructureFileName();
     const QJsonObject deviceParamStructure();
-    const QJsonObject deviceParamState();
+    const QJsonObject initialDeviceParamState();
     QString jsonStateFileName();
 
     QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
@@ -63,6 +64,8 @@ private:
     QJsonObject m_jsonParamsStructure;
     QJsonObject m_currParamState;
     QJsonObject m_requestedParamState;
+
+    cSourceIoTransactionGenerator m_ioTransactionGenerator;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
