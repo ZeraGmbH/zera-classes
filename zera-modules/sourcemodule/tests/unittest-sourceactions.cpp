@@ -7,6 +7,16 @@ TEST(TEST_SOURCEACTIONS, ACTIONS_COMPLETE) {
     EXPECT_EQ(actionMap.count(), cSourceActionTypes::getLoadActionTypeCount());
 }
 
+// Check if a switch off just generates switch phases
+// We do this test because we want to be warned in case we change behaviour
+TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
+    QJsonObject offParamState;
+    offParamState.insert("on", false);
+    tSourceActionMap actionMap = cSourceActionGenerator::GenerateLoadActionMap(QJsonObject(), offParamState);
+    EXPECT_EQ(actionMap.count(), 1);
+    EXPECT_EQ(actionMap.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
+}
+
 TEST(TEST_SOURCEACTIONS, PERIODIC_ACTIONS_COMPLETE) {
     tSourceActionMap periodicActionMap = cSourceActionGenerator::GeneratePeriodicActionMap(QJsonObject());
     EXPECT_EQ(periodicActionMap.count(), cSourceActionTypes::getPeriodicActionTypeCount());
