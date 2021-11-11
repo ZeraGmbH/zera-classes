@@ -13,9 +13,16 @@ cSourceAction::cSourceAction(QJsonObject jsonSourceParamStructure, QJsonObject j
 tSourceActionMap cSourceActionGenerator::GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState)
 {
     tSourceActionMap map;
-    for(int type=0; type<cSourceActionTypes::getLoadActionTypeCount(); ++type) {
+    // 1st guess: switch off just switch phases
+    if(jsonSourceParamState.contains("on") && !jsonSourceParamState["on"].toBool()) {
         cSourceAction action(jsonSourceParamStructure, jsonSourceParamState);
-        map.insert(cSourceActionTypes::ActionTypes(type), action);
+        map.insert(cSourceActionTypes::ActionTypes::SWITCH_PHASES, action);
+    }
+    else {
+        for(int type=0; type<cSourceActionTypes::getLoadActionTypeCount(); ++type) {
+            cSourceAction action(jsonSourceParamStructure, jsonSourceParamState);
+            map.insert(cSourceActionTypes::ActionTypes(type), action);
+        }
     }
     return map;
 }
