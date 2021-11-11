@@ -1,6 +1,7 @@
 {
     "Name": "MT507",
     "HasReferenceMeter": false,
+    "IoPrefix": "S",
 
     "zj_params": {
         "on": {

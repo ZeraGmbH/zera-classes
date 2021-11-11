@@ -1,10 +1,8 @@
 {
     "Name": "MT400-20",
-    "UPhaseMax": 0,
-    "IPhaseMax": 3,
     "HasReferenceMeter": false,
-    "Protocol": "ZERA-MT400",
-    
+    "IoPrefix": "S",
+
     "zj_params": {
         "on": {
             "type": "bool",

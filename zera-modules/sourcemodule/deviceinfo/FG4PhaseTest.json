@@ -1,10 +1,8 @@
 {
     "Name": "FG4PhaseDemo",
-    "UPhaseMax": 4,
-    "IPhaseMax": 4,
     "HasReferenceMeter": true,
-    "Protocol": "JustForTest",
-    
+    "IoPrefix": "",
+
     "zj_params": {
         "on": {
             "type": "bool",
