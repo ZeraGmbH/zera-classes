@@ -1,7 +1,6 @@
 #ifndef CSOURCEACTION_H
 #define CSOURCEACTION_H
 
-#include <QMap>
 #include <QList>
 #include <QJsonObject>
 
@@ -19,6 +18,7 @@ public:
 
         PERIODIC_FIRST = LOAD_ACTION_COUNT,
         QUERY_STATUS = PERIODIC_FIRST,
+        QUERY_ACTUAL,
         PERIODIC_LAST
     };
     static int getLoadActionTypeCount() { return LOAD_ACTION_COUNT; }
@@ -26,38 +26,34 @@ public:
 };
 
 
-class cSourceAction
-{
-public:
-    cSourceAction();
-    cSourceAction(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
-private:
-    QJsonObject m_jsonSourceParamStructure;
-    QJsonObject m_jsonSourceParamState;
-};
-
-
-typedef QMap<cSourceActionTypes::ActionTypes, cSourceAction> tSourceActionMap;
+typedef QList<cSourceActionTypes::ActionTypes> tSourceActionTypeList;
 
 class cSourceActionGenerator
 {
 public:
-    static tSourceActionMap GenerateLoadActionMap(const QJsonObject jsonSourceParamStructure, const QJsonObject jsonSourceParamState);
-    static tSourceActionMap GeneratePeriodicActionMap(const QJsonObject jsonSourceParamStructure);
+    static tSourceActionTypeList GenerateLoadActionList(const QJsonObject jsonSourceParamState);
+    static tSourceActionTypeList GeneratePeriodicActionList();
 };
 
 
-struct tSourceListEntry {
-    cSourceActionTypes::ActionTypes actionType;
-    cSourceAction action;
-};
-
-typedef QList<tSourceListEntry> tSourceActionList;
-
-class cSourceActionSorter
+template<class TListForSort>
+TListForSort listSortCustom(TListForSort sourceList, const TListForSort sortList, bool toFront)
 {
-public:
-    static tSourceActionList SortActionMap(tSourceActionMap sourceActionMap, const QList<cSourceActionTypes::ActionTypes> sortToFrontList);
-};
+    TListForSort sortedList;
+    for(auto sortEntry : sortList) { // apply sortList
+        int sortEntryIndex = sourceList.indexOf(sortEntry);
+        if(sortEntryIndex >= 0) {
+            sortedList.append(sortEntry);
+            sourceList.removeAt(sortEntryIndex);
+        }
+    }
+    if(toFront) {
+        sortedList = sortedList + sourceList;
+    }
+    else {
+        sortedList = sourceList + sortedList;
+    }
+    return sortedList;
+}
 
 #endif // CSOURCEACTION_H
