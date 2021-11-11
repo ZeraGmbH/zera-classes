@@ -1,6 +1,7 @@
 {
     "Name": "MT3000",
     "HasReferenceMeter": false,
+    "IoPrefix": "S",
 
     "zj_params": {
         "on": {
