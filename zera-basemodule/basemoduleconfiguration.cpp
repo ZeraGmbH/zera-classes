@@ -1,5 +1,4 @@
 #include <xmlconfigreader.h>
-
 #include "basemoduleconfiguration.h"
 
 cBaseModuleConfiguration::cBaseModuleConfiguration()

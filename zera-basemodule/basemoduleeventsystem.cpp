@@ -1,6 +1,5 @@
 #include <ve_commandevent.h>
 #include <vcmp_componentdata.h>
-
 #include "basemoduleeventsystem.h"
 #include "veinmodulecomponentinput.h"
 
