@@ -3,7 +3,6 @@
 #include <QFinalState>
 #include <QString>
 #include <QFile>
-#include <virtualmodule.h>
 #include <QSet>
 #include <QByteArray>
 #include <QJsonDocument>
@@ -14,6 +13,8 @@
 #include <vcmp_entitydata.h>
 #include <vcmp_componentdata.h>
 #include <ve_eventsystem.h>
+#include <virtualmodule.h>
+
 #include "basemodule.h"
 #include "debug.h"
 #include "basemoduleconfiguration.h"

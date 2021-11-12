@@ -1,6 +1,5 @@
 #include <QEvent>
 #include <QHash>
-
 #include <vcmp_componentdata.h>
 #include <vcmp_errordata.h>
 #include <vcmp_remoteproceduredata.h>
