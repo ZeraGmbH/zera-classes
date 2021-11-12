@@ -17,19 +17,16 @@ public:
     explicit cSourceVeinInterface(QObject *parent = nullptr);
 
     // getters
-    cVeinModuleActvalue *veinDeviceInfo();
-    cVeinModuleActvalue *veinDeviceState();
-    // vein setter+validator
-    cVeinModuleParameter *veinDeviceParameter();
-    cJsonParamValidator *veinDeviceParameterValidator();
+    cVeinModuleActvalue *getVeinDeviceInfo();
+    cVeinModuleActvalue *getVeinDeviceState();
+    cVeinModuleParameter *getVeinDeviceParameter();
+    cJsonParamValidator *getVeinDeviceParameterValidator();
 
     // setters
-    // vein getters
-    void setVeinDeviceInfo(cVeinModuleActvalue *veinDeviceInfo);
-    void setVeinDeviceState(cVeinModuleActvalue* veinDeviceState);
-    // vein setter+validator
-    void setVeinDeviceParameter(cVeinModuleParameter* veinDeviceParameter);
-    void setVeinDeviceParameterValidator(cJsonParamValidator* veinDeviceParameterValidator);
+    void setVeinDeviceInfo(cVeinModuleActvalue *getVeinDeviceInfo);
+    void setVeinDeviceState(cVeinModuleActvalue* getVeinDeviceState);
+    void setVeinDeviceParameter(cVeinModuleParameter* getVeinDeviceParameter);
+    void setVeinDeviceParameterValidator(cJsonParamValidator* getVeinDeviceParameterValidator);
 signals:
 
 private:

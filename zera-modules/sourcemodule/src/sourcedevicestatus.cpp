@@ -11,7 +11,7 @@ cSourceDeviceStatus::cSourceDeviceStatus()
     reset();
 }
 
-const QJsonObject &cSourceDeviceStatus::jsonStatus()
+const QJsonObject &cSourceDeviceStatus::getJsonStatus()
 {
     return m_jsonStatus;
 }

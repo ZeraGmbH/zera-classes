@@ -31,7 +31,7 @@ cSourceInterfaceBase *cSourceInterfaceFactory::createSourceInterface(SourceInter
 
 cSourceInterfaceBase::cSourceInterfaceBase(QObject *parent) : QObject(parent)
 {
-    connect(this, &cSourceInterfaceBase::ioFinishedToQueue, this, &cSourceInterfaceBase::ioFinished, Qt::QueuedConnection);
+    connect(this, &cSourceInterfaceBase::sigIoFinishedToQueue, this, &cSourceInterfaceBase::sigIoFinished, Qt::QueuedConnection);
 }
 
 cSourceInterfaceBase::~cSourceInterfaceBase()
@@ -54,7 +54,7 @@ cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBa
 int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
 {
     int transactionID = m_transactionIDGenerator.nextTransactionID();
-    emit ioFinishedToQueue(transactionID);
+    emit sigIoFinishedToQueue(transactionID);
     return transactionID;
 }
 

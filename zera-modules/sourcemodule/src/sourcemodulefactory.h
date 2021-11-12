@@ -27,10 +27,10 @@ class SourceModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     SourceModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0);
-    void destroyModule(ZeraModules::VirtualModule *module); //override;
-    QList<ZeraModules::VirtualModule *> listModules() const; //override;
-    QString getFactoryName() const; //override;
+    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0) override;
+    void destroyModule(ZeraModules::VirtualModule *module) override;
+    QList<ZeraModules::VirtualModule *> listModules() const override;;
+    QString getFactoryName() const override;
 
 private:
   QList<ZeraModules::VirtualModule*> m_ModuleList; // our list of modules

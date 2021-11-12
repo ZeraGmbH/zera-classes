@@ -37,7 +37,7 @@ public:
 
 // ------------------------- base interface --------------------------
 /**
- * @brief cSourceInterfaceBase: Interface + make sure ioFinished is queued
+ * @brief cSourceInterfaceBase: Interface + make sure sigIoFinished is queued
  */
 class cSourceInterfaceBase : public QObject
 {
@@ -56,8 +56,8 @@ public:
     virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive);
 signals:
     void sigDisconnected();
-    void ioFinished(int transactionID); // users connect this signal
-    void ioFinishedToQueue(int transactionID); // sub classes emit this to ensure queue
+    void sigIoFinished(int transactionID); // users connect this signal
+    void sigIoFinishedToQueue(int transactionID); // sub classes emit this to ensure queue
 
 protected:
     explicit cSourceInterfaceBase(QObject *parent = nullptr);
@@ -69,7 +69,7 @@ protected:
 
 // ------------------------- demo interface --------------------------
 /**
- * @brief cSourceInterfaceDemo: Emit ioFinished
+ * @brief cSourceInterfaceDemo: Emit sigIoFinished
  */
 class cSourceInterfaceDemo : public cSourceInterfaceBase
 {

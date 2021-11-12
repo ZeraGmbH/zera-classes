@@ -7,44 +7,44 @@ cSourceVeinInterface::cSourceVeinInterface(QObject *parent) : QObject(parent)
 {
 }
 
-cVeinModuleActvalue *cSourceVeinInterface::veinDeviceInfo()
+cVeinModuleActvalue *cSourceVeinInterface::getVeinDeviceInfo()
 {
     return m_veinDeviceInfo;
 }
 
-cVeinModuleActvalue *cSourceVeinInterface::veinDeviceState()
+cVeinModuleActvalue *cSourceVeinInterface::getVeinDeviceState()
 {
     return m_veinDeviceState;
 }
 
-cVeinModuleParameter *cSourceVeinInterface::veinDeviceParameter()
+cVeinModuleParameter *cSourceVeinInterface::getVeinDeviceParameter()
 {
     return m_veinDeviceParameter;
 }
 
-cJsonParamValidator *cSourceVeinInterface::veinDeviceParameterValidator()
+cJsonParamValidator *cSourceVeinInterface::getVeinDeviceParameterValidator()
 {
     return m_veinDeviceParameterValidator;
 }
 
-void cSourceVeinInterface::setVeinDeviceInfo(cVeinModuleActvalue *veinDeviceInfo)
+void cSourceVeinInterface::setVeinDeviceInfo(cVeinModuleActvalue *getVeinDeviceInfo)
 {
-    m_veinDeviceInfo = veinDeviceInfo;
+    m_veinDeviceInfo = getVeinDeviceInfo;
 }
 
-void cSourceVeinInterface::setVeinDeviceState(cVeinModuleActvalue *veinDeviceState)
+void cSourceVeinInterface::setVeinDeviceState(cVeinModuleActvalue *getVeinDeviceState)
 {
-    m_veinDeviceState = veinDeviceState;
+    m_veinDeviceState = getVeinDeviceState;
 }
 
-void cSourceVeinInterface::setVeinDeviceParameter(cVeinModuleParameter *veinDeviceParameter)
+void cSourceVeinInterface::setVeinDeviceParameter(cVeinModuleParameter *getVeinDeviceParameter)
 {
-    m_veinDeviceParameter = veinDeviceParameter;
+    m_veinDeviceParameter = getVeinDeviceParameter;
 }
 
-void cSourceVeinInterface::setVeinDeviceParameterValidator(cJsonParamValidator *veinDeviceParameterValidator)
+void cSourceVeinInterface::setVeinDeviceParameterValidator(cJsonParamValidator *getVeinDeviceParameterValidator)
 {
-    m_veinDeviceParameterValidator = veinDeviceParameterValidator;
+    m_veinDeviceParameterValidator = getVeinDeviceParameterValidator;
 }
 
 } // namespace SOURCEMODULE

@@ -3,7 +3,7 @@
 
 // Check all actions are generated
 TEST(TEST_SOURCEACTIONS, ACTIONS_COMPLETE) {
-    tSourceActionTypeList actionMap = cSourceActionGenerator::GenerateLoadActionList(QJsonObject());
+    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(QJsonObject());
     EXPECT_EQ(actionMap.count(), cSourceActionTypes::getLoadActionTypeCount());
 }
 
@@ -12,13 +12,13 @@ TEST(TEST_SOURCEACTIONS, ACTIONS_COMPLETE) {
 TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
     QJsonObject offParamState;
     offParamState.insert("on", false);
-    tSourceActionTypeList actionMap = cSourceActionGenerator::GenerateLoadActionList(offParamState);
+    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(offParamState);
     EXPECT_EQ(actionMap.count(), 1);
     EXPECT_EQ(actionMap.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_ACTIONS_COMPLETE) {
-    tSourceActionTypeList periodicActionMap = cSourceActionGenerator::GeneratePeriodicActionList();
+    tSourceActionTypeList periodicActionMap = cSourceActionGenerator::generatePeriodicActionList();
     EXPECT_EQ(periodicActionMap.count(), cSourceActionTypes::getPeriodicActionTypeCount());
 }
 
@@ -31,7 +31,7 @@ TEST(TEST_SOURCEACTIONS, SORT_KEEP_SIZE) {
     actionList.append(3);
     actionList.append(4);
 
-    tTestList actionListSorted = listSortCustom(actionList, tTestList(), true);
+    tTestList actionListSorted = sortListCustom(actionList, tTestList(), true);
     EXPECT_EQ(actionList.count(), actionListSorted.count());
 }
 
@@ -43,7 +43,7 @@ TEST(TEST_SOURCEACTIONS, SORT_TO_FRONT) {
     actionList.append(4);
     int entryCount = actionList.count();
 
-    tTestList actionListSorted = listSortCustom(actionList, tTestList() << 3 << 4, true);
+    tTestList actionListSorted = sortListCustom(actionList, tTestList() << 3 << 4, true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 3, true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 4, true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 1, true);
@@ -58,7 +58,7 @@ TEST(TEST_SOURCEACTIONS, SORT_TO_BACK) {
     actionList.append(4);
     int entryCount = actionList.count();
 
-    tTestList actionListSorted = listSortCustom(actionList, tTestList() << 1 << 2, false);
+    tTestList actionListSorted = sortListCustom(actionList, tTestList() << 1 << 2, false);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 3, true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 4, true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 1, true);
@@ -73,7 +73,7 @@ TEST(TEST_SOURCEACTIONS, SORT_KEEP_SEQUENCE) {
     actionList.append(4);
     int entryCount = actionList.count();
 
-    tTestList actionListSorted = listSortCustom(actionList, tTestList(), true);
+    tTestList actionListSorted = sortListCustom(actionList, tTestList(), true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 1, true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 2, true);
     EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 3, true);

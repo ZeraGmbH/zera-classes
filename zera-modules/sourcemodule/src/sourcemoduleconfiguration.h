@@ -12,19 +12,19 @@
 namespace SOURCEMODULE
 {
 
-// Sourcemoduleconfiguration holds configuration data as well as parameter
+// Sourcemoduleconfiguration holds module configuration
 
 class cSourceModuleConfiguration: public cBaseModuleConfiguration
 {
     Q_OBJECT
 public:
     cSourceModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
+    virtual void setConfiguration(QByteArray xmlString) override;
+    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     configuration* getConfigXMLWrapper();
 
 protected slots: // for the sake of cXMLSettings - we introduced m_xsdGeneratedConfig
-    virtual void configXMLInfo(QString key) {};
+    virtual void configXMLInfo(QString) override {};
 
 private:
     std::unique_ptr<configuration> m_xsdGeneratedConfig; // configuration

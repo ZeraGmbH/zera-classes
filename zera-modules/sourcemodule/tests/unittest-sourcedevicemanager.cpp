@@ -39,7 +39,7 @@ static void testDeviceManagerEvents(cSourceDeviceManager* devManager,
         else {
             badAdded++;
         }
-        for(int slotNo=0; slotNo<devManager->slotCount() && countRemove; slotNo++) {
+        for(int slotNo=0; slotNo<devManager->getSlotCount() && countRemove; slotNo++) {
             if(devManager->removeSource(slotNo)) {
                 countRemove--;
             }
@@ -82,8 +82,8 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD) {
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 0);
     EXPECT_EQ(removed, 0);
-    EXPECT_EQ(devManager.activeSlotCount(), 2);
-    EXPECT_EQ(devManager.demoCount(), 2);
+    EXPECT_EQ(devManager.getActiveSlotCount(), 2);
+    EXPECT_EQ(devManager.getDemoCount(), 2);
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_BASE_BAD) {
@@ -92,8 +92,8 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_BASE_BAD) {
     EXPECT_EQ(goodAdded, 0);
     EXPECT_EQ(badAdded, 2);
     EXPECT_EQ(removed, 0);
-    EXPECT_EQ(devManager.activeSlotCount(), 0);
-    EXPECT_EQ(devManager.demoCount(), 0);
+    EXPECT_EQ(devManager.getActiveSlotCount(), 0);
+    EXPECT_EQ(devManager.getDemoCount(), 0);
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS) {
@@ -102,8 +102,8 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS) {
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 1);
     EXPECT_EQ(removed, 0);
-    EXPECT_EQ(devManager.activeSlotCount(), 2);
-    EXPECT_EQ(devManager.demoCount(), 2);
+    EXPECT_EQ(devManager.getActiveSlotCount(), 2);
+    EXPECT_EQ(devManager.getDemoCount(), 2);
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS_POST) {
@@ -114,8 +114,8 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_MORE_THAN_SLOTS_POST) {
     testDeviceManagerEvents(&devManager, 2, 0, 0, 2);
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 2);
-    EXPECT_EQ(devManager.activeSlotCount(), 2);
-    EXPECT_EQ(devManager.demoCount(), 2);
+    EXPECT_EQ(devManager.getActiveSlotCount(), 2);
+    EXPECT_EQ(devManager.getDemoCount(), 2);
 }
 
 TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD_AND_REMOVE) {
@@ -124,7 +124,7 @@ TEST(TEST_SOURCE_DEVICE_MANAGER, CREATE_DEMO_GOOD_AND_REMOVE) {
     EXPECT_EQ(goodAdded, 2);
     EXPECT_EQ(badAdded, 0);
     EXPECT_EQ(removed, 2);
-    EXPECT_EQ(devManager.activeSlotCount(), 0);
-    EXPECT_EQ(devManager.demoCount(), 0);
+    EXPECT_EQ(devManager.getActiveSlotCount(), 0);
+    EXPECT_EQ(devManager.getDemoCount(), 0);
 }
 

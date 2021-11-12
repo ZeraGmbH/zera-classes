@@ -41,7 +41,7 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sou
             nextDemoType++;
         }
         m_demoType = sDemoTypeCounter = cSourceDevice::SourceType(nextDemoType);
-        connect(&m_demoOnOffDeleayTimer, &QTimer::timeout, this, &cSourceDevice::timeoutDemoTransaction);
+        connect(&m_demoOnOffDeleayTimer, &QTimer::timeout, this, &cSourceDevice::onTimeoutDemoTransaction);
     }
 }
 
@@ -66,11 +66,11 @@ void cSourceDevice::close()
     }
 }
 
-void cSourceDevice::newVeinParamStatus(QVariant paramState)
+void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
     m_requestedParamState = paramState.toJsonObject();
     m_deviceStatus.setBusy(true);
-    m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
+    m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
     // transactionList is not necessary for demo but let's create it here for
     // debug purpose
     tSourceIoTransactionList transactionList = m_ioTransactionGenerator.generateIoTransactionList(m_requestedParamState);
@@ -87,18 +87,18 @@ void cSourceDevice::newVeinParamStatus(QVariant paramState)
     }
 }
 
-void cSourceDevice::timeoutDemoTransaction()
+void cSourceDevice::onTimeoutDemoTransaction()
 {
     // TODO introduce common place for code below for demo and real transactions
     m_deviceStatus.setBusy(false);
     m_currParamState = m_requestedParamState;
     saveState();
     // TODO add some random warnings and erros
-    m_veinInterface->veinDeviceParameter()->setValue(m_currParamState);
-    m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
+    m_veinInterface->getVeinDeviceParameter()->setValue(m_currParamState);
+    m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
 }
 
-QSharedPointer<cSourceInterfaceBase> cSourceDevice::ioInterface()
+QSharedPointer<cSourceInterfaceBase> cSourceDevice::getIoInterface()
 {
     return m_spIoInterface;
 }
@@ -111,12 +111,12 @@ bool cSourceDevice::isDemo()
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
-    m_veinInterface->veinDeviceInfo()->setValue(deviceParamStructure());
-    m_veinInterface->veinDeviceState()->setValue(m_deviceStatus.jsonStatus());
-    m_veinInterface->veinDeviceParameter()->setValue(initialDeviceParamState());
-    m_veinInterface->veinDeviceParameterValidator()->setJSonParameterStructure(deviceParamStructure());
+    m_veinInterface->getVeinDeviceInfo()->setValue(getOrLoadDeviceParamStructure());
+    m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
+    m_veinInterface->getVeinDeviceParameter()->setValue(loadDeviceParamState());
+    m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(getOrLoadDeviceParamStructure());
 
-    connect(m_veinInterface->veinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::newVeinParamStatus);
+    connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
 }
 
 void cSourceDevice::startActions(tSourceIoTransactionList transactionList)
@@ -124,10 +124,10 @@ void cSourceDevice::startActions(tSourceIoTransactionList transactionList)
 
 }
 
-const QJsonObject cSourceDevice::deviceParamStructure()
+const QJsonObject cSourceDevice::getOrLoadDeviceParamStructure()
 {
     if(m_jsonParamsStructure.isEmpty()) {
-        QString deviceInfoFileName = QStringLiteral("://deviceinfo/") + jsonDeviceStructureFileName();
+        QString deviceInfoFileName = QStringLiteral("://deviceinfo/") + getDeviceStructureFileName();
         QFile deviceInfoFile(deviceInfoFileName);
         if(deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
             QByteArray jsondeviceInfoData = deviceInfoFile.readAll();
@@ -144,13 +144,13 @@ const QJsonObject cSourceDevice::deviceParamStructure()
     return m_jsonParamsStructure;
 }
 
-const QJsonObject cSourceDevice::initialDeviceParamState()
+const QJsonObject cSourceDevice::loadDeviceParamState()
 {
     if(m_currParamState.isEmpty()) {
         cZeraJsonParamsState jsonParamsState;
-        jsonParamsState.setStructure(deviceParamStructure());
+        jsonParamsState.setStructure(getOrLoadDeviceParamStructure());
         // try to load persistent state file and validate it
-        QFile deviceStateFile(jsonStateFileName());
+        QFile deviceStateFile(getStateFileName());
         if(deviceStateFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
             QByteArray jsonStateData = deviceStateFile.readAll();
             deviceStateFile.close();
@@ -172,9 +172,9 @@ const QJsonObject cSourceDevice::initialDeviceParamState()
     return m_currParamState;
 }
 
-QString cSourceDevice::jsonStateFileName()
+QString cSourceDevice::getStateFileName()
 {
-    QString fileName = jsonDeviceStructureFileName();
+    QString fileName = getDeviceStructureFileName();
     QString statePath(ZC_DEV_STATE_PATH);
     if(!statePath.endsWith("/")) {
         statePath += "/";
@@ -187,14 +187,14 @@ QString cSourceDevice::jsonStateFileName()
 
 void cSourceDevice::saveState()
 {
-    QFile deviceStateFile(jsonStateFileName());
+    QFile deviceStateFile(getStateFileName());
     if(deviceStateFile.open(QIODevice::WriteOnly)) {
         QJsonDocument doc(m_currParamState);
         deviceStateFile.write(doc.toJson(QJsonDocument::Indented));
         deviceStateFile.close();
     }
     else {
-        qWarning("Default state file %s could not be written", qPrintable(jsonStateFileName()));
+        qWarning("Default state file %s could not be written", qPrintable(getStateFileName()));
     }
 }
 
@@ -202,17 +202,17 @@ void cSourceDevice::onInterfaceClosed()
 {
     // Once we really have a soft close vein reset has to go there. Now that
     // hard-close by interface close is the only option cleanup vein here
-    m_veinInterface->veinDeviceInfo()->setValue(QJsonObject());
-    m_veinInterface->veinDeviceParameter()->setValue(QJsonObject());
-    m_veinInterface->veinDeviceParameterValidator()->setJSonParameterStructure(QJsonObject());
-    m_veinInterface->veinDeviceState()->setValue(QJsonObject());
+    m_veinInterface->getVeinDeviceInfo()->setValue(QJsonObject());
+    m_veinInterface->getVeinDeviceParameter()->setValue(QJsonObject());
+    m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(QJsonObject());
+    m_veinInterface->getVeinDeviceState()->setValue(QJsonObject());
 
     // in case interface is gone, there is not much left to do but clean up
-    disconnect(m_veinInterface->veinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::newVeinParamStatus);
+    disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
     emit sigClosed(this);
 }
 
-QString cSourceDevice::jsonDeviceStructureFileName()
+QString cSourceDevice::getDeviceStructureFileName()
 {
     QString fileName;
     // Notes:

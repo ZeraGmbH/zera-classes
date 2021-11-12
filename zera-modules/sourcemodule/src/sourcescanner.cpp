@@ -11,7 +11,7 @@ cSourceScanner::cSourceScanner(QSharedPointer<cSourceInterfaceBase> interface, Q
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
-    connect(m_spIoInterface.get(), &cSourceInterfaceBase::ioFinished, this, &cSourceScanner::onIoFinished);
+    connect(m_spIoInterface.get(), &cSourceInterfaceBase::sigIoFinished, this, &cSourceScanner::onIoFinished);
 }
 
 cSourceScanner::~cSourceScanner()
@@ -40,7 +40,7 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
     << deviceDetectInfo("TS\r", "FG", cSourceDevice::SOURCE_MT3000)
     ;
 
-cSourceDevice *cSourceScanner::sourceDeviceFound()
+cSourceDevice *cSourceScanner::getSourceDeviceFound()
 {
     return m_sourceDeviceIdentified;
 }
@@ -76,7 +76,7 @@ void cSourceScanner::sendReceiveSourceID()
     m_spIoInterface->sendAndReceive(dataSend, &m_receivedData);
 }
 
-QByteArray cSourceScanner::extractVersion(cSourceDevice::SourceType /* not used yet */)
+QByteArray cSourceScanner::extractVersionFromResponse(cSourceDevice::SourceType /* not used yet */)
 {
     int pos;
     for(pos=m_receivedData.length()-1; pos>=0; --pos) {
@@ -101,14 +101,14 @@ void cSourceScanner::onIoFinished(int transactionID)
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
     bool ourJobIsDone = false;
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[cSourceDevice::SOURCE_DEMO];
-    if(transactionID) { // receiving transaction id = 0 -> I/O problems -> don't try next
+    if(transactionID) { // receive transaction id == 0 -> I/O problems -> don't try next
         if(m_spIoInterface->type() != SOURCE_INTERFACE_DEMO) {
             deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
             if(m_receivedData.contains(deviceDetectInfoCurrent.expectedResponse)) {
                 validFound = true;
             }
         }
-        else { // demo try all
+        else {
             validFound = !moreChances;
         }
     }
@@ -118,7 +118,7 @@ void cSourceScanner::onIoFinished(int transactionID)
             m_sourceDeviceIdentified = new cSourceDevice(m_spIoInterface, cSourceDevice::SOURCE_DEMO, version);
         }
         else {
-            version = extractVersion(deviceDetectInfoCurrent.sourceType);
+            version = extractVersionFromResponse(deviceDetectInfoCurrent.sourceType);
             m_sourceDeviceIdentified = new cSourceDevice(m_spIoInterface, deviceDetectInfoCurrent.sourceType, version);
         }
         emit sigTransactionFinished(m_scannerReference);
