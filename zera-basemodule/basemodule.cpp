@@ -277,44 +277,32 @@ void cBaseModule::unsetModule()
 {
     delete m_pModuleErrorComponent;
 
-    if (veinModuleMetaDataList.count() > 0)
-    {
-        for (int i = 0; i < veinModuleMetaDataList.count(); i++)
-            delete veinModuleMetaDataList.at(i);
-        veinModuleMetaDataList.clear();
+    for (auto veinModuleMetaData : veinModuleMetaDataList) {
+        delete veinModuleMetaData;
     }
+    veinModuleMetaDataList.clear();
 
-    if (veinModuleComponentList.count() > 0)
-    {
-        for (int i = 0; i < veinModuleComponentList.count(); i++)
-            delete veinModuleComponentList.at(i);
-        veinModuleComponentList.clear();
+    for (auto veinModuleComponent : veinModuleComponentList) {
+        delete veinModuleComponent;
     }
+    veinModuleComponentList.clear();
 
-    if (veinModuleActvalueList.count() > 0)
-    {
-        for (int i = 0; i < veinModuleActvalueList.count(); i++)
-            delete veinModuleActvalueList.at(i);
-        veinModuleActvalueList.clear();
+    for (auto veinModuleActvalue : veinModuleActvalueList) {
+        delete veinModuleActvalue;
     }
+    veinModuleActvalueList.clear();
 
     veinModuleRpcList.clear();
 
-    if (scpiCommandList.count() > 0)
-    {
-        for (int i = 0; i < scpiCommandList.count(); i++)
-            delete scpiCommandList.at(i);
-        scpiCommandList.clear();
+    for (auto scpiCommand : scpiCommandList) {
+        delete scpiCommand;
     }
+    scpiCommandList.clear();
 
-    QList<QString> keylist;
-    keylist = veinModuleParameterHash.keys();
-    if (keylist.count() > 0)
-    {
-        for (int i = 0; i < keylist.count(); i++)
-            delete veinModuleParameterHash[keylist.at(i)];
-        veinModuleParameterHash.clear();
+    for (auto veinModuleParameter : veinModuleParameterHash) {
+        delete veinModuleParameter;
     }
+    veinModuleParameterHash.clear();
 
     VeinComponent::EntityData *eData = new VeinComponent::EntityData();
     eData->setCommand(VeinComponent::EntityData::Command::ECMD_REMOVE);
