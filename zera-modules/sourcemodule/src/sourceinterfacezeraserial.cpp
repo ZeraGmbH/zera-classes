@@ -115,7 +115,7 @@ void cSourceInterfaceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive,
 
 void cSourceInterfaceZeraSerial::onIoFinished()
 {
-    emit ioFinishedToQueue(m_currentTransactionID);
+    emit sigIoFinishedToQueue(m_currentTransactionID);
 }
 
 void cSourceInterfaceZeraSerial::onDeviceFileGone(QString)

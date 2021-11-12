@@ -11,7 +11,7 @@ class cSourceDeviceStatus
 public:
     cSourceDeviceStatus();
 
-    const QJsonObject &jsonStatus();
+    const QJsonObject &getJsonStatus();
     void reset();
 
     void setBusy(bool busy);

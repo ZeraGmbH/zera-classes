@@ -31,13 +31,13 @@ typedef QList<cSourceActionTypes::ActionTypes> tSourceActionTypeList;
 class cSourceActionGenerator
 {
 public:
-    static tSourceActionTypeList GenerateLoadActionList(const QJsonObject jsonSourceParamState);
-    static tSourceActionTypeList GeneratePeriodicActionList();
+    static tSourceActionTypeList generateLoadActionList(const QJsonObject jsonSourceParamState);
+    static tSourceActionTypeList generatePeriodicActionList();
 };
 
 
 template<class TListForSort>
-TListForSort listSortCustom(TListForSort sourceList, const TListForSort sortList, bool toFront)
+TListForSort sortListCustom(TListForSort sourceList, const TListForSort sortList, bool toFront)
 {
     TListForSort sortedList;
     for(auto sortEntry : sortList) { // apply sortList

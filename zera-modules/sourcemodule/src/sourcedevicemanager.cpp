@@ -57,11 +57,11 @@ QString randomString(int length) {
     return strRnd;
 }
 
-void cSourceDeviceManager::setDemoCount(int demoCount)
+void cSourceDeviceManager::setDemoCount(int getDemoCount)
 {
-    int demoDiff = demoCount - m_demoCount;
+    int demoDiff = getDemoCount - m_demoCount;
     if(demoDiff > 0) {
-        while(demoDiff && m_activeSlotCount < slotCount()) {
+        while(demoDiff && m_activeSlotCount < getSlotCount()) {
             startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
             demoDiff--;
         }
@@ -70,22 +70,22 @@ void cSourceDeviceManager::setDemoCount(int demoCount)
         demoDiff = -demoDiff;
         bool removeFront = randomBool();
         if(removeFront) {
-            for(int slotNo=0; demoDiff && slotNo<slotCount(); slotNo++) {
+            for(int slotNo=0; demoDiff && slotNo<getSlotCount(); slotNo++) {
                 cSourceDevice* source = m_sourceDeviceSlots[slotNo];
                 if(source) {
                     if(source->isDemo()) {
-                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
+                        static_cast<cSourceInterfaceDemo*>(source->getIoInterface().get())->simulateExternalDisconnect();
                         demoDiff--;
                     }
                 }
             }
         }
         else {
-            for(int slotNo=slotCount()-1; demoDiff && slotNo>=0; slotNo--) {
+            for(int slotNo=getSlotCount()-1; demoDiff && slotNo>=0; slotNo--) {
                 cSourceDevice* source = m_sourceDeviceSlots[slotNo];
                 if(source) {
                     if(source->isDemo()) {
-                        static_cast<cSourceInterfaceDemo*>(source->ioInterface().get())->simulateExternalDisconnect();
+                        static_cast<cSourceInterfaceDemo*>(source->getIoInterface().get())->simulateExternalDisconnect();
                         demoDiff--;
                     }
                 }
@@ -112,7 +112,7 @@ bool cSourceDeviceManager::removeSource(int slotNo)
     return removed;
 }
 
-int cSourceDeviceManager::slotCount()
+int cSourceDeviceManager::getSlotCount()
 {
     return m_sourceDeviceSlots.size();
 }
@@ -120,22 +120,22 @@ int cSourceDeviceManager::slotCount()
 void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transaction)
 {
     disconnect(transaction.get(), &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onScanFinished);
-    cSourceDevice *sourceDeviceFound = transaction->sourceDeviceFound();
+    cSourceDevice *getSourceDeviceFound = transaction->getSourceDeviceFound();
     // add to first free slot
     bool slotAdded = false;
-    if(sourceDeviceFound && m_activeSlotCount < m_sourceDeviceSlots.count()) {
+    if(getSourceDeviceFound && m_activeSlotCount < m_sourceDeviceSlots.count()) {
         // find free slot
         for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
             auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
             if(sourceDeviceCurr == nullptr) {
                 slotAdded = true;
-                sourceDeviceCurr = sourceDeviceFound;
+                sourceDeviceCurr = getSourceDeviceFound;
                 m_activeSlotCount++;
                 if(sourceDeviceCurr->isDemo()) {
                     m_demoCount++;
                 }
-                connect(sourceDeviceFound, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
-                emit sigSourceScanFinished(slotNo, sourceDeviceFound, transaction->getUuid(), QString());
+                connect(getSourceDeviceFound, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
+                emit sigSourceScanFinished(slotNo, getSourceDeviceFound, transaction->getUuid(), QString());
                 break;
             }
         }
@@ -145,46 +145,46 @@ void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transac
         QString erorDesc;
         // although we check at entry startSourceScan we have to recheck here
         // because startSourceScan cannot update m_activeSlotCount - scan can fail
-        if(sourceDeviceFound) {
-            delete sourceDeviceFound;
-            sourceDeviceFound = nullptr;
+        if(getSourceDeviceFound) {
+            delete getSourceDeviceFound;
+            getSourceDeviceFound = nullptr;
             erorDesc = QStringLiteral("Slots full");
         }
         else {
             erorDesc = QStringLiteral("No source device found");
         }
         // we need to notify failures
-        emit sigSourceScanFinished(-1, sourceDeviceFound, transaction->getUuid(), erorDesc);
+        emit sigSourceScanFinished(-1, getSourceDeviceFound, transaction->getUuid(), erorDesc);
     }
 }
 
 
-int cSourceDeviceManager::activeSlotCount()
+int cSourceDeviceManager::getActiveSlotCount()
 {
     return m_activeSlotCount;
 }
 
-int cSourceDeviceManager::demoCount()
+int cSourceDeviceManager::getDemoCount()
 {
     return m_demoCount;
 }
 
 
-cSourceDevice *cSourceDeviceManager::sourceDevice(int slotNo)
+cSourceDevice *cSourceDeviceManager::getSourceDevice(int slotNo)
 {
-    cSourceDevice* sourceDevice = nullptr;
+    cSourceDevice* getSourceDevice = nullptr;
     if(slotNo < m_sourceDeviceSlots.count()) {
-        sourceDevice = m_sourceDeviceSlots.at(slotNo);
+        getSourceDevice = m_sourceDeviceSlots.at(slotNo);
     }
-    return sourceDevice;
+    return getSourceDevice;
 }
 
 
-void cSourceDeviceManager::onRemoveSource(cSourceDevice *sourceDevice)
+void cSourceDeviceManager::onRemoveSource(cSourceDevice *getSourceDevice)
 {
     for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
         auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
-        if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
+        if(sourceDeviceCurr && sourceDeviceCurr == getSourceDevice) {
             removeSource(slotNo);
             break;
         }

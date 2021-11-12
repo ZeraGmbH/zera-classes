@@ -35,7 +35,7 @@ public:
     void close();
 
     // getter
-    QSharedPointer<cSourceInterfaceBase> ioInterface();
+    QSharedPointer<cSourceInterfaceBase> getIoInterface();
     bool isDemo();
 
     // setter
@@ -44,20 +44,20 @@ public:
     void saveState(); // persistency
 
 signals:
-    void sigClosed(cSourceDevice* sourceDevice);
+    void sigClosed(cSourceDevice* getSourceDevice);
 
 public slots:
-    void newVeinParamStatus(QVariant paramState);
-    void timeoutDemoTransaction();
+    void onNewVeinParamStatus(QVariant paramState);
+    void onTimeoutDemoTransaction();
 
 private slots:
     void onInterfaceClosed();
 
 private:
-    QString jsonDeviceStructureFileName();
-    const QJsonObject deviceParamStructure();
-    const QJsonObject initialDeviceParamState();
-    QString jsonStateFileName();
+    QString getDeviceStructureFileName();
+    const QJsonObject getOrLoadDeviceParamStructure();
+    QString getStateFileName();
+    const QJsonObject loadDeviceParamState();
 
     QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
 

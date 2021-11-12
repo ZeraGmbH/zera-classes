@@ -1,6 +1,6 @@
 #include "sourceactions.h"
 
-tSourceActionTypeList cSourceActionGenerator::GenerateLoadActionList(const QJsonObject jsonSourceParamState)
+tSourceActionTypeList cSourceActionGenerator::generateLoadActionList(const QJsonObject jsonSourceParamState)
 {
     tSourceActionTypeList list;
     // 1st guess: switch off just switch phases
@@ -15,7 +15,7 @@ tSourceActionTypeList cSourceActionGenerator::GenerateLoadActionList(const QJson
     return list;
 }
 
-tSourceActionTypeList cSourceActionGenerator::GeneratePeriodicActionList()
+tSourceActionTypeList cSourceActionGenerator::generatePeriodicActionList()
 {
     tSourceActionTypeList list;
     for(int type=cSourceActionTypes::PERIODIC_FIRST; type<int(cSourceActionTypes::PERIODIC_LAST); ++type) {

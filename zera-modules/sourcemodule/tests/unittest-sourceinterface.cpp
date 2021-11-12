@@ -19,7 +19,7 @@ static void testInterfaceEvents(
     QTimer timerForTimeout;
     timerForTimeout.setSingleShot(true);
 
-    QObject::connect(interface, &cSourceInterfaceBase::ioFinished, [&](int id) {
+    QObject::connect(interface, &cSourceInterfaceBase::sigIoFinished, [&](int id) {
         funcIoFinished(id);
         timerForTimeout.stop();
         loop.quit();

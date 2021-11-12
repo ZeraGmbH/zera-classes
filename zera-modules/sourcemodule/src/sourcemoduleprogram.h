@@ -23,11 +23,11 @@ class cSourceModuleProgram: public cBaseMeasWorkProgram
 public:
     cSourceModuleProgram(cSourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSourceModuleProgram();
-    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void generateInterface() override; // here we export our interface (entities)
 
 public slots: // Make cBaseMeasWorkProgram happy...
-    virtual void start() {}
-    virtual void stop() {}
+    virtual void start() override {}
+    virtual void stop() override {}
     QVariant RPC_ScanInterface(QVariantMap p_params);
 
 private:
@@ -54,7 +54,7 @@ private slots:
     void onSourceDeviceRemoved(int slotPosition);
 
     // vein change handlers
-    void newDemoSourceCount(QVariant demoCount);
+    void newDemoSourceCount(QVariant getDemoCount);
 };
 }
 

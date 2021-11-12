@@ -16,7 +16,7 @@ void cSourceIoTransactionGenerator::setParamsStructure(QJsonObject jsonParamsStr
 tSourceIoTransactionList cSourceIoTransactionGenerator::generateIoTransactionList(QJsonObject requestedParamState)
 {
     m_requestedParamState = requestedParamState;
-    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::GenerateLoadActionList(m_requestedParamState);
+    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateLoadActionList(m_requestedParamState);
     tSourceIoTransactionList transactionList;
     for(auto &actionType : actionsTypeList) {
         transactionList.append(generateListForAction(actionType));
