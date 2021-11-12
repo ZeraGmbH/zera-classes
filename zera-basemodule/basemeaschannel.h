@@ -5,7 +5,6 @@
 #include <QByteArray>
 #include <QHash>
 #include <QVariant>
-
 #include "moduleactivist.h"
 #include "socket.h"
 

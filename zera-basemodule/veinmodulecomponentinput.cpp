@@ -1,7 +1,5 @@
 #include "veinmodulecomponentinput.h"
 
-
-
 QVariant cVeinModuleComponentInput::value() const
 {
     return m_value;

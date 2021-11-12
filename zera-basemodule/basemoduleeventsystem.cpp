@@ -38,11 +38,9 @@ void cBaseModuleEventSystem::setInputList(QList<cVeinModuleComponentInput *> &in
 void cBaseModuleEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 {
     // is it a command event for setting component data
-    if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
-    {
+    if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType()) {
         // only notifications will be handled
-        if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
-        {
+        if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION) {
             QString cName;
             int entityId;
             VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
@@ -50,11 +48,9 @@ void cBaseModuleEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEve
             entityId = cData->entityId();
 
             // now let's look if we need this input
-            for (int i = 0; i < m_InputList.count(); i++)
-            {
+            for (int i = 0; i < m_InputList.count(); i++) {
                 cVeinModuleComponentInput *vmci = m_InputList.at(i);
-                if ( (vmci->m_sName == cName) && (vmci->m_nEntityId == entityId) )
-                {
+                if ( (vmci->m_sName == cName) && (vmci->m_nEntityId == entityId) ) {
                     vmci->setValue(cData->newValue());
                     emit vmci->sigValueChanged(cData->newValue());
                     // break; // we don't break here -> so a module can use an input several times

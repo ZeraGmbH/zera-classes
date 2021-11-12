@@ -10,12 +10,10 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
-
 #include <ve_commandevent.h>
 #include <vcmp_entitydata.h>
 #include <vcmp_componentdata.h>
 #include <ve_eventsystem.h>
-
 #include "basemodule.h"
 #include "debug.h"
 #include "basemoduleconfiguration.h"
@@ -26,9 +24,8 @@
 #include "veinmoduleparameter.h"
 #include "scpiinfo.h"
 
-
 cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject* parent)
-    :ZeraModules::VirtualModule(parent), m_pProxy(proxy), m_nEntityId(entityId), m_pStorageSystem(storagesystem), m_pConfiguration(modcfg), m_nModuleNr(modnr)
+    :ZeraModules::VirtualModule(parent), m_nEntityId(entityId), m_pStorageSystem(storagesystem), m_pProxy(proxy), m_pConfiguration(modcfg), m_nModuleNr(modnr)
 {
     QString s;
     setParent(parent);
@@ -188,65 +185,59 @@ cBaseModule::~cBaseModule()
     delete m_pStateMachine;
 }
 
-
 QList<const QState *> cBaseModule::getActualStates() const
 {
     return m_StateList;
 }
 
-
 void cBaseModule::setConfiguration(QByteArray xmlConfigData)
 {
     m_xmlconfString = xmlConfigData;
-    if (m_bStateMachineStarted)
+    if (m_bStateMachineStarted) {
         emit sigConfiguration(); // if our statemachine is already started we emit signal at once
-    else
+    }
+    else {
         m_bConfCmd = true; // otherwise we keep in mind that we should configure when machine starts
+    }
 }
-
 
 QString cBaseModule::getModuleName()
 {
     return m_sModuleName;
 }
 
-
 QString cBaseModule::getSCPIModuleName()
 {
     return m_sSCPIModuleName;
 }
-
 
 bool cBaseModule::isConfigured() const
 {
     return (m_nStatus > untouched);
 }
 
-
 void cBaseModule::startModule()
 {
-    if (m_bStateMachineStarted)
-    {
+    if (m_bStateMachineStarted) {
         emit sigRun(); // if our statemachine is already started we emit signal at once
         startMeas();
     }
-    else
+    else {
         m_bStartCmd = true; // otherwise we keep in mind that we should configure when machine starts
+    }
 }
-
 
 void cBaseModule::stopModule()
 {
-    if (m_bStateMachineStarted)
-    {
+    if (m_bStateMachineStarted) {
         emit sigStop(); // if our statemachine is already started we emit signal at once
         stopMeas();
     }
-    else
+    else {
         m_bStopCmd = true; // otherwise we keep in mind that we should configure when machine starts
+    }
 
 }
-
 
 void cBaseModule::setupModule()
 {
@@ -331,74 +322,64 @@ void cBaseModule::unsetModule()
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
     m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
-    if (m_ModuleActivistList.count() > 0)
-    {
-        for (int i = 0; i < m_ModuleActivistList.count(); i++) {
-            delete m_ModuleActivistList.at(i);
-        }
-        m_ModuleActivistList.clear();
+    for (auto ModuleActivist : m_ModuleActivistList) {
+        delete ModuleActivist;
     }
+    m_ModuleActivistList.clear();
 }
-
 
 void cBaseModule::exportMetaData()
 {
     QJsonObject jsonObj;
     QJsonObject jsonObj2;
 
-    for (int i = 0; i < veinModuleMetaDataList.count(); i++)
+    for (int i = 0; i < veinModuleMetaDataList.count(); i++) {
         veinModuleMetaDataList.at(i)->exportMetaData(jsonObj2);
-
+    }
     jsonObj.insert("ModuleInfo", jsonObj2);
 
     QJsonObject jsonObj3;
-
-    for (int i = 0; i < veinModuleComponentList.count(); i++)
+    for (int i = 0; i < veinModuleComponentList.count(); i++) {
         veinModuleComponentList.at(i)->exportMetaData(jsonObj3);
+    }
 
-    for (int i = 0; i < veinModuleActvalueList.count(); i++)
+    for (int i = 0; i < veinModuleActvalueList.count(); i++) {
         veinModuleActvalueList.at(i)->exportMetaData(jsonObj3);
+    }
 
     QList<QString> keyList;
     keyList = veinModuleParameterHash.keys();
-
     for (int i = 0; i < keyList.count(); i++)
         veinModuleParameterHash[keyList.at(i)]->exportMetaData(jsonObj3);
-
     jsonObj.insert("ComponentInfo", jsonObj3);
 
     QJsonArray jsonArr;
-
     // and then all the command information for actual values, parameters and for add. commands without components
-    for (int i = 0; i < scpiCommandList.count(); i++)
+    for (int i = 0; i < scpiCommandList.count(); i++) {
         scpiCommandList.at(i)->appendSCPIInfo(jsonArr);
-
-    for (int i = 0; i < veinModuleActvalueList.count(); i++)
+    }
+    for (int i = 0; i < veinModuleActvalueList.count(); i++) {
         veinModuleActvalueList.at(i)->exportSCPIInfo(jsonArr);
+    }
 
-    for (int i = 0; i < keyList.count(); i++)
+    for (int i = 0; i < keyList.count(); i++) {
         veinModuleParameterHash[keyList.at(i)]->exportSCPIInfo(jsonArr);
-
+    }
 
     QJsonObject jsonObj4;
-
     jsonObj4.insert("Name", m_sSCPIModuleName);
     jsonObj4.insert("Cmd", jsonArr);
-
     jsonObj.insert("SCPIInfo", jsonObj4);
 
     QJsonDocument jsonDoc;
     jsonDoc.setObject(jsonObj);
-
     QByteArray ba;
     ba = jsonDoc.toJson();
 
 #ifdef DEBUG
     qDebug() << jsonDoc.toJson();
 #endif
-
     m_pModuleInterfaceComponent->setValue(QVariant(ba));
-
 }
 
 quint16 cBaseModule::getModuleNr()
@@ -412,29 +393,22 @@ QString cBaseModule::getReleaseNr(QString path)
     bool releaseNrFound = false;
     QString releaseNr = "";
     QFile file(path);
-
-    if (file.exists())
-    {
-       int start, end;
-       QString line;
-
+    if (file.exists()) {
        file.open(QIODevice::ReadOnly);
        QTextStream stream(&file);
-
-       do
-       {
+       int start, end;
+       QString line;
+       do {
            line = stream.readLine();
-           if ( (start = line.indexOf("'release")+1) > 0 || (start = line.indexOf("'snapshot")+1) > 0)
-           {
+           if ( (start = line.indexOf("'release")+1) > 0 || (start = line.indexOf("'snapshot")+1) > 0) {
                 end = line.indexOf("'", start);
-                if ((releaseNrFound = (end > start)) == true)
+                if ((releaseNrFound = (end > start)) == true) {
                     releaseNr = line.mid(start, end-start);
+                }
            }
        } while (!line.isNull() && !(releaseNrFound));
-     }
-
-    file.close();
-
+       file.close();
+    }
     return releaseNr;
 }
 
@@ -445,7 +419,6 @@ QString cBaseModule::getSerialNr(QString path)
     // done by zera-setup2 and in case of success a file
     // /opt/zera/conf/serialnumber (see SerialNoInfoFilePath) is created
     QString serialNo = "";
-
     QFile file(path);
     if (file.open(QIODevice::ReadOnly)) {
         QTextStream stream(&file);
@@ -455,7 +428,6 @@ QString cBaseModule::getSerialNr(QString path)
     return serialNo;
 }
 
-
 void cBaseModule::entryIdle()
 {
     m_StateList.clear(); // we remove all states from list
@@ -463,30 +435,27 @@ void cBaseModule::entryIdle()
     m_nLastState = IDLE; // we keep track over our last state
 }
 
-
 void cBaseModule::entryIDLEIdle()
 {
     m_bStateMachineStarted = true; // event loop has activated our statemachine
-    if (m_bConfCmd)
-    {
+    if (m_bConfCmd) {
         m_bConfCmd = false;
         emit sigConfiguration();
     }
-    else
-        if (m_bStartCmd)
-        {
+    else {
+        if (m_bStartCmd) {
             m_bStartCmd = false;
             emit sigRun();
         }
-
-        else
+        else {
             if (m_bStopCmd)
             {
                 m_bStopCmd = false;
                 emit sigStop();
             }
+        }
+    }
 }
-
 
 void cBaseModule::exitIdle()
 {
@@ -495,7 +464,6 @@ void cBaseModule::exitIdle()
     // in case of entering run or stop statelist is cleared first
 }
 
-
 void cBaseModule::entryConfXML()
 {
     m_StateList.append(m_pStateConfigure);
@@ -503,29 +471,26 @@ void cBaseModule::entryConfXML()
     doConfiguration(m_xmlconfString);
 }
 
-
 void cBaseModule::entryConfSetup()
 {
-    if (m_pConfiguration->isConfigured())
-    {
+    if (m_pConfiguration->isConfigured()) {
         m_nStatus  = configured;
         setupModule();
         m_nStatus = setup;
     }
-
     m_StateList.removeOne(m_pStateConfigure);
     emit sigConfDone();
 }
 
-
 void cBaseModule::entryRunStart()
 {
-    if (m_nStatus == setup) // we must be set up (configured and interface represents configuration)
+    if (m_nStatus == setup) { // we must be set up (configured and interface represents configuration)
         m_ActivationMachine.start();
-    else
+    }
+    else {
         emit sigRunFailed(); // otherwise we are not able to run
+    }
 }
-
 
 void cBaseModule::entryRunDone()
 {
@@ -537,12 +502,10 @@ void cBaseModule::entryRunDone()
     emit moduleActivated();
 }
 
-
 void cBaseModule::entryRunDeactivate()
 {
     m_DeactivationMachine.start();
 }
-
 
 void cBaseModule::entryRunUnset()
 {
@@ -550,16 +513,15 @@ void cBaseModule::entryRunUnset()
     emit sigReconfigureContinue();
 }
 
-
-
 void cBaseModule::entryStopStart()
 {
-    if (m_nStatus == setup) // we must be set up (configured and interface represents configuration)
+    if (m_nStatus == setup) { // we must be set up (configured and interface represents configuration)
         m_ActivationMachine.start();
-    else
+    }
+    else {
         emit sigStopFailed(); // otherwise we are not able to run
+    }
 }
-
 
 void cBaseModule::entryStopDone()
 {
@@ -570,4 +532,3 @@ void cBaseModule::entryStopDone()
     m_nLastState = STOP; // we need this in case of reconfiguration
     emit moduleActivated();
 }
-

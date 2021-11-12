@@ -5,17 +5,16 @@ cBaseMeasProgram::cBaseMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<c
 {
 }
 
-
 cBaseMeasProgram::~cBaseMeasProgram()
 {
 }
 
-
 void cBaseMeasProgram::monitorConnection()
 {
     m_nConnectionCount--;
-    if (m_nConnectionCount == 0)
+    if (m_nConnectionCount == 0) {
         emit activationContinue();
+    }
 }
 
 

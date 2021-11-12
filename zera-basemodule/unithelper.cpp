@@ -3,7 +3,6 @@
 QString cUnitHelper::getNewPowerUnit(const QString &powerType, const QString &currentPowerUnit)
 {
     QString newUnit;
-
     // base unit - we assume powerType set
     if (powerType.contains('P')) {
         newUnit = QString("W");
@@ -14,7 +13,6 @@ QString cUnitHelper::getNewPowerUnit(const QString &powerType, const QString &cu
     else if (powerType.contains('S')) {
         newUnit = QString("VA");
     }
-
     // 10³ prefix
     if(currentPowerUnit.isEmpty() || currentPowerUnit == "Unknown" || currentPowerUnit.startsWith('k')) { // 'k' is default on startup
         newUnit = QString('k') + newUnit;
@@ -22,7 +20,6 @@ QString cUnitHelper::getNewPowerUnit(const QString &powerType, const QString &cu
     else if(currentPowerUnit.startsWith('M')) {
         newUnit = QString('M') + newUnit;
     }
-
     return newUnit;
 }
 
