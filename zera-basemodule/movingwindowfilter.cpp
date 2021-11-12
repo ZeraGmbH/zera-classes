@@ -35,13 +35,11 @@ cMovingwindowFilter::cMovingwindowFilter(float time)
     m_FilterStatemachine.start();
 }
 
-
 void cMovingwindowFilter::receiveActualValues(QVector<float> *actualValues)
 {
     m_pActualValues = actualValues;
     emit newActualValues();
 }
-
 
 void cMovingwindowFilter::setIntegrationtime(float time)
 {
@@ -49,37 +47,30 @@ void cMovingwindowFilter::setIntegrationtime(float time)
     emit finishFilter();
 }
 
-
 void cMovingwindowFilter::addnewValues()
 {
     int n;
-    //QVector<float> newValues(*m_pActualValues);
     QVector<double> newValues;
 
     n = m_pActualValues->count();
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n; i++) {
         newValues.append(m_pActualValues->at(i));
-
-    m_ActValueFifoList.append(newValues); // we append the next values
+    }
+    m_ActValueFifoList.append(newValues);
     int m = m_ActValueFifoList.count();
-
-    for (int i = 0; i < newValues.count(); i++)
-    {
+    for (int i = 0; i < newValues.count(); i++) {
         m_FifoSum.replace(i, m_FifoSum.at(i) + newValues.at(i));
         m_ActualValues.replace(i, m_FifoSum.at(i) / m); // our filtered actual values
     }
-
-    emit actualValues(&m_ActualValues); // we emit them here
+    emit actualValues(&m_ActualValues);
 }
-
 
 void cMovingwindowFilter::initFilter()
 {
-    m_ActValueFifoList.clear(); // we clear actual fifo
+    m_ActValueFifoList.clear();
     m_integrationTimer.stop();
     m_integrationTimer.setSingleShot(true);
 }
-
 
 void cMovingwindowFilter::setupFilter()
 {
@@ -90,39 +81,28 @@ void cMovingwindowFilter::setupFilter()
 
 }
 
-
 void cMovingwindowFilter::buildupFilter()
 {
     addnewValues(); // we must add the new values while building up our filter
 }
 
-
 void cMovingwindowFilter::doFilter()
 {
     QVector<double> removeValues = m_ActValueFifoList.at(0);
-
     int n = removeValues.count();
-
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         m_FifoSum.replace(i, m_FifoSum.at(i) - removeValues.at(i)); // we remove the first value from our sum
     }
-
     m_ActValueFifoList.removeFirst(); // and remove all values from our fifo
     addnewValues(); // and then add the new ones
 }
-
 
 void cMovingwindowFilter::stopFilter()
 {
     m_FilterStatemachine.stop(); // we restart at once
 }
 
-
 void cMovingwindowFilter::restartFilter()
 {
     m_FilterStatemachine.start();
 }
-
-
-

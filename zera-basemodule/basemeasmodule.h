@@ -9,9 +9,7 @@
 #include <QByteArray>
 #include <QTimer>
 #include <virtualmodule.h>
-
 #include "basemodule.h"
-
 
 namespace VeinEvent
 {
@@ -19,10 +17,8 @@ namespace VeinEvent
     class StorageSystem;
 }
 
-
 class cModuleValidator;
 class cVeinModuleComponent;
-
 class cBaseMeasProgram;
 class cBaseModuleConfiguration;
 class cBaseMeasChannel;
@@ -31,7 +27,6 @@ class cBaseMeasChannel;
 class cBaseMeasModule : public cBaseModule
 {
 Q_OBJECT
-
 public:
     cBaseMeasModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject *parent = 0);
 

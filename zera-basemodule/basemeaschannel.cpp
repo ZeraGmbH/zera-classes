@@ -5,35 +5,28 @@ cBaseMeasChannel::cBaseMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket
 {
 }
 
-
 quint8 cBaseMeasChannel::getDSPChannelNr()
 {
     return m_nDspChannel;
 }
-
 
 quint16 cBaseMeasChannel::getSampleRate()
 {
     return m_nSampleRate;
 }
 
-
 QString cBaseMeasChannel::getName()
 {
     return m_sName;
 }
-
 
 QString cBaseMeasChannel::getAlias()
 {
     return m_sAlias;
 }
 
-
 QString cBaseMeasChannel::getUnit()
 {
     return m_sUnit;
 }
-
-
 

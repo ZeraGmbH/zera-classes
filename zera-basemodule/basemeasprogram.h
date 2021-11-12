@@ -6,13 +6,11 @@
 #include <QVector>
 #include <QHash>
 #include <memory>
-
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
 
 class cBaseModule;
 class cSocket;
-
 
 namespace Zera {
 namespace Proxy {

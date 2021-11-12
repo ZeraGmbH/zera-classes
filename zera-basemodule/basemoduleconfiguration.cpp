@@ -2,19 +2,16 @@
 
 #include "basemoduleconfiguration.h"
 
-
 cBaseModuleConfiguration::cBaseModuleConfiguration()
 {
     m_pXMLReader = new Zera::XMLConfig::cReader();
     m_bConfigured = false;
 }
 
-
 cBaseModuleConfiguration::~cBaseModuleConfiguration()
 {
     delete m_pXMLReader;
 }
-
 
 bool cBaseModuleConfiguration::isConfigured()
 {

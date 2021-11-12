@@ -3,23 +3,19 @@
 #include <QMetaType>
 #include "boolvalidator.h"
 
-
 bool cBoolValidator::isValidParam(QVariant& newValue)
 {
    bool ok;
-   int onoff;
+   int onoff = newValue.toInt(&ok);
 
-   onoff = newValue.toInt(&ok);
-
-   if (ok && ((onoff == 0) || (onoff ==1)))
-   {
+   if (ok && ((onoff == 0) || (onoff ==1))) {
        newValue = onoff;
        return true;
    }
-   else
+   else {
        return false;
+   }
 }
-
 
 void cBoolValidator::exportMetaData(QJsonObject& jsObj)
 {
