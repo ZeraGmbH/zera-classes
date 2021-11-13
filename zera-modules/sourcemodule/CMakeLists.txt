@@ -111,6 +111,23 @@ foreach(sourceconfigfile ${SOURCE_DEVINFO})
     endif()
 endforeach()
 
+set(COMMON_LIBS
+    Qt5::Core
+    Qt5::Network
+    ${XERCES_LIBRARIES}
+    VeinMeta::VfEvent
+    VeinMeta::VfHelpers
+    VeinMeta::VfComponent
+    MeasurementModuleInterface
+    zerabasemodule
+    zeraproxy
+    zeramisc
+    zeraxmlconfig
+    zeravalidator
+    zera-json-params
+    serialportasyncblock
+    )
+
 # create library
 add_library(sourcemodule MODULE
     ${SOURCES}
@@ -121,21 +138,7 @@ add_library(sourcemodule MODULE
 
 target_link_libraries(sourcemodule
     PUBLIC
-    Qt5::Core
-    Qt5::Network
-    ${XERCES_LIBRARIES}
-    VeinMeta::VfEvent
-    VeinMeta::VfHelpers
-    VeinMeta::VfComponent
-    VeinMeta::VfCpp
-    MeasurementModuleInterface
-    zerabasemodule
-    zeraproxy
-    zeramisc
-    zeraxmlconfig
-    zeravalidator
-    zera-json-params
-    serialportasyncblock
+    ${COMMON_LIBS}
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -212,21 +215,41 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         PUBLIC
         gtest
         gtest_main
-        Qt5::Core
-        Qt5::Network
-        ${XERCES_LIBRARIES}
-        VeinMeta::VfEvent
-        VeinMeta::VfHelpers
-        VeinMeta::VfComponent
-        MeasurementModuleInterface
-        zerabasemodule
-        zeraproxy
-        zeramisc
-        zeraxmlconfig
-        zeravalidator
-        zera-json-params
-        serialportasyncblock
+        ${COMMON_LIBS}
     )
+
+    add_test(NAME    sourcemodule-unittest-qt
+             COMMAND sourcemodule-unittest-qt)
+
+    file(GLOB QTUNITTESTS
+        tests/qt-unittest-*.cpp
+        tests/qt-unittest-*.h
+    )
+
+    add_executable(sourcemodule-unittest-qt
+        tests/main-unittest-qt.h
+        tests/main-unittest-qt.cpp # must be first!!!
+        ${SOURCES}
+        ${HEADER}
+        ${RESOURCES}
+        ${QTUNITTESTS}
+        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+    )
+
+    target_include_directories(sourcemodule-unittest-qt
+        PUBLIC
+        $<INSTALL_INTERFACE:include/sourcemodule>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
+
+    target_link_libraries(sourcemodule-unittest-qt
+        PUBLIC
+        Qt5::Test
+        ${COMMON_LIBS}
+    )
+
 endif()
 
 
