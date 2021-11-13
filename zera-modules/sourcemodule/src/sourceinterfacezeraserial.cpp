@@ -61,7 +61,9 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
 
 void cSourceInterfaceZeraSerial::close()
 {
-    m_serialIO.close();
+    if(m_serialIO.isOpen()) {
+        m_serialIO.close();
+    }
     d_ptr->m_disappearWatcher.resetFiles();
 }
 
