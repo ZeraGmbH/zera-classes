@@ -20,24 +20,24 @@ cSourceScanner::~cSourceScanner()
 
 struct deviceDetectInfo
 {
-    deviceDetectInfo(QByteArray queryStr, QByteArray expectedResponse, cSourceDevice::SourceType sourceType) {
+    deviceDetectInfo(QByteArray queryStr, QByteArray expectedResponse, SupportedSourceTypes sourceType) {
         this->queryStr = queryStr;
         this->expectedResponse = expectedResponse;
         this->sourceType = sourceType;
     }
     QByteArray queryStr;
     QByteArray expectedResponse;
-    cSourceDevice::SourceType sourceType;
+    SupportedSourceTypes sourceType;
 };
 
 // Later (never hopefully) we might need multiple scan lists e.g bound to interface type or
 // settable...
 static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
     // TODO: Regex?
-    << deviceDetectInfo("STS\r", "STSFGMT", cSourceDevice::SOURCE_MT3000) // tested
+    << deviceDetectInfo("STS\r", "STSFGMT", SOURCE_MT3000) // tested
     // TODO: guessworked initial data
-    << deviceDetectInfo("TS\r", "MT400-20", cSourceDevice::SOURCE_MT400_20)
-    << deviceDetectInfo("TS\r", "FG", cSourceDevice::SOURCE_MT3000)
+    << deviceDetectInfo("TS\r", "MT400-20", SOURCE_MT400_20)
+    << deviceDetectInfo("TS\r", "FG", SOURCE_MT3000)
     ;
 
 cSourceDevice *cSourceScanner::getSourceDeviceFound()
@@ -76,7 +76,7 @@ void cSourceScanner::sendReceiveSourceID()
     m_spIoInterface->sendAndReceive(dataSend, &m_receivedData);
 }
 
-QByteArray cSourceScanner::extractVersionFromResponse(cSourceDevice::SourceType /* not used yet */)
+QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not used yet */)
 {
     int pos;
     for(pos=m_receivedData.length()-1; pos>=0; --pos) {
@@ -95,12 +95,14 @@ QByteArray cSourceScanner::extractVersionFromResponse(cSourceDevice::SourceType 
     return version;
 }
 
+static enum SupportedSourceTypes sDemoTypeCounter(SOURCE_TYPE_COUNT);
+
 void cSourceScanner::onIoFinished(int transactionID)
 {
     bool validFound = false;
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
     bool ourJobIsDone = false;
-    deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[cSourceDevice::SOURCE_DEMO];
+    deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[0];
     if(transactionID) { // receive transaction id == 0 -> I/O problems -> don't try next
         if(m_spIoInterface->type() != SOURCE_INTERFACE_DEMO) {
             deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
@@ -113,14 +115,21 @@ void cSourceScanner::onIoFinished(int transactionID)
         }
     }
     if(validFound) {
-        QByteArray version("V42");
+        QByteArray version;
         if(m_spIoInterface->type() == SOURCE_INTERFACE_DEMO) {
-            m_sourceDeviceIdentified = new cSourceDevice(m_spIoInterface, cSourceDevice::SOURCE_DEMO, version);
+            int nextDemoType = sDemoTypeCounter;
+            nextDemoType++;
+            if(nextDemoType >= SOURCE_TYPE_COUNT) {
+                nextDemoType = 0;
+            }
+            deviceDetectInfoCurrent.sourceType = sDemoTypeCounter = SupportedSourceTypes(nextDemoType);
+            version = "V42";
         }
         else {
             version = extractVersionFromResponse(deviceDetectInfoCurrent.sourceType);
-            m_sourceDeviceIdentified = new cSourceDevice(m_spIoInterface, deviceDetectInfoCurrent.sourceType, version);
         }
+        m_sourceDeviceIdentified = new cSourceDevice(m_spIoInterface, deviceDetectInfoCurrent.sourceType, version);
+
         emit sigTransactionFinished(m_scannerReference);
         ourJobIsDone = true;
     }

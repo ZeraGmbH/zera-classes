@@ -7,6 +7,7 @@
 #include <QSharedPointer>
 #include "sourcedevicestatus.h"
 #include "sourceiotransactiongenerator.h"
+#include "supportedsources.h"
 
 class cSourceInterfaceBase;
 
@@ -18,17 +19,7 @@ class cSourceDevice : public QObject
 {
     Q_OBJECT
 public:
-    enum SourceType { // TODO replace by protocol
-        SOURCE_DEMO = 0,
-        SOURCE_MT3000,   // basic
-        SOURCE_MT400_20, // current only
-        SOURCE_MT507,    // single phase
-
-        SOURCE_DEMO_FG_4PHASE, // AUX/harmonics
-
-        SOURCE_TYPE_COUNT
-    };
-    explicit cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SourceType type, QString version);
+    explicit cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SupportedSourceTypes type, QString version);
     virtual ~cSourceDevice();
 
     // requests
@@ -54,14 +45,9 @@ private slots:
     void onInterfaceClosed();
 
 private:
-    QString getDeviceStructureFileName();
-    const QJsonObject getOrLoadDeviceParamStructure();
-    QString getStateFileName();
-    const QJsonObject loadDeviceParamState();
-
     QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
 
-    QJsonObject m_jsonParamsStructure;
+    cSourceJsonStateIo* m_paramStateIo;
     QJsonObject m_currParamState;
     QJsonObject m_requestedParamState;
 
@@ -70,11 +56,10 @@ private:
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
 
-    SourceType m_type;
+    SupportedSourceTypes m_type;
     QString m_version;
 
-    SourceType m_demoType;
-    QTimer m_demoOnOffDeleayTimer;
+    QTimer m_demoOnOffDelayTimer;
 };
 
 }
