@@ -31,7 +31,7 @@ private slots:
     void onIoFinished(int transactionID);
 private:
     void sendReceiveSourceID();
-    QByteArray extractVersionFromResponse(cSourceDevice::SourceType sourceType);
+    QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);
 
     QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
     QUuid m_uuid;
