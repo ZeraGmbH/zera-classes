@@ -27,6 +27,7 @@ public:
 class cSourceJsonStructureLoader
 {
 public:
+    static QJsonObject getJsonStructure(QString fileName);
     static QJsonObject getJsonStructure(SupportedSourceTypes type);
 };
 

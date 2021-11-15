@@ -17,9 +17,9 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sup
     m_type(type),
     m_version(version)
 {
-    m_paramStateIo = new cSourceJsonStateIo(m_type);
-    m_ioTransactionGenerator.setParamsStructure(m_paramStateIo->getJsonStructure());
-    m_currParamState = m_paramStateIo->loadJsonState();
+    m_paramStateLoadSave = new cSourceJsonStateIo(type);
+    m_ioTransactionGenerator = new cSourceIoTransactionGenerator(m_paramStateLoadSave->getJsonStructure());
+    m_paramsCurrent.setParams(m_paramStateLoadSave->loadJsonState());
 
     connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
 
@@ -31,7 +31,8 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sup
 
 cSourceDevice::~cSourceDevice()
 {
-    delete m_paramStateIo;
+    delete m_ioTransactionGenerator;
+    delete m_paramStateLoadSave;
 }
 
 void cSourceDevice::close()
@@ -47,14 +48,14 @@ void cSourceDevice::close()
 
 void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
-    m_requestedParamState = paramState.toJsonObject();
+    m_paramsRequested.setParams(paramState.toJsonObject());
     m_deviceStatus.setBusy(true);
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
     // transactionList is not necessary for demo but let's create it here for
     // debug purpose
-    tSourceIoTransactionList transactionList = m_ioTransactionGenerator.generateIoTransactionList(m_requestedParamState);
+    tSourceIoTransactionList transactionList = m_ioTransactionGenerator->generateIoTransactionList(m_paramsRequested);
     if(isDemo()) {
-        if(m_requestedParamState.value("on").toBool()) {
+        if(m_paramsRequested.getOn()) {
             m_demoOnOffDelayTimer.start(3000);
         }
         else {
@@ -69,10 +70,10 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
 void cSourceDevice::onTimeoutDemoTransaction()
 {
     m_deviceStatus.setBusy(false);
-    m_currParamState = m_requestedParamState;
+    m_paramsCurrent.setParams(m_paramsRequested.getParams());
     saveState();
     // TODO add some random warnings and erros
-    m_veinInterface->getVeinDeviceParameter()->setValue(m_currParamState);
+    m_veinInterface->getVeinDeviceParameter()->setValue(m_paramsCurrent.getParams());
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
 }
 
@@ -89,10 +90,10 @@ bool cSourceDevice::isDemo()
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
-    m_veinInterface->getVeinDeviceInfo()->setValue(m_paramStateIo->getJsonStructure());
+    m_veinInterface->getVeinDeviceInfo()->setValue(m_paramStateLoadSave->getJsonStructure());
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
-    m_veinInterface->getVeinDeviceParameter()->setValue(m_currParamState);
-    m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(m_paramStateIo->getJsonStructure());
+    m_veinInterface->getVeinDeviceParameter()->setValue(m_paramsCurrent.getParams());
+    m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(m_paramStateLoadSave->getJsonStructure());
 
     connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
 }
@@ -104,7 +105,7 @@ void cSourceDevice::startActions(tSourceIoTransactionList transactionList)
 
 void cSourceDevice::saveState()
 {
-    m_paramStateIo->saveJsonState(m_currParamState);
+    m_paramStateLoadSave->saveJsonState(m_paramsCurrent.getParams());
 }
 
 void cSourceDevice::onInterfaceClosed()

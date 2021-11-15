@@ -3,6 +3,7 @@
 #include <zera-json-params-structure.h>
 #include <zera-json-params-state.h>
 #include "supportedsources.h"
+#include "sourcejsonparamapi.h"
 
 QString cSourceJsonFilenames::getJsonStructurePathName(SupportedSourceTypes type)
 {
@@ -51,11 +52,9 @@ QString cSourceJsonFilenames::getJsonFileName(SupportedSourceTypes type)
     return fileName;
 }
 
-
-QJsonObject cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes type)
-{
+QJsonObject cSourceJsonStructureLoader::getJsonStructure(QString fileName) {
     QJsonObject jsonStructure;
-    QFile deviceInfoFile(cSourceJsonFilenames::getJsonStructurePathName(type));
+    QFile deviceInfoFile(fileName);
     if(deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
         QByteArray jsondeviceInfoData = deviceInfoFile.readAll();
         deviceInfoFile.close();
@@ -65,6 +64,12 @@ QJsonObject cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes ty
         jsonStructure = jsonParamsStructure.jsonStructure();
     }
     return jsonStructure;
+}
+
+
+QJsonObject cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes type)
+{
+    return getJsonStructure(cSourceJsonFilenames::getJsonStructurePathName(type));
 }
 
 
@@ -102,8 +107,10 @@ QJsonObject cSourceJsonStateIo::loadJsonState()
         saveJsonState(paramState);
     }
     // Override on state
-    paramState.insert("on", false);
-    return paramState;
+    cSourceJsonParamApi paramApi;
+    paramApi.setParams(paramState);
+    paramApi.setOn(false);
+    return paramApi.getParams();
 }
 
 void cSourceJsonStateIo::saveJsonState(QJsonObject state)

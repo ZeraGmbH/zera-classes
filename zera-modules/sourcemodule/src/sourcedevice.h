@@ -47,11 +47,11 @@ private slots:
 private:
     QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
 
-    cSourceJsonStateIo* m_paramStateIo;
-    QJsonObject m_currParamState;
-    QJsonObject m_requestedParamState;
+    cSourceJsonStateIo* m_paramStateLoadSave;
+    cSourceJsonParamApi m_paramsRequested;
+    cSourceJsonParamApi m_paramsCurrent;
 
-    cSourceIoTransactionGenerator m_ioTransactionGenerator;
+    cSourceIoTransactionGenerator* m_ioTransactionGenerator = nullptr;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
