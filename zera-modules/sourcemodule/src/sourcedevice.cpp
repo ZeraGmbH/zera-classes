@@ -24,6 +24,7 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sup
     connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
 
     if(isDemo()) {
+        m_demoOnOffDelayTimer.setSingleShot(true);
         connect(&m_demoOnOffDelayTimer, &QTimer::timeout, this, &cSourceDevice::onTimeoutDemoTransaction);
     }
 }
