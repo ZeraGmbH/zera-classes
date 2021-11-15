@@ -4,7 +4,7 @@
 #include <zera-json-params-structure.h>
 
 // Check all deviceinfos for validity by loading them into cZeraJsonParamsStructure
-TEST(TEST_DEVICEINFO,ALL_VALID) {
+TEST(TEST_DEVICEINFO, ALL_VALID) {
     QDir dir(QStringLiteral("://deviceinfo"));
     QFileInfoList fileInfoList = dir.entryInfoList();
     for(auto fileInfo : fileInfoList) {
