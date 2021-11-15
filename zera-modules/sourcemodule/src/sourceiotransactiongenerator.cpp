@@ -29,7 +29,8 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateListForAction(cS
     tSourceIoTransactionList transactionList;
     switch(actionType) {
     case cSourceActionTypes::SET_RMS:
-        transactionList.append(generateRMSList());
+        transactionList.append(generateRMSAndAngleUList());
+        transactionList.append(generateRMSAndAngleIList());
         break;
     case cSourceActionTypes::SET_ANGLE:
         // On ZERA this is combined with RMS
@@ -54,23 +55,20 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateListForAction(cS
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSList()
+tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleUList()
 {
     tSourceIoTransactionList transactionList;
     QByteArray dataSend;
 
-    double rmsU[3], angleU[3], rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
+    double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
     for(int phase=1; phase<=3; phase++) {
         if(phase <= m_countVoltagePhases) {
             int idx = phase-1;
             rmsU[idx] = m_requestedParamState[QString("U%1").arg(phase)].toObject()["rms"].toDouble();
             angleU[idx] = m_requestedParamState[QString("U%1").arg(phase)].toObject()["angle"].toDouble();
-            rmsI[idx] = m_requestedParamState[QString("I%1").arg(phase)].toObject()["rms"].toDouble();
-            angleI[idx] = m_requestedParamState[QString("I%1").arg(phase)].toObject()["angle"].toDouble();
         }
     }
 
-    // voltage
     dataSend = m_ioPrefix + "UP";
     // e-funct off for now
     dataSend.append('A');
@@ -84,8 +82,23 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSList()
     dataSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKUP\r";
     transactionList.append(cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse));
+    return transactionList;
+}
 
-    // current
+tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleIList()
+{
+    tSourceIoTransactionList transactionList;
+    QByteArray dataSend;
+
+    double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
+    for(int phase=1; phase<=3; phase++) {
+        if(phase <= m_countVoltagePhases) {
+            int idx = phase-1;
+            rmsI[idx] = m_requestedParamState[QString("I%1").arg(phase)].toObject()["rms"].toDouble();
+            angleI[idx] = m_requestedParamState[QString("I%1").arg(phase)].toObject()["angle"].toDouble();
+        }
+    }
+
     dataSend = m_ioPrefix + "IP";
     // e-funct off for now
     dataSend.append('A');
@@ -97,7 +110,7 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSList()
         dataSend += cSourceIoCmdHelper::formatDouble(angleI[idx], 3, '.', 2);
     }
     dataSend.append('\r');
-    expectedResponse = m_ioPrefix + "OKIP\r";
+    QByteArray expectedResponse = m_ioPrefix + "OKIP\r";
     transactionList.append(cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse));
 
     return transactionList;

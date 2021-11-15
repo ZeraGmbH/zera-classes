@@ -38,7 +38,8 @@ public:
 private:
     tSourceIoTransactionList generateListForAction(cSourceActionTypes::ActionTypes actionType);
 
-    tSourceIoTransactionList generateRMSList();
+    tSourceIoTransactionList generateRMSAndAngleUList();
+    tSourceIoTransactionList generateRMSAndAngleIList();
     tSourceIoTransactionList generateSwitchPhasesList();
     tSourceIoTransactionList generateFrequencyList();
     tSourceIoTransactionList generateRegulationList();
