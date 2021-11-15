@@ -1,18 +1,20 @@
 #include <gtest/gtest.h>
 #include "sourceactions.h"
+#include "sourcejsonparamapi.h"
 
-// Check all actions are generated
+// Check all actions are generated for on
 TEST(TEST_SOURCEACTIONS, ACTIONS_COMPLETE) {
-    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(QJsonObject());
+    cSourceJsonParamApi paramApi;
+    paramApi.setOn(true);
+    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
     EXPECT_EQ(actionMap.count(), cSourceActionTypes::getLoadActionTypeCount());
 }
 
 // Check if a switch off just generates switch phases
-// We do this test because we want to be warned in case we change behaviour
 TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
-    QJsonObject offParamState;
-    offParamState.insert("on", false);
-    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(offParamState);
+    cSourceJsonParamApi paramApi;
+    paramApi.setOn(false);
+    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(paramApi);
     EXPECT_EQ(actionMap.count(), 1);
     EXPECT_EQ(actionMap.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
 }

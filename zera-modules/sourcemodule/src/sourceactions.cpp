@@ -1,10 +1,10 @@
 #include "sourceactions.h"
 
-tSourceActionTypeList cSourceActionGenerator::generateLoadActionList(const QJsonObject jsonSourceParamState)
+tSourceActionTypeList cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi requestedParams)
 {
     tSourceActionTypeList list;
     // 1st guess: switch off just switch phases
-    if(jsonSourceParamState.contains("on") && !jsonSourceParamState["on"].toBool()) {
+    if(!requestedParams.getOn()) {
         list.append(cSourceActionTypes::ActionTypes::SWITCH_PHASES);
     }
     else {

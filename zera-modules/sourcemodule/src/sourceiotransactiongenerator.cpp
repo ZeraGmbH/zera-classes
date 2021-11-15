@@ -1,22 +1,21 @@
 #include "sourceiotransactiongenerator.h"
 #include "sourceactions.h"
 
-cSourceIoTransactionGenerator::cSourceIoTransactionGenerator()
+cSourceIoTransactionGenerator::cSourceIoTransactionGenerator(QJsonObject jsonParamsStructure) :
+    m_jsonStructApi(new cSourceJsonStructureApi(jsonParamsStructure)),
+    m_ioPrefix(m_jsonStructApi->getIoPrefix())
 {
 }
 
-void cSourceIoTransactionGenerator::setParamsStructure(QJsonObject jsonParamsStructure)
+cSourceIoTransactionGenerator::~cSourceIoTransactionGenerator()
 {
-    m_jsonParamsStructure = jsonParamsStructure;
-    m_ioPrefix = m_jsonParamsStructure["IoPrefix"].toString().toLatin1();
-    m_countVoltagePhases = m_jsonParamsStructure["UPhaseMax"].toInt();
-    m_countCurrentPhases = m_jsonParamsStructure["IPhaseMax"].toInt();
+    delete m_jsonStructApi;
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateIoTransactionList(QJsonObject requestedParamState)
+tSourceIoTransactionList cSourceIoTransactionGenerator::generateIoTransactionList(cSourceJsonParamApi requestedParams)
 {
-    m_requestedParamState = requestedParamState;
-    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateLoadActionList(m_requestedParamState);
+    m_paramsRequested = requestedParams;
+    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateLoadActionList(requestedParams);
     tSourceIoTransactionList transactionList;
     for(auto &actionType : actionsTypeList) {
         transactionList.append(generateListForAction(actionType));
@@ -61,11 +60,10 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleUList
     QByteArray dataSend;
 
     double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
-    for(int phase=1; phase<=3; phase++) {
-        if(phase <= m_countVoltagePhases) {
-            int idx = phase-1;
-            rmsU[idx] = m_requestedParamState[QString("U%1").arg(phase)].toObject()["rms"].toDouble();
-            angleU[idx] = m_requestedParamState[QString("U%1").arg(phase)].toObject()["angle"].toDouble();
+    for(int phase=0; phase<3; phase++) {
+        if(phase < m_jsonStructApi->getCountUPhases()) {
+            rmsU[phase] = m_paramsRequested.getRms(true, phase);
+            angleU[phase] = m_paramsRequested.getAngle(true, phase);
         }
     }
 
@@ -91,11 +89,10 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleIList
     QByteArray dataSend;
 
     double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
-    for(int phase=1; phase<=3; phase++) {
-        if(phase <= m_countVoltagePhases) {
-            int idx = phase-1;
-            rmsI[idx] = m_requestedParamState[QString("I%1").arg(phase)].toObject()["rms"].toDouble();
-            angleI[idx] = m_requestedParamState[QString("I%1").arg(phase)].toObject()["angle"].toDouble();
+    for(int phase=0; phase<3; phase++) {
+        if(phase < m_jsonStructApi->getCountIPhases()) {
+            rmsI[phase] = m_paramsRequested.getRms(false, phase);
+            angleI[phase] = m_paramsRequested.getAngle(false, phase);
         }
     }
 
@@ -120,36 +117,38 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateSwitchPhasesList
 {
     QByteArray dataSend;
     dataSend = m_ioPrefix + "UI";
-    bool globalOn = m_requestedParamState["on"].toBool();
+    bool globalOn = m_paramsRequested.getOn();
     bool bPhaseOn = false;
+    int phaseCountU = m_jsonStructApi->getCountUPhases();
+    int phaseCountI = m_jsonStructApi->getCountIPhases();
     // voltage
-    for(int phase=1; phase<=3; phase++) {
-        bool phaseAvail = phase <= m_countVoltagePhases;
+    for(int phase=0; phase<3; phase++) {
+        bool phaseAvail = phase < phaseCountU;
         bPhaseOn = false;
         if(globalOn && phaseAvail) {
-            bPhaseOn = m_requestedParamState[QString("U%1").arg(phase)].toObject()["on"].toBool();
+            bPhaseOn = m_paramsRequested.getOn(true, phase);
         }
         dataSend.append(bPhaseOn ? "E" : "A");
     }
     // current
-    for(int phase=1; phase<=3; phase++) {
-        bool phaseAvail = phase <= m_countCurrentPhases;
+    for(int phase=0; phase<3; phase++) {
+        bool phaseAvail = phase < phaseCountI;
         bPhaseOn = false;
         if(globalOn && phaseAvail) {
-            bPhaseOn = m_requestedParamState[QString("I%1").arg(phase)].toObject()["on"].toBool();
+            bPhaseOn = m_paramsRequested.getOn(false, phase);
         }
         dataSend.append(bPhaseOn ? "P" : "A");
     }
     // aux u
     bPhaseOn = false;
-    if(globalOn && m_countVoltagePhases>3) {
-        bPhaseOn = m_requestedParamState[QString("U%1").arg(4)].toObject()["on"].toBool();
+    if(globalOn && phaseCountU>3) {
+        bPhaseOn = m_paramsRequested.getOn(true, 3);
     }
     dataSend.append(bPhaseOn ? "E" : "A");
     // aux i
     bPhaseOn = false;
-    if(globalOn && m_countCurrentPhases>3) {
-        bPhaseOn = m_requestedParamState[QString("I%1").arg(4)].toObject()["on"].toBool();
+    if(globalOn && phaseCountI>3) {
+        bPhaseOn = m_paramsRequested.getOn(false, 3);
     }
     dataSend.append(bPhaseOn ? "E" : "A");
     // relative comparison - off for now
@@ -164,10 +163,9 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateFrequencyList()
 {
     QByteArray dataSend;
     dataSend = m_ioPrefix + "FR";
-    bool quartzVar = m_requestedParamState["Frequency"].toObject()["type"] == "var";
+    bool quartzVar = m_paramsRequested.getFreqVarOn();
     if(quartzVar) {
-        double frequency = m_requestedParamState["Frequency"].toObject()["val"].toDouble();
-        dataSend += cSourceIoCmdHelper::formatDouble(frequency, 2, '.', 2);
+        dataSend += cSourceIoCmdHelper::formatDouble(m_paramsRequested.getFreqVal(), 2, '.', 2);
     }
     else {
         // for now we support 50Hz sync only

@@ -3,6 +3,7 @@
 
 #include <QList>
 #include <QJsonObject>
+#include "sourcejsonparamapi.h"
 
 class cSourceActionTypes
 {
@@ -31,7 +32,7 @@ typedef QList<cSourceActionTypes::ActionTypes> tSourceActionTypeList;
 class cSourceActionGenerator
 {
 public:
-    static tSourceActionTypeList generateLoadActionList(const QJsonObject jsonSourceParamState);
+    static tSourceActionTypeList generateLoadActionList(cSourceJsonParamApi requestedParams);
     static tSourceActionTypeList generatePeriodicActionList();
 };
 

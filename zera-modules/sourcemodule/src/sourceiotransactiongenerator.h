@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QJsonObject>
 #include "sourceactions.h"
+#include "sourcejsonparamapi.h"
 
 enum IoResponseType {
     WAIT_FOR_TIMEOUT = 0,
@@ -31,9 +32,10 @@ typedef QList<cSourceIoTransaction> tSourceIoTransactionList;
 class cSourceIoTransactionGenerator
 {
 public:
-    cSourceIoTransactionGenerator();
-    void setParamsStructure(QJsonObject jsonParamsStructure);
-    tSourceIoTransactionList generateIoTransactionList(QJsonObject requestedParamState);
+    cSourceIoTransactionGenerator(QJsonObject jsonParamsStructure);
+    ~cSourceIoTransactionGenerator();
+
+    tSourceIoTransactionList generateIoTransactionList(cSourceJsonParamApi requestedParams);
 
 private:
     tSourceIoTransactionList generateListForAction(cSourceActionTypes::ActionTypes actionType);
@@ -44,13 +46,10 @@ private:
     tSourceIoTransactionList generateFrequencyList();
     tSourceIoTransactionList generateRegulationList();
 
-    QJsonObject m_jsonParamsStructure;
-    QJsonObject m_requestedParamState;
-    QJsonObject m_lastSetParamState;
+    cSourceJsonStructureApi* m_jsonStructApi = nullptr;
+    cSourceJsonParamApi m_paramsRequested;
 
     QByteArray m_ioPrefix;
-    int m_countVoltagePhases;
-    int m_countCurrentPhases;
 };
 
 
