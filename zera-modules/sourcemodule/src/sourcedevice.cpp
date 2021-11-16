@@ -18,7 +18,7 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sup
     m_version(version)
 {
     m_paramStateLoadSave = new cSourceJsonStateIo(type);
-    m_ioTransactionGenerator = new cSourceIoTransactionGenerator(m_paramStateLoadSave->getJsonStructure());
+    m_ioTransactionGenerator = new cSourceSwitchIoTransactionGenerator(m_paramStateLoadSave->getJsonStructure());
     m_paramsCurrent.setParams(m_paramStateLoadSave->loadJsonState());
 
     connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
