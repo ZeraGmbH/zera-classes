@@ -5,7 +5,7 @@
 
 static void echoStructureName(int type)
 {
-    qInfo("Checking structure file %s...", qPrintable(cSourceJsonFilenames::getJsonStructurePathName(SupportedSourceTypes(type))));
+    //qInfo("Checking structure file %s...", qPrintable(cSourceJsonFilenames::getJsonStructurePathName(SupportedSourceTypes(type))));
 }
 
 TEST(TEST_SOURCE_STRUCT_API, NAME_VALID) { // check if all structure files have a name entry
