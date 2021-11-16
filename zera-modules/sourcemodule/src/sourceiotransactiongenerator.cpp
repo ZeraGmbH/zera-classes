@@ -1,6 +1,12 @@
 #include "sourceiotransactiongenerator.h"
 #include "sourceactions.h"
 
+void cSourceIoTransaction::setActionType(cSourceActionTypes::ActionTypes actionType)
+{
+    m_actionType = actionType;
+}
+
+
 cSourceSwitchIoTransactionGenerator::cSourceSwitchIoTransactionGenerator(QJsonObject jsonParamsStructure) :
     m_jsonStructApi(new cSourceJsonStructureApi(jsonParamsStructure)),
     m_ioPrefix(m_jsonStructApi->getIoPrefix())
@@ -12,15 +18,16 @@ cSourceSwitchIoTransactionGenerator::~cSourceSwitchIoTransactionGenerator()
     delete m_jsonStructApi;
 }
 
-tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateIoTransactionList(cSourceJsonParamApi requestedParams)
+cSourceIOTransactionPacket cSourceSwitchIoTransactionGenerator::generateListToSwitch(cSourceJsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateLoadActionList(requestedParams);
-    tSourceIoTransactionList transactionList;
+    cSourceIOTransactionPacket transactionPacket;
+    transactionPacket.m_transactionType = TRANSACTION_SWITCH;
     for(auto &actionType : actionsTypeList) {
-        transactionList.append(generateListForAction(actionType));
+        transactionPacket.m_transactionList.append(generateListForAction(actionType));
     }
-    return transactionList;
+    return transactionPacket;
 }
 
 tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateListForAction(cSourceActionTypes::ActionTypes actionType)
@@ -47,9 +54,10 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateListForAct
         transactionList.append(generateSwitchPhasesList());
         break;
     default:
-        qCritical("Should not land in generateListForAction with %i - more coffee?", int(actionType));
         break;
-
+    }
+    for(auto &transaction : transactionList) {
+        transaction.m_actionType = actionType;
     }
     return transactionList;
 }
@@ -79,7 +87,7 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngl
     }
     dataSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKUP\r";
-    transactionList.append(cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse));
+    transactionList.append(cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse));
     return transactionList;
 }
 
@@ -108,7 +116,7 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngl
     }
     dataSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKIP\r";
-    transactionList.append(cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse));
+    transactionList.append(cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse));
 
     return transactionList;
 }
@@ -156,7 +164,7 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateSwitchPhas
 
     dataSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKUI\r";
-    return tSourceIoTransactionList() << cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse);
+    return tSourceIoTransactionList() << cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse);
 }
 
 tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateFrequencyList()
@@ -173,7 +181,7 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateFrequencyL
     }
     dataSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKFR\r";
-    return tSourceIoTransactionList() << cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse);
+    return tSourceIoTransactionList() << cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse);
 }
 
 tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRegulationList()
@@ -186,7 +194,7 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRegulation
 
     dataSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKRE\r";
-    return tSourceIoTransactionList() << cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse);
+    return tSourceIoTransactionList() << cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse);
 }
 
 QByteArray cSourceIoCmdHelper::formatDouble(double val, int preDigits, char digit, int postDigits)

@@ -31,7 +31,7 @@ public:
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
-    void startActions(tSourceIoTransactionList transactionList);
+    void startActions(cSourceIOTransactionPacket transactionPacket);
     void saveState(); // persistency
 
 signals:

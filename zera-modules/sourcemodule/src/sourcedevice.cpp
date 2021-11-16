@@ -53,7 +53,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
     // transactionList is not necessary for demo but let's create it here for
     // debug purpose
-    tSourceIoTransactionList transactionList = m_ioTransactionGenerator->generateIoTransactionList(m_paramsRequested);
+    cSourceIOTransactionPacket transactionPacket = m_ioTransactionGenerator->generateListToSwitch(m_paramsRequested);
     if(isDemo()) {
         if(m_paramsRequested.getOn()) {
             m_demoOnOffDelayTimer.start(3000);
@@ -63,7 +63,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
         }
     }
     else {
-        startActions(transactionList);
+        startActions(transactionPacket);
     }
 }
 
@@ -98,7 +98,7 @@ void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
     connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
 }
 
-void cSourceDevice::startActions(tSourceIoTransactionList transactionList)
+void cSourceDevice::startActions(cSourceIOTransactionPacket transactionPacket)
 {
 
 }
