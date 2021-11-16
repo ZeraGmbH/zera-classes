@@ -642,12 +642,12 @@ void myMessageOutput(QtMsgType type, const QMessageLogContext &context, const QS
     switch(type) {
         case QtInfoMsg: {
             QTextStream cout(stdout, QIODevice::WriteOnly);
-            cout << msg << endl;
+            cout << msg << Qt::endl;
             break;
         }
         default: {
             QTextStream cout(stderr, QIODevice::WriteOnly);
-            cout << msg << endl;
+            cout << msg << Qt::endl;
             break;
         }
     }
