@@ -3,49 +3,55 @@
 #include "sourcejsonapi.h"
 
 // Check all actions are generated for on
-TEST(TEST_SOURCEACTIONS, ACTIONS_ON_COMPLETE) {
+TEST(TEST_SOURCEACTIONS, SWITCH_ON_COMPLETE) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(cSourceJsonParamApi(paramApi));
-    EXPECT_EQ(actionList.count(), cSourceActionTypes::getLoadActionTypeCount());
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
+    EXPECT_EQ(actionList.count(), cSourceActionTypes::switchTypeCount);
 }
 
-// Check for on are valid
-TEST(TEST_SOURCEACTIONS, ACTIONS_ON_VALID) {
+// Check for switch on all valid
+TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
     for(auto action : actionList) {
-        EXPECT_FALSE(action == cSourceActionTypes::ACTION_UNDEF);
-        EXPECT_FALSE(action == cSourceActionTypes::LOAD_ACTION_COUNT);
-        EXPECT_FALSE(action == cSourceActionTypes::PERIODIC_LAST);
+        EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
+        EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
     }
 }
 
-// Check if a switch off just generates switch phases
-TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
+// Check for switch off just generates switch phases
+TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(paramApi);
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(paramApi);
     EXPECT_EQ(actionList.count(), 1);
-    EXPECT_EQ(actionList.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
+    EXPECT_EQ(actionList[0], cSourceActionTypes::ActionTypes::SWITCH_PHASES);
 }
 
 // Check for off are valid
-TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_VALID) {
+TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
     for(auto action : actionList) {
-        EXPECT_FALSE(action == cSourceActionTypes::ACTION_UNDEF);
-        EXPECT_FALSE(action == cSourceActionTypes::LOAD_ACTION_COUNT);
-        EXPECT_FALSE(action == cSourceActionTypes::PERIODIC_LAST);
+        EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
+        EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
     }
 }
 
-TEST(TEST_SOURCEACTIONS, PERIODIC_ACTIONS_COMPLETE) {
-    tSourceActionTypeList periodicActionList = cSourceActionGenerator::generatePeriodicActions();
-    EXPECT_EQ(periodicActionList.count(), cSourceActionTypes::getPeriodicActionTypeCount());
+TEST(TEST_SOURCEACTIONS, PERIODIC_VALID) {
+    tSourceActionTypeList actionList = cSourceActionGenerator::generatePeriodicActions();
+    for(auto action : actionList) {
+        EXPECT_GT(action, cSourceActionTypes::PERIODIC_UNDEF);
+        EXPECT_LT(action, cSourceActionTypes::PERIODIC_UNDEF2);
+    }
+}
+
+TEST(TEST_SOURCEACTIONS, PERIODIC_COMPLETE) {
+    tSourceActionTypeList actionList = cSourceActionGenerator::generatePeriodicActions();
+    EXPECT_EQ(actionList.count(), cSourceActionTypes::periodicTypeCount);
 }
 
 typedef QList<int> tTestList;
@@ -70,10 +76,11 @@ TEST(TEST_SOURCEACTIONS, SORT_TO_FRONT) {
     int entryCount = actionList.count();
 
     tTestList actionListSorted = sortListCustom(actionList, tTestList() << 3 << 4, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 3, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 4, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 1, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[3] == 2, true);
+    EXPECT_EQ(actionListSorted.count(), entryCount);
+    EXPECT_EQ(actionListSorted[0], 3);
+    EXPECT_EQ(actionListSorted[1], 4);
+    EXPECT_EQ(actionListSorted[2], 1);
+    EXPECT_EQ(actionListSorted[3], 2);
 }
 
 TEST(TEST_SOURCEACTIONS, SORT_TO_BACK) {
@@ -85,10 +92,11 @@ TEST(TEST_SOURCEACTIONS, SORT_TO_BACK) {
     int entryCount = actionList.count();
 
     tTestList actionListSorted = sortListCustom(actionList, tTestList() << 1 << 2, false);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 3, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 4, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 1, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[3] == 2, true);
+    EXPECT_EQ(actionListSorted.count(), entryCount);
+    EXPECT_EQ(actionListSorted[0], 3);
+    EXPECT_EQ(actionListSorted[1], 4);
+    EXPECT_EQ(actionListSorted[2], 1);
+    EXPECT_EQ(actionListSorted[3], 2);
 }
 
 TEST(TEST_SOURCEACTIONS, SORT_KEEP_SEQUENCE) {
@@ -100,8 +108,9 @@ TEST(TEST_SOURCEACTIONS, SORT_KEEP_SEQUENCE) {
     int entryCount = actionList.count();
 
     tTestList actionListSorted = sortListCustom(actionList, tTestList(), true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[0] == 1, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[1] == 2, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[2] == 3, true);
-    EXPECT_EQ(actionListSorted.count() == entryCount && actionListSorted[3] == 4, true);
+    EXPECT_EQ(actionListSorted.count(), entryCount);
+    EXPECT_EQ(actionListSorted[0], 1);
+    EXPECT_EQ(actionListSorted[1], 2);
+    EXPECT_EQ(actionListSorted[2], 3);
+    EXPECT_EQ(actionListSorted[3], 4);
 }

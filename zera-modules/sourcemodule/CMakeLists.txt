@@ -202,6 +202,8 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         ${UNITTESTS}
         ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
+    # constexpr / EXPECT_EQ -> linker problems for c++ < 17
+    set_property(TARGET sourcemodule-unittest PROPERTY CXX_STANDARD 17)
 
     target_include_directories(sourcemodule-unittest
         PUBLIC
