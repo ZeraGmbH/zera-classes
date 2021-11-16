@@ -3,21 +3,9 @@
 
 #include <QObject>
 #include <QSerialPortAsyncBlock>
+#include "sourcetransactionidgenerator.h"
 
-// ------------------------- helper classes --------------------------
-class cSourceInterfaceTransactionIdGenerator
-{
-public:
-    /**
-     * @brief nextTransactionID
-     * @return unique value != 0
-     */
-    int nextTransactionID();
-private:
-    int m_currentTransActionID = -1;
-};
-
-// available
+// available interface types
 enum SourceInterfaceType
 {
     SOURCE_INTERFACE_BASE = 0,
@@ -63,7 +51,7 @@ protected:
     explicit cSourceInterfaceBase(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
 
-    cSourceInterfaceTransactionIdGenerator m_transactionIDGenerator;
+    cSourceTransactionIdGenerator m_transactionIDGenerator;
 };
 
 

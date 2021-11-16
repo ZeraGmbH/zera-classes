@@ -1,13 +1,5 @@
 #include "sourceinterface.h"
 
-int cSourceInterfaceTransactionIdGenerator::nextTransactionID()
-{
-    if(++m_currentTransActionID == 0) {
-        ++m_currentTransActionID;
-    }
-    return m_currentTransActionID;
-}
-
 cSourceInterfaceBase *cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType type, QObject *parent)
 {
     cSourceInterfaceBase* interface = nullptr;
