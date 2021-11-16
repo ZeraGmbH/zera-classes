@@ -1,21 +1,21 @@
-#include "sourcejsonparamapi.h"
+#include "sourcejsonapi.h"
 
-cSourceJsonStructureApi::cSourceJsonStructureApi(QJsonObject paramStructure) :
+cSourceJsonStructApi::cSourceJsonStructApi(QJsonObject paramStructure) :
     m_paramStructure(paramStructure)
 {
 }
 
-int cSourceJsonStructureApi::getCountUPhases()
+int cSourceJsonStructApi::getCountUPhases()
 {
     return m_paramStructure["UPhaseMax"].toInt(0);
 }
 
-int cSourceJsonStructureApi::getCountIPhases()
+int cSourceJsonStructApi::getCountIPhases()
 {
     return m_paramStructure["IPhaseMax"].toInt(0);
 }
 
-QByteArray cSourceJsonStructureApi::getIoPrefix()
+QByteArray cSourceJsonStructApi::getIoPrefix()
 {
     return m_paramStructure["IoPrefix"].toString().toLatin1();
 }

@@ -2,16 +2,16 @@
 #define CSOURCETRANSACTIONIDGENERATOR_H
 
 
-class cSourceTransactionIdGenerator
+class cSourceIdGenerator
 {
 public:
     /**
-     * @brief nextTransactionID
+     * @brief nextID
      * @return unique value != 0
      */
-    int nextTransactionID();
+    int nextID();
 private:
-    int m_currentTransActionID = -1;
+    int m_currentID = -1;
 };
 
 #endif // CSOURCETRANSACTIONIDGENERATOR_H

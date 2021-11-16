@@ -33,10 +33,10 @@ private:
     void sendReceiveSourceID();
     QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);
 
-    QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
+    QSharedPointer<cSourceInterfaceBase> m_ioInterface;
     QUuid m_uuid;
     cSourceDevice* m_sourceDeviceIdentified;
-    QByteArray m_receivedData;
+    QByteArray m_bytesReceived;
     int m_currentSourceTested = 0;
     QSharedPointer<cSourceScanner> m_scannerReference;
 };

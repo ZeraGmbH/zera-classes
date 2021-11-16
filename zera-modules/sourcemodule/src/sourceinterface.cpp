@@ -1,6 +1,6 @@
 #include "sourceinterface.h"
 
-cSourceInterfaceBase *cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType type, QObject *parent)
+cSourceInterfaceBase *cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes type, QObject *parent)
 {
     cSourceInterfaceBase* interface = nullptr;
     switch (type) {
@@ -45,7 +45,7 @@ cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBa
 
 int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
 {
-    int transactionID = m_transactionIDGenerator.nextTransactionID();
+    int transactionID = m_transactionIDGenerator.nextID();
     emit sigIoFinishedToQueue(transactionID);
     return transactionID;
 }

@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 #include "sourceactions.h"
-#include "sourcejsonparamapi.h"
+#include "sourcejsonapi.h"
 
 // Check all actions are generated for on
 TEST(TEST_SOURCEACTIONS, ACTIONS_ON_COMPLETE) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(cSourceJsonParamApi(paramApi));
     EXPECT_EQ(actionList.count(), cSourceActionTypes::getLoadActionTypeCount());
 }
 
@@ -14,7 +14,7 @@ TEST(TEST_SOURCEACTIONS, ACTIONS_ON_COMPLETE) {
 TEST(TEST_SOURCEACTIONS, ACTIONS_ON_VALID) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(cSourceJsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_FALSE(action == cSourceActionTypes::ACTION_UNDEF);
         EXPECT_FALSE(action == cSourceActionTypes::LOAD_ACTION_COUNT);
@@ -26,7 +26,7 @@ TEST(TEST_SOURCEACTIONS, ACTIONS_ON_VALID) {
 TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(paramApi);
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(paramApi);
     EXPECT_EQ(actionList.count(), 1);
     EXPECT_EQ(actionList.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
 }
@@ -35,7 +35,7 @@ TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
 TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_VALID) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActions(cSourceJsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_FALSE(action == cSourceActionTypes::ACTION_UNDEF);
         EXPECT_FALSE(action == cSourceActionTypes::LOAD_ACTION_COUNT);
@@ -44,7 +44,7 @@ TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_VALID) {
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_ACTIONS_COMPLETE) {
-    tSourceActionTypeList periodicActionList = cSourceActionGenerator::generatePeriodicActionList();
+    tSourceActionTypeList periodicActionList = cSourceActionGenerator::generatePeriodicActions();
     EXPECT_EQ(periodicActionList.count(), cSourceActionTypes::getPeriodicActionTypeCount());
 }
 

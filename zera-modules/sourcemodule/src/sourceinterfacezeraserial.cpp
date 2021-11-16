@@ -72,7 +72,7 @@ cSourceInterfaceZeraSerial::~cSourceInterfaceZeraSerial()
     close();
 }
 
-int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray dataSend, QByteArray *pDataReceive)
+int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray bytesSend, QByteArray *pDataReceive)
 {
     // set read timeout
     const cSourceInterfaceZeraSerialPrivate::TTimeoutParam* timeoutParam = &d_ptr->defaultTimeoutParam;
@@ -90,9 +90,9 @@ int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray dataSend, QByteArray *
     m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
 
     // try io
-    m_serialIO.sendAndReceive(dataSend, pDataReceive);
+    m_serialIO.sendAndReceive(bytesSend, pDataReceive);
     if(m_serialIO.isIOPending()) { // ZERA: One transaction at a time -> no hash for m_currentTransactionID
-        m_currentTransactionID = m_transactionIDGenerator.nextTransactionID();
+        m_currentTransactionID = m_transactionIDGenerator.nextID();
     }
     else {
         m_currentTransactionID = 0;

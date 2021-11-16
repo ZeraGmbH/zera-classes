@@ -114,7 +114,7 @@ QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
     int interfaceType = p_params["p_type"].toInt();
     QString deviceInfo = p_params["p_deviceInfo"].toString();
     QUuid veinUuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
-    m_pSourceDeviceManager->startSourceScan(SourceInterfaceType(interfaceType), deviceInfo, veinUuid);
+    m_pSourceDeviceManager->startSourceScan(SourceInterfaceTypes(interfaceType), deviceInfo, veinUuid);
     return true;
 }
 

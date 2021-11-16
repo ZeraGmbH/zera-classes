@@ -1,38 +1,38 @@
-#include "sourceiotransactiongenerator.h"
+#include "sourceiopacketgenerator.h"
 #include "sourceactions.h"
 
-void cSourceIoTransaction::setActionType(cSourceActionTypes::ActionTypes actionType)
+void cSourceSingleOutIn::setActionType(cSourceActionTypes::ActionTypes actionType)
 {
     m_actionType = actionType;
 }
 
 
-cSourceSwitchIoTransactionGenerator::cSourceSwitchIoTransactionGenerator(QJsonObject jsonParamsStructure) :
-    m_jsonStructApi(new cSourceJsonStructureApi(jsonParamsStructure)),
+cSourceIoPacketGenerator::cSourceIoPacketGenerator(QJsonObject jsonParamsStructure) :
+    m_jsonStructApi(new cSourceJsonStructApi(jsonParamsStructure)),
     m_ioPrefix(m_jsonStructApi->getIoPrefix())
 {
 }
 
-cSourceSwitchIoTransactionGenerator::~cSourceSwitchIoTransactionGenerator()
+cSourceIoPacketGenerator::~cSourceIoPacketGenerator()
 {
     delete m_jsonStructApi;
 }
 
-cSourceIOTransactionPacket cSourceSwitchIoTransactionGenerator::generateListToSwitch(cSourceJsonParamApi requestedParams)
+cSourceCommandPacket cSourceIoPacketGenerator::generateOnOffPacket(cSourceJsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
-    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateLoadActionList(requestedParams);
-    cSourceIOTransactionPacket transactionPacket;
-    transactionPacket.m_transactionType = TRANSACTION_SWITCH;
+    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateLoadActions(requestedParams);
+    cSourceCommandPacket commandPack;
+    commandPack.m_commandType = COMMAND_SWITCH;
     for(auto &actionType : actionsTypeList) {
-        transactionPacket.m_transactionList.append(generateListForAction(actionType));
+        commandPack.m_singleOutInList.append(generateListForAction(actionType));
     }
-    return transactionPacket;
+    return commandPack;
 }
 
-tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateListForAction(cSourceActionTypes::ActionTypes actionType)
+tSourceOutInList cSourceIoPacketGenerator::generateListForAction(cSourceActionTypes::ActionTypes actionType)
 {
-    tSourceIoTransactionList transactionList;
+    tSourceOutInList transactionList;
     switch(actionType) {
     case cSourceActionTypes::SET_RMS:
         transactionList.append(generateRMSAndAngleUList());
@@ -62,10 +62,10 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateListForAct
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngleUList()
+tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleUList()
 {
-    tSourceIoTransactionList transactionList;
-    QByteArray dataSend;
+    tSourceOutInList transactionList;
+    QByteArray bytesSend;
 
     double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
@@ -75,26 +75,26 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngl
         }
     }
 
-    dataSend = m_ioPrefix + "UP";
+    bytesSend = m_ioPrefix + "UP";
     // e-funct off for now
-    dataSend.append('A');
+    bytesSend.append('A');
     // do not switch off voltage at dosage
-    dataSend.append('E');
+    bytesSend.append('E');
     for(int idx=0; idx<3; idx++) {
-        dataSend.append('R'+idx);
-        dataSend += cSourceIoCmdHelper::formatDouble(rmsU[idx], 3, '.', 3);
-        dataSend += cSourceIoCmdHelper::formatDouble(angleU[idx], 3, '.', 2);
+        bytesSend.append('R'+idx);
+        bytesSend += cSourceIoCmdHelper::formatDouble(rmsU[idx], 3, '.', 3);
+        bytesSend += cSourceIoCmdHelper::formatDouble(angleU[idx], 3, '.', 2);
     }
-    dataSend.append('\r');
+    bytesSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKUP\r";
-    transactionList.append(cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse));
+    transactionList.append(cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngleIList()
+tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleIList()
 {
-    tSourceIoTransactionList transactionList;
-    QByteArray dataSend;
+    tSourceOutInList transactionList;
+    QByteArray bytesSend;
 
     double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
@@ -104,27 +104,27 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngl
         }
     }
 
-    dataSend = m_ioPrefix + "IP";
+    bytesSend = m_ioPrefix + "IP";
     // e-funct off for now
-    dataSend.append('A');
+    bytesSend.append('A');
     // dimension always Amps for now
-    dataSend.append('A');
+    bytesSend.append('A');
     for(int idx=0; idx<3; idx++) {
-        dataSend.append('R'+idx);
-        dataSend += cSourceIoCmdHelper::formatDouble(rmsI[idx], 3, '.', 3);
-        dataSend += cSourceIoCmdHelper::formatDouble(angleI[idx], 3, '.', 2);
+        bytesSend.append('R'+idx);
+        bytesSend += cSourceIoCmdHelper::formatDouble(rmsI[idx], 3, '.', 3);
+        bytesSend += cSourceIoCmdHelper::formatDouble(angleI[idx], 3, '.', 2);
     }
-    dataSend.append('\r');
+    bytesSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKIP\r";
-    transactionList.append(cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse));
+    transactionList.append(cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
 
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateSwitchPhasesList()
+tSourceOutInList cSourceIoPacketGenerator::generateSwitchPhasesList()
 {
-    QByteArray dataSend;
-    dataSend = m_ioPrefix + "UI";
+    QByteArray bytesSend;
+    bytesSend = m_ioPrefix + "UI";
     bool globalOn = m_paramsRequested.getOn();
     bool bPhaseOn = false;
     int phaseCountU = m_jsonStructApi->getCountUPhases();
@@ -136,7 +136,7 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateSwitchPhas
         if(globalOn && phaseAvail) {
             bPhaseOn = m_paramsRequested.getOn(true, phase);
         }
-        dataSend.append(bPhaseOn ? "E" : "A");
+        bytesSend.append(bPhaseOn ? "E" : "A");
     }
     // current
     for(int phase=0; phase<3; phase++) {
@@ -145,56 +145,56 @@ tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateSwitchPhas
         if(globalOn && phaseAvail) {
             bPhaseOn = m_paramsRequested.getOn(false, phase);
         }
-        dataSend.append(bPhaseOn ? "P" : "A");
+        bytesSend.append(bPhaseOn ? "P" : "A");
     }
     // aux u
     bPhaseOn = false;
     if(globalOn && phaseCountU>3) {
         bPhaseOn = m_paramsRequested.getOn(true, 3);
     }
-    dataSend.append(bPhaseOn ? "E" : "A");
+    bytesSend.append(bPhaseOn ? "E" : "A");
     // aux i
     bPhaseOn = false;
     if(globalOn && phaseCountI>3) {
         bPhaseOn = m_paramsRequested.getOn(false, 3);
     }
-    dataSend.append(bPhaseOn ? "E" : "A");
+    bytesSend.append(bPhaseOn ? "E" : "A");
     // relative comparison - off for now
-    dataSend.append("A");
+    bytesSend.append("A");
 
-    dataSend.append("\r");
+    bytesSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKUI\r";
-    return tSourceIoTransactionList() << cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse);
+    return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateFrequencyList()
+tSourceOutInList cSourceIoPacketGenerator::generateFrequencyList()
 {
-    QByteArray dataSend;
-    dataSend = m_ioPrefix + "FR";
+    QByteArray bytesSend;
+    bytesSend = m_ioPrefix + "FR";
     bool quartzVar = m_paramsRequested.getFreqVarOn();
     if(quartzVar) {
-        dataSend += cSourceIoCmdHelper::formatDouble(m_paramsRequested.getFreqVal(), 2, '.', 2);
+        bytesSend += cSourceIoCmdHelper::formatDouble(m_paramsRequested.getFreqVal(), 2, '.', 2);
     }
     else {
         // for now we support 50Hz sync only
-        dataSend += cSourceIoCmdHelper::formatDouble(0.0, 2, '.', 2);
+        bytesSend += cSourceIoCmdHelper::formatDouble(0.0, 2, '.', 2);
     }
-    dataSend.append("\r");
+    bytesSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKFR\r";
-    return tSourceIoTransactionList() << cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse);
+    return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRegulationList()
+tSourceOutInList cSourceIoPacketGenerator::generateRegulationList()
 {
-    QByteArray dataSend;
-    dataSend = m_ioPrefix + "RE";
+    QByteArray bytesSend;
+    bytesSend = m_ioPrefix + "RE";
 
     // for now we pin regulation to on
-    dataSend.append("1");
+    bytesSend.append("1");
 
-    dataSend.append("\r");
+    bytesSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKRE\r";
-    return tSourceIoTransactionList() << cSourceIoTransaction(RESP_FULL_DATA_SEQUENCE, dataSend, expectedResponse);
+    return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
 QByteArray cSourceIoCmdHelper::formatDouble(double val, int preDigits, char digit, int postDigits)
