@@ -3,25 +3,49 @@
 #include "sourcejsonparamapi.h"
 
 // Check all actions are generated for on
-TEST(TEST_SOURCEACTIONS, ACTIONS_COMPLETE) {
+TEST(TEST_SOURCEACTIONS, ACTIONS_ON_COMPLETE) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
-    EXPECT_EQ(actionMap.count(), cSourceActionTypes::getLoadActionTypeCount());
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
+    EXPECT_EQ(actionList.count(), cSourceActionTypes::getLoadActionTypeCount());
+}
+
+// Check for on are valid
+TEST(TEST_SOURCEACTIONS, ACTIONS_ON_VALID) {
+    cSourceJsonParamApi paramApi;
+    paramApi.setOn(true);
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
+    for(auto action : actionList) {
+        EXPECT_FALSE(action == cSourceActionTypes::ACTION_UNDEF);
+        EXPECT_FALSE(action == cSourceActionTypes::LOAD_ACTION_COUNT);
+        EXPECT_FALSE(action == cSourceActionTypes::PERIODIC_LAST);
+    }
 }
 
 // Check if a switch off just generates switch phases
 TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_PHASE_ONLY) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionMap = cSourceActionGenerator::generateLoadActionList(paramApi);
-    EXPECT_EQ(actionMap.count(), 1);
-    EXPECT_EQ(actionMap.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(paramApi);
+    EXPECT_EQ(actionList.count(), 1);
+    EXPECT_EQ(actionList.contains(cSourceActionTypes::ActionTypes::SWITCH_PHASES), true);
+}
+
+// Check for off are valid
+TEST(TEST_SOURCEACTIONS, ACTIONS_OFF_VALID) {
+    cSourceJsonParamApi paramApi;
+    paramApi.setOn(false);
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi(paramApi));
+    for(auto action : actionList) {
+        EXPECT_FALSE(action == cSourceActionTypes::ACTION_UNDEF);
+        EXPECT_FALSE(action == cSourceActionTypes::LOAD_ACTION_COUNT);
+        EXPECT_FALSE(action == cSourceActionTypes::PERIODIC_LAST);
+    }
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_ACTIONS_COMPLETE) {
-    tSourceActionTypeList periodicActionMap = cSourceActionGenerator::generatePeriodicActionList();
-    EXPECT_EQ(periodicActionMap.count(), cSourceActionTypes::getPeriodicActionTypeCount());
+    tSourceActionTypeList periodicActionList = cSourceActionGenerator::generatePeriodicActionList();
+    EXPECT_EQ(periodicActionList.count(), cSourceActionTypes::getPeriodicActionTypeCount());
 }
 
 typedef QList<int> tTestList;
