@@ -1,18 +1,18 @@
 #include "sourceiotransactiongenerator.h"
 #include "sourceactions.h"
 
-cSourceIoTransactionGenerator::cSourceIoTransactionGenerator(QJsonObject jsonParamsStructure) :
+cSourceSwitchIoTransactionGenerator::cSourceSwitchIoTransactionGenerator(QJsonObject jsonParamsStructure) :
     m_jsonStructApi(new cSourceJsonStructureApi(jsonParamsStructure)),
     m_ioPrefix(m_jsonStructApi->getIoPrefix())
 {
 }
 
-cSourceIoTransactionGenerator::~cSourceIoTransactionGenerator()
+cSourceSwitchIoTransactionGenerator::~cSourceSwitchIoTransactionGenerator()
 {
     delete m_jsonStructApi;
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateIoTransactionList(cSourceJsonParamApi requestedParams)
+tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateIoTransactionList(cSourceJsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateLoadActionList(requestedParams);
@@ -23,7 +23,7 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateIoTransactionLis
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateListForAction(cSourceActionTypes::ActionTypes actionType)
+tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateListForAction(cSourceActionTypes::ActionTypes actionType)
 {
     tSourceIoTransactionList transactionList;
     switch(actionType) {
@@ -54,7 +54,7 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateListForAction(cS
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleUList()
+tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngleUList()
 {
     tSourceIoTransactionList transactionList;
     QByteArray dataSend;
@@ -83,7 +83,7 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleUList
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleIList()
+tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRMSAndAngleIList()
 {
     tSourceIoTransactionList transactionList;
     QByteArray dataSend;
@@ -113,7 +113,7 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateRMSAndAngleIList
     return transactionList;
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateSwitchPhasesList()
+tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateSwitchPhasesList()
 {
     QByteArray dataSend;
     dataSend = m_ioPrefix + "UI";
@@ -159,7 +159,7 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateSwitchPhasesList
     return tSourceIoTransactionList() << cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse);
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateFrequencyList()
+tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateFrequencyList()
 {
     QByteArray dataSend;
     dataSend = m_ioPrefix + "FR";
@@ -176,7 +176,7 @@ tSourceIoTransactionList cSourceIoTransactionGenerator::generateFrequencyList()
     return tSourceIoTransactionList() << cSourceIoTransaction(EXPECT_DATA_SEQUENCE, dataSend, expectedResponse);
 }
 
-tSourceIoTransactionList cSourceIoTransactionGenerator::generateRegulationList()
+tSourceIoTransactionList cSourceSwitchIoTransactionGenerator::generateRegulationList()
 {
     QByteArray dataSend;
     dataSend = m_ioPrefix + "RE";

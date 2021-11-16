@@ -51,7 +51,7 @@ private:
     cSourceJsonParamApi m_paramsRequested;
     cSourceJsonParamApi m_paramsCurrent;
 
-    cSourceIoTransactionGenerator* m_ioTransactionGenerator = nullptr;
+    cSourceSwitchIoTransactionGenerator* m_ioTransactionGenerator = nullptr;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;

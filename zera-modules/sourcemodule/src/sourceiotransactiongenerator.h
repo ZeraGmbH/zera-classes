@@ -29,11 +29,11 @@ public:
 
 typedef QList<cSourceIoTransaction> tSourceIoTransactionList;
 
-class cSourceIoTransactionGenerator
+class cSourceSwitchIoTransactionGenerator
 {
 public:
-    cSourceIoTransactionGenerator(QJsonObject jsonParamsStructure);
-    ~cSourceIoTransactionGenerator();
+    cSourceSwitchIoTransactionGenerator(QJsonObject jsonParamsStructure);
+    ~cSourceSwitchIoTransactionGenerator();
 
     tSourceIoTransactionList generateIoTransactionList(cSourceJsonParamApi requestedParams);
 
