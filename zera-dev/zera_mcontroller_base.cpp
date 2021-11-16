@@ -599,7 +599,7 @@ QString ZeraMcontrollerBase::getErrorMaskText()
             strFlags += m_bBootCmd ? m_errorFlagsBootText[1<<iFlag] : m_errorFlagsText[1<<iFlag];
         }
     }
-    strError.sprintf("host-mask 0x%04X: / µC-mask 0x%04X / %s",
+    strError.asprintf("host-mask 0x%04X: / µC-mask 0x%04X / %s",
                      errMaskMaster,
                      errMaskMController,
                      qPrintable(strFlags));
