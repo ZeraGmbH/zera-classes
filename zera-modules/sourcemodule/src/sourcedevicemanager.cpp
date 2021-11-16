@@ -15,7 +15,7 @@ cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
 {
 }
 
-void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceType, const QString deviceInfo, const QUuid uuid)
+void cSourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid)
 {
     if(m_activeSlotCount >= m_sourceDeviceSlots.count()) {
         emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("No free slots"));
@@ -23,7 +23,7 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceType interfaceTy
     }
     bool started = false;
     QSharedPointer<cSourceInterfaceBase> interface =
-            QSharedPointer<cSourceInterfaceBase>(cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(interfaceType)));
+            QSharedPointer<cSourceInterfaceBase>(cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(interfaceType)));
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {

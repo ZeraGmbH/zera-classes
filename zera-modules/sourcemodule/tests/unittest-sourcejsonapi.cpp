@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <zera-json-params-state.h>
-#include "sourcejsonparamapi.h"
+#include "sourcejsonapi.h"
 #include "supportedsources.h"
 
 static void echoStructureName(int type)
@@ -25,7 +25,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_U_VALID) {
         QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
         QString key = "UPhaseMax";
         EXPECT_EQ(structure.contains(key), true);
-        cSourceJsonStructureApi jsonApi(structure);
+        cSourceJsonStructApi jsonApi(structure);
         EXPECT_EQ(structure[key].toInt(-1), jsonApi.getCountUPhases());
     }
 }
@@ -36,7 +36,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_I_VALID) {
         QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
         QString key = "IPhaseMax";
         EXPECT_EQ(structure.contains(key), true);
-        cSourceJsonStructureApi jsonApi(structure);
+        cSourceJsonStructApi jsonApi(structure);
         EXPECT_EQ(structure[key].toInt(-1), jsonApi.getCountIPhases());
     }
 }
@@ -47,7 +47,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_IO_PREFIX_VALID) {
         QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
         QString key = "IoPrefix";
         EXPECT_EQ(structure.contains(key), true);
-        cSourceJsonStructureApi jsonApi(structure);
+        cSourceJsonStructApi jsonApi(structure);
         EXPECT_EQ(structure[key].toString().toLatin1(), jsonApi.getIoPrefix());
     }
 }
@@ -97,7 +97,7 @@ TEST(TEST_SOURCE_PARAM_API, PHASE_PARAM_AVAIL_IN_DEFAULT) { // check if all gene
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
         QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
-        cSourceJsonStructureApi structApi = cSourceJsonStructureApi(structure);
+        cSourceJsonStructApi structApi = cSourceJsonStructApi(structure);
         cZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);
         QJsonObject defaultParams = jsonParamsState.createDefaultJsonState();

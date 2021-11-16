@@ -3,7 +3,7 @@
 #include <zera-json-params-structure.h>
 #include <zera-json-params-state.h>
 #include "supportedsources.h"
-#include "sourcejsonparamapi.h"
+#include "sourcejsonapi.h"
 
 QString cSourceJsonFilenames::getJsonStructurePathName(SupportedSourceTypes type)
 {

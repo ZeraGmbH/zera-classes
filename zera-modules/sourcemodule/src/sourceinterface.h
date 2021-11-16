@@ -3,10 +3,9 @@
 
 #include <QObject>
 #include <QSerialPortAsyncBlock>
-#include "sourcetransactionidgenerator.h"
+#include "sourceidgenerator.h"
 
-// available interface types
-enum SourceInterfaceType
+enum SourceInterfaceTypes
 {
     SOURCE_INTERFACE_BASE = 0,
     SOURCE_INTERFACE_DEMO,
@@ -19,7 +18,7 @@ class cSourceInterfaceBase;
 // create interfaces through cSourceInterfaceFactory only
 class cSourceInterfaceFactory {
 public:
-    static cSourceInterfaceBase* createSourceInterface(SourceInterfaceType type, QObject *parent = nullptr);
+    static cSourceInterfaceBase* createSourceInterface(SourceInterfaceTypes type, QObject *parent = nullptr);
 };
 
 
@@ -32,16 +31,16 @@ class cSourceInterfaceBase : public QObject
     Q_OBJECT
 public:
     virtual ~cSourceInterfaceBase();
-    virtual SourceInterfaceType type() { return SOURCE_INTERFACE_BASE; }
+    virtual SourceInterfaceTypes type() { return SOURCE_INTERFACE_BASE; }
     virtual bool open(QString) { return false; }
     virtual void close();
     /**
      * @brief sendAndReceive
-     * @param dataSend
+     * @param bytesSend
      * @param pDataReceive
      * @return != 0: transactionID / = 0: transactionID not started
      */
-    virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive);
+    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive);
 signals:
     void sigDisconnected();
     void sigIoFinished(int transactionID); // users connect this signal
@@ -51,7 +50,7 @@ protected:
     explicit cSourceInterfaceBase(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
 
-    cSourceTransactionIdGenerator m_transactionIDGenerator;
+    cSourceIdGenerator m_transactionIDGenerator;
 };
 
 
@@ -63,9 +62,9 @@ class cSourceInterfaceDemo : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
-    virtual SourceInterfaceType type() override { return SOURCE_INTERFACE_DEMO; }
+    virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_DEMO; }
     virtual bool open(QString) override { return true; };
-    virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
+    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     void simulateExternalDisconnect();
 protected:
     explicit cSourceInterfaceDemo(QObject *parent = nullptr);
@@ -83,8 +82,8 @@ class cSourceInterfaceZeraSerial : public cSourceInterfaceBase
     Q_OBJECT
 public:
     virtual ~cSourceInterfaceZeraSerial();
-    virtual SourceInterfaceType type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
-    virtual int sendAndReceive(QByteArray dataSend, QByteArray* pDataReceive) override;
+    virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
+    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
     // wrappers - see https://github.com/ZeraGmbH/qtiohelper / QT += serialportasyncblock

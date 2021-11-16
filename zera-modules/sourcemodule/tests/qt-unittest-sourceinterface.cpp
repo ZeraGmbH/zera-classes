@@ -79,8 +79,8 @@ void SourceInterfaceTest::testDemoInterfaceFinishIDs()
 void SourceInterfaceTest::testInterfaceTypesSetProperly()
 {
     for(int type = 0; type<SOURCE_INTERFACE_TYPE_COUNT; type++) {
-        cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceType(type));
-        QCOMPARE(SourceInterfaceType(type), interface->type());
+        cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(type));
+        QCOMPARE(SourceInterfaceTypes(type), interface->type());
         delete interface;
     }
 }

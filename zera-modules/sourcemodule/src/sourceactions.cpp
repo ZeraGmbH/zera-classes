@@ -1,6 +1,6 @@
 #include "sourceactions.h"
 
-tSourceActionTypeList cSourceActionGenerator::generateLoadActionList(cSourceJsonParamApi requestedParams)
+tSourceActionTypeList cSourceActionGenerator::generateLoadActions(cSourceJsonParamApi requestedParams)
 {
     tSourceActionTypeList list;
     // 1st guess: switch off just switch phases
@@ -15,7 +15,7 @@ tSourceActionTypeList cSourceActionGenerator::generateLoadActionList(cSourceJson
     return list;
 }
 
-tSourceActionTypeList cSourceActionGenerator::generatePeriodicActionList()
+tSourceActionTypeList cSourceActionGenerator::generatePeriodicActions()
 {
     tSourceActionTypeList list;
     for(int type=cSourceActionTypes::PERIODIC_FIRST; type<int(cSourceActionTypes::PERIODIC_LAST); ++type) {

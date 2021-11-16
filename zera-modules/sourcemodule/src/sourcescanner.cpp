@@ -7,11 +7,11 @@ namespace SOURCEMODULE
 
 cSourceScanner::cSourceScanner(QSharedPointer<cSourceInterfaceBase> interface, QUuid uuid) :
     QObject(nullptr),
-    m_spIoInterface(interface),
+    m_ioInterface(interface),
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
-    connect(m_spIoInterface.get(), &cSourceInterfaceBase::sigIoFinished, this, &cSourceScanner::onIoFinished);
+    connect(m_ioInterface.get(), &cSourceInterfaceBase::sigIoFinished, this, &cSourceScanner::onIoFinished);
 }
 
 cSourceScanner::~cSourceScanner()
@@ -62,25 +62,25 @@ void cSourceScanner::setScannerReference(QSharedPointer<cSourceScanner> scannerR
 void cSourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
-    m_receivedData.clear();
+    m_bytesReceived.clear();
     // interface specifics
     QByteArray globalPrepend;
-    if(m_spIoInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
-        static_cast<cSourceInterfaceZeraSerial*>(m_spIoInterface.get())->setBlockEndCriteriaNextIo();
+    if(m_ioInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
+        static_cast<cSourceInterfaceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
             globalPrepend = "\r";
         }
     }
-    QByteArray dataSend = globalPrepend + deviceDetectInfoCurrent.queryStr;
-    m_spIoInterface->sendAndReceive(dataSend, &m_receivedData);
+    QByteArray bytesSend = globalPrepend + deviceDetectInfoCurrent.queryStr;
+    m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived);
 }
 
 QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not used yet */)
 {
     int pos;
-    for(pos=m_receivedData.length()-1; pos>=0; --pos) {
-        QByteRef curr = m_receivedData[pos];
+    for(pos=m_bytesReceived.length()-1; pos>=0; --pos) {
+        QByteRef curr = m_bytesReceived[pos];
         if(curr == 'v' || curr == 'V') {
             break;
         }
@@ -88,8 +88,8 @@ QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* no
     QByteArray version;
     if(pos >= 0) {
         QByteArray termList(" \t\n\r");
-        for(;pos < m_receivedData.length() && !termList.contains(m_receivedData[pos]); pos++) {
-            version.append(m_receivedData[pos]);
+        for(;pos < m_bytesReceived.length() && !termList.contains(m_bytesReceived[pos]); pos++) {
+            version.append(m_bytesReceived[pos]);
         }
     }
     return version;
@@ -104,9 +104,9 @@ void cSourceScanner::onIoFinished(int transactionID)
     bool ourJobIsDone = false;
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[0];
     if(transactionID) { // receive transaction id == 0 -> I/O problems -> don't try next
-        if(m_spIoInterface->type() != SOURCE_INTERFACE_DEMO) {
+        if(m_ioInterface->type() != SOURCE_INTERFACE_DEMO) {
             deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
-            if(m_receivedData.contains(deviceDetectInfoCurrent.expectedResponse)) {
+            if(m_bytesReceived.contains(deviceDetectInfoCurrent.expectedResponse)) {
                 validFound = true;
             }
         }
@@ -116,7 +116,7 @@ void cSourceScanner::onIoFinished(int transactionID)
     }
     if(validFound) {
         QByteArray version;
-        if(m_spIoInterface->type() == SOURCE_INTERFACE_DEMO) {
+        if(m_ioInterface->type() == SOURCE_INTERFACE_DEMO) {
             int nextDemoType = sDemoTypeCounter;
             nextDemoType++;
             if(nextDemoType >= SOURCE_TYPE_COUNT) {
@@ -128,7 +128,7 @@ void cSourceScanner::onIoFinished(int transactionID)
         else {
             version = extractVersionFromResponse(deviceDetectInfoCurrent.sourceType);
         }
-        m_sourceDeviceIdentified = new cSourceDevice(m_spIoInterface, deviceDetectInfoCurrent.sourceType, version);
+        m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, deviceDetectInfoCurrent.sourceType, version);
 
         emit sigTransactionFinished(m_scannerReference);
         ourJobIsDone = true;

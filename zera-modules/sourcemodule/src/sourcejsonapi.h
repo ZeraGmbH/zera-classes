@@ -3,10 +3,10 @@
 
 #include <QJsonObject>
 
-class cSourceJsonStructureApi
+class cSourceJsonStructApi
 {
 public:
-    cSourceJsonStructureApi(QJsonObject paramStructure);
+    cSourceJsonStructApi(QJsonObject paramStructure);
 
     int getCountUPhases();
     int getCountIPhases();

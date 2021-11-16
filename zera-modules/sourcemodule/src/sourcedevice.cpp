@@ -6,19 +6,19 @@
 #include "sourcedevice.h"
 #include "sourceveininterface.h"
 #include "sourceinterface.h"
-#include "sourceiotransactiongenerator.h"
+#include "sourceiopacketgenerator.h"
 
 namespace SOURCEMODULE
 {
 
 cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SupportedSourceTypes type, QString version) :
     QObject(nullptr),
-    m_spIoInterface(interface),
+    m_ioInterface(interface),
     m_type(type),
     m_version(version)
 {
     m_paramStateLoadSave = new cSourceJsonStateIo(type);
-    m_ioTransactionGenerator = new cSourceSwitchIoTransactionGenerator(m_paramStateLoadSave->getJsonStructure());
+    m_outInGenerator = new cSourceIoPacketGenerator(m_paramStateLoadSave->getJsonStructure());
     m_paramsCurrent.setParams(m_paramStateLoadSave->loadJsonState());
 
     connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
@@ -31,14 +31,14 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sup
 
 cSourceDevice::~cSourceDevice()
 {
-    delete m_ioTransactionGenerator;
+    delete m_outInGenerator;
     delete m_paramStateLoadSave;
 }
 
 void cSourceDevice::close()
 {
     if(isDemo()) {
-        static_cast<cSourceInterfaceDemo*>(m_spIoInterface.get())->simulateExternalDisconnect();
+        static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
     }
     else {
         // TODO - maybe some sequence?
@@ -53,7 +53,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
     // transactionList is not necessary for demo but let's create it here for
     // debug purpose
-    cSourceIOTransactionPacket transactionPacket = m_ioTransactionGenerator->generateListToSwitch(m_paramsRequested);
+    cSourceCommandPacket commandPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
     if(isDemo()) {
         if(m_paramsRequested.getOn()) {
             m_demoOnOffDelayTimer.start(3000);
@@ -63,7 +63,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
         }
     }
     else {
-        startActions(transactionPacket);
+        startActions(commandPack);
     }
 }
 
@@ -79,12 +79,12 @@ void cSourceDevice::onTimeoutDemoTransaction()
 
 QSharedPointer<cSourceInterfaceBase> cSourceDevice::getIoInterface()
 {
-    return m_spIoInterface;
+    return m_ioInterface;
 }
 
 bool cSourceDevice::isDemo()
 {
-    return m_spIoInterface->type() == SOURCE_INTERFACE_DEMO;
+    return m_ioInterface->type() == SOURCE_INTERFACE_DEMO;
 }
 
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
@@ -98,7 +98,7 @@ void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
     connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
 }
 
-void cSourceDevice::startActions(cSourceIOTransactionPacket transactionPacket)
+void cSourceDevice::startActions(cSourceCommandPacket commandPack)
 {
 
 }

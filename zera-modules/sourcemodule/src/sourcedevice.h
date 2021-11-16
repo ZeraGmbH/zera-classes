@@ -6,7 +6,7 @@
 #include <QVariant>
 #include <QSharedPointer>
 #include "sourcedevicestatus.h"
-#include "sourceiotransactiongenerator.h"
+#include "sourceiopacketgenerator.h"
 #include "supportedsources.h"
 
 class cSourceInterfaceBase;
@@ -31,7 +31,7 @@ public:
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
-    void startActions(cSourceIOTransactionPacket transactionPacket);
+    void startActions(cSourceCommandPacket commandPack);
     void saveState(); // persistency
 
 signals:
@@ -45,13 +45,13 @@ private slots:
     void onInterfaceClosed();
 
 private:
-    QSharedPointer<cSourceInterfaceBase> m_spIoInterface;
+    QSharedPointer<cSourceInterfaceBase> m_ioInterface;
 
     cSourceJsonStateIo* m_paramStateLoadSave;
     cSourceJsonParamApi m_paramsRequested;
     cSourceJsonParamApi m_paramsCurrent;
 
-    cSourceSwitchIoTransactionGenerator* m_ioTransactionGenerator = nullptr;
+    cSourceIoPacketGenerator* m_outInGenerator = nullptr;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
