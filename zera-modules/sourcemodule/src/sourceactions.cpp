@@ -8,7 +8,7 @@ tSourceActionTypeList cSourceActionGenerator::generateLoadActionList(cSourceJson
         list.append(cSourceActionTypes::ActionTypes::SWITCH_PHASES);
     }
     else {
-        for(int type=0; type<cSourceActionTypes::getLoadActionTypeCount(); ++type) {
+        for(int type=1; type<cSourceActionTypes::LOAD_ACTION_COUNT; ++type) {
             list.append(cSourceActionTypes::ActionTypes(type));
         }
     }

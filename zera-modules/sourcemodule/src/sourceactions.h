@@ -9,7 +9,8 @@ class cSourceActionTypes
 {
 public:
     enum ActionTypes {
-        SET_RMS = 0,
+        ACTION_UNDEF = 0,
+        SET_RMS,
         SET_ANGLE,
         SET_FREQUENCY,
         SET_HARMONICS,
@@ -20,9 +21,11 @@ public:
         PERIODIC_FIRST = LOAD_ACTION_COUNT,
         QUERY_STATUS = PERIODIC_FIRST,
         QUERY_ACTUAL,
-        PERIODIC_LAST
+        PERIODIC_LAST,
+
+        ACTION_LIMIT
     };
-    static int getLoadActionTypeCount() { return LOAD_ACTION_COUNT; }
+    static int getLoadActionTypeCount() { return LOAD_ACTION_COUNT - ACTION_UNDEF - 1; }
     static int getPeriodicActionTypeCount() { return PERIODIC_LAST - PERIODIC_FIRST; }
 };
 
