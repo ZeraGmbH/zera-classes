@@ -9,24 +9,33 @@ class cSourceActionTypes
 {
 public:
     enum ActionTypes {
-        ACTION_UNDEF = 0,
+        SWITCH_UNDEF = 0,
         SET_RMS,
         SET_ANGLE,
         SET_FREQUENCY,
         SET_HARMONICS,
         SET_REGULATOR,
         SWITCH_PHASES,
-        LOAD_ACTION_COUNT,
+        SWITCH_UNDEF2,
 
-        PERIODIC_FIRST = LOAD_ACTION_COUNT,
-        QUERY_STATUS = PERIODIC_FIRST,
+        PERIODIC_UNDEF,
+        QUERY_STATUS,
         QUERY_ACTUAL,
-        PERIODIC_LAST,
+        PERIODIC_UNDEF2,
 
-        ACTION_LIMIT
+        BEYOND_ALL
     };
-    static int getLoadActionTypeCount() { return LOAD_ACTION_COUNT - ACTION_UNDEF - 1; }
-    static int getPeriodicActionTypeCount() { return PERIODIC_LAST - PERIODIC_FIRST; }
+    static constexpr int firstSwitchType = int(SWITCH_UNDEF)+1;
+    static constexpr int lastSwitchType = int(SWITCH_UNDEF2)-1;
+    static constexpr int switchTypeCount = int(SWITCH_UNDEF2)-int(SWITCH_UNDEF)-1;
+
+    static constexpr int firstPeriodicType = int(PERIODIC_UNDEF)+1;
+    static constexpr int lastPeriodicType = int(PERIODIC_UNDEF2)-1;
+    static constexpr int periodicTypeCount = int(PERIODIC_UNDEF2)-int(PERIODIC_UNDEF)-1;
+
+
+    static constexpr int totalMinWithInvalid = int(SWITCH_UNDEF)+1;
+    static constexpr int totalMaxWithInvalid = int(BEYOND_ALL)-1;
 };
 
 
@@ -35,7 +44,7 @@ typedef QList<cSourceActionTypes::ActionTypes> tSourceActionTypeList;
 class cSourceActionGenerator
 {
 public:
-    static tSourceActionTypeList generateLoadActions(cSourceJsonParamApi requestedParams);
+    static tSourceActionTypeList generateSwitchActions(cSourceJsonParamApi requestedParams);
     static tSourceActionTypeList generatePeriodicActions();
 };
 

@@ -6,7 +6,7 @@
 #include "sourceactions.h"
 #include "sourcejsonapi.h"
 
-enum SourceCommandTypes {
+enum SourceCommandTypes { // don't forget unittest on add
     COMMAND_UNDEFINED = 0,
     COMMAND_SWITCH,
     COMMAND_STATE_POLL
@@ -35,7 +35,7 @@ public:
     {}
     void setActionType(cSourceActionTypes::ActionTypes actionType);
 
-    cSourceActionTypes::ActionTypes m_actionType = cSourceActionTypes::ACTION_UNDEF;
+    cSourceActionTypes::ActionTypes m_actionType = cSourceActionTypes::SWITCH_UNDEF;
     SourceResponseTypes m_responseType = RESP_UNDEFINED;
     QByteArray m_bytesSend;
     QByteArray m_bytesExpected;
@@ -46,7 +46,7 @@ typedef QList<cSourceSingleOutIn> tSourceOutInList;
 class cSourceCommandPacket
 {
 public:
-    SourceCommandTypes m_commandType;
+    SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
     tSourceOutInList m_singleOutInList;
 };
 
@@ -60,6 +60,7 @@ public:
     tSourceOutInList generateListForAction(cSourceActionTypes::ActionTypes actionType);
     // composed
     cSourceCommandPacket generateOnOffPacket(cSourceJsonParamApi requestedParams);
+    cSourceCommandPacket generateStatusPollPacket();
 private:
     tSourceOutInList generateRMSAndAngleUList();
     tSourceOutInList generateRMSAndAngleIList();
