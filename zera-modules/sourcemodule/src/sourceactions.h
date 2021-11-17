@@ -25,6 +25,8 @@ public:
 
         BEYOND_ALL
     };
+
+    static bool isValidType(ActionTypes type);
     static constexpr int firstSwitchType = int(SWITCH_UNDEF)+1;
     static constexpr int lastSwitchType = int(SWITCH_UNDEF2)-1;
     static constexpr int switchTypeCount = int(SWITCH_UNDEF2)-int(SWITCH_UNDEF)-1;
@@ -34,8 +36,8 @@ public:
     static constexpr int periodicTypeCount = int(PERIODIC_UNDEF2)-int(PERIODIC_UNDEF)-1;
 
 
-    static constexpr int totalMinWithInvalid = int(SWITCH_UNDEF)+1;
-    static constexpr int totalMaxWithInvalid = int(BEYOND_ALL)-1;
+    static constexpr int totalMinWithInvalid = int(SWITCH_UNDEF);
+    static constexpr int totalMaxWithInvalid = int(BEYOND_ALL);
 };
 
 

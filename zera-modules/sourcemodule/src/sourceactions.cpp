@@ -1,5 +1,12 @@
 #include "sourceactions.h"
 
+bool cSourceActionTypes::isValidType(cSourceActionTypes::ActionTypes type)
+{
+    return
+            (type >= firstSwitchType && type <= lastSwitchType) ||
+            (type >= firstPeriodicType && type <= lastPeriodicType);
+}
+
 tSourceActionTypeList cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi requestedParams)
 {
     tSourceActionTypeList list;
@@ -23,4 +30,3 @@ tSourceActionTypeList cSourceActionGenerator::generatePeriodicActions()
     }
     return list;
 }
-
