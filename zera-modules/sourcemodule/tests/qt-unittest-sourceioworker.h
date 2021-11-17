@@ -24,7 +24,7 @@ private slots:
 //    void testNoInterfaceMultipleNotifications();
 //    void testNotOpenInterfaceMultipleNotifications();
 
-//    void testDisconnectBeforeStart();
+    void testDisconnectBeforeEnqueue();
 //    void testDisconnectWhileWorking();
 //    void testDisconnectWhileWorkingMultipleNotifications();
 
