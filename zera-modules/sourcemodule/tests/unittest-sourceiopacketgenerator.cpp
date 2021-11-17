@@ -63,19 +63,31 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
     }
 }
 
+TEST(TEST_PACKET_GENERATIOR, PACK_GENERATIR_NOT_INVENTING) {
+    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    cSourceJsonParamApi params;
+    params.setOn(true);
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(params);
+    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    for(auto outIn : cmdPack.m_singleOutInList) {
+        auto type = outIn.m_actionType;
+        EXPECT_TRUE(actionList.contains(type));
+    }
+}
+
 TEST(TEST_PACKET_GENERATIOR, SWITCH_PACKET_SPECIFICS) {
     cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
     cSourceJsonParamApi params;
     params.setOn(false);
-    cSourceCommandPacket cmpPack = ioPackGenerator.generateOnOffPacket(params);
-    EXPECT_EQ(cmpPack.m_commandType, COMMAND_SWITCH);
-    EXPECT_EQ(cmpPack.m_errorBehavior, BEHAVE_STOP_ON_ERROR);
+    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    EXPECT_EQ(cmdPack.m_commandType, COMMAND_SWITCH);
+    EXPECT_EQ(cmdPack.m_errorBehavior, BEHAVE_STOP_ON_ERROR);
 }
 
 TEST(TEST_PACKET_GENERATIOR, POLL_PACKET_SPECIFICS) {
     cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-    cSourceCommandPacket cmpPack = ioPackGenerator.generateStatusPollPacket();
-    EXPECT_EQ(cmpPack.m_commandType, COMMAND_STATE_POLL);
-    EXPECT_EQ(cmpPack.m_errorBehavior, BEHAVE_CONTINUE_ON_ERROR);
+    cSourceCommandPacket cmdPack = ioPackGenerator.generateStatusPollPacket();
+    EXPECT_EQ(cmdPack.m_commandType, COMMAND_STATE_POLL);
+    EXPECT_EQ(cmdPack.m_errorBehavior, BEHAVE_CONTINUE_ON_ERROR);
 }
 
