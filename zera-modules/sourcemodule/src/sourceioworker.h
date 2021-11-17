@@ -20,14 +20,15 @@ public:
 
 typedef QList<cSourceIoWorkerEntry> tSourceIoWorkerList;
 
-class cWorkerPacket
+class cWorkerCommandPacket
 {
 public:
     int m_workerId = 0;
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
     SourcePacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
-    tSourceIoWorkerList m_workerList;
+    tSourceIoWorkerList m_workerIOList;
 };
+Q_DECLARE_METATYPE(cWorkerCommandPacket)
 
 class cSourceIoWorker : public QObject
 {
@@ -37,27 +38,27 @@ public:
 
     void setIoInterface(tSourceInterfaceShPtr interface);
 
-    static cWorkerPacket commandPackToWorkerPack(const cSourceCommandPacket &commandPack);
-    int enqueueIoPacket(cWorkerPacket workPack);
+    static cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &commandPack);
+    int enqueueIoPacket(cWorkerCommandPacket workPack);
     bool isBusy();
 
 signals:
-    void workPackFinished(cWorkerPacket packet);
+    void workPackFinished(cWorkerCommandPacket packet);
 
 private slots:
     void onIoFinished(int ioID);
     void onIoDisconnected();
 signals:
-    void workPackFinishedQueued(cWorkerPacket pack);
+    void workPackFinishedQueued(cWorkerCommandPacket pack);
 private:
     void tryStartNextIo();
-    cSourceSingleOutIn getNextOutIn();
+    cSourceIoWorkerEntry *getNextWorkerIO();
 
     tSourceInterfaceShPtr m_interface = nullptr;
     int m_iCurrentIoID = 0;
     cSourceIdGenerator m_IdGenerator;
-    QList<cWorkerPacket> m_pendingWorkPacks;
-    cWorkerPacket m_currentWorkPack;
+    QList<cWorkerCommandPacket> m_pendingWorkPacks;
+    int m_iPositionInWorkerIo = 0;
 };
 
 #endif // CSOURCEIOWORKER_H
