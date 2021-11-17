@@ -26,6 +26,8 @@ void SourceInterfaceTest::testIoIDNotSetForBaseInterface()
 void SourceInterfaceTest::testIoIDSetForDemoInterface()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    QVERIFY(demoInterface->open(QString()));
     QByteArray dummyArray;
     int ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
     QCOMPARE(ioID, 1);

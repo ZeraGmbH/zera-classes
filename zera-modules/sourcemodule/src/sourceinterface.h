@@ -66,12 +66,13 @@ class cSourceInterfaceDemo : public cSourceInterfaceBase
     Q_OBJECT
 public:
     virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_DEMO; }
-    virtual bool open(QString) override { return true; };
+    virtual bool open(QString) override;
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     void simulateExternalDisconnect();
 protected:
     explicit cSourceInterfaceDemo(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
+    bool m_bOpen = false;
 };
 
 
