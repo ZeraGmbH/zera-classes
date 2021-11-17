@@ -8,13 +8,13 @@ class SourceInterfaceTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onIoFinish(int transactionID);
+    void onIoFinish(int ioID);
 
 private slots:
     void init();
 
-    void testTransactionIDNotSetForBaseInterface();
-    void testTransactionIDSetForDemoInterface();
+    void testIoIDNotSetForBaseInterface();
+    void testIoIDSetForDemoInterface();
     void testDemoInterfaceFinish();
     void testDemoInterfaceFinishQueued();
     void testDemoInterfaceFinishIDs();
@@ -22,7 +22,7 @@ private slots:
 
 private:
     int m_ioFinishReceived = 0;
-    int m_transactionIDReceived = 0;
+    int m_ioIDReceived = 0;
 };
 
 #endif // QTUNITTESTSOURCEINTERFACE_H

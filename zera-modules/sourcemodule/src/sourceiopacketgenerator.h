@@ -1,5 +1,5 @@
-#ifndef CSOURCEIOTRANSACTIONGENERATOR_H
-#define CSOURCEIOTRANSACTIONGENERATOR_H
+#ifndef CSOURCEIOPACKETGENERATOR_H
+#define CSOURCEIOPACKETGENERATOR_H
 
 #include <QByteArray>
 #include <QJsonObject>
@@ -90,4 +90,4 @@ public:
     static QByteArray formatDouble(double val, int preDigits, char digit, int postDigits);
 };
 
-#endif // CSOURCEIOTRANSACTIONGENERATOR_H
+#endif // CSOURCEIOPACKETGENERATOR_H

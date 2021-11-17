@@ -26,9 +26,9 @@ public:
     // keep alive ensurance
     void setScannerReference(QSharedPointer<cSourceScanner> scannerReference);
 signals:
-    void sigTransactionFinished(QSharedPointer<cSourceScanner> transaction);
+    void sigScanFinished(QSharedPointer<cSourceScanner> scanner);
 private slots:
-    void onIoFinished(int transactionID);
+    void onIoFinished(int ioID);
 private:
     void sendReceiveSourceID();
     QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);

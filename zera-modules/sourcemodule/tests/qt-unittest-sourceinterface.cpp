@@ -5,34 +5,34 @@ static QObject* pSourceInterfaceTest = addTest(new SourceInterfaceTest);
 
 void SourceInterfaceTest::init()
 {
-    m_transactionIDReceived = -1;
+    m_ioIDReceived = -1;
     m_ioFinishReceived = 0;
 }
 
-void SourceInterfaceTest::onIoFinish(int transactionID)
+void SourceInterfaceTest::onIoFinish(int ioID)
 {
-    m_transactionIDReceived = transactionID;
+    m_ioIDReceived = ioID;
     m_ioFinishReceived++;
 }
 
-void SourceInterfaceTest::testTransactionIDNotSetForBaseInterface()
+void SourceInterfaceTest::testIoIDNotSetForBaseInterface()
 {
     cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
     QByteArray dummyArray;
-    int transactionID = interface->sendAndReceive(QByteArray(), &dummyArray);
+    int ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
     delete interface;
-    QCOMPARE(transactionID, 0);
+    QCOMPARE(ioID, 0);
 }
 
-void SourceInterfaceTest::testTransactionIDSetForDemoInterface()
+void SourceInterfaceTest::testIoIDSetForDemoInterface()
 {
     cSourceInterfaceBase* interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     QByteArray dummyArray;
-    int transactionID = interface->sendAndReceive(QByteArray(), &dummyArray);
-    QCOMPARE(transactionID, 1);
-    transactionID = interface->sendAndReceive(QByteArray(), &dummyArray);
+    int ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
+    QCOMPARE(ioID, 1);
+    ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
     delete interface;
-    QCOMPARE(transactionID, 2);
+    QCOMPARE(ioID, 2);
 }
 
 void SourceInterfaceTest::testDemoInterfaceFinish()
@@ -67,10 +67,10 @@ void SourceInterfaceTest::testDemoInterfaceFinishIDs()
     QByteArray dummyReceive;
     int startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
     QTest::qWait(200);
-    QCOMPARE(m_transactionIDReceived, startId);
+    QCOMPARE(m_ioIDReceived, startId);
     startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
     QTest::qWait(200);
-    QCOMPARE(m_transactionIDReceived, startId);
+    QCOMPARE(m_ioIDReceived, startId);
 
     disconnect(interface, &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
     delete interface;

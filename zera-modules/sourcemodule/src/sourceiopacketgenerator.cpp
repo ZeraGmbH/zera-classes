@@ -45,39 +45,39 @@ cSourceCommandPacket cSourceIoPacketGenerator::generateStatusPollPacket()
 
 tSourceOutInList cSourceIoPacketGenerator::generateListForAction(cSourceActionTypes::ActionTypes actionType)
 {
-    tSourceOutInList transactionList;
+    tSourceOutInList outInList;
     switch(actionType) {
     case cSourceActionTypes::SET_RMS:
-        transactionList.append(generateRMSAndAngleUList());
-        transactionList.append(generateRMSAndAngleIList());
+        outInList.append(generateRMSAndAngleUList());
+        outInList.append(generateRMSAndAngleIList());
         break;
     case cSourceActionTypes::SET_ANGLE:
         // On ZERA this is combined with RMS
         break;
     case cSourceActionTypes::SET_FREQUENCY:
-        transactionList.append(generateFrequencyList());
+        outInList.append(generateFrequencyList());
         break;
     case cSourceActionTypes::SET_HARMONICS:
         // TODO
         break;
     case cSourceActionTypes::SET_REGULATOR:
-        transactionList.append(generateRegulationList());
+        outInList.append(generateRegulationList());
         break;
     case cSourceActionTypes::SWITCH_PHASES:
-        transactionList.append(generateSwitchPhasesList());
+        outInList.append(generateSwitchPhasesList());
         break;
     default:
         break;
     }
-    for(auto &transaction : transactionList) {
-        transaction.m_actionType = actionType;
+    for(auto &outIn : outInList) {
+        outIn.m_actionType = actionType;
     }
-    return transactionList;
+    return outInList;
 }
 
 tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleUList()
 {
-    tSourceOutInList transactionList;
+    tSourceOutInList outInList;
     QByteArray bytesSend;
 
     double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
@@ -100,13 +100,13 @@ tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleUList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKUP\r";
-    transactionList.append(cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
-    return transactionList;
+    outInList.append(cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
+    return outInList;
 }
 
 tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleIList()
 {
-    tSourceOutInList transactionList;
+    tSourceOutInList outInList;
     QByteArray bytesSend;
 
     double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
@@ -129,9 +129,9 @@ tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleIList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKIP\r";
-    transactionList.append(cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
+    outInList.append(cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
 
-    return transactionList;
+    return outInList;
 }
 
 tSourceOutInList cSourceIoPacketGenerator::generateSwitchPhasesList()

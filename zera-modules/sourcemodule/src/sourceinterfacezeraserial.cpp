@@ -91,13 +91,13 @@ int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray bytesSend, QByteArray 
 
     // try io
     m_serialIO.sendAndReceive(bytesSend, pDataReceive);
-    if(m_serialIO.isIOPending()) { // ZERA: One transaction at a time -> no hash for m_currentTransactionID
-        m_currentTransactionID = m_transactionIDGenerator.nextID();
+    if(m_serialIO.isIOPending()) { // ZERA: One I/O at a time -> no hash for m_currentIoID
+        m_currentIoID = m_IDGenerator.nextID();
     }
     else {
-        m_currentTransactionID = 0;
+        m_currentIoID = 0;
     }
-    return m_currentTransactionID;
+    return m_currentIoID;
 }
 
 void cSourceInterfaceZeraSerial::setReadTimeoutNextIo(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal)
@@ -117,7 +117,7 @@ void cSourceInterfaceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive,
 
 void cSourceInterfaceZeraSerial::onIoFinished()
 {
-    emit sigIoFinishedToQueue(m_currentTransactionID);
+    emit sigIoFinishedToQueue(m_currentIoID);
 }
 
 void cSourceInterfaceZeraSerial::onDeviceFileGone(QString)
