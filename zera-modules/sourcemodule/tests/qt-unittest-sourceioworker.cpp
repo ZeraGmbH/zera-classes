@@ -97,14 +97,29 @@ void SourceIoWorkerTest::testNotOpenInterfaceNotBusy()
     QVERIFY(!worker.isBusy());
 }
 
-void SourceIoWorkerTest::testOpenInterfaceBusy()
-{
+static tSourceInterfaceShPtr createOpenDevice() {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
-    QVERIFY(demoInterface->open(QString()));
+    demoInterface->open(QString());
+    return interface;
+}
+
+void SourceIoWorkerTest::testOpenInterfaceBusy()
+{
     cSourceIoWorker worker;
-    worker.setIoInterface(interface);
+    worker.setIoInterface(createOpenDevice());
     enqueueSwitchCommands(worker, false);
     QVERIFY(worker.isBusy());
+}
+
+void SourceIoWorkerTest::testDisconnectBeforeEnqueue()
+{
+    tSourceInterfaceShPtr interface = createOpenDevice();
+    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    cSourceIoWorker worker;
+    worker.setIoInterface(interface);
+    demoInterface->simulateExternalDisconnect();
+    enqueueSwitchCommands(worker, false);
+    QVERIFY(!worker.isBusy());
 }
 
