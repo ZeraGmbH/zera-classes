@@ -9,7 +9,8 @@
 enum SourceCommandTypes { // don't forget unittest on add
     COMMAND_UNDEFINED = 0,
     COMMAND_SWITCH,
-    COMMAND_STATE_POLL
+    COMMAND_STATE_POLL,
+    COMMAND_UNDEF_BOTTOM
 };
 
 enum SourceResponseTypes {
@@ -17,8 +18,7 @@ enum SourceResponseTypes {
     RESP_WAIT_FOR_TIMEOUT,
     RESP_FULL_DATA_SEQUENCE,
     RESP_PART_DATA_SEQUENCE,
-
-    RESP_LIMIT
+    RESP_UNDEF_BOTTOM
 };
 
 class cSourceSingleOutIn

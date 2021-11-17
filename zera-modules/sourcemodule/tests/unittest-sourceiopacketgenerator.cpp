@@ -46,7 +46,7 @@ TEST(TEST_SOURCE_IO_TRANSACTION, TRANSACTION_RESPONSE_TYPE_SET) {
         tSourceOutInList transactionList = transactionGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
         for(auto transaction : transactionList) {
             EXPECT_FALSE(transaction.m_responseType == RESP_UNDEFINED);
-            EXPECT_FALSE(transaction.m_responseType >= RESP_LIMIT);
+            EXPECT_FALSE(transaction.m_responseType >= RESP_UNDEF_BOTTOM);
         }
     }
 }
