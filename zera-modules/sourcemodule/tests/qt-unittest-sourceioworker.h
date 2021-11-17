@@ -10,15 +10,16 @@ class SourceIoWorkerTest : public QObject
 private slots:
     void init();
 
+    void testEmptyWorkerIsInvalid();
     void testCmdPackToWorkType();
     void testCmdPackToWorkIoSize();
     void testCmdPackToWorkIoSequence();
+    void testCmdPackToWorkProperties();
 
-
-
-//    void testNoInterfaceNotBusy();
-//    void testNotOpenInterfaceNotBusy();
-//    void testOpenInterfaceBusy();
+    void testNoInterfaceNotBusy();
+    void testEmptyPackNotBusy();
+    void testNotOpenInterfaceNotBusy();
+    void testOpenInterfaceBusy();
 
 //    void testNoInterfaceMultipleNotifications();
 //    void testNotOpenInterfaceMultipleNotifications();

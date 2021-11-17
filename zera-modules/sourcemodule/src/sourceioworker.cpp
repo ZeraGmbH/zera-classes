@@ -24,21 +24,22 @@ void cSourceIoWorker::setIoInterface(tSourceInterfaceShPtr interface)
     }
 }
 
-cWorkerPacket cSourceIoWorker::commandPackToWorkerPack(const cSourceCommandPacket &commandPack)
+cWorkerCommandPacket cSourceIoWorker::commandPackToWorkerPack(const cSourceCommandPacket &commandPack)
 {
-    cWorkerPacket workPack;
+    cWorkerCommandPacket workPack;
     workPack.m_commandType = commandPack.m_commandType;
+    workPack.m_errorBehavior = commandPack.m_errorBehavior;
     for(auto outIn : commandPack.m_singleOutInList) {
         cSourceIoWorkerEntry workEntry;
         workEntry.m_OutIn = outIn;
-        workPack.m_workerList.append(workEntry);
+        workPack.m_workerIOList.append(workEntry);
     }
     return workPack;
 }
 
-int cSourceIoWorker::enqueueIoPacket(cWorkerPacket workPack)
+int cSourceIoWorker::enqueueIoPacket(cWorkerCommandPacket workPack)
 {
-    if(!m_interface || workPack.m_workerList.isEmpty()) {
+    if(!m_interface || workPack.m_workerIOList.isEmpty()) {
         emit workPackFinishedQueued(workPack);
     }
     else {
@@ -51,9 +52,8 @@ int cSourceIoWorker::enqueueIoPacket(cWorkerPacket workPack)
 
 bool cSourceIoWorker::isBusy()
 {
-    return m_currentWorkPack.m_workerId != 0;
+    return m_iCurrentIoID != 0;
 }
-
 
 void cSourceIoWorker::onIoFinished(int ioID)
 {
@@ -70,9 +70,11 @@ void cSourceIoWorker::tryStartNextIo()
 {
     if(!isBusy()) {
         if(m_interface) {
-            cSourceSingleOutIn outIn = getNextOutIn();
-            if(cSourceActionTypes::isValidType(outIn.m_actionType)) {
-
+            cSourceIoWorkerEntry* workerIo = getNextWorkerIO();
+            if(workerIo) {
+                m_iCurrentIoID = m_interface->sendAndReceive(
+                            workerIo->m_OutIn.m_bytesSend,
+                            &workerIo->m_dataReceived);
             }
         }
         else {
@@ -81,10 +83,22 @@ void cSourceIoWorker::tryStartNextIo()
     }
 }
 
-cSourceSingleOutIn cSourceIoWorker::getNextOutIn()
+cSourceIoWorkerEntry* cSourceIoWorker::getNextWorkerIO()
 {
-    cSourceSingleOutIn outIn;
-
-    return outIn;
+    cSourceIoWorkerEntry* workerIo = nullptr;
+    if(!m_pendingWorkPacks.isEmpty()) {
+        cWorkerCommandPacket &currentPack = m_pendingWorkPacks.first();
+        if(m_iPositionInWorkerIo < currentPack.m_workerIOList.count()) {
+            workerIo = &(currentPack.m_workerIOList[m_iPositionInWorkerIo]);
+            m_iPositionInWorkerIo++;
+        }
+        else {
+            m_iPositionInWorkerIo = 0;
+            cWorkerCommandPacket finishedPack = m_pendingWorkPacks.takeFirst();
+            emit workPackFinished(finishedPack);
+            workerIo = getNextWorkerIO();
+        }
+    }
+    return workerIo;
 }
 
