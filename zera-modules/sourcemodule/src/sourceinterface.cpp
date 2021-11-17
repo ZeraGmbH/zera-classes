@@ -44,9 +44,18 @@ cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBa
 {
 }
 
+bool cSourceInterfaceDemo::open(QString)
+{
+    m_bOpen = true;
+    return true;
+}
+
 int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
 {
-    int ioID = m_IDGenerator.nextID();
+    int ioID = 0;
+    if(m_bOpen) {
+        ioID = m_IDGenerator.nextID();
+    }
     emit sigIoFinishedToQueue(ioID);
     return ioID;
 }
