@@ -6,7 +6,7 @@ cSourceIoWorker::cSourceIoWorker(QObject *parent) : QObject(parent)
             this, &cSourceIoWorker::workPackFinished, Qt::QueuedConnection);
 }
 
-void cSourceIoWorker::setIoInterface(QSharedPointer<cSourceInterfaceBase> interface)
+void cSourceIoWorker::setIoInterface(tSourceInterfaceShPtr interface)
 {
     m_interface = interface;
     if(interface) {

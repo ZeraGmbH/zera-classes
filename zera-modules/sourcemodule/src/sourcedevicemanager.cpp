@@ -22,12 +22,11 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceT
         return;
     }
     bool started = false;
-    QSharedPointer<cSourceInterfaceBase> interface =
-            QSharedPointer<cSourceInterfaceBase>(cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(interfaceType)));
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(interfaceType));
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
-            QSharedPointer<cSourceScanner> sourceScanner = QSharedPointer<cSourceScanner>(new cSourceScanner(interface, uuid));
+            tSourceScannerShPtr sourceScanner = tSourceScannerShPtr(new cSourceScanner(interface, uuid));
             // in case our module=we are killed while scan is pending we have to make sure
             // that scanner finishes and deletes itself after completion (our shared reference is gone)
             sourceScanner->setScannerReference(sourceScanner);
@@ -117,7 +116,7 @@ int cSourceDeviceManager::getSlotCount()
     return m_sourceDeviceSlots.size();
 }
 
-void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> scanner)
+void cSourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
 {
     disconnect(scanner.get(), &cSourceScanner::sigScanFinished, this, &cSourceDeviceManager::onScanFinished);
     cSourceDevice *getSourceDeviceFound = scanner->getSourceDeviceFound();

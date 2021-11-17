@@ -5,6 +5,7 @@
 #include <QString>
 #include <QUuid>
 #include "sourceinterface.h"
+#include "sourcescanner.h"
 
 class cSourceInterfaceBase;
 
@@ -36,7 +37,7 @@ signals:
     void sigSlotRemoved(int slotNo);
 
 private slots:
-    void onScanFinished(QSharedPointer<cSourceScanner> scanner);
+    void onScanFinished(tSourceScannerShPtr scanner);
     void onRemoveSource(cSourceDevice *getSourceDevice);
 
 private:

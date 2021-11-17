@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSerialPortAsyncBlock>
+#include <QSharedPointer>
 #include "sourceidgenerator.h"
 
 enum SourceInterfaceTypes
@@ -15,10 +16,12 @@ enum SourceInterfaceTypes
 };
 
 class cSourceInterfaceBase;
+typedef QSharedPointer<cSourceInterfaceBase> tSourceInterfaceShPtr;
+
 // create interfaces through cSourceInterfaceFactory only
 class cSourceInterfaceFactory {
 public:
-    static cSourceInterfaceBase* createSourceInterface(SourceInterfaceTypes type, QObject *parent = nullptr);
+    static tSourceInterfaceShPtr createSourceInterface(SourceInterfaceTypes type, QObject *parent = nullptr);
 };
 
 

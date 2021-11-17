@@ -5,13 +5,12 @@
 #include <jsonparamvalidator.h>
 #include "sourcedevice.h"
 #include "sourceveininterface.h"
-#include "sourceinterface.h"
 #include "sourceiopacketgenerator.h"
 
 namespace SOURCEMODULE
 {
 
-cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SupportedSourceTypes type, QString version) :
+cSourceDevice::cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString version) :
     QObject(nullptr),
     m_ioInterface(interface),
     m_type(type),
@@ -75,7 +74,7 @@ void cSourceDevice::onDemoOnOffFinished()
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
 }
 
-QSharedPointer<cSourceInterfaceBase> cSourceDevice::getIoInterface()
+tSourceInterfaceShPtr cSourceDevice::getIoInterface()
 {
     return m_ioInterface;
 }
