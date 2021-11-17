@@ -97,13 +97,13 @@ QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* no
 
 static enum SupportedSourceTypes sDemoTypeCounter(SOURCE_TYPE_COUNT);
 
-void cSourceScanner::onIoFinished(int transactionID)
+void cSourceScanner::onIoFinished(int ioID)
 {
     bool validFound = false;
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
     bool ourJobIsDone = false;
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[0];
-    if(transactionID) { // receive transaction id == 0 -> I/O problems -> don't try next
+    if(ioID) { // receive id == 0 -> I/O problems -> don't try next
         if(m_ioInterface->type() != SOURCE_INTERFACE_DEMO) {
             deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
             if(m_bytesReceived.contains(deviceDetectInfoCurrent.expectedResponse)) {
@@ -130,15 +130,15 @@ void cSourceScanner::onIoFinished(int transactionID)
         }
         m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, deviceDetectInfoCurrent.sourceType, version);
 
-        emit sigTransactionFinished(m_scannerReference);
+        emit sigScanFinished(m_scannerReference);
         ourJobIsDone = true;
     }
-    else if(transactionID && moreChances) {
+    else if(ioID && moreChances) {
         m_currentSourceTested++;
         sendReceiveSourceID(); // delay??
     }
     else {
-        emit sigTransactionFinished(m_scannerReference); // notify: we failed :(
+        emit sigScanFinished(m_scannerReference); // notify: we failed :(
         ourJobIsDone = true;
     }
     if(ourJobIsDone) {

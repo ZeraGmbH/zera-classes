@@ -45,9 +45,9 @@ cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBa
 
 int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
 {
-    int transactionID = m_transactionIDGenerator.nextID();
-    emit sigIoFinishedToQueue(transactionID);
-    return transactionID;
+    int ioID = m_IDGenerator.nextID();
+    emit sigIoFinishedToQueue(ioID);
+    return ioID;
 }
 
 void cSourceInterfaceDemo::simulateExternalDisconnect()

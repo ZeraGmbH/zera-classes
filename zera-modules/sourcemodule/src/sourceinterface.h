@@ -38,19 +38,19 @@ public:
      * @brief sendAndReceive
      * @param bytesSend
      * @param pDataReceive
-     * @return != 0: transactionID / = 0: transactionID not started
+     * @return != 0: ioID / == 0: io not started
      */
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive);
 signals:
     void sigDisconnected();
-    void sigIoFinished(int transactionID); // users connect this signal
-    void sigIoFinishedToQueue(int transactionID); // sub classes emit this to ensure queue
+    void sigIoFinished(int ioID); // users connect this signal
+    void sigIoFinishedToQueue(int ioID); // sub classes emit this to ensure queue
 
 protected:
     explicit cSourceInterfaceBase(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
 
-    cSourceIdGenerator m_transactionIDGenerator;
+    cSourceIdGenerator m_IDGenerator;
 };
 
 
@@ -100,7 +100,7 @@ private:
     Q_DECLARE_PRIVATE(cSourceInterfaceZeraSerial)
 
     QSerialPortAsyncBlock m_serialIO;
-    int m_currentTransactionID = 0;
+    int m_currentIoID = 0;
 };
 
 #endif // SOURCEINTERFACEBASE_H

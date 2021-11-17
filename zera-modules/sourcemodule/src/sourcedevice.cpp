@@ -25,7 +25,7 @@ cSourceDevice::cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, Sup
 
     if(isDemo()) {
         m_demoOnOffDelayTimer.setSingleShot(true);
-        connect(&m_demoOnOffDelayTimer, &QTimer::timeout, this, &cSourceDevice::onTimeoutDemoTransaction);
+        connect(&m_demoOnOffDelayTimer, &QTimer::timeout, this, &cSourceDevice::onDemoOnOffFinished);
     }
 }
 
@@ -51,8 +51,6 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
     m_paramsRequested.setParams(paramState.toJsonObject());
     m_deviceStatus.setBusy(true);
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
-    // transactionList is not necessary for demo but let's create it here for
-    // debug purpose
     cSourceCommandPacket commandPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
     if(isDemo()) {
         if(m_paramsRequested.getOn()) {
@@ -67,7 +65,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
     }
 }
 
-void cSourceDevice::onTimeoutDemoTransaction()
+void cSourceDevice::onDemoOnOffFinished()
 {
     m_deviceStatus.setBusy(false);
     m_paramsCurrent.setParams(m_paramsRequested.getParams());

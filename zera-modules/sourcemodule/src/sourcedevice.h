@@ -39,7 +39,7 @@ signals:
 
 public slots:
     void onNewVeinParamStatus(QVariant paramState);
-    void onTimeoutDemoTransaction();
+    void onDemoOnOffFinished();
 
 private slots:
     void onInterfaceClosed();

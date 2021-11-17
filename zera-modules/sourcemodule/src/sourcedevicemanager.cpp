@@ -27,14 +27,14 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceT
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
-            QSharedPointer<cSourceScanner> connectTransaction = QSharedPointer<cSourceScanner>(new cSourceScanner(interface, uuid));
+            QSharedPointer<cSourceScanner> sourceScanner = QSharedPointer<cSourceScanner>(new cSourceScanner(interface, uuid));
             // in case our module=we are killed while scan is pending we have to make sure
             // that scanner finishes and deletes itself after completion (our shared reference is gone)
-            connectTransaction->setScannerReference(connectTransaction);
-            connect(connectTransaction.get(), &cSourceScanner::sigTransactionFinished,
+            sourceScanner->setScannerReference(sourceScanner);
+            connect(sourceScanner.get(), &cSourceScanner::sigScanFinished,
                     this, &cSourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);
-            connectTransaction->startScan();
+            sourceScanner->startScan();
         }
     }
     if(!started) {
@@ -117,10 +117,10 @@ int cSourceDeviceManager::getSlotCount()
     return m_sourceDeviceSlots.size();
 }
 
-void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transaction)
+void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> scanner)
 {
-    disconnect(transaction.get(), &cSourceScanner::sigTransactionFinished, this, &cSourceDeviceManager::onScanFinished);
-    cSourceDevice *getSourceDeviceFound = transaction->getSourceDeviceFound();
+    disconnect(scanner.get(), &cSourceScanner::sigScanFinished, this, &cSourceDeviceManager::onScanFinished);
+    cSourceDevice *getSourceDeviceFound = scanner->getSourceDeviceFound();
     // add to first free slot
     bool slotAdded = false;
     if(getSourceDeviceFound && m_activeSlotCount < m_sourceDeviceSlots.count()) {
@@ -135,7 +135,7 @@ void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transac
                     m_demoCount++;
                 }
                 connect(getSourceDeviceFound, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
-                emit sigSourceScanFinished(slotNo, getSourceDeviceFound, transaction->getUuid(), QString());
+                emit sigSourceScanFinished(slotNo, getSourceDeviceFound, scanner->getUuid(), QString());
                 break;
             }
         }
@@ -154,7 +154,7 @@ void cSourceDeviceManager::onScanFinished(QSharedPointer<cSourceScanner> transac
             erorDesc = QStringLiteral("No source device found");
         }
         // we need to notify failures
-        emit sigSourceScanFinished(-1, getSourceDeviceFound, transaction->getUuid(), erorDesc);
+        emit sigSourceScanFinished(-1, getSourceDeviceFound, scanner->getUuid(), erorDesc);
     }
 }
 

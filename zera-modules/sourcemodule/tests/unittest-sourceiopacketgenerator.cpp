@@ -22,59 +22,59 @@ TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {
 
 TEST(TEST_PACKET_GENERATIOR, TYPE_SET) {
     for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator transactionGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList transactionList = transactionGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
-        for(auto transaction : transactionList) {
-            EXPECT_EQ(transaction.m_actionType, type);
+        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        for(auto outIn : outInList) {
+            EXPECT_EQ(outIn.m_actionType, type);
         }
     }
 }
 
 TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
     for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator transactionGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList transactionList = transactionGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
-        for(auto transaction : transactionList) {
-            EXPECT_FALSE(transaction.m_bytesSend.isEmpty());
+        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        for(auto outIn : outInList) {
+            EXPECT_FALSE(outIn.m_bytesSend.isEmpty());
         }
     }
 }
 
 TEST(TEST_PACKET_GENERATIOR, RESPONSE_TYPE_SET) {
     for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator transactionGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList transactionList = transactionGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
-        for(auto transaction : transactionList) {
-            EXPECT_FALSE(transaction.m_responseType == RESP_UNDEFINED);
-            EXPECT_FALSE(transaction.m_responseType >= RESP_UNDEF_BOTTOM);
+        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        for(auto outIn : outInList) {
+            EXPECT_FALSE(outIn.m_responseType == RESP_UNDEFINED);
+            EXPECT_FALSE(outIn.m_responseType >= RESP_UNDEF_BOTTOM);
         }
     }
 }
 
 TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
     for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator transactionGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList transactionList = transactionGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
-        for(auto transaction : transactionList) {
-            if(transaction.m_responseType == RESP_FULL_DATA_SEQUENCE || transaction.m_responseType == RESP_PART_DATA_SEQUENCE) {
-                EXPECT_FALSE(transaction.m_bytesExpected.isEmpty());
+        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        for(auto outIn : outInList) {
+            if(outIn.m_responseType == RESP_FULL_DATA_SEQUENCE || outIn.m_responseType == RESP_PART_DATA_SEQUENCE) {
+                EXPECT_FALSE(outIn.m_bytesExpected.isEmpty());
             }
         }
     }
 }
 
 TEST(TEST_PACKET_GENERATIOR, SWITCH_PACKET_SPECIFICS) {
-    cSourceIoPacketGenerator transactionGenerator = cSourceIoPacketGenerator(QJsonObject());
+    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
     cSourceJsonParamApi params;
     params.setOn(false);
-    cSourceCommandPacket cmpPack = transactionGenerator.generateOnOffPacket(params);
+    cSourceCommandPacket cmpPack = ioPackGenerator.generateOnOffPacket(params);
     EXPECT_EQ(cmpPack.m_commandType, COMMAND_SWITCH);
     EXPECT_EQ(cmpPack.m_errorBehavior, BEHAVE_STOP_ON_ERROR);
 }
 
 TEST(TEST_PACKET_GENERATIOR, POLL_PACKET_SPECIFICS) {
-    cSourceIoPacketGenerator transactionGenerator = cSourceIoPacketGenerator(QJsonObject());
-    cSourceCommandPacket cmpPack = transactionGenerator.generateStatusPollPacket();
+    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    cSourceCommandPacket cmpPack = ioPackGenerator.generateStatusPollPacket();
     EXPECT_EQ(cmpPack.m_commandType, COMMAND_STATE_POLL);
     EXPECT_EQ(cmpPack.m_errorBehavior, BEHAVE_CONTINUE_ON_ERROR);
 }
