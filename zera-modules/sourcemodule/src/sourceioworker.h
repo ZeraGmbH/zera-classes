@@ -35,7 +35,7 @@ class cSourceIoWorker : public QObject
 public:
     explicit cSourceIoWorker(QObject *parent = nullptr);
 
-    void setIoInterface(QSharedPointer<cSourceInterfaceBase> interface);
+    void setIoInterface(tSourceInterfaceShPtr interface);
 
     static cWorkerPacket commandPackToWorkerPack(const cSourceCommandPacket &commandPack);
     int enqueueIoPacket(cWorkerPacket workPack);
@@ -53,7 +53,7 @@ private:
     void tryStartNextIo();
     cSourceSingleOutIn getNextOutIn();
 
-    QSharedPointer<cSourceInterfaceBase> m_interface = nullptr;
+    tSourceInterfaceShPtr m_interface = nullptr;
     int m_iCurrentIoID = 0;
     cSourceIdGenerator m_IdGenerator;
     QList<cWorkerPacket> m_pendingWorkPacks;

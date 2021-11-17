@@ -5,7 +5,7 @@
 namespace SOURCEMODULE
 {
 
-cSourceScanner::cSourceScanner(QSharedPointer<cSourceInterfaceBase> interface, QUuid uuid) :
+cSourceScanner::cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
     QObject(nullptr),
     m_ioInterface(interface),
     m_uuid(uuid),
@@ -50,7 +50,7 @@ QUuid cSourceScanner::getUuid()
     return m_uuid;
 }
 
-void cSourceScanner::setScannerReference(QSharedPointer<cSourceScanner> scannerReference)
+void cSourceScanner::setScannerReference(tSourceScannerShPtr scannerReference)
 {
     cSourceScanner* scannerToSet = scannerReference.get();
     if(scannerToSet && scannerToSet != this) {

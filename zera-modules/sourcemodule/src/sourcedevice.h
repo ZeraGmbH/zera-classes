@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QVariant>
-#include <QSharedPointer>
+#include "sourceinterface.h"
 #include "sourcedevicestatus.h"
 #include "sourceiopacketgenerator.h"
 #include "supportedsources.h"
@@ -19,14 +19,14 @@ class cSourceDevice : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceDevice(QSharedPointer<cSourceInterfaceBase> interface, SupportedSourceTypes type, QString version);
+    explicit cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString version);
     virtual ~cSourceDevice();
 
     // requests
     void close();
 
     // getter
-    QSharedPointer<cSourceInterfaceBase> getIoInterface();
+    tSourceInterfaceShPtr getIoInterface();
     bool isDemo();
 
     // setter
@@ -45,7 +45,7 @@ private slots:
     void onInterfaceClosed();
 
 private:
-    QSharedPointer<cSourceInterfaceBase> m_ioInterface;
+    tSourceInterfaceShPtr m_ioInterface;
 
     cSourceJsonStateIo* m_paramStateLoadSave;
     cSourceJsonParamApi m_paramsRequested;

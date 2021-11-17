@@ -1,6 +1,7 @@
+
 #include "sourceinterface.h"
 
-cSourceInterfaceBase *cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes type, QObject *parent)
+tSourceInterfaceShPtr cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes type, QObject *parent)
 {
     cSourceInterfaceBase* interface = nullptr;
     switch (type) {
@@ -17,7 +18,7 @@ cSourceInterfaceBase *cSourceInterfaceFactory::createSourceInterface(SourceInter
         qCritical("Do not use SOURCE_INTERFACE_TYPE_COUNT");
         break;
     }
-    return interface;
+    return tSourceInterfaceShPtr(interface);
 }
 
 
