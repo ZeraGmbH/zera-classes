@@ -13,6 +13,14 @@ enum SourceCommandTypes { // don't forget unittest on add
     COMMAND_UNDEF_BOTTOM
 };
 
+enum SourcePacketErrorBehaviors {
+    BEHAVE_UNDEFINED = 0,
+    BEHAVE_STOP_ON_ERROR,
+    BEHAVE_CONTINUE_ON_ERROR,
+    BEHAVE_STOP_ON_FIRST_SUCCESS,
+    BEHAVE_UNDEF_BOTTOM
+};
+
 enum SourceResponseTypes {
     RESP_UNDEFINED = 0,
     RESP_WAIT_FOR_TIMEOUT,
@@ -47,6 +55,7 @@ class cSourceCommandPacket
 {
 public:
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
+    SourcePacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
     tSourceOutInList m_singleOutInList;
 };
 
