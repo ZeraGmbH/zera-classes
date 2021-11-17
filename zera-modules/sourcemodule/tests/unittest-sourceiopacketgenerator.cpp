@@ -20,6 +20,12 @@ TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {
     EXPECT_EQ(valGenerated, valExpected);
 }
 
+TEST(TEST_PACKET_GENERATIOR, EMPTY_IO_UNDEFINED) {
+    cSourceSingleOutIn outIn;
+    EXPECT_EQ(outIn.m_actionType, cSourceActionTypes::SWITCH_UNDEF);
+    EXPECT_EQ(outIn.m_responseType, RESP_UNDEFINED);
+}
+
 TEST(TEST_PACKET_GENERATIOR, TYPE_SET) {
     for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
         cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
