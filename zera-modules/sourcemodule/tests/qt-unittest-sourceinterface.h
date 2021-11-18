@@ -19,6 +19,9 @@ private slots:
     void testDemoFinishQueued();
     void testDemoFinishIDs();
     void testInterfaceTypesSetProperly();
+    void testDemoDelayNotOpen();
+    void testDemoDelayDontWait();
+    void testDemoDelayWait();
 
 private:
     int m_ioFinishReceiveCount = 0;

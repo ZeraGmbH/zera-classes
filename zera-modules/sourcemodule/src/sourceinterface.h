@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSerialPortAsyncBlock>
 #include <QSharedPointer>
+#include <QTimer>
 #include "sourceidgenerator.h"
 
 enum SourceInterfaceTypes
@@ -69,10 +70,17 @@ public:
     virtual bool open(QString) override;
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     void simulateExternalDisconnect();
+    void setResponseDelay(int iMs);
 protected:
     explicit cSourceInterfaceDemo(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
+private slots:
+    void onResponseDelayTimer();
+private:
     bool m_bOpen = false;
+    int m_responseDelayMs = 0;
+    QTimer m_responseDelayTimer;
+    int m_currentId = 0;
 };
 
 
