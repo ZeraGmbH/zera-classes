@@ -55,6 +55,7 @@ signals:
 private:
     void tryStartNextIo();
     cSourceIoWorkerEntry *getNextWorkerIO();
+    void finishCurrentWorker();
 
     tSourceInterfaceShPtr m_interface = nullptr;
     int m_iCurrentIoID = 0;
