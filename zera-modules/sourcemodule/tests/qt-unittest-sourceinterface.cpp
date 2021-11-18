@@ -35,7 +35,7 @@ void SourceInterfaceTest::testIoIDSetForDemoInterface()
     QCOMPARE(ioID, 2);
 }
 
-void SourceInterfaceTest::testDemoInterfaceFinish()
+void SourceInterfaceTest::testDemoFinish()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     bool connected = connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
@@ -47,7 +47,7 @@ void SourceInterfaceTest::testDemoInterfaceFinish()
     QCOMPARE(m_ioFinishReceived, 1);
 }
 
-void SourceInterfaceTest::testDemoInterfaceFinishQueued()
+void SourceInterfaceTest::testDemoFinishQueued()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
@@ -57,7 +57,7 @@ void SourceInterfaceTest::testDemoInterfaceFinishQueued()
     QCOMPARE(m_ioFinishReceived, 0);
 }
 
-void SourceInterfaceTest::testDemoInterfaceFinishIDs()
+void SourceInterfaceTest::testDemoFinishIDs()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
