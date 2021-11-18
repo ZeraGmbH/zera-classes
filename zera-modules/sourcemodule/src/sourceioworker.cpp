@@ -107,11 +107,16 @@ cSourceIoWorkerEntry* cSourceIoWorker::getNextWorkerIO()
             m_iPositionInWorkerIo++;
         }
         else {
-            m_iPositionInWorkerIo = 0;
-            cWorkerCommandPacket finishedPack = m_pendingWorkPacks.takeFirst();
-            emit sigWorkPackFinished(finishedPack);
+            finishCurrentWorker();
             workerIo = getNextWorkerIO();
         }
     }
     return workerIo;
+}
+
+void cSourceIoWorker::finishCurrentWorker()
+{
+    m_iPositionInWorkerIo = 0;
+    cWorkerCommandPacket finishedPack = m_pendingWorkPacks.takeFirst();
+    emit sigWorkPackFinished(finishedPack);
 }
