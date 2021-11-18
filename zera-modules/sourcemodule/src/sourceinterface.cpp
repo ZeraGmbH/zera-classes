@@ -42,6 +42,14 @@ int cSourceInterfaceBase::sendAndReceive(QByteArray, QByteArray*)
 
 cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBase(parent)
 {
+    m_responseDelayTimer.setSingleShot(true);
+    connect(&m_responseDelayTimer, &QTimer::timeout,
+            this, &cSourceInterfaceDemo::onResponseDelayTimer);
+}
+
+void cSourceInterfaceDemo::onResponseDelayTimer()
+{
+    emit sigIoFinishedToQueue(m_currentId);
 }
 
 bool cSourceInterfaceDemo::open(QString)
@@ -52,16 +60,26 @@ bool cSourceInterfaceDemo::open(QString)
 
 int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
 {
-    int ioID = 0;
+    m_currentId = 0;
     if(m_bOpen) {
-        ioID = m_IDGenerator.nextID();
+        m_currentId = m_IDGenerator.nextID();
     }
-    emit sigIoFinishedToQueue(ioID);
-    return ioID;
+    if(!m_bOpen || m_responseDelayMs == 0) {
+        emit sigIoFinishedToQueue(m_currentId);
+    }
+    else {
+        m_responseDelayTimer.start(m_responseDelayMs);
+    }
+    return m_currentId;
 }
 
 void cSourceInterfaceDemo::simulateExternalDisconnect()
 {
     emit sigDisconnected();
+}
+
+void cSourceInterfaceDemo::setResponseDelay(int iMs)
+{
+    m_responseDelayMs = iMs;
 }
 
