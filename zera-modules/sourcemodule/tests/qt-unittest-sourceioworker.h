@@ -24,7 +24,7 @@ private slots:
     void testOpenInterfaceBusy();
 
     void testNoInterfaceNotification();
-//    void testNotOpenInterfaceNotifications();
+    void testNotOpenInterfaceNotifications();
 
     void testDisconnectBeforeEnqueue();
 //    void testDisconnectWhileWorking();
