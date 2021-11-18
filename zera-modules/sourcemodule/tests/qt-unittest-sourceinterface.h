@@ -15,9 +15,9 @@ private slots:
 
     void testIoIDNotSetForBaseInterface();
     void testIoIDSetForDemoInterface();
-    void testDemoInterfaceFinish();
-    void testDemoInterfaceFinishQueued();
-    void testDemoInterfaceFinishIDs();
+    void testDemoFinish();
+    void testDemoFinishQueued();
+    void testDemoFinishIDs();
     void testInterfaceTypesSetProperly();
 
 private:
