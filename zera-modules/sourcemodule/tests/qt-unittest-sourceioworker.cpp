@@ -3,9 +3,14 @@
 
 static QObject* pSourceIoWorkerTest = addTest(new SourceIoWorkerTest);
 
+void SourceIoWorkerTest::onWorkPackFinished(cWorkerCommandPacket workPack)
+{
+    m_listWorkPacksReceived.append(workPack);
+}
+
 void SourceIoWorkerTest::init()
 {
-
+    m_listWorkPacksReceived.clear();
 }
 
 void SourceIoWorkerTest::testEmptyWorkerIsInvalid()
@@ -110,6 +115,22 @@ void SourceIoWorkerTest::testOpenInterfaceBusy()
     worker.setIoInterface(createOpenDevice());
     enqueueSwitchCommands(worker, false);
     QVERIFY(worker.isBusy());
+}
+
+void SourceIoWorkerTest::testNoInterfaceNotification()
+{
+    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    cSourceJsonParamApi params;
+    params.setOn(true);
+    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    cWorkerCommandPacket workPack = cSourceIoWorker::commandPackToWorkerPack(cmdPack);
+    cSourceIoWorker worker;
+    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    worker.enqueueIoPacket(workPack);
+    QTest::qWait(200);
+    QCOMPARE(m_listWorkPacksReceived.count(), 1);
+    QVERIFY(m_listWorkPacksReceived[0] == workPack); // QCOMPARE on objects does not play well and will be remove in QT6
+    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 }
 
 void SourceIoWorkerTest::testDisconnectBeforeEnqueue()

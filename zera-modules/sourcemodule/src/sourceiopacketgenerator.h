@@ -42,6 +42,7 @@ public:
         m_bytesExpected(bytesExpected)
     {}
     void setActionType(cSourceActionTypes::ActionTypes actionType);
+    bool operator == (const cSourceSingleOutIn& other);
 
     cSourceActionTypes::ActionTypes m_actionType = cSourceActionTypes::SWITCH_UNDEF;
     SourceResponseTypes m_responseType = RESP_UNDEFINED;

@@ -16,6 +16,7 @@ public:
         EVAL_FAIL,
         EVAL_PASS
     } m_IoEval = EVAL_UNKNOWN;
+    bool operator == (const cSourceIoWorkerEntry& other);
 };
 
 typedef QList<cSourceIoWorkerEntry> tSourceIoWorkerList;
@@ -27,6 +28,7 @@ public:
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
     SourcePacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
     tSourceIoWorkerList m_workerIOList;
+    bool operator == (const cWorkerCommandPacket& other);
 };
 Q_DECLARE_METATYPE(cWorkerCommandPacket)
 
@@ -43,13 +45,13 @@ public:
     bool isBusy();
 
 signals:
-    void workPackFinished(cWorkerCommandPacket packet);
+    void sigWorkPackFinished(cWorkerCommandPacket packet);
 
 private slots:
     void onIoFinished(int ioID);
     void onIoDisconnected();
 signals:
-    void workPackFinishedQueued(cWorkerCommandPacket pack);
+    void sigWorkPackFinishedQueued(cWorkerCommandPacket pack);
 private:
     void tryStartNextIo();
     cSourceIoWorkerEntry *getNextWorkerIO();
