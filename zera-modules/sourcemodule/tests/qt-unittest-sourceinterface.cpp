@@ -6,13 +6,13 @@ static QObject* pSourceInterfaceTest = addTest(new SourceInterfaceTest);
 void SourceInterfaceTest::init()
 {
     m_ioIDReceived = -1;
-    m_ioFinishReceived = 0;
+    m_ioFinishReceiveCount = 0;
 }
 
 void SourceInterfaceTest::onIoFinish(int ioID)
 {
     m_ioIDReceived = ioID;
-    m_ioFinishReceived++;
+    m_ioFinishReceiveCount++;
 }
 
 void SourceInterfaceTest::testIoIDNotSetForBaseInterface()
@@ -44,7 +44,7 @@ void SourceInterfaceTest::testDemoFinish()
     interface->sendAndReceive(QByteArray(), &dummyReceive);
     QTest::qWait(1000);
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-    QCOMPARE(m_ioFinishReceived, 1);
+    QCOMPARE(m_ioFinishReceiveCount, 1);
 }
 
 void SourceInterfaceTest::testDemoFinishQueued()
@@ -54,7 +54,7 @@ void SourceInterfaceTest::testDemoFinishQueued()
     QByteArray dummyReceive;
     interface->sendAndReceive(QByteArray(), &dummyReceive);
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-    QCOMPARE(m_ioFinishReceived, 0);
+    QCOMPARE(m_ioFinishReceiveCount, 0);
 }
 
 void SourceInterfaceTest::testDemoFinishIDs()

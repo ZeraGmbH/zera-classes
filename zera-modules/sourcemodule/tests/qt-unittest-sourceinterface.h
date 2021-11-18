@@ -21,7 +21,7 @@ private slots:
     void testInterfaceTypesSetProperly();
 
 private:
-    int m_ioFinishReceived = 0;
+    int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;
 };
 
