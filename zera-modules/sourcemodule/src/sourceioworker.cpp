@@ -1,9 +1,23 @@
 #include "sourceioworker.h"
 
+bool cSourceIoWorkerEntry::operator ==(const cSourceIoWorkerEntry &other)
+{
+    // this for purpose of test -> ignore m_dataReceived / m_IoEval
+    return m_OutIn == other.m_OutIn;
+}
+
+bool cWorkerCommandPacket::operator ==(const cWorkerCommandPacket &other)
+{
+    return  m_workerId == other.m_workerId &&
+            m_commandType == other.m_commandType &&
+            m_errorBehavior == other.m_errorBehavior &&
+            m_workerIOList == other.m_workerIOList;
+}
+
 cSourceIoWorker::cSourceIoWorker(QObject *parent) : QObject(parent)
 {
-    connect(this, &cSourceIoWorker::workPackFinishedQueued,
-            this, &cSourceIoWorker::workPackFinished, Qt::QueuedConnection);
+    connect(this, &cSourceIoWorker::sigWorkPackFinishedQueued,
+            this, &cSourceIoWorker::sigWorkPackFinished, Qt::QueuedConnection);
 }
 
 void cSourceIoWorker::setIoInterface(tSourceInterfaceShPtr interface)
@@ -40,7 +54,7 @@ cWorkerCommandPacket cSourceIoWorker::commandPackToWorkerPack(const cSourceComma
 int cSourceIoWorker::enqueueIoPacket(cWorkerCommandPacket workPack)
 {
     if(!m_interface || workPack.m_workerIOList.isEmpty()) {
-        emit workPackFinishedQueued(workPack);
+        emit sigWorkPackFinishedQueued(workPack);
     }
     else {
         workPack.m_workerId = m_IdGenerator.nextID();
@@ -95,10 +109,9 @@ cSourceIoWorkerEntry* cSourceIoWorker::getNextWorkerIO()
         else {
             m_iPositionInWorkerIo = 0;
             cWorkerCommandPacket finishedPack = m_pendingWorkPacks.takeFirst();
-            emit workPackFinished(finishedPack);
+            emit sigWorkPackFinished(finishedPack);
             workerIo = getNextWorkerIO();
         }
     }
     return workerIo;
 }
-

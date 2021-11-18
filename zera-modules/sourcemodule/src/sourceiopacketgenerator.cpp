@@ -6,6 +6,14 @@ void cSourceSingleOutIn::setActionType(cSourceActionTypes::ActionTypes actionTyp
     m_actionType = actionType;
 }
 
+bool cSourceSingleOutIn::operator ==(const cSourceSingleOutIn &other)
+{
+    return  m_actionType == other.m_actionType &&
+            m_responseType == other.m_responseType &&
+            m_bytesSend == other.m_bytesSend &&
+            m_bytesExpected == other.m_bytesExpected;
+}
+
 
 cSourceIoPacketGenerator::cSourceIoPacketGenerator(QJsonObject jsonParamsStructure) :
     m_jsonStructApi(new cSourceJsonStructApi(jsonParamsStructure)),
