@@ -133,6 +133,24 @@ void SourceIoWorkerTest::testNoInterfaceNotification()
     disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 }
 
+void SourceIoWorkerTest::testNotOpenInterfaceNotifications()
+{
+    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    cSourceJsonParamApi params;
+    params.setOn(true);
+    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    cWorkerCommandPacket workPack = cSourceIoWorker::commandPackToWorkerPack(cmdPack);
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    cSourceIoWorker worker;
+    worker.setIoInterface(interface);
+    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    workPack.m_workerId = worker.enqueueIoPacket(workPack);
+    QTest::qWait(200);
+    QCOMPARE(m_listWorkPacksReceived.count(), 1);
+    QVERIFY(m_listWorkPacksReceived[0] == workPack); // QCOMPARE on objects does not play well and will be remove in QT6
+    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+}
+
 void SourceIoWorkerTest::testDisconnectBeforeEnqueue()
 {
     tSourceInterfaceShPtr interface = createOpenDevice();

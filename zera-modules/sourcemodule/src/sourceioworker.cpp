@@ -71,12 +71,16 @@ bool cSourceIoWorker::isBusy()
 
 void cSourceIoWorker::onIoFinished(int ioID)
 {
-
+    if(ioID == 0) {
+        finishCurrentWorker();
+    }
 }
 
 void cSourceIoWorker::onIoDisconnected()
 {
-    onIoFinished(m_iCurrentIoID);
+    if(!m_pendingWorkPacks.isEmpty()) { // for disconnect before first enqueue
+        onIoFinished(m_iCurrentIoID);
+    }
     setIoInterface(nullptr);
 }
 
