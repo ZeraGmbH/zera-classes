@@ -35,6 +35,7 @@ private slots:
     void onIoFinished(int ioID);
 private:
     void sendReceiveSourceID();
+    QByteArray createInterfaceSpecificPrepend();
     QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);
 
     tSourceInterfaceShPtr m_ioInterface;
