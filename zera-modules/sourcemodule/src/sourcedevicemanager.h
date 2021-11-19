@@ -13,7 +13,6 @@ namespace SOURCEMODULE
 {
 
 class cSourceDevice;
-class cSourceScanner;
 
 class cSourceDeviceManager : public QObject
 {
@@ -23,7 +22,7 @@ public:
 
     // requests
     void startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid);
-    void setDemoCount(int getDemoCount);
+    void setDemoCount(int count);
     bool removeSource(int slotNo);
 
     // getter
@@ -41,6 +40,11 @@ private slots:
     void onRemoveSource(cSourceDevice *getSourceDevice);
 
 private:
+    bool isValidSlotNo(int slotNo);
+    int findFreeSlot();
+    void addSource(int slotPos, cSourceDevice *device);
+    bool tryStartDemoDeviceRemove(int slotNo);
+
     QVector<cSourceDevice*> m_sourceDeviceSlots;
     int m_activeSlotCount;
     int m_demoCount;
