@@ -20,20 +20,23 @@ class cSourceScanner : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid);
+    static tSourceScannerShPtr createScanner(tSourceInterfaceShPtr interface, QUuid uuid);
     virtual ~cSourceScanner();
+
     // requests
     void startScan();
+
     // getter
     cSourceDevice* getSourceDeviceFound();
     QUuid getUuid();
-    // keep alive ensurance
-    void setScannerReference(tSourceScannerShPtr scannerReference);
 signals:
     void sigScanFinished(tSourceScannerShPtr scanner);
+
 private slots:
     void onIoFinished(int ioID);
 private:
+    explicit cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid);
+
     void sendReceiveSourceID();
     QByteArray createInterfaceSpecificPrepend();
     QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);
@@ -43,7 +46,7 @@ private:
     cSourceDevice* m_sourceDeviceIdentified;
     QByteArray m_bytesReceived;
     int m_currentSourceTested = 0;
-    tSourceScannerShPtr m_scannerReference;
+    tSourceScannerShPtr m_safePoinerOnThis;
 };
 
 }

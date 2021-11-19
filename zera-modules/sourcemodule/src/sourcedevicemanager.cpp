@@ -26,10 +26,7 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceT
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
-            tSourceScannerShPtr sourceScanner = tSourceScannerShPtr(new cSourceScanner(interface, uuid));
-            // in case our module=we are killed while scan is pending we have to make sure
-            // that scanner finishes and deletes itself after completion (our shared reference is gone)
-            sourceScanner->setScannerReference(sourceScanner);
+            tSourceScannerShPtr sourceScanner = cSourceScanner::createScanner(interface, uuid);
             connect(sourceScanner.get(), &cSourceScanner::sigScanFinished,
                     this, &cSourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);

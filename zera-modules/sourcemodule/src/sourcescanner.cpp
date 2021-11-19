@@ -5,6 +5,13 @@
 namespace SOURCEMODULE
 {
 
+tSourceScannerShPtr cSourceScanner::createScanner(tSourceInterfaceShPtr interface, QUuid uuid)
+{
+    tSourceScannerShPtr scanner = tSourceScannerShPtr(new cSourceScanner(interface, uuid));
+    scanner->m_safePoinerOnThis = scanner;
+    return scanner;
+}
+
 cSourceScanner::cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
     QObject(nullptr),
     m_ioInterface(interface),
@@ -48,15 +55,6 @@ cSourceDevice *cSourceScanner::getSourceDeviceFound()
 QUuid cSourceScanner::getUuid()
 {
     return m_uuid;
-}
-
-void cSourceScanner::setScannerReference(tSourceScannerShPtr scannerReference)
-{
-    cSourceScanner* scannerToSet = scannerReference.get();
-    if(scannerToSet && scannerToSet != this) {
-        qFatal("Do not set reference to other scanner!");
-    }
-    m_scannerReference = scannerReference;
 }
 
 void cSourceScanner::sendReceiveSourceID()
@@ -134,7 +132,7 @@ void cSourceScanner::onIoFinished(int ioID)
         }
         m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, deviceDetectInfoCurrent.sourceType, version);
 
-        emit sigScanFinished(m_scannerReference);
+        emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;
     }
     else if(ioID && moreChances) {
@@ -142,12 +140,12 @@ void cSourceScanner::onIoFinished(int ioID)
         sendReceiveSourceID(); // delay??
     }
     else {
-        emit sigScanFinished(m_scannerReference); // notify: we failed :(
+        emit sigScanFinished(m_safePoinerOnThis); // notify: we failed :(
         ourJobIsDone = true;
     }
     if(ourJobIsDone) {
         // we are ready to die
-        setScannerReference(nullptr);
+        m_safePoinerOnThis = nullptr;
     }
 }
 
