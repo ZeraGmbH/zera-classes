@@ -29,6 +29,7 @@ public:
     // getter
     cSourceDevice* getSourceDeviceFound();
     QUuid getUuid();
+    static int getInstanceCount();
 signals:
     void sigScanFinished(tSourceScannerShPtr scanner);
 
@@ -48,6 +49,7 @@ private:
     QByteArray m_bytesReceived;
     int m_currentSourceTested = 0;
     tSourceScannerShPtr m_safePoinerOnThis;
+    static int m_InstanceCount;
 };
 
 }

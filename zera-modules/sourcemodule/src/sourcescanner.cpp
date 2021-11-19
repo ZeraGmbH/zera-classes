@@ -12,18 +12,22 @@ tSourceScannerShPtr cSourceScanner::createScanner(tSourceInterfaceShPtr interfac
     return scanner;
 }
 
+int cSourceScanner::m_InstanceCount = 0;
+
 cSourceScanner::cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
     QObject(nullptr),
     m_ioInterface(interface),
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
+    m_InstanceCount++;
     connect(m_ioInterface.get(), &cSourceInterfaceBase::sigIoFinished,
             this, &cSourceScanner::onIoFinished);
 }
 
 cSourceScanner::~cSourceScanner()
 {
+    m_InstanceCount--;
 }
 
 struct deviceDetectInfo
@@ -56,6 +60,11 @@ cSourceDevice *cSourceScanner::getSourceDeviceFound()
 QUuid cSourceScanner::getUuid()
 {
     return m_uuid;
+}
+
+int cSourceScanner::getInstanceCount()
+{
+    return m_InstanceCount;
 }
 
 void cSourceScanner::sendReceiveSourceID()
