@@ -63,17 +63,21 @@ void cSourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     m_bytesReceived.clear();
-    // interface specifics
-    QByteArray globalPrepend;
+    QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
+    m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived);
+}
+
+QByteArray cSourceScanner::createInterfaceSpecificPrepend()
+{
+    QByteArray prepend;
     if(m_ioInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
         static_cast<cSourceInterfaceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
-            globalPrepend = "\r";
+            prepend = "\r";
         }
     }
-    QByteArray bytesSend = globalPrepend + deviceDetectInfoCurrent.queryStr;
-    m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived);
+    return prepend;
 }
 
 QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not used yet */)
