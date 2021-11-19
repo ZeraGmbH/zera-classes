@@ -6,6 +6,7 @@ bool cSourceIoWorkerEntry::operator ==(const cSourceIoWorkerEntry &other)
     return m_OutIn == other.m_OutIn;
 }
 
+
 bool cWorkerCommandPacket::operator ==(const cWorkerCommandPacket &other)
 {
     return  m_workerId == other.m_workerId &&
@@ -13,6 +14,21 @@ bool cWorkerCommandPacket::operator ==(const cWorkerCommandPacket &other)
             m_errorBehavior == other.m_errorBehavior &&
             m_workerIOList == other.m_workerIOList;
 }
+
+
+cWorkerCommandPacket cSourceWorkerConverter::commandPackToWorkerPack(const cSourceCommandPacket &commandPack)
+{
+    cWorkerCommandPacket workPack;
+    workPack.m_commandType = commandPack.m_commandType;
+    workPack.m_errorBehavior = commandPack.m_errorBehavior;
+    for(auto outIn : commandPack.m_singleOutInList) {
+        cSourceIoWorkerEntry workEntry;
+        workEntry.m_OutIn = outIn;
+        workPack.m_workerIOList.append(workEntry);
+    }
+    return workPack;
+}
+
 
 cSourceIoWorker::cSourceIoWorker(QObject *parent) : QObject(parent)
 {
@@ -36,19 +52,6 @@ void cSourceIoWorker::setIoInterface(tSourceInterfaceShPtr interface)
                 this, &cSourceIoWorker::onIoDisconnected);
         m_interface = nullptr;
     }
-}
-
-cWorkerCommandPacket cSourceIoWorker::commandPackToWorkerPack(const cSourceCommandPacket &commandPack)
-{
-    cWorkerCommandPacket workPack;
-    workPack.m_commandType = commandPack.m_commandType;
-    workPack.m_errorBehavior = commandPack.m_errorBehavior;
-    for(auto outIn : commandPack.m_singleOutInList) {
-        cSourceIoWorkerEntry workEntry;
-        workEntry.m_OutIn = outIn;
-        workPack.m_workerIOList.append(workEntry);
-    }
-    return workPack;
 }
 
 int cSourceIoWorker::enqueueIoPacket(cWorkerCommandPacket workPack)
