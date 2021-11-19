@@ -30,7 +30,6 @@ private slots:
 //    void testDisconnectWhileWorking();
 //    void testDisconnectWhileWorkingMultipleNotifications();
 
-//    void testStopOnFirstSuccess();
 //    void testStopOnFirstError();
 //    void testContinueOnError();
 
