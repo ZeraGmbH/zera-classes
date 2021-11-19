@@ -159,6 +159,30 @@ void SourceDeviceManagerTest::testAddNotificationTooMany()
     QCOMPARE(m_socketsRemoved.count(), 0);
 }
 
+void SourceDeviceManagerTest::testRemoveNotification()
+{
+    constexpr int slotCount = 3;
+    cSourceDeviceManager devMan(slotCount);
+    connect(&devMan, &cSourceDeviceManager::sigSourceScanFinished,
+            this, &SourceDeviceManagerTest::onSourceScanFinished);
+    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
+            this, &SourceDeviceManagerTest::onSlotRemoved);
+    for(int i=0; i<slotCount+1; i++) {
+        devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
+    }
+    QTest::qWait(100);
+    for(int i=0; i<slotCount+1; i++) {
+        devMan.removeSource(i);
+    }
+    QTest::qWait(100);
+    disconnect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
+            this, &SourceDeviceManagerTest::onSlotRemoved);
+    disconnect(&devMan, &cSourceDeviceManager::sigSourceScanFinished,
+            this, &SourceDeviceManagerTest::onSourceScanFinished);
+
+    QCOMPARE(m_socketsRemoved.count(), slotCount);
+}
+
 void SourceDeviceManagerTest::testNoCrashOnManagerDeadBeforeScanFinished()
 {
     constexpr int slotCount = 3;
