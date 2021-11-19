@@ -21,6 +21,7 @@ public:
 
 typedef QList<cSourceIoWorkerEntry> tSourceIoWorkerList;
 
+
 class cWorkerCommandPacket
 {
 public:
@@ -32,6 +33,14 @@ public:
 };
 Q_DECLARE_METATYPE(cWorkerCommandPacket)
 
+
+class cSourceWorkerConverter
+{
+public:
+    static cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &commandPack);
+};
+
+
 class cSourceIoWorker : public QObject
 {
     Q_OBJECT
@@ -39,8 +48,6 @@ public:
     explicit cSourceIoWorker(QObject *parent = nullptr);
 
     void setIoInterface(tSourceInterfaceShPtr interface);
-
-    static cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &commandPack);
     int enqueueIoPacket(cWorkerCommandPacket workPack);
     bool isBusy();
 
