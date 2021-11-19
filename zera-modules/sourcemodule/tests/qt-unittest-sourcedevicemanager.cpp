@@ -1,10 +1,12 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevicemanager.h"
 #include "sourcedevicemanager.h"
+#include "sourcescanner.h"
 
 static QObject* pSourceDeviceManagerTest = addTest(new SourceDeviceManagerTest);
 
 using SOURCEMODULE::cSourceDeviceManager;
+using SOURCEMODULE::cSourceScanner;
 
 FinishEntry::FinishEntry(int slotNo, SOURCEMODULE::cSourceDevice *device, QUuid uuid, QString errMsg)
 {
@@ -159,8 +161,10 @@ void SourceDeviceManagerTest::testNoCrashOnManagerDeadBeforeScanFinished()
         devMan->startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     delete devMan;
-    QTest::qWait(1000);
+    QCOMPARE(cSourceScanner::getInstanceCount(), slotCount);
+    QTest::qWait(100);
     QCOMPARE(m_listSourcesAdded.count(), 0);
+    QCOMPARE(cSourceScanner::getInstanceCount(), 0);
 }
 
 
