@@ -40,6 +40,7 @@ private:
     void sendReceiveSourceID();
     QByteArray createInterfaceSpecificPrepend();
     QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);
+    static SupportedSourceTypes nextDemoType();
 
     tSourceInterfaceShPtr m_ioInterface;
     QUuid m_uuid;
