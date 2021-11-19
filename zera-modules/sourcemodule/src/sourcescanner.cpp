@@ -18,7 +18,8 @@ cSourceScanner::cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
-    connect(m_ioInterface.get(), &cSourceInterfaceBase::sigIoFinished, this, &cSourceScanner::onIoFinished);
+    connect(m_ioInterface.get(), &cSourceInterfaceBase::sigIoFinished,
+            this, &cSourceScanner::onIoFinished);
 }
 
 cSourceScanner::~cSourceScanner()
@@ -97,17 +98,25 @@ QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* no
     return version;
 }
 
-static enum SupportedSourceTypes sDemoTypeCounter(SOURCE_TYPE_COUNT);
+SupportedSourceTypes cSourceScanner::nextDemoType() {
+    static SupportedSourceTypes sDemoTypeCounter(SOURCE_TYPE_COUNT);
+    int nextDemoType = sDemoTypeCounter;
+    nextDemoType++;
+    if(nextDemoType >= SOURCE_TYPE_COUNT) {
+        nextDemoType = 0;
+    }
+    sDemoTypeCounter = SupportedSourceTypes(nextDemoType);
+    return sDemoTypeCounter;
+}
 
 void cSourceScanner::onIoFinished(int ioID)
 {
     bool validFound = false;
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
     bool ourJobIsDone = false;
-    deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[0];
+    deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     if(ioID) { // receive id == 0 -> I/O problems -> don't try next
         if(m_ioInterface->type() != SOURCE_INTERFACE_DEMO) {
-            deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
             if(m_bytesReceived.contains(deviceDetectInfoCurrent.expectedResponse)) {
                 validFound = true;
             }
@@ -119,12 +128,7 @@ void cSourceScanner::onIoFinished(int ioID)
     if(validFound) {
         QByteArray version;
         if(m_ioInterface->type() == SOURCE_INTERFACE_DEMO) {
-            int nextDemoType = sDemoTypeCounter;
-            nextDemoType++;
-            if(nextDemoType >= SOURCE_TYPE_COUNT) {
-                nextDemoType = 0;
-            }
-            deviceDetectInfoCurrent.sourceType = sDemoTypeCounter = SupportedSourceTypes(nextDemoType);
+            deviceDetectInfoCurrent.sourceType = nextDemoType();
             version = "V42";
         }
         else {
