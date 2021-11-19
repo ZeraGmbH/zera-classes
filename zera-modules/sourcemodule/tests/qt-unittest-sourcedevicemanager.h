@@ -39,7 +39,8 @@ private slots:
     void testAddNotificationTooMany();
 
     void testRemoveNotification();
-//    void testRemoveNotificationTooMany();
+    void testRemoveNotificationTooMany();
+    void testAddRemoveNotificationAndCounts();
 
     void testNoCrashOnManagerDeadBeforeScanFinished();
 
