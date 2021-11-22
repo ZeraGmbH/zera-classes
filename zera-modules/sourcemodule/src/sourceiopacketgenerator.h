@@ -20,7 +20,7 @@ enum SourcePacketErrorBehaviors {
     BEHAVE_UNDEF_BOTTOM
 };
 
-enum SourceResponseTypes {
+enum SourceIoResponseTypes {
     RESP_UNDEFINED = 0,
     RESP_FULL_DATA_SEQUENCE,
     RESP_PART_DATA_SEQUENCE,
@@ -31,7 +31,7 @@ class cSourceSingleOutIn
 {
 public:
     cSourceSingleOutIn() {}
-    cSourceSingleOutIn(SourceResponseTypes ioResponseType,
+    cSourceSingleOutIn(SourceIoResponseTypes ioResponseType,
                          QByteArray bytesSend,
                          QByteArray bytesExpected) :
         m_actionType(cSourceActionTypes::ActionTypes(0)),
@@ -43,7 +43,7 @@ public:
     bool operator == (const cSourceSingleOutIn& other);
 
     cSourceActionTypes::ActionTypes m_actionType = cSourceActionTypes::SWITCH_UNDEF;
-    SourceResponseTypes m_responseType = RESP_UNDEFINED;
+    SourceIoResponseTypes m_responseType = RESP_UNDEFINED;
     QByteArray m_bytesSend;
     QByteArray m_bytesExpected;
 };

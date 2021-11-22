@@ -73,6 +73,7 @@ public:
     void simulateExternalDisconnect();
     void setResponseDelay(int iMs);
     void setResponses(QList<QByteArray> responseList);
+    void appendResponses(QList<QByteArray> responseList);
 protected:
     explicit cSourceInterfaceDemo(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;

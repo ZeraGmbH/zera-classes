@@ -35,11 +35,8 @@ private slots:
     void testContinueOnErrorFullResponse();
     void testContinueOnErrorPartResponse();
 
-//    void testCloseToSpamAccepted();
-//    void testSpamRejected();
-
-//    void testReplacePending();
-//    void testReplacePendingSpam(); //???
+    void testSpamRejected();
+    void testCloseToSpamAccepted();
 
 //    void testOnePacketSingleIoOK();
 //    void testTwoPacketSingleIoOK();
@@ -48,6 +45,8 @@ private slots:
 //    void testTwoPacketMultipleIoOK();
 
 private:
+    void countResults(int &actionsPassedCount, int &unknownCount, int &passCount, int &failCount);
+
     QList<cWorkerCommandPacket> m_listWorkPacksReceived;
 };
 

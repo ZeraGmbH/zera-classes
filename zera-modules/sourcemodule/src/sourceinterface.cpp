@@ -97,3 +97,8 @@ void cSourceInterfaceDemo::setResponses(QList<QByteArray> responseList)
     m_responseList = responseList;
 }
 
+void cSourceInterfaceDemo::appendResponses(QList<QByteArray> responseList)
+{
+    m_responseList.append(responseList);
+}
+
