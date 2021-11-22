@@ -131,9 +131,16 @@ void SourceIoWorkerTest::testNoInterfaceNotification()
     connect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     worker.enqueueAction(workPack);
     QTest::qWait(10);
+    disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     QVERIFY(m_listWorkPacksReceived[0] == workPack); // QCOMPARE on objects does not play well and will be remove in QT6
-    disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
+    countResults(actionsPassedCount, unknownCount, passCount, failCount);
+    QCOMPARE(actionsPassedCount, 0);
+    QCOMPARE(failCount, 0);
+    QCOMPARE(passCount, 0);
+    QCOMPARE(unknownCount, cmdPack.m_outInList.count());
 }
 
 void SourceIoWorkerTest::testNotOpenInterfaceNotifications()
@@ -149,9 +156,16 @@ void SourceIoWorkerTest::testNotOpenInterfaceNotifications()
     connect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     workPack.m_workerId = worker.enqueueAction(workPack);
     QTest::qWait(10);
+    disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     QVERIFY(m_listWorkPacksReceived[0] == workPack); // QCOMPARE on objects does not play well and will be remove in QT6
-    disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
+    countResults(actionsPassedCount, unknownCount, passCount, failCount);
+    QCOMPARE(actionsPassedCount, 0);
+    QCOMPARE(failCount, 0);
+    QCOMPARE(passCount, 0);
+    QCOMPARE(unknownCount, cmdPack.m_outInList.count());
 }
 
 void SourceIoWorkerTest::testDisconnectBeforeEnqueue()
@@ -182,8 +196,15 @@ void SourceIoWorkerTest::testDisconnectWhileWorking()
     enqueueSwitchCommands(worker, false);
     QTest::qWait(50);
     disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
     QVERIFY(!worker.isBusy());
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
+    int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
+    countResults(actionsPassedCount, unknownCount, passCount, failCount);
+    QCOMPARE(actionsPassedCount, 0);
+    QCOMPARE(failCount, 0);
+    QCOMPARE(passCount, 0);
+    QCOMPARE(unknownCount, 1);
 }
 
 void SourceIoWorkerTest::testDisconnectWhileWorkingMultipleNotifications()
@@ -205,8 +226,15 @@ void SourceIoWorkerTest::testDisconnectWhileWorkingMultipleNotifications()
     enqueueSwitchCommands(worker, true);
     QTest::qWait(50);
     disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
     QVERIFY(!worker.isBusy());
     QCOMPARE(m_listWorkPacksReceived.count(), 3);
+    int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
+    countResults(actionsPassedCount, unknownCount, passCount, failCount);
+    QCOMPARE(actionsPassedCount, 0);
+    QCOMPARE(failCount, 0);
+    QCOMPARE(passCount, 0);
+    //QCOMPARE(unknownCount, 1);
 }
 
 static void adjustWorkCmdPack(cWorkerCommandPacket& workCmdPack,
@@ -478,6 +506,7 @@ void SourceIoWorkerTest::testOnePacketSingleIoOK()
     }
     QTest::qWait(10);
     disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
     int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
     countResults(actionsPassedCount, unknownCount, passCount, failCount);
     QCOMPARE(actionsPassedCount, 1);
@@ -504,6 +533,7 @@ void SourceIoWorkerTest::testTwoPacketSingleIoOK()
     }
     QTest::qWait(10);
     disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
     int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
     countResults(actionsPassedCount, unknownCount, passCount, failCount);
     QCOMPARE(actionsPassedCount, 2);
