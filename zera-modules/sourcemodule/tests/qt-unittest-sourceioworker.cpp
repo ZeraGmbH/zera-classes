@@ -162,3 +162,47 @@ void SourceIoWorkerTest::testDisconnectBeforeEnqueue()
     QVERIFY(!worker.isBusy());
 }
 
+void SourceIoWorkerTest::testDisconnectWhileWorking()
+{
+    tSourceInterfaceShPtr interface = createOpenDevice();
+    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    cSourceIoWorker worker;
+    worker.setIoInterface(interface);
+    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    demoInterface->setResponseDelay(500);
+    QTimer timer;
+    timer.setSingleShot(true);
+    connect(&timer, &QTimer::timeout, [&]() {
+        demoInterface->simulateExternalDisconnect();
+    });
+    timer.start(10);
+    enqueueSwitchCommands(worker, false);
+    QTest::qWait(200);
+    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    QVERIFY(!worker.isBusy());
+    QCOMPARE(m_listWorkPacksReceived.count(), 1);
+}
+
+void SourceIoWorkerTest::testDisconnectWhileWorkingMultipleNotifications()
+{
+    tSourceInterfaceShPtr interface = createOpenDevice();
+    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    cSourceIoWorker worker;
+    worker.setIoInterface(interface);
+    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    demoInterface->setResponseDelay(500);
+    QTimer timer;
+    timer.setSingleShot(true);
+    connect(&timer, &QTimer::timeout, [&]() {
+        demoInterface->simulateExternalDisconnect();
+    });
+    timer.start(10);
+    enqueueSwitchCommands(worker, true);
+    enqueueSwitchCommands(worker, false);
+    enqueueSwitchCommands(worker, true);
+    QTest::qWait(200);
+    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    QVERIFY(!worker.isBusy());
+    QCOMPARE(m_listWorkPacksReceived.count(), 3);
+}
+
