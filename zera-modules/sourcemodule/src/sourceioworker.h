@@ -63,12 +63,16 @@ private:
     void tryStartNextIo();
     cSourceIoWorkerEntry *getNextWorkerIO();
     void finishCurrentWorker();
+    void abortAllWorkers();
+    bool evaluateResponse();
+    bool canContinue();
+    cWorkerCommandPacket *getCurrentCmdPack();
 
     tSourceInterfaceShPtr m_interface = nullptr;
     int m_iCurrentIoID = 0;
     cSourceIdGenerator m_IdGenerator;
     QList<cWorkerCommandPacket> m_pendingWorkPacks;
-    int m_iPositionInWorkerIo = 0;
+    int m_nextPosInWorkerIo = 0;
 };
 
 #endif // CSOURCEIOWORKER_H

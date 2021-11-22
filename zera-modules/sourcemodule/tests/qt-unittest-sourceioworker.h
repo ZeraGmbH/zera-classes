@@ -30,8 +30,10 @@ private slots:
     void testDisconnectWhileWorking();
     void testDisconnectWhileWorkingMultipleNotifications();
 
-//    void testStopOnFirstError();
-//    void testContinueOnError();
+    void testStopOnFirstErrorFullResponse();
+    void testStopOnFirstErrorPartResponse();
+    void testContinueOnErrorFullResponse();
+    void testContinueOnErrorPartResponse();
 
 //    void testCloseToSpamAccepted();
 //    void testSpamRejected();

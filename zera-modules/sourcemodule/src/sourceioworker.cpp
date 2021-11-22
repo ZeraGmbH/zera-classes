@@ -75,33 +75,33 @@ bool cSourceIoWorker::isBusy()
 void cSourceIoWorker::onIoFinished(int ioID)
 {
     if(ioID == 0) {
-        finishCurrentWorker();
+        abortAllWorkers();
     }
-    m_iCurrentIoID = 0;
+    else {
+        m_iCurrentIoID = 0;
+        if(canContinue()) {
+            tryStartNextIo();
+        }
+        else {
+            abortAllWorkers();
+        }
+    }
 }
 
 void cSourceIoWorker::onIoDisconnected()
 {
-    while(!m_pendingWorkPacks.isEmpty()) {
-        finishCurrentWorker();
-    }
-    m_iCurrentIoID = 0;
+    abortAllWorkers();
     setIoInterface(nullptr);
 }
 
 void cSourceIoWorker::tryStartNextIo()
 {
     if(!isBusy()) {
-        if(m_interface) {
-            cSourceIoWorkerEntry* workerIo = getNextWorkerIO();
-            if(workerIo) {
-                m_iCurrentIoID = m_interface->sendAndReceive(
-                            workerIo->m_OutIn.m_bytesSend,
-                            &workerIo->m_dataReceived);
-            }
-        }
-        else {
-
+        cSourceIoWorkerEntry* workerIo = getNextWorkerIO();
+        if(workerIo) {
+            m_iCurrentIoID = m_interface->sendAndReceive(
+                        workerIo->m_OutIn.m_bytesSend,
+                        &workerIo->m_dataReceived);
         }
     }
 }
@@ -109,11 +109,11 @@ void cSourceIoWorker::tryStartNextIo()
 cSourceIoWorkerEntry* cSourceIoWorker::getNextWorkerIO()
 {
     cSourceIoWorkerEntry* workerIo = nullptr;
-    if(!m_pendingWorkPacks.isEmpty()) {
-        cWorkerCommandPacket &currentPack = m_pendingWorkPacks.first();
-        if(m_iPositionInWorkerIo < currentPack.m_workerIOList.count()) {
-            workerIo = &(currentPack.m_workerIOList[m_iPositionInWorkerIo]);
-            m_iPositionInWorkerIo++;
+    cWorkerCommandPacket *currCmdPack = getCurrentCmdPack();
+    if(currCmdPack) {
+        if(m_nextPosInWorkerIo < currCmdPack->m_workerIOList.count()) {
+            workerIo = &(currCmdPack->m_workerIOList[m_nextPosInWorkerIo]);
+            m_nextPosInWorkerIo++;
         }
         else {
             finishCurrentWorker();
@@ -125,7 +125,56 @@ cSourceIoWorkerEntry* cSourceIoWorker::getNextWorkerIO()
 
 void cSourceIoWorker::finishCurrentWorker()
 {
-    m_iPositionInWorkerIo = 0;
+    m_nextPosInWorkerIo = 0;
+    m_iCurrentIoID = 0;
     cWorkerCommandPacket finishedPack = m_pendingWorkPacks.takeFirst();
     emit sigWorkPackFinished(finishedPack);
+}
+
+void cSourceIoWorker::abortAllWorkers()
+{
+    while(!m_pendingWorkPacks.isEmpty()) {
+        finishCurrentWorker();
+    }
+}
+
+bool cSourceIoWorker::evaluateResponse()
+{
+    bool pass = false;
+    cWorkerCommandPacket *currCmdPack = getCurrentCmdPack();
+    if(currCmdPack) {
+        cSourceIoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
+        cSourceSingleOutIn& currentOutIn = currentWorker.m_OutIn;
+        switch(currentOutIn.m_responseType) {
+        case RESP_FULL_DATA_SEQUENCE:
+            currentWorker.m_IoEval = currentWorker.m_dataReceived == currentOutIn.m_bytesExpected ?
+                        cSourceIoWorkerEntry::EVAL_PASS : cSourceIoWorkerEntry::EVAL_FAIL;
+            break;
+        case RESP_PART_DATA_SEQUENCE:
+            currentWorker.m_IoEval = currentWorker.m_dataReceived.contains(currentOutIn.m_bytesExpected) ?
+                        cSourceIoWorkerEntry::EVAL_PASS : cSourceIoWorkerEntry::EVAL_FAIL;
+            break;
+        default:
+            currentWorker.m_IoEval = cSourceIoWorkerEntry::EVAL_FAIL;
+            break;
+        }
+        pass = currentWorker.m_IoEval == cSourceIoWorkerEntry::EVAL_PASS;
+    }
+    return pass;
+}
+
+bool cSourceIoWorker::canContinue()
+{
+    bool pass = evaluateResponse();
+    cWorkerCommandPacket *currCmdPack = getCurrentCmdPack();
+    return pass || (currCmdPack && currCmdPack->m_errorBehavior == BEHAVE_CONTINUE_ON_ERROR);
+}
+
+cWorkerCommandPacket *cSourceIoWorker::getCurrentCmdPack()
+{
+    cWorkerCommandPacket* current = nullptr;
+    if(!m_pendingWorkPacks.isEmpty()) {
+        current = &m_pendingWorkPacks.first();
+    }
+    return current;
 }
