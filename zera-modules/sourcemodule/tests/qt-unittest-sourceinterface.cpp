@@ -45,7 +45,7 @@ void SourceInterfaceTest::testDemoFinish()
     QCOMPARE(connected, true);
     QByteArray dummyReceive;
     interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(1000);
+    QTest::qWait(10);
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
@@ -67,10 +67,10 @@ void SourceInterfaceTest::testDemoFinishIDs()
 
     QByteArray dummyReceive;
     int startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(200);
+    QTest::qWait(10);
     QCOMPARE(m_ioIDReceived, startId);
     startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(200);
+    QTest::qWait(10);
     QCOMPARE(m_ioIDReceived, startId);
 
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
@@ -93,7 +93,7 @@ void SourceInterfaceTest::testDemoDelayNotOpen()
 
     QByteArray dummyReceive;
     interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(200);
+    QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
@@ -109,7 +109,7 @@ void SourceInterfaceTest::testDemoDelayDontWait()
 
     QByteArray dummyReceive;
     interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(200);
+    QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 0);
 
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
@@ -121,11 +121,11 @@ void SourceInterfaceTest::testDemoDelayWait()
     connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
     cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
     demoInterface->open(QString());
-    demoInterface->setResponseDelay(100);
+    demoInterface->setResponseDelay(10);
 
     QByteArray dummyReceive;
     int startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(300);
+    QTest::qWait(50);
     QCOMPARE(m_ioFinishReceiveCount, 1);
     QCOMPARE(m_ioIDReceived, startId);
 
@@ -160,13 +160,13 @@ void SourceInterfaceTest::testDemoResponseListDelay()
     demoInterface->open(QString());
     QList<QByteArray> testResponses = QList<QByteArray>() << "0\r" << "1\r" << "2\r";
     demoInterface->setResponses(testResponses);
-    demoInterface->setResponseDelay(50);
+    demoInterface->setResponseDelay(10);
     interface->sendAndReceive(QByteArray(), &m_receivedData);
-    QTest::qWait(200); // one I/O at a time
+    QTest::qWait(50); // one I/O at a time
     interface->sendAndReceive(QByteArray(), &m_receivedData);
-    QTest::qWait(200);
+    QTest::qWait(50);
     interface->sendAndReceive(QByteArray(), &m_receivedData);
-    QTest::qWait(200);
+    QTest::qWait(50);
     QCOMPARE(m_ioFinishReceiveCount, 3);
     QCOMPARE(m_listReceivedData, testResponses);
 
