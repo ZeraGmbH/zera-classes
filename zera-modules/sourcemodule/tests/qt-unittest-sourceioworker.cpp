@@ -460,3 +460,55 @@ void SourceIoWorkerTest::testCloseToSpamAccepted()
     QCOMPARE(unknownCount, 0);
 }
 
+void SourceIoWorkerTest::testOnePacketSingleIoOK()
+{
+    tSourceInterfaceShPtr interface = createOpenDevice();
+    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    cSourceIoWorker worker;
+    worker.setIoInterface(interface);
+    connect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
+    cWorkerCommandPacket workCmdPack = generateSwitchCommands(false);
+    adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
+    QList<QByteArray> responseList = generateResonseList(workCmdPack, -1);
+    for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
+        demoInterface->appendResponses(responseList);
+        int id = worker.enqueueAction(workCmdPack);
+        QVERIFY(id != 0);
+    }
+    QTest::qWait(10);
+    disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
+    countResults(actionsPassedCount, unknownCount, passCount, failCount);
+    QCOMPARE(actionsPassedCount, 1);
+    QCOMPARE(failCount, 0);
+    QCOMPARE(passCount, 1);
+    QCOMPARE(unknownCount, 0);
+}
+
+void SourceIoWorkerTest::testTwoPacketSingleIoOK()
+{
+    tSourceInterfaceShPtr interface = createOpenDevice();
+    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    cSourceIoWorker worker;
+    worker.setIoInterface(interface);
+    connect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
+    cWorkerCommandPacket workCmdPack = generateSwitchCommands(false);
+    adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
+    QList<QByteArray> responseList = generateResonseList(workCmdPack, -1);
+    for(int pack=0; pack<2*workCmdPack.m_workerIOList.count(); pack++) {
+        demoInterface->appendResponses(responseList);
+        int id = worker.enqueueAction(workCmdPack);
+        QVERIFY(id != 0);
+    }
+    QTest::qWait(10);
+    disconnect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    int actionsPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
+    countResults(actionsPassedCount, unknownCount, passCount, failCount);
+    QCOMPARE(actionsPassedCount, 2);
+    QCOMPARE(failCount, 0);
+    QCOMPARE(passCount, 2);
+    QCOMPARE(unknownCount, 0);
+}
+
