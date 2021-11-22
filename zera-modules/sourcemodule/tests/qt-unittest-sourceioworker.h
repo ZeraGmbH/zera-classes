@@ -38,8 +38,8 @@ private slots:
     void testSpamRejected();
     void testCloseToSpamAccepted();
 
-//    void testOnePacketSingleIoOK();
-//    void testTwoPacketSingleIoOK();
+    void testOnePacketSingleIoOK();
+    void testTwoPacketSingleIoOK();
 
 //    void testOnePacketMultipleIoOK();
 //    void testTwoPacketMultipleIoOK();
