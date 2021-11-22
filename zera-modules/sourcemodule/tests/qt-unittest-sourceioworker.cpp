@@ -70,7 +70,7 @@ void SourceIoWorkerTest::testNoInterfaceNotBusy()
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     cSourceIoWorker worker;
-    worker.enqueueIoPacket(workPack);
+    worker.enqueuePacket(workPack);
     QVERIFY(!worker.isBusy());
 }
 
@@ -80,7 +80,7 @@ void SourceIoWorkerTest::testEmptyPackNotBusy()
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
     cWorkerCommandPacket workPack;
-    worker.enqueueIoPacket(workPack);
+    worker.enqueuePacket(workPack);
     QVERIFY(!worker.isBusy());
 }
 
@@ -93,7 +93,7 @@ static cWorkerCommandPacket generateSwitchCommands(bool on) {
 }
 
 static void enqueueSwitchCommands(cSourceIoWorker& worker, bool on) {
-    worker.enqueueIoPacket(generateSwitchCommands(on));
+    worker.enqueuePacket(generateSwitchCommands(on));
 }
 
 void SourceIoWorkerTest::testNotOpenInterfaceNotBusy()
@@ -128,12 +128,12 @@ void SourceIoWorkerTest::testNoInterfaceNotification()
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     cSourceIoWorker worker;
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
-    worker.enqueueIoPacket(workPack);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    worker.enqueuePacket(workPack);
     QTest::qWait(200);
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     QVERIFY(m_listWorkPacksReceived[0] == workPack); // QCOMPARE on objects does not play well and will be remove in QT6
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 }
 
 void SourceIoWorkerTest::testNotOpenInterfaceNotifications()
@@ -146,12 +146,12 @@ void SourceIoWorkerTest::testNotOpenInterfaceNotifications()
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
-    workPack.m_workerId = worker.enqueueIoPacket(workPack);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    workPack.m_workerId = worker.enqueuePacket(workPack);
     QTest::qWait(200);
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     QVERIFY(m_listWorkPacksReceived[0] == workPack); // QCOMPARE on objects does not play well and will be remove in QT6
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 }
 
 void SourceIoWorkerTest::testDisconnectBeforeEnqueue()
@@ -171,7 +171,7 @@ void SourceIoWorkerTest::testDisconnectWhileWorking()
     cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     demoInterface->setResponseDelay(500);
     QTimer timer;
     timer.setSingleShot(true);
@@ -181,7 +181,7 @@ void SourceIoWorkerTest::testDisconnectWhileWorking()
     timer.start(10);
     enqueueSwitchCommands(worker, false);
     QTest::qWait(200);
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     QVERIFY(!worker.isBusy());
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
 }
@@ -192,7 +192,7 @@ void SourceIoWorkerTest::testDisconnectWhileWorkingMultipleNotifications()
     cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     demoInterface->setResponseDelay(500);
     QTimer timer;
     timer.setSingleShot(true);
@@ -204,7 +204,7 @@ void SourceIoWorkerTest::testDisconnectWhileWorkingMultipleNotifications()
     enqueueSwitchCommands(worker, false);
     enqueueSwitchCommands(worker, true);
     QTest::qWait(200);
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     QVERIFY(!worker.isBusy());
     QCOMPARE(m_listWorkPacksReceived.count(), 3);
 }
@@ -240,7 +240,7 @@ void SourceIoWorkerTest::testStopOnFirstErrorFullResponse()
     demoInterface->setResponseDelay(1);
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
@@ -249,9 +249,9 @@ void SourceIoWorkerTest::testStopOnFirstErrorFullResponse()
     QList<QByteArray> responseList = generateResonseList(workCmdPack, errorIoNumber);
     demoInterface->setResponses(responseList);
 
-    worker.enqueueIoPacket(workCmdPack);
+    worker.enqueuePacket(workCmdPack);
     QTest::qWait(300);
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     // valid data received
@@ -276,7 +276,7 @@ void SourceIoWorkerTest::testStopOnFirstErrorPartResponse()
     //demoInterface->setResponseDelay(1);
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_PART_DATA_SEQUENCE);
@@ -285,9 +285,9 @@ void SourceIoWorkerTest::testStopOnFirstErrorPartResponse()
     QList<QByteArray> responseList = generateResonseList(workCmdPack, errorIoNumber, "bar");
     demoInterface->setResponses(responseList);
 
-    worker.enqueueIoPacket(workCmdPack);
+    worker.enqueuePacket(workCmdPack);
     QTest::qWait(300);
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     // valid data received
@@ -312,7 +312,7 @@ void SourceIoWorkerTest::testContinueOnErrorFullResponse()
     demoInterface->setResponseDelay(1);
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_CONTINUE_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
@@ -321,9 +321,9 @@ void SourceIoWorkerTest::testContinueOnErrorFullResponse()
     QList<QByteArray> responseList = generateResonseList(workCmdPack, errorIoNumber);
     demoInterface->setResponses(responseList);
 
-    worker.enqueueIoPacket(workCmdPack);
+    worker.enqueuePacket(workCmdPack);
     QTest::qWait(300);
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     for(int runIo = 0; runIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++runIo) {
@@ -344,7 +344,7 @@ void SourceIoWorkerTest::testContinueOnErrorPartResponse()
     //demoInterface->setResponseDelay(1);
     cSourceIoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    connect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_CONTINUE_ON_ERROR, RESP_PART_DATA_SEQUENCE);
@@ -353,9 +353,9 @@ void SourceIoWorkerTest::testContinueOnErrorPartResponse()
     QList<QByteArray> responseList = generateResonseList(workCmdPack, errorIoNumber, "bar");
     demoInterface->setResponses(responseList);
 
-    worker.enqueueIoPacket(workCmdPack);
+    worker.enqueuePacket(workCmdPack);
     QTest::qWait(300);
-    disconnect(&worker, &cSourceIoWorker::sigWorkPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &cSourceIoWorker::sigPackFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
     for(int runIo = 0; runIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++runIo) {

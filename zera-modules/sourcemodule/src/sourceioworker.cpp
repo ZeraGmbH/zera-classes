@@ -32,8 +32,8 @@ cWorkerCommandPacket cSourceWorkerConverter::commandPackToWorkerPack(const cSour
 
 cSourceIoWorker::cSourceIoWorker(QObject *parent) : QObject(parent)
 {
-    connect(this, &cSourceIoWorker::sigWorkPackFinishedQueued,
-            this, &cSourceIoWorker::sigWorkPackFinished, Qt::QueuedConnection);
+    connect(this, &cSourceIoWorker::sigPackFinishedQueued,
+            this, &cSourceIoWorker::sigPackFinished, Qt::QueuedConnection);
 }
 
 void cSourceIoWorker::setIoInterface(tSourceInterfaceShPtr interface)
@@ -54,10 +54,10 @@ void cSourceIoWorker::setIoInterface(tSourceInterfaceShPtr interface)
     }
 }
 
-int cSourceIoWorker::enqueueIoPacket(cWorkerCommandPacket workPack)
+int cSourceIoWorker::enqueuePacket(cWorkerCommandPacket workPack)
 {
     if(!m_interface || workPack.m_workerIOList.isEmpty()) {
-        emit sigWorkPackFinishedQueued(workPack);
+        emit sigPackFinishedQueued(workPack);
     }
     else {
         workPack.m_workerId = m_IdGenerator.nextID();
@@ -97,7 +97,7 @@ void cSourceIoWorker::onIoDisconnected()
 void cSourceIoWorker::tryStartNextIo()
 {
     if(!isBusy()) {
-        cSourceIoWorkerEntry* workerIo = getNextWorkerIO();
+        cSourceIoWorkerEntry* workerIo = getNextIo();
         if(workerIo) {
             m_iCurrentIoID = m_interface->sendAndReceive(
                         workerIo->m_OutIn.m_bytesSend,
@@ -106,7 +106,7 @@ void cSourceIoWorker::tryStartNextIo()
     }
 }
 
-cSourceIoWorkerEntry* cSourceIoWorker::getNextWorkerIO()
+cSourceIoWorkerEntry* cSourceIoWorker::getNextIo()
 {
     cSourceIoWorkerEntry* workerIo = nullptr;
     cWorkerCommandPacket *currCmdPack = getCurrentCmdPack();
@@ -117,7 +117,7 @@ cSourceIoWorkerEntry* cSourceIoWorker::getNextWorkerIO()
         }
         else {
             finishCurrentWorker();
-            workerIo = getNextWorkerIO();
+            workerIo = getNextIo();
         }
     }
     return workerIo;
@@ -128,7 +128,7 @@ void cSourceIoWorker::finishCurrentWorker()
     m_nextPosInWorkerIo = 0;
     m_iCurrentIoID = 0;
     cWorkerCommandPacket finishedPack = m_pendingWorkPacks.takeFirst();
-    emit sigWorkPackFinished(finishedPack);
+    emit sigPackFinished(finishedPack);
 }
 
 void cSourceIoWorker::abortAllWorkers()

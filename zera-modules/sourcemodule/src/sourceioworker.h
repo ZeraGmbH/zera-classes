@@ -48,25 +48,25 @@ public:
     explicit cSourceIoWorker(QObject *parent = nullptr);
 
     void setIoInterface(tSourceInterfaceShPtr interface);
-    int enqueueIoPacket(cWorkerCommandPacket workPack);
+    int enqueuePacket(cWorkerCommandPacket workPack);
     bool isBusy();
 
 signals:
-    void sigWorkPackFinished(cWorkerCommandPacket packet);
+    void sigPackFinished(cWorkerCommandPacket packet);
 
 private slots:
     void onIoFinished(int ioID);
     void onIoDisconnected();
 signals:
-    void sigWorkPackFinishedQueued(cWorkerCommandPacket pack);
+    void sigPackFinishedQueued(cWorkerCommandPacket pack);
 private:
+    cWorkerCommandPacket *getCurrentCmdPack();
+    cSourceIoWorkerEntry *getNextIo();
     void tryStartNextIo();
-    cSourceIoWorkerEntry *getNextWorkerIO();
     void finishCurrentWorker();
     void abortAllWorkers();
     bool evaluateResponse();
     bool canContinue();
-    cWorkerCommandPacket *getCurrentCmdPack();
 
     tSourceInterfaceShPtr m_interface = nullptr;
     int m_iCurrentIoID = 0;
