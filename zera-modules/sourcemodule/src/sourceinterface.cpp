@@ -49,6 +49,14 @@ cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBa
 
 void cSourceInterfaceDemo::onResponseDelayTimer()
 {
+    sendResponse();
+}
+
+void cSourceInterfaceDemo::sendResponse()
+{
+    if(m_pDataReceive && !m_responseList.isEmpty()) {
+        *m_pDataReceive = m_responseList.takeFirst();
+    }
     emit sigIoFinishedToQueue(m_currentId);
 }
 
@@ -58,14 +66,15 @@ bool cSourceInterfaceDemo::open(QString)
     return true;
 }
 
-int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray*)
+int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
 {
     m_currentId = 0;
+    m_pDataReceive = pDataReceive;
     if(m_bOpen) {
         m_currentId = m_IDGenerator.nextID();
     }
     if(!m_bOpen || m_responseDelayMs == 0) {
-        emit sigIoFinishedToQueue(m_currentId);
+        sendResponse();
     }
     else {
         m_responseDelayTimer.start(m_responseDelayMs);
@@ -81,5 +90,10 @@ void cSourceInterfaceDemo::simulateExternalDisconnect()
 void cSourceInterfaceDemo::setResponseDelay(int iMs)
 {
     m_responseDelayMs = iMs;
+}
+
+void cSourceInterfaceDemo::setResponses(QList<QByteArray> responseList)
+{
+    m_responseList = responseList;
 }
 
