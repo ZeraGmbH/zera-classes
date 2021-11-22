@@ -72,16 +72,21 @@ public:
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     void simulateExternalDisconnect();
     void setResponseDelay(int iMs);
+    void setResponses(QList<QByteArray> responseList);
 protected:
     explicit cSourceInterfaceDemo(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
 private slots:
     void onResponseDelayTimer();
 private:
+    void sendResponse();
+
     bool m_bOpen = false;
     int m_responseDelayMs = 0;
     QTimer m_responseDelayTimer;
     int m_currentId = 0;
+    QByteArray* m_pDataReceive = nullptr;
+    QList<QByteArray> m_responseList;
 };
 
 

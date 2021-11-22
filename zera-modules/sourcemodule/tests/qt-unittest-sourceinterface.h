@@ -22,10 +22,14 @@ private slots:
     void testDemoDelayNotOpen();
     void testDemoDelayDontWait();
     void testDemoDelayWait();
+    void testDemoResponseList();
+    void testDemoResponseListDelay();
 
 private:
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;
+    QByteArray m_receivedData;
+    QList<QByteArray> m_listReceivedData;
 };
 
 #endif // QTUNITTESTSOURCEINTERFACE_H
