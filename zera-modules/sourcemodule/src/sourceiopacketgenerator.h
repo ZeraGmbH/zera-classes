@@ -76,6 +76,9 @@ private:
     tSourceOutInList generateFrequencyList();
     tSourceOutInList generateRegulationList();
 
+    tSourceOutInList generateQueryStatusList();
+    tSourceOutInList generateQueryActualList();
+
     cSourceJsonStructApi* m_jsonStructApi = nullptr;
     cSourceJsonParamApi m_paramsRequested;
 

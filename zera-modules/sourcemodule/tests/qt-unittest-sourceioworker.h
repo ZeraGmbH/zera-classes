@@ -41,8 +41,8 @@ private slots:
     void testOnePacketSingleIoOK();
     void testTwoPacketSingleIoOK();
 
-//    void testOnePacketMultipleIoOK();
-//    void testTwoPacketMultipleIoOK();
+    void testOnePacketMultipleIoOK();
+    void testTwoPacketMultipleIoOK();
 
 private:
     void countResults(int &actionsPassedCount, int &unknownCount, int &passCount, int &failCount);
