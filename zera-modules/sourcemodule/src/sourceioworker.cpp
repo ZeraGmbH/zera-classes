@@ -77,13 +77,15 @@ void cSourceIoWorker::onIoFinished(int ioID)
     if(ioID == 0) {
         finishCurrentWorker();
     }
+    m_iCurrentIoID = 0;
 }
 
 void cSourceIoWorker::onIoDisconnected()
 {
-    if(!m_pendingWorkPacks.isEmpty()) { // for disconnect before first enqueue
-        onIoFinished(m_iCurrentIoID);
+    while(!m_pendingWorkPacks.isEmpty()) {
+        finishCurrentWorker();
     }
+    m_iCurrentIoID = 0;
     setIoInterface(nullptr);
 }
 
