@@ -48,7 +48,7 @@ void SourceDeviceManagerTest::testAddTooMany()
     for(int i=0; i<slotCount+2; ++i) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     QCOMPARE(devMan.getActiveSlotCount(),slotCount);
     QCOMPARE(devMan.getDemoCount(), slotCount);
 }
@@ -83,7 +83,7 @@ void SourceDeviceManagerTest::testRemoveTooMany()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     for(int i=0; i<slotCount; i++) {
         QCOMPARE(devMan.removeSource(i), true);
         QCOMPARE(devMan.removeSource(i), false);
@@ -97,7 +97,7 @@ void SourceDeviceManagerTest::testAvailAndDemoCountAdd()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     QCOMPARE(devMan.getActiveSlotCount(),slotCount);
     QCOMPARE(devMan.getDemoCount(), slotCount);
 }
@@ -109,7 +109,7 @@ void SourceDeviceManagerTest::testAvailAndDemoCountAddRemove()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     for(int i=0; i<slotCount; i++) {
         devMan.removeSource(i);
     }
@@ -128,7 +128,7 @@ void SourceDeviceManagerTest::testAddNotification()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     disconnect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
             this, &SourceDeviceManagerTest::onSlotRemoved);
     disconnect(&devMan, &cSourceDeviceManager::sigSourceScanFinished,
@@ -148,7 +148,7 @@ void SourceDeviceManagerTest::testAddNotificationTooMany()
     for(int i=0; i<slotCount+1; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     disconnect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
             this, &SourceDeviceManagerTest::onSlotRemoved);
     disconnect(&devMan, &cSourceDeviceManager::sigSourceScanFinished,
@@ -168,11 +168,11 @@ void SourceDeviceManagerTest::testRemoveNotification()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     for(int i=0; i<slotCount; i++) {
         devMan.removeSource(i);
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     disconnect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
             this, &SourceDeviceManagerTest::onSlotRemoved);
 
@@ -188,12 +188,12 @@ void SourceDeviceManagerTest::testRemoveNotificationTooMany()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     for(int i=0; i<slotCount; i++) {
         devMan.removeSource(i);
         devMan.removeSource(i);
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     disconnect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
             this, &SourceDeviceManagerTest::onSlotRemoved);
 
@@ -211,7 +211,7 @@ void SourceDeviceManagerTest::testAddRemoveNotificationAndCounts()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     QCOMPARE(m_listSourcesAdded.count(), slotCount);
     QCOMPARE(m_socketsRemoved.count(), 0);
     QCOMPARE(devMan.getActiveSlotCount(), slotCount);
@@ -219,7 +219,7 @@ void SourceDeviceManagerTest::testAddRemoveNotificationAndCounts()
     for(int i=0; i<slotCount+1; i++) {
         devMan.removeSource(i);
     }
-    QTest::qWait(100);
+    QTest::qWait(10);
     disconnect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
             this, &SourceDeviceManagerTest::onSlotRemoved);
     disconnect(&devMan, &cSourceDeviceManager::sigSourceScanFinished,
@@ -241,7 +241,7 @@ void SourceDeviceManagerTest::testNoCrashOnManagerDeadBeforeScanFinished()
     }
     delete devMan;
     QCOMPARE(cSourceScanner::getInstanceCount(), slotCount);
-    QTest::qWait(100);
+    QTest::qWait(10);
     QCOMPARE(m_listSourcesAdded.count(), 0);
     QCOMPARE(cSourceScanner::getInstanceCount(), 0);
 }
