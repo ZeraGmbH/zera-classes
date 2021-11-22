@@ -81,7 +81,7 @@ tSourceInterfaceShPtr cSourceDevice::getIoInterface()
 
 bool cSourceDevice::isDemo()
 {
-    return m_ioInterface->type() == SOURCE_INTERFACE_DEMO;
+    return m_ioInterface->isDemo();
 }
 
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)

@@ -36,6 +36,7 @@ class cSourceInterfaceBase : public QObject
 public:
     virtual ~cSourceInterfaceBase();
     virtual SourceInterfaceTypes type() { return SOURCE_INTERFACE_BASE; }
+    bool isDemo() { return type() == SOURCE_INTERFACE_DEMO; }
     virtual bool open(QString) { return false; }
     virtual void close();
     /**

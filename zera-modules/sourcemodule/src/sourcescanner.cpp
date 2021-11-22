@@ -125,7 +125,7 @@ void cSourceScanner::onIoFinished(int ioID)
     bool ourJobIsDone = false;
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     if(ioID) { // receive id == 0 -> I/O problems -> don't try next
-        if(m_ioInterface->type() != SOURCE_INTERFACE_DEMO) {
+        if(!m_ioInterface->isDemo()) {
             if(m_bytesReceived.contains(deviceDetectInfoCurrent.expectedResponse)) {
                 validFound = true;
             }
@@ -136,7 +136,7 @@ void cSourceScanner::onIoFinished(int ioID)
     }
     if(validFound) {
         QByteArray version;
-        if(m_ioInterface->type() == SOURCE_INTERFACE_DEMO) {
+        if(m_ioInterface->isDemo()) {
             deviceDetectInfoCurrent.sourceType = nextDemoType();
             version = "V42";
         }
