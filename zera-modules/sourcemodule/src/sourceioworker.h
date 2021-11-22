@@ -25,11 +25,17 @@ typedef QList<cSourceIoWorkerEntry> tSourceIoWorkerList;
 class cWorkerCommandPacket
 {
 public:
+    bool passedAll();
+    void evalAll();
+
+    bool operator == (const cWorkerCommandPacket& other);
+
     int m_workerId = 0;
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
     SourcePacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
     tSourceIoWorkerList m_workerIOList;
-    bool operator == (const cWorkerCommandPacket& other);
+private:
+    bool m_bPassedAll = false;
 };
 Q_DECLARE_METATYPE(cWorkerCommandPacket)
 
@@ -37,7 +43,7 @@ Q_DECLARE_METATYPE(cWorkerCommandPacket)
 class cSourceWorkerConverter
 {
 public:
-    static cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &commandPack);
+    static cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &cmdPack);
 };
 
 
@@ -48,23 +54,25 @@ public:
     explicit cSourceIoWorker(QObject *parent = nullptr);
 
     void setIoInterface(tSourceInterfaceShPtr interface);
-    int enqueuePacket(cWorkerCommandPacket workPack);
+    void setMaxPendingActions(int maxPackets);
+    int enqueueAction(cWorkerCommandPacket cmdPack);
     bool isBusy();
 
 signals:
-    void sigPackFinished(cWorkerCommandPacket packet);
+    void sigCmdFinished(cWorkerCommandPacket cmdPack);
 
 private slots:
     void onIoFinished(int ioID);
     void onIoDisconnected();
 signals:
-    void sigPackFinishedQueued(cWorkerCommandPacket pack);
+    void sigCmdFinishedQueued(cWorkerCommandPacket cmdPack);
 private:
-    cWorkerCommandPacket *getCurrentCmdPack();
+    cWorkerCommandPacket *getCurrentActionPack();
     cSourceIoWorkerEntry *getNextIo();
     void tryStartNextIo();
-    void finishCurrentWorker();
-    void abortAllWorkers();
+    void finishCmd(cWorkerCommandPacket cmdToFinish);
+    void finishCurrentCmd();
+    void abortAllCmds();
     bool evaluateResponse();
     bool canContinue();
 
@@ -73,6 +81,7 @@ private:
     cSourceIdGenerator m_IdGenerator;
     QList<cWorkerCommandPacket> m_pendingWorkPacks;
     int m_nextPosInWorkerIo = 0;
+    int m_maxPendingCmdPacks = 0;
 };
 
 #endif // CSOURCEIOWORKER_H
