@@ -74,6 +74,14 @@ tSourceOutInList cSourceIoPacketGenerator::generateListForAction(cSourceActionTy
     case cSourceActionTypes::SWITCH_PHASES:
         outInList.append(generateSwitchPhasesList());
         break;
+
+    case cSourceActionTypes::QUERY_STATUS:
+        outInList.append(generateQueryStatusList());
+        break;
+    case cSourceActionTypes::QUERY_ACTUAL:
+        outInList.append(generateQueryActualList());
+        break;
+
     default:
         break;
     }
@@ -209,13 +217,30 @@ tSourceOutInList cSourceIoPacketGenerator::generateRegulationList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "RE";
-
     // for now we pin regulation to on
     bytesSend.append("1");
-
     bytesSend.append("\r");
+
     QByteArray expectedResponse = m_ioPrefix + "OKRE\r";
     return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
+}
+
+tSourceOutInList cSourceIoPacketGenerator::generateQueryStatusList()
+{
+    QByteArray bytesSend;
+    bytesSend = m_ioPrefix + "SM\r"; // error condition for now
+
+    QByteArray expectedResponse = m_ioPrefix + "\r";
+    return tSourceOutInList() << cSourceSingleOutIn(RESP_PART_DATA_SEQUENCE, bytesSend, expectedResponse);
+}
+
+tSourceOutInList cSourceIoPacketGenerator::generateQueryActualList()
+{
+    QByteArray bytesSend;
+    bytesSend = "AME0;3\r";// This is single phase!!
+
+    QByteArray expectedResponse = "\r";
+    return tSourceOutInList() << cSourceSingleOutIn(RESP_PART_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
 QByteArray cSourceIoCmdHelper::formatDouble(double val, int preDigits, char digit, int postDigits)
