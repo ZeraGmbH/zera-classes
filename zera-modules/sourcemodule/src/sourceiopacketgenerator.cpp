@@ -34,7 +34,7 @@ cSourceCommandPacket cSourceIoPacketGenerator::generateOnOffPacket(cSourceJsonPa
     commandPack.m_commandType = COMMAND_SWITCH;
     commandPack.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
     for(auto &actionType : actionsTypeList) {
-        commandPack.m_singleOutInList.append(generateListForAction(actionType));
+        commandPack.m_outInList.append(generateListForAction(actionType));
     }
     return commandPack;
 }
@@ -46,7 +46,7 @@ cSourceCommandPacket cSourceIoPacketGenerator::generateStatusPollPacket()
     commandPack.m_errorBehavior = BEHAVE_CONTINUE_ON_ERROR;
     tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generatePeriodicActions();
     for(auto &actionType : actionsTypeList) {
-        commandPack.m_singleOutInList.append(generateListForAction(actionType));
+        commandPack.m_outInList.append(generateListForAction(actionType));
     }
     return commandPack;
 }

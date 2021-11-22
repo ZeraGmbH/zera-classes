@@ -37,7 +37,7 @@ cWorkerCommandPacket cSourceWorkerConverter::commandPackToWorkerPack(const cSour
     cWorkerCommandPacket workPack;
     workPack.m_commandType = commandPack.m_commandType;
     workPack.m_errorBehavior = commandPack.m_errorBehavior;
-    for(auto outIn : commandPack.m_singleOutInList) {
+    for(auto outIn : commandPack.m_outInList) {
         cSourceIoWorkerEntry workEntry;
         workEntry.m_OutIn = outIn;
         workPack.m_workerIOList.append(workEntry);
