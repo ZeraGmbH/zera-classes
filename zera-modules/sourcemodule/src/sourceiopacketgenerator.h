@@ -55,7 +55,7 @@ class cSourceCommandPacket
 public:
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
     SourcePacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
-    tSourceOutInList m_singleOutInList;
+    tSourceOutInList m_outInList;
 };
 
 class cSourceIoPacketGenerator

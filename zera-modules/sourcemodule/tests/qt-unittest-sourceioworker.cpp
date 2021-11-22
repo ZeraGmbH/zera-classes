@@ -37,7 +37,7 @@ void SourceIoWorkerTest::testCmdPackToWorkIoSize()
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
-    QCOMPARE(cmdPack.m_singleOutInList.size(), workPack.m_workerIOList.size());
+    QCOMPARE(cmdPack.m_outInList.size(), workPack.m_workerIOList.size());
 }
 
 void SourceIoWorkerTest::testCmdPackToWorkIoSequence()
@@ -47,8 +47,8 @@ void SourceIoWorkerTest::testCmdPackToWorkIoSequence()
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
-    for(int i=0; i<cmdPack.m_singleOutInList.size(); ++i) {
-        QCOMPARE(cmdPack.m_singleOutInList[i].m_actionType, workPack.m_workerIOList[i].m_OutIn.m_actionType);
+    for(int i=0; i<cmdPack.m_outInList.size(); ++i) {
+        QCOMPARE(cmdPack.m_outInList[i].m_actionType, workPack.m_workerIOList[i].m_OutIn.m_actionType);
     }
 }
 

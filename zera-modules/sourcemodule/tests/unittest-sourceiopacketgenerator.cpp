@@ -75,7 +75,7 @@ TEST(TEST_PACKET_GENERATIOR, PACK_GENERATIR_NOT_INVENTING) {
     params.setOn(true);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(params);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    for(auto outIn : cmdPack.m_singleOutInList) {
+    for(auto outIn : cmdPack.m_outInList) {
         auto type = outIn.m_actionType;
         EXPECT_TRUE(actionList.contains(type));
     }
