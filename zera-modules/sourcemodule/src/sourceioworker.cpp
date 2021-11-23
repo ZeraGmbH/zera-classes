@@ -89,55 +89,59 @@ void cSourceIoWorker::setMaxPendingActions(int maxPackets)
 int cSourceIoWorker::enqueueAction(cWorkerCommandPacket cmdPack)
 {
     bool canEnqueue =
-            m_interface &&
+            m_interface && m_interface->isOpen() &&
             !cmdPack.m_workerIOList.isEmpty() &&
-            (m_maxPendingCmdPacks == 0 || m_pendingWorkPacks.size() < m_maxPendingCmdPacks);
+            (m_maxPendingCmdPacks == 0 || m_pendingCmdPacks.size() < m_maxPendingCmdPacks);
     if(!canEnqueue) {
         finishCmd(cmdPack);
     }
     else {
         cmdPack.m_workerId = m_IdGenerator.nextID();
-        m_pendingWorkPacks.append(cmdPack);
+        m_pendingCmdPacks.append(cmdPack);
         tryStartNextIo();
     }
     return cmdPack.m_workerId;
 }
 
-bool cSourceIoWorker::isBusy()
+bool cSourceIoWorker::isIoBusy()
 {
-    return m_iCurrentIoID != 0;
+    return m_bIoIsBusy;
 }
 
-void cSourceIoWorker::onIoFinished(int ioID)
+void cSourceIoWorker::onIoFinished(int ioID, bool error)
 {
-    if(ioID == 0) {
-        abortAllCmds();
-    }
-    else {
-        m_iCurrentIoID = 0;
-        if(canContinue()) {
-            tryStartNextIo();
+    if(ioID == m_iCurrentIoID) {
+        m_bIoIsBusy = false;
+        if(error) {
+            abortAllCmds();
         }
         else {
-            abortAllCmds();
+            if(canContinue()) {
+                tryStartNextIo();
+            }
+            else {
+                abortAllCmds();
+            }
         }
     }
 }
 
 void cSourceIoWorker::onIoDisconnected()
 {
+    m_bIoIsBusy = false;
     abortAllCmds();
     setIoInterface(nullptr);
 }
 
 void cSourceIoWorker::tryStartNextIo()
 {
-    if(!isBusy()) {
+    if(!isIoBusy()) {
         cSourceIoWorkerEntry* workerIo = getNextIo();
         if(workerIo) {
             m_iCurrentIoID = m_interface->sendAndReceive(
                         workerIo->m_OutIn.m_bytesSend,
                         &workerIo->m_dataReceived);
+            m_bIoIsBusy = true;
         }
     }
 }
@@ -145,7 +149,7 @@ void cSourceIoWorker::tryStartNextIo()
 cSourceIoWorkerEntry* cSourceIoWorker::getNextIo()
 {
     cSourceIoWorkerEntry* workerIo = nullptr;
-    cWorkerCommandPacket *currCmdPack = getCurrentActionPack();
+    cWorkerCommandPacket *currCmdPack = getCurrentCmd();
     if(currCmdPack) {
         if(m_nextPosInWorkerIo < currCmdPack->m_workerIOList.count()) {
             workerIo = &(currCmdPack->m_workerIOList[m_nextPosInWorkerIo]);
@@ -162,8 +166,7 @@ cSourceIoWorkerEntry* cSourceIoWorker::getNextIo()
 void cSourceIoWorker::finishCurrentCmd()
 {
     m_nextPosInWorkerIo = 0;
-    m_iCurrentIoID = 0;
-    finishCmd(m_pendingWorkPacks.takeFirst());
+    finishCmd(m_pendingCmdPacks.takeFirst());
 }
 
 void cSourceIoWorker::finishCmd(cWorkerCommandPacket cmdToFinish)
@@ -174,7 +177,7 @@ void cSourceIoWorker::finishCmd(cWorkerCommandPacket cmdToFinish)
 
 void cSourceIoWorker::abortAllCmds()
 {
-    while(!m_pendingWorkPacks.isEmpty()) {
+    while(!m_pendingCmdPacks.isEmpty()) {
         finishCurrentCmd();
     }
 }
@@ -182,7 +185,7 @@ void cSourceIoWorker::abortAllCmds()
 bool cSourceIoWorker::evaluateResponse()
 {
     bool pass = false;
-    cWorkerCommandPacket *currCmdPack = getCurrentActionPack();
+    cWorkerCommandPacket *currCmdPack = getCurrentCmd();
     if(currCmdPack) {
         cSourceIoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
         cSourceSingleOutIn& currentOutIn = currentWorker.m_OutIn;
@@ -207,15 +210,15 @@ bool cSourceIoWorker::evaluateResponse()
 bool cSourceIoWorker::canContinue()
 {
     bool pass = evaluateResponse();
-    cWorkerCommandPacket *currCmdPack = getCurrentActionPack();
+    cWorkerCommandPacket *currCmdPack = getCurrentCmd();
     return pass || (currCmdPack && currCmdPack->m_errorBehavior == BEHAVE_CONTINUE_ON_ERROR);
 }
 
-cWorkerCommandPacket *cSourceIoWorker::getCurrentActionPack()
+cWorkerCommandPacket *cSourceIoWorker::getCurrentCmd()
 {
     cWorkerCommandPacket* current = nullptr;
-    if(!m_pendingWorkPacks.isEmpty()) {
-        current = &m_pendingWorkPacks.first();
+    if(!m_pendingCmdPacks.isEmpty()) {
+        current = &m_pendingCmdPacks.first();
     }
     return current;
 }

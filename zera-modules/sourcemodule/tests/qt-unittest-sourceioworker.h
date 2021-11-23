@@ -12,23 +12,22 @@ public slots:
 private slots:
     void init();
 
-    void testEmptyWorkerIsInvalid();
-    void testCmdPackToWorkType();
-    void testCmdPackToWorkIoSize();
-    void testCmdPackToWorkIoSequence();
-    void testCmdPackToWorkProperties();
+    void emptyWorkerIsInvalid();
+    void cmdToWorkProperties();
+    void cmdPackToWorkIoSize();
+    void cmdPackToWorkIoSequence();
 
-    void testNoInterfaceNotBusy();
-    void testEmptyPackNotBusy();
-    void testNotOpenInterfaceNotBusy();
-    void testOpenInterfaceBusy();
+    void noInterfaceNotBusy();
+    void notOpenInterfaceNotBusy();
+    void emptyPackNotBusy();
+    void openInterfaceBusy();
 
-    void testNoInterfaceNotification();
-    void testNotOpenInterfaceNotifications();
+    void noInterfaceNotification();
+    void notOpenInterfaceNotifications();
 
-    void testDisconnectBeforeEnqueue();
-    void testDisconnectWhileWorking();
-    void testDisconnectWhileWorkingMultipleNotifications();
+    void disconnectBeforeEnqueue();
+    void disconnectWhileWorking();
+    void disconnectWhileWorkingMultipleNotifications();
 
     void testStopOnFirstErrorFullResponse();
     void testStopOnFirstErrorPartResponse();
@@ -40,12 +39,17 @@ private slots:
 
     void testOnePacketSingleIoOK();
     void testTwoPacketSingleIoOK();
-
     void testOnePacketMultipleIoOK();
     void testTwoPacketMultipleIoOK();
 
 private:
-    void countResults(int &actionsPassedCount, int &unknownCount, int &passCount, int &failCount);
+    static tSourceInterfaceShPtr createOpenInterface();
+    static cWorkerCommandPacket generateSwitchCommands(bool on);
+    static cWorkerCommandPacket generateStatusPollCommands();
+    static void adjustWorkCmdPack(cWorkerCommandPacket& workCmdPack,
+                                  SourcePacketErrorBehaviors errorBehavior,
+                                  SourceIoResponseTypes responseType);
+    void evalNotificationCount(int cmdPassedExpected, int passExpected, int failExpected, int unknownExpected);
 
     QList<cWorkerCommandPacket> m_listWorkPacksReceived;
 };
