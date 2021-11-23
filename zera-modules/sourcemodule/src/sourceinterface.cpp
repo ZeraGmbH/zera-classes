@@ -37,7 +37,9 @@ void cSourceInterfaceBase::close()
 
 int cSourceInterfaceBase::sendAndReceive(QByteArray, QByteArray*)
 {
-    return 0;
+    int ioID = m_IDGenerator.nextID();
+    emit sigIoFinishedToQueue(ioID, true);
+    return ioID;
 }
 
 cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBase(parent)
@@ -49,15 +51,15 @@ cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBa
 
 void cSourceInterfaceDemo::onResponseDelayTimer()
 {
-    sendResponse();
+    sendResponse(false);
 }
 
-void cSourceInterfaceDemo::sendResponse()
+void cSourceInterfaceDemo::sendResponse(bool error)
 {
-    if(m_pDataReceive && !m_responseList.isEmpty()) {
+    if(!error && m_pDataReceive && !m_responseList.isEmpty()) {
         *m_pDataReceive = m_responseList.takeFirst();
     }
-    emit sigIoFinishedToQueue(m_currentId);
+    emit sigIoFinishedToQueue(m_currentId, error);
 }
 
 bool cSourceInterfaceDemo::open(QString)
@@ -68,13 +70,10 @@ bool cSourceInterfaceDemo::open(QString)
 
 int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
 {
-    m_currentId = 0;
+    m_currentId = m_IDGenerator.nextID();
     m_pDataReceive = pDataReceive;
-    if(m_bOpen) {
-        m_currentId = m_IDGenerator.nextID();
-    }
     if(!m_bOpen || m_responseDelayMs == 0) {
-        sendResponse();
+        sendResponse(!m_bOpen);
     }
     else {
         m_responseDelayTimer.start(m_responseDelayMs);

@@ -74,28 +74,28 @@ cSourceInterfaceZeraSerial::~cSourceInterfaceZeraSerial()
 
 int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray bytesSend, QByteArray *pDataReceive)
 {
-    // set read timeout
-    const cSourceInterfaceZeraSerialPrivate::TTimeoutParam* timeoutParam = &d_ptr->defaultTimeoutParam;
-    if(d_ptr->nextTimeoutWasSet) {
-        timeoutParam = &d_ptr->nextTimeoutParam;
-        d_ptr->nextTimeoutWasSet = false;
-    }
-    m_serialIO.setReadTimeout(timeoutParam->iMsReceiveFirst, timeoutParam->iMsBetweenTwoBytes, timeoutParam->iMsMinTotal);
-    // block end criteria
-    const cSourceInterfaceZeraSerialPrivate::TBlockEndCriteria* endCriteria = &d_ptr->defaultBlockEndCriteria;
-    if(d_ptr->nextBlockEndCriteriaWasSet) {
-        endCriteria = &d_ptr->nextBlockEndCriteria;
-        d_ptr->nextBlockEndCriteriaWasSet = false;
-    }
-    m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
+    m_currentIoID = m_IDGenerator.nextID();
+    if(m_serialIO.isOpen()) {
+        // set read timeout
+        const cSourceInterfaceZeraSerialPrivate::TTimeoutParam* timeoutParam = &d_ptr->defaultTimeoutParam;
+        if(d_ptr->nextTimeoutWasSet) {
+            timeoutParam = &d_ptr->nextTimeoutParam;
+            d_ptr->nextTimeoutWasSet = false;
+        }
+        m_serialIO.setReadTimeout(timeoutParam->iMsReceiveFirst, timeoutParam->iMsBetweenTwoBytes, timeoutParam->iMsMinTotal);
+        // block end criteria
+        const cSourceInterfaceZeraSerialPrivate::TBlockEndCriteria* endCriteria = &d_ptr->defaultBlockEndCriteria;
+        if(d_ptr->nextBlockEndCriteriaWasSet) {
+            endCriteria = &d_ptr->nextBlockEndCriteria;
+            d_ptr->nextBlockEndCriteriaWasSet = false;
+        }
+        m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
 
-    // try io
-    m_serialIO.sendAndReceive(bytesSend, pDataReceive);
-    if(m_serialIO.isIOPending()) { // ZERA: One I/O at a time -> no hash for m_currentIoID
-        m_currentIoID = m_IDGenerator.nextID();
+        // try io
+        m_serialIO.sendAndReceive(bytesSend, pDataReceive);
     }
-    else {
-        m_currentIoID = 0;
+    if(!m_serialIO.isIOPending()) {
+        emit sigIoFinishedToQueue(m_currentIoID, true);
     }
     return m_currentIoID;
 }
@@ -117,7 +117,7 @@ void cSourceInterfaceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive,
 
 void cSourceInterfaceZeraSerial::onIoFinished()
 {
-    emit sigIoFinishedToQueue(m_currentIoID);
+    emit sigIoFinishedToQueue(m_currentIoID, false);
 }
 
 void cSourceInterfaceZeraSerial::onDeviceFileGone(QString)
