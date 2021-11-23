@@ -39,17 +39,11 @@ public:
     bool isDemo() { return type() == SOURCE_INTERFACE_DEMO; }
     virtual bool open(QString) { return false; }
     virtual void close();
-    /**
-     * @brief sendAndReceive
-     * @param bytesSend
-     * @param pDataReceive
-     * @return != 0: ioID / == 0: io not started
-     */
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive);
 signals:
     void sigDisconnected();
-    void sigIoFinished(int ioID); // users connect this signal
-    void sigIoFinishedToQueue(int ioID); // sub classes emit this to ensure queue
+    void sigIoFinished(int ioID, bool ioError); // users connect this signal
+    void sigIoFinishedToQueue(int ioID, bool ioError); // sub classes emit this to ensure queue
 
 protected:
     explicit cSourceInterfaceBase(QObject *parent = nullptr);
@@ -80,7 +74,7 @@ protected:
 private slots:
     void onResponseDelayTimer();
 private:
-    void sendResponse();
+    void sendResponse(bool error);
 
     bool m_bOpen = false;
     int m_responseDelayMs = 0;

@@ -7,76 +7,18 @@ void SourceInterfaceTest::init()
 {
     m_ioIDReceived = -1;
     m_ioFinishReceiveCount = 0;
+    m_errorsReceived = 0;
     m_receivedData.clear();
     m_listReceivedData.clear();
 }
 
-void SourceInterfaceTest::onIoFinish(int ioID)
+void SourceInterfaceTest::generateOOLInterface()
 {
-    m_ioIDReceived = ioID;
-    m_ioFinishReceiveCount++;
-    m_listReceivedData.append(m_receivedData);
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_TYPE_COUNT);
+    QCOMPARE(interface, nullptr);
 }
 
-void SourceInterfaceTest::testIoIDNotSetForBaseInterface()
-{
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
-    QByteArray dummyArray;
-    int ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
-    QCOMPARE(ioID, 0);
-}
-
-void SourceInterfaceTest::testIoIDSetForDemoInterface()
-{
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
-    QVERIFY(demoInterface->open(QString()));
-    QByteArray dummyArray;
-    int ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
-    QCOMPARE(ioID, 1);
-    ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
-    QCOMPARE(ioID, 2);
-}
-
-void SourceInterfaceTest::testDemoFinish()
-{
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    bool connected = connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-    QCOMPARE(connected, true);
-    QByteArray dummyReceive;
-    interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(10);
-    disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-    QCOMPARE(m_ioFinishReceiveCount, 1);
-}
-
-void SourceInterfaceTest::testDemoFinishQueued()
-{
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-    QByteArray dummyReceive;
-    interface->sendAndReceive(QByteArray(), &dummyReceive);
-    disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-    QCOMPARE(m_ioFinishReceiveCount, 0);
-}
-
-void SourceInterfaceTest::testDemoFinishIDs()
-{
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-
-    QByteArray dummyReceive;
-    int startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(10);
-    QCOMPARE(m_ioIDReceived, startId);
-    startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(10);
-    QCOMPARE(m_ioIDReceived, startId);
-
-    disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-}
-
-void SourceInterfaceTest::testInterfaceTypesSetProperly()
+void SourceInterfaceTest::generateTypeSet()
 {
     for(int type = 0; type<SOURCE_INTERFACE_TYPE_COUNT; type++) {
         tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(type));
@@ -84,55 +26,101 @@ void SourceInterfaceTest::testInterfaceTypesSetProperly()
     }
 }
 
-void SourceInterfaceTest::testDemoDelayNotOpen()
+void SourceInterfaceTest::onIoFinish(int ioID, bool error)
 {
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
-    demoInterface->setResponseDelay(5000);
-
-    QByteArray dummyReceive;
-    interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(10);
-    QCOMPARE(m_ioFinishReceiveCount, 1);
-
-    disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
+    m_ioIDReceived = ioID;
+    m_ioFinishReceiveCount++;
+    m_listReceivedData.append(m_receivedData);
+    if(error) {
+        m_errorsReceived++;
+    }
 }
 
-void SourceInterfaceTest::testDemoDelayDontWait()
+void SourceInterfaceTest::baseReturnsIds()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    checkIds(interface);
+}
+
+void SourceInterfaceTest::demoReturnsIds()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
+    checkIds(interface);
+}
+
+void SourceInterfaceTest::serialReturnsIds()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_ASYNCSERIAL);
+    checkIds(interface);
+}
+
+void SourceInterfaceTest::baseReportsErrorClose()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    checkNotifications(interface, 1, 1);
+}
+
+void SourceInterfaceTest::baseReportsErrorOpen()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    interface->open(QString());
+    checkNotifications(interface, 1, 1);
+}
+
+void SourceInterfaceTest::demoReportsErrorClose()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    checkNotifications(interface, 1, 1);
+}
+
+void SourceInterfaceTest::demoReportsNoErrorOpen()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    interface->open(QString());
+    checkNotifications(interface, 1, 0);
+}
+
+void SourceInterfaceTest::serialReportsErrorClose()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_ASYNCSERIAL);
+    checkNotifications(interface, 1, 1);
+}
+
+void SourceInterfaceTest::demoDelayNotOpen()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    demoInterface->setResponseDelay(5000);
+    checkNotifications(interface, 1, 1);
+}
+
+void SourceInterfaceTest::demoDelayOpenDontWait()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
     demoInterface->open(QString());
     demoInterface->setResponseDelay(5000);
-
-    QByteArray dummyReceive;
-    interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(10);
-    QCOMPARE(m_ioFinishReceiveCount, 0);
-
-    disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
+    checkNotifications(interface, 0, 0);
 }
 
-void SourceInterfaceTest::testDemoDelayWait()
+void SourceInterfaceTest::demoOpenDelayWait()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
     cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
     demoInterface->open(QString());
-    demoInterface->setResponseDelay(10);
+    demoInterface->setResponseDelay(1);
 
+    connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
     QByteArray dummyReceive;
-    int startId = interface->sendAndReceive(QByteArray(), &dummyReceive);
-    QTest::qWait(50);
+    interface->sendAndReceive(QByteArray(), &dummyReceive);
+    QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
+    QCOMPARE(m_errorsReceived, 0);
+    QTest::qWait(100);
     QCOMPARE(m_ioFinishReceiveCount, 1);
-    QCOMPARE(m_ioIDReceived, startId);
-
-    disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
+    QCOMPARE(m_errorsReceived, 0);
 }
 
-void SourceInterfaceTest::testDemoResponseList()
+void SourceInterfaceTest::demoResponseList()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
@@ -152,7 +140,7 @@ void SourceInterfaceTest::testDemoResponseList()
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
 }
 
-void SourceInterfaceTest::testDemoResponseListDelay()
+void SourceInterfaceTest::demoResponseListDelay()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
@@ -173,3 +161,23 @@ void SourceInterfaceTest::testDemoResponseListDelay()
     disconnect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
 }
 
+void SourceInterfaceTest::checkIds(tSourceInterfaceShPtr interface)
+{
+    QByteArray dummyArray;
+    int ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
+    QCOMPARE(ioID, 0);
+    ioID = interface->sendAndReceive(QByteArray(), &dummyArray);
+    QCOMPARE(ioID, 1);
+}
+
+void SourceInterfaceTest::checkNotifications(tSourceInterfaceShPtr interface, int total, int errors)
+{
+    connect(interface.get(), &cSourceInterfaceBase::sigIoFinished, this, &SourceInterfaceTest::onIoFinish);
+    QByteArray dummyReceive;
+    interface->sendAndReceive(QByteArray(), &dummyReceive);
+    QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
+    QCOMPARE(m_errorsReceived, 0);
+    QTest::qWait(10);
+    QCOMPARE(m_ioFinishReceiveCount, total);
+    QCOMPARE(m_errorsReceived, errors);
+}

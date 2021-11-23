@@ -5,10 +5,6 @@
 class cSourceIdGenerator
 {
 public:
-    /**
-     * @brief nextID
-     * @return unique value != 0
-     */
     int nextID();
 private:
     int m_currentID = -1;
