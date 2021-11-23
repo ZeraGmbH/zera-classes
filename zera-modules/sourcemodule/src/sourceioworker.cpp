@@ -45,6 +45,17 @@ cWorkerCommandPacket SourceWorkerConverter::commandPackToWorkerPack(const cSourc
     return workPack;
 }
 
+QList<QByteArray> SourceDemoHelper::generateResponseList(
+        cWorkerCommandPacket& workCmdPack, int createErrorAtIoNumber, QByteArray prefix) {
+    QList<QByteArray> responseList;
+    for(auto io : workCmdPack.m_workerIOList) {
+        responseList.append(prefix + io.m_OutIn.m_bytesExpected);
+    }
+    if(createErrorAtIoNumber >= 0) {
+        responseList[createErrorAtIoNumber] = "foo";
+    }
+    return responseList;
+}
 
 cSourceIoWorker::cSourceIoWorker(QObject *parent) : QObject(parent)
 {

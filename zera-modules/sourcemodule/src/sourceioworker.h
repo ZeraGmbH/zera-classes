@@ -43,7 +43,15 @@ Q_DECLARE_METATYPE(cWorkerCommandPacket)
 namespace SourceWorkerConverter
 {
     cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &cmdPack);
-};
+}
+
+namespace SourceDemoHelper
+{
+    QList<QByteArray> generateResponseList(
+            cWorkerCommandPacket& workCmdPack,
+            int createErrorAtIoNumber = -1,
+            QByteArray prefix = "");
+}
 
 class cSourceIoWorker : public QObject
 {
