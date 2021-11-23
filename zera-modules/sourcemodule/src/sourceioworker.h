@@ -62,18 +62,19 @@ public:
     void setIoInterface(tSourceInterfaceShPtr interface);
     void setMaxPendingActions(int maxPackets);
     int enqueueAction(cWorkerCommandPacket cmdPack);
-    bool isBusy();
+
+    bool isIoBusy();
 
 signals:
     void sigCmdFinished(cWorkerCommandPacket cmdPack);
 
 private slots:
-    void onIoFinished(int ioID);
+    void onIoFinished(int ioID, bool error);
     void onIoDisconnected();
 signals:
     void sigCmdFinishedQueued(cWorkerCommandPacket cmdPack);
 private:
-    cWorkerCommandPacket *getCurrentActionPack();
+    cWorkerCommandPacket *getCurrentCmd();
     cSourceIoWorkerEntry *getNextIo();
     void tryStartNextIo();
     void finishCmd(cWorkerCommandPacket cmdToFinish);
@@ -84,8 +85,9 @@ private:
 
     tSourceInterfaceShPtr m_interface = nullptr;
     int m_iCurrentIoID = 0;
+    bool m_bIoIsBusy = false;
     cSourceIdGenerator m_IdGenerator;
-    QList<cWorkerCommandPacket> m_pendingWorkPacks;
+    QList<cWorkerCommandPacket> m_pendingCmdPacks;
     int m_nextPosInWorkerIo = 0;
     int m_maxPendingCmdPacks = 0;
 };
