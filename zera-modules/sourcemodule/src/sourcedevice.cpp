@@ -19,13 +19,11 @@ cSourceDevice::cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTyp
     m_paramStateLoadSave = new cSourceJsonStateIo(type);
     m_outInGenerator = new cSourceIoPacketGenerator(m_paramStateLoadSave->getJsonStructure());
     m_paramsCurrent.setParams(m_paramStateLoadSave->loadJsonState());
+    m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
 
     connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
-
-    if(isDemo()) {
-        m_demoOnOffDelayTimer.setSingleShot(true);
-        connect(&m_demoOnOffDelayTimer, &QTimer::timeout, this, &cSourceDevice::onDemoOnOffFinished);
-    }
+    connect(&m_sourceIoWorker, &cSourceIoWorker::sigCmdFinished,
+            this, &cSourceDevice::onSourceCmdFinished);
 }
 
 cSourceDevice::~cSourceDevice()
@@ -47,31 +45,30 @@ void cSourceDevice::close()
 
 void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
-    m_paramsRequested.setParams(paramState.toJsonObject());
     m_deviceStatus.setBusy(true);
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
-    cSourceCommandPacket commandPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
+
+    m_paramsRequested.setParams(paramState.toJsonObject());
+    cSourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
+    cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
-        if(m_paramsRequested.getOn()) {
-            m_demoOnOffDelayTimer.start(3000);
-        }
-        else {
-            m_demoOnOffDelayTimer.start(1000);
-        }
+        cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(getIoInterface().get());
+        demoInterface->setResponseDelay(500);
+        QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
+        demoInterface->setResponses(responseList);
     }
-    else {
-        startActions(commandPack);
-    }
+    m_currentWorkerID = m_sourceIoWorker.enqueueAction(workerPack);
 }
 
-void cSourceDevice::onDemoOnOffFinished()
+void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
 {
-    m_deviceStatus.setBusy(false);
-    m_paramsCurrent.setParams(m_paramsRequested.getParams());
-    saveState();
-    // TODO add some random warnings and erros
-    m_veinInterface->getVeinDeviceParameter()->setValue(m_paramsCurrent.getParams());
-    m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
+    if(m_currentWorkerID == cmdPack.m_workerId) {
+        m_deviceStatus.setBusy(false);
+        m_paramsCurrent.setParams(m_paramsRequested.getParams());
+        saveState();
+        m_veinInterface->getVeinDeviceParameter()->setValue(m_paramsCurrent.getParams());
+        m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
+    }
 }
 
 tSourceInterfaceShPtr cSourceDevice::getIoInterface()
@@ -93,11 +90,6 @@ void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
     m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(m_paramStateLoadSave->getJsonStructure());
 
     connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
-}
-
-void cSourceDevice::startActions(cSourceCommandPacket commandPack)
-{
-
 }
 
 void cSourceDevice::saveState()
