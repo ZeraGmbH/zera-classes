@@ -8,8 +8,7 @@
 #include "sourcedevicestatus.h"
 #include "sourceiopacketgenerator.h"
 #include "supportedsources.h"
-
-class cSourceInterfaceBase;
+#include "sourceioworker.h"
 
 namespace SOURCEMODULE
 {
@@ -31,7 +30,6 @@ public:
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
-    void startActions(cSourceCommandPacket commandPack);
     void saveState(); // persistency
 
 signals:
@@ -39,7 +37,7 @@ signals:
 
 public slots:
     void onNewVeinParamStatus(QVariant paramState);
-    void onDemoOnOffFinished();
+    void onSourceCmdFinished(cWorkerCommandPacket cmdPack);
 
 private slots:
     void onInterfaceClosed();
@@ -52,14 +50,14 @@ private:
     cSourceJsonParamApi m_paramsCurrent;
 
     cSourceIoPacketGenerator* m_outInGenerator = nullptr;
+    cSourceIoWorker m_sourceIoWorker;
+    int m_currentWorkerID = 0;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
 
     SupportedSourceTypes m_type;
     QString m_version;
-
-    QTimer m_demoOnOffDelayTimer;
 };
 
 }
