@@ -27,19 +27,20 @@ public:
 
 
 // ------------------------- base interface --------------------------
-/**
- * @brief cSourceInterfaceBase: Interface + make sure sigIoFinished is queued
- */
 class cSourceInterfaceBase : public QObject
 {
     Q_OBJECT
 public:
     virtual ~cSourceInterfaceBase();
-    virtual SourceInterfaceTypes type() { return SOURCE_INTERFACE_BASE; }
-    bool isDemo() { return type() == SOURCE_INTERFACE_DEMO; }
+
     virtual bool open(QString) { return false; }
-    virtual void close();
+    virtual void close() {}
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive);
+
+    virtual bool isOpen() { return false; }
+    bool isDemo() { return type() == SOURCE_INTERFACE_DEMO; }
+    virtual SourceInterfaceTypes type() { return SOURCE_INTERFACE_BASE; }
+
 signals:
     void sigDisconnected();
     void sigIoFinished(int ioID, bool ioError); // users connect this signal
@@ -50,24 +51,27 @@ protected:
     friend class cSourceInterfaceFactory;
 
     cSourceIdGenerator m_IDGenerator;
+    int m_currentIoID = 0;
 };
 
 
 // ------------------------- demo interface --------------------------
-/**
- * @brief cSourceInterfaceDemo: Emit sigIoFinished
- */
 class cSourceInterfaceDemo : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
-    virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_DEMO; }
     virtual bool open(QString) override;
+    virtual void close() override;
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
+
     void simulateExternalDisconnect();
     void setResponseDelay(int iMs);
     void setResponses(QList<QByteArray> responseList);
     void appendResponses(QList<QByteArray> responseList);
+
+    virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_DEMO; }
+    virtual bool isOpen() override { return m_bOpen; }
+
 protected:
     explicit cSourceInterfaceDemo(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
@@ -79,29 +83,30 @@ private:
     bool m_bOpen = false;
     int m_responseDelayMs = 0;
     QTimer m_responseDelayTimer;
-    int m_currentId = 0;
     QByteArray* m_pDataReceive = nullptr;
     QList<QByteArray> m_responseList;
 };
 
 
 // ------------------------- ZERA serial interface --------------------------
-/**
- * @brief cSourceInterfaceDemo: Zera serial IO
- */
 class cSourceInterfaceZeraSerialPrivate;
 class cSourceInterfaceZeraSerial : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
     virtual ~cSourceInterfaceZeraSerial();
+
     virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
-    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
+    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
+
     // wrappers - see https://github.com/ZeraGmbH/qtiohelper / QT += serialportasyncblock
     void setReadTimeoutNextIo(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal = 0);
     void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
+
+    virtual bool isOpen() override;
+
 protected:
     explicit cSourceInterfaceZeraSerial(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
@@ -111,9 +116,6 @@ private slots:
 private:
     cSourceInterfaceZeraSerialPrivate *d_ptr;
     Q_DECLARE_PRIVATE(cSourceInterfaceZeraSerial)
-
-    QSerialPortAsyncBlock m_serialIO;
-    int m_currentIoID = 0;
 };
 
 #endif // SOURCEINTERFACEBASE_H

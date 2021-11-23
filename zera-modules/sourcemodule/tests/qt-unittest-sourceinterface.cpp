@@ -57,6 +57,7 @@ void SourceInterfaceTest::serialReturnsIds()
 void SourceInterfaceTest::baseReportsErrorClose()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    QVERIFY(!interface->isOpen());
     checkNotifications(interface, 1, 1);
 }
 
@@ -64,12 +65,14 @@ void SourceInterfaceTest::baseReportsErrorOpen()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
     interface->open(QString());
+    QVERIFY(!interface->isOpen());
     checkNotifications(interface, 1, 1);
 }
 
 void SourceInterfaceTest::demoReportsErrorClose()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    QVERIFY(!interface->isOpen());
     checkNotifications(interface, 1, 1);
 }
 
@@ -77,12 +80,14 @@ void SourceInterfaceTest::demoReportsNoErrorOpen()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     interface->open(QString());
+    QVERIFY(interface->isOpen());
     checkNotifications(interface, 1, 0);
 }
 
 void SourceInterfaceTest::serialReportsErrorClose()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_ASYNCSERIAL);
+    QVERIFY(!interface->isOpen());
     checkNotifications(interface, 1, 1);
 }
 

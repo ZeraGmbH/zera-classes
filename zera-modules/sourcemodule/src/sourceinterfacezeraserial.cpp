@@ -6,6 +6,8 @@ class cSourceInterfaceZeraSerialPrivate
 public:
     cSourceInterfaceZeraSerialPrivate() {}
 
+    QSerialPortAsyncBlock m_serialIO;
+
     struct TTimeoutParam
     {
         int iMsReceiveFirst = 1000;
@@ -32,11 +34,11 @@ cSourceInterfaceZeraSerial::cSourceInterfaceZeraSerial(QObject *parent) :
     cSourceInterfaceBase(parent),
     d_ptr(new cSourceInterfaceZeraSerialPrivate())
 {
-    connect(&m_serialIO, &QSerialPortAsyncBlock::ioFinished, this, &cSourceInterfaceZeraSerial::onIoFinished);
+    connect(&d_ptr->m_serialIO, &QSerialPortAsyncBlock::ioFinished, this, &cSourceInterfaceZeraSerial::onIoFinished);
     connect(&d_ptr->m_disappearWatcher, &cFileDisappearWatcher::sigFileRemoved,
             this, &cSourceInterfaceZeraSerial::onDeviceFileGone, Qt::QueuedConnection);
     // TBD: we need a vein logger
-    m_serialIO.enableDebugMessages(true);
+    d_ptr->m_serialIO.enableDebugMessages(true);
 }
 
 bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
@@ -45,13 +47,13 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
     QStringList splitList = strDeviceInfo.split("/", Qt::SkipEmptyParts);
     if(splitList.count() > 0) {
         QString portName = splitList.last();
-        m_serialIO.setPortName(portName);
+        d_ptr->m_serialIO.setPortName(portName);
         // hard code settings for now
-        m_serialIO.setBaudRate(9600);
-        m_serialIO.setDataBits(QSerialPort::Data8);
-        m_serialIO.setParity(QSerialPort::NoParity);
-        m_serialIO.setStopBits(QSerialPort::TwoStop);
-        open = m_serialIO.open(QIODevice::ReadWrite);
+        d_ptr->m_serialIO.setBaudRate(9600);
+        d_ptr->m_serialIO.setDataBits(QSerialPort::Data8);
+        d_ptr->m_serialIO.setParity(QSerialPort::NoParity);
+        d_ptr->m_serialIO.setStopBits(QSerialPort::TwoStop);
+        open = d_ptr->m_serialIO.open(QIODevice::ReadWrite);
         if(open) {
             d_ptr->m_disappearWatcher.watchFile(strDeviceInfo);
         }
@@ -61,8 +63,8 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
 
 void cSourceInterfaceZeraSerial::close()
 {
-    if(m_serialIO.isOpen()) {
-        m_serialIO.close();
+    if(d_ptr->m_serialIO.isOpen()) {
+        d_ptr->m_serialIO.close();
     }
     d_ptr->m_disappearWatcher.resetFiles();
 }
@@ -75,26 +77,26 @@ cSourceInterfaceZeraSerial::~cSourceInterfaceZeraSerial()
 int cSourceInterfaceZeraSerial::sendAndReceive(QByteArray bytesSend, QByteArray *pDataReceive)
 {
     m_currentIoID = m_IDGenerator.nextID();
-    if(m_serialIO.isOpen()) {
+    if(d_ptr->m_serialIO.isOpen()) {
         // set read timeout
         const cSourceInterfaceZeraSerialPrivate::TTimeoutParam* timeoutParam = &d_ptr->defaultTimeoutParam;
         if(d_ptr->nextTimeoutWasSet) {
             timeoutParam = &d_ptr->nextTimeoutParam;
             d_ptr->nextTimeoutWasSet = false;
         }
-        m_serialIO.setReadTimeout(timeoutParam->iMsReceiveFirst, timeoutParam->iMsBetweenTwoBytes, timeoutParam->iMsMinTotal);
+        d_ptr->m_serialIO.setReadTimeout(timeoutParam->iMsReceiveFirst, timeoutParam->iMsBetweenTwoBytes, timeoutParam->iMsMinTotal);
         // block end criteria
         const cSourceInterfaceZeraSerialPrivate::TBlockEndCriteria* endCriteria = &d_ptr->defaultBlockEndCriteria;
         if(d_ptr->nextBlockEndCriteriaWasSet) {
             endCriteria = &d_ptr->nextBlockEndCriteria;
             d_ptr->nextBlockEndCriteriaWasSet = false;
         }
-        m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
+        d_ptr->m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
 
         // try io
-        m_serialIO.sendAndReceive(bytesSend, pDataReceive);
+        d_ptr->m_serialIO.sendAndReceive(bytesSend, pDataReceive);
     }
-    if(!m_serialIO.isIOPending()) {
+    if(!d_ptr->m_serialIO.isIOPending()) {
         emit sigIoFinishedToQueue(m_currentIoID, true);
     }
     return m_currentIoID;
@@ -113,6 +115,11 @@ void cSourceInterfaceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive,
     d_ptr->nextBlockEndCriteria.iBlockLenReceive = iBlockLenReceive;
     d_ptr->nextBlockEndCriteria.endBlock = endBlock;
     d_ptr->nextBlockEndCriteriaWasSet = true;
+}
+
+bool cSourceInterfaceZeraSerial::isOpen()
+{
+    return d_ptr->m_serialIO.isOpen();
 }
 
 void cSourceInterfaceZeraSerial::onIoFinished()
