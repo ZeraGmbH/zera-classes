@@ -32,7 +32,7 @@ bool cWorkerCommandPacket::operator ==(const cWorkerCommandPacket &other)
 }
 
 
-cWorkerCommandPacket cSourceWorkerConverter::commandPackToWorkerPack(const cSourceCommandPacket &commandPack)
+cWorkerCommandPacket SourceWorkerConverter::commandPackToWorkerPack(const cSourceCommandPacket &commandPack)
 {
     cWorkerCommandPacket workPack;
     workPack.m_commandType = commandPack.m_commandType;
