@@ -26,7 +26,7 @@ void SourceIoWorkerTest::testCmdPackToWorkType()
     cSourceJsonParamApi params;
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     QCOMPARE(cmdPack.m_commandType, workPack.m_commandType);
 }
 
@@ -36,7 +36,7 @@ void SourceIoWorkerTest::testCmdPackToWorkIoSize()
     cSourceJsonParamApi params;
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     QCOMPARE(cmdPack.m_outInList.size(), workPack.m_workerIOList.size());
 }
 
@@ -46,7 +46,7 @@ void SourceIoWorkerTest::testCmdPackToWorkIoSequence()
     cSourceJsonParamApi params;
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     for(int i=0; i<cmdPack.m_outInList.size(); ++i) {
         QCOMPARE(cmdPack.m_outInList[i].m_actionType, workPack.m_workerIOList[i].m_OutIn.m_actionType);
     }
@@ -57,7 +57,7 @@ void SourceIoWorkerTest::testCmdPackToWorkProperties()
     cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
     cSourceJsonParamApi params;
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     QVERIFY(workPack.m_commandType != COMMAND_UNDEFINED);
     QVERIFY(workPack.m_errorBehavior != BEHAVE_UNDEFINED);
 }
@@ -68,7 +68,7 @@ void SourceIoWorkerTest::testNoInterfaceNotBusy()
     cSourceJsonParamApi params;
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     cSourceIoWorker worker;
     worker.enqueueAction(workPack);
     QVERIFY(!worker.isBusy());
@@ -89,7 +89,7 @@ static cWorkerCommandPacket generateSwitchCommands(bool on) {
     cSourceJsonParamApi params;
     params.setOn(on);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    return cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
 static void enqueueSwitchCommands(cSourceIoWorker& worker, bool on) {
@@ -100,7 +100,7 @@ static cWorkerCommandPacket generateStatusPollCommands() {
     cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
     cSourceJsonParamApi params;
     cSourceCommandPacket cmdPack = ioPackGenerator.generateStatusPollPacket();
-    return cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
 
@@ -134,7 +134,7 @@ void SourceIoWorkerTest::testNoInterfaceNotification()
     cSourceJsonParamApi params;
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     cSourceIoWorker worker;
     connect(&worker, &cSourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     worker.enqueueAction(workPack);
@@ -157,7 +157,7 @@ void SourceIoWorkerTest::testNotOpenInterfaceNotifications()
     cSourceJsonParamApi params;
     params.setOn(true);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = cSourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     cSourceIoWorker worker;
     worker.setIoInterface(interface);

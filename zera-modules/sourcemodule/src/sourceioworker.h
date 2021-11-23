@@ -40,12 +40,10 @@ private:
 Q_DECLARE_METATYPE(cWorkerCommandPacket)
 
 
-class cSourceWorkerConverter
+namespace SourceWorkerConverter
 {
-public:
-    static cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &cmdPack);
+    cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &cmdPack);
 };
-
 
 class cSourceIoWorker : public QObject
 {
