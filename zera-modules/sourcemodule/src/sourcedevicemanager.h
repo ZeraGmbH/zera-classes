@@ -39,6 +39,9 @@ private slots:
     void onScanFinished(tSourceScannerShPtr scanner);
     void onRemoveSource(cSourceDevice *getSourceDevice);
 
+signals:
+    void sigSlotRemovedQueued(int slotNo);
+
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();

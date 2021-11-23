@@ -34,7 +34,7 @@ signals:
     void sigScanFinished(tSourceScannerShPtr scanner);
 
 private slots:
-    void onIoFinished(int ioID);
+    void onIoFinished(int ioId, bool error);
 private:
     explicit cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid);
 
@@ -43,6 +43,7 @@ private:
     QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);
     static SupportedSourceTypes nextDemoType();
 
+    int m_ioId = 0;
     tSourceInterfaceShPtr m_ioInterface;
     QUuid m_uuid;
     cSourceDevice* m_sourceDeviceIdentified;

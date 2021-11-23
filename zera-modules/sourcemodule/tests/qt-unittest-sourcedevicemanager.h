@@ -3,8 +3,11 @@
 
 #include <QObject>
 #include "sourcedevice.h"
+#include "sourcedevicemanager.h"
 
 using SOURCEMODULE::cSourceDevice;
+using SOURCEMODULE::cSourceDeviceManager;
+using SOURCEMODULE::cSourceScanner;
 
 struct FinishEntry
 {
@@ -25,26 +28,30 @@ public slots:
 private slots:
     void init();
 
-    void testInitState();
-    void testAddTooMany();
-    void testRemoveOnEmpty();
-    void testRemoveInvalidBelow();
-    void testRemoveInvalidAbove();
-    void testRemoveTooMany();
+    void initSlotCount();
+    void removeSlotsOnEmpty();
+    void removeSlotInvalidBelow();
+    void removeSlotInvalidAbove();
+    void removeTooManySlots();
 
-    void testAvailAndDemoCountAdd();
-    void testAvailAndDemoCountAddRemove();
+    void demoScanOne();
+    void demoScanTooMany();
 
-    void testAddNotification();
-    void testAddNotificationTooMany();
+    void demoScanAll();
+    void demoScanAllAndRemove();
 
-    void testRemoveNotification();
-    void testRemoveNotificationTooMany();
-    void testAddRemoveNotificationAndCounts();
+    void demoAddNotification();
+    void demoAddNotificationTooMany();
 
-    void testNoCrashOnManagerDeadBeforeScanFinished();
+    void demoRemoveNotification();
+    void demoRemoveNotificationTooMany();
+
+    void noCrashOnManagerDeadBeforeScanFinished();
 
 private:
+    void checkSlotCount(cSourceDeviceManager &devMan, int total, int active, int demo);
+    void checkAddRemoveNotifications(int total, int add, int remove);
+
     QList<FinishEntry> m_listSourcesAdded;
     QList<int> m_socketsRemoved;
 };
