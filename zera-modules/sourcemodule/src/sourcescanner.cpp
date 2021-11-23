@@ -72,7 +72,7 @@ void cSourceScanner::sendReceiveSourceID()
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     m_bytesReceived.clear();
     QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
-    m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived);
+    m_ioId = m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived);
 }
 
 QByteArray cSourceScanner::createInterfaceSpecificPrepend()
@@ -118,13 +118,17 @@ SupportedSourceTypes cSourceScanner::nextDemoType() {
     return sDemoTypeCounter;
 }
 
-void cSourceScanner::onIoFinished(int ioID)
+void cSourceScanner::onIoFinished(int ioId, bool error)
 {
+    if(ioId != m_ioId) {
+        qCritical("Are there multiple clients on scanner interface?");
+        return;
+    }
     bool validFound = false;
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
     bool ourJobIsDone = false;
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
-    if(ioID) { // receive id == 0 -> I/O problems -> don't try next
+    if(!error) {
         if(!m_ioInterface->isDemo()) {
             if(m_bytesReceived.contains(deviceDetectInfoCurrent.expectedResponse)) {
                 validFound = true;
@@ -148,7 +152,7 @@ void cSourceScanner::onIoFinished(int ioID)
         emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;
     }
-    else if(ioID && moreChances) {
+    else if(!error && moreChances) {
         m_currentSourceTested++;
         sendReceiveSourceID(); // delay??
     }

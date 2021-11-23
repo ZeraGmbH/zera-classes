@@ -20,6 +20,8 @@ cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
     m_activeSlotCount(0),
     m_demoCount(0)
 {
+    connect(this, &cSourceDeviceManager::sigSlotRemovedQueued,
+            this, &cSourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
 void cSourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid)
@@ -87,7 +89,7 @@ bool cSourceDeviceManager::removeSource(int slotNo)
             disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
             delete sourceDeviceCurr;
             sourceDeviceCurr = nullptr;
-            emit sigSlotRemoved(slotNo);
+            emit sigSlotRemovedQueued(slotNo);
             removed = true;
         }
     }
