@@ -7,6 +7,8 @@
 #include <QTimer>
 #include "sourceidgenerator.h"
 
+static constexpr int sourceDefaultTimeout = 1000;
+
 enum SourceInterfaceTypes
 {
     SOURCE_INTERFACE_BASE = 0,
@@ -35,6 +37,7 @@ public:
 
     virtual bool open(QString) { return false; }
     virtual void close() {}
+    virtual void setReadTimeoutNextIo(int) {};
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive);
 
     virtual bool isOpen() { return false; }
@@ -63,9 +66,11 @@ public:
     virtual bool open(QString) override;
     virtual void close() override;
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
+    virtual void setReadTimeoutNextIo(int timeoutMs) override;
 
     void simulateExternalDisconnect();
     void setResponseDelay(int iMs);
+    void setDelayFollowsTimeout(bool followTimeout);
     void setResponses(QList<QByteArray> responseList);
     void appendResponses(QList<QByteArray> responseList);
 
@@ -82,6 +87,8 @@ private:
 
     bool m_bOpen = false;
     int m_responseDelayMs = 0;
+    int m_responseDelayMsTimeoutSimul = sourceDefaultTimeout/2;
+    bool m_delayFollowsTimeout = false;
     QTimer m_responseDelayTimer;
     QByteArray* m_pDataReceive = nullptr;
     QList<QByteArray> m_responseList;
@@ -99,6 +106,7 @@ public:
     virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
+    virtual void setReadTimeoutNextIo(int timeoutMs) override;
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
 
     // wrappers - see https://github.com/ZeraGmbH/qtiohelper / QT += serialportasyncblock

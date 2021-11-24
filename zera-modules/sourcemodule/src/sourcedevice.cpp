@@ -53,7 +53,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
     cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
         cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(getIoInterface().get());
-        demoInterface->setResponseDelay(500);
+        demoInterface->setDelayFollowsTimeout(true);
         QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
     }

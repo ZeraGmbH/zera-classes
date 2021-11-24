@@ -1,6 +1,8 @@
 #include "sourceinterface.h"
 #include "filedisappearwatcher.h"
 
+static constexpr int sourceDefaultMsBetweenTwoBytes = 500;
+
 class cSourceInterfaceZeraSerialPrivate
 {
 public:
@@ -10,8 +12,8 @@ public:
 
     struct TTimeoutParam
     {
-        int iMsReceiveFirst = 1000;
-        int iMsBetweenTwoBytes = 500;
+        int iMsReceiveFirst = sourceDefaultTimeout;
+        int iMsBetweenTwoBytes = sourceDefaultMsBetweenTwoBytes;
         int iMsMinTotal = 0;
     };
     const TTimeoutParam defaultTimeoutParam;
@@ -67,6 +69,11 @@ void cSourceInterfaceZeraSerial::close()
         d_ptr->m_serialIO.close();
     }
     d_ptr->m_disappearWatcher.resetFiles();
+}
+
+void cSourceInterfaceZeraSerial::setReadTimeoutNextIo(int timeoutMs)
+{
+    setReadTimeoutNextIo(timeoutMs, sourceDefaultMsBetweenTwoBytes);
 }
 
 cSourceInterfaceZeraSerial::~cSourceInterfaceZeraSerial()
