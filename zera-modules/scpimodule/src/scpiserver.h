@@ -9,9 +9,11 @@
 #include <QFinalState>
 
 #include "moduleactivist.h"
+#include "basemoduleeventsystem.h"
 
 
 class QSerialPort;
+class cVeinModuleParameter;
 
 namespace SCPIMODULE
 {
@@ -34,12 +36,14 @@ public:
     cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
 
-    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void generateInterface() override; // here we export our interface (entities)
     cModuleInterface* getModuleInterface();
 
 private:
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
+
+    cBaseModuleEventSystem *m_pEventSystem;
 
     QTcpServer* m_pTcpServer;
     cSCPIInterface* m_pSCPIInterface;
@@ -63,6 +67,7 @@ private:
     cSCPISerialClient *m_pSerialClient;
     QTimer m_SerialTestTimer;
     bool m_bSerial;
+    cVeinModuleParameter* m_pVeinParamSerialOn = nullptr;
 
 private slots:
     void addSCPIClient();
@@ -74,6 +79,9 @@ private slots:
     void shutdownTCPServer();
     void deactivationDone();
     void testSerial();
+
+    // vein change handlers
+    void newSerialOn(QVariant serialOn);
 };
 
 }

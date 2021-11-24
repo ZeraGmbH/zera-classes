@@ -10,6 +10,10 @@
 #include <QtSerialPort/QSerialPort>
 //#include <QtSerialPort/QSerialPortInfo>
 
+#include <veinmoduleparameter.h>
+#include <modulevalidator.h>
+#include <boolvalidator.h>
+
 #include "debug.h"
 #include "errormessages.h"
 #include "scpimoduleconfigdata.h"
@@ -79,7 +83,14 @@ cSCPIServer::~cSCPIServer()
 
 void cSCPIServer::generateInterface()
 {
-    // at the moment we have no interface
+    QString key;
+    m_pVeinParamSerialOn = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                       key = QString("PAR_EnableSerialSCPI"),
+                                                       QString("Enable/disable serial SCPI"),
+                                                       QVariant(m_ConfigData.m_SerialDevice.m_nOn));
+    m_pVeinParamSerialOn->setValidator(new cBoolValidator());
+    connect(m_pVeinParamSerialOn, &cVeinModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
+    m_pModule->veinModuleParameterHash[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
 }
 
 
@@ -244,6 +255,11 @@ void cSCPIServer::testSerial()
             }
         }
     }
+}
+
+void cSCPIServer::newSerialOn(QVariant serialOn)
+{
+    qWarning("Changed %i", serialOn.toBool());
 }
 
 }
