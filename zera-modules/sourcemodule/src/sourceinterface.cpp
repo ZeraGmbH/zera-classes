@@ -73,13 +73,23 @@ int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
 {
     m_currentIoID = m_IDGenerator.nextID();
     m_pDataReceive = pDataReceive;
-    if(!m_bOpen || m_responseDelayMs == 0) {
+    int responseDelayMs = m_responseDelayMs;
+    if(m_delayFollowsTimeout) {
+        responseDelayMs = m_responseDelayMsTimeoutSimul;
+    }
+    m_responseDelayMsTimeoutSimul = sourceDefaultTimeout/2;
+    if(!m_bOpen || responseDelayMs == 0) {
         sendResponse(!m_bOpen);
     }
     else {
-        m_responseDelayTimer.start(m_responseDelayMs);
+        m_responseDelayTimer.start(responseDelayMs);
     }
     return m_currentIoID;
+}
+
+void cSourceInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)
+{
+    m_responseDelayMsTimeoutSimul = timeoutMs/2;
 }
 
 void cSourceInterfaceDemo::simulateExternalDisconnect()
@@ -90,6 +100,11 @@ void cSourceInterfaceDemo::simulateExternalDisconnect()
 void cSourceInterfaceDemo::setResponseDelay(int iMs)
 {
     m_responseDelayMs = iMs;
+}
+
+void cSourceInterfaceDemo::setDelayFollowsTimeout(bool followTimeout)
+{
+    m_delayFollowsTimeout = followTimeout;
 }
 
 void cSourceInterfaceDemo::setResponses(QList<QByteArray> responseList)

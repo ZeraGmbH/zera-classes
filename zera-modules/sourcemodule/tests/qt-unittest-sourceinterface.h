@@ -33,9 +33,13 @@ private slots:
     void demoResponseList();
     void demoResponseListDelay();
 
+    void demoDelayFollowsDelay();
+    void demoDelayFollowsTimeout();
+
 private:
     void checkIds(tSourceInterfaceShPtr interface);
     void checkNotifications(tSourceInterfaceShPtr interface, int total, int errors);
+    tSourceInterfaceShPtr createOpenDemoInterface(int responseDelay = 0);
 
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;
