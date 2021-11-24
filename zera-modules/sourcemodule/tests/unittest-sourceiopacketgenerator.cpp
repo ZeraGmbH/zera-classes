@@ -24,6 +24,7 @@ TEST(TEST_PACKET_GENERATIOR, EMPTY_IO_UNDEFINED) {
     cSourceSingleOutIn outIn;
     EXPECT_EQ(outIn.m_actionType, cSourceActionTypes::SWITCH_UNDEF);
     EXPECT_EQ(outIn.m_responseType, RESP_UNDEFINED);
+    EXPECT_EQ(outIn.m_responseTimeoutMs, 0);
 }
 
 TEST(TEST_PACKET_GENERATIOR, TYPE_SET) {
@@ -54,6 +55,17 @@ TEST(TEST_PACKET_GENERATIOR, RESPONSE_TYPE_SET) {
             EXPECT_FALSE(outIn.m_responseType == RESP_UNDEFINED);
             EXPECT_FALSE(outIn.m_responseType >= RESP_UNDEF_BOTTOM);
         }
+    }
+}
+
+TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
+    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    cSourceJsonParamApi params;
+    params.setOn(true);
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(params);
+    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    for(auto outIn : cmdPack.m_outInList) {
+        EXPECT_FALSE(outIn.m_responseTimeoutMs == 0);
     }
 }
 

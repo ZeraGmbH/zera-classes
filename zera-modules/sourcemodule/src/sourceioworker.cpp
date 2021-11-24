@@ -138,6 +138,7 @@ void cSourceIoWorker::tryStartNextIo()
     if(!isIoBusy()) {
         cSourceIoWorkerEntry* workerIo = getNextIo();
         if(workerIo) {
+            m_interface->setReadTimeoutNextIo(workerIo->m_OutIn.m_responseTimeoutMs);
             m_iCurrentIoID = m_interface->sendAndReceive(
                         workerIo->m_OutIn.m_bytesSend,
                         &workerIo->m_dataReceived);
