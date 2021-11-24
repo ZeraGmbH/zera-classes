@@ -28,6 +28,8 @@ namespace VeinEvent
     class StorageSystem;
 }
 
+class cModuleValidator;
+
 namespace SCPIMODULE
 {
 
@@ -54,6 +56,7 @@ public:
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
     cSCPIEventSystem* m_pSCPIEventSystem;
+    cModuleValidator* m_pModuleValidator;
 
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world

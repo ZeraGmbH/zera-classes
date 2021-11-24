@@ -14,6 +14,8 @@
 #include <QJsonArray>
 #include <QJsonValue>
 
+#include "modulevalidator.h"
+
 #include "scpimodule.h"
 #include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
@@ -34,6 +36,7 @@ cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId,
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_pSCPIEventSystem = new cSCPIEventSystem(this);
+    m_pModuleValidator = new cModuleValidator(this);
 }
 
 
@@ -57,6 +60,7 @@ void cSCPIModule::doConfiguration(QByteArray xmlConfigData)
 
 void cSCPIModule::setupModule()
 {
+    emit addEventSystem(m_pModuleValidator);
     emit addEventSystem(m_pSCPIEventSystem);
 
     m_pModuleEventSystem = m_pSCPIEventSystem;
@@ -118,6 +122,8 @@ void cSCPIModule::activationDone()
 
 void cSCPIModule::activationFinished()
 {
+    m_pModuleValidator->setParameterHash(veinModuleParameterHash);
+
     // we post meta information once again because it's complete now
     exportMetaData();
     emit addEventSystem(m_pSCPIEventSystem);
