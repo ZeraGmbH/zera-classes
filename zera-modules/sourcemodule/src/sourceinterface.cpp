@@ -90,6 +90,9 @@ int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
 void cSourceInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)
 {
     m_responseDelayMsTimeoutSimul = timeoutMs/2;
+    if(m_responseDelayMsTimeoutSimul > 3000) {
+        m_responseDelayMsTimeoutSimul /= 3;
+    }
 }
 
 void cSourceInterfaceDemo::simulateExternalDisconnect()

@@ -1,5 +1,6 @@
 #include "sourceiopacketgenerator.h"
 #include "sourceactions.h"
+#include "sourceinterface.h"
 
 void cSourceSingleOutIn::setActionType(cSourceActionTypes::ActionTypes actionType)
 {
@@ -10,6 +11,7 @@ bool cSourceSingleOutIn::operator ==(const cSourceSingleOutIn &other)
 {
     return  m_actionType == other.m_actionType &&
             m_responseType == other.m_responseType &&
+            m_responseTimeoutMs == other.m_responseTimeoutMs &&
             m_bytesSend == other.m_bytesSend &&
             m_bytesExpected == other.m_bytesExpected;
 }
@@ -87,6 +89,9 @@ tSourceOutInList cSourceIoPacketGenerator::generateListForAction(cSourceActionTy
     }
     for(auto &outIn : outInList) {
         outIn.m_actionType = actionType;
+        if(outIn.m_responseTimeoutMs == 0) {
+            outIn.m_responseTimeoutMs = sourceDefaultTimeout;
+        }
     }
     return outInList;
 }
@@ -193,7 +198,8 @@ tSourceOutInList cSourceIoPacketGenerator::generateSwitchPhasesList()
 
     bytesSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKUI\r";
-    return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
+    int timeout = globalOn ? 15000 : 5000;
+    return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse, timeout);
 }
 
 tSourceOutInList cSourceIoPacketGenerator::generateFrequencyList()
