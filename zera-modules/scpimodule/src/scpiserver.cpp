@@ -85,9 +85,9 @@ void cSCPIServer::generateInterface()
 {
     QString key;
     m_pVeinParamSerialOn = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                       key = QString("PAR_EnableSerialSCPI"),
+                                                       key = QString("PAR_SerialScpiActive"),
                                                        QString("Enable/disable serial SCPI"),
-                                                       QVariant(m_ConfigData.m_SerialDevice.m_nOn));
+                                                       QVariant(m_bSerialScpiActive));
     m_pVeinParamSerialOn->setValidator(new cBoolValidator());
     connect(m_pVeinParamSerialOn, &cVeinModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
     m_pModule->veinModuleParameterHash[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
@@ -122,6 +122,7 @@ void cSCPIServer::createSerialScpi()
             delete m_pSerialPort;
         }
     }
+    m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
 }
 
 void cSCPIServer::destroySerialScpi()
@@ -135,6 +136,7 @@ void cSCPIServer::destroySerialScpi()
         m_pSerialClient = 0;
         m_pSerialPort = 0;
     }
+    m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
 }
 
 
@@ -246,7 +248,12 @@ void cSCPIServer::testSerial()
 
 void cSCPIServer::newSerialOn(QVariant serialOn)
 {
-    qWarning("Changed %i", serialOn.toBool());
+    if(serialOn.toBool()) {
+        createSerialScpi();
+    }
+    else {
+        destroySerialScpi();
+    }
 }
 
 }
