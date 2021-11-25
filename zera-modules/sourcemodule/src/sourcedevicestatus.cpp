@@ -27,6 +27,7 @@ void cSourceDeviceStatus::reset()
 static const QString keyBusy = "busy";
 static const QString keyErrors = "errors";
 static const QString keyWarnings = "warnings";
+static const QString keyDeviceInfo = "deviceinfo";
 
 void cSourceDeviceStatus::setBusy(bool busy)
 {
@@ -41,6 +42,11 @@ void cSourceDeviceStatus::addError(const QString error)
 void cSourceDeviceStatus::addWarning(const QString warning)
 {
     appendToArray(keyWarnings, warning);
+}
+
+void cSourceDeviceStatus::setDeviceInfo(const QString strDeviceInfo)
+{
+    m_jsonStatus[keyDeviceInfo] = strDeviceInfo;
 }
 
 const QJsonObject &cSourceDeviceStatus::getJsonStatus()
@@ -61,6 +67,11 @@ QStringList cSourceDeviceStatus::getErrors()
 QStringList cSourceDeviceStatus::getWarnings()
 {
     return getArray(keyWarnings);
+}
+
+QString cSourceDeviceStatus::getDeviceInfo()
+{
+    return m_jsonStatus[keyDeviceInfo].toString();
 }
 
 QStringList cSourceDeviceStatus::getArray(QString key)
