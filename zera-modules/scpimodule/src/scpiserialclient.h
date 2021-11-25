@@ -28,7 +28,7 @@ public slots:
     virtual void receiveAnswer(QString answ);
 
 private:
-    QSerialPort* m_pSerial;
+    QSerialPort* m_pSerialPort;
 
 private slots:
     virtual void cmdInput();

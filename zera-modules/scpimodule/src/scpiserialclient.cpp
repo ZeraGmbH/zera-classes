@@ -12,10 +12,10 @@ namespace SCPIMODULE
 {
 
 cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface)
-    :m_pSerial(serial), cSCPIClient(module, configdata, iface)
+    :m_pSerialPort(serial), cSCPIClient(module, configdata, iface)
 {
     // so now we can start our connection
-    connect(m_pSerial, &QSerialPort::readyRead, this, &cSCPISerialClient::cmdInput);
+    connect(m_pSerialPort, &QSerialPort::readyRead, this, &cSCPISerialClient::cmdInput);
 }
 
 
@@ -36,7 +36,7 @@ void cSCPISerialClient::receiveAnswer(QString answ)
 #endif
 
     ba = answer.toLatin1();
-    m_pSerial->write(ba.data(), ba.size());
+    m_pSerialPort->write(ba.data(), ba.size());
 }
 
 
@@ -45,7 +45,7 @@ void cSCPISerialClient::cmdInput()
     QString addString;
 
     // first we read all available input and add it to our input fifo
-    addString = QString(m_pSerial->readAll().data());
+    addString = QString(m_pSerialPort->readAll().data());
     m_sInputFifo.append(addString);
 
     testCmd();
