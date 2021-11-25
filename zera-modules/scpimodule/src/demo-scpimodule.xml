@@ -8,7 +8,7 @@
                 <port>6320</port>
             </ethernet>
             <serialdevice>
-                <on>0</on>
+                <on>1</on>
                 <baud>9600</baud>
                 <databits>8</databits>
                 <stopbits>2</stopbits>
