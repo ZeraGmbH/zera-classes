@@ -45,6 +45,7 @@ void cSourceDevice::close()
 
 void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
+    m_deviceStatus.reset();
     m_deviceStatus.setBusy(true);
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
 
@@ -64,6 +65,12 @@ void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
 {
     if(m_currentWorkerID == cmdPack.m_workerId) {
         m_deviceStatus.setBusy(false);
+        if(!cmdPack.passedAll()) {
+            // For now just drop a short note. We need a concept
+            // how to continue with translations - maybe an RPC called by GUI?
+            // Maybe no
+            m_deviceStatus.addError("Switch failed");
+        }
         m_paramsCurrent.setParams(m_paramsRequested.getParams());
         saveState();
         m_veinInterface->getVeinDeviceParameter()->setValue(m_paramsCurrent.getParams());
