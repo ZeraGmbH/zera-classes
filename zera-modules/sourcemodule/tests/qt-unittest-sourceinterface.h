@@ -20,6 +20,10 @@ private slots:
     void demoReturnsIds();
     void serialReturnsIds();
 
+    void baseCannotOpen();
+    void demoCanOpen();
+    void serialCannotOpen();
+
     void baseReportsErrorClose();
     void baseReportsErrorOpen();
     void demoReportsErrorClose();

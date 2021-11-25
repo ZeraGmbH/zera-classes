@@ -42,6 +42,7 @@ public:
 
     virtual bool isOpen() { return false; }
     bool isDemo() { return type() == SOURCE_INTERFACE_DEMO; }
+    QString getDeviceInfo();
     virtual SourceInterfaceTypes type() { return SOURCE_INTERFACE_BASE; }
 
 signals:
@@ -53,6 +54,7 @@ protected:
     explicit cSourceInterfaceBase(QObject *parent = nullptr);
     friend class cSourceInterfaceFactory;
 
+    QString m_strDeviceInfo;
     cSourceIdGenerator m_IDGenerator;
     int m_currentIoID = 0;
 };
@@ -63,7 +65,7 @@ class cSourceInterfaceDemo : public cSourceInterfaceBase
 {
     Q_OBJECT
 public:
-    virtual bool open(QString) override;
+    virtual bool open(QString strDeviceInfo) override;
     virtual void close() override;
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     virtual void setReadTimeoutNextIo(int timeoutMs) override;

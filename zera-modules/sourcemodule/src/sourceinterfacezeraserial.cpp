@@ -57,6 +57,7 @@ bool cSourceInterfaceZeraSerial::open(QString strDeviceInfo)
         d_ptr->m_serialIO.setStopBits(QSerialPort::TwoStop);
         open = d_ptr->m_serialIO.open(QIODevice::ReadWrite);
         if(open) {
+            m_strDeviceInfo = strDeviceInfo;
             d_ptr->m_disappearWatcher.watchFile(strDeviceInfo);
         }
     }

@@ -38,6 +38,11 @@ int cSourceInterfaceBase::sendAndReceive(QByteArray, QByteArray*)
     return m_currentIoID;
 }
 
+QString cSourceInterfaceBase::getDeviceInfo()
+{
+    return m_strDeviceInfo;
+}
+
 cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBase(parent)
 {
     m_responseDelayTimer.setSingleShot(true);
@@ -58,8 +63,9 @@ void cSourceInterfaceDemo::sendResponse(bool error)
     emit sigIoFinishedToQueue(m_currentIoID, error);
 }
 
-bool cSourceInterfaceDemo::open(QString)
+bool cSourceInterfaceDemo::open(QString strDeviceInfo)
 {
+    m_strDeviceInfo = strDeviceInfo;
     m_bOpen = true;
     return true;
 }
