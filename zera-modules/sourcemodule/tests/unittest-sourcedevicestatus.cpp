@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include <QJsonArray>
+#include <QStringList>
 #include "sourcedevicestatus.h"
 
 using SOURCEMODULE::cSourceDeviceStatus;

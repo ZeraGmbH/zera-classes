@@ -2,6 +2,8 @@
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
+#include <QVariant>
+#include <QStringList>
 
 namespace SOURCEMODULE
 {
