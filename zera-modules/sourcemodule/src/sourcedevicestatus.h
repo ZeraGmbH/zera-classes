@@ -12,6 +12,7 @@ public:
     cSourceDeviceStatus();
 
     void reset();
+    void clearWarningsErrors();
 
     void setBusy(bool busy);
     void addError(const QString error);

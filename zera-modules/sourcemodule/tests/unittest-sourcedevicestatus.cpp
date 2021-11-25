@@ -84,5 +84,13 @@ TEST(TEST_SOURCEDEVICESTATUS, DEVICEINFO) {
     json = status.getJsonStatus();
     int newCount = json.count();
     EXPECT_EQ(origCount, newCount);
+}
 
+TEST(TEST_SOURCEDEVICESTATUS, CLEAR_RRORS_WARNINGS) {
+    cSourceDeviceStatus status;
+    status.addError("foo");
+    status.addWarning("bar");
+    status.clearWarningsErrors();
+    EXPECT_EQ(status.getErrors().count(), 0);
+    EXPECT_EQ(status.getWarnings().count(), 0);
 }
