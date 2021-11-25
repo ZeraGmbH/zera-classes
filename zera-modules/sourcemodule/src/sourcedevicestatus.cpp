@@ -29,6 +29,13 @@ static const QString keyErrors = "errors";
 static const QString keyWarnings = "warnings";
 static const QString keyDeviceInfo = "deviceinfo";
 
+void cSourceDeviceStatus::clearWarningsErrors()
+{
+    QJsonArray emptyArr;
+    m_jsonStatus[keyErrors] = emptyArr;
+    m_jsonStatus[keyWarnings] = emptyArr;
+}
+
 void cSourceDeviceStatus::setBusy(bool busy)
 {
     m_jsonStatus[keyBusy] = busy;
