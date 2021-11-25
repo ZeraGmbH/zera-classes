@@ -33,6 +33,7 @@
 namespace SCPIMODULE
 {
 
+constexpr int serialPollTimerPeriod = 1000;
 
 cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     : m_pModule(module), m_ConfigData(configData)
@@ -192,7 +193,7 @@ void cSCPIServer::setupTCPServer()
 
     if (m_ConfigData.m_SerialDevice.m_nOn == 1) {
         connect(&m_SerialTestTimer, &QTimer::timeout, this, &cSCPIServer::testSerial);
-        m_SerialTestTimer.start(2000);
+        m_SerialTestTimer.start(serialPollTimerPeriod);
     }
 
     if (noError) {
@@ -250,9 +251,15 @@ void cSCPIServer::newSerialOn(QVariant serialOn)
 {
     if(serialOn.toBool()) {
         createSerialScpi();
+        if(!m_SerialTestTimer.isActive()) {
+            m_SerialTestTimer.start(serialPollTimerPeriod);
+        }
     }
     else {
         destroySerialScpi();
+        if(m_SerialTestTimer.isActive()) {
+            m_SerialTestTimer.stop();
+        }
     }
 }
 
