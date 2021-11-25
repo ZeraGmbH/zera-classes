@@ -7,6 +7,7 @@
 #include <QHash>
 #include <QState>
 #include <QFinalState>
+#include <QFile>
 
 #include "moduleactivist.h"
 #include "basemoduleeventsystem.h"
@@ -40,6 +41,9 @@ public:
     cModuleInterface* getModuleInterface();
 
 private:
+    void createSerialScpi();
+    void destroySerialScpi();
+
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
 
@@ -63,10 +67,10 @@ private:
     QFinalState m_deactivationDoneState;
 
     // optionally we support a serial device
-    QSerialPort* m_pSerial;
+    QSerialPort* m_pSerialPort;
     cSCPISerialClient *m_pSerialClient;
     QTimer m_SerialTestTimer;
-    bool m_bSerial;
+    bool m_bSerialScpiActive;
     cVeinModuleParameter* m_pVeinParamSerialOn = nullptr;
 
 private slots:

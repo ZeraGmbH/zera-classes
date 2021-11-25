@@ -37,7 +37,7 @@ namespace SCPIMODULE
 cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     : m_pModule(module), m_ConfigData(configData)
 {
-    m_bSerial = false;
+    m_bSerialScpiActive = false;
     m_bActive = false;
 
     m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi interface with cmd interpreter
@@ -47,8 +47,8 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_pStatusInterface = new cStatusInterface(m_pModule, m_pSCPIInterface); // the scpi status interface
     m_pIEEE488Interface = new cIEEE4882Interface(m_pModule, m_pSCPIInterface); // the ieee448-2 interface
 
-    m_pSerial = 0;
-    m_pSerialClient = 0;
+    m_pSerialPort = nullptr;
+    m_pSerialClient = nullptr;
 
     m_pTcpServer = new QTcpServer();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
@@ -68,7 +68,6 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_deactivationMachine.setInitialState(&m_shutdownTCPServerState);
     connect(&m_shutdownTCPServerState, &QState::entered, this, &cSCPIServer::shutdownTCPServer);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSCPIServer::deactivationDone);
-
 }
 
 
@@ -76,8 +75,9 @@ cSCPIServer::~cSCPIServer()
 {
     delete m_pSCPIInterface;
     delete m_pTcpServer;
-    if (m_pSerial)
-        delete m_pSerial;
+    if (m_pSerialPort) {
+        delete m_pSerialPort;
+    }
 }
 
 
@@ -99,6 +99,44 @@ cModuleInterface *cSCPIServer::getModuleInterface()
     return m_pModuleInterface;
 }
 
+void cSCPIServer::createSerialScpi()
+{
+    if (!m_bSerialScpiActive) {
+        m_pSerialPort = new QSerialPort();
+        m_pSerialPort->setPortName(m_ConfigData.m_SerialDevice.m_sDevice);
+        if (m_pSerialPort->open(QIODevice::ReadWrite)) {
+            m_pSerialPort->setBaudRate(m_ConfigData.m_SerialDevice.m_nBaud);
+            m_pSerialPort->setDataBits((QSerialPort::DataBits)m_ConfigData.m_SerialDevice.m_nDatabits);
+            m_pSerialPort->setStopBits((QSerialPort::StopBits)m_ConfigData.m_SerialDevice.m_nStopbits);
+            m_pSerialPort->setParity(QSerialPort::NoParity);
+            m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
+
+            m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule, m_ConfigData, m_pSCPIInterface);
+            m_SCPIClientList.append(m_pSerialClient);
+            if (m_SCPIClientList.count() == 1) {
+                m_pSerialClient->setAuthorisation(true);
+            }
+            m_bSerialScpiActive = true;
+        }
+        else {
+            delete m_pSerialPort;
+        }
+    }
+}
+
+void cSCPIServer::destroySerialScpi()
+{
+    if (m_bSerialScpiActive) {
+        m_bSerialScpiActive = false;
+        deleteSCPIClient(m_pSerialClient);
+        delete m_pSerialClient;
+        m_pSerialPort->close();
+        delete m_pSerialPort;
+        m_pSerialClient = 0;
+        m_pSerialPort = 0;
+    }
+}
+
 
 void cSCPIServer::addSCPIClient()
 {
@@ -106,39 +144,35 @@ void cSCPIServer::addSCPIClient()
     cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
     connect(client,& cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
     m_SCPIClientList.append(client);
-    if (m_SCPIClientList.count() == 1)
+    if (m_SCPIClientList.count() == 1) {
         client->setAuthorisation(true);
-
+    }
 }
 
 
 void cSCPIServer::deleteSCPIClient(QObject *obj)
 {
     m_SCPIClientList.removeAll(static_cast<cSCPIClient*>(obj));
-    if (m_SCPIClientList.count() > 0)
+    if (m_SCPIClientList.count() > 0) {
         m_SCPIClientList.at(0)->setAuthorisation(true);
+    }
 }
 
 
 void cSCPIServer::TCPError(QAbstractSocket::SocketError)
 {
-
 }
 
 
 void cSCPIServer::setupTCPServer()
 {
-    bool noError;
-
     // before we can call listen we must set up a valid interface that clients can connect to
-
-    noError = m_pModuleInterface->setupInterface();
+    bool noError = m_pModuleInterface->setupInterface();
     noError = noError && m_pInterfaceInterface->setupInterface();
     noError = noError && m_pStatusInterface->setupInterface();
     noError = noError && m_pIEEE488Interface->setupInterface();
 
-    if (!noError)
-    {
+    if (!noError) {
         emit errMsg((tr(interfacejsonErrMsg)));
 #ifdef DEBUG
         qDebug() << interfacejsonErrMsg;
@@ -147,25 +181,24 @@ void cSCPIServer::setupTCPServer()
 
     noError = noError && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
 
-    if(!noError)
-    {
+    if(!noError) {
         emit errMsg((tr(interfaceETHErrMsg)));
 #ifdef DEBUG
         qDebug() << interfaceETHErrMsg;
 #endif
     }
 
-    if (m_ConfigData.m_SerialDevice.m_nOn == 1)
-    {
+    if (m_ConfigData.m_SerialDevice.m_nOn == 1) {
         connect(&m_SerialTestTimer, &QTimer::timeout, this, &cSCPIServer::testSerial);
         m_SerialTestTimer.start(2000);
     }
 
-    if (noError)
+    if (noError) {
         emit activationContinue();
-    else
+    }
+    else {
         emit activationError();
-
+    }
 }
 
 
@@ -178,18 +211,14 @@ void cSCPIServer::activationDone()
 
 void cSCPIServer::shutdownTCPServer()
 {
-    cSCPIClient* client;
-
-    for (int i = 0; i < m_SCPIClientList.count(); i++)
-    {
-        client = m_SCPIClientList.at(i);
+    for(auto client : m_SCPIClientList) {
         delete client;
     }
-
+    m_SCPIClientList.clear();
     m_pTcpServer->close();
-    if (m_bSerial)
-        m_pSerial->close();
-
+    if (m_bSerialScpiActive) {
+        destroySerialScpi();
+    }
     emit deactivationContinue();
 }
 
@@ -203,56 +232,14 @@ void cSCPIServer::deactivationDone()
 
 void cSCPIServer::testSerial()
 {
-    if (m_bActive)
-    {
-        QFile devFile;
-        devFile.setFileName(m_ConfigData.m_SerialDevice.m_sDevice);
-        if (devFile.exists())
-        {
-            if (!m_bSerial)
-            {
-    #ifdef DEBUG
-            qDebug() << "serial client connected";
-    #endif
-                m_pSerial=new QSerialPort();
-                m_pSerial->setPortName(m_ConfigData.m_SerialDevice.m_sDevice);
-                if (m_pSerial->open(QIODevice::ReadWrite))
-                {
-                    m_pSerial->setBaudRate(m_ConfigData.m_SerialDevice.m_nBaud);
-                    m_pSerial->setDataBits((QSerialPort::DataBits)m_ConfigData.m_SerialDevice.m_nDatabits);
-                    m_pSerial->setStopBits((QSerialPort::StopBits)m_ConfigData.m_SerialDevice.m_nStopbits);
-                    m_pSerial->setParity(QSerialPort::NoParity);
-                    m_pSerial->setFlowControl(QSerialPort::NoFlowControl);
-
-                    m_pSerialClient = new cSCPISerialClient(m_pSerial, m_pModule, m_ConfigData, m_pSCPIInterface);
-                    m_SCPIClientList.append(m_pSerialClient);
-                    if (m_SCPIClientList.count() == 1)
-                        m_pSerialClient->setAuthorisation(true);
-
-                    m_bSerial = true;
-
-                }
-                else
-                {
-                    delete m_pSerial;
-                }
-            }
+    if (m_bActive) {
+        QFile deviceFile;
+        deviceFile.setFileName(m_ConfigData.m_SerialDevice.m_sDevice);
+        if (deviceFile.exists()) {
+            createSerialScpi();
         }
-        else
-        {
-            if (m_bSerial) // in case we already had serial connection
-            {
-    #ifdef DEBUG
-            qDebug() << "serial client disconnected";
-    #endif
-                m_bSerial = false;
-                deleteSCPIClient(m_pSerialClient);
-                delete m_pSerialClient;
-                m_pSerial->close();
-                delete m_pSerial;
-                m_pSerialClient = 0;
-                m_pSerial = 0;
-            }
+        else {
+            destroySerialScpi();
         }
     }
 }
