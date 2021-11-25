@@ -15,6 +15,7 @@
 
 class QSerialPort;
 class cVeinModuleParameter;
+class cVeinModuleActvalue;
 
 namespace SCPIMODULE
 {
@@ -72,6 +73,7 @@ private:
     QTimer m_SerialTestTimer;
     bool m_bSerialScpiActive;
     cVeinModuleParameter* m_pVeinParamSerialOn = nullptr;
+    cVeinModuleActvalue* m_pVeinSerialScpiDevFileName = nullptr;
 
 private slots:
     void addSCPIClient();

@@ -11,6 +11,7 @@
 //#include <QtSerialPort/QSerialPortInfo>
 
 #include <veinmoduleparameter.h>
+#include <veinmoduleactvalue.h>
 #include <modulevalidator.h>
 #include <boolvalidator.h>
 
@@ -92,6 +93,13 @@ void cSCPIServer::generateInterface()
     m_pVeinParamSerialOn->setValidator(new cBoolValidator());
     connect(m_pVeinParamSerialOn, &cVeinModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
     m_pModule->veinModuleParameterHash[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
+
+
+    m_pVeinSerialScpiDevFileName = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                    QString("ACT_SerialScpiDeviceFile"),
+                                                    QString("Device file name for serial SCPI"),
+                                                    QVariant(QString()) );
+    m_pModule->veinModuleActvalueList.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 }
 
 
@@ -118,6 +126,7 @@ void cSCPIServer::createSerialScpi()
                 m_pSerialClient->setAuthorisation(true);
             }
             m_bSerialScpiActive = true;
+            m_pVeinSerialScpiDevFileName->setValue(m_ConfigData.m_SerialDevice.m_sDevice);
         }
         else {
             delete m_pSerialPort;
@@ -134,8 +143,9 @@ void cSCPIServer::destroySerialScpi()
         delete m_pSerialClient;
         m_pSerialPort->close();
         delete m_pSerialPort;
-        m_pSerialClient = 0;
-        m_pSerialPort = 0;
+        m_pSerialClient = nullptr;
+        m_pSerialPort = nullptr;
+        m_pVeinSerialScpiDevFileName->setValue(QString());
     }
     m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
 }
