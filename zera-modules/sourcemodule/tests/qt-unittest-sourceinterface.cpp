@@ -54,6 +54,31 @@ void SourceInterfaceTest::serialReturnsIds()
     checkIds(interface);
 }
 
+void SourceInterfaceTest::baseCannotOpen()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    interface->open("/dev/base/foo");
+    QCOMPARE(interface->isOpen(), false);
+    QVERIFY(interface->getDeviceInfo().isEmpty());
+}
+
+void SourceInterfaceTest::demoCanOpen()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    QString strBefore = "/dev/demo/foo";
+    interface->open(strBefore);
+    QCOMPARE(interface->isOpen(), true);
+    QCOMPARE(strBefore, interface->getDeviceInfo());
+}
+
+void SourceInterfaceTest::serialCannotOpen()
+{
+    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_ASYNCSERIAL);
+    interface->open("/dev/serial/foo");
+    QCOMPARE(interface->isOpen(), false);
+    QVERIFY(interface->getDeviceInfo().isEmpty());
+}
+
 void SourceInterfaceTest::baseReportsErrorClose()
 {
     tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
