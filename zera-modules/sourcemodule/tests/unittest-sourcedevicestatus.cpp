@@ -8,6 +8,7 @@ using SOURCEMODULE::cSourceDeviceStatus;
 static const QString keyBusy = "busy";
 static const QString keyErrors = "errors";
 static const QString keyWarnings = "warnings";
+static const QString keyDeviceInfo = "deviceinfo";
 
 TEST(TEST_SOURCEDEVICESTATUS, INIT) {
     cSourceDeviceStatus status;
@@ -17,6 +18,7 @@ TEST(TEST_SOURCEDEVICESTATUS, INIT) {
     EXPECT_TRUE(json.contains(keyBusy));
     EXPECT_TRUE(json.contains(keyErrors));
     EXPECT_TRUE(json.contains(keyWarnings));
+    EXPECT_TRUE(json.contains(keyDeviceInfo));
 
     EXPECT_TRUE(json[keyBusy].isBool());
     EXPECT_FALSE(json[keyBusy].toBool());
@@ -26,6 +28,8 @@ TEST(TEST_SOURCEDEVICESTATUS, INIT) {
 
     EXPECT_TRUE(json[keyWarnings].isArray());
     EXPECT_EQ(json[keyWarnings].toArray().count(), 0);
+
+    EXPECT_TRUE(json[keyDeviceInfo].isString());
 }
 
 TEST(TEST_SOURCEDEVICESTATUS, BUSY) {
@@ -67,4 +71,18 @@ TEST(TEST_SOURCEDEVICESTATUS, ERRORS) {
     json = status.getJsonStatus();
     int newCount = json.count();
     EXPECT_EQ(origCount, newCount);
+}
+
+TEST(TEST_SOURCEDEVICESTATUS, DEVICEINFO) {
+    cSourceDeviceStatus status;
+    QJsonObject json = status.getJsonStatus();
+    int origCount = json.count();
+    status.setDeviceInfo("bar");
+    QString bar = status.getDeviceInfo();
+    EXPECT_EQ(bar, "bar");
+    // key typo test
+    json = status.getJsonStatus();
+    int newCount = json.count();
+    EXPECT_EQ(origCount, newCount);
+
 }

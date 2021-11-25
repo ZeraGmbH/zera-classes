@@ -47,6 +47,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
     m_deviceStatus.reset();
     m_deviceStatus.setBusy(true);
+    m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
     m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
 
     m_paramsRequested.setParams(paramState.toJsonObject());
