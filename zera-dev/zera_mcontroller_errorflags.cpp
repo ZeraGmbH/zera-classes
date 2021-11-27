@@ -17,13 +17,21 @@ QString ZeraMcontrollerErrorFlags::getErrorMaskText(quint32 errorFlags, bool boo
             if(!strFlags.isEmpty()) {
                 strFlags += QStringLiteral(" | ");
             }
-            strFlags += bootCmd ? m_errorFlagsBootText[1<<iFlag] : m_errorFlagsText[1<<iFlag];
+            QHash<quint32, QString> &flagStringHash = bootCmd ? m_errorFlagsBootText : m_errorFlagsText;
+            if(flagStringHash.contains(1<<iFlag)) {
+                strFlags += flagStringHash[1<<iFlag];
+            }
+            else {
+                strFlags += QString("UNDEFINED_ERROR_BIT_%1").arg(iFlag);
+            }
         }
     }
-    strError.sprintf("host-mask 0x%04X: / µC-mask 0x%04X / %s",
-                     errMaskMaster,
-                     errMaskMController,
-                     qPrintable(strFlags));
+    QString hostMask = QString("%1").arg(errMaskMaster, 4, 16, QLatin1Char('0')).toUpper();
+    QString controllerMask = QString("%1").arg(errMaskMController, 4, 16, QLatin1Char('0')).toUpper();
+    strError = QString("host-mask 0x%1 / µC-mask 0x%2").arg(hostMask).arg(controllerMask);
+    if(errorFlags) {
+        strError += QString(" / %1").arg(strFlags);
+    }
     return strError;
 }
 
