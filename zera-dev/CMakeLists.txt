@@ -42,14 +42,16 @@ add_library(zeradev SHARED
     ${RESOURCES}
     )
 
-
-
-target_link_libraries(zeradev 
-    PRIVATE
+set(COMMON_LIBS
     Qt5::Core
     zerai2c
     zeramath
     zeramisc
+    )
+
+target_link_libraries(zeradev
+    PRIVATE
+    ${COMMON_LIBS}
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -118,6 +120,45 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/dev
     )
 
+
+find_package(Qt5Test REQUIRED)
+find_package(GTest)
+if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
+    message(STATUS "unittest zera-dev")
+    enable_testing()
+
+    add_test(NAME    zera-dev-unittest
+             COMMAND zera-dev-unittest)
+
+    file(GLOB UNITTESTS
+        tests/unittest-*.cpp
+    )
+
+    add_executable(zera-dev-unittest
+        ${SOURCES}
+        ${HEADER}
+        ${RESOURCES}
+        ${UNITTESTS}
+    )
+    # constexpr / EXPECT_EQ -> linker problems for c++ < 17
+    set_property(TARGET zera-dev-unittest PROPERTY CXX_STANDARD 17)
+
+    target_include_directories(zera-dev-unittest
+        PUBLIC
+        $<INSTALL_INTERFACE:include/zera-classes/dev>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_SOURCE_DIR}/zera-misc
+        )
+
+    target_link_libraries(zera-dev-unittest
+        PUBLIC
+        gtest
+        gtest_main
+        ${COMMON_LIBS}
+    )
+endif()
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
