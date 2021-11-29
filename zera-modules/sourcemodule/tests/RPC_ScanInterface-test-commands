@@ -1,0 +1,8 @@
+# Supposed to simulate broken/gon
+{"p_deviceInfo": "Fault", "p_type": 0}
+
+# Simulate demo
+{"p_deviceInfo": "Demo", "p_type": 1}
+
+# Connect to valid source
+{"p_deviceInfo": "/dev/ttyUSB0", "p_type": 2}
