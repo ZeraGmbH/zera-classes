@@ -98,7 +98,7 @@ void cSCPIServer::generateInterface()
     m_pVeinSerialScpiDevFileName = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                     QString("ACT_SerialScpiDeviceFile"),
                                                     QString("Device file name for serial SCPI"),
-                                                    QVariant(QString()) );
+                                                    QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->veinModuleActvalueList.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 }
 
@@ -126,7 +126,6 @@ void cSCPIServer::createSerialScpi()
                 m_pSerialClient->setAuthorisation(true);
             }
             m_bSerialScpiActive = true;
-            m_pVeinSerialScpiDevFileName->setValue(m_ConfigData.m_SerialDevice.m_sDevice);
         }
         else {
             delete m_pSerialPort;
@@ -145,7 +144,6 @@ void cSCPIServer::destroySerialScpi()
         delete m_pSerialPort;
         m_pSerialClient = nullptr;
         m_pSerialPort = nullptr;
-        m_pVeinSerialScpiDevFileName->setValue(QString());
     }
     m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
 }
