@@ -29,14 +29,31 @@ TEST(TEST_SOURCEACTIONS, SWITCH_ON_COMPLETE) {
     EXPECT_EQ(actionList.count(), cSourceActionTypes::switchTypeCount);
 }
 
+template<class T> bool elementIsIn(T ele, std::vector<T> list){
+    if(list.empty()){
+        return false;
+    }
+    if(std::find(begin(list),end(list),ele) != list.end()){
+        return true;
+    }else{
+        return false;
+    }
+}
+
 // Check for switch on all valid
 TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
     cSourceJsonParamApi paramApi;
     paramApi.setOn(true);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
     for(auto action : actionList) {
-        EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
-        EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
+        EXPECT_TRUE(elementIsIn<cSourceActionTypes::ActionTypes>(action,{
+                                                                     cSourceActionTypes::SET_RMS,
+                                                                     cSourceActionTypes::SET_ANGLE,
+                                                                     cSourceActionTypes::SET_FREQUENCY,
+                                                                     cSourceActionTypes::SET_HARMONICS,
+                                                                     cSourceActionTypes::SET_REGULATOR,
+                                                                     cSourceActionTypes::SWITCH_PHASES
+                                                                 }));
         EXPECT_TRUE(cSourceActionTypes::isValidType(action));
     }
 }
@@ -56,8 +73,14 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
     paramApi.setOn(false);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
     for(auto action : actionList) {
-        EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
-        EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
+        EXPECT_TRUE(elementIsIn<cSourceActionTypes::ActionTypes>(action,{
+                                                                     cSourceActionTypes::SET_RMS,
+                                                                     cSourceActionTypes::SET_ANGLE,
+                                                                     cSourceActionTypes::SET_FREQUENCY,
+                                                                     cSourceActionTypes::SET_HARMONICS,
+                                                                     cSourceActionTypes::SET_REGULATOR,
+                                                                     cSourceActionTypes::SWITCH_PHASES
+                                                                 }));
         EXPECT_TRUE(cSourceActionTypes::isValidType(action));
     }
 }
@@ -65,8 +88,10 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
 TEST(TEST_SOURCEACTIONS, PERIODIC_VALID) {
     tSourceActionTypeList actionList = cSourceActionGenerator::generatePeriodicActions();
     for(auto action : actionList) {
-        EXPECT_GT(action, cSourceActionTypes::PERIODIC_UNDEF);
-        EXPECT_LT(action, cSourceActionTypes::PERIODIC_UNDEF2);
+        EXPECT_TRUE(elementIsIn<cSourceActionTypes::ActionTypes>(action,{
+                                                                     cSourceActionTypes::QUERY_STATUS,
+                                                                     cSourceActionTypes::QUERY_ACTUAL
+                                                                 }));
         EXPECT_TRUE(cSourceActionTypes::isValidType(action));
     }
 }
