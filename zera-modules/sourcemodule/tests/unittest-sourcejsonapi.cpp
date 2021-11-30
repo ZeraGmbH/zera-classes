@@ -141,9 +141,9 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_RMS) {
     };
     cSourceJsonParamApi paramApi;
     paramApi.setParams(testParams);
-    EXPECT_DOUBLE_EQ(paramApi.getRms(true, 0), 1.1);
-    EXPECT_DOUBLE_EQ(paramApi.getRms(true, 1), 2.2);
-    EXPECT_DOUBLE_EQ(paramApi.getRms(false, 2), 3.3);
+    EXPECT_DOUBLE_EQ(paramApi.getRms(phaseType::U, 0), 1.1);
+    EXPECT_DOUBLE_EQ(paramApi.getRms(phaseType::U, 1), 2.2);
+    EXPECT_DOUBLE_EQ(paramApi.getRms(phaseType::I, 2), 3.3);
 }
 
 TEST(TEST_SOURCE_PARAM_API, GETTER_ANGLE) {
@@ -158,9 +158,9 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_ANGLE) {
     };
     cSourceJsonParamApi paramApi;
     paramApi.setParams(testParams);
-    EXPECT_DOUBLE_EQ(paramApi.getAngle(true, 0), 0.1);
-    EXPECT_DOUBLE_EQ(paramApi.getAngle(true, 1), 0.2);
-    EXPECT_DOUBLE_EQ(paramApi.getAngle(false, 2), 0.3);
+    EXPECT_DOUBLE_EQ(paramApi.getAngle(phaseType::U, 0), 0.1);
+    EXPECT_DOUBLE_EQ(paramApi.getAngle(phaseType::U, 1), 0.2);
+    EXPECT_DOUBLE_EQ(paramApi.getAngle(phaseType::I, 2), 0.3);
 }
 
 TEST(TEST_SOURCE_PARAM_API, GETTER_PHASE_ON) {
@@ -175,9 +175,9 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_PHASE_ON) {
     };
     cSourceJsonParamApi paramApi;
     paramApi.setParams(testParams);
-    EXPECT_EQ(paramApi.getOn(true, 0), false);
-    EXPECT_EQ(paramApi.getOn(true, 1), true);
-    EXPECT_EQ(paramApi.getOn(false, 2), false);
+    EXPECT_EQ(paramApi.getOn(phaseType::U, 0), false);
+    EXPECT_EQ(paramApi.getOn(phaseType::U, 1), true);
+    EXPECT_EQ(paramApi.getOn(phaseType::I, 2), false);
 }
 
 TEST(TEST_SOURCE_PARAM_API, GETTER_FREQ_VAR) {
