@@ -44,21 +44,21 @@ void cSourceJsonParamApi::setOn(bool on)
     m_params["on"] = on;
 }
 
-double cSourceJsonParamApi::getRms(bool u, int phaseIdxBase0)
+double cSourceJsonParamApi::getRms(phaseType type, int phaseIdxBase0)
 {
-    QString phaseName = getPhaseName(u, phaseIdxBase0);
+    QString phaseName = getPhaseName(type, phaseIdxBase0);
     return m_params[phaseName].toObject()["rms"].toDouble(0.0);
 }
 
-double cSourceJsonParamApi::getAngle(bool u, int phaseIdxBase0)
+double cSourceJsonParamApi::getAngle(phaseType type, int phaseIdxBase0)
 {
-    QString phaseName = getPhaseName(u, phaseIdxBase0);
+    QString phaseName = getPhaseName(type, phaseIdxBase0);
     return m_params[phaseName].toObject()["angle"].toDouble(0.0);
 }
 
-bool cSourceJsonParamApi::getOn(bool u, int phaseIdxBase0)
+bool cSourceJsonParamApi::getOn(phaseType type, int phaseIdxBase0)
 {
-    QString phaseName = getPhaseName(u, phaseIdxBase0);
+    QString phaseName = getPhaseName(type, phaseIdxBase0);
     QJsonObject obj = m_params[phaseName].toObject();
     return obj.contains("on") && obj["on"].toBool();
 }
@@ -73,7 +73,12 @@ double cSourceJsonParamApi::getFreqVal()
     return m_params["Frequency"].toObject()["val"].toDouble();
 }
 
-QString cSourceJsonParamApi::getPhaseName(bool u, int phaseIdxBase0)
+QString cSourceJsonParamApi::getPhaseName(phaseType type, int phaseIdxBase0)
 {
-    return QString("%1%2").arg(u ? "U" : "I").arg(phaseIdxBase0+1);
+    if(type == phaseType::U){
+        return QString("%1%2").arg("U").arg(phaseIdxBase0+1);
+    }else if(type == phaseType::I){
+        return QString("%1%2").arg("I").arg(phaseIdxBase0+1);
+    }
+    return QString();
 }

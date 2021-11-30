@@ -15,6 +15,12 @@ private:
     QJsonObject m_paramStructure;
 };
 
+
+enum class phaseType{
+    U, //Voltage
+    I  //Current
+};
+
 class cSourceJsonParamApi
 {
 public:
@@ -26,14 +32,14 @@ public:
     bool getOn();
     void setOn(bool on);
 
-    double getRms(bool u, int phaseIdxBase0);
-    double getAngle(bool u, int phaseIdxBase0);
-    bool getOn(bool u, int phaseIdxBase0);
+    double getRms(phaseType type, int phaseIdxBase0);
+    double getAngle(phaseType type, int phaseIdxBase0);
+    bool getOn(phaseType type, int phaseIdxBase0);
 
     bool getFreqVarOn();
     double getFreqVal();
 private:
-    QString getPhaseName(bool u, int phaseIdxBase0);
+    QString getPhaseName(phaseType type, int phaseIdxBase0);
 
     QJsonObject m_params;
 };

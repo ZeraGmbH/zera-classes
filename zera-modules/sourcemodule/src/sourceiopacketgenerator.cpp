@@ -104,8 +104,8 @@ tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleUList()
     double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
         if(phase < m_jsonStructApi->getCountUPhases()) {
-            rmsU[phase] = m_paramsRequested.getRms(true, phase);
-            angleU[phase] = m_paramsRequested.getAngle(true, phase);
+            rmsU[phase] = m_paramsRequested.getRms(phaseType::U, phase);
+            angleU[phase] = m_paramsRequested.getAngle(phaseType::U, phase);
         }
     }
 
@@ -133,8 +133,8 @@ tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleIList()
     double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
         if(phase < m_jsonStructApi->getCountIPhases()) {
-            rmsI[phase] = m_paramsRequested.getRms(false, phase);
-            angleI[phase] = m_paramsRequested.getAngle(false, phase);
+            rmsI[phase] = m_paramsRequested.getRms(phaseType::I, phase);
+            angleI[phase] = m_paramsRequested.getAngle(phaseType::I, phase);
         }
     }
 
@@ -168,7 +168,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateSwitchPhasesList()
         bool phaseAvail = phase < phaseCountU;
         bPhaseOn = false;
         if(globalOn && phaseAvail) {
-            bPhaseOn = m_paramsRequested.getOn(true, phase);
+            bPhaseOn = m_paramsRequested.getOn(phaseType::U, phase);
         }
         bytesSend.append(bPhaseOn ? "E" : "A");
     }
@@ -177,20 +177,20 @@ tSourceOutInList cSourceIoPacketGenerator::generateSwitchPhasesList()
         bool phaseAvail = phase < phaseCountI;
         bPhaseOn = false;
         if(globalOn && phaseAvail) {
-            bPhaseOn = m_paramsRequested.getOn(false, phase);
+            bPhaseOn = m_paramsRequested.getOn(phaseType::I, phase);
         }
         bytesSend.append(bPhaseOn ? "P" : "A");
     }
     // aux u
     bPhaseOn = false;
     if(globalOn && phaseCountU>3) {
-        bPhaseOn = m_paramsRequested.getOn(true, 3);
+        bPhaseOn = m_paramsRequested.getOn(phaseType::U, 3);
     }
     bytesSend.append(bPhaseOn ? "E" : "A");
     // aux i
     bPhaseOn = false;
     if(globalOn && phaseCountI>3) {
-        bPhaseOn = m_paramsRequested.getOn(false, 3);
+        bPhaseOn = m_paramsRequested.getOn(phaseType::I, 3);
     }
     bytesSend.append(bPhaseOn ? "E" : "A");
     // relative comparison - off for now
