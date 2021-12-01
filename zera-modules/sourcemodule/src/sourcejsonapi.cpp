@@ -75,10 +75,16 @@ double cSourceJsonParamApi::getFreqVal()
 
 QString cSourceJsonParamApi::getPhaseName(phaseType type, int phaseIdxBase0)
 {
-    if(type == phaseType::U){
-        return QString("%1%2").arg("U").arg(phaseIdxBase0+1);
-    }else if(type == phaseType::I){
-        return QString("%1%2").arg("I").arg(phaseIdxBase0+1);
+    return QString("%1%2").arg(getPhaseNamePrefix(type)).arg(phaseIdxBase0+1);
+}
+
+QString cSourceJsonParamApi::getPhaseNamePrefix(phaseType type)
+{
+    switch(type) {
+    case phaseType::U:
+        return "U";
+    case phaseType::I:
+        return "I";
     }
     return QString();
 }
