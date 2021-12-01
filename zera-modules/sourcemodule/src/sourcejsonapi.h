@@ -40,6 +40,7 @@ public:
     double getFreqVal();
 private:
     QString getPhaseName(phaseType type, int phaseIdxBase0);
+    QString getPhaseNamePrefix(phaseType type);
 
     QJsonObject m_params;
 };
