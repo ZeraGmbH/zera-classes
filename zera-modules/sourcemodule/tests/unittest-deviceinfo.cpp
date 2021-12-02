@@ -7,6 +7,7 @@
 TEST(TEST_DEVICEINFO, ALL_VALID) {
     QDir dir(QStringLiteral("://deviceinfo"));
     QFileInfoList fileInfoList = dir.entryInfoList();
+    EXPECT_FALSE(fileInfoList.isEmpty());
     for(auto fileInfo : fileInfoList) {
         QString diFileName = fileInfo.absoluteFilePath();
         QFile diFile(diFileName);
