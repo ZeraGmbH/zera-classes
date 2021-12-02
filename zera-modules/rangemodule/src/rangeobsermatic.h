@@ -113,9 +113,9 @@ private:
     QList<cVeinModuleComponent*> m_RangeOVLRejectionComponentList;
     QList<cVeinModuleComponent*> m_RangeActRejectionComponentList;
     QList<cVeinModuleComponent*> m_RangeActOVLRejectionComponentList;
-    QList<cVeinModuleParameter*> m_RangeGroupePreScalingList;
-    QList<cVeinModuleParameter*> m_RangeGroupePreScalingEnabledList;
-    QList<cVeinModuleComponent*> m_RangeGroupePreScalingInfo;
+    QList<cVeinModuleParameter*> m_RangeGroupPreScalingList;
+    QList<cVeinModuleParameter*> m_RangeGroupPreScalingEnabledList;
+    QList<cVeinModuleComponent*> m_RangeGroupPreScalingInfo;
 
     cVeinModuleParameter* m_pParRangeAutomaticOnOff;
     cVeinModuleParameter* m_pParGroupingOnOff;
@@ -156,7 +156,7 @@ private:
     /**
      * @brief getPreScale
      *
-     * Reads prescaling factor for groupe with p_id
+     * Reads prescaling factor for group with p_id
      * p_idx is equal channel position in m_RangeMeasChannelList
      *
      * @param p_idx: channel id
