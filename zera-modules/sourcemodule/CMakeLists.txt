@@ -107,7 +107,6 @@ foreach(sourceconfigfile ${SOURCE_DEVINFO})
     file(STRINGS ${PROJECT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
     if(NOT lines)
         message(FATAL_ERROR "${filename} was not added to resource.qrc - source will not work!!")
-        list(APPEND HEADERS_HAVING_Q_OBJECT "${header}")
     endif()
 endforeach()
 
