@@ -47,6 +47,34 @@ file(GLOB CONFIG_VALIDATOR
     ${PROJECT_SOURCE_DIR}/src/*.xsd
 )
 
+file(GLOB TOPICS
+    ${PROJECT_SOURCE_DIR}/topic/*.json
+)
+
+# Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
+# Note 2: In case we make COMMAND in target below conditional on JSONLINT,
+#         qt-creator does not display source-deviceinfo. That's what the
+#         'echo' dance is for
+find_program (JSONLINT NAMES jsonlint-php echo)
+if(${JSONLINT} MATCHES ".*echo.*")
+    message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
+endif()
+
+# check for valid topic / display in qt-creator
+add_custom_target(topic-dont-forget-qrc ALL
+    SOURCES ${TOPICS}
+    COMMAND ${JSONLINT} ${TOPICS}
+    )
+
+# check if all configs made it into resource.qrc
+foreach(topic ${TOPICS})
+    get_filename_component(filename ${topic} NAME)
+    file(STRINGS ${PROJECT_SOURCE_DIR}/resources.qrc lines REGEX "${filename}")
+    if(NOT lines)
+        message(FATAL_ERROR "${filename} was not added to resource.qrc - topic will not work!!")
+    endif()
+endforeach()
+
 # check for valid config files / display in qt-creator
 add_custom_target(rangemodule-configs ALL
     DEPENDS ${CONFIG_VALIDATOR} ${CONFIG_FILES}
