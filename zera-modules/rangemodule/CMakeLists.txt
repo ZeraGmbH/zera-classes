@@ -89,8 +89,7 @@ add_library(rangemodule MODULE
     ${RESOURCES}
     )
 
-target_link_libraries(rangemodule 
-    PRIVATE
+set(COMMON_LIBS
     Qt5::Core
     Qt5::Gui
     Qt5::Network
@@ -102,7 +101,12 @@ target_link_libraries(rangemodule
     zeraproxy
     zeramisc
     zeraxmlconfig
-    zeravalidator 
+    zeravalidator
+    )
+
+target_link_libraries(rangemodule
+    PRIVATE
+    ${COMMON_LIBS}
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -138,6 +142,80 @@ if(NOT ZC_NO_CONFIG_INSTALL)
         DESTINATION ${SET_ZC_CONFIG_PATH}
         )
 endif()
+
+
+find_package(Qt5Test REQUIRED)
+find_package(GTest)
+if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
+    message(STATUS "unittest rangemodule")
+    enable_testing()
+
+    add_test(NAME    rangemodule-unittest
+             COMMAND rangemodule-unittest)
+
+    file(GLOB UNITTESTS
+        tests/unittest-*.cpp
+    )
+
+    add_executable(rangemodule-unittest
+        ${SOURCES}
+        ${HEADER}
+        ${RESOURCES}
+        ${UNITTESTS}
+    )
+    # constexpr / EXPECT_EQ -> linker problems for c++ < 17
+    set_property(TARGET rangemodule-unittest PROPERTY CXX_STANDARD 17)
+
+    target_include_directories(rangemodule-unittest
+        PUBLIC
+        $<INSTALL_INTERFACE:include/rangemodule>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
+
+    target_link_libraries(rangemodule-unittest
+        PUBLIC
+        gtest
+        gtest_main
+        ${COMMON_LIBS}
+    )
+
+if(FALSE) # we have no qt-unittests yet
+    add_test(NAME    rangemodule-unittest-qt
+             COMMAND rangemodule-unittest-qt)
+
+    file(GLOB QTUNITTESTS
+        tests/qt-unittest-*.cpp
+        tests/qt-unittest-*.h
+    )
+
+    add_executable(rangemodule-unittest-qt
+        tests/main-unittest-qt.h
+        tests/main-unittest-qt.cpp # must be first!!!
+        ${SOURCES}
+        ${HEADER}
+        ${RESOURCES}
+        ${QTUNITTESTS}
+    )
+
+    target_include_directories(rangemodule-unittest-qt
+        PUBLIC
+        $<INSTALL_INTERFACE:include/rangemodule>
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+        PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/src
+        )
+
+    target_link_libraries(rangemodule-unittest-qt
+        PUBLIC
+        Qt5::Test
+        ${COMMON_LIBS}
+    )
+endif()
+
+endif()
+
 
 # spawn out some info on configuration
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
