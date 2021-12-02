@@ -182,7 +182,6 @@ void cRangeObsermatic::generateInterface()
                                              false);
 
         pParameter->setUnit("");
-        pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
         pParameter->setValidator(new cRegExValidator("^[1-9][0-9]*\\/[1-9][0-9]*(\\*\\((sqrt\\(3\\)|1\\/sqrt\\(3\\))\\))?$"));
 
 
@@ -198,7 +197,6 @@ void cRangeObsermatic::generateInterface()
 
         pParameter->setValidator(new cBoolValidator());
         pParameter->setUnit("");
-        pParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", key, "0", ""));
 
         m_RangeGroupPreScalingEnabledList.append(pParameter);
         m_pModule->veinModuleParameterHash[key] = pParameter;
