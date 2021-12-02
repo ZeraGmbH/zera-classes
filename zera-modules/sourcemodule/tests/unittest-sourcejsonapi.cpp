@@ -5,6 +5,7 @@
 
 static void echoStructureName(int type)
 {
+    Q_UNUSED(type)
     //qInfo("Checking structure file %s...", qPrintable(cSourceJsonFilenames::getJsonStructurePathName(SupportedSourceTypes(type))));
 }
 
