@@ -2,6 +2,7 @@
 #include <QJsonDocument>
 #include <zera-json-params-structure.h>
 #include <zera-json-params-state.h>
+#include <zera-jsonfileloader.h>
 #include "supportedsources.h"
 #include "sourcejsonapi.h"
 
@@ -52,18 +53,12 @@ QString cSourceJsonFilenames::getJsonFileName(SupportedSourceTypes type)
     return fileName;
 }
 
-QJsonObject cSourceJsonStructureLoader::getJsonStructure(QString fileName) {
-    QJsonObject jsonStructure;
-    QFile deviceInfoFile(fileName);
-    if(deviceInfoFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
-        QByteArray jsondeviceInfoData = deviceInfoFile.readAll();
-        deviceInfoFile.close();
-        QJsonObject jsonStructureRaw = QJsonDocument::fromJson(jsondeviceInfoData).object();
-        cZeraJsonParamsStructure jsonParamsStructure;
-        jsonParamsStructure.loadStructure(jsonStructureRaw);
-        jsonStructure = jsonParamsStructure.jsonStructure();
-    }
-    return jsonStructure;
+QJsonObject cSourceJsonStructureLoader::getJsonStructure(QString fileName)
+{
+    QJsonObject jsonStructureRaw = cJsonFileLoader::loadJsonFile(fileName);
+    cZeraJsonParamsStructure jsonParamsStructure;
+    jsonParamsStructure.loadStructure(jsonStructureRaw);
+    return jsonParamsStructure.jsonStructure();
 }
 
 
@@ -90,15 +85,11 @@ QJsonObject cSourceJsonStateIo::loadJsonState()
     cZeraJsonParamsState jsonParamsState;
     jsonParamsState.setStructure(m_jsonParamStructure);
     // try to load persistent state file and validate it
-    QFile deviceStateFile(cSourceJsonFilenames::getJsonStatePathName(m_sourceType));
-    if(deviceStateFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly)) {
-        QByteArray jsonStateData = deviceStateFile.readAll();
-        deviceStateFile.close();
-        QJsonObject jsonStateFromFile = QJsonDocument::fromJson(jsonStateData).object();
-        cZeraJsonParamsState::ErrList errList = jsonParamsState.validateJsonState(jsonStateFromFile);
-        if(errList.isEmpty()) {
-            paramState = jsonStateFromFile;
-        }
+    QJsonObject jsonStateFromFile =
+            cJsonFileLoader::loadJsonFile(cSourceJsonFilenames::getJsonStatePathName(m_sourceType));
+    cZeraJsonParamsState::ErrList errList = jsonParamsState.validateJsonState(jsonStateFromFile);
+    if(errList.isEmpty()) {
+        paramState = jsonStateFromFile;
     }
     if(paramState.isEmpty()) {
         // State either not there or corrupt: Heal ourselves and create
