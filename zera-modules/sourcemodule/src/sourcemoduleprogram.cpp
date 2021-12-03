@@ -73,7 +73,7 @@ void cSourceModuleProgram::generateInterface()
     m_pModule->veinModuleRpcList[m_sharedPtrRpcScanInterface->rpcName()] = m_sharedPtrRpcScanInterface; // for module's event handling
 
     m_sharedPtrRpcRemoveInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                             this, "RPC_RemoveInterface",
+                                             this, "RPC_CloseSource",
                                              VfCpp::cVeinModuleRpc::Param({{"p_deviceInfo", "QString"}}),
                                              false, // !!! threaded on: signals do not reach theit slots
                                              false));
@@ -125,7 +125,7 @@ QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
     return true;
 }
 
-QVariant cSourceModuleProgram::RPC_RemoveInterface(QVariantMap p_params)
+QVariant cSourceModuleProgram::RPC_CloseSource(QVariantMap p_params)
 {
     QString deviceInfo = p_params["p_deviceInfo"].toString();
     QUuid uuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
