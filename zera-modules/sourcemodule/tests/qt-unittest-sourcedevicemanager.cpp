@@ -73,6 +73,44 @@ void SourceDeviceManagerTest::removeTooManySlots()
     }
 }
 
+void SourceDeviceManagerTest::removeDevInfoUnknown()
+{
+    constexpr int slotCount = 3;
+    cSourceDeviceManager devMan(slotCount);
+    for(int i=0; i<slotCount; i++) {
+        devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
+    }
+    QTest::qWait(10);
+    QUuid uuid = QUuid::createUuid();
+    int slotReceived = 0;
+    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+        Q_UNUSED(uuidParam)
+        slotReceived = slotNo;
+    });
+    devMan.closeSource(QString("Foo"), uuid);
+    QTest::qWait(10);
+    QCOMPARE(slotReceived, -1);
+}
+
+void SourceDeviceManagerTest::removeDevInfoUuidIdentical()
+{
+    constexpr int slotCount = 3;
+    cSourceDeviceManager devMan(slotCount);
+    for(int i=0; i<slotCount; i++) {
+        devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
+    }
+    QTest::qWait(10);
+    QUuid uuid = QUuid::createUuid();
+    QUuid uuidReceived;
+    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+        Q_UNUSED(slotNo)
+        uuidReceived = uuidParam;
+    });
+    devMan.closeSource(QString("Demo"), uuid);
+    QTest::qWait(10);
+    QCOMPARE(uuid, uuidReceived);
+}
+
 void SourceDeviceManagerTest::demoScanOne()
 {
     cSourceDeviceManager devMan(1);

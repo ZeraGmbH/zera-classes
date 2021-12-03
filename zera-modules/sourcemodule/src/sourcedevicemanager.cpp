@@ -87,6 +87,23 @@ bool cSourceDeviceManager::closeSource(int slotNo)
     return closeRequested;
 }
 
+void cSourceDeviceManager::closeSource(QString interfaceDeviceInfo, const QUuid uuid)
+{
+    bool closeRequested = false;
+    for(int slot = 0; slot<getSlotCount(); ++slot) {
+        cSourceDevice* sourceDevice = getSourceDevice(slot);
+        if(sourceDevice && sourceDevice->getInterfaceDeviceInfo() == interfaceDeviceInfo) {
+            closeRequested = true;
+            m_pendingSourcesToRemove[sourceDevice] = uuid;
+            sourceDevice->close();
+            break;
+        }
+    }
+    if(!closeRequested) {
+        emit sigSlotRemovedQueued(-1, uuid);
+    }
+}
+
 int cSourceDeviceManager::getSlotCount()
 {
     return m_sourceDeviceSlots.size();
@@ -147,9 +164,15 @@ void cSourceDeviceManager::onSourceClosed(cSourceDevice *sourceDevice)
         if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
             m_activeSlotCount--;
             disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
+            QUuid uuid;
+            auto iter = m_pendingSourcesToRemove.find(sourceDevice);
+            if(iter != m_pendingSourcesToRemove.end()) {
+                uuid = iter.value();
+                m_pendingSourcesToRemove.erase(iter);
+            }
             delete sourceDeviceCurr;
             sourceDeviceCurr = nullptr;
-            emit sigSlotRemovedQueued(slotNo);
+            emit sigSlotRemovedQueued(slotNo, uuid);
             break;
         }
     }

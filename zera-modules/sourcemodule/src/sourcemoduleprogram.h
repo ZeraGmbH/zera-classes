@@ -29,6 +29,7 @@ public slots: // Make cBaseMeasWorkProgram happy...
     virtual void start() override {}
     virtual void stop() override {}
     QVariant RPC_ScanInterface(QVariantMap p_params);
+    QVariant RPC_RemoveInterface(QVariantMap p_params);
 
 private:
     configuration* getConfigXMLWrapper();
@@ -46,12 +47,13 @@ private:
     QVector<cSourceVeinInterface*> m_arrVeinSourceInterfaces;
 
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
+    VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcRemoveInterface;
 
     bool m_bDeafenDemoChange = false;
 
 private slots:
     void onSourceScanFinished(int slotPosition, cSourceDevice *device, QUuid uuid, QString errMsg);
-    void onSourceDeviceRemoved(int slotPosition);
+    void onSourceDeviceRemoved(int slot, QUuid uuid);
 
     // vein change handlers
     void newDemoSourceCount(QVariant getDemoCount);

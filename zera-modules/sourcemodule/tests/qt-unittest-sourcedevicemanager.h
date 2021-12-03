@@ -33,6 +33,8 @@ private slots:
     void removeSlotInvalidBelow();
     void removeSlotInvalidAbove();
     void removeTooManySlots();
+    void removeDevInfoUnknown();
+    void removeDevInfoUuidIdentical();
 
     void demoScanOne();
     void demoScanTooMany();

@@ -24,6 +24,7 @@ public:
     void startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid);
     void setDemoCount(int count);
     bool closeSource(int slotNo);
+    void closeSource(QString interfaceDeviceInfo, const QUuid uuid);
 
     // getter
     int getSlotCount();
@@ -33,14 +34,14 @@ public:
 
 signals:
     void sigSourceScanFinished(int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg);
-    void sigSlotRemoved(int slotNo);
+    void sigSlotRemoved(int slotNo, QUuid uuid);
 
 private slots:
     void onScanFinished(tSourceScannerShPtr scanner);
     void onSourceClosed(cSourceDevice *sourceDevice);
 
 signals:
-    void sigSlotRemovedQueued(int slotNo);
+    void sigSlotRemovedQueued(int slotNo, QUuid uuid);
 
 private:
     bool isValidSlotNo(int slotNo);
@@ -49,6 +50,7 @@ private:
     bool tryStartDemoDeviceRemove(int slotNo);
 
     QVector<cSourceDevice*> m_sourceDeviceSlots;
+    QHash<cSourceDevice*, QUuid> m_pendingSourcesToRemove;
     int m_activeSlotCount = 0;
 };
 
