@@ -47,7 +47,7 @@ void cSourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceT
 
 void cSourceDeviceManager::setDemoCount(int count)
 {
-    int demoDiff = count - m_demoCount;
+    int demoDiff = count - getDemoCount();
     if(demoDiff > 0) { // add
         while(demoDiff && m_activeSlotCount < getSlotCount()) {
             startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
@@ -99,7 +99,13 @@ int cSourceDeviceManager::getActiveSlotCount()
 
 int cSourceDeviceManager::getDemoCount()
 {
-    return m_demoCount;
+    int demoCount = 0;
+    for(auto slot: m_sourceDeviceSlots) {
+        if(slot && slot->isDemo()) {
+            demoCount++;
+        }
+    }
+    return demoCount;
 }
 
 cSourceDevice *cSourceDeviceManager::getSourceDevice(int slotNo)
@@ -140,9 +146,6 @@ void cSourceDeviceManager::onSourceClosed(cSourceDevice *sourceDevice)
         auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
             m_activeSlotCount--;
-            if(sourceDeviceCurr->isDemo()) {
-                m_demoCount--;
-            }
             disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
             delete sourceDeviceCurr;
             sourceDeviceCurr = nullptr;
@@ -175,9 +178,6 @@ void cSourceDeviceManager::addSource(int slotPos, cSourceDevice *device)
 {
     m_sourceDeviceSlots[slotPos] = device;
     m_activeSlotCount++;
-    if(device->isDemo()) {
-        m_demoCount++;
-    }
     connect(device, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
 }
 
