@@ -64,13 +64,20 @@ void cSourceModuleProgram::generateInterface()
     connect(m_pVeinDemoSourceCount, &cVeinModuleParameter::sigValueChanged, this, &cSourceModuleProgram::newDemoSourceCount);
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
 
-    // RPC
+    // RPCs
     m_sharedPtrRpcScanInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              this, "RPC_ScanInterface",
                                              VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}}),
                                              false, // !!! threaded on: signals do not reach theit slots
                                              false));
     m_pModule->veinModuleRpcList[m_sharedPtrRpcScanInterface->rpcName()] = m_sharedPtrRpcScanInterface; // for module's event handling
+
+    m_sharedPtrRpcRemoveInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                             this, "RPC_RemoveInterface",
+                                             VfCpp::cVeinModuleRpc::Param({{"p_deviceInfo", "QString"}}),
+                                             false, // !!! threaded on: signals do not reach theit slots
+                                             false));
+    m_pModule->veinModuleRpcList[m_sharedPtrRpcRemoveInterface->rpcName()] = m_sharedPtrRpcRemoveInterface; // for module's event handling
 
     // per source components
     cVeinModuleActvalue* pVeinAct;
@@ -118,6 +125,14 @@ QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
     return true;
 }
 
+QVariant cSourceModuleProgram::RPC_RemoveInterface(QVariantMap p_params)
+{
+    QString deviceInfo = p_params["p_deviceInfo"].toString();
+    QUuid uuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
+    m_pSourceDeviceManager->closeSource(deviceInfo, uuid);
+    return true;
+}
+
 
 configuration *cSourceModuleProgram::getConfigXMLWrapper()
 {
@@ -145,9 +160,16 @@ void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice*
                                                sourceAdded);
 }
 
-void cSourceModuleProgram::onSourceDeviceRemoved(int)
+void cSourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid)
 {
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
+    if(!uuid.isNull()) {
+        bool ok = slot >= 0;
+        m_sharedPtrRpcRemoveInterface->sendRpcResult(uuid,
+                                                     ok ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
+                                                     ok ? QString() : QString("No source to remove found"),
+                                                     ok);
+    }
     updateDemoCount();
 }
 

@@ -90,6 +90,11 @@ bool cSourceDevice::isDemo()
     return m_ioInterface->isDemo();
 }
 
+QString cSourceDevice::getInterfaceDeviceInfo()
+{
+    return m_ioInterface->getDeviceInfo();
+}
+
 void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;

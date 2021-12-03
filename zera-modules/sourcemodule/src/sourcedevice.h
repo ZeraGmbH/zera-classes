@@ -26,6 +26,7 @@ public:
 
     // getter
     bool isDemo();
+    QString getInterfaceDeviceInfo();
 
     // setter
     void setVeinInterface(cSourceVeinInterface* veinInterface);
