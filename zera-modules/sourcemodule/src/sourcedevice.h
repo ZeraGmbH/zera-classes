@@ -49,7 +49,7 @@ private:
 
     tSourceInterfaceShPtr m_ioInterface;
 
-    cSourceJsonStateIo* m_paramStateLoadSave;
+    cSourcePersistentJsonState* m_paramStateLoadSave;
     cSourceJsonParamApi m_paramsRequested;
     cSourceJsonParamApi m_paramsCurrent;
 

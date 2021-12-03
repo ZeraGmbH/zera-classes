@@ -68,18 +68,18 @@ QJsonObject cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes ty
 }
 
 
-cSourceJsonStateIo::cSourceJsonStateIo(SupportedSourceTypes type) :
+cSourcePersistentJsonState::cSourcePersistentJsonState(SupportedSourceTypes type) :
     m_sourceType(type),
     m_jsonParamStructure(cSourceJsonStructureLoader::getJsonStructure(type))
 {
 }
 
-QJsonObject cSourceJsonStateIo::getJsonStructure()
+QJsonObject cSourcePersistentJsonState::getJsonStructure()
 {
     return m_jsonParamStructure;
 }
 
-QJsonObject cSourceJsonStateIo::loadJsonState()
+QJsonObject cSourcePersistentJsonState::loadJsonState()
 {
     QJsonObject paramState;
     cZeraJsonParamsState jsonParamsState;
@@ -104,7 +104,7 @@ QJsonObject cSourceJsonStateIo::loadJsonState()
     return paramApi.getParams();
 }
 
-void cSourceJsonStateIo::saveJsonState(QJsonObject state)
+void cSourcePersistentJsonState::saveJsonState(QJsonObject state)
 {
     QFile deviceStateFile(cSourceJsonFilenames::getJsonStatePathName(m_sourceType));
     if(deviceStateFile.open(QIODevice::WriteOnly)) {

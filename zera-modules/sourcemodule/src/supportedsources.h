@@ -32,10 +32,10 @@ public:
 };
 
 
-class cSourceJsonStateIo
+class cSourcePersistentJsonState
 {
 public:
-    cSourceJsonStateIo(SupportedSourceTypes type);
+    cSourcePersistentJsonState(SupportedSourceTypes type);
 
     QJsonObject getJsonStructure();
 
