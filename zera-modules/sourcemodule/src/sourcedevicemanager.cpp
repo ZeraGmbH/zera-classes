@@ -16,9 +16,7 @@ namespace SOURCEMODULE
 
 cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
     QObject(parent),
-    m_sourceDeviceSlots(QVector<cSourceDevice*>(countSlots, nullptr)),
-    m_activeSlotCount(0),
-    m_demoCount(0)
+    m_sourceDeviceSlots(QVector<cSourceDevice*>(countSlots, nullptr))
 {
     connect(this, &cSourceDeviceManager::sigSlotRemovedQueued,
             this, &cSourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
@@ -76,24 +74,17 @@ void cSourceDeviceManager::setDemoCount(int count)
     }
 }
 
-bool cSourceDeviceManager::removeSource(int slotNo)
+bool cSourceDeviceManager::closeSource(int slotNo)
 {
-    bool removed = false;
+    bool closeRequested = false;
     if(isValidSlotNo(slotNo)) {
-        auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
+        auto sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr) {
-            m_activeSlotCount--;
-            if(sourceDeviceCurr->isDemo()) {
-                m_demoCount--;
-            }
-            disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
-            delete sourceDeviceCurr;
-            sourceDeviceCurr = nullptr;
-            emit sigSlotRemovedQueued(slotNo);
-            removed = true;
+            sourceDeviceCurr->close();
+            closeRequested = true;
         }
     }
-    return removed;
+    return closeRequested;
 }
 
 int cSourceDeviceManager::getSlotCount()
@@ -143,12 +134,19 @@ void cSourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
     emit sigSourceScanFinished(freeSlot, sourceDeviceFound, scanner->getUuid(), erorDesc);
 }
 
-void cSourceDeviceManager::onRemoveSource(cSourceDevice *getSourceDevice)
+void cSourceDeviceManager::onSourceClosed(cSourceDevice *sourceDevice)
 {
     for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
         auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
-        if(sourceDeviceCurr && sourceDeviceCurr == getSourceDevice) {
-            removeSource(slotNo);
+        if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
+            m_activeSlotCount--;
+            if(sourceDeviceCurr->isDemo()) {
+                m_demoCount--;
+            }
+            disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
+            delete sourceDeviceCurr;
+            sourceDeviceCurr = nullptr;
+            emit sigSlotRemovedQueued(slotNo);
             break;
         }
     }
@@ -180,7 +178,7 @@ void cSourceDeviceManager::addSource(int slotPos, cSourceDevice *device)
     if(device->isDemo()) {
         m_demoCount++;
     }
-    connect(device, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onRemoveSource);
+    connect(device, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
 }
 
 bool cSourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
@@ -188,7 +186,14 @@ bool cSourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
     bool removeStarted = false;
     cSourceDevice* source = m_sourceDeviceSlots[slotNo];
     if(source && source->isDemo()) {
-        static_cast<cSourceInterfaceDemo*>(source->getIoInterface().get())->simulateExternalDisconnect();
+        // Toggle close strategies for test: Call source close / Simulate USB serial removed
+        m_removeDemoByDisconnect = !m_removeDemoByDisconnect;
+        if(m_removeDemoByDisconnect) {
+            static_cast<cSourceInterfaceDemo*>(source->getIoInterface().get())->simulateExternalDisconnect();
+        }
+        else {
+            source->close();
+        }
         removeStarted = true;
     }
     return removeStarted;

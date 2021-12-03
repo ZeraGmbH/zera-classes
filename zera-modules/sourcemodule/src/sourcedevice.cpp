@@ -74,8 +74,10 @@ void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
         }
         m_paramsCurrent.setParams(m_paramsRequested.getParams());
         saveState();
-        m_veinInterface->getVeinDeviceParameter()->setValue(m_paramsCurrent.getParams());
-        m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
+        if(m_veinInterface) {
+            m_veinInterface->getVeinDeviceParameter()->setValue(m_paramsCurrent.getParams());
+            m_veinInterface->getVeinDeviceState()->setValue(m_deviceStatus.getJsonStatus());
+        }
     }
 }
 
@@ -107,12 +109,14 @@ void cSourceDevice::saveState()
 
 void cSourceDevice::onInterfaceClosed()
 {
-    m_veinInterface->getVeinDeviceInfo()->setValue(QJsonObject());
-    m_veinInterface->getVeinDeviceParameter()->setValue(QJsonObject());
-    m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(QJsonObject());
-    m_veinInterface->getVeinDeviceState()->setValue(QJsonObject());
+    if(m_veinInterface) {
+        m_veinInterface->getVeinDeviceInfo()->setValue(QJsonObject());
+        m_veinInterface->getVeinDeviceParameter()->setValue(QJsonObject());
+        m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(QJsonObject());
+        m_veinInterface->getVeinDeviceState()->setValue(QJsonObject());
 
-    disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
+        disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
+    }
     emit sigClosed(this);
 }
 

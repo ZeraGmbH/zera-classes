@@ -41,7 +41,7 @@ void SourceDeviceManagerTest::removeSlotsOnEmpty()
     constexpr int slotCount = 3;
     cSourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; i++) {
-        QCOMPARE(devMan.removeSource(i), false);
+        QCOMPARE(devMan.closeSource(i), false);
     }
 }
 
@@ -49,14 +49,14 @@ void SourceDeviceManagerTest::removeSlotInvalidBelow()
 {
     constexpr int slotCount = 3;
     cSourceDeviceManager devMan(slotCount);
-    QCOMPARE(devMan.removeSource(-1), false);
+    QCOMPARE(devMan.closeSource(-1), false);
 }
 
 void SourceDeviceManagerTest::removeSlotInvalidAbove()
 {
     constexpr int slotCount = 3;
     cSourceDeviceManager devMan(slotCount);
-    QCOMPARE(devMan.removeSource(slotCount), false);
+    QCOMPARE(devMan.closeSource(slotCount), false);
 }
 
 void SourceDeviceManagerTest::removeTooManySlots()
@@ -68,8 +68,8 @@ void SourceDeviceManagerTest::removeTooManySlots()
     }
     QTest::qWait(10);
     for(int i=0; i<slotCount; i++) {
-        QCOMPARE(devMan.removeSource(i), true);
-        QCOMPARE(devMan.removeSource(i), false);
+        QCOMPARE(devMan.closeSource(i), true);
+        QCOMPARE(devMan.closeSource(i), false);
     }
 }
 
@@ -114,7 +114,7 @@ void SourceDeviceManagerTest::demoScanAllAndRemove()
     }
     QTest::qWait(10);
     for(int i=0; i<slotCount; i++) {
-        devMan.removeSource(i);
+        devMan.closeSource(i);
     }
     checkSlotCount(devMan, slotCount, 0, 0);
 }
@@ -184,7 +184,7 @@ void SourceDeviceManagerTest::checkAddRemoveNotifications(int total, int add, in
     QCOMPARE(m_socketsRemoved.count(), 0);
 
     for(int i=0; i<remove; i++) {
-        devMan.removeSource(i);
+        devMan.closeSource(i);
     }
     QCOMPARE(m_listSourcesAdded.count(), add);
     QCOMPARE(m_socketsRemoved.count(), 0);
