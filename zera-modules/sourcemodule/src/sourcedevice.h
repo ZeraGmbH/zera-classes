@@ -33,7 +33,7 @@ public:
     void saveState(); // persistency
 
 signals:
-    void sigClosed(cSourceDevice* getSourceDevice);
+    void sigClosed(cSourceDevice* sourceDevice);
 
 public slots:
     void onNewVeinParamStatus(QVariant paramState);

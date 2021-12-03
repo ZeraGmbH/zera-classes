@@ -23,7 +23,7 @@ public:
     // requests
     void startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid);
     void setDemoCount(int count);
-    bool removeSource(int slotNo);
+    bool closeSource(int slotNo);
 
     // getter
     int getSlotCount();
@@ -37,7 +37,7 @@ signals:
 
 private slots:
     void onScanFinished(tSourceScannerShPtr scanner);
-    void onRemoveSource(cSourceDevice *getSourceDevice);
+    void onSourceClosed(cSourceDevice *sourceDevice);
 
 signals:
     void sigSlotRemovedQueued(int slotNo);
@@ -49,8 +49,9 @@ private:
     bool tryStartDemoDeviceRemove(int slotNo);
 
     QVector<cSourceDevice*> m_sourceDeviceSlots;
-    int m_activeSlotCount;
-    int m_demoCount;
+    int m_activeSlotCount = 0;
+    int m_demoCount = 0;
+    bool m_removeDemoByDisconnect = false;
 };
 
 }
