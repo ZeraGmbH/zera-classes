@@ -43,19 +43,23 @@ private slots:
     void onInterfaceClosed();
 
 private:
+    void switchState(QJsonObject state);
+    void switchOff();
+    void doFinalCloseActivities();
     void setVeinParamStructure(QJsonObject paramStruct);
     void setVeinParamState(QJsonObject paramState);
     void setVeinDeviceState(QJsonObject deviceState);
 
     tSourceInterfaceShPtr m_ioInterface;
 
-    cSourcePersistentJsonState* m_paramStateLoadSave;
+    cSourcePersistentJsonState* m_persistentParamState;
     cSourceJsonParamApi m_paramsRequested;
     cSourceJsonParamApi m_paramsCurrent;
 
     cSourceIoPacketGenerator* m_outInGenerator = nullptr;
     cSourceIoWorker m_sourceIoWorker;
     int m_currentWorkerID = 0;
+    bool m_closeRequested = false;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
@@ -63,7 +67,7 @@ private:
     SupportedSourceTypes m_type;
     QString m_version;
 
-    bool m_removeDemoByDisconnect = false;
+    static bool m_removeDemoByDisconnect;
 };
 
 }
