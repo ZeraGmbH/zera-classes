@@ -186,14 +186,7 @@ bool cSourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
     bool removeStarted = false;
     cSourceDevice* source = m_sourceDeviceSlots[slotNo];
     if(source && source->isDemo()) {
-        // Toggle close strategies for test: Call source close / Simulate USB serial removed
-        m_removeDemoByDisconnect = !m_removeDemoByDisconnect;
-        if(m_removeDemoByDisconnect) {
-            static_cast<cSourceInterfaceDemo*>(source->getIoInterface().get())->simulateExternalDisconnect();
-        }
-        else {
-            source->close();
-        }
+        source->close();
         removeStarted = true;
     }
     return removeStarted;

@@ -35,10 +35,16 @@ cSourceDevice::~cSourceDevice()
 
 void cSourceDevice::close()
 {
+    bool closeRequested = false;
     if(isDemo()) {
-        static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
+        // Toggle close strategies for test: Call source close / Simulate USB serial removed
+        m_removeDemoByDisconnect = !m_removeDemoByDisconnect;
+        if(m_removeDemoByDisconnect) {
+            static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
+            closeRequested = true;
+        }
     }
-    else {
+    if(!closeRequested) {
         // TODO - maybe some sequence?
         qWarning("Close source for non demo is not implemented yet");
     }
@@ -54,7 +60,7 @@ void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
     cSourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
     cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
-        cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(getIoInterface().get());
+        cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(m_ioInterface.get());
         demoInterface->setDelayFollowsTimeout(true);
         QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
@@ -77,11 +83,6 @@ void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
         setVeinParamState(m_paramsCurrent.getParams());
         setVeinDeviceState(m_deviceStatus.getJsonStatus());
     }
-}
-
-tSourceInterfaceShPtr cSourceDevice::getIoInterface()
-{
-    return m_ioInterface;
 }
 
 bool cSourceDevice::isDemo()
