@@ -25,7 +25,6 @@ public:
     void close();
 
     // getter
-    tSourceInterfaceShPtr getIoInterface();
     bool isDemo();
 
     // setter
@@ -62,6 +61,8 @@ private:
 
     SupportedSourceTypes m_type;
     QString m_version;
+
+    bool m_removeDemoByDisconnect = false;
 };
 
 }
