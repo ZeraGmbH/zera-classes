@@ -50,7 +50,6 @@ private:
 
     QVector<cSourceDevice*> m_sourceDeviceSlots;
     int m_activeSlotCount = 0;
-    int m_demoCount = 0;
 };
 
 }
