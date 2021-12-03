@@ -43,6 +43,10 @@ private slots:
     void onInterfaceClosed();
 
 private:
+    void setVeinParamStructure(QJsonObject paramStruct);
+    void setVeinParamState(QJsonObject paramState);
+    void setVeinDeviceState(QJsonObject deviceState);
+
     tSourceInterfaceShPtr m_ioInterface;
 
     cSourceJsonStateIo* m_paramStateLoadSave;
