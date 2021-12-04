@@ -36,6 +36,7 @@ void cSourceModuleProgram::generateInterface()
     configuration* config = getConfigXMLWrapper();
     int maxSources = config->max_count_sources();
     m_pSourceDeviceManager = new cSourceDeviceManager(maxSources);
+    m_pSourceDeviceManager->setDemoFollowsTimeout(true);
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished,
             this, &cSourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
     connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved,

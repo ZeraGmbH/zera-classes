@@ -35,21 +35,38 @@ cSourceDevice::~cSourceDevice()
     delete m_persistentParamState;
 }
 
-void cSourceDevice::close()
+bool cSourceDevice::close()
 {
     bool closeRequested = false;
-    if(isDemo()) {
-        // Toggle close strategies for test: Call source close / Simulate USB serial removed
-        m_removeDemoByDisconnect = !m_removeDemoByDisconnect;
-        if(m_removeDemoByDisconnect) {
-            static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
+    if(!m_closeRequested) {
+        if(isDemo()) {
+            // Toggle close strategies for test: Call source close / Simulate USB serial removed
+            m_removeDemoByDisconnect = !m_removeDemoByDisconnect;
+            if(m_removeDemoByDisconnect) {
+                static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
+                closeRequested = true;
+            }
+        }
+        if(!closeRequested) {
             closeRequested = true;
+            m_closeRequested = true;
+            switchOff();
         }
     }
-    if(!closeRequested) {
-        m_closeRequested = true;
-        switchOff();
-    }
+    return closeRequested;
+}
+
+void cSourceDevice::switchLoad(QJsonObject jsonParamsState)
+{
+    m_deviceStatus.clearWarningsErrors();
+    m_deviceStatus.setBusy(true);
+    setVeinDeviceState(m_deviceStatus.getJsonStatus());
+    switchState(jsonParamsState);
+}
+
+void cSourceDevice::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
+{
+    m_bDemoDelayFollowsTimeout = demoDelayFollowsTimeout;
 }
 
 void cSourceDevice::switchOff()
@@ -71,10 +88,7 @@ void cSourceDevice::doFinalCloseActivities()
 
 void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
-    m_deviceStatus.clearWarningsErrors();
-    m_deviceStatus.setBusy(true);
-    setVeinDeviceState(m_deviceStatus.getJsonStatus());
-    switchState(paramState.toJsonObject());
+    switchLoad(paramState.toJsonObject());
 }
 
 void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
@@ -133,7 +147,7 @@ void cSourceDevice::switchState(QJsonObject state)
     cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
         cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(m_ioInterface.get());
-        demoInterface->setDelayFollowsTimeout(true);
+        demoInterface->setDelayFollowsTimeout(m_bDemoDelayFollowsTimeout);
         QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
     }

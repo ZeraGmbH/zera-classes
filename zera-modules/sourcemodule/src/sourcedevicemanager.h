@@ -22,15 +22,16 @@ public:
 
     // requests
     void startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid);
-    void setDemoCount(int count);
-    bool closeSource(int slotNo);
+    void closeSource(int slotNo, const QUuid uuid);
     void closeSource(QString interfaceDeviceInfo, const QUuid uuid);
+    void setDemoCount(int count);
+    void setDemoFollowsTimeout(bool follow);
 
     // getter
     int getSlotCount();
     int getActiveSlotCount();
-    int getDemoCount();
     cSourceDevice* getSourceDevice(int slotNo);
+    int getDemoCount();
 
 signals:
     void sigSourceScanFinished(int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg);
@@ -52,6 +53,8 @@ private:
     QVector<cSourceDevice*> m_sourceDeviceSlots;
     QHash<cSourceDevice*, QUuid> m_pendingSourcesToRemove;
     int m_activeSlotCount = 0;
+
+    bool m_bDemoDelayFollowsTimeout = false;
 };
 
 }

@@ -22,7 +22,9 @@ public:
     virtual ~cSourceDevice();
 
     // requests
-    void close();
+    bool close();
+    void switchLoad(QJsonObject jsonParamsState);
+    void setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout);
 
     // getter
     bool isDemo();
@@ -68,6 +70,7 @@ private:
     QString m_version;
 
     static bool m_removeDemoByDisconnect;
+    bool m_bDemoDelayFollowsTimeout = false;
 };
 
 }
