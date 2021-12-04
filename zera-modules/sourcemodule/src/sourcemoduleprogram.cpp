@@ -18,7 +18,6 @@ namespace SOURCEMODULE
 
 cSourceModuleProgram::cSourceModuleProgram(cSourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
-    m_pSourceDeviceManager(nullptr),
     m_pModule(module)
 {
 }
