@@ -39,7 +39,7 @@ signals:
 
 private slots:
     void onScanFinished(tSourceScannerShPtr scanner);
-    void onSourceClosed(cSourceDevice *sourceDevice);
+    void onSourceClosed(cSourceDevice *sourceDevice, QUuid uuid);
 
 signals:
     void sigSlotRemovedQueued(int slotNo, QUuid uuid);
@@ -51,7 +51,7 @@ private:
     bool tryStartDemoDeviceRemove(int slotNo);
 
     QVector<cSourceDevice*> m_sourceDeviceSlots;
-    QHash<cSourceDevice*, QUuid> m_pendingSourcesToRemove;
+    QVector<QUuid> m_PendingRemoveHashes;
     int m_activeSlotCount = 0;
 
     bool m_bDemoDelayFollowsTimeout = false;

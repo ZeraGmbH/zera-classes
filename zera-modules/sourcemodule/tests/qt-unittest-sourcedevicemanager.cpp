@@ -146,19 +146,23 @@ void SourceDeviceManagerTest::removeDevInfoUuidIdentical()
 {
     constexpr int slotCount = 3;
     cSourceDeviceManager devMan(slotCount);
+    QUuid uuidsReceived[slotCount];
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     QTest::qWait(10);
-    QUuid uuid = QUuid::createUuid();
-    QUuid uuidReceived;
     connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
-        Q_UNUSED(slotNo)
-        uuidReceived = uuidParam;
+        uuidsReceived[slotNo] = uuidParam;
     });
-    devMan.closeSource(QString("Demo"), uuid);
+    QUuid uuidsSet[slotCount];
+    for(int i=0; i<slotCount; i++) {
+        uuidsSet[i] = QUuid::createUuid();
+        devMan.closeSource(i, uuidsSet[i]);
+    }
     QTest::qWait(10);
-    QCOMPARE(uuid, uuidReceived);
+    QCOMPARE(uuidsSet[0], uuidsReceived[0]);
+    QCOMPARE(uuidsSet[1], uuidsReceived[1]);
+    QCOMPARE(uuidsSet[2], uuidsReceived[2]);
 }
 
 void SourceDeviceManagerTest::demoScanOne()

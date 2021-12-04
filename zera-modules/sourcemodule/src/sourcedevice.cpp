@@ -35,7 +35,7 @@ cSourceDevice::~cSourceDevice()
     delete m_persistentParamState;
 }
 
-bool cSourceDevice::close()
+bool cSourceDevice::close(QUuid uuid)
 {
     bool closeRequested = false;
     if(!m_closeRequested) {
@@ -43,15 +43,19 @@ bool cSourceDevice::close()
             // Toggle close strategies for test: Call source close / Simulate USB serial removed
             m_removeDemoByDisconnect = !m_removeDemoByDisconnect;
             if(m_removeDemoByDisconnect) {
-                static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
                 closeRequested = true;
+                m_closeUuid = uuid;
+                static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
             }
         }
         if(!closeRequested) {
             closeRequested = true;
-            m_closeRequested = true;
+            m_closeUuid = uuid;
             switchOff();
         }
+    }
+    if(closeRequested) {
+        m_closeRequested = true;
     }
     return closeRequested;
 }
@@ -83,7 +87,7 @@ void cSourceDevice::doFinalCloseActivities()
     if(m_veinInterface) {
         disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
     }
-    emit sigClosed(this);
+    emit sigClosed(this, m_closeUuid);
 }
 
 void cSourceDevice::onNewVeinParamStatus(QVariant paramState)

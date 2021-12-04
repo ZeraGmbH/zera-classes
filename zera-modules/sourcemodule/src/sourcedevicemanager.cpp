@@ -85,10 +85,7 @@ void cSourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
     if(isValidSlotNo(slotNo)) {
         auto sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr) {
-            closeRequested = sourceDeviceCurr->close();
-            if(closeRequested) {
-                m_pendingSourcesToRemove[sourceDeviceCurr] = uuid;
-            }
+            closeRequested = sourceDeviceCurr->close(uuid);
         }
     }
     if(!closeRequested) {
@@ -162,19 +159,13 @@ void cSourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
     emit sigSourceScanFinished(freeSlot, sourceDeviceFound, scanner->getUuid(), erorDesc);
 }
 
-void cSourceDeviceManager::onSourceClosed(cSourceDevice *sourceDevice)
+void cSourceDeviceManager::onSourceClosed(cSourceDevice *sourceDevice, QUuid uuid)
 {
     for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
         auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
             m_activeSlotCount--;
             disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
-            QUuid uuid;
-            auto iter = m_pendingSourcesToRemove.find(sourceDevice);
-            if(iter != m_pendingSourcesToRemove.end()) {
-                uuid = iter.value();
-                m_pendingSourcesToRemove.erase(iter);
-            }
             delete sourceDeviceCurr;
             sourceDeviceCurr = nullptr;
             emit sigSlotRemovedQueued(slotNo, uuid);
@@ -214,7 +205,7 @@ bool cSourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
     bool removeStarted = false;
     cSourceDevice* source = m_sourceDeviceSlots[slotNo];
     if(source && source->isDemo()) {
-        source->close();
+        source->close(QUuid());
         removeStarted = true;
     }
     return removeStarted;
