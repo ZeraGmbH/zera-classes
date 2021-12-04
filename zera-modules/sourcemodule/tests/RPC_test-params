@@ -11,11 +11,11 @@ RPC_ScanInterface:
 
 
 
-RPC_RemoveInterface
+RPC_CloseSource
 
-# Simulate demo
+# Close demo
 {"p_deviceInfo": "Demo"}
 
-# Connect to valid source
+# Close valid source
 {"p_deviceInfo": "/dev/ttyUSB0"}
 
