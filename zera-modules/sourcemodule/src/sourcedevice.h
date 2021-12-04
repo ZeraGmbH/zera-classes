@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QVariant>
+#include <QUuid>
 #include "sourceinterface.h"
 #include "sourcedevicestatus.h"
 #include "sourceiopacketgenerator.h"
