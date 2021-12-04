@@ -22,7 +22,7 @@ public:
     virtual ~cSourceDevice();
 
     // requests
-    bool close();
+    bool close(QUuid uuid);
     void switchLoad(QJsonObject jsonParamsState);
     void setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout);
 
@@ -35,7 +35,7 @@ public:
     void saveState(); // persistency
 
 signals:
-    void sigClosed(cSourceDevice* sourceDevice);
+    void sigClosed(cSourceDevice* sourceDevice, QUuid uuid);
 
 public slots:
     void onNewVeinParamStatus(QVariant paramState);
@@ -61,13 +61,16 @@ private:
     cSourceIoPacketGenerator* m_outInGenerator = nullptr;
     cSourceIoWorker m_sourceIoWorker;
     int m_currentWorkerID = 0;
+
     bool m_closeRequested = false;
+    QUuid m_closeUuid;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
 
     SupportedSourceTypes m_type;
     QString m_version;
+
 
     static bool m_removeDemoByDisconnect;
     bool m_bDemoDelayFollowsTimeout = false;
