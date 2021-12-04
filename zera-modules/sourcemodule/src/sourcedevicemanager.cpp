@@ -74,34 +74,38 @@ void cSourceDeviceManager::setDemoCount(int count)
     }
 }
 
-bool cSourceDeviceManager::closeSource(int slotNo)
+void cSourceDeviceManager::setDemoFollowsTimeout(bool follow)
+{
+    m_bDemoDelayFollowsTimeout = follow;
+}
+
+void cSourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
 {
     bool closeRequested = false;
     if(isValidSlotNo(slotNo)) {
         auto sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr) {
-            sourceDeviceCurr->close();
-            closeRequested = true;
-        }
-    }
-    return closeRequested;
-}
-
-void cSourceDeviceManager::closeSource(QString interfaceDeviceInfo, const QUuid uuid)
-{
-    bool closeRequested = false;
-    for(int slot = 0; slot<getSlotCount(); ++slot) {
-        cSourceDevice* sourceDevice = getSourceDevice(slot);
-        if(sourceDevice && sourceDevice->getInterfaceDeviceInfo() == interfaceDeviceInfo) {
-            closeRequested = true;
-            m_pendingSourcesToRemove[sourceDevice] = uuid;
-            sourceDevice->close();
-            break;
+            closeRequested = sourceDeviceCurr->close();
+            if(closeRequested) {
+                m_pendingSourcesToRemove[sourceDeviceCurr] = uuid;
+            }
         }
     }
     if(!closeRequested) {
         emit sigSlotRemovedQueued(-1, uuid);
     }
+}
+
+void cSourceDeviceManager::closeSource(QString interfaceDeviceInfo, const QUuid uuid)
+{
+    for(int slot = 0; slot<getSlotCount(); ++slot) {
+        cSourceDevice* sourceDevice = getSourceDevice(slot);
+        if(sourceDevice && sourceDevice->getInterfaceDeviceInfo() == interfaceDeviceInfo) {
+            closeSource(slot, uuid);
+            return;
+        }
+    }
+    emit sigSlotRemovedQueued(-1, uuid);
 }
 
 int cSourceDeviceManager::getSlotCount()
@@ -143,6 +147,7 @@ void cSourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
     int freeSlot = findFreeSlot();
     if(sourceDeviceFound) {
         if(freeSlot >= 0) {
+            sourceDeviceFound->setDemoDelayFollowsTimeout(m_bDemoDelayFollowsTimeout);
             addSource(freeSlot, sourceDeviceFound);
         }
         else {
