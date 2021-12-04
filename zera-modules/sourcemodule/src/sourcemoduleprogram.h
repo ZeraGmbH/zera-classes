@@ -35,7 +35,7 @@ private:
     configuration* getConfigXMLWrapper();
     void updateDemoCount();
 
-    cSourceDeviceManager* m_pSourceDeviceManager;
+    cSourceDeviceManager* m_pSourceDeviceManager = nullptr;
 
     cSourceModule* m_pModule; // the module we live in
 
