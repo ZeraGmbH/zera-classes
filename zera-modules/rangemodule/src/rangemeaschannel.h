@@ -90,6 +90,9 @@ public:
     QString getMaxRange(QString rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
 
+    double getPreScaling() const;
+    void setPreScaling(double preScaling);
+
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
@@ -105,6 +108,7 @@ private:
     QHash<int, int> m_ActionErrorcountHash;
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
+    double m_preScaling;
     double m_fGainCorrection;
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
