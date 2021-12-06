@@ -333,7 +333,10 @@ void cAdjustManagement::getOffsetCorr2()
     {
         measChannel = m_ChannelList.at(m_nChannelIt);
         fCorr = measChannel->getOffsetCorrection();
-        m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr;
+        double preScale=measChannel->getPreScaling();
+        // Offset is an summand. It must be multiplied with the
+        // scale factor.
+        m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr*preScale;
         // qDebug() << QString("OffsetCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
 
         m_nChannelIt++;
