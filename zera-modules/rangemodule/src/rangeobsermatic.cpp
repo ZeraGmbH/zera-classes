@@ -901,6 +901,9 @@ void cRangeObsermatic::preScalingChanged(QVariant unused)
         }
 
         m_RangeGroupPreScalingInfo.at(i)->setValue(factor);
+        for(int i = 0; i< m_RangeMeasChannelList.length();++i){
+            m_RangeMeasChannelList.at(i)->setPreScaling(getPreScale(i));
+        }
     }
     setRanges(true);
 }
