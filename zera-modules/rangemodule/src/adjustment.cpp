@@ -256,8 +256,11 @@ void cAdjustManagement::writeOffsetCorr()
 void cAdjustManagement::getGainCorr1()
 {
     // qDebug() << "Adjustmentstatemachine";
-    if (m_bActive)
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getgaincorr;
+    if (m_bActive){
+        double actualValue=m_ActualValues[m_nChannelIt+m_ChannelNameList.count()];
+        double preScalingFact=m_ChannelList[m_nChannelIt]->getPreScaling();
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(actualValue*preScalingFact)] = getgaincorr;
+    }
 }
 
 
