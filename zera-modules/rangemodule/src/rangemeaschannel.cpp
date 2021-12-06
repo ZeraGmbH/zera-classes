@@ -13,7 +13,7 @@ namespace RANGEMODULE
 {
 
 cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend, bool demo)
-    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bDemo(demo), m_bExtend(extend)
+    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1), m_bExtend(extend)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -882,6 +882,16 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             break;
         }
     }
+}
+
+double cRangeMeasChannel::getPreScaling() const
+{
+    return m_preScaling;
+}
+
+void cRangeMeasChannel::setPreScaling(double preScaling)
+{
+    m_preScaling = preScaling;
 }
 
 
