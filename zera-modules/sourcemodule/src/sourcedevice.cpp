@@ -52,7 +52,12 @@ bool cSourceDevice::close(QUuid uuid)
             closeRequested = true;
             m_closeUuid = uuid;
             m_deviceStatus.clearWarningsErrors();
-            switchOff();
+            if(m_paramsCurrent.getOn()) {
+                switchOff();
+            }
+            else {
+                doFinalCloseActivities();
+            }
         }
     }
     if(closeRequested) {
