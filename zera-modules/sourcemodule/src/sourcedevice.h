@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QVariant>
 #include <QUuid>
+#include <QStringList>
 #include "sourceinterface.h"
 #include "sourcedevicestatus.h"
 #include "sourceiopacketgenerator.h"
@@ -25,6 +26,7 @@ public:
     // requests
     bool close(QUuid uuid);
     void switchLoad(QJsonObject jsonParamsState);
+    QStringList getLastErrors();
     void setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout);
 
     // getter

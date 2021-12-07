@@ -35,14 +35,14 @@ public:
 
 signals:
     void sigSourceScanFinished(int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg);
-    void sigSlotRemoved(int slotNo, QUuid uuid);
+    void sigSlotRemoved(int slotNo, QUuid uuid, QString errMsg);
 
 private slots:
     void onScanFinished(tSourceScannerShPtr scanner);
     void onSourceClosed(cSourceDevice *sourceDevice, QUuid uuid);
 
 signals:
-    void sigSlotRemovedQueued(int slotNo, QUuid uuid);
+    void sigSlotRemovedQueued(int slotNo, QUuid uuid, QString errMsg);
 
 private:
     bool isValidSlotNo(int slotNo);

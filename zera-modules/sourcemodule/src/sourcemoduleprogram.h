@@ -53,7 +53,7 @@ private:
 
 private slots:
     void onSourceScanFinished(int slotPosition, cSourceDevice *device, QUuid uuid, QString errMsg);
-    void onSourceDeviceRemoved(int slot, QUuid uuid);
+    void onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg);
 
     // vein change handlers
     void newDemoSourceCount(QVariant getDemoCount);
