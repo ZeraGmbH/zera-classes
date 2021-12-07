@@ -160,14 +160,15 @@ void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice*
                                                sourceAdded);
 }
 
-void cSourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid)
+void cSourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg)
 {
+    Q_UNUSED(slot);
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
     if(!uuid.isNull()) {
-        bool ok = slot >= 0;
+        bool ok = errMsg.isEmpty();
         m_sharedPtrRpcRemoveInterface->sendRpcResult(uuid,
                                                      ok ? VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_SUCCESS : VfCpp::cVeinModuleRpc::RPCResultCodes::RPC_EINVAL,
-                                                     ok ? QString() : QString("No source to remove found"),
+                                                     errMsg,
                                                      ok);
     }
     updateDemoCount();

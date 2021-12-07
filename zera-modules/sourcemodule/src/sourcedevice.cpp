@@ -51,6 +51,7 @@ bool cSourceDevice::close(QUuid uuid)
         if(!closeRequested) {
             closeRequested = true;
             m_closeUuid = uuid;
+            m_deviceStatus.clearWarningsErrors();
             switchOff();
         }
     }
@@ -66,6 +67,11 @@ void cSourceDevice::switchLoad(QJsonObject jsonParamsState)
     m_deviceStatus.setBusy(true);
     setVeinDeviceState(m_deviceStatus.getJsonStatus());
     switchState(jsonParamsState);
+}
+
+QStringList cSourceDevice::getLastErrors()
+{
+    return m_deviceStatus.getErrors();
 }
 
 void cSourceDevice::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
@@ -103,10 +109,17 @@ void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
             // For now just drop a short note. We need a concept
             // how to continue with translations - maybe an RPC called by GUI?
             // Maybe no
-            m_deviceStatus.addError("Switch failed");
+            if(m_paramsRequested.getOn()) {
+                m_deviceStatus.addError("Switch on failed");
+            }
+            else {
+                m_deviceStatus.addError("Switch off failed");
+            }
         }
-        m_paramsCurrent.setParams(m_paramsRequested.getParams());
-        saveState();
+        else {
+            m_paramsCurrent.setParams(m_paramsRequested.getParams());
+            saveState();
+        }
         setVeinParamState(m_paramsCurrent.getParams());
         setVeinDeviceState(m_deviceStatus.getJsonStatus());
         if(m_closeRequested) {

@@ -89,7 +89,7 @@ void cSourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
         }
     }
     if(!closeRequested) {
-        emit sigSlotRemovedQueued(-1, uuid);
+        emit sigSlotRemovedQueued(-1, uuid, QStringLiteral("No source found at slot %1").arg(slotNo));
     }
 }
 
@@ -102,7 +102,7 @@ void cSourceDeviceManager::closeSource(QString interfaceDeviceInfo, const QUuid 
             return;
         }
     }
-    emit sigSlotRemovedQueued(-1, uuid);
+    emit sigSlotRemovedQueued(-1, uuid, QString("No source found at %1").arg(interfaceDeviceInfo));
 }
 
 int cSourceDeviceManager::getSlotCount()
@@ -164,11 +164,12 @@ void cSourceDeviceManager::onSourceClosed(cSourceDevice *sourceDevice, QUuid uui
     for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
         auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
+            QString lastError = sourceDeviceCurr->getLastErrors().join(" / ");
             m_activeSlotCount--;
             disconnect(sourceDeviceCurr, &cSourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
             delete sourceDeviceCurr;
             sourceDeviceCurr = nullptr;
-            emit sigSlotRemovedQueued(slotNo, uuid);
+            emit sigSlotRemovedQueued(slotNo, uuid, lastError);
             break;
         }
     }
