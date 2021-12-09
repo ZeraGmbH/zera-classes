@@ -9,7 +9,7 @@
 #include "sourceinterface.h"
 #include "sourcedevicestatus.h"
 #include "sourceiopacketgenerator.h"
-#include "supportedsources.h"
+#include "sourcepersistentjsonstate.h"
 #include "sourceioworker.h"
 
 namespace SOURCEMODULE
@@ -57,7 +57,7 @@ private:
 
     tSourceInterfaceShPtr m_ioInterface;
 
-    cSourcePersistentJsonState* m_persistentParamState;
+    SourcePersistentJsonState* m_persistentParamState;
     cSourceJsonParamApi m_paramsRequested;
     cSourceJsonParamApi m_paramsCurrent;
 

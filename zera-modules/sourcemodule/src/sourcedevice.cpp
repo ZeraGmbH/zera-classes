@@ -18,7 +18,7 @@ cSourceDevice::cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTyp
     m_type(type),
     m_version(version)
 {
-    m_persistentParamState = new cSourcePersistentJsonState(type);
+    m_persistentParamState = new SourcePersistentJsonState(type);
     m_outInGenerator = new cSourceIoPacketGenerator(m_persistentParamState->getJsonStructure());
     m_paramsCurrent.setParams(m_persistentParamState->loadJsonState());
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
