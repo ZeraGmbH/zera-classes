@@ -32,18 +32,4 @@ public:
 };
 
 
-class cSourcePersistentJsonState
-{
-public:
-    cSourcePersistentJsonState(SupportedSourceTypes type);
-
-    QJsonObject getJsonStructure();
-
-    QJsonObject loadJsonState();
-    void saveJsonState(QJsonObject state);
-private:
-    SupportedSourceTypes m_sourceType;
-    QJsonObject m_jsonParamStructure;
-};
-
 #endif // CSOURCEJSONFILENAMEGETTER_H

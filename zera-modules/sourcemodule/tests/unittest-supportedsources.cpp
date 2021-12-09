@@ -26,12 +26,3 @@ TEST(TEST_SUPPORTED_SOURCES, TYPES_LOAD_STRUCTURE_VALID) {
     }
 }
 
-TEST(TEST_SUPPORTED_SOURCES, STATE_STRUCT_GEN) {
-    for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
-        cSourcePersistentJsonState* stateIo = new cSourcePersistentJsonState(SupportedSourceTypes(type));
-        EXPECT_EQ(stateIo->getJsonStructure(), cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type)));
-    }
-}
-
-
-
