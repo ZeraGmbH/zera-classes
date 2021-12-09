@@ -32,13 +32,13 @@ cSourceScanner::~cSourceScanner()
 
 struct deviceDetectInfo
 {
-    deviceDetectInfo(QByteArray queryStr, QByteArray expectedResponse, SupportedSourceTypes sourceType) {
+    deviceDetectInfo(QByteArray queryStr, QList<QByteArray> expectedResponse, SupportedSourceTypes sourceType) {
         this->queryStr = queryStr;
         this->expectedResponse = expectedResponse;
         this->sourceType = sourceType;
     }
     QByteArray queryStr;
-    QByteArray expectedResponse;
+    QList<QByteArray> expectedResponse;
     SupportedSourceTypes sourceType;
 };
 
@@ -46,10 +46,10 @@ struct deviceDetectInfo
 // settable...
 static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
     // TODO: Regex?
-    << deviceDetectInfo("STS\r", "STSFGMT", SOURCE_MT3000) // tested
+    << deviceDetectInfo("STS\r", QList<QByteArray>() << "STSFGMT" << "STSMT", SOURCE_MT_COMMON) // tested
     // TODO: guessworked initial data
-    << deviceDetectInfo("TS\r", "MT400-20", SOURCE_MT400_20)
-    << deviceDetectInfo("TS\r", "FG", SOURCE_MT3000)
+    << deviceDetectInfo("TS\r", QList<QByteArray>() << "MT400-20", SOURCE_MT400_20)
+    << deviceDetectInfo("TS\r", QList<QByteArray>() << "FG", SOURCE_MT_COMMON)
     ;
 
 cSourceDevice *cSourceScanner::getSourceDeviceFound()
@@ -130,8 +130,11 @@ void cSourceScanner::onIoFinished(int ioId, bool error)
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     if(!error) {
         if(!m_ioInterface->isDemo()) {
-            if(m_bytesReceived.contains(deviceDetectInfoCurrent.expectedResponse)) {
-                validFound = true;
+            for(auto expectedResponse : deviceDetectInfoCurrent.expectedResponse) {
+                if(m_bytesReceived.contains(expectedResponse)) {
+                    validFound = true;
+                    break;
+                }
             }
         }
         else {
