@@ -7,7 +7,7 @@
 #include <QTimer>
 #include "sourceidgenerator.h"
 
-static constexpr int sourceDefaultTimeout = 1000;
+static constexpr int sourceDefaultTimeout = 1500;
 
 enum SourceInterfaceTypes
 {
