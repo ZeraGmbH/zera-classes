@@ -26,11 +26,11 @@ public:
     // requests
     bool close(QUuid uuid);
     void switchLoad(QJsonObject jsonParamsState);
-    QStringList getLastErrors();
     void setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout);
 
     // getter
     bool isDemo();
+    QStringList getLastErrors();
     QString getInterfaceDeviceInfo();
 
     // setter
