@@ -2,7 +2,7 @@
 #define SOURCEPERSISTENTJSONSTATE_H
 
 #include "supportedsources.h"
-#include <QJsonObject>
+#include <jsonstatefilepersistence.h>
 
 class SourcePersistentJsonState
 {
@@ -14,8 +14,8 @@ public:
     QJsonObject loadJsonState();
     void saveJsonState(QJsonObject state);
 private:
-    SupportedSourceTypes m_sourceType;
-    QJsonObject m_jsonParamStructure;
+    JsonStateFilePersistence m_jsonStatePersistenceHelper;
+    QString m_stateFileName;
 };
 
 #endif // SOURCEPERSISTENTJSONSTATE_H
