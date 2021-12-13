@@ -103,20 +103,6 @@ cAdjustManagement::~cAdjustManagement()
 void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
-    /*
-     * 0-maxChannel-1: Peak values
-     * maxChannel-2*maxchannel-1: RMS values
-     * 2*maxchannel: frequency
-     */
-
-    int rmsOffset=(actualValues->length()-1)/2;
-    int frequncyPos=actualValues->length()-1;
-
-    for(int i=0; i<m_ChannelList.length()-1;++i){
-        m_ChannelList.at(i)->setPeakValue(m_ActualValues.at(i));
-        m_ChannelList.at(i)->setActualValue(m_ActualValues.at(rmsOffset+i));
-        m_ChannelList.at(i)->setSignalFrequency(m_ActualValues.at(frequncyPos));
-    }
     m_nChannelIt = 0; // we start with first channel
     // in case measurement is faster than adjusting
     if (m_bActive && m_bAdjustTrigger && !m_adjustMachine.isRunning())
