@@ -142,6 +142,7 @@ void cRangeModule::setupModule()
         connect(m_pRangeModuleObservation, &cRangeModuleObservation::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
     }
     else {
+        connect(m_pMeasProgram, &cRangeModuleMeasProgram::sigDemoActualValues, this, &cRangeModule::setPeakRmsAndFrequencyValues);
         connect(m_pMeasProgram, &cRangeModuleMeasProgram::sigDemoActualValues, m_pRangeObsermatic, &cRangeObsermatic::demoActValues);
     }
 
@@ -190,6 +191,8 @@ void cRangeModule::activationDone()
 void cRangeModule::activationFinished()
 {
     if(!m_bDemo) {
+        // set new actual values PEAK,RMS,FREQ in channel class
+        connect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, this, &cRangeModule::setPeakRmsAndFrequencyValues);
         // we connect the measurement output to our adjustment module
         connect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pAdjustment, &cAdjustManagement::ActionHandler);
         // and to the range obsermatic
@@ -219,6 +222,7 @@ void cRangeModule::deactivationStart()
 {
     if(!m_bDemo) {
         // we first disconnect all what we connected when activation took place
+        disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, this, &cRangeModule::setPeakRmsAndFrequencyValues);
         disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pAdjustment, &cAdjustManagement::ActionHandler);
         disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pRangeObsermatic, &cRangeObsermatic::ActionHandler);
         disconnect(m_pRangeObsermatic->m_pRangingSignal, &cVeinModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
@@ -259,6 +263,26 @@ void cRangeModule::deactivationDone()
 void cRangeModule::deactivationFinished()
 {
     emit deactivationReady();
+}
+
+void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const values)
+{
+    /* values:
+     * 0-maxChannel-1: Peak values
+     * maxChannel-2*maxchannel-1: RMS values
+     * 2*maxchannel: frequency
+     */
+
+
+    int rmsOffset=(values->length()-1)/2;
+    int frequencyPos=values->length()-1;
+    // prevent potential out of range access
+    int iterationLength=qMin(m_rangeMeasChannelList.length()-1,(values->length()-1)/2);
+    for(int i=0; i<iterationLength;++i){
+        m_rangeMeasChannelList.at(i)->setPeakValue(values->at(i));
+        m_rangeMeasChannelList.at(i)->setActualValue(values->at(rmsOffset+i));
+        m_rangeMeasChannelList.at(i)->setSignalFrequency(values->at(frequencyPos));
+    }
 }
 
 
