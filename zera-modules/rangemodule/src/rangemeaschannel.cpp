@@ -884,6 +884,36 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
+double cRangeMeasChannel::getPeakValue() const
+{
+    return m_peakValue;
+}
+
+void cRangeMeasChannel::setPeakValue(double peakValue)
+{
+    m_peakValue = peakValue;
+}
+
+double cRangeMeasChannel::getSignalFrequency() const
+{
+    return m_signalFrequency;
+}
+
+void cRangeMeasChannel::setSignalFrequency(double signalFrequency)
+{
+    m_signalFrequency = signalFrequency;
+}
+
+double cRangeMeasChannel::getActualValue() const
+{
+    return m_actualValue;
+}
+
+void cRangeMeasChannel::setActualValue(double actualValue)
+{
+    m_actualValue = actualValue;
+}
+
 double cRangeMeasChannel::getPreScaling() const
 {
     return m_preScaling;

@@ -84,6 +84,7 @@ private:
     Zera::Proxy::cProxyClient *m_pDspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
+    // Those are the actual values without preSacling
     QVector<float> m_ActualValues;
     quint8 m_nChannelIt;
     QHash<quint32, int> m_MsgNrCmdList;
