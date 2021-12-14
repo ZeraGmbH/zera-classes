@@ -914,14 +914,14 @@ void cRangeMeasChannel::setSignalFrequency(double signalFrequency)
     m_signalFrequency = signalFrequency;
 }
 
-double cRangeMeasChannel::getActualValue() const
+double cRangeMeasChannel::getRmsValue() const
 {
-    return m_actualValue;
+    return m_rmsValue;
 }
 
-void cRangeMeasChannel::setActualValue(double actualValue)
+void cRangeMeasChannel::setRmsValue(double actualValue)
 {
-    m_actualValue = actualValue;
+    m_rmsValue = actualValue;
 }
 
 double cRangeMeasChannel::getPreScaling() const

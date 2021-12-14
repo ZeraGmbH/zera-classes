@@ -93,8 +93,8 @@ public:
     double getPreScaling() const;
     void setPreScaling(double preScaling);
 
-    double getActualValue() const;
-    void setActualValue(double actualValue);
+    double getRmsValue() const;
+    void setRmsValue(double actualValue);
 
     double getSignalFrequency() const;
     void setSignalFrequency(double signalFrequency);
@@ -122,7 +122,7 @@ private:
     QString m_sActRange; // the actual range set (alias)
     double m_peakValue;
     double m_peakValueWithDc;
-    double m_actualValue;
+    double m_rmsValue;
     double m_signalFrequency;
     double m_preScaling;
     double m_fGainCorrection;
