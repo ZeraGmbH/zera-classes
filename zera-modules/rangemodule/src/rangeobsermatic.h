@@ -105,7 +105,6 @@ private:
     quint32 m_nReadStatusPending;
     QStringList m_actChannelRangeList; // a list of the actual ranges set
     QStringList m_actChannelRangeNotifierList; // we hold a list to avoid unnecessary notifications
-    QVector<float> m_ActualValues; // here we find the actual values
 
     // our interface entities
     QList<cVeinModuleParameter*> m_RangeParameterList;

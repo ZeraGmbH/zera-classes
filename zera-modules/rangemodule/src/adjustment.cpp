@@ -102,7 +102,6 @@ cAdjustManagement::~cAdjustManagement()
 
 void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
 {
-    m_ActualValues = *actualValues;
     m_nChannelIt = 0; // we start with first channel
     // in case measurement is faster than adjusting
     if (m_bActive && m_bAdjustTrigger && !m_adjustMachine.isRunning())
@@ -257,7 +256,7 @@ void cAdjustManagement::getGainCorr1()
 {
     // qDebug() << "Adjustmentstatemachine";
     if (m_bActive){
-        double actualValue=m_ActualValues[m_nChannelIt+m_ChannelNameList.count()];
+        double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
         double preScalingFact=m_ChannelList[m_nChannelIt]->getPreScaling();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readGainCorrection(actualValue*preScalingFact)] = getgaincorr;
     }
@@ -290,7 +289,7 @@ void cAdjustManagement::getGainCorr2()
 void cAdjustManagement::getPhaseCorr1()
 {
     if (m_bActive){
-        double frequency=m_ActualValues[2 * m_ChannelNameList.count()];
+        double frequency=m_ChannelList.at(m_nChannelIt)->getSignalFrequency();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = getphasecorr;
     }
 }
@@ -322,7 +321,7 @@ void cAdjustManagement::getPhaseCorr2()
 void cAdjustManagement::getOffsetCorr1()
 {
     if (m_bActive){
-        double actualValue=m_ActualValues[m_nChannelIt+m_ChannelNameList.count()];
+        double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
         double preScalingFact=m_ChannelList[m_nChannelIt]->getPreScaling();
         m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValue*preScalingFact)] = getoffsetcore;
     }
