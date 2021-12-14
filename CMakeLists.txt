@@ -70,6 +70,7 @@ set(MODULE_DIRS
     zera-modules/sem1module
     zera-modules/spm1module
     zera-modules/sourcemodule
+    zera-modules/electronicburdenmodule
 )
 
 

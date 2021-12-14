@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+	<file>deviceinfo/ESVB.json</file>
+        <file>deviceinfo/ESCB.json</file>
+    </qresource>
+</RCC>
