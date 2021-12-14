@@ -13,7 +13,6 @@
 *.so*
 *_pch.h.cpp
 *_resource.rc
-*.user.pri
 *.qm
 .#*
 *.*#
@@ -28,10 +27,6 @@ qrc_*.cpp
 Thumbs.db
 
 # qtcreator generated files
-*.pro.user*
+CMakeLists.txt.user*
 *.qmlproject.user*
 *.pluginspec
-
-#ignore the doc directory
-doc/*
-doc/
