@@ -37,8 +37,6 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* pr
     m_nRangeSetPending = 0;
 
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
-    for (int i = 0; i < m_ChannelNameList.count(); i++)
-        m_ActualValues.append(0.0);
 
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
@@ -92,14 +90,14 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
             m_nWaitAfterRanging--;
         }
         else {
-            m_ActualValues = *actualValues;
             // qInfo() << "range obsermatic new actual values";
 
 #ifdef DEBUG
-            qInfo() << QString("PEAK %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
-                     << QString("%1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
+            QVector<float> actualValuesStack=*actualValues;
+            qInfo() << QString("PEAK %1 ; %2 ; %3 ;").arg(actualValuesStack[0]).arg(actualValuesStack[1]).arg(actualValuesStack[2])
+                     << QString("%1 ; %2 ; %3").arg(actualValuesStack[3]).arg(actualValuesStack[4]).arg(actualValuesStack[5]);
 #endif
-            // qInfo() << QString("RMS %1 ; %2 ; %3").arg(m_ActualValues[6]).arg(m_ActualValues[7]).arg(m_ActualValues[8]);
+            // qInfo() << QString("RMS %1 ; %2 ; %3").arg(actualValuesStack[6]).arg(actualValuesStack[7]).arg(actualValuesStack[8]);
 
             rangeObservation(); // first we test for overload conditions
             rangeAutomatic(); // let rangeautomatic do its job
@@ -274,8 +272,8 @@ void cRangeObsermatic::rangeObservation()
         float prescalingFac=getPreScale(i);
         // for test overload we take the rms value with/without dc depending on configuration
         // and for overload condition of adc test, we take the peakvalues including dc
-        bool rmsOverload = pmChn->isRMSOverload(m_ActualValues[nrActValues+i]*prescalingFac);
-        bool adcOverLoad = pmChn->isADCOverload(m_ActualValues[2 * nrActValues + 1 + i]);
+        bool rmsOverload = pmChn->isRMSOverload(pmChn->getRmsValue()*prescalingFac); // rms
+        bool adcOverLoad = pmChn->isADCOverload(pmChn->getPeakValueWithDc()*prescalingFac); //peak
         bool hardOverLoad = m_hardOvlList.at(i);
         if ( rmsOverload || adcOverLoad || hardOverLoad) { // if any overload ?
             qInfo("Overload channel %i / Range %s: RMS %i / ADC %i / Hard %i",
@@ -340,7 +338,7 @@ void cRangeObsermatic::rangeAutomatic()
                 if (!m_hardOvlList.at(i)) {
                     if (!m_softOvlList.at(i)) {
                         stringParameter sPar = m_ConfPar.m_senseChannelRangeParameter.at(i);
-                        sPar.m_sPar = pmChn->getOptRange(m_ActualValues[i]*getPreScale(i), sPar.m_sPar);
+                        sPar.m_sPar = pmChn->getOptRange(pmChn->getRmsValue()*getPreScale(i), sPar.m_sPar);
                         m_ConfPar.m_senseChannelRangeParameter.replace(i, sPar);
                     }
                 }
@@ -960,7 +958,6 @@ void cRangeObsermatic::demoTimerTimeout()
 
 void cRangeObsermatic::demoActValues(QVector<float> *actualValues)
 {
-    m_ActualValues = *actualValues;
     rangeAutomatic(); // let rangeautomatic do its job
     groupHandling(); // and look for grouping channels if necessary
     setRanges(); // set the new ranges now
