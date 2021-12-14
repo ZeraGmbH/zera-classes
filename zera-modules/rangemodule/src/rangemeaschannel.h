@@ -93,6 +93,15 @@ public:
     double getPreScaling() const;
     void setPreScaling(double preScaling);
 
+    double getActualValue() const;
+    void setActualValue(double actualValue);
+
+    double getSignalFrequency() const;
+    void setSignalFrequency(double signalFrequency);
+
+    double getPeakValue() const;
+    void setPeakValue(double peakValue);
+
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
@@ -108,6 +117,9 @@ private:
     QHash<int, int> m_ActionErrorcountHash;
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
+    double m_peakValue;
+    double m_actualValue;
+    double m_signalFrequency;
     double m_preScaling;
     double m_fGainCorrection;
     double m_fPhaseCorrection;
