@@ -271,17 +271,21 @@ void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const valu
      * 0-maxChannel-1: Peak values
      * maxChannel-2*maxchannel-1: RMS values
      * 2*maxchannel: frequency
+     * 2*maxchannel+1-3*maxchannel: Peak Values with DC
      */
 
-
-    int rmsOffset=(values->length()-1)/2;
-    int frequencyPos=values->length()-1;
+    int expectedChannelCount=m_rangeMeasChannelList.length();
+    int deliveredChannelCount=(values->length()-1)/3;
+    int rmsOffset=deliveredChannelCount;
+    int frequencyPos=2*deliveredChannelCount;
+    int peakWithDcOffset=deliveredChannelCount+1;
     // prevent potential out of range access
-    int iterationLength=qMin(m_rangeMeasChannelList.length()-1,(values->length()-1)/2);
+    int iterationLength=qMin(expectedChannelCount,deliveredChannelCount);
     for(int i=0; i<iterationLength;++i){
         m_rangeMeasChannelList.at(i)->setPeakValue(values->at(i));
         m_rangeMeasChannelList.at(i)->setActualValue(values->at(rmsOffset+i));
         m_rangeMeasChannelList.at(i)->setSignalFrequency(values->at(frequencyPos));
+        m_rangeMeasChannelList.at(i)->setPeakValueWithDc(values->at(peakWithDcOffset+i));
     }
 }
 

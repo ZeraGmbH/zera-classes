@@ -102,6 +102,9 @@ public:
     double getPeakValue() const;
     void setPeakValue(double peakValue);
 
+    double getPeakValueWithDc() const;
+    void setPeakValueWithDc(double peakValueWithDc);
+
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
     void newRangeList(); // if the channel has read new range list after async. notification
@@ -118,6 +121,7 @@ private:
     QString m_sNewRange;
     QString m_sActRange; // the actual range set (alias)
     double m_peakValue;
+    double m_peakValueWithDc;
     double m_actualValue;
     double m_signalFrequency;
     double m_preScaling;
