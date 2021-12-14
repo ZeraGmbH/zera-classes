@@ -289,8 +289,10 @@ void cAdjustManagement::getGainCorr2()
 
 void cAdjustManagement::getPhaseCorr1()
 {
-    if (m_bActive)
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(m_ActualValues[2 * m_ChannelNameList.count()])] = getphasecorr;
+    if (m_bActive){
+        double frequency=m_ActualValues[2 * m_ChannelNameList.count()];
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readPhaseCorrection(frequency)] = getphasecorr;
+    }
 }
 
 
@@ -319,8 +321,11 @@ void cAdjustManagement::getPhaseCorr2()
 
 void cAdjustManagement::getOffsetCorr1()
 {
-    if (m_bActive)
-        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(m_ActualValues[m_nChannelIt+m_ChannelNameList.count()])] = getoffsetcore;
+    if (m_bActive){
+        double actualValue=m_ActualValues[m_nChannelIt+m_ChannelNameList.count()];
+        double preScalingFact=m_ChannelList[m_nChannelIt]->getPreScaling();
+        m_MsgNrCmdList[m_ChannelList.at(m_nChannelIt)->readOffsetCorrection(actualValue*preScalingFact)] = getoffsetcore;
+    }
 }
 
 
