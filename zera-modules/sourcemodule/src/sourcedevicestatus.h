@@ -6,10 +6,10 @@
 namespace SOURCEMODULE
 {
 
-class cSourceDeviceStatus
+class SourceDeviceStatus
 {
 public:
-    cSourceDeviceStatus();
+    SourceDeviceStatus();
 
     void reset();
     void clearWarningsErrors();
