@@ -29,7 +29,7 @@ TEST(TEST_PACKET_GENERATIOR, EMPTY_IO_UNDEFINED) {
 
 TEST(TEST_PACKET_GENERATIOR, TYPE_SET) {
     for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
         tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             EXPECT_EQ(outIn.m_actionType, type);
@@ -39,7 +39,7 @@ TEST(TEST_PACKET_GENERATIOR, TYPE_SET) {
 
 TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
     for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
         tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             EXPECT_FALSE(outIn.m_bytesSend.isEmpty());
@@ -49,7 +49,7 @@ TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
 
 TEST(TEST_PACKET_GENERATIOR, RESPONSE_TYPE_SET) {
     for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
         tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             EXPECT_FALSE(outIn.m_responseType == RESP_UNDEFINED);
@@ -59,7 +59,7 @@ TEST(TEST_PACKET_GENERATIOR, RESPONSE_TYPE_SET) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
-    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
     params.setOn(true);
     tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(params);
@@ -71,7 +71,7 @@ TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
 
 TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
     for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
-        cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+        SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
         tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             if(outIn.m_responseType == RESP_FULL_DATA_SEQUENCE || outIn.m_responseType == RESP_PART_DATA_SEQUENCE) {
@@ -82,7 +82,7 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, PACK_GENERATIR_NOT_INVENTING) {
-    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
     params.setOn(true);
     tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(params);
@@ -94,7 +94,7 @@ TEST(TEST_PACKET_GENERATIOR, PACK_GENERATIR_NOT_INVENTING) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, SWITCH_PACKET_SPECIFICS) {
-    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
     params.setOn(false);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
@@ -103,7 +103,7 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_PACKET_SPECIFICS) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, POLL_PACKET_SPECIFICS) {
-    cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
+    SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     cSourceCommandPacket cmdPack = ioPackGenerator.generateStatusPollPacket();
     EXPECT_EQ(cmdPack.m_commandType, COMMAND_STATE_POLL);
     EXPECT_EQ(cmdPack.m_errorBehavior, BEHAVE_CONTINUE_ON_ERROR);

@@ -10,7 +10,7 @@ SourceDeviceBase::SourceDeviceBase(tSourceInterfaceShPtr interface, SupportedSou
     m_ioInterface(interface)
 {
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, version);
-    m_outInGenerator = new cSourceIoPacketGenerator(paramStructure);
+    m_outInGenerator = new SourceIoPacketGenerator(paramStructure);
 
     connect(&m_sourceIoWorker, &SourceIoWorker::sigCmdFinished,
             this, &SourceDeviceBase::onSourceCmdFinished);

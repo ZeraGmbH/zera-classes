@@ -32,7 +32,7 @@ protected:
     void switchOff();
 
     tSourceInterfaceShPtr m_ioInterface;
-    cSourceIoPacketGenerator* m_outInGenerator = nullptr;
+    SourceIoPacketGenerator* m_outInGenerator = nullptr;
 
     SourceJsonParamApi m_paramsRequested;
     SourceJsonParamApi m_paramsCurrent;
