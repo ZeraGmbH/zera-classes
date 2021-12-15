@@ -36,13 +36,13 @@ QString cSourceJsonFilenames::getJsonFileName(SupportedSourceTypes type)
     case SOURCE_MT_COMMON:
         fileName = QStringLiteral("MT3000.json");
         break;
-    case SOURCE_MT400_20:
+    case SOURCE_MT_CURRENT_ONLY:
         fileName = QStringLiteral("MT400-20.json");
         break;
     case SOURCE_DEMO_FG_4PHASE:
         fileName = QStringLiteral("FG4PhaseTest.json");
         break;
-    case SOURCE_MT507:
+    case SOURCE_MT_SINGLE_PHASE_ONLY:
         fileName = QStringLiteral("MT507.json");
         break;
 

@@ -5,9 +5,9 @@
 #include <QJsonObject>
 
 enum SupportedSourceTypes {
-    SOURCE_MT_COMMON = 0,  // basic 3ph
-    SOURCE_MT400_20,       // current only
-    SOURCE_MT507,          // single phase
+    SOURCE_MT_COMMON = 0,  // 3ph common
+    SOURCE_MT_CURRENT_ONLY,
+    SOURCE_MT_SINGLE_PHASE_ONLY,
 
     SOURCE_DEMO_FG_4PHASE, // AUX/harmonics
 
