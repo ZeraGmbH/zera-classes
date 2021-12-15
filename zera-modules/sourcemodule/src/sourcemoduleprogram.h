@@ -13,16 +13,16 @@ class cJsonParamValidator;
 namespace SOURCEMODULE
 {
 
-class cSourceModule;
+class SourceModule;
 class SourceDeviceVein;
 class SourceDeviceManager;
 
-class cSourceModuleProgram: public cBaseMeasWorkProgram
+class SourceModuleProgram: public cBaseMeasWorkProgram
 {
     Q_OBJECT
 public:
-    cSourceModuleProgram(cSourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual ~cSourceModuleProgram();
+    SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    virtual ~SourceModuleProgram();
     virtual void generateInterface() override; // here we export our interface (entities)
 
 public slots: // Make cBaseMeasWorkProgram happy...
@@ -37,7 +37,7 @@ private:
 
     SourceDeviceManager* m_pSourceDeviceManager = nullptr;
 
-    cSourceModule* m_pModule; // the module we live in
+    SourceModule* m_pModule; // the module we live in
 
     cVeinModuleActvalue* m_pVeinMaxCountAct;
     cVeinModuleActvalue* m_pVeinCountAct;

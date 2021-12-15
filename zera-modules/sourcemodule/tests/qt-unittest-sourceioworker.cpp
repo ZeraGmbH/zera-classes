@@ -32,7 +32,7 @@ void SourceIoWorkerTest::cmdPackToWorkIoSize()
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
     params.setOn(true);
-    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     QCOMPARE(cmdPack.m_outInList.size(), workPack.m_workerIOList.size());
 }
@@ -42,7 +42,7 @@ void SourceIoWorkerTest::cmdPackToWorkIoSequence()
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
     params.setOn(true);
-    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     for(int i=0; i<cmdPack.m_outInList.size(); ++i) {
         QCOMPARE(cmdPack.m_outInList[i].m_actionType, workPack.m_workerIOList[i].m_OutIn.m_actionType);
@@ -203,15 +203,15 @@ void SourceIoWorkerTest::testStopOnFirstErrorFullResponse()
     // valid data received
     for(int runIo = 0; runIo<errorIoNumber; ++runIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_dataReceived, responseList[runIo]);
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, cSourceIoWorkerEntry::EVAL_PASS);
+        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, SourceIoWorkerEntry::EVAL_PASS);
     }
     // invalid data received
     QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_dataReceived, responseList[errorIoNumber]);
-    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_IoEval, cSourceIoWorkerEntry::EVAL_FAIL);
+    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_IoEval, SourceIoWorkerEntry::EVAL_FAIL);
     // no data received
     for(int notRunIo = errorIoNumber+1; notRunIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++notRunIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_dataReceived, "");
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_IoEval, cSourceIoWorkerEntry::EVAL_UNKNOWN);
+        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_IoEval, SourceIoWorkerEntry::EVAL_UNKNOWN);
     }
 }
 
@@ -237,15 +237,15 @@ void SourceIoWorkerTest::testStopOnFirstErrorPartResponse()
     // valid data received
     for(int runIo = 0; runIo<errorIoNumber; ++runIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_dataReceived, responseList[runIo]);
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, cSourceIoWorkerEntry::EVAL_PASS);
+        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, SourceIoWorkerEntry::EVAL_PASS);
     }
     // invalid data received
     QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_dataReceived, responseList[errorIoNumber]);
-    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_IoEval, cSourceIoWorkerEntry::EVAL_FAIL);
+    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_IoEval, SourceIoWorkerEntry::EVAL_FAIL);
     // no data received
     for(int notRunIo = errorIoNumber+1; notRunIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++notRunIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_dataReceived, "");
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_IoEval, cSourceIoWorkerEntry::EVAL_UNKNOWN);
+        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_IoEval, SourceIoWorkerEntry::EVAL_UNKNOWN);
     }
 }
 
@@ -271,10 +271,10 @@ void SourceIoWorkerTest::testContinueOnErrorFullResponse()
     for(int runIo = 0; runIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++runIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_dataReceived, responseList[runIo]);
         if(runIo != errorIoNumber) {
-            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, cSourceIoWorkerEntry::EVAL_PASS);
+            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, SourceIoWorkerEntry::EVAL_PASS);
         }
         else {
-            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, cSourceIoWorkerEntry::EVAL_FAIL);
+            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, SourceIoWorkerEntry::EVAL_FAIL);
         }
     }
 }
@@ -301,10 +301,10 @@ void SourceIoWorkerTest::testContinueOnErrorPartResponse()
     for(int runIo = 0; runIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++runIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_dataReceived, responseList[runIo]);
         if(runIo != errorIoNumber) {
-            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, cSourceIoWorkerEntry::EVAL_PASS);
+            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, SourceIoWorkerEntry::EVAL_PASS);
         }
         else {
-            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, cSourceIoWorkerEntry::EVAL_FAIL);
+            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, SourceIoWorkerEntry::EVAL_FAIL);
         }
     }
 }
@@ -466,7 +466,7 @@ cWorkerCommandPacket SourceIoWorkerTest::generateStatusPollCommands()
 {
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
-    cSourceCommandPacket cmdPack = ioPackGenerator.generateStatusPollPacket();
+    SourceCommandPacket cmdPack = ioPackGenerator.generateStatusPollPacket();
     return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
@@ -475,7 +475,7 @@ cWorkerCommandPacket SourceIoWorkerTest::generateSwitchCommands(bool on)
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
     params.setOn(on);
-    cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
@@ -500,13 +500,13 @@ void SourceIoWorkerTest::evalNotificationCount(int cmdPassedExpected, int passEx
         }
         for(int io=0; io<m_listWorkPacksReceived[pack].m_workerIOList.count(); ++io) {
             switch(m_listWorkPacksReceived[pack].m_workerIOList[io].m_IoEval) {
-            case cSourceIoWorkerEntry::EVAL_UNKNOWN:
+            case SourceIoWorkerEntry::EVAL_UNKNOWN:
                 unknownCount++;
                 break;
-            case cSourceIoWorkerEntry::EVAL_PASS:
+            case SourceIoWorkerEntry::EVAL_PASS:
                 passCount++;
                 break;
-            case cSourceIoWorkerEntry::EVAL_FAIL:
+            case SourceIoWorkerEntry::EVAL_FAIL:
                 failCount++;
                 break;
             }

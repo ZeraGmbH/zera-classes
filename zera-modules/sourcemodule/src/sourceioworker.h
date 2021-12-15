@@ -6,20 +6,20 @@
 #include "sourceiopacketgenerator.h"
 #include "sourceinterface.h"
 
-class cSourceIoWorkerEntry
+class SourceIoWorkerEntry
 {
 public:
-    cSourceSingleOutIn m_OutIn;
+    SourceSingleOutIn m_OutIn;
     QByteArray m_dataReceived;
     enum {
         EVAL_UNKNOWN = 0,
         EVAL_FAIL,
         EVAL_PASS
     } m_IoEval = EVAL_UNKNOWN;
-    bool operator == (const cSourceIoWorkerEntry& other);
+    bool operator == (const SourceIoWorkerEntry& other);
 };
 
-typedef QList<cSourceIoWorkerEntry> tSourceIoWorkerList;
+typedef QList<SourceIoWorkerEntry> tSourceIoWorkerList;
 
 
 class cWorkerCommandPacket
@@ -42,7 +42,7 @@ Q_DECLARE_METATYPE(cWorkerCommandPacket)
 
 namespace SourceWorkerConverter
 {
-    cWorkerCommandPacket commandPackToWorkerPack(const cSourceCommandPacket &cmdPack);
+    cWorkerCommandPacket commandPackToWorkerPack(const SourceCommandPacket &cmdPack);
 }
 
 namespace SourceDemoHelper
@@ -75,7 +75,7 @@ signals:
     void sigCmdFinishedQueued(cWorkerCommandPacket cmdPack);
 private:
     cWorkerCommandPacket *getCurrentCmd();
-    cSourceIoWorkerEntry *getNextIo();
+    SourceIoWorkerEntry *getNextIo();
     void tryStartNextIo();
     void finishCmd(cWorkerCommandPacket cmdToFinish);
     void finishCurrentCmd();

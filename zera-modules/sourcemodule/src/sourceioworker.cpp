@@ -1,6 +1,6 @@
 #include "sourceioworker.h"
 
-bool cSourceIoWorkerEntry::operator ==(const cSourceIoWorkerEntry &other)
+bool SourceIoWorkerEntry::operator ==(const SourceIoWorkerEntry &other)
 {
     // this for purpose of test -> ignore m_dataReceived / m_IoEval
     return m_OutIn == other.m_OutIn;
@@ -16,7 +16,7 @@ void cWorkerCommandPacket::evalAll()
 {
     bool pass = true;
     for(auto io : m_workerIOList) {
-        if(io.m_IoEval != cSourceIoWorkerEntry::EVAL_PASS) {
+        if(io.m_IoEval != SourceIoWorkerEntry::EVAL_PASS) {
             pass = false;
         }
     }
@@ -32,13 +32,13 @@ bool cWorkerCommandPacket::operator ==(const cWorkerCommandPacket &other)
 }
 
 
-cWorkerCommandPacket SourceWorkerConverter::commandPackToWorkerPack(const cSourceCommandPacket &commandPack)
+cWorkerCommandPacket SourceWorkerConverter::commandPackToWorkerPack(const SourceCommandPacket &commandPack)
 {
     cWorkerCommandPacket workPack;
     workPack.m_commandType = commandPack.m_commandType;
     workPack.m_errorBehavior = commandPack.m_errorBehavior;
     for(auto outIn : commandPack.m_outInList) {
-        cSourceIoWorkerEntry workEntry;
+        SourceIoWorkerEntry workEntry;
         workEntry.m_OutIn = outIn;
         workPack.m_workerIOList.append(workEntry);
     }
@@ -136,7 +136,7 @@ void SourceIoWorker::onIoDisconnected()
 void SourceIoWorker::tryStartNextIo()
 {
     if(!isIoBusy()) {
-        cSourceIoWorkerEntry* workerIo = getNextIo();
+        SourceIoWorkerEntry* workerIo = getNextIo();
         if(workerIo) {
             m_interface->setReadTimeoutNextIo(workerIo->m_OutIn.m_responseTimeoutMs);
             m_iCurrentIoID = m_interface->sendAndReceive(
@@ -147,9 +147,9 @@ void SourceIoWorker::tryStartNextIo()
     }
 }
 
-cSourceIoWorkerEntry* SourceIoWorker::getNextIo()
+SourceIoWorkerEntry* SourceIoWorker::getNextIo()
 {
-    cSourceIoWorkerEntry* workerIo = nullptr;
+    SourceIoWorkerEntry* workerIo = nullptr;
     cWorkerCommandPacket *currCmdPack = getCurrentCmd();
     if(currCmdPack) {
         if(m_nextPosInWorkerIo < currCmdPack->m_workerIOList.count()) {
@@ -188,22 +188,22 @@ bool SourceIoWorker::evaluateResponse()
     bool pass = false;
     cWorkerCommandPacket *currCmdPack = getCurrentCmd();
     if(currCmdPack) {
-        cSourceIoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
-        cSourceSingleOutIn& currentOutIn = currentWorker.m_OutIn;
+        SourceIoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
+        SourceSingleOutIn& currentOutIn = currentWorker.m_OutIn;
         switch(currentOutIn.m_responseType) {
         case RESP_FULL_DATA_SEQUENCE:
             currentWorker.m_IoEval = currentWorker.m_dataReceived == currentOutIn.m_bytesExpected ?
-                        cSourceIoWorkerEntry::EVAL_PASS : cSourceIoWorkerEntry::EVAL_FAIL;
+                        SourceIoWorkerEntry::EVAL_PASS : SourceIoWorkerEntry::EVAL_FAIL;
             break;
         case RESP_PART_DATA_SEQUENCE:
             currentWorker.m_IoEval = currentWorker.m_dataReceived.contains(currentOutIn.m_bytesExpected) ?
-                        cSourceIoWorkerEntry::EVAL_PASS : cSourceIoWorkerEntry::EVAL_FAIL;
+                        SourceIoWorkerEntry::EVAL_PASS : SourceIoWorkerEntry::EVAL_FAIL;
             break;
         default:
-            currentWorker.m_IoEval = cSourceIoWorkerEntry::EVAL_FAIL;
+            currentWorker.m_IoEval = SourceIoWorkerEntry::EVAL_FAIL;
             break;
         }
-        pass = currentWorker.m_IoEval == cSourceIoWorkerEntry::EVAL_PASS;
+        pass = currentWorker.m_IoEval == SourceIoWorkerEntry::EVAL_PASS;
     }
     return pass;
 }

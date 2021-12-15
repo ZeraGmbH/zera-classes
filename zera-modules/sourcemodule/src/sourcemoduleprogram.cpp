@@ -16,13 +16,13 @@
 namespace SOURCEMODULE
 {
 
-cSourceModuleProgram::cSourceModuleProgram(cSourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module)
 {
 }
 
-cSourceModuleProgram::~cSourceModuleProgram()
+SourceModuleProgram::~SourceModuleProgram()
 {
     delete m_pSourceDeviceManager;
     while(m_arrVeinSourceInterfaces.size()) {
@@ -30,7 +30,7 @@ cSourceModuleProgram::~cSourceModuleProgram()
     }
 }
 
-void cSourceModuleProgram::generateInterface()
+void SourceModuleProgram::generateInterface()
 {
     // source manager
     configuration* config = getConfigXMLWrapper();
@@ -38,9 +38,9 @@ void cSourceModuleProgram::generateInterface()
     m_pSourceDeviceManager = new SourceDeviceManager(maxSources);
     m_pSourceDeviceManager->setDemoFollowsTimeout(true);
     connect(m_pSourceDeviceManager, &SourceDeviceManager::sigSourceScanFinished,
-            this, &cSourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
+            this, &SourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
     connect(m_pSourceDeviceManager, &SourceDeviceManager::sigSlotRemoved,
-            this, &cSourceModuleProgram::onSourceDeviceRemoved, Qt::QueuedConnection);
+            this, &SourceModuleProgram::onSourceDeviceRemoved, Qt::QueuedConnection);
 
     // common components
     QString key;
@@ -61,7 +61,7 @@ void cSourceModuleProgram::generateInterface()
                                                        QString("Component for setting number of demo sources"),
                                                        QVariant(int(0)));
     m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
-    connect(m_pVeinDemoSourceCount, &cVeinModuleParameter::sigValueChanged, this, &cSourceModuleProgram::newDemoSourceCount);
+    connect(m_pVeinDemoSourceCount, &cVeinModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
 
     // RPCs
@@ -116,7 +116,7 @@ void cSourceModuleProgram::generateInterface()
     }
 }
 
-QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
+QVariant SourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
 {
     int interfaceType = p_params["p_type"].toInt();
     QString deviceInfo = p_params["p_deviceInfo"].toString();
@@ -125,7 +125,7 @@ QVariant cSourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
     return true;
 }
 
-QVariant cSourceModuleProgram::RPC_CloseSource(QVariantMap p_params)
+QVariant SourceModuleProgram::RPC_CloseSource(QVariantMap p_params)
 {
     QString deviceInfo = p_params["p_deviceInfo"].toString();
     QUuid uuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
@@ -134,19 +134,19 @@ QVariant cSourceModuleProgram::RPC_CloseSource(QVariantMap p_params)
 }
 
 
-configuration *cSourceModuleProgram::getConfigXMLWrapper()
+configuration *SourceModuleProgram::getConfigXMLWrapper()
 {
-    return static_cast<cSourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
+    return static_cast<SourceModuleConfiguration*>(m_pConfiguration.get())->getConfigXMLWrapper();
 }
 
-void cSourceModuleProgram::updateDemoCount()
+void SourceModuleProgram::updateDemoCount()
 {
     m_bDeafenDemoChange = true;
     m_pVeinDemoSourceCount->setValue(m_pSourceDeviceManager->getDemoCount());
     m_bDeafenDemoChange = false;
 }
 
-void cSourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDeviceVein* device, QUuid uuid, QString errMsg)
+void SourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDeviceVein* device, QUuid uuid, QString errMsg)
 {
     bool sourceAdded = slotPosition >= 0 && device;
     if(sourceAdded) {
@@ -160,7 +160,7 @@ void cSourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDeviceVe
                                                sourceAdded);
 }
 
-void cSourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg)
+void SourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg)
 {
     Q_UNUSED(slot);
     m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
@@ -175,7 +175,7 @@ void cSourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString e
 }
 
 
-void cSourceModuleProgram::newDemoSourceCount(QVariant getDemoCount)
+void SourceModuleProgram::newDemoSourceCount(QVariant getDemoCount)
 {
     if(!m_bDeafenDemoChange) {
         m_pSourceDeviceManager->setDemoCount(getDemoCount.toInt());
