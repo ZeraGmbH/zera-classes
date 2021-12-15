@@ -29,7 +29,7 @@ void SourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceTy
         return;
     }
     bool started = false;
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(interfaceType));
+    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(interfaceType));
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {

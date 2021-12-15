@@ -7,7 +7,7 @@
 #include "sourceinterface.h"
 #include "sourcedevicevein.h"
 
-class cSourceInterfaceBase;
+class SourceInterfaceBase;
 
 namespace SOURCEMODULE
 {

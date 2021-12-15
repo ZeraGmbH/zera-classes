@@ -68,7 +68,7 @@ void SourceIoWorkerTest::emptyPackNotBusy()
 
 void SourceIoWorkerTest::notOpenInterfaceNotBusy()
 {
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     cWorkerCommandPacket workPack = generateSwitchCommands(false);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
@@ -101,7 +101,7 @@ void SourceIoWorkerTest::noInterfaceNotification()
 
 void SourceIoWorkerTest::notOpenInterfaceNotifications()
 {
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     SourceIoWorker worker;
     cWorkerCommandPacket workPack = generateSwitchCommands(true);
     worker.setIoInterface(interface);
@@ -118,7 +118,7 @@ void SourceIoWorkerTest::notOpenInterfaceNotifications()
 void SourceIoWorkerTest::disconnectBeforeEnqueue()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     worker.setIoInterface(interface);
 
@@ -132,7 +132,7 @@ void SourceIoWorkerTest::disconnectBeforeEnqueue()
 void SourceIoWorkerTest::disconnectWhileWorking()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -156,7 +156,7 @@ void SourceIoWorkerTest::disconnectWhileWorking()
 void SourceIoWorkerTest::disconnectWhileWorkingMultipleNotifications()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -184,7 +184,7 @@ using SourceDemoHelper::generateResponseList;
 void SourceIoWorkerTest::testStopOnFirstErrorFullResponse()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     demoInterface->setResponseDelay(1);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
@@ -218,7 +218,7 @@ void SourceIoWorkerTest::testStopOnFirstErrorFullResponse()
 void SourceIoWorkerTest::testStopOnFirstErrorPartResponse()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     //demoInterface->setResponseDelay(1);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
@@ -252,7 +252,7 @@ void SourceIoWorkerTest::testStopOnFirstErrorPartResponse()
 void SourceIoWorkerTest::testContinueOnErrorFullResponse()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     demoInterface->setResponseDelay(1);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
@@ -282,7 +282,7 @@ void SourceIoWorkerTest::testContinueOnErrorFullResponse()
 void SourceIoWorkerTest::testContinueOnErrorPartResponse()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     //demoInterface->setResponseDelay(1);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
@@ -312,7 +312,7 @@ void SourceIoWorkerTest::testContinueOnErrorPartResponse()
 void SourceIoWorkerTest::testSpamRejected()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     constexpr int maxPendingPackets = 3;
     worker.setMaxPendingActions(maxPendingPackets);
@@ -335,7 +335,7 @@ void SourceIoWorkerTest::testSpamRejected()
 void SourceIoWorkerTest::testCloseToSpamAccepted()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     constexpr int maxPendingPackets = 3;
     worker.setMaxPendingActions(maxPendingPackets);
@@ -358,7 +358,7 @@ void SourceIoWorkerTest::testCloseToSpamAccepted()
 void SourceIoWorkerTest::testOnePacketSingleIoOK()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -380,7 +380,7 @@ void SourceIoWorkerTest::testOnePacketSingleIoOK()
 void SourceIoWorkerTest::testTwoPacketSingleIoOK()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -402,7 +402,7 @@ void SourceIoWorkerTest::testTwoPacketSingleIoOK()
 void SourceIoWorkerTest::testOnePacketMultipleIoOK()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -425,7 +425,7 @@ void SourceIoWorkerTest::testOnePacketMultipleIoOK()
 void SourceIoWorkerTest::testTwoPacketMultipleIoOK()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -456,8 +456,8 @@ void SourceIoWorkerTest::testTwoPacketMultipleIoOK()
 
 tSourceInterfaceShPtr SourceIoWorkerTest::createOpenInterface()
 {
-    tSourceInterfaceShPtr interface = cSourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(interface.get());
+    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     demoInterface->open(QString());
     return interface;
 }

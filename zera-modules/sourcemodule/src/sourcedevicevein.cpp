@@ -20,7 +20,7 @@ SourceDeviceVein::SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSou
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
-    connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
+    connect(interface.get(), &SourceInterfaceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
 }
 
 SourceDeviceVein::~SourceDeviceVein()
@@ -38,7 +38,7 @@ bool SourceDeviceVein::close(QUuid uuid)
             if(m_removeDemoByDisconnect) {
                 closeRequested = true;
                 m_closeUuid = uuid;
-                static_cast<cSourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
+                static_cast<SourceInterfaceDemo*>(m_ioInterface.get())->simulateExternalDisconnect();
             }
         }
         if(!closeRequested) {

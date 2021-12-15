@@ -1,18 +1,18 @@
 
 #include "sourceinterface.h"
 
-tSourceInterfaceShPtr cSourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes type, QObject *parent)
+tSourceInterfaceShPtr SourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes type, QObject *parent)
 {
-    cSourceInterfaceBase* interface = nullptr;
+    SourceInterfaceBase* interface = nullptr;
     switch (type) {
     case SOURCE_INTERFACE_BASE:
-        interface = new cSourceInterfaceBase(parent);
+        interface = new SourceInterfaceBase(parent);
         break;
     case SOURCE_INTERFACE_DEMO:
-        interface = new cSourceInterfaceDemo(parent);
+        interface = new SourceInterfaceDemo(parent);
         break;
     case SOURCE_INTERFACE_ASYNCSERIAL:
-        interface = new cSourceInterfaceZeraSerial(parent);
+        interface = new SourceInterfaceZeraSerial(parent);
         break;
     case SOURCE_INTERFACE_TYPE_COUNT:
         qCritical("Do not use SOURCE_INTERFACE_TYPE_COUNT");
@@ -22,40 +22,40 @@ tSourceInterfaceShPtr cSourceInterfaceFactory::createSourceInterface(SourceInter
 }
 
 
-cSourceInterfaceBase::cSourceInterfaceBase(QObject *parent) : QObject(parent)
+SourceInterfaceBase::SourceInterfaceBase(QObject *parent) : QObject(parent)
 {
-    connect(this, &cSourceInterfaceBase::sigIoFinishedToQueue, this, &cSourceInterfaceBase::sigIoFinished, Qt::QueuedConnection);
+    connect(this, &SourceInterfaceBase::sigIoFinishedToQueue, this, &SourceInterfaceBase::sigIoFinished, Qt::QueuedConnection);
 }
 
-cSourceInterfaceBase::~cSourceInterfaceBase()
+SourceInterfaceBase::~SourceInterfaceBase()
 {
 }
 
-int cSourceInterfaceBase::sendAndReceive(QByteArray, QByteArray*)
+int SourceInterfaceBase::sendAndReceive(QByteArray, QByteArray*)
 {
     m_currentIoID = m_IDGenerator.nextID();
     emit sigIoFinishedToQueue(m_currentIoID, true);
     return m_currentIoID;
 }
 
-QString cSourceInterfaceBase::getDeviceInfo()
+QString SourceInterfaceBase::getDeviceInfo()
 {
     return m_strDeviceInfo;
 }
 
-cSourceInterfaceDemo::cSourceInterfaceDemo(QObject *parent) : cSourceInterfaceBase(parent)
+SourceInterfaceDemo::SourceInterfaceDemo(QObject *parent) : SourceInterfaceBase(parent)
 {
     m_responseDelayTimer.setSingleShot(true);
     connect(&m_responseDelayTimer, &QTimer::timeout,
-            this, &cSourceInterfaceDemo::onResponseDelayTimer);
+            this, &SourceInterfaceDemo::onResponseDelayTimer);
 }
 
-void cSourceInterfaceDemo::onResponseDelayTimer()
+void SourceInterfaceDemo::onResponseDelayTimer()
 {
     sendResponse(false);
 }
 
-void cSourceInterfaceDemo::sendResponse(bool error)
+void SourceInterfaceDemo::sendResponse(bool error)
 {
     if(!error && m_pDataReceive && !m_responseList.isEmpty()) {
         *m_pDataReceive = m_responseList.takeFirst();
@@ -63,19 +63,19 @@ void cSourceInterfaceDemo::sendResponse(bool error)
     emit sigIoFinishedToQueue(m_currentIoID, error);
 }
 
-bool cSourceInterfaceDemo::open(QString strDeviceInfo)
+bool SourceInterfaceDemo::open(QString strDeviceInfo)
 {
     m_strDeviceInfo = strDeviceInfo;
     m_bOpen = true;
     return true;
 }
 
-void cSourceInterfaceDemo::close()
+void SourceInterfaceDemo::close()
 {
     m_bOpen = false;
 }
 
-int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
+int SourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
 {
     m_currentIoID = m_IDGenerator.nextID();
     m_pDataReceive = pDataReceive;
@@ -93,7 +93,7 @@ int cSourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
     return m_currentIoID;
 }
 
-void cSourceInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)
+void SourceInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)
 {
     m_responseDelayMsTimeoutSimul = timeoutMs/2;
     if(m_responseDelayMsTimeoutSimul > 3000) {
@@ -101,27 +101,27 @@ void cSourceInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)
     }
 }
 
-void cSourceInterfaceDemo::simulateExternalDisconnect()
+void SourceInterfaceDemo::simulateExternalDisconnect()
 {
     emit sigDisconnected();
 }
 
-void cSourceInterfaceDemo::setResponseDelay(int iMs)
+void SourceInterfaceDemo::setResponseDelay(int iMs)
 {
     m_responseDelayMs = iMs;
 }
 
-void cSourceInterfaceDemo::setDelayFollowsTimeout(bool followTimeout)
+void SourceInterfaceDemo::setDelayFollowsTimeout(bool followTimeout)
 {
     m_delayFollowsTimeout = followTimeout;
 }
 
-void cSourceInterfaceDemo::setResponses(QList<QByteArray> responseList)
+void SourceInterfaceDemo::setResponses(QList<QByteArray> responseList)
 {
     m_responseList = responseList;
 }
 
-void cSourceInterfaceDemo::appendResponses(QList<QByteArray> responseList)
+void SourceInterfaceDemo::appendResponses(QList<QByteArray> responseList)
 {
     m_responseList.append(responseList);
 }

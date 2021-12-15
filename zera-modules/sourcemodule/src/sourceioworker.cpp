@@ -67,15 +67,15 @@ void SourceIoWorker::setIoInterface(tSourceInterfaceShPtr interface)
 {
     m_interface = interface;
     if(interface) {
-        connect(m_interface.get(), &cSourceInterfaceBase::sigIoFinished,
+        connect(m_interface.get(), &SourceInterfaceBase::sigIoFinished,
                 this, &SourceIoWorker::onIoFinished);
-        connect(m_interface.get(), &cSourceInterfaceBase::sigDisconnected,
+        connect(m_interface.get(), &SourceInterfaceBase::sigDisconnected,
                 this, &SourceIoWorker::onIoDisconnected);
     }
     else if(m_interface){
-        disconnect(m_interface.get(), &cSourceInterfaceBase::sigIoFinished,
+        disconnect(m_interface.get(), &SourceInterfaceBase::sigIoFinished,
                    this, &SourceIoWorker::onIoFinished);
-        disconnect(m_interface.get(), &cSourceInterfaceBase::sigDisconnected,
+        disconnect(m_interface.get(), &SourceInterfaceBase::sigDisconnected,
                 this, &SourceIoWorker::onIoDisconnected);
         m_interface = nullptr;
     }
