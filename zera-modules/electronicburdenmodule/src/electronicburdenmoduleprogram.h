@@ -26,11 +26,13 @@ public:
 public slots: // Make cBaseMeasWorkProgram happy...
     virtual void start() override {}
     virtual void stop() override {}
+    void newDemoTest(QVariant val);
 
 private:
     configuration* getConfigXMLWrapper();
 
     ElectronicBurdenModule* m_pModule; // the module we live in
+    cVeinModuleParameter* m_pVeinDemoTest = nullptr;
 
 private slots:
 
