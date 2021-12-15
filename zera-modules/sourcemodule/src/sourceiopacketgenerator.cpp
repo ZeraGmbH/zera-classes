@@ -17,18 +17,18 @@ bool cSourceSingleOutIn::operator ==(const cSourceSingleOutIn &other)
 }
 
 
-cSourceIoPacketGenerator::cSourceIoPacketGenerator(QJsonObject jsonParamsStructure) :
+SourceIoPacketGenerator::SourceIoPacketGenerator(QJsonObject jsonParamsStructure) :
     m_jsonStructApi(new SourceJsonStructApi(jsonParamsStructure)),
     m_ioPrefix(m_jsonStructApi->getIoPrefix())
 {
 }
 
-cSourceIoPacketGenerator::~cSourceIoPacketGenerator()
+SourceIoPacketGenerator::~SourceIoPacketGenerator()
 {
     delete m_jsonStructApi;
 }
 
-cSourceCommandPacket cSourceIoPacketGenerator::generateOnOffPacket(SourceJsonParamApi requestedParams)
+cSourceCommandPacket SourceIoPacketGenerator::generateOnOffPacket(SourceJsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
@@ -41,7 +41,7 @@ cSourceCommandPacket cSourceIoPacketGenerator::generateOnOffPacket(SourceJsonPar
     return commandPack;
 }
 
-cSourceCommandPacket cSourceIoPacketGenerator::generateStatusPollPacket()
+cSourceCommandPacket SourceIoPacketGenerator::generateStatusPollPacket()
 {
     cSourceCommandPacket commandPack;
     commandPack.m_commandType = COMMAND_STATE_POLL;
@@ -53,7 +53,7 @@ cSourceCommandPacket cSourceIoPacketGenerator::generateStatusPollPacket()
     return commandPack;
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
+tSourceOutInList SourceIoPacketGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
 {
     tSourceOutInList outInList;
     switch(actionType) {
@@ -96,7 +96,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateListForAction(SourceActionTyp
     return outInList;
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleUList()
+tSourceOutInList SourceIoPacketGenerator::generateRMSAndAngleUList()
 {
     tSourceOutInList outInList;
     QByteArray bytesSend;
@@ -125,7 +125,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleUList()
     return outInList;
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleIList()
+tSourceOutInList SourceIoPacketGenerator::generateRMSAndAngleIList()
 {
     tSourceOutInList outInList;
     QByteArray bytesSend;
@@ -155,7 +155,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateRMSAndAngleIList()
     return outInList;
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateSwitchPhasesList()
+tSourceOutInList SourceIoPacketGenerator::generateSwitchPhasesList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "UI";
@@ -202,7 +202,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateSwitchPhasesList()
     return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse, timeout);
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateFrequencyList()
+tSourceOutInList SourceIoPacketGenerator::generateFrequencyList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "FR";
@@ -219,7 +219,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateFrequencyList()
     return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateRegulationList()
+tSourceOutInList SourceIoPacketGenerator::generateRegulationList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "RE";
@@ -231,7 +231,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateRegulationList()
     return tSourceOutInList() << cSourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateQueryStatusList()
+tSourceOutInList SourceIoPacketGenerator::generateQueryStatusList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "SM\r"; // error condition for now
@@ -240,7 +240,7 @@ tSourceOutInList cSourceIoPacketGenerator::generateQueryStatusList()
     return tSourceOutInList() << cSourceSingleOutIn(RESP_PART_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateQueryActualList()
+tSourceOutInList SourceIoPacketGenerator::generateQueryActualList()
 {
     QByteArray bytesSend;
     bytesSend = "AME0;3\r";// This is single phase!!

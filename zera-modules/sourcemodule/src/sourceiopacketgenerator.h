@@ -61,11 +61,11 @@ public:
     tSourceOutInList m_outInList;
 };
 
-class cSourceIoPacketGenerator
+class SourceIoPacketGenerator
 {
 public:
-    cSourceIoPacketGenerator(QJsonObject jsonParamsStructure);
-    ~cSourceIoPacketGenerator();
+    SourceIoPacketGenerator(QJsonObject jsonParamsStructure);
+    ~SourceIoPacketGenerator();
 
     // single
     tSourceOutInList generateListForAction(SourceActionTypes::ActionTypes actionType);
