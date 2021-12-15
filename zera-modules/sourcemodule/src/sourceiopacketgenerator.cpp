@@ -31,7 +31,7 @@ cSourceIoPacketGenerator::~cSourceIoPacketGenerator()
 cSourceCommandPacket cSourceIoPacketGenerator::generateOnOffPacket(SourceJsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
-    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateSwitchActions(requestedParams);
+    tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
     cSourceCommandPacket commandPack;
     commandPack.m_commandType = COMMAND_SWITCH;
     commandPack.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
@@ -46,7 +46,7 @@ cSourceCommandPacket cSourceIoPacketGenerator::generateStatusPollPacket()
     cSourceCommandPacket commandPack;
     commandPack.m_commandType = COMMAND_STATE_POLL;
     commandPack.m_errorBehavior = BEHAVE_CONTINUE_ON_ERROR;
-    tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generatePeriodicActions();
+    tSourceActionTypeList actionsTypeList = SourceActionGenerator::generatePeriodicActions();
     for(auto &actionType : actionsTypeList) {
         commandPack.m_outInList.append(generateListForAction(actionType));
     }

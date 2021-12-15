@@ -43,7 +43,7 @@ public:
 
 typedef QList<SourceActionTypes::ActionTypes> tSourceActionTypeList;
 
-class cSourceActionGenerator
+class SourceActionGenerator
 {
 public:
     static tSourceActionTypeList generateSwitchActions(SourceJsonParamApi requestedParams);

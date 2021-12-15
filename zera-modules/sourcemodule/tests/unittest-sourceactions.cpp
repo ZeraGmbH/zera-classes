@@ -25,7 +25,7 @@ TEST(TEST_SOURCEACTIONS, VALID_TYPE_DETECT) {
 TEST(TEST_SOURCEACTIONS, SWITCH_ON_COMPLETE) {
     SourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     EXPECT_EQ(actionList.count(), SourceActionTypes::switchTypeCount);
 }
 
@@ -33,7 +33,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_ON_COMPLETE) {
 TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
     SourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_GT(action, SourceActionTypes::SWITCH_UNDEF);
         EXPECT_LT(action, SourceActionTypes::SWITCH_UNDEF2);
@@ -45,7 +45,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
 TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
     SourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(paramApi);
+    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(paramApi);
     EXPECT_EQ(actionList.count(), 1);
     EXPECT_EQ(actionList[0], SourceActionTypes::ActionTypes::SWITCH_PHASES);
 }
@@ -54,7 +54,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
 TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
     SourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_GT(action, SourceActionTypes::SWITCH_UNDEF);
         EXPECT_LT(action, SourceActionTypes::SWITCH_UNDEF2);
@@ -63,7 +63,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_VALID) {
-    tSourceActionTypeList actionList = cSourceActionGenerator::generatePeriodicActions();
+    tSourceActionTypeList actionList = SourceActionGenerator::generatePeriodicActions();
     for(auto action : actionList) {
         EXPECT_GT(action, SourceActionTypes::PERIODIC_UNDEF);
         EXPECT_LT(action, SourceActionTypes::PERIODIC_UNDEF2);
@@ -72,7 +72,7 @@ TEST(TEST_SOURCEACTIONS, PERIODIC_VALID) {
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_COMPLETE) {
-    tSourceActionTypeList actionList = cSourceActionGenerator::generatePeriodicActions();
+    tSourceActionTypeList actionList = SourceActionGenerator::generatePeriodicActions();
     EXPECT_EQ(actionList.count(), SourceActionTypes::periodicTypeCount);
 }
 
