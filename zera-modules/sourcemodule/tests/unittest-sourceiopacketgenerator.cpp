@@ -22,15 +22,15 @@ TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {
 
 TEST(TEST_PACKET_GENERATIOR, EMPTY_IO_UNDEFINED) {
     cSourceSingleOutIn outIn;
-    EXPECT_EQ(outIn.m_actionType, cSourceActionTypes::SWITCH_UNDEF);
+    EXPECT_EQ(outIn.m_actionType, SourceActionTypes::SWITCH_UNDEF);
     EXPECT_EQ(outIn.m_responseType, RESP_UNDEFINED);
     EXPECT_EQ(outIn.m_responseTimeoutMs, 0);
 }
 
 TEST(TEST_PACKET_GENERATIOR, TYPE_SET) {
-    for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
+    for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
         cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             EXPECT_EQ(outIn.m_actionType, type);
         }
@@ -38,9 +38,9 @@ TEST(TEST_PACKET_GENERATIOR, TYPE_SET) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
-    for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
+    for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
         cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             EXPECT_FALSE(outIn.m_bytesSend.isEmpty());
         }
@@ -48,9 +48,9 @@ TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, RESPONSE_TYPE_SET) {
-    for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
+    for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
         cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             EXPECT_FALSE(outIn.m_responseType == RESP_UNDEFINED);
             EXPECT_FALSE(outIn.m_responseType >= RESP_UNDEF_BOTTOM);
@@ -70,9 +70,9 @@ TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
 }
 
 TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
-    for(int type=cSourceActionTypes::totalMinWithInvalid; type<=cSourceActionTypes::totalMaxWithInvalid; ++type) {
+    for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
         cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-        tSourceOutInList outInList = ioPackGenerator.generateListForAction(cSourceActionTypes::ActionTypes(type));
+        tSourceOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
             if(outIn.m_responseType == RESP_FULL_DATA_SEQUENCE || outIn.m_responseType == RESP_PART_DATA_SEQUENCE) {
                 EXPECT_FALSE(outIn.m_bytesExpected.isEmpty());

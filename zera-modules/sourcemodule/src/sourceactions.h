@@ -5,7 +5,7 @@
 #include <QJsonObject>
 #include "sourcejsonapi.h"
 
-class cSourceActionTypes
+class SourceActionTypes
 {
 public:
     enum ActionTypes {
@@ -41,7 +41,7 @@ public:
 };
 
 
-typedef QList<cSourceActionTypes::ActionTypes> tSourceActionTypeList;
+typedef QList<SourceActionTypes::ActionTypes> tSourceActionTypeList;
 
 class cSourceActionGenerator
 {
