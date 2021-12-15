@@ -86,7 +86,7 @@ private:
     tSourceInterfaceShPtr m_interface = nullptr;
     int m_iCurrentIoID = 0;
     bool m_bIoIsBusy = false;
-    cSourceIdGenerator m_IdGenerator;
+    SourceIdGenerator m_IdGenerator;
     QList<cWorkerCommandPacket> m_pendingCmdPacks;
     int m_nextPosInWorkerIo = 0;
     int m_maxPendingCmdPacks = 0;

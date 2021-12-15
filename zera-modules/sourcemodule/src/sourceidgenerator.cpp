@@ -1,6 +1,6 @@
 #include "sourceidgenerator.h"
 
-int cSourceIdGenerator::nextID()
+int SourceIdGenerator::nextID()
 {
     return ++m_currentID;
 }

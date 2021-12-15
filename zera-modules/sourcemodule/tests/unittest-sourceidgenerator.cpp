@@ -2,7 +2,7 @@
 #include "sourceidgenerator.h"
 
 TEST(TEST_ID_GENERATOR, INCREMENT) {
-    cSourceIdGenerator generator;
+    SourceIdGenerator generator;
     int id;
     id = generator.nextID();
     EXPECT_EQ(id, 0);

@@ -55,7 +55,7 @@ protected:
     friend class SourceInterfaceFactory;
 
     QString m_strDeviceInfo;
-    cSourceIdGenerator m_IDGenerator;
+    SourceIdGenerator m_IDGenerator;
     int m_currentIoID = 0;
 };
 
