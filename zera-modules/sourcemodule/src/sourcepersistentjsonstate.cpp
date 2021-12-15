@@ -1,17 +1,16 @@
 #include "sourcepersistentjsonstate.h"
 #include "sourcejsonapi.h"
+#include "jsonfilenames.h"
+#include "jsonstructureloader.h"
 
 SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
 {
-    QJsonObject paramStructure = cSourceJsonStructureLoader::getJsonStructure(type);
-    SourceJsonStructApi structureApi = SourceJsonStructApi(paramStructure);
-    if(!deviceName.isEmpty()) {
-        m_stateFileName = cSourceJsonFilenames::getJsonStatePath(deviceName, deviceVersion);
-        structureApi.setDeviceName(deviceName);
+    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName);
+    if(deviceName.isEmpty()) {
+        SourceJsonStructApi structApi(paramStructure);
+        deviceName = structApi.getDeviceName();
     }
-    else {
-        m_stateFileName = cSourceJsonFilenames::getJsonStatePath(type);
-    }
+    m_stateFileName = JsonFilenames::getJsonStatePath(deviceName, deviceVersion);
     m_jsonStatePersistenceHelper.setStateFilePath(m_stateFileName);
     m_jsonStatePersistenceHelper.setJsonParamStructure(paramStructure);
 }

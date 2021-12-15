@@ -1,8 +1,13 @@
 #include "sourcejsonapi.h"
 
-SourceJsonStructApi::SourceJsonStructApi(QJsonObject &paramStructure) :
+SourceJsonStructApi::SourceJsonStructApi(QJsonObject paramStructure) :
     m_paramStructure(paramStructure)
 {
+}
+
+QJsonObject SourceJsonStructApi::getParamStructure()
+{
+    return m_paramStructure;
 }
 
 QString SourceJsonStructApi::getDeviceName()
