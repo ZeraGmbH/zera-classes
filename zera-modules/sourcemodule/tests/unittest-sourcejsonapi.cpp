@@ -2,17 +2,18 @@
 #include <zera-json-params-state.h>
 #include "sourcejsonapi.h"
 #include "supportedsources.h"
+#include "jsonstructureloader.h"
 
 static void echoStructureName(int type)
 {
     Q_UNUSED(type)
-    //qInfo("Checking structure file %s...", qPrintable(cSourceJsonFilenames::getJsonStructurePath(SupportedSourceTypes(type))));
+    //qInfo("Checking structure file %s...", qPrintable(JsonFilenames::getJsonStructurePath(SupportedSourceTypes(type))));
 }
 
 TEST(TEST_SOURCE_STRUCT_API, NAME_VALID) { // check if all structure files have a name entry
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
-        QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
+        QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         QString key = "Name";
         EXPECT_EQ(structure.contains(key), true);
         EXPECT_EQ(structure[key].isString(), true);
@@ -23,7 +24,7 @@ TEST(TEST_SOURCE_STRUCT_API, NAME_VALID) { // check if all structure files have 
 TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_U_VALID) {
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
-        QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
+        QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         QString key = "UPhaseMax";
         EXPECT_EQ(structure.contains(key), true);
         SourceJsonStructApi jsonApi(structure);
@@ -34,7 +35,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_U_VALID) {
 TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_I_VALID) {
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
-        QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
+        QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         QString key = "IPhaseMax";
         EXPECT_EQ(structure.contains(key), true);
         SourceJsonStructApi jsonApi(structure);
@@ -45,7 +46,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_I_VALID) {
 TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_IO_PREFIX_VALID) {
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
-        QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
+        QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         QString key = "IoPrefix";
         EXPECT_EQ(structure.contains(key), true);
         SourceJsonStructApi jsonApi(structure);
@@ -57,7 +58,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_IO_PREFIX_VALID) {
 TEST(TEST_SOURCE_PARAM_API, ON_AVAIL_AND_OFF) { // check if all structure files have 'on":false
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
-        QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
+        QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         cZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);
         QJsonObject defaultParams = jsonParamsState.createDefaultJsonState();
@@ -71,7 +72,7 @@ TEST(TEST_SOURCE_PARAM_API, ON_AVAIL_AND_OFF) { // check if all structure files 
 TEST(TEST_SOURCE_PARAM_API, GETTER_SETTER_ON) { // initial off (see ON_AVAIL_AND_OFF) -> on -> off
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
-        QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
+        QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         cZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);
         QJsonObject defaultParams = jsonParamsState.createDefaultJsonState();
@@ -97,7 +98,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_SETTER_ON) { // initial off (see ON_AVAIL_AND
 TEST(TEST_SOURCE_PARAM_API, PHASE_PARAM_AVAIL_IN_DEFAULT) { // check if all generated default states contain mandatory items
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
-        QJsonObject structure = cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes(type));
+        QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         SourceJsonStructApi structApi = SourceJsonStructApi(structure);
         cZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);

@@ -6,7 +6,9 @@
 class SourceJsonStructApi
 {
 public:
-    SourceJsonStructApi(QJsonObject &paramStructure);
+    SourceJsonStructApi(QJsonObject paramStructure);
+
+    QJsonObject getParamStructure();
 
     QString getDeviceName();
     int getCountUPhases();
@@ -15,7 +17,7 @@ public:
 
     void setDeviceName(QString name);
 private:
-    QJsonObject& m_paramStructure;
+    QJsonObject m_paramStructure;
 };
 
 
