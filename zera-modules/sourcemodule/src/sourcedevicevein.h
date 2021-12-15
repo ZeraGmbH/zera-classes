@@ -15,12 +15,12 @@ namespace SOURCEMODULE
 {
 class cSourceVeinInterface;
 
-class SourceDevice : public SourceDeviceBase
+class SourceDeviceVein : public SourceDeviceBase
 {
     Q_OBJECT
 public:
-    explicit SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
-    virtual ~SourceDevice();
+    explicit SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
+    virtual ~SourceDeviceVein();
 
     // requests
     bool close(QUuid uuid);
@@ -34,7 +34,7 @@ public:
     void saveState(); // persistency
 
 signals:
-    void sigClosed(SourceDevice* sourceDevice, QUuid uuid);
+    void sigClosed(SourceDeviceVein* sourceDevice, QUuid uuid);
 
 public slots:
     void onNewVeinParamStatus(QVariant paramState);

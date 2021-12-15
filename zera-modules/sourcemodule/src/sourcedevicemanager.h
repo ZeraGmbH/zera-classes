@@ -12,7 +12,7 @@ class cSourceInterfaceBase;
 namespace SOURCEMODULE
 {
 
-class SourceDevice;
+class SourceDeviceVein;
 
 class cSourceDeviceManager : public QObject
 {
@@ -30,16 +30,16 @@ public:
     // getter
     int getSlotCount();
     int getActiveSlotCount();
-    SourceDevice* getSourceDevice(int slotNo);
+    SourceDeviceVein* getSourceDevice(int slotNo);
     int getDemoCount();
 
 signals:
-    void sigSourceScanFinished(int slotNo, SourceDevice* device, QUuid uuid, QString errMsg);
+    void sigSourceScanFinished(int slotNo, SourceDeviceVein* device, QUuid uuid, QString errMsg);
     void sigSlotRemoved(int slotNo, QUuid uuid, QString errMsg);
 
 private slots:
     void onScanFinished(tSourceScannerShPtr scanner);
-    void onSourceClosed(SourceDevice *sourceDevice, QUuid uuid);
+    void onSourceClosed(SourceDeviceVein *sourceDevice, QUuid uuid);
 
 signals:
     void sigSlotRemovedQueued(int slotNo, QUuid uuid, QString errMsg);
@@ -47,10 +47,10 @@ signals:
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();
-    void addSource(int slotPos, SourceDevice *device);
+    void addSource(int slotPos, SourceDeviceVein *device);
     bool tryStartDemoDeviceRemove(int slotNo);
 
-    QVector<SourceDevice*> m_sourceDeviceSlots;
+    QVector<SourceDeviceVein*> m_sourceDeviceSlots;
     QVector<QUuid> m_PendingRemoveHashes;
     int m_activeSlotCount = 0;
 

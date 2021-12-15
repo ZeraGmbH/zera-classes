@@ -2,18 +2,18 @@
 #define SOURCEDEVICEMANAGER_H
 
 #include <QObject>
-#include "sourcedevice.h"
+#include "sourcedevicevein.h"
 #include "sourcedevicemanager.h"
 
-using SOURCEMODULE::SourceDevice;
+using SOURCEMODULE::SourceDeviceVein;
 using SOURCEMODULE::cSourceDeviceManager;
 using SOURCEMODULE::cSourceScanner;
 
 struct FinishEntry
 {
-    FinishEntry(int slotNo, SourceDevice* device, QUuid uuid, QString errMsg);
+    FinishEntry(int slotNo, SourceDeviceVein* device, QUuid uuid, QString errMsg);
     int slotNo;
-    SourceDevice* device;
+    SourceDeviceVein* device;
     QUuid uuid;
     QString errMsg;
 };
@@ -22,7 +22,7 @@ class SourceDeviceManagerTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onSourceScanFinished(int slotNo, SourceDevice* device, QUuid uuid, QString errMsg);
+    void onSourceScanFinished(int slotNo, SourceDeviceVein* device, QUuid uuid, QString errMsg);
     void onSlotRemoved(int slotNo);
 
 private slots:
