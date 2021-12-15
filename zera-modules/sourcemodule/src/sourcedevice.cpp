@@ -21,7 +21,7 @@ SourceDevice::SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
     connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &SourceDevice::onInterfaceClosed);
-    connect(&m_sourceIoWorker, &cSourceIoWorker::sigCmdFinished,
+    connect(&m_sourceIoWorker, &SourceIoWorker::sigCmdFinished,
             this, &SourceDevice::onSourceCmdFinished);
 }
 

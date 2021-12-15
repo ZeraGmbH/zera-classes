@@ -53,11 +53,11 @@ namespace SourceDemoHelper
             QByteArray prefix = "");
 }
 
-class cSourceIoWorker : public QObject
+class SourceIoWorker : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceIoWorker(QObject *parent = nullptr);
+    explicit SourceIoWorker(QObject *parent = nullptr);
 
     void setIoInterface(tSourceInterfaceShPtr interface);
     void setMaxPendingActions(int maxPackets);

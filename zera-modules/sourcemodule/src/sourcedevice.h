@@ -57,7 +57,7 @@ private:
     SourceJsonParamApi m_paramsRequested;
     SourceJsonParamApi m_paramsCurrent;
 
-    cSourceIoWorker m_sourceIoWorker;
+    SourceIoWorker m_sourceIoWorker;
     int m_currentWorkerID = 0;
 
     bool m_closeRequested = false;
