@@ -60,7 +60,7 @@ TEST(TEST_PACKET_GENERATIOR, RESPONSE_TYPE_SET) {
 
 TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
     cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-    cSourceJsonParamApi params;
+    SourceJsonParamApi params;
     params.setOn(true);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(params);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
@@ -83,7 +83,7 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
 
 TEST(TEST_PACKET_GENERATIOR, PACK_GENERATIR_NOT_INVENTING) {
     cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-    cSourceJsonParamApi params;
+    SourceJsonParamApi params;
     params.setOn(true);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(params);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
@@ -95,7 +95,7 @@ TEST(TEST_PACKET_GENERATIOR, PACK_GENERATIR_NOT_INVENTING) {
 
 TEST(TEST_PACKET_GENERATIOR, SWITCH_PACKET_SPECIFICS) {
     cSourceIoPacketGenerator ioPackGenerator = cSourceIoPacketGenerator(QJsonObject());
-    cSourceJsonParamApi params;
+    SourceJsonParamApi params;
     params.setOn(false);
     cSourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     EXPECT_EQ(cmdPack.m_commandType, COMMAND_SWITCH);

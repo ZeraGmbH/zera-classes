@@ -1,84 +1,94 @@
 #include "sourcejsonapi.h"
 
-cSourceJsonStructApi::cSourceJsonStructApi(QJsonObject paramStructure) :
+SourceJsonStructApi::SourceJsonStructApi(QJsonObject &paramStructure) :
     m_paramStructure(paramStructure)
 {
 }
 
-int cSourceJsonStructApi::getCountUPhases()
+QString SourceJsonStructApi::getDeviceName()
+{
+    return m_paramStructure["Name"].toString();
+}
+
+int SourceJsonStructApi::getCountUPhases()
 {
     return m_paramStructure["UPhaseMax"].toInt(0);
 }
 
-int cSourceJsonStructApi::getCountIPhases()
+int SourceJsonStructApi::getCountIPhases()
 {
     return m_paramStructure["IPhaseMax"].toInt(0);
 }
 
-QByteArray cSourceJsonStructApi::getIoPrefix()
+QByteArray SourceJsonStructApi::getIoPrefix()
 {
     return m_paramStructure["IoPrefix"].toString().toLatin1();
 }
 
-cSourceJsonParamApi::cSourceJsonParamApi()
+void SourceJsonStructApi::setDeviceName(QString name)
+{
+    m_paramStructure["Name"] = name;
+}
+
+SourceJsonParamApi::SourceJsonParamApi()
 {
 }
 
-QJsonObject cSourceJsonParamApi::getParams()
+QJsonObject SourceJsonParamApi::getParams()
 {
     return m_params;
 }
 
-void cSourceJsonParamApi::setParams(QJsonObject params)
+void SourceJsonParamApi::setParams(QJsonObject params)
 {
     m_params = params;
 }
 
-bool cSourceJsonParamApi::getOn()
+bool SourceJsonParamApi::getOn()
 {
     return m_params.contains("on") && m_params["on"].toBool();
 }
 
-void cSourceJsonParamApi::setOn(bool on)
+void SourceJsonParamApi::setOn(bool on)
 {
     m_params["on"] = on;
 }
 
-double cSourceJsonParamApi::getRms(phaseType type, int phaseIdxBase0)
+double SourceJsonParamApi::getRms(phaseType type, int phaseIdxBase0)
 {
     QString phaseName = getPhaseName(type, phaseIdxBase0);
     return m_params[phaseName].toObject()["rms"].toDouble(0.0);
 }
 
-double cSourceJsonParamApi::getAngle(phaseType type, int phaseIdxBase0)
+double SourceJsonParamApi::getAngle(phaseType type, int phaseIdxBase0)
 {
     QString phaseName = getPhaseName(type, phaseIdxBase0);
     return m_params[phaseName].toObject()["angle"].toDouble(0.0);
 }
 
-bool cSourceJsonParamApi::getOn(phaseType type, int phaseIdxBase0)
+bool SourceJsonParamApi::getOn(phaseType type, int phaseIdxBase0)
 {
     QString phaseName = getPhaseName(type, phaseIdxBase0);
     QJsonObject obj = m_params[phaseName].toObject();
     return obj.contains("on") && obj["on"].toBool();
 }
 
-bool cSourceJsonParamApi::getFreqVarOn()
+bool SourceJsonParamApi::getFreqVarOn()
 {
     return m_params["Frequency"].toObject()["type"] == "var";
 }
 
-double cSourceJsonParamApi::getFreqVal()
+double SourceJsonParamApi::getFreqVal()
 {
     return m_params["Frequency"].toObject()["val"].toDouble();
 }
 
-QString cSourceJsonParamApi::getPhaseName(phaseType type, int phaseIdxBase0)
+QString SourceJsonParamApi::getPhaseName(phaseType type, int phaseIdxBase0)
 {
     return QString("%1%2").arg(getPhaseNamePrefix(type)).arg(phaseIdxBase0+1);
 }
 
-QString cSourceJsonParamApi::getPhaseNamePrefix(phaseType type)
+QString SourceJsonParamApi::getPhaseNamePrefix(phaseType type)
 {
     switch(type) {
     case phaseType::U:

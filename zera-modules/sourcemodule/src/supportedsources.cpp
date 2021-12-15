@@ -6,7 +6,7 @@
 #include "supportedsources.h"
 #include "sourcejsonapi.h"
 
-QString cSourceJsonFilenames::getJsonStructurePathName(SupportedSourceTypes type)
+QString cSourceJsonFilenames::getJsonStructurePath(SupportedSourceTypes type)
 {
     QString fileName, filePath;
     fileName = getJsonFileName(type);
@@ -16,17 +16,33 @@ QString cSourceJsonFilenames::getJsonStructurePathName(SupportedSourceTypes type
     return filePath;
 }
 
-QString cSourceJsonFilenames::getJsonStatePathName(SupportedSourceTypes type)
+QString cSourceJsonFilenames::getJsonStateDir()
 {
-    QString fileName = getJsonFileName(type);
     QString statePath(ZC_DEV_STATE_PATH);
     if(!statePath.endsWith("/")) {
         statePath += "/";
     }
-    QDir dir; // make sure path exists
-    dir.mkpath(statePath);
-    fileName = statePath + fileName;
-    return fileName;
+    return statePath;
+}
+
+QString cSourceJsonFilenames::getJsonStatePath(SupportedSourceTypes type)
+{
+    QString fileName = getJsonFileName(type);
+    QString statePath = getJsonStateDir();
+    createDirIfNotExist(statePath);
+    return statePath + fileName;
+}
+
+QString cSourceJsonFilenames::getJsonStatePath(QString deviceName, QString deviceVersion)
+{
+    QString fileName = deviceName;
+    if(!deviceVersion.isEmpty()) {
+        fileName += "-" + deviceVersion;
+    }
+    fileName += ".json";
+    QString statePath = getJsonStateDir();
+    createDirIfNotExist(statePath);
+    return statePath + fileName;
 }
 
 QString cSourceJsonFilenames::getJsonFileName(SupportedSourceTypes type)
@@ -53,6 +69,12 @@ QString cSourceJsonFilenames::getJsonFileName(SupportedSourceTypes type)
     return fileName;
 }
 
+void cSourceJsonFilenames::createDirIfNotExist(QString path)
+{
+    QDir dir;
+    dir.mkpath(path);
+}
+
 QJsonObject cSourceJsonStructureLoader::getJsonStructure(QString fileName)
 {
     QJsonObject jsonStructureRaw = cJsonFileLoader::loadJsonFile(fileName);
@@ -64,7 +86,7 @@ QJsonObject cSourceJsonStructureLoader::getJsonStructure(QString fileName)
 
 QJsonObject cSourceJsonStructureLoader::getJsonStructure(SupportedSourceTypes type)
 {
-    return getJsonStructure(cSourceJsonFilenames::getJsonStructurePathName(type));
+    return getJsonStructure(cSourceJsonFilenames::getJsonStructurePath(type));
 }
 
 

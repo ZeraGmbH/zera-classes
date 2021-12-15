@@ -70,7 +70,7 @@ public:
     // single
     tSourceOutInList generateListForAction(cSourceActionTypes::ActionTypes actionType);
     // composed
-    cSourceCommandPacket generateOnOffPacket(cSourceJsonParamApi requestedParams);
+    cSourceCommandPacket generateOnOffPacket(SourceJsonParamApi requestedParams);
     cSourceCommandPacket generateStatusPollPacket();
 private:
     tSourceOutInList generateRMSAndAngleUList();
@@ -82,8 +82,8 @@ private:
     tSourceOutInList generateQueryStatusList();
     tSourceOutInList generateQueryActualList();
 
-    cSourceJsonStructApi* m_jsonStructApi = nullptr;
-    cSourceJsonParamApi m_paramsRequested;
+    SourceJsonStructApi* m_jsonStructApi = nullptr;
+    SourceJsonParamApi m_paramsRequested;
 
     QByteArray m_ioPrefix;
 };

@@ -7,7 +7,7 @@ bool cSourceActionTypes::isValidType(cSourceActionTypes::ActionTypes type)
             (type >= firstPeriodicType && type <= lastPeriodicType);
 }
 
-tSourceActionTypeList cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi requestedParams)
+tSourceActionTypeList cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi requestedParams)
 {
     tSourceActionTypeList list;
     // 1st guess: switch off just switch phases

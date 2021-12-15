@@ -18,9 +18,13 @@ enum SupportedSourceTypes {
 class cSourceJsonFilenames
 {
 public:
-    static QString getJsonStructurePathName(SupportedSourceTypes type);
-    static QString getJsonStatePathName(SupportedSourceTypes type);
+    static QString getJsonStructurePath(SupportedSourceTypes type);
+    static QString getJsonStateDir();
+    static QString getJsonStatePath(SupportedSourceTypes type);
+    static QString getJsonStatePath(QString deviceName, QString deviceVersion);
     static QString getJsonFileName(SupportedSourceTypes type);
+public:
+    static void createDirIfNotExist(QString path);
 };
 
 

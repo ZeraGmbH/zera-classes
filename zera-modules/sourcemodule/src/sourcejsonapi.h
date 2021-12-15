@@ -3,16 +3,19 @@
 
 #include <QJsonObject>
 
-class cSourceJsonStructApi
+class SourceJsonStructApi
 {
 public:
-    cSourceJsonStructApi(QJsonObject paramStructure);
+    SourceJsonStructApi(QJsonObject &paramStructure);
 
+    QString getDeviceName();
     int getCountUPhases();
     int getCountIPhases();
     QByteArray getIoPrefix();
+
+    void setDeviceName(QString name);
 private:
-    QJsonObject m_paramStructure;
+    QJsonObject& m_paramStructure;
 };
 
 
@@ -21,10 +24,10 @@ enum class phaseType{
     I  //Current
 };
 
-class cSourceJsonParamApi
+class SourceJsonParamApi
 {
 public:
-    cSourceJsonParamApi();
+    SourceJsonParamApi();
 
     QJsonObject getParams();
     void setParams(QJsonObject params);
