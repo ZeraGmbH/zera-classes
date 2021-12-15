@@ -9,11 +9,14 @@ QJsonObject JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes t
     return loadJsonStructureFromFile(JsonFilenames::getJsonStructurePath(type));
 }
 
-QJsonObject JsonStructureLoader::loadJsonStructure(SupportedSourceTypes type, QString deviceName)
+QJsonObject JsonStructureLoader::loadJsonStructure(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
 {
     SourceJsonStructApi structureApi = SourceJsonStructApi(loadJsonDefaultStructure(type));
     if(!deviceName.isEmpty()) {
         structureApi.setDeviceName(deviceName);
+    }
+    if(!deviceVersion.isEmpty()) {
+        structureApi.setDeviceVersion(deviceVersion);
     }
     return structureApi.getParamStructure();
 }
