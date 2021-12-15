@@ -11,11 +11,13 @@ public:
     QJsonObject getParamStructure();
 
     QString getDeviceName();
+    QString getDeviceVersion();
     int getCountUPhases();
     int getCountIPhases();
     QByteArray getIoPrefix();
 
     void setDeviceName(QString name);
+    void setDeviceVersion(QString version);
 private:
     QJsonObject m_paramStructure;
 };

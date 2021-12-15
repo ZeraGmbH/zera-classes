@@ -5,15 +5,15 @@
 #include "sourcedevice.h"
 #include "sourcedevicemanager.h"
 
-using SOURCEMODULE::cSourceDevice;
+using SOURCEMODULE::SourceDevice;
 using SOURCEMODULE::cSourceDeviceManager;
 using SOURCEMODULE::cSourceScanner;
 
 struct FinishEntry
 {
-    FinishEntry(int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg);
+    FinishEntry(int slotNo, SourceDevice* device, QUuid uuid, QString errMsg);
     int slotNo;
-    cSourceDevice* device;
+    SourceDevice* device;
     QUuid uuid;
     QString errMsg;
 };
@@ -22,7 +22,7 @@ class SourceDeviceManagerTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onSourceScanFinished(int slotNo, cSourceDevice* device, QUuid uuid, QString errMsg);
+    void onSourceScanFinished(int slotNo, SourceDevice* device, QUuid uuid, QString errMsg);
     void onSlotRemoved(int slotNo);
 
 private slots:

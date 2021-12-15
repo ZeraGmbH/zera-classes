@@ -14,7 +14,7 @@ namespace SOURCEMODULE
 {
 
 class cSourceModule;
-class cSourceDevice;
+class SourceDevice;
 class cSourceDeviceManager;
 
 class cSourceModuleProgram: public cBaseMeasWorkProgram
@@ -52,7 +52,7 @@ private:
     bool m_bDeafenDemoChange = false;
 
 private slots:
-    void onSourceScanFinished(int slotPosition, cSourceDevice *device, QUuid uuid, QString errMsg);
+    void onSourceScanFinished(int slotPosition, SourceDevice *device, QUuid uuid, QString errMsg);
     void onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg);
 
     // vein change handlers

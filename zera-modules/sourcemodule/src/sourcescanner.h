@@ -11,7 +11,7 @@ class cSourceInterfaceBase;
 
 namespace SOURCEMODULE
 {
-class cSourceDevice;
+class SourceDevice;
 class cSourceScanner;
 typedef QSharedPointer<cSourceScanner> tSourceScannerShPtr;
 
@@ -27,7 +27,7 @@ public:
     void startScan();
 
     // getter
-    cSourceDevice* getSourceDeviceFound();
+    SourceDevice* getSourceDeviceFound();
     QUuid getUuid();
     static int getInstanceCount();
 signals:
@@ -47,7 +47,7 @@ private:
     int m_ioId = 0;
     tSourceInterfaceShPtr m_ioInterface;
     QUuid m_uuid;
-    cSourceDevice* m_sourceDeviceIdentified;
+    SourceDevice* m_sourceDeviceIdentified;
     QByteArray m_bytesReceived;
     int m_currentSourceTested = 0;
     tSourceScannerShPtr m_safePoinerOnThis;

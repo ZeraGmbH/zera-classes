@@ -15,6 +15,11 @@ QString SourceJsonStructApi::getDeviceName()
     return m_paramStructure["Name"].toString();
 }
 
+QString SourceJsonStructApi::getDeviceVersion()
+{
+    return m_paramStructure["Version"].toString();
+}
+
 int SourceJsonStructApi::getCountUPhases()
 {
     return m_paramStructure["UPhaseMax"].toInt(0);
@@ -33,6 +38,11 @@ QByteArray SourceJsonStructApi::getIoPrefix()
 void SourceJsonStructApi::setDeviceName(QString name)
 {
     m_paramStructure["Name"] = name;
+}
+
+void SourceJsonStructApi::setDeviceVersion(QString version)
+{
+    m_paramStructure["Version"] = version;
 }
 
 SourceJsonParamApi::SourceJsonParamApi()
