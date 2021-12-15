@@ -48,7 +48,7 @@ void SourceDeviceBase::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
 void SourceDeviceBase::switchState(QJsonObject state)
 {
     m_paramsRequested.setParams(state);
-    cSourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
+    SourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
     cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
         SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(m_ioInterface.get());

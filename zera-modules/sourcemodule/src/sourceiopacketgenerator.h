@@ -27,11 +27,11 @@ enum SourceIoResponseTypes {
     RESP_UNDEF_BOTTOM
 };
 
-class cSourceSingleOutIn
+class SourceSingleOutIn
 {
 public:
-    cSourceSingleOutIn() {}
-    cSourceSingleOutIn(SourceIoResponseTypes ioResponseType,
+    SourceSingleOutIn() {}
+    SourceSingleOutIn(SourceIoResponseTypes ioResponseType,
                        QByteArray bytesSend,
                        QByteArray bytesExpected,
                        int responseTimeoutMs = 0) :
@@ -42,7 +42,7 @@ public:
         m_bytesExpected(bytesExpected)
     {}
     void setActionType(SourceActionTypes::ActionTypes actionType);
-    bool operator == (const cSourceSingleOutIn& other);
+    bool operator == (const SourceSingleOutIn& other);
 
     SourceActionTypes::ActionTypes m_actionType = SourceActionTypes::SWITCH_UNDEF;
     SourceIoResponseTypes m_responseType = RESP_UNDEFINED;
@@ -51,9 +51,9 @@ public:
     QByteArray m_bytesExpected;
 };
 
-typedef QList<cSourceSingleOutIn> tSourceOutInList;
+typedef QList<SourceSingleOutIn> tSourceOutInList;
 
-class cSourceCommandPacket
+class SourceCommandPacket
 {
 public:
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
@@ -70,8 +70,8 @@ public:
     // single
     tSourceOutInList generateListForAction(SourceActionTypes::ActionTypes actionType);
     // composed
-    cSourceCommandPacket generateOnOffPacket(SourceJsonParamApi requestedParams);
-    cSourceCommandPacket generateStatusPollPacket();
+    SourceCommandPacket generateOnOffPacket(SourceJsonParamApi requestedParams);
+    SourceCommandPacket generateStatusPollPacket();
 private:
     tSourceOutInList generateRMSAndAngleUList();
     tSourceOutInList generateRMSAndAngleIList();
@@ -89,7 +89,7 @@ private:
 };
 
 
-class cSourceIoCmdHelper
+class SourceIoCmdFormatHelper
 {
 public:
     static QByteArray formatDouble(double val, int preDigits, char digit, int postDigits);

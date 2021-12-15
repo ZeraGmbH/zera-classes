@@ -14,11 +14,11 @@ namespace SOURCEMODULE
 
 // Sourcemoduleconfiguration holds module configuration
 
-class cSourceModuleConfiguration: public cBaseModuleConfiguration
+class SourceModuleConfiguration: public cBaseModuleConfiguration
 {
     Q_OBJECT
 public:
-    cSourceModuleConfiguration();
+    SourceModuleConfiguration();
     virtual void setConfiguration(QByteArray xmlString) override;
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     configuration* getConfigXMLWrapper();

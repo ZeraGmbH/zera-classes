@@ -10,27 +10,24 @@
 #include "basemeasmodule.h"
 #include "sourcemoduleconfiguration.h"
 
-
 namespace SOURCEMODULE
 {
-
-
 #define BaseModuleName "SourceModule"
 #define BaseSCPIModuleName "SRC"
 
-class cSourceModuleConfiguration;
-class cSourceModuleProgram;
+class SourceModuleConfiguration;
+class SourceModuleProgram;
 
-class cSourceModule : public cBaseMeasModule
+class SourceModule : public cBaseMeasModule
 {
 Q_OBJECT
 
 public:
-    cSourceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
+    SourceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
 
 protected:
-    cSourceModuleProgram *m_pProgram; // our program, lets say the working horse
+    SourceModuleProgram *m_pProgram; // our program, lets say the working horse
 
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module

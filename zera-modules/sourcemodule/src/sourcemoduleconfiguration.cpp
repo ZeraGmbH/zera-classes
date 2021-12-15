@@ -7,12 +7,12 @@
 namespace SOURCEMODULE
 {
 
-cSourceModuleConfiguration::cSourceModuleConfiguration()
+SourceModuleConfiguration::SourceModuleConfiguration()
 {
 }
 
 
-void cSourceModuleConfiguration::setConfiguration(QByteArray xmlString)
+void SourceModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -41,7 +41,7 @@ void cSourceModuleConfiguration::setConfiguration(QByteArray xmlString)
 }
 
 
-QByteArray cSourceModuleConfiguration::exportConfiguration()
+QByteArray SourceModuleConfiguration::exportConfiguration()
 {
     std::stringstream oStream;
     configuration_(oStream, *m_xsdGeneratedConfig);
@@ -49,7 +49,7 @@ QByteArray cSourceModuleConfiguration::exportConfiguration()
     return xmlExport;
 }
 
-configuration* cSourceModuleConfiguration::getConfigXMLWrapper()
+configuration* SourceModuleConfiguration::getConfigXMLWrapper()
 {
     return m_xsdGeneratedConfig.get();
 }
