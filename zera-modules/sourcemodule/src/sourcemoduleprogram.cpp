@@ -146,7 +146,7 @@ void cSourceModuleProgram::updateDemoCount()
     m_bDeafenDemoChange = false;
 }
 
-void cSourceModuleProgram::onSourceScanFinished(int slotPosition, cSourceDevice* device, QUuid uuid, QString errMsg)
+void cSourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDevice* device, QUuid uuid, QString errMsg)
 {
     bool sourceAdded = slotPosition >= 0 && device;
     if(sourceAdded) {

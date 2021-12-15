@@ -5,7 +5,7 @@
 
 SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
 {
-    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName);
+    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, deviceVersion);
     if(deviceName.isEmpty()) {
         SourceJsonStructApi structApi(paramStructure);
         deviceName = structApi.getDeviceName();

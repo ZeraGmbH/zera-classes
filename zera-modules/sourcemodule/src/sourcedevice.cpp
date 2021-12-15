@@ -10,30 +10,27 @@
 namespace SOURCEMODULE
 {
 
-bool cSourceDevice::m_removeDemoByDisconnect = false;
+bool SourceDevice::m_removeDemoByDisconnect = false;
 
-cSourceDevice::cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
-    QObject(nullptr),
-    m_ioInterface(interface)
+SourceDevice::SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
+    SourceDeviceBase(interface, type, name, version)
 {
     m_persistentParamState = new SourcePersistentJsonState(type, name, version);
-    m_outInGenerator = new cSourceIoPacketGenerator(m_persistentParamState->getJsonStructure());
     m_paramsCurrent.setParams(m_persistentParamState->loadJsonState());
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
-    connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &cSourceDevice::onInterfaceClosed);
+    connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &SourceDevice::onInterfaceClosed);
     connect(&m_sourceIoWorker, &cSourceIoWorker::sigCmdFinished,
-            this, &cSourceDevice::onSourceCmdFinished);
+            this, &SourceDevice::onSourceCmdFinished);
 }
 
-cSourceDevice::~cSourceDevice()
+SourceDevice::~SourceDevice()
 {
-    delete m_outInGenerator;
     delete m_persistentParamState;
 }
 
-bool cSourceDevice::close(QUuid uuid)
+bool SourceDevice::close(QUuid uuid)
 {
     bool closeRequested = false;
     if(!m_closeRequested) {
@@ -64,7 +61,7 @@ bool cSourceDevice::close(QUuid uuid)
     return closeRequested;
 }
 
-void cSourceDevice::switchLoad(QJsonObject jsonParamsState)
+void SourceDevice::switchLoad(QJsonObject jsonParamsState)
 {
     m_deviceStatus.clearWarningsErrors();
     m_deviceStatus.setBusy(true);
@@ -72,39 +69,39 @@ void cSourceDevice::switchLoad(QJsonObject jsonParamsState)
     switchState(jsonParamsState);
 }
 
-QStringList cSourceDevice::getLastErrors()
+QStringList SourceDevice::getLastErrors()
 {
     return m_deviceStatus.getErrors();
 }
 
-void cSourceDevice::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
+void SourceDevice::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
 {
     m_bDemoDelayFollowsTimeout = demoDelayFollowsTimeout;
 }
 
-void cSourceDevice::switchOff()
+void SourceDevice::switchOff()
 {
     m_paramsCurrent.setOn(false);
     switchState(m_paramsCurrent.getParams());
 }
 
-void cSourceDevice::doFinalCloseActivities()
+void SourceDevice::doFinalCloseActivities()
 {
     setVeinParamStructure(QJsonObject());
     setVeinParamState(QJsonObject());
     setVeinDeviceState(QJsonObject());
     if(m_veinInterface) {
-        disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
+        disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &SourceDevice::onNewVeinParamStatus);
     }
     emit sigClosed(this, m_closeUuid);
 }
 
-void cSourceDevice::onNewVeinParamStatus(QVariant paramState)
+void SourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
     switchLoad(paramState.toJsonObject());
 }
 
-void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
+void SourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
 {
     if(m_currentWorkerID == cmdPack.m_workerId) {
         m_deviceStatus.setBusy(false);
@@ -131,36 +128,26 @@ void cSourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
     }
 }
 
-bool cSourceDevice::isDemo()
-{
-    return m_ioInterface->isDemo();
-}
-
-QString cSourceDevice::getInterfaceDeviceInfo()
-{
-    return m_ioInterface->getDeviceInfo();
-}
-
-void cSourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
+void SourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
     setVeinParamStructure(m_persistentParamState->getJsonStructure());
     setVeinParamState(m_paramsCurrent.getParams());
     setVeinDeviceState(m_deviceStatus.getJsonStatus());
-    connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &cSourceDevice::onNewVeinParamStatus);
+    connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &SourceDevice::onNewVeinParamStatus);
 }
 
-void cSourceDevice::saveState()
+void SourceDevice::saveState()
 {
     m_persistentParamState->saveJsonState(m_paramsCurrent.getParams());
 }
 
-void cSourceDevice::onInterfaceClosed()
+void SourceDevice::onInterfaceClosed()
 {
     doFinalCloseActivities();
 }
 
-void cSourceDevice::switchState(QJsonObject state)
+void SourceDevice::switchState(QJsonObject state)
 {
     m_paramsRequested.setParams(state);
     cSourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
@@ -174,7 +161,7 @@ void cSourceDevice::switchState(QJsonObject state)
     m_currentWorkerID = m_sourceIoWorker.enqueueAction(workerPack);
 }
 
-void cSourceDevice::setVeinParamStructure(QJsonObject paramStruct)
+void SourceDevice::setVeinParamStructure(QJsonObject paramStruct)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceInfo()->setValue(paramStruct);
@@ -182,14 +169,14 @@ void cSourceDevice::setVeinParamStructure(QJsonObject paramStruct)
     }
 }
 
-void cSourceDevice::setVeinParamState(QJsonObject paramState)
+void SourceDevice::setVeinParamState(QJsonObject paramState)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceParameter()->setValue(paramState);
     }
 }
 
-void cSourceDevice::setVeinDeviceState(QJsonObject deviceState)
+void SourceDevice::setVeinDeviceState(QJsonObject deviceState)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceState()->setValue(deviceState);

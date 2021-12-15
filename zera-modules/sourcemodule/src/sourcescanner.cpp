@@ -64,7 +64,7 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
                         << deviceResponseTypePair("TSFG", SOURCE_DEMO_FG_4PHASE))
        ;
 
-cSourceDevice *cSourceScanner::getSourceDeviceFound()
+SourceDevice *cSourceScanner::getSourceDeviceFound()
 {
     return m_sourceDeviceIdentified;
 }
@@ -182,7 +182,7 @@ void cSourceScanner::onIoFinished(int ioId, bool error)
             deviceVersion = extractVersionFromResponse(sourceTypeFound);
             deviceName = extractNameFromResponse(responsePrefix, deviceVersion, sourceTypeFound);
         }
-        m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, sourceTypeFound, deviceName, deviceVersion);
+        m_sourceDeviceIdentified = new SourceDevice(m_ioInterface, sourceTypeFound, deviceName, deviceVersion);
 
         emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;
