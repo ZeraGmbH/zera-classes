@@ -14,11 +14,11 @@ namespace SOURCEMODULE
 
 class SourceDeviceVein;
 
-class cSourceDeviceManager : public QObject
+class SourceDeviceManager : public QObject
 {
     Q_OBJECT
 public:
-    cSourceDeviceManager(int countSlots, QObject *parent = 0);
+    SourceDeviceManager(int countSlots, QObject *parent = 0);
 
     // requests
     void startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid);

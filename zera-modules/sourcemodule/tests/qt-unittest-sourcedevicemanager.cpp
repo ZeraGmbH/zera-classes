@@ -32,17 +32,17 @@ void SourceDeviceManagerTest::init()
 void SourceDeviceManagerTest::initSlotCount()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     checkSlotCount(devMan, slotCount, 0, 0);
 }
 
 void SourceDeviceManagerTest::removeSlotsOnEmpty()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     int slotNoReceived = 0;
     int slotRemoveReceived = 0;
-    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+    connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
         Q_UNUSED(uuidParam)
         slotRemoveReceived++;
         slotNoReceived = slotNo;
@@ -56,14 +56,14 @@ void SourceDeviceManagerTest::removeSlotsOnEmpty()
 void SourceDeviceManagerTest::removeSlotInvalidBelow()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     QTest::qWait(10);
     int slotNoReceived = 0;
     int slotRemoveReceived = 0;
-    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+    connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
         Q_UNUSED(uuidParam)
         slotRemoveReceived++;
         slotNoReceived = slotNo;
@@ -77,14 +77,14 @@ void SourceDeviceManagerTest::removeSlotInvalidBelow()
 void SourceDeviceManagerTest::removeSlotInvalidAbove()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     QTest::qWait(10);
     int slotNoReceived = 0;
     int slotRemoveReceived = 0;
-    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+    connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
         Q_UNUSED(uuidParam)
         slotRemoveReceived++;
         slotNoReceived = slotNo;
@@ -98,14 +98,14 @@ void SourceDeviceManagerTest::removeSlotInvalidAbove()
 void SourceDeviceManagerTest::removeTooManySlots()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     QTest::qWait(10);
     int validSlotNoReceived = 0;
     int invalidSlotNoReceived = 0;
-    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+    connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
         Q_UNUSED(uuidParam)
         if(slotNo >= 0 && slotNo < slotCount) {
             validSlotNoReceived++;
@@ -126,14 +126,14 @@ void SourceDeviceManagerTest::removeTooManySlots()
 void SourceDeviceManagerTest::removeDevInfoUnknown()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     QTest::qWait(10);
     QUuid uuid = QUuid::createUuid();
     int slotReceived = 0;
-    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+    connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
         Q_UNUSED(uuidParam)
         slotReceived = slotNo;
     });
@@ -145,13 +145,13 @@ void SourceDeviceManagerTest::removeDevInfoUnknown()
 void SourceDeviceManagerTest::removeDevInfoUuidIdentical()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     QUuid uuidsReceived[slotCount];
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     QTest::qWait(10);
-    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
+    connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
         uuidsReceived[slotNo] = uuidParam;
     });
     QUuid uuidsSet[slotCount];
@@ -167,7 +167,7 @@ void SourceDeviceManagerTest::removeDevInfoUuidIdentical()
 
 void SourceDeviceManagerTest::demoScanOne()
 {
-    cSourceDeviceManager devMan(1);
+    SourceDeviceManager devMan(1);
     devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     QTest::qWait(50);
     checkSlotCount(devMan, 1, 1, 1);
@@ -176,7 +176,7 @@ void SourceDeviceManagerTest::demoScanOne()
 void SourceDeviceManagerTest::demoScanTooMany()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; ++i) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
@@ -189,7 +189,7 @@ void SourceDeviceManagerTest::demoScanTooMany()
 void SourceDeviceManagerTest::demoScanAll()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
@@ -200,7 +200,7 @@ void SourceDeviceManagerTest::demoScanAll()
 void SourceDeviceManagerTest::demoScanAllAndRemove()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager devMan(slotCount);
+    SourceDeviceManager devMan(slotCount);
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
@@ -241,8 +241,8 @@ void SourceDeviceManagerTest::demoRemoveNotificationTooMany()
 void SourceDeviceManagerTest::noCrashOnManagerDeadBeforeScanFinished()
 {
     constexpr int slotCount = 3;
-    cSourceDeviceManager* devMan = new cSourceDeviceManager(slotCount);
-    connect(devMan, &cSourceDeviceManager::sigSourceScanFinished,
+    SourceDeviceManager* devMan = new SourceDeviceManager(slotCount);
+    connect(devMan, &SourceDeviceManager::sigSourceScanFinished,
             this, &SourceDeviceManagerTest::onSourceScanFinished);
     for(int i=0; i<slotCount; i++) {
         devMan->startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
@@ -254,7 +254,7 @@ void SourceDeviceManagerTest::noCrashOnManagerDeadBeforeScanFinished()
     QCOMPARE(cSourceScanner::getInstanceCount(), 0);
 }
 
-void SourceDeviceManagerTest::checkSlotCount(cSourceDeviceManager& devMan, int total, int active, int demo)
+void SourceDeviceManagerTest::checkSlotCount(SourceDeviceManager& devMan, int total, int active, int demo)
 {
     QCOMPARE(devMan.getSlotCount(), total);
     QCOMPARE(devMan.getActiveSlotCount(), active);
@@ -263,10 +263,10 @@ void SourceDeviceManagerTest::checkSlotCount(cSourceDeviceManager& devMan, int t
 
 void SourceDeviceManagerTest::checkAddRemoveNotifications(int total, int add, int remove)
 {
-    cSourceDeviceManager devMan(total);
-    connect(&devMan, &cSourceDeviceManager::sigSourceScanFinished,
+    SourceDeviceManager devMan(total);
+    connect(&devMan, &SourceDeviceManager::sigSourceScanFinished,
             this, &SourceDeviceManagerTest::onSourceScanFinished);
-    connect(&devMan, &cSourceDeviceManager::sigSlotRemoved,
+    connect(&devMan, &SourceDeviceManager::sigSlotRemoved,
             this, &SourceDeviceManagerTest::onSlotRemoved);
 
     for(int i=0; i<add; i++) {

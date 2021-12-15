@@ -6,7 +6,7 @@
 #include "sourcedevicemanager.h"
 
 using SOURCEMODULE::SourceDeviceVein;
-using SOURCEMODULE::cSourceDeviceManager;
+using SOURCEMODULE::SourceDeviceManager;
 using SOURCEMODULE::cSourceScanner;
 
 struct FinishEntry
@@ -51,7 +51,7 @@ private slots:
     void noCrashOnManagerDeadBeforeScanFinished();
 
 private:
-    void checkSlotCount(cSourceDeviceManager &devMan, int total, int active, int demo);
+    void checkSlotCount(SourceDeviceManager &devMan, int total, int active, int demo);
     void checkAddRemoveNotifications(int total, int add, int remove);
 
     QList<FinishEntry> m_listSourcesAdded;
