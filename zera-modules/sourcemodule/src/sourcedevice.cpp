@@ -21,8 +21,6 @@ SourceDevice::SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
     connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &SourceDevice::onInterfaceClosed);
-    connect(&m_sourceIoWorker, &SourceIoWorker::sigCmdFinished,
-            this, &SourceDevice::onSourceCmdFinished);
 }
 
 SourceDevice::~SourceDevice()
@@ -61,7 +59,7 @@ bool SourceDevice::close(QUuid uuid)
     return closeRequested;
 }
 
-void SourceDevice::switchLoad(QJsonObject jsonParamsState)
+void SourceDevice::switchVeinLoad(QJsonObject jsonParamsState)
 {
     m_deviceStatus.clearWarningsErrors();
     m_deviceStatus.setBusy(true);
@@ -72,17 +70,6 @@ void SourceDevice::switchLoad(QJsonObject jsonParamsState)
 QStringList SourceDevice::getLastErrors()
 {
     return m_deviceStatus.getErrors();
-}
-
-void SourceDevice::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
-{
-    m_bDemoDelayFollowsTimeout = demoDelayFollowsTimeout;
-}
-
-void SourceDevice::switchOff()
-{
-    m_paramsCurrent.setOn(false);
-    switchState(m_paramsCurrent.getParams());
 }
 
 void SourceDevice::doFinalCloseActivities()
@@ -98,11 +85,12 @@ void SourceDevice::doFinalCloseActivities()
 
 void SourceDevice::onNewVeinParamStatus(QVariant paramState)
 {
-    switchLoad(paramState.toJsonObject());
+    switchVeinLoad(paramState.toJsonObject());
 }
 
 void SourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
 {
+    SourceDeviceBase::onSourceCmdFinished(cmdPack);
     if(m_currentWorkerID == cmdPack.m_workerId) {
         m_deviceStatus.setBusy(false);
         if(!cmdPack.passedAll()) {
@@ -117,7 +105,6 @@ void SourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
             }
         }
         else {
-            m_paramsCurrent.setParams(m_paramsRequested.getParams());
             saveState();
         }
         setVeinParamState(m_paramsCurrent.getParams());
@@ -145,20 +132,6 @@ void SourceDevice::saveState()
 void SourceDevice::onInterfaceClosed()
 {
     doFinalCloseActivities();
-}
-
-void SourceDevice::switchState(QJsonObject state)
-{
-    m_paramsRequested.setParams(state);
-    cSourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
-    cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
-    if(isDemo()) {
-        cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(m_ioInterface.get());
-        demoInterface->setDelayFollowsTimeout(m_bDemoDelayFollowsTimeout);
-        QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
-        demoInterface->setResponses(responseList);
-    }
-    m_currentWorkerID = m_sourceIoWorker.enqueueAction(workerPack);
 }
 
 void SourceDevice::setVeinParamStructure(QJsonObject paramStruct)

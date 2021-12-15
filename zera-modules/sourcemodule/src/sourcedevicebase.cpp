@@ -12,15 +12,18 @@ SourceDeviceBase::SourceDeviceBase(tSourceInterfaceShPtr interface, SupportedSou
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, version);
     m_outInGenerator = new cSourceIoPacketGenerator(paramStructure);
 
-    /*if(deviceName.isEmpty()) {
-        SourceJsonStructApi structApi(paramStructure);
-        deviceName = structApi.getDeviceName();
-    }*/
+    connect(&m_sourceIoWorker, &SourceIoWorker::sigCmdFinished,
+            this, &SourceDeviceBase::onSourceCmdFinished);
 }
 
 SourceDeviceBase::~SourceDeviceBase()
 {
     delete m_outInGenerator;
+}
+
+void SourceDeviceBase::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
+{
+    m_bDemoDelayFollowsTimeout = demoDelayFollowsTimeout;
 }
 
 bool SourceDeviceBase::isDemo()
@@ -31,6 +34,35 @@ bool SourceDeviceBase::isDemo()
 QString SourceDeviceBase::getInterfaceDeviceInfo()
 {
     return m_ioInterface->getDeviceInfo();
+}
+
+void SourceDeviceBase::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
+{
+    if(m_currentWorkerID == cmdPack.m_workerId) {
+        if(cmdPack.passedAll()) {
+            m_paramsCurrent.setParams(m_paramsRequested.getParams());
+        }
+    }
+}
+
+void SourceDeviceBase::switchState(QJsonObject state)
+{
+    m_paramsRequested.setParams(state);
+    cSourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
+    cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    if(isDemo()) {
+        cSourceInterfaceDemo* demoInterface = static_cast<cSourceInterfaceDemo*>(m_ioInterface.get());
+        demoInterface->setDelayFollowsTimeout(m_bDemoDelayFollowsTimeout);
+        QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
+        demoInterface->setResponses(responseList);
+    }
+    m_currentWorkerID = m_sourceIoWorker.enqueueAction(workerPack);
+}
+
+void SourceDeviceBase::switchOff()
+{
+    m_paramsCurrent.setOn(false);
+    switchState(m_paramsCurrent.getParams());
 }
 
 
