@@ -248,10 +248,10 @@ void SourceDeviceManagerTest::noCrashOnManagerDeadBeforeScanFinished()
         devMan->startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
     }
     delete devMan;
-    QCOMPARE(cSourceScanner::getInstanceCount(), slotCount);
+    QCOMPARE(SourceScanner::getInstanceCount(), slotCount);
     QTest::qWait(10);
     QCOMPARE(m_listSourcesAdded.count(), 0);
-    QCOMPARE(cSourceScanner::getInstanceCount(), 0);
+    QCOMPARE(SourceScanner::getInstanceCount(), 0);
 }
 
 void SourceDeviceManagerTest::checkSlotCount(SourceDeviceManager& devMan, int total, int active, int demo)

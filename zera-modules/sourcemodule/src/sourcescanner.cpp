@@ -5,16 +5,16 @@
 namespace SOURCEMODULE
 {
 
-tSourceScannerShPtr cSourceScanner::createScanner(tSourceInterfaceShPtr interface, QUuid uuid)
+tSourceScannerShPtr SourceScanner::createScanner(tSourceInterfaceShPtr interface, QUuid uuid)
 {
-    tSourceScannerShPtr scanner = tSourceScannerShPtr(new cSourceScanner(interface, uuid));
+    tSourceScannerShPtr scanner = tSourceScannerShPtr(new SourceScanner(interface, uuid));
     scanner->m_safePoinerOnThis = scanner;
     return scanner;
 }
 
-int cSourceScanner::m_InstanceCount = 0;
+int SourceScanner::m_InstanceCount = 0;
 
-cSourceScanner::cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
+SourceScanner::SourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
     QObject(nullptr),
     m_ioInterface(interface),
     m_uuid(uuid),
@@ -22,10 +22,10 @@ cSourceScanner::cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
 {
     m_InstanceCount++;
     connect(m_ioInterface.get(), &SourceInterfaceBase::sigIoFinished,
-            this, &cSourceScanner::onIoFinished);
+            this, &SourceScanner::onIoFinished);
 }
 
-cSourceScanner::~cSourceScanner()
+SourceScanner::~SourceScanner()
 {
     m_InstanceCount--;
 }
@@ -64,22 +64,22 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
                         << deviceResponseTypePair("TSFG", SOURCE_DEMO_FG_4PHASE))
        ;
 
-SourceDeviceVein *cSourceScanner::getSourceDeviceFound()
+SourceDeviceVein *SourceScanner::getSourceDeviceFound()
 {
     return m_sourceDeviceIdentified;
 }
 
-QUuid cSourceScanner::getUuid()
+QUuid SourceScanner::getUuid()
 {
     return m_uuid;
 }
 
-int cSourceScanner::getInstanceCount()
+int SourceScanner::getInstanceCount()
 {
     return m_InstanceCount;
 }
 
-void cSourceScanner::sendReceiveSourceID()
+void SourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     m_bytesReceived.clear();
@@ -87,7 +87,7 @@ void cSourceScanner::sendReceiveSourceID()
     m_ioId = m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived);
 }
 
-QByteArray cSourceScanner::createInterfaceSpecificPrepend()
+QByteArray SourceScanner::createInterfaceSpecificPrepend()
 {
     QByteArray prepend;
     if(m_ioInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
@@ -100,7 +100,7 @@ QByteArray cSourceScanner::createInterfaceSpecificPrepend()
     return prepend;
 }
 
-QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not used yet */)
+QByteArray SourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not used yet */)
 {
     int pos;
     for(pos=m_bytesReceived.length()-1; pos>=0; --pos) {
@@ -119,7 +119,7 @@ QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* no
     return version;
 }
 
-QByteArray cSourceScanner::extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes)
+QByteArray SourceScanner::extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes)
 {
     QByteArray name = m_bytesReceived;
     if(m_bytesReceived.startsWith("STSFGMT")) {
@@ -134,7 +134,7 @@ QByteArray cSourceScanner::extractNameFromResponse(QByteArray responsePrefix, QB
     return name;
 }
 
-SupportedSourceTypes cSourceScanner::nextDemoType() {
+SupportedSourceTypes SourceScanner::nextDemoType() {
     static SupportedSourceTypes sDemoTypeCounter(SOURCE_TYPE_COUNT);
     int nextDemoType = sDemoTypeCounter;
     nextDemoType++;
@@ -145,7 +145,7 @@ SupportedSourceTypes cSourceScanner::nextDemoType() {
     return sDemoTypeCounter;
 }
 
-void cSourceScanner::onIoFinished(int ioId, bool error)
+void SourceScanner::onIoFinished(int ioId, bool error)
 {
     if(ioId != m_ioId) {
         qCritical("Are there multiple clients on scanner interface?");
@@ -201,12 +201,12 @@ void cSourceScanner::onIoFinished(int ioId, bool error)
     }
 }
 
-void cSourceScanner::startScan()
+void SourceScanner::startScan()
 {
     m_currentSourceTested = 0;
     if(m_sourceDeviceIdentified) {
         // we are one shot
-        qCritical("Do not call cSourceScanner::startScan more than once per instance!");
+        qCritical("Do not call SourceScanner::startScan more than once per instance!");
         delete m_sourceDeviceIdentified;
         m_sourceDeviceIdentified = nullptr;
     }

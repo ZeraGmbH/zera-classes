@@ -1,5 +1,5 @@
-#ifndef cSourceScanner_H
-#define cSourceScanner_H
+#ifndef SourceScanner_H
+#define SourceScanner_H
 
 #include <QObject>
 #include <QUuid>
@@ -12,16 +12,16 @@ class SourceInterfaceBase;
 namespace SOURCEMODULE
 {
 class SourceDeviceVein;
-class cSourceScanner;
-typedef QSharedPointer<cSourceScanner> tSourceScannerShPtr;
+class SourceScanner;
+typedef QSharedPointer<SourceScanner> tSourceScannerShPtr;
 
 
-class cSourceScanner : public QObject
+class SourceScanner : public QObject
 {
     Q_OBJECT
 public:
     static tSourceScannerShPtr createScanner(tSourceInterfaceShPtr interface, QUuid uuid);
-    virtual ~cSourceScanner();
+    virtual ~SourceScanner();
 
     // requests
     void startScan();
@@ -36,7 +36,7 @@ signals:
 private slots:
     void onIoFinished(int ioId, bool error);
 private:
-    explicit cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid);
+    explicit SourceScanner(tSourceInterfaceShPtr interface, QUuid uuid);
 
     void sendReceiveSourceID();
     QByteArray createInterfaceSpecificPrepend();
@@ -55,4 +55,4 @@ private:
 };
 
 }
-#endif // cSourceScanner_H
+#endif // SourceScanner_H

@@ -33,8 +33,8 @@ void SourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceTy
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
-            tSourceScannerShPtr sourceScanner = cSourceScanner::createScanner(interface, uuid);
-            connect(sourceScanner.get(), &cSourceScanner::sigScanFinished,
+            tSourceScannerShPtr sourceScanner = SourceScanner::createScanner(interface, uuid);
+            connect(sourceScanner.get(), &SourceScanner::sigScanFinished,
                     this, &SourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);
             sourceScanner->startScan();
@@ -137,7 +137,7 @@ SourceDeviceVein *SourceDeviceManager::getSourceDevice(int slotNo)
 
 void SourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
 {
-    disconnect(scanner.get(), &cSourceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
+    disconnect(scanner.get(), &SourceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
 
     SourceDeviceVein *sourceDeviceFound = scanner->getSourceDeviceFound();
     QString erorDesc;
