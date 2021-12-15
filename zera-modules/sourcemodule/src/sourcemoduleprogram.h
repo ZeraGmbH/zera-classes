@@ -15,7 +15,7 @@ namespace SOURCEMODULE
 
 class cSourceModule;
 class SourceDeviceVein;
-class cSourceDeviceManager;
+class SourceDeviceManager;
 
 class cSourceModuleProgram: public cBaseMeasWorkProgram
 {
@@ -35,7 +35,7 @@ private:
     configuration* getConfigXMLWrapper();
     void updateDemoCount();
 
-    cSourceDeviceManager* m_pSourceDeviceManager = nullptr;
+    SourceDeviceManager* m_pSourceDeviceManager = nullptr;
 
     cSourceModule* m_pModule; // the module we live in
 

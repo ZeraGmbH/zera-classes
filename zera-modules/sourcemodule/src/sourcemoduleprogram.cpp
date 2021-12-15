@@ -35,11 +35,11 @@ void cSourceModuleProgram::generateInterface()
     // source manager
     configuration* config = getConfigXMLWrapper();
     int maxSources = config->max_count_sources();
-    m_pSourceDeviceManager = new cSourceDeviceManager(maxSources);
+    m_pSourceDeviceManager = new SourceDeviceManager(maxSources);
     m_pSourceDeviceManager->setDemoFollowsTimeout(true);
-    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSourceScanFinished,
+    connect(m_pSourceDeviceManager, &SourceDeviceManager::sigSourceScanFinished,
             this, &cSourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
-    connect(m_pSourceDeviceManager, &cSourceDeviceManager::sigSlotRemoved,
+    connect(m_pSourceDeviceManager, &SourceDeviceManager::sigSlotRemoved,
             this, &cSourceModuleProgram::onSourceDeviceRemoved, Qt::QueuedConnection);
 
     // common components
