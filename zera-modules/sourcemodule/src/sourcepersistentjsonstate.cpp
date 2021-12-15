@@ -1,11 +1,19 @@
 #include "sourcepersistentjsonstate.h"
 #include "sourcejsonapi.h"
 
-SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type) :
-    m_stateFileName(cSourceJsonFilenames::getJsonStatePathName(type))
+SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
 {
+    QJsonObject paramStructure = cSourceJsonStructureLoader::getJsonStructure(type);
+    SourceJsonStructApi structureApi = SourceJsonStructApi(paramStructure);
+    if(!deviceName.isEmpty()) {
+        m_stateFileName = cSourceJsonFilenames::getJsonStatePath(deviceName, deviceVersion);
+        structureApi.setDeviceName(deviceName);
+    }
+    else {
+        m_stateFileName = cSourceJsonFilenames::getJsonStatePath(type);
+    }
     m_jsonStatePersistenceHelper.setStateFilePath(m_stateFileName);
-    m_jsonStatePersistenceHelper.setJsonParamStructure(cSourceJsonStructureLoader::getJsonStructure(type));
+    m_jsonStatePersistenceHelper.setJsonParamStructure(paramStructure);
 }
 
 QJsonObject SourcePersistentJsonState::getJsonStructure()
@@ -18,7 +26,7 @@ QJsonObject SourcePersistentJsonState::loadJsonState()
     QJsonObject paramState = m_jsonStatePersistenceHelper.loadState();
 
     // Override on state -> OFF
-    cSourceJsonParamApi paramApi;
+    SourceJsonParamApi paramApi;
     paramApi.setParams(paramState);
     paramApi.setOn(false);
     return paramApi.getParams();

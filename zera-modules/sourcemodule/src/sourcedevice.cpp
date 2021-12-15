@@ -12,13 +12,11 @@ namespace SOURCEMODULE
 
 bool cSourceDevice::m_removeDemoByDisconnect = false;
 
-cSourceDevice::cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString version) :
+cSourceDevice::cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     QObject(nullptr),
-    m_ioInterface(interface),
-    m_type(type),
-    m_version(version)
+    m_ioInterface(interface)
 {
-    m_persistentParamState = new SourcePersistentJsonState(type);
+    m_persistentParamState = new SourcePersistentJsonState(type, name, version);
     m_outInGenerator = new cSourceIoPacketGenerator(m_persistentParamState->getJsonStructure());
     m_paramsCurrent.setParams(m_persistentParamState->loadJsonState());
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line

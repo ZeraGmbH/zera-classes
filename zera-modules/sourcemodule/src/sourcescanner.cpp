@@ -58,6 +58,7 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
                         << deviceResponseTypePair("STSMT400", SOURCE_MT_CURRENT_ONLY)
                         << deviceResponseTypePair("STSMT", SOURCE_MT_COMMON)
                         << deviceResponseTypePair("STSFGMT", SOURCE_MT_COMMON))
+
     // TODO: guessworked initial data
     << deviceDetectInfo("TS\r", QList<deviceResponseTypePair> ()
                         << deviceResponseTypePair("TSFG", SOURCE_DEMO_FG_4PHASE))
@@ -118,6 +119,21 @@ QByteArray cSourceScanner::extractVersionFromResponse(SupportedSourceTypes /* no
     return version;
 }
 
+QByteArray cSourceScanner::extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes)
+{
+    QByteArray name = m_bytesReceived;
+    if(m_bytesReceived.startsWith("STSFGMT")) {
+        name = "MT3000";
+    }
+    else {
+        name = name.replace(responsePrefix, "");
+        name = name.replace(version, "");
+        name = name.replace(" " , "");
+        name = name.replace("\r" , "");
+    }
+    return name;
+}
+
 SupportedSourceTypes cSourceScanner::nextDemoType() {
     static SupportedSourceTypes sDemoTypeCounter(SOURCE_TYPE_COUNT);
     int nextDemoType = sDemoTypeCounter;
@@ -140,12 +156,14 @@ void cSourceScanner::onIoFinished(int ioId, bool error)
     bool ourJobIsDone = false;
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     SupportedSourceTypes sourceTypeFound = SOURCE_MT_COMMON;
+    QByteArray responsePrefix;
     if(!error) {
         if(!m_ioInterface->isDemo()) {
             for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
                 if(m_bytesReceived.contains(responseTypePair.expectedResponse)) {
                     validFound = true;
                     sourceTypeFound = responseTypePair.sourceType;
+                    responsePrefix = deviceDetectInfoCurrent.queryStr.replace("\r", "");
                     break;
                 }
             }
@@ -155,15 +173,16 @@ void cSourceScanner::onIoFinished(int ioId, bool error)
         }
     }
     if(validFound) {
-        QByteArray version;
+        QByteArray deviceVersion;
+        QByteArray deviceName;
         if(m_ioInterface->isDemo()) {
             sourceTypeFound = nextDemoType();
-            version = "V42";
         }
         else {
-            version = extractVersionFromResponse(sourceTypeFound);
+            deviceVersion = extractVersionFromResponse(sourceTypeFound);
+            deviceName = extractNameFromResponse(responsePrefix, deviceVersion, sourceTypeFound);
         }
-        m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, sourceTypeFound, version);
+        m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, sourceTypeFound, deviceName, deviceVersion);
 
         emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;

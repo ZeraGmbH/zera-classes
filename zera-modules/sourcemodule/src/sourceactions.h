@@ -46,7 +46,7 @@ typedef QList<cSourceActionTypes::ActionTypes> tSourceActionTypeList;
 class cSourceActionGenerator
 {
 public:
-    static tSourceActionTypeList generateSwitchActions(cSourceJsonParamApi requestedParams);
+    static tSourceActionTypeList generateSwitchActions(SourceJsonParamApi requestedParams);
     static tSourceActionTypeList generatePeriodicActions();
 };
 

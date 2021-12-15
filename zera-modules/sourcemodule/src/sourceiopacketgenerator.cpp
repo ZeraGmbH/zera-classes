@@ -18,7 +18,7 @@ bool cSourceSingleOutIn::operator ==(const cSourceSingleOutIn &other)
 
 
 cSourceIoPacketGenerator::cSourceIoPacketGenerator(QJsonObject jsonParamsStructure) :
-    m_jsonStructApi(new cSourceJsonStructApi(jsonParamsStructure)),
+    m_jsonStructApi(new SourceJsonStructApi(jsonParamsStructure)),
     m_ioPrefix(m_jsonStructApi->getIoPrefix())
 {
 }
@@ -28,7 +28,7 @@ cSourceIoPacketGenerator::~cSourceIoPacketGenerator()
     delete m_jsonStructApi;
 }
 
-cSourceCommandPacket cSourceIoPacketGenerator::generateOnOffPacket(cSourceJsonParamApi requestedParams)
+cSourceCommandPacket cSourceIoPacketGenerator::generateOnOffPacket(SourceJsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = cSourceActionGenerator::generateSwitchActions(requestedParams);

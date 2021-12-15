@@ -20,7 +20,7 @@ class cSourceDevice : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString version);
+    explicit cSourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
     virtual ~cSourceDevice();
 
     // requests
@@ -58,8 +58,8 @@ private:
     tSourceInterfaceShPtr m_ioInterface;
 
     SourcePersistentJsonState* m_persistentParamState;
-    cSourceJsonParamApi m_paramsRequested;
-    cSourceJsonParamApi m_paramsCurrent;
+    SourceJsonParamApi m_paramsRequested;
+    SourceJsonParamApi m_paramsCurrent;
 
     cSourceIoPacketGenerator* m_outInGenerator = nullptr;
     cSourceIoWorker m_sourceIoWorker;
@@ -70,10 +70,6 @@ private:
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
-
-    SupportedSourceTypes m_type;
-    QString m_version;
-
 
     static bool m_removeDemoByDisconnect;
     bool m_bDemoDelayFollowsTimeout = false;

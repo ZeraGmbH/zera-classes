@@ -23,17 +23,17 @@ TEST(TEST_SOURCEACTIONS, VALID_TYPE_DETECT) {
 
 // Check all actions are generated for on
 TEST(TEST_SOURCEACTIONS, SWITCH_ON_COMPLETE) {
-    cSourceJsonParamApi paramApi;
+    SourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     EXPECT_EQ(actionList.count(), cSourceActionTypes::switchTypeCount);
 }
 
 // Check for switch on all valid
 TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
-    cSourceJsonParamApi paramApi;
+    SourceJsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
         EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
@@ -43,7 +43,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
 
 // Check for switch off just generates switch phases
 TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
-    cSourceJsonParamApi paramApi;
+    SourceJsonParamApi paramApi;
     paramApi.setOn(false);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(paramApi);
     EXPECT_EQ(actionList.count(), 1);
@@ -52,9 +52,9 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
 
 // Check for off are valid
 TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
-    cSourceJsonParamApi paramApi;
+    SourceJsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(cSourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
         EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
