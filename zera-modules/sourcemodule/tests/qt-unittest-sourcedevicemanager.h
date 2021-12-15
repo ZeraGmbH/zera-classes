@@ -7,7 +7,7 @@
 
 using SOURCEMODULE::SourceDeviceVein;
 using SOURCEMODULE::SourceDeviceManager;
-using SOURCEMODULE::cSourceScanner;
+using SOURCEMODULE::SourceScanner;
 
 struct FinishEntry
 {
