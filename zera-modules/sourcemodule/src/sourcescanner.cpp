@@ -21,7 +21,7 @@ cSourceScanner::cSourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
     m_sourceDeviceIdentified(nullptr)
 {
     m_InstanceCount++;
-    connect(m_ioInterface.get(), &cSourceInterfaceBase::sigIoFinished,
+    connect(m_ioInterface.get(), &SourceInterfaceBase::sigIoFinished,
             this, &cSourceScanner::onIoFinished);
 }
 
@@ -91,7 +91,7 @@ QByteArray cSourceScanner::createInterfaceSpecificPrepend()
 {
     QByteArray prepend;
     if(m_ioInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
-        static_cast<cSourceInterfaceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
+        static_cast<SourceInterfaceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
             prepend = "\r";

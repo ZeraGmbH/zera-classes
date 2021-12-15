@@ -18,22 +18,22 @@ enum SourceInterfaceTypes
     SOURCE_INTERFACE_TYPE_COUNT
 };
 
-class cSourceInterfaceBase;
-typedef QSharedPointer<cSourceInterfaceBase> tSourceInterfaceShPtr;
+class SourceInterfaceBase;
+typedef QSharedPointer<SourceInterfaceBase> tSourceInterfaceShPtr;
 
-// create interfaces through cSourceInterfaceFactory only
-class cSourceInterfaceFactory {
+// create interfaces through SourceInterfaceFactory only
+class SourceInterfaceFactory {
 public:
     static tSourceInterfaceShPtr createSourceInterface(SourceInterfaceTypes type, QObject *parent = nullptr);
 };
 
 
 // ------------------------- base interface --------------------------
-class cSourceInterfaceBase : public QObject
+class SourceInterfaceBase : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~cSourceInterfaceBase();
+    virtual ~SourceInterfaceBase();
 
     virtual bool open(QString) { return false; }
     virtual void close() {}
@@ -51,8 +51,8 @@ signals:
     void sigIoFinishedToQueue(int ioID, bool ioError); // sub classes emit this to ensure queue
 
 protected:
-    explicit cSourceInterfaceBase(QObject *parent = nullptr);
-    friend class cSourceInterfaceFactory;
+    explicit SourceInterfaceBase(QObject *parent = nullptr);
+    friend class SourceInterfaceFactory;
 
     QString m_strDeviceInfo;
     cSourceIdGenerator m_IDGenerator;
@@ -61,7 +61,7 @@ protected:
 
 
 // ------------------------- demo interface --------------------------
-class cSourceInterfaceDemo : public cSourceInterfaceBase
+class SourceInterfaceDemo : public SourceInterfaceBase
 {
     Q_OBJECT
 public:
@@ -80,8 +80,8 @@ public:
     virtual bool isOpen() override { return m_bOpen; }
 
 protected:
-    explicit cSourceInterfaceDemo(QObject *parent = nullptr);
-    friend class cSourceInterfaceFactory;
+    explicit SourceInterfaceDemo(QObject *parent = nullptr);
+    friend class SourceInterfaceFactory;
 private slots:
     void onResponseDelayTimer();
 private:
@@ -98,12 +98,12 @@ private:
 
 
 // ------------------------- ZERA serial interface --------------------------
-class cSourceInterfaceZeraSerialPrivate;
-class cSourceInterfaceZeraSerial : public cSourceInterfaceBase
+class SourceInterfaceZeraSerialPrivate;
+class SourceInterfaceZeraSerial : public SourceInterfaceBase
 {
     Q_OBJECT
 public:
-    virtual ~cSourceInterfaceZeraSerial();
+    virtual ~SourceInterfaceZeraSerial();
 
     virtual SourceInterfaceTypes type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
@@ -118,14 +118,14 @@ public:
     virtual bool isOpen() override;
 
 protected:
-    explicit cSourceInterfaceZeraSerial(QObject *parent = nullptr);
-    friend class cSourceInterfaceFactory;
+    explicit SourceInterfaceZeraSerial(QObject *parent = nullptr);
+    friend class SourceInterfaceFactory;
 private slots:
     void onIoFinished();
     void onDeviceFileGone(QString);
 private:
-    cSourceInterfaceZeraSerialPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(cSourceInterfaceZeraSerial)
+    SourceInterfaceZeraSerialPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(SourceInterfaceZeraSerial)
 };
 
 #endif // SOURCEINTERFACEBASE_H

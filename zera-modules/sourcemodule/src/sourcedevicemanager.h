@@ -7,7 +7,7 @@
 #include "sourceinterface.h"
 #include "sourcescanner.h"
 
-class cSourceInterfaceBase;
+class SourceInterfaceBase;
 
 namespace SOURCEMODULE
 {
