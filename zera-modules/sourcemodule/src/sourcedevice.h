@@ -10,7 +10,6 @@
 #include "sourceinterface.h"
 #include "sourcedevicestatus.h"
 #include "sourcepersistentjsonstate.h"
-#include "sourceioworker.h"
 
 namespace SOURCEMODULE
 {
@@ -25,8 +24,7 @@ public:
 
     // requests
     bool close(QUuid uuid);
-    void switchLoad(QJsonObject jsonParamsState);
-    void setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout);
+    void switchVeinLoad(QJsonObject jsonParamsState);
 
     // getter
     QStringList getLastErrors();
@@ -40,34 +38,28 @@ signals:
 
 public slots:
     void onNewVeinParamStatus(QVariant paramState);
-    void onSourceCmdFinished(cWorkerCommandPacket cmdPack);
+
+protected slots:
+    virtual void onSourceCmdFinished(cWorkerCommandPacket cmdPack) override;
 
 private slots:
     void onInterfaceClosed();
 
 private:
-    void switchState(QJsonObject state);
-    void switchOff();
     void doFinalCloseActivities();
     void setVeinParamStructure(QJsonObject paramStruct);
     void setVeinParamState(QJsonObject paramState);
     void setVeinDeviceState(QJsonObject deviceState);
 
     SourcePersistentJsonState* m_persistentParamState;
-    SourceJsonParamApi m_paramsRequested;
-    SourceJsonParamApi m_paramsCurrent;
 
-    SourceIoWorker m_sourceIoWorker;
-    int m_currentWorkerID = 0;
-
-    bool m_closeRequested = false;
     QUuid m_closeUuid;
+    bool m_closeRequested = false;
 
     cSourceDeviceStatus  m_deviceStatus;
     cSourceVeinInterface* m_veinInterface = nullptr;
 
     static bool m_removeDemoByDisconnect;
-    bool m_bDemoDelayFollowsTimeout = false;
 };
 
 }
