@@ -115,7 +115,7 @@ void SourceDeviceVein::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
     }
 }
 
-void SourceDeviceVein::setVeinInterface(cSourceVeinInterface *veinInterface)
+void SourceDeviceVein::setVeinInterface(SourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
     setVeinParamStructure(m_persistentParamState->getJsonStructure());

@@ -44,7 +44,7 @@ private:
 
     cVeinModuleParameter* m_pVeinDemoSourceCount;
 
-    QVector<cSourceVeinInterface*> m_arrVeinSourceInterfaces;
+    QVector<SourceVeinInterface*> m_arrVeinSourceInterfaces;
 
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcRemoveInterface;

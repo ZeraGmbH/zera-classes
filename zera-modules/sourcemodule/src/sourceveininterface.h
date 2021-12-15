@@ -10,11 +10,11 @@ namespace SOURCEMODULE
 {
 class SourceDeviceVein;
 
-class cSourceVeinInterface : public QObject
+class SourceVeinInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit cSourceVeinInterface(QObject *parent = nullptr);
+    explicit SourceVeinInterface(QObject *parent = nullptr);
 
     // getters
     cVeinModuleActvalue *getVeinDeviceInfo();
