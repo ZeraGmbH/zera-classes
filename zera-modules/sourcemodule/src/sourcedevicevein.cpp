@@ -107,7 +107,6 @@ void SourceDeviceVein::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
         else {
             saveState();
         }
-        setVeinParamState(m_paramsCurrent.getParams());
         setVeinDeviceState(m_deviceStatus.getJsonStatus());
         if(m_closeRequested) {
             doFinalCloseActivities();
