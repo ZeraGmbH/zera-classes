@@ -2,21 +2,21 @@
 #include "sourceactions.h"
 #include "sourcejsonapi.h"
 
-// cSourceActionTypes::isValidType
+// SourceActionTypes::isValidType
 TEST(TEST_SOURCEACTIONS, VALID_TYPE_DETECT) {
-    for(int type=cSourceActionTypes::totalMinWithInvalid-3; type<=cSourceActionTypes::totalMaxWithInvalid+3; ++type) {
-        //cSourceActionTypes::ActionTypes forTest = cSourceActionTypes::ActionTypes(type);
-        bool isValid = cSourceActionTypes::isValidType(cSourceActionTypes::ActionTypes(type));
+    for(int type=SourceActionTypes::totalMinWithInvalid-3; type<=SourceActionTypes::totalMaxWithInvalid+3; ++type) {
+        //SourceActionTypes::ActionTypes forTest = SourceActionTypes::ActionTypes(type);
+        bool isValid = SourceActionTypes::isValidType(SourceActionTypes::ActionTypes(type));
         if(isValid) {
-            EXPECT_GT(type, cSourceActionTypes::totalMinWithInvalid);
+            EXPECT_GT(type, SourceActionTypes::totalMinWithInvalid);
 
-            EXPECT_NE(type, cSourceActionTypes::SWITCH_UNDEF);
-            EXPECT_NE(type, cSourceActionTypes::SWITCH_UNDEF2);
+            EXPECT_NE(type, SourceActionTypes::SWITCH_UNDEF);
+            EXPECT_NE(type, SourceActionTypes::SWITCH_UNDEF2);
 
-            EXPECT_NE(type, cSourceActionTypes::PERIODIC_UNDEF);
-            EXPECT_NE(type, cSourceActionTypes::PERIODIC_UNDEF2);
+            EXPECT_NE(type, SourceActionTypes::PERIODIC_UNDEF);
+            EXPECT_NE(type, SourceActionTypes::PERIODIC_UNDEF2);
 
-            EXPECT_LT(type, cSourceActionTypes::totalMaxWithInvalid);
+            EXPECT_LT(type, SourceActionTypes::totalMaxWithInvalid);
         }
     }
 }
@@ -26,7 +26,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_ON_COMPLETE) {
     SourceJsonParamApi paramApi;
     paramApi.setOn(true);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
-    EXPECT_EQ(actionList.count(), cSourceActionTypes::switchTypeCount);
+    EXPECT_EQ(actionList.count(), SourceActionTypes::switchTypeCount);
 }
 
 // Check for switch on all valid
@@ -35,9 +35,9 @@ TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
     paramApi.setOn(true);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     for(auto action : actionList) {
-        EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
-        EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
-        EXPECT_TRUE(cSourceActionTypes::isValidType(action));
+        EXPECT_GT(action, SourceActionTypes::SWITCH_UNDEF);
+        EXPECT_LT(action, SourceActionTypes::SWITCH_UNDEF2);
+        EXPECT_TRUE(SourceActionTypes::isValidType(action));
     }
 }
 
@@ -47,7 +47,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
     paramApi.setOn(false);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(paramApi);
     EXPECT_EQ(actionList.count(), 1);
-    EXPECT_EQ(actionList[0], cSourceActionTypes::ActionTypes::SWITCH_PHASES);
+    EXPECT_EQ(actionList[0], SourceActionTypes::ActionTypes::SWITCH_PHASES);
 }
 
 // Check for off are valid
@@ -56,24 +56,24 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
     paramApi.setOn(false);
     tSourceActionTypeList actionList = cSourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
     for(auto action : actionList) {
-        EXPECT_GT(action, cSourceActionTypes::SWITCH_UNDEF);
-        EXPECT_LT(action, cSourceActionTypes::SWITCH_UNDEF2);
-        EXPECT_TRUE(cSourceActionTypes::isValidType(action));
+        EXPECT_GT(action, SourceActionTypes::SWITCH_UNDEF);
+        EXPECT_LT(action, SourceActionTypes::SWITCH_UNDEF2);
+        EXPECT_TRUE(SourceActionTypes::isValidType(action));
     }
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_VALID) {
     tSourceActionTypeList actionList = cSourceActionGenerator::generatePeriodicActions();
     for(auto action : actionList) {
-        EXPECT_GT(action, cSourceActionTypes::PERIODIC_UNDEF);
-        EXPECT_LT(action, cSourceActionTypes::PERIODIC_UNDEF2);
-        EXPECT_TRUE(cSourceActionTypes::isValidType(action));
+        EXPECT_GT(action, SourceActionTypes::PERIODIC_UNDEF);
+        EXPECT_LT(action, SourceActionTypes::PERIODIC_UNDEF2);
+        EXPECT_TRUE(SourceActionTypes::isValidType(action));
     }
 }
 
 TEST(TEST_SOURCEACTIONS, PERIODIC_COMPLETE) {
     tSourceActionTypeList actionList = cSourceActionGenerator::generatePeriodicActions();
-    EXPECT_EQ(actionList.count(), cSourceActionTypes::periodicTypeCount);
+    EXPECT_EQ(actionList.count(), SourceActionTypes::periodicTypeCount);
 }
 
 typedef QList<int> tTestList;

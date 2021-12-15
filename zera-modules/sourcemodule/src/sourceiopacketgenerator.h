@@ -35,16 +35,16 @@ public:
                        QByteArray bytesSend,
                        QByteArray bytesExpected,
                        int responseTimeoutMs = 0) :
-        m_actionType(cSourceActionTypes::ActionTypes(0)),
+        m_actionType(SourceActionTypes::ActionTypes(0)),
         m_responseType(ioResponseType),
         m_responseTimeoutMs(responseTimeoutMs),
         m_bytesSend(bytesSend),
         m_bytesExpected(bytesExpected)
     {}
-    void setActionType(cSourceActionTypes::ActionTypes actionType);
+    void setActionType(SourceActionTypes::ActionTypes actionType);
     bool operator == (const cSourceSingleOutIn& other);
 
-    cSourceActionTypes::ActionTypes m_actionType = cSourceActionTypes::SWITCH_UNDEF;
+    SourceActionTypes::ActionTypes m_actionType = SourceActionTypes::SWITCH_UNDEF;
     SourceIoResponseTypes m_responseType = RESP_UNDEFINED;
     int m_responseTimeoutMs = 0;
     QByteArray m_bytesSend;
@@ -68,7 +68,7 @@ public:
     ~cSourceIoPacketGenerator();
 
     // single
-    tSourceOutInList generateListForAction(cSourceActionTypes::ActionTypes actionType);
+    tSourceOutInList generateListForAction(SourceActionTypes::ActionTypes actionType);
     // composed
     cSourceCommandPacket generateOnOffPacket(SourceJsonParamApi requestedParams);
     cSourceCommandPacket generateStatusPollPacket();

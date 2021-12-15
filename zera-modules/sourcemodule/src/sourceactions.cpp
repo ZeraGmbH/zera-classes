@@ -1,6 +1,6 @@
 #include "sourceactions.h"
 
-bool cSourceActionTypes::isValidType(cSourceActionTypes::ActionTypes type)
+bool SourceActionTypes::isValidType(SourceActionTypes::ActionTypes type)
 {
     return
             (type >= firstSwitchType && type <= lastSwitchType) ||
@@ -12,11 +12,11 @@ tSourceActionTypeList cSourceActionGenerator::generateSwitchActions(SourceJsonPa
     tSourceActionTypeList list;
     // 1st guess: switch off just switch phases
     if(!requestedParams.getOn()) {
-        list.append(cSourceActionTypes::ActionTypes::SWITCH_PHASES);
+        list.append(SourceActionTypes::ActionTypes::SWITCH_PHASES);
     }
     else {
-        for(int type=cSourceActionTypes::firstSwitchType; type<=cSourceActionTypes::lastSwitchType; ++type) {
-            list.append(cSourceActionTypes::ActionTypes(type));
+        for(int type=SourceActionTypes::firstSwitchType; type<=SourceActionTypes::lastSwitchType; ++type) {
+            list.append(SourceActionTypes::ActionTypes(type));
         }
     }
     return list;
@@ -25,8 +25,8 @@ tSourceActionTypeList cSourceActionGenerator::generateSwitchActions(SourceJsonPa
 tSourceActionTypeList cSourceActionGenerator::generatePeriodicActions()
 {
     tSourceActionTypeList list;
-    for(int type=cSourceActionTypes::firstPeriodicType; type<=int(cSourceActionTypes::lastPeriodicType); ++type) {
-        list.append(cSourceActionTypes::ActionTypes(type));
+    for(int type=SourceActionTypes::firstPeriodicType; type<=int(SourceActionTypes::lastPeriodicType); ++type) {
+        list.append(SourceActionTypes::ActionTypes(type));
     }
     return list;
 }

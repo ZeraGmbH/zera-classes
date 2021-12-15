@@ -2,7 +2,7 @@
 #include "sourceactions.h"
 #include "sourceinterface.h"
 
-void cSourceSingleOutIn::setActionType(cSourceActionTypes::ActionTypes actionType)
+void cSourceSingleOutIn::setActionType(SourceActionTypes::ActionTypes actionType)
 {
     m_actionType = actionType;
 }
@@ -53,34 +53,34 @@ cSourceCommandPacket cSourceIoPacketGenerator::generateStatusPollPacket()
     return commandPack;
 }
 
-tSourceOutInList cSourceIoPacketGenerator::generateListForAction(cSourceActionTypes::ActionTypes actionType)
+tSourceOutInList cSourceIoPacketGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
 {
     tSourceOutInList outInList;
     switch(actionType) {
-    case cSourceActionTypes::SET_RMS:
+    case SourceActionTypes::SET_RMS:
         outInList.append(generateRMSAndAngleUList());
         outInList.append(generateRMSAndAngleIList());
         break;
-    case cSourceActionTypes::SET_ANGLE:
+    case SourceActionTypes::SET_ANGLE:
         // On ZERA this is combined with RMS
         break;
-    case cSourceActionTypes::SET_FREQUENCY:
+    case SourceActionTypes::SET_FREQUENCY:
         outInList.append(generateFrequencyList());
         break;
-    case cSourceActionTypes::SET_HARMONICS:
+    case SourceActionTypes::SET_HARMONICS:
         // TODO
         break;
-    case cSourceActionTypes::SET_REGULATOR:
+    case SourceActionTypes::SET_REGULATOR:
         outInList.append(generateRegulationList());
         break;
-    case cSourceActionTypes::SWITCH_PHASES:
+    case SourceActionTypes::SWITCH_PHASES:
         outInList.append(generateSwitchPhasesList());
         break;
 
-    case cSourceActionTypes::QUERY_STATUS:
+    case SourceActionTypes::QUERY_STATUS:
         outInList.append(generateQueryStatusList());
         break;
-    case cSourceActionTypes::QUERY_ACTUAL:
+    case SourceActionTypes::QUERY_ACTUAL:
         outInList.append(generateQueryActualList());
         break;
 
