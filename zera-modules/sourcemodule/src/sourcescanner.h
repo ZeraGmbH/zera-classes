@@ -5,13 +5,13 @@
 #include <QUuid>
 #include <QSharedPointer>
 #include "sourceinterface.h"
-#include "sourcedevice.h"
+#include "sourcedevicevein.h"
 
 class cSourceInterfaceBase;
 
 namespace SOURCEMODULE
 {
-class SourceDevice;
+class SourceDeviceVein;
 class cSourceScanner;
 typedef QSharedPointer<cSourceScanner> tSourceScannerShPtr;
 
@@ -27,7 +27,7 @@ public:
     void startScan();
 
     // getter
-    SourceDevice* getSourceDeviceFound();
+    SourceDeviceVein* getSourceDeviceFound();
     QUuid getUuid();
     static int getInstanceCount();
 signals:
@@ -47,7 +47,7 @@ private:
     int m_ioId = 0;
     tSourceInterfaceShPtr m_ioInterface;
     QUuid m_uuid;
-    SourceDevice* m_sourceDeviceIdentified;
+    SourceDeviceVein* m_sourceDeviceIdentified;
     QByteArray m_bytesReceived;
     int m_currentSourceTested = 0;
     tSourceScannerShPtr m_safePoinerOnThis;

@@ -5,7 +5,7 @@
 
 static QObject* pSourceDeviceManagerTest = addTest(new SourceDeviceManagerTest);
 
-FinishEntry::FinishEntry(int slotNo, SOURCEMODULE::SourceDevice *device, QUuid uuid, QString errMsg)
+FinishEntry::FinishEntry(int slotNo, SOURCEMODULE::SourceDeviceVein *device, QUuid uuid, QString errMsg)
 {
     this->slotNo = slotNo;
     this->device = device;
@@ -13,7 +13,7 @@ FinishEntry::FinishEntry(int slotNo, SOURCEMODULE::SourceDevice *device, QUuid u
     this->errMsg = errMsg;
 }
 
-void SourceDeviceManagerTest::onSourceScanFinished(int slotNo, SOURCEMODULE::SourceDevice *device, QUuid uuid, QString errMsg)
+void SourceDeviceManagerTest::onSourceScanFinished(int slotNo, SOURCEMODULE::SourceDeviceVein *device, QUuid uuid, QString errMsg)
 {
     m_listSourcesAdded.append(FinishEntry(slotNo, device, uuid, errMsg));
 }

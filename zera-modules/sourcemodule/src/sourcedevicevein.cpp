@@ -3,16 +3,16 @@
 #include <veinmoduleparameter.h>
 #include <zera-json-params-structure.h>
 #include <jsonparamvalidator.h>
-#include "sourcedevice.h"
+#include "sourcedevicevein.h"
 #include "sourceveininterface.h"
 #include "sourceiopacketgenerator.h"
 
 namespace SOURCEMODULE
 {
 
-bool SourceDevice::m_removeDemoByDisconnect = false;
+bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
-SourceDevice::SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
+SourceDeviceVein::SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     SourceDeviceBase(interface, type, name, version)
 {
     m_persistentParamState = new SourcePersistentJsonState(type, name, version);
@@ -20,15 +20,15 @@ SourceDevice::SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
-    connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &SourceDevice::onInterfaceClosed);
+    connect(interface.get(), &cSourceInterfaceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
 }
 
-SourceDevice::~SourceDevice()
+SourceDeviceVein::~SourceDeviceVein()
 {
     delete m_persistentParamState;
 }
 
-bool SourceDevice::close(QUuid uuid)
+bool SourceDeviceVein::close(QUuid uuid)
 {
     bool closeRequested = false;
     if(!m_closeRequested) {
@@ -59,7 +59,7 @@ bool SourceDevice::close(QUuid uuid)
     return closeRequested;
 }
 
-void SourceDevice::switchVeinLoad(QJsonObject jsonParamsState)
+void SourceDeviceVein::switchVeinLoad(QJsonObject jsonParamsState)
 {
     m_deviceStatus.clearWarningsErrors();
     m_deviceStatus.setBusy(true);
@@ -67,28 +67,28 @@ void SourceDevice::switchVeinLoad(QJsonObject jsonParamsState)
     switchState(jsonParamsState);
 }
 
-QStringList SourceDevice::getLastErrors()
+QStringList SourceDeviceVein::getLastErrors()
 {
     return m_deviceStatus.getErrors();
 }
 
-void SourceDevice::doFinalCloseActivities()
+void SourceDeviceVein::doFinalCloseActivities()
 {
     setVeinParamStructure(QJsonObject());
     setVeinParamState(QJsonObject());
     setVeinDeviceState(QJsonObject());
     if(m_veinInterface) {
-        disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &SourceDevice::onNewVeinParamStatus);
+        disconnect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &SourceDeviceVein::onNewVeinParamStatus);
     }
     emit sigClosed(this, m_closeUuid);
 }
 
-void SourceDevice::onNewVeinParamStatus(QVariant paramState)
+void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
 {
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
+void SourceDeviceVein::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
 {
     SourceDeviceBase::onSourceCmdFinished(cmdPack);
     if(m_currentWorkerID == cmdPack.m_workerId) {
@@ -115,26 +115,26 @@ void SourceDevice::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
     }
 }
 
-void SourceDevice::setVeinInterface(cSourceVeinInterface *veinInterface)
+void SourceDeviceVein::setVeinInterface(cSourceVeinInterface *veinInterface)
 {
     m_veinInterface = veinInterface;
     setVeinParamStructure(m_persistentParamState->getJsonStructure());
     setVeinParamState(m_paramsCurrent.getParams());
     setVeinDeviceState(m_deviceStatus.getJsonStatus());
-    connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &SourceDevice::onNewVeinParamStatus);
+    connect(m_veinInterface->getVeinDeviceParameter(), &cVeinModuleParameter::sigValueChanged, this, &SourceDeviceVein::onNewVeinParamStatus);
 }
 
-void SourceDevice::saveState()
+void SourceDeviceVein::saveState()
 {
     m_persistentParamState->saveJsonState(m_paramsCurrent.getParams());
 }
 
-void SourceDevice::onInterfaceClosed()
+void SourceDeviceVein::onInterfaceClosed()
 {
     doFinalCloseActivities();
 }
 
-void SourceDevice::setVeinParamStructure(QJsonObject paramStruct)
+void SourceDeviceVein::setVeinParamStructure(QJsonObject paramStruct)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceInfo()->setValue(paramStruct);
@@ -142,14 +142,14 @@ void SourceDevice::setVeinParamStructure(QJsonObject paramStruct)
     }
 }
 
-void SourceDevice::setVeinParamState(QJsonObject paramState)
+void SourceDeviceVein::setVeinParamState(QJsonObject paramState)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceParameter()->setValue(paramState);
     }
 }
 
-void SourceDevice::setVeinDeviceState(QJsonObject deviceState)
+void SourceDeviceVein::setVeinDeviceState(QJsonObject deviceState)
 {
     if(m_veinInterface) {
         m_veinInterface->getVeinDeviceState()->setValue(deviceState);

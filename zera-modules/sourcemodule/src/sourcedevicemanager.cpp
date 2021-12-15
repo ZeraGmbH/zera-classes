@@ -1,5 +1,5 @@
 #include "sourcedevicemanager.h"
-#include "sourcedevice.h"
+#include "sourcedevicevein.h"
 #include "sourceinterface.h"
 #include "sourcescanner.h"
 #include <random>
@@ -16,7 +16,7 @@ namespace SOURCEMODULE
 
 cSourceDeviceManager::cSourceDeviceManager(int countSlots, QObject *parent) :
     QObject(parent),
-    m_sourceDeviceSlots(QVector<SourceDevice*>(countSlots, nullptr))
+    m_sourceDeviceSlots(QVector<SourceDeviceVein*>(countSlots, nullptr))
 {
     connect(this, &cSourceDeviceManager::sigSlotRemovedQueued,
             this, &cSourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
@@ -96,7 +96,7 @@ void cSourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
 void cSourceDeviceManager::closeSource(QString interfaceDeviceInfo, const QUuid uuid)
 {
     for(int slot = 0; slot<getSlotCount(); ++slot) {
-        SourceDevice* sourceDevice = getSourceDevice(slot);
+        SourceDeviceVein* sourceDevice = getSourceDevice(slot);
         if(sourceDevice && sourceDevice->getInterfaceDeviceInfo() == interfaceDeviceInfo) {
             closeSource(slot, uuid);
             return;
@@ -126,9 +126,9 @@ int cSourceDeviceManager::getDemoCount()
     return demoCount;
 }
 
-SourceDevice *cSourceDeviceManager::getSourceDevice(int slotNo)
+SourceDeviceVein *cSourceDeviceManager::getSourceDevice(int slotNo)
 {
-    SourceDevice* getSourceDevice = nullptr;
+    SourceDeviceVein* getSourceDevice = nullptr;
     if(isValidSlotNo(slotNo)) {
         getSourceDevice = m_sourceDeviceSlots.at(slotNo);
     }
@@ -139,7 +139,7 @@ void cSourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
 {
     disconnect(scanner.get(), &cSourceScanner::sigScanFinished, this, &cSourceDeviceManager::onScanFinished);
 
-    SourceDevice *sourceDeviceFound = scanner->getSourceDeviceFound();
+    SourceDeviceVein *sourceDeviceFound = scanner->getSourceDeviceFound();
     QString erorDesc;
     int freeSlot = findFreeSlot();
     if(sourceDeviceFound) {
@@ -159,14 +159,14 @@ void cSourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
     emit sigSourceScanFinished(freeSlot, sourceDeviceFound, scanner->getUuid(), erorDesc);
 }
 
-void cSourceDeviceManager::onSourceClosed(SourceDevice *sourceDevice, QUuid uuid)
+void cSourceDeviceManager::onSourceClosed(SourceDeviceVein *sourceDevice, QUuid uuid)
 {
     for(int slotNo=0; slotNo<m_sourceDeviceSlots.count(); slotNo++) {
         auto &sourceDeviceCurr = m_sourceDeviceSlots[slotNo];
         if(sourceDeviceCurr && sourceDeviceCurr == sourceDevice) {
             QString lastError = sourceDeviceCurr->getLastErrors().join(" / ");
             m_activeSlotCount--;
-            disconnect(sourceDeviceCurr, &SourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
+            disconnect(sourceDeviceCurr, &SourceDeviceVein::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
             delete sourceDeviceCurr;
             sourceDeviceCurr = nullptr;
             emit sigSlotRemovedQueued(slotNo, uuid, lastError);
@@ -194,17 +194,17 @@ int cSourceDeviceManager::findFreeSlot()
     return freeSlotNo;
 }
 
-void cSourceDeviceManager::addSource(int slotPos, SourceDevice *device)
+void cSourceDeviceManager::addSource(int slotPos, SourceDeviceVein *device)
 {
     m_sourceDeviceSlots[slotPos] = device;
     m_activeSlotCount++;
-    connect(device, &SourceDevice::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
+    connect(device, &SourceDeviceVein::sigClosed, this, &cSourceDeviceManager::onSourceClosed);
 }
 
 bool cSourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
 {
     bool removeStarted = false;
-    SourceDevice* source = m_sourceDeviceSlots[slotNo];
+    SourceDeviceVein* source = m_sourceDeviceSlots[slotNo];
     if(source && source->isDemo()) {
         source->close(QUuid());
         removeStarted = true;

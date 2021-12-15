@@ -8,7 +8,7 @@ class cJsonParamValidator;
 
 namespace SOURCEMODULE
 {
-class SourceDevice;
+class SourceDeviceVein;
 
 class cSourceVeinInterface : public QObject
 {

@@ -9,7 +9,7 @@
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
 #include "sourcedevicemanager.h"
-#include "sourcedevice.h"
+#include "sourcedevicevein.h"
 #include "sourceveininterface.h"
 #include "sourceinterface.h"
 
@@ -146,7 +146,7 @@ void cSourceModuleProgram::updateDemoCount()
     m_bDeafenDemoChange = false;
 }
 
-void cSourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDevice* device, QUuid uuid, QString errMsg)
+void cSourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDeviceVein* device, QUuid uuid, QString errMsg)
 {
     bool sourceAdded = slotPosition >= 0 && device;
     if(sourceAdded) {
