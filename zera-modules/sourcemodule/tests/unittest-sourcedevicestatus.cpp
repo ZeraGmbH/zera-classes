@@ -3,7 +3,7 @@
 #include <QStringList>
 #include "sourcedevicestatus.h"
 
-using SOURCEMODULE::cSourceDeviceStatus;
+using SOURCEMODULE::SourceDeviceStatus;
 
 static const QString keyBusy = "busy";
 static const QString keyErrors = "errors";
@@ -11,7 +11,7 @@ static const QString keyWarnings = "warnings";
 static const QString keyDeviceInfo = "deviceinfo";
 
 TEST(TEST_SOURCEDEVICESTATUS, INIT) {
-    cSourceDeviceStatus status;
+    SourceDeviceStatus status;
     QJsonObject json = status.getJsonStatus();
 
     // Just in case we change: Our clients have to be modified either
@@ -33,7 +33,7 @@ TEST(TEST_SOURCEDEVICESTATUS, INIT) {
 }
 
 TEST(TEST_SOURCEDEVICESTATUS, BUSY) {
-    cSourceDeviceStatus status;
+    SourceDeviceStatus status;
     QJsonObject json = status.getJsonStatus();
     int origCount = json.count();
     EXPECT_FALSE(status.getBusy());
@@ -46,7 +46,7 @@ TEST(TEST_SOURCEDEVICESTATUS, BUSY) {
 }
 
 TEST(TEST_SOURCEDEVICESTATUS, WARNINGS) {
-    cSourceDeviceStatus status;
+    SourceDeviceStatus status;
     QJsonObject json = status.getJsonStatus();
     int origCount = json.count();
     EXPECT_EQ(status.getWarnings().count(), 0);
@@ -60,7 +60,7 @@ TEST(TEST_SOURCEDEVICESTATUS, WARNINGS) {
 }
 
 TEST(TEST_SOURCEDEVICESTATUS, ERRORS) {
-    cSourceDeviceStatus status;
+    SourceDeviceStatus status;
     QJsonObject json = status.getJsonStatus();
     int origCount = json.count();
     EXPECT_EQ(status.getErrors().count(), 0);
@@ -74,7 +74,7 @@ TEST(TEST_SOURCEDEVICESTATUS, ERRORS) {
 }
 
 TEST(TEST_SOURCEDEVICESTATUS, DEVICEINFO) {
-    cSourceDeviceStatus status;
+    SourceDeviceStatus status;
     QJsonObject json = status.getJsonStatus();
     int origCount = json.count();
     status.setDeviceInfo("bar");
@@ -87,7 +87,7 @@ TEST(TEST_SOURCEDEVICESTATUS, DEVICEINFO) {
 }
 
 TEST(TEST_SOURCEDEVICESTATUS, CLEAR_RRORS_WARNINGS) {
-    cSourceDeviceStatus status;
+    SourceDeviceStatus status;
     status.addError("foo");
     status.addWarning("bar");
     status.clearWarningsErrors();

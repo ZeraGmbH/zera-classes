@@ -8,12 +8,12 @@
 namespace SOURCEMODULE
 {
 
-cSourceDeviceStatus::cSourceDeviceStatus()
+SourceDeviceStatus::SourceDeviceStatus()
 {
     reset();
 }
 
-void cSourceDeviceStatus::reset()
+void SourceDeviceStatus::reset()
 {
     QString deviceInfoFileName = QStringLiteral("://devicestatus/DefaultDeviceStatus.json");
     QFile deviceInfoFile(deviceInfoFileName);
@@ -29,59 +29,59 @@ static const QString keyErrors = "errors";
 static const QString keyWarnings = "warnings";
 static const QString keyDeviceInfo = "deviceinfo";
 
-void cSourceDeviceStatus::clearWarningsErrors()
+void SourceDeviceStatus::clearWarningsErrors()
 {
     QJsonArray emptyArr;
     m_jsonStatus[keyErrors] = emptyArr;
     m_jsonStatus[keyWarnings] = emptyArr;
 }
 
-void cSourceDeviceStatus::setBusy(bool busy)
+void SourceDeviceStatus::setBusy(bool busy)
 {
     m_jsonStatus[keyBusy] = busy;
 }
 
-void cSourceDeviceStatus::addError(const QString error)
+void SourceDeviceStatus::addError(const QString error)
 {
     appendToArray(keyErrors, error);
 }
 
-void cSourceDeviceStatus::addWarning(const QString warning)
+void SourceDeviceStatus::addWarning(const QString warning)
 {
     appendToArray(keyWarnings, warning);
 }
 
-void cSourceDeviceStatus::setDeviceInfo(const QString strDeviceInfo)
+void SourceDeviceStatus::setDeviceInfo(const QString strDeviceInfo)
 {
     m_jsonStatus[keyDeviceInfo] = strDeviceInfo;
 }
 
-const QJsonObject &cSourceDeviceStatus::getJsonStatus()
+const QJsonObject &SourceDeviceStatus::getJsonStatus()
 {
     return m_jsonStatus;
 }
 
-bool cSourceDeviceStatus::getBusy()
+bool SourceDeviceStatus::getBusy()
 {
     return m_jsonStatus[keyBusy].toBool();
 }
 
-QStringList cSourceDeviceStatus::getErrors()
+QStringList SourceDeviceStatus::getErrors()
 {
     return getArray(keyErrors);
 }
 
-QStringList cSourceDeviceStatus::getWarnings()
+QStringList SourceDeviceStatus::getWarnings()
 {
     return getArray(keyWarnings);
 }
 
-QString cSourceDeviceStatus::getDeviceInfo()
+QString SourceDeviceStatus::getDeviceInfo()
 {
     return m_jsonStatus[keyDeviceInfo].toString();
 }
 
-QStringList cSourceDeviceStatus::getArray(QString key)
+QStringList SourceDeviceStatus::getArray(QString key)
 {
     QStringList strList;
     auto arr = m_jsonStatus[key].toArray();
@@ -92,7 +92,7 @@ QStringList cSourceDeviceStatus::getArray(QString key)
     return strList;
 }
 
-void cSourceDeviceStatus::appendToArray(QString key, QString value)
+void SourceDeviceStatus::appendToArray(QString key, QString value)
 {
     QJsonArray arr = m_jsonStatus[key].toArray();
     arr.append(value);

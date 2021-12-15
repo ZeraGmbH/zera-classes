@@ -56,7 +56,7 @@ private:
     QUuid m_closeUuid;
     bool m_closeRequested = false;
 
-    cSourceDeviceStatus  m_deviceStatus;
+    SourceDeviceStatus  m_deviceStatus;
     SourceVeinInterface* m_veinInterface = nullptr;
 
     static bool m_removeDemoByDisconnect;
