@@ -30,27 +30,38 @@ cSourceScanner::~cSourceScanner()
     m_InstanceCount--;
 }
 
-struct deviceDetectInfo
+struct deviceResponseTypePair
 {
-    deviceDetectInfo(QByteArray queryStr, QList<QByteArray> expectedResponse, SupportedSourceTypes sourceType) {
-        this->queryStr = queryStr;
+    deviceResponseTypePair(QByteArray expectedResponse, SupportedSourceTypes sourceType) {
         this->expectedResponse = expectedResponse;
         this->sourceType = sourceType;
     }
-    QByteArray queryStr;
-    QList<QByteArray> expectedResponse;
+    QByteArray expectedResponse;
     SupportedSourceTypes sourceType;
+};
+
+struct deviceDetectInfo
+{
+    deviceDetectInfo(QByteArray queryStr, QList<deviceResponseTypePair> responseTypePairs) {
+        this->queryStr = queryStr;
+        this->responseTypePairs = responseTypePairs;
+    }
+    QByteArray queryStr;
+    QList<deviceResponseTypePair> responseTypePairs;
 };
 
 // Later (never hopefully) we might need multiple scan lists e.g bound to interface type or
 // settable...
 static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
-    // TODO: Regex?
-    << deviceDetectInfo("STS\r", QList<QByteArray>() << "STSFGMT" << "STSMT", SOURCE_MT_COMMON) // tested
+    << deviceDetectInfo("STS\r", QList<deviceResponseTypePair> ()
+                        // Sequence: special -> common
+                        << deviceResponseTypePair("STSMT400", SOURCE_MT_CURRENT_ONLY)
+                        << deviceResponseTypePair("STSMT", SOURCE_MT_COMMON)
+                        << deviceResponseTypePair("STSFGMT", SOURCE_MT_COMMON))
     // TODO: guessworked initial data
-    << deviceDetectInfo("TS\r", QList<QByteArray>() << "MT400-20", SOURCE_MT400_20)
-    << deviceDetectInfo("TS\r", QList<QByteArray>() << "FG", SOURCE_MT_COMMON)
-    ;
+    << deviceDetectInfo("TS\r", QList<deviceResponseTypePair> ()
+                        << deviceResponseTypePair("TSFG", SOURCE_DEMO_FG_4PHASE))
+       ;
 
 cSourceDevice *cSourceScanner::getSourceDeviceFound()
 {
@@ -128,11 +139,13 @@ void cSourceScanner::onIoFinished(int ioId, bool error)
     bool moreChances = m_currentSourceTested < deviceScanListSerial.size()-1;
     bool ourJobIsDone = false;
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
+    SupportedSourceTypes sourceTypeFound = SOURCE_MT_COMMON;
     if(!error) {
         if(!m_ioInterface->isDemo()) {
-            for(auto expectedResponse : deviceDetectInfoCurrent.expectedResponse) {
-                if(m_bytesReceived.contains(expectedResponse)) {
+            for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
+                if(m_bytesReceived.contains(responseTypePair.expectedResponse)) {
                     validFound = true;
+                    sourceTypeFound = responseTypePair.sourceType;
                     break;
                 }
             }
@@ -144,13 +157,13 @@ void cSourceScanner::onIoFinished(int ioId, bool error)
     if(validFound) {
         QByteArray version;
         if(m_ioInterface->isDemo()) {
-            deviceDetectInfoCurrent.sourceType = nextDemoType();
+            sourceTypeFound = nextDemoType();
             version = "V42";
         }
         else {
-            version = extractVersionFromResponse(deviceDetectInfoCurrent.sourceType);
+            version = extractVersionFromResponse(sourceTypeFound);
         }
-        m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, deviceDetectInfoCurrent.sourceType, version);
+        m_sourceDeviceIdentified = new cSourceDevice(m_ioInterface, sourceTypeFound, version);
 
         emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;
