@@ -3,46 +3,46 @@
 namespace SOURCEMODULE
 {
 
-cSourceVeinInterface::cSourceVeinInterface(QObject *parent) : QObject(parent)
+SourceVeinInterface::SourceVeinInterface(QObject *parent) : QObject(parent)
 {
 }
 
-cVeinModuleActvalue *cSourceVeinInterface::getVeinDeviceInfo()
+cVeinModuleActvalue *SourceVeinInterface::getVeinDeviceInfo()
 {
     return m_veinDeviceInfo;
 }
 
-cVeinModuleActvalue *cSourceVeinInterface::getVeinDeviceState()
+cVeinModuleActvalue *SourceVeinInterface::getVeinDeviceState()
 {
     return m_veinDeviceState;
 }
 
-cVeinModuleParameter *cSourceVeinInterface::getVeinDeviceParameter()
+cVeinModuleParameter *SourceVeinInterface::getVeinDeviceParameter()
 {
     return m_veinDeviceParameter;
 }
 
-cJsonParamValidator *cSourceVeinInterface::getVeinDeviceParameterValidator()
+cJsonParamValidator *SourceVeinInterface::getVeinDeviceParameterValidator()
 {
     return m_veinDeviceParameterValidator;
 }
 
-void cSourceVeinInterface::setVeinDeviceInfo(cVeinModuleActvalue *getVeinDeviceInfo)
+void SourceVeinInterface::setVeinDeviceInfo(cVeinModuleActvalue *getVeinDeviceInfo)
 {
     m_veinDeviceInfo = getVeinDeviceInfo;
 }
 
-void cSourceVeinInterface::setVeinDeviceState(cVeinModuleActvalue *getVeinDeviceState)
+void SourceVeinInterface::setVeinDeviceState(cVeinModuleActvalue *getVeinDeviceState)
 {
     m_veinDeviceState = getVeinDeviceState;
 }
 
-void cSourceVeinInterface::setVeinDeviceParameter(cVeinModuleParameter *getVeinDeviceParameter)
+void SourceVeinInterface::setVeinDeviceParameter(cVeinModuleParameter *getVeinDeviceParameter)
 {
     m_veinDeviceParameter = getVeinDeviceParameter;
 }
 
-void cSourceVeinInterface::setVeinDeviceParameterValidator(cJsonParamValidator *getVeinDeviceParameterValidator)
+void SourceVeinInterface::setVeinDeviceParameterValidator(cJsonParamValidator *getVeinDeviceParameterValidator)
 {
     m_veinDeviceParameterValidator = getVeinDeviceParameterValidator;
 }

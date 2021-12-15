@@ -13,7 +13,7 @@
 
 namespace SOURCEMODULE
 {
-class cSourceVeinInterface;
+class SourceVeinInterface;
 
 class SourceDeviceVein : public SourceDeviceBase
 {
@@ -30,7 +30,7 @@ public:
     QStringList getLastErrors();
 
     // setter
-    void setVeinInterface(cSourceVeinInterface* veinInterface);
+    void setVeinInterface(SourceVeinInterface* veinInterface);
     void saveState(); // persistency
 
 signals:
@@ -57,7 +57,7 @@ private:
     bool m_closeRequested = false;
 
     cSourceDeviceStatus  m_deviceStatus;
-    cSourceVeinInterface* m_veinInterface = nullptr;
+    SourceVeinInterface* m_veinInterface = nullptr;
 
     static bool m_removeDemoByDisconnect;
 };

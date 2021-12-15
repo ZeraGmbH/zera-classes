@@ -84,7 +84,7 @@ void cSourceModuleProgram::generateInterface()
     cVeinModuleParameter* pVeinParam;
     cJsonParamValidator *jsonValidator;
     for(int souceCount=0; souceCount<maxSources; souceCount++) {
-        cSourceVeinInterface* sourceVeinInterface = new cSourceVeinInterface;
+        SourceVeinInterface* sourceVeinInterface = new SourceVeinInterface;
         // device info (Don' movit down - our clients need it first!!)
         pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_DeviceInfo%1").arg(souceCount),
