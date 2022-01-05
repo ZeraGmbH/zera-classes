@@ -12,7 +12,7 @@ public:
     virtual bool isValidParam(QVariant &newValue) override;
     virtual void exportMetaData(QJsonObject& jsObj)  override;
 private:
-    cZeraJsonParamsState m_paramState;
+    ZeraJsonParamsState m_paramState;
 };
 
 #endif // CJSONVALIDATORNOSCHEMA_H
