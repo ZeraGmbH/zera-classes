@@ -14,8 +14,8 @@ TEST(TEST_JSON_STRUCTURE_LOADER, TYPES_ALL_STRUCTURES_LOADED) {
 TEST(TEST_JSON_STRUCTURE_LOADER, TYPES_ALL_STRUCTURES_VALID) {
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
-        cZeraJsonParamsStructure paramStruct;
-        EXPECT_TRUE(paramStruct.loadStructure(structure).isEmpty());
+        ZeraJsonParamsStructure paramStruct;
+        EXPECT_TRUE(paramStruct.setJson(structure).isEmpty());
     }
 }
 

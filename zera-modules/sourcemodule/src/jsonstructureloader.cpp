@@ -24,8 +24,8 @@ QJsonObject JsonStructureLoader::loadJsonStructure(SupportedSourceTypes type, QS
 QJsonObject JsonStructureLoader::loadJsonStructureFromFile(QString fileName)
 {
     QJsonObject jsonStructureRaw = cJsonFileLoader::loadJsonFile(fileName);
-    cZeraJsonParamsStructure jsonParamsStructure;
-    jsonParamsStructure.loadStructure(jsonStructureRaw);
-    return jsonParamsStructure.jsonStructure();
+    ZeraJsonParamsStructure jsonParamsStructure;
+    jsonParamsStructure.setJson(jsonStructureRaw);
+    return jsonParamsStructure.getJson();
 }
 

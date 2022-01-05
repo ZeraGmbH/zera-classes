@@ -3,7 +3,7 @@
 #include <QJsonDocument>
 #include <zera-json-params-structure.h>
 
-// Check all deviceinfos for validity by loading them into cZeraJsonParamsStructure
+// Check all deviceinfos for validity by loading them into ZeraJsonParamsStructure
 TEST(TEST_DEVICEINFO, ALL_VALID) {
     QDir dir(QStringLiteral("://deviceinfo"));
     QFileInfoList fileInfoList = dir.entryInfoList();
@@ -15,8 +15,8 @@ TEST(TEST_DEVICEINFO, ALL_VALID) {
         EXPECT_EQ(diOpened, true) << "Deviceinfo could not be opened:" << qPrintable(diFileName);
         if(diOpened) {
             QJsonObject diStructure = QJsonDocument::fromJson(diFile.readAll()).object();
-            cZeraJsonParamsStructure jsonParamStructure;
-            cZeraJsonParamsStructure::ErrList errListStructure = jsonParamStructure.loadStructure(diStructure);
+            ZeraJsonParamsStructure jsonParamStructure;
+            ZeraJsonParamsStructure::ErrList errListStructure = jsonParamStructure.setJson(diStructure);
             QString errorInfoTxt;
             for(auto errInfo: errListStructure) {
                 errorInfoTxt += "\n" + errInfo.strID() + ": " + errInfo.m_strInfo;

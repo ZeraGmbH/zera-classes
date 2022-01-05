@@ -15,11 +15,11 @@ bool cJsonParamValidator::isValidParam(QVariant &newValue)
 {
     bool valid = false;
     QJsonObject jsonObj = newValue.toJsonObject();
-    cZeraJsonParamsState::ErrList errList = m_paramState.validateJsonState(jsonObj);
+    ZeraJsonParamsState::ErrList errList = m_paramState.validateJsonState(jsonObj);
     valid = errList.isEmpty();
     if(!valid) {
         while(!errList.isEmpty()) {
-            cZeraJsonParamsState::errEntry err = errList.takeFirst();
+            ZeraJsonParamsState::errEntry err = errList.takeFirst();
             qWarning("%s: %s", qPrintable(err.strID()), qPrintable(err.m_strInfo));
         }
     }
