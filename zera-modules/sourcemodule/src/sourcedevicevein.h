@@ -40,7 +40,7 @@ public slots:
     void onNewVeinParamStatus(QVariant paramState);
 
 protected slots:
-    virtual void onSourceCmdFinished(cWorkerCommandPacket cmdPack) override;
+    virtual void onSourceCmdFinished(SourceWorkerCmdPack cmdPack) override;
 
 private slots:
     void onInterfaceClosed();

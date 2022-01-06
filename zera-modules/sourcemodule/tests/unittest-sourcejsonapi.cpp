@@ -61,7 +61,7 @@ TEST(TEST_SOURCE_PARAM_API, ON_AVAIL_AND_OFF) { // check if all structure files 
         QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         ZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);
-        QJsonObject defaultParams = jsonParamsState.createDefaultJsonState();
+        QJsonObject defaultParams = jsonParamsState.getDefaultJsonState();
 
         QString key = "on";
         EXPECT_EQ(defaultParams.contains(key), true);
@@ -75,7 +75,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_SETTER_ON) { // initial off (see ON_AVAIL_AND
         QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         ZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);
-        QJsonObject defaultParams = jsonParamsState.createDefaultJsonState();
+        QJsonObject defaultParams = jsonParamsState.getDefaultJsonState();
 
         SourceJsonParamApi paramApi;
         paramApi.setParams(defaultParams);
@@ -102,7 +102,7 @@ TEST(TEST_SOURCE_PARAM_API, PHASE_PARAM_AVAIL_IN_DEFAULT) { // check if all gene
         SourceJsonStructApi structApi = SourceJsonStructApi(structure);
         ZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);
-        QJsonObject defaultParams = jsonParamsState.createDefaultJsonState();
+        QJsonObject defaultParams = jsonParamsState.getDefaultJsonState();
         QStringList phaseNames = QStringList() << "U" << "I";
         for(auto uI: phaseNames) {
             int countPhases = uI == "U" ? structApi.getCountUPhases() :structApi.getCountIPhases();

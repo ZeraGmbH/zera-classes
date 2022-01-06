@@ -25,7 +25,7 @@ public:
     QString getInterfaceDeviceInfo();
 
 protected slots:
-    virtual void onSourceCmdFinished(cWorkerCommandPacket cmdPack);
+    virtual void onSourceCmdFinished(SourceWorkerCmdPack cmdPack);
 
 protected:
     void switchState(QJsonObject state);

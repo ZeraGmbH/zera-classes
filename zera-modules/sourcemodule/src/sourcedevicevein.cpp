@@ -88,7 +88,7 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDeviceVein::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
+void SourceDeviceVein::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
 {
     SourceDeviceBase::onSourceCmdFinished(cmdPack);
     if(m_currentWorkerID == cmdPack.m_workerId) {
