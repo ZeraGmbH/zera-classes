@@ -3,7 +3,7 @@
 
 static QObject* pSourceIoWorkerTest = addTest(new SourceIoWorkerTest);
 
-void SourceIoWorkerTest::onWorkPackFinished(cWorkerCommandPacket workPack)
+void SourceIoWorkerTest::onWorkPackFinished(SourceWorkerCmdPack workPack)
 {
     m_listWorkPacksReceived.append(workPack);
 }
@@ -15,14 +15,14 @@ void SourceIoWorkerTest::init()
 
 void SourceIoWorkerTest::emptyWorkerIsInvalid()
 {
-    cWorkerCommandPacket workPack;
+    SourceWorkerCmdPack workPack;
     QVERIFY(workPack.m_commandType == COMMAND_UNDEFINED);
     QVERIFY(workPack.m_errorBehavior == BEHAVE_UNDEFINED);
 }
 
 void SourceIoWorkerTest::cmdToWorkProperties()
 {
-    cWorkerCommandPacket workPack = generateSwitchCommands(false);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(false);
     QVERIFY(workPack.m_commandType != COMMAND_UNDEFINED);
     QVERIFY(workPack.m_errorBehavior != BEHAVE_UNDEFINED);
 }
@@ -33,7 +33,7 @@ void SourceIoWorkerTest::cmdPackToWorkIoSize()
     SourceJsonParamApi params;
     params.setOn(true);
     SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    SourceWorkerCmdPack workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     QCOMPARE(cmdPack.m_outInList.size(), workPack.m_workerIOList.size());
 }
 
@@ -43,7 +43,7 @@ void SourceIoWorkerTest::cmdPackToWorkIoSequence()
     SourceJsonParamApi params;
     params.setOn(true);
     SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    cWorkerCommandPacket workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    SourceWorkerCmdPack workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     for(int i=0; i<cmdPack.m_outInList.size(); ++i) {
         QCOMPARE(cmdPack.m_outInList[i].m_actionType, workPack.m_workerIOList[i].m_OutIn.m_actionType);
     }
@@ -51,7 +51,7 @@ void SourceIoWorkerTest::cmdPackToWorkIoSequence()
 
 void SourceIoWorkerTest::noInterfaceNotBusy()
 {
-    cWorkerCommandPacket workPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(true);
     SourceIoWorker worker;
     worker.enqueueAction(workPack);
     QVERIFY(!worker.isIoBusy());
@@ -61,7 +61,7 @@ void SourceIoWorkerTest::emptyPackNotBusy()
 {
     SourceIoWorker worker;
     worker.setIoInterface(createOpenInterface());
-    cWorkerCommandPacket workPack;
+    SourceWorkerCmdPack workPack;
     worker.enqueueAction(workPack);
     QVERIFY(!worker.isIoBusy());
 }
@@ -69,7 +69,7 @@ void SourceIoWorkerTest::emptyPackNotBusy()
 void SourceIoWorkerTest::notOpenInterfaceNotBusy()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
-    cWorkerCommandPacket workPack = generateSwitchCommands(false);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(false);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     worker.enqueueAction(workPack);
@@ -79,7 +79,7 @@ void SourceIoWorkerTest::notOpenInterfaceNotBusy()
 void SourceIoWorkerTest::openInterfaceBusy()
 {
     SourceIoWorker worker;
-    cWorkerCommandPacket workPack = generateSwitchCommands(false);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(false);
     worker.setIoInterface(createOpenInterface());
     worker.enqueueAction(workPack);
     QVERIFY(worker.isIoBusy());
@@ -88,7 +88,7 @@ void SourceIoWorkerTest::openInterfaceBusy()
 void SourceIoWorkerTest::noInterfaceNotification()
 {
     SourceIoWorker worker;
-    cWorkerCommandPacket workPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(true);
 
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
     worker.enqueueAction(workPack);
@@ -103,7 +103,7 @@ void SourceIoWorkerTest::notOpenInterfaceNotifications()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     SourceIoWorker worker;
-    cWorkerCommandPacket workPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(true);
     worker.setIoInterface(interface);
 
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -123,7 +123,7 @@ void SourceIoWorkerTest::disconnectBeforeEnqueue()
     worker.setIoInterface(interface);
 
     demoInterface->simulateExternalDisconnect();
-    cWorkerCommandPacket workPack = generateSwitchCommands(false);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(false);
     worker.enqueueAction(workPack);
 
     QVERIFY(!worker.isIoBusy());
@@ -144,7 +144,7 @@ void SourceIoWorkerTest::disconnectWhileWorking()
         demoInterface->simulateExternalDisconnect();
     });
     timer.start(10);
-    cWorkerCommandPacket workPack = generateSwitchCommands(false);
+    SourceWorkerCmdPack workPack = generateSwitchCommands(false);
     worker.enqueueAction(workPack);
     QTest::qWait(50);
 
@@ -168,8 +168,8 @@ void SourceIoWorkerTest::disconnectWhileWorkingMultipleNotifications()
         demoInterface->simulateExternalDisconnect();
     });
     timer.start(10);
-    cWorkerCommandPacket workPack1 = generateSwitchCommands(true);
-    cWorkerCommandPacket workPack2 = generateSwitchCommands(false);
+    SourceWorkerCmdPack workPack1 = generateSwitchCommands(true);
+    SourceWorkerCmdPack workPack2 = generateSwitchCommands(false);
     worker.enqueueAction(workPack1);
     worker.enqueueAction(workPack2);
     QTest::qWait(50);
@@ -190,7 +190,7 @@ void SourceIoWorkerTest::testStopOnFirstErrorFullResponse()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
     constexpr int errorIoNumber = 2;
     QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber);
@@ -224,7 +224,7 @@ void SourceIoWorkerTest::testStopOnFirstErrorPartResponse()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_PART_DATA_SEQUENCE);
     constexpr int errorIoNumber = 2;
     QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber, "bar");
@@ -258,7 +258,7 @@ void SourceIoWorkerTest::testContinueOnErrorFullResponse()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_CONTINUE_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
     constexpr int errorIoNumber = 2;
     QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber);
@@ -288,7 +288,7 @@ void SourceIoWorkerTest::testContinueOnErrorPartResponse()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_CONTINUE_ON_ERROR, RESP_PART_DATA_SEQUENCE);
     constexpr int errorIoNumber = 2;
     QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber, "bar");
@@ -319,7 +319,7 @@ void SourceIoWorkerTest::testSpamRejected()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
     QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
     for(int pack=0; pack<maxPendingPackets*2; pack++) {
@@ -342,7 +342,7 @@ void SourceIoWorkerTest::testCloseToSpamAccepted()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR, RESP_FULL_DATA_SEQUENCE);
     QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
     for(int pack=0; pack<maxPendingPackets; pack++) {
@@ -363,7 +363,7 @@ void SourceIoWorkerTest::testOnePacketSingleIoOK()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(false);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(false);
     QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
     for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
         demoInterface->appendResponses(responseList);
@@ -385,7 +385,7 @@ void SourceIoWorkerTest::testTwoPacketSingleIoOK()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(false);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(false);
     QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
     for(int pack=0; pack<2*workCmdPack.m_workerIOList.count(); pack++) {
         demoInterface->appendResponses(responseList);
@@ -407,7 +407,7 @@ void SourceIoWorkerTest::testOnePacketMultipleIoOK()
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
-    cWorkerCommandPacket workCmdPack = generateSwitchCommands(true);
+    SourceWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     int ioCount = workCmdPack.m_workerIOList.count();
     QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
     for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
@@ -431,7 +431,7 @@ void SourceIoWorkerTest::testTwoPacketMultipleIoOK()
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
 
     int outInCount = 0;
-    cWorkerCommandPacket workCmdPacks[2];
+    SourceWorkerCmdPack workCmdPacks[2];
     workCmdPacks[0] = generateSwitchCommands(true);
     workCmdPacks[1] = generateStatusPollCommands();
     int commandCount = 0;
@@ -462,7 +462,7 @@ tSourceInterfaceShPtr SourceIoWorkerTest::createOpenInterface()
     return interface;
 }
 
-cWorkerCommandPacket SourceIoWorkerTest::generateStatusPollCommands()
+SourceWorkerCmdPack SourceIoWorkerTest::generateStatusPollCommands()
 {
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
@@ -470,7 +470,7 @@ cWorkerCommandPacket SourceIoWorkerTest::generateStatusPollCommands()
     return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
-cWorkerCommandPacket SourceIoWorkerTest::generateSwitchCommands(bool on)
+SourceWorkerCmdPack SourceIoWorkerTest::generateSwitchCommands(bool on)
 {
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
     SourceJsonParamApi params;
@@ -479,7 +479,7 @@ cWorkerCommandPacket SourceIoWorkerTest::generateSwitchCommands(bool on)
     return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
-void SourceIoWorkerTest::adjustWorkCmdPack(cWorkerCommandPacket& workCmdPack,
+void SourceIoWorkerTest::adjustWorkCmdPack(SourceWorkerCmdPack& workCmdPack,
                                  SourcePacketErrorBehaviors errorBehavior,
                                  SourceIoResponseTypes responseType)
 {

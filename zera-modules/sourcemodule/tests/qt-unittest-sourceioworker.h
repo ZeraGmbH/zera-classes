@@ -8,7 +8,7 @@ class SourceIoWorkerTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onWorkPackFinished(cWorkerCommandPacket workPack);
+    void onWorkPackFinished(SourceWorkerCmdPack workPack);
 private slots:
     void init();
 
@@ -44,14 +44,14 @@ private slots:
 
 private:
     static tSourceInterfaceShPtr createOpenInterface();
-    static cWorkerCommandPacket generateSwitchCommands(bool on);
-    static cWorkerCommandPacket generateStatusPollCommands();
-    static void adjustWorkCmdPack(cWorkerCommandPacket& workCmdPack,
+    static SourceWorkerCmdPack generateSwitchCommands(bool on);
+    static SourceWorkerCmdPack generateStatusPollCommands();
+    static void adjustWorkCmdPack(SourceWorkerCmdPack& workCmdPack,
                                   SourcePacketErrorBehaviors errorBehavior,
                                   SourceIoResponseTypes responseType);
     void evalNotificationCount(int cmdPassedExpected, int passExpected, int failExpected, int unknownExpected);
 
-    QList<cWorkerCommandPacket> m_listWorkPacksReceived;
+    QList<SourceWorkerCmdPack> m_listWorkPacksReceived;
 };
 
 #endif // SOURCEIOWORKERENTRYTEST_H

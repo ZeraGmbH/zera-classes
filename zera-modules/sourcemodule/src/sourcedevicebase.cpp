@@ -36,7 +36,7 @@ QString SourceDeviceBase::getInterfaceDeviceInfo()
     return m_ioInterface->getDeviceInfo();
 }
 
-void SourceDeviceBase::onSourceCmdFinished(cWorkerCommandPacket cmdPack)
+void SourceDeviceBase::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
 {
     if(m_currentWorkerID == cmdPack.m_workerId) {
         if(cmdPack.passedAll()) {
@@ -49,7 +49,7 @@ void SourceDeviceBase::switchState(QJsonObject state)
 {
     m_paramsRequested.setParams(state);
     SourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
-    cWorkerCommandPacket workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    SourceWorkerCmdPack workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
         SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(m_ioInterface.get());
         demoInterface->setDelayFollowsTimeout(m_bDemoDelayFollowsTimeout);

@@ -22,13 +22,13 @@ public:
 typedef QList<SourceIoWorkerEntry> tSourceIoWorkerList;
 
 
-class cWorkerCommandPacket
+class SourceWorkerCmdPack
 {
 public:
     bool passedAll();
     void evalAll();
 
-    bool operator == (const cWorkerCommandPacket& other);
+    bool operator == (const SourceWorkerCmdPack& other);
 
     int m_workerId = 0;
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
@@ -37,18 +37,18 @@ public:
 private:
     bool m_bPassedAll = false;
 };
-Q_DECLARE_METATYPE(cWorkerCommandPacket)
+Q_DECLARE_METATYPE(SourceWorkerCmdPack)
 
 
 namespace SourceWorkerConverter
 {
-    cWorkerCommandPacket commandPackToWorkerPack(const SourceCommandPacket &cmdPack);
+    SourceWorkerCmdPack commandPackToWorkerPack(const SourceCommandPacket &cmdPack);
 }
 
 namespace SourceDemoHelper
 {
     QList<QByteArray> generateResponseList(
-            cWorkerCommandPacket& workCmdPack,
+            SourceWorkerCmdPack& workCmdPack,
             int createErrorAtIoNumber = -1,
             QByteArray prefix = "");
 }
@@ -61,23 +61,23 @@ public:
 
     void setIoInterface(tSourceInterfaceShPtr interface);
     void setMaxPendingActions(int maxPackets);
-    int enqueueAction(cWorkerCommandPacket cmdPack);
+    int enqueueAction(SourceWorkerCmdPack cmdPack);
 
     bool isIoBusy();
 
 signals:
-    void sigCmdFinished(cWorkerCommandPacket cmdPack);
+    void sigCmdFinished(SourceWorkerCmdPack cmdPack);
 
 private slots:
     void onIoFinished(int ioID, bool error);
     void onIoDisconnected();
 signals:
-    void sigCmdFinishedQueued(cWorkerCommandPacket cmdPack);
+    void sigCmdFinishedQueued(SourceWorkerCmdPack cmdPack);
 private:
-    cWorkerCommandPacket *getCurrentCmd();
+    SourceWorkerCmdPack *getCurrentCmd();
     SourceIoWorkerEntry *getNextIo();
     void tryStartNextIo();
-    void finishCmd(cWorkerCommandPacket cmdToFinish);
+    void finishCmd(SourceWorkerCmdPack cmdToFinish);
     void finishCurrentCmd();
     void abortAllCmds();
     bool evaluateResponse();
@@ -87,7 +87,7 @@ private:
     int m_iCurrentIoID = 0;
     bool m_bIoIsBusy = false;
     SourceIdGenerator m_IdGenerator;
-    QList<cWorkerCommandPacket> m_pendingCmdPacks;
+    QList<SourceWorkerCmdPack> m_pendingCmdPacks;
     int m_nextPosInWorkerIo = 0;
     int m_maxPendingCmdPacks = 0;
 };
