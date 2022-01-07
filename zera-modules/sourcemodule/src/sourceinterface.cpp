@@ -33,9 +33,9 @@ SourceInterfaceBase::~SourceInterfaceBase()
 
 int SourceInterfaceBase::sendAndReceive(QByteArray, QByteArray*)
 {
-    m_currentIoID = m_IDGenerator.nextID();
-    emit sigIoFinishedToQueue(m_currentIoID, true);
-    return m_currentIoID;
+    m_currIoId.setCurrent(m_IDGenerator.nextID());
+    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), true);
+    return m_currIoId.getCurrent();
 }
 
 QString SourceInterfaceBase::getDeviceInfo()
@@ -60,7 +60,7 @@ void SourceInterfaceDemo::sendResponse(bool error)
     if(!error && m_pDataReceive && !m_responseList.isEmpty()) {
         *m_pDataReceive = m_responseList.takeFirst();
     }
-    emit sigIoFinishedToQueue(m_currentIoID, error);
+    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), error);
 }
 
 bool SourceInterfaceDemo::open(QString strDeviceInfo)
@@ -77,7 +77,7 @@ void SourceInterfaceDemo::close()
 
 int SourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
 {
-    m_currentIoID = m_IDGenerator.nextID();
+    m_currIoId.setCurrent(m_IDGenerator.nextID());
     m_pDataReceive = pDataReceive;
     int responseDelayMs = m_responseDelayMs;
     if(m_delayFollowsTimeout) {
@@ -90,7 +90,7 @@ int SourceInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
     else {
         m_responseDelayTimer.start(responseDelayMs);
     }
-    return m_currentIoID;
+    return m_currIoId.getCurrent();
 }
 
 void SourceInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)

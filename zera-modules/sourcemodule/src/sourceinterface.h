@@ -6,6 +6,7 @@
 #include <QSharedPointer>
 #include <QTimer>
 #include "sourceidgenerator.h"
+#include "sourceidkeeper.h"
 
 static constexpr int sourceDefaultTimeout = 1500;
 
@@ -56,7 +57,7 @@ protected:
 
     QString m_strDeviceInfo;
     SourceIdGenerator m_IDGenerator;
-    int m_currentIoID = 0;
+    SourceIdKeeper m_currIoId;
 };
 
 

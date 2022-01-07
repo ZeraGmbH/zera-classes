@@ -81,7 +81,7 @@ SourceInterfaceZeraSerial::~SourceInterfaceZeraSerial()
 
 int SourceInterfaceZeraSerial::sendAndReceive(QByteArray bytesSend, QByteArray *pDataReceive)
 {
-    m_currentIoID = m_IDGenerator.nextID();
+    m_currIoId.setCurrent(m_IDGenerator.nextID());
     if(d_ptr->m_serialIO.isOpen()) {
         // set read timeout
         const SourceInterfaceZeraSerialPrivate::TTimeoutParam* timeoutParam = &d_ptr->defaultTimeoutParam;
@@ -102,9 +102,9 @@ int SourceInterfaceZeraSerial::sendAndReceive(QByteArray bytesSend, QByteArray *
         d_ptr->m_serialIO.sendAndReceive(bytesSend, pDataReceive);
     }
     if(!d_ptr->m_serialIO.isIOPending()) {
-        emit sigIoFinishedToQueue(m_currentIoID, true);
+        emit sigIoFinishedToQueue(m_currIoId.getCurrent(), true);
     }
-    return m_currentIoID;
+    return m_currIoId.getCurrent();
 }
 
 void SourceInterfaceZeraSerial::setReadTimeoutNextIo(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal)
@@ -129,7 +129,7 @@ bool SourceInterfaceZeraSerial::isOpen()
 
 void SourceInterfaceZeraSerial::onIoFinished()
 {
-    emit sigIoFinishedToQueue(m_currentIoID, false);
+    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), false);
 }
 
 void SourceInterfaceZeraSerial::onDeviceFileGone(QString)
