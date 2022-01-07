@@ -5,6 +5,7 @@
 #include "supportedsources.h"
 #include "sourceiopacketgenerator.h"
 #include "sourceioworker.h"
+#include "sourceidkeeper.h"
 
 #include <QObject>
 
@@ -38,7 +39,7 @@ protected:
     SourceJsonParamApi m_paramsCurrent;
 
     SourceIoWorker m_sourceIoWorker;
-    int m_currentWorkerID = 0;
+    SourceIdKeeper m_currWorkerId;
 
 private:
     bool m_bDemoDelayFollowsTimeout = false;
