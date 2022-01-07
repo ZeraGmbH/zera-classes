@@ -91,7 +91,7 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
 void SourceDeviceVein::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
 {
     SourceDeviceBase::onSourceCmdFinished(cmdPack);
-    if(m_currentWorkerID == cmdPack.m_workerId) {
+    if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
         m_deviceStatus.setBusy(false);
         if(!cmdPack.passedAll()) {
             // For now just drop a short note. We need a concept

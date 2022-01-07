@@ -38,7 +38,7 @@ QString SourceDeviceBase::getInterfaceDeviceInfo()
 
 void SourceDeviceBase::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
 {
-    if(m_currentWorkerID == cmdPack.m_workerId) {
+    if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
         if(cmdPack.passedAll()) {
             m_paramsCurrent.setParams(m_paramsRequested.getParams());
         }
@@ -56,7 +56,7 @@ void SourceDeviceBase::switchState(QJsonObject state)
         QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
     }
-    m_currentWorkerID = m_sourceIoWorker.enqueueAction(workerPack);
+    m_currWorkerId.setCurrent(m_sourceIoWorker.enqueueAction(workerPack));
 }
 
 void SourceDeviceBase::switchOff()
