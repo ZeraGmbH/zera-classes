@@ -66,10 +66,7 @@ bool SourceInterfaceZeraSerial::open(QString strDeviceInfo)
 
 void SourceInterfaceZeraSerial::close()
 {
-    if(d_ptr->m_serialIO.isOpen()) {
-        d_ptr->m_serialIO.close();
-    }
-    d_ptr->m_disappearWatcher.resetFiles();
+    _close();
 }
 
 void SourceInterfaceZeraSerial::setReadTimeoutNextIo(int timeoutMs)
@@ -79,7 +76,7 @@ void SourceInterfaceZeraSerial::setReadTimeoutNextIo(int timeoutMs)
 
 SourceInterfaceZeraSerial::~SourceInterfaceZeraSerial()
 {
-    close();
+    _close();
 }
 
 int SourceInterfaceZeraSerial::sendAndReceive(QByteArray bytesSend, QByteArray *pDataReceive)
@@ -139,4 +136,12 @@ void SourceInterfaceZeraSerial::onDeviceFileGone(QString)
 {
     close();
     emit sigDisconnected();
+}
+
+void SourceInterfaceZeraSerial::_close()
+{
+    if(d_ptr->m_serialIO.isOpen()) {
+        d_ptr->m_serialIO.close();
+    }
+    d_ptr->m_disappearWatcher.resetFiles();
 }
