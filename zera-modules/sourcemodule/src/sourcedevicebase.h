@@ -25,12 +25,10 @@ public:
     bool isDemo();
     QString getInterfaceDeviceInfo();
 
-protected slots:
-    virtual void onSourceCmdFinished(SourceWorkerCmdPack cmdPack);
-
 protected:
     void switchState(QJsonObject state);
     void switchOff();
+    virtual void handleSourceCmd(SourceWorkerCmdPack cmdPack);
 
     tSourceInterfaceShPtr m_ioInterface;
     SourceIoPacketGenerator* m_outInGenerator = nullptr;
@@ -40,6 +38,9 @@ protected:
 
     SourceIoWorker m_sourceIoWorker;
     SourceIdKeeper m_currWorkerId;
+
+private slots:
+    void onSourceCmdFinished(SourceWorkerCmdPack cmdPack);
 
 private:
     bool m_bDemoDelayFollowsTimeout = false;
