@@ -6,6 +6,7 @@
 #include <QSharedPointer>
 #include "sourceinterface.h"
 #include "sourcedevicevein.h"
+#include "sourceidkeeper.h"
 
 class SourceInterfaceBase;
 
@@ -44,7 +45,7 @@ private:
     QByteArray extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes sourceType);
     static SupportedSourceTypes nextDemoType();
 
-    int m_ioId = 0;
+    SourceIdKeeper m_currIoId;
     tSourceInterfaceShPtr m_ioInterface;
     QUuid m_uuid;
     SourceDeviceVein* m_sourceDeviceIdentified;

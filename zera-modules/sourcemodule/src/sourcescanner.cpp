@@ -84,7 +84,7 @@ void SourceScanner::sendReceiveSourceID()
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     m_bytesReceived.clear();
     QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
-    m_ioId = m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived);
+    m_currIoId.setCurrent(m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived));
 }
 
 QByteArray SourceScanner::createInterfaceSpecificPrepend()
@@ -147,7 +147,7 @@ SupportedSourceTypes SourceScanner::nextDemoType() {
 
 void SourceScanner::onIoFinished(int ioId, bool error)
 {
-    if(ioId != m_ioId) {
+    if(!m_currIoId.isCurrAndDeactivateIf(ioId)) {
         qCritical("Are there multiple clients on scanner interface?");
         return;
     }
