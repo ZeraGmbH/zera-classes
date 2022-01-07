@@ -124,6 +124,7 @@ private slots:
     void onIoFinished();
     void onDeviceFileGone(QString);
 private:
+    void _close();
     SourceInterfaceZeraSerialPrivate *d_ptr;
     Q_DECLARE_PRIVATE(SourceInterfaceZeraSerial)
 };
