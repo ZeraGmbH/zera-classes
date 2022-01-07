@@ -15,7 +15,7 @@ SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type, 
     m_jsonStatePersistenceHelper.setJsonParamStructure(paramStructure);
 }
 
-QJsonObject SourcePersistentJsonState::getJsonStructure()
+QJsonObject SourcePersistentJsonState::getJsonStructure() const
 {
     return m_jsonStatePersistenceHelper.getJsonParamStructure();
 }

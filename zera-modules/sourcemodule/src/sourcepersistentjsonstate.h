@@ -9,7 +9,7 @@ class SourcePersistentJsonState
 public:
     SourcePersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion);
 
-    QJsonObject getJsonStructure();
+    QJsonObject getJsonStructure() const;
 
     QJsonObject loadJsonState();
     void saveJsonState(QJsonObject state);
