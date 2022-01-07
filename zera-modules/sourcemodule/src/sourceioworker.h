@@ -5,6 +5,7 @@
 #include <QSharedPointer>
 #include "sourceiopacketgenerator.h"
 #include "sourceinterface.h"
+#include "sourceidkeeper.h"
 
 class SourceIoWorkerEntry
 {
@@ -84,9 +85,8 @@ private:
     bool canContinue();
 
     tSourceInterfaceShPtr m_interface = nullptr;
-    int m_iCurrentIoID = 0;
-    bool m_bIoIsBusy = false;
     SourceIdGenerator m_IdGenerator;
+    SourceIdKeeper m_currIoId;
     QList<SourceWorkerCmdPack> m_pendingCmdPacks;
     int m_nextPosInWorkerIo = 0;
     int m_maxPendingCmdPacks = 0;

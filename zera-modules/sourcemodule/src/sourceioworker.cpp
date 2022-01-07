@@ -105,13 +105,12 @@ int SourceIoWorker::enqueueAction(SourceWorkerCmdPack cmdPack)
 
 bool SourceIoWorker::isIoBusy()
 {
-    return m_bIoIsBusy;
+    return m_currIoId.isActive();
 }
 
 void SourceIoWorker::onIoFinished(int ioID, bool error)
 {
-    if(ioID == m_iCurrentIoID) {
-        m_bIoIsBusy = false;
+    if(m_currIoId.isCurrAndDeactivateIf(ioID)) {
         if(error) {
             abortAllCmds();
         }
@@ -128,7 +127,7 @@ void SourceIoWorker::onIoFinished(int ioID, bool error)
 
 void SourceIoWorker::onIoDisconnected()
 {
-    m_bIoIsBusy = false;
+    m_currIoId.deactivate();
     abortAllCmds();
     setIoInterface(nullptr);
 }
@@ -139,10 +138,9 @@ void SourceIoWorker::tryStartNextIo()
         SourceIoWorkerEntry* workerIo = getNextIo();
         if(workerIo) {
             m_interface->setReadTimeoutNextIo(workerIo->m_OutIn.m_responseTimeoutMs);
-            m_iCurrentIoID = m_interface->sendAndReceive(
+            m_currIoId.setCurrent(m_interface->sendAndReceive(
                         workerIo->m_OutIn.m_bytesSend,
-                        &workerIo->m_dataReceived);
-            m_bIoIsBusy = true;
+                        &workerIo->m_dataReceived));
         }
     }
 }
