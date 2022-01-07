@@ -46,7 +46,7 @@ SourceWorkerCmdPack SourceWorkerConverter::commandPackToWorkerPack(const SourceC
 }
 
 QList<QByteArray> SourceDemoHelper::generateResponseList(
-        SourceWorkerCmdPack& workCmdPack, int createErrorAtIoNumber, QByteArray prefix) {
+        const SourceWorkerCmdPack& workCmdPack, int createErrorAtIoNumber, QByteArray prefix) {
     QList<QByteArray> responseList;
     for(auto io : workCmdPack.m_workerIOList) {
         responseList.append(prefix + io.m_OutIn.m_bytesExpected);

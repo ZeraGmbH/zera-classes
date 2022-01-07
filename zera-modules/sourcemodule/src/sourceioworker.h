@@ -48,8 +48,7 @@ namespace SourceWorkerConverter
 
 namespace SourceDemoHelper
 {
-    QList<QByteArray> generateResponseList(
-            SourceWorkerCmdPack& workCmdPack,
+    QList<QByteArray> generateResponseList(const SourceWorkerCmdPack &workCmdPack,
             int createErrorAtIoNumber = -1,
             QByteArray prefix = "");
 }
