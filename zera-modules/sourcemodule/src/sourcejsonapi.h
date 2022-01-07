@@ -8,13 +8,13 @@ class SourceJsonStructApi
 public:
     SourceJsonStructApi(QJsonObject paramStructure);
 
-    QJsonObject getParamStructure();
+    QJsonObject getParamStructure() const;
 
-    QString getDeviceName();
-    QString getDeviceVersion();
-    int getCountUPhases();
-    int getCountIPhases();
-    QByteArray getIoPrefix();
+    QString getDeviceName() const;
+    QString getDeviceVersion() const;
+    int getCountUPhases() const;
+    int getCountIPhases() const;
+    QByteArray getIoPrefix() const;
 
     void setDeviceName(QString name);
     void setDeviceVersion(QString version);
@@ -33,21 +33,21 @@ class SourceJsonParamApi
 public:
     SourceJsonParamApi();
 
-    QJsonObject getParams();
+    QJsonObject getParams() const;
     void setParams(QJsonObject params);
 
-    bool getOn();
+    bool getOn() const;
     void setOn(bool on);
 
-    double getRms(phaseType type, int phaseIdxBase0);
-    double getAngle(phaseType type, int phaseIdxBase0);
-    bool getOn(phaseType type, int phaseIdxBase0);
+    double getRms(phaseType type, int phaseIdxBase0) const;
+    double getAngle(phaseType type, int phaseIdxBase0) const;
+    bool getOn(phaseType type, int phaseIdxBase0) const;
 
-    bool getFreqVarOn();
-    double getFreqVal();
+    bool getFreqVarOn() const;
+    double getFreqVal() const;
 private:
-    QString getPhaseName(phaseType type, int phaseIdxBase0);
-    QString getPhaseNamePrefix(phaseType type);
+    QString getPhaseName(phaseType type, int phaseIdxBase0) const;
+    QString getPhaseNamePrefix(phaseType type) const;
 
     QJsonObject m_params;
 };
