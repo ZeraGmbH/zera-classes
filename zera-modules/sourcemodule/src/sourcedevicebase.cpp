@@ -36,15 +36,6 @@ QString SourceDeviceBase::getInterfaceDeviceInfo()
     return m_ioInterface->getDeviceInfo();
 }
 
-void SourceDeviceBase::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
-{
-    if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
-        if(cmdPack.passedAll()) {
-            m_paramsCurrent.setParams(m_paramsRequested.getParams());
-        }
-    }
-}
-
 void SourceDeviceBase::switchState(QJsonObject state)
 {
     m_paramsRequested.setParams(state);
@@ -65,5 +56,18 @@ void SourceDeviceBase::switchOff()
     switchState(m_paramsCurrent.getParams());
 }
 
+void SourceDeviceBase::handleSourceCmd(SourceWorkerCmdPack cmdPack)
+{
+    if(cmdPack.passedAll()) {
+        m_paramsCurrent.setParams(m_paramsRequested.getParams());
+    }
+}
+
+void SourceDeviceBase::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
+{
+    if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
+        handleSourceCmd(cmdPack);
+    }
+}
 
 }

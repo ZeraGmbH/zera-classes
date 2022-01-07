@@ -88,29 +88,27 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDeviceVein::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
+void SourceDeviceVein::handleSourceCmd(SourceWorkerCmdPack cmdPack)
 {
-    SourceDeviceBase::onSourceCmdFinished(cmdPack);
-    if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
-        m_deviceStatus.setBusy(false);
-        if(!cmdPack.passedAll()) {
-            // For now just drop a short note. We need a concept
-            // how to continue with translations - maybe an RPC called by GUI?
-            // Maybe no
-            if(m_paramsRequested.getOn()) {
-                m_deviceStatus.addError("Switch on failed");
-            }
-            else {
-                m_deviceStatus.addError("Switch off failed");
-            }
+    SourceDeviceBase::handleSourceCmd(cmdPack);
+    m_deviceStatus.setBusy(false);
+    if(!cmdPack.passedAll()) {
+        // For now just drop a short note. We need a concept
+        // how to continue with translations - maybe an RPC called by GUI?
+        // Maybe no
+        if(m_paramsRequested.getOn()) {
+            m_deviceStatus.addError("Switch on failed");
         }
         else {
-            saveState();
+            m_deviceStatus.addError("Switch off failed");
         }
-        setVeinDeviceState(m_deviceStatus.getJsonStatus());
-        if(m_closeRequested) {
-            doFinalCloseActivities();
-        }
+    }
+    else {
+        saveState();
+    }
+    setVeinDeviceState(m_deviceStatus.getJsonStatus());
+    if(m_closeRequested) {
+        doFinalCloseActivities();
     }
 }
 

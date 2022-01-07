@@ -39,8 +39,8 @@ signals:
 public slots:
     void onNewVeinParamStatus(QVariant paramState);
 
-protected slots:
-    virtual void onSourceCmdFinished(SourceWorkerCmdPack cmdPack) override;
+protected:
+    virtual void handleSourceCmd(SourceWorkerCmdPack cmdPack) override;
 
 private slots:
     void onInterfaceClosed();
