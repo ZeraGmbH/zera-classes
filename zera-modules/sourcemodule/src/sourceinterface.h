@@ -40,6 +40,7 @@ public:
     virtual void close() {}
     virtual void setReadTimeoutNextIo(int) {};
     virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive);
+    virtual void simulateExternalDisconnect() {}
 
     virtual bool isOpen() { return false; }
     bool isDemo() { return type() == SOURCE_INTERFACE_DEMO; }
@@ -68,10 +69,10 @@ class SourceInterfaceDemo : public SourceInterfaceBase
 public:
     virtual bool open(QString strDeviceInfo) override;
     virtual void close() override;
-    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
     virtual void setReadTimeoutNextIo(int timeoutMs) override;
+    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
+    virtual void simulateExternalDisconnect() override;
 
-    void simulateExternalDisconnect();
     void setResponseDelay(bool followsTimeout, int iFixedMs);
     void setResponses(QList<QByteArray> responseList);
     void appendResponses(QList<QByteArray> responseList);

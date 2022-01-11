@@ -211,6 +211,34 @@ void SourceInterfaceTest::demoDelayFollowsTimeout()
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
 
+void SourceInterfaceTest::baseCannotClose()
+{
+    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    interface->open("");
+
+    int countDiconnectReceived = 0;
+    connect(interface.get(), &SourceInterfaceBase::sigDisconnected, [&] {
+        countDiconnectReceived++;
+    });
+    interface->simulateExternalDisconnect();
+    QTest::qWait(1);
+    QCOMPARE(countDiconnectReceived, 0);
+}
+
+void SourceInterfaceTest::demoCanClose()
+{
+    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    interface->open("");
+
+    int countDiconnectReceived = 0;
+    connect(interface.get(), &SourceInterfaceBase::sigDisconnected, [&] {
+        countDiconnectReceived++;
+    });
+    interface->simulateExternalDisconnect();
+    QTest::qWait(1);
+    QCOMPARE(countDiconnectReceived, 1);
+}
+
 void SourceInterfaceTest::checkIds(tSourceInterfaceShPtr interface)
 {
     QByteArray dummyArray;

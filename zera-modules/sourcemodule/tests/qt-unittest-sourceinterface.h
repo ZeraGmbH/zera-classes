@@ -40,6 +40,9 @@ private slots:
     void demoDelayFollowsDelay();
     void demoDelayFollowsTimeout();
 
+    void baseCannotClose();
+    void demoCanClose();
+
 private:
     void checkIds(tSourceInterfaceShPtr interface);
     void checkNotifications(tSourceInterfaceShPtr interface, int total, int errors);
