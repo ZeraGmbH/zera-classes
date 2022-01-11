@@ -72,8 +72,7 @@ public:
     virtual void setReadTimeoutNextIo(int timeoutMs) override;
 
     void simulateExternalDisconnect();
-    void setResponseDelay(int iMs);
-    void setDelayFollowsTimeout(bool followTimeout);
+    void setResponseDelay(bool followsTimeout, int iFixedMs);
     void setResponses(QList<QByteArray> responseList);
     void appendResponses(QList<QByteArray> responseList);
 

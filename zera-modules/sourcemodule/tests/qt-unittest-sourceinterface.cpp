@@ -120,7 +120,7 @@ void SourceInterfaceTest::demoDelayNotOpen()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
-    demoInterface->setResponseDelay(5000);
+    demoInterface->setResponseDelay(false, 5000);
     checkNotifications(interface, 1, 1);
 }
 
@@ -129,7 +129,7 @@ void SourceInterfaceTest::demoDelayOpenDontWait()
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     demoInterface->open(QString());
-    demoInterface->setResponseDelay(5000);
+    demoInterface->setResponseDelay(false, 5000);
     checkNotifications(interface, 0, 0);
 }
 
@@ -190,7 +190,7 @@ void SourceInterfaceTest::demoDelayFollowsDelay()
     interface->sendAndReceive(QByteArray(), &m_receivedData);
     QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 1);
-    demoInterface->setResponseDelay(5000);
+    demoInterface->setResponseDelay(false, 5000);
     interface->sendAndReceive(QByteArray(), &m_receivedData);
     QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 1);
@@ -200,9 +200,8 @@ void SourceInterfaceTest::demoDelayFollowsTimeout()
 {
     tSourceInterfaceShPtr interface = createOpenDemoInterface();
     SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
-    demoInterface->setDelayFollowsTimeout(true);
     interface->setReadTimeoutNextIo(0);    // default is not 0
-    demoInterface->setResponseDelay(5000); // must be ignored
+    demoInterface->setResponseDelay(true, 5000 /* must be ignored */);
     interface->sendAndReceive(QByteArray(), &m_receivedData);
     QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 1);
@@ -240,7 +239,7 @@ tSourceInterfaceShPtr SourceInterfaceTest::createOpenDemoInterface(int responseD
     SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
     demoInterface->open(QString());
     if(responseDelay) {
-        demoInterface->setResponseDelay(responseDelay);
+        demoInterface->setResponseDelay(false, responseDelay);
     }
     return interface;
 }
