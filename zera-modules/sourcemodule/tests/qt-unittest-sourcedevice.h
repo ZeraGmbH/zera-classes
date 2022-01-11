@@ -11,15 +11,15 @@ class SourceDeviceTest : public QObject
 private slots:
     void init();
 
-    void testGetters();
-    void testNonDemoInterFace();
-    void testDemoInterFace();
+    void gettersOK();
+    void nonDemoInterFaceGet();
+    void demoInterFaceGet();
 
-    void testDisconnect();
+    void disconnectSignal();
 
-    void testMultipleTransactionsDiffIds();
-    void testObserverReceiveCount();
-    void testObserverReceiveId();
+    void multipleCmdsDifferentIds();
+    void observerReceiveCount();
+    void observerReceiveId();
 };
 
 #endif // QTUNITTESTSOURCEDEVICE_H
