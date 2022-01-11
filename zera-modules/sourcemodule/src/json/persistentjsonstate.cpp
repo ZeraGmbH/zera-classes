@@ -4,7 +4,7 @@
 #include "jsonfilenames.h"
 #include "jsonstructureloader.h"
 
-SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
+PersistentJsonState::PersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
 {
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, deviceVersion);
     if(deviceName.isEmpty()) {
@@ -16,12 +16,12 @@ SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type, 
     m_jsonStatePersistenceHelper.setJsonParamStructure(paramStructure);
 }
 
-QJsonObject SourcePersistentJsonState::getJsonStructure() const
+QJsonObject PersistentJsonState::getJsonStructure() const
 {
     return m_jsonStatePersistenceHelper.getJsonParamStructure();
 }
 
-QJsonObject SourcePersistentJsonState::loadJsonState()
+QJsonObject PersistentJsonState::loadJsonState()
 {
     QJsonObject paramState = m_jsonStatePersistenceHelper.loadState();
 
@@ -32,7 +32,7 @@ QJsonObject SourcePersistentJsonState::loadJsonState()
     return paramApi.getParams();
 }
 
-void SourcePersistentJsonState::saveJsonState(QJsonObject state)
+void PersistentJsonState::saveJsonState(QJsonObject state)
 {
     if(!m_jsonStatePersistenceHelper.saveState(state)) {
         qWarning("Default state file %s could not be written", qPrintable(m_stateFileName));

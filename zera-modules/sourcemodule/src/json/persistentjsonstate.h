@@ -1,13 +1,13 @@
-#ifndef SOURCEPERSISTENTJSONSTATE_H
-#define SOURCEPERSISTENTJSONSTATE_H
+#ifndef PERSISTENTJSONSTATE_H
+#define PERSISTENTJSONSTATE_H
 
 #include "../supportedsources.h"
 #include <jsonstatefilepersistence.h>
 
-class SourcePersistentJsonState
+class PersistentJsonState
 {
 public:
-    SourcePersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion);
+    PersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion);
 
     QJsonObject getJsonStructure() const;
 
@@ -18,4 +18,4 @@ private:
     QString m_stateFileName;
 };
 
-#endif // SOURCEPERSISTENTJSONSTATE_H
+#endif // PERSISTENTJSONSTATE_H
