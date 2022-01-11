@@ -8,8 +8,11 @@ class SourceDeviceObserver
 {
 public:
     SourceDeviceObserver(SourceDeviceSubject* subject);
-    virtual void updateResponse(const SourceWorkerCmdPack& cmdPack) = 0;
+
 protected:
+    friend class SourceDeviceSubject;
+    virtual void updateResponse(const SourceWorkerCmdPack& cmdPack) = 0;
+
     SourceDeviceSubject* m_subject;
 };
 
