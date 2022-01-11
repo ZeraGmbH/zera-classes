@@ -309,6 +309,23 @@ void SourceIoWorkerTest::testContinueOnErrorPartResponse()
     }
 }
 
+void SourceIoWorkerTest::noErrorSigOnEmptyPack()
+{
+    tSourceInterfaceShPtr interface = createOpenInterface();
+    SourceIoWorker worker;
+    worker.setIoInterface(interface);
+    connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
+
+    SourceWorkerCmdPack workCmdPack;
+    worker.enqueueAction(workCmdPack);
+    QTest::qWait(10);
+    if(m_listWorkPacksReceived.count() != 1) {
+        QCOMPARE(m_listWorkPacksReceived.count(), 1);
+        QFAIL("Skipping check of error flag");
+    }
+    QVERIFY(m_listWorkPacksReceived[0].passedAll());
+}
+
 void SourceIoWorkerTest::testSpamRejected()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();

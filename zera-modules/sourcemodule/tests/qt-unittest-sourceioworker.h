@@ -34,6 +34,8 @@ private slots:
     void testContinueOnErrorFullResponse();
     void testContinueOnErrorPartResponse();
 
+    void noErrorSigOnEmptyPack();
+
     void testSpamRejected();
     void testCloseToSpamAccepted();
 
