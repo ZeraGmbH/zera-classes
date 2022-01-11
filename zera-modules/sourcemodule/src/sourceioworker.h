@@ -26,7 +26,7 @@ typedef QList<SourceIoWorkerEntry> tSourceIoWorkerList;
 class SourceWorkerCmdPack
 {
 public:
-    bool passedAll();
+    bool passedAll() const;
     void evalAll();
 
     bool operator == (const SourceWorkerCmdPack& other);
