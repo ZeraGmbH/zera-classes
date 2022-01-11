@@ -142,20 +142,10 @@ target_link_libraries(sourcemodule
     "-Wl,--no-undefined"
     )
 
+# we build a module -> no public headers
 target_include_directories(sourcemodule
-    PUBLIC
-    $<INSTALL_INTERFACE:include/sourcemodule>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
-# announce headers - target perspective
-target_include_directories(sourcemodule
-    PUBLIC
-    $<INSTALL_INTERFACE:include/sourcemodule>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
@@ -205,10 +195,8 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     set_property(TARGET sourcemodule-unittest PROPERTY CXX_STANDARD 17)
 
     target_include_directories(sourcemodule-unittest
-        PUBLIC
-        $<INSTALL_INTERFACE:include/sourcemodule>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
 
@@ -238,10 +226,8 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     )
 
     target_include_directories(sourcemodule-unittest-qt
-        PUBLIC
-        $<INSTALL_INTERFACE:include/sourcemodule>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
 

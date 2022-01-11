@@ -75,12 +75,10 @@ target_link_libraries(referencemodule
     "-Wl,--no-undefined"
     )
 
-# announce headers - target perspective
+# we build a module -> no public headers
 target_include_directories(referencemodule
-    PUBLIC
-    $<INSTALL_INTERFACE:include/referencemodule>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
