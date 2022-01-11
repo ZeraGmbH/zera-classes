@@ -9,7 +9,7 @@ void SourceDeviceTest::init()
 {
 }
 
-void SourceDeviceTest::testGetters()
+void SourceDeviceTest::gettersOK()
 {
     QString name = "fooName";
     QString version = "fooVersion";
@@ -26,21 +26,21 @@ void SourceDeviceTest::testGetters()
     QCOMPARE(info, sourceDevice.getInterfaceInfo());
 }
 
-void SourceDeviceTest::testNonDemoInterFace()
+void SourceDeviceTest::nonDemoInterFaceGet()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     QVERIFY(!sourceDevice.isDemo());
 }
 
-void SourceDeviceTest::testDemoInterFace()
+void SourceDeviceTest::demoInterFaceGet()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     QVERIFY(sourceDevice.isDemo());
 }
 
-void SourceDeviceTest::testDisconnect()
+void SourceDeviceTest::disconnectSignal()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
@@ -64,7 +64,7 @@ static SourceWorkerCmdPack createWorkingCmdPack()
     return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
-void SourceDeviceTest::testMultipleTransactionsDiffIds()
+void SourceDeviceTest::multipleCmdsDifferentIds()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
@@ -86,7 +86,7 @@ public:
     }
 };
 
-void SourceDeviceTest::testObserverReceiveCount()
+void SourceDeviceTest::observerReceiveCount()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
@@ -102,7 +102,7 @@ void SourceDeviceTest::testObserverReceiveCount()
     QCOMPARE(testObserver2.observerReceiveCount, 2);
 }
 
-void SourceDeviceTest::testObserverReceiveId()
+void SourceDeviceTest::observerReceiveId()
 {
     tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
