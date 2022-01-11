@@ -76,12 +76,10 @@ target_link_libraries(dftmodule
     "-Wl,--no-undefined"
     )
 
-# announce headers - target perspective
+# we build a module -> no public headers
 target_include_directories(dftmodule
-    PUBLIC
-    $<INSTALL_INTERFACE:include/dftmodule>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 

@@ -75,12 +75,10 @@ target_link_libraries(modemodule
     "-Wl,--no-undefined"
     )
 
-# announce headers - target perspective
+# we build a module -> no public headers
 target_include_directories(modemodule
-    PUBLIC
-    $<INSTALL_INTERFACE:include/modemodule>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 

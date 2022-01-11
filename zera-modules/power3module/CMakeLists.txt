@@ -77,12 +77,10 @@ target_link_libraries(power3module
     "-Wl,--no-undefined"
     )
 
-# announce headers - target perspective
+# we build a module -> no public headers
 target_include_directories(power3module
-    PUBLIC
-    $<INSTALL_INTERFACE:include/power3module>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
