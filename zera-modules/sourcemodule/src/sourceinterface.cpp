@@ -106,14 +106,10 @@ void SourceInterfaceDemo::simulateExternalDisconnect()
     emit sigDisconnected();
 }
 
-void SourceInterfaceDemo::setResponseDelay(int iMs)
+void SourceInterfaceDemo::setResponseDelay(bool followsTimeout, int iFixedMs)
 {
-    m_responseDelayMs = iMs;
-}
-
-void SourceInterfaceDemo::setDelayFollowsTimeout(bool followTimeout)
-{
-    m_delayFollowsTimeout = followTimeout;
+    m_delayFollowsTimeout = followsTimeout;
+    m_responseDelayMs = iFixedMs;
 }
 
 void SourceInterfaceDemo::setResponses(QList<QByteArray> responseList)

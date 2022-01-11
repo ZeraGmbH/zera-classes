@@ -136,7 +136,7 @@ void SourceIoWorkerTest::disconnectWhileWorking()
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
-    demoInterface->setResponseDelay(500);
+    demoInterface->setResponseDelay(false, 500);
 
     QTimer timer;
     timer.setSingleShot(true);
@@ -160,7 +160,7 @@ void SourceIoWorkerTest::disconnectWhileWorkingMultipleNotifications()
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
-    demoInterface->setResponseDelay(500);
+    demoInterface->setResponseDelay(false, 500);
 
     QTimer timer;
     timer.setSingleShot(true);
@@ -185,7 +185,7 @@ void SourceIoWorkerTest::testStopOnFirstErrorFullResponse()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
     SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
-    demoInterface->setResponseDelay(1);
+    demoInterface->setResponseDelay(false, 1);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);
@@ -253,7 +253,7 @@ void SourceIoWorkerTest::testContinueOnErrorFullResponse()
 {
     tSourceInterfaceShPtr interface = createOpenInterface();
     SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(interface.get());
-    demoInterface->setResponseDelay(1);
+    demoInterface->setResponseDelay(false, 1);
     SourceIoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &SourceIoWorker::sigCmdFinished, this, &SourceIoWorkerTest::onWorkPackFinished);

@@ -43,7 +43,7 @@ void SourceDeviceBase::switchState(QJsonObject state)
     SourceWorkerCmdPack workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
         SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(m_ioInterface.get());
-        demoInterface->setDelayFollowsTimeout(m_bDemoDelayFollowsTimeout);
+        demoInterface->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
         QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
     }
