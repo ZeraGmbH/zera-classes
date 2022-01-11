@@ -7,6 +7,12 @@
 
 #include <QObject>
 
+/*
+ * Start cmd worker on external demand
+ * Notify observers attached on commnd response
+ * Keep source information
+ * Allow adjustments on demo interfaces
+ */
 class SourceDevice : public QObject, public SourceDeviceSubject
 {
     Q_OBJECT
