@@ -49,7 +49,7 @@ private:
     void setVeinParamState(QJsonObject paramState);
     void setVeinDeviceState(QJsonObject deviceState);
 
-    SourcePersistentJsonState* m_persistentParamState;
+    PersistentJsonState* m_persistentParamState;
 
     QUuid m_closeUuid;
     bool m_closeRequested = false;

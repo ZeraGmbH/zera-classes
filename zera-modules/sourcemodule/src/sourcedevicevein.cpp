@@ -12,7 +12,7 @@ bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 SourceDeviceVein::SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     SourceDeviceBase(interface, type, name, version)
 {
-    m_persistentParamState = new SourcePersistentJsonState(type, name, version);
+    m_persistentParamState = new PersistentJsonState(type, name, version);
     m_paramsCurrent.setParams(m_persistentParamState->loadJsonState());
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
