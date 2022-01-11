@@ -1,37 +1,17 @@
-#ifndef CSOURCEJSONPARAMAPI_H
-#define CSOURCEJSONPARAMAPI_H
+#ifndef JSONPARAMAPI_H
+#define JSONPARAMAPI_H
 
 #include <QJsonObject>
-
-class SourceJsonStructApi
-{
-public:
-    SourceJsonStructApi(QJsonObject paramStructure);
-
-    QJsonObject getParamStructure() const;
-
-    QString getDeviceName() const;
-    QString getDeviceVersion() const;
-    int getCountUPhases() const;
-    int getCountIPhases() const;
-    QByteArray getIoPrefix() const;
-
-    void setDeviceName(QString name);
-    void setDeviceVersion(QString version);
-private:
-    QJsonObject m_paramStructure;
-};
-
 
 enum class phaseType{
     U, //Voltage
     I  //Current
 };
 
-class SourceJsonParamApi
+class JsonParamApi
 {
 public:
-    SourceJsonParamApi();
+    JsonParamApi();
 
     QJsonObject getParams() const;
     void setParams(QJsonObject params);
@@ -52,4 +32,4 @@ private:
     QJsonObject m_params;
 };
 
-#endif // CSOURCEJSONPARAMAPI_H
+#endif // JSONPARAMAPI_H

@@ -1,6 +1,5 @@
 #include "sourcedevicebase.h"
-#include "jsonstructureloader.h"
-#include "sourcejsonapi.h"
+#include "json/jsonstructureloader.h"
 
 SourceDeviceBase::SourceDeviceBase(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version) :
     QObject(nullptr),

@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include "sourceactions.h"
-#include "sourcejsonapi.h"
 
 // SourceActionTypes::isValidType
 TEST(TEST_SOURCEACTIONS, VALID_TYPE_DETECT) {
@@ -23,17 +22,17 @@ TEST(TEST_SOURCEACTIONS, VALID_TYPE_DETECT) {
 
 // Check all actions are generated for on
 TEST(TEST_SOURCEACTIONS, SWITCH_ON_COMPLETE) {
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(JsonParamApi(paramApi));
     EXPECT_EQ(actionList.count(), SourceActionTypes::switchTypeCount);
 }
 
 // Check for switch on all valid
 TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setOn(true);
-    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(JsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_GT(action, SourceActionTypes::SWITCH_UNDEF);
         EXPECT_LT(action, SourceActionTypes::SWITCH_UNDEF2);
@@ -43,7 +42,7 @@ TEST(TEST_SOURCEACTIONS, SWITCH_ON_VALID) {
 
 // Check for switch off just generates switch phases
 TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setOn(false);
     tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(paramApi);
     EXPECT_EQ(actionList.count(), 1);
@@ -52,9 +51,9 @@ TEST(TEST_SOURCEACTIONS, SWITCH_OFF_PHASE_ONLY) {
 
 // Check for off are valid
 TEST(TEST_SOURCEACTIONS, SWITCH_OFF_VALID) {
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setOn(false);
-    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(SourceJsonParamApi(paramApi));
+    tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(JsonParamApi(paramApi));
     for(auto action : actionList) {
         EXPECT_GT(action, SourceActionTypes::SWITCH_UNDEF);
         EXPECT_LT(action, SourceActionTypes::SWITCH_UNDEF2);

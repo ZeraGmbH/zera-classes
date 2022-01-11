@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
 #include <zera-json-params-state.h>
-#include "sourcejsonapi.h"
 #include "supportedsources.h"
-#include "jsonstructureloader.h"
+#include "json/jsonstructapi.h"
+#include "json/jsonparamapi.h"
+#include "json/jsonstructureloader.h"
 
 static void echoStructureName(int type)
 {
@@ -27,7 +28,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_U_VALID) {
         QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         QString key = "UPhaseMax";
         EXPECT_EQ(structure.contains(key), true);
-        SourceJsonStructApi jsonApi(structure);
+        JsonStructApi jsonApi(structure);
         EXPECT_EQ(structure[key].toInt(-1), jsonApi.getCountUPhases());
     }
 }
@@ -38,7 +39,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_I_VALID) {
         QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         QString key = "IPhaseMax";
         EXPECT_EQ(structure.contains(key), true);
-        SourceJsonStructApi jsonApi(structure);
+        JsonStructApi jsonApi(structure);
         EXPECT_EQ(structure[key].toInt(-1), jsonApi.getCountIPhases());
     }
 }
@@ -49,7 +50,7 @@ TEST(TEST_SOURCE_STRUCT_API, PHASE_COUNT_IO_PREFIX_VALID) {
         QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
         QString key = "IoPrefix";
         EXPECT_EQ(structure.contains(key), true);
-        SourceJsonStructApi jsonApi(structure);
+        JsonStructApi jsonApi(structure);
         EXPECT_EQ(structure[key].toString().toLatin1(), jsonApi.getIoPrefix());
     }
 }
@@ -77,7 +78,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_SETTER_ON) { // initial off (see ON_AVAIL_AND
         jsonParamsState.setStructure(structure);
         QJsonObject defaultParams = jsonParamsState.getDefaultJsonState();
 
-        SourceJsonParamApi paramApi;
+        JsonParamApi paramApi;
         paramApi.setParams(defaultParams);
         EXPECT_EQ(paramApi.getOn(), false);
 
@@ -99,7 +100,7 @@ TEST(TEST_SOURCE_PARAM_API, PHASE_PARAM_AVAIL_IN_DEFAULT) { // check if all gene
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
         echoStructureName(type);
         QJsonObject structure = JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes(type));
-        SourceJsonStructApi structApi = SourceJsonStructApi(structure);
+        JsonStructApi structApi = JsonStructApi(structure);
         ZeraJsonParamsState jsonParamsState;
         jsonParamsState.setStructure(structure);
         QJsonObject defaultParams = jsonParamsState.getDefaultJsonState();
@@ -141,7 +142,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_RMS) {
         {"U2", val2},
         {"I3", val3}
     };
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setParams(testParams);
     EXPECT_DOUBLE_EQ(paramApi.getRms(phaseType::U, 0), 1.1);
     EXPECT_DOUBLE_EQ(paramApi.getRms(phaseType::U, 1), 2.2);
@@ -158,7 +159,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_ANGLE) {
         {"U2", val2},
         {"I3", val3}
     };
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setParams(testParams);
     EXPECT_DOUBLE_EQ(paramApi.getAngle(phaseType::U, 0), 0.1);
     EXPECT_DOUBLE_EQ(paramApi.getAngle(phaseType::U, 1), 0.2);
@@ -175,7 +176,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_PHASE_ON) {
         {"U2", val2},
         {"I3", val3}
     };
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setParams(testParams);
     EXPECT_EQ(paramApi.getOn(phaseType::U, 0), false);
     EXPECT_EQ(paramApi.getOn(phaseType::U, 1), true);
@@ -188,7 +189,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_FREQ_VAR) {
     {
         {"Frequency", val1}
     };
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setParams(testParams);
     EXPECT_EQ(paramApi.getFreqVarOn(), true);
 }
@@ -199,7 +200,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_FREQ_SYNC) {
     {
         {"Frequency", val1}
     };
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setParams(testParams);
     EXPECT_EQ(paramApi.getFreqVarOn(), false);
 }
@@ -210,7 +211,7 @@ TEST(TEST_SOURCE_PARAM_API, GETTER_FREQ_VAL) {
     {
         {"Frequency", val1}
     };
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setParams(testParams);
     EXPECT_DOUBLE_EQ(paramApi.getFreqVal(), 50.001);
 }

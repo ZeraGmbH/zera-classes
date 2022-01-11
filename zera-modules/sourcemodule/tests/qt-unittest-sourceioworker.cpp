@@ -30,7 +30,7 @@ void SourceIoWorkerTest::cmdToWorkProperties()
 void SourceIoWorkerTest::cmdPackToWorkIoSize()
 {
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
-    SourceJsonParamApi params;
+    JsonParamApi params;
     params.setOn(true);
     SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     SourceWorkerCmdPack workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
@@ -40,7 +40,7 @@ void SourceIoWorkerTest::cmdPackToWorkIoSize()
 void SourceIoWorkerTest::cmdPackToWorkIoSequence()
 {
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
-    SourceJsonParamApi params;
+    JsonParamApi params;
     params.setOn(true);
     SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     SourceWorkerCmdPack workPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
@@ -465,7 +465,7 @@ tSourceInterfaceShPtr SourceIoWorkerTest::createOpenInterface()
 SourceWorkerCmdPack SourceIoWorkerTest::generateStatusPollCommands()
 {
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
-    SourceJsonParamApi params;
+    JsonParamApi params;
     SourceCommandPacket cmdPack = ioPackGenerator.generateStatusPollPacket();
     return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
@@ -473,7 +473,7 @@ SourceWorkerCmdPack SourceIoWorkerTest::generateStatusPollCommands()
 SourceWorkerCmdPack SourceIoWorkerTest::generateSwitchCommands(bool on)
 {
     SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
-    SourceJsonParamApi params;
+    JsonParamApi params;
     params.setOn(on);
     SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);

@@ -31,8 +31,8 @@ protected:
     tSourceInterfaceShPtr m_ioInterface;
     SourceIoPacketGenerator* m_outInGenerator = nullptr;
 
-    SourceJsonParamApi m_paramsRequested;
-    SourceJsonParamApi m_paramsCurrent;
+    JsonParamApi m_paramsRequested;
+    JsonParamApi m_paramsCurrent;
 
     SourceIoWorker m_sourceIoWorker;
     SourceIdKeeper m_currWorkerId;

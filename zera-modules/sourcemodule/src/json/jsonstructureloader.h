@@ -3,7 +3,7 @@
 
 #include <QString>
 #include <QJsonObject>
-#include "supportedsources.h"
+#include "../supportedsources.h"
 
 class JsonStructureLoader
 {

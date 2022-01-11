@@ -1,5 +1,6 @@
-#include "sourcepersistentjsonstate.h"
-#include "sourcejsonapi.h"
+#include "persistentjsonstate.h"
+#include "jsonstructapi.h"
+#include "jsonparamapi.h"
 #include "jsonfilenames.h"
 #include "jsonstructureloader.h"
 
@@ -7,7 +8,7 @@ SourcePersistentJsonState::SourcePersistentJsonState(SupportedSourceTypes type, 
 {
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, deviceVersion);
     if(deviceName.isEmpty()) {
-        SourceJsonStructApi structApi(paramStructure);
+        JsonStructApi structApi(paramStructure);
         deviceName = structApi.getDeviceName();
     }
     m_stateFileName = JsonFilenames::getJsonStatePath(deviceName, deviceVersion);
@@ -25,7 +26,7 @@ QJsonObject SourcePersistentJsonState::loadJsonState()
     QJsonObject paramState = m_jsonStatePersistenceHelper.loadState();
 
     // Override on state -> OFF
-    SourceJsonParamApi paramApi;
+    JsonParamApi paramApi;
     paramApi.setParams(paramState);
     paramApi.setOn(false);
     return paramApi.getParams();

@@ -9,7 +9,7 @@
 #include "sourcedevicebase.h"
 #include "sourceinterface.h"
 #include "sourcedevicestatus.h"
-#include "sourcepersistentjsonstate.h"
+#include "json/persistentjsonstate.h"
 
 class SourceVeinInterface;
 

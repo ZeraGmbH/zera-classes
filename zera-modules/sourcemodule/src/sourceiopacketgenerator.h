@@ -4,7 +4,7 @@
 #include <QByteArray>
 #include <QJsonObject>
 #include "sourceactions.h"
-#include "sourcejsonapi.h"
+#include "json/jsonstructapi.h"
 
 enum SourceCommandTypes { // don't forget unittest on add
     COMMAND_UNDEFINED = 0,
@@ -70,7 +70,7 @@ public:
     // single
     tSourceOutInList generateListForAction(SourceActionTypes::ActionTypes actionType);
     // composed
-    SourceCommandPacket generateOnOffPacket(SourceJsonParamApi requestedParams);
+    SourceCommandPacket generateOnOffPacket(JsonParamApi requestedParams);
     SourceCommandPacket generateStatusPollPacket();
 private:
     tSourceOutInList generateRMSAndAngleUList();
@@ -82,8 +82,8 @@ private:
     tSourceOutInList generateQueryStatusList();
     tSourceOutInList generateQueryActualList();
 
-    SourceJsonStructApi* m_jsonStructApi = nullptr;
-    SourceJsonParamApi m_paramsRequested;
+    JsonStructApi* m_jsonStructApi = nullptr;
+    JsonParamApi m_paramsRequested;
 
     QByteArray m_ioPrefix;
 };
