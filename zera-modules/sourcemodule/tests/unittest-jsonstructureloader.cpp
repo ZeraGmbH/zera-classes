@@ -2,7 +2,7 @@
 #include <QFile>
 #include <zera-json-params-structure.h>
 #include "supportedsources.h"
-#include "jsonstructureloader.h"
+#include "json/jsonstructureloader.h"
 
 TEST(TEST_JSON_STRUCTURE_LOADER, TYPES_ALL_STRUCTURES_LOADED) {
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {

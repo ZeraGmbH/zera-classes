@@ -1,7 +1,7 @@
 #ifndef SOURCEPERSISTENTJSONSTATE_H
 #define SOURCEPERSISTENTJSONSTATE_H
 
-#include "supportedsources.h"
+#include "../supportedsources.h"
 #include <jsonstatefilepersistence.h>
 
 class SourcePersistentJsonState

@@ -30,12 +30,12 @@ find_Package(VfCpp REQUIRED)
 #sum up project Files 
 file(GLOB SOURCES 
     ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/json/*.cpp
     )
 
 file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/*.h
-     ${PROJECT_SOURCE_DIR}/*.h
+    ${PROJECT_SOURCE_DIR}/src/json/*.h
     )
 
 file(GLOB RESOURCES 

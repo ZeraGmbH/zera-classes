@@ -1,6 +1,6 @@
 #include "jsonstructureloader.h"
 #include "jsonfilenames.h"
-#include "sourcejsonapi.h"
+#include "jsonstructapi.h"
 #include <zera-jsonfileloader.h>
 #include <zera-json-params-structure.h>
 
@@ -11,7 +11,7 @@ QJsonObject JsonStructureLoader::loadJsonDefaultStructure(SupportedSourceTypes t
 
 QJsonObject JsonStructureLoader::loadJsonStructure(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
 {
-    SourceJsonStructApi structureApi = SourceJsonStructApi(loadJsonDefaultStructure(type));
+    JsonStructApi structureApi = JsonStructApi(loadJsonDefaultStructure(type));
     if(!deviceName.isEmpty()) {
         structureApi.setDeviceName(deviceName);
     }
