@@ -7,7 +7,7 @@ bool SourceIoWorkerEntry::operator ==(const SourceIoWorkerEntry &other)
 }
 
 
-bool SourceWorkerCmdPack::passedAll()
+bool SourceWorkerCmdPack::passedAll() const
 {
     return m_bPassedAll;
 }
