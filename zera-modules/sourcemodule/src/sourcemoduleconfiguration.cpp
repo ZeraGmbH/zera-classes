@@ -4,9 +4,6 @@
 #include "sourcemoduleconfiguration.h"
 
 
-namespace SOURCEMODULE
-{
-
 SourceModuleConfiguration::SourceModuleConfiguration()
 {
 }
@@ -52,7 +49,5 @@ QByteArray SourceModuleConfiguration::exportConfiguration()
 configuration* SourceModuleConfiguration::getConfigXMLWrapper()
 {
     return m_xsdGeneratedConfig.get();
-}
-
 }
 

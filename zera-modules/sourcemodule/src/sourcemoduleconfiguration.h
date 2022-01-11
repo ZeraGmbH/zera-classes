@@ -9,9 +9,6 @@
 #include <basemoduleconfiguration.h>
 #include <sourcemodule-config.hxx>
 
-namespace SOURCEMODULE
-{
-
 // Sourcemoduleconfiguration holds module configuration
 
 class SourceModuleConfiguration: public cBaseModuleConfiguration
@@ -29,7 +26,5 @@ protected slots: // for the sake of cXMLSettings - we introduced m_xsdGeneratedC
 private:
     std::unique_ptr<configuration> m_xsdGeneratedConfig; // configuration
 };
-
-}
 
 #endif // SOURCEMODULECONFIGURATION_H

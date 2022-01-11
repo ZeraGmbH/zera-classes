@@ -11,8 +11,6 @@
 #include "sourcedevicestatus.h"
 #include "sourcepersistentjsonstate.h"
 
-namespace SOURCEMODULE
-{
 class SourceVeinInterface;
 
 class SourceDeviceVein : public SourceDeviceBase
@@ -62,5 +60,4 @@ private:
     static bool m_removeDemoByDisconnect;
 };
 
-}
 #endif // CSOURCEDEVICE_H

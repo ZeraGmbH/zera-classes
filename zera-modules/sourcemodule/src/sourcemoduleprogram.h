@@ -6,13 +6,10 @@
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
 #include "sourceveininterface.h"
+
 class cVeinModuleActvalue;
 class cVeinModuleParameter;
 class cJsonParamValidator;
-
-namespace SOURCEMODULE
-{
-
 class SourceModule;
 class SourceDeviceVein;
 class SourceDeviceManager;
@@ -58,6 +55,5 @@ private slots:
     // vein change handlers
     void newDemoSourceCount(QVariant getDemoCount);
 };
-}
 
 #endif // SOURCEMODULEPROGRAM_H

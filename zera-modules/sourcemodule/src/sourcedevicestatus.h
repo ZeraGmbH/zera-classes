@@ -3,9 +3,6 @@
 
 #include <QJsonObject>
 
-namespace SOURCEMODULE
-{
-
 class SourceDeviceStatus
 {
 public:
@@ -30,7 +27,5 @@ private:
 
     QJsonObject m_jsonStatus;
 };
-
-} //namespace SOURCEMODULE
 
 #endif // CSOURCEDEVICESTATUS_H

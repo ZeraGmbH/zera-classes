@@ -5,10 +5,6 @@
 #include "sourcedevicevein.h"
 #include "sourcedevicemanager.h"
 
-using SOURCEMODULE::SourceDeviceVein;
-using SOURCEMODULE::SourceDeviceManager;
-using SOURCEMODULE::SourceScanner;
-
 struct FinishEntry
 {
     FinishEntry(int slotNo, SourceDeviceVein* device, QUuid uuid, QString errMsg);

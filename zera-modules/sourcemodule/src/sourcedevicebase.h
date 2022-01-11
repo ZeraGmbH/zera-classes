@@ -9,8 +9,6 @@
 
 #include <QObject>
 
-namespace SOURCEMODULE
-{
 class SourceDeviceBase : public QObject
 {
     Q_OBJECT
@@ -45,6 +43,5 @@ private slots:
 private:
     bool m_bDemoDelayFollowsTimeout = false;
 };
-}
 
 #endif // SOURCEDEVICEBASE_H

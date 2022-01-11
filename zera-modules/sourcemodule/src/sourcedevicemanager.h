@@ -8,10 +8,6 @@
 #include "sourcescanner.h"
 
 class SourceInterfaceBase;
-
-namespace SOURCEMODULE
-{
-
 class SourceDeviceVein;
 
 class SourceDeviceManager : public QObject
@@ -56,7 +52,5 @@ private:
 
     bool m_bDemoDelayFollowsTimeout = false;
 };
-
-}
 
 #endif // CSOURCEDEVICEMANAGER_H

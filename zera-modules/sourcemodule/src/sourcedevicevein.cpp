@@ -7,9 +7,6 @@
 #include "sourceveininterface.h"
 #include "sourceiopacketgenerator.h"
 
-namespace SOURCEMODULE
-{
-
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
 SourceDeviceVein::SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
@@ -153,4 +150,3 @@ void SourceDeviceVein::setVeinDeviceState(QJsonObject deviceState)
     }
 }
 
-} // namespace SOURCEMODULE

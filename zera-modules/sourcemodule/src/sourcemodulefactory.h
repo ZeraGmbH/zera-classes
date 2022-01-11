@@ -16,9 +16,6 @@ namespace Proxy
 }
 }
 
-namespace SOURCEMODULE
-{
-
 class SourceModuleFactory : public QObject, public MeasurementModuleFactory
 {
     Q_OBJECT
@@ -35,7 +32,5 @@ public:
 private:
   QList<ZeraModules::VirtualModule*> m_ModuleList; // our list of modules
 };
-
-}
 
 #endif // SOURCEMODULEFACTORY_H

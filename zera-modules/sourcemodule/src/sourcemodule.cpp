@@ -10,9 +10,6 @@
 #include "sourcemoduleconfiguration.h"
 #include "sourcemoduleprogram.h"
 
-namespace SOURCEMODULE
-{
-
 SourceModule::SourceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
     :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new SourceModuleConfiguration()), parent)
 {
@@ -77,6 +74,4 @@ void SourceModule::activationFinished()
 void SourceModule::deactivationFinished()
 {
     emit deactivationReady();
-}
-
 }
