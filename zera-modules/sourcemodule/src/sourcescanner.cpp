@@ -2,9 +2,6 @@
 #include "sourceinterface.h"
 #include <QUuid>
 
-namespace SOURCEMODULE
-{
-
 tSourceScannerShPtr SourceScanner::createScanner(tSourceInterfaceShPtr interface, QUuid uuid)
 {
     tSourceScannerShPtr scanner = tSourceScannerShPtr(new SourceScanner(interface, uuid));
@@ -212,5 +209,3 @@ void SourceScanner::startScan()
     }
     sendReceiveSourceID();
 }
-
-} // namespace

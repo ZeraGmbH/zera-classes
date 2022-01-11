@@ -5,9 +5,6 @@
 #include <QVariant>
 #include <QStringList>
 
-namespace SOURCEMODULE
-{
-
 SourceDeviceStatus::SourceDeviceStatus()
 {
     reset();
@@ -98,5 +95,3 @@ void SourceDeviceStatus::appendToArray(QString key, QString value)
     arr.append(value);
     m_jsonStatus[key] = arr;
 }
-
-} //namespace SOURCEMODULE

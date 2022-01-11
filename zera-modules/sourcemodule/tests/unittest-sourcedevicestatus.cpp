@@ -3,8 +3,6 @@
 #include <QStringList>
 #include "sourcedevicestatus.h"
 
-using SOURCEMODULE::SourceDeviceStatus;
-
 static const QString keyBusy = "busy";
 static const QString keyErrors = "errors";
 static const QString keyWarnings = "warnings";

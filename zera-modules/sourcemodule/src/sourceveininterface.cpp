@@ -1,8 +1,5 @@
 #include "sourceveininterface.h"
 
-namespace SOURCEMODULE
-{
-
 SourceVeinInterface::SourceVeinInterface(QObject *parent) : QObject(parent)
 {
 }
@@ -47,4 +44,3 @@ void SourceVeinInterface::setVeinDeviceParameterValidator(cJsonParamValidator *g
     m_veinDeviceParameterValidator = getVeinDeviceParameterValidator;
 }
 
-} // namespace SOURCEMODULE

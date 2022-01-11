@@ -10,8 +10,6 @@
 #include "basemeasmodule.h"
 #include "sourcemoduleconfiguration.h"
 
-namespace SOURCEMODULE
-{
 #define BaseModuleName "SourceModule"
 #define BaseSCPIModuleName "SRC"
 
@@ -48,7 +46,5 @@ private slots:
     virtual void deactivationExec() {}
     virtual void deactivationDone() {}
 };
-
-}
 
 #endif // SOURCEMODULE_H

@@ -2,9 +2,6 @@
 #include "sourcemodule.h"
 
 
-namespace SOURCEMODULE
-{
-
 ZeraModules::VirtualModule* SourceModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
     ZeraModules::VirtualModule *module = new SourceModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
@@ -31,7 +28,5 @@ QList<ZeraModules::VirtualModule *> SourceModuleFactory::listModules() const
 QString SourceModuleFactory::getFactoryName() const
 {
     return QString(BaseModuleName).toLower();
-}
-
 }
 

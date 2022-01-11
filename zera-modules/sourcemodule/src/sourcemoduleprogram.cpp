@@ -13,9 +13,6 @@
 #include "sourceveininterface.h"
 #include "sourceinterface.h"
 
-namespace SOURCEMODULE
-{
-
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module)
@@ -180,6 +177,4 @@ void SourceModuleProgram::newDemoSourceCount(QVariant getDemoCount)
     if(!m_bDeafenDemoChange) {
         m_pSourceDeviceManager->setDemoCount(getDemoCount.toInt());
     }
-}
-
 }

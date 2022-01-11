@@ -11,9 +11,6 @@ static bool randomBool() {
     return gen();
 }
 
-namespace SOURCEMODULE
-{
-
 SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
     QObject(parent),
     m_sourceDeviceSlots(QVector<SourceDeviceVein*>(countSlots, nullptr))
@@ -212,5 +209,3 @@ bool SourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
     return removeStarted;
 }
 
-
-}

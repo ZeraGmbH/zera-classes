@@ -2,12 +2,10 @@
 #define CSOURCEVEININTERFACE_H
 
 #include <QObject>
+
 class cVeinModuleActvalue;
 class cVeinModuleParameter;
 class cJsonParamValidator;
-
-namespace SOURCEMODULE
-{
 class SourceDeviceVein;
 
 class SourceVeinInterface : public QObject
@@ -35,7 +33,5 @@ private:
     cVeinModuleParameter* m_veinDeviceParameter = nullptr;
     cJsonParamValidator* m_veinDeviceParameterValidator = nullptr;
 };
-
-} // namespace SOURCEMODULE
 
 #endif // CSOURCEVEININTERFACE_H

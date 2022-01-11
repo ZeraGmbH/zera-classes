@@ -2,9 +2,6 @@
 #include "jsonstructureloader.h"
 #include "sourcejsonapi.h"
 
-namespace SOURCEMODULE
-{
-
 SourceDeviceBase::SourceDeviceBase(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version) :
     QObject(nullptr),
     m_ioInterface(interface)
@@ -68,6 +65,4 @@ void SourceDeviceBase::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
     if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
         handleSourceCmd(cmdPack);
     }
-}
-
 }

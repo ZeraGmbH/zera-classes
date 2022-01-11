@@ -10,12 +10,9 @@
 
 class SourceInterfaceBase;
 
-namespace SOURCEMODULE
-{
 class SourceDeviceVein;
 class SourceScanner;
 typedef QSharedPointer<SourceScanner> tSourceScannerShPtr;
-
 
 class SourceScanner : public QObject
 {
@@ -55,5 +52,4 @@ private:
     static int m_InstanceCount;
 };
 
-}
 #endif // SourceScanner_H
