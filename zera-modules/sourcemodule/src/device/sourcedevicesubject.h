@@ -1,19 +1,18 @@
 #ifndef SOURCEDEVICESUBJECT_H
 #define SOURCEDEVICESUBJECT_H
 
-#include <QList>
+#include <QObject>
 
 class SourceWorkerCmdPack;
 class SourceDeviceObserver;
 
-class SourceDeviceSubject
+class SourceDeviceSubject : public QObject
 {
+    Q_OBJECT
 public:
-    void attach(SourceDeviceObserver* observer);
-    void notifyObservers(const SourceWorkerCmdPack &response);
-
-private:
-    QList<SourceDeviceObserver*> m_observers;
+    void notifyObservers(const SourceWorkerCmdPack response);
+signals:
+    void sigResponseReceived(const SourceWorkerCmdPack response);
 };
 
 #endif // SOURCEDEVICESUBJECT_H

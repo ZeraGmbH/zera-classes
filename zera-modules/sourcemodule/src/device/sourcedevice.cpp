@@ -1,7 +1,6 @@
 #include "sourcedevice.h"
 
 SourceDevice::SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
-    QObject(nullptr),
     m_ioInterface(interface),
     m_type(type),
     m_name(name),

@@ -1,14 +1,8 @@
 #include "sourcedevicesubject.h"
 #include "sourcedeviceobserver.h"
+#include "../sourceioworker.h"
 
-void SourceDeviceSubject::attach(SourceDeviceObserver *observer)
+void SourceDeviceSubject::notifyObservers(const SourceWorkerCmdPack response)
 {
-    m_observers.append(observer);
-}
-
-void SourceDeviceSubject::notifyObservers(const SourceWorkerCmdPack &response)
-{
-    for(auto observer: m_observers) {
-        observer->updateResponse(response);
-    }
+    emit sigResponseReceived(response);
 }
