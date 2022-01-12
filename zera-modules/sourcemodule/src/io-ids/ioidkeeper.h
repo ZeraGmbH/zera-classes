@@ -1,10 +1,10 @@
 #ifndef SOURCEIDKEEPER_H
 #define SOURCEIDKEEPER_H
 
-class SourceIdKeeper
+class IoIdKeeper
 {
 public:
-    SourceIdKeeper();
+    IoIdKeeper();
 
     void setCurrent(int id);
     int getCurrent();

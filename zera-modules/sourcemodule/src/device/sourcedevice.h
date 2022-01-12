@@ -3,7 +3,7 @@
 
 #include "sourcedevicesubject.h"
 #include "supportedsources.h"
-#include "io-interface/sourceioworker.h"
+#include "io-interface/ioworker.h"
 
 #include <QObject>
 
@@ -17,11 +17,11 @@ class SourceDevice : public SourceDeviceSubject
 {
     Q_OBJECT
 public:
-    SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
+    SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
     ~SourceDevice();
 
     // requests
-    int startTransaction(const SourceWorkerCmdPack &workerPack);
+    int startTransaction(const IoWorkerCmdPack &workerPack);
     void simulateExternalDisconnect();
 
     // setter
@@ -38,11 +38,11 @@ signals:
     void sigInterfaceDisconnected();
 
 private slots:
-    void onSourceCmdFinished(SourceWorkerCmdPack cmdPack);
+    void onSourceCmdFinished(IoWorkerCmdPack cmdPack);
 
 private:
-    tSourceInterfaceShPtr m_ioInterface;
-    SourceIoWorker m_sourceIoWorker;
+    tIoInterfaceShPtr m_ioInterface;
+    IoWorker m_sourceIoWorker;
 
     SupportedSourceTypes m_type;
     QString m_name;

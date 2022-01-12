@@ -5,11 +5,11 @@
 #include <jsonparamvalidator.h>
 #include "sourcedevicevein.h"
 #include "sourceveininterface.h"
-#include "io-interface/sourceiopacketgenerator.h"
+#include "io-interface/iopacketgenerator.h"
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
-SourceDeviceVein::SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
+SourceDeviceVein::SourceDeviceVein(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     SourceDeviceBase(interface, type, name, version)
 {
     m_persistentParamState = new PersistentJsonState(type, name, version);
@@ -17,7 +17,7 @@ SourceDeviceVein::SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSou
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
-    connect(interface.get(), &SourceInterfaceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
+    connect(interface.get(), &IoInterfaceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
 }
 
 SourceDeviceVein::~SourceDeviceVein()
@@ -85,7 +85,7 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDeviceVein::handleSourceCmd(SourceWorkerCmdPack cmdPack)
+void SourceDeviceVein::handleSourceCmd(IoWorkerCmdPack cmdPack)
 {
     SourceDeviceBase::handleSourceCmd(cmdPack);
     m_deviceStatus.setBusy(false);

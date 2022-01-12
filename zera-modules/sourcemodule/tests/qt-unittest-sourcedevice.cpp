@@ -16,7 +16,7 @@ void SourceDeviceTest::gettersOK()
     SupportedSourceTypes type = SOURCE_MT_COMMON;
     QString info = "fooInfo";
 
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open(info);
 
     SourceDevice sourceDevice(interface, type, name, version);
@@ -28,21 +28,21 @@ void SourceDeviceTest::gettersOK()
 
 void SourceDeviceTest::nonDemoInterFaceGet()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_BASE);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_BASE);
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     QVERIFY(!sourceDevice.isDemo());
 }
 
 void SourceDeviceTest::demoInterFaceGet()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     QVERIFY(sourceDevice.isDemo());
 }
 
 void SourceDeviceTest::disconnectSignal()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
@@ -55,18 +55,18 @@ void SourceDeviceTest::disconnectSignal()
     QCOMPARE(countDisconnectReceived, 1);
 }
 
-static SourceWorkerCmdPack createWorkingCmdPack()
+static IoWorkerCmdPack createWorkingCmdPack()
 {
-    SourceIoPacketGenerator ioPackGenerator = SourceIoPacketGenerator(QJsonObject());
+    IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
     JsonParamApi params;
     params.setOn(false);
-    SourceCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    return SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    return IoWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
 void SourceDeviceTest::multipleCmdsDifferentIds()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
@@ -81,7 +81,7 @@ public:
     int observerReceiveId = 0;
     TestObserver(SourceDeviceSubject* subject) : SourceDeviceObserver(subject) {}
 protected:
-    virtual void updateResponse(SourceWorkerCmdPack cmdPack) override {
+    virtual void updateResponse(IoWorkerCmdPack cmdPack) override {
         observerReceiveCount++;
         observerReceiveId = cmdPack.m_workerId;
     }
@@ -89,7 +89,7 @@ protected:
 
 void SourceDeviceTest::observerReceiveCount()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
@@ -105,7 +105,7 @@ void SourceDeviceTest::observerReceiveCount()
 
 void SourceDeviceTest::observerReceiveId()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 

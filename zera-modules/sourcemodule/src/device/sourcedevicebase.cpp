@@ -1,14 +1,15 @@
 #include "sourcedevicebase.h"
 #include "json/jsonstructureloader.h"
+#include "io-interface/iointerfacedemo.h"
 
-SourceDeviceBase::SourceDeviceBase(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version) :
+SourceDeviceBase::SourceDeviceBase(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version) :
     QObject(nullptr),
     m_ioInterface(interface)
 {
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, version);
-    m_outInGenerator = new SourceIoPacketGenerator(paramStructure);
+    m_outInGenerator = new IoPacketGenerator(paramStructure);
 
-    connect(&m_sourceIoWorker, &SourceIoWorker::sigCmdFinished,
+    connect(&m_sourceIoWorker, &IoWorker::sigCmdFinished,
             this, &SourceDeviceBase::onSourceCmdFinished);
 }
 
@@ -35,12 +36,12 @@ QString SourceDeviceBase::getInterfaceDeviceInfo()
 void SourceDeviceBase::switchState(QJsonObject state)
 {
     m_paramsRequested.setParams(state);
-    SourceCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
-    SourceWorkerCmdPack workerPack = SourceWorkerConverter::commandPackToWorkerPack(cmdPack);
+    IoCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
+    IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
-        SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(m_ioInterface.get());
+        IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
-        QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
+        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
     }
     m_currWorkerId.setCurrent(m_sourceIoWorker.enqueueAction(workerPack));
@@ -52,14 +53,14 @@ void SourceDeviceBase::switchOff()
     switchState(m_paramsCurrent.getParams());
 }
 
-void SourceDeviceBase::handleSourceCmd(SourceWorkerCmdPack cmdPack)
+void SourceDeviceBase::handleSourceCmd(IoWorkerCmdPack cmdPack)
 {
     if(cmdPack.passedAll()) {
         m_paramsCurrent.setParams(m_paramsRequested.getParams());
     }
 }
 
-void SourceDeviceBase::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
+void SourceDeviceBase::onSourceCmdFinished(IoWorkerCmdPack cmdPack)
 {
     if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
         handleSourceCmd(cmdPack);

@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
-#include "io-ids/sourceidgenerator.h"
+#include "io-ids/ioidgenerator.h"
 
 TEST(TEST_ID_GENERATOR, INCREMENT) {
-    SourceIdGenerator generator;
+    IoIdGenerator generator;
     int id;
     id = generator.nextID();
     EXPECT_EQ(id, 0);

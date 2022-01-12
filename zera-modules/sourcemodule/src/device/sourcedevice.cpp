@@ -1,15 +1,16 @@
 #include "sourcedevice.h"
+#include "io-interface/iointerfacedemo.h"
 
-SourceDevice::SourceDevice(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
+SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     m_ioInterface(interface),
     m_type(type),
     m_name(name),
     m_version(version)
 {
     m_sourceIoWorker.setIoInterface(interface);
-    connect(&m_sourceIoWorker, &SourceIoWorker::sigCmdFinished,
+    connect(&m_sourceIoWorker, &IoWorker::sigCmdFinished,
             this, &SourceDevice::onSourceCmdFinished);
-    connect(m_ioInterface.get(), &SourceInterfaceBase::sigDisconnected,
+    connect(m_ioInterface.get(), &IoInterfaceBase::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
             Qt::QueuedConnection);
 }
@@ -18,12 +19,12 @@ SourceDevice::~SourceDevice()
 {
 }
 
-int SourceDevice::startTransaction(const SourceWorkerCmdPack &workerPack)
+int SourceDevice::startTransaction(const IoWorkerCmdPack &workerPack)
 {
     if(isDemo()) {
-        SourceInterfaceDemo* demoInterface = static_cast<SourceInterfaceDemo*>(m_ioInterface.get());
+        IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
-        QList<QByteArray> responseList = SourceDemoHelper::generateResponseList(workerPack);
+        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
     }
     return m_sourceIoWorker.enqueueAction(workerPack);
@@ -65,7 +66,7 @@ bool SourceDevice::isDemo() const
     return m_ioInterface->isDemo();
 }
 
-void SourceDevice::onSourceCmdFinished(SourceWorkerCmdPack cmdPack)
+void SourceDevice::onSourceCmdFinished(IoWorkerCmdPack cmdPack)
 {
     notifyObservers(cmdPack);
 }

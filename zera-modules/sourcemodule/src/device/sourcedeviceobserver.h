@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class SourceWorkerCmdPack;
+class IoWorkerCmdPack;
 class SourceDeviceSubject;
 
 
@@ -14,7 +14,7 @@ public:
     SourceDeviceObserver(SourceDeviceSubject* subject);
 
 protected slots:
-    virtual void updateResponse(SourceWorkerCmdPack cmdPack) = 0;
+    virtual void updateResponse(IoWorkerCmdPack cmdPack) = 0;
     friend class SourceDeviceSubject;
 };
 

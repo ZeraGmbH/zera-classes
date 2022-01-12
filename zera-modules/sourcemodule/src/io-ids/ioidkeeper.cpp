@@ -1,22 +1,21 @@
-#include "sourceidkeeper.h"
+#include "ioidkeeper.h"
 
-SourceIdKeeper::SourceIdKeeper()
+IoIdKeeper::IoIdKeeper()
 {
-
 }
 
-void SourceIdKeeper::setCurrent(int id)
+void IoIdKeeper::setCurrent(int id)
 {
     m_currentId = id;
     m_isActive = true;
 }
 
-int SourceIdKeeper::getCurrent()
+int IoIdKeeper::getCurrent()
 {
     return m_currentId;
 }
 
-bool SourceIdKeeper::isCurrAndDeactivateIf(int id)
+bool IoIdKeeper::isCurrAndDeactivateIf(int id)
 {
     if(m_isActive && id == m_currentId) {
         m_isActive = false;
@@ -25,12 +24,12 @@ bool SourceIdKeeper::isCurrAndDeactivateIf(int id)
     return false;
 }
 
-bool SourceIdKeeper::isActive()
+bool IoIdKeeper::isActive()
 {
     return m_isActive;
 }
 
-void SourceIdKeeper::deactivate()
+void IoIdKeeper::deactivate()
 {
     m_isActive = false;
 }
