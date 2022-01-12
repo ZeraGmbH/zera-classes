@@ -6,7 +6,7 @@
 #include <QSharedPointer>
 #include "sourceinterface.h"
 #include "device/sourcedevicevein.h"
-#include "sourceidkeeper.h"
+#include "io-ids/sourceidkeeper.h"
 
 class SourceInterfaceBase;
 

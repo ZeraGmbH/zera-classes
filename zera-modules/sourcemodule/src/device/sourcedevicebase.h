@@ -5,7 +5,7 @@
 #include "../supportedsources.h"
 #include "../sourceiopacketgenerator.h"
 #include "../sourceioworker.h"
-#include "../sourceidkeeper.h"
+#include "../io-ids/sourceidkeeper.h"
 
 #include <QObject>
 

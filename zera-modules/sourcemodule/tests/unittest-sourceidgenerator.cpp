@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "sourceidgenerator.h"
+#include "io-ids/sourceidgenerator.h"
 
 TEST(TEST_ID_GENERATOR, INCREMENT) {
     SourceIdGenerator generator;

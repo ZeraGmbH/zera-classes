@@ -5,7 +5,7 @@
 #include <QSharedPointer>
 #include "sourceiopacketgenerator.h"
 #include "sourceinterface.h"
-#include "sourceidkeeper.h"
+#include "io-ids/sourceidkeeper.h"
 
 class SourceIoWorkerEntry
 {
