@@ -1,6 +1,6 @@
 #include "sourcedevicesubject.h"
 #include "sourcedeviceobserver.h"
-#include "../sourceioworker.h"
+#include "io-interface/sourceioworker.h"
 
 void SourceDeviceSubject::notifyObservers(const SourceWorkerCmdPack response)
 {

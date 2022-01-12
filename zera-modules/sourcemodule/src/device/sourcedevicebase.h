@@ -1,11 +1,11 @@
 #ifndef SOURCEDEVICEBASE_H
 #define SOURCEDEVICEBASE_H
 
-#include "../sourceinterface.h"
-#include "../supportedsources.h"
-#include "../sourceiopacketgenerator.h"
-#include "../sourceioworker.h"
-#include "../io-ids/sourceidkeeper.h"
+#include "io-interface/sourceinterface.h"
+#include "supportedsources.h"
+#include "io-interface/sourceiopacketgenerator.h"
+#include "io-interface/sourceioworker.h"
+#include "io-ids/sourceidkeeper.h"
 
 #include <QObject>
 

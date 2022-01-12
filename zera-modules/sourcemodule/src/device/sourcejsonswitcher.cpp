@@ -1,6 +1,6 @@
 #include "sourcejsonswitcher.h"
-#include "../json/jsonstructureloader.h"
-#include "../json/persistentjsonstate.h"
+#include "json/jsonstructureloader.h"
+#include "json/persistentjsonstate.h"
 
 SourceJsonSwitcher::SourceJsonSwitcher(SourceDevice *sourceDevice) :
     SourceDeviceObserver(sourceDevice),
