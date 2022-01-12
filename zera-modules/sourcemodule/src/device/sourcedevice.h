@@ -13,7 +13,7 @@
  * Keep source information
  * Allow adjustments on demo interfaces
  */
-class SourceDevice : public QObject, public SourceDeviceSubject
+class SourceDevice : public SourceDeviceSubject
 {
     Q_OBJECT
 public:

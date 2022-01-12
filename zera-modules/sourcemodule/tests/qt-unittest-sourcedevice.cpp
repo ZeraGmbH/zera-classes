@@ -81,7 +81,7 @@ public:
     int observerReceiveId = 0;
     TestObserver(SourceDeviceSubject* subject) : SourceDeviceObserver(subject) {}
 protected:
-    virtual void updateResponse(const SourceWorkerCmdPack& cmdPack) override {
+    virtual void updateResponse(SourceWorkerCmdPack cmdPack) override {
         observerReceiveCount++;
         observerReceiveId = cmdPack.m_workerId;
     }

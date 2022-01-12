@@ -1,8 +1,9 @@
 #include "sourcedeviceobserver.h"
 #include "sourcedevicesubject.h"
+#include "../sourceioworker.h"
 
 SourceDeviceObserver::SourceDeviceObserver(SourceDeviceSubject *subject)
 {
-    m_subject = subject;
-    subject->attach(this);
+    connect(subject, &SourceDeviceSubject::sigResponseReceived,
+            this, &SourceDeviceObserver::updateResponse);
 }
