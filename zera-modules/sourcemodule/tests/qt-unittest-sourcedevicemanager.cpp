@@ -1,6 +1,6 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevicemanager.h"
-#include "sourcedevicemanager.h"
+#include "device/sourcedevicemanager.h"
 #include "sourcescanner.h"
 
 static QObject* pSourceDeviceManagerTest = addTest(new SourceDeviceManagerTest);

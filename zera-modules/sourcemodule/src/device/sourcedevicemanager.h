@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QString>
 #include <QUuid>
-#include "sourceinterface.h"
-#include "sourcescanner.h"
+#include "../sourcescanner.h"
+#include "../sourceinterface.h"
 
 class SourceInterfaceBase;
 class SourceDeviceVein;

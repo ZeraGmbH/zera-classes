@@ -1,7 +1,7 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevicevein.h"
-#include "sourceinterface.h"
-#include "sourcescanner.h"
+#include "../sourceinterface.h"
+#include "../sourcescanner.h"
 #include <random>
 
 // DEMO helper

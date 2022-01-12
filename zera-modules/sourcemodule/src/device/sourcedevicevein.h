@@ -7,9 +7,9 @@
 #include <QUuid>
 #include <QStringList>
 #include "sourcedevicebase.h"
-#include "sourceinterface.h"
+#include "../sourceinterface.h"
 #include "sourcedevicestatus.h"
-#include "json/persistentjsonstate.h"
+#include "../json/persistentjsonstate.h"
 
 class SourceVeinInterface;
 

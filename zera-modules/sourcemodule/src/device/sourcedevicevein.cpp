@@ -4,8 +4,8 @@
 #include <zera-json-params-structure.h>
 #include <jsonparamvalidator.h>
 #include "sourcedevicevein.h"
-#include "sourceveininterface.h"
-#include "sourceiopacketgenerator.h"
+#include "../sourceveininterface.h"
+#include "../sourceiopacketgenerator.h"
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
