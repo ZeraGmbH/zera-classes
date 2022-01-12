@@ -2,7 +2,7 @@
 #define SOURCEIOWORKERENTRYTEST_H
 
 #include <QObject>
-#include "sourceioworker.h"
+#include "io-interface/sourceioworker.h"
 
 class SourceIoWorkerTest : public QObject
 {

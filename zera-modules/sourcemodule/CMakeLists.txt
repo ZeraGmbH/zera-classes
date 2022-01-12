@@ -152,7 +152,7 @@ target_link_libraries(sourcemodule
 target_include_directories(sourcemodule
     PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
 # install library

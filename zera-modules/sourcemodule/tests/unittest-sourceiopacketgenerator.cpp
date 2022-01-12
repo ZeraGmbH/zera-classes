@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "sourceiopacketgenerator.h"
+#include "io-interface/sourceiopacketgenerator.h"
 
 // double -> send string conversion
 TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {

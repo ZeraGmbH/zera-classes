@@ -2,8 +2,8 @@
 #define SOURCEDEVICE_H
 
 #include "sourcedevicesubject.h"
-#include "../supportedsources.h"
-#include "../sourceioworker.h"
+#include "supportedsources.h"
+#include "io-interface/sourceioworker.h"
 
 #include <QObject>
 

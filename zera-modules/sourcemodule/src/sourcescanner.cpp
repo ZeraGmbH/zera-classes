@@ -1,5 +1,5 @@
 #include "sourcescanner.h"
-#include "sourceinterface.h"
+#include "io-interface/sourceinterface.h"
 #include <QUuid>
 
 tSourceScannerShPtr SourceScanner::createScanner(tSourceInterfaceShPtr interface, QUuid uuid)

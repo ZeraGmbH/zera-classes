@@ -1,7 +1,7 @@
 #ifndef JSONFILENAMES_H
 #define JSONFILENAMES_H
 
-#include "../supportedsources.h"
+#include "supportedsources.h"
 #include <QString>
 
 class JsonFilenames

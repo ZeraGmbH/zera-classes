@@ -1,6 +1,6 @@
 #include "sourcedeviceobserver.h"
 #include "sourcedevicesubject.h"
-#include "../sourceioworker.h"
+#include "io-interface/sourceioworker.h"
 
 SourceDeviceObserver::SourceDeviceObserver(SourceDeviceSubject *subject)
 {

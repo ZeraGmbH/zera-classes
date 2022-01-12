@@ -2,7 +2,7 @@
 #define QTUNITTESTSOURCEINTERFACE_H
 
 #include <QObject>
-#include "sourceinterface.h"
+#include "io-interface/sourceinterface.h"
 
 class SourceInterfaceTest : public QObject
 {
