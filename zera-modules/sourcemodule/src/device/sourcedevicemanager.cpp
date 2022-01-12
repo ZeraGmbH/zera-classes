@@ -1,6 +1,6 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevicevein.h"
-#include "io-interface/sourceinterface.h"
+#include "io-interface/iointerfacebase.h"
 #include "sourcescanner.h"
 #include <random>
 
@@ -19,14 +19,14 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
             this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
-void SourceDeviceManager::startSourceScan(const SourceInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid)
+void SourceDeviceManager::startSourceScan(const IoInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid)
 {
     if(m_activeSlotCount >= m_sourceDeviceSlots.count()) {
         emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("No free slots"));
         return;
     }
     bool started = false;
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SourceInterfaceTypes(interfaceType));
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(IoInterfaceTypes(interfaceType));
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {

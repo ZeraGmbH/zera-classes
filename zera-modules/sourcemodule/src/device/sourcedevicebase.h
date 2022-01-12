@@ -1,11 +1,11 @@
 #ifndef SOURCEDEVICEBASE_H
 #define SOURCEDEVICEBASE_H
 
-#include "io-interface/sourceinterface.h"
 #include "supportedsources.h"
-#include "io-interface/sourceiopacketgenerator.h"
-#include "io-interface/sourceioworker.h"
-#include "io-ids/sourceidkeeper.h"
+#include "io-interface/iointerfacebase.h"
+#include "io-interface/iopacketgenerator.h"
+#include "io-interface/ioworker.h"
+#include "io-ids/ioidkeeper.h"
 
 #include <QObject>
 
@@ -13,7 +13,7 @@ class SourceDeviceBase : public QObject
 {
     Q_OBJECT
 public:
-    explicit SourceDeviceBase(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version);
+    explicit SourceDeviceBase(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version);
     virtual ~SourceDeviceBase();
 
     // requests
@@ -26,19 +26,19 @@ public:
 protected:
     void switchState(QJsonObject state);
     void switchOff();
-    virtual void handleSourceCmd(SourceWorkerCmdPack cmdPack);
+    virtual void handleSourceCmd(IoWorkerCmdPack cmdPack);
 
-    tSourceInterfaceShPtr m_ioInterface;
-    SourceIoPacketGenerator* m_outInGenerator = nullptr;
+    tIoInterfaceShPtr m_ioInterface;
+    IoPacketGenerator* m_outInGenerator = nullptr;
 
     JsonParamApi m_paramsRequested;
     JsonParamApi m_paramsCurrent;
 
-    SourceIoWorker m_sourceIoWorker;
-    SourceIdKeeper m_currWorkerId;
+    IoWorker m_sourceIoWorker;
+    IoIdKeeper m_currWorkerId;
 
 private slots:
-    void onSourceCmdFinished(SourceWorkerCmdPack cmdPack);
+    void onSourceCmdFinished(IoWorkerCmdPack cmdPack);
 
 private:
     bool m_bDemoDelayFollowsTimeout = false;

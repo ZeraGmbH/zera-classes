@@ -31,13 +31,13 @@ signals:
     void sigBusyChanged(bool busy);
 
 protected:
-    virtual void updateResponse(SourceWorkerCmdPack cmdPack) override;
+    virtual void updateResponse(IoWorkerCmdPack cmdPack) override;
 
 private:
     SourceDevice* m_sourceDevice;
 
     PersistentJsonState* m_persistentParamState;
-    SourceIoPacketGenerator* m_outInGenerator = nullptr;
+    IoPacketGenerator* m_outInGenerator = nullptr;
 
     JsonParamApi m_paramsRequested;
     JsonParamApi m_paramsCurrent;

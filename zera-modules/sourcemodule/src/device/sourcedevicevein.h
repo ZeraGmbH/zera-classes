@@ -7,8 +7,8 @@
 #include <QUuid>
 #include <QStringList>
 #include "sourcedevicebase.h"
-#include "io-interface/sourceinterface.h"
 #include "sourcedevicestatus.h"
+#include "io-interface/iointerfacebase.h"
 #include "json/persistentjsonstate.h"
 
 class SourceVeinInterface;
@@ -17,7 +17,7 @@ class SourceDeviceVein : public SourceDeviceBase
 {
     Q_OBJECT
 public:
-    explicit SourceDeviceVein(tSourceInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
+    explicit SourceDeviceVein(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
     virtual ~SourceDeviceVein();
 
     // requests
@@ -38,7 +38,7 @@ public slots:
     void onNewVeinParamStatus(QVariant paramState);
 
 protected:
-    virtual void handleSourceCmd(SourceWorkerCmdPack cmdPack) override;
+    virtual void handleSourceCmd(IoWorkerCmdPack cmdPack) override;
 
 private slots:
     void onInterfaceClosed();

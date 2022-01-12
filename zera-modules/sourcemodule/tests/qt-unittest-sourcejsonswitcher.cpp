@@ -11,7 +11,7 @@ void SourceJsonSwitcherTest::init()
 
 void SourceJsonSwitcherTest::signalSwitch()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 0);
@@ -30,7 +30,7 @@ void SourceJsonSwitcherTest::signalSwitch()
 
 void SourceJsonSwitcherTest::twoSignalsSwitchSameTwice()
 {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 0);
@@ -49,7 +49,7 @@ void SourceJsonSwitcherTest::twoSignalsSwitchSameTwice()
 }
 
 static void getBusyToggleCount(bool ioResponseDelay) {
-    tSourceInterfaceShPtr interface = SourceInterfaceFactory::createSourceInterface(SOURCE_INTERFACE_DEMO);
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, ioResponseDelay ? 50 : 0);

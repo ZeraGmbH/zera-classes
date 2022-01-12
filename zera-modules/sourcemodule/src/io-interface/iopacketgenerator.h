@@ -13,25 +13,25 @@ enum SourceCommandTypes { // don't forget unittest on add
     COMMAND_UNDEF_BOTTOM
 };
 
-enum SourcePacketErrorBehaviors {
+enum PacketErrorBehaviors {
     BEHAVE_UNDEFINED = 0,
     BEHAVE_STOP_ON_ERROR,
     BEHAVE_CONTINUE_ON_ERROR,
     BEHAVE_UNDEF_BOTTOM
 };
 
-enum SourceIoResponseTypes {
+enum IoResponseTypes {
     RESP_UNDEFINED = 0,
     RESP_FULL_DATA_SEQUENCE,
     RESP_PART_DATA_SEQUENCE,
     RESP_UNDEF_BOTTOM
 };
 
-class SourceSingleOutIn
+class IoSingleOutIn
 {
 public:
-    SourceSingleOutIn() {}
-    SourceSingleOutIn(SourceIoResponseTypes ioResponseType,
+    IoSingleOutIn() {}
+    IoSingleOutIn(IoResponseTypes ioResponseType,
                        QByteArray bytesSend,
                        QByteArray bytesExpected,
                        int responseTimeoutMs = 0) :
@@ -42,45 +42,45 @@ public:
         m_bytesExpected(bytesExpected)
     {}
     void setActionType(SourceActionTypes::ActionTypes actionType);
-    bool operator == (const SourceSingleOutIn& other);
+    bool operator == (const IoSingleOutIn& other);
 
     SourceActionTypes::ActionTypes m_actionType = SourceActionTypes::SWITCH_UNDEF;
-    SourceIoResponseTypes m_responseType = RESP_UNDEFINED;
+    IoResponseTypes m_responseType = RESP_UNDEFINED;
     int m_responseTimeoutMs = 0;
     QByteArray m_bytesSend;
     QByteArray m_bytesExpected;
 };
 
-typedef QList<SourceSingleOutIn> tSourceOutInList;
+typedef QList<IoSingleOutIn> tIoOutInList;
 
-class SourceCommandPacket
+class IoCommandPacket
 {
 public:
     SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
-    SourcePacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
-    tSourceOutInList m_outInList;
+    PacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
+    tIoOutInList m_outInList;
 };
 
-class SourceIoPacketGenerator
+class IoPacketGenerator
 {
 public:
-    SourceIoPacketGenerator(QJsonObject jsonParamsStructure);
-    ~SourceIoPacketGenerator();
+    IoPacketGenerator(QJsonObject jsonParamsStructure);
+    ~IoPacketGenerator();
 
     // single
-    tSourceOutInList generateListForAction(SourceActionTypes::ActionTypes actionType);
+    tIoOutInList generateListForAction(SourceActionTypes::ActionTypes actionType);
     // composed
-    SourceCommandPacket generateOnOffPacket(JsonParamApi requestedParams);
-    SourceCommandPacket generateStatusPollPacket();
+    IoCommandPacket generateOnOffPacket(JsonParamApi requestedParams);
+    IoCommandPacket generateStatusPollPacket();
 private:
-    tSourceOutInList generateRMSAndAngleUList();
-    tSourceOutInList generateRMSAndAngleIList();
-    tSourceOutInList generateSwitchPhasesList();
-    tSourceOutInList generateFrequencyList();
-    tSourceOutInList generateRegulationList();
+    tIoOutInList generateRMSAndAngleUList();
+    tIoOutInList generateRMSAndAngleIList();
+    tIoOutInList generateSwitchPhasesList();
+    tIoOutInList generateFrequencyList();
+    tIoOutInList generateRegulationList();
 
-    tSourceOutInList generateQueryStatusList();
-    tSourceOutInList generateQueryActualList();
+    tIoOutInList generateQueryStatusList();
+    tIoOutInList generateQueryActualList();
 
     JsonStructApi* m_jsonStructApi = nullptr;
     JsonParamApi m_paramsRequested;
@@ -89,7 +89,7 @@ private:
 };
 
 
-class SourceIoCmdFormatHelper
+class IoCmdFormatHelper
 {
 public:
     static QByteArray formatDouble(double val, int preDigits, char digit, int postDigits);

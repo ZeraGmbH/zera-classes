@@ -1,8 +1,9 @@
 #include "sourcescanner.h"
-#include "io-interface/sourceinterface.h"
+#include "io-interface/iointerfacebase.h"
+#include "io-interface/iointerfacezeraserial.h"
 #include <QUuid>
 
-tSourceScannerShPtr SourceScanner::createScanner(tSourceInterfaceShPtr interface, QUuid uuid)
+tSourceScannerShPtr SourceScanner::createScanner(tIoInterfaceShPtr interface, QUuid uuid)
 {
     tSourceScannerShPtr scanner = tSourceScannerShPtr(new SourceScanner(interface, uuid));
     scanner->m_safePoinerOnThis = scanner;
@@ -11,14 +12,14 @@ tSourceScannerShPtr SourceScanner::createScanner(tSourceInterfaceShPtr interface
 
 int SourceScanner::m_InstanceCount = 0;
 
-SourceScanner::SourceScanner(tSourceInterfaceShPtr interface, QUuid uuid) :
+SourceScanner::SourceScanner(tIoInterfaceShPtr interface, QUuid uuid) :
     QObject(nullptr),
     m_ioInterface(interface),
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
     m_InstanceCount++;
-    connect(m_ioInterface.get(), &SourceInterfaceBase::sigIoFinished,
+    connect(m_ioInterface.get(), &IoInterfaceBase::sigIoFinished,
             this, &SourceScanner::onIoFinished);
 }
 
@@ -88,7 +89,7 @@ QByteArray SourceScanner::createInterfaceSpecificPrepend()
 {
     QByteArray prepend;
     if(m_ioInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
-        static_cast<SourceInterfaceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
+        static_cast<IoInterfaceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
             prepend = "\r";

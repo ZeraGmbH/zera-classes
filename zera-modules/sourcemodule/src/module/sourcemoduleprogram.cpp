@@ -10,7 +10,7 @@
 #include "sourcemodule.h"
 #include "device/sourcedevicemanager.h"
 #include "device/sourcedevicevein.h"
-#include "io-interface/sourceinterface.h"
+#include "io-interface/iointerfacebase.h"
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
@@ -21,8 +21,8 @@ SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<c
 SourceModuleProgram::~SourceModuleProgram()
 {
     delete m_pSourceDeviceManager;
-    while(m_arrVeinSourceInterfaces.size()) {
-        delete m_arrVeinSourceInterfaces.takeLast();
+    while(m_arrVeinIoInterfaces.size()) {
+        delete m_arrVeinIoInterfaces.takeLast();
     }
 }
 
@@ -108,7 +108,7 @@ void SourceModuleProgram::generateInterface()
         pVeinParam->setValidator(jsonValidator);
         m_pModule->veinModuleParameterHash[key] = pVeinParam; // auto delete / meta-data / scpi
 
-        m_arrVeinSourceInterfaces.append(sourceVeinInterface);
+        m_arrVeinIoInterfaces.append(sourceVeinInterface);
     }
 }
 
@@ -117,7 +117,7 @@ QVariant SourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
     int interfaceType = p_params["p_type"].toInt();
     QString deviceInfo = p_params["p_deviceInfo"].toString();
     QUuid veinUuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
-    m_pSourceDeviceManager->startSourceScan(SourceInterfaceTypes(interfaceType), deviceInfo, veinUuid);
+    m_pSourceDeviceManager->startSourceScan(IoInterfaceTypes(interfaceType), deviceInfo, veinUuid);
     return true;
 }
 
@@ -146,7 +146,7 @@ void SourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDeviceVei
 {
     bool sourceAdded = slotPosition >= 0 && device;
     if(sourceAdded) {
-        device->setVeinInterface(m_arrVeinSourceInterfaces[slotPosition]);
+        device->setVeinInterface(m_arrVeinIoInterfaces[slotPosition]);
         m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
         updateDemoCount();
     }

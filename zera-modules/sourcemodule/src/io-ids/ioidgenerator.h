@@ -2,7 +2,7 @@
 #define CSOURCEIDGENERATOR_H
 
 
-class SourceIdGenerator
+class IoIdGenerator
 {
 public:
     int nextID();

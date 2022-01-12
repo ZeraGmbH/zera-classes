@@ -2,9 +2,9 @@
 #define QTUNITTESTSOURCEINTERFACE_H
 
 #include <QObject>
-#include "io-interface/sourceinterface.h"
+#include "io-interface/iointerfacebase.h"
 
-class SourceInterfaceTest : public QObject
+class IoInterfaceTest : public QObject
 {
     Q_OBJECT
 public slots:
@@ -44,9 +44,9 @@ private slots:
     void demoCanClose();
 
 private:
-    void checkIds(tSourceInterfaceShPtr interface);
-    void checkNotifications(tSourceInterfaceShPtr interface, int total, int errors);
-    tSourceInterfaceShPtr createOpenDemoInterface(int responseDelay = 0);
+    void checkIds(tIoInterfaceShPtr interface);
+    void checkNotifications(tIoInterfaceShPtr interface, int total, int errors);
+    tIoInterfaceShPtr createOpenDemoInterface(int responseDelay = 0);
 
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;

@@ -2,13 +2,13 @@
 #define SOURCEIOWORKERENTRYTEST_H
 
 #include <QObject>
-#include "io-interface/sourceioworker.h"
+#include "io-interface/ioworker.h"
 
-class SourceIoWorkerTest : public QObject
+class IoWorkerTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onWorkPackFinished(SourceWorkerCmdPack workPack);
+    void onWorkPackFinished(IoWorkerCmdPack workPack);
 private slots:
     void init();
 
@@ -45,15 +45,15 @@ private slots:
     void testTwoPacketMultipleIoOK();
 
 private:
-    static tSourceInterfaceShPtr createOpenInterface();
-    static SourceWorkerCmdPack generateSwitchCommands(bool on);
-    static SourceWorkerCmdPack generateStatusPollCommands();
-    static void adjustWorkCmdPack(SourceWorkerCmdPack& workCmdPack,
-                                  SourcePacketErrorBehaviors errorBehavior,
-                                  SourceIoResponseTypes responseType);
+    static tIoInterfaceShPtr createOpenInterface();
+    static IoWorkerCmdPack generateSwitchCommands(bool on);
+    static IoWorkerCmdPack generateStatusPollCommands();
+    static void adjustWorkCmdPack(IoWorkerCmdPack& workCmdPack,
+                                  PacketErrorBehaviors errorBehavior,
+                                  IoResponseTypes responseType);
     void evalNotificationCount(int cmdPassedExpected, int passExpected, int failExpected, int unknownExpected);
 
-    QList<SourceWorkerCmdPack> m_listWorkPacksReceived;
+    QList<IoWorkerCmdPack> m_listWorkPacksReceived;
 };
 
 #endif // SOURCEIOWORKERENTRYTEST_H

@@ -1,8 +1,8 @@
 #include "sourcedevicesubject.h"
 #include "sourcedeviceobserver.h"
-#include "io-interface/sourceioworker.h"
+#include "io-interface/ioworker.h"
 
-void SourceDeviceSubject::notifyObservers(const SourceWorkerCmdPack response)
+void SourceDeviceSubject::notifyObservers(const IoWorkerCmdPack response)
 {
     emit sigResponseReceived(response);
 }

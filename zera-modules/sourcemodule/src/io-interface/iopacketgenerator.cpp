@@ -1,13 +1,13 @@
-#include "sourceiopacketgenerator.h"
+#include "iopacketgenerator.h"
 #include "sourceactions.h"
-#include "sourceinterface.h"
+#include "iointerfacebase.h"
 
-void SourceSingleOutIn::setActionType(SourceActionTypes::ActionTypes actionType)
+void IoSingleOutIn::setActionType(SourceActionTypes::ActionTypes actionType)
 {
     m_actionType = actionType;
 }
 
-bool SourceSingleOutIn::operator ==(const SourceSingleOutIn &other)
+bool IoSingleOutIn::operator ==(const IoSingleOutIn &other)
 {
     return  m_actionType == other.m_actionType &&
             m_responseType == other.m_responseType &&
@@ -16,23 +16,22 @@ bool SourceSingleOutIn::operator ==(const SourceSingleOutIn &other)
             m_bytesExpected == other.m_bytesExpected;
 }
 
-
-SourceIoPacketGenerator::SourceIoPacketGenerator(QJsonObject jsonParamsStructure) :
+IoPacketGenerator::IoPacketGenerator(QJsonObject jsonParamsStructure) :
     m_jsonStructApi(new JsonStructApi(jsonParamsStructure)),
     m_ioPrefix(m_jsonStructApi->getIoPrefix())
 {
 }
 
-SourceIoPacketGenerator::~SourceIoPacketGenerator()
+IoPacketGenerator::~IoPacketGenerator()
 {
     delete m_jsonStructApi;
 }
 
-SourceCommandPacket SourceIoPacketGenerator::generateOnOffPacket(JsonParamApi requestedParams)
+IoCommandPacket IoPacketGenerator::generateOnOffPacket(JsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
-    SourceCommandPacket commandPack;
+    IoCommandPacket commandPack;
     commandPack.m_commandType = COMMAND_SWITCH;
     commandPack.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
     for(auto &actionType : actionsTypeList) {
@@ -41,9 +40,9 @@ SourceCommandPacket SourceIoPacketGenerator::generateOnOffPacket(JsonParamApi re
     return commandPack;
 }
 
-SourceCommandPacket SourceIoPacketGenerator::generateStatusPollPacket()
+IoCommandPacket IoPacketGenerator::generateStatusPollPacket()
 {
-    SourceCommandPacket commandPack;
+    IoCommandPacket commandPack;
     commandPack.m_commandType = COMMAND_STATE_POLL;
     commandPack.m_errorBehavior = BEHAVE_CONTINUE_ON_ERROR;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generatePeriodicActions();
@@ -53,9 +52,9 @@ SourceCommandPacket SourceIoPacketGenerator::generateStatusPollPacket()
     return commandPack;
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
+tIoOutInList IoPacketGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
 {
-    tSourceOutInList outInList;
+    tIoOutInList outInList;
     switch(actionType) {
     case SourceActionTypes::SET_RMS:
         outInList.append(generateRMSAndAngleUList());
@@ -96,9 +95,9 @@ tSourceOutInList SourceIoPacketGenerator::generateListForAction(SourceActionType
     return outInList;
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateRMSAndAngleUList()
+tIoOutInList IoPacketGenerator::generateRMSAndAngleUList()
 {
-    tSourceOutInList outInList;
+    tIoOutInList outInList;
     QByteArray bytesSend;
 
     double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
@@ -116,18 +115,18 @@ tSourceOutInList SourceIoPacketGenerator::generateRMSAndAngleUList()
     bytesSend.append('E');
     for(int idx=0; idx<3; idx++) {
         bytesSend.append('R'+idx);
-        bytesSend += SourceIoCmdFormatHelper::formatDouble(rmsU[idx], 3, '.', 3);
-        bytesSend += SourceIoCmdFormatHelper::formatDouble(angleU[idx], 3, '.', 2);
+        bytesSend += IoCmdFormatHelper::formatDouble(rmsU[idx], 3, '.', 3);
+        bytesSend += IoCmdFormatHelper::formatDouble(angleU[idx], 3, '.', 2);
     }
     bytesSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKUP\r";
-    outInList.append(SourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
+    outInList.append(IoSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
     return outInList;
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateRMSAndAngleIList()
+tIoOutInList IoPacketGenerator::generateRMSAndAngleIList()
 {
-    tSourceOutInList outInList;
+    tIoOutInList outInList;
     QByteArray bytesSend;
 
     double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
@@ -145,17 +144,17 @@ tSourceOutInList SourceIoPacketGenerator::generateRMSAndAngleIList()
     bytesSend.append('A');
     for(int idx=0; idx<3; idx++) {
         bytesSend.append('R'+idx);
-        bytesSend += SourceIoCmdFormatHelper::formatDouble(rmsI[idx], 3, '.', 3);
-        bytesSend += SourceIoCmdFormatHelper::formatDouble(angleI[idx], 3, '.', 2);
+        bytesSend += IoCmdFormatHelper::formatDouble(rmsI[idx], 3, '.', 3);
+        bytesSend += IoCmdFormatHelper::formatDouble(angleI[idx], 3, '.', 2);
     }
     bytesSend.append('\r');
     QByteArray expectedResponse = m_ioPrefix + "OKIP\r";
-    outInList.append(SourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
+    outInList.append(IoSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse));
 
     return outInList;
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateSwitchPhasesList()
+tIoOutInList IoPacketGenerator::generateSwitchPhasesList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "UI";
@@ -199,27 +198,27 @@ tSourceOutInList SourceIoPacketGenerator::generateSwitchPhasesList()
     bytesSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKUI\r";
     int timeout = globalOn ? 15000 : 5000;
-    return tSourceOutInList() << SourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse, timeout);
+    return tIoOutInList() << IoSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse, timeout);
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateFrequencyList()
+tIoOutInList IoPacketGenerator::generateFrequencyList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "FR";
     bool quartzVar = m_paramsRequested.getFreqVarOn();
     if(quartzVar) {
-        bytesSend += SourceIoCmdFormatHelper::formatDouble(m_paramsRequested.getFreqVal(), 2, '.', 2);
+        bytesSend += IoCmdFormatHelper::formatDouble(m_paramsRequested.getFreqVal(), 2, '.', 2);
     }
     else {
         // for now we support 50Hz sync only
-        bytesSend += SourceIoCmdFormatHelper::formatDouble(0.0, 2, '.', 2);
+        bytesSend += IoCmdFormatHelper::formatDouble(0.0, 2, '.', 2);
     }
     bytesSend.append("\r");
     QByteArray expectedResponse = m_ioPrefix + "OKFR\r";
-    return tSourceOutInList() << SourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
+    return tIoOutInList() << IoSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateRegulationList()
+tIoOutInList IoPacketGenerator::generateRegulationList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "RE";
@@ -228,28 +227,28 @@ tSourceOutInList SourceIoPacketGenerator::generateRegulationList()
     bytesSend.append("\r");
 
     QByteArray expectedResponse = m_ioPrefix + "OKRE\r";
-    return tSourceOutInList() << SourceSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
+    return tIoOutInList() << IoSingleOutIn(RESP_FULL_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateQueryStatusList()
+tIoOutInList IoPacketGenerator::generateQueryStatusList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "SM\r"; // error condition for now
 
     QByteArray expectedResponse = m_ioPrefix + "\r";
-    return tSourceOutInList() << SourceSingleOutIn(RESP_PART_DATA_SEQUENCE, bytesSend, expectedResponse);
+    return tIoOutInList() << IoSingleOutIn(RESP_PART_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-tSourceOutInList SourceIoPacketGenerator::generateQueryActualList()
+tIoOutInList IoPacketGenerator::generateQueryActualList()
 {
     QByteArray bytesSend;
     bytesSend = "AME0;3\r";// This is single phase!!
 
     QByteArray expectedResponse = "\r";
-    return tSourceOutInList() << SourceSingleOutIn(RESP_PART_DATA_SEQUENCE, bytesSend, expectedResponse);
+    return tIoOutInList() << IoSingleOutIn(RESP_PART_DATA_SEQUENCE, bytesSend, expectedResponse);
 }
 
-QByteArray SourceIoCmdFormatHelper::formatDouble(double val, int preDigits, char digit, int postDigits)
+QByteArray IoCmdFormatHelper::formatDouble(double val, int preDigits, char digit, int postDigits)
 {
     QByteArray data;
     QString str, strFormat;
