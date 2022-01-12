@@ -32,12 +32,14 @@ file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/src/device/*.cpp
     ${PROJECT_SOURCE_DIR}/src/json/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/module/*.cpp
     )
 
 file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/*.h
     ${PROJECT_SOURCE_DIR}/src/device/*.h
     ${PROJECT_SOURCE_DIR}/src/json/*.h
+    ${PROJECT_SOURCE_DIR}/src/module/*.h
     )
 
 file(GLOB RESOURCES 
