@@ -5,7 +5,7 @@
 #include <QUuid>
 #include <QSharedPointer>
 #include "sourceinterface.h"
-#include "sourcedevicevein.h"
+#include "device/sourcedevicevein.h"
 #include "sourceidkeeper.h"
 
 class SourceInterfaceBase;
