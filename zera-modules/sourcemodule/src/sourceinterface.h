@@ -5,8 +5,8 @@
 #include <QSerialPortAsyncBlock>
 #include <QSharedPointer>
 #include <QTimer>
-#include "sourceidgenerator.h"
-#include "sourceidkeeper.h"
+#include "io-ids/sourceidgenerator.h"
+#include "io-ids/sourceidkeeper.h"
 
 static constexpr int sourceDefaultTimeout = 1500;
 

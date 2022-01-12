@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "sourceidkeeper.h"
+#include "io-ids/sourceidkeeper.h"
 
 TEST(TEST_ID_GENERATOR, INITIAL_NOT_MINE) {
     SourceIdKeeper keeper;
