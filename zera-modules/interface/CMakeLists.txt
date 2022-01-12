@@ -52,8 +52,10 @@ target_link_libraries(MeasurementModuleInterface
     )
 
 
-# we build a module -> no public headers
+# announce headers - target perspective
 target_include_directories(MeasurementModuleInterface
+    PUBLIC
+    $<INSTALL_INTERFACE:include/zera-modules>
     PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
