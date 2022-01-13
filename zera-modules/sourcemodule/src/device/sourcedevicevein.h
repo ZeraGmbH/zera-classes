@@ -7,8 +7,8 @@
 #include <QUuid>
 #include <QStringList>
 #include "sourcedevicebase.h"
-#include "sourcedevicestatus.h"
 #include "io-interface/iointerfacebase.h"
+#include "json/jsondevicestatus.h"
 #include "json/persistentjsonstate.h"
 
 class SourceVeinInterface;
@@ -54,7 +54,7 @@ private:
     QUuid m_closeUuid;
     bool m_closeRequested = false;
 
-    SourceDeviceStatus  m_deviceStatus;
+    JsonDeviceStatus  m_deviceStatus;
     SourceVeinInterface* m_veinInterface = nullptr;
 
     static bool m_removeDemoByDisconnect;
