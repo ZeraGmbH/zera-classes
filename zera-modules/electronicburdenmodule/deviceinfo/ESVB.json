@@ -1,3 +1,11 @@
 {
-   
+    "Burdentype": {
+        "zj_params": {
+            "type": {
+                "type": "oneof-list",
+                "list": [ "IEC50", "IEC60", "ANSI", "USER 50Hz", "USER 60Hz" ],
+                "default": "IEC50"
+            }
+        }
+    }
 }
