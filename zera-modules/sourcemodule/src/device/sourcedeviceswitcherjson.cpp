@@ -1,8 +1,8 @@
-#include "sourcejsonswitcher.h"
+#include "sourcedeviceswitcherjson.h"
 #include "json/jsonstructureloader.h"
 #include "json/persistentjsonstate.h"
 
-SourceJsonSwitcher::SourceJsonSwitcher(SourceDevice *sourceDevice) :
+SourceDeviceSwitcherJson::SourceDeviceSwitcherJson(SourceDevice *sourceDevice) :
     SourceDeviceObserver(sourceDevice),
     m_sourceDevice(sourceDevice)
 {
@@ -15,17 +15,17 @@ SourceJsonSwitcher::SourceJsonSwitcher(SourceDevice *sourceDevice) :
     m_persistentParamState = new PersistentJsonState(type, name, version);
     m_paramsCurrent.setParams(m_persistentParamState->loadJsonState());
     m_paramsRequested.setParams(m_paramsCurrent.getParams());
-    connect(this, &SourceJsonSwitcher::sigBusyChangedQueued,
-            this, &SourceJsonSwitcher::sigBusyChanged,
+    connect(this, &SourceDeviceSwitcherJson::sigBusyChangedQueued,
+            this, &SourceDeviceSwitcherJson::sigBusyChanged,
             Qt::QueuedConnection);
 }
 
-SourceJsonSwitcher::~SourceJsonSwitcher()
+SourceDeviceSwitcherJson::~SourceDeviceSwitcherJson()
 {
     delete m_outInGenerator;
 }
 
-void SourceJsonSwitcher::switchState(QJsonObject state)
+void SourceDeviceSwitcherJson::switchState(QJsonObject state)
 {
     m_paramsRequested.setParams(state);
     IoCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
@@ -34,19 +34,19 @@ void SourceJsonSwitcher::switchState(QJsonObject state)
     emit sigBusyChangedQueued(true);
 }
 
-void SourceJsonSwitcher::switchOff()
+void SourceDeviceSwitcherJson::switchOff()
 {
     m_paramsRequested.setParams(m_paramsCurrent.getParams());
     m_paramsRequested.setOn(false);
     switchState(m_paramsRequested.getParams());
 }
 
-QJsonObject SourceJsonSwitcher::getCurrParamState()
+QJsonObject SourceDeviceSwitcherJson::getCurrParamState()
 {
     return m_paramsCurrent.getParams();
 }
 
-void SourceJsonSwitcher::updateResponse(IoWorkerCmdPack cmdPack)
+void SourceDeviceSwitcherJson::updateResponse(IoWorkerCmdPack cmdPack)
 {
     if(cmdPack.m_commandType == COMMAND_SWITCH) {
         emit sigBusyChanged(false);

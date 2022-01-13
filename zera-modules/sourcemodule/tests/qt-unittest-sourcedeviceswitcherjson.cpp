@@ -1,7 +1,7 @@
 #include "main-unittest-qt.h"
-#include "qt-unittest-sourcejsonswitcher.h"
+#include "qt-unittest-sourcedeviceswitcherjson.h"
 #include "device/sourcedevice.h"
-#include "device/sourcejsonswitcher.h"
+#include "device/sourcedeviceswitcherjson.h"
 
 static QObject* pSourceDeviceTest = addTest(new SourceJsonSwitcherTest);
 
@@ -15,11 +15,11 @@ void SourceJsonSwitcherTest::signalSwitch()
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 0);
-    SourceJsonSwitcher switcher(&sourceDevice);
+    SourceDeviceSwitcherJson switcher(&sourceDevice);
 
     QJsonObject json = switcher.getCurrParamState();
     int paramChangeCount = 0;
-    connect(&switcher, &SourceJsonSwitcher::sigCurrParamTouched, [&] {
+    connect(&switcher, &SourceDeviceSwitcherJson::sigCurrParamTouched, [&] {
         paramChangeCount++;
     });
 
@@ -34,11 +34,11 @@ void SourceJsonSwitcherTest::twoSignalsSwitchSameTwice()
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 0);
-    SourceJsonSwitcher switcher(&sourceDevice);
+    SourceDeviceSwitcherJson switcher(&sourceDevice);
 
     QJsonObject json = switcher.getCurrParamState();
     int paramChangeCount = 0;
-    connect(&switcher, &SourceJsonSwitcher::sigCurrParamTouched, [&] {
+    connect(&switcher, &SourceDeviceSwitcherJson::sigCurrParamTouched, [&] {
         paramChangeCount++;
     });
 
@@ -53,7 +53,7 @@ static void getBusyToggleCount(bool ioResponseDelay) {
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, ioResponseDelay ? 50 : 0);
-    SourceJsonSwitcher switcher(&sourceDevice);
+    SourceDeviceSwitcherJson switcher(&sourceDevice);
 
     QJsonObject json = switcher.getCurrParamState();
 
@@ -62,7 +62,7 @@ static void getBusyToggleCount(bool ioResponseDelay) {
     switcher.switchState(json);
 
     int busyToggleCount = 0;
-    QObject::connect(&switcher, &SourceJsonSwitcher::sigBusyChanged, [&] (bool busy) {
+    QObject::connect(&switcher, &SourceDeviceSwitcherJson::sigBusyChanged, [&] (bool busy) {
         if(busyToggleCount < countSwitches) {
             QVERIFY(busy);
         }
