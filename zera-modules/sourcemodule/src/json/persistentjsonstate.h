@@ -2,6 +2,7 @@
 #define PERSISTENTJSONSTATE_H
 
 #include "supportedsources.h"
+#include "jsonparamapi.h"
 #include <jsonstatefilepersistence.h>
 
 class PersistentJsonState
@@ -11,8 +12,8 @@ public:
 
     QJsonObject getJsonStructure() const;
 
-    QJsonObject loadJsonState();
-    void saveJsonState(QJsonObject state);
+    JsonParamApi loadJsonState();
+    void saveJsonState(JsonParamApi state);
 private:
     JsonStateFilePersistence m_jsonStatePersistenceHelper;
     QString m_stateFileName;

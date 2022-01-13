@@ -33,9 +33,9 @@ QString SourceDeviceBase::getInterfaceDeviceInfo()
     return m_ioInterface->getDeviceInfo();
 }
 
-void SourceDeviceBase::switchState(QJsonObject state)
+void SourceDeviceBase::switchState(JsonParamApi state)
 {
-    m_paramsRequested.setParams(state);
+    m_paramsRequested = state;
     IoCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
     IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
     if(isDemo()) {
@@ -50,13 +50,13 @@ void SourceDeviceBase::switchState(QJsonObject state)
 void SourceDeviceBase::switchOff()
 {
     m_paramsCurrent.setOn(false);
-    switchState(m_paramsCurrent.getParams());
+    switchState(m_paramsCurrent);
 }
 
 void SourceDeviceBase::handleSourceCmd(IoWorkerCmdPack cmdPack)
 {
     if(cmdPack.passedAll()) {
-        m_paramsCurrent.setParams(m_paramsRequested.getParams());
+        m_paramsCurrent = m_paramsRequested;
     }
 }
 

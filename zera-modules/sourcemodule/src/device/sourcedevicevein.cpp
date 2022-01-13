@@ -13,7 +13,7 @@ SourceDeviceVein::SourceDeviceVein(tIoInterfaceShPtr interface, SupportedSourceT
     SourceDeviceBase(interface, type, name, version)
 {
     m_persistentParamState = new PersistentJsonState(type, name, version);
-    m_paramsCurrent.setParams(m_persistentParamState->loadJsonState());
+    m_paramsCurrent = m_persistentParamState->loadJsonState();
     m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
@@ -61,7 +61,9 @@ void SourceDeviceVein::switchVeinLoad(QJsonObject jsonParamsState)
     m_deviceStatus.clearWarningsErrors();
     m_deviceStatus.setBusy(true);
     setVeinDeviceState(m_deviceStatus.getJsonStatus());
-    switchState(jsonParamsState);
+    JsonParamApi oaramApi;
+    oaramApi.setParams(jsonParamsState);
+    switchState(oaramApi);
 }
 
 QStringList SourceDeviceVein::getLastErrors()
@@ -120,7 +122,7 @@ void SourceDeviceVein::setVeinInterface(SourceVeinInterface *veinInterface)
 
 void SourceDeviceVein::saveState()
 {
-    m_persistentParamState->saveJsonState(m_paramsCurrent.getParams());
+    m_persistentParamState->saveJsonState(m_paramsCurrent);
 }
 
 void SourceDeviceVein::onInterfaceClosed()

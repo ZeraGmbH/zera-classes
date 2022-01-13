@@ -24,7 +24,7 @@ public:
     QString getInterfaceDeviceInfo();
 
 protected:
-    void switchState(QJsonObject state);
+    void switchState(JsonParamApi state);
     void switchOff();
     virtual void handleSourceCmd(IoWorkerCmdPack cmdPack);
 
