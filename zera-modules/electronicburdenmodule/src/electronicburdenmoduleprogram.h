@@ -5,6 +5,7 @@
 #include <vf-cpp-rpc.h>
 #include "basemeasworkprogram.h"
 #include "electronicburdenmoduleconfiguration.h"
+#include "veininterface.h"
 
 class cVeinModuleActvalue;
 class cVeinModuleParameter;
@@ -33,6 +34,7 @@ private:
 
     ElectronicBurdenModule* m_pModule; // the module we live in
     cVeinModuleParameter* m_pVeinDemoTest = nullptr;
+    VeinInterface* m_pVeinInterface = nullptr;
 
 private slots:
 

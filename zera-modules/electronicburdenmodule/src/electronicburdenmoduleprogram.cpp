@@ -32,6 +32,39 @@ void ElectronicBurdenModuleProgram::generateInterface()
     m_pVeinDemoTest->setValidator(new cIntValidator(0, 10));
     connect(m_pVeinDemoTest, &cVeinModuleParameter::sigValueChanged, this, &ElectronicBurdenModuleProgram::newDemoTest);
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoTest; // auto delete / meta-data / scpi
+
+    cVeinModuleActvalue* pVeinAct;
+    cVeinModuleParameter* pVeinParam;
+    cJsonParamValidator *jsonValidator;
+
+    m_pVeinInterface = new VeinInterface;
+    // device info (Don' movit down - our clients need it first!!)
+    pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                        QString("ACT_DeviceInfo"),
+                                        QString("Component with burden info/capabiliities"),
+                                        QJsonObject());
+    m_pVeinInterface->setVeinDeviceInfo(pVeinAct);
+    m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
+
+    pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                        QString("ACT_DeviceState"),
+                                        QString("Component with burden status"),
+                                        QJsonObject());
+    m_pVeinInterface->setVeinDeviceState(pVeinAct);
+    m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
+
+    // device param
+    pVeinParam = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                        key = QString("PAR_BurdenState"),
+                                                        QString("Component all source parameters in JSON format"),
+                                                        QJsonObject());
+    m_pVeinInterface->setVeinDeviceParameter(pVeinParam);
+    //pVeinParam->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
+    jsonValidator = new cJsonParamValidator();
+    m_pVeinInterface->setVeinDeviceParameterValidator(jsonValidator);
+    pVeinParam->setValidator(jsonValidator);
+    m_pModule->veinModuleParameterHash[key] = pVeinParam; // auto delete / meta-data / scpi
+
 }
 
 void ElectronicBurdenModuleProgram::newDemoTest(QVariant val)
