@@ -9,7 +9,8 @@
 
 /*
  * Start cmd worker on external demand
- * Notify observers attached on commnd response
+ * Notify busy state changed
+ * Notify observers attached on command response
  * Keep source information
  * Allow adjustments on demo interfaces
  */
@@ -35,10 +36,14 @@ public:
     bool isDemo() const;
 
 signals:
+    void sigBusyChanged(bool busy);
     void sigInterfaceDisconnected();
 
 private slots:
     void onSourceCmdFinished(IoWorkerCmdPack cmdPack);
+
+signals:
+    void sigBusyChangedQueued(bool busy);
 
 private:
     tIoInterfaceShPtr m_ioInterface;

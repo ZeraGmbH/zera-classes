@@ -15,9 +15,6 @@ SourceDeviceSwitcherJson::SourceDeviceSwitcherJson(SourceDevice *sourceDevice) :
     m_persistentParamState = new PersistentJsonState(type, name, version);
     m_paramsCurrent = m_persistentParamState->loadJsonState();
     m_paramsRequested = m_paramsCurrent;
-    connect(this, &SourceDeviceSwitcherJson::sigBusyChangedQueued,
-            this, &SourceDeviceSwitcherJson::sigBusyChanged,
-            Qt::QueuedConnection);
 }
 
 SourceDeviceSwitcherJson::~SourceDeviceSwitcherJson()
@@ -31,7 +28,6 @@ void SourceDeviceSwitcherJson::switchState(JsonParamApi paramState)
     IoCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
     IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
     m_sourceDevice->startTransaction(workerPack);
-    emit sigBusyChangedQueued(true);
 }
 
 void SourceDeviceSwitcherJson::switchOff()
@@ -49,7 +45,6 @@ JsonParamApi SourceDeviceSwitcherJson::getCurrParamState()
 void SourceDeviceSwitcherJson::updateResponse(IoWorkerCmdPack cmdPack)
 {
     if(cmdPack.m_commandType == COMMAND_SWITCH) {
-        emit sigBusyChanged(false);
         if(cmdPack.passedAll()) {
             m_paramsCurrent = m_paramsRequested;
             emit sigCurrParamTouched();

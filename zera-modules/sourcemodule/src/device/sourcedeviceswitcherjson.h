@@ -12,7 +12,6 @@ class PersistentJsonState;
 /*
  * Actor/Observer on source device
  * Switch on/off
- * notify busy changed
  * notify current state changed
  */
 class SourceDeviceSwitcherJson : public SourceDeviceObserver
@@ -28,7 +27,6 @@ public:
     JsonParamApi getCurrParamState();
 signals:
     void sigCurrParamTouched();
-    void sigBusyChanged(bool busy);
 
 protected:
     virtual void updateResponse(IoWorkerCmdPack cmdPack) override;
@@ -41,9 +39,6 @@ private:
 
     JsonParamApi m_paramsRequested;
     JsonParamApi m_paramsCurrent;
-
-signals:
-    void sigBusyChangedQueued(bool busy);
 };
 
 #endif // SOURCEDEVICESWITCHERJSON_H
