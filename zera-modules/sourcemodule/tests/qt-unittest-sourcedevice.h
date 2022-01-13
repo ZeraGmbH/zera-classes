@@ -20,6 +20,9 @@ private slots:
     void multipleCmdsDifferentIds();
     void observerReceiveCount();
     void observerReceiveId();
+
+    void busyToggledOnSwitch();
+    void ioLastLongerThanLifetime();
 };
 
 #endif // QTUNITTESTSOURCEDEVICE_H

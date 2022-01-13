@@ -2,6 +2,8 @@
 #include "qt-unittest-sourcedevice.h"
 #include "device/sourcedevice.h"
 #include "device/sourcedeviceobserver.h"
+#include "json/jsonstructureloader.h"
+#include <zera-json-params-state.h>
 
 static QObject* pSourceDeviceTest = addTest(new SourceDeviceTest);
 
@@ -121,5 +123,51 @@ void SourceDeviceTest::observerReceiveId()
     QTest::qWait(10);
     QCOMPARE(testObserver1.observerReceiveId, id2);
     QCOMPARE(testObserver2.observerReceiveId, id2);
+}
+
+static void getBusyToggleCount(bool ioResponseDelay) {
+    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    interface->open("");
+    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    sourceDevice.setDemoResponseDelay(false, ioResponseDelay ? 50 : 0);
+
+    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(SOURCE_MT_COMMON, "", "");
+    IoPacketGenerator ioPackGen = IoPacketGenerator(paramStructure);
+
+    ZeraJsonParamsState jsonParamsState(paramStructure);
+    jsonParamsState.setStructure(paramStructure);
+    JsonParamApi paramApi;
+    paramApi.setParams(jsonParamsState.getDefaultJsonState());
+    IoCommandPacket cmdPack = ioPackGen.generateOnOffPacket(paramApi);
+    IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
+
+    int countSwitches = 2;
+    sourceDevice.startTransaction(workerPack);
+    sourceDevice.startTransaction(workerPack);
+
+    int busyToggleCount = 0;
+    QObject::connect(&sourceDevice, &SourceDevice::sigBusyChanged, [&] (bool busy) {
+        if(busyToggleCount < countSwitches) {
+            QVERIFY(busy);
+        }
+        else {
+            QVERIFY(!busy);
+        }
+        busyToggleCount++;
+    });
+
+    QTest::qWait(10);
+    QCOMPARE(busyToggleCount, countSwitches +(!ioResponseDelay ? countSwitches : 0) );
+}
+
+
+void SourceDeviceTest::busyToggledOnSwitch()
+{
+    getBusyToggleCount(false);
+}
+
+void SourceDeviceTest::ioLastLongerThanLifetime()
+{
+    getBusyToggleCount(true);
 }
 

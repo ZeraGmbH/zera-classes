@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class SourceJsonSwitcherTest : public QObject
+class SourceDeviceSwitcherJsonTest : public QObject
 {
     Q_OBJECT
 
@@ -12,9 +12,6 @@ private slots:
 
     void signalSwitch();
     void twoSignalsSwitchSameTwice();
-    void busyToggledOnSwitch();
-
-    void ioLastLongerThanLifetime();
 };
 
 #endif // SOURCEJSONSWITCHERTEST_H

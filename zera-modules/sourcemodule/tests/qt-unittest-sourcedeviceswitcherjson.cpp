@@ -3,13 +3,13 @@
 #include "device/sourcedevice.h"
 #include "device/sourcedeviceswitcherjson.h"
 
-static QObject* pSourceDeviceTest = addTest(new SourceJsonSwitcherTest);
+static QObject* pSourceDeviceTest = addTest(new SourceDeviceSwitcherJsonTest);
 
-void SourceJsonSwitcherTest::init()
+void SourceDeviceSwitcherJsonTest::init()
 {
 }
 
-void SourceJsonSwitcherTest::signalSwitch()
+void SourceDeviceSwitcherJsonTest::signalSwitch()
 {
     tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
@@ -28,7 +28,7 @@ void SourceJsonSwitcherTest::signalSwitch()
     QCOMPARE(paramChangeCount, 1);
 }
 
-void SourceJsonSwitcherTest::twoSignalsSwitchSameTwice()
+void SourceDeviceSwitcherJsonTest::twoSignalsSwitchSameTwice()
 {
     tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
@@ -47,42 +47,3 @@ void SourceJsonSwitcherTest::twoSignalsSwitchSameTwice()
     QTest::qWait(10);
     QCOMPARE(paramChangeCount, 2);
 }
-
-static void getBusyToggleCount(bool ioResponseDelay) {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
-    interface->open("");
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
-    sourceDevice.setDemoResponseDelay(false, ioResponseDelay ? 50 : 0);
-    SourceDeviceSwitcherJson switcher(&sourceDevice);
-
-    JsonParamApi paramState = switcher.getCurrParamState();
-
-    int countSwitches = 2;
-    switcher.switchState(paramState);
-    switcher.switchState(paramState);
-
-    int busyToggleCount = 0;
-    QObject::connect(&switcher, &SourceDeviceSwitcherJson::sigBusyChanged, [&] (bool busy) {
-        if(busyToggleCount < countSwitches) {
-            QVERIFY(busy);
-        }
-        else {
-            QVERIFY(!busy);
-        }
-        busyToggleCount++;
-    });
-
-    QTest::qWait(10);
-    QCOMPARE(busyToggleCount, countSwitches +(!ioResponseDelay ? countSwitches : 0) );
-}
-
-void SourceJsonSwitcherTest::busyToggledOnSwitch()
-{
-    getBusyToggleCount(false);
-}
-
-void SourceJsonSwitcherTest::ioLastLongerThanLifetime()
-{
-    getBusyToggleCount(true);
-}
-
