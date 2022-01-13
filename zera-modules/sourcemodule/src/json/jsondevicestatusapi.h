@@ -3,10 +3,10 @@
 
 #include <QJsonObject>
 
-class JsonDeviceStatus
+class JsonDeviceStatusApi
 {
 public:
-    JsonDeviceStatus();
+    JsonDeviceStatusApi();
 
     void reset();
     void clearWarningsErrors();
