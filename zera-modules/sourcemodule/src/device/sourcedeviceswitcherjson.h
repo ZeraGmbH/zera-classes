@@ -1,5 +1,5 @@
-#ifndef SOURCEJSONSWITCHER_H
-#define SOURCEJSONSWITCHER_H
+#ifndef SOURCEDEVICESWITCHERJSON_H
+#define SOURCEDEVICESWITCHERJSON_H
 
 #include "sourcedeviceobserver.h"
 #include "sourcedevice.h"
@@ -15,12 +15,12 @@ class PersistentJsonState;
  * notify busy changed
  * notify current state changed
  */
-class SourceJsonSwitcher : public SourceDeviceObserver
+class SourceDeviceSwitcherJson : public SourceDeviceObserver
 {
     Q_OBJECT
 public:
-    SourceJsonSwitcher(SourceDevice* sourceDevice);
-    virtual ~SourceJsonSwitcher();
+    SourceDeviceSwitcherJson(SourceDevice* sourceDevice);
+    virtual ~SourceDeviceSwitcherJson();
 
     void switchState(QJsonObject state);
     void switchOff();
@@ -46,4 +46,4 @@ signals:
     void sigBusyChangedQueued(bool busy);
 };
 
-#endif // SOURCEJSONSWITCHER_H
+#endif // SOURCEDEVICESWITCHERJSON_H
