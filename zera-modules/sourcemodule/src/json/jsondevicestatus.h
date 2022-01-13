@@ -1,12 +1,12 @@
-#ifndef CSOURCEDEVICESTATUS_H
-#define CSOURCEDEVICESTATUS_H
+#ifndef JSONDEVICESTATUS_H
+#define JSONDEVICESTATUS_H
 
 #include <QJsonObject>
 
-class SourceDeviceStatus
+class JsonDeviceStatus
 {
 public:
-    SourceDeviceStatus();
+    JsonDeviceStatus();
 
     void reset();
     void clearWarningsErrors();
@@ -28,4 +28,4 @@ private:
     QJsonObject m_jsonStatus;
 };
 
-#endif // CSOURCEDEVICESTATUS_H
+#endif // JSONDEVICESTATUS_H

@@ -1,16 +1,16 @@
-#include "sourcedevicestatus.h"
+#include "jsondevicestatus.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QVariant>
 #include <QStringList>
 
-SourceDeviceStatus::SourceDeviceStatus()
+JsonDeviceStatus::JsonDeviceStatus()
 {
     reset();
 }
 
-void SourceDeviceStatus::reset()
+void JsonDeviceStatus::reset()
 {
     QString deviceInfoFileName = QStringLiteral("://devicestatus/DefaultDeviceStatus.json");
     QFile deviceInfoFile(deviceInfoFileName);
@@ -26,59 +26,59 @@ static const QString keyErrors = "errors";
 static const QString keyWarnings = "warnings";
 static const QString keyDeviceInfo = "deviceinfo";
 
-void SourceDeviceStatus::clearWarningsErrors()
+void JsonDeviceStatus::clearWarningsErrors()
 {
     QJsonArray emptyArr;
     m_jsonStatus[keyErrors] = emptyArr;
     m_jsonStatus[keyWarnings] = emptyArr;
 }
 
-void SourceDeviceStatus::setBusy(bool busy)
+void JsonDeviceStatus::setBusy(bool busy)
 {
     m_jsonStatus[keyBusy] = busy;
 }
 
-void SourceDeviceStatus::addError(const QString error)
+void JsonDeviceStatus::addError(const QString error)
 {
     appendToArray(keyErrors, error);
 }
 
-void SourceDeviceStatus::addWarning(const QString warning)
+void JsonDeviceStatus::addWarning(const QString warning)
 {
     appendToArray(keyWarnings, warning);
 }
 
-void SourceDeviceStatus::setDeviceInfo(const QString strDeviceInfo)
+void JsonDeviceStatus::setDeviceInfo(const QString strDeviceInfo)
 {
     m_jsonStatus[keyDeviceInfo] = strDeviceInfo;
 }
 
-const QJsonObject &SourceDeviceStatus::getJsonStatus()
+const QJsonObject &JsonDeviceStatus::getJsonStatus()
 {
     return m_jsonStatus;
 }
 
-bool SourceDeviceStatus::getBusy()
+bool JsonDeviceStatus::getBusy()
 {
     return m_jsonStatus[keyBusy].toBool();
 }
 
-QStringList SourceDeviceStatus::getErrors()
+QStringList JsonDeviceStatus::getErrors()
 {
     return getArray(keyErrors);
 }
 
-QStringList SourceDeviceStatus::getWarnings()
+QStringList JsonDeviceStatus::getWarnings()
 {
     return getArray(keyWarnings);
 }
 
-QString SourceDeviceStatus::getDeviceInfo()
+QString JsonDeviceStatus::getDeviceInfo()
 {
     return m_jsonStatus[keyDeviceInfo].toString();
 }
 
-QStringList SourceDeviceStatus::getArray(QString key)
+QStringList JsonDeviceStatus::getArray(QString key)
 {
     QStringList strList;
     auto arr = m_jsonStatus[key].toArray();
@@ -89,7 +89,7 @@ QStringList SourceDeviceStatus::getArray(QString key)
     return strList;
 }
 
-void SourceDeviceStatus::appendToArray(QString key, QString value)
+void JsonDeviceStatus::appendToArray(QString key, QString value)
 {
     QJsonArray arr = m_jsonStatus[key].toArray();
     arr.append(value);
