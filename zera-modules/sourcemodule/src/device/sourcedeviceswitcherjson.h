@@ -22,10 +22,10 @@ public:
     SourceDeviceSwitcherJson(SourceDevice* sourceDevice);
     virtual ~SourceDeviceSwitcherJson();
 
-    void switchState(QJsonObject state);
+    void switchState(JsonParamApi paramState);
     void switchOff();
 
-    QJsonObject getCurrParamState();
+    JsonParamApi getCurrParamState();
 signals:
     void sigCurrParamTouched();
     void sigBusyChanged(bool busy);
