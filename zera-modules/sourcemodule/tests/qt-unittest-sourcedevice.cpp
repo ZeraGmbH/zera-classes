@@ -57,12 +57,12 @@ void SourceDeviceTest::disconnectSignal()
     QCOMPARE(countDisconnectReceived, 1);
 }
 
-static IoWorkerCmdPack createWorkingCmdPack()
+static IoWorkerCmdPack createWorkingCmdPack(SourceDevice *source)
 {
-    IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
+    IoPacketGenerator *ioPackGenerator = source->getIoPacketGenerator();
     JsonParamApi params;
     params.setOn(false);
-    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    IoCommandPacket cmdPack = ioPackGenerator->generateOnOffPacket(params);
     return IoWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
@@ -72,8 +72,8 @@ void SourceDeviceTest::multipleCmdsDifferentIds()
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
-    int id1 = sourceDevice.startTransaction(createWorkingCmdPack());
-    int id2 = sourceDevice.startTransaction(createWorkingCmdPack());
+    int id1 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
+    int id2 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
     QVERIFY(id1 != id2);
 }
 
@@ -98,8 +98,8 @@ void SourceDeviceTest::observerReceiveCount()
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
 
-    sourceDevice.startTransaction(createWorkingCmdPack());
-    sourceDevice.startTransaction(createWorkingCmdPack());
+    sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
+    sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
     QTest::qWait(10); // source's worker requires event loop
     QCOMPARE(testObserver1.observerReceiveCount, 2);
     QCOMPARE(testObserver2.observerReceiveCount, 2);
@@ -114,12 +114,12 @@ void SourceDeviceTest::observerReceiveId()
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
 
-    int id1 = sourceDevice.startTransaction(createWorkingCmdPack());
+    int id1 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
     QTest::qWait(10);
     QCOMPARE(testObserver1.observerReceiveId, id1);
     QCOMPARE(testObserver2.observerReceiveId, id1);
 
-    int id2 = sourceDevice.startTransaction(createWorkingCmdPack());
+    int id2 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
     QTest::qWait(10);
     QCOMPARE(testObserver1.observerReceiveId, id2);
     QCOMPARE(testObserver2.observerReceiveId, id2);
