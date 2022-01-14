@@ -32,7 +32,7 @@ IoCommandPacket IoPacketGenerator::generateOnOffPacket(JsonParamApi requestedPar
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
     IoCommandPacket commandPack;
-    commandPack.m_commandType = COMMAND_SWITCH;
+    commandPack.m_commandType = requestedParams.getOn() ? COMMAND_SWITCH_ON : COMMAND_SWITCH_OFF;
     commandPack.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
     for(auto &actionType : actionsTypeList) {
         commandPack.m_outInList.append(generateListForAction(actionType));

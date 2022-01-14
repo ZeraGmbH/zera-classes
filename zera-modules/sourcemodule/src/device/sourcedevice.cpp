@@ -84,7 +84,7 @@ bool SourceDevice::isDemo() const
 
 void SourceDevice::onSourceCmdFinished(IoWorkerCmdPack cmdPack)
 {
-    if(cmdPack.m_commandType == COMMAND_SWITCH) {
+    if(cmdPack.isSwitchPack()) {
         emit sigBusyChanged(false);
     }
     notifyObservers(cmdPack);
