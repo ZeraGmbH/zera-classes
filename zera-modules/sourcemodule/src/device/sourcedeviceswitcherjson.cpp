@@ -21,7 +21,7 @@ SourceDeviceSwitcherJson::~SourceDeviceSwitcherJson()
 void SourceDeviceSwitcherJson::switchState(JsonParamApi paramState)
 {
     m_paramsRequested = paramState;
-    IoCommandPacket cmdPack = m_sourceDevice->getIoPacketGenerator()->generateOnOffPacket(m_paramsRequested);
+    IoCommandPacket cmdPack = m_sourceDevice->getIoPacketGenerator().generateOnOffPacket(m_paramsRequested);
     IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
     m_sourceDevice->startTransaction(workerPack);
 }

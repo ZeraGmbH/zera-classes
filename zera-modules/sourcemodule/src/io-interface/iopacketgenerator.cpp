@@ -16,15 +16,14 @@ bool IoSingleOutIn::operator ==(const IoSingleOutIn &other)
             m_bytesExpected == other.m_bytesExpected;
 }
 
-IoPacketGenerator::IoPacketGenerator(QJsonObject jsonParamsStructure) :
-    m_jsonStructApi(new JsonStructApi(jsonParamsStructure)),
-    m_ioPrefix(m_jsonStructApi->getIoPrefix())
+IoPacketGenerator::IoPacketGenerator(JsonStructApi jsonStructApi) :
+    m_jsonStructApi(jsonStructApi),
+    m_ioPrefix(m_jsonStructApi.getIoPrefix())
 {
 }
 
 IoPacketGenerator::~IoPacketGenerator()
 {
-    delete m_jsonStructApi;
 }
 
 IoCommandPacket IoPacketGenerator::generateOnOffPacket(JsonParamApi requestedParams)
@@ -102,7 +101,7 @@ tIoOutInList IoPacketGenerator::generateRMSAndAngleUList()
 
     double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
-        if(phase < m_jsonStructApi->getCountUPhases()) {
+        if(phase < m_jsonStructApi.getCountUPhases()) {
             rmsU[phase] = m_paramsRequested.getRms(phaseType::U, phase);
             angleU[phase] = m_paramsRequested.getAngle(phaseType::U, phase);
         }
@@ -131,7 +130,7 @@ tIoOutInList IoPacketGenerator::generateRMSAndAngleIList()
 
     double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
-        if(phase < m_jsonStructApi->getCountIPhases()) {
+        if(phase < m_jsonStructApi.getCountIPhases()) {
             rmsI[phase] = m_paramsRequested.getRms(phaseType::I, phase);
             angleI[phase] = m_paramsRequested.getAngle(phaseType::I, phase);
         }
@@ -160,8 +159,8 @@ tIoOutInList IoPacketGenerator::generateSwitchPhasesList()
     bytesSend = m_ioPrefix + "UI";
     bool globalOn = m_paramsRequested.getOn();
     bool bPhaseOn = false;
-    int phaseCountU = m_jsonStructApi->getCountUPhases();
-    int phaseCountI = m_jsonStructApi->getCountIPhases();
+    int phaseCountU = m_jsonStructApi.getCountUPhases();
+    int phaseCountI = m_jsonStructApi.getCountIPhases();
     // voltage
     for(int phase=0; phase<3; phase++) {
         bool phaseAvail = phase < phaseCountU;

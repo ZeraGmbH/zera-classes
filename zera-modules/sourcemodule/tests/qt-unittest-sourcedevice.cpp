@@ -59,10 +59,10 @@ void SourceDeviceTest::disconnectSignal()
 
 static IoWorkerCmdPack createWorkingCmdPack(SourceDevice *source)
 {
-    IoPacketGenerator *ioPackGenerator = source->getIoPacketGenerator();
+    IoPacketGenerator ioPackGenerator = source->getIoPacketGenerator();
     JsonParamApi params;
     params.setOn(false);
-    IoCommandPacket cmdPack = ioPackGenerator->generateOnOffPacket(params);
+    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
     return IoWorkerConverter::commandPackToWorkerPack(cmdPack);
 }
 
