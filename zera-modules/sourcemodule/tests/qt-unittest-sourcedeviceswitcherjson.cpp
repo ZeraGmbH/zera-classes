@@ -17,9 +17,9 @@ void SourceDeviceSwitcherJsonTest::signalSwitch()
     sourceDevice.setDemoResponseDelay(false, 0);
     SourceDeviceSwitcherJson switcher(&sourceDevice);
 
-    JsonParamApi paramState = switcher.getCurrParamState();
+    JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
-    connect(&switcher, &SourceDeviceSwitcherJson::sigCurrParamTouched, [&] {
+    connect(&switcher, &SourceDeviceSwitcherJson::sigSwitchFinished, [&] {
         paramChangeCount++;
     });
 
@@ -36,9 +36,9 @@ void SourceDeviceSwitcherJsonTest::twoSignalsSwitchSameTwice()
     sourceDevice.setDemoResponseDelay(false, 0);
     SourceDeviceSwitcherJson switcher(&sourceDevice);
 
-    JsonParamApi paramState = switcher.getCurrParamState();
+    JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
-    connect(&switcher, &SourceDeviceSwitcherJson::sigCurrParamTouched, [&] {
+    connect(&switcher, &SourceDeviceSwitcherJson::sigSwitchFinished, [&] {
         paramChangeCount++;
     });
 

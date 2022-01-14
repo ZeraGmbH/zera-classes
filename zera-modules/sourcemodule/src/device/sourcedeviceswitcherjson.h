@@ -13,7 +13,7 @@ class PersistentJsonState;
  * Actor/Observer on source device
  * Switch on/off
  * keep switch state persistent
- * notify current state changed
+ * notify switch finished
  */
 class SourceDeviceSwitcherJson : public SourceDeviceObserver
 {
@@ -25,9 +25,9 @@ public:
     void switchState(JsonParamApi paramState);
     void switchOff();
 
-    JsonParamApi getCurrParamState();
+    JsonParamApi getCurrLoadState();
 signals:
-    void sigCurrParamTouched();
+    void sigSwitchFinished();
 
 protected:
     virtual void updateResponse(IoWorkerCmdPack cmdPack) override;
