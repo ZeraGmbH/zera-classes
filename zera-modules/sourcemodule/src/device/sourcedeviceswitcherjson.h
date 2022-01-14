@@ -12,6 +12,7 @@ class PersistentJsonState;
 /*
  * Actor/Observer on source device
  * Switch on/off
+ * keep switch state persistent
  * notify current state changed
  */
 class SourceDeviceSwitcherJson : public SourceDeviceObserver
