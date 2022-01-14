@@ -33,7 +33,7 @@ void SourceDeviceSwitcherJson::switchOff()
     switchState(m_paramsRequested);
 }
 
-JsonParamApi SourceDeviceSwitcherJson::getCurrParamState()
+JsonParamApi SourceDeviceSwitcherJson::getCurrLoadState()
 {
     return m_paramsCurrent;
 }
@@ -44,7 +44,7 @@ void SourceDeviceSwitcherJson::updateResponse(IoWorkerCmdPack cmdPack)
         if(cmdPack.passedAll()) {
             m_paramsCurrent = m_paramsRequested;
             m_persistentParamState->saveJsonState(m_paramsCurrent);
-            emit sigCurrParamTouched();
+            emit sigSwitchFinished();
         }
     }
 }
