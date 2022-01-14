@@ -23,6 +23,11 @@ void IoWorkerCmdPack::evalAll()
     m_bPassedAll = pass;
 }
 
+bool IoWorkerCmdPack::isSwitchPack()
+{
+    return m_commandType == COMMAND_SWITCH_ON || m_commandType == COMMAND_SWITCH_OFF;
+}
+
 bool IoWorkerCmdPack::operator ==(const IoWorkerCmdPack &other)
 {
     return  m_workerId == other.m_workerId &&

@@ -28,6 +28,7 @@ class IoWorkerCmdPack
 public:
     bool passedAll() const;
     void evalAll();
+    bool isSwitchPack();
 
     bool operator == (const IoWorkerCmdPack& other);
 

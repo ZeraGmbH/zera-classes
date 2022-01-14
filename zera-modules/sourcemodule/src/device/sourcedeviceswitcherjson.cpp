@@ -40,7 +40,7 @@ JsonParamApi SourceDeviceSwitcherJson::getCurrParamState()
 
 void SourceDeviceSwitcherJson::updateResponse(IoWorkerCmdPack cmdPack)
 {
-    if(cmdPack.m_commandType == COMMAND_SWITCH) {
+    if(cmdPack.isSwitchPack()) {
         if(cmdPack.passedAll()) {
             m_paramsCurrent = m_paramsRequested;
             emit sigCurrParamTouched();

@@ -8,7 +8,8 @@
 
 enum SourceCommandTypes { // don't forget unittest on add
     COMMAND_UNDEFINED = 0,
-    COMMAND_SWITCH,
+    COMMAND_SWITCH_ON,
+    COMMAND_SWITCH_OFF,
     COMMAND_STATE_POLL,
     COMMAND_UNDEF_BOTTOM
 };

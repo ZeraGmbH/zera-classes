@@ -93,12 +93,21 @@ TEST(TEST_PACKET_GENERATIOR, PACK_GENERATIR_NOT_INVENTING) {
     }
 }
 
-TEST(TEST_PACKET_GENERATIOR, SWITCH_PACKET_SPECIFICS) {
+TEST(TEST_PACKET_GENERATIOR, SWITCH_OFF_PACKET_SPECIFICS) {
     IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
     JsonParamApi params;
     params.setOn(false);
     IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    EXPECT_EQ(cmdPack.m_commandType, COMMAND_SWITCH);
+    EXPECT_EQ(cmdPack.m_commandType, COMMAND_SWITCH_OFF);
+    EXPECT_EQ(cmdPack.m_errorBehavior, BEHAVE_STOP_ON_ERROR);
+}
+
+TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
+    IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
+    JsonParamApi params;
+    params.setOn(true);
+    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
+    EXPECT_EQ(cmdPack.m_commandType, COMMAND_SWITCH_ON);
     EXPECT_EQ(cmdPack.m_errorBehavior, BEHAVE_STOP_ON_ERROR);
 }
 
