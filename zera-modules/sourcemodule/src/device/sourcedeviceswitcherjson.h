@@ -35,7 +35,6 @@ private:
     SourceDevice* m_sourceDevice;
 
     PersistentJsonState* m_persistentParamState;
-    IoPacketGenerator* m_outInGenerator = nullptr;
 
     JsonParamApi m_paramsRequested;
     JsonParamApi m_paramsCurrent;

@@ -1,5 +1,4 @@
 #include "sourcedeviceswitcherjson.h"
-#include "json/jsonstructureloader.h"
 #include "json/persistentjsonstate.h"
 
 SourceDeviceSwitcherJson::SourceDeviceSwitcherJson(SourceDevice *sourceDevice) :
@@ -9,9 +8,7 @@ SourceDeviceSwitcherJson::SourceDeviceSwitcherJson(SourceDevice *sourceDevice) :
     SupportedSourceTypes type = sourceDevice->getType();
     QString name = sourceDevice->getName();
     QString version = sourceDevice->getVersion();
-    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(
-                type, name, version);
-    m_outInGenerator = new IoPacketGenerator(paramStructure);
+
     m_persistentParamState = new PersistentJsonState(type, name, version);
     m_paramsCurrent = m_persistentParamState->loadJsonState();
     m_paramsRequested = m_paramsCurrent;
@@ -19,13 +16,12 @@ SourceDeviceSwitcherJson::SourceDeviceSwitcherJson(SourceDevice *sourceDevice) :
 
 SourceDeviceSwitcherJson::~SourceDeviceSwitcherJson()
 {
-    delete m_outInGenerator;
 }
 
 void SourceDeviceSwitcherJson::switchState(JsonParamApi paramState)
 {
     m_paramsRequested = paramState;
-    IoCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
+    IoCommandPacket cmdPack = m_sourceDevice->getIoPacketGenerator()->generateOnOffPacket(m_paramsRequested);
     IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
     m_sourceDevice->startTransaction(workerPack);
 }
