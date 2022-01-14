@@ -4,15 +4,12 @@
 
 SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     m_ioInterface(interface),
+    m_outInGenerator(JsonStructureLoader::loadJsonStructure(type, name, version)),
     m_type(type),
     m_name(name),
     m_version(version)
 {
     m_sourceIoWorker.setIoInterface(interface);
-
-    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(
-                type, name, version);
-    m_outInGenerator = new IoPacketGenerator(paramStructure);
 
     connect(&m_sourceIoWorker, &IoWorker::sigCmdFinished,
             this, &SourceDevice::onSourceCmdFinished);
@@ -26,7 +23,6 @@ SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes typ
 
 SourceDevice::~SourceDevice()
 {
-    delete m_outInGenerator;
 }
 
 int SourceDevice::startTransaction(const IoWorkerCmdPack &workerPack)
@@ -52,7 +48,7 @@ void SourceDevice::setDemoResponseDelay(bool followsTimeout, int fixedMs)
     m_demoDelayFixedMs = fixedMs;
 }
 
-IoPacketGenerator *SourceDevice::getIoPacketGenerator()
+IoPacketGenerator SourceDevice::getIoPacketGenerator()
 {
     return m_outInGenerator;
 }

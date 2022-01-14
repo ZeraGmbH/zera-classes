@@ -29,7 +29,7 @@ public:
     void setDemoResponseDelay(bool followsTimeout, int fixedMs);
 
     // getter
-    IoPacketGenerator *getIoPacketGenerator();
+    IoPacketGenerator getIoPacketGenerator();
     SupportedSourceTypes getType() const;
     QString getName() const;
     QString getVersion() const;
@@ -50,7 +50,7 @@ private:
     tIoInterfaceShPtr m_ioInterface;
     IoWorker m_sourceIoWorker;
 
-    IoPacketGenerator* m_outInGenerator = nullptr;
+    IoPacketGenerator m_outInGenerator;
 
     SupportedSourceTypes m_type;
     QString m_name;

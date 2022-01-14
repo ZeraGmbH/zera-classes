@@ -65,7 +65,7 @@ public:
 class IoPacketGenerator
 {
 public:
-    IoPacketGenerator(QJsonObject jsonParamsStructure);
+    IoPacketGenerator(JsonStructApi jsonStructApi);
     ~IoPacketGenerator();
 
     // single
@@ -83,7 +83,7 @@ private:
     tIoOutInList generateQueryStatusList();
     tIoOutInList generateQueryActualList();
 
-    JsonStructApi* m_jsonStructApi = nullptr;
+    JsonStructApi m_jsonStructApi;
     JsonParamApi m_paramsRequested;
 
     QByteArray m_ioPrefix;
