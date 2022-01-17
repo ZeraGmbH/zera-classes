@@ -150,7 +150,7 @@ void IoInterfaceTest::demoResponseList()
     tIoInterfaceShPtr interface = createOpenDemoInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     QList<QByteArray> testResponses = QList<QByteArray>() << "0\r" << "1\r" << "2\r";
-    demoInterface->setResponses(testResponses);
+    demoInterface->appendResponses(testResponses);
 
     interface->sendAndReceive(QByteArray(), &m_receivedData);
     QTest::qWait(10); // one I/O at a time
@@ -169,7 +169,7 @@ void IoInterfaceTest::demoResponseListDelay()
     tIoInterfaceShPtr interface = createOpenDemoInterface(10);
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     QList<QByteArray> testResponses = QList<QByteArray>() << "0\r" << "1\r" << "2\r";
-    demoInterface->setResponses(testResponses);
+    demoInterface->appendResponses(testResponses);
 
     interface->sendAndReceive(QByteArray(), &m_receivedData);
     QTest::qWait(50); // one I/O at a time

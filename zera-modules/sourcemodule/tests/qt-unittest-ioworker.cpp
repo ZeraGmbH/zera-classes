@@ -195,7 +195,7 @@ void IoWorkerTest::testStopOnFirstError()
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR);
     constexpr int errorIoNumber = 2;
     QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber);
-    demoInterface->setResponses(responseList);
+    demoInterface->appendResponses(responseList);
     worker.enqueueAction(workCmdPack);
     QTest::qWait(100);
 
@@ -230,7 +230,7 @@ void IoWorkerTest::testContinueOnError()
     adjustWorkCmdPack(workCmdPack, BEHAVE_CONTINUE_ON_ERROR);
     constexpr int errorIoNumber = 2;
     QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber);
-    demoInterface->setResponses(responseList);
+    demoInterface->appendResponses(responseList);
     worker.enqueueAction(workCmdPack);
     QTest::qWait(100);
 
