@@ -208,7 +208,7 @@ void IoWorkerTest::testStopOnFirstError()
     }
     // invalid data received
     QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_dataReceived, responseList[errorIoNumber]);
-    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_IoEval, IoWorkerEntry::EVAL_FAIL);
+    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_IoEval, IoWorkerEntry::EVAL_WRONG_ANSWER);
     // no data received
     for(int notRunIo = errorIoNumber+1; notRunIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++notRunIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_dataReceived, "");
@@ -242,7 +242,7 @@ void IoWorkerTest::testContinueOnError()
             QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, IoWorkerEntry::EVAL_PASS);
         }
         else {
-            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, IoWorkerEntry::EVAL_FAIL);
+            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, IoWorkerEntry::EVAL_WRONG_ANSWER);
         }
     }
 }
@@ -406,6 +406,26 @@ void IoWorkerTest::testTwoPacketMultipleIoOK()
     evalNotificationCount(2, outInCount, 0, 0);
 }
 
+void IoWorkerTest::timeoutDetected()
+{
+    tIoInterfaceShPtr interface = createOpenInterface();
+    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    demoInterface->setResponseDelay(false, 10);
+    IoWorker worker;
+    worker.setIoInterface(interface);
+    IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
+    int finishReceived = 0;
+    connect(&worker, &IoWorker::sigCmdFinished, [&](IoWorkerCmdPack cmdToFinish) {
+        QVERIFY(cmdToFinish.m_workerIOList.count() > 0);
+        // only first I/O is executed
+        QCOMPARE(cmdToFinish.m_workerIOList[0].m_IoEval, IoWorkerEntry::EVAL_NO_ANSWER);
+        finishReceived++;
+    });
+    worker.enqueueAction(workCmdPack);
+    QTest::qWait(30);
+    QVERIFY(finishReceived > 0);
+}
+
 
 tIoInterfaceShPtr IoWorkerTest::createOpenInterface()
 {
@@ -453,8 +473,11 @@ void IoWorkerTest::evalNotificationCount(int cmdPassedExpected, int passExpected
             case IoWorkerEntry::EVAL_PASS:
                 passCount++;
                 break;
-            case IoWorkerEntry::EVAL_FAIL:
+            case IoWorkerEntry::EVAL_WRONG_ANSWER:
                 failCount++;
+                break;
+            // timeout has an explicit test
+            case IoWorkerEntry::EVAL_NO_ANSWER:
                 break;
             }
         }

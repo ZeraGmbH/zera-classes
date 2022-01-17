@@ -14,7 +14,8 @@ public:
     QByteArray m_dataReceived;
     enum {
         EVAL_UNKNOWN = 0,
-        EVAL_FAIL,
+        EVAL_NO_ANSWER,
+        EVAL_WRONG_ANSWER,
         EVAL_PASS
     } m_IoEval = EVAL_UNKNOWN;
     bool operator == (const IoWorkerEntry& other);

@@ -42,6 +42,8 @@ private slots:
     void testOnePacketMultipleIoOK();
     void testTwoPacketMultipleIoOK();
 
+    void timeoutDetected();
+
 private:
     static tIoInterfaceShPtr createOpenInterface();
     static IoWorkerCmdPack generateSwitchCommands(bool on);
