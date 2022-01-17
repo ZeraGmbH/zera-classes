@@ -23,7 +23,7 @@ void IoWorkerCmdPack::evalAll()
     m_bPassedAll = pass;
 }
 
-bool IoWorkerCmdPack::isSwitchPack()
+bool IoWorkerCmdPack::isSwitchPack() const
 {
     return m_commandType == COMMAND_SWITCH_ON || m_commandType == COMMAND_SWITCH_OFF;
 }
