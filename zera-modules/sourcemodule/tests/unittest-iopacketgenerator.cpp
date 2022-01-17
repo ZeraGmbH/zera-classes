@@ -62,7 +62,7 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
         IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
         tIoOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
-            EXPECT_FALSE(outIn.m_bytesExpected.isEmpty());
+            EXPECT_FALSE(outIn.m_bytesExpectedLead.isEmpty() && outIn.m_bytesExpectedTrail.isEmpty());
         }
     }
 }

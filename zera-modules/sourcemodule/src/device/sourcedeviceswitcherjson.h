@@ -10,7 +10,7 @@
 class PersistentJsonState;
 
 /*
- * Actor/Observer on source device
+ * Actor / observer on source device
  * Switch on/off
  * keep switch state persistent
  * notify switch finished

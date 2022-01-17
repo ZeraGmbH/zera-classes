@@ -51,10 +51,10 @@ IoWorkerCmdPack IoWorkerConverter::commandPackToWorkerPack(const IoCommandPacket
 }
 
 QList<QByteArray> DemoResponseHelper::generateResponseList(
-        const IoWorkerCmdPack& workCmdPack, int createErrorAtIoNumber, QByteArray prefix) {
+        const IoWorkerCmdPack& workCmdPack, int createErrorAtIoNumber) {
     QList<QByteArray> responseList;
     for(auto io : workCmdPack.m_workerIOList) {
-        responseList.append(prefix + io.m_OutIn.m_bytesExpected);
+        responseList.append(io.m_OutIn.m_bytesExpectedLead + io.m_OutIn.m_bytesExpectedTrail);
     }
     if(createErrorAtIoNumber >= 0) {
         responseList[createErrorAtIoNumber] = "foo";
@@ -193,8 +193,10 @@ bool IoWorker::evaluateResponse()
     if(currCmdPack) {
         IoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
         IoSingleOutIn& currentOutIn = currentWorker.m_OutIn;
-        currentWorker.m_IoEval = currentWorker.m_dataReceived == currentOutIn.m_bytesExpected ? IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_FAIL;
-        pass = currentWorker.m_IoEval == IoWorkerEntry::EVAL_PASS;
+        pass =
+                currentWorker.m_dataReceived.startsWith(currentOutIn.m_bytesExpectedLead) &&
+                currentWorker.m_dataReceived.endsWith(currentOutIn.m_bytesExpectedTrail);
+        currentWorker.m_IoEval = pass ? IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_FAIL;
     }
     return pass;
 }

@@ -388,16 +388,13 @@ void IoWorkerTest::testTwoPacketMultipleIoOK()
     int outInCount = 0;
     IoWorkerCmdPack workCmdPacks[2];
     workCmdPacks[0] = generateSwitchCommands(true);
-    workCmdPacks[1] = generateSwitchCommands(true);
-    //workCmdPacks[1] = generateStatusPollCommands();
+    workCmdPacks[1] = generateStatusPollCommands();
     int commandCount = 0;
-    QList<QByteArray> responseList;
     for(auto &cmdPack: workCmdPacks) {
+        QList<QByteArray> responseList;
         responseList.append(generateResponseList(cmdPack, -1));
         outInCount += cmdPack.m_workerIOList.count();
-        for(int pack=0; pack<cmdPack.m_workerIOList.count(); pack++) {
-            demoInterface->appendResponses(responseList);
-        }
+        demoInterface->appendResponses(responseList);
         worker.enqueueAction(cmdPack);
         QVERIFY(worker.isIoBusy());
         commandCount++;
@@ -436,13 +433,9 @@ IoWorkerCmdPack IoWorkerTest::generateSwitchCommands(bool on)
 }
 
 void IoWorkerTest::adjustWorkCmdPack(IoWorkerCmdPack& workCmdPack,
-                                 PacketErrorBehaviors errorBehavior)
+                                     PacketErrorBehaviors errorBehavior)
 {
     workCmdPack.m_errorBehavior = errorBehavior;
-    QList<QByteArray> responseList;
-    for(auto &io : workCmdPack.m_workerIOList) {
-        responseList.append(io.m_OutIn.m_bytesExpected);
-    }
 }
 
 void IoWorkerTest::evalNotificationCount(int cmdPassedExpected, int passExpected, int failExpected, int unknownExpected)
