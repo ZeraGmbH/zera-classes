@@ -26,12 +26,14 @@ class IoSingleOutIn
 public:
     IoSingleOutIn() {}
     IoSingleOutIn(QByteArray bytesSend,
-                  QByteArray bytesExpected,
+                  QByteArray bytesExpectedLead,
+                  QByteArray bytesExpectedTrail = "\r",
                   int responseTimeoutMs = 0) :
         m_actionType(SourceActionTypes::ActionTypes(0)),
         m_responseTimeoutMs(responseTimeoutMs),
         m_bytesSend(bytesSend),
-        m_bytesExpected(bytesExpected)
+        m_bytesExpectedLead(bytesExpectedLead),
+        m_bytesExpectedTrail(bytesExpectedTrail)
     {}
     void setActionType(SourceActionTypes::ActionTypes actionType);
     bool operator == (const IoSingleOutIn& other);
@@ -39,7 +41,8 @@ public:
     SourceActionTypes::ActionTypes m_actionType = SourceActionTypes::SWITCH_UNDEF;
     int m_responseTimeoutMs = 0;
     QByteArray m_bytesSend;
-    QByteArray m_bytesExpected;
+    QByteArray m_bytesExpectedLead;
+    QByteArray m_bytesExpectedTrail;
 };
 
 typedef QList<IoSingleOutIn> tIoOutInList;

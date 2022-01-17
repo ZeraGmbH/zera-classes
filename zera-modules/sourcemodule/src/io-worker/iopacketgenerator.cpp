@@ -12,7 +12,8 @@ bool IoSingleOutIn::operator ==(const IoSingleOutIn &other)
     return  m_actionType == other.m_actionType &&
             m_responseTimeoutMs == other.m_responseTimeoutMs &&
             m_bytesSend == other.m_bytesSend &&
-            m_bytesExpected == other.m_bytesExpected;
+            m_bytesExpectedLead == other.m_bytesExpectedLead &&
+            m_bytesExpectedTrail == other.m_bytesExpectedTrail;
 }
 
 IoPacketGenerator::IoPacketGenerator(JsonStructApi jsonStructApi) :
@@ -117,8 +118,8 @@ tIoOutInList IoPacketGenerator::generateRMSAndAngleUList()
         bytesSend += IoCmdFormatHelper::formatDouble(angleU[idx], 3, '.', 2);
     }
     bytesSend.append('\r');
-    QByteArray expectedResponse = m_ioPrefix + "OKUP\r";
-    outInList.append(IoSingleOutIn(bytesSend, expectedResponse));
+    QByteArray expectedResponseLead = m_ioPrefix + "OKUP";
+    outInList.append(IoSingleOutIn(bytesSend, expectedResponseLead));
     return outInList;
 }
 
@@ -146,8 +147,8 @@ tIoOutInList IoPacketGenerator::generateRMSAndAngleIList()
         bytesSend += IoCmdFormatHelper::formatDouble(angleI[idx], 3, '.', 2);
     }
     bytesSend.append('\r');
-    QByteArray expectedResponse = m_ioPrefix + "OKIP\r";
-    outInList.append(IoSingleOutIn(bytesSend, expectedResponse));
+    QByteArray expectedResponseLead = m_ioPrefix + "OKIP";
+    outInList.append(IoSingleOutIn(bytesSend, expectedResponseLead));
 
     return outInList;
 }
@@ -194,9 +195,9 @@ tIoOutInList IoPacketGenerator::generateSwitchPhasesList()
     bytesSend.append("A");
 
     bytesSend.append("\r");
-    QByteArray expectedResponse = m_ioPrefix + "OKUI\r";
+    QByteArray expectedResponseLead = m_ioPrefix + "OKUI";
     int timeout = globalOn ? 15000 : 5000;
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponse, timeout);
+    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead, "\r", timeout);
 }
 
 tIoOutInList IoPacketGenerator::generateFrequencyList()
@@ -212,8 +213,8 @@ tIoOutInList IoPacketGenerator::generateFrequencyList()
         bytesSend += IoCmdFormatHelper::formatDouble(0.0, 2, '.', 2);
     }
     bytesSend.append("\r");
-    QByteArray expectedResponse = m_ioPrefix + "OKFR\r";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponse);
+    QByteArray expectedResponseLead = m_ioPrefix + "OKFR";
+    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
 }
 
 tIoOutInList IoPacketGenerator::generateRegulationList()
@@ -224,8 +225,8 @@ tIoOutInList IoPacketGenerator::generateRegulationList()
     bytesSend.append("1");
     bytesSend.append("\r");
 
-    QByteArray expectedResponse = m_ioPrefix + "OKRE\r";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponse);
+    QByteArray expectedResponseLead = m_ioPrefix + "OKRE";
+    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
 }
 
 tIoOutInList IoPacketGenerator::generateQueryStatusList()
@@ -233,8 +234,8 @@ tIoOutInList IoPacketGenerator::generateQueryStatusList()
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "SM\r"; // error condition for now
 
-    QByteArray expectedResponse = m_ioPrefix + "\r";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponse);
+    QByteArray expectedResponseLead = m_ioPrefix + "SM";
+    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
 }
 
 tIoOutInList IoPacketGenerator::generateQueryActualList()
@@ -242,8 +243,8 @@ tIoOutInList IoPacketGenerator::generateQueryActualList()
     QByteArray bytesSend;
     bytesSend = "AME0;3\r";// This is single phase!!
 
-    QByteArray expectedResponse = "\r";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponse);
+    QByteArray expectedResponseLead = "AME";
+    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
 }
 
 QByteArray IoCmdFormatHelper::formatDouble(double val, int preDigits, char digit, int postDigits)
