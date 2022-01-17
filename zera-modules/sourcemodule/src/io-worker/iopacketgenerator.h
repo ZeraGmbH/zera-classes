@@ -21,23 +21,14 @@ enum PacketErrorBehaviors {
     BEHAVE_UNDEF_BOTTOM
 };
 
-enum IoResponseTypes {
-    RESP_UNDEFINED = 0,
-    RESP_FULL_DATA_SEQUENCE,
-    RESP_PART_DATA_SEQUENCE,
-    RESP_UNDEF_BOTTOM
-};
-
 class IoSingleOutIn
 {
 public:
     IoSingleOutIn() {}
-    IoSingleOutIn(IoResponseTypes ioResponseType,
-                       QByteArray bytesSend,
-                       QByteArray bytesExpected,
-                       int responseTimeoutMs = 0) :
+    IoSingleOutIn(QByteArray bytesSend,
+                  QByteArray bytesExpected,
+                  int responseTimeoutMs = 0) :
         m_actionType(SourceActionTypes::ActionTypes(0)),
-        m_responseType(ioResponseType),
         m_responseTimeoutMs(responseTimeoutMs),
         m_bytesSend(bytesSend),
         m_bytesExpected(bytesExpected)
@@ -46,7 +37,6 @@ public:
     bool operator == (const IoSingleOutIn& other);
 
     SourceActionTypes::ActionTypes m_actionType = SourceActionTypes::SWITCH_UNDEF;
-    IoResponseTypes m_responseType = RESP_UNDEFINED;
     int m_responseTimeoutMs = 0;
     QByteArray m_bytesSend;
     QByteArray m_bytesExpected;

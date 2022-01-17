@@ -23,7 +23,6 @@ TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {
 TEST(TEST_PACKET_GENERATIOR, EMPTY_IO_UNDEFINED) {
     IoSingleOutIn outIn;
     EXPECT_EQ(outIn.m_actionType, SourceActionTypes::SWITCH_UNDEF);
-    EXPECT_EQ(outIn.m_responseType, RESP_UNDEFINED);
     EXPECT_EQ(outIn.m_responseTimeoutMs, 0);
 }
 
@@ -47,17 +46,6 @@ TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
     }
 }
 
-TEST(TEST_PACKET_GENERATIOR, RESPONSE_TYPE_SET) {
-    for(int type=SourceActionTypes::totalMinWithInvalid; type<=SourceActionTypes::totalMaxWithInvalid; ++type) {
-        IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
-        tIoOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
-        for(auto outIn : outInList) {
-            EXPECT_FALSE(outIn.m_responseType == RESP_UNDEFINED);
-            EXPECT_FALSE(outIn.m_responseType >= RESP_UNDEF_BOTTOM);
-        }
-    }
-}
-
 TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
     IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
     JsonParamApi params;
@@ -74,9 +62,7 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
         IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
         tIoOutInList outInList = ioPackGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
-            if(outIn.m_responseType == RESP_FULL_DATA_SEQUENCE || outIn.m_responseType == RESP_PART_DATA_SEQUENCE) {
-                EXPECT_FALSE(outIn.m_bytesExpected.isEmpty());
-            }
+            EXPECT_FALSE(outIn.m_bytesExpected.isEmpty());
         }
     }
 }

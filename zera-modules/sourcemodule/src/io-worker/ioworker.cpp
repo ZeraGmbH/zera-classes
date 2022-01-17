@@ -193,19 +193,7 @@ bool IoWorker::evaluateResponse()
     if(currCmdPack) {
         IoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
         IoSingleOutIn& currentOutIn = currentWorker.m_OutIn;
-        switch(currentOutIn.m_responseType) {
-        case RESP_FULL_DATA_SEQUENCE:
-            currentWorker.m_IoEval = currentWorker.m_dataReceived == currentOutIn.m_bytesExpected ?
-                        IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_FAIL;
-            break;
-        case RESP_PART_DATA_SEQUENCE:
-            currentWorker.m_IoEval = currentWorker.m_dataReceived.contains(currentOutIn.m_bytesExpected) ?
-                        IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_FAIL;
-            break;
-        default:
-            currentWorker.m_IoEval = IoWorkerEntry::EVAL_FAIL;
-            break;
-        }
+        currentWorker.m_IoEval = currentWorker.m_dataReceived == currentOutIn.m_bytesExpected ? IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_FAIL;
         pass = currentWorker.m_IoEval == IoWorkerEntry::EVAL_PASS;
     }
     return pass;
