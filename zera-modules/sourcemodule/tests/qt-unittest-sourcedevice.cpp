@@ -125,11 +125,12 @@ void SourceDeviceTest::observerReceiveId()
     QCOMPARE(testObserver2.observerReceiveId, id2);
 }
 
-static void getBusyToggleCount(bool ioResponseDelay) {
+void SourceDeviceTest::busySignalOnSwitch()
+{
     tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
-    sourceDevice.setDemoResponseDelay(false, ioResponseDelay ? 50 : 0);
+    sourceDevice.setDemoResponseDelay(false, 1);
 
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(SOURCE_MT_COMMON, "", "");
     IoPacketGenerator ioPackGen = IoPacketGenerator(paramStructure);
@@ -146,28 +147,10 @@ static void getBusyToggleCount(bool ioResponseDelay) {
     sourceDevice.startTransaction(workerPack);
 
     int busyToggleCount = 0;
-    QObject::connect(&sourceDevice, &SourceDevice::sigSwitchBusyChanged, [&] (bool busy) {
-        if(busyToggleCount < countSwitches) {
-            QVERIFY(busy);
-        }
-        else {
-            QVERIFY(!busy);
-        }
+    QObject::connect(&sourceDevice, &SourceDevice::sigSwitchTransationStarted, [&] {
         busyToggleCount++;
     });
 
     QTest::qWait(10);
-    QCOMPARE(busyToggleCount, countSwitches +(!ioResponseDelay ? countSwitches : 0) );
+    QCOMPARE(busyToggleCount, countSwitches);
 }
-
-
-void SourceDeviceTest::busyToggledOnSwitch()
-{
-    getBusyToggleCount(false);
-}
-
-void SourceDeviceTest::ioLastLongerThanLifetime()
-{
-    getBusyToggleCount(true);
-}
-

@@ -21,8 +21,7 @@ private slots:
     void observerReceiveCount();
     void observerReceiveId();
 
-    void busyToggledOnSwitch();
-    void ioLastLongerThanLifetime();
+    void busySignalOnSwitch();
 };
 
 #endif // QTUNITTESTSOURCEDEVICE_H
