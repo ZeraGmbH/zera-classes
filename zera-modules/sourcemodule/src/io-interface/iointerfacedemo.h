@@ -17,7 +17,6 @@ public:
     virtual void simulateExternalDisconnect() override;
 
     void setResponseDelay(bool followsTimeout, int iFixedMs);
-    void setResponses(QList<QByteArray> responseList);
     void appendResponses(QList<QByteArray> responseList);
 
     virtual IoInterfaceTypes type() override { return SOURCE_INTERFACE_DEMO; }

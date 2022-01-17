@@ -31,7 +31,7 @@ int SourceDevice::startTransaction(const IoWorkerCmdPack &workerPack)
         IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
         QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
-        demoInterface->setResponses(responseList);
+        demoInterface->appendResponses(responseList);
     }
     if(workerPack.isSwitchPack()) {
         emit sigSwitchBusyChangedQueued(true);

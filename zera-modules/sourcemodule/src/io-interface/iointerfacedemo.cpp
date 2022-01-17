@@ -69,11 +69,6 @@ void IoInterfaceDemo::setResponseDelay(bool followsTimeout, int iFixedMs)
     m_responseDelayMs = iFixedMs;
 }
 
-void IoInterfaceDemo::setResponses(QList<QByteArray> responseList)
-{
-    m_responseList = responseList;
-}
-
 void IoInterfaceDemo::appendResponses(QList<QByteArray> responseList)
 {
     m_responseList.append(responseList);
