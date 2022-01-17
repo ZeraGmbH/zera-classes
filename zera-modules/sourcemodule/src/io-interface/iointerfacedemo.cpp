@@ -14,8 +14,15 @@ void IoInterfaceDemo::onResponseDelayTimer()
 
 void IoInterfaceDemo::sendResponse(bool error)
 {
-    if(!error && m_pDataReceive && !m_responseList.isEmpty()) {
-        *m_pDataReceive = m_responseList.takeFirst();
+    if(error) {
+        m_responseList.clear();
+    }
+    QByteArray response;
+    if(!m_responseList.isEmpty()) {
+        response = m_responseList.takeFirst();
+    }
+    if(m_pDataReceive) {
+        *m_pDataReceive = response;
     }
     emit sigIoFinishedToQueue(m_currIoId.getCurrent(), error);
 }
