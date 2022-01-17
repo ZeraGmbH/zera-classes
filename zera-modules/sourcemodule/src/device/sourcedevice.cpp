@@ -13,8 +13,8 @@ SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes typ
 
     connect(&m_sourceIoWorker, &IoWorker::sigCmdFinished,
             this, &SourceDevice::onSourceCmdFinished);
-    connect(this, &SourceDevice::sigBusyChangedQueued,
-            this, &SourceDevice::sigBusyChanged,
+    connect(this, &SourceDevice::sigSwitchBusyChangedQueued,
+            this, &SourceDevice::sigSwitchBusyChanged,
             Qt::QueuedConnection);
     connect(m_ioInterface.get(), &IoInterfaceBase::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
@@ -33,7 +33,9 @@ int SourceDevice::startTransaction(const IoWorkerCmdPack &workerPack)
         QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
         demoInterface->setResponses(responseList);
     }
-    emit sigBusyChangedQueued(true);
+    if(workerPack.isSwitchPack()) {
+        emit sigSwitchBusyChangedQueued(true);
+    }
     return m_sourceIoWorker.enqueueAction(workerPack);
 }
 
@@ -81,7 +83,7 @@ bool SourceDevice::isDemo() const
 void SourceDevice::onSourceCmdFinished(IoWorkerCmdPack cmdPack)
 {
     if(cmdPack.isSwitchPack()) {
-        emit sigBusyChanged(false);
+        emit sigSwitchBusyChanged(false);
     }
     notifyObservers(cmdPack);
 }

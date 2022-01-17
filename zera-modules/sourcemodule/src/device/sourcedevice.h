@@ -37,14 +37,14 @@ public:
     bool isDemo() const;
 
 signals:
-    void sigBusyChanged(bool busy);
+    void sigSwitchBusyChanged(bool busy);
     void sigInterfaceDisconnected();
 
 private slots:
     void onSourceCmdFinished(IoWorkerCmdPack cmdPack);
 
 signals:
-    void sigBusyChangedQueued(bool busy);
+    void sigSwitchBusyChangedQueued(bool busy);
 
 private:
     tIoInterfaceShPtr m_ioInterface;
