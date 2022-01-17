@@ -193,10 +193,15 @@ bool IoWorker::evaluateResponse()
     if(currCmdPack) {
         IoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
         IoSingleOutIn& currentOutIn = currentWorker.m_OutIn;
-        pass =
-                currentWorker.m_dataReceived.startsWith(currentOutIn.m_bytesExpectedLead) &&
-                currentWorker.m_dataReceived.endsWith(currentOutIn.m_bytesExpectedTrail);
-        currentWorker.m_IoEval = pass ? IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_FAIL;
+        if(currentWorker.m_dataReceived.isEmpty()) {
+            currentWorker.m_IoEval = IoWorkerEntry::EVAL_NO_ANSWER;
+        }
+        else {
+            pass =
+                    currentWorker.m_dataReceived.startsWith(currentOutIn.m_bytesExpectedLead) &&
+                    currentWorker.m_dataReceived.endsWith(currentOutIn.m_bytesExpectedTrail);
+            currentWorker.m_IoEval = pass ? IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_WRONG_ANSWER;
+        }
     }
     return pass;
 }
