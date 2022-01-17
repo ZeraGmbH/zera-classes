@@ -73,3 +73,8 @@ void IoInterfaceDemo::appendResponses(QList<QByteArray> responseList)
 {
     m_responseList.append(responseList);
 }
+
+QList<QByteArray>& IoInterfaceDemo::getResponsesForErrorInjection()
+{
+    return m_responseList;
+}

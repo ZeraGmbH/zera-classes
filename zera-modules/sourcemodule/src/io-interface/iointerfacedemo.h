@@ -18,6 +18,7 @@ public:
 
     void setResponseDelay(bool followsTimeout, int iFixedMs);
     void appendResponses(QList<QByteArray> responseList);
+    QList<QByteArray> &getResponsesForErrorInjection();
 
     virtual IoInterfaceTypes type() override { return SOURCE_INTERFACE_DEMO; }
     virtual bool isOpen() override { return m_bOpen; }

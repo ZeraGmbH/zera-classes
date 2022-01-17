@@ -50,8 +50,7 @@ namespace IoWorkerConverter
 
 namespace DemoResponseHelper
 {
-    QList<QByteArray> generateResponseList(const IoWorkerCmdPack &workCmdPack,
-            int createErrorAtIoNumber = -1);
+    QList<QByteArray> generateResponseList(const IoWorkerCmdPack &workCmdPack);
 }
 
 class IoWorker : public QObject

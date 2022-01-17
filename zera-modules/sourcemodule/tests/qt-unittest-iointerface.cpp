@@ -183,6 +183,31 @@ void IoInterfaceTest::demoResponseListDelay()
     disconnect(interface.get(), &IoInterfaceBase::sigIoFinished, this, &IoInterfaceTest::onIoFinish);
 }
 
+void IoInterfaceTest::demoResponseListErrorInjection()
+{
+    tIoInterfaceShPtr interface = createOpenDemoInterface();
+    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    QList<QByteArray> testResponses = QList<QByteArray>() << "0\r" << "1\r" << "2\r";
+    demoInterface->appendResponses(testResponses);
+
+    QList<QByteArray>& injectError = demoInterface->getResponsesForErrorInjection();
+    QByteArray errInject = "abc";
+    injectError[0] = errInject;
+
+    interface->sendAndReceive(QByteArray(), &m_receivedData);
+    QTest::qWait(10); // one I/O at a time
+    interface->sendAndReceive(QByteArray(), &m_receivedData);
+    QTest::qWait(10);
+    interface->sendAndReceive(QByteArray(), &m_receivedData);
+    QTest::qWait(10);
+    QCOMPARE(m_ioFinishReceiveCount, 3);
+    QCOMPARE(m_listReceivedData[0], errInject);
+    QCOMPARE(m_listReceivedData[1], testResponses[1]);
+    QCOMPARE(m_listReceivedData[2], testResponses[2]);
+
+    disconnect(interface.get(), &IoInterfaceBase::sigIoFinished, this, &IoInterfaceTest::onIoFinish);
+}
+
 void IoInterfaceTest::demoDelayFollowsDelay()
 {
     tIoInterfaceShPtr interface = createOpenDemoInterface();

@@ -193,8 +193,10 @@ void IoWorkerTest::testStopOnFirstError()
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR);
+
     constexpr int errorIoNumber = 2;
-    QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber);
+    QList<QByteArray> responseList = generateResponseList(workCmdPack);
+    responseList[errorIoNumber] = "foo";
     demoInterface->appendResponses(responseList);
     worker.enqueueAction(workCmdPack);
     QTest::qWait(100);
@@ -228,8 +230,10 @@ void IoWorkerTest::testContinueOnError()
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_CONTINUE_ON_ERROR);
+
     constexpr int errorIoNumber = 2;
-    QList<QByteArray> responseList = generateResponseList(workCmdPack, errorIoNumber);
+    QList<QByteArray> responseList = generateResponseList(workCmdPack);
+    responseList[errorIoNumber] = "foo";
     demoInterface->appendResponses(responseList);
     worker.enqueueAction(workCmdPack);
     QTest::qWait(100);
@@ -276,7 +280,7 @@ void IoWorkerTest::testSpamRejected()
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
+    QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<maxPendingPackets*2; pack++) {
         demoInterface->appendResponses(responseList);
         worker.enqueueAction(workCmdPack);
@@ -299,7 +303,7 @@ void IoWorkerTest::testCloseToSpamAccepted()
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
+    QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<maxPendingPackets; pack++) {
         demoInterface->appendResponses(responseList);
         worker.enqueueAction(workCmdPack);
@@ -319,7 +323,7 @@ void IoWorkerTest::testOnePacketSingleIoOK()
     connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(false);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
+    QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
         demoInterface->appendResponses(responseList);
     }
@@ -341,7 +345,7 @@ void IoWorkerTest::testTwoPacketSingleIoOK()
     connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(false);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
+    QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<2*workCmdPack.m_workerIOList.count(); pack++) {
         demoInterface->appendResponses(responseList);
         worker.enqueueAction(workCmdPack);
@@ -364,7 +368,7 @@ void IoWorkerTest::testOnePacketMultipleIoOK()
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     int ioCount = workCmdPack.m_workerIOList.count();
-    QList<QByteArray> responseList = generateResponseList(workCmdPack, -1);
+    QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
         demoInterface->appendResponses(responseList);
     }
@@ -392,7 +396,7 @@ void IoWorkerTest::testTwoPacketMultipleIoOK()
     int commandCount = 0;
     for(auto &cmdPack: workCmdPacks) {
         QList<QByteArray> responseList;
-        responseList.append(generateResponseList(cmdPack, -1));
+        responseList.append(generateResponseList(cmdPack));
         outInCount += cmdPack.m_workerIOList.count();
         demoInterface->appendResponses(responseList);
         worker.enqueueAction(cmdPack);
