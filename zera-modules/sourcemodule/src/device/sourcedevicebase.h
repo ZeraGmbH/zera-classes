@@ -3,8 +3,8 @@
 
 #include "supportedsources.h"
 #include "io-interface/iointerfacebase.h"
-#include "io-interface/iopacketgenerator.h"
-#include "io-interface/ioworker.h"
+#include "io-worker/iopacketgenerator.h"
+#include "io-worker/ioworker.h"
 #include "io-ids/ioidkeeper.h"
 
 #include <QObject>

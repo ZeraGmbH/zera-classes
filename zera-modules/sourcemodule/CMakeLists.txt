@@ -33,6 +33,7 @@ file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/device/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-ids/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-interface/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/io-worker/*.cpp
     ${PROJECT_SOURCE_DIR}/src/json/*.cpp
     ${PROJECT_SOURCE_DIR}/src/module/*.cpp
     )
@@ -42,6 +43,7 @@ file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/device/*.h
     ${PROJECT_SOURCE_DIR}/src/io-ids/*.h
     ${PROJECT_SOURCE_DIR}/src/io-interface/*.h
+    ${PROJECT_SOURCE_DIR}/src/io-worker/*.h
     ${PROJECT_SOURCE_DIR}/src/json/*.h
     ${PROJECT_SOURCE_DIR}/src/module/*.h
     )

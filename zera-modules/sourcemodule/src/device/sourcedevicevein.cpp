@@ -5,7 +5,7 @@
 #include <jsonparamvalidator.h>
 #include "sourcedevicevein.h"
 #include "sourceveininterface.h"
-#include "io-interface/iopacketgenerator.h"
+#include "io-worker/iopacketgenerator.h"
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
