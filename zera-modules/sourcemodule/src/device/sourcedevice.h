@@ -3,7 +3,7 @@
 
 #include "sourcedevicesubject.h"
 #include "supportedsources.h"
-#include "io-interface/ioworker.h"
+#include "io-worker/ioworker.h"
 
 #include <QObject>
 

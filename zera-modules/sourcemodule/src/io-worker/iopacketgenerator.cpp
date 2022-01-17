@@ -1,6 +1,6 @@
 #include "iopacketgenerator.h"
 #include "sourceactions.h"
-#include "iointerfacebase.h"
+#include "io-interface/iointerfacebase.h"
 
 void IoSingleOutIn::setActionType(SourceActionTypes::ActionTypes actionType)
 {

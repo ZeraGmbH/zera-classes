@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include "iopacketgenerator.h"
-#include "iointerfacebase.h"
+#include "io-interface/iointerfacebase.h"
 #include "io-ids/ioidkeeper.h"
 
 class IoWorkerEntry
