@@ -29,10 +29,8 @@ private slots:
     void disconnectWhileWorking();
     void disconnectWhileWorkingMultipleNotifications();
 
-    void testStopOnFirstErrorFullResponse();
-    void testStopOnFirstErrorPartResponse();
-    void testContinueOnErrorFullResponse();
-    void testContinueOnErrorPartResponse();
+    void testStopOnFirstError();
+    void testContinueOnError();
 
     void noErrorSigOnEmptyPack();
 
@@ -49,8 +47,7 @@ private:
     static IoWorkerCmdPack generateSwitchCommands(bool on);
     static IoWorkerCmdPack generateStatusPollCommands();
     static void adjustWorkCmdPack(IoWorkerCmdPack& workCmdPack,
-                                  PacketErrorBehaviors errorBehavior,
-                                  IoResponseTypes responseType);
+                                  PacketErrorBehaviors errorBehavior);
     void evalNotificationCount(int cmdPassedExpected, int passExpected, int failExpected, int unknownExpected);
 
     QList<IoWorkerCmdPack> m_listWorkPacksReceived;
