@@ -13,8 +13,8 @@ SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes typ
 
     connect(&m_sourceIoWorker, &IoWorker::sigCmdFinished,
             this, &SourceDevice::onSourceCmdFinished);
-    connect(this, &SourceDevice::sigSwitchBusyChangedQueued,
-            this, &SourceDevice::sigSwitchBusyChanged,
+    connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
+            this, &SourceDevice::sigSwitchTransationStarted,
             Qt::QueuedConnection);
     connect(m_ioInterface.get(), &IoInterfaceBase::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
@@ -27,14 +27,9 @@ SourceDevice::~SourceDevice()
 
 int SourceDevice::startTransaction(const IoWorkerCmdPack &workerPack)
 {
-    if(isDemo()) {
-        IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
-        demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
-        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
-        demoInterface->appendResponses(responseList);
-    }
+    doDemoTransactionAdjustments(workerPack);
     if(workerPack.isSwitchPack()) {
-        emit sigSwitchBusyChangedQueued(true);
+        emit sigSwitchTransationStartedQueued();
     }
     return m_sourceIoWorker.enqueueAction(workerPack);
 }
@@ -48,6 +43,11 @@ void SourceDevice::setDemoResponseDelay(bool followsTimeout, int fixedMs)
 {
     m_demoDelayFollowsTimeout = followsTimeout;
     m_demoDelayFixedMs = fixedMs;
+}
+
+void SourceDevice::setDemoResonseError(bool active)
+{
+    m_demoSimulErrorActive = active;
 }
 
 IoPacketGenerator SourceDevice::getIoPacketGenerator()
@@ -82,8 +82,23 @@ bool SourceDevice::isDemo() const
 
 void SourceDevice::onSourceCmdFinished(IoWorkerCmdPack cmdPack)
 {
-    if(cmdPack.isSwitchPack()) {
-        emit sigSwitchBusyChanged(false);
-    }
     notifyObservers(cmdPack);
+}
+
+void SourceDevice::doDemoTransactionAdjustments(const IoWorkerCmdPack &workerPack)
+{
+    if(isDemo()) {
+        IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
+        demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
+        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
+        if(m_demoSimulErrorActive) {
+            if(workerPack.isStateQuery()) {
+                responseList.first() = "foo";
+            }
+            else if(workerPack.isSwitchPack()) {
+                responseList.last() = "foo";
+            }
+        }
+        demoInterface->appendResponses(responseList);
+    }
 }

@@ -27,6 +27,7 @@ public:
 
     // setter
     void setDemoResponseDelay(bool followsTimeout, int fixedMs);
+    void setDemoResonseError(bool active);
 
     // getter
     IoPacketGenerator getIoPacketGenerator();
@@ -37,16 +38,18 @@ public:
     bool isDemo() const;
 
 signals:
-    void sigSwitchBusyChanged(bool busy);
+    void sigSwitchTransationStarted();
     void sigInterfaceDisconnected();
 
 private slots:
     void onSourceCmdFinished(IoWorkerCmdPack cmdPack);
 
 signals:
-    void sigSwitchBusyChangedQueued(bool busy);
+    void sigSwitchTransationStartedQueued();
 
 private:
+    void doDemoTransactionAdjustments(const IoWorkerCmdPack &workerPack);
+
     tIoInterfaceShPtr m_ioInterface;
     IoWorker m_sourceIoWorker;
 
@@ -58,6 +61,7 @@ private:
 
     bool m_demoDelayFollowsTimeout = false;
     int m_demoDelayFixedMs = 0;
+    bool m_demoSimulErrorActive = false;
 };
 
 #endif // SOURCEDEVICE_H

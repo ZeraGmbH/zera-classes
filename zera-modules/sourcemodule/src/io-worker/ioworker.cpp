@@ -28,6 +28,11 @@ bool IoWorkerCmdPack::isSwitchPack() const
     return m_commandType == COMMAND_SWITCH_ON || m_commandType == COMMAND_SWITCH_OFF;
 }
 
+bool IoWorkerCmdPack::isStateQuery() const
+{
+    return m_commandType == COMMAND_STATE_POLL;
+}
+
 bool IoWorkerCmdPack::operator ==(const IoWorkerCmdPack &other)
 {
     return  m_workerId == other.m_workerId &&
