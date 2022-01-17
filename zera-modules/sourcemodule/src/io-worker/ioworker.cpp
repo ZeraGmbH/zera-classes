@@ -50,14 +50,10 @@ IoWorkerCmdPack IoWorkerConverter::commandPackToWorkerPack(const IoCommandPacket
     return workPack;
 }
 
-QList<QByteArray> DemoResponseHelper::generateResponseList(
-        const IoWorkerCmdPack& workCmdPack, int createErrorAtIoNumber) {
+QList<QByteArray> DemoResponseHelper::generateResponseList(const IoWorkerCmdPack& workCmdPack) {
     QList<QByteArray> responseList;
     for(auto io : workCmdPack.m_workerIOList) {
         responseList.append(io.m_OutIn.m_bytesExpectedLead + io.m_OutIn.m_bytesExpectedTrail);
-    }
-    if(createErrorAtIoNumber >= 0) {
-        responseList[createErrorAtIoNumber] = "foo";
     }
     return responseList;
 }

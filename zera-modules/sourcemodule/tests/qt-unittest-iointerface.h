@@ -36,6 +36,7 @@ private slots:
 
     void demoResponseList();
     void demoResponseListDelay();
+    void demoResponseListErrorInjection();
 
     void demoDelayFollowsDelay();
     void demoDelayFollowsTimeout();
