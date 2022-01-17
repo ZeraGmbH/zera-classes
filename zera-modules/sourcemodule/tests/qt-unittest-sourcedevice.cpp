@@ -146,7 +146,7 @@ static void getBusyToggleCount(bool ioResponseDelay) {
     sourceDevice.startTransaction(workerPack);
 
     int busyToggleCount = 0;
-    QObject::connect(&sourceDevice, &SourceDevice::sigBusyChanged, [&] (bool busy) {
+    QObject::connect(&sourceDevice, &SourceDevice::sigSwitchBusyChanged, [&] (bool busy) {
         if(busyToggleCount < countSwitches) {
             QVERIFY(busy);
         }
