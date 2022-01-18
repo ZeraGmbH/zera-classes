@@ -90,7 +90,7 @@ private:
     IoIdGenerator m_IdGenerator;
     IoIdKeeper m_currIoId;
     QList<IoWorkerCmdPack> m_pendingCmdPacks;
-    int m_nextPosInWorkerIo = 0;
+    int m_nextPosInCurrCmd = 0;
     int m_maxPendingCmdPacks = 0;
 };
 

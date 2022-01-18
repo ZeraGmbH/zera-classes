@@ -51,7 +51,8 @@ private:
     static IoWorkerCmdPack generateStatusPollCommands();
     static void adjustWorkCmdPack(IoWorkerCmdPack& workCmdPack,
                                   PacketErrorBehaviors errorBehavior);
-    void evalNotificationCount(int cmdPassedExpected, int passExpected, int failExpected, int unknownExpected);
+    void evalNotificationCount(int cmdPassedExpected,
+                               int passExpected, int failExpected, int unknownExpected);
 
     QList<IoWorkerCmdPack> m_listWorkPacksReceived;
 };
