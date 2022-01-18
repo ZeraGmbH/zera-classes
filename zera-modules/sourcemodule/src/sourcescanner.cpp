@@ -143,7 +143,7 @@ SupportedSourceTypes SourceScanner::nextDemoType() {
     return sDemoTypeCounter;
 }
 
-void SourceScanner::onIoFinished(int ioId, bool error)
+void SourceScanner::onIoFinished(int ioId, bool interfaceError)
 {
     if(!m_currIoId.isCurrAndDeactivateIf(ioId)) {
         qCritical("Are there multiple clients on scanner interface?");
@@ -155,7 +155,7 @@ void SourceScanner::onIoFinished(int ioId, bool error)
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     SupportedSourceTypes sourceTypeFound = SOURCE_MT_COMMON;
     QByteArray responsePrefix;
-    if(!error) {
+    if(!interfaceError) {
         if(!m_ioInterface->isDemo()) {
             for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
                 if(m_bytesReceived.contains(responseTypePair.expectedResponse)) {
@@ -185,7 +185,7 @@ void SourceScanner::onIoFinished(int ioId, bool error)
         emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;
     }
-    else if(!error && moreChances) {
+    else if(!interfaceError && moreChances) {
         m_currentSourceTested++;
         sendReceiveSourceID(); // delay??
     }

@@ -32,7 +32,7 @@ signals:
     void sigScanFinished(tSourceScannerShPtr scanner);
 
 private slots:
-    void onIoFinished(int ioId, bool error);
+    void onIoFinished(int ioId, bool interfaceError);
 private:
     explicit SourceScanner(tIoInterfaceShPtr interface, QUuid uuid);
 

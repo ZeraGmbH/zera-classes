@@ -28,8 +28,8 @@ public:
 
 signals:
     void sigDisconnected();
-    void sigIoFinished(int ioID, bool ioError); // users connect this signal
-    void sigIoFinishedToQueue(int ioID, bool ioError); // sub classes emit this to ensure queue
+    void sigIoFinished(int ioID, bool interfaceError); // users connect this signal
+    void sigIoFinishedToQueue(int ioID, bool interfaceError); // sub classes emit this to ensure queue
 
 protected:
     explicit IoInterfaceBase(QObject *parent = nullptr);

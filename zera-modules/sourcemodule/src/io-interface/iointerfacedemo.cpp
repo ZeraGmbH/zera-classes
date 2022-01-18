@@ -12,9 +12,9 @@ void IoInterfaceDemo::onResponseDelayTimer()
     sendResponse(false);
 }
 
-void IoInterfaceDemo::sendResponse(bool error)
+void IoInterfaceDemo::sendResponse(bool interfaceError)
 {
-    if(error) {
+    if(interfaceError) {
         m_responseList.clear();
     }
     QByteArray response;
@@ -24,7 +24,7 @@ void IoInterfaceDemo::sendResponse(bool error)
     if(m_pDataReceive) {
         *m_pDataReceive = response;
     }
-    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), error);
+    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), interfaceError);
 }
 
 bool IoInterfaceDemo::open(QString strDeviceInfo)
