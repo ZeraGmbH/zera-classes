@@ -1,7 +1,7 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedeviceswitcherjson.h"
-#include "device/sourcedevice.h"
-#include "device/sourcedeviceswitcherjson.h"
+#include "source-device/sourcedevice.h"
+#include "source-device/sourcedeviceswitcherjson.h"
 
 static QObject* pSourceDeviceTest = addTest(new SourceDeviceSwitcherJsonTest);
 

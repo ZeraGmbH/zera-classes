@@ -8,8 +8,8 @@
 #include "basedspmeasprogram.h"
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
-#include "device/sourcedevicemanager.h"
-#include "device/sourcedevicevein.h"
+#include "source-device/sourcedevicemanager.h"
+#include "source-device/sourcedevicevein.h"
 #include "io-interface/iointerfacebase.h"
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
