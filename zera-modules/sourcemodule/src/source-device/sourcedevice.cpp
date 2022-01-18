@@ -4,15 +4,15 @@
 
 SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     m_ioInterface(interface),
-    m_outInGenerator(JsonStructureLoader::loadJsonStructure(type, name, version)),
+    m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(type, name, version)),
     m_type(type),
     m_name(name),
     m_version(version)
 {
-    m_sourceIoWorker.setIoInterface(interface);
+    m_ioWorker.setIoInterface(interface);
 
-    connect(&m_sourceIoWorker, &IoWorker::sigCmdFinished,
-            this, &SourceDevice::onSourceCmdFinished);
+    connect(&m_ioWorker, &IoWorker::sigTransferGroupFinished,
+            this, &SourceDevice::onIoGroupFinished);
     connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
             this, &SourceDevice::sigSwitchTransationStarted,
             Qt::QueuedConnection);
@@ -25,13 +25,13 @@ SourceDevice::~SourceDevice()
 {
 }
 
-int SourceDevice::startTransaction(const IoWorkerCmdPack &workerPack)
+int SourceDevice::startTransaction(const IoMultipleTransferGroup &transferGroup)
 {
-    doDemoTransactionAdjustments(workerPack);
-    if(workerPack.isSwitchPack()) {
+    doDemoTransactionAdjustments(transferGroup);
+    if(transferGroup.isSwitchGroup()) {
         emit sigSwitchTransationStartedQueued();
     }
-    return m_sourceIoWorker.enqueueCmd(workerPack);
+    return m_ioWorker.enqueueTransferGroup(transferGroup);
 }
 
 void SourceDevice::simulateExternalDisconnect()
@@ -50,9 +50,9 @@ void SourceDevice::setDemoResonseError(bool active)
     m_demoSimulErrorActive = active;
 }
 
-IoPacketGenerator SourceDevice::getIoPacketGenerator()
+IoGroupGenerator SourceDevice::getIoGroupGenerator()
 {
-    return m_outInGenerator;
+    return m_ioGroupGenerator;
 }
 
 SupportedSourceTypes SourceDevice::getType() const
@@ -80,24 +80,19 @@ bool SourceDevice::isDemo() const
     return m_ioInterface->isDemo();
 }
 
-void SourceDevice::onSourceCmdFinished(IoWorkerCmdPack cmdPack)
+void SourceDevice::onIoGroupFinished(IoMultipleTransferGroup transferGroup)
 {
-    notifyObservers(cmdPack);
+    notifyObservers(transferGroup);
 }
 
-void SourceDevice::doDemoTransactionAdjustments(const IoWorkerCmdPack &workerPack)
+void SourceDevice::doDemoTransactionAdjustments(const IoMultipleTransferGroup &transferGroup)
 {
     if(isDemo()) {
         IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
-        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
+        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(transferGroup);
         if(m_demoSimulErrorActive) {
-            if(workerPack.isStateQuery()) {
-                responseList.first() = "foo";
-            }
-            else if(workerPack.isSwitchPack()) {
-                responseList.last() = "foo";
-            }
+            responseList.first() = "foo";
         }
         demoInterface->appendResponses(responseList);
     }

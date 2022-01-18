@@ -3,56 +3,14 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include "iopacketgenerator.h"
+#include "iogroupgenerator.h"
 #include "io-interface/iointerfacebase.h"
+#include "io-device/iomultipletransfergroup.h"
 #include "io-ids/ioidkeeper.h"
-
-class IoWorkerEntry
-{
-public:
-    IoSingleOutIn m_OutIn;
-    QByteArray m_dataReceived;
-    enum {
-        EVAL_NOT_EXECUTED = 0,
-        EVAL_NO_ANSWER,
-        EVAL_WRONG_ANSWER,
-        EVAL_PASS
-    } m_IoEval = EVAL_NOT_EXECUTED;
-    bool operator == (const IoWorkerEntry& other);
-};
-
-typedef QList<IoWorkerEntry> tIoWorkerList;
-
-
-class IoWorkerCmdPack
-{
-public:
-    bool passedAll() const;
-    void evalAll();
-
-    bool isSwitchPack() const;
-    bool isStateQuery() const;
-
-    bool operator == (const IoWorkerCmdPack& other);
-
-    int m_workerId = 0;
-    SourceCommandTypes m_commandType = COMMAND_UNDEFINED;
-    PacketErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
-    tIoWorkerList m_workerIOList;
-private:
-    bool m_bPassedAll = false;
-};
-Q_DECLARE_METATYPE(IoWorkerCmdPack)
-
-
-namespace IoWorkerConverter
-{
-    IoWorkerCmdPack commandPackToWorkerPack(const IoCommandPacket &cmdPack);
-}
 
 namespace DemoResponseHelper
 {
-    QList<QByteArray> generateResponseList(const IoWorkerCmdPack &workCmdPack);
+    QList<QByteArray> generateResponseList(const IoMultipleTransferGroup &workTransferGroup);
 }
 
 class IoWorker : public QObject
@@ -62,36 +20,36 @@ public:
     explicit IoWorker(QObject *parent = nullptr);
 
     void setIoInterface(tIoInterfaceShPtr interface);
-    void setMaxPendingCmds(int maxPackets);
-    int enqueueCmd(IoWorkerCmdPack cmdPack);
+    void setMaxPendingGroups(int maxGroups);
+    int enqueueTransferGroup(IoMultipleTransferGroup transferGroup);
 
     bool isIoBusy();
 
 signals:
-    void sigCmdFinished(IoWorkerCmdPack cmdPack);
+    void sigTransferGroupFinished(IoMultipleTransferGroup transferGroup);
 
 private slots:
     void onIoFinished(int ioID, bool interfaceError);
     void onIoDisconnected();
 signals:
-    void sigCmdFinishedQueued(IoWorkerCmdPack cmdPack);
+    void sigTransferGroupFinishedQueued(IoMultipleTransferGroup transferGroup);
 private:
-    IoWorkerCmdPack *getCurrentCmd();
-    IoWorkerEntry *getNextIo();
+    IoMultipleTransferGroup *getCurrentGroup();
+    IOSingleTransferData *getNextIoTransfer();
     void tryStartNextIo();
-    void finishCmd(IoWorkerCmdPack cmdPackToFinish);
-    void finishCurrentCmd();
-    void abortAllCmds();
+    void finishGroup(IoMultipleTransferGroup transferGroupToFinish);
+    void finishCurrentGroup();
+    void abortAllGroups();
     bool evaluateResponse();
-    bool canEnqueue(IoWorkerCmdPack cmdPack);
-    bool canContinueCurrentCmd();
+    bool canEnqueue(IoMultipleTransferGroup transferGroup);
+    bool canContinueCurrentGroup();
 
     tIoInterfaceShPtr m_interface = nullptr;
     IoIdGenerator m_IdGenerator;
     IoIdKeeper m_currIoId;
-    QList<IoWorkerCmdPack> m_pendingCmdPacks;
-    int m_nextPosInCurrCmd = 0;
-    int m_maxPendingCmdPacks = 0;
+    QList<IoMultipleTransferGroup> m_pendingGroups;
+    int m_nextPosInCurrGroup = 0;
+    int m_maxPendingGroups = 0;
 };
 
 #endif // CSOURCEIOWORKER_H

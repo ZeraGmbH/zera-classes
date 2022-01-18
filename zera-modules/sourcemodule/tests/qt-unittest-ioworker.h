@@ -8,18 +8,16 @@ class IoWorkerTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onWorkPackFinished(IoWorkerCmdPack workPack);
+    void onIoWorkerGroupFinished(IoMultipleTransferGroup workGroup);
 private slots:
     void init();
 
     void emptyWorkerIsInvalid();
-    void cmdToWorkProperties();
-    void cmdPackToWorkIoSize();
-    void cmdPackToWorkIoSequence();
+    void mulipleTransferIniitialProperties();
 
     void noInterfaceNotBusy();
     void notOpenInterfaceNotBusy();
-    void emptyPackNotBusy();
+    void emptyGroupNotBusy();
     void openInterfaceBusy();
 
     void noInterfaceNotification();
@@ -32,29 +30,29 @@ private slots:
     void stopOnFirstError();
     void continueOnError();
 
-    void noErrorSigOnEmptyPack();
+    void noErrorSigalOnEmptyGroup();
 
     void rejectSpam();
     void acceptCloseToSpam();
 
-    void oneValidPacketSingleIo();
-    void twoValidPacketsSingleIo();
-    void oneValidPacketMultipleIo();
-    void twoValidPacketsMultipleIo();
+    void oneValidGroupSingleIo();
+    void twoValidGroupsSingleIo();
+    void oneValidGroupMultipleIo();
+    void twoValidGroupsMultipleIo();
     void twoFirstInvalidSecondOkSingleIo();
 
     void timeoutDetected();
 
 private:
     static tIoInterfaceShPtr createOpenInterface();
-    static IoWorkerCmdPack generateSwitchCommands(bool on);
-    static IoWorkerCmdPack generateStatusPollCommands();
-    static void adjustWorkCmdPack(IoWorkerCmdPack& workCmdPack,
-                                  PacketErrorBehaviors errorBehavior);
-    void evalNotificationCount(int cmdPassedExpected,
+    static IoMultipleTransferGroup generateSwitchCommands(bool on);
+    static IoMultipleTransferGroup generateStatusPollCommands();
+    static void adjustWorkTransferGroup(IoMultipleTransferGroup& workTransferGroup,
+                                  GroupErrorBehaviors errorBehavior);
+    void evalNotificationCount(int passedGroupsExpected,
                                int passExpected, int failExpected, int unknownExpected);
 
-    QList<IoWorkerCmdPack> m_listWorkPacksReceived;
+    QList<IoMultipleTransferGroup> m_listIoGroupsReceived;
 };
 
 #endif // SOURCEIOWORKERENTRYTEST_H

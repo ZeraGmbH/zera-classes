@@ -4,116 +4,94 @@
 
 static QObject* pIoWorkerTest = addTest(new IoWorkerTest);
 
-void IoWorkerTest::onWorkPackFinished(IoWorkerCmdPack workPack)
+void IoWorkerTest::onIoWorkerGroupFinished(IoMultipleTransferGroup workGroup)
 {
-    m_listWorkPacksReceived.append(workPack);
+    m_listIoGroupsReceived.append(workGroup);
 }
 
 void IoWorkerTest::init()
 {
-    m_listWorkPacksReceived.clear();
+    m_listIoGroupsReceived.clear();
 }
 
 void IoWorkerTest::emptyWorkerIsInvalid()
 {
-    IoWorkerCmdPack workPack;
-    QVERIFY(workPack.m_commandType == COMMAND_UNDEFINED);
-    QVERIFY(workPack.m_errorBehavior == BEHAVE_UNDEFINED);
+    IoMultipleTransferGroup workGroup;
+    QVERIFY(workGroup.m_commandType == COMMAND_UNDEFINED);
+    QVERIFY(workGroup.m_errorBehavior == BEHAVE_UNDEFINED);
 }
 
-void IoWorkerTest::cmdToWorkProperties()
+void IoWorkerTest::mulipleTransferIniitialProperties()
 {
-    IoWorkerCmdPack workPack = generateSwitchCommands(false);
-    QVERIFY(workPack.m_commandType != COMMAND_UNDEFINED);
-    QVERIFY(workPack.m_errorBehavior != BEHAVE_UNDEFINED);
-}
-
-void IoWorkerTest::cmdPackToWorkIoSize()
-{
-    IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
-    JsonParamApi params;
-    params.setOn(true);
-    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    IoWorkerCmdPack workPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
-    QCOMPARE(cmdPack.m_outInList.size(), workPack.m_workerIOList.size());
-}
-
-void IoWorkerTest::cmdPackToWorkIoSequence()
-{
-    IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
-    JsonParamApi params;
-    params.setOn(true);
-    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    IoWorkerCmdPack workPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
-    for(int i=0; i<cmdPack.m_outInList.size(); ++i) {
-        QCOMPARE(cmdPack.m_outInList[i].m_actionType, workPack.m_workerIOList[i].m_OutIn.m_actionType);
-    }
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    QVERIFY(workGroup.m_commandType != COMMAND_UNDEFINED);
+    QVERIFY(workGroup.m_errorBehavior != BEHAVE_UNDEFINED);
 }
 
 void IoWorkerTest::noInterfaceNotBusy()
 {
-    IoWorkerCmdPack workPack = generateSwitchCommands(true);
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(true);
     IoWorker worker;
-    worker.enqueueCmd(workPack);
+    worker.enqueueTransferGroup(workGroup);
     QVERIFY(!worker.isIoBusy());
 }
 
-void IoWorkerTest::emptyPackNotBusy()
+void IoWorkerTest::emptyGroupNotBusy()
 {
     IoWorker worker;
     worker.setIoInterface(createOpenInterface());
-    IoWorkerCmdPack workPack;
-    worker.enqueueCmd(workPack);
+    IoMultipleTransferGroup workGroup;
+    worker.enqueueTransferGroup(workGroup);
     QVERIFY(!worker.isIoBusy());
 }
 
 void IoWorkerTest::notOpenInterfaceNotBusy()
 {
     tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
-    IoWorkerCmdPack workPack = generateSwitchCommands(false);
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
     IoWorker worker;
     worker.setIoInterface(interface);
-    worker.enqueueCmd(workPack);
+    worker.enqueueTransferGroup(workGroup);
     QVERIFY(!worker.isIoBusy());
 }
 
 void IoWorkerTest::openInterfaceBusy()
 {
     IoWorker worker;
-    IoWorkerCmdPack workPack = generateSwitchCommands(false);
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
     worker.setIoInterface(createOpenInterface());
-    worker.enqueueCmd(workPack);
+    worker.enqueueTransferGroup(workGroup);
     QVERIFY(worker.isIoBusy());
 }
 
 void IoWorkerTest::noInterfaceNotification()
 {
     IoWorker worker;
-    IoWorkerCmdPack workPack = generateSwitchCommands(true);
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(true);
 
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
-    worker.enqueueCmd(workPack);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
+    worker.enqueueTransferGroup(workGroup);
     QTest::qWait(10);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 1);
-    QVERIFY(m_listWorkPacksReceived[0] == workPack); // QCOMPARE on objects does not play well and will be remove in QT6
-    evalNotificationCount(0, 0, 0, workPack.m_workerIOList.count());
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
+    QVERIFY(m_listIoGroupsReceived[0] == workGroup); // QCOMPARE on objects does not play well and will be remove in QT6
+    evalNotificationCount(0, 0, 0, workGroup.m_ioTransferList.count());
 }
 
 void IoWorkerTest::notOpenInterfaceNotifications()
 {
     tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
     IoWorker worker;
-    IoWorkerCmdPack workPack = generateSwitchCommands(true);
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(true);
     worker.setIoInterface(interface);
 
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
-    workPack.m_workerId = worker.enqueueCmd(workPack);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
+    workGroup.m_groupId = worker.enqueueTransferGroup(workGroup);
     QTest::qWait(10);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 1);
-    QVERIFY(m_listWorkPacksReceived[0] == workPack);
-    evalNotificationCount(0, 0, 0, workPack.m_workerIOList.count());
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
+    QVERIFY(m_listIoGroupsReceived[0] == workGroup);
+    evalNotificationCount(0, 0, 0, workGroup.m_ioTransferList.count());
 }
 
 void IoWorkerTest::disconnectBeforeEnqueue()
@@ -124,8 +102,8 @@ void IoWorkerTest::disconnectBeforeEnqueue()
     worker.setIoInterface(interface);
 
     demoInterface->simulateExternalDisconnect();
-    IoWorkerCmdPack workPack = generateSwitchCommands(false);
-    worker.enqueueCmd(workPack);
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    worker.enqueueTransferGroup(workGroup);
 
     QVERIFY(!worker.isIoBusy());
 }
@@ -136,7 +114,7 @@ void IoWorkerTest::disconnectWhileWorking()
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
     demoInterface->setResponseDelay(false, 500);
 
     QTimer timer;
@@ -145,12 +123,12 @@ void IoWorkerTest::disconnectWhileWorking()
         demoInterface->simulateExternalDisconnect();
     });
     timer.start(10);
-    IoWorkerCmdPack workPack = generateSwitchCommands(false);
-    worker.enqueueCmd(workPack);
+    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    worker.enqueueTransferGroup(workGroup);
     QTest::qWait(50);
 
     QVERIFY(!worker.isIoBusy());
-    QCOMPARE(m_listWorkPacksReceived.count(), 1);
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
     evalNotificationCount(0, 0, 0, 1);
 }
 
@@ -160,7 +138,7 @@ void IoWorkerTest::disconnectWhileWorkingMultipleNotifications()
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
     demoInterface->setResponseDelay(false, 500);
 
     QTimer timer;
@@ -169,15 +147,15 @@ void IoWorkerTest::disconnectWhileWorkingMultipleNotifications()
         demoInterface->simulateExternalDisconnect();
     });
     timer.start(10);
-    IoWorkerCmdPack workPack1 = generateSwitchCommands(true);
-    IoWorkerCmdPack workPack2 = generateSwitchCommands(false);
-    worker.enqueueCmd(workPack1);
-    worker.enqueueCmd(workPack2);
+    IoMultipleTransferGroup workGroup1 = generateSwitchCommands(true);
+    IoMultipleTransferGroup workGroup2 = generateSwitchCommands(false);
+    worker.enqueueTransferGroup(workGroup1);
+    worker.enqueueTransferGroup(workGroup2);
     QTest::qWait(50);
 
     QVERIFY(!worker.isIoBusy());
-    QCOMPARE(m_listWorkPacksReceived.count(), 2);
-    evalNotificationCount(0, 0, 0, workPack1.m_workerIOList.count()+workPack2.m_workerIOList.count());
+    QCOMPARE(m_listIoGroupsReceived.count(), 2);
+    evalNotificationCount(0, 0, 0, workGroup1.m_ioTransferList.count()+workGroup2.m_ioTransferList.count());
 }
 
 using DemoResponseHelper::generateResponseList;
@@ -189,32 +167,32 @@ void IoWorkerTest::stopOnFirstError()
     demoInterface->setResponseDelay(false, 1);
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
-    adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR);
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    adjustWorkTransferGroup(workTransferGroup, BEHAVE_STOP_ON_ERROR);
 
     constexpr int errorIoNumber = 2;
-    QList<QByteArray> responseList = generateResponseList(workCmdPack);
+    QList<QByteArray> responseList = generateResponseList(workTransferGroup);
     responseList[errorIoNumber] = "foo";
     demoInterface->appendResponses(responseList);
-    worker.enqueueCmd(workCmdPack);
+    worker.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(100);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 1);
-    QCOMPARE(m_listWorkPacksReceived[0].passedAll(), false);
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
+    QCOMPARE(m_listIoGroupsReceived[0].passedAll(), false);
     // valid data received
     for(int runIo = 0; runIo<errorIoNumber; ++runIo) {
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_dataReceived, responseList[runIo]);
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, IoWorkerEntry::EVAL_PASS);
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_dataReceived, responseList[runIo]);
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IOSingleTransferData::EVAL_PASS);
     }
     // invalid data received
-    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_dataReceived, responseList[errorIoNumber]);
-    QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[errorIoNumber].m_IoEval, IoWorkerEntry::EVAL_WRONG_ANSWER);
+    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber].m_dataReceived, responseList[errorIoNumber]);
+    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber].m_IoEval, IOSingleTransferData::EVAL_WRONG_ANSWER);
     // no data received
-    for(int notRunIo = errorIoNumber+1; notRunIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++notRunIo) {
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_dataReceived, "");
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_IoEval, IoWorkerEntry::EVAL_NOT_EXECUTED);
+    for(int notRunIo = errorIoNumber+1; notRunIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++notRunIo) {
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo].m_dataReceived, "");
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo].m_IoEval, IOSingleTransferData::EVAL_NOT_EXECUTED);
     }
 }
 
@@ -226,46 +204,46 @@ void IoWorkerTest::continueOnError()
     demoInterface->setResponseDelay(false, 1);
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
-    adjustWorkCmdPack(workCmdPack, BEHAVE_CONTINUE_ON_ERROR);
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    adjustWorkTransferGroup(workTransferGroup, BEHAVE_CONTINUE_ON_ERROR);
 
     constexpr int errorIoNumber = 2;
-    QList<QByteArray> responseList = generateResponseList(workCmdPack);
+    QList<QByteArray> responseList = generateResponseList(workTransferGroup);
     responseList[errorIoNumber] = "foo";
     demoInterface->appendResponses(responseList);
-    worker.enqueueCmd(workCmdPack);
+    worker.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(100);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 1);
-    QCOMPARE(m_listWorkPacksReceived[0].passedAll(), false);
-    for(int runIo = 0; runIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++runIo) {
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_dataReceived, responseList[runIo]);
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
+    QCOMPARE(m_listIoGroupsReceived[0].passedAll(), false);
+    for(int runIo = 0; runIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++runIo) {
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_dataReceived, responseList[runIo]);
         if(runIo != errorIoNumber) {
-            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, IoWorkerEntry::EVAL_PASS);
+            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IOSingleTransferData::EVAL_PASS);
         }
         else {
-            QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[runIo].m_IoEval, IoWorkerEntry::EVAL_WRONG_ANSWER);
+            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IOSingleTransferData::EVAL_WRONG_ANSWER);
         }
     }
 }
 
-void IoWorkerTest::noErrorSigOnEmptyPack()
+void IoWorkerTest::noErrorSigalOnEmptyGroup()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack;
-    worker.enqueueCmd(workCmdPack);
+    IoMultipleTransferGroup workTransferGroup;
+    worker.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(10);
-    if(m_listWorkPacksReceived.count() != 1) {
-        QCOMPARE(m_listWorkPacksReceived.count(), 1);
+    if(m_listIoGroupsReceived.count() != 1) {
+        QCOMPARE(m_listIoGroupsReceived.count(), 1);
         QFAIL("Skipping check of error flag");
     }
-    QVERIFY(m_listWorkPacksReceived[0].passedAll());
+    QVERIFY(m_listIoGroupsReceived[0].passedAll());
 }
 
 void IoWorkerTest::rejectSpam()
@@ -273,22 +251,22 @@ void IoWorkerTest::rejectSpam()
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
-    constexpr int maxPendingPackets = 3;
-    worker.setMaxPendingCmds(maxPendingPackets);
+    constexpr int maxPendingGroups = 3;
+    worker.setMaxPendingGroups(maxPendingGroups);
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
-    adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack);
-    for(int pack=0; pack<maxPendingPackets*2; pack++) {
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    adjustWorkTransferGroup(workTransferGroup, BEHAVE_STOP_ON_ERROR);
+    QList<QByteArray> responseList = generateResponseList(workTransferGroup);
+    for(int group=0; group<maxPendingGroups*2; group++) {
         demoInterface->appendResponses(responseList);
-        worker.enqueueCmd(workCmdPack);
+        worker.enqueueTransferGroup(workTransferGroup);
     }
     QTest::qWait(10);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), maxPendingPackets*2);
-    evalNotificationCount(maxPendingPackets, maxPendingPackets*responseList.count(), 0, maxPendingPackets*responseList.count());
+    QCOMPARE(m_listIoGroupsReceived.count(), maxPendingGroups*2);
+    evalNotificationCount(maxPendingGroups, maxPendingGroups*responseList.count(), 0, maxPendingGroups*responseList.count());
 }
 
 void IoWorkerTest::acceptCloseToSpam()
@@ -296,113 +274,113 @@ void IoWorkerTest::acceptCloseToSpam()
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
-    constexpr int maxPendingPackets = 3;
-    worker.setMaxPendingCmds(maxPendingPackets);
+    constexpr int maxPendingGroups = 3;
+    worker.setMaxPendingGroups(maxPendingGroups);
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
-    adjustWorkCmdPack(workCmdPack, BEHAVE_STOP_ON_ERROR);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack);
-    for(int pack=0; pack<maxPendingPackets; pack++) {
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    adjustWorkTransferGroup(workTransferGroup, BEHAVE_STOP_ON_ERROR);
+    QList<QByteArray> responseList = generateResponseList(workTransferGroup);
+    for(int group=0; group<maxPendingGroups; group++) {
         demoInterface->appendResponses(responseList);
-        worker.enqueueCmd(workCmdPack);
+        worker.enqueueTransferGroup(workTransferGroup);
     }
     QTest::qWait(10);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), maxPendingPackets);
-    evalNotificationCount(maxPendingPackets, maxPendingPackets*responseList.count(), 0, 0);
+    QCOMPARE(m_listIoGroupsReceived.count(), maxPendingGroups);
+    evalNotificationCount(maxPendingGroups, maxPendingGroups*responseList.count(), 0, 0);
 }
 
-void IoWorkerTest::oneValidPacketSingleIo()
+void IoWorkerTest::oneValidGroupSingleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(false);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack);
-    for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(false);
+    QList<QByteArray> responseList = generateResponseList(workTransferGroup);
+    for(int group=0; group<workTransferGroup.m_ioTransferList.count(); group++) {
         demoInterface->appendResponses(responseList);
     }
-    worker.enqueueCmd(workCmdPack);
+    worker.enqueueTransferGroup(workTransferGroup);
     QVERIFY(worker.isIoBusy());
     QTest::qWait(10);
-    disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 1);
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
     evalNotificationCount(1, 1, 0, 0);
 }
 
-void IoWorkerTest::twoValidPacketsSingleIo()
+void IoWorkerTest::twoValidGroupsSingleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(false);
-    QList<QByteArray> responseList = generateResponseList(workCmdPack);
-    for(int pack=0; pack<2*workCmdPack.m_workerIOList.count(); pack++) {
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(false);
+    QList<QByteArray> responseList = generateResponseList(workTransferGroup);
+    for(int group=0; group<2*workTransferGroup.m_ioTransferList.count(); group++) {
         demoInterface->appendResponses(responseList);
-        worker.enqueueCmd(workCmdPack);
+        worker.enqueueTransferGroup(workTransferGroup);
         QVERIFY(worker.isIoBusy());
     }
     QTest::qWait(10);
-    disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 2);
+    QCOMPARE(m_listIoGroupsReceived.count(), 2);
     evalNotificationCount(2, 2, 0, 0);
 }
 
-void IoWorkerTest::oneValidPacketMultipleIo()
+void IoWorkerTest::oneValidGroupMultipleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
-    int ioCount = workCmdPack.m_workerIOList.count();
-    demoInterface->appendResponses(generateResponseList(workCmdPack));
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    int ioCount = workTransferGroup.m_ioTransferList.count();
+    demoInterface->appendResponses(generateResponseList(workTransferGroup));
 
-    worker.enqueueCmd(workCmdPack);
+    worker.enqueueTransferGroup(workTransferGroup);
     QVERIFY(worker.isIoBusy());
     QTest::qWait(10);
-    disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 1);
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
     evalNotificationCount(1, ioCount, 0, 0);
 }
 
-void IoWorkerTest::twoValidPacketsMultipleIo()
+void IoWorkerTest::twoValidGroupsMultipleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
     int outInCount = 0;
-    IoWorkerCmdPack workCmdPacks[2];
-    workCmdPacks[0] = generateSwitchCommands(true);
-    workCmdPacks[1] = generateStatusPollCommands();
+    IoMultipleTransferGroup workTransferGroups[2];
+    workTransferGroups[0] = generateSwitchCommands(true);
+    workTransferGroups[1] = generateStatusPollCommands();
     int commandCount = 0;
-    for(auto &cmdPack: workCmdPacks) {
-        outInCount += cmdPack.m_workerIOList.count();
-        demoInterface->appendResponses(generateResponseList(cmdPack));
-        worker.enqueueCmd(cmdPack);
+    for(auto &transferGroup: workTransferGroups) {
+        outInCount += transferGroup.m_ioTransferList.count();
+        demoInterface->appendResponses(generateResponseList(transferGroup));
+        worker.enqueueTransferGroup(transferGroup);
         QVERIFY(worker.isIoBusy());
         commandCount++;
     }
     QTest::qWait(10);
-    disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 2);
+    QCOMPARE(m_listIoGroupsReceived.count(), 2);
     evalNotificationCount(2, outInCount, 0, 0);
 }
 
@@ -412,21 +390,25 @@ void IoWorkerTest::twoFirstInvalidSecondOkSingleIo()
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
-    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoWorkerCmdPack workCmdPacks[2];
-    workCmdPacks[0] = generateSwitchCommands(false);
-    workCmdPacks[1] = generateSwitchCommands(false);
-    for(auto &cmdPack: workCmdPacks) {
-        worker.enqueueCmd(cmdPack);
-        QVERIFY(worker.isIoBusy());
-        demoInterface->appendResponses(generateResponseList(cmdPack));
-    }
-    demoInterface->getResponsesForErrorInjection()[0] = "foo";
+    IoMultipleTransferGroup workTransferGroups[2];
+    workTransferGroups[0] = generateSwitchCommands(true);
+    demoInterface->appendResponses(generateResponseList(workTransferGroups[0]));
+    workTransferGroups[1] = generateSwitchCommands(false);
+    demoInterface->appendResponses(generateResponseList(workTransferGroups[1]));
+    QList<QByteArray>& listResponses = demoInterface->getResponsesForErrorInjection();
+    listResponses[0] = "foo";
+
+    worker.enqueueTransferGroup(workTransferGroups[0]);
+    QVERIFY(worker.isIoBusy());
+    worker.enqueueTransferGroup(workTransferGroups[1]);
+    QVERIFY(worker.isIoBusy());
+
     QTest::qWait(10);
-    disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+    disconnect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    QCOMPARE(m_listWorkPacksReceived.count(), 2);
+    QCOMPARE(m_listIoGroupsReceived.count(), 2);
     evalNotificationCount(1, 1, 1, 0);
 }
 
@@ -437,15 +419,15 @@ void IoWorkerTest::timeoutDetected()
     demoInterface->setResponseDelay(false, 10);
     IoWorker worker;
     worker.setIoInterface(interface);
-    IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
+    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
     int finishReceived = 0;
-    connect(&worker, &IoWorker::sigCmdFinished, [&](IoWorkerCmdPack cmdToFinish) {
-        QVERIFY(cmdToFinish.m_workerIOList.count() > 0);
+    connect(&worker, &IoWorker::sigTransferGroupFinished, [&](IoMultipleTransferGroup transferGroupToFinish) {
+        QVERIFY(transferGroupToFinish.m_ioTransferList.count() > 0);
         // only first I/O is executed
-        QCOMPARE(cmdToFinish.m_workerIOList[0].m_IoEval, IoWorkerEntry::EVAL_NO_ANSWER);
+        QCOMPARE(transferGroupToFinish.m_ioTransferList[0].m_IoEval, IOSingleTransferData::EVAL_NO_ANSWER);
         finishReceived++;
     });
-    worker.enqueueCmd(workCmdPack);
+    worker.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(30);
     QVERIFY(finishReceived > 0);
 }
@@ -459,53 +441,51 @@ tIoInterfaceShPtr IoWorkerTest::createOpenInterface()
     return interface;
 }
 
-IoWorkerCmdPack IoWorkerTest::generateStatusPollCommands()
+IoMultipleTransferGroup IoWorkerTest::generateStatusPollCommands()
 {
-    IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
+    IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;
-    IoCommandPacket cmdPack = ioPackGenerator.generateStatusPollPacket();
-    return IoWorkerConverter::commandPackToWorkerPack(cmdPack);
+    return ioGroupGenerator.generateStatusPollGroup();
 }
 
-IoWorkerCmdPack IoWorkerTest::generateSwitchCommands(bool on)
+IoMultipleTransferGroup IoWorkerTest::generateSwitchCommands(bool on)
 {
-    IoPacketGenerator ioPackGenerator = IoPacketGenerator(QJsonObject());
+    IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;
     params.setOn(on);
-    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    return IoWorkerConverter::commandPackToWorkerPack(cmdPack);
+    return ioGroupGenerator.generateOnOffGroup(params);
 }
 
-void IoWorkerTest::adjustWorkCmdPack(IoWorkerCmdPack& workCmdPack,
-                                     PacketErrorBehaviors errorBehavior)
+void IoWorkerTest::adjustWorkTransferGroup(IoMultipleTransferGroup& workTransferGroup,
+                                     GroupErrorBehaviors errorBehavior)
 {
-    workCmdPack.m_errorBehavior = errorBehavior;
+    workTransferGroup.m_errorBehavior = errorBehavior;
 }
 
-void IoWorkerTest::evalNotificationCount(int cmdPassedExpected, int passExpected, int failExpected, int unknownExpected)
+void IoWorkerTest::evalNotificationCount(int passedGroupsExpected, int passExpected, int failExpected, int unknownExpected)
 {
-    int cmdPassedCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
-    for(int pack=0; pack<m_listWorkPacksReceived.count(); pack++) {
-        if(m_listWorkPacksReceived[pack].passedAll()) {
-            cmdPassedCount++;
+    int passedGroupCount = 0, unknownCount = 0, passCount = 0, failCount = 0;
+    for(int group=0; group<m_listIoGroupsReceived.count(); group++) {
+        if(m_listIoGroupsReceived[group].passedAll()) {
+            passedGroupCount++;
         }
-        for(int io=0; io<m_listWorkPacksReceived[pack].m_workerIOList.count(); ++io) {
-            switch(m_listWorkPacksReceived[pack].m_workerIOList[io].m_IoEval) {
-            case IoWorkerEntry::EVAL_NOT_EXECUTED:
+        for(int io=0; io<m_listIoGroupsReceived[group].m_ioTransferList.count(); ++io) {
+            switch(m_listIoGroupsReceived[group].m_ioTransferList[io].m_IoEval) {
+            case IOSingleTransferData::EVAL_NOT_EXECUTED:
                 unknownCount++;
                 break;
-            case IoWorkerEntry::EVAL_PASS:
+            case IOSingleTransferData::EVAL_PASS:
                 passCount++;
                 break;
-            case IoWorkerEntry::EVAL_WRONG_ANSWER:
+            case IOSingleTransferData::EVAL_WRONG_ANSWER:
                 failCount++;
                 break;
-            case IoWorkerEntry::EVAL_NO_ANSWER:
+            case IOSingleTransferData::EVAL_NO_ANSWER:
                 break;
             }
         }
     }
-    QCOMPARE(cmdPassedCount, cmdPassedExpected);
+    QCOMPARE(passedGroupCount, passedGroupsExpected);
     QCOMPARE(passCount, passExpected);
     QCOMPARE(failCount, failExpected);
     QCOMPARE(unknownCount, unknownExpected);

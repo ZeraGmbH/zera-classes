@@ -5,7 +5,7 @@
 #include <jsonparamvalidator.h>
 #include "sourcedevicevein.h"
 #include "sourceveininterface.h"
-#include "io-worker/iopacketgenerator.h"
+#include "io-worker/iogroupgenerator.h"
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
@@ -14,7 +14,7 @@ SourceDeviceVein::SourceDeviceVein(tIoInterfaceShPtr interface, SupportedSourceT
 {
     m_persistentParamState = new PersistentJsonState(type, name, version);
     m_paramsCurrent = m_persistentParamState->loadJsonState();
-    m_sourceIoWorker.setIoInterface(interface); // for quick error tests: comment this line
+    m_ioWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
     connect(interface.get(), &IoInterfaceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
@@ -87,11 +87,11 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDeviceVein::handleSourceCmd(IoWorkerCmdPack cmdPack)
+void SourceDeviceVein::handleSourceCmd(IoMultipleTransferGroup transferGroup)
 {
-    SourceDeviceBase::handleSourceCmd(cmdPack);
+    SourceDeviceBase::handleSourceCmd(transferGroup);
     m_deviceStatus.setBusy(false);
-    if(!cmdPack.passedAll()) {
+    if(!transferGroup.passedAll()) {
         // For now just drop a short note. We need a concept
         // how to continue with translations - maybe an RPC called by GUI?
         // Maybe no

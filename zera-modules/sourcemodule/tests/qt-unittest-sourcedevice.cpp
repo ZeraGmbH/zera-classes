@@ -57,13 +57,12 @@ void SourceDeviceTest::disconnectSignal()
     QCOMPARE(countDisconnectReceived, 1);
 }
 
-static IoWorkerCmdPack createWorkingCmdPack(SourceDevice *source)
+static IoMultipleTransferGroup createWorkingIoGroup(SourceDevice *source)
 {
-    IoPacketGenerator ioPackGenerator = source->getIoPacketGenerator();
+    IoGroupGenerator ioGroupGenerator = source->getIoGroupGenerator();
     JsonParamApi params;
     params.setOn(false);
-    IoCommandPacket cmdPack = ioPackGenerator.generateOnOffPacket(params);
-    return IoWorkerConverter::commandPackToWorkerPack(cmdPack);
+    return ioGroupGenerator.generateOnOffGroup(params);
 }
 
 void SourceDeviceTest::multipleCmdsDifferentIds()
@@ -72,8 +71,8 @@ void SourceDeviceTest::multipleCmdsDifferentIds()
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
-    int id1 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
-    int id2 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
+    int id1 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
+    int id2 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
     QVERIFY(id1 != id2);
 }
 
@@ -83,9 +82,9 @@ public:
     int observerReceiveId = 0;
     TestObserver(SourceDeviceSubject* subject) : SourceDeviceObserver(subject) {}
 protected:
-    virtual void updateResponse(IoWorkerCmdPack cmdPack) override {
+    virtual void updateResponse(IoMultipleTransferGroup transferGroup) override {
         observerReceiveCount++;
-        observerReceiveId = cmdPack.m_workerId;
+        observerReceiveId = transferGroup.m_groupId;
     }
 };
 
@@ -98,8 +97,8 @@ void SourceDeviceTest::observerReceiveCount()
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
 
-    sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
-    sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
+    sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
+    sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
     QTest::qWait(10); // source's worker requires event loop
     QCOMPARE(testObserver1.observerReceiveCount, 2);
     QCOMPARE(testObserver2.observerReceiveCount, 2);
@@ -114,12 +113,12 @@ void SourceDeviceTest::observerReceiveId()
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
 
-    int id1 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
+    int id1 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
     QTest::qWait(10);
     QCOMPARE(testObserver1.observerReceiveId, id1);
     QCOMPARE(testObserver2.observerReceiveId, id1);
 
-    int id2 = sourceDevice.startTransaction(createWorkingCmdPack(&sourceDevice));
+    int id2 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
     QTest::qWait(10);
     QCOMPARE(testObserver1.observerReceiveId, id2);
     QCOMPARE(testObserver2.observerReceiveId, id2);
@@ -133,18 +132,17 @@ void SourceDeviceTest::busySignalOnSwitch()
     sourceDevice.setDemoResponseDelay(false, 1);
 
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(SOURCE_MT_COMMON, "", "");
-    IoPacketGenerator ioPackGen = IoPacketGenerator(paramStructure);
+    IoGroupGenerator ioGroupGen = IoGroupGenerator(paramStructure);
 
     ZeraJsonParamsState jsonParamsState(paramStructure);
     jsonParamsState.setStructure(paramStructure);
     JsonParamApi paramApi;
     paramApi.setParams(jsonParamsState.getDefaultJsonState());
-    IoCommandPacket cmdPack = ioPackGen.generateOnOffPacket(paramApi);
-    IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
+    IoMultipleTransferGroup transferGroup = ioGroupGen.generateOnOffGroup(paramApi);
 
     int countSwitches = 2;
-    sourceDevice.startTransaction(workerPack);
-    sourceDevice.startTransaction(workerPack);
+    sourceDevice.startTransaction(transferGroup);
+    sourceDevice.startTransaction(transferGroup);
 
     int busyToggleCount = 0;
     QObject::connect(&sourceDevice, &SourceDevice::sigSwitchTransationStarted, [&] {

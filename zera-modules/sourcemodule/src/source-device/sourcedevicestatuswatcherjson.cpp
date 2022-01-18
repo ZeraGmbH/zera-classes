@@ -48,23 +48,22 @@ void SourceDeviceStatusWatcherJson::onSwitchBusyChanged()
     setState(SOURCE_STATE::SWITCH_BUSY);
 }
 
-void SourceDeviceStatusWatcherJson::updateResponse(IoWorkerCmdPack cmdPack)
+void SourceDeviceStatusWatcherJson::updateResponse(IoMultipleTransferGroup transferGroup)
 {
-    if(cmdPack.isSwitchPack()) {
-        handleSwitchResponse(cmdPack);
+    if(transferGroup.isSwitchGroup()) {
+        handleSwitchResponse(transferGroup);
     }
 
-    if(cmdPack.isStateQuery() && m_ioIdKeeper.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
-        handleStateResponse(cmdPack);
+    if(transferGroup.isStateQueryGroup() && m_ioIdKeeper.isCurrAndDeactivateIf(transferGroup.m_groupId)) {
+        handleStateResponse(transferGroup);
     }
 }
 
 void SourceDeviceStatusWatcherJson::onPollTimer()
 {
     if(!m_ioIdKeeper.isActive()) {
-        IoCommandPacket cmdPack = m_sourceDevice->getIoPacketGenerator().generateStatusPollPacket();
-        IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
-        m_ioIdKeeper.setCurrent(m_sourceDevice->startTransaction(workerPack));
+        IoMultipleTransferGroup transferGroup = m_sourceDevice->getIoGroupGenerator().generateStatusPollGroup();
+        m_ioIdKeeper.setCurrent(m_sourceDevice->startTransaction(transferGroup));
     }
 }
 
@@ -87,9 +86,9 @@ void SourceDeviceStatusWatcherJson::setPollingOnStateChange()
     }
 }
 
-void SourceDeviceStatusWatcherJson::handleSwitchResponse(IoWorkerCmdPack &cmdPack)
+void SourceDeviceStatusWatcherJson::handleSwitchResponse(IoMultipleTransferGroup &transferGroup)
 {
-    if(!cmdPack.passedAll() && !isErrorActive()) {
+    if(!transferGroup.passedAll() && !isErrorActive()) {
         setState(SOURCE_STATE::ERROR_SWITCH);
     }
     else if(m_stateEnum == SOURCE_STATE::SWITCH_BUSY) {
@@ -97,9 +96,9 @@ void SourceDeviceStatusWatcherJson::handleSwitchResponse(IoWorkerCmdPack &cmdPac
     }
 }
 
-void SourceDeviceStatusWatcherJson::handleStateResponse(IoWorkerCmdPack &cmdPack)
+void SourceDeviceStatusWatcherJson::handleStateResponse(IoMultipleTransferGroup &transferGroup)
 {
-    if(!cmdPack.passedAll() && !isErrorActive()) {
+    if(!transferGroup.passedAll() && !isErrorActive()) {
         setState(SOURCE_STATE::ERROR_POLL);
     }
     else if(m_stateEnum == SOURCE_STATE::UNDEFINED) {

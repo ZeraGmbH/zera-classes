@@ -1,72 +1,17 @@
 #include "ioworker.h"
 
-bool IoWorkerEntry::operator ==(const IoWorkerEntry &other)
-{
-    // this for purpose of test -> ignore m_dataReceived / m_IoEval
-    return m_OutIn == other.m_OutIn;
-}
-
-
-bool IoWorkerCmdPack::passedAll() const
-{
-    return m_bPassedAll;
-}
-
-void IoWorkerCmdPack::evalAll()
-{
-    bool pass = true;
-    for(auto io : m_workerIOList) {
-        if(io.m_IoEval != IoWorkerEntry::EVAL_PASS) {
-            pass = false;
-        }
-    }
-    m_bPassedAll = pass;
-}
-
-bool IoWorkerCmdPack::isSwitchPack() const
-{
-    return m_commandType == COMMAND_SWITCH_ON || m_commandType == COMMAND_SWITCH_OFF;
-}
-
-bool IoWorkerCmdPack::isStateQuery() const
-{
-    return m_commandType == COMMAND_STATE_POLL;
-}
-
-bool IoWorkerCmdPack::operator ==(const IoWorkerCmdPack &other)
-{
-    return  m_workerId == other.m_workerId &&
-            m_commandType == other.m_commandType &&
-            m_errorBehavior == other.m_errorBehavior &&
-            m_workerIOList == other.m_workerIOList;
-}
-
-
-IoWorkerCmdPack IoWorkerConverter::commandPackToWorkerPack(const IoCommandPacket &commandPack)
-{
-    IoWorkerCmdPack workPack;
-    workPack.m_commandType = commandPack.m_commandType;
-    workPack.m_errorBehavior = commandPack.m_errorBehavior;
-    for(auto outIn : commandPack.m_outInList) {
-        IoWorkerEntry workEntry;
-        workEntry.m_OutIn = outIn;
-        workPack.m_workerIOList.append(workEntry);
-    }
-    return workPack;
-}
-
-QList<QByteArray> DemoResponseHelper::generateResponseList(const IoWorkerCmdPack& workCmdPack) {
+QList<QByteArray> DemoResponseHelper::generateResponseList(const IoMultipleTransferGroup& workTransferGroup) {
     QList<QByteArray> responseList;
-    for(auto io : workCmdPack.m_workerIOList) {
-        responseList.append(io.m_OutIn.m_bytesExpectedLead + io.m_OutIn.m_bytesExpectedTrail);
+    for(auto io : workTransferGroup.m_ioTransferList) {
+        responseList.append(io.m_bytesExpectedLead + io.m_bytesExpectedTrail);
     }
     return responseList;
 }
 
 IoWorker::IoWorker(QObject *parent) : QObject(parent)
 {
-    connect(this, &IoWorker::sigCmdFinishedQueued,
-            this, &IoWorker::sigCmdFinished, Qt::QueuedConnection);
+    connect(this, &IoWorker::sigTransferGroupFinishedQueued,
+            this, &IoWorker::sigTransferGroupFinished, Qt::QueuedConnection);
 }
 
 void IoWorker::setIoInterface(tIoInterfaceShPtr interface)
@@ -87,22 +32,22 @@ void IoWorker::setIoInterface(tIoInterfaceShPtr interface)
     }
 }
 
-void IoWorker::setMaxPendingCmds(int maxPackets)
+void IoWorker::setMaxPendingGroups(int maxGroups)
 {
-    m_maxPendingCmdPacks = maxPackets;
+    m_maxPendingGroups = maxGroups;
 }
 
-int IoWorker::enqueueCmd(IoWorkerCmdPack cmdPack)
+int IoWorker::enqueueTransferGroup(IoMultipleTransferGroup transferGroup)
 {
-    if(!canEnqueue(cmdPack)) {
-        finishCmd(cmdPack);
+    if(!canEnqueue(transferGroup)) {
+        finishGroup(transferGroup);
     }
     else {
-        cmdPack.m_workerId = m_IdGenerator.nextID();
-        m_pendingCmdPacks.append(cmdPack);
+        transferGroup.m_groupId = m_IdGenerator.nextID();
+        m_pendingGroups.append(transferGroup);
         tryStartNextIo();
     }
-    return cmdPack.m_workerId;
+    return transferGroup.m_groupId;
 }
 
 bool IoWorker::isIoBusy()
@@ -114,15 +59,13 @@ void IoWorker::onIoFinished(int ioID, bool interfaceError)
 {
     if(m_currIoId.isCurrAndDeactivateIf(ioID)) {
         if(interfaceError) {
-            abortAllCmds();
+            abortAllGroups();
         }
         else {
-            if(canContinue()) {
-                tryStartNextIo();
+            if(!canContinueCurrentGroup()) {
+                finishCurrentGroup();
             }
-            else {
-                abortAllCmds();
-            }
+            tryStartNextIo();
         }
     }
 }
@@ -130,100 +73,99 @@ void IoWorker::onIoFinished(int ioID, bool interfaceError)
 void IoWorker::onIoDisconnected()
 {
     m_currIoId.deactivate();
-    abortAllCmds();
+    abortAllGroups();
     setIoInterface(nullptr);
 }
 
 void IoWorker::tryStartNextIo()
 {
     if(!isIoBusy()) {
-        IoWorkerEntry* workerIo = getNextIo();
+        IOSingleTransferData* workerIo = getNextIoTransfer();
         if(workerIo) {
-            m_interface->setReadTimeoutNextIo(workerIo->m_OutIn.m_responseTimeoutMs);
-            int ioId = m_interface->sendAndReceive(workerIo->m_OutIn.m_bytesSend,
+            m_interface->setReadTimeoutNextIo(workerIo->m_responseTimeoutMs);
+            int ioId = m_interface->sendAndReceive(workerIo->m_bytesSend,
                                                    &workerIo->m_dataReceived);
             m_currIoId.setCurrent(ioId);
         }
     }
 }
 
-IoWorkerEntry* IoWorker::getNextIo()
+IOSingleTransferData *IoWorker::getNextIoTransfer()
 {
-    IoWorkerEntry* workerIo = nullptr;
-    IoWorkerCmdPack *currCmdPack = getCurrentCmd();
-    if(currCmdPack) {
-        if(m_nextPosInCurrCmd < currCmdPack->m_workerIOList.count()) {
-            workerIo = &(currCmdPack->m_workerIOList[m_nextPosInCurrCmd]);
-            m_nextPosInCurrCmd++;
+    IOSingleTransferData* workerIo = nullptr;
+    IoMultipleTransferGroup *currGroup = getCurrentGroup();
+    if(currGroup) {
+        if(m_nextPosInCurrGroup < currGroup->m_ioTransferList.count()) {
+            workerIo = &(currGroup->m_ioTransferList[m_nextPosInCurrGroup]);
+            m_nextPosInCurrGroup++;
         }
         else {
-            finishCurrentCmd();
-            workerIo = getNextIo();
+            finishCurrentGroup();
+            workerIo = getNextIoTransfer();
         }
     }
     return workerIo;
 }
 
-void IoWorker::finishCurrentCmd()
+void IoWorker::finishCurrentGroup()
 {
-    m_nextPosInCurrCmd = 0;
-    finishCmd(m_pendingCmdPacks.takeFirst());
+    m_nextPosInCurrGroup = 0;
+    finishGroup(m_pendingGroups.takeFirst());
 }
 
-void IoWorker::finishCmd(IoWorkerCmdPack cmdPackToFinish)
+void IoWorker::finishGroup(IoMultipleTransferGroup transferGroupToFinish)
 {
-    cmdPackToFinish.evalAll();
-    emit sigCmdFinishedQueued(cmdPackToFinish);
+    transferGroupToFinish.evalAll();
+    emit sigTransferGroupFinishedQueued(transferGroupToFinish);
 }
 
-void IoWorker::abortAllCmds()
+void IoWorker::abortAllGroups()
 {
-    while(!m_pendingCmdPacks.isEmpty()) {
-        finishCurrentCmd();
+    while(!m_pendingGroups.isEmpty()) {
+        finishCurrentGroup();
     }
 }
 
 bool IoWorker::evaluateResponse()
 {
     bool pass = false;
-    IoWorkerCmdPack *currCmdPack = getCurrentCmd();
-    if(currCmdPack) {
-        IoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInCurrCmd-1];
-        IoSingleOutIn& currentOutIn = currentWorker.m_OutIn;
+    IoMultipleTransferGroup *currGroup = getCurrentGroup();
+    if(currGroup) {
+        IOSingleTransferData& currentWorker = currGroup->m_ioTransferList[m_nextPosInCurrGroup-1];
         if(currentWorker.m_dataReceived.isEmpty()) {
-            currentWorker.m_IoEval = IoWorkerEntry::EVAL_NO_ANSWER;
+            currentWorker.m_IoEval = IOSingleTransferData::EVAL_NO_ANSWER;
         }
         else {
             pass =
-                    currentWorker.m_dataReceived.startsWith(currentOutIn.m_bytesExpectedLead) &&
-                    currentWorker.m_dataReceived.endsWith(currentOutIn.m_bytesExpectedTrail);
-            currentWorker.m_IoEval = pass ? IoWorkerEntry::EVAL_PASS : IoWorkerEntry::EVAL_WRONG_ANSWER;
+                    currentWorker.m_dataReceived.startsWith(currentWorker.m_bytesExpectedLead) &&
+                    currentWorker.m_dataReceived.endsWith(currentWorker.m_bytesExpectedTrail);
+            currentWorker.m_IoEval = pass ? IOSingleTransferData::EVAL_PASS : IOSingleTransferData::EVAL_WRONG_ANSWER;
         }
     }
     return pass;
 }
 
-bool IoWorker::canEnqueue(IoWorkerCmdPack cmdPack)
+bool IoWorker::canEnqueue(IoMultipleTransferGroup transferGroup)
 {
     bool canEnqueue =
             m_interface && m_interface->isOpen() &&
-            !cmdPack.m_workerIOList.isEmpty() &&
-            (m_maxPendingCmdPacks == 0 || m_pendingCmdPacks.size() < m_maxPendingCmdPacks);
+            !transferGroup.m_ioTransferList.isEmpty() &&
+            (m_maxPendingGroups == 0 || m_pendingGroups.size() < m_maxPendingGroups);
     return canEnqueue;
 }
 
-bool IoWorker::canContinueCurrentCmd()
+bool IoWorker::canContinueCurrentGroup()
 {
     bool pass = evaluateResponse();
-    IoWorkerCmdPack *currCmdPack = getCurrentCmd();
-    return pass || (currCmdPack && currCmdPack->m_errorBehavior == BEHAVE_CONTINUE_ON_ERROR);
+    IoMultipleTransferGroup *currGroup = getCurrentGroup();
+    return pass || (currGroup && currGroup->m_errorBehavior == BEHAVE_CONTINUE_ON_ERROR);
 }
 
-IoWorkerCmdPack *IoWorker::getCurrentCmd()
+IoMultipleTransferGroup *IoWorker::getCurrentGroup()
 {
-    IoWorkerCmdPack* current = nullptr;
-    if(!m_pendingCmdPacks.isEmpty()) {
-        current = &m_pendingCmdPacks.first();
+    IoMultipleTransferGroup* current = nullptr;
+    if(!m_pendingGroups.isEmpty()) {
+        current = &m_pendingGroups.first();
     }
     return current;
 }

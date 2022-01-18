@@ -22,7 +22,7 @@ public:
     ~SourceDevice();
 
     // requests
-    int startTransaction(const IoWorkerCmdPack &workerPack);
+    int startTransaction(const IoMultipleTransferGroup &transferGroup);
     void simulateExternalDisconnect();
 
     // setter
@@ -30,7 +30,7 @@ public:
     void setDemoResonseError(bool active);
 
     // getter
-    IoPacketGenerator getIoPacketGenerator();
+    IoGroupGenerator getIoGroupGenerator();
     SupportedSourceTypes getType() const;
     QString getName() const;
     QString getVersion() const;
@@ -42,18 +42,18 @@ signals:
     void sigInterfaceDisconnected();
 
 private slots:
-    void onSourceCmdFinished(IoWorkerCmdPack cmdPack);
+    void onIoGroupFinished(IoMultipleTransferGroup transferGroup);
 
 signals:
     void sigSwitchTransationStartedQueued();
 
 private:
-    void doDemoTransactionAdjustments(const IoWorkerCmdPack &workerPack);
+    void doDemoTransactionAdjustments(const IoMultipleTransferGroup &transferGroup);
 
     tIoInterfaceShPtr m_ioInterface;
-    IoWorker m_sourceIoWorker;
+    IoWorker m_ioWorker;
 
-    IoPacketGenerator m_outInGenerator;
+    IoGroupGenerator m_ioGroupGenerator;
 
     SupportedSourceTypes m_type;
     QString m_name;

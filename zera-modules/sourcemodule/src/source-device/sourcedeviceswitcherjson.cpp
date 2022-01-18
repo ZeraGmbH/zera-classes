@@ -21,9 +21,8 @@ SourceDeviceSwitcherJson::~SourceDeviceSwitcherJson()
 void SourceDeviceSwitcherJson::switchState(JsonParamApi paramState)
 {
     m_paramsRequested = paramState;
-    IoCommandPacket cmdPack = m_sourceDevice->getIoPacketGenerator().generateOnOffPacket(m_paramsRequested);
-    IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
-    m_sourceDevice->startTransaction(workerPack);
+    IoMultipleTransferGroup transferGroup = m_sourceDevice->getIoGroupGenerator().generateOnOffGroup(m_paramsRequested);
+    m_sourceDevice->startTransaction(transferGroup);
 }
 
 void SourceDeviceSwitcherJson::switchOff()
@@ -38,10 +37,10 @@ JsonParamApi SourceDeviceSwitcherJson::getCurrLoadState()
     return m_paramsCurrent;
 }
 
-void SourceDeviceSwitcherJson::updateResponse(IoWorkerCmdPack cmdPack)
+void SourceDeviceSwitcherJson::updateResponse(IoMultipleTransferGroup transferGroup)
 {
-    if(cmdPack.isSwitchPack()) {
-        if(cmdPack.passedAll()) {
+    if(transferGroup.isSwitchGroup()) {
+        if(transferGroup.passedAll()) {
             m_paramsCurrent = m_paramsRequested;
             m_persistentParamState->saveJsonState(m_paramsCurrent);
             emit sigSwitchFinished();

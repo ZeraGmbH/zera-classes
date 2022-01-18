@@ -1,59 +1,45 @@
-#include "iopacketgenerator.h"
+#include "iogroupgenerator.h"
 #include "sourceactions.h"
 #include "io-interface/iointerfacebase.h"
 
-void IoSingleOutIn::setActionType(SourceActionTypes::ActionTypes actionType)
-{
-    m_actionType = actionType;
-}
-
-bool IoSingleOutIn::operator ==(const IoSingleOutIn &other)
-{
-    return  m_actionType == other.m_actionType &&
-            m_responseTimeoutMs == other.m_responseTimeoutMs &&
-            m_bytesSend == other.m_bytesSend &&
-            m_bytesExpectedLead == other.m_bytesExpectedLead &&
-            m_bytesExpectedTrail == other.m_bytesExpectedTrail;
-}
-
-IoPacketGenerator::IoPacketGenerator(JsonStructApi jsonStructApi) :
+IoGroupGenerator::IoGroupGenerator(JsonStructApi jsonStructApi) :
     m_jsonStructApi(jsonStructApi),
     m_ioPrefix(m_jsonStructApi.getIoPrefix())
 {
 }
 
-IoPacketGenerator::~IoPacketGenerator()
+IoGroupGenerator::~IoGroupGenerator()
 {
 }
 
-IoCommandPacket IoPacketGenerator::generateOnOffPacket(JsonParamApi requestedParams)
+IoMultipleTransferGroup IoGroupGenerator::generateOnOffGroup(JsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
-    IoCommandPacket commandPack;
-    commandPack.m_commandType = requestedParams.getOn() ? COMMAND_SWITCH_ON : COMMAND_SWITCH_OFF;
-    commandPack.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
+    IoMultipleTransferGroup transferGroup;
+    transferGroup.m_commandType = requestedParams.getOn() ? COMMAND_SWITCH_ON : COMMAND_SWITCH_OFF;
+    transferGroup.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
     for(auto &actionType : actionsTypeList) {
-        commandPack.m_outInList.append(generateListForAction(actionType));
+        transferGroup.m_ioTransferList.append(generateListForAction(actionType));
     }
-    return commandPack;
+    return transferGroup;
 }
 
-IoCommandPacket IoPacketGenerator::generateStatusPollPacket()
+IoMultipleTransferGroup IoGroupGenerator::generateStatusPollGroup()
 {
-    IoCommandPacket commandPack;
-    commandPack.m_commandType = COMMAND_STATE_POLL;
-    commandPack.m_errorBehavior = BEHAVE_CONTINUE_ON_ERROR;
+    IoMultipleTransferGroup transferGroup;
+    transferGroup.m_commandType = COMMAND_STATE_POLL;
+    transferGroup.m_errorBehavior = BEHAVE_CONTINUE_ON_ERROR;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generatePeriodicActions();
     for(auto &actionType : actionsTypeList) {
-        commandPack.m_outInList.append(generateListForAction(actionType));
+        transferGroup.m_ioTransferList.append(generateListForAction(actionType));
     }
-    return commandPack;
+    return transferGroup;
 }
 
-tIoOutInList IoPacketGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
+tIoTransferList IoGroupGenerator::generateListForAction(SourceActionTypes::ActionTypes actionType)
 {
-    tIoOutInList outInList;
+    tIoTransferList outInList;
     switch(actionType) {
     case SourceActionTypes::SET_RMS:
         outInList.append(generateRMSAndAngleUList());
@@ -86,7 +72,6 @@ tIoOutInList IoPacketGenerator::generateListForAction(SourceActionTypes::ActionT
         break;
     }
     for(auto &outIn : outInList) {
-        outIn.m_actionType = actionType;
         if(outIn.m_responseTimeoutMs == 0) {
             outIn.m_responseTimeoutMs = sourceDefaultTimeout;
         }
@@ -94,9 +79,9 @@ tIoOutInList IoPacketGenerator::generateListForAction(SourceActionTypes::ActionT
     return outInList;
 }
 
-tIoOutInList IoPacketGenerator::generateRMSAndAngleUList()
+tIoTransferList IoGroupGenerator::generateRMSAndAngleUList()
 {
-    tIoOutInList outInList;
+    tIoTransferList outInList;
     QByteArray bytesSend;
 
     double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
@@ -119,13 +104,13 @@ tIoOutInList IoPacketGenerator::generateRMSAndAngleUList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponseLead = m_ioPrefix + "OKUP";
-    outInList.append(IoSingleOutIn(bytesSend, expectedResponseLead));
+    outInList.append(IOSingleTransferData(bytesSend, expectedResponseLead));
     return outInList;
 }
 
-tIoOutInList IoPacketGenerator::generateRMSAndAngleIList()
+tIoTransferList IoGroupGenerator::generateRMSAndAngleIList()
 {
-    tIoOutInList outInList;
+    tIoTransferList outInList;
     QByteArray bytesSend;
 
     double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
@@ -148,12 +133,12 @@ tIoOutInList IoPacketGenerator::generateRMSAndAngleIList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponseLead = m_ioPrefix + "OKIP";
-    outInList.append(IoSingleOutIn(bytesSend, expectedResponseLead));
+    outInList.append(IOSingleTransferData(bytesSend, expectedResponseLead));
 
     return outInList;
 }
 
-tIoOutInList IoPacketGenerator::generateSwitchPhasesList()
+tIoTransferList IoGroupGenerator::generateSwitchPhasesList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "UI";
@@ -197,10 +182,10 @@ tIoOutInList IoPacketGenerator::generateSwitchPhasesList()
     bytesSend.append("\r");
     QByteArray expectedResponseLead = m_ioPrefix + "OKUI";
     int timeout = globalOn ? 15000 : 5000;
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead, "\r", timeout);
+    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead, "\r", timeout);
 }
 
-tIoOutInList IoPacketGenerator::generateFrequencyList()
+tIoTransferList IoGroupGenerator::generateFrequencyList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "FR";
@@ -214,10 +199,10 @@ tIoOutInList IoPacketGenerator::generateFrequencyList()
     }
     bytesSend.append("\r");
     QByteArray expectedResponseLead = m_ioPrefix + "OKFR";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
 }
 
-tIoOutInList IoPacketGenerator::generateRegulationList()
+tIoTransferList IoGroupGenerator::generateRegulationList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "RE";
@@ -226,25 +211,25 @@ tIoOutInList IoPacketGenerator::generateRegulationList()
     bytesSend.append("\r");
 
     QByteArray expectedResponseLead = m_ioPrefix + "OKRE";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
 }
 
-tIoOutInList IoPacketGenerator::generateQueryStatusList()
+tIoTransferList IoGroupGenerator::generateQueryStatusList()
 {
     QByteArray bytesSend;
     bytesSend = m_ioPrefix + "SM\r"; // error condition for now
 
     QByteArray expectedResponseLead = m_ioPrefix + "SM";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
 }
 
-tIoOutInList IoPacketGenerator::generateQueryActualList()
+tIoTransferList IoGroupGenerator::generateQueryActualList()
 {
     QByteArray bytesSend;
     bytesSend = "AME0;3\r";// This is single phase!!
 
     QByteArray expectedResponseLead = "AME";
-    return tIoOutInList() << IoSingleOutIn(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
 }
 
 QByteArray IoCmdFormatHelper::formatDouble(double val, int preDigits, char digit, int postDigits)
