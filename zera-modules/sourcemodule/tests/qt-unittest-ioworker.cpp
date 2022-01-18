@@ -406,6 +406,30 @@ void IoWorkerTest::twoValidPacketsMultipleIo()
     evalNotificationCount(2, outInCount, 0, 0);
 }
 
+void IoWorkerTest::twoFirstInvalidSecondOkSingleIo()
+{
+    tIoInterfaceShPtr interface = createOpenInterface();
+    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    IoWorker worker;
+    worker.setIoInterface(interface);
+    connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+
+    IoWorkerCmdPack workCmdPacks[2];
+    workCmdPacks[0] = generateSwitchCommands(false);
+    workCmdPacks[1] = generateSwitchCommands(false);
+    for(auto &cmdPack: workCmdPacks) {
+        worker.enqueueCmd(cmdPack);
+        QVERIFY(worker.isIoBusy());
+        demoInterface->appendResponses(generateResponseList(cmdPack));
+    }
+    demoInterface->getResponsesForErrorInjection()[0] = "foo";
+    QTest::qWait(10);
+    disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
+
+    QCOMPARE(m_listWorkPacksReceived.count(), 2);
+    evalNotificationCount(1, 1, 1, 0);
+}
+
 void IoWorkerTest::timeoutDetected()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
