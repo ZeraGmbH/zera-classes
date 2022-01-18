@@ -71,7 +71,7 @@ signals:
     void sigCmdFinished(IoWorkerCmdPack cmdPack);
 
 private slots:
-    void onIoFinished(int ioID, bool error);
+    void onIoFinished(int ioID, bool interfaceError);
     void onIoDisconnected();
 signals:
     void sigCmdFinishedQueued(IoWorkerCmdPack cmdPack);

@@ -29,7 +29,7 @@ protected:
 private slots:
     void onResponseDelayTimer();
 private:
-    void sendResponse(bool error);
+    void sendResponse(bool interfaceError);
 
     bool m_bOpen = false;
     int m_responseDelayMs = 0;
