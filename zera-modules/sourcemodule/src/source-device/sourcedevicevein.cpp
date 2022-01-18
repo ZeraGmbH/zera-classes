@@ -9,7 +9,7 @@
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
-SourceDeviceVein::SourceDeviceVein(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
+SourceDeviceVein::SourceDeviceVein(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     SourceDeviceBase(interface, type, name, version)
 {
     m_persistentParamState = new PersistentJsonState(type, name, version);
@@ -17,7 +17,7 @@ SourceDeviceVein::SourceDeviceVein(tIoInterfaceShPtr interface, SupportedSourceT
     m_ioWorker.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
-    connect(interface.get(), &IoInterfaceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
+    connect(interface.get(), &IODeviceBaseSerial::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
 }
 
 SourceDeviceVein::~SourceDeviceVein()
@@ -87,7 +87,7 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDeviceVein::handleSourceCmd(IoMultipleTransferGroup transferGroup)
+void SourceDeviceVein::handleSourceCmd(IoTransferDataGroup transferGroup)
 {
     SourceDeviceBase::handleSourceCmd(transferGroup);
     m_deviceStatus.setBusy(false);

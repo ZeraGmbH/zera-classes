@@ -1,20 +1,20 @@
-#include "iointerfacedemo.h"
+#include "iodevicedemo.h"
 
-IoInterfaceDemo::IoInterfaceDemo(QObject *parent) : IoInterfaceBase(parent)
+IoDeviceDemo::IoDeviceDemo(QObject *parent) : IODeviceBaseSerial(parent)
 {
     m_responseDelayTimer.setSingleShot(true);
     connect(&m_responseDelayTimer, &QTimer::timeout,
-            this, &IoInterfaceDemo::onResponseDelayTimer);
+            this, &IoDeviceDemo::onResponseDelayTimer);
 }
 
-void IoInterfaceDemo::onResponseDelayTimer()
+void IoDeviceDemo::onResponseDelayTimer()
 {
     sendResponse(false);
 }
 
-void IoInterfaceDemo::sendResponse(bool interfaceError)
+void IoDeviceDemo::sendResponse(bool ioDeviceError)
 {
-    if(interfaceError) {
+    if(ioDeviceError) {
         m_responseList.clear();
     }
     QByteArray response;
@@ -24,22 +24,22 @@ void IoInterfaceDemo::sendResponse(bool interfaceError)
     if(m_pDataReceive) {
         *m_pDataReceive = response;
     }
-    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), interfaceError);
+    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), ioDeviceError);
 }
 
-bool IoInterfaceDemo::open(QString strDeviceInfo)
+bool IoDeviceDemo::open(QString strDeviceInfo)
 {
     m_strDeviceInfo = strDeviceInfo;
     m_bOpen = true;
     return true;
 }
 
-void IoInterfaceDemo::close()
+void IoDeviceDemo::close()
 {
     m_bOpen = false;
 }
 
-int IoInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
+int IoDeviceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
 {
     m_currIoId.setCurrent(m_IDGenerator.nextID());
     m_pDataReceive = pDataReceive;
@@ -57,7 +57,7 @@ int IoInterfaceDemo::sendAndReceive(QByteArray, QByteArray* pDataReceive)
     return m_currIoId.getCurrent();
 }
 
-void IoInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)
+void IoDeviceDemo::setReadTimeoutNextIo(int timeoutMs)
 {
     m_responseDelayMsTimeoutSimul = timeoutMs/2;
     if(m_responseDelayMsTimeoutSimul > 3000) {
@@ -65,23 +65,23 @@ void IoInterfaceDemo::setReadTimeoutNextIo(int timeoutMs)
     }
 }
 
-void IoInterfaceDemo::simulateExternalDisconnect()
+void IoDeviceDemo::simulateExternalDisconnect()
 {
     emit sigDisconnected();
 }
 
-void IoInterfaceDemo::setResponseDelay(bool followsTimeout, int iFixedMs)
+void IoDeviceDemo::setResponseDelay(bool followsTimeout, int iFixedMs)
 {
     m_delayFollowsTimeout = followsTimeout;
     m_responseDelayMs = iFixedMs;
 }
 
-void IoInterfaceDemo::appendResponses(QList<QByteArray> responseList)
+void IoDeviceDemo::appendResponses(QList<QByteArray> responseList)
 {
     m_responseList.append(responseList);
 }
 
-QList<QByteArray>& IoInterfaceDemo::getResponsesForErrorInjection()
+QList<QByteArray>& IoDeviceDemo::getResponsesForErrorInjection()
 {
     return m_responseList;
 }

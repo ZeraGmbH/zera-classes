@@ -4,13 +4,13 @@
 #include <QObject>
 #include <QSharedPointer>
 #include "iogroupgenerator.h"
-#include "io-interface/iointerfacebase.h"
-#include "io-device/iomultipletransfergroup.h"
+#include "io-device/iodevicebaseserial.h"
+#include "io-device/iotransferdatagroup.h"
 #include "io-ids/ioidkeeper.h"
 
 namespace DemoResponseHelper
 {
-    QList<QByteArray> generateResponseList(const IoMultipleTransferGroup &workTransferGroup);
+    QList<QByteArray> generateResponseList(const IoTransferDataGroup &workTransferGroup);
 }
 
 class IoWorker : public QObject
@@ -19,35 +19,35 @@ class IoWorker : public QObject
 public:
     explicit IoWorker(QObject *parent = nullptr);
 
-    void setIoInterface(tIoInterfaceShPtr interface);
+    void setIoInterface(tIoDeviceShPtr interface);
     void setMaxPendingGroups(int maxGroups);
-    int enqueueTransferGroup(IoMultipleTransferGroup transferGroup);
+    int enqueueTransferGroup(IoTransferDataGroup transferGroup);
 
     bool isIoBusy();
 
 signals:
-    void sigTransferGroupFinished(IoMultipleTransferGroup transferGroup);
+    void sigTransferGroupFinished(IoTransferDataGroup transferGroup);
 
 private slots:
-    void onIoFinished(int ioID, bool interfaceError);
+    void onIoFinished(int ioID, bool ioDeviceError);
     void onIoDisconnected();
 signals:
-    void sigTransferGroupFinishedQueued(IoMultipleTransferGroup transferGroup);
+    void sigTransferGroupFinishedQueued(IoTransferDataGroup transferGroup);
 private:
-    IoMultipleTransferGroup *getCurrentGroup();
-    IOSingleTransferData *getNextIoTransfer();
+    IoTransferDataGroup *getCurrentGroup();
+    IoTransferDataSingle *getNextIoTransfer();
     void tryStartNextIo();
-    void finishGroup(IoMultipleTransferGroup transferGroupToFinish);
+    void finishGroup(IoTransferDataGroup transferGroupToFinish);
     void finishCurrentGroup();
     void abortAllGroups();
     bool evaluateResponse();
-    bool canEnqueue(IoMultipleTransferGroup transferGroup);
+    bool canEnqueue(IoTransferDataGroup transferGroup);
     bool canContinueCurrentGroup();
 
-    tIoInterfaceShPtr m_interface = nullptr;
+    tIoDeviceShPtr m_interface = nullptr;
     IoIdGenerator m_IdGenerator;
     IoIdKeeper m_currIoId;
-    QList<IoMultipleTransferGroup> m_pendingGroups;
+    QList<IoTransferDataGroup> m_pendingGroups;
     int m_nextPosInCurrGroup = 0;
     int m_maxPendingGroups = 0;
 };

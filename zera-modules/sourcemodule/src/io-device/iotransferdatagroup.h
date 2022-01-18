@@ -1,7 +1,7 @@
-#ifndef IOMULTIPLETRANSFERGROUP_H
-#define IOMULTIPLETRANSFERGROUP_H
+#ifndef IOTRANSFERDATAGROUP_H
+#define IOTRANSFERDATAGROUP_H
 
-#include "iosingletransferdata.h"
+#include "iotransferdatasingle.h"
 
 enum SourceGroupTypes { // don't forget unittest on add
     COMMAND_UNDEFINED = 0,
@@ -18,7 +18,7 @@ enum GroupErrorBehaviors {
     BEHAVE_UNDEF_BOTTOM
 };
 
-class IoMultipleTransferGroup
+class IoTransferDataGroup
 {
 public:
     bool passedAll() const;
@@ -27,7 +27,7 @@ public:
     bool isSwitchGroup() const;
     bool isStateQueryGroup() const;
 
-    bool operator == (const IoMultipleTransferGroup& other);
+    bool operator == (const IoTransferDataGroup& other);
 
     int m_groupId = 0;
     SourceGroupTypes m_commandType = COMMAND_UNDEFINED;
@@ -36,7 +36,7 @@ public:
 private:
     bool m_bPassedAll = false;
 };
-Q_DECLARE_METATYPE(IoMultipleTransferGroup)
+Q_DECLARE_METATYPE(IoTransferDataGroup)
 
 
-#endif // IOMULTIPLETRANSFERGROUP_H
+#endif // IOTRANSFERDATAGROUP_H

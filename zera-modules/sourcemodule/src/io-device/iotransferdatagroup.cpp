@@ -1,32 +1,32 @@
-#include "iomultipletransfergroup.h"
+#include "iotransferdatagroup.h"
 
-bool IoMultipleTransferGroup::passedAll() const
+bool IoTransferDataGroup::passedAll() const
 {
     return m_bPassedAll;
 }
 
-void IoMultipleTransferGroup::evalAll()
+void IoTransferDataGroup::evalAll()
 {
     bool pass = true;
     for(auto io : m_ioTransferList) {
-        if(io.m_IoEval != IOSingleTransferData::EVAL_PASS) {
+        if(io.m_IoEval != IoTransferDataSingle::EVAL_PASS) {
             pass = false;
         }
     }
     m_bPassedAll = pass;
 }
 
-bool IoMultipleTransferGroup::isSwitchGroup() const
+bool IoTransferDataGroup::isSwitchGroup() const
 {
     return m_commandType == COMMAND_SWITCH_ON || m_commandType == COMMAND_SWITCH_OFF;
 }
 
-bool IoMultipleTransferGroup::isStateQueryGroup() const
+bool IoTransferDataGroup::isStateQueryGroup() const
 {
     return m_commandType == COMMAND_STATE_POLL;
 }
 
-bool IoMultipleTransferGroup::operator ==(const IoMultipleTransferGroup &other)
+bool IoTransferDataGroup::operator ==(const IoTransferDataGroup &other)
 {
     return  m_groupId == other.m_groupId &&
             m_commandType == other.m_commandType &&

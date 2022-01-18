@@ -18,7 +18,7 @@ void SourceDeviceTest::gettersOK()
     SupportedSourceTypes type = SOURCE_MT_COMMON;
     QString info = "fooInfo";
 
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     interface->open(info);
 
     SourceDevice sourceDevice(interface, type, name, version);
@@ -30,21 +30,21 @@ void SourceDeviceTest::gettersOK()
 
 void SourceDeviceTest::nonDemoInterFaceGet()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_BASE);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BASE);
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     QVERIFY(!sourceDevice.isDemo());
 }
 
 void SourceDeviceTest::demoInterFaceGet()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     QVERIFY(sourceDevice.isDemo());
 }
 
 void SourceDeviceTest::disconnectSignal()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
@@ -57,7 +57,7 @@ void SourceDeviceTest::disconnectSignal()
     QCOMPARE(countDisconnectReceived, 1);
 }
 
-static IoMultipleTransferGroup createWorkingIoGroup(SourceDevice *source)
+static IoTransferDataGroup createWorkingIoGroup(SourceDevice *source)
 {
     IoGroupGenerator ioGroupGenerator = source->getIoGroupGenerator();
     JsonParamApi params;
@@ -67,7 +67,7 @@ static IoMultipleTransferGroup createWorkingIoGroup(SourceDevice *source)
 
 void SourceDeviceTest::multipleCmdsDifferentIds()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
@@ -82,7 +82,7 @@ public:
     int observerReceiveId = 0;
     TestObserver(SourceDeviceSubject* subject) : SourceDeviceObserver(subject) {}
 protected:
-    virtual void updateResponse(IoMultipleTransferGroup transferGroup) override {
+    virtual void updateResponse(IoTransferDataGroup transferGroup) override {
         observerReceiveCount++;
         observerReceiveId = transferGroup.m_groupId;
     }
@@ -90,7 +90,7 @@ protected:
 
 void SourceDeviceTest::observerReceiveCount()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
@@ -106,7 +106,7 @@ void SourceDeviceTest::observerReceiveCount()
 
 void SourceDeviceTest::observerReceiveId()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
@@ -126,7 +126,7 @@ void SourceDeviceTest::observerReceiveId()
 
 void SourceDeviceTest::busySignalOnSwitch()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     interface->open("");
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 1);
@@ -138,7 +138,7 @@ void SourceDeviceTest::busySignalOnSwitch()
     jsonParamsState.setStructure(paramStructure);
     JsonParamApi paramApi;
     paramApi.setParams(jsonParamsState.getDefaultJsonState());
-    IoMultipleTransferGroup transferGroup = ioGroupGen.generateOnOffGroup(paramApi);
+    IoTransferDataGroup transferGroup = ioGroupGen.generateOnOffGroup(paramApi);
 
     int countSwitches = 2;
     sourceDevice.startTransaction(transferGroup);

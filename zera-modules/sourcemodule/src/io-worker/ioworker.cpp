@@ -1,6 +1,6 @@
 #include "ioworker.h"
 
-QList<QByteArray> DemoResponseHelper::generateResponseList(const IoMultipleTransferGroup& workTransferGroup) {
+QList<QByteArray> DemoResponseHelper::generateResponseList(const IoTransferDataGroup& workTransferGroup) {
     QList<QByteArray> responseList;
     for(auto io : workTransferGroup.m_ioTransferList) {
         responseList.append(io.m_bytesExpectedLead + io.m_bytesExpectedTrail);
@@ -14,19 +14,19 @@ IoWorker::IoWorker(QObject *parent) : QObject(parent)
             this, &IoWorker::sigTransferGroupFinished, Qt::QueuedConnection);
 }
 
-void IoWorker::setIoInterface(tIoInterfaceShPtr interface)
+void IoWorker::setIoInterface(tIoDeviceShPtr interface)
 {
     m_interface = interface;
     if(interface) {
-        connect(m_interface.get(), &IoInterfaceBase::sigIoFinished,
+        connect(m_interface.get(), &IODeviceBaseSerial::sigIoFinished,
                 this, &IoWorker::onIoFinished);
-        connect(m_interface.get(), &IoInterfaceBase::sigDisconnected,
+        connect(m_interface.get(), &IODeviceBaseSerial::sigDisconnected,
                 this, &IoWorker::onIoDisconnected);
     }
     else if(m_interface){
-        disconnect(m_interface.get(), &IoInterfaceBase::sigIoFinished,
+        disconnect(m_interface.get(), &IODeviceBaseSerial::sigIoFinished,
                    this, &IoWorker::onIoFinished);
-        disconnect(m_interface.get(), &IoInterfaceBase::sigDisconnected,
+        disconnect(m_interface.get(), &IODeviceBaseSerial::sigDisconnected,
                 this, &IoWorker::onIoDisconnected);
         m_interface = nullptr;
     }
@@ -37,7 +37,7 @@ void IoWorker::setMaxPendingGroups(int maxGroups)
     m_maxPendingGroups = maxGroups;
 }
 
-int IoWorker::enqueueTransferGroup(IoMultipleTransferGroup transferGroup)
+int IoWorker::enqueueTransferGroup(IoTransferDataGroup transferGroup)
 {
     if(!canEnqueue(transferGroup)) {
         finishGroup(transferGroup);
@@ -55,10 +55,10 @@ bool IoWorker::isIoBusy()
     return m_currIoId.isActive();
 }
 
-void IoWorker::onIoFinished(int ioID, bool interfaceError)
+void IoWorker::onIoFinished(int ioID, bool ioDeviceError)
 {
     if(m_currIoId.isCurrAndDeactivateIf(ioID)) {
-        if(interfaceError) {
+        if(ioDeviceError) {
             abortAllGroups();
         }
         else {
@@ -80,7 +80,7 @@ void IoWorker::onIoDisconnected()
 void IoWorker::tryStartNextIo()
 {
     if(!isIoBusy()) {
-        IOSingleTransferData* workerIo = getNextIoTransfer();
+        IoTransferDataSingle* workerIo = getNextIoTransfer();
         if(workerIo) {
             m_interface->setReadTimeoutNextIo(workerIo->m_responseTimeoutMs);
             int ioId = m_interface->sendAndReceive(workerIo->m_bytesSend,
@@ -90,10 +90,10 @@ void IoWorker::tryStartNextIo()
     }
 }
 
-IOSingleTransferData *IoWorker::getNextIoTransfer()
+IoTransferDataSingle *IoWorker::getNextIoTransfer()
 {
-    IOSingleTransferData* workerIo = nullptr;
-    IoMultipleTransferGroup *currGroup = getCurrentGroup();
+    IoTransferDataSingle* workerIo = nullptr;
+    IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
         if(m_nextPosInCurrGroup < currGroup->m_ioTransferList.count()) {
             workerIo = &(currGroup->m_ioTransferList[m_nextPosInCurrGroup]);
@@ -113,7 +113,7 @@ void IoWorker::finishCurrentGroup()
     finishGroup(m_pendingGroups.takeFirst());
 }
 
-void IoWorker::finishGroup(IoMultipleTransferGroup transferGroupToFinish)
+void IoWorker::finishGroup(IoTransferDataGroup transferGroupToFinish)
 {
     transferGroupToFinish.evalAll();
     emit sigTransferGroupFinishedQueued(transferGroupToFinish);
@@ -129,23 +129,23 @@ void IoWorker::abortAllGroups()
 bool IoWorker::evaluateResponse()
 {
     bool pass = false;
-    IoMultipleTransferGroup *currGroup = getCurrentGroup();
+    IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
-        IOSingleTransferData& currentWorker = currGroup->m_ioTransferList[m_nextPosInCurrGroup-1];
+        IoTransferDataSingle& currentWorker = currGroup->m_ioTransferList[m_nextPosInCurrGroup-1];
         if(currentWorker.m_dataReceived.isEmpty()) {
-            currentWorker.m_IoEval = IOSingleTransferData::EVAL_NO_ANSWER;
+            currentWorker.m_IoEval = IoTransferDataSingle::EVAL_NO_ANSWER;
         }
         else {
             pass =
                     currentWorker.m_dataReceived.startsWith(currentWorker.m_bytesExpectedLead) &&
                     currentWorker.m_dataReceived.endsWith(currentWorker.m_bytesExpectedTrail);
-            currentWorker.m_IoEval = pass ? IOSingleTransferData::EVAL_PASS : IOSingleTransferData::EVAL_WRONG_ANSWER;
+            currentWorker.m_IoEval = pass ? IoTransferDataSingle::EVAL_PASS : IoTransferDataSingle::EVAL_WRONG_ANSWER;
         }
     }
     return pass;
 }
 
-bool IoWorker::canEnqueue(IoMultipleTransferGroup transferGroup)
+bool IoWorker::canEnqueue(IoTransferDataGroup transferGroup)
 {
     bool canEnqueue =
             m_interface && m_interface->isOpen() &&
@@ -157,13 +157,13 @@ bool IoWorker::canEnqueue(IoMultipleTransferGroup transferGroup)
 bool IoWorker::canContinueCurrentGroup()
 {
     bool pass = evaluateResponse();
-    IoMultipleTransferGroup *currGroup = getCurrentGroup();
+    IoTransferDataGroup *currGroup = getCurrentGroup();
     return pass || (currGroup && currGroup->m_errorBehavior == BEHAVE_CONTINUE_ON_ERROR);
 }
 
-IoMultipleTransferGroup *IoWorker::getCurrentGroup()
+IoTransferDataGroup *IoWorker::getCurrentGroup()
 {
-    IoMultipleTransferGroup* current = nullptr;
+    IoTransferDataGroup* current = nullptr;
     if(!m_pendingGroups.isEmpty()) {
         current = &m_pendingGroups.first();
     }

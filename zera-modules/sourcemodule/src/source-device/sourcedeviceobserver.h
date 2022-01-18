@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class IoMultipleTransferGroup;
+class IoTransferDataGroup;
 class SourceDeviceSubject;
 
 
@@ -14,7 +14,7 @@ public:
     SourceDeviceObserver(SourceDeviceSubject* subject);
 
 protected slots:
-    virtual void updateResponse(IoMultipleTransferGroup transferGroup) = 0;
+    virtual void updateResponse(IoTransferDataGroup transferGroup) = 0;
     friend class SourceDeviceSubject;
 };
 

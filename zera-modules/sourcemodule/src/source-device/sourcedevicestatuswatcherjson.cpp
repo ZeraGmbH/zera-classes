@@ -48,7 +48,7 @@ void SourceDeviceStatusWatcherJson::onSwitchBusyChanged()
     setState(SOURCE_STATE::SWITCH_BUSY);
 }
 
-void SourceDeviceStatusWatcherJson::updateResponse(IoMultipleTransferGroup transferGroup)
+void SourceDeviceStatusWatcherJson::updateResponse(IoTransferDataGroup transferGroup)
 {
     if(transferGroup.isSwitchGroup()) {
         handleSwitchResponse(transferGroup);
@@ -62,7 +62,7 @@ void SourceDeviceStatusWatcherJson::updateResponse(IoMultipleTransferGroup trans
 void SourceDeviceStatusWatcherJson::onPollTimer()
 {
     if(!m_ioIdKeeper.isActive()) {
-        IoMultipleTransferGroup transferGroup = m_sourceDevice->getIoGroupGenerator().generateStatusPollGroup();
+        IoTransferDataGroup transferGroup = m_sourceDevice->getIoGroupGenerator().generateStatusPollGroup();
         m_ioIdKeeper.setCurrent(m_sourceDevice->startTransaction(transferGroup));
     }
 }
@@ -86,7 +86,7 @@ void SourceDeviceStatusWatcherJson::setPollingOnStateChange()
     }
 }
 
-void SourceDeviceStatusWatcherJson::handleSwitchResponse(IoMultipleTransferGroup &transferGroup)
+void SourceDeviceStatusWatcherJson::handleSwitchResponse(IoTransferDataGroup &transferGroup)
 {
     if(!transferGroup.passedAll() && !isErrorActive()) {
         setState(SOURCE_STATE::ERROR_SWITCH);
@@ -96,7 +96,7 @@ void SourceDeviceStatusWatcherJson::handleSwitchResponse(IoMultipleTransferGroup
     }
 }
 
-void SourceDeviceStatusWatcherJson::handleStateResponse(IoMultipleTransferGroup &transferGroup)
+void SourceDeviceStatusWatcherJson::handleStateResponse(IoTransferDataGroup &transferGroup)
 {
     if(!transferGroup.passedAll() && !isErrorActive()) {
         setState(SOURCE_STATE::ERROR_POLL);

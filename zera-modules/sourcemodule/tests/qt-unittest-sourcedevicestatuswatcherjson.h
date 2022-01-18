@@ -1,6 +1,6 @@
 #include <QObject>
 
-#include "io-interface/iointerfacefactory.h"
+#include "io-device/iodevicefactory.h"
 
 class SourceDevice;
 
@@ -33,5 +33,5 @@ private slots:
     void sequencePollStopsOnErrorAndStartsOnSwitch();
 private:
     SourceDevice *m_sourceDevice = nullptr;
-    tIoInterfaceShPtr m_interface;
+    tIoDeviceShPtr m_interface;
 };

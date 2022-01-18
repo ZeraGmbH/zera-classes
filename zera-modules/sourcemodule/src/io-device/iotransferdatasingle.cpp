@@ -1,10 +1,10 @@
-#include "iosingletransferdata.h"
+#include "iotransferdatasingle.h"
 
-IOSingleTransferData::IOSingleTransferData()
+IoTransferDataSingle::IoTransferDataSingle()
 {
 }
 
-bool IOSingleTransferData::operator ==(const IOSingleTransferData &other)
+bool IoTransferDataSingle::operator ==(const IoTransferDataSingle &other)
 {
     return  m_responseTimeoutMs == other.m_responseTimeoutMs &&
             m_bytesSend == other.m_bytesSend &&

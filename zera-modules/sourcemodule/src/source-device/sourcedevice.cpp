@@ -1,8 +1,8 @@
 #include "sourcedevice.h"
-#include "io-interface/iointerfacedemo.h"
+#include "io-device/iodevicedemo.h"
 #include "json/jsonstructureloader.h"
 
-SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
+SourceDevice::SourceDevice(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
     m_ioInterface(interface),
     m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(type, name, version)),
     m_type(type),
@@ -16,7 +16,7 @@ SourceDevice::SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes typ
     connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
             this, &SourceDevice::sigSwitchTransationStarted,
             Qt::QueuedConnection);
-    connect(m_ioInterface.get(), &IoInterfaceBase::sigDisconnected,
+    connect(m_ioInterface.get(), &IODeviceBaseSerial::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
             Qt::QueuedConnection);
 }
@@ -25,7 +25,7 @@ SourceDevice::~SourceDevice()
 {
 }
 
-int SourceDevice::startTransaction(const IoMultipleTransferGroup &transferGroup)
+int SourceDevice::startTransaction(const IoTransferDataGroup &transferGroup)
 {
     doDemoTransactionAdjustments(transferGroup);
     if(transferGroup.isSwitchGroup()) {
@@ -80,15 +80,15 @@ bool SourceDevice::isDemo() const
     return m_ioInterface->isDemo();
 }
 
-void SourceDevice::onIoGroupFinished(IoMultipleTransferGroup transferGroup)
+void SourceDevice::onIoGroupFinished(IoTransferDataGroup transferGroup)
 {
     notifyObservers(transferGroup);
 }
 
-void SourceDevice::doDemoTransactionAdjustments(const IoMultipleTransferGroup &transferGroup)
+void SourceDevice::doDemoTransactionAdjustments(const IoTransferDataGroup &transferGroup)
 {
     if(isDemo()) {
-        IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
+        IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
         QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(transferGroup);
         if(m_demoSimulErrorActive) {

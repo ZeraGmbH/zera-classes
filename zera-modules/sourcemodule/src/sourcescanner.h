@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QUuid>
 #include <QSharedPointer>
-#include "io-interface/iointerfacebase.h"
+#include "io-device/iodevicebaseserial.h"
 #include "source-device/sourcedevicevein.h"
 #include "io-ids/ioidkeeper.h"
 
-class IoInterfaceBase;
+class IODeviceBaseSerial;
 
 class SourceDeviceVein;
 class SourceScanner;
@@ -18,7 +18,7 @@ class SourceScanner : public QObject
 {
     Q_OBJECT
 public:
-    static tSourceScannerShPtr createScanner(tIoInterfaceShPtr interface, QUuid uuid);
+    static tSourceScannerShPtr createScanner(tIoDeviceShPtr interface, QUuid uuid);
     virtual ~SourceScanner();
 
     // requests
@@ -32,9 +32,9 @@ signals:
     void sigScanFinished(tSourceScannerShPtr scanner);
 
 private slots:
-    void onIoFinished(int ioId, bool interfaceError);
+    void onIoFinished(int ioId, bool ioDeviceError);
 private:
-    explicit SourceScanner(tIoInterfaceShPtr interface, QUuid uuid);
+    explicit SourceScanner(tIoDeviceShPtr interface, QUuid uuid);
 
     void sendReceiveSourceID();
     QByteArray createInterfaceSpecificPrepend();
@@ -43,7 +43,7 @@ private:
     static SupportedSourceTypes nextDemoType();
 
     IoIdKeeper m_currIoId;
-    tIoInterfaceShPtr m_ioInterface;
+    tIoDeviceShPtr m_ioInterface;
     QUuid m_uuid;
     SourceDeviceVein* m_sourceDeviceIdentified;
     QByteArray m_bytesReceived;

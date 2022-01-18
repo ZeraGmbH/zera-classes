@@ -3,16 +3,16 @@
 
 #include <QObject>
 
-class IoMultipleTransferGroup;
+class IoTransferDataGroup;
 class SourceDeviceObserver;
 
 class SourceDeviceSubject : public QObject
 {
     Q_OBJECT
 public:
-    void notifyObservers(const IoMultipleTransferGroup response);
+    void notifyObservers(const IoTransferDataGroup response);
 signals:
-    void sigResponseReceived(const IoMultipleTransferGroup response);
+    void sigResponseReceived(const IoTransferDataGroup response);
 };
 
 #endif // SOURCEDEVICESUBJECT_H

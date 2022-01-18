@@ -1,7 +1,7 @@
-#ifndef IOINTERFACEBASE_H
-#define IOINTERFACEBASE_H
+#ifndef IOSERIALDEVICEBASE_H
+#define IOSERIALDEVICEBASE_H
 
-#include "iointerfacefactory.h"
+#include "iodevicefactory.h"
 #include "io-ids/ioidgenerator.h"
 #include "io-ids/ioidkeeper.h"
 
@@ -9,11 +9,11 @@
 
 static constexpr int sourceDefaultTimeout = 1500;
 
-class IoInterfaceBase : public QObject
+class IODeviceBaseSerial : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~IoInterfaceBase();
+    virtual ~IODeviceBaseSerial();
 
     virtual bool open(QString) { return false; }
     virtual void close() {}
@@ -22,23 +22,24 @@ public:
     virtual void simulateExternalDisconnect() {}
 
     virtual bool isOpen() { return false; }
-    bool isDemo() { return type() == SOURCE_INTERFACE_DEMO; }
+    virtual IoDeviceTypes type() { return SERIAL_DEVICE_BASE; }
+
     QString getDeviceInfo();
-    virtual IoInterfaceTypes type() { return SOURCE_INTERFACE_BASE; }
+
+    bool isDemo() { return type() == SERIAL_DEVICE_DEMO; }
 
 signals:
     void sigDisconnected();
-    void sigIoFinished(int ioID, bool interfaceError); // users connect this signal
-    void sigIoFinishedToQueue(int ioID, bool interfaceError); // sub classes emit this to ensure queue
+    void sigIoFinished(int ioID, bool ioDeviceError); // users connect this signal
+    void sigIoFinishedToQueue(int ioID, bool ioDeviceError); // sub classes emit this to ensure queue
 
 protected:
-    explicit IoInterfaceBase(QObject *parent = nullptr);
-    friend class IoInterfaceFactory;
+    explicit IODeviceBaseSerial(QObject *parent = nullptr);
+    friend class IoDeviceFactory;
 
     QString m_strDeviceInfo;
     IoIdGenerator m_IDGenerator;
     IoIdKeeper m_currIoId;
 };
 
-
-#endif // IOINTERFACEBASE_H
+#endif // IOSERIALDEVICEBASE_H
