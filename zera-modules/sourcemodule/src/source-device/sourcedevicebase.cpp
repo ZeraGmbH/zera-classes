@@ -1,8 +1,8 @@
 #include "sourcedevicebase.h"
 #include "json/jsonstructureloader.h"
-#include "io-interface/iointerfacedemo.h"
+#include "io-device/iodevicedemo.h"
 
-SourceDeviceBase::SourceDeviceBase(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version) :
+SourceDeviceBase::SourceDeviceBase(tIoDeviceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version) :
     QObject(nullptr),
     m_ioInterface(interface)
 {
@@ -36,9 +36,9 @@ QString SourceDeviceBase::getInterfaceDeviceInfo()
 void SourceDeviceBase::switchState(JsonParamApi state)
 {
     m_paramsRequested = state;
-    IoMultipleTransferGroup transferGroup = m_ioGroupGenerator->generateOnOffGroup(m_paramsRequested);
+    IoTransferDataGroup transferGroup = m_ioGroupGenerator->generateOnOffGroup(m_paramsRequested);
     if(isDemo()) {
-        IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
+        IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
         QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(transferGroup);
         demoInterface->appendResponses(responseList);
@@ -52,14 +52,14 @@ void SourceDeviceBase::switchOff()
     switchState(m_paramsCurrent);
 }
 
-void SourceDeviceBase::handleSourceCmd(IoMultipleTransferGroup transferGroup)
+void SourceDeviceBase::handleSourceCmd(IoTransferDataGroup transferGroup)
 {
     if(transferGroup.passedAll()) {
         m_paramsCurrent = m_paramsRequested;
     }
 }
 
-void SourceDeviceBase::onIoGroupFinished(IoMultipleTransferGroup transferGroup)
+void SourceDeviceBase::onIoGroupFinished(IoTransferDataGroup transferGroup)
 {
     if(m_currWorkerId.isCurrAndDeactivateIf(transferGroup.m_groupId)) {
         handleSourceCmd(transferGroup);

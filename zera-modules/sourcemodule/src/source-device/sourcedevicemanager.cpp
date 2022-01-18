@@ -1,6 +1,6 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevicevein.h"
-#include "io-interface/iointerfacebase.h"
+#include "io-device/iodevicebaseserial.h"
 #include "sourcescanner.h"
 #include <random>
 
@@ -19,14 +19,14 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
             this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
-void SourceDeviceManager::startSourceScan(const IoInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid)
+void SourceDeviceManager::startSourceScan(const IoDeviceTypes interfaceType, const QString deviceInfo, const QUuid uuid)
 {
     if(m_activeSlotCount >= m_sourceDeviceSlots.count()) {
         emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("No free slots"));
         return;
     }
     bool started = false;
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(IoInterfaceTypes(interfaceType));
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(IoDeviceTypes(interfaceType));
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {
@@ -47,7 +47,7 @@ void SourceDeviceManager::setDemoCount(int count)
     int demoDiff = count - getDemoCount();
     if(demoDiff > 0) { // add
         while(demoDiff && m_activeSlotCount < getSlotCount()) {
-            startSourceScan(SOURCE_INTERFACE_DEMO, "Demo", QUuid::createUuid());
+            startSourceScan(SERIAL_DEVICE_DEMO, "Demo", QUuid::createUuid());
             demoDiff--;
         }
     }

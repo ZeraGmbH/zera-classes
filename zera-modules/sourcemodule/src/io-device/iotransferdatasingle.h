@@ -1,15 +1,15 @@
-#ifndef IOSINGLETRANSFERDATA_H
-#define IOSINGLETRANSFERDATA_H
+#ifndef IOTRANSFERDATASINGLE_H
+#define IOTRANSFERDATASINGLE_H
 
 #include <QObject>
 #include <QByteArray>
 #include <QList>
 
-class IOSingleTransferData
+class IoTransferDataSingle
 {
 public:
-    IOSingleTransferData();
-    IOSingleTransferData(QByteArray bytesSend,
+    IoTransferDataSingle();
+    IoTransferDataSingle(QByteArray bytesSend,
                   QByteArray bytesExpectedLead,
                   QByteArray bytesExpectedTrail = "\r",
                   int responseTimeoutMs = 0) :
@@ -18,7 +18,7 @@ public:
         m_bytesExpectedLead(bytesExpectedLead),
         m_bytesExpectedTrail(bytesExpectedTrail)
     {}
-    bool operator == (const IOSingleTransferData& other);
+    bool operator == (const IoTransferDataSingle& other);
 
     QByteArray m_dataReceived;
     enum {
@@ -34,8 +34,8 @@ public:
     QByteArray m_bytesExpectedTrail;
 };
 
-typedef QList<IOSingleTransferData> tIoTransferList;
+typedef QList<IoTransferDataSingle> tIoTransferList;
 
 
 
-#endif // IOSINGLETRANSFERDATA_H
+#endif // IOTRANSFERDATASINGLE_H

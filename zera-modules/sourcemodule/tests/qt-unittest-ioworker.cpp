@@ -1,10 +1,10 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-ioworker.h"
-#include "io-interface/iointerfacedemo.h"
+#include "io-device/iodevicedemo.h"
 
 static QObject* pIoWorkerTest = addTest(new IoWorkerTest);
 
-void IoWorkerTest::onIoWorkerGroupFinished(IoMultipleTransferGroup workGroup)
+void IoWorkerTest::onIoWorkerGroupFinished(IoTransferDataGroup workGroup)
 {
     m_listIoGroupsReceived.append(workGroup);
 }
@@ -16,21 +16,21 @@ void IoWorkerTest::init()
 
 void IoWorkerTest::emptyWorkerIsInvalid()
 {
-    IoMultipleTransferGroup workGroup;
+    IoTransferDataGroup workGroup;
     QVERIFY(workGroup.m_commandType == COMMAND_UNDEFINED);
     QVERIFY(workGroup.m_errorBehavior == BEHAVE_UNDEFINED);
 }
 
 void IoWorkerTest::mulipleTransferIniitialProperties()
 {
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    IoTransferDataGroup workGroup = generateSwitchCommands(false);
     QVERIFY(workGroup.m_commandType != COMMAND_UNDEFINED);
     QVERIFY(workGroup.m_errorBehavior != BEHAVE_UNDEFINED);
 }
 
 void IoWorkerTest::noInterfaceNotBusy()
 {
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workGroup = generateSwitchCommands(true);
     IoWorker worker;
     worker.enqueueTransferGroup(workGroup);
     QVERIFY(!worker.isIoBusy());
@@ -40,15 +40,15 @@ void IoWorkerTest::emptyGroupNotBusy()
 {
     IoWorker worker;
     worker.setIoInterface(createOpenInterface());
-    IoMultipleTransferGroup workGroup;
+    IoTransferDataGroup workGroup;
     worker.enqueueTransferGroup(workGroup);
     QVERIFY(!worker.isIoBusy());
 }
 
 void IoWorkerTest::notOpenInterfaceNotBusy()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoTransferDataGroup workGroup = generateSwitchCommands(false);
     IoWorker worker;
     worker.setIoInterface(interface);
     worker.enqueueTransferGroup(workGroup);
@@ -58,7 +58,7 @@ void IoWorkerTest::notOpenInterfaceNotBusy()
 void IoWorkerTest::openInterfaceBusy()
 {
     IoWorker worker;
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    IoTransferDataGroup workGroup = generateSwitchCommands(false);
     worker.setIoInterface(createOpenInterface());
     worker.enqueueTransferGroup(workGroup);
     QVERIFY(worker.isIoBusy());
@@ -67,7 +67,7 @@ void IoWorkerTest::openInterfaceBusy()
 void IoWorkerTest::noInterfaceNotification()
 {
     IoWorker worker;
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workGroup = generateSwitchCommands(true);
 
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
     worker.enqueueTransferGroup(workGroup);
@@ -80,9 +80,9 @@ void IoWorkerTest::noInterfaceNotification()
 
 void IoWorkerTest::notOpenInterfaceNotifications()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     IoWorker worker;
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workGroup = generateSwitchCommands(true);
     worker.setIoInterface(interface);
 
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
@@ -96,13 +96,13 @@ void IoWorkerTest::notOpenInterfaceNotifications()
 
 void IoWorkerTest::disconnectBeforeEnqueue()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
 
     demoInterface->simulateExternalDisconnect();
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    IoTransferDataGroup workGroup = generateSwitchCommands(false);
     worker.enqueueTransferGroup(workGroup);
 
     QVERIFY(!worker.isIoBusy());
@@ -110,8 +110,8 @@ void IoWorkerTest::disconnectBeforeEnqueue()
 
 void IoWorkerTest::disconnectWhileWorking()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
@@ -123,7 +123,7 @@ void IoWorkerTest::disconnectWhileWorking()
         demoInterface->simulateExternalDisconnect();
     });
     timer.start(10);
-    IoMultipleTransferGroup workGroup = generateSwitchCommands(false);
+    IoTransferDataGroup workGroup = generateSwitchCommands(false);
     worker.enqueueTransferGroup(workGroup);
     QTest::qWait(50);
 
@@ -134,8 +134,8 @@ void IoWorkerTest::disconnectWhileWorking()
 
 void IoWorkerTest::disconnectWhileWorkingMultipleNotifications()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
@@ -147,8 +147,8 @@ void IoWorkerTest::disconnectWhileWorkingMultipleNotifications()
         demoInterface->simulateExternalDisconnect();
     });
     timer.start(10);
-    IoMultipleTransferGroup workGroup1 = generateSwitchCommands(true);
-    IoMultipleTransferGroup workGroup2 = generateSwitchCommands(false);
+    IoTransferDataGroup workGroup1 = generateSwitchCommands(true);
+    IoTransferDataGroup workGroup2 = generateSwitchCommands(false);
     worker.enqueueTransferGroup(workGroup1);
     worker.enqueueTransferGroup(workGroup2);
     QTest::qWait(50);
@@ -162,14 +162,14 @@ using DemoResponseHelper::generateResponseList;
 
 void IoWorkerTest::stopOnFirstError()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->setResponseDelay(false, 1);
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(true);
     adjustWorkTransferGroup(workTransferGroup, BEHAVE_STOP_ON_ERROR);
 
     constexpr int errorIoNumber = 2;
@@ -184,29 +184,29 @@ void IoWorkerTest::stopOnFirstError()
     // valid data received
     for(int runIo = 0; runIo<errorIoNumber; ++runIo) {
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_dataReceived, responseList[runIo]);
-        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IOSingleTransferData::EVAL_PASS);
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IoTransferDataSingle::EVAL_PASS);
     }
     // invalid data received
     QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber].m_dataReceived, responseList[errorIoNumber]);
-    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber].m_IoEval, IOSingleTransferData::EVAL_WRONG_ANSWER);
+    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber].m_IoEval, IoTransferDataSingle::EVAL_WRONG_ANSWER);
     // no data received
     for(int notRunIo = errorIoNumber+1; notRunIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++notRunIo) {
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo].m_dataReceived, "");
-        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo].m_IoEval, IOSingleTransferData::EVAL_NOT_EXECUTED);
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo].m_IoEval, IoTransferDataSingle::EVAL_NOT_EXECUTED);
     }
 }
 
 
 void IoWorkerTest::continueOnError()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->setResponseDelay(false, 1);
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(true);
     adjustWorkTransferGroup(workTransferGroup, BEHAVE_CONTINUE_ON_ERROR);
 
     constexpr int errorIoNumber = 2;
@@ -221,22 +221,22 @@ void IoWorkerTest::continueOnError()
     for(int runIo = 0; runIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++runIo) {
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_dataReceived, responseList[runIo]);
         if(runIo != errorIoNumber) {
-            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IOSingleTransferData::EVAL_PASS);
+            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IoTransferDataSingle::EVAL_PASS);
         }
         else {
-            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IOSingleTransferData::EVAL_WRONG_ANSWER);
+            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo].m_IoEval, IoTransferDataSingle::EVAL_WRONG_ANSWER);
         }
     }
 }
 
 void IoWorkerTest::noErrorSigalOnEmptyGroup()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenInterface();
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup;
+    IoTransferDataGroup workTransferGroup;
     worker.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(10);
     if(m_listIoGroupsReceived.count() != 1) {
@@ -248,15 +248,15 @@ void IoWorkerTest::noErrorSigalOnEmptyGroup()
 
 void IoWorkerTest::rejectSpam()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     constexpr int maxPendingGroups = 3;
     worker.setMaxPendingGroups(maxPendingGroups);
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(true);
     adjustWorkTransferGroup(workTransferGroup, BEHAVE_STOP_ON_ERROR);
     QList<QByteArray> responseList = generateResponseList(workTransferGroup);
     for(int group=0; group<maxPendingGroups*2; group++) {
@@ -271,15 +271,15 @@ void IoWorkerTest::rejectSpam()
 
 void IoWorkerTest::acceptCloseToSpam()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     constexpr int maxPendingGroups = 3;
     worker.setMaxPendingGroups(maxPendingGroups);
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(true);
     adjustWorkTransferGroup(workTransferGroup, BEHAVE_STOP_ON_ERROR);
     QList<QByteArray> responseList = generateResponseList(workTransferGroup);
     for(int group=0; group<maxPendingGroups; group++) {
@@ -294,13 +294,13 @@ void IoWorkerTest::acceptCloseToSpam()
 
 void IoWorkerTest::oneValidGroupSingleIo()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(false);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(false);
     QList<QByteArray> responseList = generateResponseList(workTransferGroup);
     for(int group=0; group<workTransferGroup.m_ioTransferList.count(); group++) {
         demoInterface->appendResponses(responseList);
@@ -316,13 +316,13 @@ void IoWorkerTest::oneValidGroupSingleIo()
 
 void IoWorkerTest::twoValidGroupsSingleIo()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(false);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(false);
     QList<QByteArray> responseList = generateResponseList(workTransferGroup);
     for(int group=0; group<2*workTransferGroup.m_ioTransferList.count(); group++) {
         demoInterface->appendResponses(responseList);
@@ -338,13 +338,13 @@ void IoWorkerTest::twoValidGroupsSingleIo()
 
 void IoWorkerTest::oneValidGroupMultipleIo()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(true);
     int ioCount = workTransferGroup.m_ioTransferList.count();
     demoInterface->appendResponses(generateResponseList(workTransferGroup));
 
@@ -359,14 +359,14 @@ void IoWorkerTest::oneValidGroupMultipleIo()
 
 void IoWorkerTest::twoValidGroupsMultipleIo()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
     int outInCount = 0;
-    IoMultipleTransferGroup workTransferGroups[2];
+    IoTransferDataGroup workTransferGroups[2];
     workTransferGroups[0] = generateSwitchCommands(true);
     workTransferGroups[1] = generateStatusPollCommands();
     int commandCount = 0;
@@ -386,13 +386,13 @@ void IoWorkerTest::twoValidGroupsMultipleIo()
 
 void IoWorkerTest::twoFirstInvalidSecondOkSingleIo()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoWorker worker;
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigTransferGroupFinished, this, &IoWorkerTest::onIoWorkerGroupFinished);
 
-    IoMultipleTransferGroup workTransferGroups[2];
+    IoTransferDataGroup workTransferGroups[2];
     workTransferGroups[0] = generateSwitchCommands(true);
     demoInterface->appendResponses(generateResponseList(workTransferGroups[0]));
     workTransferGroups[1] = generateSwitchCommands(false);
@@ -414,17 +414,17 @@ void IoWorkerTest::twoFirstInvalidSecondOkSingleIo()
 
 void IoWorkerTest::timeoutDetected()
 {
-    tIoInterfaceShPtr interface = createOpenInterface();
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = createOpenInterface();
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->setResponseDelay(false, 10);
     IoWorker worker;
     worker.setIoInterface(interface);
-    IoMultipleTransferGroup workTransferGroup = generateSwitchCommands(true);
+    IoTransferDataGroup workTransferGroup = generateSwitchCommands(true);
     int finishReceived = 0;
-    connect(&worker, &IoWorker::sigTransferGroupFinished, [&](IoMultipleTransferGroup transferGroupToFinish) {
+    connect(&worker, &IoWorker::sigTransferGroupFinished, [&](IoTransferDataGroup transferGroupToFinish) {
         QVERIFY(transferGroupToFinish.m_ioTransferList.count() > 0);
         // only first I/O is executed
-        QCOMPARE(transferGroupToFinish.m_ioTransferList[0].m_IoEval, IOSingleTransferData::EVAL_NO_ANSWER);
+        QCOMPARE(transferGroupToFinish.m_ioTransferList[0].m_IoEval, IoTransferDataSingle::EVAL_NO_ANSWER);
         finishReceived++;
     });
     worker.enqueueTransferGroup(workTransferGroup);
@@ -433,22 +433,22 @@ void IoWorkerTest::timeoutDetected()
 }
 
 
-tIoInterfaceShPtr IoWorkerTest::createOpenInterface()
+tIoDeviceShPtr IoWorkerTest::createOpenInterface()
 {
-    tIoInterfaceShPtr interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->open(QString());
     return interface;
 }
 
-IoMultipleTransferGroup IoWorkerTest::generateStatusPollCommands()
+IoTransferDataGroup IoWorkerTest::generateStatusPollCommands()
 {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;
     return ioGroupGenerator.generateStatusPollGroup();
 }
 
-IoMultipleTransferGroup IoWorkerTest::generateSwitchCommands(bool on)
+IoTransferDataGroup IoWorkerTest::generateSwitchCommands(bool on)
 {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;
@@ -456,7 +456,7 @@ IoMultipleTransferGroup IoWorkerTest::generateSwitchCommands(bool on)
     return ioGroupGenerator.generateOnOffGroup(params);
 }
 
-void IoWorkerTest::adjustWorkTransferGroup(IoMultipleTransferGroup& workTransferGroup,
+void IoWorkerTest::adjustWorkTransferGroup(IoTransferDataGroup& workTransferGroup,
                                      GroupErrorBehaviors errorBehavior)
 {
     workTransferGroup.m_errorBehavior = errorBehavior;
@@ -471,16 +471,16 @@ void IoWorkerTest::evalNotificationCount(int passedGroupsExpected, int passExpec
         }
         for(int io=0; io<m_listIoGroupsReceived[group].m_ioTransferList.count(); ++io) {
             switch(m_listIoGroupsReceived[group].m_ioTransferList[io].m_IoEval) {
-            case IOSingleTransferData::EVAL_NOT_EXECUTED:
+            case IoTransferDataSingle::EVAL_NOT_EXECUTED:
                 unknownCount++;
                 break;
-            case IOSingleTransferData::EVAL_PASS:
+            case IoTransferDataSingle::EVAL_PASS:
                 passCount++;
                 break;
-            case IOSingleTransferData::EVAL_WRONG_ANSWER:
+            case IoTransferDataSingle::EVAL_WRONG_ANSWER:
                 failCount++;
                 break;
-            case IOSingleTransferData::EVAL_NO_ANSWER:
+            case IoTransferDataSingle::EVAL_NO_ANSWER:
                 break;
             }
         }

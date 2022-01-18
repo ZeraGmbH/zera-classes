@@ -1,17 +1,17 @@
-#ifndef IOINTERFACEZERASERIAL_H
-#define IOINTERFACEZERASERIAL_H
+#ifndef IODEVICEZERASERIAL_H
+#define IODEVICEZERASERIAL_H
 
 #include <QObject>
-#include "iointerfacebase.h"
+#include "iodevicebaseserial.h"
 
-class IoInterfaceZeraSerialPrivate;
-class IoInterfaceZeraSerial : public IoInterfaceBase
+class IoDeviceZeraSerialPrivate;
+class IoDeviceZeraSerial : public IODeviceBaseSerial
 {
     Q_OBJECT
 public:
-    virtual ~IoInterfaceZeraSerial();
+    virtual ~IoDeviceZeraSerial();
 
-    virtual IoInterfaceTypes type() override { return SOURCE_INTERFACE_ASYNCSERIAL; }
+    virtual IoDeviceTypes type() override { return SERIAL_DEVICE_ASYNCSERIAL; }
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
     virtual void setReadTimeoutNextIo(int timeoutMs) override;
@@ -24,15 +24,15 @@ public:
     virtual bool isOpen() override;
 
 protected:
-    explicit IoInterfaceZeraSerial(QObject *parent = nullptr);
-    friend class IoInterfaceFactory;
+    explicit IoDeviceZeraSerial(QObject *parent = nullptr);
+    friend class IoDeviceFactory;
 private slots:
     void onIoFinished();
     void onDeviceFileGone(QString);
 private:
     void _close();
-    IoInterfaceZeraSerialPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(IoInterfaceZeraSerial)
+    IoDeviceZeraSerialPrivate *d_ptr;
+    Q_DECLARE_PRIVATE(IoDeviceZeraSerial)
 };
 
-#endif // IOINTERFACEZERASERIAL_H
+#endif // IODEVICEZERASERIAL_H

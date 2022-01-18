@@ -18,11 +18,11 @@ class SourceDevice : public SourceDeviceSubject
 {
     Q_OBJECT
 public:
-    SourceDevice(tIoInterfaceShPtr interface, SupportedSourceTypes type, QString name, QString version);
+    SourceDevice(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version);
     ~SourceDevice();
 
     // requests
-    int startTransaction(const IoMultipleTransferGroup &transferGroup);
+    int startTransaction(const IoTransferDataGroup &transferGroup);
     void simulateExternalDisconnect();
 
     // setter
@@ -42,15 +42,15 @@ signals:
     void sigInterfaceDisconnected();
 
 private slots:
-    void onIoGroupFinished(IoMultipleTransferGroup transferGroup);
+    void onIoGroupFinished(IoTransferDataGroup transferGroup);
 
 signals:
     void sigSwitchTransationStartedQueued();
 
 private:
-    void doDemoTransactionAdjustments(const IoMultipleTransferGroup &transferGroup);
+    void doDemoTransactionAdjustments(const IoTransferDataGroup &transferGroup);
 
-    tIoInterfaceShPtr m_ioInterface;
+    tIoDeviceShPtr m_ioInterface;
     IoWorker m_ioWorker;
 
     IoGroupGenerator m_ioGroupGenerator;

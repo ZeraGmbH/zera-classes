@@ -35,7 +35,7 @@ signals:
     void sigStateChanged(SOURCE_STATE state);
 
 protected:
-    virtual void updateResponse(IoMultipleTransferGroup transferGroup);
+    virtual void updateResponse(IoTransferDataGroup transferGroup);
 
 private slots:
     void onPollTimer();
@@ -46,8 +46,8 @@ private:
     void disablePolling();
     void setState(SOURCE_STATE state);
     void setPollingOnStateChange();
-    void handleSwitchResponse(IoMultipleTransferGroup &transferGroup);
-    void handleStateResponse(IoMultipleTransferGroup &transferGroup);
+    void handleSwitchResponse(IoTransferDataGroup &transferGroup);
+    void handleStateResponse(IoTransferDataGroup &transferGroup);
 
     SourceDevice* m_sourceDevice;
     SOURCE_STATE m_stateEnum;

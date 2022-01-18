@@ -21,7 +21,7 @@ SourceDeviceSwitcherJson::~SourceDeviceSwitcherJson()
 void SourceDeviceSwitcherJson::switchState(JsonParamApi paramState)
 {
     m_paramsRequested = paramState;
-    IoMultipleTransferGroup transferGroup = m_sourceDevice->getIoGroupGenerator().generateOnOffGroup(m_paramsRequested);
+    IoTransferDataGroup transferGroup = m_sourceDevice->getIoGroupGenerator().generateOnOffGroup(m_paramsRequested);
     m_sourceDevice->startTransaction(transferGroup);
 }
 
@@ -37,7 +37,7 @@ JsonParamApi SourceDeviceSwitcherJson::getCurrLoadState()
     return m_paramsCurrent;
 }
 
-void SourceDeviceSwitcherJson::updateResponse(IoMultipleTransferGroup transferGroup)
+void SourceDeviceSwitcherJson::updateResponse(IoTransferDataGroup transferGroup)
 {
     if(transferGroup.isSwitchGroup()) {
         if(transferGroup.passedAll()) {

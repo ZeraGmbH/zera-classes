@@ -10,7 +10,7 @@
 #include "sourcemodule.h"
 #include "source-device/sourcedevicemanager.h"
 #include "source-device/sourcedevicevein.h"
-#include "io-interface/iointerfacebase.h"
+#include "io-device/iodevicebaseserial.h"
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
@@ -117,7 +117,7 @@ QVariant SourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
     int interfaceType = p_params["p_type"].toInt();
     QString deviceInfo = p_params["p_deviceInfo"].toString();
     QUuid veinUuid = p_params[VeinComponent::RemoteProcedureData::s_callIdString].toUuid();
-    m_pSourceDeviceManager->startSourceScan(IoInterfaceTypes(interfaceType), deviceInfo, veinUuid);
+    m_pSourceDeviceManager->startSourceScan(IoDeviceTypes(interfaceType), deviceInfo, veinUuid);
     return true;
 }
 

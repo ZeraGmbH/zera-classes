@@ -1,6 +1,6 @@
 #include "iogroupgenerator.h"
 #include "sourceactions.h"
-#include "io-interface/iointerfacebase.h"
+#include "io-device/iodevicebaseserial.h"
 
 IoGroupGenerator::IoGroupGenerator(JsonStructApi jsonStructApi) :
     m_jsonStructApi(jsonStructApi),
@@ -12,11 +12,11 @@ IoGroupGenerator::~IoGroupGenerator()
 {
 }
 
-IoMultipleTransferGroup IoGroupGenerator::generateOnOffGroup(JsonParamApi requestedParams)
+IoTransferDataGroup IoGroupGenerator::generateOnOffGroup(JsonParamApi requestedParams)
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
-    IoMultipleTransferGroup transferGroup;
+    IoTransferDataGroup transferGroup;
     transferGroup.m_commandType = requestedParams.getOn() ? COMMAND_SWITCH_ON : COMMAND_SWITCH_OFF;
     transferGroup.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
     for(auto &actionType : actionsTypeList) {
@@ -25,9 +25,9 @@ IoMultipleTransferGroup IoGroupGenerator::generateOnOffGroup(JsonParamApi reques
     return transferGroup;
 }
 
-IoMultipleTransferGroup IoGroupGenerator::generateStatusPollGroup()
+IoTransferDataGroup IoGroupGenerator::generateStatusPollGroup()
 {
-    IoMultipleTransferGroup transferGroup;
+    IoTransferDataGroup transferGroup;
     transferGroup.m_commandType = COMMAND_STATE_POLL;
     transferGroup.m_errorBehavior = BEHAVE_CONTINUE_ON_ERROR;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generatePeriodicActions();
@@ -104,7 +104,7 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleUList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponseLead = m_ioPrefix + "OKUP";
-    outInList.append(IOSingleTransferData(bytesSend, expectedResponseLead));
+    outInList.append(IoTransferDataSingle(bytesSend, expectedResponseLead));
     return outInList;
 }
 
@@ -133,7 +133,7 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleIList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponseLead = m_ioPrefix + "OKIP";
-    outInList.append(IOSingleTransferData(bytesSend, expectedResponseLead));
+    outInList.append(IoTransferDataSingle(bytesSend, expectedResponseLead));
 
     return outInList;
 }
@@ -182,7 +182,7 @@ tIoTransferList IoGroupGenerator::generateSwitchPhasesList()
     bytesSend.append("\r");
     QByteArray expectedResponseLead = m_ioPrefix + "OKUI";
     int timeout = globalOn ? 15000 : 5000;
-    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead, "\r", timeout);
+    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead, "\r", timeout);
 }
 
 tIoTransferList IoGroupGenerator::generateFrequencyList()
@@ -199,7 +199,7 @@ tIoTransferList IoGroupGenerator::generateFrequencyList()
     }
     bytesSend.append("\r");
     QByteArray expectedResponseLead = m_ioPrefix + "OKFR";
-    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
 }
 
 tIoTransferList IoGroupGenerator::generateRegulationList()
@@ -211,7 +211,7 @@ tIoTransferList IoGroupGenerator::generateRegulationList()
     bytesSend.append("\r");
 
     QByteArray expectedResponseLead = m_ioPrefix + "OKRE";
-    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
 }
 
 tIoTransferList IoGroupGenerator::generateQueryStatusList()
@@ -220,7 +220,7 @@ tIoTransferList IoGroupGenerator::generateQueryStatusList()
     bytesSend = m_ioPrefix + "SM\r"; // error condition for now
 
     QByteArray expectedResponseLead = m_ioPrefix + "SM";
-    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
 }
 
 tIoTransferList IoGroupGenerator::generateQueryActualList()
@@ -229,7 +229,7 @@ tIoTransferList IoGroupGenerator::generateQueryActualList()
     bytesSend = "AME0;3\r";// This is single phase!!
 
     QByteArray expectedResponseLead = "AME";
-    return tIoTransferList() << IOSingleTransferData(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
 }
 
 QByteArray IoCmdFormatHelper::formatDouble(double val, int preDigits, char digit, int postDigits)

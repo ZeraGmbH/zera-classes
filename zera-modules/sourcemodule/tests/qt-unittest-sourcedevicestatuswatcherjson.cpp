@@ -2,7 +2,7 @@
 #include "qt-unittest-sourcedevicestatuswatcherjson.h"
 #include "source-device/sourcedevicestatuswatcherjson.h"
 #include "source-device/sourcedeviceswitcherjson.h"
-#include "io-interface/iointerfacedemo.h"
+#include "io-device/iodevicedemo.h"
 #include "json/jsonstructureloader.h"
 
 #include <zera-json-params-state.h>
@@ -19,7 +19,7 @@ void SourceDeviceStatusWatcherJsonTest::init()
     delete m_sourceDevice;
     m_interface = nullptr;
 
-    m_interface = IoInterfaceFactory::createIoInterface(SOURCE_INTERFACE_DEMO);
+    m_interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
     m_interface->open("");
     m_sourceDevice = new SourceDevice(m_interface, SOURCE_MT_COMMON, "", "");
 }
@@ -299,7 +299,7 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnError()
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SOURCE_STATE::ERROR_SWITCH);
 
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_interface.get());
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_interface.get());
     QList<QByteArray> pendingResponses = demoInterface->getResponsesForErrorInjection();
     QCOMPARE(pendingResponses.count(), 0);
 
@@ -333,7 +333,7 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnErrorAndStartsOnSwitc
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SOURCE_STATE::ERROR_SWITCH);
 
-    IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_interface.get());
+    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_interface.get());
     QList<QByteArray> pendingResponses = demoInterface->getResponsesForErrorInjection();
     QCOMPARE(pendingResponses.count(), 0);
 

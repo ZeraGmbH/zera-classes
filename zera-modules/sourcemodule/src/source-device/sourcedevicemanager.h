@@ -5,9 +5,9 @@
 #include <QString>
 #include <QUuid>
 #include "sourcescanner.h"
-#include "io-interface/iointerfacebase.h"
+#include "io-device/iodevicebaseserial.h"
 
-class IoInterfaceBase;
+class IODeviceBaseSerial;
 class SourceDeviceVein;
 
 class SourceDeviceManager : public QObject
@@ -17,7 +17,7 @@ public:
     SourceDeviceManager(int countSlots, QObject *parent = 0);
 
     // requests
-    void startSourceScan(const IoInterfaceTypes interfaceType, const QString deviceInfo, const QUuid uuid);
+    void startSourceScan(const IoDeviceTypes interfaceType, const QString deviceInfo, const QUuid uuid);
     void closeSource(int slotNo, const QUuid uuid);
     void closeSource(QString interfaceDeviceInfo, const QUuid uuid);
     void setDemoCount(int count);

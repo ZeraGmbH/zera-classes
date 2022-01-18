@@ -1,9 +1,9 @@
 #include "sourcescanner.h"
-#include "io-interface/iointerfacebase.h"
-#include "io-interface/iointerfacezeraserial.h"
+#include "io-device/iodevicebaseserial.h"
+#include "io-device/iodevicezeraserial.h"
 #include <QUuid>
 
-tSourceScannerShPtr SourceScanner::createScanner(tIoInterfaceShPtr interface, QUuid uuid)
+tSourceScannerShPtr SourceScanner::createScanner(tIoDeviceShPtr interface, QUuid uuid)
 {
     tSourceScannerShPtr scanner = tSourceScannerShPtr(new SourceScanner(interface, uuid));
     scanner->m_safePoinerOnThis = scanner;
@@ -12,14 +12,14 @@ tSourceScannerShPtr SourceScanner::createScanner(tIoInterfaceShPtr interface, QU
 
 int SourceScanner::m_InstanceCount = 0;
 
-SourceScanner::SourceScanner(tIoInterfaceShPtr interface, QUuid uuid) :
+SourceScanner::SourceScanner(tIoDeviceShPtr interface, QUuid uuid) :
     QObject(nullptr),
     m_ioInterface(interface),
     m_uuid(uuid),
     m_sourceDeviceIdentified(nullptr)
 {
     m_InstanceCount++;
-    connect(m_ioInterface.get(), &IoInterfaceBase::sigIoFinished,
+    connect(m_ioInterface.get(), &IODeviceBaseSerial::sigIoFinished,
             this, &SourceScanner::onIoFinished);
 }
 
@@ -88,8 +88,8 @@ void SourceScanner::sendReceiveSourceID()
 QByteArray SourceScanner::createInterfaceSpecificPrepend()
 {
     QByteArray prepend;
-    if(m_ioInterface->type() == SOURCE_INTERFACE_ASYNCSERIAL) {
-        static_cast<IoInterfaceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
+    if(m_ioInterface->type() == SERIAL_DEVICE_ASYNCSERIAL) {
+        static_cast<IoDeviceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
             prepend = "\r";
@@ -143,7 +143,7 @@ SupportedSourceTypes SourceScanner::nextDemoType() {
     return sDemoTypeCounter;
 }
 
-void SourceScanner::onIoFinished(int ioId, bool interfaceError)
+void SourceScanner::onIoFinished(int ioId, bool ioDeviceError)
 {
     if(!m_currIoId.isCurrAndDeactivateIf(ioId)) {
         qCritical("Are there multiple clients on scanner interface?");
@@ -155,7 +155,7 @@ void SourceScanner::onIoFinished(int ioId, bool interfaceError)
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     SupportedSourceTypes sourceTypeFound = SOURCE_MT_COMMON;
     QByteArray responsePrefix;
-    if(!interfaceError) {
+    if(!ioDeviceError) {
         if(!m_ioInterface->isDemo()) {
             for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
                 if(m_bytesReceived.contains(responseTypePair.expectedResponse)) {
@@ -185,7 +185,7 @@ void SourceScanner::onIoFinished(int ioId, bool interfaceError)
         emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;
     }
-    else if(!interfaceError && moreChances) {
+    else if(!ioDeviceError && moreChances) {
         m_currentSourceTested++;
         sendReceiveSourceID(); // delay??
     }

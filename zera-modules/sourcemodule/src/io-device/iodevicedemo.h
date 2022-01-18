@@ -1,12 +1,12 @@
 #ifndef IOINTERFACEDEMO_H
 #define IOINTERFACEDEMO_H
 
-#include "iointerfacebase.h"
+#include "iodevicebaseserial.h"
 #include <QTimer>
 #include <QList>
 #include <QByteArray>
 
-class IoInterfaceDemo : public IoInterfaceBase
+class IoDeviceDemo : public IODeviceBaseSerial
 {
     Q_OBJECT
 public:
@@ -20,16 +20,16 @@ public:
     void appendResponses(QList<QByteArray> responseList);
     QList<QByteArray> &getResponsesForErrorInjection();
 
-    virtual IoInterfaceTypes type() override { return SOURCE_INTERFACE_DEMO; }
+    virtual IoDeviceTypes type() override { return SERIAL_DEVICE_DEMO; }
     virtual bool isOpen() override { return m_bOpen; }
 
 protected:
-    explicit IoInterfaceDemo(QObject *parent = nullptr);
-    friend class IoInterfaceFactory;
+    explicit IoDeviceDemo(QObject *parent = nullptr);
+    friend class IoDeviceFactory;
 private slots:
     void onResponseDelayTimer();
 private:
-    void sendResponse(bool interfaceError);
+    void sendResponse(bool ioDeviceError);
 
     bool m_bOpen = false;
     int m_responseDelayMs = 0;

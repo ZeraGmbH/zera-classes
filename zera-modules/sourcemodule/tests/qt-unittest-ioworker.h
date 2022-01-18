@@ -8,7 +8,7 @@ class IoWorkerTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onIoWorkerGroupFinished(IoMultipleTransferGroup workGroup);
+    void onIoWorkerGroupFinished(IoTransferDataGroup workGroup);
 private slots:
     void init();
 
@@ -44,15 +44,15 @@ private slots:
     void timeoutDetected();
 
 private:
-    static tIoInterfaceShPtr createOpenInterface();
-    static IoMultipleTransferGroup generateSwitchCommands(bool on);
-    static IoMultipleTransferGroup generateStatusPollCommands();
-    static void adjustWorkTransferGroup(IoMultipleTransferGroup& workTransferGroup,
+    static tIoDeviceShPtr createOpenInterface();
+    static IoTransferDataGroup generateSwitchCommands(bool on);
+    static IoTransferDataGroup generateStatusPollCommands();
+    static void adjustWorkTransferGroup(IoTransferDataGroup& workTransferGroup,
                                   GroupErrorBehaviors errorBehavior);
     void evalNotificationCount(int passedGroupsExpected,
                                int passExpected, int failExpected, int unknownExpected);
 
-    QList<IoMultipleTransferGroup> m_listIoGroupsReceived;
+    QList<IoTransferDataGroup> m_listIoGroupsReceived;
 };
 
 #endif // SOURCEIOWORKERENTRYTEST_H

@@ -30,7 +30,7 @@ signals:
     void sigSwitchFinished();
 
 protected:
-    virtual void updateResponse(IoMultipleTransferGroup transferGroup) override;
+    virtual void updateResponse(IoTransferDataGroup transferGroup) override;
 
 private:
     SourceDevice* m_sourceDevice;
