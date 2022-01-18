@@ -54,7 +54,7 @@ void IoWorkerTest::noInterfaceNotBusy()
 {
     IoWorkerCmdPack workPack = generateSwitchCommands(true);
     IoWorker worker;
-    worker.enqueueAction(workPack);
+    worker.enqueueCmd(workPack);
     QVERIFY(!worker.isIoBusy());
 }
 
@@ -63,7 +63,7 @@ void IoWorkerTest::emptyPackNotBusy()
     IoWorker worker;
     worker.setIoInterface(createOpenInterface());
     IoWorkerCmdPack workPack;
-    worker.enqueueAction(workPack);
+    worker.enqueueCmd(workPack);
     QVERIFY(!worker.isIoBusy());
 }
 
@@ -73,7 +73,7 @@ void IoWorkerTest::notOpenInterfaceNotBusy()
     IoWorkerCmdPack workPack = generateSwitchCommands(false);
     IoWorker worker;
     worker.setIoInterface(interface);
-    worker.enqueueAction(workPack);
+    worker.enqueueCmd(workPack);
     QVERIFY(!worker.isIoBusy());
 }
 
@@ -82,7 +82,7 @@ void IoWorkerTest::openInterfaceBusy()
     IoWorker worker;
     IoWorkerCmdPack workPack = generateSwitchCommands(false);
     worker.setIoInterface(createOpenInterface());
-    worker.enqueueAction(workPack);
+    worker.enqueueCmd(workPack);
     QVERIFY(worker.isIoBusy());
 }
 
@@ -92,7 +92,7 @@ void IoWorkerTest::noInterfaceNotification()
     IoWorkerCmdPack workPack = generateSwitchCommands(true);
 
     connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
-    worker.enqueueAction(workPack);
+    worker.enqueueCmd(workPack);
     QTest::qWait(10);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
@@ -108,7 +108,7 @@ void IoWorkerTest::notOpenInterfaceNotifications()
     worker.setIoInterface(interface);
 
     connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
-    workPack.m_workerId = worker.enqueueAction(workPack);
+    workPack.m_workerId = worker.enqueueCmd(workPack);
     QTest::qWait(10);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
@@ -125,7 +125,7 @@ void IoWorkerTest::disconnectBeforeEnqueue()
 
     demoInterface->simulateExternalDisconnect();
     IoWorkerCmdPack workPack = generateSwitchCommands(false);
-    worker.enqueueAction(workPack);
+    worker.enqueueCmd(workPack);
 
     QVERIFY(!worker.isIoBusy());
 }
@@ -146,7 +146,7 @@ void IoWorkerTest::disconnectWhileWorking()
     });
     timer.start(10);
     IoWorkerCmdPack workPack = generateSwitchCommands(false);
-    worker.enqueueAction(workPack);
+    worker.enqueueCmd(workPack);
     QTest::qWait(50);
 
     QVERIFY(!worker.isIoBusy());
@@ -171,8 +171,8 @@ void IoWorkerTest::disconnectWhileWorkingMultipleNotifications()
     timer.start(10);
     IoWorkerCmdPack workPack1 = generateSwitchCommands(true);
     IoWorkerCmdPack workPack2 = generateSwitchCommands(false);
-    worker.enqueueAction(workPack1);
-    worker.enqueueAction(workPack2);
+    worker.enqueueCmd(workPack1);
+    worker.enqueueCmd(workPack2);
     QTest::qWait(50);
 
     QVERIFY(!worker.isIoBusy());
@@ -198,7 +198,7 @@ void IoWorkerTest::stopOnFirstError()
     QList<QByteArray> responseList = generateResponseList(workCmdPack);
     responseList[errorIoNumber] = "foo";
     demoInterface->appendResponses(responseList);
-    worker.enqueueAction(workCmdPack);
+    worker.enqueueCmd(workCmdPack);
     QTest::qWait(100);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
@@ -235,7 +235,7 @@ void IoWorkerTest::continueOnError()
     QList<QByteArray> responseList = generateResponseList(workCmdPack);
     responseList[errorIoNumber] = "foo";
     demoInterface->appendResponses(responseList);
-    worker.enqueueAction(workCmdPack);
+    worker.enqueueCmd(workCmdPack);
     QTest::qWait(100);
 
     QCOMPARE(m_listWorkPacksReceived.count(), 1);
@@ -259,7 +259,7 @@ void IoWorkerTest::noErrorSigOnEmptyPack()
     connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
 
     IoWorkerCmdPack workCmdPack;
-    worker.enqueueAction(workCmdPack);
+    worker.enqueueCmd(workCmdPack);
     QTest::qWait(10);
     if(m_listWorkPacksReceived.count() != 1) {
         QCOMPARE(m_listWorkPacksReceived.count(), 1);
@@ -274,7 +274,7 @@ void IoWorkerTest::rejectSpam()
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     constexpr int maxPendingPackets = 3;
-    worker.setMaxPendingActions(maxPendingPackets);
+    worker.setMaxPendingCmds(maxPendingPackets);
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
 
@@ -283,7 +283,7 @@ void IoWorkerTest::rejectSpam()
     QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<maxPendingPackets*2; pack++) {
         demoInterface->appendResponses(responseList);
-        worker.enqueueAction(workCmdPack);
+        worker.enqueueCmd(workCmdPack);
     }
     QTest::qWait(10);
 
@@ -297,7 +297,7 @@ void IoWorkerTest::acceptCloseToSpam()
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
     IoWorker worker;
     constexpr int maxPendingPackets = 3;
-    worker.setMaxPendingActions(maxPendingPackets);
+    worker.setMaxPendingCmds(maxPendingPackets);
     worker.setIoInterface(interface);
     connect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
 
@@ -306,7 +306,7 @@ void IoWorkerTest::acceptCloseToSpam()
     QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<maxPendingPackets; pack++) {
         demoInterface->appendResponses(responseList);
-        worker.enqueueAction(workCmdPack);
+        worker.enqueueCmd(workCmdPack);
     }
     QTest::qWait(10);
 
@@ -327,7 +327,7 @@ void IoWorkerTest::oneValidPacketSingleIo()
     for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
         demoInterface->appendResponses(responseList);
     }
-    worker.enqueueAction(workCmdPack);
+    worker.enqueueCmd(workCmdPack);
     QVERIFY(worker.isIoBusy());
     QTest::qWait(10);
     disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
@@ -348,7 +348,7 @@ void IoWorkerTest::twoValidPacketsSingleIo()
     QList<QByteArray> responseList = generateResponseList(workCmdPack);
     for(int pack=0; pack<2*workCmdPack.m_workerIOList.count(); pack++) {
         demoInterface->appendResponses(responseList);
-        worker.enqueueAction(workCmdPack);
+        worker.enqueueCmd(workCmdPack);
         QVERIFY(worker.isIoBusy());
     }
     QTest::qWait(10);
@@ -370,7 +370,7 @@ void IoWorkerTest::oneValidPacketMultipleIo()
     int ioCount = workCmdPack.m_workerIOList.count();
     demoInterface->appendResponses(generateResponseList(workCmdPack));
 
-    worker.enqueueAction(workCmdPack);
+    worker.enqueueCmd(workCmdPack);
     QVERIFY(worker.isIoBusy());
     QTest::qWait(10);
     disconnect(&worker, &IoWorker::sigCmdFinished, this, &IoWorkerTest::onWorkPackFinished);
@@ -395,7 +395,7 @@ void IoWorkerTest::twoValidPacketsMultipleIo()
     for(auto &cmdPack: workCmdPacks) {
         outInCount += cmdPack.m_workerIOList.count();
         demoInterface->appendResponses(generateResponseList(cmdPack));
-        worker.enqueueAction(cmdPack);
+        worker.enqueueCmd(cmdPack);
         QVERIFY(worker.isIoBusy());
         commandCount++;
     }
@@ -421,7 +421,7 @@ void IoWorkerTest::timeoutDetected()
         QCOMPARE(cmdToFinish.m_workerIOList[0].m_IoEval, IoWorkerEntry::EVAL_NO_ANSWER);
         finishReceived++;
     });
-    worker.enqueueAction(workCmdPack);
+    worker.enqueueCmd(workCmdPack);
     QTest::qWait(30);
     QVERIFY(finishReceived > 0);
 }

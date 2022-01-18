@@ -44,7 +44,7 @@ void SourceDeviceBase::switchState(JsonParamApi state)
         QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
         demoInterface->appendResponses(responseList);
     }
-    m_currWorkerId.setCurrent(m_sourceIoWorker.enqueueAction(workerPack));
+    m_currWorkerId.setCurrent(m_sourceIoWorker.enqueueCmd(workerPack));
 }
 
 void SourceDeviceBase::switchOff()

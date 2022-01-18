@@ -62,8 +62,8 @@ public:
     explicit IoWorker(QObject *parent = nullptr);
 
     void setIoInterface(tIoInterfaceShPtr interface);
-    void setMaxPendingActions(int maxPackets);
-    int enqueueAction(IoWorkerCmdPack cmdPack);
+    void setMaxPendingCmds(int maxPackets);
+    int enqueueCmd(IoWorkerCmdPack cmdPack);
 
     bool isIoBusy();
 
@@ -79,11 +79,12 @@ private:
     IoWorkerCmdPack *getCurrentCmd();
     IoWorkerEntry *getNextIo();
     void tryStartNextIo();
-    void finishCmd(IoWorkerCmdPack cmdToFinish);
+    void finishCmd(IoWorkerCmdPack cmdPackToFinish);
     void finishCurrentCmd();
     void abortAllCmds();
     bool evaluateResponse();
-    bool canContinue();
+    bool canEnqueue(IoWorkerCmdPack cmdPack);
+    bool canContinueCurrentCmd();
 
     tIoInterfaceShPtr m_interface = nullptr;
     IoIdGenerator m_IdGenerator;
