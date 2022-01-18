@@ -152,9 +152,9 @@ IoWorkerEntry* IoWorker::getNextIo()
     IoWorkerEntry* workerIo = nullptr;
     IoWorkerCmdPack *currCmdPack = getCurrentCmd();
     if(currCmdPack) {
-        if(m_nextPosInWorkerIo < currCmdPack->m_workerIOList.count()) {
-            workerIo = &(currCmdPack->m_workerIOList[m_nextPosInWorkerIo]);
-            m_nextPosInWorkerIo++;
+        if(m_nextPosInCurrCmd < currCmdPack->m_workerIOList.count()) {
+            workerIo = &(currCmdPack->m_workerIOList[m_nextPosInCurrCmd]);
+            m_nextPosInCurrCmd++;
         }
         else {
             finishCurrentCmd();
@@ -166,7 +166,7 @@ IoWorkerEntry* IoWorker::getNextIo()
 
 void IoWorker::finishCurrentCmd()
 {
-    m_nextPosInWorkerIo = 0;
+    m_nextPosInCurrCmd = 0;
     finishCmd(m_pendingCmdPacks.takeFirst());
 }
 
@@ -188,7 +188,7 @@ bool IoWorker::evaluateResponse()
     bool pass = false;
     IoWorkerCmdPack *currCmdPack = getCurrentCmd();
     if(currCmdPack) {
-        IoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInWorkerIo-1];
+        IoWorkerEntry& currentWorker = currCmdPack->m_workerIOList[m_nextPosInCurrCmd-1];
         IoSingleOutIn& currentOutIn = currentWorker.m_OutIn;
         if(currentWorker.m_dataReceived.isEmpty()) {
             currentWorker.m_IoEval = IoWorkerEntry::EVAL_NO_ANSWER;
