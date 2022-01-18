@@ -2,8 +2,8 @@
 #define SOURCEDEVICEMANAGER_H
 
 #include <QObject>
-#include "device/sourcedevicevein.h"
-#include "device/sourcedevicemanager.h"
+#include "source-device/sourcedevicevein.h"
+#include "source-device/sourcedevicemanager.h"
 
 struct FinishEntry
 {

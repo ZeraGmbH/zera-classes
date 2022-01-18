@@ -5,7 +5,7 @@
 #include <QUuid>
 #include <QSharedPointer>
 #include "io-interface/iointerfacebase.h"
-#include "device/sourcedevicevein.h"
+#include "source-device/sourcedevicevein.h"
 #include "io-ids/ioidkeeper.h"
 
 class IoInterfaceBase;

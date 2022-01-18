@@ -1,7 +1,7 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevicestatuswatcherjson.h"
-#include "device/sourcedevicestatuswatcherjson.h"
-#include "device/sourcedeviceswitcherjson.h"
+#include "source-device/sourcedevicestatuswatcherjson.h"
+#include "source-device/sourcedeviceswitcherjson.h"
 #include "io-interface/iointerfacedemo.h"
 #include "json/jsonstructureloader.h"
 

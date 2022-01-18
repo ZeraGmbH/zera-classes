@@ -1,7 +1,7 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevice.h"
-#include "device/sourcedevice.h"
-#include "device/sourcedeviceobserver.h"
+#include "source-device/sourcedevice.h"
+#include "source-device/sourcedeviceobserver.h"
 #include "json/jsonstructureloader.h"
 #include <zera-json-params-state.h>
 
