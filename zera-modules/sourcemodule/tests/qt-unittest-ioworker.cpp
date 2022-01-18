@@ -214,7 +214,7 @@ void IoWorkerTest::stopOnFirstError()
     // no data received
     for(int notRunIo = errorIoNumber+1; notRunIo<m_listWorkPacksReceived[0].m_workerIOList.count(); ++notRunIo) {
         QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_dataReceived, "");
-        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_IoEval, IoWorkerEntry::EVAL_UNKNOWN);
+        QCOMPARE(m_listWorkPacksReceived[0].m_workerIOList[notRunIo].m_IoEval, IoWorkerEntry::EVAL_NOT_EXECUTED);
     }
 }
 
@@ -491,7 +491,7 @@ void IoWorkerTest::evalNotificationCount(int cmdPassedExpected, int passExpected
         }
         for(int io=0; io<m_listWorkPacksReceived[pack].m_workerIOList.count(); ++io) {
             switch(m_listWorkPacksReceived[pack].m_workerIOList[io].m_IoEval) {
-            case IoWorkerEntry::EVAL_UNKNOWN:
+            case IoWorkerEntry::EVAL_NOT_EXECUTED:
                 unknownCount++;
                 break;
             case IoWorkerEntry::EVAL_PASS:
@@ -500,7 +500,6 @@ void IoWorkerTest::evalNotificationCount(int cmdPassedExpected, int passExpected
             case IoWorkerEntry::EVAL_WRONG_ANSWER:
                 failCount++;
                 break;
-            // timeout has an explicit test
             case IoWorkerEntry::EVAL_NO_ANSWER:
                 break;
             }
