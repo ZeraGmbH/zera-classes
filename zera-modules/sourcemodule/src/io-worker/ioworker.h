@@ -13,11 +13,11 @@ public:
     IoSingleOutIn m_OutIn;
     QByteArray m_dataReceived;
     enum {
-        EVAL_UNKNOWN = 0,
+        EVAL_NOT_EXECUTED = 0,
         EVAL_NO_ANSWER,
         EVAL_WRONG_ANSWER,
         EVAL_PASS
-    } m_IoEval = EVAL_UNKNOWN;
+    } m_IoEval = EVAL_NOT_EXECUTED;
     bool operator == (const IoWorkerEntry& other);
 };
 
