@@ -31,7 +31,7 @@ int SourceDevice::startTransaction(const IoWorkerCmdPack &workerPack)
     if(workerPack.isSwitchPack()) {
         emit sigSwitchTransationStartedQueued();
     }
-    return m_sourceIoWorker.enqueueAction(workerPack);
+    return m_sourceIoWorker.enqueueCmd(workerPack);
 }
 
 void SourceDevice::simulateExternalDisconnect()

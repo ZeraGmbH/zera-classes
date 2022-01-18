@@ -87,18 +87,14 @@ void IoWorker::setIoInterface(tIoInterfaceShPtr interface)
     }
 }
 
-void IoWorker::setMaxPendingActions(int maxPackets)
+void IoWorker::setMaxPendingCmds(int maxPackets)
 {
     m_maxPendingCmdPacks = maxPackets;
 }
 
-int IoWorker::enqueueAction(IoWorkerCmdPack cmdPack)
+int IoWorker::enqueueCmd(IoWorkerCmdPack cmdPack)
 {
-    bool canEnqueue =
-            m_interface && m_interface->isOpen() &&
-            !cmdPack.m_workerIOList.isEmpty() &&
-            (m_maxPendingCmdPacks == 0 || m_pendingCmdPacks.size() < m_maxPendingCmdPacks);
-    if(!canEnqueue) {
+    if(!canEnqueue(cmdPack)) {
         finishCmd(cmdPack);
     }
     else {
@@ -114,10 +110,10 @@ bool IoWorker::isIoBusy()
     return m_currIoId.isActive();
 }
 
-void IoWorker::onIoFinished(int ioID, bool error)
+void IoWorker::onIoFinished(int ioID, bool interfaceError)
 {
     if(m_currIoId.isCurrAndDeactivateIf(ioID)) {
-        if(error) {
+        if(interfaceError) {
             abortAllCmds();
         }
         else {
@@ -144,9 +140,9 @@ void IoWorker::tryStartNextIo()
         IoWorkerEntry* workerIo = getNextIo();
         if(workerIo) {
             m_interface->setReadTimeoutNextIo(workerIo->m_OutIn.m_responseTimeoutMs);
-            m_currIoId.setCurrent(m_interface->sendAndReceive(
-                        workerIo->m_OutIn.m_bytesSend,
-                        &workerIo->m_dataReceived));
+            int ioId = m_interface->sendAndReceive(workerIo->m_OutIn.m_bytesSend,
+                                                   &workerIo->m_dataReceived);
+            m_currIoId.setCurrent(ioId);
         }
     }
 }
@@ -174,10 +170,10 @@ void IoWorker::finishCurrentCmd()
     finishCmd(m_pendingCmdPacks.takeFirst());
 }
 
-void IoWorker::finishCmd(IoWorkerCmdPack cmdToFinish)
+void IoWorker::finishCmd(IoWorkerCmdPack cmdPackToFinish)
 {
-    cmdToFinish.evalAll();
-    emit sigCmdFinishedQueued(cmdToFinish);
+    cmdPackToFinish.evalAll();
+    emit sigCmdFinishedQueued(cmdPackToFinish);
 }
 
 void IoWorker::abortAllCmds()
@@ -207,7 +203,16 @@ bool IoWorker::evaluateResponse()
     return pass;
 }
 
-bool IoWorker::canContinue()
+bool IoWorker::canEnqueue(IoWorkerCmdPack cmdPack)
+{
+    bool canEnqueue =
+            m_interface && m_interface->isOpen() &&
+            !cmdPack.m_workerIOList.isEmpty() &&
+            (m_maxPendingCmdPacks == 0 || m_pendingCmdPacks.size() < m_maxPendingCmdPacks);
+    return canEnqueue;
+}
+
+bool IoWorker::canContinueCurrentCmd()
 {
     bool pass = evaluateResponse();
     IoWorkerCmdPack *currCmdPack = getCurrentCmd();
