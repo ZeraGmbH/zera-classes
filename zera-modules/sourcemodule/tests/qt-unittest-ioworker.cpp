@@ -182,7 +182,7 @@ void IoWorkerTest::disconnectWhileWorkingMultipleNotifications()
 
 using DemoResponseHelper::generateResponseList;
 
-void IoWorkerTest::testStopOnFirstError()
+void IoWorkerTest::stopOnFirstError()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -219,7 +219,7 @@ void IoWorkerTest::testStopOnFirstError()
 }
 
 
-void IoWorkerTest::testContinueOnError()
+void IoWorkerTest::continueOnError()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -268,7 +268,7 @@ void IoWorkerTest::noErrorSigOnEmptyPack()
     QVERIFY(m_listWorkPacksReceived[0].passedAll());
 }
 
-void IoWorkerTest::testSpamRejected()
+void IoWorkerTest::rejectSpam()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -291,7 +291,7 @@ void IoWorkerTest::testSpamRejected()
     evalNotificationCount(maxPendingPackets, maxPendingPackets*responseList.count(), 0, maxPendingPackets*responseList.count());
 }
 
-void IoWorkerTest::testCloseToSpamAccepted()
+void IoWorkerTest::acceptCloseToSpam()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -314,7 +314,7 @@ void IoWorkerTest::testCloseToSpamAccepted()
     evalNotificationCount(maxPendingPackets, maxPendingPackets*responseList.count(), 0, 0);
 }
 
-void IoWorkerTest::testOnePacketSingleIoOK()
+void IoWorkerTest::oneValidPacketSingleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -336,7 +336,7 @@ void IoWorkerTest::testOnePacketSingleIoOK()
     evalNotificationCount(1, 1, 0, 0);
 }
 
-void IoWorkerTest::testTwoPacketSingleIoOK()
+void IoWorkerTest::twoValidPacketsSingleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -358,7 +358,7 @@ void IoWorkerTest::testTwoPacketSingleIoOK()
     evalNotificationCount(2, 2, 0, 0);
 }
 
-void IoWorkerTest::testOnePacketMultipleIoOK()
+void IoWorkerTest::oneValidPacketMultipleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -368,10 +368,8 @@ void IoWorkerTest::testOnePacketMultipleIoOK()
 
     IoWorkerCmdPack workCmdPack = generateSwitchCommands(true);
     int ioCount = workCmdPack.m_workerIOList.count();
-    QList<QByteArray> responseList = generateResponseList(workCmdPack);
-    for(int pack=0; pack<workCmdPack.m_workerIOList.count(); pack++) {
-        demoInterface->appendResponses(responseList);
-    }
+    demoInterface->appendResponses(generateResponseList(workCmdPack));
+
     worker.enqueueAction(workCmdPack);
     QVERIFY(worker.isIoBusy());
     QTest::qWait(10);
@@ -381,7 +379,7 @@ void IoWorkerTest::testOnePacketMultipleIoOK()
     evalNotificationCount(1, ioCount, 0, 0);
 }
 
-void IoWorkerTest::testTwoPacketMultipleIoOK()
+void IoWorkerTest::twoValidPacketsMultipleIo()
 {
     tIoInterfaceShPtr interface = createOpenInterface();
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(interface.get());
@@ -395,10 +393,8 @@ void IoWorkerTest::testTwoPacketMultipleIoOK()
     workCmdPacks[1] = generateStatusPollCommands();
     int commandCount = 0;
     for(auto &cmdPack: workCmdPacks) {
-        QList<QByteArray> responseList;
-        responseList.append(generateResponseList(cmdPack));
         outInCount += cmdPack.m_workerIOList.count();
-        demoInterface->appendResponses(responseList);
+        demoInterface->appendResponses(generateResponseList(cmdPack));
         worker.enqueueAction(cmdPack);
         QVERIFY(worker.isIoBusy());
         commandCount++;

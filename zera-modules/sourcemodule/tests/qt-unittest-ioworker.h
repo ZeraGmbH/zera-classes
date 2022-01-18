@@ -29,18 +29,18 @@ private slots:
     void disconnectWhileWorking();
     void disconnectWhileWorkingMultipleNotifications();
 
-    void testStopOnFirstError();
-    void testContinueOnError();
+    void stopOnFirstError();
+    void continueOnError();
 
     void noErrorSigOnEmptyPack();
 
-    void testSpamRejected();
-    void testCloseToSpamAccepted();
+    void rejectSpam();
+    void acceptCloseToSpam();
 
-    void testOnePacketSingleIoOK();
-    void testTwoPacketSingleIoOK();
-    void testOnePacketMultipleIoOK();
-    void testTwoPacketMultipleIoOK();
+    void oneValidPacketSingleIo();
+    void twoValidPacketsSingleIo();
+    void oneValidPacketMultipleIo();
+    void twoValidPacketsMultipleIo();
 
     void timeoutDetected();
 
