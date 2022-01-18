@@ -3,7 +3,7 @@
 
 #include "supportedsources.h"
 #include "io-interface/iointerfacebase.h"
-#include "io-worker/iopacketgenerator.h"
+#include "io-worker/iogroupgenerator.h"
 #include "io-worker/ioworker.h"
 #include "io-ids/ioidkeeper.h"
 
@@ -26,19 +26,19 @@ public:
 protected:
     void switchState(JsonParamApi state);
     void switchOff();
-    virtual void handleSourceCmd(IoWorkerCmdPack cmdPack);
+    virtual void handleSourceCmd(IoMultipleTransferGroup transferGroup);
 
     tIoInterfaceShPtr m_ioInterface;
-    IoPacketGenerator* m_outInGenerator = nullptr;
+    IoGroupGenerator* m_ioGroupGenerator = nullptr;
 
     JsonParamApi m_paramsRequested;
     JsonParamApi m_paramsCurrent;
 
-    IoWorker m_sourceIoWorker;
+    IoWorker m_ioWorker;
     IoIdKeeper m_currWorkerId;
 
 private slots:
-    void onSourceCmdFinished(IoWorkerCmdPack cmdPack);
+    void onIoGroupFinished(IoMultipleTransferGroup transferGroup);
 
 private:
     bool m_bDemoDelayFollowsTimeout = false;

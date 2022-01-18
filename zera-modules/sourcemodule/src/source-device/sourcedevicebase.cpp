@@ -7,15 +7,15 @@ SourceDeviceBase::SourceDeviceBase(tIoInterfaceShPtr interface, SupportedSourceT
     m_ioInterface(interface)
 {
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, version);
-    m_outInGenerator = new IoPacketGenerator(paramStructure);
+    m_ioGroupGenerator = new IoGroupGenerator(paramStructure);
 
-    connect(&m_sourceIoWorker, &IoWorker::sigCmdFinished,
-            this, &SourceDeviceBase::onSourceCmdFinished);
+    connect(&m_ioWorker, &IoWorker::sigTransferGroupFinished,
+            this, &SourceDeviceBase::onIoGroupFinished);
 }
 
 SourceDeviceBase::~SourceDeviceBase()
 {
-    delete m_outInGenerator;
+    delete m_ioGroupGenerator;
 }
 
 void SourceDeviceBase::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
@@ -36,15 +36,14 @@ QString SourceDeviceBase::getInterfaceDeviceInfo()
 void SourceDeviceBase::switchState(JsonParamApi state)
 {
     m_paramsRequested = state;
-    IoCommandPacket cmdPack = m_outInGenerator->generateOnOffPacket(m_paramsRequested);
-    IoWorkerCmdPack workerPack = IoWorkerConverter::commandPackToWorkerPack(cmdPack);
+    IoMultipleTransferGroup transferGroup = m_ioGroupGenerator->generateOnOffGroup(m_paramsRequested);
     if(isDemo()) {
         IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
-        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(workerPack);
+        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(transferGroup);
         demoInterface->appendResponses(responseList);
     }
-    m_currWorkerId.setCurrent(m_sourceIoWorker.enqueueCmd(workerPack));
+    m_currWorkerId.setCurrent(m_ioWorker.enqueueTransferGroup(transferGroup));
 }
 
 void SourceDeviceBase::switchOff()
@@ -53,16 +52,16 @@ void SourceDeviceBase::switchOff()
     switchState(m_paramsCurrent);
 }
 
-void SourceDeviceBase::handleSourceCmd(IoWorkerCmdPack cmdPack)
+void SourceDeviceBase::handleSourceCmd(IoMultipleTransferGroup transferGroup)
 {
-    if(cmdPack.passedAll()) {
+    if(transferGroup.passedAll()) {
         m_paramsCurrent = m_paramsRequested;
     }
 }
 
-void SourceDeviceBase::onSourceCmdFinished(IoWorkerCmdPack cmdPack)
+void SourceDeviceBase::onIoGroupFinished(IoMultipleTransferGroup transferGroup)
 {
-    if(m_currWorkerId.isCurrAndDeactivateIf(cmdPack.m_workerId)) {
-        handleSourceCmd(cmdPack);
+    if(m_currWorkerId.isCurrAndDeactivateIf(transferGroup.m_groupId)) {
+        handleSourceCmd(transferGroup);
     }
 }

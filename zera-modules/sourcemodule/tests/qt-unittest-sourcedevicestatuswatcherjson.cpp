@@ -279,7 +279,7 @@ void SourceDeviceStatusWatcherJsonTest::sequenceSwitchPollErrorOnBoth()
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnError()
 {
-    /*m_sourceDevice->setDemoResponseDelay(false, 1);
+    m_sourceDevice->setDemoResponseDelay(false, 0);
     m_sourceDevice->setDemoResonseError(true);
 
     SourceDeviceSwitcherJson switcher(m_sourceDevice);
@@ -295,7 +295,7 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnError()
         statesReceived.append(state);
     });
 
-    QTest::qWait(10000);
+    QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SOURCE_STATE::ERROR_SWITCH);
 
@@ -308,12 +308,12 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnError()
     QCOMPARE(statesReceived.count(), 0);
 
     pendingResponses = demoInterface->getResponsesForErrorInjection();
-    QCOMPARE(pendingResponses.count(), 0);*/
+    QCOMPARE(pendingResponses.count(), 0);
 }
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnErrorAndStartsOnSwitch()
 {
-    /*m_sourceDevice->setDemoResponseDelay(false, 1);
+    m_sourceDevice->setDemoResponseDelay(false, 1);
     m_sourceDevice->setDemoResonseError(true);
 
     SourceDeviceSwitcherJson switcher(m_sourceDevice);
@@ -329,22 +329,26 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnErrorAndStartsOnSwitc
         statesReceived.append(state);
     });
 
-    QTest::qWait(20);
+    QTest::qWait(30);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SOURCE_STATE::ERROR_SWITCH);
 
-    m_sourceDevice->setDemoResonseError(false);
-    statesReceived.clear();
-    QTest::qWait(100);
     IoInterfaceDemo* demoInterface = static_cast<IoInterfaceDemo*>(m_interface.get());
     QList<QByteArray> pendingResponses = demoInterface->getResponsesForErrorInjection();
     QCOMPARE(pendingResponses.count(), 0);
 
-    switcher.switchState(jsonParam);
+    statesReceived.clear();
+    QTest::qWait(10);
+    QCOMPARE(statesReceived.count(), 0);
 
+    pendingResponses = demoInterface->getResponsesForErrorInjection();
+    QCOMPARE(pendingResponses.count(), 0);
+
+    m_sourceDevice->setDemoResonseError(false);
+    switcher.switchState(jsonParam);
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SOURCE_STATE::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SOURCE_STATE::IDLE);*/
+    QCOMPARE(statesReceived[1], SOURCE_STATE::IDLE);
 }
 
