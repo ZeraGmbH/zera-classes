@@ -41,6 +41,7 @@ private slots:
     void twoValidPacketsSingleIo();
     void oneValidPacketMultipleIo();
     void twoValidPacketsMultipleIo();
+    void twoFirstInvalidSecondOkSingleIo();
 
     void timeoutDetected();
 
