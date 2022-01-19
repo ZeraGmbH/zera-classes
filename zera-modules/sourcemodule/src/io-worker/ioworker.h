@@ -8,11 +8,6 @@
 #include "io-device/iotransferdatagroup.h"
 #include "io-ids/ioidkeeper.h"
 
-namespace DemoResponseHelper
-{
-    QList<QByteArray> generateResponseList(const IoTransferDataGroup &workTransferGroup);
-}
-
 class IoWorker : public QObject
 {
     Q_OBJECT
@@ -23,7 +18,7 @@ public:
     void setMaxPendingGroups(int maxGroups);
     int enqueueTransferGroup(IoTransferDataGroup transferGroup);
 
-    bool isIoBusy();
+    bool isIoBusy() const;
 
 signals:
     void sigTransferGroupFinished(IoTransferDataGroup transferGroup);
@@ -35,7 +30,7 @@ signals:
     void sigTransferGroupFinishedQueued(IoTransferDataGroup transferGroup);
 private:
     IoTransferDataGroup *getCurrentGroup();
-    IoTransferDataSingle *getNextIoTransfer();
+    tIoTransferDataSingleShPtr getNextIoTransfer();
     void tryStartNextIo();
     void finishGroup(IoTransferDataGroup transferGroupToFinish);
     void finishCurrentGroup();

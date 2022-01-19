@@ -11,7 +11,7 @@ public:
 
     bool isCurrAndDeactivateIf(int id);
 
-    bool isActive();
+    bool isActive() const;
     void deactivate();
 private:
     bool m_isActive = false;

@@ -8,8 +8,8 @@ bool IoTransferDataGroup::passedAll() const
 void IoTransferDataGroup::evalAll()
 {
     bool pass = true;
-    for(auto io : m_ioTransferList) {
-        if(io.m_IoEval != IoTransferDataSingle::EVAL_PASS) {
+    for(const auto &io : m_ioTransferList) {
+        if(io->m_IoEval != IoTransferDataSingle::EVAL_PASS) {
             pass = false;
         }
     }

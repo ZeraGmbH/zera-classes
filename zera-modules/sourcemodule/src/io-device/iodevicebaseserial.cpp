@@ -1,17 +1,25 @@
 #include "iodevicebaseserial.h"
 
-IODeviceBaseSerial::IODeviceBaseSerial(QObject *parent) : QObject(parent)
+IODeviceBaseSerial::IODeviceBaseSerial(IoDeviceTypes type) :
+    m_type(type)
 {
     connect(this, &IODeviceBaseSerial::sigIoFinishedToQueue, this, &IODeviceBaseSerial::sigIoFinished, Qt::QueuedConnection);
+}
+
+void IODeviceBaseSerial::prepareSendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
+{
+    m_ioTransferData = ioTransferData;
+    m_ioTransferData->checkUnusedData();
+    m_currIoId.setCurrent(m_IDGenerator.nextID());
 }
 
 IODeviceBaseSerial::~IODeviceBaseSerial()
 {
 }
 
-int IODeviceBaseSerial::sendAndReceive(QByteArray, QByteArray*)
+int IODeviceBaseSerial::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
 {
-    m_currIoId.setCurrent(m_IDGenerator.nextID());
+    prepareSendAndReceive(ioTransferData);
     emit sigIoFinishedToQueue(m_currIoId.getCurrent(), true);
     return m_currIoId.getCurrent();
 }

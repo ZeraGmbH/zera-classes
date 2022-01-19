@@ -18,6 +18,8 @@ enum GroupErrorBehaviors {
     BEHAVE_UNDEF_BOTTOM
 };
 
+typedef QList<tIoTransferDataSingleShPtr> tIoTransferList;
+
 class IoTransferDataGroup
 {
 public:

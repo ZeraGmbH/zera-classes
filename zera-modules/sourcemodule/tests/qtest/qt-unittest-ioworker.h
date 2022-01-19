@@ -47,8 +47,6 @@ private:
     static tIoDeviceShPtr createOpenInterface();
     static IoTransferDataGroup generateSwitchCommands(bool on);
     static IoTransferDataGroup generateStatusPollCommands();
-    static void adjustWorkTransferGroup(IoTransferDataGroup& workTransferGroup,
-                                  GroupErrorBehaviors errorBehavior);
     void evalNotificationCount(int passedGroupsExpected,
                                int passExpected, int failExpected, int unknownExpected);
 

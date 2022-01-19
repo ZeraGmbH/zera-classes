@@ -40,8 +40,6 @@ void SourceDeviceBase::switchState(JsonParamApi state)
     if(isDemo()) {
         IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
-        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(transferGroup);
-        demoInterface->appendResponses(responseList);
     }
     m_currWorkerId.setCurrent(m_ioWorker.enqueueTransferGroup(transferGroup));
 }

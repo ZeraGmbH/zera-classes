@@ -16,7 +16,8 @@ SourceScanner::SourceScanner(tIoDeviceShPtr interface, QUuid uuid) :
     QObject(nullptr),
     m_ioInterface(interface),
     m_uuid(uuid),
-    m_sourceDeviceIdentified(nullptr)
+    m_sourceDeviceIdentified(nullptr),
+    m_ioDataSingle(nullptr)
 {
     m_InstanceCount++;
     connect(m_ioInterface.get(), &IODeviceBaseSerial::sigIoFinished,
@@ -80,9 +81,10 @@ int SourceScanner::getInstanceCount()
 void SourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
-    m_bytesReceived.clear();
-    QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
-    m_currIoId.setCurrent(m_ioInterface->sendAndReceive(bytesSend, &m_bytesReceived));
+    m_ioDataSingle = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    m_ioDataSingle->m_bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
+    int ioId = m_ioInterface->sendAndReceive(m_ioDataSingle);
+    m_currIoId.setCurrent(ioId);
 }
 
 QByteArray SourceScanner::createInterfaceSpecificPrepend()
@@ -101,8 +103,9 @@ QByteArray SourceScanner::createInterfaceSpecificPrepend()
 QByteArray SourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not used yet */)
 {
     int pos;
-    for(pos=m_bytesReceived.length()-1; pos>=0; --pos) {
-        QByteRef curr = m_bytesReceived[pos];
+    QByteArray bytesReceived = m_ioDataSingle->m_dataReceived;
+    for(pos=bytesReceived.length()-1; pos>=0; --pos) {
+        QByteRef curr = bytesReceived[pos];
         if(curr == 'v' || curr == 'V') {
             break;
         }
@@ -110,8 +113,8 @@ QByteArray SourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not
     QByteArray version;
     if(pos >= 0) {
         QByteArray termList(" \t\n\r");
-        for(;pos < m_bytesReceived.length() && !termList.contains(m_bytesReceived[pos]); pos++) {
-            version.append(m_bytesReceived[pos]);
+        for(;pos < bytesReceived.length() && !termList.contains(bytesReceived[pos]); pos++) {
+            version.append(bytesReceived[pos]);
         }
     }
     return version;
@@ -119,8 +122,8 @@ QByteArray SourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not
 
 QByteArray SourceScanner::extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes)
 {
-    QByteArray name = m_bytesReceived;
-    if(m_bytesReceived.startsWith("STSFGMT")) {
+    QByteArray name = m_ioDataSingle->m_dataReceived;
+    if(name.startsWith("STSFGMT")) {
         name = "MT3000";
     }
     else {
@@ -158,7 +161,7 @@ void SourceScanner::onIoFinished(int ioId, bool ioDeviceError)
     if(!ioDeviceError) {
         if(!m_ioInterface->isDemo()) {
             for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
-                if(m_bytesReceived.contains(responseTypePair.expectedResponse)) {
+                if(m_ioDataSingle->m_dataReceived.contains(responseTypePair.expectedResponse)) {
                     validFound = true;
                     sourceTypeFound = responseTypePair.sourceType;
                     responsePrefix = deviceDetectInfoCurrent.queryStr.replace("\r", "");

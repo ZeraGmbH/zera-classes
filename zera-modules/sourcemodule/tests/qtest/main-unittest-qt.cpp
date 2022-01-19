@@ -1,4 +1,5 @@
 #include "main-unittest-qt.h"
+#include <QProcessEnvironment>
 
 static QList<QObject*> listTests;
 
@@ -11,6 +12,7 @@ QObject *addTest(QObject *test)
 int main(int argc, char *argv[])
 {
     int status = 0;
+    qputenv("QT_FATAL_CRITICALS", "1");
     while(!listTests.isEmpty()) {
         QCoreApplication app(argc, argv);
         QObject *test = listTests.takeLast();

@@ -1,13 +1,5 @@
 #include "ioworker.h"
 
-QList<QByteArray> DemoResponseHelper::generateResponseList(const IoTransferDataGroup& workTransferGroup) {
-    QList<QByteArray> responseList;
-    for(auto io : workTransferGroup.m_ioTransferList) {
-        responseList.append(io.m_bytesExpectedLead + io.m_bytesExpectedTrail);
-    }
-    return responseList;
-}
-
 IoWorker::IoWorker(QObject *parent) : QObject(parent)
 {
     connect(this, &IoWorker::sigTransferGroupFinishedQueued,
@@ -50,7 +42,7 @@ int IoWorker::enqueueTransferGroup(IoTransferDataGroup transferGroup)
     return transferGroup.m_groupId;
 }
 
-bool IoWorker::isIoBusy()
+bool IoWorker::isIoBusy() const
 {
     return m_currIoId.isActive();
 }
@@ -80,23 +72,22 @@ void IoWorker::onIoDisconnected()
 void IoWorker::tryStartNextIo()
 {
     if(!isIoBusy()) {
-        IoTransferDataSingle* workerIo = getNextIoTransfer();
+        tIoTransferDataSingleShPtr workerIo = getNextIoTransfer();
         if(workerIo) {
             m_interface->setReadTimeoutNextIo(workerIo->m_responseTimeoutMs);
-            int ioId = m_interface->sendAndReceive(workerIo->m_bytesSend,
-                                                   &workerIo->m_dataReceived);
+            int ioId = m_interface->sendAndReceive(workerIo);
             m_currIoId.setCurrent(ioId);
         }
     }
 }
 
-IoTransferDataSingle *IoWorker::getNextIoTransfer()
+tIoTransferDataSingleShPtr IoWorker::getNextIoTransfer()
 {
-    IoTransferDataSingle* workerIo = nullptr;
+    tIoTransferDataSingleShPtr workerIo;
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
         if(m_nextPosInCurrGroup < currGroup->m_ioTransferList.count()) {
-            workerIo = &(currGroup->m_ioTransferList[m_nextPosInCurrGroup]);
+            workerIo = currGroup->m_ioTransferList[m_nextPosInCurrGroup];
             m_nextPosInCurrGroup++;
         }
         else {
@@ -131,16 +122,8 @@ bool IoWorker::evaluateResponse()
     bool pass = false;
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
-        IoTransferDataSingle& currentWorker = currGroup->m_ioTransferList[m_nextPosInCurrGroup-1];
-        if(currentWorker.m_dataReceived.isEmpty()) {
-            currentWorker.m_IoEval = IoTransferDataSingle::EVAL_NO_ANSWER;
-        }
-        else {
-            pass =
-                    currentWorker.m_dataReceived.startsWith(currentWorker.m_bytesExpectedLead) &&
-                    currentWorker.m_dataReceived.endsWith(currentWorker.m_bytesExpectedTrail);
-            currentWorker.m_IoEval = pass ? IoTransferDataSingle::EVAL_PASS : IoTransferDataSingle::EVAL_WRONG_ANSWER;
-        }
+        tIoTransferDataSingleShPtr currentIo = currGroup->m_ioTransferList[m_nextPosInCurrGroup-1];
+        pass = currentIo->evaluateResponse();
     }
     return pass;
 }

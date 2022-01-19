@@ -14,28 +14,52 @@ class IoDeviceZeraSerial : public IODeviceBaseSerial
 public:
     virtual ~IoDeviceZeraSerial();
 
-    virtual IoDeviceTypes type() override { return SERIAL_DEVICE_ASYNCSERIAL; }
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
     virtual void setReadTimeoutNextIo(int timeoutMs) override;
-    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive) override;
+    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) override;
+
+    virtual bool isOpen() override;
 
     // wrappers - see https://github.com/ZeraGmbH/qtiohelper / QT += serialportasyncblock
     void setReadTimeoutNextIo(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal = 0);
     void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
 
-    virtual bool isOpen() override;
-
 protected:
-    explicit IoDeviceZeraSerial(QObject *parent = nullptr);
+    explicit IoDeviceZeraSerial(IoDeviceTypes type);
+
     friend class IoDeviceFactory;
+
 private slots:
     void onIoFinished();
     void onDeviceFileGone(QString);
 private:
     void _close();
-    IoDeviceZeraSerialPrivate *d_ptr;
-    Q_DECLARE_PRIVATE(IoDeviceZeraSerial)
+
+    QSerialPortAsyncBlock m_serialIO;
+    FileDisappearWatcher m_disappearWatcher;
+
+    static constexpr int sourceDefaultMsBetweenTwoBytes = 500;
+
+    struct TTimeoutParam
+    {
+        int iMsReceiveFirst = sourceDefaultTimeout;
+        int iMsBetweenTwoBytes = sourceDefaultMsBetweenTwoBytes;
+        int iMsMinTotal = 0;
+    };
+    const TTimeoutParam defaultTimeoutParam;
+    TTimeoutParam nextTimeoutParam;
+    bool nextTimeoutWasSet = false;
+
+    struct TBlockEndCriteria
+    {
+        int iBlockLenReceive = 0;
+        QByteArray endBlock = QByteArray("\r");
+    };
+    const TBlockEndCriteria defaultBlockEndCriteria;
+    TBlockEndCriteria nextBlockEndCriteria;
+    bool nextBlockEndCriteriaWasSet = false;
+
 };
 
 #endif // IODEVICEZERASERIAL_H
