@@ -99,7 +99,7 @@ void SourceDeviceTest::observerReceiveCount()
 
     sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
     sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
-    QTest::qWait(10); // source's worker requires event loop
+    QTest::qWait(10); // source's queue requires event loop
     QCOMPARE(testObserver1.observerReceiveCount, 2);
     QCOMPARE(testObserver2.observerReceiveCount, 2);
 }

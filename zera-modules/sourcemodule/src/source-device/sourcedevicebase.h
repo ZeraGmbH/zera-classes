@@ -3,8 +3,8 @@
 
 #include "supportedsources.h"
 #include "io-device/iodevicebaseserial.h"
-#include "io-worker/iogroupgenerator.h"
-#include "io-worker/ioworker.h"
+#include "io-queue/iogroupgenerator.h"
+#include "io-queue/ioqueue.h"
 #include "io-ids/ioidkeeper.h"
 
 #include <QObject>
@@ -34,8 +34,8 @@ protected:
     JsonParamApi m_paramsRequested;
     JsonParamApi m_paramsCurrent;
 
-    IoWorker m_ioWorker;
-    IoIdKeeper m_currWorkerId;
+    IoQueue m_ioQueue;
+    IoIdKeeper m_currQueueId;
 
 private slots:
     void onIoGroupFinished(IoTransferDataGroup transferGroup);

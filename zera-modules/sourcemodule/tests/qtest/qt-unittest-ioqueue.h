@@ -1,18 +1,18 @@
-#ifndef SOURCEIOWORKERENTRYTEST_H
-#define SOURCEIOWORKERENTRYTEST_H
+#ifndef IOQUEUETEST_H
+#define IOQUEUETEST_H
 
 #include <QObject>
-#include "io-worker/ioworker.h"
+#include "io-queue/ioqueue.h"
 
-class IoWorkerTest : public QObject
+class IoQueueTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onIoWorkerGroupFinished(IoTransferDataGroup workGroup);
+    void onIoQueueGroupFinished(IoTransferDataGroup workGroup);
 private slots:
     void init();
 
-    void emptyWorkerIsInvalid();
+    void emptyQueueIsInvalid();
     void mulipleTransferIniitialProperties();
 
     void noInterfaceNotBusy();
@@ -53,4 +53,4 @@ private:
     QList<IoTransferDataGroup> m_listIoGroupsReceived;
 };
 
-#endif // SOURCEIOWORKERENTRYTEST_H
+#endif // IOQUEUETEST_H

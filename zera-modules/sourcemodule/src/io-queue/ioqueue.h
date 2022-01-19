@@ -1,5 +1,5 @@
-#ifndef CSOURCEIOWORKER_H
-#define CSOURCEIOWORKER_H
+#ifndef IOQUEUE_H
+#define IOQUEUE_H
 
 #include <QObject>
 #include <QSharedPointer>
@@ -8,11 +8,11 @@
 #include "io-device/iotransferdatagroup.h"
 #include "io-ids/ioidkeeper.h"
 
-class IoWorker : public QObject
+class IoQueue : public QObject
 {
     Q_OBJECT
 public:
-    explicit IoWorker(QObject *parent = nullptr);
+    explicit IoQueue(QObject *parent = nullptr);
 
     void setIoInterface(tIoDeviceShPtr interface);
     void setMaxPendingGroups(int maxGroups);
@@ -47,4 +47,4 @@ private:
     int m_maxPendingGroups = 0;
 };
 
-#endif // CSOURCEIOWORKER_H
+#endif // IOQUEUE_H

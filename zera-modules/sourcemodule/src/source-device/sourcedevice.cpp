@@ -9,9 +9,9 @@ SourceDevice::SourceDevice(tIoDeviceShPtr interface, SupportedSourceTypes type, 
     m_name(name),
     m_version(version)
 {
-    m_ioWorker.setIoInterface(interface);
+    m_ioQueue.setIoInterface(interface);
 
-    connect(&m_ioWorker, &IoWorker::sigTransferGroupFinished,
+    connect(&m_ioQueue, &IoQueue::sigTransferGroupFinished,
             this, &SourceDevice::onIoGroupFinished);
     connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
             this, &SourceDevice::sigSwitchTransationStarted,
@@ -34,7 +34,7 @@ int SourceDevice::startTransaction(IoTransferDataGroup transferGroup)
     if(m_demoSimulErrorActive && !transferGroup.m_ioTransferList.isEmpty()) {
         transferGroup.m_ioTransferList[0]->m_demoErrorResponse = true;
     }
-    return m_ioWorker.enqueueTransferGroup(transferGroup);
+    return m_ioQueue.enqueueTransferGroup(transferGroup);
 }
 
 void SourceDevice::simulateExternalDisconnect()
@@ -80,7 +80,7 @@ QString SourceDevice::getInterfaceInfo() const
 
 bool SourceDevice::isIoBusy() const
 {
-    return m_ioWorker.isIoBusy();
+    return m_ioQueue.isIoBusy();
 }
 
 bool SourceDevice::isDemo() const
