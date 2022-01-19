@@ -17,7 +17,6 @@ public:
             int responseTimeoutMs = 0,
             bool demoErrorResponse = false);
 
-    bool operator == (const IoTransferDataSingle& other);
     void checkUnusedData();
     QByteArray getDemoResponse();
     bool evaluateResponse();

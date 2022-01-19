@@ -19,14 +19,6 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
 {}
 
 
-bool IoTransferDataSingle::operator ==(const IoTransferDataSingle &other)
-{
-    return  m_responseTimeoutMs == other.m_responseTimeoutMs &&
-            m_bytesSend == other.m_bytesSend &&
-            m_bytesExpectedLead == other.m_bytesExpectedLead &&
-            m_bytesExpectedTrail == other.m_bytesExpectedTrail;
-}
-
 void IoTransferDataSingle::checkUnusedData()
 {
     if(!m_dataReceived.isEmpty() || m_IoEval != EVAL_NOT_EXECUTED) {
