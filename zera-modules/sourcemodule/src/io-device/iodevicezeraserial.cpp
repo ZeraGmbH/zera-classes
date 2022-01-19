@@ -1,6 +1,5 @@
 #include "iodevicezeraserial.h"
 
-#include "filedisappearwatcher.h"
 #include <QSerialPortAsyncBlock>
 
 static constexpr int sourceDefaultMsBetweenTwoBytes = 500;
@@ -31,7 +30,6 @@ public:
     TBlockEndCriteria nextBlockEndCriteria;
     bool nextBlockEndCriteriaWasSet = false;
 
-    cFileDisappearWatcher m_disappearWatcher;
 };
 
 IoDeviceZeraSerial::IoDeviceZeraSerial(QObject *parent) :
@@ -39,7 +37,7 @@ IoDeviceZeraSerial::IoDeviceZeraSerial(QObject *parent) :
     d_ptr(new IoDeviceZeraSerialPrivate())
 {
     connect(&d_ptr->m_serialIO, &QSerialPortAsyncBlock::ioFinished, this, &IoDeviceZeraSerial::onIoFinished);
-    connect(&d_ptr->m_disappearWatcher, &cFileDisappearWatcher::sigFileRemoved,
+    connect(&m_disappearWatcher, &FileDisappearWatcher::sigFileRemoved,
             this, &IoDeviceZeraSerial::onDeviceFileGone, Qt::QueuedConnection);
     // TBD: we need a vein logger
     d_ptr->m_serialIO.enableDebugMessages(true);
@@ -60,7 +58,7 @@ bool IoDeviceZeraSerial::open(QString strDeviceInfo)
         open = d_ptr->m_serialIO.open(QIODevice::ReadWrite);
         if(open) {
             m_strDeviceInfo = strDeviceInfo;
-            d_ptr->m_disappearWatcher.watchFile(strDeviceInfo);
+            m_disappearWatcher.watchFile(strDeviceInfo);
         }
     }
     return open;
@@ -145,5 +143,5 @@ void IoDeviceZeraSerial::_close()
     if(d_ptr->m_serialIO.isOpen()) {
         d_ptr->m_serialIO.close();
     }
-    d_ptr->m_disappearWatcher.resetFiles();
+    m_disappearWatcher.resetFiles();
 }

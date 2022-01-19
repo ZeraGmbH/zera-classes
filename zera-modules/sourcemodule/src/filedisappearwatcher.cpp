@@ -1,13 +1,13 @@
 #include <QFile>
 #include "filedisappearwatcher.h"
 
-cFileDisappearWatcher::cFileDisappearWatcher(QObject *parent) : QObject(parent)
+FileDisappearWatcher::FileDisappearWatcher(QObject *parent) : QObject(parent)
 {
-    connect(this, &cFileDisappearWatcher::sigFileRemovedToQueue, this, &cFileDisappearWatcher::sigFileRemoved, Qt::QueuedConnection);
-    connect(&m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &cFileDisappearWatcher::onFileChanged);
+    connect(this, &FileDisappearWatcher::sigFileRemovedToQueue, this, &FileDisappearWatcher::sigFileRemoved, Qt::QueuedConnection);
+    connect(&m_fileWatcher, &QFileSystemWatcher::fileChanged, this, &FileDisappearWatcher::onFileChanged);
 }
 
-void cFileDisappearWatcher::watchFile(const QString fileName)
+void FileDisappearWatcher::watchFile(const QString fileName)
 {
     bool fileOK = false;
     if(QFile::exists(fileName)) {
@@ -20,7 +20,7 @@ void cFileDisappearWatcher::watchFile(const QString fileName)
     }
 }
 
-void cFileDisappearWatcher::resetFiles()
+void FileDisappearWatcher::resetFiles()
 {
     QStringList watchedFiles = m_fileWatcher.files();
     for(auto file : watchedFiles) {
@@ -28,7 +28,7 @@ void cFileDisappearWatcher::resetFiles()
     }
 }
 
-void cFileDisappearWatcher::onFileChanged(const QString &fileName)
+void FileDisappearWatcher::onFileChanged(const QString &fileName)
 {
     if(!QFile::exists(fileName)) {
         m_fileWatcher.removePath(fileName);

@@ -23,8 +23,8 @@ static void testDisappearEvents(int countCreate, int countRemove, int countNotEx
     QTimer timerForFinish;
     timerForFinish.setSingleShot(true);
 
-    cFileDisappearWatcher watcher;
-    QObject::connect(&watcher, &cFileDisappearWatcher::sigFileRemoved, [&](QString) {
+    FileDisappearWatcher watcher;
+    QObject::connect(&watcher, &FileDisappearWatcher::sigFileRemoved, [&](QString) {
         disappearOrNotExistentCount++;
     });
 
