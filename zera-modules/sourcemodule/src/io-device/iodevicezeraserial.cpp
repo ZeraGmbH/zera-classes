@@ -41,7 +41,7 @@ void IoDeviceZeraSerial::close()
 
 void IoDeviceZeraSerial::setReadTimeoutNextIo(int timeoutMs)
 {
-    setReadTimeoutNextIo(timeoutMs, sourceDefaultMsBetweenTwoBytes);
+    setReadTimeoutNextIoSerial(timeoutMs, sourceDefaultMsBetweenTwoBytes);
 }
 
 IoDeviceZeraSerial::~IoDeviceZeraSerial()
@@ -77,7 +77,7 @@ int IoDeviceZeraSerial::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData
     return m_currIoId.getCurrent();
 }
 
-void IoDeviceZeraSerial::setReadTimeoutNextIo(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal)
+void IoDeviceZeraSerial::setReadTimeoutNextIoSerial(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal)
 {
     nextTimeoutParam.iMsReceiveFirst = iMsReceiveFirst;
     nextTimeoutParam.iMsBetweenTwoBytes = iMsBetweenTwoBytes;

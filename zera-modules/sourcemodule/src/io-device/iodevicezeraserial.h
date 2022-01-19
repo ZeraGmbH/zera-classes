@@ -21,8 +21,6 @@ public:
 
     virtual bool isOpen() override;
 
-    // wrappers - see https://github.com/ZeraGmbH/qtiohelper / QT += serialportasyncblock
-    void setReadTimeoutNextIo(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal = 0);
     void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
 
 protected:
@@ -34,6 +32,7 @@ private slots:
     void onIoFinished();
     void onDeviceFileGone(QString);
 private:
+    void setReadTimeoutNextIoSerial(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal = 0);
     void _close();
 
     QSerialPortAsyncBlock m_serialIO;
