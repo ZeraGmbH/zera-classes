@@ -25,11 +25,14 @@ SourceDevice::~SourceDevice()
 {
 }
 
-int SourceDevice::startTransaction(const IoTransferDataGroup &transferGroup)
+int SourceDevice::startTransaction(IoTransferDataGroup transferGroup)
 {
     doDemoTransactionAdjustments(transferGroup);
     if(transferGroup.isSwitchGroup()) {
         emit sigSwitchTransationStartedQueued();
+    }
+    if(m_demoSimulErrorActive && !transferGroup.m_ioTransferList.isEmpty()) {
+        transferGroup.m_ioTransferList[0]->m_demoErrorResponse = true;
     }
     return m_ioWorker.enqueueTransferGroup(transferGroup);
 }
@@ -75,6 +78,11 @@ QString SourceDevice::getInterfaceInfo() const
     return m_ioInterface->getDeviceInfo();
 }
 
+bool SourceDevice::isIoBusy() const
+{
+    return m_ioWorker.isIoBusy();
+}
+
 bool SourceDevice::isDemo() const
 {
     return m_ioInterface->isDemo();
@@ -90,10 +98,5 @@ void SourceDevice::doDemoTransactionAdjustments(const IoTransferDataGroup &trans
     if(isDemo()) {
         IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
-        QList<QByteArray> responseList = DemoResponseHelper::generateResponseList(transferGroup);
-        if(m_demoSimulErrorActive) {
-            responseList.first() = "foo";
-        }
-        demoInterface->appendResponses(responseList);
     }
 }

@@ -298,17 +298,12 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnError()
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SOURCE_STATE::ERROR_SWITCH);
-
-    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_interface.get());
-    QList<QByteArray> pendingResponses = demoInterface->getResponsesForErrorInjection();
-    QCOMPARE(pendingResponses.count(), 0);
+    QCOMPARE(m_sourceDevice->isIoBusy(), false);
 
     statesReceived.clear();
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 0);
-
-    pendingResponses = demoInterface->getResponsesForErrorInjection();
-    QCOMPARE(pendingResponses.count(), 0);
+    QCOMPARE(m_sourceDevice->isIoBusy(), false);
 }
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnErrorAndStartsOnSwitch()
@@ -332,17 +327,12 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnErrorAndStartsOnSwitc
     QTest::qWait(30);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SOURCE_STATE::ERROR_SWITCH);
-
-    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_interface.get());
-    QList<QByteArray> pendingResponses = demoInterface->getResponsesForErrorInjection();
-    QCOMPARE(pendingResponses.count(), 0);
+    QCOMPARE(m_sourceDevice->isIoBusy(), false);
 
     statesReceived.clear();
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 0);
-
-    pendingResponses = demoInterface->getResponsesForErrorInjection();
-    QCOMPARE(pendingResponses.count(), 0);
+    QCOMPARE(m_sourceDevice->isIoBusy(), false);
 
     m_sourceDevice->setDemoResonseError(false);
     switcher.switchState(jsonParam);

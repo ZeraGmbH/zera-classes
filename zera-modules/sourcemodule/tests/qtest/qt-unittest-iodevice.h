@@ -1,10 +1,10 @@
-#ifndef QTUNITTESTSOURCEINTERFACE_H
-#define QTUNITTESTSOURCEINTERFACE_H
+#ifndef QTUNITTESTSOURCEIODEVICE_H
+#define QTUNITTESTSOURCEIODEVICE_H
 
 #include <QObject>
 #include "io-device/iodevicebaseserial.h"
 
-class IoInterfaceTest : public QObject
+class IoDeviceTest : public QObject
 {
     Q_OBJECT
 public slots:
@@ -13,7 +13,7 @@ public slots:
 private slots:
     void init();
 
-    void generateOOLInterface();
+    void generateOutOfLimitsInterface();
     void generateTypeSet();
 
     void baseReturnsIds();
@@ -52,8 +52,8 @@ private:
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;
     int m_errorsReceived = 0;
-    QByteArray m_receivedData;
+    tIoTransferDataSingleShPtr m_ioDataForSingleUse;
     QList<QByteArray> m_listReceivedData;
 };
 
-#endif // QTUNITTESTSOURCEINTERFACE_H
+#endif // QTUNITTESTSOURCEIODEVICE_H

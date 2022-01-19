@@ -12,7 +12,6 @@
  * Notify busy state changed
  * Notify observers attached on command response
  * Keep source information
- * Allow adjustments on demo interfaces
  */
 class SourceDevice : public SourceDeviceSubject
 {
@@ -22,7 +21,7 @@ public:
     ~SourceDevice();
 
     // requests
-    int startTransaction(const IoTransferDataGroup &transferGroup);
+    int startTransaction(IoTransferDataGroup transferGroup);
     void simulateExternalDisconnect();
 
     // setter
@@ -35,6 +34,7 @@ public:
     QString getName() const;
     QString getVersion() const;
     QString getInterfaceInfo() const;
+    bool isIoBusy() const;
     bool isDemo() const;
 
 signals:
@@ -46,6 +46,8 @@ private slots:
 
 signals:
     void sigSwitchTransationStartedQueued();
+
+protected:
 
 private:
     void doDemoTransactionAdjustments(const IoTransferDataGroup &transferGroup);

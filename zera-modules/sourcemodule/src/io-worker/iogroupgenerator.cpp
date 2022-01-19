@@ -72,8 +72,8 @@ tIoTransferList IoGroupGenerator::generateListForAction(SourceActionTypes::Actio
         break;
     }
     for(auto &outIn : outInList) {
-        if(outIn.m_responseTimeoutMs == 0) {
-            outIn.m_responseTimeoutMs = sourceDefaultTimeout;
+        if(outIn->m_responseTimeoutMs == 0) {
+            outIn->m_responseTimeoutMs = sourceDefaultTimeout;
         }
     }
     return outInList;
@@ -84,7 +84,8 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleUList()
     tIoTransferList outInList;
     QByteArray bytesSend;
 
-    double rmsU[3], angleU[3] = {0.0, 0.0, 0.0};
+    double rmsU[3] = {0.0, 0.0, 0.0};
+    double angleU[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
         if(phase < m_jsonStructApi.getCountUPhases()) {
             rmsU[phase] = m_paramsRequested.getRms(phaseType::U, phase);
@@ -104,7 +105,7 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleUList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponseLead = m_ioPrefix + "OKUP";
-    outInList.append(IoTransferDataSingle(bytesSend, expectedResponseLead));
+    outInList.append(IoTransferDataSingleFactory::createIoData(bytesSend, expectedResponseLead));
     return outInList;
 }
 
@@ -113,7 +114,8 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleIList()
     tIoTransferList outInList;
     QByteArray bytesSend;
 
-    double rmsI[3], angleI[3] = {0.0, 0.0, 0.0};
+    double rmsI[3] = {0.0, 0.0, 0.0};
+    double angleI[3] = {0.0, 0.0, 0.0};
     for(int phase=0; phase<3; phase++) {
         if(phase < m_jsonStructApi.getCountIPhases()) {
             rmsI[phase] = m_paramsRequested.getRms(phaseType::I, phase);
@@ -133,7 +135,7 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleIList()
     }
     bytesSend.append('\r');
     QByteArray expectedResponseLead = m_ioPrefix + "OKIP";
-    outInList.append(IoTransferDataSingle(bytesSend, expectedResponseLead));
+    outInList.append(IoTransferDataSingleFactory::createIoData(bytesSend, expectedResponseLead));
 
     return outInList;
 }
@@ -182,7 +184,7 @@ tIoTransferList IoGroupGenerator::generateSwitchPhasesList()
     bytesSend.append("\r");
     QByteArray expectedResponseLead = m_ioPrefix + "OKUI";
     int timeout = globalOn ? 15000 : 5000;
-    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead, "\r", timeout);
+    return tIoTransferList() << IoTransferDataSingleFactory::createIoData(bytesSend, expectedResponseLead, "\r", timeout);
 }
 
 tIoTransferList IoGroupGenerator::generateFrequencyList()
@@ -199,7 +201,7 @@ tIoTransferList IoGroupGenerator::generateFrequencyList()
     }
     bytesSend.append("\r");
     QByteArray expectedResponseLead = m_ioPrefix + "OKFR";
-    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingleFactory::createIoData(bytesSend, expectedResponseLead);
 }
 
 tIoTransferList IoGroupGenerator::generateRegulationList()
@@ -211,7 +213,7 @@ tIoTransferList IoGroupGenerator::generateRegulationList()
     bytesSend.append("\r");
 
     QByteArray expectedResponseLead = m_ioPrefix + "OKRE";
-    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingleFactory::createIoData(bytesSend, expectedResponseLead);
 }
 
 tIoTransferList IoGroupGenerator::generateQueryStatusList()
@@ -220,7 +222,7 @@ tIoTransferList IoGroupGenerator::generateQueryStatusList()
     bytesSend = m_ioPrefix + "SM\r"; // error condition for now
 
     QByteArray expectedResponseLead = m_ioPrefix + "SM";
-    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingleFactory::createIoData(bytesSend, expectedResponseLead);
 }
 
 tIoTransferList IoGroupGenerator::generateQueryActualList()
@@ -229,7 +231,7 @@ tIoTransferList IoGroupGenerator::generateQueryActualList()
     bytesSend = "AME0;3\r";// This is single phase!!
 
     QByteArray expectedResponseLead = "AME";
-    return tIoTransferList() << IoTransferDataSingle(bytesSend, expectedResponseLead);
+    return tIoTransferList() << IoTransferDataSingleFactory::createIoData(bytesSend, expectedResponseLead);
 }
 
 QByteArray IoCmdFormatHelper::formatDouble(double val, int preDigits, char digit, int postDigits)

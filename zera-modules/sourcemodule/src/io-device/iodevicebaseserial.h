@@ -2,6 +2,7 @@
 #define IOSERIALDEVICEBASE_H
 
 #include "iodevicefactory.h"
+#include "iotransferdatasingle.h"
 #include "io-ids/ioidgenerator.h"
 #include "io-ids/ioidkeeper.h"
 
@@ -17,15 +18,16 @@ public:
 
     virtual bool open(QString) { return false; }
     virtual void close() {}
+
     virtual void setReadTimeoutNextIo(int) {};
-    virtual int sendAndReceive(QByteArray bytesSend, QByteArray* pDataReceive);
+
+    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData);
     virtual void simulateExternalDisconnect() {}
 
     virtual bool isOpen() { return false; }
-    virtual IoDeviceTypes type() { return SERIAL_DEVICE_BASE; }
 
     QString getDeviceInfo();
-
+    IoDeviceTypes type() { return m_type; }
     bool isDemo() { return type() == SERIAL_DEVICE_DEMO; }
 
 signals:
@@ -34,12 +36,16 @@ signals:
     void sigIoFinishedToQueue(int ioID, bool ioDeviceError); // sub classes emit this to ensure queue
 
 protected:
-    explicit IODeviceBaseSerial(QObject *parent = nullptr);
+    explicit IODeviceBaseSerial(IoDeviceTypes type);
+    void prepareSendAndReceive(tIoTransferDataSingleShPtr ioTransferData);
+
     friend class IoDeviceFactory;
 
+    IoDeviceTypes m_type;
     QString m_strDeviceInfo;
     IoIdGenerator m_IDGenerator;
     IoIdKeeper m_currIoId;
+    tIoTransferDataSingleShPtr m_ioTransferData;
 };
 
 #endif // IOSERIALDEVICEBASE_H

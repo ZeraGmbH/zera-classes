@@ -26,7 +26,7 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes interfaceType, con
         return;
     }
     bool started = false;
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(IoDeviceTypes(interfaceType));
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(interfaceType);
     if(interface) {
         started = interface->open(deviceInfo);
         if(started) {

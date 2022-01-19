@@ -191,7 +191,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
              COMMAND sourcemodule-unittest)
 
     file(GLOB UNITTESTS
-        tests/unittest-*.cpp
+        tests/gtest/unittest-*.cpp
     )
 
     add_executable(sourcemodule-unittest
@@ -221,13 +221,13 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
              COMMAND sourcemodule-unittest-qt)
 
     file(GLOB QTUNITTESTS
-        tests/qt-unittest-*.cpp
-        tests/qt-unittest-*.h
+        tests/qtest/qt-unittest-*.cpp
+        tests/qtest/qt-unittest-*.h
     )
 
     add_executable(sourcemodule-unittest-qt
-        tests/main-unittest-qt.h
-        tests/main-unittest-qt.cpp # must be first!!!
+        tests/qtest/main-unittest-qt.h
+        tests/qtest/main-unittest-qt.cpp # must be first!!!
         ${SOURCES}
         ${HEADER}
         ${RESOURCES}

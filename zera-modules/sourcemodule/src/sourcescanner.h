@@ -1,12 +1,14 @@
 #ifndef SourceScanner_H
 #define SourceScanner_H
 
+#include "io-device/iodevicebaseserial.h"
+#include "io-device/iotransferdatasingle.h"
+#include "source-device/sourcedevicevein.h"
+#include "io-ids/ioidkeeper.h"
+
 #include <QObject>
 #include <QUuid>
 #include <QSharedPointer>
-#include "io-device/iodevicebaseserial.h"
-#include "source-device/sourcedevicevein.h"
-#include "io-ids/ioidkeeper.h"
 
 class IODeviceBaseSerial;
 
@@ -46,7 +48,7 @@ private:
     tIoDeviceShPtr m_ioInterface;
     QUuid m_uuid;
     SourceDeviceVein* m_sourceDeviceIdentified;
-    QByteArray m_bytesReceived;
+    tIoTransferDataSingleShPtr m_ioDataSingle;
     int m_currentSourceTested = 0;
     tSourceScannerShPtr m_safePoinerOnThis;
     static int m_InstanceCount;

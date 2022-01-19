@@ -24,7 +24,7 @@ bool IoIdKeeper::isCurrAndDeactivateIf(int id)
     return false;
 }
 
-bool IoIdKeeper::isActive()
+bool IoIdKeeper::isActive() const
 {
     return m_isActive;
 }
