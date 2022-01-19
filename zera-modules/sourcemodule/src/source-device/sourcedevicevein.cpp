@@ -5,7 +5,7 @@
 #include <jsonparamvalidator.h>
 #include "sourcedevicevein.h"
 #include "sourceveininterface.h"
-#include "io-worker/iogroupgenerator.h"
+#include "io-queue/iogroupgenerator.h"
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
@@ -14,7 +14,7 @@ SourceDeviceVein::SourceDeviceVein(tIoDeviceShPtr interface, SupportedSourceType
 {
     m_persistentParamState = new PersistentJsonState(type, name, version);
     m_paramsCurrent = m_persistentParamState->loadJsonState();
-    m_ioWorker.setIoInterface(interface); // for quick error tests: comment this line
+    m_ioQueue.setIoInterface(interface); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioInterface->getDeviceInfo());
 
     connect(interface.get(), &IODeviceBaseSerial::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);

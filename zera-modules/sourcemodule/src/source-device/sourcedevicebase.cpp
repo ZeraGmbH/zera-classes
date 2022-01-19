@@ -9,7 +9,7 @@ SourceDeviceBase::SourceDeviceBase(tIoDeviceShPtr interface, SupportedSourceType
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, version);
     m_ioGroupGenerator = new IoGroupGenerator(paramStructure);
 
-    connect(&m_ioWorker, &IoWorker::sigTransferGroupFinished,
+    connect(&m_ioQueue, &IoQueue::sigTransferGroupFinished,
             this, &SourceDeviceBase::onIoGroupFinished);
 }
 
@@ -41,7 +41,7 @@ void SourceDeviceBase::switchState(JsonParamApi state)
         IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_ioInterface.get());
         demoInterface->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
     }
-    m_currWorkerId.setCurrent(m_ioWorker.enqueueTransferGroup(transferGroup));
+    m_currQueueId.setCurrent(m_ioQueue.enqueueTransferGroup(transferGroup));
 }
 
 void SourceDeviceBase::switchOff()
@@ -59,7 +59,7 @@ void SourceDeviceBase::handleSourceCmd(IoTransferDataGroup transferGroup)
 
 void SourceDeviceBase::onIoGroupFinished(IoTransferDataGroup transferGroup)
 {
-    if(m_currWorkerId.isCurrAndDeactivateIf(transferGroup.m_groupId)) {
+    if(m_currQueueId.isCurrAndDeactivateIf(transferGroup.m_groupId)) {
         handleSourceCmd(transferGroup);
     }
 }

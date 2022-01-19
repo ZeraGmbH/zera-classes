@@ -1,35 +1,35 @@
-#include "ioworker.h"
+#include "ioqueue.h"
 
-IoWorker::IoWorker(QObject *parent) : QObject(parent)
+IoQueue::IoQueue(QObject *parent) : QObject(parent)
 {
-    connect(this, &IoWorker::sigTransferGroupFinishedQueued,
-            this, &IoWorker::sigTransferGroupFinished, Qt::QueuedConnection);
+    connect(this, &IoQueue::sigTransferGroupFinishedQueued,
+            this, &IoQueue::sigTransferGroupFinished, Qt::QueuedConnection);
 }
 
-void IoWorker::setIoInterface(tIoDeviceShPtr interface)
+void IoQueue::setIoInterface(tIoDeviceShPtr interface)
 {
     m_interface = interface;
     if(interface) {
         connect(m_interface.get(), &IODeviceBaseSerial::sigIoFinished,
-                this, &IoWorker::onIoFinished);
+                this, &IoQueue::onIoFinished);
         connect(m_interface.get(), &IODeviceBaseSerial::sigDisconnected,
-                this, &IoWorker::onIoDisconnected);
+                this, &IoQueue::onIoDisconnected);
     }
     else if(m_interface){
         disconnect(m_interface.get(), &IODeviceBaseSerial::sigIoFinished,
-                   this, &IoWorker::onIoFinished);
+                   this, &IoQueue::onIoFinished);
         disconnect(m_interface.get(), &IODeviceBaseSerial::sigDisconnected,
-                this, &IoWorker::onIoDisconnected);
+                this, &IoQueue::onIoDisconnected);
         m_interface = nullptr;
     }
 }
 
-void IoWorker::setMaxPendingGroups(int maxGroups)
+void IoQueue::setMaxPendingGroups(int maxGroups)
 {
     m_maxPendingGroups = maxGroups;
 }
 
-int IoWorker::enqueueTransferGroup(IoTransferDataGroup transferGroup)
+int IoQueue::enqueueTransferGroup(IoTransferDataGroup transferGroup)
 {
     if(!canEnqueue(transferGroup)) {
         finishGroup(transferGroup);
@@ -42,12 +42,12 @@ int IoWorker::enqueueTransferGroup(IoTransferDataGroup transferGroup)
     return transferGroup.m_groupId;
 }
 
-bool IoWorker::isIoBusy() const
+bool IoQueue::isIoBusy() const
 {
     return m_currIoId.isActive();
 }
 
-void IoWorker::onIoFinished(int ioID, bool ioDeviceError)
+void IoQueue::onIoFinished(int ioID, bool ioDeviceError)
 {
     if(m_currIoId.isCurrAndDeactivateIf(ioID)) {
         if(ioDeviceError) {
@@ -62,62 +62,62 @@ void IoWorker::onIoFinished(int ioID, bool ioDeviceError)
     }
 }
 
-void IoWorker::onIoDisconnected()
+void IoQueue::onIoDisconnected()
 {
     m_currIoId.deactivate();
     abortAllGroups();
     setIoInterface(nullptr);
 }
 
-void IoWorker::tryStartNextIo()
+void IoQueue::tryStartNextIo()
 {
     if(!isIoBusy()) {
-        tIoTransferDataSingleShPtr workerIo = getNextIoTransfer();
-        if(workerIo) {
-            m_interface->setReadTimeoutNextIo(workerIo->m_responseTimeoutMs);
-            int ioId = m_interface->sendAndReceive(workerIo);
+        tIoTransferDataSingleShPtr nextIo = getNextIoTransfer();
+        if(nextIo) {
+            m_interface->setReadTimeoutNextIo(nextIo->m_responseTimeoutMs);
+            int ioId = m_interface->sendAndReceive(nextIo);
             m_currIoId.setCurrent(ioId);
         }
     }
 }
 
-tIoTransferDataSingleShPtr IoWorker::getNextIoTransfer()
+tIoTransferDataSingleShPtr IoQueue::getNextIoTransfer()
 {
-    tIoTransferDataSingleShPtr workerIo;
+    tIoTransferDataSingleShPtr nextIo;
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
         if(m_nextPosInCurrGroup < currGroup->m_ioTransferList.count()) {
-            workerIo = currGroup->m_ioTransferList[m_nextPosInCurrGroup];
+            nextIo = currGroup->m_ioTransferList[m_nextPosInCurrGroup];
             m_nextPosInCurrGroup++;
         }
         else {
             finishCurrentGroup();
-            workerIo = getNextIoTransfer();
+            nextIo = getNextIoTransfer();
         }
     }
-    return workerIo;
+    return nextIo;
 }
 
-void IoWorker::finishCurrentGroup()
+void IoQueue::finishCurrentGroup()
 {
     m_nextPosInCurrGroup = 0;
     finishGroup(m_pendingGroups.takeFirst());
 }
 
-void IoWorker::finishGroup(IoTransferDataGroup transferGroupToFinish)
+void IoQueue::finishGroup(IoTransferDataGroup transferGroupToFinish)
 {
     transferGroupToFinish.evalAll();
     emit sigTransferGroupFinishedQueued(transferGroupToFinish);
 }
 
-void IoWorker::abortAllGroups()
+void IoQueue::abortAllGroups()
 {
     while(!m_pendingGroups.isEmpty()) {
         finishCurrentGroup();
     }
 }
 
-bool IoWorker::evaluateResponse()
+bool IoQueue::evaluateResponse()
 {
     bool pass = false;
     IoTransferDataGroup *currGroup = getCurrentGroup();
@@ -128,7 +128,7 @@ bool IoWorker::evaluateResponse()
     return pass;
 }
 
-bool IoWorker::canEnqueue(IoTransferDataGroup transferGroup)
+bool IoQueue::canEnqueue(IoTransferDataGroup transferGroup)
 {
     bool canEnqueue =
             m_interface && m_interface->isOpen() &&
@@ -137,14 +137,14 @@ bool IoWorker::canEnqueue(IoTransferDataGroup transferGroup)
     return canEnqueue;
 }
 
-bool IoWorker::canContinueCurrentGroup()
+bool IoQueue::canContinueCurrentGroup()
 {
     bool pass = evaluateResponse();
     IoTransferDataGroup *currGroup = getCurrentGroup();
     return pass || (currGroup && currGroup->m_errorBehavior == BEHAVE_CONTINUE_ON_ERROR);
 }
 
-IoTransferDataGroup *IoWorker::getCurrentGroup()
+IoTransferDataGroup *IoQueue::getCurrentGroup()
 {
     IoTransferDataGroup* current = nullptr;
     if(!m_pendingGroups.isEmpty()) {
