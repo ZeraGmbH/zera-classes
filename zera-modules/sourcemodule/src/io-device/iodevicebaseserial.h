@@ -14,8 +14,6 @@ class IODeviceBaseSerial : public QObject
 {
     Q_OBJECT
 public:
-    virtual ~IODeviceBaseSerial();
-
     virtual bool open(QString) { return false; }
     virtual void close() {}
 
