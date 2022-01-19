@@ -1,8 +1,11 @@
 #ifndef IODEVICEZERASERIAL_H
 #define IODEVICEZERASERIAL_H
 
-#include <QObject>
 #include "iodevicebaseserial.h"
+#include "filedisappearwatcher.h"
+
+#include <QObject>
+#include <QSerialPortAsyncBlock>
 
 class IoDeviceZeraSerialPrivate;
 class IoDeviceZeraSerial : public IODeviceBaseSerial

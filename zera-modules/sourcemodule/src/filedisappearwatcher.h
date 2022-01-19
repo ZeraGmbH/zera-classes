@@ -4,11 +4,11 @@
 #include <QObject>
 #include <QFileSystemWatcher>
 
-class cFileDisappearWatcher : public QObject
+class FileDisappearWatcher : public QObject
 {
     Q_OBJECT
 public:
-    explicit cFileDisappearWatcher(QObject *parent = nullptr);
+    explicit FileDisappearWatcher(QObject *parent = nullptr);
     void watchFile(const QString fileName);
     void resetFiles();
 signals:
