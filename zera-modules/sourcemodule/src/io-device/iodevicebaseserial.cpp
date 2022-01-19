@@ -13,10 +13,6 @@ void IODeviceBaseSerial::prepareSendAndReceive(tIoTransferDataSingleShPtr ioTran
     m_currIoId.setCurrent(m_IDGenerator.nextID());
 }
 
-IODeviceBaseSerial::~IODeviceBaseSerial()
-{
-}
-
 int IODeviceBaseSerial::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
 {
     prepareSendAndReceive(ioTransferData);
