@@ -18,6 +18,7 @@ void IoDeviceBase::onIoFinished(int ioID, bool ioDeviceError)
 void IoDeviceBase::prepareSendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
 {
     m_ioTransferData = ioTransferData;
+    setReadTimeoutNextIo(m_ioTransferData->getResponseTimeout());
     m_ioTransferData->checkUnusedData();
     m_currIoId.setCurrent(m_IDGenerator.nextID());
 }

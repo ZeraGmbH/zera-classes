@@ -69,7 +69,7 @@ int IoDeviceZeraSerial::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData
         m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
 
         // try io
-        m_serialIO.sendAndReceive(ioTransferData->m_bytesSend, &ioTransferData->m_dataReceived);
+        m_serialIO.sendAndReceive(ioTransferData->getByesSend(), &m_dataReceived);
     }
     if(!m_serialIO.isIOPending()) {
         emit _sigIoFinished(m_currIoId.getCurrent(), true);
@@ -99,6 +99,7 @@ bool IoDeviceZeraSerial::isOpen()
 
 void IoDeviceZeraSerial::onIoFinished()
 {
+    m_ioTransferData->setDataReceived(m_dataReceived);
     emit _sigIoFinished(m_currIoId.getCurrent(), false);
 }
 

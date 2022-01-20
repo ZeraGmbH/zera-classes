@@ -81,8 +81,8 @@ int SourceScanner::getInstanceCount()
 void SourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
-    m_ioDataSingle = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
-    m_ioDataSingle->m_bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
+    QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
+    m_ioDataSingle = tIoTransferDataSingleShPtr(new IoTransferDataSingle(bytesSend, ""));
     int ioId = m_ioInterface->sendAndReceive(m_ioDataSingle);
     m_currIoId.setCurrent(ioId);
 }
@@ -103,7 +103,7 @@ QByteArray SourceScanner::createInterfaceSpecificPrepend()
 QByteArray SourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not used yet */)
 {
     int pos;
-    QByteArray bytesReceived = m_ioDataSingle->m_dataReceived;
+    QByteArray bytesReceived = m_ioDataSingle->getDataReceived();
     for(pos=bytesReceived.length()-1; pos>=0; --pos) {
         QByteRef curr = bytesReceived[pos];
         if(curr == 'v' || curr == 'V') {
@@ -122,7 +122,7 @@ QByteArray SourceScanner::extractVersionFromResponse(SupportedSourceTypes /* not
 
 QByteArray SourceScanner::extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes)
 {
-    QByteArray name = m_ioDataSingle->m_dataReceived;
+    QByteArray name = m_ioDataSingle->getDataReceived();
     if(name.startsWith("STSFGMT")) {
         name = "MT3000";
     }
@@ -161,7 +161,7 @@ void SourceScanner::onIoFinished(int ioId, bool ioDeviceError)
     if(!ioDeviceError) {
         if(!m_ioInterface->isDemo()) {
             for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
-                if(m_ioDataSingle->m_dataReceived.contains(responseTypePair.expectedResponse)) {
+                if(m_ioDataSingle->getDataReceived().contains(responseTypePair.expectedResponse)) {
                     validFound = true;
                     sourceTypeFound = responseTypePair.sourceType;
                     responsePrefix = deviceDetectInfoCurrent.queryStr.replace("\r", "");

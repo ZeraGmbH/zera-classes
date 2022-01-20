@@ -25,7 +25,7 @@ TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
         IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
         tIoTransferList outInList = ioGroupGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
-            EXPECT_FALSE(outIn->m_bytesSend.isEmpty());
+            EXPECT_FALSE(outIn->getByesSend().isEmpty());
         }
     }
 }
@@ -37,7 +37,7 @@ TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
     tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(params);
     IoTransferDataGroup transferGroup = ioGroupGenerator.generateOnOffGroup(params);
     for(auto outIn : transferGroup.m_ioTransferList) {
-        EXPECT_FALSE(outIn->m_responseTimeoutMs == 0);
+        EXPECT_FALSE(outIn->getResponseTimeout() == 0);
     }
 }
 
@@ -46,7 +46,7 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
         IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
         tIoTransferList outInList = ioGroupGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
-            EXPECT_FALSE(outIn->m_bytesExpectedLead.isEmpty() && outIn->m_bytesExpectedTrail.isEmpty());
+            EXPECT_FALSE(outIn->getExpectedDataLead().isEmpty() && outIn->getExpectedDataTrail().isEmpty());
         }
     }
 }

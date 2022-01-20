@@ -74,7 +74,6 @@ void IoQueue::tryStartNextIo()
     if(!isIoBusy()) {
         tIoTransferDataSingleShPtr nextIo = getNextIoTransfer();
         if(nextIo) {
-            m_interface->setReadTimeoutNextIo(nextIo->m_responseTimeoutMs);
             int ioId = m_interface->sendAndReceive(nextIo);
             m_currIoId.setCurrent(ioId);
         }

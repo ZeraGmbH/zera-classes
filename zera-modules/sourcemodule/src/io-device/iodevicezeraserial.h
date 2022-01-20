@@ -7,7 +7,6 @@
 #include <QObject>
 #include <QSerialPortAsyncBlock>
 
-class IoDeviceZeraSerialPrivate;
 class IoDeviceZeraSerial : public IoDeviceBase
 {
     Q_OBJECT
@@ -16,7 +15,6 @@ public:
 
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
-    virtual void setReadTimeoutNextIo(int timeoutMs) override;
     virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) override;
 
     virtual bool isOpen() override;
@@ -25,6 +23,7 @@ public:
 
 protected:
     IoDeviceZeraSerial(IoDeviceTypes type);
+    virtual void setReadTimeoutNextIo(int timeoutMs) override;
 
     friend class IoDeviceFactory;
 
@@ -37,12 +36,13 @@ private:
 
     QSerialPortAsyncBlock m_serialIO;
     FileDisappearWatcher m_disappearWatcher;
+    QByteArray m_dataReceived;
 
     static constexpr int sourceDefaultMsBetweenTwoBytes = 500;
 
     struct TTimeoutParam
     {
-        int iMsReceiveFirst = sourceDefaultTimeout;
+        int iMsReceiveFirst = ioDefaultTimeout;
         int iMsBetweenTwoBytes = sourceDefaultMsBetweenTwoBytes;
         int iMsMinTotal = 0;
     };
