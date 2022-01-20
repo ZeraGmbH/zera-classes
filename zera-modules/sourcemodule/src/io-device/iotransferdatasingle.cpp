@@ -1,6 +1,6 @@
 #include "iotransferdatasingle.h"
 
-const QByteArray IoTransferDataSingle::demoErrorResponseData = QByteArrayLiteral("foo");
+const QByteArray IoTransferDataSingle::demoErrorResponseData = QByteArrayLiteral("_ERROR_RESPONSE_");
 
 IoTransferDataSingle::IoTransferDataSingle()
 {
