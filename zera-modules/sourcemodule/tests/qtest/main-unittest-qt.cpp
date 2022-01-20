@@ -1,5 +1,5 @@
 #include "main-unittest-qt.h"
-#include <QProcessEnvironment>
+#include "io-device/iodevicebase.h"
 
 static QList<QObject*> listTests;
 
@@ -29,3 +29,9 @@ int main(int argc, char *argv[])
     return status;
 }
 
+tIoDeviceShPtr createOpenDemoInterface()
+{
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    interface->open(QString());
+    return interface;
+}
