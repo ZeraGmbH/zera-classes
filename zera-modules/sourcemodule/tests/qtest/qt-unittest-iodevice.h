@@ -47,7 +47,7 @@ private slots:
 private:
     void checkIds(tIoDeviceShPtr interface);
     void checkNotifications(tIoDeviceShPtr interface, int total, int errors);
-    tIoDeviceShPtr createOpenDemoInterface(int responseDelay = 0);
+    tIoDeviceShPtr createOpenDemoInterfaceWithDelayAndConnected(int responseDelay = 0);
 
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;
