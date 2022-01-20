@@ -44,7 +44,6 @@ private slots:
     void timeoutDetected();
 
 private:
-    static tIoDeviceShPtr createOpenInterface();
     static IoTransferDataGroup generateSwitchCommands(bool on);
     static IoTransferDataGroup generateStatusPollCommands();
     void evalNotificationCount(int passedGroupsExpected,

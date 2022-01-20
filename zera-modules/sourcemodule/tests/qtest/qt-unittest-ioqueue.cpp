@@ -45,7 +45,7 @@ void IoQueueTest::noInterfaceNotBusy()
 void IoQueueTest::emptyGroupNotBusy()
 {
     IoQueue queue;
-    queue.setIoInterface(createOpenInterface());
+    queue.setIoInterface(createOpenDemoInterface());
     IoTransferDataGroup workGroup;
     queue.enqueueTransferGroup(workGroup);
     QVERIFY(!queue.isIoBusy());
@@ -65,7 +65,7 @@ void IoQueueTest::openInterfaceBusy()
 {
     IoQueue queue;
     IoTransferDataGroup workGroup = generateSwitchCommands(false);
-    queue.setIoInterface(createOpenInterface());
+    queue.setIoInterface(createOpenDemoInterface());
     queue.enqueueTransferGroup(workGroup);
     QVERIFY(queue.isIoBusy());
 }
@@ -102,7 +102,7 @@ void IoQueueTest::notOpenInterfaceNotifications()
 
 void IoQueueTest::disconnectBeforeEnqueue()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoQueue queue;
     queue.setIoInterface(interface);
@@ -116,7 +116,7 @@ void IoQueueTest::disconnectBeforeEnqueue()
 
 void IoQueueTest::disconnectWhileWorking()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoQueue queue;
     queue.setIoInterface(interface);
@@ -140,7 +140,7 @@ void IoQueueTest::disconnectWhileWorking()
 
 void IoQueueTest::disconnectWhileWorkingMultipleNotifications()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     IoQueue queue;
     queue.setIoInterface(interface);
@@ -166,7 +166,7 @@ void IoQueueTest::disconnectWhileWorkingMultipleNotifications()
 
 void IoQueueTest::stopOnFirstError()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->setResponseDelay(false, 1);
     IoQueue queue;
@@ -200,7 +200,7 @@ void IoQueueTest::stopOnFirstError()
 
 void IoQueueTest::continueOnError()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->setResponseDelay(false, 1);
     IoQueue queue;
@@ -231,7 +231,7 @@ void IoQueueTest::continueOnError()
 
 void IoQueueTest::noErrorSigalOnEmptyGroup()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     queue.setIoInterface(interface);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -248,7 +248,7 @@ void IoQueueTest::noErrorSigalOnEmptyGroup()
 
 void IoQueueTest::rejectSpam()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     constexpr int maxPendingGroups = 2;
     queue.setMaxPendingGroups(maxPendingGroups);
@@ -270,7 +270,7 @@ void IoQueueTest::rejectSpam()
 
 void IoQueueTest::acceptCloseToSpam()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     constexpr int maxPendingGroups = 2;
     queue.setMaxPendingGroups(maxPendingGroups);
@@ -292,7 +292,7 @@ void IoQueueTest::acceptCloseToSpam()
 
 void IoQueueTest::oneValidGroupSingleIo()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     queue.setIoInterface(interface);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -309,7 +309,7 @@ void IoQueueTest::oneValidGroupSingleIo()
 
 void IoQueueTest::twoValidGroupsSingleIo()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     queue.setIoInterface(interface);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -327,7 +327,7 @@ void IoQueueTest::twoValidGroupsSingleIo()
 
 void IoQueueTest::oneValidGroupMultipleIo()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     queue.setIoInterface(interface);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -346,7 +346,7 @@ void IoQueueTest::oneValidGroupMultipleIo()
 
 void IoQueueTest::twoValidGroupsMultipleIo()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     queue.setIoInterface(interface);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -371,7 +371,7 @@ void IoQueueTest::twoValidGroupsMultipleIo()
 
 void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoQueue queue;
     queue.setIoInterface(interface);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -396,7 +396,7 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
 
 void IoQueueTest::timeoutDetected()
 {
-    tIoDeviceShPtr interface = createOpenInterface();
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->setResponseDelay(false, 10);
     IoQueue queue;
@@ -421,14 +421,6 @@ void IoQueueTest::timeoutDetected()
     QCOMPARE(groupsFinished, 1);
 }
 
-
-tIoDeviceShPtr IoQueueTest::createOpenInterface()
-{
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
-    demoInterface->open(QString());
-    return interface;
-}
 
 IoTransferDataGroup IoQueueTest::generateStatusPollCommands()
 {
