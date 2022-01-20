@@ -1,6 +1,7 @@
 #include "sourcescanner.h"
 #include "io-device/iodevicebrokendummy.h"
 #include "io-device/iodevicezeraserial.h"
+#include "io-device/iotransferdatasinglefactory.h"
 #include <QUuid>
 
 tSourceScannerShPtr SourceScanner::createScanner(tIoDeviceShPtr interface, QUuid uuid)
@@ -82,7 +83,7 @@ void SourceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
-    m_ioDataSingle = tIoTransferDataSingleShPtr(new IoTransferDataSingle(bytesSend, ""));
+    m_ioDataSingle = IoTransferDataSingleFactory::createIoData(bytesSend, "");
     int ioId = m_ioInterface->sendAndReceive(m_ioDataSingle);
     m_currIoId.setCurrent(ioId);
 }

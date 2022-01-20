@@ -1,7 +1,7 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-iodevice.h"
 #include "io-device/iodevicedemo.h"
-#include "io-device/iotransferdatasingle.h"
+#include "io-device/iotransferdatasinglefactory.h"
 
 static QObject* pIoDeviceTest = addTest(new IoDeviceTest);
 
@@ -10,7 +10,7 @@ void IoDeviceTest::init()
     m_ioIDReceived = -1;
     m_ioFinishReceiveCount = 0;
     m_errorsReceived = 0;
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData();
     m_listReceivedData.clear();
 }
 
@@ -151,15 +151,15 @@ void IoDeviceTest::demoResponseList()
 {
     tIoDeviceShPtr interface = createOpenDemoInterfaceWithDelayAndConnected();
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "0"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "0");
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10); // one I/O at a time
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "1"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "1");
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10);
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "2"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "2");
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10);
 
@@ -173,15 +173,15 @@ void IoDeviceTest::demoResponseListDelay()
 {
     tIoDeviceShPtr interface = createOpenDemoInterfaceWithDelayAndConnected(10);
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "0"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "0");
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30); // one I/O at a time
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "1"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "1");
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30);
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "2"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "2");
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30);
 
@@ -195,17 +195,17 @@ void IoDeviceTest::demoResponseListErrorInjection()
 {
     tIoDeviceShPtr interface = createOpenDemoInterfaceWithDelayAndConnected();
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "0"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "0");
     m_ioDataForSingleUse->m_demoErrorResponse = true;
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30); // one I/O at a time
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "1"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "1");
     m_ioDataForSingleUse->m_demoErrorResponse = false;
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30);
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "2"));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "2");
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30);
 
@@ -221,13 +221,13 @@ void IoDeviceTest::demoDelayFollowsDelay()
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
 
     // huge timeout must be ignored
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "\r", "", 5000));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "\r", "", 5000);
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
     demoInterface->setResponseDelay(false, 5000);
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData();
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10);
 
@@ -239,13 +239,13 @@ void IoDeviceTest::demoDelayFollowsTimeout()
     tIoDeviceShPtr interface = createOpenDemoInterfaceWithDelayAndConnected();
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "\r", "", 0));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "\r", "", 0);
     demoInterface->setResponseDelay(true, 5000 /* must be ignored */);
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
-    m_ioDataForSingleUse = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "\r", "", 5000));
+    m_ioDataForSingleUse = IoTransferDataSingleFactory::createIoData("", "\r", "", 5000);
     interface->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10);
     QCOMPARE(m_ioFinishReceiveCount, 1);
@@ -280,7 +280,7 @@ void IoDeviceTest::demoCanClose()
 
 void IoDeviceTest::checkIds(tIoDeviceShPtr interface)
 {
-    tIoTransferDataSingleShPtr dummyIoData = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    tIoTransferDataSingleShPtr dummyIoData = IoTransferDataSingleFactory::createIoData();
     int ioID = interface->sendAndReceive(dummyIoData);
     QCOMPARE(ioID, 0);
     ioID = interface->sendAndReceive(dummyIoData);
@@ -290,7 +290,7 @@ void IoDeviceTest::checkIds(tIoDeviceShPtr interface)
 void IoDeviceTest::checkNotifications(tIoDeviceShPtr interface, int total, int errors)
 {
     connect(interface.get(), &IoDeviceBase::sigIoFinished, this, &IoDeviceTest::onIoFinish);
-    tIoTransferDataSingleShPtr dummyIoData = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    tIoTransferDataSingleShPtr dummyIoData = IoTransferDataSingleFactory::createIoData();
     interface->sendAndReceive(dummyIoData);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
     QCOMPARE(m_errorsReceived, 0);

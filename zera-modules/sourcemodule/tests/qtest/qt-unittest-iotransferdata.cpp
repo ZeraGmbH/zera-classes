@@ -1,6 +1,7 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-iotransferdata.h"
 #include "io-device/iotransferdatagroup.h"
+#include "io-device/iotransferdatasinglefactory.h"
 #include "io-device/iodevicebase.h"
 #include "sigslotiotransfergroup-forunittest.h"
 
@@ -12,52 +13,52 @@ void IoTransferDataTest::init()
 
 void IoTransferDataTest::singleDataEvalNotExecutedOnConstruct1()
 {
-    IoTransferDataSingle transSingle;
-    QCOMPARE(transSingle.getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    QCOMPARE(ioTransferData->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
 }
 
 void IoTransferDataTest::singleDataEvalNotExecutedOnConstruct2()
 {
-    IoTransferDataSingle transSingle("", "");
-    QCOMPARE(transSingle.getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "");
+    QCOMPARE(ioTransferData->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
 }
 
 void IoTransferDataTest::singleDemoResponseLeadTrail()
 {
     QByteArray lead = "foo";
     QByteArray trail = "foo";
-    IoTransferDataSingle transSingle("", lead, trail);
-    QCOMPARE(transSingle.getDemoResponse(), lead+trail);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", lead, trail);
+    QCOMPARE(ioTransferData->getDemoResponse(), lead+trail);
 }
 
 void IoTransferDataTest::singleDemoResponseLeadTrailEmpty()
 {
-    IoTransferDataSingle transSingle;
-    QCOMPARE(transSingle.getDemoResponse(), "\r");
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    QCOMPARE(ioTransferData->getDemoResponse(), "\r");
 }
 
 void IoTransferDataTest::singleDemoResponseSimError()
 {
-    IoTransferDataSingle transSingle;
-    transSingle.m_demoErrorResponse = true;
-    QCOMPARE(transSingle.getDemoResponse(), IoTransferDataSingle::demoErrorResponseData);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    ioTransferData->m_demoErrorResponse = true;
+    QCOMPARE(ioTransferData->getDemoResponse(), IoTransferDataSingle::demoErrorResponseData);
 }
 
 void IoTransferDataTest::singleCheckUnusedDataOnOnConstruct1()
 {
-    IoTransferDataSingle transSingle;
-    QCOMPARE(transSingle.checkUnusedData(), true);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    QCOMPARE(ioTransferData->checkUnusedData(), true);
 }
 
 void IoTransferDataTest::singleCheckUnusedDataOnOnConstruct2()
 {
-    IoTransferDataSingle transSingle("", "");
-    QCOMPARE(transSingle.checkUnusedData(), true);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "");
+    QCOMPARE(ioTransferData->checkUnusedData(), true);
 }
 
 void IoTransferDataTest::singleCheckUsedDataDataReceived()
 {
-    tIoTransferDataSingleShPtr ioTransferData = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -68,7 +69,7 @@ void IoTransferDataTest::singleCheckUsedDataDataReceived()
 
 void IoTransferDataTest::singleCheckUsedDataNoAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "", ""));
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "", "");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -80,7 +81,7 @@ void IoTransferDataTest::singleCheckUsedDataNoAnswer()
 
 void IoTransferDataTest::singleCheckUsedWrongAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
     ioTransferData->m_demoErrorResponse = true;
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
@@ -93,7 +94,7 @@ void IoTransferDataTest::singleCheckUsedWrongAnswer()
 
 void IoTransferDataTest::singleCheckUsedPass()
 {
-    tIoTransferDataSingleShPtr ioTransferData = tIoTransferDataSingleShPtr(new IoTransferDataSingle("fooSend", "fooLead", "fooTrail"));
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("fooSend", "fooLead", "fooTrail");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -126,13 +127,13 @@ void IoTransferDataTest::groupEqual()
     IoTransferDataGroup workTransferGroup1(IoTransferDataGroup::GROUP_TYPE_SWITCH_OFF, IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
 
     tIoTransferList transList1_1;
-    transList1_1.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("1a","1b", "1c", 1, false)));
-    transList1_1.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("2a","2b", "2c", 2, true)));
+    transList1_1.append(IoTransferDataSingleFactory::createIoData("1a","1b", "1c", 1, false));
+    transList1_1.append(IoTransferDataSingleFactory::createIoData("2a","2b", "2c", 2, true));
     workTransferGroup1.appendTransferList(transList1_1);
 
     tIoTransferList transList1_2;
-    transList1_2.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("3a","3b", "3c", 3, false)));
-    transList1_2.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("4a","4b", "4c", 4, true)));
+    transList1_2.append(IoTransferDataSingleFactory::createIoData("3a","3b", "3c", 3, false));
+    transList1_2.append(IoTransferDataSingleFactory::createIoData("4a","4b", "4c", 4, true));
     workTransferGroup1.appendTransferList(transList1_2);
 
     IoTransferDataGroup workTransferGroup2 = workTransferGroup1;
@@ -145,19 +146,19 @@ void IoTransferDataTest::groupUnequal()
     IoTransferDataGroup workTransferGroup1(IoTransferDataGroup::GROUP_TYPE_SWITCH_OFF, IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
 
     tIoTransferList transList1_1;
-    transList1_1.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("1a","1b", "1c", 1, false)));
-    transList1_1.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("2a","2b", "2c", 2, true)));
+    transList1_1.append(IoTransferDataSingleFactory::createIoData("1a","1b", "1c", 1, false));
+    transList1_1.append(IoTransferDataSingleFactory::createIoData("2a","2b", "2c", 2, true));
     workTransferGroup1.appendTransferList(transList1_1);
 
     tIoTransferList transList1_2;
-    transList1_2.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("3a","3b", "3c", 3, false)));
-    transList1_2.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("4a","4b", "4c", 4, true)));
+    transList1_2.append(IoTransferDataSingleFactory::createIoData("3a","3b", "3c", 3, false));
+    transList1_2.append(IoTransferDataSingleFactory::createIoData("4a","4b", "4c", 4, true));
     workTransferGroup1.appendTransferList(transList1_2);
 
     IoTransferDataGroup workTransferGroup2 = workTransferGroup1;
     tIoTransferList transList2;
-    transList2.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("3a","3b", "3c", 3, false)));
-    transList2.append(tIoTransferDataSingleShPtr(new IoTransferDataSingle("4a","4b", "4c", 4, true)));
+    transList2.append(IoTransferDataSingleFactory::createIoData("3a","3b", "3c", 3, false));
+    transList2.append(IoTransferDataSingleFactory::createIoData("4a","4b", "4c", 4, true));
     workTransferGroup1.appendTransferList(transList2);
 
     QVERIFY(workTransferGroup1 != workTransferGroup2); // yes we could explode this on each (sub)-value...
@@ -227,13 +228,13 @@ void IoTransferDataTest::groupTypeHasIsMethod()
 
 void IoTransferDataTest::singleDataEvalNotExecuted()
 {
-    IoTransferDataSingle transSingle("", "");
-    QCOMPARE(transSingle.getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
+    tIoTransferDataSingleShPtr transSingle = IoTransferDataSingleFactory::createIoData("", "");
+    QCOMPARE(transSingle->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
 }
 
 void IoTransferDataTest::singleDataEvalNoAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = tIoTransferDataSingleShPtr(new IoTransferDataSingle("", "", ""));
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "", "");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -242,7 +243,7 @@ void IoTransferDataTest::singleDataEvalNoAnswer()
 
 void IoTransferDataTest::singleDataEvalWrongAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
     ioTransferData->m_demoErrorResponse = true;
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
@@ -252,7 +253,7 @@ void IoTransferDataTest::singleDataEvalWrongAnswer()
 
 void IoTransferDataTest::singleDataEvalPass()
 {
-    tIoTransferDataSingleShPtr ioTransferData = tIoTransferDataSingleShPtr(new IoTransferDataSingle("fooSend", "fooLead", "fooTrail"));
+    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("fooSend", "fooLead", "fooTrail");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);

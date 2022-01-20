@@ -9,14 +9,6 @@
 class IoTransferDataSingle
 {
 public:
-    IoTransferDataSingle();
-    IoTransferDataSingle(
-            QByteArray bytesSend,
-            QByteArray bytesExpectedLead,
-            QByteArray bytesExpectedTrail = "\r",
-            int responseTimeoutMs = 0,
-            bool demoErrorResponse = false);
-
     enum EvalResponse {
         EVAL_NOT_EXECUTED = 0,
         EVAL_NO_ANSWER,
@@ -43,6 +35,15 @@ public:
     bool m_demoErrorResponse = false;
 
 protected:
+    IoTransferDataSingle();
+    IoTransferDataSingle(
+            QByteArray bytesSend,
+            QByteArray bytesExpectedLead,
+            QByteArray bytesExpectedTrail = "\r",
+            int responseTimeoutMs = 0,
+            bool demoErrorResponse = false);
+    friend class IoTransferDataSingleFactory;
+
     QByteArray m_dataReceived;
     int m_responseTimeoutMs = 0;
     QByteArray m_bytesExpectedLead;
@@ -53,16 +54,5 @@ private:
 };
 
 typedef QSharedPointer<IoTransferDataSingle> tIoTransferDataSingleShPtr;
-
-class IoTransferDataSingleFactory
-{
-public:
-    static tIoTransferDataSingleShPtr createIoData(
-            QByteArray bytesSend,
-            QByteArray bytesExpectedLead,
-            QByteArray bytesExpectedTrail = "\r",
-            int responseTimeoutMs = 0,
-            bool demoErrorResponse = false);
-};
 
 #endif // IOTRANSFERDATASINGLE_H
