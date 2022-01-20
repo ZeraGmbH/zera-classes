@@ -16,23 +16,23 @@ IoTransferDataGroup IoGroupGenerator::generateOnOffGroup(JsonParamApi requestedP
 {
     m_paramsRequested = requestedParams;
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generateSwitchActions(requestedParams);
-    IoTransferDataGroup transferGroup;
-    transferGroup.m_commandType = requestedParams.getOn() ? COMMAND_SWITCH_ON : COMMAND_SWITCH_OFF;
-    transferGroup.m_errorBehavior = BEHAVE_STOP_ON_ERROR;
+    IoTransferDataGroup::SourceGroupTypes type = requestedParams.getOn() ?
+                IoTransferDataGroup::GROUP_TYPE_SWITCH_ON : IoTransferDataGroup::GROUP_TYPE_SWITCH_OFF;
+    IoTransferDataGroup transferGroup(type,
+                                      IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     for(auto &actionType : actionsTypeList) {
-        transferGroup.m_ioTransferList.append(generateListForAction(actionType));
+        transferGroup.appendTransferList(generateListForAction(actionType));
     }
     return transferGroup;
 }
 
 IoTransferDataGroup IoGroupGenerator::generateStatusPollGroup()
 {
-    IoTransferDataGroup transferGroup;
-    transferGroup.m_commandType = COMMAND_STATE_POLL;
-    transferGroup.m_errorBehavior = BEHAVE_CONTINUE_ON_ERROR;
+    IoTransferDataGroup transferGroup(IoTransferDataGroup::GROUP_TYPE_STATE_POLL,
+                                      IoTransferDataGroup::BEHAVE_CONTINUE_ON_ERROR);
     tSourceActionTypeList actionsTypeList = SourceActionGenerator::generatePeriodicActions();
     for(auto &actionType : actionsTypeList) {
-        transferGroup.m_ioTransferList.append(generateListForAction(actionType));
+        transferGroup.appendTransferList(generateListForAction(actionType));
     }
     return transferGroup;
 }

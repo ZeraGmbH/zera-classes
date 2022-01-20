@@ -54,7 +54,7 @@ void SourceDeviceStatusWatcherJson::updateResponse(IoTransferDataGroup transferG
         handleSwitchResponse(transferGroup);
     }
 
-    if(transferGroup.isStateQueryGroup() && m_ioIdKeeper.isCurrAndDeactivateIf(transferGroup.m_groupId)) {
+    if(transferGroup.isStateQueryGroup() && m_ioIdKeeper.isCurrAndDeactivateIf(transferGroup.getGroupId())) {
         handleStateResponse(transferGroup);
     }
 }

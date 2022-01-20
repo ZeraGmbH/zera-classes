@@ -1,8 +1,8 @@
 #include <QObject>
 
 #include "io-device/iodevicefactory.h"
+#include "sourcedevice-forunittest.h"
 
-class SourceDevice;
 
 class SourceDeviceStatusWatcherJsonTest : public QObject
 {
@@ -32,6 +32,6 @@ private slots:
     void sequencePollStopsOnError();
     void sequencePollStopsOnErrorAndStartsOnSwitch();
 private:
-    SourceDevice *m_sourceDevice = nullptr;
+    SourceDeviceForUnittest *m_sourceDevice = nullptr;
     tIoDeviceShPtr m_interface;
 };

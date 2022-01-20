@@ -35,11 +35,10 @@ int IoQueue::enqueueTransferGroup(IoTransferDataGroup transferGroup)
         finishGroup(transferGroup);
     }
     else {
-        transferGroup.m_groupId = m_IdGenerator.nextID();
         m_pendingGroups.append(transferGroup);
         tryStartNextIo();
     }
-    return transferGroup.m_groupId;
+    return transferGroup.getGroupId();
 }
 
 bool IoQueue::isIoBusy() const
@@ -85,8 +84,8 @@ tIoTransferDataSingleShPtr IoQueue::getNextIoTransfer()
     tIoTransferDataSingleShPtr nextIo;
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
-        if(m_nextPosInCurrGroup < currGroup->m_ioTransferList.count()) {
-            nextIo = currGroup->m_ioTransferList[m_nextPosInCurrGroup];
+        if(m_nextPosInCurrGroup < currGroup->getTransferCount()) {
+            nextIo = currGroup->getTransfer(m_nextPosInCurrGroup);
             m_nextPosInCurrGroup++;
         }
         else {
@@ -116,12 +115,12 @@ void IoQueue::abortAllGroups()
     }
 }
 
-bool IoQueue::evaluateResponse()
+bool IoQueue::checkCurrentResponsePassed()
 {
     bool pass = false;
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
-        tIoTransferDataSingleShPtr currentIo = currGroup->m_ioTransferList[m_nextPosInCurrGroup-1];
+        tIoTransferDataSingleShPtr currentIo = currGroup->getTransfer(m_nextPosInCurrGroup-1);
         pass = currentIo->didIoPass();
     }
     return pass;
@@ -131,16 +130,16 @@ bool IoQueue::canEnqueue(IoTransferDataGroup transferGroup)
 {
     bool canEnqueue =
             m_interface && m_interface->isOpen() &&
-            !transferGroup.m_ioTransferList.isEmpty() &&
+            transferGroup.getTransferCount() > 0 &&
             (m_maxPendingGroups == 0 || m_pendingGroups.size() < m_maxPendingGroups);
     return canEnqueue;
 }
 
 bool IoQueue::canContinueCurrentGroup()
 {
-    bool pass = evaluateResponse();
+    bool pass = checkCurrentResponsePassed();
     IoTransferDataGroup *currGroup = getCurrentGroup();
-    return pass || (currGroup && currGroup->m_errorBehavior == BEHAVE_CONTINUE_ON_ERROR);
+    return pass || (currGroup && currGroup->getErrorBehavior() == IoTransferDataGroup::BEHAVE_CONTINUE_ON_ERROR);
 }
 
 IoTransferDataGroup *IoQueue::getCurrentGroup()

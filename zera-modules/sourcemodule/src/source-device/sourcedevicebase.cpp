@@ -59,7 +59,7 @@ void SourceDeviceBase::handleSourceCmd(IoTransferDataGroup transferGroup)
 
 void SourceDeviceBase::onIoGroupFinished(IoTransferDataGroup transferGroup)
 {
-    if(m_currQueueId.isCurrAndDeactivateIf(transferGroup.m_groupId)) {
+    if(m_currQueueId.isCurrAndDeactivateIf(transferGroup.getGroupId())) {
         handleSourceCmd(transferGroup);
     }
 }

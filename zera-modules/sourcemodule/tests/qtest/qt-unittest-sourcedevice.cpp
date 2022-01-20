@@ -82,7 +82,7 @@ public:
 protected:
     virtual void updateResponse(IoTransferDataGroup transferGroup) override {
         observerReceiveCount++;
-        observerReceiveId = transferGroup.m_groupId;
+        observerReceiveId = transferGroup.getGroupId();
     }
 };
 

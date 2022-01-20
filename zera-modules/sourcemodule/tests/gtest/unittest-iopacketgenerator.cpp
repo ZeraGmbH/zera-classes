@@ -36,8 +36,8 @@ TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
     params.setOn(true);
     tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(params);
     IoTransferDataGroup transferGroup = ioGroupGenerator.generateOnOffGroup(params);
-    for(auto outIn : transferGroup.m_ioTransferList) {
-        EXPECT_FALSE(outIn->getResponseTimeout() == 0);
+    for(int idx=0; idx<transferGroup.getTransferCount(); idx++) {
+        EXPECT_GE(transferGroup.getTransfer(idx)->getResponseTimeout(), 0);
     }
 }
 
@@ -56,8 +56,8 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_OFF_PACKET_SPECIFICS) {
     JsonParamApi params;
     params.setOn(false);
     IoTransferDataGroup transferGroup = ioGroupGenerator.generateOnOffGroup(params);
-    EXPECT_EQ(transferGroup.m_commandType, COMMAND_SWITCH_OFF);
-    EXPECT_EQ(transferGroup.m_errorBehavior, BEHAVE_STOP_ON_ERROR);
+    EXPECT_EQ(transferGroup.getGroupType(), IoTransferDataGroup::GROUP_TYPE_SWITCH_OFF);
+    EXPECT_EQ(transferGroup.getErrorBehavior(), IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
 }
 
 TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
@@ -65,14 +65,14 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
     JsonParamApi params;
     params.setOn(true);
     IoTransferDataGroup transferGroup = ioGroupGenerator.generateOnOffGroup(params);
-    EXPECT_EQ(transferGroup.m_commandType, COMMAND_SWITCH_ON);
-    EXPECT_EQ(transferGroup.m_errorBehavior, BEHAVE_STOP_ON_ERROR);
+    EXPECT_EQ(transferGroup.getGroupType(), IoTransferDataGroup::GROUP_TYPE_SWITCH_ON);
+    EXPECT_EQ(transferGroup.getErrorBehavior(), IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
 }
 
 TEST(TEST_PACKET_GENERATIOR, POLL_PACKET_SPECIFICS) {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     IoTransferDataGroup transferGroup = ioGroupGenerator.generateStatusPollGroup();
-    EXPECT_EQ(transferGroup.m_commandType, COMMAND_STATE_POLL);
-    EXPECT_EQ(transferGroup.m_errorBehavior, BEHAVE_CONTINUE_ON_ERROR);
+    EXPECT_EQ(transferGroup.getGroupType(), IoTransferDataGroup::GROUP_TYPE_STATE_POLL);
+    EXPECT_EQ(transferGroup.getErrorBehavior(), IoTransferDataGroup::BEHAVE_CONTINUE_ON_ERROR);
 }
 
