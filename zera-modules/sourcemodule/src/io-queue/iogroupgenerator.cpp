@@ -71,11 +71,10 @@ tIoTransferList IoGroupGenerator::generateListForAction(SourceActionTypes::Actio
     default:
         break;
     }
-    for(auto &outIn : outInList) {
-        if(outIn->m_responseTimeoutMs == 0) {
-            outIn->m_responseTimeoutMs = sourceDefaultTimeout;
-        }
+    for(auto outIn : outInList) {
+        outIn->adjustZeroToDefaultTimeouts();
     }
+
     return outInList;
 }
 

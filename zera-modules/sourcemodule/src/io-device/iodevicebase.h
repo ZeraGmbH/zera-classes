@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-static constexpr int sourceDefaultTimeout = 1500;
+static constexpr int ioDefaultTimeout = 1500;
 
 class IoDeviceBase : public QObject
 {
@@ -19,7 +19,6 @@ public:
 
     virtual bool isOpen() = 0;
 
-    virtual void setReadTimeoutNextIo(int) {};
     virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) = 0;
 
     virtual void simulateExternalDisconnect() {}
@@ -37,6 +36,7 @@ protected: signals: // Just to state out: sub classes emit this to ensure evalua
 protected:
     friend class IoDeviceFactory;
     IoDeviceBase(IoDeviceTypes type);
+    virtual void setReadTimeoutNextIo(int) {};
     void prepareSendAndReceive(tIoTransferDataSingleShPtr ioTransferData);
 
     QString m_strDeviceInfo;

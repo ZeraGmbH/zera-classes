@@ -41,8 +41,6 @@ private slots:
     void twoValidGroupsMultipleIo();
     void twoFirstInvalidSecondOkSingleIo();
 
-    void timeoutDetected();
-
 private:
     static IoTransferDataGroup generateSwitchCommands(bool on);
     static IoTransferDataGroup generateStatusPollCommands();

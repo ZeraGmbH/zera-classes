@@ -24,24 +24,31 @@ public:
         EVAL_PASS
     };
 
-    bool didIoPass();
-    EvalResponse getEvaluation();
-    bool checkUnusedData();
-    QByteArray getDemoResponse();
+    QByteArray getDataReceived() const;
+    bool didIoPass() const;
+    EvalResponse getEvaluation() const;
+    bool checkUnusedData() const;
+    QByteArray getByesSend() const;
+    QByteArray getDemoResponse() const;
+    QByteArray getExpectedDataLead() const;
+    QByteArray getExpectedDataTrail() const;
+    int getResponseTimeout() const;
 
-    static const QByteArray demoErrorResponseData;
-    QByteArray m_dataReceived;
-
-    int m_responseTimeoutMs = 0;
-    QByteArray m_bytesSend;
-    QByteArray m_bytesExpectedLead;
-    QByteArray m_bytesExpectedTrail = "\r";
-    bool m_demoErrorResponse = false;
-
-    friend class IoDeviceBase;
-private:
+    void setDataReceived(QByteArray dataReceived);
+    void adjustZeroToDefaultTimeouts();
     void evaluateResponseLeadTrail();
 
+    static const QByteArray demoErrorResponseData;
+
+    bool m_demoErrorResponse = false;
+
+protected:
+    QByteArray m_dataReceived;
+    int m_responseTimeoutMs = 0;
+    QByteArray m_bytesExpectedLead;
+    QByteArray m_bytesExpectedTrail = "\r";
+    QByteArray m_bytesSend;
+private:
     EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
 };
 

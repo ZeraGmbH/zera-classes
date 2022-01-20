@@ -16,7 +16,7 @@ void IoDeviceDemo::onResponseDelayTimer()
 void IoDeviceDemo::sendResponse(bool ioDeviceError)
 {
     if(!ioDeviceError) {
-        m_ioTransferData->m_dataReceived = m_ioTransferData->getDemoResponse();
+        m_ioTransferData->setDataReceived(m_ioTransferData->getDemoResponse());
     }
     emit _sigIoFinished(m_currIoId.getCurrent(), ioDeviceError);
 }
@@ -41,7 +41,7 @@ int IoDeviceDemo::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
         responseDelayMs = m_responseDelayMsTimeoutSimul;
     }
     // set default for next
-    m_responseDelayMsTimeoutSimul = sourceDefaultTimeout/2;
+    m_responseDelayMsTimeoutSimul = ioDefaultTimeout/2;
     if(!m_bOpen || responseDelayMs == 0) {
         sendResponse(!m_bOpen);
     }

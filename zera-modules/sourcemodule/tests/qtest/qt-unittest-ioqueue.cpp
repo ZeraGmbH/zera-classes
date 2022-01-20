@@ -185,15 +185,15 @@ void IoQueueTest::stopOnFirstError()
     QCOMPARE(m_listIoGroupsReceived[0].passedAll(), false);
     // valid data received
     for(int runIo = 0; runIo<errorIoNumber; ++runIo) {
-        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->m_dataReceived, workTransferGroup.m_ioTransferList[runIo]->getDemoResponse());
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getDataReceived(), workTransferGroup.m_ioTransferList[runIo]->getDemoResponse());
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getEvaluation(), IoTransferDataSingle::EVAL_PASS);
     }
     // invalid data received
-    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber]->m_dataReceived, workTransferGroup.m_ioTransferList[errorIoNumber]->getDemoResponse());
+    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber]->getDataReceived(), workTransferGroup.m_ioTransferList[errorIoNumber]->getDemoResponse());
     QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber]->getEvaluation(), IoTransferDataSingle::EVAL_WRONG_ANSWER);
     // no data received
     for(int notRunIo = errorIoNumber+1; notRunIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++notRunIo) {
-        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo]->m_dataReceived, "");
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo]->getDataReceived(), "");
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo]->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
     }
 }
@@ -219,7 +219,7 @@ void IoQueueTest::continueOnError()
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QCOMPARE(m_listIoGroupsReceived[0].passedAll(), false);
     for(int runIo = 0; runIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++runIo) {
-        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->m_dataReceived, m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getDemoResponse());
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getDataReceived(), m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getDemoResponse());
         if(runIo != errorIoNumber) {
             QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getEvaluation(), IoTransferDataSingle::EVAL_PASS);
         }
@@ -393,34 +393,6 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
     QCOMPARE(m_listIoGroupsReceived.count(), 2);
     evalNotificationCount(1, 1, 1, 0);
 }
-
-void IoQueueTest::timeoutDetected()
-{
-    tIoDeviceShPtr interface = createOpenDemoInterface();
-    IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
-    demoInterface->setResponseDelay(false, 10);
-    IoQueue queue;
-    queue.setIoInterface(interface);
-
-    IoTransferDataGroup workTransferGroup = generateSwitchCommands(true);
-    for(auto &ioData : workTransferGroup.m_ioTransferList) {
-        ioData->m_bytesExpectedLead.clear();
-        ioData->m_bytesExpectedTrail.clear();
-    }
-    int groupsFinished = 0;
-    connect(&queue, &IoQueue::sigTransferGroupFinished, [&](IoTransferDataGroup transferGroupToFinish) {
-        QVERIFY(transferGroupToFinish.m_ioTransferList.count() > 0);
-        // only first I/O is executed
-        QCOMPARE(transferGroupToFinish.m_ioTransferList[0]->getEvaluation(), IoTransferDataSingle::EVAL_NO_ANSWER);
-        groupsFinished++;
-    });
-
-    queue.enqueueTransferGroup(workTransferGroup);
-    QTest::qWait(30);
-
-    QCOMPARE(groupsFinished, 1);
-}
-
 
 IoTransferDataGroup IoQueueTest::generateStatusPollCommands()
 {

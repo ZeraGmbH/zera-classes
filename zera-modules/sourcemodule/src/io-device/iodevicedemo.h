@@ -13,8 +13,6 @@ public:
     virtual bool open(QString strDeviceInfo) override;
     virtual void close() override;
 
-    virtual void setReadTimeoutNextIo(int timeoutMs) override;
-
     virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) override;
     virtual void simulateExternalDisconnect() override;
 
@@ -31,10 +29,11 @@ private slots:
     void onResponseDelayTimer();
 private:
     void sendResponse(bool ioDeviceError);
+    virtual void setReadTimeoutNextIo(int timeoutMs) override;
 
     bool m_bOpen = false;
     int m_responseDelayMs = 0;
-    int m_responseDelayMsTimeoutSimul = sourceDefaultTimeout/2;
+    int m_responseDelayMsTimeoutSimul = ioDefaultTimeout/2;
     bool m_delayFollowsTimeout = false;
     QTimer m_responseDelayTimer;
 };
