@@ -26,6 +26,13 @@ int main(int argc, char *argv[])
         qWarning("\nOne or more tests failed!!!");
 #endif
     }
+    else {
+#ifdef QT_DEBUG
+        qInfo("\n\033[1;32m%s\033[0m","All tests passed :)");
+#else
+        qInfo("\nAll tests passed :)");
+#endif
+    }
     return status;
 }
 
