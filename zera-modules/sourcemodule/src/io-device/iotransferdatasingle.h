@@ -26,7 +26,7 @@ public:
 
     bool didIoPass();
     EvalResponse getEvaluation();
-    void checkUnusedData();
+    bool checkUnusedData();
     QByteArray getDemoResponse();
 
     static const QByteArray demoErrorResponseData;
