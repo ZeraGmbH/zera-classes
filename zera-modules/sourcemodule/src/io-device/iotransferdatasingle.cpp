@@ -28,11 +28,13 @@ IoTransferDataSingle::EvalResponse IoTransferDataSingle::getEvaluation()
     return m_IoEval;
 }
 
-void IoTransferDataSingle::checkUnusedData()
+bool IoTransferDataSingle::checkUnusedData()
 {
-    if(!m_dataReceived.isEmpty() || m_IoEval != EVAL_NOT_EXECUTED) {
+    bool unused = m_dataReceived.isEmpty() && m_IoEval == EVAL_NOT_EXECUTED;
+    if(!unused ) {
         qCritical("Do not reuse IoTransferDataSingle");
     }
+    return unused;
 }
 
 QByteArray IoTransferDataSingle::getDemoResponse()
