@@ -21,12 +21,11 @@ public:
     ~SourceDevice();
 
     // requests
-    int startTransaction(IoTransferDataGroup transferGroup);
+    virtual int startTransaction(IoTransferDataGroup transferGroup);
     void simulateExternalDisconnect();
 
     // setter
     void setDemoResponseDelay(bool followsTimeout, int fixedMs);
-    void setDemoResonseError(bool active);
 
     // getter
     IoGroupGenerator getIoGroupGenerator();
@@ -63,7 +62,6 @@ private:
 
     bool m_demoDelayFollowsTimeout = false;
     int m_demoDelayFixedMs = 0;
-    bool m_demoSimulErrorActive = false;
 };
 
 #endif // SOURCEDEVICE_H

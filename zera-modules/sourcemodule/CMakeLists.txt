@@ -223,6 +223,8 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     file(GLOB QTUNITTESTS
         tests/qtest/qt-unittest-*.cpp
         tests/qtest/qt-unittest-*.h
+        tests/qtest/*forunittest.h
+        tests/qtest/*forunittest.cpp
     )
 
     add_executable(sourcemodule-unittest-qt

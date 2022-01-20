@@ -35,12 +35,11 @@ private:
     void finishGroup(IoTransferDataGroup transferGroupToFinish);
     void finishCurrentGroup();
     void abortAllGroups();
-    bool evaluateResponse();
+    bool checkCurrentResponsePassed();
     bool canEnqueue(IoTransferDataGroup transferGroup);
     bool canContinueCurrentGroup();
 
     tIoDeviceShPtr m_interface = nullptr;
-    IoIdGenerator m_IdGenerator;
     IoIdKeeper m_currIoId;
     QList<IoTransferDataGroup> m_pendingGroups;
     int m_nextPosInCurrGroup = 0;

@@ -12,16 +12,13 @@ public slots:
 private slots:
     void init();
 
-    void emptyQueueIsInvalid();
-    void mulipleTransferIniitialProperties();
-
-    void noInterfaceNotBusy();
-    void notOpenInterfaceNotBusy();
+    void noIoDeviceNotBusy();
+    void notOpenIoDeviceNotBusy();
     void emptyGroupNotBusy();
-    void openInterfaceBusy();
+    void openIoDeviceBusy();
 
-    void noInterfaceNotification();
-    void notOpenInterfaceNotifications();
+    void noIoDeviceNotification();
+    void notOpenIoDeviceNotifications();
 
     void disconnectBeforeEnqueue();
     void disconnectWhileWorking();
@@ -30,7 +27,7 @@ private slots:
     void stopOnFirstError();
     void continueOnError();
 
-    void noErrorSigalOnEmptyGroup();
+    void noErrorSignalOnEmptyGroup();
 
     void rejectSpam();
     void acceptCloseToSpam();

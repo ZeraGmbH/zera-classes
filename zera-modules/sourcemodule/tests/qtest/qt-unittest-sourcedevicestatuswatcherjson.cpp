@@ -20,7 +20,7 @@ void SourceDeviceStatusWatcherJsonTest::init()
     m_interface = nullptr;
 
     m_interface = createOpenDemoInterface();
-    m_sourceDevice = new SourceDevice(m_interface, SOURCE_MT_COMMON, "", "");
+    m_sourceDevice = new SourceDeviceForUnittest(m_interface, SOURCE_MT_COMMON, "", "");
 }
 
 void SourceDeviceStatusWatcherJsonTest::statusPollAutoStart()
