@@ -44,8 +44,7 @@ void SourceDeviceTest::demoInterFaceGet()
 
 void SourceDeviceTest::disconnectSignal()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open("");
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
     int countDisconnectReceived = 0;
@@ -67,8 +66,7 @@ static IoTransferDataGroup createWorkingIoGroup(SourceDevice *source)
 
 void SourceDeviceTest::multipleCmdsDifferentIds()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open("");
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
     int id1 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
@@ -90,8 +88,7 @@ protected:
 
 void SourceDeviceTest::observerReceiveCount()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open("");
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
     TestObserver testObserver1(&sourceDevice);
@@ -106,8 +103,7 @@ void SourceDeviceTest::observerReceiveCount()
 
 void SourceDeviceTest::observerReceiveId()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open("");
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
 
     TestObserver testObserver1(&sourceDevice);
@@ -126,8 +122,7 @@ void SourceDeviceTest::observerReceiveId()
 
 void SourceDeviceTest::busySignalOnSwitch()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open("");
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 1);
 

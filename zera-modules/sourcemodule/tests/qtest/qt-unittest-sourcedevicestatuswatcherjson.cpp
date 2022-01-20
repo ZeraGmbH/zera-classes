@@ -19,8 +19,7 @@ void SourceDeviceStatusWatcherJsonTest::init()
     delete m_sourceDevice;
     m_interface = nullptr;
 
-    m_interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    m_interface->open("");
+    m_interface = createOpenDemoInterface();
     m_sourceDevice = new SourceDevice(m_interface, SOURCE_MT_COMMON, "", "");
 }
 

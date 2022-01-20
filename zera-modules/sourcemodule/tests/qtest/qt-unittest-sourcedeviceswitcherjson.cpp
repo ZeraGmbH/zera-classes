@@ -11,8 +11,7 @@ void SourceDeviceSwitcherJsonTest::init()
 
 void SourceDeviceSwitcherJsonTest::signalSwitch()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open("");
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 0);
     SourceDeviceSwitcherJson switcher(&sourceDevice);
@@ -30,8 +29,7 @@ void SourceDeviceSwitcherJsonTest::signalSwitch()
 
 void SourceDeviceSwitcherJsonTest::twoSignalsSwitchSameTwice()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open("");
+    tIoDeviceShPtr interface = createOpenDemoInterface();
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 0);
     SourceDeviceSwitcherJson switcher(&sourceDevice);
