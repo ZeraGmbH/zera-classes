@@ -17,25 +17,32 @@ public:
             int responseTimeoutMs = 0,
             bool demoErrorResponse = false);
 
-    void checkUnusedData();
-    QByteArray getDemoResponse();
-    bool evaluateResponse();
-
-    static const QByteArray demoErrorResponseData;
-    QByteArray m_dataReceived;
     enum EvalResponse {
         EVAL_NOT_EXECUTED = 0,
         EVAL_NO_ANSWER,
         EVAL_WRONG_ANSWER,
         EVAL_PASS
     };
-    EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
+
+    bool didIoPass();
+    EvalResponse getEvaluation();
+    void checkUnusedData();
+    QByteArray getDemoResponse();
+
+    static const QByteArray demoErrorResponseData;
+    QByteArray m_dataReceived;
 
     int m_responseTimeoutMs = 0;
     QByteArray m_bytesSend;
     QByteArray m_bytesExpectedLead;
     QByteArray m_bytesExpectedTrail = "\r";
     bool m_demoErrorResponse = false;
+
+    friend class IoDeviceBase;
+private:
+    void evaluateResponseLeadTrail();
+
+    EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
 };
 
 typedef QSharedPointer<IoTransferDataSingle> tIoTransferDataSingleShPtr;

@@ -5,9 +5,9 @@
 #include <QString>
 #include <QUuid>
 #include "sourcescanner.h"
-#include "io-device/iodevicebaseserial.h"
+#include "io-device/iodevicebrokendummy.h"
 
-class IODeviceBaseSerial;
+class IoDeviceBrokenDummy;
 class SourceDeviceVein;
 
 class SourceDeviceManager : public QObject

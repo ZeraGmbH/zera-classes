@@ -42,7 +42,7 @@ void IoDeviceTest::onIoFinish(int ioID, bool error)
 
 void IoDeviceTest::baseReturnsIds()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BASE);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
     checkIds(interface);
 }
 
@@ -60,7 +60,7 @@ void IoDeviceTest::serialReturnsIds()
 
 void IoDeviceTest::baseCannotOpen()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BASE);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
     interface->open("/dev/base/foo");
     QCOMPARE(interface->isOpen(), false);
     QVERIFY(interface->getDeviceInfo().isEmpty());
@@ -85,14 +85,14 @@ void IoDeviceTest::serialCannotOpen()
 
 void IoDeviceTest::baseReportsErrorClose()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BASE);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
     QVERIFY(!interface->isOpen());
     checkNotifications(interface, 1, 1);
 }
 
 void IoDeviceTest::baseReportsErrorOpen()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BASE);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
     interface->open(QString());
     QVERIFY(!interface->isOpen());
     checkNotifications(interface, 1, 1);
@@ -265,11 +265,11 @@ void IoDeviceTest::demoDelayFollowsTimeout()
 
 void IoDeviceTest::baseCannotClose()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BASE);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
     interface->open("");
 
     int countDiconnectReceived = 0;
-    connect(interface.get(), &IODeviceBaseSerial::sigDisconnected, [&] {
+    connect(interface.get(), &IoDeviceBrokenDummy::sigDisconnected, [&] {
         countDiconnectReceived++;
     });
     interface->simulateExternalDisconnect();
@@ -283,7 +283,7 @@ void IoDeviceTest::demoCanClose()
     interface->open("");
 
     int countDiconnectReceived = 0;
-    connect(interface.get(), &IODeviceBaseSerial::sigDisconnected, [&] {
+    connect(interface.get(), &IoDeviceBrokenDummy::sigDisconnected, [&] {
         countDiconnectReceived++;
     });
     interface->simulateExternalDisconnect();
@@ -302,7 +302,7 @@ void IoDeviceTest::checkIds(tIoDeviceShPtr interface)
 
 void IoDeviceTest::checkNotifications(tIoDeviceShPtr interface, int total, int errors)
 {
-    connect(interface.get(), &IODeviceBaseSerial::sigIoFinished, this, &IoDeviceTest::onIoFinish);
+    connect(interface.get(), &IoDeviceBrokenDummy::sigIoFinished, this, &IoDeviceTest::onIoFinish);
     tIoTransferDataSingleShPtr dummyIoData = tIoTransferDataSingleShPtr(new IoTransferDataSingle);
     interface->sendAndReceive(dummyIoData);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
@@ -315,7 +315,7 @@ void IoDeviceTest::checkNotifications(tIoDeviceShPtr interface, int total, int e
 tIoDeviceShPtr IoDeviceTest::createOpenDemoInterface(int responseDelay)
 {
     tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    connect(interface.get(), &IODeviceBaseSerial::sigIoFinished, this, &IoDeviceTest::onIoFinish);
+    connect(interface.get(), &IoDeviceBrokenDummy::sigIoFinished, this, &IoDeviceTest::onIoFinish);
     IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(interface.get());
     demoInterface->open(QString());
     if(responseDelay) {

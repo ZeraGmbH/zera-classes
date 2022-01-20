@@ -9,7 +9,7 @@ void IoTransferDataGroup::evalAll()
 {
     bool pass = true;
     for(const auto &io : m_ioTransferList) {
-        if(io->m_IoEval != IoTransferDataSingle::EVAL_PASS) {
+        if(io->getEvaluation() != IoTransferDataSingle::EVAL_PASS) {
             pass = false;
         }
     }

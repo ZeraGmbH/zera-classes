@@ -1,7 +1,7 @@
 #ifndef SourceScanner_H
 #define SourceScanner_H
 
-#include "io-device/iodevicebaseserial.h"
+#include "io-device/iodevicebrokendummy.h"
 #include "io-device/iotransferdatasingle.h"
 #include "source-device/sourcedevicevein.h"
 #include "io-ids/ioidkeeper.h"
@@ -10,7 +10,7 @@
 #include <QUuid>
 #include <QSharedPointer>
 
-class IODeviceBaseSerial;
+class IoDeviceBrokenDummy;
 
 class SourceDeviceVein;
 class SourceScanner;

@@ -4,7 +4,7 @@
 
 
 IoDeviceZeraSerial::IoDeviceZeraSerial(IoDeviceTypes type) :
-    IODeviceBaseSerial(type)
+    IoDeviceBase(type)
 {
     connect(&m_serialIO, &QSerialPortAsyncBlock::ioFinished, this, &IoDeviceZeraSerial::onIoFinished);
     connect(&m_disappearWatcher, &FileDisappearWatcher::sigFileRemoved,
@@ -72,7 +72,7 @@ int IoDeviceZeraSerial::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData
         m_serialIO.sendAndReceive(ioTransferData->m_bytesSend, &ioTransferData->m_dataReceived);
     }
     if(!m_serialIO.isIOPending()) {
-        emit sigIoFinishedToQueue(m_currIoId.getCurrent(), true);
+        emit _sigIoFinished(m_currIoId.getCurrent(), true);
     }
     return m_currIoId.getCurrent();
 }
@@ -99,7 +99,7 @@ bool IoDeviceZeraSerial::isOpen()
 
 void IoDeviceZeraSerial::onIoFinished()
 {
-    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), false);
+    emit _sigIoFinished(m_currIoId.getCurrent(), false);
 }
 
 void IoDeviceZeraSerial::onDeviceFileGone(QString)

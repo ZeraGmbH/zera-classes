@@ -1,12 +1,12 @@
 #ifndef IOINTERFACEDEMO_H
 #define IOINTERFACEDEMO_H
 
-#include "iodevicebaseserial.h"
+#include "iodevicebase.h"
 #include <QTimer>
 #include <QList>
 #include <QByteArray>
 
-class IoDeviceDemo : public IODeviceBaseSerial
+class IoDeviceDemo : public IoDeviceBase
 {
     Q_OBJECT
 public:

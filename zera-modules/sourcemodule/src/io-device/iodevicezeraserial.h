@@ -1,14 +1,14 @@
 #ifndef IODEVICEZERASERIAL_H
 #define IODEVICEZERASERIAL_H
 
-#include "iodevicebaseserial.h"
+#include "iodevicebase.h"
 #include "filedisappearwatcher.h"
 
 #include <QObject>
 #include <QSerialPortAsyncBlock>
 
 class IoDeviceZeraSerialPrivate;
-class IoDeviceZeraSerial : public IODeviceBaseSerial
+class IoDeviceZeraSerial : public IoDeviceBase
 {
     Q_OBJECT
 public:
@@ -24,7 +24,7 @@ public:
     void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
 
 protected:
-    explicit IoDeviceZeraSerial(IoDeviceTypes type);
+    IoDeviceZeraSerial(IoDeviceTypes type);
 
     friend class IoDeviceFactory;
 

@@ -30,7 +30,7 @@ void SourceDeviceTest::gettersOK()
 
 void SourceDeviceTest::nonDemoInterFaceGet()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BASE);
+    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
     SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
     QVERIFY(!sourceDevice.isDemo());
 }

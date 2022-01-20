@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include "iogroupgenerator.h"
-#include "io-device/iodevicebaseserial.h"
+#include "io-device/iodevicebrokendummy.h"
 #include "io-device/iotransferdatagroup.h"
 #include "io-ids/ioidkeeper.h"
 

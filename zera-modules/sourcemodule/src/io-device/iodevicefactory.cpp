@@ -1,14 +1,14 @@
 #include "iodevicefactory.h"
-#include "iodevicebaseserial.h"
+#include "iodevicebrokendummy.h"
 #include "iodevicedemo.h"
 #include "iodevicezeraserial.h"
 
 tIoDeviceShPtr IoDeviceFactory::createIoDevice(IoDeviceTypes type)
 {
-    IODeviceBaseSerial* device = nullptr;
+    IoDeviceBase* device = nullptr;
     switch (type) {
-    case SERIAL_DEVICE_BASE:
-        device = new IODeviceBaseSerial(SERIAL_DEVICE_BASE);
+    case SERIAL_DEVICE_BROKEN:
+        device = new IoDeviceBrokenDummy(SERIAL_DEVICE_BROKEN);
         break;
     case SERIAL_DEVICE_DEMO:
         device = new IoDeviceDemo(SERIAL_DEVICE_DEMO);
