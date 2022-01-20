@@ -1,5 +1,5 @@
-#ifndef IOSERIALDEVICEBASE_H
-#define IOSERIALDEVICEBASE_H
+#ifndef IODEVICEBASE_H
+#define IODEVICEBASE_H
 
 #include "iodevicefactory.h"
 #include "iotransferdatasingle.h"
@@ -10,19 +10,19 @@
 
 static constexpr int sourceDefaultTimeout = 1500;
 
-class IODeviceBaseSerial : public QObject
+class IoDeviceBase : public QObject
 {
     Q_OBJECT
 public:
-    virtual bool open(QString) { return false; }
-    virtual void close() {}
+    virtual bool open(QString) = 0;
+    virtual void close() = 0;
+
+    virtual bool isOpen() = 0;
 
     virtual void setReadTimeoutNextIo(int) {};
+    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) = 0;
 
-    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData);
     virtual void simulateExternalDisconnect() {}
-
-    virtual bool isOpen() { return false; }
 
     QString getDeviceInfo();
     IoDeviceTypes type() { return m_type; }
@@ -31,19 +31,23 @@ public:
 signals:
     void sigDisconnected();
     void sigIoFinished(int ioID, bool ioDeviceError); // users connect this signal
-    void sigIoFinishedToQueue(int ioID, bool ioDeviceError); // sub classes emit this to ensure queue
 
+protected: signals: // Just to state out: sub classes emit this to ensure evaluation & queue
+    void _sigIoFinished(int ioID, bool ioDeviceError);
 protected:
-    explicit IODeviceBaseSerial(IoDeviceTypes type);
+    friend class IoDeviceFactory;
+    IoDeviceBase(IoDeviceTypes type);
     void prepareSendAndReceive(tIoTransferDataSingleShPtr ioTransferData);
 
-    friend class IoDeviceFactory;
-
-    IoDeviceTypes m_type;
     QString m_strDeviceInfo;
     IoIdGenerator m_IDGenerator;
     IoIdKeeper m_currIoId;
     tIoTransferDataSingleShPtr m_ioTransferData;
+
+private:
+    IoDeviceTypes m_type;
+private slots:
+    void onIoFinished(int ioID, bool ioDeviceError);
 };
 
-#endif // IOSERIALDEVICEBASE_H
+#endif // IODEVICEBASE_H

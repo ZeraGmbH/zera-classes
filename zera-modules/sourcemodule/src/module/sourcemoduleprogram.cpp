@@ -10,7 +10,7 @@
 #include "sourcemodule.h"
 #include "source-device/sourcedevicemanager.h"
 #include "source-device/sourcedevicevein.h"
-#include "io-device/iodevicebaseserial.h"
+#include "io-device/iodevicebrokendummy.h"
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),

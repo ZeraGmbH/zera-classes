@@ -186,15 +186,15 @@ void IoQueueTest::stopOnFirstError()
     // valid data received
     for(int runIo = 0; runIo<errorIoNumber; ++runIo) {
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->m_dataReceived, workTransferGroup.m_ioTransferList[runIo]->getDemoResponse());
-        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->m_IoEval, IoTransferDataSingle::EVAL_PASS);
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getEvaluation(), IoTransferDataSingle::EVAL_PASS);
     }
     // invalid data received
     QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber]->m_dataReceived, workTransferGroup.m_ioTransferList[errorIoNumber]->getDemoResponse());
-    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber]->m_IoEval, IoTransferDataSingle::EVAL_WRONG_ANSWER);
+    QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[errorIoNumber]->getEvaluation(), IoTransferDataSingle::EVAL_WRONG_ANSWER);
     // no data received
     for(int notRunIo = errorIoNumber+1; notRunIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++notRunIo) {
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo]->m_dataReceived, "");
-        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo]->m_IoEval, IoTransferDataSingle::EVAL_NOT_EXECUTED);
+        QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[notRunIo]->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
     }
 }
 
@@ -221,10 +221,10 @@ void IoQueueTest::continueOnError()
     for(int runIo = 0; runIo<m_listIoGroupsReceived[0].m_ioTransferList.count(); ++runIo) {
         QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->m_dataReceived, m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getDemoResponse());
         if(runIo != errorIoNumber) {
-            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->m_IoEval, IoTransferDataSingle::EVAL_PASS);
+            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getEvaluation(), IoTransferDataSingle::EVAL_PASS);
         }
         else {
-            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->m_IoEval, IoTransferDataSingle::EVAL_WRONG_ANSWER);
+            QCOMPARE(m_listIoGroupsReceived[0].m_ioTransferList[runIo]->getEvaluation(), IoTransferDataSingle::EVAL_WRONG_ANSWER);
         }
     }
 }
@@ -411,7 +411,7 @@ void IoQueueTest::timeoutDetected()
     connect(&queue, &IoQueue::sigTransferGroupFinished, [&](IoTransferDataGroup transferGroupToFinish) {
         QVERIFY(transferGroupToFinish.m_ioTransferList.count() > 0);
         // only first I/O is executed
-        QCOMPARE(transferGroupToFinish.m_ioTransferList[0]->m_IoEval, IoTransferDataSingle::EVAL_NO_ANSWER);
+        QCOMPARE(transferGroupToFinish.m_ioTransferList[0]->getEvaluation(), IoTransferDataSingle::EVAL_NO_ANSWER);
         groupsFinished++;
     });
 
@@ -453,7 +453,7 @@ void IoQueueTest::evalNotificationCount(int passedGroupsExpected, int passExpect
             passedGroupCount++;
         }
         for(int io=0; io<m_listIoGroupsReceived[group].m_ioTransferList.count(); ++io) {
-            switch(m_listIoGroupsReceived[group].m_ioTransferList[io]->m_IoEval) {
+            switch(m_listIoGroupsReceived[group].m_ioTransferList[io]->getEvaluation()) {
             case IoTransferDataSingle::EVAL_NOT_EXECUTED:
                 unknownCount++;
                 break;

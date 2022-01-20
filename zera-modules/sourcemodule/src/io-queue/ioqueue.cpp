@@ -10,15 +10,15 @@ void IoQueue::setIoInterface(tIoDeviceShPtr interface)
 {
     m_interface = interface;
     if(interface) {
-        connect(m_interface.get(), &IODeviceBaseSerial::sigIoFinished,
+        connect(m_interface.get(), &IoDeviceBrokenDummy::sigIoFinished,
                 this, &IoQueue::onIoFinished);
-        connect(m_interface.get(), &IODeviceBaseSerial::sigDisconnected,
+        connect(m_interface.get(), &IoDeviceBrokenDummy::sigDisconnected,
                 this, &IoQueue::onIoDisconnected);
     }
     else if(m_interface){
-        disconnect(m_interface.get(), &IODeviceBaseSerial::sigIoFinished,
+        disconnect(m_interface.get(), &IoDeviceBrokenDummy::sigIoFinished,
                    this, &IoQueue::onIoFinished);
-        disconnect(m_interface.get(), &IODeviceBaseSerial::sigDisconnected,
+        disconnect(m_interface.get(), &IoDeviceBrokenDummy::sigDisconnected,
                 this, &IoQueue::onIoDisconnected);
         m_interface = nullptr;
     }
@@ -123,7 +123,7 @@ bool IoQueue::evaluateResponse()
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
         tIoTransferDataSingleShPtr currentIo = currGroup->m_ioTransferList[m_nextPosInCurrGroup-1];
-        pass = currentIo->evaluateResponse();
+        pass = currentIo->didIoPass();
     }
     return pass;
 }

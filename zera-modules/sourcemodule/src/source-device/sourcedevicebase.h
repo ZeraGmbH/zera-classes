@@ -2,7 +2,7 @@
 #define SOURCEDEVICEBASE_H
 
 #include "supportedsources.h"
-#include "io-device/iodevicebaseserial.h"
+#include "io-device/iodevicebrokendummy.h"
 #include "io-queue/iogroupgenerator.h"
 #include "io-queue/ioqueue.h"
 #include "io-ids/ioidkeeper.h"

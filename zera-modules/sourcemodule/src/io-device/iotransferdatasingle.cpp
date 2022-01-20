@@ -18,6 +18,15 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
     m_demoErrorResponse(demoErrorResponse)
 {}
 
+bool IoTransferDataSingle::didIoPass()
+{
+    return m_IoEval == EVAL_PASS;
+}
+
+IoTransferDataSingle::EvalResponse IoTransferDataSingle::getEvaluation()
+{
+    return m_IoEval;
+}
 
 void IoTransferDataSingle::checkUnusedData()
 {
@@ -31,19 +40,17 @@ QByteArray IoTransferDataSingle::getDemoResponse()
     return m_demoErrorResponse ? demoErrorResponseData : m_bytesExpectedLead+m_bytesExpectedTrail;
 }
 
-bool IoTransferDataSingle::evaluateResponse()
+void IoTransferDataSingle::evaluateResponseLeadTrail()
 {
-    bool pass = false;
     if(m_dataReceived.isEmpty()) {
         m_IoEval = IoTransferDataSingle::EVAL_NO_ANSWER;
     }
     else {
-        pass =
+        bool pass =
                 m_dataReceived.startsWith(m_bytesExpectedLead) &&
                 m_dataReceived.endsWith(m_bytesExpectedTrail);
         m_IoEval = pass ? IoTransferDataSingle::EVAL_PASS : IoTransferDataSingle::EVAL_WRONG_ANSWER;
     }
-    return pass;
 }
 
 tIoTransferDataSingleShPtr IoTransferDataSingleFactory::createIoData(QByteArray bytesSend,

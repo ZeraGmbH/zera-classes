@@ -1,7 +1,7 @@
 #include "iodevicedemo.h"
 
 IoDeviceDemo::IoDeviceDemo(IoDeviceTypes type) :
-    IODeviceBaseSerial(type)
+    IoDeviceBase(type)
 {
     m_responseDelayTimer.setSingleShot(true);
     connect(&m_responseDelayTimer, &QTimer::timeout,
@@ -18,7 +18,7 @@ void IoDeviceDemo::sendResponse(bool ioDeviceError)
     if(!ioDeviceError) {
         m_ioTransferData->m_dataReceived = m_ioTransferData->getDemoResponse();
     }
-    emit sigIoFinishedToQueue(m_currIoId.getCurrent(), ioDeviceError);
+    emit _sigIoFinished(m_currIoId.getCurrent(), ioDeviceError);
 }
 
 bool IoDeviceDemo::open(QString strDeviceInfo)

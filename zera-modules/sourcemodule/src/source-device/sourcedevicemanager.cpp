@@ -1,6 +1,6 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevicevein.h"
-#include "io-device/iodevicebaseserial.h"
+#include "io-device/iodevicebrokendummy.h"
 #include "sourcescanner.h"
 #include <random>
 

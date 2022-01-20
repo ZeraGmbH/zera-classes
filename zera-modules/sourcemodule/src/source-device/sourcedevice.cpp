@@ -16,7 +16,7 @@ SourceDevice::SourceDevice(tIoDeviceShPtr interface, SupportedSourceTypes type, 
     connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
             this, &SourceDevice::sigSwitchTransationStarted,
             Qt::QueuedConnection);
-    connect(m_ioInterface.get(), &IODeviceBaseSerial::sigDisconnected,
+    connect(m_ioInterface.get(), &IoDeviceBrokenDummy::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
             Qt::QueuedConnection);
 }
