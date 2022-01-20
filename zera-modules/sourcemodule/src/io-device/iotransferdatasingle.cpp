@@ -92,16 +92,3 @@ void IoTransferDataSingle::evaluateResponseLeadTrail()
         m_IoEval = pass ? IoTransferDataSingle::EVAL_PASS : IoTransferDataSingle::EVAL_WRONG_ANSWER;
     }
 }
-
-tIoTransferDataSingleShPtr IoTransferDataSingleFactory::createIoData(QByteArray bytesSend,
-                                                                     QByteArray bytesExpectedLead,
-                                                                     QByteArray bytesExpectedTrail,
-                                                                     int responseTimeoutMs,
-                                                                     bool demoErrorResponse)
-{
-    return tIoTransferDataSingleShPtr(new IoTransferDataSingle(bytesSend,
-                                                               bytesExpectedLead,
-                                                               bytesExpectedTrail,
-                                                               responseTimeoutMs,
-                                                               demoErrorResponse));
-}
