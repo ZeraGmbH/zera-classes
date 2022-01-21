@@ -15,9 +15,6 @@ public:
     explicit SourceDeviceBase(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString deviceName, QString version);
     virtual ~SourceDeviceBase();
 
-    // requests
-    void setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout);
-
     // getter
     bool isDemo();
     QString getInterfaceDeviceInfo();
@@ -38,9 +35,6 @@ protected:
 
 private slots:
     void onIoGroupFinished(IoTransferDataGroup transferGroup);
-
-private:
-    bool m_bDemoDelayFollowsTimeout = false;
 };
 
 #endif // SOURCEDEVICEBASE_H

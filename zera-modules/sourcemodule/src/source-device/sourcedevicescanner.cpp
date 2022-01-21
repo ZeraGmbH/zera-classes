@@ -1,6 +1,7 @@
 #include "sourcedevicescanner.h"
 #include "io-device/iodevicebase.h"
 #include "io-device/iodevicezeraserial.h"
+#include "io-device/iodevicedemo.h"
 #include "io-device/iotransferdatasinglefactory.h"
 #include <QUuid>
 
@@ -176,6 +177,7 @@ void SourceDeviceScanner::onIoFinished(int ioId, bool ioDeviceError)
         QByteArray deviceName;
         if(m_ioDevice->isDemo()) {
             sourceTypeFound = nextDemoType();
+            static_cast<IoDeviceDemo*>(m_ioDevice.get())->setResponseDelay(true, 0);
         }
         else {
             deviceVersion = extractVersionFromResponse(sourceTypeFound);
