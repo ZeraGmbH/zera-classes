@@ -1,7 +1,10 @@
 #include "iotransferdatagroup.h"
 
+
+IoIdGenerator IoTransferDataGroup::m_idGenerator;
+
 IoTransferDataGroup::IoTransferDataGroup() :
-    m_groupId(m_idGenerator.nextIDStatic())
+    m_groupId(m_idGenerator.nextID())
 {
 }
 
@@ -9,7 +12,7 @@ IoTransferDataGroup::IoTransferDataGroup(IoTransferDataGroup::SourceGroupTypes g
                                          IoTransferDataGroup::GroupErrorBehaviors errorBehavior) :
     m_groupType(groupType),
     m_errorBehavior(errorBehavior),
-    m_groupId(m_idGenerator.nextIDStatic())
+    m_groupId(m_idGenerator.nextID())
 {
 }
 
