@@ -6,7 +6,7 @@
 class SourceDeviceForUnittest : public SourceDevice
 {
 public:
-    SourceDeviceForUnittest(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version);
+    SourceDeviceForUnittest(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
     void setDemoResonseError(bool active);
     virtual int startTransaction(IoTransferDataGroup transferGroup) override;
 private:

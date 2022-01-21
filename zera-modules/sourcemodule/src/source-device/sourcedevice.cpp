@@ -2,21 +2,21 @@
 #include "io-device/iodevicedemo.h"
 #include "json/jsonstructureloader.h"
 
-SourceDevice::SourceDevice(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
-    m_ioInterface(interface),
+SourceDevice::SourceDevice(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version) :
+    m_ioDevice(ioDevice),
     m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(type, name, version)),
     m_type(type),
     m_name(name),
     m_version(version)
 {
-    m_ioQueue.setIoInterface(interface);
+    m_ioQueue.setIoDevice(ioDevice);
 
     connect(&m_ioQueue, &IoQueue::sigTransferGroupFinished,
             this, &SourceDevice::onIoGroupFinished);
     connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
             this, &SourceDevice::sigSwitchTransationStarted,
             Qt::QueuedConnection);
-    connect(m_ioInterface.get(), &IoDeviceBrokenDummy::sigDisconnected,
+    connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
             Qt::QueuedConnection);
 }
@@ -36,7 +36,7 @@ int SourceDevice::startTransaction(IoTransferDataGroup transferGroup)
 
 void SourceDevice::simulateExternalDisconnect()
 {
-    m_ioInterface->simulateExternalDisconnect();
+    m_ioDevice->simulateExternalDisconnect();
 }
 
 void SourceDevice::setDemoResponseDelay(bool followsTimeout, int fixedMs)
@@ -67,7 +67,7 @@ QString SourceDevice::getVersion() const
 
 QString SourceDevice::getInterfaceInfo() const
 {
-    return m_ioInterface->getDeviceInfo();
+    return m_ioDevice->getDeviceInfo();
 }
 
 bool SourceDevice::isIoBusy() const
@@ -77,7 +77,7 @@ bool SourceDevice::isIoBusy() const
 
 bool SourceDevice::isDemo() const
 {
-    return m_ioInterface->isDemo();
+    return m_ioDevice->isDemo();
 }
 
 void SourceDevice::onIoGroupFinished(IoTransferDataGroup transferGroup)
@@ -88,7 +88,7 @@ void SourceDevice::onIoGroupFinished(IoTransferDataGroup transferGroup)
 void SourceDevice::doDemoTransactionAdjustments(const IoTransferDataGroup &transferGroup)
 {
     if(isDemo()) {
-        IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_ioInterface.get());
-        demoInterface->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
+        IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(m_ioDevice.get());
+        demoIoDevice->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
     }
 }

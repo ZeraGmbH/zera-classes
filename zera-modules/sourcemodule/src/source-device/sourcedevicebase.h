@@ -13,7 +13,7 @@ class SourceDeviceBase : public QObject
 {
     Q_OBJECT
 public:
-    explicit SourceDeviceBase(tIoDeviceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version);
+    explicit SourceDeviceBase(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString deviceName, QString version);
     virtual ~SourceDeviceBase();
 
     // requests
@@ -28,7 +28,7 @@ protected:
     void switchOff();
     virtual void handleSourceCmd(IoTransferDataGroup transferGroup);
 
-    tIoDeviceShPtr m_ioInterface;
+    IoDeviceBase::Ptr m_ioDevice;
     IoGroupGenerator* m_ioGroupGenerator = nullptr;
 
     JsonParamApi m_paramsRequested;

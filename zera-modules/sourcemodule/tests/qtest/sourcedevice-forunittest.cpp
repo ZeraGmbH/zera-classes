@@ -1,8 +1,8 @@
 #include "sourcedevice-forunittest.h"
 
 
-SourceDeviceForUnittest::SourceDeviceForUnittest(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version) :
-    SourceDevice(interface, type, name, version)
+SourceDeviceForUnittest::SourceDeviceForUnittest(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version) :
+    SourceDevice(ioDevice, type, name, version)
 {
 }
 

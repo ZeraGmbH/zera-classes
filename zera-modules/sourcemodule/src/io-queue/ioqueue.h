@@ -14,7 +14,7 @@ class IoQueue : public QObject
 public:
     explicit IoQueue(QObject *parent = nullptr);
 
-    void setIoInterface(tIoDeviceShPtr interface);
+    void setIoDevice(IoDeviceBase::Ptr ioDevice);
     void setMaxPendingGroups(int maxGroups);
     int enqueueTransferGroup(IoTransferDataGroup transferGroup);
 
@@ -39,7 +39,7 @@ private:
     bool canEnqueue(IoTransferDataGroup transferGroup);
     bool canContinueCurrentGroup();
 
-    tIoDeviceShPtr m_interface = nullptr;
+    IoDeviceBase::Ptr m_ioDevice = nullptr;
     IoIdKeeper m_currIoId;
     QList<IoTransferDataGroup> m_pendingGroups;
     int m_nextPosInCurrGroup = 0;

@@ -20,7 +20,7 @@ class SourceScanner : public QObject
 {
     Q_OBJECT
 public:
-    static tSourceScannerShPtr createScanner(tIoDeviceShPtr interface, QUuid uuid);
+    static tSourceScannerShPtr createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
     virtual ~SourceScanner();
 
     // requests
@@ -36,7 +36,7 @@ signals:
 private slots:
     void onIoFinished(int ioId, bool ioDeviceError);
 private:
-    explicit SourceScanner(tIoDeviceShPtr interface, QUuid uuid);
+    explicit SourceScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
 
     void sendReceiveSourceID();
     QByteArray createInterfaceSpecificPrepend();
@@ -45,9 +45,9 @@ private:
     static SupportedSourceTypes nextDemoType();
 
     IoIdKeeper m_currIoId;
-    tIoDeviceShPtr m_ioInterface;
+    IoDeviceBase::Ptr m_ioDevice;
     QUuid m_uuid;
-    SourceDeviceVein* m_sourceDeviceIdentified;
+    SourceDeviceVein* m_sourceDeviceFound = nullptr;
     IoTransferDataSingle::Ptr m_ioDataSingle = nullptr;
     int m_currentSourceTested = 0;
     tSourceScannerShPtr m_safePoinerOnThis;

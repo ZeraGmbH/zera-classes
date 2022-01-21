@@ -1,7 +1,7 @@
 #ifndef IODEVICEBASE_H
 #define IODEVICEBASE_H
 
-#include "iodevicefactory.h"
+#include "iodevicetypes.h"
 #include "iotransferdatasingle.h"
 #include "io-ids/ioidgenerator.h"
 #include "io-ids/ioidkeeper.h"
@@ -14,6 +14,8 @@ class IoDeviceBase : public QObject
 {
     Q_OBJECT
 public:
+    typedef QSharedPointer<IoDeviceBase> Ptr;
+
     virtual bool open(QString) = 0;
     virtual void close() = 0;
 

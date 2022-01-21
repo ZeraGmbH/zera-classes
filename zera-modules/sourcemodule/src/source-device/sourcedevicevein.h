@@ -17,7 +17,7 @@ class SourceDeviceVein : public SourceDeviceBase
 {
     Q_OBJECT
 public:
-    explicit SourceDeviceVein(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version);
+    explicit SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
     virtual ~SourceDeviceVein();
 
     // requests

@@ -6,21 +6,21 @@ IoQueue::IoQueue(QObject *parent) : QObject(parent)
             this, &IoQueue::sigTransferGroupFinished, Qt::QueuedConnection);
 }
 
-void IoQueue::setIoInterface(tIoDeviceShPtr interface)
+void IoQueue::setIoDevice(IoDeviceBase::Ptr ioDevice)
 {
-    m_interface = interface;
-    if(interface) {
-        connect(m_interface.get(), &IoDeviceBrokenDummy::sigIoFinished,
+    m_ioDevice = ioDevice;
+    if(ioDevice) {
+        connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigIoFinished,
                 this, &IoQueue::onIoFinished);
-        connect(m_interface.get(), &IoDeviceBrokenDummy::sigDisconnected,
+        connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigDisconnected,
                 this, &IoQueue::onIoDisconnected);
     }
-    else if(m_interface){
-        disconnect(m_interface.get(), &IoDeviceBrokenDummy::sigIoFinished,
+    else if(m_ioDevice){
+        disconnect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigIoFinished,
                    this, &IoQueue::onIoFinished);
-        disconnect(m_interface.get(), &IoDeviceBrokenDummy::sigDisconnected,
+        disconnect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigDisconnected,
                 this, &IoQueue::onIoDisconnected);
-        m_interface = nullptr;
+        m_ioDevice = nullptr;
     }
 }
 
@@ -65,7 +65,7 @@ void IoQueue::onIoDisconnected()
 {
     m_currIoId.deactivate();
     abortAllGroups();
-    setIoInterface(nullptr);
+    setIoDevice(nullptr);
 }
 
 void IoQueue::tryStartNextIo()
@@ -73,7 +73,7 @@ void IoQueue::tryStartNextIo()
     if(!isIoBusy()) {
         IoTransferDataSingle::Ptr nextIo = getNextIoTransfer();
         if(nextIo) {
-            int ioId = m_interface->sendAndReceive(nextIo);
+            int ioId = m_ioDevice->sendAndReceive(nextIo);
             m_currIoId.setCurrent(ioId);
         }
     }
@@ -129,7 +129,7 @@ bool IoQueue::checkCurrentResponsePassed()
 bool IoQueue::canEnqueue(IoTransferDataGroup transferGroup)
 {
     bool canEnqueue =
-            m_interface && m_interface->isOpen() &&
+            m_ioDevice && m_ioDevice->isOpen() &&
             transferGroup.getTransferCount() > 0 &&
             (m_maxPendingGroups == 0 || m_pendingGroups.size() < m_maxPendingGroups);
     return canEnqueue;

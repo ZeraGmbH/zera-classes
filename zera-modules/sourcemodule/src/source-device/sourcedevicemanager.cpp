@@ -1,5 +1,6 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevicevein.h"
+#include "io-device/iodevicefactory.h"
 #include "io-device/iodevicebrokendummy.h"
 #include "sourcescanner.h"
 #include <random>
@@ -26,11 +27,11 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes interfaceType, con
         return;
     }
     bool started = false;
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(interfaceType);
-    if(interface) {
-        started = interface->open(deviceInfo);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(interfaceType);
+    if(ioDevice) {
+        started = ioDevice->open(deviceInfo);
         if(started) {
-            tSourceScannerShPtr sourceScanner = SourceScanner::createScanner(interface, uuid);
+            tSourceScannerShPtr sourceScanner = SourceScanner::createScanner(ioDevice, uuid);
             connect(sourceScanner.get(), &SourceScanner::sigScanFinished,
                     this, &SourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);
