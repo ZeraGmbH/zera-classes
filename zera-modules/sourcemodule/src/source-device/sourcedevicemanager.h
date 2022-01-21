@@ -4,9 +4,8 @@
 #include <QObject>
 #include <QString>
 #include <QUuid>
-#include "sourcescanner.h"
+#include "sourcedevicescanner.h"
 
-class IoDeviceBrokenDummy;
 class SourceDeviceVein;
 
 class SourceDeviceManager : public QObject
@@ -33,7 +32,7 @@ signals:
     void sigSlotRemoved(int slotNo, QUuid uuid, QString errMsg);
 
 private slots:
-    void onScanFinished(SourceScanner::Ptr scanner);
+    void onScanFinished(SourceDeviceScanner::Ptr scanner);
     void onSourceClosed(SourceDeviceVein *sourceDevice, QUuid uuid);
 
 signals:

@@ -1,5 +1,5 @@
-#ifndef SourceScanner_H
-#define SourceScanner_H
+#ifndef SOURCEDEVICESCANNER_H
+#define SOURCEDEVICESCANNER_H
 
 #include "io-device/iotransferdatasingle.h"
 #include "source-device/sourcedevicevein.h"
@@ -9,15 +9,13 @@
 #include <QUuid>
 #include <QSharedPointer>
 
-class IoDeviceBrokenDummy;
-
-class SourceScanner : public QObject
+class SourceDeviceScanner : public QObject
 {
     Q_OBJECT
 public:
-    typedef QSharedPointer<SourceScanner> Ptr;
+    typedef QSharedPointer<SourceDeviceScanner> Ptr;
     static Ptr createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
-    virtual ~SourceScanner();
+    virtual ~SourceDeviceScanner();
 
     // requests
     void startScan();
@@ -27,12 +25,12 @@ public:
     QUuid getUuid();
     static int getInstanceCount();
 signals:
-    void sigScanFinished(SourceScanner::Ptr scanner);
+    void sigScanFinished(SourceDeviceScanner::Ptr scanner);
 
 private slots:
     void onIoFinished(int ioId, bool ioDeviceError);
 private:
-    explicit SourceScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
+    explicit SourceDeviceScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
 
     void sendReceiveSourceID();
     QByteArray createInterfaceSpecificPrepend();
@@ -46,8 +44,8 @@ private:
     SourceDeviceVein* m_sourceDeviceFound = nullptr;
     IoTransferDataSingle::Ptr m_ioDataSingle = nullptr;
     int m_currentSourceTested = 0;
-    SourceScanner::Ptr m_safePoinerOnThis;
+    SourceDeviceScanner::Ptr m_safePoinerOnThis;
     static int m_InstanceCount;
 };
 
-#endif // SourceScanner_H
+#endif // SOURCEDEVICESCANNER_H

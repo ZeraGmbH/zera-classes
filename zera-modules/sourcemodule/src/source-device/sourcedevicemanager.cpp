@@ -1,7 +1,7 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevicevein.h"
 #include "io-device/iodevicefactory.h"
-#include "sourcescanner.h"
+#include "sourcedevicescanner.h"
 #include <random>
 
 // DEMO helper
@@ -30,8 +30,8 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes interfaceType, con
     if(ioDevice) {
         started = ioDevice->open(deviceInfo);
         if(started) {
-            SourceScanner::Ptr sourceScanner = SourceScanner::createScanner(ioDevice, uuid);
-            connect(sourceScanner.get(), &SourceScanner::sigScanFinished,
+            SourceDeviceScanner::Ptr sourceScanner = SourceDeviceScanner::createScanner(ioDevice, uuid);
+            connect(sourceScanner.get(), &SourceDeviceScanner::sigScanFinished,
                     this, &SourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);
             sourceScanner->startScan();
@@ -132,9 +132,9 @@ SourceDeviceVein *SourceDeviceManager::getSourceDevice(int slotNo)
     return getSourceDevice;
 }
 
-void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
+void SourceDeviceManager::onScanFinished(SourceDeviceScanner::Ptr scanner)
 {
-    disconnect(scanner.get(), &SourceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
+    disconnect(scanner.get(), &SourceDeviceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
 
     SourceDeviceVein *sourceDeviceFound = scanner->getSourceDeviceFound();
     QString erorDesc;

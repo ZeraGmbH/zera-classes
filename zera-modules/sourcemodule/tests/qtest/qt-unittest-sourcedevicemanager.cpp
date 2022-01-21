@@ -1,7 +1,7 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevicemanager.h"
 #include "source-device/sourcedevicemanager.h"
-#include "sourcescanner.h"
+#include "source-device/sourcedevicescanner.h"
 
 static QObject* pSourceDeviceManagerTest = addTest(new SourceDeviceManagerTest);
 
@@ -248,10 +248,10 @@ void SourceDeviceManagerTest::noCrashOnManagerDeadBeforeScanFinished()
         devMan->startSourceScan(SERIAL_DEVICE_DEMO, "Demo", QUuid::createUuid());
     }
     delete devMan;
-    QCOMPARE(SourceScanner::getInstanceCount(), slotCount);
+    QCOMPARE(SourceDeviceScanner::getInstanceCount(), slotCount);
     QTest::qWait(10);
     QCOMPARE(m_listSourcesAdded.count(), 0);
-    QCOMPARE(SourceScanner::getInstanceCount(), 0);
+    QCOMPARE(SourceDeviceScanner::getInstanceCount(), 0);
 }
 
 void SourceDeviceManagerTest::checkSlotCount(SourceDeviceManager& devMan, int total, int active, int demo)
