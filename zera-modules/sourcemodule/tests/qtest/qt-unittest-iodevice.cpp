@@ -280,7 +280,7 @@ void IoDeviceTest::demoCanClose()
 
 void IoDeviceTest::checkIds(tIoDeviceShPtr interface)
 {
-    tIoTransferDataSingleShPtr dummyIoData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingleFactory::createIoData();
     int ioID = interface->sendAndReceive(dummyIoData);
     QCOMPARE(ioID, 0);
     ioID = interface->sendAndReceive(dummyIoData);
@@ -290,7 +290,7 @@ void IoDeviceTest::checkIds(tIoDeviceShPtr interface)
 void IoDeviceTest::checkNotifications(tIoDeviceShPtr interface, int total, int errors)
 {
     connect(interface.get(), &IoDeviceBase::sigIoFinished, this, &IoDeviceTest::onIoFinish);
-    tIoTransferDataSingleShPtr dummyIoData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingleFactory::createIoData();
     interface->sendAndReceive(dummyIoData);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
     QCOMPARE(m_errorsReceived, 0);

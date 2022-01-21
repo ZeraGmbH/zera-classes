@@ -52,7 +52,7 @@ private:
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;
     int m_errorsReceived = 0;
-    tIoTransferDataSingleShPtr m_ioDataForSingleUse;
+    IoTransferDataSingle::Ptr m_ioDataForSingleUse;
     QList<QByteArray> m_listReceivedData;
 };
 

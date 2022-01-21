@@ -30,7 +30,7 @@ signals:
     void sigTransferGroupFinishedQueued(IoTransferDataGroup transferGroup);
 private:
     IoTransferDataGroup *getCurrentGroup();
-    tIoTransferDataSingleShPtr getNextIoTransfer();
+    IoTransferDataSingle::Ptr getNextIoTransfer();
     void tryStartNextIo();
     void finishGroup(IoTransferDataGroup transferGroupToFinish);
     void finishCurrentGroup();

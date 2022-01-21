@@ -19,7 +19,7 @@ public:
 
     virtual bool isOpen() = 0;
 
-    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) = 0;
+    virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) = 0;
 
     virtual void simulateExternalDisconnect() {}
 
@@ -37,12 +37,12 @@ protected:
     friend class IoDeviceFactory;
     IoDeviceBase(IoDeviceTypes type);
     virtual void setReadTimeoutNextIo(int) {};
-    void prepareSendAndReceive(tIoTransferDataSingleShPtr ioTransferData);
+    void prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferData);
 
     QString m_strDeviceInfo;
     IoIdGenerator m_IDGenerator;
     IoIdKeeper m_currIoId;
-    tIoTransferDataSingleShPtr m_ioTransferData;
+    IoTransferDataSingle::Ptr m_ioTransferData;
 
 private:
     IoDeviceTypes m_type;

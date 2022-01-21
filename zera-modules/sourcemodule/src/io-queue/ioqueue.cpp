@@ -71,7 +71,7 @@ void IoQueue::onIoDisconnected()
 void IoQueue::tryStartNextIo()
 {
     if(!isIoBusy()) {
-        tIoTransferDataSingleShPtr nextIo = getNextIoTransfer();
+        IoTransferDataSingle::Ptr nextIo = getNextIoTransfer();
         if(nextIo) {
             int ioId = m_interface->sendAndReceive(nextIo);
             m_currIoId.setCurrent(ioId);
@@ -79,9 +79,9 @@ void IoQueue::tryStartNextIo()
     }
 }
 
-tIoTransferDataSingleShPtr IoQueue::getNextIoTransfer()
+IoTransferDataSingle::Ptr IoQueue::getNextIoTransfer()
 {
-    tIoTransferDataSingleShPtr nextIo;
+    IoTransferDataSingle::Ptr nextIo;
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
         if(m_nextPosInCurrGroup < currGroup->getTransferCount()) {
@@ -120,7 +120,7 @@ bool IoQueue::checkCurrentResponsePassed()
     bool pass = false;
     IoTransferDataGroup *currGroup = getCurrentGroup();
     if(currGroup) {
-        tIoTransferDataSingleShPtr currentIo = currGroup->getTransfer(m_nextPosInCurrGroup-1);
+        IoTransferDataSingle::Ptr currentIo = currGroup->getTransfer(m_nextPosInCurrGroup-1);
         pass = currentIo->didIoPass();
     }
     return pass;

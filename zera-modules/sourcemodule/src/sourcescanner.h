@@ -48,7 +48,7 @@ private:
     tIoDeviceShPtr m_ioInterface;
     QUuid m_uuid;
     SourceDeviceVein* m_sourceDeviceIdentified;
-    tIoTransferDataSingleShPtr m_ioDataSingle;
+    IoTransferDataSingle::Ptr m_ioDataSingle = nullptr;
     int m_currentSourceTested = 0;
     tSourceScannerShPtr m_safePoinerOnThis;
     static int m_InstanceCount;

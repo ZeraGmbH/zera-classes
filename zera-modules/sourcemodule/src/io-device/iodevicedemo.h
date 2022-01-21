@@ -13,7 +13,7 @@ public:
     virtual bool open(QString strDeviceInfo) override;
     virtual void close() override;
 
-    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) override;
+    virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
     virtual void simulateExternalDisconnect() override;
 
     virtual bool isOpen() override { return m_bOpen; }

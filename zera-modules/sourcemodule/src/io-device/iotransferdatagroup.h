@@ -4,7 +4,7 @@
 #include "iotransferdatasingle.h"
 #include "io-ids/ioidgenerator.h"
 
-typedef QList<tIoTransferDataSingleShPtr> tIoTransferList;
+typedef QList<IoTransferDataSingle::Ptr> tIoTransferList;
 
 class IoTransferDataGroup
 {
@@ -38,7 +38,7 @@ public:
     GroupErrorBehaviors getErrorBehavior() const;
 
     int getTransferCount();
-    tIoTransferDataSingleShPtr getTransfer(int idx);
+    IoTransferDataSingle::Ptr getTransfer(int idx);
 
     // Currently just for unittests
     bool operator == (const IoTransferDataGroup& other);

@@ -6,8 +6,8 @@
 class IoTransferDataSingleFactory
 {
 public:
-    static tIoTransferDataSingleShPtr createIoData();
-    static tIoTransferDataSingleShPtr createIoData(
+    static IoTransferDataSingle::Ptr createIoData();
+    static IoTransferDataSingle::Ptr createIoData(
             QByteArray bytesSend,
             QByteArray bytesExpectedLead,
             QByteArray bytesExpectedTrail = "\r",

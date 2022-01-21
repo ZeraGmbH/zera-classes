@@ -5,7 +5,7 @@ IoDeviceBrokenDummy::IoDeviceBrokenDummy(IoDeviceTypes type) :
 {
 }
 
-int IoDeviceBrokenDummy::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
+int IoDeviceBrokenDummy::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
     prepareSendAndReceive(ioTransferData);
     emit _sigIoFinished(m_currIoId.getCurrent(), true);
