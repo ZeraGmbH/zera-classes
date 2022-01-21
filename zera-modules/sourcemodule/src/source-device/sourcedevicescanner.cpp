@@ -89,7 +89,7 @@ void SourceDeviceScanner::sendReceiveSourceID()
 QByteArray SourceDeviceScanner::createInterfaceSpecificPrepend()
 {
     QByteArray prepend;
-    if(m_ioDevice->type() == SERIAL_DEVICE_ASYNCSERIAL) {
+    if(m_ioDevice->getType() == SERIAL_DEVICE_ASYNCSERIAL) {
         static_cast<IoDeviceZeraSerial*>(m_ioDevice.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
