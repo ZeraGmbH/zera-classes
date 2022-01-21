@@ -13,7 +13,7 @@ public slots:
 private slots:
     void init();
 
-    void generateOutOfLimitsInterface();
+    void generateBrokenIoDeviceForOutOfLimitType();
     void generateTypeSet();
 
     void baseReturnsIds();
