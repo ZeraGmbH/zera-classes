@@ -15,9 +15,9 @@ void IoDeviceTest::init()
     m_listReceivedData.clear();
 }
 
-void IoDeviceTest::generateOutOfLimitsInterface()
+void IoDeviceTest::generateBrokenIoDeviceForOutOfLimitType()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_TYPE_COUNT);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes(-1));
     QCOMPARE(SERIAL_DEVICE_BROKEN, ioDevice->getType());
 }
 
@@ -280,10 +280,9 @@ void IoDeviceTest::demoCanClose()
 void IoDeviceTest::checkIds(IoDeviceBase::Ptr ioDevice)
 {
     IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingleFactory::createIoData();
-    int ioID = ioDevice->sendAndReceive(dummyIoData);
-    QCOMPARE(ioID, 0);
-    ioID = ioDevice->sendAndReceive(dummyIoData);
-    QCOMPARE(ioID, 1);
+    int ioID1 = ioDevice->sendAndReceive(dummyIoData);
+    int ioID2 = ioDevice->sendAndReceive(dummyIoData);
+    QVERIFY(ioID1 != ioID2);
 }
 
 void IoDeviceTest::checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int errors)
