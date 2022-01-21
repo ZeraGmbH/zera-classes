@@ -1,6 +1,5 @@
 #include "sourcedevicebase.h"
 #include "json/jsonstructureloader.h"
-#include "io-device/iodevicedemo.h"
 
 SourceDeviceBase::SourceDeviceBase(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString deviceName, QString version) :
     QObject(nullptr),
@@ -18,11 +17,6 @@ SourceDeviceBase::~SourceDeviceBase()
     delete m_ioGroupGenerator;
 }
 
-void SourceDeviceBase::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
-{
-    m_bDemoDelayFollowsTimeout = demoDelayFollowsTimeout;
-}
-
 bool SourceDeviceBase::isDemo()
 {
     return m_ioDevice->isDemo();
@@ -37,10 +31,6 @@ void SourceDeviceBase::switchState(JsonParamApi state)
 {
     m_paramsRequested = state;
     IoTransferDataGroup transferGroup = m_ioGroupGenerator->generateOnOffGroup(m_paramsRequested);
-    if(isDemo()) {
-        IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(m_ioDevice.get());
-        demoIoDevice->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
-    }
     m_currQueueId.setCurrent(m_ioQueue.enqueueTransferGroup(transferGroup));
 }
 
