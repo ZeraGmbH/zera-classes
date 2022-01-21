@@ -31,7 +31,7 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes interfaceType, con
     if(ioDevice) {
         started = ioDevice->open(deviceInfo);
         if(started) {
-            tSourceScannerShPtr sourceScanner = SourceScanner::createScanner(ioDevice, uuid);
+            SourceScanner::Ptr sourceScanner = SourceScanner::createScanner(ioDevice, uuid);
             connect(sourceScanner.get(), &SourceScanner::sigScanFinished,
                     this, &SourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);
@@ -133,7 +133,7 @@ SourceDeviceVein *SourceDeviceManager::getSourceDevice(int slotNo)
     return getSourceDevice;
 }
 
-void SourceDeviceManager::onScanFinished(tSourceScannerShPtr scanner)
+void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
 {
     disconnect(scanner.get(), &SourceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
 

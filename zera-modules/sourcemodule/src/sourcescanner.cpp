@@ -4,9 +4,9 @@
 #include "io-device/iotransferdatasinglefactory.h"
 #include <QUuid>
 
-tSourceScannerShPtr SourceScanner::createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid)
+SourceScanner::Ptr SourceScanner::createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid)
 {
-    tSourceScannerShPtr scanner = tSourceScannerShPtr(new SourceScanner(ioDevice, uuid));
+    SourceScanner::Ptr scanner = SourceScanner::Ptr(new SourceScanner(ioDevice, uuid));
     scanner->m_safePoinerOnThis = scanner;
     return scanner;
 }
