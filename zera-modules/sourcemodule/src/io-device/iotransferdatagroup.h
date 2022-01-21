@@ -49,7 +49,7 @@ private:
     tIoTransferList m_ioTransferList;
     SourceGroupTypes m_groupType = GROUP_TYPE_UNDEFINED;
     GroupErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
-    IoIdGenerator m_idGenerator;
+    static IoIdGenerator m_idGenerator;
     int m_groupId = 0;
     bool m_bPassedAll = false;
 };
