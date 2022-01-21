@@ -1,6 +1,5 @@
 #include "iogroupgenerator.h"
 #include "sourceactions.h"
-#include "io-device/iodevicebrokendummy.h"
 #include "io-device/iotransferdatasinglefactory.h"
 
 IoGroupGenerator::IoGroupGenerator(JsonStructApi jsonStructApi) :

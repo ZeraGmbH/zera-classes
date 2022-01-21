@@ -16,7 +16,7 @@ SourceDevice::SourceDevice(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type
     connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
             this, &SourceDevice::sigSwitchTransationStarted,
             Qt::QueuedConnection);
-    connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigDisconnected,
+    connect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
             Qt::QueuedConnection);
 }

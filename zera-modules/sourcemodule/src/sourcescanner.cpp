@@ -1,5 +1,5 @@
 #include "sourcescanner.h"
-#include "io-device/iodevicebrokendummy.h"
+#include "io-device/iodevicebase.h"
 #include "io-device/iodevicezeraserial.h"
 #include "io-device/iotransferdatasinglefactory.h"
 #include <QUuid>
@@ -18,7 +18,7 @@ SourceScanner::SourceScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid) :
     m_uuid(uuid)
 {
     m_InstanceCount++;
-    connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigIoFinished,
+    connect(m_ioDevice.get(), &IoDeviceBase::sigIoFinished,
             this, &SourceScanner::onIoFinished);
 }
 

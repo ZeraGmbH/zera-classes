@@ -1,7 +1,6 @@
 #ifndef SourceScanner_H
 #define SourceScanner_H
 
-#include "io-device/iodevicebrokendummy.h"
 #include "io-device/iotransferdatasingle.h"
 #include "source-device/sourcedevicevein.h"
 #include "io-ids/ioidkeeper.h"

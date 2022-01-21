@@ -10,15 +10,15 @@ void IoQueue::setIoDevice(IoDeviceBase::Ptr ioDevice)
 {
     m_ioDevice = ioDevice;
     if(ioDevice) {
-        connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigIoFinished,
+        connect(m_ioDevice.get(), &IoDeviceBase::sigIoFinished,
                 this, &IoQueue::onIoFinished);
-        connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigDisconnected,
+        connect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
                 this, &IoQueue::onIoDisconnected);
     }
     else if(m_ioDevice){
-        disconnect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigIoFinished,
+        disconnect(m_ioDevice.get(), &IoDeviceBase::sigIoFinished,
                    this, &IoQueue::onIoFinished);
-        disconnect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigDisconnected,
+        disconnect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
                 this, &IoQueue::onIoDisconnected);
         m_ioDevice = nullptr;
     }
