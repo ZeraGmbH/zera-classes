@@ -33,5 +33,5 @@ private slots:
     void sequencePollStopsOnErrorAndStartsOnSwitch();
 private:
     SourceDeviceForUnittest *m_sourceDevice = nullptr;
-    tIoDeviceShPtr m_interface;
+    IoDeviceBase::Ptr m_ioDevice;
 };

@@ -3,7 +3,7 @@
 #include "iodevicedemo.h"
 #include "iodevicezeraserial.h"
 
-tIoDeviceShPtr IoDeviceFactory::createIoDevice(IoDeviceTypes type)
+IoDeviceBase::Ptr IoDeviceFactory::createIoDevice(IoDeviceTypes type)
 {
     IoDeviceBase* device = nullptr;
     switch (type) {
@@ -20,5 +20,5 @@ tIoDeviceShPtr IoDeviceFactory::createIoDevice(IoDeviceTypes type)
         qCritical("Do not use SERIAL_DEVICE_TYPE_COUNT");
         break;
     }
-    return tIoDeviceShPtr(device);
+    return IoDeviceBase::Ptr(device);
 }

@@ -17,7 +17,7 @@ class SourceDevice : public SourceDeviceSubject
 {
     Q_OBJECT
 public:
-    SourceDevice(tIoDeviceShPtr interface, SupportedSourceTypes type, QString name, QString version);
+    SourceDevice(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
     ~SourceDevice();
 
     // requests
@@ -51,7 +51,7 @@ protected:
 private:
     void doDemoTransactionAdjustments(const IoTransferDataGroup &transferGroup);
 
-    tIoDeviceShPtr m_ioInterface;
+    IoDeviceBase::Ptr m_ioDevice;
     IoQueue m_ioQueue;
 
     IoGroupGenerator m_ioGroupGenerator;

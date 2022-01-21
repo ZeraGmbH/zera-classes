@@ -45,9 +45,9 @@ private slots:
     void demoCanClose();
 
 private:
-    void checkIds(tIoDeviceShPtr interface);
-    void checkNotifications(tIoDeviceShPtr interface, int total, int errors);
-    tIoDeviceShPtr createOpenDemoInterfaceWithDelayAndConnected(int responseDelay = 0);
+    void checkIds(IoDeviceBase::Ptr ioDevice);
+    void checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int errors);
+    IoDeviceBase::Ptr createOpenDemoInterfaceWithDelayAndConnected(int responseDelay = 0);
 
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;

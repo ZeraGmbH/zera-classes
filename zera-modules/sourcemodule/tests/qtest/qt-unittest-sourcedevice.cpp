@@ -1,5 +1,6 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevice.h"
+#include "io-device/iodevicefactory.h"
 #include "source-device/sourcedevice.h"
 #include "source-device/sourcedeviceobserver.h"
 #include "json/jsonstructureloader.h"
@@ -18,10 +19,10 @@ void SourceDeviceTest::gettersOK()
     SupportedSourceTypes type = SOURCE_MT_COMMON;
     QString info = "fooInfo";
 
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    interface->open(info);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    ioDevice->open(info);
 
-    SourceDevice sourceDevice(interface, type, name, version);
+    SourceDevice sourceDevice(ioDevice, type, name, version);
     QCOMPARE(type, sourceDevice.getType());
     QCOMPARE(name, sourceDevice.getName());
     QCOMPARE(version, sourceDevice.getVersion());
@@ -30,22 +31,22 @@ void SourceDeviceTest::gettersOK()
 
 void SourceDeviceTest::nonDemoInterFaceGet()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
+    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
     QVERIFY(!sourceDevice.isDemo());
 }
 
 void SourceDeviceTest::demoInterFaceGet()
 {
-    tIoDeviceShPtr interface = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
     QVERIFY(sourceDevice.isDemo());
 }
 
 void SourceDeviceTest::disconnectSignal()
 {
-    tIoDeviceShPtr interface = createOpenDemoInterface();
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
 
     int countDisconnectReceived = 0;
     connect(&sourceDevice, &SourceDevice::sigInterfaceDisconnected, [&] {
@@ -66,8 +67,8 @@ static IoTransferDataGroup createWorkingIoGroup(SourceDevice *source)
 
 void SourceDeviceTest::multipleCmdsDifferentIds()
 {
-    tIoDeviceShPtr interface = createOpenDemoInterface();
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
 
     int id1 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
     int id2 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
@@ -88,8 +89,8 @@ protected:
 
 void SourceDeviceTest::observerReceiveCount()
 {
-    tIoDeviceShPtr interface = createOpenDemoInterface();
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
 
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
@@ -103,8 +104,8 @@ void SourceDeviceTest::observerReceiveCount()
 
 void SourceDeviceTest::observerReceiveId()
 {
-    tIoDeviceShPtr interface = createOpenDemoInterface();
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
 
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
@@ -122,8 +123,8 @@ void SourceDeviceTest::observerReceiveId()
 
 void SourceDeviceTest::busySignalOnSwitch()
 {
-    tIoDeviceShPtr interface = createOpenDemoInterface();
-    SourceDevice sourceDevice(interface, SOURCE_MT_COMMON, "", "");
+    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
     sourceDevice.setDemoResponseDelay(false, 1);
 
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(SOURCE_MT_COMMON, "", "");

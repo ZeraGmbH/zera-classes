@@ -2,9 +2,9 @@
 #include "json/jsonstructureloader.h"
 #include "io-device/iodevicedemo.h"
 
-SourceDeviceBase::SourceDeviceBase(tIoDeviceShPtr interface, SupportedSourceTypes type, QString deviceName, QString version) :
+SourceDeviceBase::SourceDeviceBase(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString deviceName, QString version) :
     QObject(nullptr),
-    m_ioInterface(interface)
+    m_ioDevice(ioDevice)
 {
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, version);
     m_ioGroupGenerator = new IoGroupGenerator(paramStructure);
@@ -25,12 +25,12 @@ void SourceDeviceBase::setDemoDelayFollowsTimeout(bool demoDelayFollowsTimeout)
 
 bool SourceDeviceBase::isDemo()
 {
-    return m_ioInterface->isDemo();
+    return m_ioDevice->isDemo();
 }
 
 QString SourceDeviceBase::getInterfaceDeviceInfo()
 {
-    return m_ioInterface->getDeviceInfo();
+    return m_ioDevice->getDeviceInfo();
 }
 
 void SourceDeviceBase::switchState(JsonParamApi state)
@@ -38,8 +38,8 @@ void SourceDeviceBase::switchState(JsonParamApi state)
     m_paramsRequested = state;
     IoTransferDataGroup transferGroup = m_ioGroupGenerator->generateOnOffGroup(m_paramsRequested);
     if(isDemo()) {
-        IoDeviceDemo* demoInterface = static_cast<IoDeviceDemo*>(m_ioInterface.get());
-        demoInterface->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
+        IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(m_ioDevice.get());
+        demoIoDevice->setResponseDelay(m_bDemoDelayFollowsTimeout, 0);
     }
     m_currQueueId.setCurrent(m_ioQueue.enqueueTransferGroup(transferGroup));
 }

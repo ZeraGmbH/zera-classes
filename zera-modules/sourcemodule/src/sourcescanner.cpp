@@ -4,24 +4,21 @@
 #include "io-device/iotransferdatasinglefactory.h"
 #include <QUuid>
 
-tSourceScannerShPtr SourceScanner::createScanner(tIoDeviceShPtr interface, QUuid uuid)
+tSourceScannerShPtr SourceScanner::createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid)
 {
-    tSourceScannerShPtr scanner = tSourceScannerShPtr(new SourceScanner(interface, uuid));
+    tSourceScannerShPtr scanner = tSourceScannerShPtr(new SourceScanner(ioDevice, uuid));
     scanner->m_safePoinerOnThis = scanner;
     return scanner;
 }
 
 int SourceScanner::m_InstanceCount = 0;
 
-SourceScanner::SourceScanner(tIoDeviceShPtr interface, QUuid uuid) :
-    QObject(nullptr),
-    m_ioInterface(interface),
-    m_uuid(uuid),
-    m_sourceDeviceIdentified(nullptr),
-    m_ioDataSingle(nullptr)
+SourceScanner::SourceScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid) :
+    m_ioDevice(ioDevice),
+    m_uuid(uuid)
 {
     m_InstanceCount++;
-    connect(m_ioInterface.get(), &IoDeviceBrokenDummy::sigIoFinished,
+    connect(m_ioDevice.get(), &IoDeviceBrokenDummy::sigIoFinished,
             this, &SourceScanner::onIoFinished);
 }
 
@@ -66,7 +63,7 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
 
 SourceDeviceVein *SourceScanner::getSourceDeviceFound()
 {
-    return m_sourceDeviceIdentified;
+    return m_sourceDeviceFound;
 }
 
 QUuid SourceScanner::getUuid()
@@ -84,15 +81,15 @@ void SourceScanner::sendReceiveSourceID()
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
     m_ioDataSingle = IoTransferDataSingleFactory::createIoData(bytesSend, "");
-    int ioId = m_ioInterface->sendAndReceive(m_ioDataSingle);
+    int ioId = m_ioDevice->sendAndReceive(m_ioDataSingle);
     m_currIoId.setCurrent(ioId);
 }
 
 QByteArray SourceScanner::createInterfaceSpecificPrepend()
 {
     QByteArray prepend;
-    if(m_ioInterface->type() == SERIAL_DEVICE_ASYNCSERIAL) {
-        static_cast<IoDeviceZeraSerial*>(m_ioInterface.get())->setBlockEndCriteriaNextIo();
+    if(m_ioDevice->type() == SERIAL_DEVICE_ASYNCSERIAL) {
+        static_cast<IoDeviceZeraSerial*>(m_ioDevice.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
             prepend = "\r";
@@ -160,7 +157,7 @@ void SourceScanner::onIoFinished(int ioId, bool ioDeviceError)
     SupportedSourceTypes sourceTypeFound = SOURCE_MT_COMMON;
     QByteArray responsePrefix;
     if(!ioDeviceError) {
-        if(!m_ioInterface->isDemo()) {
+        if(!m_ioDevice->isDemo()) {
             for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
                 if(m_ioDataSingle->getDataReceived().contains(responseTypePair.expectedResponse)) {
                     validFound = true;
@@ -177,14 +174,14 @@ void SourceScanner::onIoFinished(int ioId, bool ioDeviceError)
     if(validFound) {
         QByteArray deviceVersion;
         QByteArray deviceName;
-        if(m_ioInterface->isDemo()) {
+        if(m_ioDevice->isDemo()) {
             sourceTypeFound = nextDemoType();
         }
         else {
             deviceVersion = extractVersionFromResponse(sourceTypeFound);
             deviceName = extractNameFromResponse(responsePrefix, deviceVersion, sourceTypeFound);
         }
-        m_sourceDeviceIdentified = new SourceDeviceVein(m_ioInterface, sourceTypeFound, deviceName, deviceVersion);
+        m_sourceDeviceFound = new SourceDeviceVein(m_ioDevice, sourceTypeFound, deviceName, deviceVersion);
 
         emit sigScanFinished(m_safePoinerOnThis);
         ourJobIsDone = true;
@@ -206,11 +203,11 @@ void SourceScanner::onIoFinished(int ioId, bool ioDeviceError)
 void SourceScanner::startScan()
 {
     m_currentSourceTested = 0;
-    if(m_sourceDeviceIdentified) {
+    if(m_sourceDeviceFound) {
         // we are one shot
         qCritical("Do not call SourceScanner::startScan more than once per instance!");
-        delete m_sourceDeviceIdentified;
-        m_sourceDeviceIdentified = nullptr;
+        delete m_sourceDeviceFound;
+        m_sourceDeviceFound = nullptr;
     }
     sendReceiveSourceID();
 }
