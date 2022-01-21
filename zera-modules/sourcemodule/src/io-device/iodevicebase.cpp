@@ -15,7 +15,7 @@ void IoDeviceBase::onIoFinished(int ioID, bool ioDeviceError)
     emit sigIoFinished(ioID, ioDeviceError);
 }
 
-void IoDeviceBase::prepareSendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
+void IoDeviceBase::prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
     m_ioTransferData = ioTransferData;
     setReadTimeoutNextIo(m_ioTransferData->getResponseTimeout());

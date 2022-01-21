@@ -15,7 +15,7 @@ public:
 
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
-    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) override;
+    virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
 
     virtual bool isOpen() override;
 

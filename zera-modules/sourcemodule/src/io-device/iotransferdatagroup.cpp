@@ -67,9 +67,9 @@ int IoTransferDataGroup::getTransferCount()
     return m_ioTransferList.count();
 }
 
-tIoTransferDataSingleShPtr IoTransferDataGroup::getTransfer(int idx)
+IoTransferDataSingle::Ptr IoTransferDataGroup::getTransfer(int idx)
 {
-    tIoTransferDataSingleShPtr transfer = nullptr;
+    IoTransferDataSingle::Ptr transfer = nullptr;
     if(idx >= 0 && idx < m_ioTransferList.count()) {
         transfer = m_ioTransferList[idx];
     }

@@ -1,17 +1,17 @@
 #include "iotransferdatasinglefactory.h"
 
-tIoTransferDataSingleShPtr IoTransferDataSingleFactory::createIoData()
+IoTransferDataSingle::Ptr IoTransferDataSingleFactory::createIoData()
 {
-    return tIoTransferDataSingleShPtr(new IoTransferDataSingle());
+    return IoTransferDataSingle::Ptr(new IoTransferDataSingle());
 }
 
-tIoTransferDataSingleShPtr IoTransferDataSingleFactory::createIoData(QByteArray bytesSend,
+IoTransferDataSingle::Ptr IoTransferDataSingleFactory::createIoData(QByteArray bytesSend,
                                                                      QByteArray bytesExpectedLead,
                                                                      QByteArray bytesExpectedTrail,
                                                                      int responseTimeoutMs,
                                                                      bool demoErrorResponse)
 {
-    return tIoTransferDataSingleShPtr(new IoTransferDataSingle(bytesSend,
+    return IoTransferDataSingle::Ptr(new IoTransferDataSingle(bytesSend,
                                                                bytesExpectedLead,
                                                                bytesExpectedTrail,
                                                                responseTimeoutMs,

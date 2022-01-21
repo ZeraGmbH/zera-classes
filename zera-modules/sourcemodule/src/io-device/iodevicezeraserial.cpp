@@ -49,7 +49,7 @@ IoDeviceZeraSerial::~IoDeviceZeraSerial()
     _close();
 }
 
-int IoDeviceZeraSerial::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
+int IoDeviceZeraSerial::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
     prepareSendAndReceive(ioTransferData);
     if(m_serialIO.isOpen()) {

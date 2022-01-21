@@ -13,13 +13,13 @@ void IoTransferDataTest::init()
 
 void IoTransferDataTest::singleDataEvalNotExecutedOnConstruct1()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData();
     QCOMPARE(ioTransferData->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
 }
 
 void IoTransferDataTest::singleDataEvalNotExecutedOnConstruct2()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "");
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData("", "");
     QCOMPARE(ioTransferData->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
 }
 
@@ -27,38 +27,38 @@ void IoTransferDataTest::singleDemoResponseLeadTrail()
 {
     QByteArray lead = "foo";
     QByteArray trail = "foo";
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", lead, trail);
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData("", lead, trail);
     QCOMPARE(ioTransferData->getDemoResponse(), lead+trail);
 }
 
 void IoTransferDataTest::singleDemoResponseLeadTrailEmpty()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData();
     QCOMPARE(ioTransferData->getDemoResponse(), "\r");
 }
 
 void IoTransferDataTest::singleDemoResponseSimError()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData();
     ioTransferData->m_demoErrorResponse = true;
     QCOMPARE(ioTransferData->getDemoResponse(), IoTransferDataSingle::demoErrorResponseData);
 }
 
 void IoTransferDataTest::singleCheckUnusedDataOnOnConstruct1()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData();
     QCOMPARE(ioTransferData->checkUnusedData(), true);
 }
 
 void IoTransferDataTest::singleCheckUnusedDataOnOnConstruct2()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "");
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData("", "");
     QCOMPARE(ioTransferData->checkUnusedData(), true);
 }
 
 void IoTransferDataTest::singleCheckUsedDataDataReceived()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData();
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -69,7 +69,7 @@ void IoTransferDataTest::singleCheckUsedDataDataReceived()
 
 void IoTransferDataTest::singleCheckUsedDataNoAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "", "");
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData("", "", "");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -81,7 +81,7 @@ void IoTransferDataTest::singleCheckUsedDataNoAnswer()
 
 void IoTransferDataTest::singleCheckUsedWrongAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData();
     ioTransferData->m_demoErrorResponse = true;
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
@@ -94,7 +94,7 @@ void IoTransferDataTest::singleCheckUsedWrongAnswer()
 
 void IoTransferDataTest::singleCheckUsedPass()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("fooSend", "fooLead", "fooTrail");
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData("fooSend", "fooLead", "fooTrail");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -228,13 +228,13 @@ void IoTransferDataTest::groupTypeHasIsMethod()
 
 void IoTransferDataTest::singleDataEvalNotExecuted()
 {
-    tIoTransferDataSingleShPtr transSingle = IoTransferDataSingleFactory::createIoData("", "");
+    IoTransferDataSingle::Ptr transSingle = IoTransferDataSingleFactory::createIoData("", "");
     QCOMPARE(transSingle->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
 }
 
 void IoTransferDataTest::singleDataEvalNoAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("", "", "");
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData("", "", "");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -243,7 +243,7 @@ void IoTransferDataTest::singleDataEvalNoAnswer()
 
 void IoTransferDataTest::singleDataEvalWrongAnswer()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData();
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData();
     ioTransferData->m_demoErrorResponse = true;
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
@@ -253,7 +253,7 @@ void IoTransferDataTest::singleDataEvalWrongAnswer()
 
 void IoTransferDataTest::singleDataEvalPass()
 {
-    tIoTransferDataSingleShPtr ioTransferData = IoTransferDataSingleFactory::createIoData("fooSend", "fooLead", "fooTrail");
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingleFactory::createIoData("fooSend", "fooLead", "fooTrail");
     tIoDeviceShPtr interface = createOpenDemoInterface();
     interface->sendAndReceive(ioTransferData);
     QTest::qWait(10);

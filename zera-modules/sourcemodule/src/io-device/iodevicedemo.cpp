@@ -33,7 +33,7 @@ void IoDeviceDemo::close()
     m_bOpen = false;
 }
 
-int IoDeviceDemo::sendAndReceive(tIoTransferDataSingleShPtr ioTransferData)
+int IoDeviceDemo::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
     prepareSendAndReceive(ioTransferData);
     int responseDelayMs = m_responseDelayMs;

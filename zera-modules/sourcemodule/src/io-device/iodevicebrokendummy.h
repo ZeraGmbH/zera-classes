@@ -13,7 +13,7 @@ public:
     virtual void close() override {}
     virtual bool isOpen() override { return false; }
 
-    virtual int sendAndReceive(tIoTransferDataSingleShPtr ioTransferData) override;
+    virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
 
 protected:
     IoDeviceBrokenDummy(IoDeviceTypes type);
