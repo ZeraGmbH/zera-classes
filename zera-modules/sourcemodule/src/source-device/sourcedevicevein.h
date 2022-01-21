@@ -7,7 +7,6 @@
 #include <QUuid>
 #include <QStringList>
 #include "sourcedevicebase.h"
-#include "io-device/iodevicebrokendummy.h"
 #include "json/jsondevicestatusapi.h"
 #include "json/persistentjsonstate.h"
 

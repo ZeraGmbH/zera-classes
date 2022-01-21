@@ -5,7 +5,6 @@
 #include <QString>
 #include <QUuid>
 #include "sourcescanner.h"
-#include "io-device/iodevicebrokendummy.h"
 
 class IoDeviceBrokenDummy;
 class SourceDeviceVein;

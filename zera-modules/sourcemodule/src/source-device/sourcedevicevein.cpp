@@ -17,7 +17,7 @@ SourceDeviceVein::SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SupportedSourceTy
     m_ioQueue.setIoDevice(ioDevice); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioDevice->getDeviceInfo());
 
-    connect(ioDevice.get(), &IoDeviceBrokenDummy::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
+    connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
 }
 
 SourceDeviceVein::~SourceDeviceVein()
