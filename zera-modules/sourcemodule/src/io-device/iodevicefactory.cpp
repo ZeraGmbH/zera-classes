@@ -7,7 +7,7 @@ IoDeviceBase::Ptr IoDeviceFactory::createIoDevice(IoDeviceTypes type)
 {
     IoDeviceBase* device = nullptr;
     switch (type) {
-    case SERIAL_DEVICE_BROKEN:
+    default:
         device = new IoDeviceBrokenDummy(SERIAL_DEVICE_BROKEN);
         break;
     case SERIAL_DEVICE_DEMO:
@@ -15,9 +15,6 @@ IoDeviceBase::Ptr IoDeviceFactory::createIoDevice(IoDeviceTypes type)
         break;
     case SERIAL_DEVICE_ASYNCSERIAL:
         device = new IoDeviceZeraSerial(SERIAL_DEVICE_ASYNCSERIAL);
-        break;
-    case SERIAL_DEVICE_TYPE_COUNT:
-        qCritical("Do not use SERIAL_DEVICE_TYPE_COUNT");
         break;
     }
     return IoDeviceBase::Ptr(device);

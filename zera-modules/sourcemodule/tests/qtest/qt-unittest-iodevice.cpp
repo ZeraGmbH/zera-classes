@@ -17,10 +17,8 @@ void IoDeviceTest::init()
 
 void IoDeviceTest::generateOutOfLimitsInterface()
 {
-    qputenv("QT_FATAL_CRITICALS", "0");
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_TYPE_COUNT);
-    qputenv("QT_FATAL_CRITICALS", "1");
-    QCOMPARE(ioDevice, nullptr);
+    QCOMPARE(SERIAL_DEVICE_BROKEN, ioDevice->getType());
 }
 
 void IoDeviceTest::generateTypeSet()
