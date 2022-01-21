@@ -71,11 +71,6 @@ void SourceDeviceManager::setDemoCount(int count)
     }
 }
 
-void SourceDeviceManager::setDemoFollowsTimeout(bool follow)
-{
-    m_bDemoDelayFollowsTimeout = follow;
-}
-
 void SourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
 {
     bool closeRequested = false;
@@ -141,7 +136,7 @@ void SourceDeviceManager::onScanFinished(SourceDeviceScanner::Ptr scanner)
     int freeSlot = findFreeSlot();
     if(sourceDeviceFound) {
         if(freeSlot >= 0) {
-            sourceDeviceFound->setDemoDelayFollowsTimeout(m_bDemoDelayFollowsTimeout);
+            sourceDeviceFound->setDemoDelayFollowsTimeout(true);
             addSource(freeSlot, sourceDeviceFound);
         }
         else {

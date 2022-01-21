@@ -19,7 +19,6 @@ public:
     void closeSource(int slotNo, const QUuid uuid);
     void closeSource(QString interfaceDeviceInfo, const QUuid uuid);
     void setDemoCount(int count);
-    void setDemoFollowsTimeout(bool follow);
 
     // getter
     int getSlotCount();
@@ -47,8 +46,6 @@ private:
     QVector<SourceDeviceVein*> m_sourceDeviceSlots;
     QVector<QUuid> m_PendingRemoveHashes;
     int m_activeSlotCount = 0;
-
-    bool m_bDemoDelayFollowsTimeout = false;
 };
 
 #endif // CSOURCEDEVICEMANAGER_H
