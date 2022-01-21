@@ -42,3 +42,9 @@ IoDeviceBase::Ptr createOpenDemoInterface()
     ioDevice->open(QString());
     return ioDevice;
 }
+
+void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs)
+{
+    IoDeviceDemo *demoDev = static_cast<IoDeviceDemo*>(ioDevice.get());
+    demoDev->setResponseDelay(false, timeoutMs);
+}

@@ -1,5 +1,4 @@
 #include "sourcedevice.h"
-#include "io-device/iodevicedemo.h"
 #include "json/jsonstructureloader.h"
 
 SourceDevice::SourceDevice(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version) :
@@ -27,7 +26,6 @@ SourceDevice::~SourceDevice()
 
 int SourceDevice::startTransaction(IoTransferDataGroup transferGroup)
 {
-    doDemoTransactionAdjustments(transferGroup);
     if(transferGroup.isSwitchGroup()) {
         emit sigSwitchTransationStartedQueued();
     }
@@ -37,12 +35,6 @@ int SourceDevice::startTransaction(IoTransferDataGroup transferGroup)
 void SourceDevice::simulateExternalDisconnect()
 {
     m_ioDevice->simulateExternalDisconnect();
-}
-
-void SourceDevice::setDemoResponseDelay(bool followsTimeout, int fixedMs)
-{
-    m_demoDelayFollowsTimeout = followsTimeout;
-    m_demoDelayFixedMs = fixedMs;
 }
 
 IoGroupGenerator SourceDevice::getIoGroupGenerator()
@@ -75,20 +67,7 @@ bool SourceDevice::isIoBusy() const
     return m_ioQueue.isIoBusy();
 }
 
-bool SourceDevice::isDemo() const
-{
-    return m_ioDevice->isDemo();
-}
-
 void SourceDevice::onIoGroupFinished(IoTransferDataGroup transferGroup)
 {
     notifyObservers(transferGroup);
-}
-
-void SourceDevice::doDemoTransactionAdjustments(const IoTransferDataGroup &transferGroup)
-{
-    if(isDemo()) {
-        IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(m_ioDevice.get());
-        demoIoDevice->setResponseDelay(m_demoDelayFollowsTimeout, m_demoDelayFixedMs);
-    }
 }

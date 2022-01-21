@@ -12,8 +12,6 @@ private slots:
     void init();
 
     void gettersOK();
-    void nonDemoInterFaceGet();
-    void demoInterFaceGet();
 
     void disconnectSignal();
 
