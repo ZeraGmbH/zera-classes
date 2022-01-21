@@ -12,8 +12,8 @@ void SourceDeviceSwitcherJsonTest::init()
 void SourceDeviceSwitcherJsonTest::signalSwitch()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    setDemoIoFixedTimeout(ioDevice, 0);
     SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
-    sourceDevice.setDemoResponseDelay(false, 0);
     SourceDeviceSwitcherJson switcher(&sourceDevice);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
@@ -30,8 +30,8 @@ void SourceDeviceSwitcherJsonTest::signalSwitch()
 void SourceDeviceSwitcherJsonTest::twoSignalsSwitchSameTwice()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    setDemoIoFixedTimeout(ioDevice, 0);
     SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
-    sourceDevice.setDemoResponseDelay(false, 0);
     SourceDeviceSwitcherJson switcher(&sourceDevice);
 
     JsonParamApi paramState = switcher.getCurrLoadState();

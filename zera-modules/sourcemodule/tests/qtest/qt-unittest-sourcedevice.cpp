@@ -29,20 +29,6 @@ void SourceDeviceTest::gettersOK()
     QCOMPARE(info, sourceDevice.getInterfaceInfo());
 }
 
-void SourceDeviceTest::nonDemoInterFaceGet()
-{
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
-    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
-    QVERIFY(!sourceDevice.isDemo());
-}
-
-void SourceDeviceTest::demoInterFaceGet()
-{
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
-    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
-    QVERIFY(sourceDevice.isDemo());
-}
-
 void SourceDeviceTest::disconnectSignal()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
@@ -124,8 +110,8 @@ void SourceDeviceTest::observerReceiveId()
 void SourceDeviceTest::busySignalOnSwitch()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    setDemoIoFixedTimeout(ioDevice, 1);
     SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
-    sourceDevice.setDemoResponseDelay(false, 1);
 
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(SOURCE_MT_COMMON, "", "");
     IoGroupGenerator ioGroupGen = IoGroupGenerator(paramStructure);

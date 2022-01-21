@@ -25,7 +25,7 @@ void SourceDeviceStatusWatcherJsonTest::init()
 
 void SourceDeviceStatusWatcherJsonTest::statusPollAutoStart()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 0);
+    setDemoIoFixedTimeout(m_ioDevice, 0);
 
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
     stateWatcher.setPollTime(0);
@@ -40,7 +40,7 @@ void SourceDeviceStatusWatcherJsonTest::statusPollAutoStart()
 
 void SourceDeviceStatusWatcherJsonTest::statusPollChangeTime()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 0);
+    setDemoIoFixedTimeout(m_ioDevice, 0);
 
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
     stateWatcher.setPollTime(10);
@@ -57,7 +57,7 @@ void SourceDeviceStatusWatcherJsonTest::statusPollChangeTime()
 
 void SourceDeviceStatusWatcherJsonTest::initialBusyIdle()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 0);
+    setDemoIoFixedTimeout(m_ioDevice, 0);
 
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
     stateWatcher.setPollTime(0);
@@ -75,7 +75,7 @@ void SourceDeviceStatusWatcherJsonTest::initialBusyIdle()
 
 void SourceDeviceStatusWatcherJsonTest::busyOnCausesBusyOnOffState()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 0);
+    setDemoIoFixedTimeout(m_ioDevice, 0);
 
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
     stateWatcher.setPollTime(0);
@@ -99,7 +99,7 @@ void SourceDeviceStatusWatcherJsonTest::busyOnCausesBusyOnOffState()
 
 void SourceDeviceStatusWatcherJsonTest::busyOnOffCausesBusyTwoOnOffState()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 0);
+    setDemoIoFixedTimeout(m_ioDevice, 0);
 
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
     stateWatcher.setPollTime(0);
@@ -128,7 +128,7 @@ void SourceDeviceStatusWatcherJsonTest::busyOnOffCausesBusyTwoOnOffState()
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollSwitchErrorOnSwitch()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 1);
+    setDemoIoFixedTimeout(m_ioDevice, 1);
 
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
     stateWatcher.setPollTime(0);
@@ -153,7 +153,7 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollSwitchErrorOnSwitch()
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollSwitchErrorOnPoll()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 1);
+    setDemoIoFixedTimeout(m_ioDevice, 1);
 
     m_sourceDevice->setDemoResonseError(true);
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
@@ -179,7 +179,7 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollSwitchErrorOnPoll()
 
 void SourceDeviceStatusWatcherJsonTest::sequenceSwitchPollErrorOnSwitch()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 1);
+    setDemoIoFixedTimeout(m_ioDevice, 1);
 
     m_sourceDevice->setDemoResonseError(true);
     SourceDeviceSwitcherJson switcher(m_sourceDevice);
@@ -204,7 +204,7 @@ void SourceDeviceStatusWatcherJsonTest::sequenceSwitchPollErrorOnSwitch()
 
 void SourceDeviceStatusWatcherJsonTest::sequenceSwitchPollErrorOnPoll()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 1);
+    setDemoIoFixedTimeout(m_ioDevice, 1);
 
     SourceDeviceSwitcherJson switcher(m_sourceDevice);
     JsonParamApi jsonParam = switcher.getCurrLoadState();
@@ -229,7 +229,7 @@ void SourceDeviceStatusWatcherJsonTest::sequenceSwitchPollErrorOnPoll()
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollSwitchErrorOnBoth()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 1);
+    setDemoIoFixedTimeout(m_ioDevice, 1);
     m_sourceDevice->setDemoResonseError(true);
 
     SourceDeviceStatusWatcherJson stateWatcher(m_sourceDevice);
@@ -254,7 +254,7 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollSwitchErrorOnBoth()
 
 void SourceDeviceStatusWatcherJsonTest::sequenceSwitchPollErrorOnBoth()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 1);
+    setDemoIoFixedTimeout(m_ioDevice, 1);
     m_sourceDevice->setDemoResonseError(true);
 
     SourceDeviceSwitcherJson switcher(m_sourceDevice);
@@ -278,7 +278,7 @@ void SourceDeviceStatusWatcherJsonTest::sequenceSwitchPollErrorOnBoth()
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnError()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 0);
+    setDemoIoFixedTimeout(m_ioDevice, 0);
     m_sourceDevice->setDemoResonseError(true);
 
     SourceDeviceSwitcherJson switcher(m_sourceDevice);
@@ -307,7 +307,7 @@ void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnError()
 
 void SourceDeviceStatusWatcherJsonTest::sequencePollStopsOnErrorAndStartsOnSwitch()
 {
-    m_sourceDevice->setDemoResponseDelay(false, 1);
+    setDemoIoFixedTimeout(m_ioDevice, 1);
     m_sourceDevice->setDemoResonseError(true);
 
     SourceDeviceSwitcherJson switcher(m_sourceDevice);

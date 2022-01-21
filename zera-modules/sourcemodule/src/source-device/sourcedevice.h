@@ -24,9 +24,6 @@ public:
     virtual int startTransaction(IoTransferDataGroup transferGroup);
     void simulateExternalDisconnect();
 
-    // setter
-    void setDemoResponseDelay(bool followsTimeout, int fixedMs);
-
     // getter
     IoGroupGenerator getIoGroupGenerator();
     SupportedSourceTypes getType() const;
@@ -34,7 +31,6 @@ public:
     QString getVersion() const;
     QString getInterfaceInfo() const;
     bool isIoBusy() const;
-    bool isDemo() const;
 
 signals:
     void sigSwitchTransationStarted();
@@ -49,8 +45,6 @@ signals:
 protected:
 
 private:
-    void doDemoTransactionAdjustments(const IoTransferDataGroup &transferGroup);
-
     IoDeviceBase::Ptr m_ioDevice;
     IoQueue m_ioQueue;
 
@@ -59,9 +53,6 @@ private:
     SupportedSourceTypes m_type;
     QString m_name;
     QString m_version;
-
-    bool m_demoDelayFollowsTimeout = false;
-    int m_demoDelayFixedMs = 0;
 };
 
 #endif // SOURCEDEVICE_H
