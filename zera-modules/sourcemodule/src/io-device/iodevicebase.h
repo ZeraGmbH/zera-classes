@@ -26,8 +26,8 @@ public:
     virtual void simulateExternalDisconnect() {}
 
     QString getDeviceInfo();
-    IoDeviceTypes type() { return m_type; }
-    bool isDemo() { return type() == SERIAL_DEVICE_DEMO; }
+    IoDeviceTypes getType() { return m_type; }
+    bool isDemo() { return m_type == SERIAL_DEVICE_DEMO; }
 
 signals:
     void sigDisconnected();

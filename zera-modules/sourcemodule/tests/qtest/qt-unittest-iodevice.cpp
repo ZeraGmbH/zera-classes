@@ -27,7 +27,7 @@ void IoDeviceTest::generateTypeSet()
 {
     for(int type = 0; type<SERIAL_DEVICE_TYPE_COUNT; type++) {
         IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes(type));
-        QCOMPARE(IoDeviceTypes(type), ioDevice->type());
+        QCOMPARE(IoDeviceTypes(type), ioDevice->getType());
     }
 }
 
