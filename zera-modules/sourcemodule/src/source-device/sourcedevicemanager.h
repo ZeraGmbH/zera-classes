@@ -34,7 +34,7 @@ signals:
     void sigSlotRemoved(int slotNo, QUuid uuid, QString errMsg);
 
 private slots:
-    void onScanFinished(tSourceScannerShPtr scanner);
+    void onScanFinished(SourceScanner::Ptr scanner);
     void onSourceClosed(SourceDeviceVein *sourceDevice, QUuid uuid);
 
 signals:

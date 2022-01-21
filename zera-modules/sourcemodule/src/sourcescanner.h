@@ -12,15 +12,12 @@
 
 class IoDeviceBrokenDummy;
 
-class SourceDeviceVein;
-class SourceScanner;
-typedef QSharedPointer<SourceScanner> tSourceScannerShPtr;
-
 class SourceScanner : public QObject
 {
     Q_OBJECT
 public:
-    static tSourceScannerShPtr createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
+    typedef QSharedPointer<SourceScanner> Ptr;
+    static Ptr createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
     virtual ~SourceScanner();
 
     // requests
@@ -31,7 +28,7 @@ public:
     QUuid getUuid();
     static int getInstanceCount();
 signals:
-    void sigScanFinished(tSourceScannerShPtr scanner);
+    void sigScanFinished(SourceScanner::Ptr scanner);
 
 private slots:
     void onIoFinished(int ioId, bool ioDeviceError);
@@ -50,7 +47,7 @@ private:
     SourceDeviceVein* m_sourceDeviceFound = nullptr;
     IoTransferDataSingle::Ptr m_ioDataSingle = nullptr;
     int m_currentSourceTested = 0;
-    tSourceScannerShPtr m_safePoinerOnThis;
+    SourceScanner::Ptr m_safePoinerOnThis;
     static int m_InstanceCount;
 };
 
