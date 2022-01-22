@@ -5,11 +5,7 @@ SourceDeviceSwitcherJson::SourceDeviceSwitcherJson(SourceDevice *sourceDevice) :
     SourceDeviceObserver(sourceDevice),
     m_sourceDevice(sourceDevice)
 {
-    SupportedSourceTypes type = sourceDevice->getType();
-    QString name = sourceDevice->getName();
-    QString version = sourceDevice->getVersion();
-
-    m_persistentParamState = new PersistentJsonState(type, name, version);
+    m_persistentParamState = new PersistentJsonState(sourceDevice->getProperties());
     m_paramsCurrent = m_persistentParamState->loadJsonState();
     m_paramsRequested = m_paramsCurrent;
 }

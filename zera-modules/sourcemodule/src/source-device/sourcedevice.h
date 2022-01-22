@@ -2,7 +2,8 @@
 #define SOURCEDEVICE_H
 
 #include "sourcedevicesubject.h"
-#include "source-device/supportedsources.h"
+#include "supportedsources.h"
+#include "sourceproperties.h"
 #include "source-protocols/iogroupgenerator.h"
 #include "io-queue/ioqueue.h"
 
@@ -18,7 +19,7 @@ class SourceDevice : public SourceDeviceSubject
 {
     Q_OBJECT
 public:
-    SourceDevice(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
+    SourceDevice(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties);
     ~SourceDevice();
     typedef QSharedPointer<SourceDevice> Ptr;
 
@@ -28,11 +29,9 @@ public:
 
     // getter
     IoGroupGenerator getIoGroupGenerator();
-    SupportedSourceTypes getType() const;
-    QString getName() const;
-    QString getVersion() const;
-    QString getInterfaceInfo() const;
     bool isIoBusy() const;
+    QString getInterfaceInfo() const;
+    SourceProperties getProperties() const;
 
 signals:
     void sigSwitchTransationStarted();
@@ -52,9 +51,7 @@ private:
 
     IoGroupGenerator m_ioGroupGenerator;
 
-    SupportedSourceTypes m_type;
-    QString m_name;
-    QString m_version;
+    SourceProperties m_sourceProperties;
 };
 
 #endif // SOURCEDEVICE_H

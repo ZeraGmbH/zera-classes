@@ -5,14 +5,12 @@
 
 PersistentJsonState::PersistentJsonState(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
 {
-    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, deviceVersion);
-    if(deviceName.isEmpty()) {
-        JsonStructApi structApi(paramStructure);
-        deviceName = structApi.getDeviceName();
-    }
-    m_stateFileName = JsonFilenames::getJsonStatePath(deviceName, deviceVersion);
-    m_jsonStatePersistenceHelper.setStateFilePath(m_stateFileName);
-    m_jsonStatePersistenceHelper.setJsonParamStructure(paramStructure);
+    init(type, deviceName, deviceVersion);
+}
+
+PersistentJsonState::PersistentJsonState(SourceProperties properties)
+{
+    init(properties.getType(), properties.getName(), properties.getVersion());
 }
 
 QJsonObject PersistentJsonState::getJsonStructure() const
@@ -36,5 +34,17 @@ void PersistentJsonState::saveJsonState(JsonParamApi state)
     if(!m_jsonStatePersistenceHelper.saveState(state.getParams())) {
         qWarning("Default state file %s could not be written", qPrintable(m_stateFileName));
     }
+}
+
+void PersistentJsonState::init(SupportedSourceTypes type, QString deviceName, QString deviceVersion)
+{
+    QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(type, deviceName, deviceVersion);
+    if(deviceName.isEmpty()) {
+        JsonStructApi structApi(paramStructure);
+        deviceName = structApi.getDeviceName();
+    }
+    m_stateFileName = JsonFilenames::getJsonStatePath(deviceName, deviceVersion);
+    m_jsonStatePersistenceHelper.setStateFilePath(m_stateFileName);
+    m_jsonStatePersistenceHelper.setJsonParamStructure(paramStructure);
 }
 
