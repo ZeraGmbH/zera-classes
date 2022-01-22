@@ -32,6 +32,8 @@ private slots:
     void onDeviceFileGone(QString);
 private:
     void setReadTimeoutNextIoSerial(int iMsReceiveFirst, int iMsBetweenTwoBytes, int iMsMinTotal = 0);
+    void setReadTimeout();
+    void setBlockEndCriteria();
     void _close();
 
     QSerialPortAsyncBlock m_serialIO;
