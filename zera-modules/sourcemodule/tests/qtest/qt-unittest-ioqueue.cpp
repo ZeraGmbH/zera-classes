@@ -36,7 +36,7 @@ void IoQueueTest::emptyGroupNotBusy()
 
 void IoQueueTest::notOpenIoDeviceNotBusy()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     IoTransferDataGroup workGroup = generateSwitchCommands(false);
     IoQueue queue;
     queue.setIoDevice(ioDevice);
@@ -69,7 +69,7 @@ void IoQueueTest::noIoDeviceNotification()
 
 void IoQueueTest::notOpenIoDeviceNotifications()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     IoQueue queue;
     IoTransferDataGroup workGroup = generateSwitchCommands(true);
     queue.setIoDevice(ioDevice);

@@ -18,12 +18,12 @@ void IoDeviceTest::init()
 void IoDeviceTest::generateBrokenIoDeviceForOutOfLimitType()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes(-1));
-    QCOMPARE(SERIAL_DEVICE_BROKEN, ioDevice->getType());
+    QCOMPARE(IoDeviceTypes::BROKEN, ioDevice->getType());
 }
 
 void IoDeviceTest::generateTypeSet()
 {
-    for(int type = 0; type<SERIAL_DEVICE_TYPE_COUNT; type++) {
+    for(int type = 0; type<int(IoDeviceTypes::TYPE_COUNT); type++) {
         IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes(type));
         QCOMPARE(IoDeviceTypes(type), ioDevice->getType());
     }
@@ -41,25 +41,25 @@ void IoDeviceTest::onIoFinish(int ioID, bool error)
 
 void IoDeviceTest::baseReturnsIds()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     checkIds(ioDevice);
 }
 
 void IoDeviceTest::demoReturnsIds()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     checkIds(ioDevice);
 }
 
 void IoDeviceTest::serialReturnsIds()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_ASYNCSERIAL);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::ASYNCSERIAL);
     checkIds(ioDevice);
 }
 
 void IoDeviceTest::baseCannotOpen()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open("/dev/base/foo");
     QCOMPARE(ioDevice->isOpen(), false);
     QVERIFY(ioDevice->getDeviceInfo().isEmpty());
@@ -67,7 +67,7 @@ void IoDeviceTest::baseCannotOpen()
 
 void IoDeviceTest::demoCanOpen()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     QString strBefore = "/dev/demo/foo";
     ioDevice->open(strBefore);
     QCOMPARE(ioDevice->isOpen(), true);
@@ -76,7 +76,7 @@ void IoDeviceTest::demoCanOpen()
 
 void IoDeviceTest::serialCannotOpen()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_ASYNCSERIAL);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::ASYNCSERIAL);
     ioDevice->open("/dev/serial/foo");
     QCOMPARE(ioDevice->isOpen(), false);
     QVERIFY(ioDevice->getDeviceInfo().isEmpty());
@@ -84,14 +84,14 @@ void IoDeviceTest::serialCannotOpen()
 
 void IoDeviceTest::baseReportsErrorClose()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     QVERIFY(!ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 1);
 }
 
 void IoDeviceTest::baseReportsErrorOpen()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open(QString());
     QVERIFY(!ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 1);
@@ -99,14 +99,14 @@ void IoDeviceTest::baseReportsErrorOpen()
 
 void IoDeviceTest::demoReportsErrorClose()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     QVERIFY(!ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 1);
 }
 
 void IoDeviceTest::demoReportsNoErrorOpen()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     ioDevice->open(QString());
     QVERIFY(ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 0);
@@ -114,14 +114,14 @@ void IoDeviceTest::demoReportsNoErrorOpen()
 
 void IoDeviceTest::serialReportsErrorClose()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_ASYNCSERIAL);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::ASYNCSERIAL);
     QVERIFY(!ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 1);
 }
 
 void IoDeviceTest::demoDelayNotOpen()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
     demoIoDevice->setResponseDelay(false, 5000);
     checkNotifications(ioDevice, 1, 1);
@@ -252,7 +252,7 @@ void IoDeviceTest::demoDelayFollowsTimeout()
 
 void IoDeviceTest::baseCannotClose()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_BROKEN);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open("");
 
     int countDiconnectReceived = 0;

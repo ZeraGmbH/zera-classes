@@ -19,7 +19,7 @@ void SourceDeviceTest::gettersOK()
     SupportedSourceTypes type = SOURCE_MT_COMMON;
     QString info = "fooInfo";
 
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     ioDevice->open(info);
 
     SourceDevice sourceDevice(ioDevice, type, name, version);

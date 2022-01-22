@@ -1,13 +1,20 @@
 #ifndef IODEVICETYPES_H
 #define IODEVICETYPES_H
 
-enum IoDeviceTypes
+enum class IoDeviceTypes
 {
-    SERIAL_DEVICE_BROKEN,
-    SERIAL_DEVICE_DEMO,
-    SERIAL_DEVICE_ASYNCSERIAL,
+    BROKEN,
+    DEMO,
+    ASYNCSERIAL,
 
-    SERIAL_DEVICE_TYPE_COUNT
+    TYPE_COUNT
+};
+
+class IoDeviceTypeQuery
+{
+public:
+    static bool isDemo(IoDeviceTypes type) { return type == IoDeviceTypes::DEMO; }
+    static bool isAsyncSerial(IoDeviceTypes type) { return type == IoDeviceTypes::ASYNCSERIAL; }
 };
 
 #endif // IODEVICETYPES_H
