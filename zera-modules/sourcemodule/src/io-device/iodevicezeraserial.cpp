@@ -53,22 +53,8 @@ int IoDeviceZeraSerial::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
     prepareSendAndReceive(ioTransferData);
     if(m_serialIO.isOpen()) {
-        // set read timeout
-        const TTimeoutParam* timeoutParam = &defaultTimeoutParam;
-        if(nextTimeoutWasSet) {
-            timeoutParam = &nextTimeoutParam;
-            nextTimeoutWasSet = false;
-        }
-        m_serialIO.setReadTimeout(timeoutParam->iMsReceiveFirst, timeoutParam->iMsBetweenTwoBytes, timeoutParam->iMsMinTotal);
-        // block end criteria
-        const TBlockEndCriteria* endCriteria = &defaultBlockEndCriteria;
-        if(nextBlockEndCriteriaWasSet) {
-            endCriteria = &nextBlockEndCriteria;
-            nextBlockEndCriteriaWasSet = false;
-        }
-        m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
-
-        // try io
+        setReadTimeout();
+        setBlockEndCriteria();
         m_serialIO.sendAndReceive(ioTransferData->getByesSend(), &m_dataReceived);
     }
     if(!m_serialIO.isIOPending()) {
@@ -83,6 +69,26 @@ void IoDeviceZeraSerial::setReadTimeoutNextIoSerial(int iMsReceiveFirst, int iMs
     nextTimeoutParam.iMsBetweenTwoBytes = iMsBetweenTwoBytes;
     nextTimeoutParam.iMsMinTotal = iMsMinTotal;
     nextTimeoutWasSet = true;
+}
+
+void IoDeviceZeraSerial::setReadTimeout()
+{
+    const TTimeoutParam* timeoutParam = &defaultTimeoutParam;
+    if(nextTimeoutWasSet) {
+        timeoutParam = &nextTimeoutParam;
+        nextTimeoutWasSet = false;
+    }
+    m_serialIO.setReadTimeout(timeoutParam->iMsReceiveFirst, timeoutParam->iMsBetweenTwoBytes, timeoutParam->iMsMinTotal);
+}
+
+void IoDeviceZeraSerial::setBlockEndCriteria()
+{
+    const TBlockEndCriteria* endCriteria = &defaultBlockEndCriteria;
+    if(nextBlockEndCriteriaWasSet) {
+        endCriteria = &nextBlockEndCriteria;
+        nextBlockEndCriteriaWasSet = false;
+    }
+    m_serialIO.setBlockEndCriteria(endCriteria->iBlockLenReceive, endCriteria->endBlock);
 }
 
 void IoDeviceZeraSerial::setBlockEndCriteriaNextIo(int iBlockLenReceive, QByteArray endBlock)
