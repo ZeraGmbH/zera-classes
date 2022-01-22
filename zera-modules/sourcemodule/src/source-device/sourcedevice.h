@@ -19,6 +19,7 @@ class SourceDevice : public SourceDeviceSubject
 public:
     SourceDevice(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
     ~SourceDevice();
+    typedef QSharedPointer<SourceDevice> Ptr;
 
     // requests
     virtual int startTransaction(IoTransferDataGroup transferGroup);
