@@ -1,8 +1,8 @@
 #ifndef PERSISTENTJSONSTATE_H
 #define PERSISTENTJSONSTATE_H
 
-#include "supportedsources.h"
 #include "jsonparamapi.h"
+#include "source-device/supportedsources.h"
 #include <jsonstatefilepersistence.h>
 
 class PersistentJsonState

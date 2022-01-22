@@ -3,6 +3,7 @@
 #include "io-device/iodevicefactory.h"
 #include "io-device/iodevicedemo.h"
 #include "io-device/iotransferdatasinglefactory.h"
+#include "source-protocols/iogroupgenerator.h"
 
 static QObject* pIoQueueTest = addTest(new IoQueueTest);
 

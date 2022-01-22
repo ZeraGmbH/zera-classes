@@ -1,8 +1,8 @@
 #ifndef SOURCEDEVICEBASE_H
 #define SOURCEDEVICEBASE_H
 
-#include "supportedsources.h"
-#include "io-queue/iogroupgenerator.h"
+#include "source-device/supportedsources.h"
+#include "source-protocols/iogroupgenerator.h"
 #include "io-queue/ioqueue.h"
 #include "io-ids/ioidkeeper.h"
 

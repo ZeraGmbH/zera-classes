@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 #include <zera-json-params-state.h>
-#include "supportedsources.h"
+#include "source-device/supportedsources.h"
 #include "json/jsonstructapi.h"
 #include "json/jsonparamapi.h"
 #include "json/jsonstructureloader.h"
