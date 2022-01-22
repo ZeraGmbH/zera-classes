@@ -27,7 +27,7 @@ public:
 
     QString getDeviceInfo();
     IoDeviceTypes getType() { return m_type; }
-    bool isDemo() { return m_type == SERIAL_DEVICE_DEMO; }
+    bool isDemo() { return IoDeviceTypeQuery::isDemo(m_type); }
 
 signals:
     void sigDisconnected();

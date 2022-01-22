@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 
 IoDeviceBase::Ptr createOpenDemoInterface()
 {
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(SERIAL_DEVICE_DEMO);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     ioDevice->open(QString());
     return ioDevice;
 }

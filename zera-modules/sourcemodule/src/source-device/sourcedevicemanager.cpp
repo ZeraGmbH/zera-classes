@@ -47,7 +47,7 @@ void SourceDeviceManager::setDemoCount(int count)
     int demoDiff = count - getDemoCount();
     if(demoDiff > 0) { // add
         while(demoDiff && m_activeSlotCount < getSlotCount()) {
-            startSourceScan(SERIAL_DEVICE_DEMO, "Demo", QUuid::createUuid());
+            startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
             demoDiff--;
         }
     }

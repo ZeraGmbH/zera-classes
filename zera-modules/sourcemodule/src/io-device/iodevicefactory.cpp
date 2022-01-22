@@ -8,13 +8,13 @@ IoDeviceBase::Ptr IoDeviceFactory::createIoDevice(IoDeviceTypes type)
     IoDeviceBase* device = nullptr;
     switch (type) {
     default:
-        device = new IoDeviceBrokenDummy(SERIAL_DEVICE_BROKEN);
+        device = new IoDeviceBrokenDummy(IoDeviceTypes::BROKEN);
         break;
-    case SERIAL_DEVICE_DEMO:
-        device = new IoDeviceDemo(SERIAL_DEVICE_DEMO);
+    case IoDeviceTypes::DEMO:
+        device = new IoDeviceDemo(IoDeviceTypes::DEMO);
         break;
-    case SERIAL_DEVICE_ASYNCSERIAL:
-        device = new IoDeviceZeraSerial(SERIAL_DEVICE_ASYNCSERIAL);
+    case IoDeviceTypes::ASYNCSERIAL:
+        device = new IoDeviceZeraSerial(IoDeviceTypes::ASYNCSERIAL);
         break;
     }
     return IoDeviceBase::Ptr(device);
