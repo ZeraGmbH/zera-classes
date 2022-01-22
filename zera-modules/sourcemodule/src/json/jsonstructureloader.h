@@ -1,9 +1,9 @@
 #ifndef JSONSTRUCTURELOADER_H
 #define JSONSTRUCTURELOADER_H
 
+#include "source-device/supportedsources.h"
 #include <QString>
 #include <QJsonObject>
-#include "supportedsources.h"
 
 class JsonStructureLoader
 {

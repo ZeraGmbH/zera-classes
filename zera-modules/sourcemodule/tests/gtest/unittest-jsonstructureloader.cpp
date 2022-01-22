@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <QFile>
 #include <zera-json-params-structure.h>
-#include "supportedsources.h"
+#include "source-device/supportedsources.h"
 #include "json/jsonstructureloader.h"
 
 TEST(TEST_JSON_STRUCTURE_LOADER, TYPES_ALL_STRUCTURES_LOADED) {

@@ -36,6 +36,7 @@ file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/json/*.cpp
     ${PROJECT_SOURCE_DIR}/src/module/*.cpp
     ${PROJECT_SOURCE_DIR}/src/source-device/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/source-protocols/*.cpp
     )
 
 file(GLOB HEADER
@@ -46,6 +47,7 @@ file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/json/*.h
     ${PROJECT_SOURCE_DIR}/src/module/*.h
     ${PROJECT_SOURCE_DIR}/src/source-device/*.h
+    ${PROJECT_SOURCE_DIR}/src/source-protocols/*.h
     )
 
 file(GLOB RESOURCES 

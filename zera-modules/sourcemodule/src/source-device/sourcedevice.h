@@ -2,7 +2,8 @@
 #define SOURCEDEVICE_H
 
 #include "sourcedevicesubject.h"
-#include "supportedsources.h"
+#include "source-device/supportedsources.h"
+#include "source-protocols/iogroupgenerator.h"
 #include "io-queue/ioqueue.h"
 
 #include <QObject>

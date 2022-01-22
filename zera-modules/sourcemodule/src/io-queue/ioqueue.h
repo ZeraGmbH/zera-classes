@@ -3,7 +3,6 @@
 
 #include <QObject>
 #include <QSharedPointer>
-#include "iogroupgenerator.h"
 #include "io-device/iodevicebase.h"
 #include "io-device/iotransferdatagroup.h"
 #include "io-ids/ioidkeeper.h"
