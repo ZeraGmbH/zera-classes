@@ -22,17 +22,20 @@ void SourceDeviceTest::gettersOK()
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     ioDevice->open(info);
 
-    SourceDevice sourceDevice(ioDevice, type, name, version);
-    QCOMPARE(type, sourceDevice.getType());
-    QCOMPARE(name, sourceDevice.getName());
-    QCOMPARE(version, sourceDevice.getVersion());
+    SourceProperties sourceProperties(SOURCE_MT_COMMON, name, version);
+    SourceDevice sourceDevice(ioDevice, sourceProperties);
+
+    QCOMPARE(type, sourceDevice.getProperties().getType());
+    QCOMPARE(name, sourceDevice.getProperties().getName());
+    QCOMPARE(version, sourceDevice.getProperties().getVersion());
     QCOMPARE(info, sourceDevice.getInterfaceInfo());
 }
 
 void SourceDeviceTest::disconnectSignal()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
-    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
+    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
+    SourceDevice sourceDevice(ioDevice, sourceProperties);
 
     int countDisconnectReceived = 0;
     connect(&sourceDevice, &SourceDevice::sigInterfaceDisconnected, [&] {
@@ -54,7 +57,8 @@ static IoTransferDataGroup createWorkingIoGroup(SourceDevice *source)
 void SourceDeviceTest::multipleCmdsDifferentIds()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
-    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
+    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
+    SourceDevice sourceDevice(ioDevice, sourceProperties);
 
     int id1 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
     int id2 = sourceDevice.startTransaction(createWorkingIoGroup(&sourceDevice));
@@ -76,7 +80,8 @@ protected:
 void SourceDeviceTest::observerReceiveCount()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
-    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
+    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
+    SourceDevice sourceDevice(ioDevice, sourceProperties);
 
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
@@ -91,7 +96,8 @@ void SourceDeviceTest::observerReceiveCount()
 void SourceDeviceTest::observerReceiveId()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
-    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
+    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
+    SourceDevice sourceDevice(ioDevice, sourceProperties);
 
     TestObserver testObserver1(&sourceDevice);
     TestObserver testObserver2(&sourceDevice);
@@ -111,7 +117,8 @@ void SourceDeviceTest::busySignalOnSwitch()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
     setDemoIoFixedTimeout(ioDevice, 1);
-    SourceDevice sourceDevice(ioDevice, SOURCE_MT_COMMON, "", "");
+    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
+    SourceDevice sourceDevice(ioDevice, sourceProperties);
 
     QJsonObject paramStructure = JsonStructureLoader::loadJsonStructure(SOURCE_MT_COMMON, "", "");
     IoGroupGenerator ioGroupGen = IoGroupGenerator(paramStructure);

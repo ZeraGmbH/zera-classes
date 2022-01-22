@@ -1,12 +1,10 @@
 #include "sourcedevice.h"
 #include "json/jsonstructureloader.h"
 
-SourceDevice::SourceDevice(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version) :
+SourceDevice::SourceDevice(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties) :
     m_ioDevice(ioDevice),
-    m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(type, name, version)),
-    m_type(type),
-    m_name(name),
-    m_version(version)
+    m_ioGroupGenerator(JsonStructureLoader::loadJsonStructure(sourceProperties)),
+    m_sourceProperties(sourceProperties)
 {
     m_ioQueue.setIoDevice(ioDevice);
 
@@ -42,24 +40,14 @@ IoGroupGenerator SourceDevice::getIoGroupGenerator()
     return m_ioGroupGenerator;
 }
 
-SupportedSourceTypes SourceDevice::getType() const
-{
-    return m_type;
-}
-
-QString SourceDevice::getName() const
-{
-    return m_name;
-}
-
-QString SourceDevice::getVersion() const
-{
-    return m_version;
-}
-
 QString SourceDevice::getInterfaceInfo() const
 {
     return m_ioDevice->getDeviceInfo();
+}
+
+SourceProperties SourceDevice::getProperties() const
+{
+    return m_sourceProperties;
 }
 
 bool SourceDevice::isIoBusy() const

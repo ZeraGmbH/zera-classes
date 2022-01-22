@@ -21,6 +21,11 @@ QJsonObject JsonStructureLoader::loadJsonStructure(SupportedSourceTypes type, QS
     return structureApi.getParamStructure();
 }
 
+QJsonObject JsonStructureLoader::loadJsonStructure(SourceProperties properties)
+{
+    return loadJsonStructure(properties.getType(), properties.getName(), properties.getVersion());
+}
+
 QJsonObject JsonStructureLoader::loadJsonStructureFromFile(QString fileName)
 {
     QJsonObject jsonStructureRaw = cJsonFileLoader::loadJsonFile(fileName);
