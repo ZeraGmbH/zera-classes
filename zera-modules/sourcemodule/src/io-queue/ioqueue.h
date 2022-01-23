@@ -30,6 +30,8 @@ signals:
 private:
     IoTransferDataGroup *getCurrentGroup();
     IoTransferDataSingle::Ptr getNextIoTransfer();
+    void connectIoDevice();
+    void disconnectIoDevice();
     void tryStartNextIo();
     void finishGroup(IoTransferDataGroup transferGroupToFinish);
     void finishCurrentGroup();
