@@ -8,19 +8,13 @@ IoQueue::IoQueue(QObject *parent) : QObject(parent)
 
 void IoQueue::setIoDevice(IoDeviceBase::Ptr ioDevice)
 {
-    m_ioDevice = ioDevice;
-    if(ioDevice) {
-        connect(m_ioDevice.get(), &IoDeviceBase::sigIoFinished,
-                this, &IoQueue::onIoFinished);
-        connect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
-                this, &IoQueue::onIoDisconnected);
-    }
-    else if(m_ioDevice){
-        disconnect(m_ioDevice.get(), &IoDeviceBase::sigIoFinished,
-                   this, &IoQueue::onIoFinished);
-        disconnect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
-                this, &IoQueue::onIoDisconnected);
+    if(m_ioDevice){
+        disconnectIoDevice();
         m_ioDevice = nullptr;
+    }
+    if(ioDevice) {
+        m_ioDevice = ioDevice;
+        connectIoDevice();
     }
 }
 
@@ -94,6 +88,22 @@ IoTransferDataSingle::Ptr IoQueue::getNextIoTransfer()
         }
     }
     return nextIo;
+}
+
+void IoQueue::connectIoDevice()
+{
+    connect(m_ioDevice.get(), &IoDeviceBase::sigIoFinished,
+            this, &IoQueue::onIoFinished);
+    connect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
+            this, &IoQueue::onIoDisconnected);
+}
+
+void IoQueue::disconnectIoDevice()
+{
+    disconnect(m_ioDevice.get(), &IoDeviceBase::sigIoFinished,
+               this, &IoQueue::onIoFinished);
+    disconnect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
+            this, &IoQueue::onIoDisconnected);
 }
 
 void IoQueue::finishCurrentGroup()
