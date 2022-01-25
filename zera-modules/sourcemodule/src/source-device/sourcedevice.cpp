@@ -10,9 +10,6 @@ SourceDevice::SourceDevice(IoDeviceBase::Ptr ioDevice, SourceProperties sourcePr
 
     connect(&m_ioQueue, &IoQueue::sigTransferGroupFinished,
             this, &SourceDevice::onIoGroupFinished);
-    connect(this, &SourceDevice::sigSwitchTransationStartedQueued,
-            this, &SourceDevice::sigSwitchTransationStarted,
-            Qt::QueuedConnection);
     connect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
             this, &SourceDevice::sigInterfaceDisconnected,
             Qt::QueuedConnection);
@@ -22,12 +19,10 @@ SourceDevice::~SourceDevice()
 {
 }
 
-int SourceDevice::startTransaction(IoTransferDataGroup transferGroup)
+int SourceDevice::startTransaction(IoTransferDataGroup::Ptr transferGroup)
 {
-    if(transferGroup.isSwitchGroup()) {
-        emit sigSwitchTransationStartedQueued();
-    }
-    return m_ioQueue.enqueueTransferGroup(transferGroup);
+    m_ioQueue.enqueueTransferGroup(transferGroup);
+    return transferGroup->getGroupId();
 }
 
 void SourceDevice::simulateExternalDisconnect()
@@ -35,14 +30,9 @@ void SourceDevice::simulateExternalDisconnect()
     m_ioDevice->simulateExternalDisconnect();
 }
 
-IoGroupGenerator SourceDevice::getIoGroupGenerator()
+IoGroupGenerator SourceDevice::getIoGroupGenerator() const
 {
     return m_ioGroupGenerator;
-}
-
-QString SourceDevice::getInterfaceInfo() const
-{
-    return m_ioDevice->getDeviceInfo();
 }
 
 SourceProperties SourceDevice::getProperties() const
@@ -50,12 +40,7 @@ SourceProperties SourceDevice::getProperties() const
     return m_sourceProperties;
 }
 
-bool SourceDevice::isIoBusy() const
+void SourceDevice::onIoGroupFinished(IoTransferDataGroup::Ptr transferGroup)
 {
-    return m_ioQueue.isIoBusy();
-}
-
-void SourceDevice::onIoGroupFinished(IoTransferDataGroup transferGroup)
-{
-    notifyObservers(transferGroup);
+    emit sigResponseReceived(transferGroup);
 }

@@ -7,7 +7,6 @@
 class SourceProperties
 {
 public:
-    SourceProperties();
     SourceProperties(SupportedSourceTypes type, QString name, QString version);
 
     SupportedSourceTypes getType() const;

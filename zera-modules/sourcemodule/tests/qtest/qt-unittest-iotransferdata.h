@@ -28,25 +28,9 @@ private slots:
     void singleCheckUsedWrongAnswer();
     void singleCheckUsedPass();
 
-    void groupEmptyInvalid();
     void groupIdsCreated();
 
-    void groupEqual();
-    void groupUnequal();
-    void groupSignalSlotDirect();
-    void groupSignalSlotQueues();
-
-    void groupIsNotSwitchGroup();
-    void groupIsSwitchGroup();
-    void groupIsQueryGroup();
-    void groupIsNotQueryGroup();
-    void groupIsUnknownGroup();
-    void groupTypeHasIsMethod();
-
-    /*
     void groupPassedAllFail();
-    void groupPassedAllOk();
-    */
 };
 
 #endif // IOTRANSFERDATATEST_H

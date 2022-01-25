@@ -16,8 +16,8 @@ public:
     // single
     tIoTransferList generateListForAction(SourceActionTypes::ActionTypes actionType);
     // composed
-    IoTransferDataGroup generateOnOffGroup(JsonParamApi requestedParams);
-    IoTransferDataGroup generateStatusPollGroup();
+    IoTransferDataGroup::Ptr generateOnOffGroup(JsonParamApi requestedParams);
+    IoTransferDataGroup::Ptr generateStatusPollGroup();
 private:
     tIoTransferList generateRMSAndAngleUList();
     tIoTransferList generateRMSAndAngleIList();

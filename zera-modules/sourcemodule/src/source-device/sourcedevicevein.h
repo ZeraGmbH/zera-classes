@@ -37,7 +37,7 @@ public slots:
     void onNewVeinParamStatus(QVariant paramState);
 
 protected:
-    virtual void handleSourceCmd(IoTransferDataGroup transferGroup) override;
+    virtual void handleSourceCmd(IoTransferDataGroup::Ptr transferGroup) override;
 
 private slots:
     void onInterfaceClosed();

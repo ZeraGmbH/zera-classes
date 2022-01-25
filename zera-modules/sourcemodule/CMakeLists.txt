@@ -31,7 +31,7 @@ find_Package(VfCpp REQUIRED)
 file(GLOB SOURCES 
     ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-device/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/io-ids/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-queue/*.cpp
     ${PROJECT_SOURCE_DIR}/src/json/*.cpp
     ${PROJECT_SOURCE_DIR}/src/module/*.cpp
@@ -42,7 +42,7 @@ file(GLOB SOURCES
 file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/*.h
     ${PROJECT_SOURCE_DIR}/src/io-device/*.h
-    ${PROJECT_SOURCE_DIR}/src/io-ids/*.h
+    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.h
     ${PROJECT_SOURCE_DIR}/src/io-queue/*.h
     ${PROJECT_SOURCE_DIR}/src/json/*.h
     ${PROJECT_SOURCE_DIR}/src/module/*.h

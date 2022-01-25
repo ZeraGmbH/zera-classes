@@ -1,9 +1,5 @@
 #include "sourceproperties.h"
 
-SourceProperties::SourceProperties()
-{
-}
-
 SourceProperties::SourceProperties(SupportedSourceTypes type, QString name, QString version) :
     m_type(type),
     m_name(name),

@@ -12,14 +12,11 @@ private slots:
     void init();
 
     void gettersOK();
+    void signalResponses();
+    void signalResponsesOnOneError();
+    void signalResponsesOnTwoErrors();
+    void signalDisconnect();
 
-    void disconnectSignal();
-
-    void multipleCmdsDifferentIds();
-    void observerReceiveCount();
-    void observerReceiveId();
-
-    void busySignalOnSwitch();
 };
 
 #endif // QTUNITTESTSOURCEDEVICE_H

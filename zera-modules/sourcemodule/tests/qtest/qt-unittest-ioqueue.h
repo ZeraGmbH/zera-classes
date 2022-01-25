@@ -8,13 +8,14 @@ class IoQueueTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onIoQueueGroupFinished(IoTransferDataGroup workGroup);
+    void onIoQueueGroupFinished(IoTransferDataGroup::Ptr workGroup);
 private slots:
     void init();
 
     void noIoDeviceNotBusy();
     void notOpenIoDeviceNotBusy();
     void emptyGroupNotBusy();
+    void nullGroupNotBusy();
     void openIoDeviceBusy();
 
     void noIoDeviceNotification();
@@ -39,12 +40,12 @@ private slots:
     void twoFirstInvalidSecondOkSingleIo();
 
 private:
-    static IoTransferDataGroup generateSwitchCommands(bool on);
-    static IoTransferDataGroup generateStatusPollCommands();
+    static IoTransferDataGroup::Ptr generateSwitchCommands(bool on);
+    static IoTransferDataGroup::Ptr generateStatusPollCommands();
     void evalNotificationCount(int passedGroupsExpected,
                                int passExpected, int failExpected, int unknownExpected);
 
-    QList<IoTransferDataGroup> m_listIoGroupsReceived;
+    QList<IoTransferDataGroup::Ptr> m_listIoGroupsReceived;
 };
 
 #endif // IOQUEUETEST_H

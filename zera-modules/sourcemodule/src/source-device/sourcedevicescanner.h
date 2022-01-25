@@ -3,7 +3,7 @@
 
 #include "io-device/iotransferdatasingle.h"
 #include "source-device/sourcedevicevein.h"
-#include "io-ids/ioidkeeper.h"
+#include "transaction-ids/idkeeper.h"
 
 #include <QObject>
 #include <QUuid>
@@ -38,7 +38,7 @@ private:
     QByteArray extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes sourceType);
     static SupportedSourceTypes nextDemoType();
 
-    IoIdKeeper m_currIoId;
+    IdKeeperSingle m_currIoId;
     IoDeviceBase::Ptr m_ioDevice;
     QUuid m_uuid;
     SourceDeviceVein* m_sourceDeviceFound = nullptr;

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
-#include "io-ids/ioidgenerator.h"
+#include "transaction-ids/idgenerator.h"
 
-TEST(TEST_ID_GENERATOR, INCREMENT) {
+TEST(TEST_ID_KEEPER_SINGLE, INCREMENT) {
     IoIdGenerator generator;
     int id1  = generator.nextID();
     int id2 = generator.nextID();

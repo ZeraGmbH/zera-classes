@@ -4,7 +4,7 @@
 #include "source-device/supportedsources.h"
 #include "source-protocols/iogroupgenerator.h"
 #include "io-queue/ioqueue.h"
-#include "io-ids/ioidkeeper.h"
+#include "transaction-ids/idkeeper.h"
 
 #include <QObject>
 
@@ -22,7 +22,7 @@ public:
 protected:
     void switchState(JsonParamApi state);
     void switchOff();
-    virtual void handleSourceCmd(IoTransferDataGroup transferGroup);
+    virtual void handleSourceCmd(IoTransferDataGroup::Ptr transferGroup);
 
     IoDeviceBase::Ptr m_ioDevice;
     IoGroupGenerator* m_ioGroupGenerator = nullptr;
@@ -31,10 +31,10 @@ protected:
     JsonParamApi m_paramsCurrent;
 
     IoQueue m_ioQueue;
-    IoIdKeeper m_currQueueId;
+    IdKeeperSingle m_currQueueId;
 
 private slots:
-    void onIoGroupFinished(IoTransferDataGroup transferGroup);
+    void onIoGroupFinished(IoTransferDataGroup::Ptr transferGroup);
 };
 
 #endif // SOURCEDEVICEBASE_H

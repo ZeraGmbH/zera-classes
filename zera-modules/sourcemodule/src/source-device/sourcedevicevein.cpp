@@ -87,11 +87,11 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDeviceVein::handleSourceCmd(IoTransferDataGroup transferGroup)
+void SourceDeviceVein::handleSourceCmd(IoTransferDataGroup::Ptr transferGroup)
 {
     SourceDeviceBase::handleSourceCmd(transferGroup);
     m_deviceStatus.setBusy(false);
-    if(!transferGroup.passedAll()) {
+    if(!transferGroup->passedAll()) {
         // For now just drop a short note. We need a concept
         // how to continue with translations - maybe an RPC called by GUI?
         // Maybe no

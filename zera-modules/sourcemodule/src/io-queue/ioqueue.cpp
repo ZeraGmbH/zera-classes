@@ -23,7 +23,7 @@ void IoQueue::setMaxPendingGroups(int maxGroups)
     m_maxPendingGroups = maxGroups;
 }
 
-int IoQueue::enqueueTransferGroup(IoTransferDataGroup transferGroup)
+int IoQueue::enqueueTransferGroup(IoTransferDataGroup::Ptr transferGroup)
 {
     if(!canEnqueue(transferGroup)) {
         finishGroup(transferGroup);
@@ -32,17 +32,17 @@ int IoQueue::enqueueTransferGroup(IoTransferDataGroup transferGroup)
         m_pendingGroups.append(transferGroup);
         tryStartNextIo();
     }
-    return transferGroup.getGroupId();
+    return transferGroup ? transferGroup->getGroupId() : 0;
 }
 
 bool IoQueue::isIoBusy() const
 {
-    return m_currIoId.isActive();
+    return m_currIoId.hasPending();
 }
 
 void IoQueue::onIoFinished(int ioID, bool ioDeviceError)
 {
-    if(m_currIoId.isCurrAndDeactivateIf(ioID)) {
+    if(m_currIoId.isPendingAndRemoveIf(ioID)) {
         if(ioDeviceError) {
             abortAllGroups();
         }
@@ -57,7 +57,7 @@ void IoQueue::onIoFinished(int ioID, bool ioDeviceError)
 
 void IoQueue::onIoDisconnected()
 {
-    m_currIoId.deactivate();
+    m_currIoId.clear();
     abortAllGroups();
     setIoDevice(nullptr);
 }
@@ -68,7 +68,7 @@ void IoQueue::tryStartNextIo()
         IoTransferDataSingle::Ptr nextIo = getNextIoTransfer();
         if(nextIo) {
             int ioId = m_ioDevice->sendAndReceive(nextIo);
-            m_currIoId.setCurrent(ioId);
+            m_currIoId.setPending(ioId);
         }
     }
 }
@@ -76,7 +76,7 @@ void IoQueue::tryStartNextIo()
 IoTransferDataSingle::Ptr IoQueue::getNextIoTransfer()
 {
     IoTransferDataSingle::Ptr nextIo;
-    IoTransferDataGroup *currGroup = getCurrentGroup();
+    IoTransferDataGroup::Ptr currGroup = getCurrentGroup();
     if(currGroup) {
         if(m_nextPosInCurrGroup < currGroup->getTransferCount()) {
             nextIo = currGroup->getTransfer(m_nextPosInCurrGroup);
@@ -112,9 +112,11 @@ void IoQueue::finishCurrentGroup()
     finishGroup(m_pendingGroups.takeFirst());
 }
 
-void IoQueue::finishGroup(IoTransferDataGroup transferGroupToFinish)
+void IoQueue::finishGroup(IoTransferDataGroup::Ptr transferGroupToFinish)
 {
-    transferGroupToFinish.evalAll();
+    if(transferGroupToFinish) {
+        transferGroupToFinish->evalAll();
+    }
     emit sigTransferGroupFinishedQueued(transferGroupToFinish);
 }
 
@@ -128,7 +130,7 @@ void IoQueue::abortAllGroups()
 bool IoQueue::checkCurrentResponsePassed()
 {
     bool pass = false;
-    IoTransferDataGroup *currGroup = getCurrentGroup();
+    IoTransferDataGroup::Ptr currGroup = getCurrentGroup();
     if(currGroup) {
         IoTransferDataSingle::Ptr currentIo = currGroup->getTransfer(m_nextPosInCurrGroup-1);
         pass = currentIo->didIoPass();
@@ -136,11 +138,11 @@ bool IoQueue::checkCurrentResponsePassed()
     return pass;
 }
 
-bool IoQueue::canEnqueue(IoTransferDataGroup transferGroup)
+bool IoQueue::canEnqueue(IoTransferDataGroup::Ptr transferGroup)
 {
     bool canEnqueue =
             m_ioDevice && m_ioDevice->isOpen() &&
-            transferGroup.getTransferCount() > 0 &&
+            transferGroup && transferGroup->getTransferCount() > 0 &&
             (m_maxPendingGroups == 0 || m_pendingGroups.size() < m_maxPendingGroups);
     return canEnqueue;
 }
@@ -148,15 +150,15 @@ bool IoQueue::canEnqueue(IoTransferDataGroup transferGroup)
 bool IoQueue::canContinueCurrentGroup()
 {
     bool pass = checkCurrentResponsePassed();
-    IoTransferDataGroup *currGroup = getCurrentGroup();
+    IoTransferDataGroup::Ptr currGroup = getCurrentGroup();
     return pass || (currGroup && currGroup->getErrorBehavior() == IoTransferDataGroup::BEHAVE_CONTINUE_ON_ERROR);
 }
 
-IoTransferDataGroup *IoQueue::getCurrentGroup()
+IoTransferDataGroup::Ptr IoQueue::getCurrentGroup()
 {
-    IoTransferDataGroup* current = nullptr;
+    IoTransferDataGroup::Ptr current;
     if(!m_pendingGroups.isEmpty()) {
-        current = &m_pendingGroups.first();
+        current = m_pendingGroups.first();
     }
     return current;
 }
