@@ -29,18 +29,19 @@ bool IoTransferDataSingle::didIoPass() const
     return m_IoEval == EVAL_PASS;
 }
 
-IoTransferDataSingle::EvalResponse IoTransferDataSingle::getEvaluation() const
+bool IoTransferDataSingle::wasNotRunYet() const
 {
-    return m_IoEval;
+    return m_dataReceived.isEmpty() && m_IoEval == EVAL_NOT_EXECUTED;
 }
 
-bool IoTransferDataSingle::checkUnusedData() const
+bool IoTransferDataSingle::noAnswerReceived() const
 {
-    bool unused = m_dataReceived.isEmpty() && m_IoEval == EVAL_NOT_EXECUTED;
-    if(!unused ) {
-        qCritical("Do not reuse IoTransferDataSingle");
-    }
-    return unused;
+    return m_IoEval == EVAL_NO_ANSWER;
+}
+
+bool IoTransferDataSingle::wrongAnswerReceived() const
+{
+    return m_IoEval == EVAL_WRONG_ANSWER;
 }
 
 QByteArray IoTransferDataSingle::getByesSend() const

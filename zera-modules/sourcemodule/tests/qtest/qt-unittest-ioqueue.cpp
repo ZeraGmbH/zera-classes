@@ -177,9 +177,9 @@ void IoQueueTest::stopOnFirstError()
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QCOMPARE(m_listIoGroupsReceived[0]->passedAll(), false);
-    QCOMPARE(m_listIoGroupsReceived[0]->getTransfer(0)->getEvaluation(), IoTransferDataSingle::EVAL_PASS);
-    QCOMPARE(m_listIoGroupsReceived[0]->getTransfer(1)->getEvaluation(), IoTransferDataSingle::EVAL_WRONG_ANSWER);
-    QCOMPARE(m_listIoGroupsReceived[0]->getTransfer(2)->getEvaluation(), IoTransferDataSingle::EVAL_NOT_EXECUTED);
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(0)->didIoPass());
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(1)->wrongAnswerReceived());
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(2)->wasNotRunYet());
 }
 
 void IoQueueTest::continueOnError()
@@ -203,9 +203,9 @@ void IoQueueTest::continueOnError()
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QCOMPARE(m_listIoGroupsReceived[0]->passedAll(), false);
-    QCOMPARE(m_listIoGroupsReceived[0]->getTransfer(0)->getEvaluation(), IoTransferDataSingle::EVAL_PASS);
-    QCOMPARE(m_listIoGroupsReceived[0]->getTransfer(1)->getEvaluation(), IoTransferDataSingle::EVAL_WRONG_ANSWER);
-    QCOMPARE(m_listIoGroupsReceived[0]->getTransfer(2)->getEvaluation(), IoTransferDataSingle::EVAL_PASS);
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(0)->didIoPass());
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(1)->wrongAnswerReceived());
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(2)->didIoPass());
 }
 
 void IoQueueTest::noErrorSignalOnEmptyGroup()
@@ -448,18 +448,14 @@ void IoQueueTest::evalNotificationCount(int passedGroupsExpected, int passExpect
             passedGroupCount++;
         }
         for(int io=0; io<m_listIoGroupsReceived[group]->getTransferCount(); ++io) {
-            switch(m_listIoGroupsReceived[group]->getTransfer(io)->getEvaluation()) {
-            case IoTransferDataSingle::EVAL_NOT_EXECUTED:
+            if(m_listIoGroupsReceived[group]->getTransfer(io)->wasNotRunYet()) {
                 unknownCount++;
-                break;
-            case IoTransferDataSingle::EVAL_PASS:
+            }
+            else if(m_listIoGroupsReceived[group]->getTransfer(io)->didIoPass()) {
                 passCount++;
-                break;
-            case IoTransferDataSingle::EVAL_WRONG_ANSWER:
+            }
+            else if(m_listIoGroupsReceived[group]->getTransfer(io)->wrongAnswerReceived()) {
                 failCount++;
-                break;
-            case IoTransferDataSingle::EVAL_NO_ANSWER:
-                break;
             }
         }
     }
