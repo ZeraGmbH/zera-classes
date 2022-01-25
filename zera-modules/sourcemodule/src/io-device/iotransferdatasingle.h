@@ -10,17 +10,13 @@ class IoTransferDataSingle
 {
 public:
     typedef QSharedPointer<IoTransferDataSingle> Ptr;
-    enum EvalResponse {
-        EVAL_NOT_EXECUTED = 0,
-        EVAL_NO_ANSWER,
-        EVAL_WRONG_ANSWER,
-        EVAL_PASS
-    };
 
     QByteArray getDataReceived() const;
     bool didIoPass() const;
-    EvalResponse getEvaluation() const;
-    bool checkUnusedData() const;
+    bool wasNotRunYet() const;
+    bool noAnswerReceived() const;
+    bool wrongAnswerReceived() const;
+
     QByteArray getByesSend() const;
     QByteArray getDemoResponse() const;
     QByteArray getExpectedDataLead() const;
@@ -51,6 +47,12 @@ protected:
     QByteArray m_bytesExpectedTrail = "\r";
     QByteArray m_bytesSend;
 private:
+    enum EvalResponse {
+        EVAL_NOT_EXECUTED = 0,
+        EVAL_NO_ANSWER,
+        EVAL_WRONG_ANSWER,
+        EVAL_PASS
+    };
     EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
 };
 

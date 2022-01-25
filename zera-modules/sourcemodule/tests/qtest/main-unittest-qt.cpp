@@ -12,7 +12,11 @@ QObject *addTest(QObject *test)
 int main(int argc, char *argv[])
 {
     int status = 0;
+
+    // Make qCritical in tests for re-used IoTransferDataSingle objects - see
+    // IoDeviceBase::prepareSendAndReceive
     qputenv("QT_FATAL_CRITICALS", "1");
+
     while(!listTests.isEmpty()) {
         QCoreApplication app(argc, argv);
         QObject *test = listTests.takeLast();

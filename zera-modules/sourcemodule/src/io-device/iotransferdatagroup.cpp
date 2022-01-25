@@ -26,7 +26,7 @@ void IoTransferDataGroup::evalAll()
 {
     bool pass = true;
     for(const auto &io : m_ioTransferList) {
-        if(io->getEvaluation() != IoTransferDataSingle::EVAL_PASS) {
+        if(!io->didIoPass()) {
             pass = false;
         }
     }

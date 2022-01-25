@@ -19,7 +19,9 @@ void IoDeviceBase::prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferDat
 {
     m_ioTransferData = ioTransferData;
     setReadTimeoutNextIo(m_ioTransferData->getResponseTimeout());
-    m_ioTransferData->checkUnusedData();
+    if(!m_ioTransferData->wasNotRunYet()) {
+        qCritical("Do not reuse IoTransferDataSingle");
+    }
     m_currIoId.setPending(m_IDGenerator.nextID());
 }
 
