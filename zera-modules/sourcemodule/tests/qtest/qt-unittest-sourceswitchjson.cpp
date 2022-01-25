@@ -12,7 +12,7 @@ void SourceSwitchJsonTest::init()
 
 void SourceSwitchJsonTest::signalSwitch()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
@@ -32,7 +32,7 @@ void SourceSwitchJsonTest::signalSwitch()
 
 void SourceSwitchJsonTest::signalSwitchAfterError()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
@@ -54,7 +54,7 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
 
 void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
@@ -75,7 +75,7 @@ void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
 
 void SourceSwitchJsonTest::keepParamOnError()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
@@ -101,7 +101,7 @@ void SourceSwitchJsonTest::keepParamOnError()
 
 void SourceSwitchJsonTest::changeParamOnSuccess()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);

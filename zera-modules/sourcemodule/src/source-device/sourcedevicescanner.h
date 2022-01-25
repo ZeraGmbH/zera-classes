@@ -33,7 +33,7 @@ private:
     explicit SourceDeviceScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid);
 
     void sendReceiveSourceID();
-    QByteArray createInterfaceSpecificPrepend();
+    QByteArray createIoDeviceSpecificPrepend();
     QByteArray extractVersionFromResponse(SupportedSourceTypes sourceType);
     QByteArray extractNameFromResponse(QByteArray responsePrefix, QByteArray version, SupportedSourceTypes sourceType);
     static SupportedSourceTypes nextDemoType();

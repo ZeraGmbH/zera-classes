@@ -1,10 +1,10 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-SourceDeviceErrorInjection::SourceDeviceErrorInjection(SourceDeviceInterface *sourceUnderTest) :
+SourceDeviceErrorInjection::SourceDeviceErrorInjection(ISourceDevice *sourceUnderTest) :
     m_sourceUnderTest(sourceUnderTest)
 {
-    connect(m_sourceUnderTest, &SourceDeviceInterface::sigResponseReceived,
-            this, &SourceDeviceInterface::sigResponseReceived);
+    connect(m_sourceUnderTest, &ISourceDevice::sigResponseReceived,
+            this, &ISourceDevice::sigResponseReceived);
 }
 
 void SourceDeviceErrorInjection::setDemoResonseError(bool active)

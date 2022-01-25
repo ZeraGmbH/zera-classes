@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-class SourceDeviceInterface : public QObject
+class ISourceDevice : public QObject
 {
     Q_OBJECT
 public:
@@ -27,7 +27,7 @@ signals:
  * Notify observers on io-device removed
  * Keep source properties
  */
-class SourceDevice : public SourceDeviceInterface
+class SourceDevice : public ISourceDevice
 {
     Q_OBJECT
 public:
@@ -43,7 +43,7 @@ public:
     SourceProperties getProperties() const override;
 
 signals:
-    void sigInterfaceDisconnected();
+    void sigIoDeviceDisconnected();
 
 private slots:
     void onIoGroupFinished(IoTransferDataGroup::Ptr transferGroup);

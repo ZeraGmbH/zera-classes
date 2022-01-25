@@ -47,7 +47,7 @@ private slots:
 private:
     void checkIds(IoDeviceBase::Ptr ioDevice);
     void checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int errors);
-    IoDeviceBase::Ptr createOpenDemoInterfaceWithDelayAndConnected(int responseDelay = 0);
+    IoDeviceBase::Ptr createOpenDemoIoDeviceWithDelayAndConnected(int responseDelay = 0);
 
     int m_ioFinishReceiveCount = 0;
     int m_ioIDReceived = 0;

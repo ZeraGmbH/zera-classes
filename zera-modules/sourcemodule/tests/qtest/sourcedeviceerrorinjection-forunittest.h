@@ -3,10 +3,10 @@
 
 #include "source-device/sourcedevice.h"
 
-class SourceDeviceErrorInjection : public SourceDeviceInterface
+class SourceDeviceErrorInjection : public ISourceDevice
 {
 public:
-    SourceDeviceErrorInjection(SourceDeviceInterface *sourceUnderTest);
+    SourceDeviceErrorInjection(ISourceDevice *sourceUnderTest);
 
     int startTransaction(IoTransferDataGroup::Ptr transferGroup) override;
     IoGroupGenerator getIoGroupGenerator() const override;
@@ -16,7 +16,7 @@ public:
 
 private:
     bool m_demoSimulErrorActive = false;
-    SourceDeviceInterface *m_sourceUnderTest = nullptr;
+    ISourceDevice *m_sourceUnderTest = nullptr;
 };
 
 #endif // SOURCEDEVICEFORUNITTEST_H

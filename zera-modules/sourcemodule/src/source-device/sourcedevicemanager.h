@@ -15,9 +15,9 @@ public:
     SourceDeviceManager(int countSlots, QObject *parent = 0);
 
     // requests
-    void startSourceScan(const IoDeviceTypes interfaceType, const QString deviceInfo, const QUuid uuid);
+    void startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid);
     void closeSource(int slotNo, const QUuid uuid);
-    void closeSource(QString interfaceDeviceInfo, const QUuid uuid);
+    void closeSource(QString ioDeviceInfo, const QUuid uuid);
     void setDemoCount(int count);
 
     // getter

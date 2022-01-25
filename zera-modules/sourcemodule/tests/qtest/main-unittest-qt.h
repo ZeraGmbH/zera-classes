@@ -9,7 +9,7 @@
 
 QObject* addTest(QObject* test);
 
-IoDeviceBase::Ptr createOpenDemoInterface();
+IoDeviceBase::Ptr createOpenDemoIoDevice();
 void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs);
 
 #endif // MAIN_UNITTEST_H
