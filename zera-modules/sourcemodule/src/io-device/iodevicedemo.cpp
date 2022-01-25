@@ -18,7 +18,7 @@ void IoDeviceDemo::sendResponse(bool ioDeviceError)
     if(!ioDeviceError) {
         m_ioTransferData->setDataReceived(m_ioTransferData->getDemoResponse());
     }
-    emit _sigIoFinished(m_currIoId.getCurrent(), ioDeviceError);
+    emit _sigIoFinished(m_currIoId.getPending(), ioDeviceError);
 }
 
 bool IoDeviceDemo::open(QString strDeviceInfo)
@@ -48,7 +48,7 @@ int IoDeviceDemo::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
     else {
         m_responseDelayTimer.start(responseDelayMs);
     }
-    return m_currIoId.getCurrent();
+    return m_currIoId.getPending();
 }
 
 void IoDeviceDemo::setReadTimeoutNextIo(int timeoutMs)

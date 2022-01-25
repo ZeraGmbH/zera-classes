@@ -5,7 +5,7 @@
 #include <QSharedPointer>
 #include "io-device/iodevicebase.h"
 #include "io-device/iotransferdatagroup.h"
-#include "io-ids/ioidkeeper.h"
+#include "transaction-ids/idkeeper.h"
 
 class IoQueue : public QObject
 {
@@ -15,34 +15,34 @@ public:
 
     void setIoDevice(IoDeviceBase::Ptr ioDevice);
     void setMaxPendingGroups(int maxGroups);
-    int enqueueTransferGroup(IoTransferDataGroup transferGroup);
+    int enqueueTransferGroup(IoTransferDataGroup::Ptr transferGroup);
 
     bool isIoBusy() const;
 
 signals:
-    void sigTransferGroupFinished(IoTransferDataGroup transferGroup);
+    void sigTransferGroupFinished(IoTransferDataGroup::Ptr transferGroup);
 
 private slots:
     void onIoFinished(int ioID, bool ioDeviceError);
     void onIoDisconnected();
 signals:
-    void sigTransferGroupFinishedQueued(IoTransferDataGroup transferGroup);
+    void sigTransferGroupFinishedQueued(IoTransferDataGroup::Ptr transferGroup);
 private:
-    IoTransferDataGroup *getCurrentGroup();
+    IoTransferDataGroup::Ptr getCurrentGroup();
     IoTransferDataSingle::Ptr getNextIoTransfer();
     void connectIoDevice();
     void disconnectIoDevice();
     void tryStartNextIo();
-    void finishGroup(IoTransferDataGroup transferGroupToFinish);
+    void finishGroup(IoTransferDataGroup::Ptr transferGroupToFinish);
     void finishCurrentGroup();
     void abortAllGroups();
     bool checkCurrentResponsePassed();
-    bool canEnqueue(IoTransferDataGroup transferGroup);
+    bool canEnqueue(IoTransferDataGroup::Ptr transferGroup);
     bool canContinueCurrentGroup();
 
     IoDeviceBase::Ptr m_ioDevice = nullptr;
-    IoIdKeeper m_currIoId;
-    QList<IoTransferDataGroup> m_pendingGroups;
+    IdKeeperSingle m_currIoId;
+    QList<IoTransferDataGroup::Ptr> m_pendingGroups;
     int m_nextPosInCurrGroup = 0;
     int m_maxPendingGroups = 0;
 };

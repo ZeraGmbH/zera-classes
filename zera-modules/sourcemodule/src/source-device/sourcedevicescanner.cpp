@@ -83,7 +83,7 @@ void SourceDeviceScanner::sendReceiveSourceID()
     QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
     m_ioDataSingle = IoTransferDataSingleFactory::createIoData(bytesSend, "");
     int ioId = m_ioDevice->sendAndReceive(m_ioDataSingle);
-    m_currIoId.setCurrent(ioId);
+    m_currIoId.setPending(ioId);
 }
 
 QByteArray SourceDeviceScanner::createInterfaceSpecificPrepend()
@@ -147,7 +147,7 @@ SupportedSourceTypes SourceDeviceScanner::nextDemoType() {
 
 void SourceDeviceScanner::onIoFinished(int ioId, bool ioDeviceError)
 {
-    if(!m_currIoId.isCurrAndDeactivateIf(ioId)) {
+    if(!m_currIoId.isPendingAndRemoveIf(ioId)) {
         qCritical("Are there multiple clients on scanner interface?");
         return;
     }

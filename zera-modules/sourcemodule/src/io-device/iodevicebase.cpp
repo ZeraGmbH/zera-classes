@@ -20,7 +20,7 @@ void IoDeviceBase::prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferDat
     m_ioTransferData = ioTransferData;
     setReadTimeoutNextIo(m_ioTransferData->getResponseTimeout());
     m_ioTransferData->checkUnusedData();
-    m_currIoId.setCurrent(m_IDGenerator.nextID());
+    m_currIoId.setPending(m_IDGenerator.nextID());
 }
 
 QString IoDeviceBase::getDeviceInfo()

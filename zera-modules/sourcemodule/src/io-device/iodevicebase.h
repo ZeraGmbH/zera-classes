@@ -3,8 +3,8 @@
 
 #include "iodevicetypes.h"
 #include "iotransferdatasingle.h"
-#include "io-ids/ioidgenerator.h"
-#include "io-ids/ioidkeeper.h"
+#include "transaction-ids/idgenerator.h"
+#include "transaction-ids/idkeeper.h"
 
 #include <QObject>
 
@@ -43,7 +43,7 @@ protected:
 
     QString m_strDeviceInfo;
     IoIdGenerator m_IDGenerator;
-    IoIdKeeper m_currIoId;
+    IdKeeperSingle m_currIoId;
     IoTransferDataSingle::Ptr m_ioTransferData;
 
 private:

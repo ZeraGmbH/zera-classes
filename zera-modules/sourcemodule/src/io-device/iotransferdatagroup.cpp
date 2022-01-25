@@ -1,18 +1,14 @@
 #include "iotransferdatagroup.h"
 
-
 IoIdGenerator IoTransferDataGroup::m_idGenerator;
 
-IoTransferDataGroup::IoTransferDataGroup() :
+IoTransferDataGroup::IoTransferDataGroup(IoTransferDataGroup::GroupErrorBehaviors errorBehavior) :
+    m_errorBehavior(errorBehavior),
     m_groupId(m_idGenerator.nextID())
 {
 }
 
-IoTransferDataGroup::IoTransferDataGroup(IoTransferDataGroup::SourceGroupTypes groupType,
-                                         IoTransferDataGroup::GroupErrorBehaviors errorBehavior) :
-    m_groupType(groupType),
-    m_errorBehavior(errorBehavior),
-    m_groupId(m_idGenerator.nextID())
+IoTransferDataGroup::~IoTransferDataGroup()
 {
 }
 
@@ -37,21 +33,6 @@ void IoTransferDataGroup::evalAll()
     m_bPassedAll = pass;
 }
 
-bool IoTransferDataGroup::isSwitchGroup() const
-{
-    return m_groupType == GROUP_TYPE_SWITCH_ON || m_groupType == GROUP_TYPE_SWITCH_OFF;
-}
-
-bool IoTransferDataGroup::isStateQueryGroup() const
-{
-    return m_groupType == GROUP_TYPE_STATE_POLL;
-}
-
-IoTransferDataGroup::SourceGroupTypes IoTransferDataGroup::getGroupType() const
-{
-    return m_groupType;
-}
-
 int IoTransferDataGroup::getGroupId() const
 {
     return m_groupId;
@@ -74,19 +55,6 @@ IoTransferDataSingle::Ptr IoTransferDataGroup::getTransfer(int idx)
         transfer = m_ioTransferList[idx];
     }
     return transfer;
-}
-
-bool IoTransferDataGroup::operator ==(const IoTransferDataGroup &other)
-{
-    return  m_groupId == other.m_groupId &&
-            m_groupType == other.m_groupType &&
-            m_errorBehavior == other.m_errorBehavior &&
-            m_ioTransferList == other.m_ioTransferList;
-}
-
-bool IoTransferDataGroup::operator !=(const IoTransferDataGroup &other)
-{
-    return !(*this == other);
 }
 
 void IoTransferDataGroup::setDemoErrorOnTransfer(int idx)
