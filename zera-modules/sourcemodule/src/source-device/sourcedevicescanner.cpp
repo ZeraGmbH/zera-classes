@@ -80,13 +80,13 @@ int SourceDeviceScanner::getInstanceCount()
 void SourceDeviceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
-    QByteArray bytesSend = createInterfaceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
+    QByteArray bytesSend = createIoDeviceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
     m_ioDataSingle = IoTransferDataSingleFactory::createIoData(bytesSend, "");
     int ioId = m_ioDevice->sendAndReceive(m_ioDataSingle);
     m_currIoId.setPending(ioId);
 }
 
-QByteArray SourceDeviceScanner::createInterfaceSpecificPrepend()
+QByteArray SourceDeviceScanner::createIoDeviceSpecificPrepend()
 {
     QByteArray prepend;
     if(IoDeviceTypeQuery::isAsyncSerial(m_ioDevice->getType())) {

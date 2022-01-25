@@ -1,6 +1,6 @@
 #include "sourcestatecontroller.h"
 
-SourceStateController::SourceStateController(SourceDeviceInterface *sourceDevice,
+SourceStateController::SourceStateController(ISourceDevice *sourceDevice,
                                                SourceTransactionStartNotifier *sourceNotificationSwitch,
                                                SourceTransactionStartNotifier *sourceNotificationStateQuery) :
     m_sourceDevice(sourceDevice),

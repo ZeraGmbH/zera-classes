@@ -1,6 +1,6 @@
 #include "sourceswitchjson.h"
 
-SourceSwitchJson::SourceSwitchJson(SourceDeviceInterface *sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch) :
+SourceSwitchJson::SourceSwitchJson(ISourceDevice *sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch) :
     m_sourceDevice(sourceDevice),
     m_sourceNotificationSwitch(sourceNotificationSwitch)
 {

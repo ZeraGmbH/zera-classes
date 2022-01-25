@@ -32,12 +32,12 @@ void SourceDeviceTest::gettersOK()
 
 void SourceDeviceTest::signalDisconnect()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
 
     int countDisconnectReceived = 0;
-    connect(&sourceDevice, &SourceDevice::sigInterfaceDisconnected, [&] {
+    connect(&sourceDevice, &SourceDevice::sigIoDeviceDisconnected, [&] {
         countDisconnectReceived++;
     });
     sourceDevice.simulateExternalDisconnect();
@@ -48,7 +48,7 @@ void SourceDeviceTest::signalDisconnect()
 
 void SourceDeviceTest::signalResponses()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
 
@@ -77,7 +77,7 @@ void SourceDeviceTest::signalResponses()
 
 void SourceDeviceTest::signalResponsesOnOneError()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
 
@@ -107,7 +107,7 @@ void SourceDeviceTest::signalResponsesOnOneError()
 
 void SourceDeviceTest::signalResponsesOnTwoErrors()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
 

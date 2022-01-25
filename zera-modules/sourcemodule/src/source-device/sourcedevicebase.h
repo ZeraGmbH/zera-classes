@@ -17,7 +17,7 @@ public:
 
     // getter
     bool isDemo();
-    QString getInterfaceDeviceInfo();
+    QString getIoDeviceInfo();
 
 protected:
     void switchState(JsonParamApi state);

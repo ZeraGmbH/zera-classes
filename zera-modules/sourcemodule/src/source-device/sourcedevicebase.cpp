@@ -22,7 +22,7 @@ bool SourceDeviceBase::isDemo()
     return m_ioDevice->isDemo();
 }
 
-QString SourceDeviceBase::getInterfaceDeviceInfo()
+QString SourceDeviceBase::getIoDeviceInfo()
 {
     return m_ioDevice->getDeviceInfo();
 }

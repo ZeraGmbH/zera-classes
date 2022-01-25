@@ -28,11 +28,11 @@ void SourceStateControllerTest::init()
     m_ioDevice = nullptr;
     m_listIoGroupsReceived.clear();
 
-    m_ioDevice = createOpenDemoInterface();
+    m_ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     m_sourceDeviceUnderTest = new SourceDevice(m_ioDevice, sourceProperties);
     m_sourceDevice = new SourceDeviceErrorInjection(m_sourceDeviceUnderTest);
-    connect(m_sourceDevice, &SourceDeviceInterface::sigResponseReceived,
+    connect(m_sourceDevice, &ISourceDevice::sigResponseReceived,
             this, &SourceStateControllerTest::onIoQueueGroupFinished);
 }
 

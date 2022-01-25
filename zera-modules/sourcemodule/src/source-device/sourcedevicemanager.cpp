@@ -19,14 +19,14 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
             this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
 }
 
-void SourceDeviceManager::startSourceScan(const IoDeviceTypes interfaceType, const QString deviceInfo, const QUuid uuid)
+void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid)
 {
     if(m_activeSlotCount >= m_sourceDeviceSlots.count()) {
         emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("No free slots"));
         return;
     }
     bool started = false;
-    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(interfaceType);
+    IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(ioDeviceType);
     if(ioDevice) {
         started = ioDevice->open(deviceInfo);
         if(started) {
@@ -38,7 +38,7 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes interfaceType, con
         }
     }
     if(!started) {
-        emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("Could not open Interface"));
+        emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("Could not open IO-device"));
     }
 }
 
@@ -85,16 +85,16 @@ void SourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
     }
 }
 
-void SourceDeviceManager::closeSource(QString interfaceDeviceInfo, const QUuid uuid)
+void SourceDeviceManager::closeSource(QString ioDeviceInfo, const QUuid uuid)
 {
     for(int slot = 0; slot<getSlotCount(); ++slot) {
         SourceDeviceVein* sourceDevice = getSourceDevice(slot);
-        if(sourceDevice && sourceDevice->getInterfaceDeviceInfo() == interfaceDeviceInfo) {
+        if(sourceDevice && sourceDevice->getIoDeviceInfo() == ioDeviceInfo) {
             closeSource(slot, uuid);
             return;
         }
     }
-    emit sigSlotRemovedQueued(-1, uuid, QString("No source found at %1").arg(interfaceDeviceInfo));
+    emit sigSlotRemovedQueued(-1, uuid, QString("No source found at %1").arg(ioDeviceInfo));
 }
 
 int SourceDeviceManager::getSlotCount()

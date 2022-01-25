@@ -28,7 +28,7 @@ void IoQueueTest::noIoDeviceNotBusy()
 void IoQueueTest::emptyGroupNotBusy()
 {
     IoQueue queue;
-    queue.setIoDevice(createOpenDemoInterface());
+    queue.setIoDevice(createOpenDemoIoDevice());
     IoTransferDataGroup::Ptr workGroup = IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     queue.enqueueTransferGroup(workGroup);
     QVERIFY(!queue.isIoBusy());
@@ -37,7 +37,7 @@ void IoQueueTest::emptyGroupNotBusy()
 void IoQueueTest::nullGroupNotBusy()
 {
     IoQueue queue;
-    queue.setIoDevice(createOpenDemoInterface());
+    queue.setIoDevice(createOpenDemoIoDevice());
     IoTransferDataGroup::Ptr null;
     queue.enqueueTransferGroup(null);
     QVERIFY(!queue.isIoBusy());
@@ -57,7 +57,7 @@ void IoQueueTest::openIoDeviceBusy()
 {
     IoQueue queue;
     IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(false);
-    queue.setIoDevice(createOpenDemoInterface());
+    queue.setIoDevice(createOpenDemoIoDevice());
     queue.enqueueTransferGroup(workGroup);
     QVERIFY(queue.isIoBusy());
 }
@@ -94,7 +94,7 @@ void IoQueueTest::notOpenIoDeviceNotifications()
 
 void IoQueueTest::disconnectBeforeEnqueue()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
     IoQueue queue;
     queue.setIoDevice(ioDevice);
@@ -108,7 +108,7 @@ void IoQueueTest::disconnectBeforeEnqueue()
 
 void IoQueueTest::disconnectWhileWorking()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
     IoQueue queue;
     queue.setIoDevice(ioDevice);
@@ -132,7 +132,7 @@ void IoQueueTest::disconnectWhileWorking()
 
 void IoQueueTest::disconnectWhileWorkingMultipleNotifications()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
     IoQueue queue;
     queue.setIoDevice(ioDevice);
@@ -158,7 +158,7 @@ void IoQueueTest::disconnectWhileWorkingMultipleNotifications()
 
 void IoQueueTest::stopOnFirstError()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -184,7 +184,7 @@ void IoQueueTest::stopOnFirstError()
 
 void IoQueueTest::continueOnError()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -210,7 +210,7 @@ void IoQueueTest::continueOnError()
 
 void IoQueueTest::noErrorSignalOnEmptyGroup()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -228,7 +228,7 @@ void IoQueueTest::noErrorSignalOnEmptyGroup()
 
 void IoQueueTest::rejectSpam()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -265,7 +265,7 @@ void IoQueueTest::rejectSpam()
 
 void IoQueueTest::acceptCloseToSpam()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -295,7 +295,7 @@ void IoQueueTest::acceptCloseToSpam()
 
 void IoQueueTest::oneValidGroupSingleIo()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -316,7 +316,7 @@ void IoQueueTest::oneValidGroupSingleIo()
 
 void IoQueueTest::twoValidGroupsSingleIo()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -344,7 +344,7 @@ void IoQueueTest::twoValidGroupsSingleIo()
 
 void IoQueueTest::oneValidGroupMultipleIo()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -366,7 +366,7 @@ void IoQueueTest::oneValidGroupMultipleIo()
 
 void IoQueueTest::twoValidGroupsMultipleIo()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -398,7 +398,7 @@ void IoQueueTest::twoValidGroupsMultipleIo()
 
 void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
 {
-    IoDeviceBase::Ptr ioDevice = createOpenDemoInterface();
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);

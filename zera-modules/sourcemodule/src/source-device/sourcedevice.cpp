@@ -11,7 +11,7 @@ SourceDevice::SourceDevice(IoDeviceBase::Ptr ioDevice, SourceProperties sourcePr
     connect(&m_ioQueue, &IoQueue::sigTransferGroupFinished,
             this, &SourceDevice::onIoGroupFinished);
     connect(m_ioDevice.get(), &IoDeviceBase::sigDisconnected,
-            this, &SourceDevice::sigInterfaceDisconnected,
+            this, &SourceDevice::sigIoDeviceDisconnected,
             Qt::QueuedConnection);
 }
 

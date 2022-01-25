@@ -17,7 +17,7 @@ SourceDeviceVein::SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SupportedSourceTy
     m_ioQueue.setIoDevice(ioDevice); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioDevice->getDeviceInfo());
 
-    connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this, &SourceDeviceVein::onInterfaceClosed);
+    connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this, &SourceDeviceVein::onIoDeviceClosed);
 }
 
 SourceDeviceVein::~SourceDeviceVein()
@@ -125,7 +125,7 @@ void SourceDeviceVein::saveState()
     m_persistentParamState->saveJsonState(m_paramsCurrent);
 }
 
-void SourceDeviceVein::onInterfaceClosed()
+void SourceDeviceVein::onIoDeviceClosed()
 {
     doFinalCloseActivities();
 }

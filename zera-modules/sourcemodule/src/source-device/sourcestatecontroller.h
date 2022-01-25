@@ -40,7 +40,7 @@ class SourceStateController : public QObject
 {
     Q_OBJECT
 public:
-    SourceStateController(SourceDeviceInterface *sourceDevice,
+    SourceStateController(ISourceDevice *sourceDevice,
                            SourceTransactionStartNotifier *sourceNotificationSwitch,
                            SourceTransactionStartNotifier *sourceNotificationStateQuery);
 
@@ -64,7 +64,7 @@ private:
     void handleSwitchResponse(const IoTransferDataGroup::Ptr transferGroup);
     void handleStateResponse(const IoTransferDataGroup::Ptr transferGroup);
 
-    SourceDeviceInterface *m_sourceDevice;
+    ISourceDevice *m_sourceDevice;
     SourceTransactionStartNotifier *m_sourceNotificationSwitch;
     SourceTransactionStartNotifier *m_sourceNotificationStateQuery;
     SourceStateQueries m_currState;

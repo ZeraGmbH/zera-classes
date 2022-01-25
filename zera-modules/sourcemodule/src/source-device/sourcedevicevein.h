@@ -40,7 +40,7 @@ protected:
     virtual void handleSourceCmd(IoTransferDataGroup::Ptr transferGroup) override;
 
 private slots:
-    void onInterfaceClosed();
+    void onIoDeviceClosed();
 
 private:
     void doFinalCloseActivities();
