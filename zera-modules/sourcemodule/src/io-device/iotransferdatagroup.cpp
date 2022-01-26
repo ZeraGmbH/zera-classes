@@ -8,10 +8,6 @@ IoTransferDataGroup::IoTransferDataGroup(IoTransferDataGroup::GroupErrorBehavior
 {
 }
 
-IoTransferDataGroup::~IoTransferDataGroup()
-{
-}
-
 void IoTransferDataGroup::appendTransferList(tIoTransferList transferList)
 {
     m_ioTransferList.append(transferList);

@@ -20,7 +20,6 @@ public:
     typedef QSharedPointer<IoTransferDataGroup> Ptr;
 
     IoTransferDataGroup(GroupErrorBehaviors errorBehavior);
-    ~IoTransferDataGroup();
 
     void appendTransferList(tIoTransferList transferList);
 
