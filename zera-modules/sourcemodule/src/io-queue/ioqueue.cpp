@@ -153,13 +153,13 @@ bool IoQueue::canContinueCurrentGroup()
     IoQueueEntry::Ptr currGroup = getCurrentGroup();
     bool canContinue = false;
     if(currGroup) {
-        if(!pass && currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_STOP_ON_FIRST_OK) {
+        if(!pass && currGroup->getErrorBehavior() == IoQueueErrorBehaviors::STOP_ON_FIRST_OK) {
             canContinue = true;
         }
-        else if(pass && currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_STOP_ON_ERROR) {
+        else if(pass && currGroup->getErrorBehavior() == IoQueueErrorBehaviors::STOP_ON_ERROR) {
             canContinue = true;
         }
-        else if(currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_CONTINUE_ON_ERROR) {
+        else if(currGroup->getErrorBehavior() == IoQueueErrorBehaviors::CONTINUE_ON_ERROR) {
             canContinue = true;
         }
     }

@@ -57,14 +57,14 @@ void SourceDeviceTest::signalResponses()
     });
 
     IoQueueEntry::Ptr workTransferGroup1 =
-            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     sourceDevice.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
-            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
@@ -86,7 +86,7 @@ void SourceDeviceTest::signalResponsesOnOneError()
     });
 
     IoQueueEntry::Ptr workTransferGroup1 =
-            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
@@ -94,7 +94,7 @@ void SourceDeviceTest::signalResponsesOnOneError()
     sourceDevice.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
-            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
@@ -116,7 +116,7 @@ void SourceDeviceTest::signalResponsesOnTwoErrors()
     });
 
     IoQueueEntry::Ptr workTransferGroup1 =
-            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
@@ -124,7 +124,7 @@ void SourceDeviceTest::signalResponsesOnTwoErrors()
     sourceDevice.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
-            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);

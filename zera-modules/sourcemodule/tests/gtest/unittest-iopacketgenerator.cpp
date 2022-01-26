@@ -56,7 +56,7 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_OFF_PACKET_SPECIFICS) {
     JsonParamApi params;
     params.setOn(false);
     IoQueueEntry::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
-    EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+    EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueErrorBehaviors::STOP_ON_ERROR);
 }
 
 TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
@@ -64,12 +64,12 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
     JsonParamApi params;
     params.setOn(true);
     IoQueueEntry::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
-    EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+    EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueErrorBehaviors::STOP_ON_ERROR);
 }
 
 TEST(TEST_PACKET_GENERATIOR, POLL_PACKET_SPECIFICS) {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     IoQueueEntry::Ptr transferGroup = ioGroupGenerator.generateStatusPollGroup();
-    EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueEntry::BEHAVE_CONTINUE_ON_ERROR);
+    EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
 }
 

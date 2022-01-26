@@ -1,6 +1,7 @@
 #ifndef IOQUEUEGROUP_H
 #define IOQUEUEGROUP_H
 
+#include "ioqueuebehaviors.h"
 #include "io-device/iotransferdatasingle.h"
 #include "transaction-ids/idgenerator.h"
 #include <QSharedPointer>
@@ -10,17 +11,9 @@ typedef QList<IoTransferDataSingle::Ptr> tIoTransferList;
 class IoQueueEntry
 {
 public:
-    enum GroupErrorBehaviors {
-        BEHAVE_UNDEFINED = 0,
-        BEHAVE_STOP_ON_ERROR,
-        BEHAVE_CONTINUE_ON_ERROR,
-        BEHAVE_STOP_ON_FIRST_OK,
-        BEHAVE_UNDEF_BOTTOM
-    };
-
     typedef QSharedPointer<IoQueueEntry> Ptr;
 
-    IoQueueEntry(GroupErrorBehaviors errorBehavior);
+    IoQueueEntry(IoQueueErrorBehaviors errorBehavior);
 
     void appendTransferList(tIoTransferList transferList);
 
@@ -28,7 +21,7 @@ public:
     void evalAll();
 
     int getGroupId() const;
-    GroupErrorBehaviors getErrorBehavior() const;
+    IoQueueErrorBehaviors getErrorBehavior() const;
 
     int getTransferCount();
     IoTransferDataSingle::Ptr getTransfer(int idx);
@@ -36,7 +29,7 @@ public:
     void setDemoErrorOnTransfer(int idx);
 private:
     tIoTransferList m_ioTransferList;
-    GroupErrorBehaviors m_errorBehavior = BEHAVE_UNDEFINED;
+    IoQueueErrorBehaviors m_errorBehavior;
     static IoIdGenerator m_idGenerator;
     int m_groupId = 0;
     bool m_bPassedAll = false;
