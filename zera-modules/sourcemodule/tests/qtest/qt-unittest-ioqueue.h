@@ -26,6 +26,7 @@ private slots:
     void disconnectWhileWorkingMultipleNotifications();
 
     void stopOnFirstError();
+    void stopOnFirstOk();
     void continueOnError();
 
     void noErrorSignalOnEmptyGroup();

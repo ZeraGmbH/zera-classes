@@ -151,7 +151,19 @@ bool IoQueue::canContinueCurrentGroup()
 {
     bool pass = checkCurrentResponsePassed();
     IoQueueEntry::Ptr currGroup = getCurrentGroup();
-    return pass || (currGroup && currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_CONTINUE_ON_ERROR);
+    bool canContinue = false;
+    if(currGroup) {
+        if(!pass && currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_STOP_ON_FIRST_OK) {
+            canContinue = true;
+        }
+        else if(pass && currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_STOP_ON_ERROR) {
+            canContinue = true;
+        }
+        else if(currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_CONTINUE_ON_ERROR) {
+            canContinue = true;
+        }
+    }
+    return canContinue;
 }
 
 IoQueueEntry::Ptr IoQueue::getCurrentGroup()

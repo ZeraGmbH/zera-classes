@@ -181,6 +181,32 @@ void IoQueueTest::stopOnFirstError()
     QVERIFY(m_listIoGroupsReceived[0]->getTransfer(2)->wasNotRunYet());
 }
 
+void IoQueueTest::stopOnFirstOk()
+{
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
+    IoQueue queue;
+    queue.setIoDevice(ioDevice);
+    connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
+
+    IoQueueEntry::Ptr workTransferGroup =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_FIRST_OK);
+    tIoTransferList transList;
+    transList.append(IoTransferDataSingle::Ptr::create());
+    transList.append(IoTransferDataSingle::Ptr::create());
+    transList.append(IoTransferDataSingle::Ptr::create());
+    workTransferGroup->appendTransferList(transList);
+    workTransferGroup->setDemoErrorOnTransfer(0);
+
+    queue.enqueueTransferGroup(workTransferGroup);
+    QTest::qWait(10);
+
+    QCOMPARE(m_listIoGroupsReceived.count(), 1);
+    QCOMPARE(m_listIoGroupsReceived[0]->passedAll(), false);
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(0)->wrongAnswerReceived());
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(1)->didIoPass());
+    QVERIFY(m_listIoGroupsReceived[0]->getTransfer(2)->wasNotRunYet());
+}
+
 void IoQueueTest::continueOnError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
