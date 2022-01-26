@@ -2,7 +2,6 @@
 #include "io-device/iodevicebase.h"
 #include "io-device/iodevicezeraserial.h"
 #include "io-device/iodevicedemo.h"
-#include "io-device/iotransferdatasinglefactory.h"
 #include <QUuid>
 
 SourceDeviceScanner::Ptr SourceDeviceScanner::createScanner(IoDeviceBase::Ptr ioDevice, QUuid uuid)
@@ -81,7 +80,7 @@ void SourceDeviceScanner::sendReceiveSourceID()
 {
     deviceDetectInfo deviceDetectInfoCurrent = deviceScanListSerial[m_currentSourceTested];
     QByteArray bytesSend = createIoDeviceSpecificPrepend() + deviceDetectInfoCurrent.queryStr;
-    m_ioDataSingle = IoTransferDataSingleFactory::createIoData(bytesSend, "");
+    m_ioDataSingle = IoTransferDataSingle::Ptr::create(bytesSend, "");
     int ioId = m_ioDevice->sendAndReceive(m_ioDataSingle);
     m_currIoId.setPending(ioId);
 }
