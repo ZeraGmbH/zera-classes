@@ -9,7 +9,7 @@ class SourceStateControllerTest : public QObject
     virtual ~SourceStateControllerTest();
 
 public slots:
-    void onIoQueueGroupFinished(IoTransferDataGroup::Ptr workGroup);
+    void onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup);
 
 private slots:
     void init();
@@ -45,5 +45,5 @@ private:
     SourceDeviceErrorInjection *m_sourceDevice = nullptr;
     SourceDevice *m_sourceDeviceUnderTest = nullptr;
     IoDeviceBase::Ptr m_ioDevice;
-    QList<IoTransferDataGroup::Ptr> m_listIoGroupsReceived;
+    QList<IoQueueEntry::Ptr> m_listIoGroupsReceived;
 };

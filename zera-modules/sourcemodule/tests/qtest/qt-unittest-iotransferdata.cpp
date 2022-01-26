@@ -1,6 +1,6 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-iotransferdata.h"
-#include "io-device/iotransferdatagroup.h"
+#include "io-queue/ioqueueentry.h"
 #include "io-device/iodevicebase.h"
 
 static QObject* pIoQueueTest = addTest(new IoTransferDataTest);
@@ -96,9 +96,9 @@ void IoTransferDataTest::singleCheckUsedPass()
 
 void IoTransferDataTest::groupIdsCreated()
 {
-    IoTransferDataGroup workGroup1(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
-    IoTransferDataGroup workGroup2(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
-    IoTransferDataGroup workGroup3(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry workGroup1(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry workGroup2(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry workGroup3(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
 
     QVERIFY(workGroup1.getGroupId() != workGroup2.getGroupId());
     QVERIFY(workGroup2.getGroupId() != workGroup3.getGroupId());
@@ -107,8 +107,8 @@ void IoTransferDataTest::groupIdsCreated()
 
 void IoTransferDataTest::groupPassedAllFail()
 {
-    IoTransferDataGroup::Ptr workTransferGroup =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     transList1.append(IoTransferDataSingle::Ptr::create());

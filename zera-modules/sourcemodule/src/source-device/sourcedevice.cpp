@@ -19,7 +19,7 @@ SourceDevice::~SourceDevice()
 {
 }
 
-int SourceDevice::startTransaction(IoTransferDataGroup::Ptr transferGroup)
+int SourceDevice::startTransaction(IoQueueEntry::Ptr transferGroup)
 {
     m_ioQueue.enqueueTransferGroup(transferGroup);
     return transferGroup->getGroupId();
@@ -40,7 +40,7 @@ SourceProperties SourceDevice::getProperties() const
     return m_sourceProperties;
 }
 
-void SourceDevice::onIoGroupFinished(IoTransferDataGroup::Ptr transferGroup)
+void SourceDevice::onIoGroupFinished(IoQueueEntry::Ptr transferGroup)
 {
     emit sigResponseReceived(transferGroup);
 }

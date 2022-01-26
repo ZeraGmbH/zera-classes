@@ -5,7 +5,7 @@
 #include <QJsonObject>
 #include "sourceactions.h"
 #include "json/jsonstructapi.h"
-#include "io-device/iotransferdatagroup.h"
+#include "io-queue/ioqueueentry.h"
 
 class IoGroupGenerator
 {
@@ -16,8 +16,8 @@ public:
     // single
     tIoTransferList generateListForAction(SourceActionTypes::ActionTypes actionType);
     // composed
-    IoTransferDataGroup::Ptr generateOnOffGroup(JsonParamApi requestedParams);
-    IoTransferDataGroup::Ptr generateStatusPollGroup();
+    IoQueueEntry::Ptr generateOnOffGroup(JsonParamApi requestedParams);
+    IoQueueEntry::Ptr generateStatusPollGroup();
 private:
     tIoTransferList generateRMSAndAngleUList();
     tIoTransferList generateRMSAndAngleIList();

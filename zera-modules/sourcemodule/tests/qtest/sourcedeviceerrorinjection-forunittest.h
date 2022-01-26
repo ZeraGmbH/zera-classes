@@ -8,7 +8,7 @@ class SourceDeviceErrorInjection : public ISourceDevice
 public:
     SourceDeviceErrorInjection(ISourceDevice *sourceUnderTest);
 
-    int startTransaction(IoTransferDataGroup::Ptr transferGroup) override;
+    int startTransaction(IoQueueEntry::Ptr transferGroup) override;
     IoGroupGenerator getIoGroupGenerator() const override;
     SourceProperties getProperties() const override;
 

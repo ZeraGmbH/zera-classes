@@ -5,7 +5,7 @@ SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceDevice *so
 {
 }
 
-void SourceTransactionStartNotifier::startTransactionWithNotify(IoTransferDataGroup::Ptr transferGroup)
+void SourceTransactionStartNotifier::startTransactionWithNotify(IoQueueEntry::Ptr transferGroup)
 {
     m_sourceDevice->startTransaction(transferGroup);
     emit sigTransationStarted(transferGroup->getGroupId());

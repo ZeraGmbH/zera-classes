@@ -87,7 +87,7 @@ void SourceDeviceVein::onNewVeinParamStatus(QVariant paramState)
     switchVeinLoad(paramState.toJsonObject());
 }
 
-void SourceDeviceVein::handleSourceCmd(IoTransferDataGroup::Ptr transferGroup)
+void SourceDeviceVein::handleSourceCmd(IoQueueEntry::Ptr transferGroup)
 {
     SourceDeviceBase::handleSourceCmd(transferGroup);
     m_deviceStatus.setBusy(false);
