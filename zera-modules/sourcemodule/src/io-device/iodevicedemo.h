@@ -10,20 +10,16 @@ class IoDeviceDemo : public IoDeviceBase
 {
     Q_OBJECT
 public:
+    IoDeviceDemo(IoDeviceTypes type);
+
     virtual bool open(QString strDeviceInfo) override;
     virtual void close() override;
+    virtual bool isOpen() override { return m_bOpen; }
 
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
     virtual void simulateExternalDisconnect() override;
 
-    virtual bool isOpen() override { return m_bOpen; }
-
     void setResponseDelay(bool followsTimeout, int iFixedMs);
-
-protected:
-    explicit IoDeviceDemo(IoDeviceTypes type);
-
-    friend class IoDeviceFactory;
 
 private slots:
     void onResponseDelayTimer();

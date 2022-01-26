@@ -18,7 +18,7 @@ void IoDeviceDemo::sendResponse(bool ioDeviceError)
     if(!ioDeviceError) {
         m_ioTransferData->setDataReceived(m_ioTransferData->getDemoResponse());
     }
-    emit _sigIoFinished(m_currIoId.getPending(), ioDeviceError);
+    emit sigIoFinishedQueued(m_currIoId.getPending(), ioDeviceError);
 }
 
 bool IoDeviceDemo::open(QString strDeviceInfo)

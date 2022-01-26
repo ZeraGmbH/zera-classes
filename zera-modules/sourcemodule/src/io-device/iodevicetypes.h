@@ -6,8 +6,6 @@ enum class IoDeviceTypes
     BROKEN,
     DEMO,
     ASYNCSERIAL,
-
-    TYPE_COUNT
 };
 
 class IoDeviceTypeQuery

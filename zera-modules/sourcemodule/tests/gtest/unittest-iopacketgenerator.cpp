@@ -25,7 +25,7 @@ TEST(TEST_PACKET_GENERATIOR, SEND_NOT_EMPTY) {
         IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
         tIoTransferList outInList = ioGroupGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
-            EXPECT_FALSE(outIn->getByesSend().isEmpty());
+            EXPECT_FALSE(outIn->getBytesSend().isEmpty());
         }
     }
 }

@@ -14,7 +14,6 @@ private slots:
     void init();
 
     void generateBrokenIoDeviceForOutOfLimitType();
-    void generateTypeSet();
 
     void baseReturnsIds();
     void demoReturnsIds();

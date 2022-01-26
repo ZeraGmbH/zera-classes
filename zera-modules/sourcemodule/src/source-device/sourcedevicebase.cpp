@@ -19,7 +19,7 @@ SourceDeviceBase::~SourceDeviceBase()
 
 bool SourceDeviceBase::isDemo()
 {
-    return m_ioDevice->isDemo();
+    return m_ioDevice->getType() == IoDeviceTypes::DEMO;
 }
 
 QString SourceDeviceBase::getIoDeviceInfo()
