@@ -1,5 +1,4 @@
 #include "iotransferdatasingle.h"
-#include "iodevicebase.h"
 
 const QByteArray IoTransferDataSingle::demoErrorResponseData = QByteArrayLiteral("_ERROR_RESPONSE_");
 
@@ -90,13 +89,6 @@ int IoTransferDataSingle::getResponseTimeout() const
 void IoTransferDataSingle::setDataReceived(QByteArray dataReceived)
 {
     m_dataReceived = dataReceived;
-}
-
-void IoTransferDataSingle::adjustZeroToDefaultTimeouts()
-{
-    if(m_responseTimeoutMs == 0) {
-        m_responseTimeoutMs = ioDefaultTimeout;
-    }
 }
 
 void IoTransferDataSingle::evaluateResponseLeadTrail()

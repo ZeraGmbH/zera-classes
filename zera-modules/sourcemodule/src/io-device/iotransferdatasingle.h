@@ -36,7 +36,6 @@ public:
     int getResponseTimeout() const;
 
     void setDataReceived(QByteArray dataReceived);
-    void adjustZeroToDefaultTimeouts();
     void evaluateResponseLeadTrail();
 
     static const QByteArray demoErrorResponseData;
