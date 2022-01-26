@@ -88,7 +88,7 @@ void SourceDeviceScanner::sendReceiveSourceID()
 QByteArray SourceDeviceScanner::createIoDeviceSpecificPrepend()
 {
     QByteArray prepend;
-    if(IoDeviceTypeQuery::isAsyncSerial(m_ioDevice->getType())) {
+    if(m_ioDevice->getType() == IoDeviceTypes::ASYNCSERIAL) {
         static_cast<IoDeviceZeraSerial*>(m_ioDevice.get())->setBlockEndCriteriaNextIo();
         // clean hung up blockers on first try by prepending '\r'
         if(m_currentSourceTested == 0) {
@@ -157,7 +157,7 @@ void SourceDeviceScanner::onIoFinished(int ioId, bool ioDeviceError)
     SupportedSourceTypes sourceTypeFound = SOURCE_MT_COMMON;
     QByteArray responsePrefix;
     if(!ioDeviceError) {
-        if(!m_ioDevice->isDemo()) {
+        if(m_ioDevice->getType() != IoDeviceTypes::DEMO) {
             for(auto responseTypePair : deviceDetectInfoCurrent.responseTypePairs) {
                 if(m_ioDataSingle->getDataReceived().contains(responseTypePair.expectedResponse)) {
                     validFound = true;
@@ -174,7 +174,7 @@ void SourceDeviceScanner::onIoFinished(int ioId, bool ioDeviceError)
     if(validFound) {
         QByteArray deviceVersion;
         QByteArray deviceName;
-        if(m_ioDevice->isDemo()) {
+        if(m_ioDevice->getType() == IoDeviceTypes::DEMO) {
             sourceTypeFound = nextDemoType();
             static_cast<IoDeviceDemo*>(m_ioDevice.get())->setResponseDelay(true, 0);
         }

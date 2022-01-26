@@ -41,7 +41,7 @@ void IoDeviceZeraSerial::close()
 
 void IoDeviceZeraSerial::setReadTimeoutNextIo(int timeoutMs)
 {
-    setReadTimeoutNextIoSerial(timeoutMs, sourceDefaultMsBetweenTwoBytes);
+    setReadTimeoutNextIoSerial(timeoutMs, ioDefaultMsBetweenTwoBytes);
 }
 
 IoDeviceZeraSerial::~IoDeviceZeraSerial()
@@ -55,10 +55,10 @@ int IoDeviceZeraSerial::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
     if(m_serialIO.isOpen()) {
         setReadTimeout();
         setBlockEndCriteria();
-        m_serialIO.sendAndReceive(ioTransferData->getByesSend(), &m_dataReceived);
+        m_serialIO.sendAndReceive(ioTransferData->getBytesSend(), &m_dataReceived);
     }
     if(!m_serialIO.isIOPending()) {
-        emit _sigIoFinished(m_currIoId.getPending(), true);
+        emit sigIoFinishedQueued(m_currIoId.getPending(), true);
     }
     return m_currIoId.getPending();
 }
@@ -106,7 +106,7 @@ bool IoDeviceZeraSerial::isOpen()
 void IoDeviceZeraSerial::onIoFinished()
 {
     m_ioTransferData->setDataReceived(m_dataReceived);
-    emit _sigIoFinished(m_currIoId.getPending(), false);
+    emit sigIoFinishedQueued(m_currIoId.getPending(), false);
 }
 
 void IoDeviceZeraSerial::onDeviceFileGone(QString)

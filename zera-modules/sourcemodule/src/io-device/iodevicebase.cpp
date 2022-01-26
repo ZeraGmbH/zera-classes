@@ -4,15 +4,9 @@
 IoDeviceBase::IoDeviceBase(IoDeviceTypes type) :
     m_type(type)
 {
-    connect(this, &IoDeviceBase::_sigIoFinished,
-            this, &IoDeviceBase::onIoFinished,
+    connect(this, &IoDeviceBase::sigIoFinishedQueued,
+            this, &IoDeviceBase::sigIoFinished,
             Qt::QueuedConnection);
-}
-
-void IoDeviceBase::onIoFinished(int ioID, bool ioDeviceError)
-{
-    m_ioTransferData->evaluateResponseLeadTrail();
-    emit sigIoFinished(ioID, ioDeviceError);
 }
 
 void IoDeviceBase::prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferData)

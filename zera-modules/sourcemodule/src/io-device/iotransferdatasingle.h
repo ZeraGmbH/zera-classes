@@ -24,26 +24,25 @@ public:
             int responseTimeoutMs = 0,
             bool demoErrorResponse = false);
 
+    void setDataReceived(QByteArray dataReceived);
     QByteArray getDataReceived() const;
+
     bool didIoPass() const;
     bool wasNotRunYet() const;
     bool noAnswerReceived() const;
     bool wrongAnswerReceived() const;
 
-    QByteArray getByesSend() const;
-    QByteArray getDemoResponse() const;
-    QByteArray getExpectedDataLead() const;
+    QByteArray getBytesSend() const;
     int getResponseTimeout() const;
 
-    void setDataReceived(QByteArray dataReceived);
-    void evaluateResponseLeadTrail();
-
     static const QByteArray demoErrorResponseData;
-
+    QByteArray getDemoResponse() const;
     bool m_demoErrorResponse = false;
 
 private:
+    QByteArray getExpectedDataLead() const;
     QByteArray getExpectedDataTrail() const;
+    void evaluateResponseLeadTrail();
 
     QByteArray m_dataReceived;
     int m_responseTimeoutMs = 0;

@@ -61,7 +61,7 @@ bool IoTransferDataSingle::wrongAnswerReceived() const
     return m_IoEval == EVAL_WRONG_ANSWER;
 }
 
-QByteArray IoTransferDataSingle::getByesSend() const
+QByteArray IoTransferDataSingle::getBytesSend() const
 {
     return m_bytesSend;
 }
@@ -89,6 +89,7 @@ int IoTransferDataSingle::getResponseTimeout() const
 void IoTransferDataSingle::setDataReceived(QByteArray dataReceived)
 {
     m_dataReceived = dataReceived;
+    evaluateResponseLeadTrail();
 }
 
 void IoTransferDataSingle::evaluateResponseLeadTrail()

@@ -11,22 +11,19 @@ class IoDeviceZeraSerial : public IoDeviceBase
 {
     Q_OBJECT
 public:
+    IoDeviceZeraSerial(IoDeviceTypes type);
     virtual ~IoDeviceZeraSerial();
 
     virtual bool open(QString strDeviceInfo) override; // e.g "/dev/ttyUSB0"
     virtual void close() override;
-    virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
-
     virtual bool isOpen() override;
+
+    virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
 
     void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
 
 protected:
-    IoDeviceZeraSerial(IoDeviceTypes type);
     virtual void setReadTimeoutNextIo(int timeoutMs) override;
-
-    friend class IoDeviceFactory;
-
 private slots:
     void onIoFinished();
     void onDeviceFileGone(QString);
@@ -40,12 +37,10 @@ private:
     FileDisappearWatcher m_disappearWatcher;
     QByteArray m_dataReceived;
 
-    static constexpr int sourceDefaultMsBetweenTwoBytes = 500;
-
     struct TTimeoutParam
     {
         int iMsReceiveFirst = ioDefaultTimeout;
-        int iMsBetweenTwoBytes = sourceDefaultMsBetweenTwoBytes;
+        int iMsBetweenTwoBytes = ioDefaultMsBetweenTwoBytes;
         int iMsMinTotal = 0;
     };
     const TTimeoutParam defaultTimeoutParam;

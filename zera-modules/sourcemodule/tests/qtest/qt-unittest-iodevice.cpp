@@ -20,14 +20,6 @@ void IoDeviceTest::generateBrokenIoDeviceForOutOfLimitType()
     QCOMPARE(IoDeviceTypes::BROKEN, ioDevice->getType());
 }
 
-void IoDeviceTest::generateTypeSet()
-{
-    for(int type = 0; type<int(IoDeviceTypes::TYPE_COUNT); type++) {
-        IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes(type));
-        QCOMPARE(IoDeviceTypes(type), ioDevice->getType());
-    }
-}
-
 void IoDeviceTest::onIoFinish(int ioID, bool error)
 {
     m_ioIDReceived = ioID;

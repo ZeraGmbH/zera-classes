@@ -9,16 +9,17 @@
 #include <QObject>
 
 static constexpr int ioDefaultTimeout = 1500;
+static constexpr int ioDefaultMsBetweenTwoBytes = 500;
 
 class IoDeviceBase : public QObject
 {
     Q_OBJECT
 public:
     typedef QSharedPointer<IoDeviceBase> Ptr;
+    IoDeviceBase(IoDeviceTypes type);
 
     virtual bool open(QString) = 0;
     virtual void close() = 0;
-
     virtual bool isOpen() = 0;
 
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) = 0;
@@ -27,17 +28,11 @@ public:
 
     QString getDeviceInfo();
     IoDeviceTypes getType() { return m_type; }
-    bool isDemo() { return IoDeviceTypeQuery::isDemo(m_type); }
-
 signals:
     void sigDisconnected();
     void sigIoFinished(int ioID, bool ioDeviceError); // users connect this signal
 
-protected: signals: // Just to state out: sub classes emit this to ensure evaluation & queue
-    void _sigIoFinished(int ioID, bool ioDeviceError);
 protected:
-    friend class IoDeviceFactory;
-    IoDeviceBase(IoDeviceTypes type);
     virtual void setReadTimeoutNextIo(int) {};
     void prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferData);
 
@@ -48,8 +43,8 @@ protected:
 
 private:
     IoDeviceTypes m_type;
-private slots:
-    void onIoFinished(int ioID, bool ioDeviceError);
+signals: // sub classes emit this to ensure queue
+    void sigIoFinishedQueued(int ioID, bool ioDeviceError);
 };
 
 #endif // IODEVICEBASE_H
