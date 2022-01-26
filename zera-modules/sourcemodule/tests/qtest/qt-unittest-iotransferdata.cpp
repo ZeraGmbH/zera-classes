@@ -96,9 +96,9 @@ void IoTransferDataTest::singleCheckUsedPass()
 
 void IoTransferDataTest::groupIdsCreated()
 {
-    IoQueueEntry workGroup1(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
-    IoQueueEntry workGroup2(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
-    IoQueueEntry workGroup3(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry workGroup1(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueEntry workGroup2(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueEntry workGroup3(IoQueueErrorBehaviors::STOP_ON_ERROR);
 
     QVERIFY(workGroup1.getGroupId() != workGroup2.getGroupId());
     QVERIFY(workGroup2.getGroupId() != workGroup3.getGroupId());
@@ -108,7 +108,7 @@ void IoTransferDataTest::groupIdsCreated()
 void IoTransferDataTest::groupPassedAllFail()
 {
     IoQueueEntry::Ptr workTransferGroup =
-            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
+            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     transList1.append(IoTransferDataSingle::Ptr::create());

@@ -1,0 +1,10 @@
+#ifndef IOQUEUEBEHAVIORS_H
+#define IOQUEUEBEHAVIORS_H
+
+enum class IoQueueErrorBehaviors {
+    STOP_ON_ERROR,
+    CONTINUE_ON_ERROR,
+    STOP_ON_FIRST_OK,
+};
+
+#endif // IOQUEUEBEHAVIORS_H

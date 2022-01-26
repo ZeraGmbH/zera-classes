@@ -3,8 +3,9 @@
 
 #include <QObject>
 #include <QSharedPointer>
+#include "ioqueueentry.h"
+#include "ioqueuebehaviors.h"
 #include "io-device/iodevicebase.h"
-#include "io-queue/ioqueueentry.h"
 #include "transaction-ids/idkeeper.h"
 
 class IoQueue : public QObject

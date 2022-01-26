@@ -2,7 +2,7 @@
 
 IoIdGenerator IoQueueEntry::m_idGenerator;
 
-IoQueueEntry::IoQueueEntry(IoQueueEntry::GroupErrorBehaviors errorBehavior) :
+IoQueueEntry::IoQueueEntry(IoQueueErrorBehaviors errorBehavior) :
     m_errorBehavior(errorBehavior),
     m_groupId(m_idGenerator.nextID())
 {
@@ -34,7 +34,7 @@ int IoQueueEntry::getGroupId() const
     return m_groupId;
 }
 
-IoQueueEntry::GroupErrorBehaviors IoQueueEntry::getErrorBehavior() const
+IoQueueErrorBehaviors IoQueueEntry::getErrorBehavior() const
 {
     return m_errorBehavior;
 }
