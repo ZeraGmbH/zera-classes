@@ -14,6 +14,7 @@ public:
         BEHAVE_UNDEFINED = 0,
         BEHAVE_STOP_ON_ERROR,
         BEHAVE_CONTINUE_ON_ERROR,
+        BEHAVE_STOP_ON_FIRST_OK,
         BEHAVE_UNDEF_BOTTOM
     };
 
