@@ -7,13 +7,16 @@
 class SourceProperties
 {
 public:
+    SourceProperties();
     SourceProperties(SupportedSourceTypes type, QString name, QString version);
 
+    bool isValid() const;
     SupportedSourceTypes getType() const;
     QString getName() const;
     QString getVersion() const;
 private:
-    SupportedSourceTypes m_type;
+    bool m_isValid = false;
+    SupportedSourceTypes m_type = SOURCE_MT_COMMON;
     QString m_name;
     QString m_version;
 
