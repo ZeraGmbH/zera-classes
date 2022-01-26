@@ -1,7 +1,6 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevice.h"
 #include "io-device/iodevicefactory.h"
-#include "io-device/iotransferdatasinglefactory.h"
 #include "source-device/sourcedevice.h"
 #include "json/jsonstructureloader.h"
 #include <zera-json-params-state.h>
@@ -60,14 +59,14 @@ void SourceDeviceTest::signalResponses()
     IoTransferDataGroup::Ptr workTransferGroup1 =
             IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingleFactory::createIoData());
+    transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     sourceDevice.startTransaction(workTransferGroup1);
 
     IoTransferDataGroup::Ptr workTransferGroup2 =
             IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingleFactory::createIoData());
+    transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
     sourceDevice.startTransaction(workTransferGroup2);
 
@@ -89,7 +88,7 @@ void SourceDeviceTest::signalResponsesOnOneError()
     IoTransferDataGroup::Ptr workTransferGroup1 =
             IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingleFactory::createIoData());
+    transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->setDemoErrorOnTransfer(0);
     sourceDevice.startTransaction(workTransferGroup1);
@@ -97,7 +96,7 @@ void SourceDeviceTest::signalResponsesOnOneError()
     IoTransferDataGroup::Ptr workTransferGroup2 =
             IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingleFactory::createIoData());
+    transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
     sourceDevice.startTransaction(workTransferGroup2);
 
@@ -119,7 +118,7 @@ void SourceDeviceTest::signalResponsesOnTwoErrors()
     IoTransferDataGroup::Ptr workTransferGroup1 =
             IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingleFactory::createIoData());
+    transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->setDemoErrorOnTransfer(0);
     sourceDevice.startTransaction(workTransferGroup1);
@@ -127,7 +126,7 @@ void SourceDeviceTest::signalResponsesOnTwoErrors()
     IoTransferDataGroup::Ptr workTransferGroup2 =
             IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingleFactory::createIoData());
+    transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
     workTransferGroup2->setDemoErrorOnTransfer(0);
     sourceDevice.startTransaction(workTransferGroup2);

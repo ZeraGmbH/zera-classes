@@ -10,6 +10,13 @@ class IoTransferDataSingle
 {
 public:
     typedef QSharedPointer<IoTransferDataSingle> Ptr;
+    IoTransferDataSingle();
+    IoTransferDataSingle(
+            QByteArray bytesSend,
+            QByteArray bytesExpectedLead,
+            QByteArray bytesExpectedTrail = "\r",
+            int responseTimeoutMs = 0,
+            bool demoErrorResponse = false);
 
     QByteArray getDataReceived() const;
     bool didIoPass() const;
@@ -32,15 +39,6 @@ public:
     bool m_demoErrorResponse = false;
 
 protected:
-    IoTransferDataSingle();
-    IoTransferDataSingle(
-            QByteArray bytesSend,
-            QByteArray bytesExpectedLead,
-            QByteArray bytesExpectedTrail = "\r",
-            int responseTimeoutMs = 0,
-            bool demoErrorResponse = false);
-    friend class IoTransferDataSingleFactory;
-
     QByteArray m_dataReceived;
     int m_responseTimeoutMs = 0;
     QByteArray m_bytesExpectedLead;
