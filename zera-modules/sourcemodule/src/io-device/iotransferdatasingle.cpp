@@ -5,19 +5,37 @@ const QByteArray IoTransferDataSingle::demoErrorResponseData = QByteArrayLiteral
 
 IoTransferDataSingle::IoTransferDataSingle()
 {
+    m_bytesExpectedLeadList.append(QByteArray());
 }
 
 IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
-              QByteArray bytesExpectedLead,
-              QByteArray bytesExpectedTrail,
-              int responseTimeoutMs,
-              bool demoErrorResponse) :
+                                           QByteArray bytesExpectedLead,
+                                           QByteArray bytesExpectedTrail,
+                                           int responseTimeoutMs,
+                                           bool demoErrorResponse) :
     m_demoErrorResponse(demoErrorResponse),
     m_responseTimeoutMs(responseTimeoutMs),
-    m_bytesExpectedLead(bytesExpectedLead),
     m_bytesExpectedTrail(bytesExpectedTrail),
     m_bytesSend(bytesSend)
-{}
+{
+    m_bytesExpectedLeadList.append(bytesExpectedLead);
+}
+
+IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
+                                           QList<QByteArray> bytesExpectedLeadList,
+                                           QByteArray bytesExpectedTrail,
+                                           int responseTimeoutMs,
+                                           bool demoErrorResponse) :
+    m_demoErrorResponse(demoErrorResponse),
+    m_responseTimeoutMs(responseTimeoutMs),
+    m_bytesExpectedTrail(bytesExpectedTrail),
+    m_bytesSend(bytesSend)
+{
+    m_bytesExpectedLeadList = bytesExpectedLeadList;
+    if(m_bytesExpectedLeadList.isEmpty()) {
+        m_bytesExpectedLeadList.append(QByteArray());
+    }
+}
 
 QByteArray IoTransferDataSingle::getDataReceived() const
 {
@@ -51,12 +69,12 @@ QByteArray IoTransferDataSingle::getByesSend() const
 
 QByteArray IoTransferDataSingle::getDemoResponse() const
 {
-    return m_demoErrorResponse ? demoErrorResponseData : m_bytesExpectedLead+m_bytesExpectedTrail;
+    return m_demoErrorResponse ? demoErrorResponseData : getExpectedDataLead()+getExpectedDataTrail();
 }
 
 QByteArray IoTransferDataSingle::getExpectedDataLead() const
 {
-    return m_bytesExpectedLead;
+    return m_bytesExpectedLeadList[0];
 }
 
 QByteArray IoTransferDataSingle::getExpectedDataTrail() const
@@ -87,9 +105,13 @@ void IoTransferDataSingle::evaluateResponseLeadTrail()
         m_IoEval = IoTransferDataSingle::EVAL_NO_ANSWER;
     }
     else {
-        bool pass =
-                m_dataReceived.startsWith(m_bytesExpectedLead) &&
-                m_dataReceived.endsWith(m_bytesExpectedTrail);
+        bool pass = false;
+        for(auto bytesExpectedLead : m_bytesExpectedLeadList) {
+            if(m_dataReceived.startsWith(bytesExpectedLead) && m_dataReceived.endsWith(m_bytesExpectedTrail)) {
+                pass = true;
+                break;
+            }
+        }
         m_IoEval = pass ? IoTransferDataSingle::EVAL_PASS : IoTransferDataSingle::EVAL_WRONG_ANSWER;
     }
 }

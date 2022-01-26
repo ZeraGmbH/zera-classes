@@ -46,7 +46,9 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
         IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
         tIoTransferList outInList = ioGroupGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
-            EXPECT_FALSE(outIn->getExpectedDataLead().isEmpty() && outIn->getExpectedDataTrail().isEmpty());
+            QByteArray demoResponse = outIn->getDemoResponse();
+            EXPECT_GE(demoResponse.length(), 1);
+            EXPECT_TRUE(demoResponse.endsWith("\r"));
         }
     }
 }
