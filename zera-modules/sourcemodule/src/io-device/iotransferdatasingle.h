@@ -17,6 +17,12 @@ public:
             QByteArray bytesExpectedTrail = "\r",
             int responseTimeoutMs = 0,
             bool demoErrorResponse = false);
+    IoTransferDataSingle(
+            QByteArray bytesSend,
+            QList<QByteArray> bytesExpectedLeadList,
+            QByteArray bytesExpectedTrail = "\r",
+            int responseTimeoutMs = 0,
+            bool demoErrorResponse = false);
 
     QByteArray getDataReceived() const;
     bool didIoPass() const;
@@ -27,7 +33,6 @@ public:
     QByteArray getByesSend() const;
     QByteArray getDemoResponse() const;
     QByteArray getExpectedDataLead() const;
-    QByteArray getExpectedDataTrail() const;
     int getResponseTimeout() const;
 
     void setDataReceived(QByteArray dataReceived);
@@ -38,13 +43,14 @@ public:
 
     bool m_demoErrorResponse = false;
 
-protected:
+private:
+    QByteArray getExpectedDataTrail() const;
+
     QByteArray m_dataReceived;
     int m_responseTimeoutMs = 0;
-    QByteArray m_bytesExpectedLead;
+    QList<QByteArray> m_bytesExpectedLeadList;
     QByteArray m_bytesExpectedTrail = "\r";
     QByteArray m_bytesSend;
-private:
     enum EvalResponse {
         EVAL_NOT_EXECUTED = 0,
         EVAL_NO_ANSWER,
