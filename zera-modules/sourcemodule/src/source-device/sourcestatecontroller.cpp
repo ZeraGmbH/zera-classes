@@ -40,7 +40,7 @@ bool SourceStateController::tryStartPollNow()
 {
     bool bStarted = false;
     if(!m_PendingStateQueryIds.hasPending()) {
-        IoTransferDataGroup::Ptr transferGroup = m_sourceDevice->getIoGroupGenerator().generateStatusPollGroup();
+        IoQueueEntry::Ptr transferGroup = m_sourceDevice->getIoGroupGenerator().generateStatusPollGroup();
         m_sourceNotificationStateQuery->startTransactionWithNotify(transferGroup);
         bStarted = true;
     }
@@ -68,7 +68,7 @@ void SourceStateController::onStateQueryTransationStarted(int dataGroupId)
     m_PendingStateQueryIds.setPending(dataGroupId);
 }
 
-void SourceStateController::onResponseReceived(const IoTransferDataGroup::Ptr transferGroup)
+void SourceStateController::onResponseReceived(const IoQueueEntry::Ptr transferGroup)
 {
     int groupId = transferGroup->getGroupId();
     if(m_pendingSwitchIds.isPendingAndRemoveIf(groupId)) {
@@ -108,7 +108,7 @@ void SourceStateController::setPollingOnStateChange()
     }
 }
 
-void SourceStateController::handleSwitchResponse(const IoTransferDataGroup::Ptr transferGroup)
+void SourceStateController::handleSwitchResponse(const IoQueueEntry::Ptr transferGroup)
 {
     if(!transferGroup->passedAll() && !m_currState.isError()) {
         setState(SourceStates::ERROR_SWITCH);
@@ -118,7 +118,7 @@ void SourceStateController::handleSwitchResponse(const IoTransferDataGroup::Ptr 
     }
 }
 
-void SourceStateController::handleStateResponse(const IoTransferDataGroup::Ptr transferGroup)
+void SourceStateController::handleStateResponse(const IoQueueEntry::Ptr transferGroup)
 {
     if(!transferGroup->passedAll() && !m_currState.isError()) {
         setState(SourceStates::ERROR_POLL);

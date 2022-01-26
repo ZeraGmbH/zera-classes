@@ -12,11 +12,11 @@ class ISourceDevice : public QObject
 {
     Q_OBJECT
 public:
-    virtual int startTransaction(IoTransferDataGroup::Ptr transferGroup) = 0;
+    virtual int startTransaction(IoQueueEntry::Ptr transferGroup) = 0;
     virtual IoGroupGenerator getIoGroupGenerator() const = 0;
     virtual SourceProperties getProperties() const = 0;
 signals:
-    void sigResponseReceived(const IoTransferDataGroup::Ptr response);
+    void sigResponseReceived(const IoQueueEntry::Ptr response);
 };
 
 
@@ -35,7 +35,7 @@ public:
     ~SourceDevice();
 
     // requests
-    int startTransaction(IoTransferDataGroup::Ptr transferGroup) override;
+    int startTransaction(IoQueueEntry::Ptr transferGroup) override;
     void simulateExternalDisconnect();
 
     // getter
@@ -46,7 +46,7 @@ signals:
     void sigIoDeviceDisconnected();
 
 private slots:
-    void onIoGroupFinished(IoTransferDataGroup::Ptr transferGroup);
+    void onIoGroupFinished(IoQueueEntry::Ptr transferGroup);
 
 private:
     IoDeviceBase::Ptr m_ioDevice;

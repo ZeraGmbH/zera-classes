@@ -12,7 +12,7 @@ void SourceDeviceErrorInjection::setDemoResonseError(bool active)
     m_demoSimulErrorActive = active;
 }
 
-int SourceDeviceErrorInjection::startTransaction(IoTransferDataGroup::Ptr transferGroup)
+int SourceDeviceErrorInjection::startTransaction(IoQueueEntry::Ptr transferGroup)
 {
     if(m_demoSimulErrorActive) {
         transferGroup->setDemoErrorOnTransfer(0);

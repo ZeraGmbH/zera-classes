@@ -55,14 +55,14 @@ private slots:
     void onPollTimer();
     void onSwitchTransactionStarted(int dataGroupId);
     void onStateQueryTransationStarted(int dataGroupId);
-    void onResponseReceived(const IoTransferDataGroup::Ptr transferGroup);
+    void onResponseReceived(const IoQueueEntry::Ptr transferGroup);
 private:
     void enablePolling();
     void disablePolling();
     void setState(SourceStates state);
     void setPollingOnStateChange();
-    void handleSwitchResponse(const IoTransferDataGroup::Ptr transferGroup);
-    void handleStateResponse(const IoTransferDataGroup::Ptr transferGroup);
+    void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
+    void handleStateResponse(const IoQueueEntry::Ptr transferGroup);
 
     ISourceDevice *m_sourceDevice;
     SourceTransactionStartNotifier *m_sourceNotificationSwitch;

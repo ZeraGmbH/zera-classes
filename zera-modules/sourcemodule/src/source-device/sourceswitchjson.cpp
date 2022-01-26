@@ -17,7 +17,7 @@ SourceSwitchJson::SourceSwitchJson(ISourceDevice *sourceDevice, SourceTransactio
 void SourceSwitchJson::switchState(JsonParamApi paramState)
 {
     m_paramsRequested = paramState;
-    IoTransferDataGroup::Ptr transferGroup = m_sourceDevice->getIoGroupGenerator().generateOnOffGroup(m_paramsRequested);
+    IoQueueEntry::Ptr transferGroup = m_sourceDevice->getIoGroupGenerator().generateOnOffGroup(m_paramsRequested);
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
 }
 
@@ -38,7 +38,7 @@ void SourceSwitchJson::onSwitchTransactionStarted(int dataGroupId)
     m_pendingSwitchIds.setPending(dataGroupId);
 }
 
-void SourceSwitchJson::onResponseReceived(const IoTransferDataGroup::Ptr transferGroup)
+void SourceSwitchJson::onResponseReceived(const IoQueueEntry::Ptr transferGroup)
 {
     int groupId = transferGroup->getGroupId();
     if(m_pendingSwitchIds.isPendingAndRemoveIf(groupId)) {
@@ -46,7 +46,7 @@ void SourceSwitchJson::onResponseReceived(const IoTransferDataGroup::Ptr transfe
     }
 }
 
-void SourceSwitchJson::handleSwitchResponse(const IoTransferDataGroup::Ptr transferGroup)
+void SourceSwitchJson::handleSwitchResponse(const IoQueueEntry::Ptr transferGroup)
 {
     if(transferGroup->passedAll()) {
         m_paramsCurrent = m_paramsRequested;

@@ -21,9 +21,9 @@ signals:
 
 private slots:
     void onSwitchTransactionStarted(int dataGroupId);
-    void onResponseReceived(const IoTransferDataGroup::Ptr transferGroup);
+    void onResponseReceived(const IoQueueEntry::Ptr transferGroup);
 private:
-    void handleSwitchResponse(const IoTransferDataGroup::Ptr transferGroup);
+    void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
 
     ISourceDevice* m_sourceDevice;
     SourceTransactionStartNotifier *m_sourceNotificationSwitch;

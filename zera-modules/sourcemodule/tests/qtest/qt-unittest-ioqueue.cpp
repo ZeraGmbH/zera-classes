@@ -6,7 +6,7 @@
 
 static QObject* pIoQueueTest = addTest(new IoQueueTest);
 
-void IoQueueTest::onIoQueueGroupFinished(IoTransferDataGroup::Ptr workGroup)
+void IoQueueTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {
     m_listIoGroupsReceived.append(workGroup);
 }
@@ -18,7 +18,7 @@ void IoQueueTest::init()
 
 void IoQueueTest::noIoDeviceNotBusy()
 {
-    IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(true);
+    IoQueueEntry::Ptr workGroup = generateSwitchCommands(true);
     IoQueue queue;
     queue.enqueueTransferGroup(workGroup);
     QVERIFY(!queue.isIoBusy());
@@ -28,7 +28,7 @@ void IoQueueTest::emptyGroupNotBusy()
 {
     IoQueue queue;
     queue.setIoDevice(createOpenDemoIoDevice());
-    IoTransferDataGroup::Ptr workGroup = IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workGroup = IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     queue.enqueueTransferGroup(workGroup);
     QVERIFY(!queue.isIoBusy());
 }
@@ -37,7 +37,7 @@ void IoQueueTest::nullGroupNotBusy()
 {
     IoQueue queue;
     queue.setIoDevice(createOpenDemoIoDevice());
-    IoTransferDataGroup::Ptr null;
+    IoQueueEntry::Ptr null;
     queue.enqueueTransferGroup(null);
     QVERIFY(!queue.isIoBusy());
 }
@@ -45,7 +45,7 @@ void IoQueueTest::nullGroupNotBusy()
 void IoQueueTest::notOpenIoDeviceNotBusy()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
-    IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(false);
+    IoQueueEntry::Ptr workGroup = generateSwitchCommands(false);
     IoQueue queue;
     queue.setIoDevice(ioDevice);
     queue.enqueueTransferGroup(workGroup);
@@ -55,7 +55,7 @@ void IoQueueTest::notOpenIoDeviceNotBusy()
 void IoQueueTest::openIoDeviceBusy()
 {
     IoQueue queue;
-    IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(false);
+    IoQueueEntry::Ptr workGroup = generateSwitchCommands(false);
     queue.setIoDevice(createOpenDemoIoDevice());
     queue.enqueueTransferGroup(workGroup);
     QVERIFY(queue.isIoBusy());
@@ -64,7 +64,7 @@ void IoQueueTest::openIoDeviceBusy()
 void IoQueueTest::noIoDeviceNotification()
 {
     IoQueue queue;
-    IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(true);
+    IoQueueEntry::Ptr workGroup = generateSwitchCommands(true);
 
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
     queue.enqueueTransferGroup(workGroup);
@@ -79,7 +79,7 @@ void IoQueueTest::notOpenIoDeviceNotifications()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     IoQueue queue;
-    IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(true);
+    IoQueueEntry::Ptr workGroup = generateSwitchCommands(true);
     queue.setIoDevice(ioDevice);
 
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
@@ -99,7 +99,7 @@ void IoQueueTest::disconnectBeforeEnqueue()
     queue.setIoDevice(ioDevice);
 
     demoIoDevice->simulateExternalDisconnect();
-    IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(false);
+    IoQueueEntry::Ptr workGroup = generateSwitchCommands(false);
     queue.enqueueTransferGroup(workGroup);
 
     QVERIFY(!queue.isIoBusy());
@@ -120,7 +120,7 @@ void IoQueueTest::disconnectWhileWorking()
         demoIoDevice->simulateExternalDisconnect();
     });
     timer.start(10);
-    IoTransferDataGroup::Ptr workGroup = generateSwitchCommands(false);
+    IoQueueEntry::Ptr workGroup = generateSwitchCommands(false);
     queue.enqueueTransferGroup(workGroup);
     QTest::qWait(50);
 
@@ -144,8 +144,8 @@ void IoQueueTest::disconnectWhileWorkingMultipleNotifications()
         demoIoDevice->simulateExternalDisconnect();
     });
     timer.start(10);
-    IoTransferDataGroup::Ptr workGroup1 = generateSwitchCommands(true);
-    IoTransferDataGroup::Ptr workGroup2 = generateSwitchCommands(false);
+    IoQueueEntry::Ptr workGroup1 = generateSwitchCommands(true);
+    IoQueueEntry::Ptr workGroup2 = generateSwitchCommands(false);
     queue.enqueueTransferGroup(workGroup1);
     queue.enqueueTransferGroup(workGroup2);
     QTest::qWait(50);
@@ -162,8 +162,8 @@ void IoQueueTest::stopOnFirstError()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList;
     transList.append(IoTransferDataSingle::Ptr::create());
     transList.append(IoTransferDataSingle::Ptr::create());
@@ -188,8 +188,8 @@ void IoQueueTest::continueOnError()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_CONTINUE_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_CONTINUE_ON_ERROR);
     tIoTransferList transList;
     transList.append(IoTransferDataSingle::Ptr::create());
     transList.append(IoTransferDataSingle::Ptr::create());
@@ -214,8 +214,8 @@ void IoQueueTest::noErrorSignalOnEmptyGroup()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_CONTINUE_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_CONTINUE_ON_ERROR);
     queue.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(10);
     if(m_listIoGroupsReceived.count() != 1) {
@@ -235,22 +235,22 @@ void IoQueueTest::rejectSpam()
     constexpr int maxPendingGroups = 2;
     queue.setMaxPendingGroups(maxPendingGroups);
 
-    IoTransferDataGroup::Ptr workTransferGroup1 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup1 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
-    IoTransferDataGroup::Ptr workTransferGroup2 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup2 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
-    IoTransferDataGroup::Ptr workTransferGroup3 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup3 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList3;
     transList3.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup3->appendTransferList(transList3);
@@ -272,15 +272,15 @@ void IoQueueTest::acceptCloseToSpam()
     constexpr int maxPendingGroups = 2;
     queue.setMaxPendingGroups(maxPendingGroups);
 
-    IoTransferDataGroup::Ptr workTransferGroup1 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup1 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
-    IoTransferDataGroup::Ptr workTransferGroup2 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup2 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
@@ -299,8 +299,8 @@ void IoQueueTest::oneValidGroupSingleIo()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup->appendTransferList(transList1);
@@ -320,15 +320,15 @@ void IoQueueTest::twoValidGroupsSingleIo()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup1 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup1 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
-    IoTransferDataGroup::Ptr workTransferGroup2 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup2 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
@@ -348,8 +348,8 @@ void IoQueueTest::oneValidGroupMultipleIo()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     transList1.append(IoTransferDataSingle::Ptr::create());
@@ -370,16 +370,16 @@ void IoQueueTest::twoValidGroupsMultipleIo()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup1 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup1 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
-    IoTransferDataGroup::Ptr workTransferGroup2 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup2 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     transList2.append(IoTransferDataSingle::Ptr::create());
@@ -402,16 +402,16 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
     queue.setIoDevice(ioDevice);
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
-    IoTransferDataGroup::Ptr workTransferGroup1 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup1 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->setDemoErrorOnTransfer(0);
     queue.enqueueTransferGroup(workTransferGroup1);
 
-    IoTransferDataGroup::Ptr workTransferGroup2 =
-            IoTransferDataGroup::Ptr::create(IoTransferDataGroup::BEHAVE_STOP_ON_ERROR);
+    IoQueueEntry::Ptr workTransferGroup2 =
+            IoQueueEntry::Ptr::create(IoQueueEntry::BEHAVE_STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create());
     workTransferGroup2->appendTransferList(transList2);
@@ -424,14 +424,14 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
     evalNotificationCount(1, 1, 1, 0);
 }
 
-IoTransferDataGroup::Ptr IoQueueTest::generateStatusPollCommands()
+IoQueueEntry::Ptr IoQueueTest::generateStatusPollCommands()
 {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;
     return ioGroupGenerator.generateStatusPollGroup();
 }
 
-IoTransferDataGroup::Ptr IoQueueTest::generateSwitchCommands(bool on)
+IoQueueEntry::Ptr IoQueueTest::generateSwitchCommands(bool on)
 {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;

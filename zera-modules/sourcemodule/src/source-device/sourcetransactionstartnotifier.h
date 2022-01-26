@@ -10,7 +10,7 @@ class SourceTransactionStartNotifier : public QObject
 public:
     SourceTransactionStartNotifier(ISourceDevice *sourceDevice);
 
-    void startTransactionWithNotify(IoTransferDataGroup::Ptr transferGroup);
+    void startTransactionWithNotify(IoQueueEntry::Ptr transferGroup);
 signals:
     void sigTransationStarted(int dataGroupId);
 

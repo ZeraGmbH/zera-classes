@@ -22,7 +22,7 @@ public:
 protected:
     void switchState(JsonParamApi state);
     void switchOff();
-    virtual void handleSourceCmd(IoTransferDataGroup::Ptr transferGroup);
+    virtual void handleSourceCmd(IoQueueEntry::Ptr transferGroup);
 
     IoDeviceBase::Ptr m_ioDevice;
     IoGroupGenerator* m_ioGroupGenerator = nullptr;
@@ -34,7 +34,7 @@ protected:
     IdKeeperSingle m_currQueueId;
 
 private slots:
-    void onIoGroupFinished(IoTransferDataGroup::Ptr transferGroup);
+    void onIoGroupFinished(IoQueueEntry::Ptr transferGroup);
 };
 
 #endif // SOURCEDEVICEBASE_H

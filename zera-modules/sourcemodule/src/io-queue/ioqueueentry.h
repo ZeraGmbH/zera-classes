@@ -1,13 +1,13 @@
-#ifndef IOTRANSFERDATAGROUP_H
-#define IOTRANSFERDATAGROUP_H
+#ifndef IOQUEUEGROUP_H
+#define IOQUEUEGROUP_H
 
-#include "iotransferdatasingle.h"
+#include "io-device/iotransferdatasingle.h"
 #include "transaction-ids/idgenerator.h"
 #include <QSharedPointer>
 
 typedef QList<IoTransferDataSingle::Ptr> tIoTransferList;
 
-class IoTransferDataGroup
+class IoQueueEntry
 {
 public:
     enum GroupErrorBehaviors {
@@ -17,9 +17,9 @@ public:
         BEHAVE_UNDEF_BOTTOM
     };
 
-    typedef QSharedPointer<IoTransferDataGroup> Ptr;
+    typedef QSharedPointer<IoQueueEntry> Ptr;
 
-    IoTransferDataGroup(GroupErrorBehaviors errorBehavior);
+    IoQueueEntry(GroupErrorBehaviors errorBehavior);
 
     void appendTransferList(tIoTransferList transferList);
 
@@ -41,6 +41,6 @@ private:
     bool m_bPassedAll = false;
 };
 
-Q_DECLARE_METATYPE(IoTransferDataGroup::Ptr)
+Q_DECLARE_METATYPE(IoQueueEntry::Ptr)
 
-#endif // IOTRANSFERDATAGROUP_H
+#endif // IOQUEUEGROUP_H

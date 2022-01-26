@@ -16,7 +16,7 @@ SourceStateControllerTest::~SourceStateControllerTest()
     delete m_sourceDevice;
 }
 
-void SourceStateControllerTest::onIoQueueGroupFinished(IoTransferDataGroup::Ptr workGroup)
+void SourceStateControllerTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {
     m_listIoGroupsReceived.append(workGroup);
 }

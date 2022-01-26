@@ -23,7 +23,7 @@ void IoQueue::setMaxPendingGroups(int maxGroups)
     m_maxPendingGroups = maxGroups;
 }
 
-int IoQueue::enqueueTransferGroup(IoTransferDataGroup::Ptr transferGroup)
+int IoQueue::enqueueTransferGroup(IoQueueEntry::Ptr transferGroup)
 {
     if(!canEnqueue(transferGroup)) {
         finishGroup(transferGroup);
@@ -76,7 +76,7 @@ void IoQueue::tryStartNextIo()
 IoTransferDataSingle::Ptr IoQueue::getNextIoTransfer()
 {
     IoTransferDataSingle::Ptr nextIo;
-    IoTransferDataGroup::Ptr currGroup = getCurrentGroup();
+    IoQueueEntry::Ptr currGroup = getCurrentGroup();
     if(currGroup) {
         if(m_nextPosInCurrGroup < currGroup->getTransferCount()) {
             nextIo = currGroup->getTransfer(m_nextPosInCurrGroup);
@@ -112,7 +112,7 @@ void IoQueue::finishCurrentGroup()
     finishGroup(m_pendingGroups.takeFirst());
 }
 
-void IoQueue::finishGroup(IoTransferDataGroup::Ptr transferGroupToFinish)
+void IoQueue::finishGroup(IoQueueEntry::Ptr transferGroupToFinish)
 {
     if(transferGroupToFinish) {
         transferGroupToFinish->evalAll();
@@ -130,7 +130,7 @@ void IoQueue::abortAllGroups()
 bool IoQueue::checkCurrentResponsePassed()
 {
     bool pass = false;
-    IoTransferDataGroup::Ptr currGroup = getCurrentGroup();
+    IoQueueEntry::Ptr currGroup = getCurrentGroup();
     if(currGroup) {
         IoTransferDataSingle::Ptr currentIo = currGroup->getTransfer(m_nextPosInCurrGroup-1);
         pass = currentIo->didIoPass();
@@ -138,7 +138,7 @@ bool IoQueue::checkCurrentResponsePassed()
     return pass;
 }
 
-bool IoQueue::canEnqueue(IoTransferDataGroup::Ptr transferGroup)
+bool IoQueue::canEnqueue(IoQueueEntry::Ptr transferGroup)
 {
     bool canEnqueue =
             m_ioDevice && m_ioDevice->isOpen() &&
@@ -150,13 +150,13 @@ bool IoQueue::canEnqueue(IoTransferDataGroup::Ptr transferGroup)
 bool IoQueue::canContinueCurrentGroup()
 {
     bool pass = checkCurrentResponsePassed();
-    IoTransferDataGroup::Ptr currGroup = getCurrentGroup();
-    return pass || (currGroup && currGroup->getErrorBehavior() == IoTransferDataGroup::BEHAVE_CONTINUE_ON_ERROR);
+    IoQueueEntry::Ptr currGroup = getCurrentGroup();
+    return pass || (currGroup && currGroup->getErrorBehavior() == IoQueueEntry::BEHAVE_CONTINUE_ON_ERROR);
 }
 
-IoTransferDataGroup::Ptr IoQueue::getCurrentGroup()
+IoQueueEntry::Ptr IoQueue::getCurrentGroup()
 {
-    IoTransferDataGroup::Ptr current;
+    IoQueueEntry::Ptr current;
     if(!m_pendingGroups.isEmpty()) {
         current = m_pendingGroups.first();
     }

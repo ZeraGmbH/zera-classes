@@ -30,7 +30,7 @@ QString SourceDeviceBase::getIoDeviceInfo()
 void SourceDeviceBase::switchState(JsonParamApi state)
 {
     m_paramsRequested = state;
-    IoTransferDataGroup::Ptr transferGroup = m_ioGroupGenerator->generateOnOffGroup(m_paramsRequested);
+    IoQueueEntry::Ptr transferGroup = m_ioGroupGenerator->generateOnOffGroup(m_paramsRequested);
     m_currQueueId.setPending(m_ioQueue.enqueueTransferGroup(transferGroup));
 }
 
@@ -40,14 +40,14 @@ void SourceDeviceBase::switchOff()
     switchState(m_paramsCurrent);
 }
 
-void SourceDeviceBase::handleSourceCmd(IoTransferDataGroup::Ptr transferGroup)
+void SourceDeviceBase::handleSourceCmd(IoQueueEntry::Ptr transferGroup)
 {
     if(transferGroup->passedAll()) {
         m_paramsCurrent = m_paramsRequested;
     }
 }
 
-void SourceDeviceBase::onIoGroupFinished(IoTransferDataGroup::Ptr transferGroup)
+void SourceDeviceBase::onIoGroupFinished(IoQueueEntry::Ptr transferGroup)
 {
     if(m_currQueueId.isPendingAndRemoveIf(transferGroup->getGroupId())) {
         handleSourceCmd(transferGroup);
