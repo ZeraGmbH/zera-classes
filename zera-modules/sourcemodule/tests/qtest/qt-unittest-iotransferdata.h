@@ -30,6 +30,9 @@ private slots:
     void singleCheckUsedWrongAnswer();
     void singleCheckUsedPass();
 
+    void singleCheckInjectSingleExpected();
+    void singleCheckInjectMultipleExpected();
+
     void groupIdsCreated();
 
     void groupPassedAllFail();

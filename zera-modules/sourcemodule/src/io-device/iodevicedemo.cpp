@@ -16,7 +16,7 @@ void IoDeviceDemo::onResponseDelayTimer()
 void IoDeviceDemo::sendResponse(bool ioDeviceError)
 {
     if(!ioDeviceError) {
-        m_ioTransferData->setDataReceived(m_ioTransferData->getDemoResponse());
+        m_ioTransferData->setDataReceived(m_ioTransferData->getDemoResponder().getDemoResponse());
     }
     emit sigIoFinishedQueued(m_currIoId.getPending(), ioDeviceError);
 }

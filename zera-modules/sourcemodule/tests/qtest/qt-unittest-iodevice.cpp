@@ -186,23 +186,17 @@ void IoDeviceTest::demoResponseListErrorInjection()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
-    m_ioDataForSingleUse->m_demoErrorResponse = true;
+    m_ioDataForSingleUse->getDemoResponder().activateErrorResponse();
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30); // one I/O at a time
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "1");
-    m_ioDataForSingleUse->m_demoErrorResponse = false;
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30);
 
-    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "2");
-    ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30);
-
-    QCOMPARE(m_ioFinishReceiveCount, 3);
-    QCOMPARE(m_listReceivedData[0], IoTransferDataSingle::demoErrorResponseData);
+    QCOMPARE(m_ioFinishReceiveCount, 2);
+    QCOMPARE(m_listReceivedData[0], IoTransferDemoResponder::getDefaultErrorResponse());
     QCOMPARE(m_listReceivedData[1], "1\r");
-    QCOMPARE(m_listReceivedData[2], "2\r");
 }
 
 void IoDeviceTest::demoDelayFollowsDelay()

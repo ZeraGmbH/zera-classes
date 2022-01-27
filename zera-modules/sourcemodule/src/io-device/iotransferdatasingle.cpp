@@ -1,14 +1,13 @@
 #include "iotransferdatasingle.h"
 
-const QByteArray IoTransferDataSingle::demoErrorResponseData = QByteArrayLiteral("_ERROR_RESPONSE_");
-
 IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
                                            QByteArray bytesExpectedLead,
                                            QByteArray bytesExpectedTrail,
                                            int responseTimeoutMs) :
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
-    m_bytesSend(bytesSend)
+    m_bytesSend(bytesSend),
+    m_demoResponder(bytesExpectedLead, bytesExpectedTrail)
 {
     m_bytesExpectedLeadList.append(bytesExpectedLead);
 }
@@ -19,7 +18,8 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
                                            int responseTimeoutMs) :
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
-    m_bytesSend(bytesSend)
+    m_bytesSend(bytesSend),
+    m_demoResponder(bytesExpectedLeadList.isEmpty() ? QByteArray() : bytesExpectedLeadList[0], bytesExpectedTrail)
 {
     m_bytesExpectedLeadList = bytesExpectedLeadList;
     if(m_bytesExpectedLeadList.isEmpty()) {
@@ -57,11 +57,6 @@ QByteArray IoTransferDataSingle::getBytesSend() const
     return m_bytesSend;
 }
 
-QByteArray IoTransferDataSingle::getDemoResponse() const
-{
-    return m_demoErrorResponse ? demoErrorResponseData : getExpectedDataLead()+getExpectedDataTrail();
-}
-
 QByteArray IoTransferDataSingle::getExpectedDataLead() const
 {
     return m_bytesExpectedLeadList[0];
@@ -75,6 +70,11 @@ QByteArray IoTransferDataSingle::getExpectedDataTrail() const
 int IoTransferDataSingle::getResponseTimeout() const
 {
     return m_responseTimeoutMs;
+}
+
+IoTransferDemoResponder &IoTransferDataSingle::getDemoResponder()
+{
+    return m_demoResponder;
 }
 
 void IoTransferDataSingle::setDataReceived(QByteArray dataReceived)

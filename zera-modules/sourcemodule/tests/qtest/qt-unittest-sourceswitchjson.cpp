@@ -37,7 +37,7 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
     SourceDeviceErrorInjection sourceDeviceWithError(&sourceDevice);
-    sourceDeviceWithError.setDemoResonseError(true);
+    sourceDeviceWithError.setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDeviceWithError);
     SourceSwitchJson switcher(&sourceDeviceWithError, &notifyWrapperSwitch);
 
@@ -80,7 +80,7 @@ void SourceSwitchJsonTest::keepParamOnError()
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     SourceDevice sourceDevice(ioDevice, sourceProperties);
     SourceDeviceErrorInjection sourceDeviceWithError(&sourceDevice);
-    sourceDeviceWithError.setDemoResonseError(true);
+    sourceDeviceWithError.setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDeviceWithError);
     SourceSwitchJson switcher(&sourceDeviceWithError, &notifyWrapperSwitch);
 

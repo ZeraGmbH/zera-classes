@@ -211,7 +211,7 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
     jsonParam.setOn(true);
 
     QVERIFY(stateWatcher.tryStartPollNow());
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
 
     QTest::qWait(50);
@@ -237,9 +237,9 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     QVERIFY(stateWatcher.tryStartPollNow());
-    m_sourceDevice->setDemoResonseError(false);
+    m_sourceDevice->setDemoResonseErrorIdx(-1);
     switcher.switchState(jsonParam);
 
     QTest::qWait(50);
@@ -265,9 +265,9 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
-    m_sourceDevice->setDemoResonseError(false);
+    m_sourceDevice->setDemoResonseErrorIdx(-1);
     QVERIFY(stateWatcher.tryStartPollNow());
 
     QTest::qWait(50);
@@ -293,9 +293,9 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceDevice->setDemoResonseError(false);
+    m_sourceDevice->setDemoResonseErrorIdx(-1);
     switcher.switchState(jsonParam);
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(1);
 
     QTest::qWait(100);
@@ -322,7 +322,7 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     QVERIFY(stateWatcher.tryStartPollNow());
     switcher.switchState(jsonParam);
 
@@ -349,7 +349,7 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
     QVERIFY(stateWatcher.tryStartPollNow());
 
@@ -376,7 +376,7 @@ void SourceStateControllerTest::pollStopsAfterSwitchError()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
     stateWatcher.setPollTime(0);
 
@@ -401,7 +401,7 @@ void SourceStateControllerTest::pollStopsAfterPollError()
         statesReceived.append(state);
     });
 
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(0);
 
     QTest::qWait(10);
@@ -425,7 +425,7 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
         statesReceived.append(state);
     });
 
-    m_sourceDevice->setDemoResonseError(true);
+    m_sourceDevice->setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(0);
 
     QTest::qWait(10);
@@ -434,7 +434,7 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
 
     QVERIFY(!stateWatcher.isPeriodicPollActive());
 
-    m_sourceDevice->setDemoResonseError(false);
+    m_sourceDevice->setDemoResonseErrorIdx(-1);
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);

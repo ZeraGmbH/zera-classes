@@ -26,20 +26,20 @@ void IoTransferDataTest::singleDemoResponseLeadTrail()
     QByteArray lead = "foo";
     QByteArray trail = "foo";
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", lead, trail);
-    QCOMPARE(ioTransferData->getDemoResponse(), lead+trail);
+    QCOMPARE(ioTransferData->getDemoResponder().getDemoResponse(), lead+trail);
 }
 
 void IoTransferDataTest::singleDemoResponseLeadTrailEmpty()
 {
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", "");
-    QCOMPARE(ioTransferData->getDemoResponse(), "\r");
+    QCOMPARE(ioTransferData->getDemoResponder().getDemoResponse(), "\r");
 }
 
 void IoTransferDataTest::singleDemoResponseSimError()
 {
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", "");
-    ioTransferData->m_demoErrorResponse = true;
-    QCOMPARE(ioTransferData->getDemoResponse(), IoTransferDataSingle::demoErrorResponseData);
+    ioTransferData->getDemoResponder().activateErrorResponse();
+    QCOMPARE(ioTransferData->getDemoResponder().getDemoResponse(), IoTransferDemoResponder::getDefaultErrorResponse());
 }
 
 void IoTransferDataTest::singleCheckUnusedDataOnOnConstruct1()
@@ -76,7 +76,7 @@ void IoTransferDataTest::singleCheckUsedDataNoAnswer()
 void IoTransferDataTest::singleCheckUsedWrongAnswer()
 {
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", "");
-    ioTransferData->m_demoErrorResponse = true;
+    ioTransferData->getDemoResponder().activateErrorResponse();
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ioDevice->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -92,6 +92,47 @@ void IoTransferDataTest::singleCheckUsedPass()
     QTest::qWait(10);
     QVERIFY(ioTransferData->didIoPass());
     QCOMPARE(ioTransferData->wasNotRunYet(), false);
+}
+
+void IoTransferDataTest::singleCheckInjectSingleExpected()
+{
+    QByteArray lead = "fooLead";
+    QByteArray trail = "fooLead";
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", lead, trail);
+    QByteArray overrideResponse = lead+"foo"+trail;
+    ioTransferData->getDemoResponder().overrideDefaultResponse(overrideResponse);
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
+    ioDevice->sendAndReceive(ioTransferData);
+    QTest::qWait(10);
+    QVERIFY(ioTransferData->didIoPass());
+    QCOMPARE(ioTransferData->getDataReceived(), overrideResponse);
+}
+
+void IoTransferDataTest::singleCheckInjectMultipleExpected()
+{
+    QByteArray lead1 = "fooLead1";
+    QByteArray lead2 = "fooLead2";
+    QByteArray trail = "fooLead";
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
+
+    IoTransferDataSingle::Ptr ioTransferData1 =
+            IoTransferDataSingle::Ptr::create("", QList<QByteArray>()<<lead1<<lead2, trail);
+    QByteArray overrideResponse = lead1+"foo"+trail;
+    ioTransferData1->getDemoResponder().overrideDefaultResponse(overrideResponse);
+    ioDevice->sendAndReceive(ioTransferData1);
+    QTest::qWait(10);
+    QVERIFY(ioTransferData1->didIoPass());
+    QCOMPARE(ioTransferData1->getDataReceived(), overrideResponse);
+
+    IoTransferDataSingle::Ptr ioTransferData2 =
+            IoTransferDataSingle::Ptr::create("", QList<QByteArray>()<<lead1<<lead2, trail);
+    overrideResponse = lead2+"foo"+trail;
+    ioTransferData2->getDemoResponder().overrideDefaultResponse(overrideResponse);
+    ioDevice->sendAndReceive(ioTransferData2);
+
+    QTest::qWait(10);
+    QVERIFY(ioTransferData2->didIoPass());
+    QCOMPARE(ioTransferData2->getDataReceived(), overrideResponse);
 }
 
 void IoTransferDataTest::groupIdsCreated()
@@ -143,7 +184,7 @@ void IoTransferDataTest::singleDataEvalNoAnswer()
 void IoTransferDataTest::singleDataEvalWrongAnswerConstruct1()
 {
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("send", "lead", "trail");
-    ioTransferData->m_demoErrorResponse = true;
+    ioTransferData->getDemoResponder().activateErrorResponse();
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ioDevice->sendAndReceive(ioTransferData);
     QTest::qWait(10);
@@ -155,7 +196,7 @@ void IoTransferDataTest::singleDataEvalWrongAnswerConstruct2()
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("send",
                                                                                  QList<QByteArray>() << "lead1" << "lead2",
                                                                                  "trail");
-    ioTransferData->m_demoErrorResponse = true;
+    ioTransferData->getDemoResponder().activateErrorResponse();
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ioDevice->sendAndReceive(ioTransferData);
     QTest::qWait(10);
