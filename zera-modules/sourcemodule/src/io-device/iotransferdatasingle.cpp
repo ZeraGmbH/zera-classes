@@ -2,11 +2,6 @@
 
 const QByteArray IoTransferDataSingle::demoErrorResponseData = QByteArrayLiteral("_ERROR_RESPONSE_");
 
-IoTransferDataSingle::IoTransferDataSingle()
-{
-    m_bytesExpectedLeadList.append(QByteArray());
-}
-
 IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
                                            QByteArray bytesExpectedLead,
                                            QByteArray bytesExpectedTrail,

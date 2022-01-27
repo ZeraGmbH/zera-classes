@@ -10,7 +10,7 @@ void IoDeviceTest::init()
     m_ioIDReceived = -1;
     m_ioFinishReceiveCount = 0;
     m_errorsReceived = 0;
-    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create();
+    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "");
     m_listReceivedData.clear();
 }
 
@@ -217,7 +217,7 @@ void IoDeviceTest::demoDelayFollowsDelay()
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
     demoIoDevice->setResponseDelay(false, 5000);
-    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create();
+    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(10);
 
@@ -270,7 +270,7 @@ void IoDeviceTest::demoCanClose()
 
 void IoDeviceTest::checkIds(IoDeviceBase::Ptr ioDevice)
 {
-    IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingle::Ptr::create();
+    IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingle::Ptr::create("", "");
     int ioID1 = ioDevice->sendAndReceive(dummyIoData);
     int ioID2 = ioDevice->sendAndReceive(dummyIoData);
     QVERIFY(ioID1 != ioID2);
@@ -279,7 +279,7 @@ void IoDeviceTest::checkIds(IoDeviceBase::Ptr ioDevice)
 void IoDeviceTest::checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int errors)
 {
     connect(ioDevice.get(), &IoDeviceBase::sigIoFinished, this, &IoDeviceTest::onIoFinish);
-    IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingle::Ptr::create();
+    IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingle::Ptr::create("", "");
     ioDevice->sendAndReceive(dummyIoData);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
     QCOMPARE(m_errorsReceived, 0);

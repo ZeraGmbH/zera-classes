@@ -11,7 +11,6 @@ private slots:
 
     void singleDataEvalNotExecutedOnConstruct1();
     void singleDataEvalNotExecutedOnConstruct2();
-    void singleDataEvalNotExecutedOnConstruct3();
 
     void singleDemoResponseLeadTrail();
     void singleDemoResponseLeadTrailEmpty();
@@ -19,16 +18,13 @@ private slots:
 
     void singleDataEvalNotExecuted();
     void singleDataEvalNoAnswer();
-    void singleDataEvalWrongAnswerConstructor1();
-    void singleDataEvalWrongAnswerConstructor2();
-    void singleDataEvalWrongAnswerConstructor3();
-    void singleDataEvalPassConstructor1();
-    void singleDataEvalPassConstructor2();
-    void singleDataEvalPassConstructor3();
+    void singleDataEvalWrongAnswerConstruct1();
+    void singleDataEvalWrongAnswerConstruct2();
+    void singleDataEvalPassConstruct1();
+    void singleDataEvalPassConstruct2();
 
     void singleCheckUnusedDataOnOnConstruct1();
     void singleCheckUnusedDataOnOnConstruct2();
-    void singleCheckUnusedDataOnOnConstruct3();
     void singleCheckUsedDataDataReceived();
     void singleCheckUsedDataNoAnswer();
     void singleCheckUsedWrongAnswer();
