@@ -10,7 +10,6 @@ class IoTransferDataSingle
 {
 public:
     typedef QSharedPointer<IoTransferDataSingle> Ptr;
-    IoTransferDataSingle();
     IoTransferDataSingle(
             QByteArray bytesSend,
             QByteArray bytesExpectedLead,

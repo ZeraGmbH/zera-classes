@@ -165,9 +165,9 @@ void IoQueueTest::stopOnFirstError()
     IoQueueEntry::Ptr workTransferGroup =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList;
-    transList.append(IoTransferDataSingle::Ptr::create());
-    transList.append(IoTransferDataSingle::Ptr::create());
-    transList.append(IoTransferDataSingle::Ptr::create());
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList);
     workTransferGroup->setDemoErrorOnTransfer(1);
 
@@ -191,9 +191,9 @@ void IoQueueTest::stopOnFirstOk()
     IoQueueEntry::Ptr workTransferGroup =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_FIRST_OK);
     tIoTransferList transList;
-    transList.append(IoTransferDataSingle::Ptr::create());
-    transList.append(IoTransferDataSingle::Ptr::create());
-    transList.append(IoTransferDataSingle::Ptr::create());
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList);
     workTransferGroup->setDemoErrorOnTransfer(0);
 
@@ -217,9 +217,9 @@ void IoQueueTest::continueOnError()
     IoQueueEntry::Ptr workTransferGroup =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
     tIoTransferList transList;
-    transList.append(IoTransferDataSingle::Ptr::create());
-    transList.append(IoTransferDataSingle::Ptr::create());
-    transList.append(IoTransferDataSingle::Ptr::create());
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList);
     workTransferGroup->setDemoErrorOnTransfer(1);
 
@@ -264,21 +264,21 @@ void IoQueueTest::rejectSpam()
     IoQueueEntry::Ptr workTransferGroup1 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingle::Ptr::create());
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingle::Ptr::create());
+    transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
     IoQueueEntry::Ptr workTransferGroup3 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList3;
-    transList3.append(IoTransferDataSingle::Ptr::create());
+    transList3.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup3->appendTransferList(transList3);
     queue.enqueueTransferGroup(workTransferGroup3);
 
@@ -301,14 +301,14 @@ void IoQueueTest::acceptCloseToSpam()
     IoQueueEntry::Ptr workTransferGroup1 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingle::Ptr::create());
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingle::Ptr::create());
+    transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
@@ -328,7 +328,7 @@ void IoQueueTest::oneValidGroupSingleIo()
     IoQueueEntry::Ptr workTransferGroup =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingle::Ptr::create());
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup);
 
@@ -349,14 +349,14 @@ void IoQueueTest::twoValidGroupsSingleIo()
     IoQueueEntry::Ptr workTransferGroup1 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingle::Ptr::create());
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingle::Ptr::create());
+    transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
@@ -377,8 +377,8 @@ void IoQueueTest::oneValidGroupMultipleIo()
     IoQueueEntry::Ptr workTransferGroup =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingle::Ptr::create());
-    transList1.append(IoTransferDataSingle::Ptr::create());
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup);
 
@@ -399,16 +399,16 @@ void IoQueueTest::twoValidGroupsMultipleIo()
     IoQueueEntry::Ptr workTransferGroup1 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingle::Ptr::create());
-    transList1.append(IoTransferDataSingle::Ptr::create());
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     queue.enqueueTransferGroup(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingle::Ptr::create());
-    transList2.append(IoTransferDataSingle::Ptr::create());
+    transList2.append(IoTransferDataSingle::Ptr::create("", ""));
+    transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
@@ -431,7 +431,7 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
     IoQueueEntry::Ptr workTransferGroup1 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
-    transList1.append(IoTransferDataSingle::Ptr::create());
+    transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->setDemoErrorOnTransfer(0);
     queue.enqueueTransferGroup(workTransferGroup1);
@@ -439,7 +439,7 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
-    transList2.append(IoTransferDataSingle::Ptr::create());
+    transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
