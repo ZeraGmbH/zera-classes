@@ -15,14 +15,12 @@ public:
             QByteArray bytesSend,
             QByteArray bytesExpectedLead,
             QByteArray bytesExpectedTrail = "\r",
-            int responseTimeoutMs = 0,
-            bool demoErrorResponse = false);
+            int responseTimeoutMs = 0);
     IoTransferDataSingle(
             QByteArray bytesSend,
             QList<QByteArray> bytesExpectedLeadList,
             QByteArray bytesExpectedTrail = "\r",
-            int responseTimeoutMs = 0,
-            bool demoErrorResponse = false);
+            int responseTimeoutMs = 0);
 
     void setDataReceived(QByteArray dataReceived);
     QByteArray getDataReceived() const;

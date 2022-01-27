@@ -10,9 +10,7 @@ IoTransferDataSingle::IoTransferDataSingle()
 IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
                                            QByteArray bytesExpectedLead,
                                            QByteArray bytesExpectedTrail,
-                                           int responseTimeoutMs,
-                                           bool demoErrorResponse) :
-    m_demoErrorResponse(demoErrorResponse),
+                                           int responseTimeoutMs) :
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
     m_bytesSend(bytesSend)
@@ -23,9 +21,7 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
 IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
                                            QList<QByteArray> bytesExpectedLeadList,
                                            QByteArray bytesExpectedTrail,
-                                           int responseTimeoutMs,
-                                           bool demoErrorResponse) :
-    m_demoErrorResponse(demoErrorResponse),
+                                           int responseTimeoutMs) :
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
     m_bytesSend(bytesSend)
