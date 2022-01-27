@@ -53,10 +53,3 @@ IoTransferDataSingle::Ptr IoQueueEntry::getTransfer(int idx)
     return transfer;
 }
 
-void IoQueueEntry::setDemoErrorOnTransfer(int idx)
-{
-    if(idx < m_ioTransferList.count()) {
-        m_ioTransferList[idx]->m_demoErrorResponse = true;
-    }
-}
-

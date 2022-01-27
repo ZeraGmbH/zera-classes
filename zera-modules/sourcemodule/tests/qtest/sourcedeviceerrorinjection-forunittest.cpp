@@ -7,15 +7,12 @@ SourceDeviceErrorInjection::SourceDeviceErrorInjection(ISourceDevice *sourceUnde
             this, &ISourceDevice::sigResponseReceived);
 }
 
-void SourceDeviceErrorInjection::setDemoResonseError(bool active)
-{
-    m_demoSimulErrorActive = active;
-}
-
 int SourceDeviceErrorInjection::startTransaction(IoQueueEntry::Ptr transferGroup)
 {
-    if(m_demoSimulErrorActive) {
-        transferGroup->setDemoErrorOnTransfer(0);
+    if(m_simulErrorGroupIdx >= 0) {
+        IoTransferDataSingle::Ptr ioData = transferGroup->getTransfer(m_simulErrorGroupIdx);
+        // no nullptr checks intended: crash in tests is feedback
+        ioData->getDemoResponder().activateErrorResponse();
     }
     return m_sourceUnderTest->startTransaction(transferGroup);
 }
@@ -28,4 +25,9 @@ IoGroupGenerator SourceDeviceErrorInjection::getIoGroupGenerator() const
 SourceProperties SourceDeviceErrorInjection::getProperties() const
 {
     return m_sourceUnderTest->getProperties();
+}
+
+void SourceDeviceErrorInjection::setDemoResonseErrorIdx(int idx)
+{
+    m_simulErrorGroupIdx = idx;
 }

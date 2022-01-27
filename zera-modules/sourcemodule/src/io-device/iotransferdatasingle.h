@@ -1,6 +1,7 @@
 #ifndef IOTRANSFERDATASINGLE_H
 #define IOTRANSFERDATASINGLE_H
 
+#include "iotransferdemoresponder.h"
 #include <QObject>
 #include <QByteArray>
 #include <QList>
@@ -32,9 +33,7 @@ public:
     QByteArray getBytesSend() const;
     int getResponseTimeout() const;
 
-    static const QByteArray demoErrorResponseData;
-    QByteArray getDemoResponse() const;
-    bool m_demoErrorResponse = false;
+    IoTransferDemoResponder &getDemoResponder();
 
 private:
     QByteArray getExpectedDataLead() const;
@@ -53,6 +52,7 @@ private:
         EVAL_PASS
     };
     EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
+    IoTransferDemoResponder m_demoResponder;
 };
 
 #endif // IOTRANSFERDATASINGLE_H

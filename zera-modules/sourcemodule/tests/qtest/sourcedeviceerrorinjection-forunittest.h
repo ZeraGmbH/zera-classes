@@ -12,10 +12,10 @@ public:
     IoGroupGenerator getIoGroupGenerator() const override;
     SourceProperties getProperties() const override;
 
-    void setDemoResonseError(bool active);
+    void setDemoResonseErrorIdx(int idx);
 
 private:
-    bool m_demoSimulErrorActive = false;
+    int m_simulErrorGroupIdx = -1;
     ISourceDevice *m_sourceUnderTest = nullptr;
 };
 

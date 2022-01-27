@@ -90,7 +90,7 @@ void SourceDeviceTest::signalResponsesOnOneError()
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
-    workTransferGroup1->setDemoErrorOnTransfer(0);
+    workTransferGroup1->getTransfer(0)->getDemoResponder().activateErrorResponse();
     sourceDevice.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
@@ -120,7 +120,7 @@ void SourceDeviceTest::signalResponsesOnTwoErrors()
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
-    workTransferGroup1->setDemoErrorOnTransfer(0);
+    workTransferGroup1->getTransfer(0)->getDemoResponder().activateErrorResponse();
     sourceDevice.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
@@ -128,7 +128,7 @@ void SourceDeviceTest::signalResponsesOnTwoErrors()
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
-    workTransferGroup2->setDemoErrorOnTransfer(0);
+    workTransferGroup1->getTransfer(0)->getDemoResponder().activateErrorResponse();
     sourceDevice.startTransaction(workTransferGroup2);
 
     QTest::qWait(10);

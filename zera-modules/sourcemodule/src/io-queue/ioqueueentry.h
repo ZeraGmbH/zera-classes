@@ -26,7 +26,6 @@ public:
     int getTransferCount();
     IoTransferDataSingle::Ptr getTransfer(int idx);
 
-    void setDemoErrorOnTransfer(int idx);
 private:
     tIoTransferList m_ioTransferList;
     IoQueueErrorBehaviors m_errorBehavior;

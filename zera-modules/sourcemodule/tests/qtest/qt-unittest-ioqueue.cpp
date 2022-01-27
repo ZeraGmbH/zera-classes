@@ -169,7 +169,7 @@ void IoQueueTest::stopOnFirstError()
     transList.append(IoTransferDataSingle::Ptr::create("", ""));
     transList.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList);
-    workTransferGroup->setDemoErrorOnTransfer(1);
+    workTransferGroup->getTransfer(1)->getDemoResponder().activateErrorResponse();
 
     queue.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(10);
@@ -195,7 +195,7 @@ void IoQueueTest::stopOnFirstOk()
     transList.append(IoTransferDataSingle::Ptr::create("", ""));
     transList.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList);
-    workTransferGroup->setDemoErrorOnTransfer(0);
+    workTransferGroup->getTransfer(0)->getDemoResponder().activateErrorResponse();
 
     queue.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(10);
@@ -221,7 +221,7 @@ void IoQueueTest::continueOnError()
     transList.append(IoTransferDataSingle::Ptr::create("", ""));
     transList.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList);
-    workTransferGroup->setDemoErrorOnTransfer(1);
+    workTransferGroup->getTransfer(1)->getDemoResponder().activateErrorResponse();
 
     queue.enqueueTransferGroup(workTransferGroup);
     QTest::qWait(10);
@@ -433,7 +433,7 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
-    workTransferGroup1->setDemoErrorOnTransfer(0);
+    workTransferGroup1->getTransfer(0)->getDemoResponder().activateErrorResponse();
     queue.enqueueTransferGroup(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
