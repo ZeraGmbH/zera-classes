@@ -8,11 +8,4 @@ enum class IoDeviceTypes
     ASYNCSERIAL,
 };
 
-class IoDeviceTypeQuery
-{
-public:
-    static bool isDemo(IoDeviceTypes type) { return type == IoDeviceTypes::DEMO; }
-    static bool isAsyncSerial(IoDeviceTypes type) { return type == IoDeviceTypes::ASYNCSERIAL; }
-};
-
 #endif // IODEVICETYPES_H
