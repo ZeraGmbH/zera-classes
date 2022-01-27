@@ -36,8 +36,8 @@ public:
     IoTransferDemoResponder &getDemoResponder();
 
 private:
-    QByteArray getExpectedDataLead() const;
-    QByteArray getExpectedDataTrail() const;
+    QByteArray getExpectedResponseLead() const;
+    QByteArray getExpectedResponseTrail() const;
     void evaluateResponseLeadTrail();
 
     QByteArray m_dataReceived;

@@ -57,12 +57,12 @@ QByteArray IoTransferDataSingle::getBytesSend() const
     return m_bytesSend;
 }
 
-QByteArray IoTransferDataSingle::getExpectedDataLead() const
+QByteArray IoTransferDataSingle::getExpectedResponseLead() const
 {
     return m_bytesExpectedLeadList[0];
 }
 
-QByteArray IoTransferDataSingle::getExpectedDataTrail() const
+QByteArray IoTransferDataSingle::getExpectedResponseTrail() const
 {
     return m_bytesExpectedTrail;
 }
