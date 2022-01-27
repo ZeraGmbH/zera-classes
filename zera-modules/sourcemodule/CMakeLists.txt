@@ -37,6 +37,7 @@ file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.cpp
     ${PROJECT_SOURCE_DIR}/src/source-device/*.cpp
     ${PROJECT_SOURCE_DIR}/src/source-protocols/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/source-scanner/*.cpp
     )
 
 file(GLOB HEADER
@@ -48,6 +49,7 @@ file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.h
     ${PROJECT_SOURCE_DIR}/src/source-device/*.h
     ${PROJECT_SOURCE_DIR}/src/source-protocols/*.h
+    ${PROJECT_SOURCE_DIR}/src/source-scanner/*.h
     )
 
 file(GLOB RESOURCES 
