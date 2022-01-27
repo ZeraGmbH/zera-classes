@@ -1,5 +1,5 @@
-#ifndef CSOURCEJSONFILENAMEGETTER_H
-#define CSOURCEJSONFILENAMEGETTER_H
+#ifndef SUPPORTED_SOURCES_H
+#define SUPPORTED_SOURCES_H
 
 enum SupportedSourceTypes {
     SOURCE_MT_COMMON = 0,  // 3ph common
@@ -11,4 +11,4 @@ enum SupportedSourceTypes {
     SOURCE_TYPE_COUNT
 };
 
-#endif // CSOURCEJSONFILENAMEGETTER_H
+#endif // SUPPORTED_SOURCES_H
