@@ -37,6 +37,11 @@ bool IoTransferDataSingle::didIoPass() const
     return m_IoEval == EVAL_PASS;
 }
 
+int IoTransferDataSingle::getPassIdxInExpectedLead() const
+{
+    return m_passIdxInExpectedLead;
+}
+
 bool IoTransferDataSingle::wasNotRunYet() const
 {
     return m_dataReceived.isEmpty() && m_IoEval == EVAL_NOT_EXECUTED;
@@ -90,9 +95,11 @@ void IoTransferDataSingle::evaluateResponseLeadTrail()
     }
     else {
         bool pass = false;
-        for(auto bytesExpectedLead : m_bytesExpectedLeadList) {
+        for(int idx=0; idx<m_bytesExpectedLeadList.count(); ++idx) {
+            QByteArray bytesExpectedLead = m_bytesExpectedLeadList[idx];
             if(m_dataReceived.startsWith(bytesExpectedLead) && m_dataReceived.endsWith(m_bytesExpectedTrail)) {
                 pass = true;
+                m_passIdxInExpectedLead = idx;
                 break;
             }
         }
