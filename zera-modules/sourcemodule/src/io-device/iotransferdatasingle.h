@@ -26,6 +26,7 @@ public:
     QByteArray getDataReceived() const;
 
     bool didIoPass() const;
+    int getPassIdxInExpectedLead() const;
     bool wasNotRunYet() const;
     bool noAnswerReceived() const;
     bool wrongAnswerReceived() const;
@@ -45,6 +46,7 @@ private:
     QList<QByteArray> m_bytesExpectedLeadList;
     QByteArray m_bytesExpectedTrail = "\r";
     QByteArray m_bytesSend;
+
     enum EvalResponse {
         EVAL_NOT_EXECUTED = 0,
         EVAL_NO_ANSWER,
@@ -52,6 +54,8 @@ private:
         EVAL_PASS
     };
     EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
+    int m_passIdxInExpectedLead = -1;
+
     IoTransferDemoResponder m_demoResponder;
 };
 
