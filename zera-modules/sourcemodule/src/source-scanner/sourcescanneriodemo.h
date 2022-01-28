@@ -1,9 +1,9 @@
 #ifndef SOURCESCANNERACTIONDEMO_H
 #define SOURCESCANNERACTIONDEMO_H
 
-#include "sourcescannergenandhandleio.h"
+#include "sourcescannerstrategy.h"
 
-class SourceScannerIoDemo : public ISourceScannerGenAndHandleIo
+class SourceScannerIoDemo : public ISourceScannerStrategy
 {
 public:
     virtual QList<IoQueueEntry::Ptr> getIoQueueEntriesForScan() override;

@@ -1,17 +1,17 @@
-#ifndef SOURCESCANNERACTIONDECORATOR_H
-#define SOURCESCANNERACTIONDECORATOR_H
+#ifndef SOURCESCANNERSTRATEGY_H
+#define SOURCESCANNERSTRATEGY_H
 
 #include "io-queue/ioqueueentry.h"
 #include "source-device/sourceproperties.h"
 #include <QList>
 
-class ISourceScannerGenAndHandleIo
+class ISourceScannerStrategy
 {
 public:
-    typedef QSharedPointer<ISourceScannerGenAndHandleIo> Ptr;
+    typedef QSharedPointer<ISourceScannerStrategy> Ptr;
 
     virtual QList<IoQueueEntry::Ptr> getIoQueueEntriesForScan() = 0;
     virtual SourceProperties evalResponses(int ioGroupId) = 0;
 };
 
-#endif // SOURCESCANNERACTIONDECORATOR_H
+#endif // SOURCESCANNERSTRATEGY_H
