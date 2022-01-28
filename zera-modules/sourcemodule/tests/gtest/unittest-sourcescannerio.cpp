@@ -1,6 +1,8 @@
 #include <gtest/gtest.h>
 #include "source-scanner/sourcescanneriozeraserial.h"
+#include "source-scanner/sourcescanneriodemo.h"
 #include "io-queue/ioqueuebehaviors.h"
+#include <QSet>
 
 TEST(SCANNER_IO_ZERA, LIST_NOT_EMPTY) {
     SourceScannerIoZeraSerial scannerIo;
@@ -94,4 +96,35 @@ TEST(SCANNER_IO_ZERA, NO_FIND_ON_UNKNOWN_RESPONSE_LEAD) {
 
         EXPECT_FALSE(sourceFound.isValid());
     }
+}
+
+TEST(SCANNER_IO_DEMO, CREATES_ONE_EMPTY_QUEUE_ENTRY) {
+    SourceScannerIoDemo scannerIo;
+    QList<IoQueueEntry::Ptr> queueList = scannerIo.getIoQueueEntriesForScan();
+    EXPECT_EQ(queueList.size(), 1);
+    EXPECT_EQ(queueList[0]->getTransferCount(), 0);
+}
+
+TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {
+    SourceScannerIoDemo scannerIo;
+
+    QSet<SupportedSourceTypes> setTypes;
+
+    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
+        setTypes.insert(SupportedSourceTypes(idx));
+    }
+    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
+        SourceProperties props = scannerIo.evalResponses(0);
+        setTypes.remove(props.getType());
+    }
+    EXPECT_TRUE(setTypes.isEmpty());
+
+    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
+        setTypes.insert(SupportedSourceTypes(idx));
+    }
+    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
+        SourceProperties props = scannerIo.evalResponses(0);
+        setTypes.remove(props.getType());
+    }
+    EXPECT_TRUE(setTypes.isEmpty());
 }
