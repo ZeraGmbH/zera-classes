@@ -4,11 +4,12 @@ SourceProperties::SourceProperties()
 {
 }
 
-SourceProperties::SourceProperties(SupportedSourceTypes type, QString name, QString version) :
+SourceProperties::SourceProperties(SupportedSourceTypes type, QString name, QString version, SourceProtocols protocol) :
     m_isValid(true),
     m_type(type),
     m_name(name),
-    m_version(version)
+    m_version(version),
+    m_protocol(protocol)
 {
 }
 
@@ -30,5 +31,10 @@ QString SourceProperties::getName() const
 QString SourceProperties::getVersion() const
 {
     return m_version;
+}
+
+SourceProtocols SourceProperties::getProtocol() const
+{
+    return m_protocol;
 }
 
