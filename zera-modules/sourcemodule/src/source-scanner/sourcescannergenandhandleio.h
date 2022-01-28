@@ -10,7 +10,7 @@ class ISourceScannerGenAndHandleIo
 public:
     typedef QSharedPointer<ISourceScannerGenAndHandleIo> Ptr;
 
-    virtual QList<IoQueueEntry::Ptr> getScanIoGroups() = 0;
+    virtual QList<IoQueueEntry::Ptr> getIoQueueEntriesForScan() = 0;
     virtual SourceProperties evalResponses(int ioGroupId) = 0;
 };
 

@@ -7,7 +7,7 @@ class SourceScannerIoZeraSerial : public ISourceScannerGenAndHandleIo
 {
 public:
     SourceScannerIoZeraSerial();
-    virtual QList<IoQueueEntry::Ptr> getScanIoGroups() override;
+    virtual QList<IoQueueEntry::Ptr> getIoQueueEntriesForScan() override;
     virtual SourceProperties evalResponses(int ioGroupId) override;
 
 private:
