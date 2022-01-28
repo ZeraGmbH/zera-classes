@@ -2,14 +2,14 @@
 #include "source-scanner/sourcescanneriozeraserial.h"
 #include "io-queue/ioqueuebehaviors.h"
 
-TEST(SCANNER_ACTION_ZERA, LIST_NOT_EMPTY) {
+TEST(SCANNER_IO_ZERA, LIST_NOT_EMPTY) {
     SourceScannerIoZeraSerial scannerIo;
-    EXPECT_GT(scannerIo.getScanIoGroups().size(), 0);
+    EXPECT_GT(scannerIo.getIoQueueEntriesForScan().size(), 0);
 }
 
-TEST(SCANNER_ACTION_ZERA, LIST_ENTRIES_NOT_EMPTY) {
+TEST(SCANNER_IO_ZERA, LIST_ENTRIES_NOT_EMPTY) {
     SourceScannerIoZeraSerial scannerIo;
-    for(auto entry : scannerIo.getScanIoGroups()) {
+    for(auto entry : scannerIo.getIoQueueEntriesForScan()) {
         EXPECT_GT(entry->getTransferCount(), 0);
     }
 }
@@ -37,7 +37,7 @@ static SourceProperties findSources(NameVersion dev)
     // docs too...
     QByteArray devResponse = dev.devIoName + " " + dev.devVersion + "\r";
     SourceScannerIoZeraSerial scannerIo;
-    QList<IoQueueEntry::Ptr> transferGroupList = scannerIo.getScanIoGroups();
+    QList<IoQueueEntry::Ptr> transferGroupList = scannerIo.getIoQueueEntriesForScan();
 
     SourceProperties sourceFound;
     for(auto group : transferGroupList) {
@@ -65,7 +65,7 @@ static SourceProperties findSources(NameVersion dev)
     return sourceFound;
 }
 
-TEST(SCANNER_ACTION_ZERA, FIND_DEVICES_KNOWN) {
+TEST(SCANNER_IO_ZERA, FIND_DEVICES_KNOWN) {
     QList<NameVersion> nameVersion = QList<NameVersion>()
             << NameVersion("MT400", "V1.00", "STSMT400", SOURCE_MT_CURRENT_ONLY)
             << NameVersion("MT500", "V1.01", "STSMT500", SOURCE_MT_COMMON)
@@ -82,7 +82,7 @@ TEST(SCANNER_ACTION_ZERA, FIND_DEVICES_KNOWN) {
     }
 }
 
-TEST(SCANNER_ACTION_ZERA, NO_FIND_ON_UNKNOWN_RESPONSE_LEAD) {
+TEST(SCANNER_IO_ZERA, NO_FIND_ON_UNKNOWN_RESPONSE_LEAD) {
     QList<NameVersion> nameVersion = QList<NameVersion>()
             << NameVersion("MT400", "V1.00", "FOO", SOURCE_MT_CURRENT_ONLY)
             << NameVersion("MT400", "V1.00", "TSMT", SOURCE_MT_CURRENT_ONLY)

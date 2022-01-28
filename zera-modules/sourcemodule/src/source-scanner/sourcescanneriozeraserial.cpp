@@ -42,7 +42,7 @@ SourceScannerIoZeraSerial::SourceScannerIoZeraSerial()
     m_scanIoGroupList = scanIoGroupList;
 }
 
-QList<IoQueueEntry::Ptr> SourceScannerIoZeraSerial::getScanIoGroups()
+QList<IoQueueEntry::Ptr> SourceScannerIoZeraSerial::getIoQueueEntriesForScan()
 {
     return m_scanIoGroupList;
 }
