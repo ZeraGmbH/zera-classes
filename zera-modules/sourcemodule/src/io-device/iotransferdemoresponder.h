@@ -2,10 +2,12 @@
 #define IOTRANSFERDEMORESPONDER_H
 
 #include "QByteArray"
+#include "QSharedPointer"
 
 class IoTransferDemoResponder
 {
 public:
+    typedef QSharedPointer<IoTransferDemoResponder> Ptr;
     IoTransferDemoResponder(QByteArray expectedDataLead, QByteArray expectedDataTrail);
     void activateErrorResponse();
     void overrideDefaultResponse(QByteArray override);

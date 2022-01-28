@@ -7,7 +7,7 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
     m_bytesSend(bytesSend),
-    m_demoResponder(bytesExpectedLead, bytesExpectedTrail)
+    m_demoResponder(IoTransferDemoResponder::Ptr::create(bytesExpectedLead, bytesExpectedTrail))
 {
     m_bytesExpectedLeadList.append(bytesExpectedLead);
 }
@@ -19,7 +19,7 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
     m_bytesSend(bytesSend),
-    m_demoResponder(bytesExpectedLeadList.isEmpty() ? QByteArray() : bytesExpectedLeadList[0], bytesExpectedTrail)
+    m_demoResponder(IoTransferDemoResponder::Ptr::create(bytesExpectedLeadList.isEmpty() ? QByteArray() : bytesExpectedLeadList[0], bytesExpectedTrail))
 {
     m_bytesExpectedLeadList = bytesExpectedLeadList;
     if(m_bytesExpectedLeadList.isEmpty()) {
@@ -77,7 +77,7 @@ int IoTransferDataSingle::getResponseTimeout() const
     return m_responseTimeoutMs;
 }
 
-IoTransferDemoResponder &IoTransferDataSingle::getDemoResponder()
+IoTransferDemoResponder::Ptr IoTransferDataSingle::getDemoResponder()
 {
     return m_demoResponder;
 }

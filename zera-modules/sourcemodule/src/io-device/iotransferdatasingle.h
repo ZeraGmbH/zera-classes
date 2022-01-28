@@ -34,7 +34,7 @@ public:
     QByteArray getBytesSend() const;
     int getResponseTimeout() const;
 
-    IoTransferDemoResponder &getDemoResponder();
+    IoTransferDemoResponder::Ptr getDemoResponder();
 
 private:
     QByteArray getExpectedResponseLead() const;
@@ -56,7 +56,7 @@ private:
     EvalResponse m_IoEval = EVAL_NOT_EXECUTED;
     int m_passIdxInExpectedLead = -1;
 
-    IoTransferDemoResponder m_demoResponder;
+    IoTransferDemoResponder::Ptr m_demoResponder;
 };
 
 #endif // IOTRANSFERDATASINGLE_H

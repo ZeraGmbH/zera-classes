@@ -12,7 +12,7 @@ int SourceDeviceErrorInjection::startTransaction(IoQueueEntry::Ptr transferGroup
     if(m_simulErrorGroupIdx >= 0) {
         IoTransferDataSingle::Ptr ioData = transferGroup->getTransfer(m_simulErrorGroupIdx);
         // no nullptr checks intended: crash in tests is feedback
-        ioData->getDemoResponder().activateErrorResponse();
+        ioData->getDemoResponder()->activateErrorResponse();
     }
     return m_sourceUnderTest->startTransaction(transferGroup);
 }
