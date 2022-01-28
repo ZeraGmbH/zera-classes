@@ -25,6 +25,7 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
     << deviceDetectInfo("STS\r", QList<deviceResponseTypePair> ()
                         // Sequence: special -> common
                         << deviceResponseTypePair("STSMT400", SOURCE_MT_CURRENT_ONLY)
+                        << deviceResponseTypePair("STSMT551", SOURCE_MT_SINGLE_PHASE_ONLY)
                         << deviceResponseTypePair("STSMT", SOURCE_MT_COMMON)
                         << deviceResponseTypePair("STSFGMT", SOURCE_MT_COMMON))
 
