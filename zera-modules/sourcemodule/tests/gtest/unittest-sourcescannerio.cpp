@@ -69,8 +69,9 @@ TEST(SCANNER_IO_ZERA, FIND_DEVICES_KNOWN) {
     QList<NameVersion> nameVersion = QList<NameVersion>()
             << NameVersion("MT400", "V1.00", "STSMT400", SOURCE_MT_CURRENT_ONLY)
             << NameVersion("MT500", "V1.01", "STSMT500", SOURCE_MT_COMMON)
-            << NameVersion("MT3000","V1.02", "STSFGMT", SOURCE_MT_COMMON)
-            << NameVersion("FG301", "V1.03", "TSFG301", SOURCE_DEMO_FG_4PHASE);
+            << NameVersion("MT551", "V1.02", "STSMT551", SOURCE_MT_SINGLE_PHASE_ONLY)
+            << NameVersion("MT3000","V1.03", "STSFGMT", SOURCE_MT_COMMON)
+            << NameVersion("FG301", "V1.04", "TSFG301", SOURCE_DEMO_FG_4PHASE);
 
     for(auto dev : nameVersion) {
         SourceProperties sourceFound = findSources(dev);
