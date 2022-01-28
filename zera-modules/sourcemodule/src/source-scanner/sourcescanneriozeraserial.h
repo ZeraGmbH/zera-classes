@@ -1,9 +1,9 @@
 #ifndef SOURCESCANNERACTIONZERASERIAL_H
 #define SOURCESCANNERACTIONZERASERIAL_H
 
-#include "sourcescannergenandhandleio.h"
+#include "sourcescannerstrategy.h"
 
-class SourceScannerIoZeraSerial : public ISourceScannerGenAndHandleIo
+class SourceScannerIoZeraSerial : public ISourceScannerStrategy
 {
 public:
     SourceScannerIoZeraSerial();
