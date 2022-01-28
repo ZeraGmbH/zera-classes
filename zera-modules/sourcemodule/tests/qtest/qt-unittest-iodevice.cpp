@@ -186,7 +186,7 @@ void IoDeviceTest::demoResponseListErrorInjection()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
-    m_ioDataForSingleUse->getDemoResponder().activateErrorResponse();
+    m_ioDataForSingleUse->getDemoResponder()->activateErrorResponse();
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
     QTest::qWait(30); // one I/O at a time
 

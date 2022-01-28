@@ -46,7 +46,7 @@ TEST(TEST_PACKET_GENERATIOR, EXPECT_RESPONSE_SET) {
         IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
         tIoTransferList outInList = ioGroupGenerator.generateListForAction(SourceActionTypes::ActionTypes(type));
         for(auto outIn : outInList) {
-            QByteArray demoResponse = outIn->getDemoResponder().getDemoResponse();
+            QByteArray demoResponse = outIn->getDemoResponder()->getDemoResponse();
             EXPECT_GE(demoResponse.length(), 1);
             EXPECT_TRUE(demoResponse.endsWith("\r"));
         }
