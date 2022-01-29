@@ -19,8 +19,8 @@ IoQueueEntryList SourceScannerIoDemo::getIoQueueEntriesForScan()
 SourceProperties SourceScannerIoDemo::evalResponses(int ioGroupId)
 {
     SourceProperties props;
-    if(ioGroupId == m_scanIoGroupList[0]->getGroupId() &&
-            m_scanIoGroupList[0]->passedAll()) {
+    IoQueueEntry::Ptr entry = IoQueueEntryListFind::findGroup(m_scanIoGroupList, ioGroupId);
+    if(entry && entry->passedAll()) {
         SupportedSourceTypes sourceType = getNextSourceType();
         JsonStructApi structureApi = JsonStructApi(JsonStructureLoader::loadJsonDefaultStructure(sourceType));
         props = SourceProperties(sourceType, structureApi.getDeviceName(), structureApi.getDeviceVersion());
