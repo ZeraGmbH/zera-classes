@@ -37,13 +37,13 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
 
 SourceScannerIoZeraSerial::SourceScannerIoZeraSerial()
 {
-    QList<IoQueueEntry::Ptr> scanIoGroupList;
+    IoQueueEntryList scanIoGroupList;
     scanIoGroupList.append(getCleanupUnfinishedGroup());
     scanIoGroupList.append(getDeviceScanGroup());
     m_scanIoGroupList = scanIoGroupList;
 }
 
-QList<IoQueueEntry::Ptr> SourceScannerIoZeraSerial::getIoQueueEntriesForScan()
+IoQueueEntryList SourceScannerIoZeraSerial::getIoQueueEntriesForScan()
 {
     return m_scanIoGroupList;
 }
@@ -51,7 +51,7 @@ QList<IoQueueEntry::Ptr> SourceScannerIoZeraSerial::getIoQueueEntriesForScan()
 SourceProperties SourceScannerIoZeraSerial::evalResponses(int ioGroupId)
 {
     SourceProperties sourceProperties;
-    int iogroupIdx = findGroupIdx(ioGroupId);
+    int iogroupIdx = IoQueueEntryListFind::findGroupIdx(m_scanIoGroupList, ioGroupId);
     if(iogroupIdx > 0) { // 1st is unfinished cleanup group - see getCleanupUnfinishedGroup
         IoQueueEntry::Ptr groupFound = m_scanIoGroupList[iogroupIdx];
         sourceProperties = evalResponsesForTransactionGroup(groupFound);
@@ -83,18 +83,6 @@ IoQueueEntry::Ptr SourceScannerIoZeraSerial::getDeviceScanGroup()
     }
     ioScanOutInGroup->appendTransferList(scanList);
     return ioScanOutInGroup;
-}
-
-int SourceScannerIoZeraSerial::findGroupIdx(int ioGroupId)
-{
-    int idxFound = -1;
-    for(int idx=0; idx<m_scanIoGroupList.count(); ++idx) {
-        if(m_scanIoGroupList[idx]->getGroupId() == ioGroupId) {
-            idxFound = idx;
-            break;
-        }
-    }
-    return idxFound;
 }
 
 QByteArray SourceScannerIoZeraSerial::extractVersionFromResponse(IoTransferDataSingle::Ptr ioData)

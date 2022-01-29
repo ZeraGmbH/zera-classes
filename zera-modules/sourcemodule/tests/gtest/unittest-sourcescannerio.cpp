@@ -39,7 +39,7 @@ static SourceProperties findSources(NameVersion dev)
     // docs too...
     QByteArray devResponse = dev.devIoName + " " + dev.devVersion + "\r";
     SourceScannerIoZeraSerial scannerIo;
-    QList<IoQueueEntry::Ptr> transferGroupList = scannerIo.getIoQueueEntriesForScan();
+    IoQueueEntryList transferGroupList = scannerIo.getIoQueueEntriesForScan();
 
     SourceProperties sourceFound;
     for(auto group : transferGroupList) {

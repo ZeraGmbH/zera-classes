@@ -46,7 +46,7 @@ private:
     void evalNotificationCount(int passedGroupsExpected,
                                int passExpected, int failExpected, int unknownExpected);
 
-    QList<IoQueueEntry::Ptr> m_listIoGroupsReceived;
+    IoQueueEntryList m_listIoGroupsReceived;
 };
 
 #endif // IOQUEUETEST_H
