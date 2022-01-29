@@ -45,5 +45,5 @@ private:
     SourceDeviceErrorInjection *m_sourceDevice = nullptr;
     SourceDevice *m_sourceDeviceUnderTest = nullptr;
     IoDeviceBase::Ptr m_ioDevice;
-    QList<IoQueueEntry::Ptr> m_listIoGroupsReceived;
+    IoQueueEntryList m_listIoGroupsReceived;
 };

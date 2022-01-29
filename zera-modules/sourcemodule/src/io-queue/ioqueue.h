@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QSharedPointer>
 #include "ioqueueentry.h"
+#include "ioqueueentrylist.h"
 #include "ioqueuebehaviors.h"
 #include "io-device/iodevicebase.h"
 #include "transaction-ids/idkeeper.h"
@@ -43,7 +44,7 @@ private:
 
     IoDeviceBase::Ptr m_ioDevice = nullptr;
     IdKeeperSingle m_currIoId;
-    QList<IoQueueEntry::Ptr> m_pendingGroups;
+    IoQueueEntryList m_pendingGroups;
     int m_nextPosInCurrGroup = 0;
     int m_maxPendingGroups = 0;
 };
