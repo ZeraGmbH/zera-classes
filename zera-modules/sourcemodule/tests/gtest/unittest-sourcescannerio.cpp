@@ -98,11 +98,18 @@ TEST(SCANNER_IO_ZERA, NO_FIND_ON_UNKNOWN_RESPONSE_LEAD) {
     }
 }
 
-TEST(SCANNER_IO_DEMO, CREATES_ONE_EMPTY_QUEUE_ENTRY) {
+TEST(SCANNER_IO_DEMO, CREATES_ONE_QUEUE_ENTRY_WITH_ONE_IO) {
     SourceScannerIoDemo scannerIo;
-    QList<IoQueueEntry::Ptr> queueList = scannerIo.getIoQueueEntriesForScan();
+    IoQueueEntryList queueList = scannerIo.getIoQueueEntriesForScan();
     EXPECT_EQ(queueList.size(), 1);
-    EXPECT_EQ(queueList[0]->getTransferCount(), 0);
+    EXPECT_EQ(queueList[0]->getTransferCount(), 1);
+}
+
+TEST(SCANNER_IO_DEMO, GENERATES_INVALID_ON_NO_IO) {
+    SourceScannerIoDemo scannerIo;
+    IoQueueEntryList queueList = scannerIo.getIoQueueEntriesForScan();
+    SourceProperties props = scannerIo.evalResponses(queueList[0]->getGroupId());
+    EXPECT_FALSE(props.isValid());
 }
 
 TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {
@@ -114,7 +121,9 @@ TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {
         setTypes.insert(SupportedSourceTypes(idx));
     }
     for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
-        SourceProperties props = scannerIo.evalResponses(0);
+        IoQueueEntryList queueList = scannerIo.getIoQueueEntriesForScan();
+        queueList[0]->getTransfer(0)->setDataReceived(QByteArray("\r")); // valid response
+        SourceProperties props = scannerIo.evalResponses(queueList[0]->getGroupId());
         setTypes.remove(props.getType());
     }
     EXPECT_TRUE(setTypes.isEmpty());
@@ -123,7 +132,9 @@ TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {
         setTypes.insert(SupportedSourceTypes(idx));
     }
     for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
-        SourceProperties props = scannerIo.evalResponses(0);
+        IoQueueEntryList queueList = scannerIo.getIoQueueEntriesForScan();
+        queueList[0]->getTransfer(0)->setDataReceived(QByteArray("\r"));
+        SourceProperties props = scannerIo.evalResponses(queueList[0]->getGroupId());
         setTypes.remove(props.getType());
     }
     EXPECT_TRUE(setTypes.isEmpty());
