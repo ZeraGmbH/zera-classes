@@ -160,9 +160,6 @@ void IoTransferDataTest::groupPassedAllFail()
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup->appendTransferList(transList2);
 
-    // not run communication -> all fail
-    // single evaluation is done by io devices
-    workTransferGroup->evalAll();
     QCOMPARE(workTransferGroup->passedAll(), false);
 }
 
