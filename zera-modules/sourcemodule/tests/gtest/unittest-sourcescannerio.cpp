@@ -43,10 +43,9 @@ static SourceProperties findSources(NameVersion dev)
 
     SourceProperties sourceFound;
     for(auto group : transferGroupList) {
-        // simulate out/in transactions just by setDataReceived these days
         for(int idx=0; idx<group->getTransferCount(); ++idx) {
             IoTransferDataSingle::Ptr singleTransfer = group->getTransfer(idx);
-            singleTransfer->setDataReceived(devResponse); // simulate out/in
+            singleTransfer->setDataReceived(devResponse); // simulate response
             // act same as IoQueue with IoQueueErrorBehaviors::STOP_ON_FIRST_OK
             if(singleTransfer->didIoPass()) {
                 break;
