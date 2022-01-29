@@ -2,17 +2,30 @@
 #include "json/jsonstructapi.h"
 #include "json/jsonstructureloader.h"
 
-QList<IoQueueEntry::Ptr> SourceScannerIoDemo::getIoQueueEntriesForScan()
+SourceScannerIoDemo::SourceScannerIoDemo()
 {
-    return QList<IoQueueEntry::Ptr>() << IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_FIRST_OK);
+    IoQueueEntry::Ptr queueEntry = IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_FIRST_OK);
+    QList<IoTransferDataSingle::Ptr> transferList;
+    transferList.append(IoTransferDataSingle::Ptr::create("", ""));
+    queueEntry->appendTransferList(transferList);
+    m_scanIoGroupList.append(queueEntry);
+}
+
+IoQueueEntryList SourceScannerIoDemo::getIoQueueEntriesForScan()
+{
+    return m_scanIoGroupList;
 }
 
 SourceProperties SourceScannerIoDemo::evalResponses(int ioGroupId)
 {
-    Q_UNUSED(ioGroupId)
-    SupportedSourceTypes sourceType = getNextSourceType();
-    JsonStructApi structureApi = JsonStructApi(JsonStructureLoader::loadJsonDefaultStructure(sourceType));
-    return SourceProperties(sourceType, structureApi.getDeviceName(), structureApi.getDeviceVersion());
+    SourceProperties props;
+    if(ioGroupId == m_scanIoGroupList[0]->getGroupId() &&
+            m_scanIoGroupList[0]->passedAll()) {
+        SupportedSourceTypes sourceType = getNextSourceType();
+        JsonStructApi structureApi = JsonStructApi(JsonStructureLoader::loadJsonDefaultStructure(sourceType));
+        props = SourceProperties(sourceType, structureApi.getDeviceName(), structureApi.getDeviceVersion());
+    }
+    return props;
 }
 
 SupportedSourceTypes SourceScannerIoDemo::getNextSourceType() {
