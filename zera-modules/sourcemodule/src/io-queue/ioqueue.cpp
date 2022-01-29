@@ -114,9 +114,6 @@ void IoQueue::finishCurrentGroup()
 
 void IoQueue::finishGroup(IoQueueEntry::Ptr transferGroupToFinish)
 {
-    if(transferGroupToFinish) {
-        transferGroupToFinish->evalAll();
-    }
     emit sigTransferGroupFinishedQueued(transferGroupToFinish);
 }
 

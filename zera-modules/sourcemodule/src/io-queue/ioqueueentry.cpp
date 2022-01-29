@@ -15,18 +15,14 @@ void IoQueueEntry::appendTransferList(tIoTransferList transferList)
 
 bool IoQueueEntry::passedAll() const
 {
-    return m_bPassedAll;
-}
-
-void IoQueueEntry::evalAll()
-{
     bool pass = true;
     for(const auto &io : m_ioTransferList) {
         if(!io->didIoPass()) {
             pass = false;
+            break;
         }
     }
-    m_bPassedAll = pass;
+    return pass;
 }
 
 int IoQueueEntry::getGroupId() const

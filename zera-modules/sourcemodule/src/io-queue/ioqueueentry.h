@@ -18,7 +18,6 @@ public:
     void appendTransferList(tIoTransferList transferList);
 
     bool passedAll() const;
-    void evalAll();
 
     int getGroupId() const;
     IoQueueErrorBehaviors getErrorBehavior() const;
@@ -31,7 +30,6 @@ private:
     IoQueueErrorBehaviors m_errorBehavior;
     static IoIdGenerator m_idGenerator;
     int m_groupId = 0;
-    bool m_bPassedAll = false;
 };
 
 Q_DECLARE_METATYPE(IoQueueEntry::Ptr)
