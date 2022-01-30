@@ -8,9 +8,6 @@
 
 #include <QObject>
 
-static constexpr int ioDefaultTimeout = 1500;
-static constexpr int ioDefaultMsBetweenTwoBytes = 500;
-
 class IoDeviceBase : public QObject
 {
     Q_OBJECT

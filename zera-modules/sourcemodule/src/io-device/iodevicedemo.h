@@ -6,6 +6,8 @@
 #include <QList>
 #include <QByteArray>
 
+static constexpr int demoIoDefaultTimeout = 1000;
+
 class IoDeviceDemo : public IoDeviceBase
 {
     Q_OBJECT
@@ -29,7 +31,7 @@ private:
 
     bool m_bOpen = false;
     int m_responseDelayMs = 0;
-    int m_responseDelayMsTimeoutSimul = ioDefaultTimeout/2;
+    int m_responseDelayMsTimeoutSimul = demoIoDefaultTimeout;
     bool m_delayFollowsTimeout = false;
     QTimer m_responseDelayTimer;
 };

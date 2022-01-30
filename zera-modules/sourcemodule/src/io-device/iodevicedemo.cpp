@@ -41,7 +41,7 @@ int IoDeviceDemo::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
         responseDelayMs = m_responseDelayMsTimeoutSimul;
     }
     // set default for next
-    m_responseDelayMsTimeoutSimul = ioDefaultTimeout/2;
+    m_responseDelayMsTimeoutSimul = demoIoDefaultTimeout;
     if(!m_bOpen || responseDelayMs == 0) {
         sendResponse(!m_bOpen);
     }
