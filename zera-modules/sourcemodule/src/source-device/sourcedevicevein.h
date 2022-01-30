@@ -7,6 +7,7 @@
 #include <QUuid>
 #include <QStringList>
 #include "sourcedevicebase.h"
+#include "sourceproperties.h"
 #include "json/jsondevicestatusapi.h"
 #include "json/persistentjsonstate.h"
 
@@ -16,7 +17,8 @@ class SourceDeviceVein : public SourceDeviceBase
 {
     Q_OBJECT
 public:
-    explicit SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
+    SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
+    SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SourceProperties properties);
     virtual ~SourceDeviceVein();
 
     // requests
@@ -43,6 +45,7 @@ private slots:
     void onIoDeviceClosed();
 
 private:
+    void init(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version);
     void doFinalCloseActivities();
     void setVeinParamStructure(QJsonObject paramStruct);
     void setVeinParamState(QJsonObject paramState);

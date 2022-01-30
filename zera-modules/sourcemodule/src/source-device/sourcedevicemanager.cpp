@@ -1,7 +1,9 @@
 #include "sourcedevicemanager.h"
 #include "sourcedevicevein.h"
 #include "io-device/iodevicefactory.h"
-#include "sourcedevicescanner.h"
+#include "io-device/iodevicedemo.h"
+#include "source-scanner/sourcescanneriodemo.h"
+#include "source-scanner/sourcescanneriozeraserial.h"
 #include <random>
 
 // DEMO helper
@@ -25,13 +27,22 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, cons
         emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("No free slots"));
         return;
     }
+    // factory for list of scanners? / get rid of ioDeviceType?
     bool started = false;
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(ioDeviceType);
     if(ioDevice) {
         started = ioDevice->open(deviceInfo);
         if(started) {
-            SourceDeviceScanner::Ptr sourceScanner = SourceDeviceScanner::createScanner(ioDevice, uuid);
-            connect(sourceScanner.get(), &SourceDeviceScanner::sigScanFinished,
+            ISourceScannerStrategy::Ptr scannerStrategy;
+            if(ioDeviceType == IoDeviceTypes::DEMO) {
+                static_cast<IoDeviceDemo*>(ioDevice.get())->setResponseDelay(true, 0);
+                scannerStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
+            }
+            else {
+                scannerStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoZeraSerial);
+            }
+            SourceScanner::Ptr sourceScanner = SourceScanner::create(ioDevice, scannerStrategy, uuid);
+            connect(sourceScanner.get(), &SourceScanner::sigScanFinished,
                     this, &SourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);
             sourceScanner->startScan();
@@ -127,20 +138,19 @@ SourceDeviceVein *SourceDeviceManager::getSourceDevice(int slotNo)
     return getSourceDevice;
 }
 
-void SourceDeviceManager::onScanFinished(SourceDeviceScanner::Ptr scanner)
+void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
 {
-    disconnect(scanner.get(), &SourceDeviceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
-
-    SourceDeviceVein *sourceDeviceFound = scanner->getSourceDeviceFound();
+    disconnect(scanner.get(), &SourceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
+    SourceProperties props = scanner->getSourcePropertiesFound();
     QString erorDesc;
     int freeSlot = findFreeSlot();
-    if(sourceDeviceFound) {
+    SourceDeviceVein* sourceDeviceFound = nullptr;
+    if(props.isValid()) {
         if(freeSlot >= 0) {
+            sourceDeviceFound = new SourceDeviceVein(scanner->getIoDevice(), scanner->getSourcePropertiesFound());
             addSource(freeSlot, sourceDeviceFound);
         }
         else {
-            delete sourceDeviceFound;
-            sourceDeviceFound = nullptr;
             erorDesc = QStringLiteral("Slots full");
         }
     }

@@ -1,7 +1,6 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourcedevicemanager.h"
 #include "source-device/sourcedevicemanager.h"
-#include "source-device/sourcedevicescanner.h"
 
 static QObject* pSourceDeviceManagerTest = addTest(new SourceDeviceManagerTest);
 
@@ -236,22 +235,6 @@ void SourceDeviceManagerTest::demoRemoveNotificationTooMany()
 {
     constexpr int slotCount = 3;
     checkAddRemoveNotifications(slotCount, slotCount, slotCount*2);
-}
-
-void SourceDeviceManagerTest::noCrashOnManagerDeadBeforeScanFinished()
-{
-    constexpr int slotCount = 3;
-    SourceDeviceManager* devMan = new SourceDeviceManager(slotCount);
-    connect(devMan, &SourceDeviceManager::sigSourceScanFinished,
-            this, &SourceDeviceManagerTest::onSourceScanFinished);
-    for(int i=0; i<slotCount; i++) {
-        devMan->startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
-    }
-    delete devMan;
-    QCOMPARE(SourceDeviceScanner::getInstanceCount(), slotCount);
-    QTest::qWait(10);
-    QCOMPARE(m_listSourcesAdded.count(), 0);
-    QCOMPARE(SourceDeviceScanner::getInstanceCount(), 0);
 }
 
 void SourceDeviceManagerTest::checkSlotCount(SourceDeviceManager& devMan, int total, int active, int demo)
