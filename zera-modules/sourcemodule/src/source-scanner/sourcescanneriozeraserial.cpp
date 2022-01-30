@@ -137,6 +137,7 @@ SourceProperties SourceScannerIoZeraSerial::extractProperties(IoTransferDataSing
 SourceProperties SourceScannerIoZeraSerial::evalResponsesForTransactionGroup(IoQueueEntry::Ptr group)
 {
     SourceProperties properties;
+    // Do not use IoQueueEntry::passedAll - remember we stop on first passed
     for(int ioIdxInScanGroup=0; ioIdxInScanGroup<group->getTransferCount(); ++ioIdxInScanGroup) {
         IoTransferDataSingle::Ptr singleIo = group->getTransfer(ioIdxInScanGroup);
         if(singleIo->getPassIdxInExpectedLead() >= 0) {
