@@ -100,8 +100,7 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleUList()
     outInList.append(IoTransferDataSingle::Ptr::create(
                          bytesSend,
                          expectedResponseLead,
-                         "\r",
-                         ioDefaultTimeout));
+                         "\r"));
     return outInList;
 }
 
@@ -134,8 +133,7 @@ tIoTransferList IoGroupGenerator::generateRMSAndAngleIList()
     outInList.append(IoTransferDataSingle::Ptr::create(
                          bytesSend,
                          expectedResponseLead,
-                         "\r",
-                         ioDefaultTimeout));
+                         "\r"));
 
     return outInList;
 }
@@ -209,8 +207,7 @@ tIoTransferList IoGroupGenerator::generateFrequencyList()
     outInList.append(IoTransferDataSingle::Ptr::create(
                          bytesSend,
                          expectedResponseLead,
-                         "\r",
-                         ioDefaultTimeout));
+                         "\r"));
     return outInList;
 }
 
@@ -227,8 +224,7 @@ tIoTransferList IoGroupGenerator::generateRegulationList()
     outInList.append(IoTransferDataSingle::Ptr::create(
                          bytesSend,
                          expectedResponseLead,
-                         "\r",
-                         ioDefaultTimeout));
+                         "\r"));
     return outInList;
 }
 
@@ -242,8 +238,7 @@ tIoTransferList IoGroupGenerator::generateQueryStatusList()
     outInList.append(IoTransferDataSingle::Ptr::create(
                          bytesSend,
                          expectedResponseLead,
-                         "\r",
-                         ioDefaultTimeout));
+                         "\r"));
     return outInList;
 }
 
@@ -257,8 +252,7 @@ tIoTransferList IoGroupGenerator::generateQueryActualList()
     outInList.append(IoTransferDataSingle::Ptr::create(
                          bytesSend,
                          expectedResponseLead,
-                         "\r",
-                         ioDefaultTimeout));
+                         "\r"));
     return outInList;
 }
 
