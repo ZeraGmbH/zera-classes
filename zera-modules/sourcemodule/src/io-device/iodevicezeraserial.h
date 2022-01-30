@@ -7,6 +7,9 @@
 #include <QObject>
 #include <QSerialPortAsyncBlock>
 
+static constexpr int serialIoDefaultTimeout = 1500;
+static constexpr int serialIoDefaultMsBetweenTwoBytes = 500;
+
 class IoDeviceZeraSerial : public IoDeviceBase
 {
     Q_OBJECT
@@ -20,6 +23,7 @@ public:
 
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
 
+    void setDefaultTimeout(int defaultTimeoutMs);
     void setBlockEndCriteriaNextIo(int iBlockLenReceive = 0, QByteArray endBlock = QByteArray());
 
 protected:
@@ -39,13 +43,14 @@ private:
 
     struct TTimeoutParam
     {
-        int iMsReceiveFirst = ioDefaultTimeout;
-        int iMsBetweenTwoBytes = ioDefaultMsBetweenTwoBytes;
+        int iMsReceiveFirst = serialIoDefaultTimeout;
+        int iMsBetweenTwoBytes = serialIoDefaultMsBetweenTwoBytes;
         int iMsMinTotal = 0;
     };
     const TTimeoutParam defaultTimeoutParam;
     TTimeoutParam nextTimeoutParam;
     bool nextTimeoutWasSet = false;
+    int m_defaultTimeoutMs = serialIoDefaultTimeout;
 
     struct TBlockEndCriteria
     {
