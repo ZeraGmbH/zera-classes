@@ -12,17 +12,28 @@ bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 SourceDeviceVein::SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version) :
     SourceDeviceBase(ioDevice, type, name, version)
 {
+    init(ioDevice, type, name, version);
+}
+
+SourceDeviceVein::SourceDeviceVein(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
+    SourceDeviceBase(ioDevice, properties.getType(), properties.getName(), properties.getVersion())
+{
+    init(ioDevice, properties.getType(), properties.getName(), properties.getVersion());
+}
+
+SourceDeviceVein::~SourceDeviceVein()
+{
+    delete m_persistentParamState;
+}
+
+void SourceDeviceVein::init(IoDeviceBase::Ptr ioDevice, SupportedSourceTypes type, QString name, QString version)
+{
     m_persistentParamState = new PersistentJsonState(type, name, version);
     m_paramsCurrent = m_persistentParamState->loadJsonState();
     m_ioQueue.setIoDevice(ioDevice); // for quick error tests: comment this line
     m_deviceStatus.setDeviceInfo(m_ioDevice->getDeviceInfo());
 
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, this, &SourceDeviceVein::onIoDeviceClosed);
-}
-
-SourceDeviceVein::~SourceDeviceVein()
-{
-    delete m_persistentParamState;
 }
 
 bool SourceDeviceVein::close(QUuid uuid)
