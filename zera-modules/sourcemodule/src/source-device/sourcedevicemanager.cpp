@@ -24,7 +24,7 @@ SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
 void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid)
 {
     if(m_activeSlotCount >= m_sourceDeviceSlots.count()) {
-        emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("No free slots"));
+        emit sigSourceScanFinished(-1, uuid, QStringLiteral("No free slots"));
         return;
     }
     // factory for list of scanners? / get rid of ioDeviceType?
@@ -49,7 +49,7 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, cons
         }
     }
     if(!started) {
-        emit sigSourceScanFinished(-1, nullptr, uuid, QStringLiteral("Could not open IO-device"));
+        emit sigSourceScanFinished(-1, uuid, QStringLiteral("Could not open IO-device"));
     }
 }
 
@@ -157,7 +157,7 @@ void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
     else {
         erorDesc = QStringLiteral("No source device found");
     }
-    emit sigSourceScanFinished(freeSlot, sourceDeviceFound, scanner->getUuid(), erorDesc);
+    emit sigSourceScanFinished(freeSlot, scanner->getUuid(), erorDesc);
 }
 
 void SourceDeviceManager::onSourceClosed(SourceDeviceVein *sourceDevice, QUuid uuid)

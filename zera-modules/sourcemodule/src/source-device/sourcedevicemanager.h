@@ -27,7 +27,7 @@ public:
     int getDemoCount();
 
 signals:
-    void sigSourceScanFinished(int slotNo, SourceDeviceVein* device, QUuid uuid, QString errMsg);
+    void sigSourceScanFinished(int slotNo, QUuid uuid, QString errMsg);
     void sigSlotRemoved(int slotNo, QUuid uuid, QString errMsg);
 
 private slots:

@@ -49,7 +49,7 @@ private:
     bool m_bDeafenDemoChange = false;
 
 private slots:
-    void onSourceScanFinished(int slotPosition, SourceDeviceVein *device, QUuid uuid, QString errMsg);
+    void onSourceScanFinished(int slotPosition, QUuid uuid, QString errMsg);
     void onSourceDeviceRemoved(int slot, QUuid uuid, QString errMsg);
 
     // vein change handlers
