@@ -7,9 +7,8 @@
 
 struct FinishEntry
 {
-    FinishEntry(int slotNo, SourceDeviceVein* device, QUuid uuid, QString errMsg);
+    FinishEntry(int slotNo, QUuid uuid, QString errMsg);
     int slotNo;
-    SourceDeviceVein* device;
     QUuid uuid;
     QString errMsg;
 };
@@ -18,7 +17,7 @@ class SourceDeviceManagerTest : public QObject
 {
     Q_OBJECT
 public slots:
-    void onSourceScanFinished(int slotNo, SourceDeviceVein* device, QUuid uuid, QString errMsg);
+    void onSourceScanFinished(int slotNo, QUuid uuid, QString errMsg);
     void onSlotRemoved(int slotNo);
 
 private slots:

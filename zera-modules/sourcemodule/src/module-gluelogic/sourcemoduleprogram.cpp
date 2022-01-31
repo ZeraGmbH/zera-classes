@@ -140,10 +140,11 @@ void SourceModuleProgram::updateDemoCount()
     m_bDeafenDemoChange = false;
 }
 
-void SourceModuleProgram::onSourceScanFinished(int slotPosition, SourceDeviceVein* device, QUuid uuid, QString errMsg)
+void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QString errMsg)
 {
-    bool sourceAdded = slotPosition >= 0 && device;
+    bool sourceAdded = slotPosition >= 0;
     if(sourceAdded) {
+        SourceDeviceVein *device = m_pSourceDeviceManager->getSourceDevice(slotPosition);
         device->setVeinInterface(m_arrVeinIoInterfaces[slotPosition]);
         m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
         updateDemoCount();
