@@ -31,25 +31,26 @@ find_Package(VfCpp REQUIRED)
 file(GLOB SOURCES 
     ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-device/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-queue/*.cpp
     ${PROJECT_SOURCE_DIR}/src/json/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.cpp
     ${PROJECT_SOURCE_DIR}/src/source-device/*.cpp
     ${PROJECT_SOURCE_DIR}/src/source-protocols/*.cpp
     ${PROJECT_SOURCE_DIR}/src/source-scanner/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/vein-fassade/*.cpp
     )
+
 
 file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/*.h
     ${PROJECT_SOURCE_DIR}/src/io-device/*.h
-    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.h
     ${PROJECT_SOURCE_DIR}/src/io-queue/*.h
     ${PROJECT_SOURCE_DIR}/src/json/*.h
-    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.h
     ${PROJECT_SOURCE_DIR}/src/source-device/*.h
     ${PROJECT_SOURCE_DIR}/src/source-protocols/*.h
     ${PROJECT_SOURCE_DIR}/src/source-scanner/*.h
+    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.h
+    ${PROJECT_SOURCE_DIR}/src/vein-fassade/*.h
     )
 
 file(GLOB RESOURCES 
@@ -141,17 +142,40 @@ set(COMMON_LIBS
     serialportasyncblock
     )
 
-# create library
-add_library(sourcemodule MODULE
+add_library(sourcemodule-static STATIC
     ${SOURCES}
     ${HEADER}
+    )
+
+target_link_libraries(sourcemodule-static
+    PUBLIC
+    ${COMMON_LIBS}
+    )
+
+target_include_directories(sourcemodule-static
+    PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    )
+
+file(GLOB MODULE_SOURCES
+    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.cpp
+    )
+
+file(GLOB MODULE_HEADERS
+    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.h
+    )
+
+add_library(sourcemodule MODULE
+    ${MODULE_SOURCES}
+    ${MODULE_HEADERS}
     ${RESOURCES}
     ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
 
 target_link_libraries(sourcemodule
     PUBLIC
-    ${COMMON_LIBS}
+    sourcemodule-static
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -199,10 +223,8 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     )
 
     add_executable(sourcemodule-unittest
-        ${SOURCES}
-        ${HEADER}
-        ${RESOURCES}
         ${UNITTESTS}
+        ${RESOURCES}
         ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
     # constexpr / EXPECT_EQ -> linker problems for c++ < 17
@@ -218,7 +240,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         PUBLIC
         gtest
         gtest_main
-        ${COMMON_LIBS}
+        sourcemodule-static
     )
 
     add_test(NAME    sourcemodule-unittest-qt
@@ -234,10 +256,8 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     add_executable(sourcemodule-unittest-qt
         tests/qtest/main-unittest-qt.h
         tests/qtest/main-unittest-qt.cpp # must be first!!!
-        ${SOURCES}
-        ${HEADER}
-        ${RESOURCES}
         ${QTUNITTESTS}
+        ${RESOURCES}
         ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
 
@@ -250,7 +270,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     target_link_libraries(sourcemodule-unittest-qt
         PUBLIC
         Qt5::Test
-        ${COMMON_LIBS}
+        sourcemodule-static
     )
 
 endif()
