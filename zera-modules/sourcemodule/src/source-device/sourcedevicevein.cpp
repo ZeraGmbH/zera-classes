@@ -4,7 +4,7 @@
 #include <zera-json-params-structure.h>
 #include <jsonparamvalidator.h>
 #include "sourcedevicevein.h"
-#include "module-gluelogic/sourceveininterface.h"
+#include "vein-fassade/sourceveininterface.h"
 #include "source-protocols/iogroupgenerator.h"
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
