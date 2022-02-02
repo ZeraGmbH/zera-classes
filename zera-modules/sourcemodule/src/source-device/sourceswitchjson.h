@@ -16,6 +16,7 @@ public:
     void switchOff();
 
     JsonParamApi getCurrLoadState();
+    JsonParamApi getRequestedLoadState();
 signals:
     void sigSwitchFinished();
 

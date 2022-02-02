@@ -33,6 +33,11 @@ JsonParamApi SourceSwitchJson::getCurrLoadState()
     return m_paramsCurrent;
 }
 
+JsonParamApi SourceSwitchJson::getRequestedLoadState()
+{
+    return m_paramsRequested;
+}
+
 void SourceSwitchJson::onSwitchTransactionStarted(int dataGroupId)
 {
     m_pendingSwitchIds.setPending(dataGroupId);

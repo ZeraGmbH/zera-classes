@@ -73,7 +73,7 @@ void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
     QCOMPARE(paramChangeCount, 2);
 }
 
-void SourceSwitchJsonTest::keepParamOnError()
+void SourceSwitchJsonTest::currentAndRequestedParamOnError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
@@ -96,6 +96,7 @@ void SourceSwitchJsonTest::keepParamOnError()
 
     QTest::qWait(10);
     QCOMPARE(paramChangeCount, 1);
+    QVERIFY(paramStateForError.getParams() == switcher.getRequestedLoadState().getParams());
     QVERIFY(paramState.getParams() == switcher.getCurrLoadState().getParams());
 }
 
