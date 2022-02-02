@@ -42,9 +42,6 @@ public:
     IoGroupGenerator getIoGroupGenerator() const override;
     SourceProperties getProperties() const override;
 
-signals:
-    void sigIoDeviceDisconnected();
-
 private slots:
     void onIoGroupFinished(IoQueueEntry::Ptr transferGroup);
 
