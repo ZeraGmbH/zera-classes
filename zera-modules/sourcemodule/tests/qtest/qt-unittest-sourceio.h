@@ -15,7 +15,6 @@ private slots:
     void signalResponses();
     void signalResponsesOnOneError();
     void signalResponsesOnTwoErrors();
-    void signalDisconnect();
 
 };
 

@@ -29,22 +29,6 @@ void SourceIoTest::gettersOK()
     QCOMPARE(version, sourceDevice.getProperties().getVersion());
 }
 
-void SourceDeviceTest::signalDisconnect()
-{
-    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
-
-    int countDisconnectReceived = 0;
-    connect(&sourceDevice, &SourceIo::sigIoDeviceDisconnected, [&] {
-        countDisconnectReceived++;
-    });
-    sourceDevice.simulateExternalDisconnect();
-
-    QTest::qWait(10);
-    QCOMPARE(countDisconnectReceived, 1);
-}
-
 void SourceIoTest::signalResponses()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
