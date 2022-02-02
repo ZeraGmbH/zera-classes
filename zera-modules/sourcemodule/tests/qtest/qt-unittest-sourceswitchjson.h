@@ -14,7 +14,7 @@ private slots:
     void signalSwitchAfterError();
     void twoSignalsSwitchSameTwice();
 
-    void keepParamOnError();
+    void currentAndRequestedParamOnError();
     void changeParamOnSuccess();
 };
 
