@@ -1,6 +1,6 @@
 #include "sourcetransactionstartnotifier.h"
 
-SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceDevice *sourceDevice) :
+SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceIo *sourceDevice) :
     m_sourceDevice(sourceDevice)
 {
 }

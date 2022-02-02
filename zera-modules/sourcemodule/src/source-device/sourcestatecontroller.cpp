@@ -1,6 +1,6 @@
 #include "sourcestatecontroller.h"
 
-SourceStateController::SourceStateController(ISourceDevice *sourceDevice,
+SourceStateController::SourceStateController(ISourceIo *sourceDevice,
                                                SourceTransactionStartNotifier *sourceNotificationSwitch,
                                                SourceTransactionStartNotifier *sourceNotificationStateQuery) :
     m_sourceDevice(sourceDevice),
@@ -20,7 +20,7 @@ SourceStateController::SourceStateController(ISourceDevice *sourceDevice,
     connect(m_sourceNotificationStateQuery, &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStateController::onStateQueryTransationStarted);
 
-    connect(m_sourceDevice, &SourceDevice::sigResponseReceived,
+    connect(m_sourceDevice, &SourceIo::sigResponseReceived,
             this, &SourceStateController::onResponseReceived);
 }
 

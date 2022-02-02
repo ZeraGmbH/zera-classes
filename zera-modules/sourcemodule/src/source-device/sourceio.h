@@ -8,7 +8,7 @@
 
 #include <QObject>
 
-class ISourceDevice : public QObject
+class ISourceIo : public QObject
 {
     Q_OBJECT
 public:
@@ -27,12 +27,12 @@ signals:
  * Notify observers on io-device removed
  * Keep source properties
  */
-class SourceDevice : public ISourceDevice
+class SourceIo : public ISourceIo
 {
     Q_OBJECT
 public:
-    SourceDevice(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties);
-    ~SourceDevice();
+    SourceIo(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties);
+    ~SourceIo();
 
     // requests
     int startTransaction(IoQueueEntry::Ptr transferGroup) override;

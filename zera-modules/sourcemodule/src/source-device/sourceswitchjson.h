@@ -1,7 +1,7 @@
 #ifndef SOURCEINTERACTORSWITCH_H
 #define SOURCEINTERACTORSWITCH_H
 
-#include "sourcedevice.h"
+#include "sourceio.h"
 #include "sourcetransactionstartnotifier.h"
 #include "json/persistentjsonstate.h"
 #include <QObject>
@@ -10,7 +10,7 @@ class SourceSwitchJson : public QObject
 {
     Q_OBJECT
 public:
-    SourceSwitchJson(ISourceDevice* sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch);
+    SourceSwitchJson(ISourceIo* sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch);
 
     void switchState(JsonParamApi paramState);
     void switchOff();
@@ -25,7 +25,7 @@ private slots:
 private:
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
 
-    ISourceDevice* m_sourceDevice;
+    ISourceIo* m_sourceDevice;
     SourceTransactionStartNotifier *m_sourceNotificationSwitch;
 
     IdKeeperMulti m_pendingSwitchIds;

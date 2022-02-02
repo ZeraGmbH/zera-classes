@@ -1,7 +1,7 @@
 #ifndef SOURCEINTERACTORSTATUS_H
 #define SOURCEINTERACTORSTATUS_H
 
-#include "sourcedevice.h"
+#include "sourceio.h"
 #include "sourcetransactionstartnotifier.h"
 #include <QObject>
 #include <QTimer>
@@ -40,7 +40,7 @@ class SourceStateController : public QObject
 {
     Q_OBJECT
 public:
-    SourceStateController(ISourceDevice *sourceDevice,
+    SourceStateController(ISourceIo *sourceDevice,
                            SourceTransactionStartNotifier *sourceNotificationSwitch,
                            SourceTransactionStartNotifier *sourceNotificationStateQuery);
 
@@ -64,7 +64,7 @@ private:
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
     void handleStateResponse(const IoQueueEntry::Ptr transferGroup);
 
-    ISourceDevice *m_sourceDevice;
+    ISourceIo *m_sourceDevice;
     SourceTransactionStartNotifier *m_sourceNotificationSwitch;
     SourceTransactionStartNotifier *m_sourceNotificationStateQuery;
     SourceStateQueries m_currState;

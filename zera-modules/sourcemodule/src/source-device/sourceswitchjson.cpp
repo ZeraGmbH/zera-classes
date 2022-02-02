@@ -1,6 +1,6 @@
 #include "sourceswitchjson.h"
 
-SourceSwitchJson::SourceSwitchJson(ISourceDevice *sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch) :
+SourceSwitchJson::SourceSwitchJson(ISourceIo *sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch) :
     m_sourceDevice(sourceDevice),
     m_sourceNotificationSwitch(sourceNotificationSwitch)
 {
@@ -10,7 +10,7 @@ SourceSwitchJson::SourceSwitchJson(ISourceDevice *sourceDevice, SourceTransactio
 
     connect(m_sourceNotificationSwitch, &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceSwitchJson::onSwitchTransactionStarted);
-    connect(m_sourceDevice, &SourceDevice::sigResponseReceived,
+    connect(m_sourceDevice, &SourceIo::sigResponseReceived,
             this, &SourceSwitchJson::onResponseReceived);
 }
 

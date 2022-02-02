@@ -5,7 +5,7 @@
 #include "source-scanner/sourcescanneriodemo.h"
 #include "source-scanner/sourcescanneriozeraserial.h"
 
-static QObject* pSourceDeviceTest = addTest(new SourceScannerTest);
+static QObject* pSourceIoTest = addTest(new SourceScannerTest);
 
 void SourceScannerTest::init()
 {

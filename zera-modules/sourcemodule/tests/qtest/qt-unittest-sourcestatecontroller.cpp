@@ -8,7 +8,7 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include <zera-json-params-state.h>
 
-static QObject* pSourceDeviceTest = addTest(new SourceStateControllerTest);
+static QObject* pSourceIoTest = addTest(new SourceStateControllerTest);
 
 SourceStateControllerTest::~SourceStateControllerTest()
 {
@@ -30,9 +30,9 @@ void SourceStateControllerTest::init()
 
     m_ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    m_sourceDeviceUnderTest = new SourceDevice(m_ioDevice, sourceProperties);
+    m_sourceDeviceUnderTest = new SourceIo(m_ioDevice, sourceProperties);
     m_sourceDevice = new SourceDeviceErrorInjection(m_sourceDeviceUnderTest);
-    connect(m_sourceDevice, &ISourceDevice::sigResponseReceived,
+    connect(m_sourceDevice, &ISourceIo::sigResponseReceived,
             this, &SourceStateControllerTest::onIoQueueGroupFinished);
 }
 

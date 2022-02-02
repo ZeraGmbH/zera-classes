@@ -1,10 +1,10 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-sourceswitchjson.h"
-#include "source-device/sourcedevice.h"
+#include "source-device/sourceio.h"
 #include "source-device/sourceswitchjson.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-static QObject* pSourceDeviceTest = addTest(new SourceSwitchJsonTest);
+static QObject* pSourceIoTest = addTest(new SourceSwitchJsonTest);
 
 void SourceSwitchJsonTest::init()
 {
@@ -15,7 +15,7 @@ void SourceSwitchJsonTest::signalSwitch()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
     SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDevice);
     SourceSwitchJson switcher(&sourceDevice, &notifyWrapperSwitch);
 
@@ -35,7 +35,7 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
     SourceDeviceErrorInjection sourceDeviceWithError(&sourceDevice);
     sourceDeviceWithError.setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDeviceWithError);
@@ -57,7 +57,7 @@ void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
     SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDevice);
     SourceSwitchJson switcher(&sourceDevice, &notifyWrapperSwitch);
 
@@ -78,7 +78,7 @@ void SourceSwitchJsonTest::keepParamOnError()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
     SourceDeviceErrorInjection sourceDeviceWithError(&sourceDevice);
     sourceDeviceWithError.setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDeviceWithError);
@@ -104,7 +104,7 @@ void SourceSwitchJsonTest::changeParamOnSuccess()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
     SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDevice);
     SourceSwitchJson switcher(&sourceDevice, &notifyWrapperSwitch);
 

@@ -1,17 +1,17 @@
 #include "main-unittest-qt.h"
-#include "qt-unittest-sourcedevice.h"
+#include "qt-unittest-sourceio.h"
 #include "io-device/iodevicefactory.h"
-#include "source-device/sourcedevice.h"
+#include "source-device/sourceio.h"
 #include "json/jsonstructureloader.h"
 #include <zera-json-params-state.h>
 
-static QObject* pSourceDeviceTest = addTest(new SourceDeviceTest);
+static QObject* pSourceIoTest = addTest(new SourceIoTest);
 
-void SourceDeviceTest::init()
+void SourceIoTest::init()
 {
 }
 
-void SourceDeviceTest::gettersOK()
+void SourceIoTest::gettersOK()
 {
     QString name = "fooName";
     QString version = "fooVersion";
@@ -22,7 +22,7 @@ void SourceDeviceTest::gettersOK()
     ioDevice->open(info);
 
     SourceProperties sourceProperties(SOURCE_MT_COMMON, name, version);
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
 
     QCOMPARE(type, sourceDevice.getProperties().getType());
     QCOMPARE(name, sourceDevice.getProperties().getName());
@@ -33,10 +33,10 @@ void SourceDeviceTest::signalDisconnect()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
 
     int countDisconnectReceived = 0;
-    connect(&sourceDevice, &SourceDevice::sigIoDeviceDisconnected, [&] {
+    connect(&sourceDevice, &SourceIo::sigIoDeviceDisconnected, [&] {
         countDisconnectReceived++;
     });
     sourceDevice.simulateExternalDisconnect();
@@ -45,14 +45,14 @@ void SourceDeviceTest::signalDisconnect()
     QCOMPARE(countDisconnectReceived, 1);
 }
 
-void SourceDeviceTest::signalResponses()
+void SourceIoTest::signalResponses()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
 
     int countResponseReceived = 0;
-    connect(&sourceDevice, &SourceDevice::sigResponseReceived, [&] {
+    connect(&sourceDevice, &SourceIo::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
@@ -74,14 +74,14 @@ void SourceDeviceTest::signalResponses()
     QCOMPARE(countResponseReceived, 2);
 }
 
-void SourceDeviceTest::signalResponsesOnOneError()
+void SourceIoTest::signalResponsesOnOneError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
 
     int countResponseReceived = 0;
-    connect(&sourceDevice, &SourceDevice::sigResponseReceived, [&] {
+    connect(&sourceDevice, &SourceIo::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
@@ -104,14 +104,14 @@ void SourceDeviceTest::signalResponsesOnOneError()
     QCOMPARE(countResponseReceived, 2);
 }
 
-void SourceDeviceTest::signalResponsesOnTwoErrors()
+void SourceIoTest::signalResponsesOnTwoErrors()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceDevice sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceDevice(ioDevice, sourceProperties);
 
     int countResponseReceived = 0;
-    connect(&sourceDevice, &SourceDevice::sigResponseReceived, [&] {
+    connect(&sourceDevice, &SourceIo::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
