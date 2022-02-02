@@ -58,27 +58,27 @@ const QJsonObject &JsonDeviceStatusApi::getJsonStatus()
     return m_jsonStatus;
 }
 
-bool JsonDeviceStatusApi::getBusy()
+bool JsonDeviceStatusApi::getBusy() const
 {
     return m_jsonStatus[keyBusy].toBool();
 }
 
-QStringList JsonDeviceStatusApi::getErrors()
+QStringList JsonDeviceStatusApi::getErrors() const
 {
     return getArray(keyErrors);
 }
 
-QStringList JsonDeviceStatusApi::getWarnings()
+QStringList JsonDeviceStatusApi::getWarnings() const
 {
     return getArray(keyWarnings);
 }
 
-QString JsonDeviceStatusApi::getDeviceInfo()
+QString JsonDeviceStatusApi::getDeviceInfo() const
 {
     return m_jsonStatus[keyDeviceInfo].toString();
 }
 
-QStringList JsonDeviceStatusApi::getArray(QString key)
+QStringList JsonDeviceStatusApi::getArray(QString key) const
 {
     QStringList strList;
     auto arr = m_jsonStatus[key].toArray();
