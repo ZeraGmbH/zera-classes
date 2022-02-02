@@ -8,10 +8,18 @@
 
 #include <QObject>
 
+/*
+ * Obtain group generator
+ * Start multiple queued transactions
+ * Notify observers attached on group response
+ * Notify observers on io-device removed
+ * Keep source properties
+ */
 class ISourceIo : public QObject
 {
     Q_OBJECT
 public:
+    typedef QSharedPointer<ISourceIo> Ptr;
     virtual int startTransaction(IoQueueEntry::Ptr transferGroup) = 0;
     virtual IoGroupGenerator getIoGroupGenerator() const = 0;
     virtual SourceProperties getProperties() const = 0;
@@ -20,25 +28,13 @@ signals:
 };
 
 
-/*
- * Obtain group generator
- * Start multiple queued transactions
- * Notify observers attached on group response
- * Notify observers on io-device removed
- * Keep source properties
- */
 class SourceIo : public ISourceIo
 {
     Q_OBJECT
 public:
     SourceIo(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties);
-    ~SourceIo();
 
-    // requests
     int startTransaction(IoQueueEntry::Ptr transferGroup) override;
-    void simulateExternalDisconnect();
-
-    // getter
     IoGroupGenerator getIoGroupGenerator() const override;
     SourceProperties getProperties() const override;
 

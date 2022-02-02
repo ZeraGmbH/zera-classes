@@ -12,19 +12,10 @@ SourceIo::SourceIo(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties
             this, &SourceIo::onIoGroupFinished);
 }
 
-SourceIo::~SourceIo()
-{
-}
-
 int SourceIo::startTransaction(IoQueueEntry::Ptr transferGroup)
 {
     m_ioQueue.enqueueTransferGroup(transferGroup);
     return transferGroup->getGroupId();
-}
-
-void SourceIo::simulateExternalDisconnect()
-{
-    m_ioDevice->simulateExternalDisconnect();
 }
 
 IoGroupGenerator SourceIo::getIoGroupGenerator() const
