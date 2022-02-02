@@ -2,9 +2,9 @@
 #define QTUNITTESTSOURCEDEVICE_H
 
 #include <QObject>
-#include "source-device/sourcedevice.h"
+#include "source-device/sourceio.h"
 
-class SourceDeviceTest : public QObject
+class SourceIoTest : public QObject
 {
     Q_OBJECT
 

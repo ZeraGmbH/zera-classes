@@ -1,12 +1,12 @@
 #ifndef SOURCEDEVICEFORUNITTEST_H
 #define SOURCEDEVICEFORUNITTEST_H
 
-#include "source-device/sourcedevice.h"
+#include "source-device/sourceio.h"
 
-class SourceDeviceErrorInjection : public ISourceDevice
+class SourceDeviceErrorInjection : public ISourceIo
 {
 public:
-    SourceDeviceErrorInjection(ISourceDevice *sourceUnderTest);
+    SourceDeviceErrorInjection(ISourceIo *sourceUnderTest);
 
     int startTransaction(IoQueueEntry::Ptr transferGroup) override;
     IoGroupGenerator getIoGroupGenerator() const override;
@@ -16,7 +16,7 @@ public:
 
 private:
     int m_simulErrorGroupIdx = -1;
-    ISourceDevice *m_sourceUnderTest = nullptr;
+    ISourceIo *m_sourceUnderTest = nullptr;
 };
 
 #endif // SOURCEDEVICEFORUNITTEST_H

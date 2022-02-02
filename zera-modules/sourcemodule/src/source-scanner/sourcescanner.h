@@ -3,7 +3,7 @@
 
 #include "sourcescannerstrategy.h"
 #include "source-protocols/sourceprotocols.h"
-#include "source-device/sourcedevice.h"
+#include "source-device/sourceio.h"
 #include "source-device/sourceproperties.h"
 #include "io-device/iodevicetypes.h"
 #include "transaction-ids/idkeeper.h"

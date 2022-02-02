@@ -1,10 +1,10 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-SourceDeviceErrorInjection::SourceDeviceErrorInjection(ISourceDevice *sourceUnderTest) :
+SourceDeviceErrorInjection::SourceDeviceErrorInjection(ISourceIo *sourceUnderTest) :
     m_sourceUnderTest(sourceUnderTest)
 {
-    connect(m_sourceUnderTest, &ISourceDevice::sigResponseReceived,
-            this, &ISourceDevice::sigResponseReceived);
+    connect(m_sourceUnderTest, &ISourceIo::sigResponseReceived,
+            this, &ISourceIo::sigResponseReceived);
 }
 
 int SourceDeviceErrorInjection::startTransaction(IoQueueEntry::Ptr transferGroup)
