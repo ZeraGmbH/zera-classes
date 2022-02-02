@@ -17,12 +17,12 @@ public:
     void setDeviceInfo(const QString strDeviceInfo);
 
     const QJsonObject &getJsonStatus();
-    bool getBusy();
-    QStringList getErrors();
-    QStringList getWarnings();
-    QString getDeviceInfo();
+    bool getBusy() const;
+    QStringList getErrors() const;
+    QStringList getWarnings() const;
+    QString getDeviceInfo() const;
 private:
-    QStringList getArray(QString key);
+    QStringList getArray(QString key) const;
     void appendToArray(QString key, QString value);
 
     QJsonObject m_jsonStatus;
