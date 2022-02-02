@@ -14,13 +14,6 @@ public slots:
 private slots:
     void init();
 
-    void stateQueryIdle();
-    void stateQueryError();
-    void stateQueryBusy();
-    void stateQueryUndefined();
-    void stateQueryInitUndefined();
-    void stateQueryUnequal();
-
     void statePollAutoStart();
 
     void statePollChangeTime();

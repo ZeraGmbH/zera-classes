@@ -47,9 +47,15 @@ bool SourceStateController::tryStartPollNow()
     return bStarted;
 }
 
-int SourceStateController::isPeriodicPollActive()
+int SourceStateController::isPeriodicPollActive() const
 {
     return m_pollTimer.isActive();
+}
+
+bool SourceStateController::isErrorState() const
+{
+    return m_currState == States::ERROR_SWITCH ||
+            m_currState == States::ERROR_POLL;
 }
 
 void SourceStateController::onPollTimer()
@@ -60,7 +66,7 @@ void SourceStateController::onPollTimer()
 void SourceStateController::onSwitchTransactionStarted(int dataGroupId)
 {
     m_pendingSwitchIds.setPending(dataGroupId);
-    setState(SourceStates::SWITCH_BUSY);
+    setState(States::SWITCH_BUSY);
 }
 
 void SourceStateController::onStateQueryTransationStarted(int dataGroupId)
@@ -89,10 +95,10 @@ void SourceStateController::disablePolling()
     m_pollTimer.stop();
 }
 
-void SourceStateController::setState(SourceStates state)
+void SourceStateController::setState(States state)
 {
-    if(m_currState.isUnequal(state)) {
-        m_currState.setState(state);
+    if(m_currState != state) {
+        m_currState = state;
         emit sigStateChanged(state);
         setPollingOnStateChange();
     }
@@ -100,7 +106,7 @@ void SourceStateController::setState(SourceStates state)
 
 void SourceStateController::setPollingOnStateChange()
 {
-    if(!m_currState.isError()) {
+    if(!isErrorState()) {
         enablePolling();
     }
     else {
@@ -110,20 +116,20 @@ void SourceStateController::setPollingOnStateChange()
 
 void SourceStateController::handleSwitchResponse(const IoQueueEntry::Ptr transferGroup)
 {
-    if(!transferGroup->passedAll() && !m_currState.isError()) {
-        setState(SourceStates::ERROR_SWITCH);
+    if(!transferGroup->passedAll() && !isErrorState()) {
+        setState(States::ERROR_SWITCH);
     }
-    else if(m_currState.isSwitchBusy()) {
-        setState(SourceStates::IDLE);
+    else if(m_currState == States::SWITCH_BUSY) {
+        setState(States::IDLE);
     }
 }
 
 void SourceStateController::handleStateResponse(const IoQueueEntry::Ptr transferGroup)
 {
-    if(!transferGroup->passedAll() && !m_currState.isError()) {
-        setState(SourceStates::ERROR_POLL);
+    if(!transferGroup->passedAll() && !isErrorState()) {
+        setState(States::ERROR_POLL);
     }
-    else if(m_currState.isUndefined()) {
-        setState(SourceStates::IDLE);
+    else if(m_currState == States::UNDEFINED) {
+        setState(States::IDLE);
     }
 }

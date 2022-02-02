@@ -36,48 +36,6 @@ void SourceStateControllerTest::init()
             this, &SourceStateControllerTest::onIoQueueGroupFinished);
 }
 
-void SourceStateControllerTest::stateQueryIdle()
-{
-    SourceStateQueries state;
-    state.setState(SourceStates::IDLE);
-    QVERIFY(state.isIdle());
-}
-
-void SourceStateControllerTest::stateQueryError()
-{
-    SourceStateQueries state;
-    state.setState(SourceStates::ERROR_POLL);
-    QVERIFY(state.isError());
-    state.setState(SourceStates::ERROR_SWITCH);
-    QVERIFY(state.isError());
-}
-
-void SourceStateControllerTest::stateQueryBusy()
-{
-    SourceStateQueries state;
-    state.setState(SourceStates::SWITCH_BUSY);
-    QVERIFY(state.isSwitchBusy());
-}
-
-void SourceStateControllerTest::stateQueryUndefined()
-{
-    SourceStateQueries state;
-    state.setState(SourceStates::UNDEFINED);
-    QVERIFY(state.isUndefined());
-}
-
-void SourceStateControllerTest::stateQueryInitUndefined()
-{
-    SourceStateQueries state;
-    QVERIFY(state.isUndefined());
-}
-
-void SourceStateControllerTest::stateQueryUnequal()
-{
-    SourceStateQueries state;
-    state.setState(SourceStates::UNDEFINED);
-    QVERIFY(state.isUnequal(SourceStates::IDLE));
-}
 
 void SourceStateControllerTest::statePollAutoStart()
 {
@@ -125,15 +83,15 @@ void SourceStateControllerTest::stateInitialIdle()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     stateWatcher.setPollTime(0);
     int statePollSignalCount = 0;
-    SourceStates stateReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    SourceStateController::States stateReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         stateReceived = state;
         statePollSignalCount++;
     });
 
     QTest::qWait(10);
     QCOMPARE(statePollSignalCount, 1);
-    QCOMPARE(stateReceived, SourceStates::IDLE);
+    QCOMPARE(stateReceived, SourceStateController::States::IDLE);
 }
 
 void SourceStateControllerTest::switchOnCausesBusyOnOffState()
@@ -147,8 +105,8 @@ void SourceStateControllerTest::switchOnCausesBusyOnOffState()
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
     QTest::qWait(10); // ignore initial idle
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -158,8 +116,8 @@ void SourceStateControllerTest::switchOnCausesBusyOnOffState()
 
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::IDLE);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
 }
 
 void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
@@ -173,8 +131,8 @@ void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
     QTest::qWait(10); // ignore initial idle
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -183,14 +141,14 @@ void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
     switcher.switchState(jsonParam);
     QTest::qWait(50);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::IDLE);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
 
     switcher.switchOff();
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 4);
-    QCOMPARE(statesReceived[2], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[3], SourceStates::IDLE);
+    QCOMPARE(statesReceived[2], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[3], SourceStateController::States::IDLE);
 }
 
 void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
@@ -202,8 +160,8 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -216,8 +174,8 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
 
     QTest::qWait(50);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::ERROR_SWITCH);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
 void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
@@ -229,8 +187,8 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -244,8 +202,8 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
 
     QTest::qWait(50);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::ERROR_POLL);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_POLL);
 }
 
 void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
@@ -257,8 +215,8 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -272,8 +230,8 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
 
     QTest::qWait(50);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::ERROR_SWITCH);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
 void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
@@ -285,8 +243,8 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -300,9 +258,9 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
 
     QTest::qWait(100);
     QCOMPARE(statesReceived.count(), 3);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::IDLE);
-    QCOMPARE(statesReceived[2], SourceStates::ERROR_POLL);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
+    QCOMPARE(statesReceived[2], SourceStateController::States::ERROR_POLL);
 }
 
 void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
@@ -314,8 +272,8 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -328,8 +286,8 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
 
     QTest::qWait(50);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::ERROR_POLL);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_POLL);
 }
 
 void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
@@ -341,8 +299,8 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -355,8 +313,8 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
 
     QTest::qWait(50);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[0], SourceStates::SWITCH_BUSY);
-    QCOMPARE(statesReceived[1], SourceStates::ERROR_SWITCH);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
 void SourceStateControllerTest::pollStopsAfterSwitchError()
@@ -368,8 +326,8 @@ void SourceStateControllerTest::pollStopsAfterSwitchError()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -382,7 +340,7 @@ void SourceStateControllerTest::pollStopsAfterSwitchError()
 
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 2);
-    QCOMPARE(statesReceived[1], SourceStates::ERROR_SWITCH);
+    QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 
     QVERIFY(!stateWatcher.isPeriodicPollActive());
 }
@@ -396,8 +354,8 @@ void SourceStateControllerTest::pollStopsAfterPollError()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -406,7 +364,7 @@ void SourceStateControllerTest::pollStopsAfterPollError()
 
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 1);
-    QCOMPARE(statesReceived[0], SourceStates::ERROR_POLL);
+    QCOMPARE(statesReceived[0], SourceStateController::States::ERROR_POLL);
 
     QVERIFY(!stateWatcher.isPeriodicPollActive());
 }
@@ -420,8 +378,8 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
 
-    QList<SourceStates> statesReceived;
-    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStates state) {
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
@@ -430,7 +388,7 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
 
     QTest::qWait(10);
     QCOMPARE(statesReceived.count(), 1);
-    QCOMPARE(statesReceived[0], SourceStates::ERROR_POLL);
+    QCOMPARE(statesReceived[0], SourceStateController::States::ERROR_POLL);
 
     QVERIFY(!stateWatcher.isPeriodicPollActive());
 
