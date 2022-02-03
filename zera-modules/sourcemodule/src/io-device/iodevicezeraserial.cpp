@@ -1,7 +1,5 @@
 #include "iodevicezeraserial.h"
-
 #include <QSerialPortAsyncBlock>
-
 
 IoDeviceZeraSerial::IoDeviceZeraSerial(IoDeviceTypes type) :
     IoDeviceBase(type)
@@ -9,8 +7,11 @@ IoDeviceZeraSerial::IoDeviceZeraSerial(IoDeviceTypes type) :
     connect(&m_serialIO, &QSerialPortAsyncBlock::ioFinished, this, &IoDeviceZeraSerial::onIoFinished);
     connect(&m_disappearWatcher, &FileDisappearWatcher::sigFileRemoved,
             this, &IoDeviceZeraSerial::onDeviceFileGone, Qt::QueuedConnection);
-    // TBD: we need a vein logger
-    //m_serialIO.enableDebugMessages(true);
+}
+
+IoDeviceZeraSerial::~IoDeviceZeraSerial()
+{
+    _close();
 }
 
 bool IoDeviceZeraSerial::open(QString strDeviceInfo)
@@ -42,11 +43,6 @@ void IoDeviceZeraSerial::close()
 void IoDeviceZeraSerial::setReadTimeoutNextIo(int timeoutMs)
 {
     setReadTimeoutNextIoSerial(timeoutMs != 0 ? timeoutMs : m_defaultTimeoutMs, serialIoDefaultMsBetweenTwoBytes);
-}
-
-IoDeviceZeraSerial::~IoDeviceZeraSerial()
-{
-    _close();
 }
 
 int IoDeviceZeraSerial::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
@@ -116,14 +112,14 @@ void IoDeviceZeraSerial::onIoFinished()
 
 void IoDeviceZeraSerial::onDeviceFileGone(QString)
 {
-    close();
-    emit sigDisconnected();
+    _close();
 }
 
 void IoDeviceZeraSerial::_close()
 {
     if(m_serialIO.isOpen()) {
         m_serialIO.close();
+        emit sigDisconnected();
+        m_disappearWatcher.resetFiles();
     }
-    m_disappearWatcher.resetFiles();
 }

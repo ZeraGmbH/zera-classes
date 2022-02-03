@@ -98,7 +98,7 @@ void IoQueueTest::disconnectBeforeEnqueue()
     IoQueue queue;
     queue.setIoDevice(ioDevice);
 
-    demoIoDevice->simulateExternalDisconnect();
+    demoIoDevice->close();
     IoQueueEntry::Ptr workGroup = generateSwitchCommands(false);
     queue.enqueueTransferGroup(workGroup);
 
@@ -117,7 +117,7 @@ void IoQueueTest::disconnectWhileWorking()
     QTimer timer;
     timer.setSingleShot(true);
     connect(&timer, &QTimer::timeout, [&]() {
-        demoIoDevice->simulateExternalDisconnect();
+        demoIoDevice->close();
     });
     timer.start(10);
     IoQueueEntry::Ptr workGroup = generateSwitchCommands(false);
@@ -141,7 +141,7 @@ void IoQueueTest::disconnectWhileWorkingMultipleNotifications()
     QTimer timer;
     timer.setSingleShot(true);
     connect(&timer, &QTimer::timeout, [&]() {
-        demoIoDevice->simulateExternalDisconnect();
+        demoIoDevice->close();
     });
     timer.start(10);
     IoQueueEntry::Ptr workGroup1 = generateSwitchCommands(true);

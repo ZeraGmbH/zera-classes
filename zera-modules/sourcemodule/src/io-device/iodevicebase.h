@@ -21,8 +21,6 @@ public:
 
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) = 0;
 
-    virtual void simulateExternalDisconnect() {}
-
     QString getDeviceInfo();
     IoDeviceTypes getType() { return m_type; }
 signals:
