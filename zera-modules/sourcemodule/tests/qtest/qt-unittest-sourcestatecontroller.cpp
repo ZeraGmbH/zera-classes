@@ -50,7 +50,7 @@ void SourceStateControllerTest::statePollAutoStart()
         statePollSignalCount++;
     });
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QVERIFY(statePollSignalCount > 0);
     QVERIFY(stateWatcher.isPeriodicPollActive());
 }
@@ -68,7 +68,7 @@ void SourceStateControllerTest::statePollChangeTime()
         statePollSignalCount++;
     });
 
-    QTest::qWait(5);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(statePollSignalCount, 0);
     QTest::qWait(20);
     QCOMPARE(statePollSignalCount, 1);
@@ -89,7 +89,7 @@ void SourceStateControllerTest::stateInitialIdle()
         statePollSignalCount++;
     });
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(statePollSignalCount, 1);
     QCOMPARE(stateReceived, SourceStateController::States::IDLE);
 }
@@ -103,7 +103,7 @@ void SourceStateControllerTest::switchOnCausesBusyOnOffState()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     stateWatcher.setPollTime(0);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
-    QTest::qWait(10); // ignore initial idle
+    QTest::qWait(shortQtEventTimeout); // ignore initial idle
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -114,7 +114,7 @@ void SourceStateControllerTest::switchOnCausesBusyOnOffState()
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
@@ -129,7 +129,7 @@ void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
     SourceStateController stateWatcher(m_sourceDevice, &notifyWrapperSwitch, &notifyWrapperState);
     stateWatcher.setPollTime(0);
     SourceSwitchJson switcher(m_sourceDevice, &notifyWrapperSwitch);
-    QTest::qWait(10); // ignore initial idle
+    QTest::qWait(shortQtEventTimeout); // ignore initial idle
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -145,7 +145,7 @@ void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
     QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
 
     switcher.switchOff();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 4);
     QCOMPARE(statesReceived[2], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[3], SourceStateController::States::IDLE);
@@ -338,7 +338,7 @@ void SourceStateControllerTest::pollStopsAfterSwitchError()
     switcher.switchState(jsonParam);
     stateWatcher.setPollTime(0);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 
@@ -362,7 +362,7 @@ void SourceStateControllerTest::pollStopsAfterPollError()
     m_sourceDevice->setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(0);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 1);
     QCOMPARE(statesReceived[0], SourceStateController::States::ERROR_POLL);
 
@@ -386,7 +386,7 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
     m_sourceDevice->setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(0);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 1);
     QCOMPARE(statesReceived[0], SourceStateController::States::ERROR_POLL);
 

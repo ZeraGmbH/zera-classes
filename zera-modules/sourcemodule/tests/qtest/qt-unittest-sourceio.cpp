@@ -54,7 +54,7 @@ void SourceIoTest::signalResponses()
     workTransferGroup2->appendTransferList(transList2);
     sourceDevice.startTransaction(workTransferGroup2);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
 }
 
@@ -84,7 +84,7 @@ void SourceIoTest::signalResponsesOnOneError()
     workTransferGroup2->appendTransferList(transList2);
     sourceDevice.startTransaction(workTransferGroup2);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
 }
 
@@ -115,6 +115,6 @@ void SourceIoTest::signalResponsesOnTwoErrors()
     workTransferGroup1->getTransfer(0)->getDemoResponder()->activateErrorResponse();
     sourceDevice.startTransaction(workTransferGroup2);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
 }
