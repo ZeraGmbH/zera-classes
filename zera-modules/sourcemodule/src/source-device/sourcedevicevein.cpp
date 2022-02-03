@@ -1,11 +1,11 @@
-#include <QJsonDocument>
+#include "sourcedevicevein.h"
+#include "message-texts/messagetexts.h"
+#include "vein-fassade/sourceveininterface.h"
+#include "source-protocols/iogroupgenerator.h"
 #include <veinmoduleactvalue.h>
 #include <veinmoduleparameter.h>
 #include <zera-json-params-structure.h>
 #include <jsonparamvalidator.h>
-#include "sourcedevicevein.h"
-#include "vein-fassade/sourceveininterface.h"
-#include "source-protocols/iogroupgenerator.h"
 
 bool SourceDeviceVein::m_removeDemoByDisconnect = false;
 
@@ -107,10 +107,10 @@ void SourceDeviceVein::handleSourceCmd(IoQueueEntry::Ptr transferGroup)
         // how to continue with translations - maybe an RPC called by GUI?
         // Maybe no
         if(m_paramsRequested.getOn()) {
-            m_deviceStatus.addError("Switch on failed");
+            m_deviceStatus.addError(MessageTexts::getText(MessageTexts::ERR_SWITCH_ON));
         }
         else {
-            m_deviceStatus.addError("Switch off failed");
+            m_deviceStatus.addError(MessageTexts::getText(MessageTexts::ERR_SWITCH_OFF));
         }
     }
     else {
