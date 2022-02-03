@@ -12,4 +12,6 @@ QObject* addTest(QObject* test);
 IoDeviceBase::Ptr createOpenDemoIoDevice();
 void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs);
 
+static constexpr int shortQtEventTimeout = 5;
+
 #endif // MAIN_UNITTEST_H

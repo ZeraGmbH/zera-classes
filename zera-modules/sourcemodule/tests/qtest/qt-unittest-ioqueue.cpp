@@ -68,7 +68,7 @@ void IoQueueTest::noIoDeviceNotification()
 
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
     queue.enqueueTransferGroup(workGroup);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QVERIFY(m_listIoGroupsReceived[0].get() == workGroup.get());
@@ -84,7 +84,7 @@ void IoQueueTest::notOpenIoDeviceNotifications()
 
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
     queue.enqueueTransferGroup(workGroup);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QVERIFY(m_listIoGroupsReceived[0] == workGroup);
@@ -172,7 +172,7 @@ void IoQueueTest::stopOnFirstError()
     workTransferGroup->getTransfer(1)->getDemoResponder()->activateErrorResponse();
 
     queue.enqueueTransferGroup(workTransferGroup);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QCOMPARE(m_listIoGroupsReceived[0]->passedAll(), false);
@@ -198,7 +198,7 @@ void IoQueueTest::stopOnFirstOk()
     workTransferGroup->getTransfer(0)->getDemoResponder()->activateErrorResponse();
 
     queue.enqueueTransferGroup(workTransferGroup);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QCOMPARE(m_listIoGroupsReceived[0]->passedAll(), false);
@@ -224,7 +224,7 @@ void IoQueueTest::continueOnError()
     workTransferGroup->getTransfer(1)->getDemoResponder()->activateErrorResponse();
 
     queue.enqueueTransferGroup(workTransferGroup);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     QCOMPARE(m_listIoGroupsReceived[0]->passedAll(), false);
@@ -243,7 +243,7 @@ void IoQueueTest::noErrorSignalOnEmptyGroup()
     IoQueueEntry::Ptr workTransferGroup =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
     queue.enqueueTransferGroup(workTransferGroup);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     if(m_listIoGroupsReceived.count() != 1) {
         QCOMPARE(m_listIoGroupsReceived.count(), 1);
         QFAIL("Skipping check of error flag");
@@ -282,7 +282,7 @@ void IoQueueTest::rejectSpam()
     workTransferGroup3->appendTransferList(transList3);
     queue.enqueueTransferGroup(workTransferGroup3);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), maxPendingGroups+1);
     evalNotificationCount(maxPendingGroups, maxPendingGroups, 0, 1);
@@ -312,7 +312,7 @@ void IoQueueTest::acceptCloseToSpam()
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), maxPendingGroups);
     evalNotificationCount(maxPendingGroups, maxPendingGroups, 0, 0);
@@ -333,7 +333,7 @@ void IoQueueTest::oneValidGroupSingleIo()
     queue.enqueueTransferGroup(workTransferGroup);
 
     QVERIFY(queue.isIoBusy());
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     evalNotificationCount(1, 1, 0, 0);
@@ -361,7 +361,7 @@ void IoQueueTest::twoValidGroupsSingleIo()
     queue.enqueueTransferGroup(workTransferGroup2);
 
     QVERIFY(queue.isIoBusy());
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 2);
     evalNotificationCount(2, 2, 0, 0);
@@ -383,7 +383,7 @@ void IoQueueTest::oneValidGroupMultipleIo()
     queue.enqueueTransferGroup(workTransferGroup);
 
     QVERIFY(queue.isIoBusy());
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 1);
     evalNotificationCount(1, 2, 0, 0);
@@ -414,7 +414,7 @@ void IoQueueTest::twoValidGroupsMultipleIo()
 
     QVERIFY(queue.isIoBusy());
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     disconnect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 2);
@@ -443,7 +443,7 @@ void IoQueueTest::twoFirstInvalidSecondOkSingleIo()
     workTransferGroup2->appendTransferList(transList2);
     queue.enqueueTransferGroup(workTransferGroup2);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     disconnect(&queue, &IoQueue::sigTransferGroupFinished, this, &IoQueueTest::onIoQueueGroupFinished);
 
     QCOMPARE(m_listIoGroupsReceived.count(), 2);

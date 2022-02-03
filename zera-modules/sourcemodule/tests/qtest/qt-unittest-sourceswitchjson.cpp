@@ -26,7 +26,7 @@ void SourceSwitchJsonTest::signalSwitch()
     });
 
     switcher.switchState(paramState);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
 }
 
@@ -48,7 +48,7 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
     });
 
     switcher.switchState(paramState);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
 }
 
@@ -69,7 +69,7 @@ void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
 
     switcher.switchState(paramState);
     switcher.switchState(paramState);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 2);
 }
 
@@ -94,7 +94,7 @@ void SourceSwitchJsonTest::currentAndRequestedParamOnError()
     });
     switcher.switchState(paramStateForError);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
     QVERIFY(paramStateForError.getParams() == switcher.getRequestedLoadState().getParams());
     QVERIFY(paramState.getParams() == switcher.getCurrLoadState().getParams());
@@ -119,7 +119,7 @@ void SourceSwitchJsonTest::changeParamOnSuccess()
     });
     switcher.switchState(paramStateForError);
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
     QVERIFY(paramState.getParams() != switcher.getCurrLoadState().getParams());
 }

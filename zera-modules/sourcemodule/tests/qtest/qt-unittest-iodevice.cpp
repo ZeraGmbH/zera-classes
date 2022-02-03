@@ -143,15 +143,15 @@ void IoDeviceTest::demoResponseList()
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(10); // one I/O at a time
+    QTest::qWait(shortQtEventTimeout); // one I/O at a time
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "1");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "2");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_ioFinishReceiveCount, 3);
     QCOMPARE(m_listReceivedData[0], "0\r");
@@ -207,13 +207,13 @@ void IoDeviceTest::demoDelayFollowsDelay()
     // huge timeout must be ignored
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "\r", "", 5000);
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
     demoIoDevice->setResponseDelay(false, 5000);
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
 
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
@@ -226,12 +226,12 @@ void IoDeviceTest::demoDelayFollowsTimeout()
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "\r", "", 0);
     demoIoDevice->setResponseDelay(true, 5000 /* must be ignored */);
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(m_ioFinishReceiveCount, 1);
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "\r", "", 5000);
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
 
@@ -277,7 +277,7 @@ void IoDeviceTest::checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int
     ioDevice->sendAndReceive(dummyIoData);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
     QCOMPARE(m_errorsReceived, 0);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(m_ioFinishReceiveCount, total);
     QCOMPARE(m_errorsReceived, errors);
 }

@@ -29,7 +29,7 @@ void SourceScannerTest::scannerDiesOnNoConnection()
     scanner = nullptr;
 
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 1);
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
 
@@ -45,7 +45,7 @@ void SourceScannerTest::scannerSurvivesUntilSlotDirectConnection()
     scanner->startScan();
     scanner = nullptr;
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(m_scanFinishCount, 1);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
@@ -62,7 +62,7 @@ void SourceScannerTest::scannerSurvivesUntilSlotQueuedConnection()
     scanner->startScan();
     scanner = nullptr;
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(m_scanFinishCount, 1);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
@@ -81,7 +81,7 @@ void SourceScannerTest::scannerSurvivesUntilSlotLambdaConnection()
     scanner->startScan();
     scanner = nullptr;
 
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(scanFinish, 1);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
@@ -105,7 +105,7 @@ void SourceScannerTest::uuidPassedIdentical()
     });
 
     scanner->startScan();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(uuid, uuidReceived);
 }
 
@@ -121,7 +121,7 @@ void SourceScannerTest::ioDevicePassedIdentical()
     });
 
     scanner->startScan();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(ioDevice.get(), ioDeviceReceived.get());
 }
 
@@ -148,7 +148,7 @@ void SourceScannerTest::scannerReportsValidSourceAfterDemoIo()
     });
 
     scanner->startScan();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(props.isValid(), true);
 }
 
@@ -166,7 +166,7 @@ void SourceScannerTest::scannerReportsValidSourceAfterZeraIo()
     });
 
     scanner->startScan();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(props.isValid(), true);
 }
 
@@ -185,7 +185,7 @@ void SourceScannerTest::scannerReportsInvalidSourceAfterBrokenIo()
     });
 
     scanner->startScan();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(props.isValid(), false);
 }
 
@@ -210,7 +210,7 @@ void SourceScannerTest::scannerReportsInvalidSourceAfterDemoIoResponseError()
     });
 
     scanner->startScan();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(props.isValid(), false);
 }
 
@@ -235,6 +235,6 @@ void SourceScannerTest::scannerReportsInvalidSourceAfterZeraIoResponseError()
     });
 
     scanner->startScan();
-    QTest::qWait(10);
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(props.isValid(), false);
 }
