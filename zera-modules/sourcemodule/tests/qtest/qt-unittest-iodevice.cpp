@@ -244,7 +244,7 @@ void IoDeviceTest::baseCannotClose()
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, [&] {
         countDiconnectReceived++;
     });
-    ioDevice->simulateExternalDisconnect();
+    ioDevice->close();
     QTest::qWait(1);
     QCOMPARE(countDiconnectReceived, 0);
 }
@@ -257,7 +257,7 @@ void IoDeviceTest::demoCanClose()
     connect(ioDevice.get(), &IoDeviceBase::sigDisconnected, [&] {
         countDiconnectReceived++;
     });
-    ioDevice->simulateExternalDisconnect();
+    ioDevice->close();
     QTest::qWait(1);
     QCOMPARE(countDiconnectReceived, 1);
 }

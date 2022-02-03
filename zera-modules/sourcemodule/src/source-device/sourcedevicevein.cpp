@@ -46,7 +46,7 @@ bool SourceDeviceVein::close(QUuid uuid)
             if(m_removeDemoByDisconnect) {
                 closeRequested = true;
                 m_closeUuid = uuid;
-                m_ioDevice->simulateExternalDisconnect();
+                m_ioDevice->close();
             }
         }
         if(!closeRequested) {

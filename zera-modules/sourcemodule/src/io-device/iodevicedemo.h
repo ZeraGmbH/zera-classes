@@ -19,7 +19,6 @@ public:
     virtual bool isOpen() override { return m_bOpen; }
 
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
-    virtual void simulateExternalDisconnect() override;
 
     void setResponseDelay(bool followsTimeout, int iFixedMs);
 

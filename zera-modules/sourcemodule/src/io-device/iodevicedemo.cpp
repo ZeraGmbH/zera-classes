@@ -31,6 +31,7 @@ bool IoDeviceDemo::open(QString strDeviceInfo)
 void IoDeviceDemo::close()
 {
     m_bOpen = false;
+    emit sigDisconnected();
 }
 
 int IoDeviceDemo::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
@@ -57,11 +58,6 @@ void IoDeviceDemo::setReadTimeoutNextIo(int timeoutMs)
     if(m_responseDelayMsTimeoutSimul > 3000) {
         m_responseDelayMsTimeoutSimul /= 3;
     }
-}
-
-void IoDeviceDemo::simulateExternalDisconnect()
-{
-    emit sigDisconnected();
 }
 
 void IoDeviceDemo::setResponseDelay(bool followsTimeout, int iFixedMs)

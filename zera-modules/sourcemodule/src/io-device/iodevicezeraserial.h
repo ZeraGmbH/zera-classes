@@ -60,7 +60,6 @@ private:
     const TBlockEndCriteria defaultBlockEndCriteria;
     TBlockEndCriteria nextBlockEndCriteria;
     bool nextBlockEndCriteriaWasSet = false;
-
 };
 
 #endif // IODEVICEZERASERIAL_H
