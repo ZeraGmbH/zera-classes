@@ -15,9 +15,9 @@ void SourceSwitchJsonTest::signalSwitch()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDevice);
-    SourceSwitchJson switcher(&sourceDevice, &notifyWrapperSwitch);
+    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIo);
+    SourceSwitchJson switcher(&sourceIo, &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
@@ -35,11 +35,11 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
-    SourceDeviceErrorInjection sourceDeviceWithError(&sourceDevice);
-    sourceDeviceWithError.setDemoResonseErrorIdx(0);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDeviceWithError);
-    SourceSwitchJson switcher(&sourceDeviceWithError, &notifyWrapperSwitch);
+    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceIoErrorInjection sourceIoWithError(&sourceIo);
+    sourceIoWithError.setDemoResonseErrorIdx(0);
+    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIoWithError);
+    SourceSwitchJson switcher(&sourceIoWithError, &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
@@ -57,9 +57,9 @@ void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDevice);
-    SourceSwitchJson switcher(&sourceDevice, &notifyWrapperSwitch);
+    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIo);
+    SourceSwitchJson switcher(&sourceIo, &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
@@ -78,11 +78,11 @@ void SourceSwitchJsonTest::currentAndRequestedParamOnError()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
-    SourceDeviceErrorInjection sourceDeviceWithError(&sourceDevice);
-    sourceDeviceWithError.setDemoResonseErrorIdx(0);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDeviceWithError);
-    SourceSwitchJson switcher(&sourceDeviceWithError, &notifyWrapperSwitch);
+    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceIoErrorInjection sourceIoWithError(&sourceIo);
+    sourceIoWithError.setDemoResonseErrorIdx(0);
+    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIoWithError);
+    SourceSwitchJson switcher(&sourceIoWithError, &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     JsonParamApi paramStateForError = paramState;
@@ -105,9 +105,9 @@ void SourceSwitchJsonTest::changeParamOnSuccess()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceDevice);
-    SourceSwitchJson switcher(&sourceDevice, &notifyWrapperSwitch);
+    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIo);
+    SourceSwitchJson switcher(&sourceIo, &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     JsonParamApi paramStateForError = paramState;

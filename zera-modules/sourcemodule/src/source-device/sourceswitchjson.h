@@ -10,7 +10,7 @@ class SourceSwitchJson : public QObject
 {
     Q_OBJECT
 public:
-    SourceSwitchJson(ISourceIo* sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch);
+    SourceSwitchJson(ISourceIo* sourceIo, SourceTransactionStartNotifier *sourceNotificationSwitch);
 
     void switchState(JsonParamApi paramState);
     void switchOff();
@@ -26,7 +26,7 @@ private slots:
 private:
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
 
-    ISourceIo* m_sourceDevice;
+    ISourceIo* m_sourceIo;
     SourceTransactionStartNotifier *m_sourceNotificationSwitch;
 
     IdKeeperMulti m_pendingSwitchIds;

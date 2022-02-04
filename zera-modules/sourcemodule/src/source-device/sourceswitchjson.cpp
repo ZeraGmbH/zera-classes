@@ -1,23 +1,23 @@
 #include "sourceswitchjson.h"
 
-SourceSwitchJson::SourceSwitchJson(ISourceIo *sourceDevice, SourceTransactionStartNotifier *sourceNotificationSwitch) :
-    m_sourceDevice(sourceDevice),
+SourceSwitchJson::SourceSwitchJson(ISourceIo *sourceIo, SourceTransactionStartNotifier *sourceNotificationSwitch) :
+    m_sourceIo(sourceIo),
     m_sourceNotificationSwitch(sourceNotificationSwitch)
 {
-    m_persistentParamState = new PersistentJsonState(sourceDevice->getProperties());
+    m_persistentParamState = new PersistentJsonState(sourceIo->getProperties());
     m_paramsCurrent = m_persistentParamState->loadJsonState();
     m_paramsRequested = m_paramsCurrent;
 
     connect(m_sourceNotificationSwitch, &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceSwitchJson::onSwitchTransactionStarted);
-    connect(m_sourceDevice, &SourceIo::sigResponseReceived,
+    connect(m_sourceIo, &SourceIo::sigResponseReceived,
             this, &SourceSwitchJson::onResponseReceived);
 }
 
 void SourceSwitchJson::switchState(JsonParamApi paramState)
 {
     m_paramsRequested = paramState;
-    IoQueueEntry::Ptr transferGroup = m_sourceDevice->getIoGroupGenerator().generateOnOffGroup(m_paramsRequested);
+    IoQueueEntry::Ptr transferGroup = m_sourceIo->getIoGroupGenerator().generateOnOffGroup(m_paramsRequested);
     m_sourceNotificationSwitch->startTransactionWithNotify(transferGroup);
 }
 
