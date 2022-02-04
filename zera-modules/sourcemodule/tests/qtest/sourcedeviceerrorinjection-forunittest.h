@@ -3,10 +3,10 @@
 
 #include "source-device/sourceio.h"
 
-class SourceDeviceErrorInjection : public ISourceIo
+class SourceIoErrorInjection : public ISourceIo
 {
 public:
-    SourceDeviceErrorInjection(ISourceIo *sourceUnderTest);
+    SourceIoErrorInjection(ISourceIo *sourceUnderTest);
 
     int startTransaction(IoQueueEntry::Ptr transferGroup) override;
     IoGroupGenerator getIoGroupGenerator() const override;

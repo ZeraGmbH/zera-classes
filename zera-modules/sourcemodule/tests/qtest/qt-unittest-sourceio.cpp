@@ -22,21 +22,21 @@ void SourceIoTest::gettersOK()
     ioDevice->open(info);
 
     SourceProperties sourceProperties(SOURCE_MT_COMMON, name, version);
-    SourceIo sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceIo(ioDevice, sourceProperties);
 
-    QCOMPARE(type, sourceDevice.getProperties().getType());
-    QCOMPARE(name, sourceDevice.getProperties().getName());
-    QCOMPARE(version, sourceDevice.getProperties().getVersion());
+    QCOMPARE(type, sourceIo.getProperties().getType());
+    QCOMPARE(name, sourceIo.getProperties().getName());
+    QCOMPARE(version, sourceIo.getProperties().getVersion());
 }
 
 void SourceIoTest::signalResponses()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceIo(ioDevice, sourceProperties);
 
     int countResponseReceived = 0;
-    connect(&sourceDevice, &SourceIo::sigResponseReceived, [&] {
+    connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
@@ -45,14 +45,14 @@ void SourceIoTest::signalResponses()
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
-    sourceDevice.startTransaction(workTransferGroup1);
+    sourceIo.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
-    sourceDevice.startTransaction(workTransferGroup2);
+    sourceIo.startTransaction(workTransferGroup2);
 
     QTest::qWait(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
@@ -62,10 +62,10 @@ void SourceIoTest::signalResponsesOnOneError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceIo(ioDevice, sourceProperties);
 
     int countResponseReceived = 0;
-    connect(&sourceDevice, &SourceIo::sigResponseReceived, [&] {
+    connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
@@ -75,14 +75,14 @@ void SourceIoTest::signalResponsesOnOneError()
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->getTransfer(0)->getDemoResponder()->activateErrorResponse();
-    sourceDevice.startTransaction(workTransferGroup1);
+    sourceIo.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
-    sourceDevice.startTransaction(workTransferGroup2);
+    sourceIo.startTransaction(workTransferGroup2);
 
     QTest::qWait(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
@@ -92,10 +92,10 @@ void SourceIoTest::signalResponsesOnTwoErrors()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceDevice(ioDevice, sourceProperties);
+    SourceIo sourceIo(ioDevice, sourceProperties);
 
     int countResponseReceived = 0;
-    connect(&sourceDevice, &SourceIo::sigResponseReceived, [&] {
+    connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
         countResponseReceived++;
     });
 
@@ -105,7 +105,7 @@ void SourceIoTest::signalResponsesOnTwoErrors()
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->getTransfer(0)->getDemoResponder()->activateErrorResponse();
-    sourceDevice.startTransaction(workTransferGroup1);
+    sourceIo.startTransaction(workTransferGroup1);
 
     IoQueueEntry::Ptr workTransferGroup2 =
             IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
@@ -113,7 +113,7 @@ void SourceIoTest::signalResponsesOnTwoErrors()
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
     workTransferGroup1->getTransfer(0)->getDemoResponder()->activateErrorResponse();
-    sourceDevice.startTransaction(workTransferGroup2);
+    sourceIo.startTransaction(workTransferGroup2);
 
     QTest::qWait(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);

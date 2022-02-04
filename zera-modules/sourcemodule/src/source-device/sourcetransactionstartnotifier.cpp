@@ -1,12 +1,12 @@
 #include "sourcetransactionstartnotifier.h"
 
-SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceIo *sourceDevice) :
-    m_sourceDevice(sourceDevice)
+SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceIo *sourceIo) :
+    m_sourceIo(sourceIo)
 {
 }
 
 void SourceTransactionStartNotifier::startTransactionWithNotify(IoQueueEntry::Ptr transferGroup)
 {
-    m_sourceDevice->startTransaction(transferGroup);
+    m_sourceIo->startTransaction(transferGroup);
     emit sigTransationStarted(transferGroup->getGroupId());
 }

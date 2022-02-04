@@ -11,14 +11,11 @@
  * Observe source to generate state
  * notify current state changed
  */
-
-
-
 class SourceStateController : public QObject
 {
     Q_OBJECT
 public:
-    SourceStateController(ISourceIo *sourceDevice,
+    SourceStateController(ISourceIo *sourceIo,
                            SourceTransactionStartNotifier *sourceNotificationSwitch,
                            SourceTransactionStartNotifier *sourceNotificationStateQuery);
     enum class States
@@ -50,7 +47,7 @@ private:
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
     void handleStateResponse(const IoQueueEntry::Ptr transferGroup);
 
-    ISourceIo *m_sourceDevice;
+    ISourceIo *m_sourceIo;
     SourceTransactionStartNotifier *m_sourceNotificationSwitch;
     SourceTransactionStartNotifier *m_sourceNotificationStateQuery;
     States m_currState = States::UNDEFINED;

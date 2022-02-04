@@ -1,9 +1,9 @@
 #include "sourcestatecontroller.h"
 
-SourceStateController::SourceStateController(ISourceIo *sourceDevice,
+SourceStateController::SourceStateController(ISourceIo *sourceIo,
                                                SourceTransactionStartNotifier *sourceNotificationSwitch,
                                                SourceTransactionStartNotifier *sourceNotificationStateQuery) :
-    m_sourceDevice(sourceDevice),
+    m_sourceIo(sourceIo),
     m_sourceNotificationSwitch(sourceNotificationSwitch),
     m_sourceNotificationStateQuery(sourceNotificationStateQuery)
 
@@ -20,7 +20,7 @@ SourceStateController::SourceStateController(ISourceIo *sourceDevice,
     connect(m_sourceNotificationStateQuery, &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStateController::onStateQueryTransationStarted);
 
-    connect(m_sourceDevice, &SourceIo::sigResponseReceived,
+    connect(m_sourceIo, &SourceIo::sigResponseReceived,
             this, &SourceStateController::onResponseReceived);
 }
 
@@ -40,7 +40,7 @@ bool SourceStateController::tryStartPollNow()
 {
     bool bStarted = false;
     if(!m_PendingStateQueryIds.hasPending()) {
-        IoQueueEntry::Ptr transferGroup = m_sourceDevice->getIoGroupGenerator().generateStatusPollGroup();
+        IoQueueEntry::Ptr transferGroup = m_sourceIo->getIoGroupGenerator().generateStatusPollGroup();
         m_sourceNotificationStateQuery->startTransactionWithNotify(transferGroup);
         bStarted = true;
     }

@@ -8,14 +8,14 @@ class SourceTransactionStartNotifier : public QObject
 {
     Q_OBJECT
 public:
-    SourceTransactionStartNotifier(ISourceIo *sourceDevice);
+    SourceTransactionStartNotifier(ISourceIo *sourceIo);
 
     void startTransactionWithNotify(IoQueueEntry::Ptr transferGroup);
 signals:
     void sigTransationStarted(int dataGroupId);
 
 private:
-    ISourceIo *m_sourceDevice;
+    ISourceIo *m_sourceIo;
 };
 
 #endif // SOURCETRANSACTIONSTARTNOTIFIER_H
