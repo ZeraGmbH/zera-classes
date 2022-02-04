@@ -10,6 +10,9 @@ QString MessageTexts::getText(MessageTexts::Texts textId)
     case ERR_SWITCH_OFF:
         text = QStringLiteral("Switch off failed");
         break;
+    case ERR_STATUS_POLL:
+        text = QStringLiteral("Status error");
+        break;
     }
     return text;
 }
