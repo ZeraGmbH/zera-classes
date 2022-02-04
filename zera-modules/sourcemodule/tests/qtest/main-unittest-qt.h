@@ -5,12 +5,13 @@
 #include "io-device/iodevicedemo.h"
 #include <QObject>
 #include <QList>
+#include <QString>
 #include <QtTest>
 #include <vs_veinhash.h>
 
 QObject* addTest(QObject* test);
 
-IoDeviceBase::Ptr createOpenDemoIoDevice();
+IoDeviceBase::Ptr createOpenDemoIoDevice(QString deviceInfo = QString());
 void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs);
 
 VeinStorage::VeinHash *getNullEventSystem();
