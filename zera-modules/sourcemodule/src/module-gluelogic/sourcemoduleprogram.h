@@ -5,7 +5,7 @@
 #include <vf-cpp-rpc.h>
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
-#include "vein-fassade/sourceveininterface.h"
+#include "vein/sourceveininterface.h"
 
 class cVeinModuleActvalue;
 class cVeinModuleParameter;

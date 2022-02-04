@@ -2,11 +2,12 @@
 #define CSOURCEVEININTERFACE_H
 
 #include <QObject>
+#include <QJsonObject>
+#include <QVariant>
 
 class cVeinModuleActvalue;
 class cVeinModuleParameter;
 class cJsonParamValidator;
-class SourceDeviceVein;
 
 class SourceVeinInterface : public QObject
 {
@@ -14,19 +15,20 @@ class SourceVeinInterface : public QObject
 public:
     explicit SourceVeinInterface(QObject *parent = nullptr);
 
-    // getters
     cVeinModuleActvalue *getVeinDeviceInfo();
     cVeinModuleActvalue *getVeinDeviceState();
     cVeinModuleParameter *getVeinDeviceParameter();
     cJsonParamValidator *getVeinDeviceParameterValidator();
 
-    // setters
-    void setVeinDeviceInfo(cVeinModuleActvalue *getVeinDeviceInfo);
-    void setVeinDeviceState(cVeinModuleActvalue* getVeinDeviceState);
-    void setVeinDeviceParameter(cVeinModuleParameter* getVeinDeviceParameter);
-    void setVeinDeviceParameterValidator(cJsonParamValidator* getVeinDeviceParameterValidator);
+    void setVeinDeviceInfo(cVeinModuleActvalue *veinDeviceInfo);
+    void setVeinDeviceState(cVeinModuleActvalue* veinDeviceState);
+    void setVeinDeviceParameter(cVeinModuleParameter* veinDeviceParameter);
+    void setVeinDeviceParameterValidator(cJsonParamValidator* veinDeviceParameterValidator);
 signals:
+    void sigNewLoadParams(QJsonObject params);
 
+private slots:
+    void onNewVeinLoadParams(QVariant params);
 private:
     cVeinModuleActvalue* m_veinDeviceInfo = nullptr;
     cVeinModuleActvalue* m_veinDeviceState = nullptr;

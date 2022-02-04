@@ -1,6 +1,6 @@
 #include "sourcedevicevein.h"
 #include "message-texts/messagetexts.h"
-#include "vein-fassade/sourceveininterface.h"
+#include "vein/sourceveininterface.h"
 #include "source-protocols/iogroupgenerator.h"
 #include <veinmoduleactvalue.h>
 #include <veinmoduleparameter.h>
