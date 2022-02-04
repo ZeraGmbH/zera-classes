@@ -38,7 +38,7 @@ file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/source-protocols/*.cpp
     ${PROJECT_SOURCE_DIR}/src/source-scanner/*.cpp
     ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/vein-fassade/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/vein/*.cpp
     )
 
 
@@ -52,7 +52,7 @@ file(GLOB HEADER
     ${PROJECT_SOURCE_DIR}/src/source-protocols/*.h
     ${PROJECT_SOURCE_DIR}/src/source-scanner/*.h
     ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.h
-    ${PROJECT_SOURCE_DIR}/src/vein-fassade/*.h
+    ${PROJECT_SOURCE_DIR}/src/vein/*.h
     )
 
 file(GLOB RESOURCES 
