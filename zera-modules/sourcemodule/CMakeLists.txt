@@ -269,8 +269,11 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         ${CMAKE_CURRENT_SOURCE_DIR}/src
         )
 
+    find_package(VfStorageHash REQUIRED)
+
     target_link_libraries(sourcemodule-unittest-qt
         PUBLIC
+        VeinMeta::VfStorageHash
         Qt5::Test
         sourcemodule-static
     )
