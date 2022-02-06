@@ -19,10 +19,10 @@ public:
     cJsonParamValidator *getVeinDeviceParameterValidator();
 
     // setters
-    void setVeinDeviceInfo(cVeinModuleActvalue *getVeinDeviceInfo);
-    void setVeinDeviceState(cVeinModuleActvalue* getVeinDeviceState);
-    void setVeinDeviceParameter(cVeinModuleParameter* getVeinDeviceParameter);
-    void setVeinDeviceParameterValidator(cJsonParamValidator* getVeinDeviceParameterValidator);
+    void setVeinDeviceInfo(cVeinModuleActvalue *veinDeviceInfo);
+    void setVeinDeviceState(cVeinModuleActvalue* veinDeviceState);
+    void setVeinDeviceParameter(cVeinModuleParameter* veinDeviceParameter);
+    void setVeinDeviceParameterValidator(cJsonParamValidator* veinDeviceParameterValidator);
 signals:
 
 private:

@@ -25,23 +25,23 @@ cJsonParamValidator *VeinInterface::getVeinDeviceParameterValidator()
     return m_veinDeviceParameterValidator;
 }
 
-void VeinInterface::setVeinDeviceInfo(cVeinModuleActvalue *getVeinDeviceInfo)
+void VeinInterface::setVeinDeviceInfo(cVeinModuleActvalue *veinDeviceInfo)
 {
-    m_veinDeviceInfo = getVeinDeviceInfo;
+    m_veinDeviceInfo = veinDeviceInfo;
 }
 
-void VeinInterface::setVeinDeviceState(cVeinModuleActvalue *getVeinDeviceState)
+void VeinInterface::setVeinDeviceState(cVeinModuleActvalue *veinDeviceState)
 {
-    m_veinDeviceState = getVeinDeviceState;
+    m_veinDeviceState = veinDeviceState;
 }
 
-void VeinInterface::setVeinDeviceParameter(cVeinModuleParameter *getVeinDeviceParameter)
+void VeinInterface::setVeinDeviceParameter(cVeinModuleParameter *veinDeviceParameter)
 {
-    m_veinDeviceParameter = getVeinDeviceParameter;
+    m_veinDeviceParameter = veinDeviceParameter;
 }
 
-void VeinInterface::setVeinDeviceParameterValidator(cJsonParamValidator *getVeinDeviceParameterValidator)
+void VeinInterface::setVeinDeviceParameterValidator(cJsonParamValidator *veinDeviceParameterValidator)
 {
-    m_veinDeviceParameterValidator = getVeinDeviceParameterValidator;
+    m_veinDeviceParameterValidator = veinDeviceParameterValidator;
 }
 
