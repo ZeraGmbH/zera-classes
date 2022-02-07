@@ -21,6 +21,7 @@ public:
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) override;
 
     void setResponseDelay(bool followsTimeout, int iFixedMs);
+    void setAllTransfersError(bool error);
 
 private slots:
     void onResponseDelayTimer();
@@ -33,6 +34,7 @@ private:
     int m_responseDelayMsTimeoutSimul = demoIoDefaultTimeout;
     bool m_delayFollowsTimeout = false;
     QTimer m_responseDelayTimer;
+    bool m_allTransfersError = false;
 };
 
 
