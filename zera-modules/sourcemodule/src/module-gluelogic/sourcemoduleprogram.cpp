@@ -84,14 +84,14 @@ void SourceModuleProgram::generateInterface()
                                             QString("ACT_DeviceInfo%1").arg(souceCount),
                                             QString("Component with source info/capabiliities"),
                                             QJsonObject());
-        sourceVeinInterface->setVeinDeviceInfo(pVeinAct);
+        sourceVeinInterface->setVeinDeviceInfoComponent(pVeinAct);
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
         pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_DeviceState%1").arg(souceCount),
                                             QString("Component with source status"),
                                             QJsonObject());
-        sourceVeinInterface->setVeinDeviceState(pVeinAct);
+        sourceVeinInterface->setVeinDeviceStateComponent(pVeinAct);
         m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
         // device param
@@ -99,7 +99,7 @@ void SourceModuleProgram::generateInterface()
                                                             key = QString("PAR_SourceState%1").arg(souceCount),
                                                             QString("Component all source parameters in JSON format"),
                                                             QJsonObject());
-        sourceVeinInterface->setVeinDeviceParameter(pVeinParam);
+        sourceVeinInterface->setVeinDeviceParameterComponent(pVeinParam);
         //pVeinParam->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
         jsonValidator = new cJsonParamValidator();
         sourceVeinInterface->setVeinDeviceParameterValidator(jsonValidator);

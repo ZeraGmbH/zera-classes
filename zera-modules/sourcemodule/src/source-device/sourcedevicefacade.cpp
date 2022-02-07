@@ -134,7 +134,7 @@ void SourceDeviceFacade::setStatusPollTime(int ms)
 void SourceDeviceFacade::setVeinParamStructure(QJsonObject paramStruct)
 {
     if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceInfo()->setValue(paramStruct);
+        m_veinInterface->getVeinDeviceInfoComponent()->setValue(paramStruct);
         m_veinInterface->getVeinDeviceParameterValidator()->setJSonParameterStructure(paramStruct);
     }
 }
@@ -142,14 +142,14 @@ void SourceDeviceFacade::setVeinParamStructure(QJsonObject paramStruct)
 void SourceDeviceFacade::setVeinParamState(QJsonObject paramState)
 {
     if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceParameter()->setValue(paramState);
+        m_veinInterface->getVeinDeviceParameterComponent()->setValue(paramState);
     }
 }
 
 void SourceDeviceFacade::setVeinDeviceState(QJsonObject deviceState)
 {
     if(m_veinInterface) {
-        m_veinInterface->getVeinDeviceState()->setValue(deviceState);
+        m_veinInterface->getVeinDeviceStateComponent()->setValue(deviceState);
     }
 }
 

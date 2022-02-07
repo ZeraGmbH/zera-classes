@@ -68,9 +68,9 @@ struct TVeinObjects
                             veinEventSystem,
                             componentNameParLoad, noDescription, QVariant())
     {
-        veinInterface.setVeinDeviceState(&veinActDeviceState);
-        veinInterface.setVeinDeviceInfo(&veinActDeviceInfo);
-        veinInterface.setVeinDeviceParameter(&veinDeviceParameter);
+        veinInterface.setVeinDeviceStateComponent(&veinActDeviceState);
+        veinInterface.setVeinDeviceInfoComponent(&veinActDeviceInfo);
+        veinInterface.setVeinDeviceParameterComponent(&veinDeviceParameter);
         veinInterface.setVeinDeviceParameterValidator(&veinDeviceParameterValidator);
         veinDeviceParameterValidator.setJSonParameterStructure(jsonStructure);
     }
