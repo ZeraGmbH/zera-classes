@@ -9,8 +9,6 @@ QObject *addTest(QObject *test)
     return test;
 }
 
-static VeinStorage::VeinHash *currentEventSystem = nullptr;
-
 int main(int argc, char *argv[])
 {
     int status = 0;
@@ -21,11 +19,9 @@ int main(int argc, char *argv[])
 
     while(!listTests.isEmpty()) {
         QCoreApplication app(argc, argv);
-        currentEventSystem = new VeinStorage::VeinHash(&app);
         QObject *test = listTests.takeLast();
         status |= QTest::qExec(test, argc, argv);
         delete test;
-        delete currentEventSystem;
     }
     if(status) {
 #ifdef QT_DEBUG
@@ -57,7 +53,3 @@ void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs)
     demoDev->setResponseDelay(false, timeoutMs);
 }
 
-VeinStorage::VeinHash *getNullEventSystem()
-{
-    return currentEventSystem;
-}
