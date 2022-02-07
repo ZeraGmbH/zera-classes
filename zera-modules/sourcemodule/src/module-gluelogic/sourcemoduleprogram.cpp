@@ -9,7 +9,7 @@
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
 #include "source-device/sourcedevicemanager.h"
-#include "source-device/sourcedevicevein.h"
+#include "source-device/sourcedevicefacade.h"
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
@@ -144,8 +144,8 @@ void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QSt
 {
     bool sourceAdded = slotPosition >= 0;
     if(sourceAdded) {
-        SourceDeviceVein *device = m_pSourceDeviceManager->getSourceDevice(slotPosition);
-        device->setVeinInterface(m_arrVeinIoInterfaces[slotPosition]);
+        SourceDeviceFacade *deviceContainer = m_pSourceDeviceManager->getSourceController(slotPosition);
+        deviceContainer->setVeinInterface(m_arrVeinIoInterfaces[slotPosition]);
         m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
         updateDemoCount();
     }
