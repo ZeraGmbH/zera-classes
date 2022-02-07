@@ -37,6 +37,9 @@ void IoDeviceDemo::close()
 int IoDeviceDemo::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
 {
     prepareSendAndReceive(ioTransferData);
+    if(m_allTransfersError) {
+        ioTransferData->getDemoResponder()->activateErrorResponse();
+    }
     int responseDelayMs = m_responseDelayMs;
     if(m_delayFollowsTimeout) {
         responseDelayMs = m_responseDelayMsTimeoutSimul;
@@ -64,4 +67,9 @@ void IoDeviceDemo::setResponseDelay(bool followsTimeout, int iFixedMs)
 {
     m_delayFollowsTimeout = followsTimeout;
     m_responseDelayMs = iFixedMs;
+}
+
+void IoDeviceDemo::setAllTransfersError(bool error)
+{
+    m_allTransfersError = error;
 }

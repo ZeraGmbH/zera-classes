@@ -199,6 +199,31 @@ void IoDeviceTest::demoResponseListErrorInjection()
     QCOMPARE(m_listReceivedData[1], "1\r");
 }
 
+void IoDeviceTest::demoResponseAlwaysError()
+{
+    IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
+    IoDeviceDemo* demoIO = static_cast<IoDeviceDemo*>(ioDevice.get());
+
+    demoIO->setAllTransfersError(true);
+    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
+    ioDevice->sendAndReceive(m_ioDataForSingleUse);
+    QTest::qWait(30); // one I/O at a time
+
+    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "1");
+    ioDevice->sendAndReceive(m_ioDataForSingleUse);
+    QTest::qWait(30);
+
+    demoIO->setAllTransfersError(false);
+    m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "2");
+    ioDevice->sendAndReceive(m_ioDataForSingleUse);
+    QTest::qWait(30);
+
+    QCOMPARE(m_ioFinishReceiveCount, 3);
+    QCOMPARE(m_listReceivedData[0], IoTransferDemoResponder::getDefaultErrorResponse());
+    QCOMPARE(m_listReceivedData[1], IoTransferDemoResponder::getDefaultErrorResponse());
+    QCOMPARE(m_listReceivedData[2], "2\r");
+}
+
 void IoDeviceTest::demoDelayFollowsDelay()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
