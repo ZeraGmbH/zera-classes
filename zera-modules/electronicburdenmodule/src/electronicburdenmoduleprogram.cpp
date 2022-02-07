@@ -43,14 +43,14 @@ void ElectronicBurdenModuleProgram::generateInterface()
                                         QString("ACT_DeviceInfo"),
                                         QString("Component with burden info/capabiliities"),
                                         QJsonObject());
-    m_pVeinInterface->setVeinDeviceInfo(pVeinAct);
+    m_pVeinInterface->setVeinDeviceInfoComponent(pVeinAct);
     m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
     pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                         QString("ACT_DeviceState"),
                                         QString("Component with burden status"),
                                         QJsonObject());
-    m_pVeinInterface->setVeinDeviceState(pVeinAct);
+    m_pVeinInterface->setVeinDeviceStateComponent(pVeinAct);
     m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
     // device param
@@ -58,7 +58,7 @@ void ElectronicBurdenModuleProgram::generateInterface()
                                                         key = QString("PAR_BurdenState"),
                                                         QString("Component all source parameters in JSON format"),
                                                         QJsonObject());
-    m_pVeinInterface->setVeinDeviceParameter(pVeinParam);
+    m_pVeinInterface->setVeinDeviceParameterComponent(pVeinParam);
     //pVeinParam->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RANGE", "10", "PAR_NominalRange", "0", s));
     jsonValidator = new cJsonParamValidator();
     m_pVeinInterface->setVeinDeviceParameterValidator(jsonValidator);
