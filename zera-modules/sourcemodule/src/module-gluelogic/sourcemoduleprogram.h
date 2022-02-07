@@ -11,7 +11,6 @@ class cVeinModuleActvalue;
 class cVeinModuleParameter;
 class cJsonParamValidator;
 class SourceModule;
-class SourceDeviceVein;
 class SourceDeviceManager;
 
 class SourceModuleProgram: public cBaseMeasWorkProgram

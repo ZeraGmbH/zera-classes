@@ -6,7 +6,7 @@
 #include <QUuid>
 #include "source-scanner/sourcescanner.h"
 
-class SourceDeviceVein;
+class SourceDeviceFacade;
 
 class SourceDeviceManager : public QObject
 {
@@ -23,7 +23,7 @@ public:
     // getter
     int getSlotCount();
     int getActiveSlotCount();
-    SourceDeviceVein* getSourceDevice(int slotNo);
+    SourceDeviceFacade* getSourceController(int slotNo);
     int getDemoCount();
 
 signals:
@@ -32,7 +32,7 @@ signals:
 
 private slots:
     void onScanFinished(SourceScanner::Ptr scanner);
-    void onSourceClosed(SourceDeviceVein *sourceDevice, QUuid uuid);
+    void onSourceClosed(SourceDeviceFacade *source, QUuid uuid);
 
 signals:
     void sigSlotRemovedQueued(int slotNo, QUuid uuid, QString errMsg);
@@ -40,10 +40,10 @@ signals:
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();
-    void addSource(int slotPos, SourceDeviceVein *device);
+    void addSource(int slotPos, SourceDeviceFacade *deviceController);
     bool tryStartDemoDeviceRemove(int slotNo);
 
-    QVector<SourceDeviceVein*> m_sourceDeviceSlots;
+    QVector<SourceDeviceFacade*> m_sourceControllers;
     QVector<QUuid> m_PendingRemoveHashes;
     int m_activeSlotCount = 0;
 };
