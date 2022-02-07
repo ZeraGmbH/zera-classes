@@ -61,7 +61,7 @@ tIoTransferList IoGroupGenerator::generateListForAction(SourceActionTypes::Actio
         outInList.append(generateQueryStatusList());
         break;
     case SourceActionTypes::QUERY_ACTUAL:
-        outInList.append(generateQueryActualList());
+        //outInList.append(generateQueryActualList());
         break;
 
     default:
