@@ -5,7 +5,6 @@
 #include "sourceproperties.h"
 #include "source-protocols/iogroupgenerator.h"
 #include "io-queue/ioqueue.h"
-
 #include <QObject>
 
 /*
@@ -27,26 +26,21 @@ signals:
     void sigResponseReceived(const IoQueueEntry::Ptr response);
 };
 
-
 class SourceIo : public ISourceIo
 {
     Q_OBJECT
 public:
     SourceIo(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties);
-
     int startTransaction(IoQueueEntry::Ptr transferGroup) override;
     IoGroupGenerator getIoGroupGenerator() const override;
     SourceProperties getProperties() const override;
 
 private slots:
     void onIoGroupFinished(IoQueueEntry::Ptr transferGroup);
-
 private:
     IoDeviceBase::Ptr m_ioDevice;
     IoQueue m_ioQueue;
-
     IoGroupGenerator m_ioGroupGenerator;
-
     SourceProperties m_sourceProperties;
 };
 

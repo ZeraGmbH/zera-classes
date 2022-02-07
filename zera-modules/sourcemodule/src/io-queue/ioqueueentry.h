@@ -12,16 +12,11 @@ class IoQueueEntry
 {
 public:
     typedef QSharedPointer<IoQueueEntry> Ptr;
-
     IoQueueEntry(IoQueueErrorBehaviors errorBehavior);
-
     void appendTransferList(tIoTransferList transferList);
-
     bool passedAll() const;
-
     int getGroupId() const;
     IoQueueErrorBehaviors getErrorBehavior() const;
-
     int getTransferCount();
     IoTransferDataSingle::Ptr getTransfer(int idx);
 
