@@ -15,14 +15,14 @@ class SourceVeinInterface : public QObject
 public:
     explicit SourceVeinInterface(QObject *parent = nullptr);
 
-    cVeinModuleActvalue *getVeinDeviceInfo();
-    cVeinModuleActvalue *getVeinDeviceState();
-    cVeinModuleParameter *getVeinDeviceParameter();
+    cVeinModuleActvalue *getVeinDeviceInfoComponent();
+    cVeinModuleActvalue *getVeinDeviceStateComponent();
+    cVeinModuleParameter *getVeinDeviceParameterComponent();
     cJsonParamValidator *getVeinDeviceParameterValidator();
 
-    void setVeinDeviceInfo(cVeinModuleActvalue *veinDeviceInfo);
-    void setVeinDeviceState(cVeinModuleActvalue* veinDeviceState);
-    void setVeinDeviceParameter(cVeinModuleParameter* veinDeviceParameter);
+    void setVeinDeviceInfoComponent(cVeinModuleActvalue *veinDeviceInfo);
+    void setVeinDeviceStateComponent(cVeinModuleActvalue* veinDeviceState);
+    void setVeinDeviceParameterComponent(cVeinModuleParameter* veinDeviceParameter);
     void setVeinDeviceParameterValidator(cJsonParamValidator* veinDeviceParameterValidator);
 signals:
     void sigNewLoadParams(QJsonObject params);
