@@ -14,8 +14,6 @@ QObject* addTest(QObject* test);
 IoDeviceBase::Ptr createOpenDemoIoDevice(QString deviceInfo = QString());
 void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs);
 
-VeinStorage::VeinHash *getNullEventSystem();
-
 static constexpr int shortQtEventTimeout = 5;
 
 #endif // MAIN_UNITTEST_H
