@@ -16,7 +16,7 @@ SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourcePropert
     m_stateController(m_sourceIo.get(), &m_transactionNotifierSwitch, &m_transactionNotifierStatus),
     m_switcher(m_sourceIo.get(), &m_transactionNotifierSwitch)
 {
-    m_deviceStatus.setDeviceInfo(m_ioDevice->getDeviceInfo());
+    m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
     connect(&m_stateController, &SourceStateController::sigStateChanged,
             this, &SourceDeviceFacade::onSourceStateChanged);
     connect(&m_switcher, &SourceSwitchJson::sigSwitchFinished,
@@ -37,7 +37,7 @@ bool SourceDeviceFacade::hasDemoIo() const
 
 QStringList SourceDeviceFacade::getLastErrors() const
 {
-    return m_deviceStatus.getErrors();
+    return m_deviceStatusJsonApi.getErrors();
 }
 
 bool SourceDeviceFacade::close(QUuid uuid)
@@ -66,16 +66,16 @@ void SourceDeviceFacade::switchLoad(QJsonObject params)
 void SourceDeviceFacade::onSourceStateChanged(SourceStateController::States state)
 {
     if(state == SourceStateController::States::SWITCH_BUSY) {
-        m_deviceStatus.clearWarningsErrors();
-        m_deviceStatus.setBusy(true);
+        m_deviceStatusJsonApi.clearWarningsErrors();
+        m_deviceStatusJsonApi.setBusy(true);
     }
     else if(state == SourceStateController::States::IDLE) {
-        m_deviceStatus.setBusy(false);
+        m_deviceStatusJsonApi.setBusy(false);
     }
     else {
         handleErrorState(state);
     }
-    setVeinDeviceState(m_deviceStatus.getJsonStatus());
+    setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
 }
 
 void SourceDeviceFacade::onSourceSwitchFinished()
@@ -98,16 +98,16 @@ void SourceDeviceFacade::handleErrorState(SourceStateController::States state)
         MessageTexts::Texts msgTxtId = m_switcher.getRequestedLoadState().getOn() ?
                     MessageTexts::ERR_SWITCH_ON :
                     MessageTexts::ERR_SWITCH_OFF;
-        m_deviceStatus.addError(MessageTexts::getText(msgTxtId));
+        m_deviceStatusJsonApi.addError(MessageTexts::getText(msgTxtId));
     }
     else if(state == SourceStateController::States::ERROR_POLL) {
-        m_deviceStatus.addError(MessageTexts::getText(MessageTexts::ERR_STATUS_POLL));
+        m_deviceStatusJsonApi.addError(MessageTexts::getText(MessageTexts::ERR_STATUS_POLL));
     }
 
     else {
         qCritical("Unhandled source state!");
     }
-    m_deviceStatus.setBusy(false);
+    m_deviceStatusJsonApi.setBusy(false);
 }
 
 void SourceDeviceFacade::doFinalCloseActivities()
@@ -121,7 +121,7 @@ void SourceDeviceFacade::setVeinInterface(SourceVeinInterface *veinInterface)
     m_veinInterface = veinInterface;
     setVeinParamStructure(JsonStructureLoader::loadJsonStructure(m_sourceIo->getProperties()));
     setVeinParamState(m_switcher.getCurrLoadState().getParams());
-    setVeinDeviceState(m_deviceStatus.getJsonStatus());
+    setVeinDeviceState(m_deviceStatusJsonApi.getJsonStatus());
     connect(m_veinInterface, &SourceVeinInterface::sigNewLoadParams,
             this, &SourceDeviceFacade::switchLoad);
 }
