@@ -63,7 +63,7 @@ private:
     QUuid m_closeUuid;
     bool m_closeRequested = false;
 
-    JsonDeviceStatusApi m_deviceStatus;
+    JsonDeviceStatusApi m_deviceStatusJsonApi;
 
     static bool m_demoCloseByUsbDisconnect;
 };
