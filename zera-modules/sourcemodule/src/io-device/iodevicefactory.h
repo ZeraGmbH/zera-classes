@@ -4,7 +4,6 @@
 #include "iodevicebase.h"
 #include "iodevicetypes.h"
 
-// create interfaces through IoDeviceFactory only
 class IoDeviceFactory {
 public:
     static IoDeviceBase::Ptr createIoDevice(IoDeviceTypes type);

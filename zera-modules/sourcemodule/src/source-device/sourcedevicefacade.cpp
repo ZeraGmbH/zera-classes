@@ -1,6 +1,5 @@
 #include "sourcedevicefacade.h"
 #include "json/jsonstructureloader.h"
-#include "vein/sourceveininterface.h"
 #include "message-texts/messagetexts.h"
 #include <veinmoduleactvalue.h>
 #include <veinmoduleparameter.h>

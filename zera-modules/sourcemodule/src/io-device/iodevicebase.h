@@ -14,13 +14,10 @@ class IoDeviceBase : public QObject
 public:
     typedef QSharedPointer<IoDeviceBase> Ptr;
     IoDeviceBase(IoDeviceTypes type);
-
     virtual bool open(QString) = 0;
     virtual void close() = 0;
     virtual bool isOpen() = 0;
-
     virtual int sendAndReceive(IoTransferDataSingle::Ptr ioTransferData) = 0;
-
     QString getDeviceInfo();
     IoDeviceTypes getType() { return m_type; }
 signals:
@@ -30,7 +27,6 @@ signals:
 protected:
     virtual void setReadTimeoutNextIo(int) {};
     void prepareSendAndReceive(IoTransferDataSingle::Ptr ioTransferData);
-
     QString m_strDeviceInfo;
     IoIdGenerator m_IDGenerator;
     IdKeeperSingle m_currIoId;

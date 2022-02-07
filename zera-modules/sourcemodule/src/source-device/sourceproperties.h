@@ -19,6 +19,7 @@ public:
     QString getName() const;
     QString getVersion() const;
     SourceProtocols getProtocol() const;
+
 private:
     bool m_isValid = false;
     SupportedSourceTypes m_type = SOURCE_MT_COMMON;

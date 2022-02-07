@@ -1,5 +1,4 @@
 #include "sourcedevicemanager.h"
-#include "sourcedevicefacade.h"
 #include "io-device/iodevicefactory.h"
 #include "io-device/iodevicedemo.h"
 #include "source-scanner/sourcescanneriodemo.h"

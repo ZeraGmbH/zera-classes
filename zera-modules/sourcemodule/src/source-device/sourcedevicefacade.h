@@ -9,12 +9,11 @@
 #include "sourceswitchjson.h"
 #include "json/jsondevicestatusapi.h"
 #include "json/persistentjsonstate.h"
+#include "vein/sourceveininterface.h"
 
 #include <QObject>
 #include <QUuid>
 #include <QJsonObject>
-
-class SourceVeinInterface;
 
 class SourceDeviceFacade : public QObject
 {
@@ -31,16 +30,13 @@ public:
     QStringList getLastErrors() const;
 
     bool close(QUuid uuid);
-
 signals:
     void sigClosed(SourceDeviceFacade* source, QUuid uuid);
-
 
 private slots:
     void onSourceStateChanged(SourceStateController::States state);
     void onSourceSwitchFinished();
     void onIoDeviceClosed();
-
 private:
     void handleErrorState(SourceStateController::States state);
     void doFinalCloseActivities();
@@ -50,21 +46,16 @@ private:
     void resetVeinComponents();
     void enableCloseRequested(QUuid uuid);
     bool tryDemoCloseByUsbDisconnect(QUuid uuid);
-
     SourceVeinInterface* m_veinInterface = nullptr;
     IoDeviceBase::Ptr m_ioDevice;
     ISourceIo::Ptr m_sourceIo;
-
     SourceTransactionStartNotifier m_transactionNotifierStatus;
     SourceTransactionStartNotifier m_transactionNotifierSwitch;
     SourceStateController m_stateController;
     SourceSwitchJson m_switcher;
-
     QUuid m_closeUuid;
     bool m_closeRequested = false;
-
     JsonDeviceStatusApi m_deviceStatusJsonApi;
-
     static bool m_demoCloseByUsbDisconnect;
 };
 
