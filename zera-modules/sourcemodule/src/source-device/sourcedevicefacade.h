@@ -51,6 +51,7 @@ private:
     ISourceIo::Ptr m_sourceIo;
     SourceTransactionStartNotifier::Ptr m_transactionNotifierStatus;
     SourceTransactionStartNotifier::Ptr m_transactionNotifierSwitch;
+    SourceStatePeriodicPoller::Ptr m_statePoller;
     SourceStateController m_stateController;
     SourceSwitchJson m_switcher;
     QUuid m_closeUuid;

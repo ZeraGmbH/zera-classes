@@ -12,7 +12,8 @@ SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourcePropert
     m_sourceIo(ISourceIo::Ptr(new SourceIo(ioDevice, properties))),
     m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
-    m_stateController(m_sourceIo, m_transactionNotifierSwitch, m_transactionNotifierStatus),
+    m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),
+    m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller),
     m_switcher(m_sourceIo, m_transactionNotifierSwitch)
 {
     m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
@@ -127,7 +128,7 @@ void SourceDeviceFacade::setVeinInterface(SourceVeinInterface *veinInterface)
 
 void SourceDeviceFacade::setStatusPollTime(int ms)
 {
-    m_stateController.setPollTime(ms);
+    m_statePoller->setPollTime(ms);
 }
 
 void SourceDeviceFacade::setVeinParamStructure(QJsonObject paramStruct)

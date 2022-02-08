@@ -4,11 +4,13 @@
 #include "sourcetransactionstartnotifier.h"
 #include <QObject>
 #include <QTimer>
+#include <QSharedPointer>
 
 class SourceStatePeriodicPoller : public QObject
 {
     Q_OBJECT
 public:
+    typedef QSharedPointer<SourceStatePeriodicPoller> Ptr;
     SourceStatePeriodicPoller(SourceTransactionStartNotifier::Ptr sourceIoWithNotificationForQuery,
                               int pollTime = 500);
     void setPollTime(int ms);
