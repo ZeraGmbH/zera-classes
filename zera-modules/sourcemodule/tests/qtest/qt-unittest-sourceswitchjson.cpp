@@ -15,9 +15,9 @@ void SourceSwitchJsonTest::signalSwitch()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIo);
-    SourceSwitchJson switcher(&sourceIo, &notifyWrapperSwitch);
+    SourceIo::Ptr sourceIo = SourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    SourceTransactionStartNotifier notifyWrapperSwitch(sourceIo);
+    SourceSwitchJson switcher(sourceIo.get(), &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
@@ -35,11 +35,12 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
-    SourceIoErrorInjection sourceIoWithError(&sourceIo);
-    sourceIoWithError.setDemoResonseErrorIdx(0);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIoWithError);
-    SourceSwitchJson switcher(&sourceIoWithError, &notifyWrapperSwitch);
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo.get());
+    ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
+    pSourceIoWithError->setDemoResonseErrorIdx(0);
+    SourceTransactionStartNotifier notifyWrapperSwitch(sourceIoWithError);
+    SourceSwitchJson switcher(pSourceIoWithError, &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
@@ -57,9 +58,9 @@ void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIo);
-    SourceSwitchJson switcher(&sourceIo, &notifyWrapperSwitch);
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    SourceTransactionStartNotifier notifyWrapperSwitch(sourceIo);
+    SourceSwitchJson switcher(sourceIo.get(), &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     int paramChangeCount = 0;
@@ -78,11 +79,12 @@ void SourceSwitchJsonTest::currentAndRequestedParamOnError()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
-    SourceIoErrorInjection sourceIoWithError(&sourceIo);
-    sourceIoWithError.setDemoResonseErrorIdx(0);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIoWithError);
-    SourceSwitchJson switcher(&sourceIoWithError, &notifyWrapperSwitch);
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo.get());
+    ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
+    pSourceIoWithError->setDemoResonseErrorIdx(0);
+    SourceTransactionStartNotifier notifyWrapperSwitch(sourceIoWithError);
+    SourceSwitchJson switcher(pSourceIoWithError, &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     JsonParamApi paramStateForError = paramState;
@@ -105,9 +107,9 @@ void SourceSwitchJsonTest::changeParamOnSuccess()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
-    SourceTransactionStartNotifier notifyWrapperSwitch(&sourceIo);
-    SourceSwitchJson switcher(&sourceIo, &notifyWrapperSwitch);
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    SourceTransactionStartNotifier notifyWrapperSwitch(sourceIo);
+    SourceSwitchJson switcher(sourceIo.get(), &notifyWrapperSwitch);
 
     JsonParamApi paramState = switcher.getCurrLoadState();
     JsonParamApi paramStateForError = paramState;

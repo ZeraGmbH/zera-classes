@@ -1,6 +1,6 @@
 #include "sourcetransactionstartnotifier.h"
 
-SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceIo *sourceIo) :
+SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceIo::Ptr sourceIo) :
     m_sourceIo(sourceIo)
 {
 }
