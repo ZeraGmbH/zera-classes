@@ -3,21 +3,20 @@
 
 #include "sourceio.h"
 #include "sourcetransactionstartnotifier.h"
+#include "sourceperiodicpollerstate.h"
 #include <QObject>
 #include <QTimer>
 
 /*
- * Spawn periodic state poll
- * Observe source to generate state
- * notify current state changed
+ * Observe source to generate state change notification
  */
 class SourceStateController : public QObject
 {
     Q_OBJECT
 public:
-    SourceStateController(ISourceIo::Ptr sourceIo,
-                          SourceTransactionStartNotifier::Ptr sourceNotificationSwitch,
-                          SourceTransactionStartNotifier::Ptr sourceNotificationStateQuery);
+    SourceStateController(SourceTransactionStartNotifier::Ptr sourceNotificationSwitch,
+                          SourceTransactionStartNotifier::Ptr sourceNotificationStateQuery,
+                          SourceStatePeriodicPoller::Ptr sourceStatePoller);
     enum class States
     {
         UNDEFINED,
@@ -26,21 +25,15 @@ public:
         ERROR_SWITCH,
         ERROR_POLL
     };
-    void setPollTime(int ms);
-    bool tryStartPollNow();
-    int isPeriodicPollActive() const;
     bool isErrorState() const;
 signals:
     void sigStateChanged(States state);
 
 private slots:
-    void onPollTimer();
     void onSwitchTransactionStarted(int dataGroupId);
     void onStateQueryTransationStarted(int dataGroupId);
     void onResponseReceived(const IoQueueEntry::Ptr transferGroup);
 private:
-    void enablePolling();
-    void disablePolling();
     void setState(States state);
     void setPollingOnStateChange();
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
@@ -48,10 +41,10 @@ private:
     ISourceIo::Ptr m_sourceIo;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
+    SourceStatePeriodicPoller::Ptr m_sourceStatePoller;
     States m_currState = States::UNDEFINED;
     IdKeeperMulti m_pendingSwitchIds;
     IdKeeperMulti m_PendingStateQueryIds;
-    QTimer m_pollTimer;
 };
 
 #endif // SOURCEINTERACTORSTATUS_H
