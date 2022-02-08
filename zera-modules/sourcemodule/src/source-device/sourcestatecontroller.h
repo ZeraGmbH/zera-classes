@@ -16,8 +16,8 @@ class SourceStateController : public QObject
     Q_OBJECT
 public:
     SourceStateController(ISourceIo *sourceIo,
-                           SourceTransactionStartNotifier *sourceNotificationSwitch,
-                           SourceTransactionStartNotifier *sourceNotificationStateQuery);
+                           SourceTransactionStartNotifier::Ptr sourceNotificationSwitch,
+                           SourceTransactionStartNotifier::Ptr sourceNotificationStateQuery);
     enum class States
     {
         UNDEFINED,
@@ -46,8 +46,8 @@ private:
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
     void handleStateResponse(const IoQueueEntry::Ptr transferGroup);
     ISourceIo *m_sourceIo;
-    SourceTransactionStartNotifier *m_sourceNotificationSwitch;
-    SourceTransactionStartNotifier *m_sourceNotificationStateQuery;
+    SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
+    SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
     States m_currState = States::UNDEFINED;
     IdKeeperMulti m_pendingSwitchIds;
     IdKeeperMulti m_PendingStateQueryIds;

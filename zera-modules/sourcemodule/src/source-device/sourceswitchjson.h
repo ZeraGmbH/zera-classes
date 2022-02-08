@@ -10,7 +10,7 @@ class SourceSwitchJson : public QObject
 {
     Q_OBJECT
 public:
-    SourceSwitchJson(ISourceIo* sourceIo, SourceTransactionStartNotifier *sourceNotificationSwitch);
+    SourceSwitchJson(ISourceIo* sourceIo, SourceTransactionStartNotifier::Ptr sourceNotificationSwitch);
     void switchState(JsonParamApi paramState);
     void switchOff();
     JsonParamApi getCurrLoadState();
@@ -24,7 +24,7 @@ private slots:
 private:
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
     ISourceIo* m_sourceIo;
-    SourceTransactionStartNotifier *m_sourceNotificationSwitch;
+    SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     IdKeeperMulti m_pendingSwitchIds;
     PersistentJsonState* m_persistentParamState;
     JsonParamApi m_paramsRequested;
