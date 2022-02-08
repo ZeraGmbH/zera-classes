@@ -36,6 +36,7 @@ private slots:
     void pollStopsAfterErrorAndRestartsAfterSuccessfulSwitch();
 private:
     SourceIoErrorInjection *m_sourceIo = nullptr;
+    ISourceIo::Ptr m_sourceIoPtr;
     SourceIo *m_sourceIoUnderTest = nullptr;
     IoDeviceBase::Ptr m_ioDevice;
     IoQueueEntryList m_listIoGroupsReceived;
