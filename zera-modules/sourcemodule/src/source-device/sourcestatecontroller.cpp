@@ -1,6 +1,6 @@
 #include "sourcestatecontroller.h"
 
-SourceStateController::SourceStateController(ISourceIo *sourceIo,
+SourceStateController::SourceStateController(ISourceIo::Ptr sourceIo,
                                                SourceTransactionStartNotifier::Ptr sourceNotificationSwitch,
                                                SourceTransactionStartNotifier::Ptr sourceNotificationStateQuery) :
     m_sourceIo(sourceIo),
@@ -20,7 +20,7 @@ SourceStateController::SourceStateController(ISourceIo *sourceIo,
     connect(m_sourceNotificationStateQuery.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStateController::onStateQueryTransationStarted);
 
-    connect(m_sourceIo, &SourceIo::sigResponseReceived,
+    connect(m_sourceIo.get(), &SourceIo::sigResponseReceived,
             this, &SourceStateController::onResponseReceived);
 }
 
