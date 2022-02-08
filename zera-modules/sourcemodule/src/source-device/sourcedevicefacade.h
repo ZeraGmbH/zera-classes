@@ -49,8 +49,8 @@ private:
     SourceVeinInterface* m_veinInterface = nullptr;
     IoDeviceBase::Ptr m_ioDevice;
     ISourceIo::Ptr m_sourceIo;
-    SourceTransactionStartNotifier m_transactionNotifierStatus;
-    SourceTransactionStartNotifier m_transactionNotifierSwitch;
+    SourceTransactionStartNotifier::Ptr m_transactionNotifierStatus;
+    SourceTransactionStartNotifier::Ptr m_transactionNotifierSwitch;
     SourceStateController m_stateController;
     SourceSwitchJson m_switcher;
     QUuid m_closeUuid;

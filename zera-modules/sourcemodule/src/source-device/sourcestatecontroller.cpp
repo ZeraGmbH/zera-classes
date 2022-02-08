@@ -1,8 +1,8 @@
 #include "sourcestatecontroller.h"
 
 SourceStateController::SourceStateController(ISourceIo *sourceIo,
-                                               SourceTransactionStartNotifier *sourceNotificationSwitch,
-                                               SourceTransactionStartNotifier *sourceNotificationStateQuery) :
+                                               SourceTransactionStartNotifier::Ptr sourceNotificationSwitch,
+                                               SourceTransactionStartNotifier::Ptr sourceNotificationStateQuery) :
     m_sourceIo(sourceIo),
     m_sourceNotificationSwitch(sourceNotificationSwitch),
     m_sourceNotificationStateQuery(sourceNotificationStateQuery)
@@ -15,9 +15,9 @@ SourceStateController::SourceStateController(ISourceIo *sourceIo,
     connect(&m_pollTimer, &QTimer::timeout,
             this, &SourceStateController::onPollTimer);
 
-    connect(m_sourceNotificationSwitch, &SourceTransactionStartNotifier::sigTransationStarted,
+    connect(m_sourceNotificationSwitch.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStateController::onSwitchTransactionStarted);
-    connect(m_sourceNotificationStateQuery, &SourceTransactionStartNotifier::sigTransationStarted,
+    connect(m_sourceNotificationStateQuery.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStateController::onStateQueryTransationStarted);
 
     connect(m_sourceIo, &SourceIo::sigResponseReceived,

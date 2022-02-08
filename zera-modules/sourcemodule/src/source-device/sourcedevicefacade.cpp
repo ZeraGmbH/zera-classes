@@ -10,10 +10,10 @@
 SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
     m_ioDevice(ioDevice),
     m_sourceIo(ISourceIo::Ptr(new SourceIo(ioDevice, properties))),
-    m_transactionNotifierStatus(m_sourceIo),
-    m_transactionNotifierSwitch(m_sourceIo),
-    m_stateController(m_sourceIo.get(), &m_transactionNotifierSwitch, &m_transactionNotifierStatus),
-    m_switcher(m_sourceIo.get(), &m_transactionNotifierSwitch)
+    m_transactionNotifierStatus(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
+    m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
+    m_stateController(m_sourceIo.get(), m_transactionNotifierSwitch, m_transactionNotifierStatus),
+    m_switcher(m_sourceIo.get(), m_transactionNotifierSwitch)
 {
     m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
     connect(&m_stateController, &SourceStateController::sigStateChanged,
