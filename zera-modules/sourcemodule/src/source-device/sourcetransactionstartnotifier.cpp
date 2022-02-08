@@ -5,6 +5,11 @@ SourceTransactionStartNotifier::SourceTransactionStartNotifier(ISourceIo::Ptr so
 {
 }
 
+ISourceIo::Ptr SourceTransactionStartNotifier::getSourceIo()
+{
+    return m_sourceIo;
+}
+
 void SourceTransactionStartNotifier::startTransactionWithNotify(IoQueueEntry::Ptr transferGroup)
 {
     m_sourceIo->startTransaction(transferGroup);
