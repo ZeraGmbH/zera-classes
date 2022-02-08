@@ -12,7 +12,6 @@ static QObject* pSourceIoTest = addTest(new SourceStateControllerTest);
 
 SourceStateControllerTest::~SourceStateControllerTest()
 {
-    delete m_sourceIoUnderTest;
 }
 
 void SourceStateControllerTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
@@ -22,17 +21,16 @@ void SourceStateControllerTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGro
 
 void SourceStateControllerTest::init()
 {
-    delete m_sourceIoUnderTest;
-    m_sourceIoPtr = nullptr;
+    m_sourceIo = nullptr;
+    m_sourceIoWithError = nullptr;
     m_ioDevice = nullptr;
     m_listIoGroupsReceived.clear();
 
     m_ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    m_sourceIoUnderTest = new SourceIo(m_ioDevice, sourceProperties);
-    m_sourceIo = new SourceIoErrorInjection(m_sourceIoUnderTest);
-    m_sourceIoPtr = ISourceIo::Ptr(m_sourceIo);
-    connect(m_sourceIo, &ISourceIo::sigResponseReceived,
+    m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, sourceProperties));
+    m_sourceIoWithError = ISourceIo::Ptr(new SourceIoErrorInjection(m_sourceIo));
+    connect(m_sourceIoWithError.get(), &ISourceIo::sigResponseReceived,
             this, &SourceStateControllerTest::onIoQueueGroupFinished);
 }
 
@@ -41,8 +39,8 @@ void SourceStateControllerTest::statePollAutoStart()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
     stateWatcher.setPollTime(0);
     int statePollSignalCount = 0;
@@ -59,8 +57,8 @@ void SourceStateControllerTest::statePollChangeTime()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
     stateWatcher.setPollTime(10);
     int statePollSignalCount = 0;
@@ -78,8 +76,8 @@ void SourceStateControllerTest::stateInitialIdle()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
     stateWatcher.setPollTime(0);
     int statePollSignalCount = 0;
@@ -98,11 +96,11 @@ void SourceStateControllerTest::switchOnCausesBusyOnOffState()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
     stateWatcher.setPollTime(0);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceSwitchJson switcher(m_sourceIo, notifyWrapperSwitch);
     QTest::qWait(shortQtEventTimeout); // ignore initial idle
 
     QList<SourceStateController::States> statesReceived;
@@ -124,11 +122,11 @@ void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
     stateWatcher.setPollTime(0);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceSwitchJson switcher(m_sourceIo, notifyWrapperSwitch);
     QTest::qWait(shortQtEventTimeout); // ignore initial idle
 
     QList<SourceStateController::States> statesReceived;
@@ -151,14 +149,16 @@ void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
     QCOMPARE(statesReceived[3], SourceStateController::States::IDLE);
 }
 
+
+
 void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -169,7 +169,7 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
     jsonParam.setOn(true);
 
     QVERIFY(stateWatcher.tryStartPollNow());
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
 
     QTest::qWait(50);
@@ -182,10 +182,10 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -195,9 +195,9 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     QVERIFY(stateWatcher.tryStartPollNow());
-    m_sourceIo->setDemoResonseErrorIdx(-1);
+    setDemoResonseErrorIdx(-1);
     switcher.switchState(jsonParam);
 
     QTest::qWait(50);
@@ -210,10 +210,10 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -223,9 +223,9 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
-    m_sourceIo->setDemoResonseErrorIdx(-1);
+    setDemoResonseErrorIdx(-1);
     QVERIFY(stateWatcher.tryStartPollNow());
 
     QTest::qWait(50);
@@ -238,10 +238,10 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -251,9 +251,9 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceIo->setDemoResonseErrorIdx(-1);
+    setDemoResonseErrorIdx(-1);
     switcher.switchState(jsonParam);
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(1);
 
     QTest::qWait(100);
@@ -267,10 +267,10 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -280,7 +280,7 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     QVERIFY(stateWatcher.tryStartPollNow());
     switcher.switchState(jsonParam);
 
@@ -294,10 +294,10 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -307,7 +307,7 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
     QVERIFY(stateWatcher.tryStartPollNow());
 
@@ -321,10 +321,10 @@ void SourceStateControllerTest::pollStopsAfterSwitchError()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -334,7 +334,7 @@ void SourceStateControllerTest::pollStopsAfterSwitchError()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
 
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
     stateWatcher.setPollTime(0);
 
@@ -349,17 +349,17 @@ void SourceStateControllerTest::pollStopsAfterPollError()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(0);
 
     QTest::qWait(shortQtEventTimeout);
@@ -373,17 +373,17 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
-    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoPtr);
-    SourceStateController stateWatcher(m_sourceIo, notifyWrapperSwitch, notifyWrapperState);
-    SourceSwitchJson switcher(m_sourceIoPtr, notifyWrapperSwitch);
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStateController stateWatcher(m_sourceIoWithError, notifyWrapperSwitch, notifyWrapperState);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
         statesReceived.append(state);
     });
 
-    m_sourceIo->setDemoResonseErrorIdx(0);
+    setDemoResonseErrorIdx(0);
     stateWatcher.setPollTime(0);
 
     QTest::qWait(shortQtEventTimeout);
@@ -392,11 +392,16 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
 
     QVERIFY(!stateWatcher.isPeriodicPollActive());
 
-    m_sourceIo->setDemoResonseErrorIdx(-1);
+    setDemoResonseErrorIdx(-1);
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);
 
     QVERIFY(stateWatcher.isPeriodicPollActive());
+}
+
+void SourceStateControllerTest::setDemoResonseErrorIdx(int idx)
+{
+    static_cast<SourceIoErrorInjection*>(m_sourceIoWithError.get())->setDemoResonseErrorIdx(idx);
 }
 

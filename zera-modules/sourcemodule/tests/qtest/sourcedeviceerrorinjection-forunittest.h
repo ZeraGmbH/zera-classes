@@ -6,7 +6,7 @@
 class SourceIoErrorInjection : public ISourceIo
 {
 public:
-    SourceIoErrorInjection(ISourceIo *sourceUnderTest);
+    SourceIoErrorInjection(ISourceIo::Ptr sourceUnderTest);
 
     int startTransaction(IoQueueEntry::Ptr transferGroup) override;
     IoGroupGenerator getIoGroupGenerator() const override;
@@ -16,7 +16,7 @@ public:
 
 private:
     int m_simulErrorGroupIdx = -1;
-    ISourceIo *m_sourceUnderTest = nullptr;
+    ISourceIo::Ptr m_sourceUnderTest;
 };
 
 #endif // SOURCEDEVICEFORUNITTEST_H

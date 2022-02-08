@@ -1,9 +1,9 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-SourceIoErrorInjection::SourceIoErrorInjection(ISourceIo *sourceUnderTest) :
+SourceIoErrorInjection::SourceIoErrorInjection(Ptr sourceUnderTest) :
     m_sourceUnderTest(sourceUnderTest)
 {
-    connect(m_sourceUnderTest, &ISourceIo::sigResponseReceived,
+    connect(m_sourceUnderTest.get(), &ISourceIo::sigResponseReceived,
             this, &ISourceIo::sigResponseReceived);
 }
 

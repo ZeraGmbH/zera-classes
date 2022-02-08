@@ -36,7 +36,7 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
-    SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo.get());
+    SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo);
     ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
@@ -80,7 +80,7 @@ void SourceSwitchJsonTest::currentAndRequestedParamOnError()
     setDemoIoFixedTimeout(ioDevice, 0);
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
     ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
-    SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo.get());
+    SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo);
     ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIoWithError);
