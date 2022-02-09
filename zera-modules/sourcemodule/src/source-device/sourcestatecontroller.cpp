@@ -65,7 +65,7 @@ void SourceStateController::setPollingOnStateChange()
 
 void SourceStateController::handleSwitchResponse(const IoQueueEntry::Ptr transferGroup)
 {
-    if(!transferGroup->passedAll() && !isErrorState()) {
+    if(isNewError(transferGroup)) {
         setState(States::ERROR_SWITCH);
     }
     else if(m_currState == States::SWITCH_BUSY) {
@@ -75,10 +75,15 @@ void SourceStateController::handleSwitchResponse(const IoQueueEntry::Ptr transfe
 
 void SourceStateController::handleStateResponse(const IoQueueEntry::Ptr transferGroup)
 {
-    if(!transferGroup->passedAll() && !isErrorState()) {
+    if(isNewError(transferGroup)) {
         setState(States::ERROR_POLL);
     }
     else if(m_currState == States::UNDEFINED) {
         setState(States::IDLE);
     }
+}
+
+bool SourceStateController::isNewError(const IoQueueEntry::Ptr transferGroup)
+{
+    return !transferGroup->passedAll() && !isErrorState();
 }
