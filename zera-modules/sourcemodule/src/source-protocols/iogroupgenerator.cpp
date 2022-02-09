@@ -238,7 +238,8 @@ tIoTransferList IoGroupGenerator::generateQueryStatusList()
     outInList.append(IoTransferDataSingle::Ptr::create(
                          bytesSend,
                          expectedResponseLead,
-                         "\r"));
+                         "\r",
+                         2500));
     return outInList;
 }
 
