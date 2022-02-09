@@ -25,7 +25,6 @@ public:
         ERROR_SWITCH,
         ERROR_POLL
     };
-    bool isErrorState() const;
 signals:
     void sigStateChanged(States state);
 
@@ -34,10 +33,12 @@ private slots:
     void onStateQueryTransationStarted(int dataGroupId);
     void onResponseReceived(const IoQueueEntry::Ptr transferGroup);
 private:
+    bool isErrorState() const;
     void setState(States state);
     void setPollingOnStateChange();
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
     void handleStateResponse(const IoQueueEntry::Ptr transferGroup);
+    bool isNewError(const IoQueueEntry::Ptr transferGroup);
     ISourceIo::Ptr m_sourceIo;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
