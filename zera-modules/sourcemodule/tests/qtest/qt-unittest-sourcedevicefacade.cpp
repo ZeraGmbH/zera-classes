@@ -181,6 +181,7 @@ void SourceDeviceFacadeTest::checkVeinSwitchTwoStateChanges()
     });
 
     SourceDeviceFacade sourceFasade(ioDevice, sourceProperties);
+    sourceFasade.setStatusPollTime(0);
     sourceFasade.setVeinInterface(&vein.veinInterface);
 
     QTest::qWait(shortQtEventTimeout); // initial vein processing
@@ -189,7 +190,7 @@ void SourceDeviceFacadeTest::checkVeinSwitchTwoStateChanges()
     paramApi.setOn(true);
     sourceFasade.switchLoad(paramApi.getParams());
 
-    QTest::qWait(shortQtEventTimeout);
+    QTest::qWait(30);
     QCOMPARE(statesReceived.count(), 3);
     QCOMPARE(statesReceived[0]["busy"], false);
     QCOMPARE(statesReceived[1]["busy"], true);

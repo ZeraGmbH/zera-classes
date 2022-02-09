@@ -16,6 +16,11 @@ SourceStateController::SourceStateController(SourceTransactionStartNotifier::Ptr
             this, &SourceStateController::onResponseReceived);
 }
 
+void SourceStateController::setPollCountAfterSwitchOnOk(int count)
+{
+    m_pollCountAfterSwitchOnOk = count;
+}
+
 bool SourceStateController::isErrorState() const
 {
     return m_currState == States::ERROR_SWITCH ||
@@ -69,13 +74,29 @@ void SourceStateController::handleSwitchResponse(const IoQueueEntry::Ptr transfe
         setState(States::ERROR_SWITCH);
     }
     else if(m_currState == States::SWITCH_BUSY) {
-        setState(States::IDLE);
+        if(m_pollCountAfterSwitchOnOk > 0) {
+            m_pollCountBeforeIdleOrError = m_pollCountAfterSwitchOnOk;
+            m_sourceStatePoller->startPeriodicPoll();
+        }
+        else {
+            setState(States::IDLE);
+        }
     }
 }
 
 void SourceStateController::handleStateResponse(const IoQueueEntry::Ptr transferGroup)
 {
-    if(isNewError(transferGroup)) {
+    if(m_pollCountBeforeIdleOrError > 0) {
+        m_pollCountBeforeIdleOrError--;
+        if(isNewError(transferGroup)) {
+            setState(States::ERROR_SWITCH);
+            m_pollCountBeforeIdleOrError = 0;
+        }
+        else if(m_pollCountBeforeIdleOrError == 0) {
+            setState(States::IDLE);
+        }
+    }
+    else if(isNewError(transferGroup)) {
         setState(States::ERROR_POLL);
     }
     else if(m_currState == States::UNDEFINED) {

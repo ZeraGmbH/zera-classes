@@ -27,6 +27,7 @@ private slots:
 
     void sequenceSwitchPollErrorOnSwitch();
     void sequenceSwitchPollErrorOnPoll();
+    void sequenceSwitchPollErrorOnPostPoll();
 
     void sequencePollSwitchErrorOnBoth();
     void sequenceSwitchPollErrorOnBoth();

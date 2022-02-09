@@ -250,6 +250,7 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
     SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
     SourceStatePeriodicPoller::Ptr poller = SourceStatePeriodicPoller::Ptr::create(notifyWrapperState);
     SourceStateController stateWatcher(notifyWrapperSwitch, notifyWrapperState, poller);
+    stateWatcher.setPollCountAfterSwitchOnOk(0);
     SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
 
     QList<SourceStateController::States> statesReceived;
@@ -270,6 +271,36 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
     QCOMPARE(statesReceived[2], SourceStateController::States::ERROR_POLL);
+}
+
+void SourceStateControllerTest::sequenceSwitchPollErrorOnPostPoll()
+{
+    setDemoIoFixedTimeout(m_ioDevice, 1);
+
+    SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIoWithError);
+    SourceStatePeriodicPoller::Ptr poller = SourceStatePeriodicPoller::Ptr::create(notifyWrapperState);
+    SourceStateController stateWatcher(notifyWrapperSwitch, notifyWrapperState, poller);
+    stateWatcher.setPollCountAfterSwitchOnOk(1);
+    SourceSwitchJson switcher(m_sourceIoWithError, notifyWrapperSwitch);
+
+    QList<SourceStateController::States> statesReceived;
+    connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
+        statesReceived.append(state);
+    });
+
+    JsonParamApi jsonParam = switcher.getCurrLoadState();
+    jsonParam.setOn(true);
+
+    setDemoResonseErrorIdx(-1);
+    switcher.switchState(jsonParam);
+    setDemoResonseErrorIdx(0);
+    poller->setPollTime(1);
+
+    QTest::qWait(100);
+    QCOMPARE(statesReceived.count(), 2);
+    QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
+    QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
 void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()

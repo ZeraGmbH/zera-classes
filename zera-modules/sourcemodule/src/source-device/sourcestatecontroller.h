@@ -25,6 +25,7 @@ public:
         ERROR_SWITCH,
         ERROR_POLL
     };
+    void setPollCountAfterSwitchOnOk(int count);
 signals:
     void sigStateChanged(States state);
 
@@ -34,16 +35,18 @@ private slots:
     void onResponseReceived(const IoQueueEntry::Ptr transferGroup);
 private:
     bool isErrorState() const;
+    bool isNewError(const IoQueueEntry::Ptr transferGroup);
     void setState(States state);
     void setPollingOnStateChange();
     void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
     void handleStateResponse(const IoQueueEntry::Ptr transferGroup);
-    bool isNewError(const IoQueueEntry::Ptr transferGroup);
     ISourceIo::Ptr m_sourceIo;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
     SourceStatePeriodicPoller::Ptr m_sourceStatePoller;
     States m_currState = States::UNDEFINED;
+    int m_pollCountAfterSwitchOnOk = 1;
+    int m_pollCountBeforeIdleOrError = 0;
     IdKeeperMulti m_pendingSwitchIds;
     IdKeeperMulti m_PendingStateQueryIds;
 };
