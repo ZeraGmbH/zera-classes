@@ -7,6 +7,7 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
     m_bytesSend(bytesSend),
+    m_queryContentEvaluator(IIoQueryContentEvaluator::Ptr(new IoQueryContentEvaluatorAlwaysPass)),
     m_demoResponder(IoTransferDemoResponder::Ptr::create(bytesExpectedLead, bytesExpectedTrail))
 {
     m_bytesExpectedLeadList.append(bytesExpectedLead);
@@ -19,6 +20,7 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
     m_responseTimeoutMs(responseTimeoutMs),
     m_bytesExpectedTrail(bytesExpectedTrail),
     m_bytesSend(bytesSend),
+    m_queryContentEvaluator(IIoQueryContentEvaluator::Ptr(new IoQueryContentEvaluatorAlwaysPass)),
     m_demoResponder(IoTransferDemoResponder::Ptr::create(bytesExpectedLeadList.isEmpty() ? QByteArray() : bytesExpectedLeadList[0], bytesExpectedTrail))
 {
     m_bytesExpectedLeadList = bytesExpectedLeadList;
@@ -29,13 +31,29 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
 
 void IoTransferDataSingle::setDataReceived(QByteArray dataReceived)
 {
-    m_dataReceived = dataReceived;
-    evaluateResponseLeadTrail();
+    m_bytesReceived = dataReceived;
+    evaluateResponse();
 }
 
-QByteArray IoTransferDataSingle::getDataReceived() const
+void IoTransferDataSingle::setCustomQueryContentEvaluator(IIoQueryContentEvaluator::Ptr evaluator)
 {
-    return m_dataReceived;
+    m_queryContentEvaluator = evaluator;
+    m_hasCustomQueryEvaluator = true;
+}
+
+QByteArray IoTransferDataSingle::getBytesReceived() const
+{
+    return m_bytesReceived;
+}
+
+QByteArray IoTransferDataSingle::getBytesQueryContent() const
+{
+    return m_queryContent;
+}
+
+bool IoTransferDataSingle::hasCustomQueryEvaluator() const
+{
+    return m_hasCustomQueryEvaluator;
 }
 
 bool IoTransferDataSingle::didIoPass() const
@@ -50,7 +68,7 @@ int IoTransferDataSingle::getPassIdxInExpectedLead() const
 
 bool IoTransferDataSingle::wasNotRunYet() const
 {
-    return m_dataReceived.isEmpty() && m_IoEval == EVAL_NOT_EXECUTED;
+    return m_bytesReceived.isEmpty() && m_IoEval == EVAL_NOT_EXECUTED;
 }
 
 bool IoTransferDataSingle::noAnswerReceived() const
@@ -61,6 +79,11 @@ bool IoTransferDataSingle::noAnswerReceived() const
 bool IoTransferDataSingle::wrongAnswerReceived() const
 {
     return m_IoEval == EVAL_WRONG_ANSWER;
+}
+
+bool IoTransferDataSingle::queryContentFailed() const
+{
+    return m_IoEval == EVAL_QUERY_CONTENT_FAIL;
 }
 
 int IoTransferDataSingle::getResponseTimeout() const
@@ -88,21 +111,51 @@ IoTransferDemoResponder::Ptr IoTransferDataSingle::getDemoResponder()
     return m_demoResponder;
 }
 
-void IoTransferDataSingle::evaluateResponseLeadTrail()
+void IoTransferDataSingle::evaluateResponse()
 {
-    if(m_dataReceived.isEmpty()) {
+    if(evaluateResponseEmpty() &&
+            evaluateResponseLeadTrail() &&
+            evaluateResponseQueryContent()) {
+        m_IoEval = IoTransferDataSingle::EVAL_PASS;
+    }
+}
+
+bool IoTransferDataSingle::evaluateResponseEmpty()
+{
+    // on protocols other than serial we have to rethink this
+    bool pass = true;
+    if(m_bytesReceived.isEmpty()) {
+        pass = false;
         m_IoEval = IoTransferDataSingle::EVAL_NO_ANSWER;
     }
-    else {
-        bool pass = false;
-        for(int idx=0; idx<m_bytesExpectedLeadList.count(); ++idx) {
-            QByteArray bytesExpectedLead = m_bytesExpectedLeadList[idx];
-            if(m_dataReceived.startsWith(bytesExpectedLead) && m_dataReceived.endsWith(m_bytesExpectedTrail)) {
-                pass = true;
-                m_passIdxInExpectedLead = idx;
-                break;
-            }
+    return pass;
+}
+
+bool IoTransferDataSingle::evaluateResponseLeadTrail()
+{
+    bool pass = false;
+    for(int idx=0; idx<m_bytesExpectedLeadList.count(); ++idx) {
+        QByteArray bytesExpectedLead = m_bytesExpectedLeadList[idx];
+        if(m_bytesReceived.startsWith(bytesExpectedLead) && m_bytesReceived.endsWith(m_bytesExpectedTrail)) {
+            pass = true;
+            m_passIdxInExpectedLead = idx;
+            int queryContentLength =
+                    m_bytesReceived.length() - bytesExpectedLead.length() - m_bytesExpectedTrail.length();
+            m_queryContent = m_bytesReceived.mid(bytesExpectedLead.length(), queryContentLength);
+            break;
         }
-        m_IoEval = pass ? IoTransferDataSingle::EVAL_PASS : IoTransferDataSingle::EVAL_WRONG_ANSWER;
     }
+    if(!pass) {
+        m_IoEval = IoTransferDataSingle::EVAL_WRONG_ANSWER;
+    }
+    return pass;
+}
+
+bool IoTransferDataSingle::evaluateResponseQueryContent()
+{
+    bool pass = m_queryContentEvaluator->evalQueryResponse(m_queryContent);
+    if(!pass) {
+        m_IoEval = IoTransferDataSingle::EVAL_QUERY_CONTENT_FAIL;
+    }
+    return pass;
 }

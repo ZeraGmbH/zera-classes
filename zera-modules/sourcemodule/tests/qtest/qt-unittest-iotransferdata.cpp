@@ -24,7 +24,7 @@ void IoTransferDataTest::singleDataEvalNotExecutedOnConstruct2()
 void IoTransferDataTest::singleDemoResponseLeadTrail()
 {
     QByteArray lead = "foo";
-    QByteArray trail = "foo";
+    QByteArray trail = "bar";
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", lead, trail);
     QCOMPARE(ioTransferData->getDemoResponder()->getDemoResponse(), lead+trail);
 }
@@ -40,6 +40,49 @@ void IoTransferDataTest::singleDemoResponseSimError()
     IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", "");
     ioTransferData->getDemoResponder()->activateErrorResponse();
     QCOMPARE(ioTransferData->getDemoResponder()->getDemoResponse(), IoTransferDemoResponder::getDefaultErrorResponse());
+}
+
+void IoTransferDataTest::singleQueryContent()
+{
+    QByteArray lead = "foo";
+    QByteArray content = "1234";
+    QByteArray trail = "bar";
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", lead, trail);
+    ioTransferData->setDataReceived(lead+content+trail);
+    QCOMPARE(ioTransferData->getBytesQueryContent(), content);
+}
+
+void IoTransferDataTest::singleQueryContentPass()
+{
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", "", "");
+    ioTransferData->setDataReceived("foo");
+    QCOMPARE(ioTransferData->queryContentFailed(), false);
+    QCOMPARE(ioTransferData->didIoPass(), true);
+}
+
+void IoTransferDataTest::singleQueryContentFail()
+{
+    QByteArray lead = "foo";
+    QByteArray content = "1234";
+    QByteArray trail = "bar";
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", lead, trail);
+    ioTransferData->setCustomQueryContentEvaluator(IIoQueryContentEvaluator::Ptr(new IoQueryContentEvaluatorAlwaysFail));
+    ioTransferData->setDataReceived(lead+content+trail);
+    QCOMPARE(ioTransferData->queryContentFailed(), true);
+    QCOMPARE(ioTransferData->didIoPass(), false);
+}
+
+void IoTransferDataTest::singleCustomQueryEvaluatorNotSet()
+{
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", "");
+    QCOMPARE(ioTransferData->hasCustomQueryEvaluator(), false);
+}
+
+void IoTransferDataTest::singleCustomQueryEvaluatorSet()
+{
+    IoTransferDataSingle::Ptr ioTransferData = IoTransferDataSingle::Ptr::create("", "");
+    ioTransferData->setCustomQueryContentEvaluator(IIoQueryContentEvaluator::Ptr(new IoQueryContentEvaluatorAlwaysFail));
+    QCOMPARE(ioTransferData->hasCustomQueryEvaluator(), true);
 }
 
 void IoTransferDataTest::singleCheckUnusedDataOnOnConstruct1()
@@ -105,7 +148,7 @@ void IoTransferDataTest::singleCheckInjectSingleExpected()
     ioDevice->sendAndReceive(ioTransferData);
     QTest::qWait(shortQtEventTimeout);
     QVERIFY(ioTransferData->didIoPass());
-    QCOMPARE(ioTransferData->getDataReceived(), overrideResponse);
+    QCOMPARE(ioTransferData->getBytesReceived(), overrideResponse);
 }
 
 void IoTransferDataTest::singleCheckInjectMultipleExpected()
@@ -122,7 +165,7 @@ void IoTransferDataTest::singleCheckInjectMultipleExpected()
     ioDevice->sendAndReceive(ioTransferData1);
     QTest::qWait(shortQtEventTimeout);
     QVERIFY(ioTransferData1->didIoPass());
-    QCOMPARE(ioTransferData1->getDataReceived(), overrideResponse);
+    QCOMPARE(ioTransferData1->getBytesReceived(), overrideResponse);
 
     IoTransferDataSingle::Ptr ioTransferData2 =
             IoTransferDataSingle::Ptr::create("", QList<QByteArray>()<<lead1<<lead2, trail);
@@ -132,7 +175,7 @@ void IoTransferDataTest::singleCheckInjectMultipleExpected()
 
     QTest::qWait(shortQtEventTimeout);
     QVERIFY(ioTransferData2->didIoPass());
-    QCOMPARE(ioTransferData2->getDataReceived(), overrideResponse);
+    QCOMPARE(ioTransferData2->getBytesReceived(), overrideResponse);
 }
 
 void IoTransferDataTest::groupIdsCreated()

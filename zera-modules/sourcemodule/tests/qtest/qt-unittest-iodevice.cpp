@@ -24,7 +24,7 @@ void IoDeviceTest::onIoFinish(int ioID, bool error)
 {
     m_ioIDReceived = ioID;
     m_ioFinishReceiveCount++;
-    m_listReceivedData.append(m_ioDataForSingleUse->getDataReceived());
+    m_listReceivedData.append(m_ioDataForSingleUse->getBytesReceived());
     if(error) {
         m_errorsReceived++;
     }

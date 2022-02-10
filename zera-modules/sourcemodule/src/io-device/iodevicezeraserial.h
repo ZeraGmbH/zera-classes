@@ -35,7 +35,7 @@ private:
     void _close();
     QSerialPortAsyncBlock m_serialIO;
     FileDisappearWatcher m_disappearWatcher;
-    QByteArray m_dataReceived;
+    QByteArray m_bytesReceived;
     struct TTimeoutParam
     {
         int iMsReceiveFirst = serialIoDefaultTimeout;
