@@ -1,6 +1,7 @@
 #include "iogroupgenerator.h"
 #include "sourceactions.h"
 #include "io-device/iodevicebase.h"
+#include "sourcezerastatequeryevaluator.h"
 
 IoGroupGenerator::IoGroupGenerator(JsonStructApi jsonStructApi) :
     m_jsonStructApi(jsonStructApi),
@@ -231,15 +232,16 @@ tIoTransferList IoGroupGenerator::generateRegulationList()
 tIoTransferList IoGroupGenerator::generateQueryStatusList()
 {
     QByteArray bytesSend;
-    bytesSend = m_ioPrefix + "SM\r"; // error condition for now
-
+    bytesSend = m_ioPrefix + "SM\r";
     QByteArray expectedResponseLead = m_ioPrefix + "SM";
     tIoTransferList outInList;
-    outInList.append(IoTransferDataSingle::Ptr::create(
-                         bytesSend,
-                         expectedResponseLead,
-                         "\r",
-                         2500));
+    IoTransferDataSingle::Ptr singleIo = IoTransferDataSingle::Ptr::create(
+                bytesSend,
+                expectedResponseLead,
+                "\r",
+                2500);
+    singleIo->setCustomQueryContentEvaluator(IIoQueryContentEvaluator::Ptr(new SourceZeraStateQueryEvaluator));
+    outInList.append(singleIo);
     return outInList;
 }
 
