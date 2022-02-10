@@ -12,6 +12,7 @@ QObject *addTest(QObject *test)
 int main(int argc, char *argv[])
 {
     int status = 0;
+    Q_INIT_RESOURCE(resource);
 
     // Make qCritical in tests for re-used IoTransferDataSingle objects - see
     // IoDeviceBase::prepareSendAndReceive
