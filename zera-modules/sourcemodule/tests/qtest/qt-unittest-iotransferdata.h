@@ -16,6 +16,12 @@ private slots:
     void singleDemoResponseLeadTrailEmpty();
     void singleDemoResponseSimError();
 
+    void singleQueryContent();
+    void singleQueryContentPass();
+    void singleQueryContentFail();
+    void singleCustomQueryEvaluatorNotSet();
+    void singleCustomQueryEvaluatorSet();
+
     void singleDataEvalNotExecuted();
     void singleDataEvalNoAnswer();
     void singleDataEvalWrongAnswerConstruct1();

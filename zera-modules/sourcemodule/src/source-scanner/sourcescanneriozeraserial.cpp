@@ -87,7 +87,7 @@ IoQueueEntry::Ptr SourceScannerIoZeraSerial::getDeviceScanGroup()
 
 QByteArray SourceScannerIoZeraSerial::extractVersionFromResponse(IoTransferDataSingle::Ptr ioData)
 {
-    QByteArray bytesReceived = ioData->getDataReceived();
+    QByteArray bytesReceived = ioData->getBytesReceived();
     int posV;
     for(posV=bytesReceived.length()-1; posV>=0; --posV) {
         QByteRef curr = bytesReceived[posV];
@@ -107,7 +107,7 @@ QByteArray SourceScannerIoZeraSerial::extractVersionFromResponse(IoTransferDataS
 
 QByteArray SourceScannerIoZeraSerial::extractNameFromResponse(IoTransferDataSingle::Ptr ioData, QByteArray version, QByteArray cmdSend)
 {
-    QByteArray name = ioData->getDataReceived();
+    QByteArray name = ioData->getBytesReceived();
     if(name.startsWith("STSFGMT")) {
         name = "MT3000";
     }
