@@ -147,6 +147,7 @@ set(COMMON_LIBS
 add_library(sourcemodule-static STATIC
     ${SOURCES}
     ${HEADER}
+    ${RESOURCES}
     )
 
 target_link_libraries(sourcemodule-static
@@ -171,7 +172,6 @@ file(GLOB MODULE_HEADERS
 add_library(sourcemodule MODULE
     ${MODULE_SOURCES}
     ${MODULE_HEADERS}
-    ${RESOURCES}
     ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
 
@@ -226,7 +226,6 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
 
     add_executable(sourcemodule-unittest
         ${UNITTESTS}
-        ${RESOURCES}
         ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
     # constexpr / EXPECT_EQ -> linker problems for c++ < 17
@@ -259,7 +258,6 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         tests/qtest/main-unittest-qt.h
         tests/qtest/main-unittest-qt.cpp # must be first!!!
         ${QTUNITTESTS}
-        ${RESOURCES}
         ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
     )
 

@@ -22,6 +22,7 @@ SourceModule::SourceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityI
 
     m_DeactivationMachine.setInitialState(&m_DeactivationFinishedState);
     connect(&m_DeactivationFinishedState, &QState::entered, this, &SourceModule::deactivationFinished);
+    Q_INIT_RESOURCE(resource);
 }
 
 QByteArray SourceModule::getConfiguration() const
