@@ -27,6 +27,12 @@ IoTransferDataSingle::IoTransferDataSingle(QByteArray bytesSend,
     }
 }
 
+void IoTransferDataSingle::setDataReceived(QByteArray dataReceived)
+{
+    m_dataReceived = dataReceived;
+    evaluateResponseLeadTrail();
+}
+
 QByteArray IoTransferDataSingle::getDataReceived() const
 {
     return m_dataReceived;
@@ -57,6 +63,11 @@ bool IoTransferDataSingle::wrongAnswerReceived() const
     return m_IoEval == EVAL_WRONG_ANSWER;
 }
 
+int IoTransferDataSingle::getResponseTimeout() const
+{
+    return m_responseTimeoutMs;
+}
+
 QByteArray IoTransferDataSingle::getBytesSend() const
 {
     return m_bytesSend;
@@ -72,20 +83,9 @@ QByteArray IoTransferDataSingle::getExpectedResponseTrail() const
     return m_bytesExpectedTrail;
 }
 
-int IoTransferDataSingle::getResponseTimeout() const
-{
-    return m_responseTimeoutMs;
-}
-
 IoTransferDemoResponder::Ptr IoTransferDataSingle::getDemoResponder()
 {
     return m_demoResponder;
-}
-
-void IoTransferDataSingle::setDataReceived(QByteArray dataReceived)
-{
-    m_dataReceived = dataReceived;
-    evaluateResponseLeadTrail();
 }
 
 void IoTransferDataSingle::evaluateResponseLeadTrail()
