@@ -236,6 +236,30 @@ void SourceDeviceManagerTest::demoRemoveNotificationTooMany()
     checkAddRemoveNotifications(slotCount, slotCount, slotCount*2);
 }
 
+void SourceDeviceManagerTest::demoScanNoDevFoundOnBroken()
+{
+    SourceDeviceManager devMan(2);
+    connect(&devMan, &SourceDeviceManager::sigSourceScanFinished,
+            this, &SourceDeviceManagerTest::onSourceScanFinished);
+    devMan.startSourceScan(IoDeviceTypes::BROKEN, "", QUuid::createUuid());
+
+    QTest::qWait(shortQtEventTimeout);
+    QCOMPARE(m_listSourcesAdded.count(), 1);
+    QCOMPARE(m_listSourcesAdded[0].slotNo, -1);
+}
+
+void SourceDeviceManagerTest::demoScanNoDevFoundOnDemo()
+{
+    SourceDeviceManager devMan(2);
+    connect(&devMan, &SourceDeviceManager::sigSourceScanFinished,
+            this, &SourceDeviceManagerTest::onSourceScanFinished);
+    devMan.startSourceScan(IoDeviceTypes::DEMO, "broken", QUuid::createUuid());
+
+    QTest::qWait(shortQtEventTimeout);
+    QCOMPARE(m_listSourcesAdded.count(), 1);
+    QCOMPARE(m_listSourcesAdded[0].slotNo, -1);
+}
+
 void SourceDeviceManagerTest::checkSlotCount(SourceDeviceManager& devMan, int total, int active, int demo)
 {
     QCOMPARE(devMan.getSlotCount(), total);
