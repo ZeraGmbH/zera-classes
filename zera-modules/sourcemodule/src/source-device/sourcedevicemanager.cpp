@@ -34,7 +34,11 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, cons
         if(started) {
             ISourceScannerStrategy::Ptr scannerStrategy;
             if(ioDeviceType == IoDeviceTypes::DEMO) {
-                static_cast<IoDeviceDemo*>(ioDevice.get())->setResponseDelay(true, 0);
+                IoDeviceDemo* demoIO = static_cast<IoDeviceDemo*>(ioDevice.get());
+                demoIO->setResponseDelay(true, 0);
+                if(deviceInfo.toLower().contains("broken")) {
+                    demoIO->setAllTransfersError(true);
+                }
                 scannerStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
             }
             else {
@@ -142,9 +146,10 @@ void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
     disconnect(scanner.get(), &SourceScanner::sigScanFinished, this, &SourceDeviceManager::onScanFinished);
     SourceProperties props = scanner->getSourcePropertiesFound();
     QString erorDesc;
-    int freeSlot = findFreeSlot();
+    int freeSlot = -1;
     SourceDeviceFacade* sourceControllerFound = nullptr;
     if(props.isValid()) {
+        freeSlot = findFreeSlot();
         if(freeSlot >= 0) {
             sourceControllerFound = new SourceDeviceFacade(scanner->getIoDevice(), scanner->getSourcePropertiesFound());
             addSource(freeSlot, sourceControllerFound);

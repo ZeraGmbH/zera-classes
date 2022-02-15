@@ -42,6 +42,9 @@ private slots:
     void demoRemoveNotification();
     void demoRemoveNotificationTooMany();
 
+    void demoScanNoDevFoundOnBroken();
+    void demoScanNoDevFoundOnDemo();
+
 private:
     void checkSlotCount(SourceDeviceManager &devMan, int total, int active, int demo);
     void checkAddRemoveNotifications(int total, int add, int remove);
