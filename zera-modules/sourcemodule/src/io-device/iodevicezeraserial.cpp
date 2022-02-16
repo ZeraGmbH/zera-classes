@@ -6,7 +6,7 @@ IoDeviceZeraSerial::IoDeviceZeraSerial(IoDeviceTypes type) :
 {
     connect(&m_serialIO, &QSerialPortAsyncBlock::ioFinished, this, &IoDeviceZeraSerial::onIoFinished);
     connect(&m_disappearWatcher, &FileDisappearWatcher::sigFileRemoved,
-            this, &IoDeviceZeraSerial::onDeviceFileGone, Qt::QueuedConnection);
+            this, &IoDeviceZeraSerial::onDeviceFileGone);
 }
 
 IoDeviceZeraSerial::~IoDeviceZeraSerial()
