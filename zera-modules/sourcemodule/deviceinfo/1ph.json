@@ -14,15 +14,15 @@
     "zj_param_templates": {
         "voltage_rms": {
             "type": "number",
-            "min": 40.0,
-            "max": 300.0,
+            "min": 20.0,
+            "max": 500.0,
             "decimals": 3,
             "default": 230.0
         },
         "current_rms": {
             "type": "number",
             "min": 0.001,
-            "max": 20.0,
+            "max": 40.0,
             "decimals": 3,
             "default": 5.0
         },
