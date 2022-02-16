@@ -7,6 +7,8 @@
 
 #include <QVariant>
 
+IoIdGenerator SourceDeviceFacade::m_idGenerator;
+
 SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties) :
     m_ioDevice(ioDevice),
     m_sourceIo(ISourceIo::Ptr(new SourceIo(ioDevice, properties))),
@@ -14,7 +16,8 @@ SourceDeviceFacade::SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourcePropert
     m_transactionNotifierSwitch(SourceTransactionStartNotifier::Ptr::create(m_sourceIo)),
     m_statePoller(SourceStatePeriodicPoller::Ptr::create(m_transactionNotifierStatus)),
     m_stateController(m_transactionNotifierSwitch, m_transactionNotifierStatus, m_statePoller),
-    m_switcher(m_sourceIo, m_transactionNotifierSwitch)
+    m_switcher(m_sourceIo, m_transactionNotifierSwitch),
+    m_ID(m_idGenerator.nextID())
 {
     m_deviceStatusJsonApi.setDeviceInfo(m_ioDevice->getDeviceInfo());
     connect(&m_stateController, &SourceStateController::sigStateChanged,
@@ -61,6 +64,11 @@ void SourceDeviceFacade::switchLoad(QJsonObject params)
     JsonParamApi paramApi;
     paramApi.setParams(params);
     m_switcher.switchState(paramApi);
+}
+
+int SourceDeviceFacade::getId()
+{
+    return m_ID;
 }
 
 void SourceDeviceFacade::onSourceStateChanged(SourceStateController::States state)
@@ -113,7 +121,7 @@ void SourceDeviceFacade::handleErrorState(SourceStateController::States state)
 void SourceDeviceFacade::doFinalCloseActivities()
 {
     resetVeinComponents();
-    emit sigClosed(this, m_closeUuid);
+    emit sigClosed(getId(), m_closeUuid);
 }
 
 void SourceDeviceFacade::setVeinInterface(SourceVeinInterface *veinInterface)
