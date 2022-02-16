@@ -59,7 +59,6 @@ void IoQueue::onIoDisconnected()
 {
     m_currIoId.clear();
     abortAllGroups();
-    setIoDevice(nullptr);
 }
 
 void IoQueue::tryStartNextIo()
