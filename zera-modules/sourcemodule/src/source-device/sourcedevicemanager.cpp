@@ -164,11 +164,11 @@ void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
     emit sigSourceScanFinished(freeSlot, scanner->getUuid(), erorDesc);
 }
 
-void SourceDeviceManager::onSourceClosed(SourceDeviceFacade *source, QUuid uuid)
+void SourceDeviceManager::onSourceClosed(int facadeId, QUuid uuid)
 {
     for(int slotNo=0; slotNo<m_sourceControllers.count(); slotNo++) {
         auto &sourceController = m_sourceControllers[slotNo];
-        if(sourceController && sourceController == source) {
+        if(sourceController && sourceController->getId() == facadeId) {
             QString lastError = sourceController->getLastErrors().join(" / ");
             m_activeSlotCount--;
             disconnect(sourceController.get(), &SourceDeviceFacade::sigClosed,
@@ -203,7 +203,8 @@ void SourceDeviceManager::addSource(int slotPos, SourceDeviceFacade::Ptr deviceC
 {
     m_sourceControllers[slotPos] = deviceController;
     m_activeSlotCount++;
-    connect(deviceController.get(), &SourceDeviceFacade::sigClosed, this, &SourceDeviceManager::onSourceClosed);
+    connect(deviceController.get(), &SourceDeviceFacade::sigClosed,
+            this, &SourceDeviceManager::onSourceClosed);
 }
 
 bool SourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)

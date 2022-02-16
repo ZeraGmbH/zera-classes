@@ -27,7 +27,7 @@ signals:
 
 private slots:
     void onScanFinished(SourceScanner::Ptr scanner);
-    void onSourceClosed(SourceDeviceFacade *source, QUuid uuid);
+    void onSourceClosed(int facadeId, QUuid uuid);
 signals:
     void sigSlotRemovedQueued(int slotNo, QUuid uuid, QString errMsg);
 private:

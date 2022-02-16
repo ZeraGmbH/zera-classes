@@ -27,13 +27,14 @@ public:
     void setStatusPollTime(int ms);
     void switchLoad(QJsonObject params);
 
+    int getId();
     QString getIoDeviceInfo() const;
     bool hasDemoIo() const;
     QStringList getLastErrors() const;
 
     bool close(QUuid uuid);
 signals:
-    void sigClosed(SourceDeviceFacade* source, QUuid uuid);
+    void sigClosed(int facadeId, QUuid uuid);
 
 private slots:
     void onSourceStateChanged(SourceStateController::States state);
@@ -59,6 +60,8 @@ private:
     QUuid m_closeUuid;
     bool m_closeRequested = false;
     JsonDeviceStatusApi m_deviceStatusJsonApi;
+    static IoIdGenerator m_idGenerator;
+    int m_ID;
     static bool m_demoCloseByUsbDisconnect;
 };
 
