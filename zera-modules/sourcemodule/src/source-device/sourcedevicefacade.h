@@ -14,11 +14,13 @@
 #include <QObject>
 #include <QUuid>
 #include <QJsonObject>
+#include <QSharedDataPointer>
 
 class SourceDeviceFacade : public QObject
 {
     Q_OBJECT
 public:
+    typedef QSharedPointer<SourceDeviceFacade> Ptr;
     SourceDeviceFacade(IoDeviceBase::Ptr ioDevice, SourceProperties properties);
 
     void setVeinInterface(SourceVeinInterface* veinInterface);

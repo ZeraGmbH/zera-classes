@@ -144,7 +144,7 @@ void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QSt
 {
     bool sourceAdded = slotPosition >= 0;
     if(sourceAdded) {
-        SourceDeviceFacade *deviceContainer = m_pSourceDeviceManager->getSourceController(slotPosition);
+        SourceDeviceFacade::Ptr deviceContainer = m_pSourceDeviceManager->getSourceController(slotPosition);
         deviceContainer->setVeinInterface(m_arrVeinIoInterfaces[slotPosition]);
         m_pVeinCountAct->setValue(QVariant(m_pSourceDeviceManager->getActiveSlotCount()));
         updateDemoCount();

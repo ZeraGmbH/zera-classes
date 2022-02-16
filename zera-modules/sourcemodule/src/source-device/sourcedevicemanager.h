@@ -19,7 +19,7 @@ public:
 
     int getSlotCount();
     int getActiveSlotCount();
-    SourceDeviceFacade* getSourceController(int slotNo);
+    SourceDeviceFacade::Ptr getSourceController(int slotNo);
     int getDemoCount();
 signals:
     void sigSourceScanFinished(int slotNo, QUuid uuid, QString errMsg);
@@ -33,9 +33,9 @@ signals:
 private:
     bool isValidSlotNo(int slotNo);
     int findFreeSlot();
-    void addSource(int slotPos, SourceDeviceFacade *deviceController);
+    void addSource(int slotPos, SourceDeviceFacade::Ptr deviceController);
     bool tryStartDemoDeviceRemove(int slotNo);
-    QVector<SourceDeviceFacade*> m_sourceControllers;
+    QVector<SourceDeviceFacade::Ptr> m_sourceControllers;
     QVector<QUuid> m_PendingRemoveHashes;
     int m_activeSlotCount = 0;
 };

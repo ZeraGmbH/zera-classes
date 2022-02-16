@@ -14,7 +14,7 @@ static bool randomBool() {
 
 SourceDeviceManager::SourceDeviceManager(int countSlots, QObject *parent) :
     QObject(parent),
-    m_sourceControllers(QVector<SourceDeviceFacade*>(countSlots, nullptr))
+    m_sourceControllers(QVector<SourceDeviceFacade::Ptr>(countSlots, nullptr))
 {
     connect(this, &SourceDeviceManager::sigSlotRemovedQueued,
             this, &SourceDeviceManager::sigSlotRemoved, Qt::QueuedConnection);
@@ -102,7 +102,7 @@ void SourceDeviceManager::closeSource(int slotNo, const QUuid uuid)
 void SourceDeviceManager::closeSource(QString ioDeviceInfo, const QUuid uuid)
 {
     for(int slot = 0; slot<getSlotCount(); ++slot) {
-        SourceDeviceFacade* sourceController = getSourceController(slot);
+        SourceDeviceFacade::Ptr sourceController = getSourceController(slot);
         if(sourceController && sourceController->getIoDeviceInfo() == ioDeviceInfo) {
             closeSource(slot, uuid);
             return;
@@ -132,9 +132,9 @@ int SourceDeviceManager::getDemoCount()
     return demoCount;
 }
 
-SourceDeviceFacade *SourceDeviceManager::getSourceController(int slotNo)
+SourceDeviceFacade::Ptr SourceDeviceManager::getSourceController(int slotNo)
 {
-    SourceDeviceFacade* sourceController = nullptr;
+    SourceDeviceFacade::Ptr sourceController = nullptr;
     if(isValidSlotNo(slotNo)) {
         sourceController = m_sourceControllers.at(slotNo);
     }
@@ -147,11 +147,11 @@ void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
     SourceProperties props = scanner->getSourcePropertiesFound();
     QString erorDesc;
     int freeSlot = -1;
-    SourceDeviceFacade* sourceControllerFound = nullptr;
+    SourceDeviceFacade::Ptr sourceControllerFound = nullptr;
     if(props.isValid()) {
         freeSlot = findFreeSlot();
         if(freeSlot >= 0) {
-            sourceControllerFound = new SourceDeviceFacade(scanner->getIoDevice(), scanner->getSourcePropertiesFound());
+            sourceControllerFound = SourceDeviceFacade::Ptr::create(scanner->getIoDevice(), scanner->getSourcePropertiesFound());
             addSource(freeSlot, sourceControllerFound);
         }
         else {
@@ -171,10 +171,9 @@ void SourceDeviceManager::onSourceClosed(SourceDeviceFacade *source, QUuid uuid)
         if(sourceController && sourceController == source) {
             QString lastError = sourceController->getLastErrors().join(" / ");
             m_activeSlotCount--;
-            disconnect(sourceController, &SourceDeviceFacade::sigClosed,
+            disconnect(sourceController.get(), &SourceDeviceFacade::sigClosed,
                        this, &SourceDeviceManager::onSourceClosed);
-            delete sourceController;
-            sourceController = nullptr;
+            sourceController = SourceDeviceFacade::Ptr();
             emit sigSlotRemovedQueued(slotNo, uuid, lastError);
             break;
         }
@@ -200,17 +199,17 @@ int SourceDeviceManager::findFreeSlot()
     return freeSlotNo;
 }
 
-void SourceDeviceManager::addSource(int slotPos, SourceDeviceFacade *deviceController)
+void SourceDeviceManager::addSource(int slotPos, SourceDeviceFacade::Ptr deviceController)
 {
     m_sourceControllers[slotPos] = deviceController;
     m_activeSlotCount++;
-    connect(deviceController, &SourceDeviceFacade::sigClosed, this, &SourceDeviceManager::onSourceClosed);
+    connect(deviceController.get(), &SourceDeviceFacade::sigClosed, this, &SourceDeviceManager::onSourceClosed);
 }
 
 bool SourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
 {
     bool removeStarted = false;
-    SourceDeviceFacade* source = m_sourceControllers[slotNo];
+    SourceDeviceFacade::Ptr source = m_sourceControllers[slotNo];
     if(source && source->hasDemoIo()) {
         source->close(QUuid());
         removeStarted = true;
