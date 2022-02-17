@@ -118,8 +118,8 @@ void IoDeviceZeraSerial::onDeviceFileGone(QString)
 void IoDeviceZeraSerial::_close()
 {
     if(m_serialIO.isOpen()) {
+        m_disappearWatcher.resetFiles();
         m_serialIO.close();
         emit sigDisconnected();
-        m_disappearWatcher.resetFiles();
     }
 }
