@@ -173,7 +173,7 @@ void SourceDeviceManager::onSourceClosed(int facadeId, QUuid uuid)
             m_activeSlotCount--;
             disconnect(sourceController.get(), &SourceDeviceFacade::sigClosed,
                        this, &SourceDeviceManager::onSourceClosed);
-            sourceController = SourceDeviceFacade::Ptr();
+            sourceController = nullptr;
             emit sigSlotRemovedQueued(slotNo, uuid, lastError);
             break;
         }
