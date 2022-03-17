@@ -36,6 +36,7 @@ public:
      * @param adr defines the start adress in the eeprom
      */
     virtual int ReadData(char* data, ushort count, ushort adr)=0; // wie write, nur halt zum lesen
+    virtual int Reset() = 0;
     /**
      * @brief returns the devices size in bytes
      */
