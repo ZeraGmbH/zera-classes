@@ -52,6 +52,14 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
     return(count - toWrite);
 }
 
+int cF24LC256Private::Reset()
+{
+    char freshBuff[size()];
+    for(int i=0; i<size(); ++i) {
+        freshBuff[i] = 0xFF;
+    }
+    return WriteData(freshBuff, size(), 0);
+}
 
 int cF24LC256Private::ReadData(char* data,ushort n,ushort adr)
 {

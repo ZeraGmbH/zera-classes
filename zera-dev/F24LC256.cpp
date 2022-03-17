@@ -23,6 +23,11 @@ int cF24LC256::ReadData(char *data, ushort count, ushort adr)
     return d_ptr->ReadData(data, count, adr);
 }
 
+int cF24LC256::Reset()
+{
+    return d_ptr->Reset();
+}
+
 int cF24LC256::size()
 {
     return d_ptr->size();

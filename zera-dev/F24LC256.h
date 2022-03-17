@@ -13,6 +13,7 @@ public:
     virtual ~cF24LC256();
     virtual int WriteData(char* data, ushort count, ushort adr);
     virtual int ReadData(char* data, ushort count, ushort adr);
+    virtual int Reset();
     virtual int size();
 private:
     cF24LC256Private* d_ptr;
