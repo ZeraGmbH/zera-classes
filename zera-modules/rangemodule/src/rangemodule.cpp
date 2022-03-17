@@ -77,16 +77,13 @@ void cRangeModule::setupModule()
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
-        bool extend;
         QString channel;
 
         channel = pConfData->m_senseChannelList.at(i);
-        extend = pConfData->m_ExtendChannelList.contains(channel); // let's test if this channel is range extendable
         cRangeMeasChannel* pchn = new cRangeMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1,
-                                                        extend,
                                                         m_bDemo);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);

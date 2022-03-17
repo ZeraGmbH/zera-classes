@@ -59,7 +59,7 @@ class cRangeMeasChannel:public cBaseMeasChannel
 
 
 public:
-    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend, bool demo);
+    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo);
     ~cRangeMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -129,7 +129,6 @@ private:
     double m_fPhaseCorrection;
     double m_fOffsetCorrection;
     quint32 m_nStatus;
-    bool m_bExtend; // true if this channel is range extendable
     QString m_sRangeListAlias; // all range alias: alias1;alias2 ....
 
     // statemachine for activating a rangemeaschannel

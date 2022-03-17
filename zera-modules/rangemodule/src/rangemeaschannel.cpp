@@ -12,8 +12,8 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool extend, bool demo)
-    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1), m_bExtend(extend)
+cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo)
+    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1)
 {
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -1167,12 +1167,7 @@ void cRangeMeasChannel::resetStatusSlot()
 
 void cRangeMeasChannel::setNotifierRangeCat()
 {
-    if (m_bExtend) {
-        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName),"1")] = registerNotifier;
-    }
-    else {
-        emit activationContinue();
-    }
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName),"1")] = registerNotifier;
 }
 
 
