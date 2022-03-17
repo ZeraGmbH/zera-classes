@@ -23,7 +23,6 @@ enum moduleconfigstate
     setDSPServerPort,
     setChannelCount,
     setSubdcCount,
-    setExtendCount,
     setGroupCount,
     setGrouping,
     setRangeAutomatic,
