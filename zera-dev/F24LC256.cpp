@@ -1,8 +1,8 @@
 #include "F24LC256.h"
 #include "F24LC256_p.h"
 
-cF24LC256::cF24LC256(QString devNode, int dLevel, short adr)
-    :d_ptr( new cF24LC256Private(devNode, dLevel, adr))
+cF24LC256::cF24LC256(QString devNode, short adr)
+    :d_ptr( new cF24LC256Private(devNode, adr))
 {
 }
 

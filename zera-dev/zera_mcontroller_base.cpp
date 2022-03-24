@@ -127,7 +127,7 @@ quint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quin
                m_nI2CAdr, hc->cmdcode, hc->device, qPrintable(i2cHexParam), dataAndCrcLen);
     }
 
-    int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
+    int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, &comData);
     if (!errVal) { // if no error
         // Checksum OK?
         quint8 expectedCrc = cMaxim1WireCRC::CalcBlockCRC(inpBuf, 4);
@@ -227,7 +227,7 @@ quint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRec
                m_nI2CAdr, blc->cmdcode, qPrintable(i2cHexParam), dataAndCrcLen);
     }
 
-    int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
+    int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, &comData);
     if (!errVal) { // no error?
         // Checksum OK?
         quint8 expectedCrc = cMaxim1WireCRC::CalcBlockCRC(inpBuf, 4);
@@ -332,7 +332,7 @@ quint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
         syslog(LOG_INFO,"i2c read start: adr 0x%02X / len %u",
                 m_nI2CAdr, dataAndCrcLen);
     }
-    int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, m_nDebugLevel, &comData);
+    int errVal = I2CTransfer(m_sI2CDevNode, m_nI2CAdr, &comData);
     if (!errVal) { // if no error
         QString i2cHexData;
         quint16 iByte;

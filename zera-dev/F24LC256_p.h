@@ -14,7 +14,7 @@
 class cF24LC256Private: public cI2CEEPromPrivate
 {
 public:
-    cF24LC256Private(QString devNode,int dLevel,short adr);
+    cF24LC256Private(QString devNode, short adr);
     virtual ~cF24LC256Private(){};
     virtual int WriteData(char* data, ushort count, ushort adr) override;
     virtual int ReadData(char* data, ushort count, ushort adr) override;

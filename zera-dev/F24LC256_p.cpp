@@ -11,8 +11,8 @@
 #include "F24LC256_p.h"
 
 
-cF24LC256Private::cF24LC256Private(QString devNode, int dLevel, short adr)
-    : cI2CEEPromPrivate(devNode,dLevel,adr)
+cF24LC256Private::cF24LC256Private(QString devNode, short adr)
+    : cI2CEEPromPrivate(devNode, adr)
 {
 }
 
@@ -24,7 +24,7 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
     struct i2c_rdwr_ioctl_data EEPromData = { msgs: &(Msgs), nmsgs: 1 };
     int toWrite = count;
 
-    if ( I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData) )
+    if ( I2CTransfer(DevNode, I2CAdress, &EEPromData) )
     return 0; // we couldn't write any data
 
     Msgs.flags = 0; // switch to write direction
@@ -41,7 +41,7 @@ int cF24LC256Private::WriteData(char* data, ushort count, ushort adr)
         int r;
         for (int i = 0; i < 100; i++) // max 10ms
         {
-            if (( r = I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData)) == 0)
+            if (( r = I2CTransfer(DevNode, I2CAdress, &EEPromData)) == 0)
                 break;
             usleep(100);
         }
@@ -78,7 +78,7 @@ int cF24LC256Private::ReadData(char* data,ushort n,ushort adr)
         outpBuf[0]=(adr >> 8) & 0xff; outpBuf[1]=adr & 0xff; // we set the adress for the next transfer
         Msgs[1].len = l; // and it's length
 
-        if ( I2CTransfer(DevNode,I2CAdress,DebugLevel,&EEPromData) == 0 ) // alles ok und gelesen
+        if ( I2CTransfer(DevNode, I2CAdress, &EEPromData) == 0 ) // alles ok und gelesen
         {
             memcpy((void*)data,(void*)&inpBuf[0],l);
             adr += l;
