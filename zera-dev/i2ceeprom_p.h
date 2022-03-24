@@ -18,7 +18,7 @@ public:
       @param[in] d(ebug)Level decides what to write to syslog
       @param[in] (i2c)adr is the devices adress
       */
-    cI2CEEPromPrivate(QString dNode, int dLevel, ushort adr);
+    cI2CEEPromPrivate(QString dNode, ushort adr);
     cI2CEEPromPrivate(){};
     virtual ~cI2CEEPromPrivate(){};
 
@@ -43,7 +43,6 @@ public:
     virtual int size()=0;
 protected:
     QString DevNode;
-    int DebugLevel;
     ushort I2CAdress;
 };
 
