@@ -102,22 +102,18 @@ void cModeModuleInit::generateInterface()
 
 void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) {// 0 was reserved for async. messages
         // that we will ignore
     }
-    else
-    {
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+    else {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
-            switch (cmd)
-            {
+            switch (cmd) {
             case MODEMODINIT::sendrmident:
-                if (reply == ack) // we only continue if resource manager acknowledges
+                if (reply == ack) { // we only continue if resource manager acknowledges
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(rmidentErrMSG)));
 #ifdef DEBUG
                     qDebug() << rmidentErrMSG;
@@ -127,10 +123,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 break;
 
             case MODEMODINIT::readresourcetypes:
-                if ((reply == ack) && (answer.toString().contains("SENSE")))
+                if ((reply == ack) && (answer.toString().contains("SENSE"))) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(resourcetypeErrMsg)));
 #ifdef DEBUG
                     qDebug() << resourcetypeErrMsg;
@@ -140,10 +136,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 break;
 
             case MODEMODINIT::readresource:
-                if ((reply == ack) && (answer.toString().contains("MMODE")))
+                if ((reply == ack) && (answer.toString().contains("MMODE"))) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(resourceErrMsg)));
 #ifdef DEBUG
                     qDebug() << resourceErrMsg;
@@ -159,20 +155,15 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 QStringList sl;
 
                 sl = answer.toString().split(';');
-                if ((reply ==ack) && (sl.length() >= 4))
-                {
+                if ((reply ==ack) && (sl.length() >= 4)) {
                     max = sl.at(0).toInt(&ok1); // fixed position
                     free = sl.at(1).toInt(&ok2);
                     m_sDescription = sl.at(2);
                     m_nPort = sl.at(3).toInt(&ok3);
-
-                    if (ok1 && ok2 && ok3 && ((max == free) == 1))
-                    {
+                    if (ok1 && ok2 && ok3 && ((max == free) == 1)) {
                         emit activationContinue();
                     }
-
-                    else
-                    {
+                    else {
                         emit errMsg((tr(resourceInfoErrMsg)));
 #ifdef DEBUG
                         qDebug() << resourceInfoErrMsg;
@@ -180,24 +171,21 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                         emit activationError();
                     }
                 }
-
-                else
-                {
+                else {
                     emit errMsg((tr(resourceInfoErrMsg)));
 #ifdef DEBUG
                     qDebug() << resourceInfoErrMsg;
 #endif
                     emit activationError();
                 }
-
                 break;
             }
 
             case MODEMODINIT::claimresource:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(claimresourceErrMsg)));
         #ifdef DEBUG
                     qDebug() << claimresourceErrMsg;
@@ -207,10 +195,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 break;
 
             case MODEMODINIT::setmode:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(setMeasModeErrMsg)));
 #ifdef DEBUG
                     qDebug() << setMeasModeErrMsg;
@@ -221,10 +209,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
 
             case MODEMODINIT::writegaincorr:
             case MODEMODINIT::writegaincorr2:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspgaincorrErrMsg)));
 #ifdef DEBUG
@@ -235,10 +223,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
 
             case MODEMODINIT::writephasecorr:
             case MODEMODINIT::writephasecorr2:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspphasecorrErrMsg)));
 #ifdef DEBUG
@@ -249,10 +237,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
 
             case MODEMODINIT::writeoffsetcorr:
             case MODEMODINIT::writeoffsetcorr2:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspoffsetcorrErrMsg)));
 #ifdef DEBUG
@@ -262,10 +250,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 break;
 
             case MODEMODINIT::subdcdsp:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
-                else
-                {
+                }
+                else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writesubdcErrMsg)));
 #ifdef DEBUG
@@ -275,8 +263,9 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 break;
 
             case MODEMODINIT::setsamplingsystem:
-                if (reply == ack)
+                if (reply == ack) {
                     emit activationContinue();
+                }
                 else
                 {
                     // perhaps we emit some error here ?
@@ -288,10 +277,10 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 break;
 
             case MODEMODINIT::freeresource:
-                if (reply == ack || reply == nack) // we accept nack here also
+                if (reply == ack || reply == nack) { // we accept nack here also
                     emit deactivationContinue(); // maybe that resource was deleted by server and then it is no more set
-                else
-                {
+                }
+                else {
                     emit errMsg((tr(freeresourceErrMsg)));
         #ifdef DEBUG
                     qDebug() << freeresourceErrMsg;
@@ -381,8 +370,9 @@ void cModeModuleInit::writeGainCorr()
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pDSPInterface->data(m_pCorrectionDSP, "GAINCORRECTION");
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
+    }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr;
 #ifdef DEBUG
     qDebug() << "writeGainCorr";
@@ -397,8 +387,9 @@ void cModeModuleInit::writeGainCorr2()
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("GainCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("GAINCORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pDSPInterface->data(m_pCorrectionDSP, "GAINCORRECTION2");
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++) {
         data[i] = 1.0;
+    }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr2;
 #ifdef DEBUG
     qDebug() << "writeGainCorr2";
@@ -413,8 +404,9 @@ void cModeModuleInit::writePhaseCorr()
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pDSPInterface->data(m_pCorrectionDSP, "PHASECORRECTION");
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
+    }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr;
 #ifdef DEBUG
     qDebug() << "writePhaseCorr";
@@ -429,8 +421,9 @@ void cModeModuleInit::writePhaseCorr2()
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("PhaseCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("PHASECORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pDSPInterface->data(m_pCorrectionDSP, "PHASECORRECTION2");
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
+    }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr2;
 #ifdef DEBUG
     qDebug() << "writePhaseCorr2";
@@ -445,8 +438,9 @@ void cModeModuleInit::writeOffsetCorr()
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION",32, DSPDATA::vDspIntVar));
     float* data = m_pDSPInterface->data(m_pCorrectionDSP, "OFFSETCORRECTION");
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
+    }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
 #ifdef DEBUG
     qDebug() << "writeOffsetCorr";
@@ -461,8 +455,9 @@ void cModeModuleInit::writeOffsetCorr2()
     m_pCorrectionDSP = m_pDSPInterface->getMemHandle("OffsetCorrection");
     m_pCorrectionDSP->addVarItem( new cDspVar("OFFSETCORRECTION2",32, DSPDATA::vDspIntVar));
     float* data = m_pDSPInterface->data(m_pCorrectionDSP, "OFFSETCORRECTION2");
-    for (int i = 0; i < 32; i++)
+    for (int i = 0; i < 32; i++) {
         data[i] = 0.0;
+    }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
 #ifdef DEBUG
     qDebug() << "writeOffsetCorr2";
@@ -472,13 +467,11 @@ void cModeModuleInit::writeOffsetCorr2()
 
 void cModeModuleInit::setSubDC()
 {
-    quint32 subdc;
-    cDspMeasData* pSubDCMaskDSP; // here we can set if sub dc or not
-
     m_pDSPInterface->deleteMemHandle(m_pCorrectionDSP); // we delete the old handle
 
-    subdc = 0;
-    pSubDCMaskDSP = m_pDSPInterface->getMemHandle("SubDC");
+    quint32 subdc = 0;
+    // here we can set if sub dc or not
+    cDspMeasData* pSubDCMaskDSP = m_pDSPInterface->getMemHandle("SubDC");
     pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
     m_pDSPInterface->setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(pSubDCMaskDSP)] = MODEMODINIT::subdcdsp;
