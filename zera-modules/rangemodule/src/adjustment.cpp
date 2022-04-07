@@ -184,15 +184,11 @@ void cAdjustManagement::readOffsetCorr()
 
 void cAdjustManagement::setSubDC()
 {
-    quint32 subdc;
-    cDspMeasData* pSubDCMaskDSP; // here we can set if sub dc or not
-
-    subdc = 0;
-    if (m_subDCChannelList.count() > 0)
-    for (int i = 0; i < m_subDCChannelList.count(); i++)
+    quint32 subdc = 0;
+    for (int i = 0; i < m_subDCChannelList.count(); i++) {
         subdc |= (1 << m_subDCChannelList.at(i)->getDSPChannelNr());
-
-    pSubDCMaskDSP = m_pDSPInterFace->getMemHandle("SubDC");
+    }
+    cDspMeasData* pSubDCMaskDSP = m_pDSPInterFace->getMemHandle("SubDC"); // here we can set if sub dc or not
     pSubDCMaskDSP->addVarItem( new cDspVar("SUBDC",1, DSPDATA::vDspIntVar, DSPDATA::dInt));
     m_pDSPInterFace->setVarData(pSubDCMaskDSP, QString("SUBDC:%1;").arg(subdc), DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(pSubDCMaskDSP)] = subdcdsp;
