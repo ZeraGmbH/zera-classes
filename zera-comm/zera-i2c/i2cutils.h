@@ -15,7 +15,8 @@
   @param[in] deviceNode is full path i2c device node /dev/i2c-3/0 for example
   @param[in] i2cadr is sent debug information if desired
   */
-int ZERAI2C_EXPORT I2CTransfer( QString deviceNode, int i2cadr, i2c_rdwr_ioctl_data* iodata);
+int ZERAI2C_EXPORT I2CTransfer(QString deviceNode, int i2cadr, i2c_rdwr_ioctl_data* iodata);
 
+bool ZERAI2C_EXPORT I2cPing(QString deviceNode, int i2cadr);
 
 #endif // I2CUTILS_H
