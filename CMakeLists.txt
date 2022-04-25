@@ -42,6 +42,7 @@ set(SUB_DIRS
     zera-intel-hex-checker
     zera-mcontroller-io
     zera-comm/zera-i2c
+    zera-comm/zera-i2c-ping
     zera-dev
     zera-misc
 )
