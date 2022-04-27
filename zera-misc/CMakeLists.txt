@@ -1,24 +1,3 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
-project(zera-misc LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-#C++ 11 Flag
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-# Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-
-# Find dependecies
-find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
-
 if(ZC_BUILD_MODULES)
     find_package(Qt5 COMPONENTS Network CONFIG REQUIRED)
 
@@ -70,7 +49,6 @@ set(HEADER
     ${HEADER_FOR_MODULE}
 )
 
-# create library
 add_library(zeramisc SHARED
     ${SOURCES}
     ${HEADER}
@@ -100,22 +78,17 @@ target_include_directories(zeramisc
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-# set target Version
 set_target_properties(zeramisc PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zeramisc PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
 
-# generate export header
-include(GenerateExportHeader)
 generate_export_header(zeramisc)
 
-# install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeramisc_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc
 )
 
-# install library
 install(TARGETS zeramisc
     EXPORT zeramiscExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -150,9 +123,3 @@ install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc
     )
-
-# spawn out some info on configuration
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-
-
