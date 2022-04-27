@@ -10,7 +10,8 @@ private slots:
     void schemaFound();
     void schemaNotFound();
     void validPairSchemaXmlResourceFile();
-
+    void validPairSchemaXmlFile();
+    void validPairSchemaXmlFileOld(); // As long as cReader::loadXML still exists
 
 };
 
