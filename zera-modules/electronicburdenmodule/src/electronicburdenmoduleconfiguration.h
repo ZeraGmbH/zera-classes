@@ -23,7 +23,7 @@ public:
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     configuration* getConfigXMLWrapper();
 
-protected slots: // for the sake of cXMLSettings - we introduced m_xsdGeneratedConfig
+protected slots: // for the sake of XMLSettings - we introduced m_xsdGeneratedConfig
     virtual void configXMLInfo(QString) override {};
 
 private:
