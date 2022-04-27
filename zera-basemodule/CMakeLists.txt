@@ -44,7 +44,6 @@ target_include_directories(zerabasemodule
 set_target_properties(zerabasemodule PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zerabasemodule PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-include(GenerateExportHeader)
 generate_export_header(zerabasemodule)
 
 install(FILES
@@ -58,7 +57,6 @@ install(TARGETS zerabasemodule
     )
 
 # configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zerabasemoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
