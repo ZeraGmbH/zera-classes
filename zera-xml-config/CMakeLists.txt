@@ -1,4 +1,3 @@
-#sum up project Files 
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
     )
@@ -7,15 +6,9 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
     )
 
-file(GLOB RESOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.qrc
-    )
-
-#create library 
 add_library(zeraxmlconfig SHARED
     ${SOURCES}
     ${HEADER}
-    ${RESOURCES}
     )
 
 target_link_libraries(zeraxmlconfig 
@@ -38,10 +31,8 @@ target_include_directories(zeraxmlconfig
 set_target_properties(zeraxmlconfig PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zeraxmlconfig PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-include(GenerateExportHeader)
 generate_export_header(zeraxmlconfig)
 
-#install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeraxmlconfig_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeraxmlconfig
@@ -81,4 +72,3 @@ install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeraxmlconfig
     )
-
