@@ -19,6 +19,7 @@ set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT
 set(REPO_VERSION ${PROJECT_VERSION})
 
 find_package(Qt5 COMPONENTS Core Gui Network XmlPatterns CONFIG REQUIRED)
+find_package(xiqnet REQUIRED)
 find_package(VfEvent REQUIRED)
 find_package(VfHelpers REQUIRED)
 find_package(VfComponent REQUIRED)
@@ -26,6 +27,11 @@ find_package(zera-json-params REQUIRED)
 find_Package(VfCpp REQUIRED)
 find_package(Qt5Test REQUIRED)
 find_package(GTest)
+
+include(FeatureSummary)
+include(GNUInstallDirs)
+include(GenerateExportHeader)
+include(CMakePackageConfigHelpers)
 
 option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
 option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging on PC" OFF)
@@ -83,7 +89,6 @@ set(MODULE_DIRS
     zera-modules/electronicburdenmodule
 )
 
-
 # zera_xml-config has an src folder with header files inside
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/zera-xml-config/src)
 
@@ -107,6 +112,4 @@ if(${GTest_FOUND})
     enable_testing()
 endif()
 
-
-
-
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
