@@ -30,7 +30,6 @@ target_include_directories(zeramath
 set_target_properties(zeramath PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zeramath PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-include(GenerateExportHeader)
 generate_export_header(zeramath)
 
 install(FILES
