@@ -1,6 +1,6 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-8"?>
 <testvals>
-  <yesno>1</yesno>
+  <yesno>2</yesno>
   <ethernet>
     <ip>1.2.3.4</ip>
     <port>5000</port>

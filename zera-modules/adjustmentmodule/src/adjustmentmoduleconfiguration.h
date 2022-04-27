@@ -56,14 +56,15 @@ class cAdjustmentModuleConfiguration: public cBaseModuleConfiguration
 public:
     cAdjustmentModuleConfiguration();
     ~cAdjustmentModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
+    virtual void setConfiguration(QByteArray xmlString) override;
+    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cAdjustmentModuleConfigData* getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key);
-    virtual void completeConfiguration(bool ok);
+    virtual void configXMLInfo(QString key) override;
 
+private slots:
+    void completeConfiguration(bool ok);
 private:
     cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData;  // configuration
 };
