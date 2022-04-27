@@ -1,7 +1,3 @@
-cmake_minimum_required(VERSION 3.1)
-
-find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
-
 add_executable(zera-i2c-ping
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
