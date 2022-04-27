@@ -18,7 +18,12 @@ set(PROJECT_VERSION_PATCH "0")
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 set(REPO_VERSION ${PROJECT_VERSION})
 
-find_package(Qt5 COMPONENTS Core XmlPatterns CONFIG REQUIRED)
+find_package(Qt5 COMPONENTS Core Gui Network XmlPatterns CONFIG REQUIRED)
+find_package(VfEvent REQUIRED)
+find_package(VfHelpers REQUIRED)
+find_package(VfComponent REQUIRED)
+find_package(zera-json-params REQUIRED)
+find_Package(VfCpp REQUIRED)
 
 option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
 option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging on PC" OFF)
