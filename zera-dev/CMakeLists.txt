@@ -1,45 +1,14 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
-project(zera-dev LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-#C++ 11 Flag
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
-#Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-
-#Find dependecies
-find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
-
-
-
-#sum up project Files 
 file(GLOB SOURCES 
-    ${PROJECT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
 
 file(GLOB HEADER
-    ${PROJECT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
-file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
-    )
-
-#create library 
 add_library(zeradev SHARED
     ${SOURCES}
     ${HEADER}
-    ${RESOURCES}
     )
 
 set(COMMON_LIBS
@@ -56,7 +25,6 @@ target_link_libraries(zeradev
     "-Wl,--no-undefined"
     )
 
-
 # announce headers - target perspective
 target_include_directories(zeradev
     PUBLIC
@@ -67,23 +35,17 @@ target_include_directories(zeradev
     ${CMAKE_SOURCE_DIR}/zera-misc
     )
 
-#set target Version
 set_target_properties(zeradev PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zeradev PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-#generate export header
 include(GenerateExportHeader)
 generate_export_header(zeradev)
 
-#install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeradev_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/dev
     )
 
-
-
-# install library
 install(TARGETS zeradev
     EXPORT zeradevExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -99,7 +61,6 @@ write_basic_package_version_file(
 
 # configure *Config.cmake
 configure_file(zeradevConfig.cmake.in zeradevConfig.cmake @ONLY)
-
 
 # install *Config(Version).cmake
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeradevConfig.cmake"
@@ -120,9 +81,6 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/dev
     )
 
-
-find_package(Qt5Test REQUIRED)
-find_package(GTest)
 if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     message(STATUS "unittest zera-dev")
     enable_testing()
@@ -137,7 +95,6 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     add_executable(zera-dev-unittest
         ${SOURCES}
         ${HEADER}
-        ${RESOURCES}
         ${UNITTESTS}
     )
     # constexpr / EXPECT_EQ -> linker problems for c++ < 17
@@ -159,8 +116,3 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         ${COMMON_LIBS}
     )
 endif()
-# spawn out some info on configuration
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-
-

@@ -24,6 +24,8 @@ find_package(VfHelpers REQUIRED)
 find_package(VfComponent REQUIRED)
 find_package(zera-json-params REQUIRED)
 find_Package(VfCpp REQUIRED)
+find_package(Qt5Test REQUIRED)
+find_package(GTest)
 
 option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
 option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging on PC" OFF)
