@@ -1,48 +1,21 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
-project(zera-i2c LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-#C++ 11 Flag
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
-#Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-
-#Find dependecies
-find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
-
-
-#Sum up sources
 file(GLOB SOURCES 
-    ${PROJECT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
 
 
 file(GLOB HEADER
-    ${PROJECT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
 file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 
-#create library 
 add_library(zerai2c SHARED
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
     )
-
-
 
 target_link_libraries(zerai2c 
     PRIVATE
@@ -50,7 +23,6 @@ target_link_libraries(zerai2c
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
-
 
 # announce headers - target perspective
 target_include_directories(zerai2c
@@ -61,24 +33,16 @@ target_include_directories(zerai2c
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-#set target Version
 set_target_properties(zerai2c PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zerai2c PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-
-#generate export header
-include(GenerateExportHeader)
 generate_export_header(zerai2c)
 
-#install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zerai2c_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/i2c
     )
 
-
-
-# install library
 install(TARGETS zerai2c
     EXPORT zerai2cExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -114,9 +78,3 @@ install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/i2c
     )
-
-# spawn out some info on configuration
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-
-
