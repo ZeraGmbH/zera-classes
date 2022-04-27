@@ -5,7 +5,7 @@
 
 // pure virtual base class for module configuration
 
-class cBaseModuleConfiguration: public cXMLSettings
+class cBaseModuleConfiguration: public XMLSettings
 {
     Q_OBJECT
 
