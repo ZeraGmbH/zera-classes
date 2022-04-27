@@ -151,16 +151,15 @@ QString cReader::getXMLConfig()
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
 
-    // for each key in the QHash
-    for(int elemCount=0; elemCount<d->data.keys().count(); elemCount++) {
+    for(QString key : d->data.sortedKeys()) {
         QString elementName;
-        parents = d->data.keys().at(elemCount).split(":");
+        parents = key.split(":");
         elementName = parents.last();
         parents.removeLast();
 
         parseLists(oldParents, parents, stream);
         oldParents = parents;
-        stream.writeTextElement(elementName, d->data.values().at(elemCount));
+        stream.writeTextElement(elementName, d->data.value(key));
     }
     stream.writeEndDocument();
 

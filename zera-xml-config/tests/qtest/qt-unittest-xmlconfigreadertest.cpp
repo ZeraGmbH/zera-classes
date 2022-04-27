@@ -95,6 +95,16 @@ void XMLConfigReaderTest::setGetValidYesNoShouldNotWorkOnInvalid()
     QCOMPARE(reader.getValue(xml), newYesNoInvalid);
 }
 
+void XMLConfigReaderTest::setWithInvalidKey()
+{
+    Zera::XMLConfig::cReader reader;
+    QVERIFY(reader.loadSchema(":/schemas/with-complex.xsd"));
+    QVERIFY(reader.loadXMLFile(":/xmls/with-complex-valid.xml"));
+    QString newYesNoInvalid = "0";
+    QString xml = "testvals:foo";
+    QVERIFY(!reader.setValue(xml, newYesNoInvalid));
+}
+
 void XMLConfigReaderTest::loadAndModifyExportSequenceOfFields()
 {
     Zera::XMLConfig::cReader reader;

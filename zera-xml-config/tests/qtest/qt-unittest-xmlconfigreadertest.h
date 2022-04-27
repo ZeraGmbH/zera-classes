@@ -22,6 +22,8 @@ private slots:
     void setGetValidIp();
     void setGetValidYesNoShouldNotWorkOnInvalid(); // how can we fix this???
 
+    void setWithInvalidKey();
+
     void loadAndModifyExportSequenceOfFields();
 };
 

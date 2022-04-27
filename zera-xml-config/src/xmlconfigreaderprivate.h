@@ -5,7 +5,7 @@
 
 #include <QList>
 #include <QString>
-#include <QDebug>
+#include <QHash>
 
 
 /**
@@ -17,52 +17,35 @@ public:
     void clear()
     {
         m_keyList.clear();
-        m_valueList.clear();
+        m_keyValueHash.clear();
     }
-
     void insert(T_key key, T_value value)
     {
-        if(contains(key) == false)
-        {
+        if(!contains(key)) {
             m_keyList.append(key);
-            m_valueList.append(value);
         }
-        else
-        {
-            m_valueList.replace(m_keyList.indexOf(key), value);
-        }
+        m_keyValueHash[key] = value;
     }
-
-
     T_value value(T_key key) const
     {
         T_value retVal;
-        if(contains(key))
-        {
-            retVal = m_valueList.at(m_keyList.indexOf(key));
+        auto iter = m_keyValueHash.find(key);
+        if(iter != m_keyValueHash.end()) {
+            retVal = iter.value();
         }
         return retVal;
     }
-
     bool contains(T_key key) const
     {
         return m_keyList.contains(key);
     }
-
-    QList<T_key> keys() const
+    QList<T_key> sortedKeys() const
     {
         return m_keyList;
     }
-
-    QList<T_value> values() const
-    {
-        return m_valueList;
-    }
-
 private:
-
     QList<T_key> m_keyList;
-    QList<T_value> m_valueList;
+    QHash<T_key, T_value> m_keyValueHash;
 };
 
 
