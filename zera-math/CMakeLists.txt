@@ -1,48 +1,15 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
-project(zera-math LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-#C++ 11 Flag
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-
-
-#Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-
-#Find dependecies
-find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
-
-
-#sum up project Files 
 file(GLOB SOURCES 
-    ${PROJECT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
 
 file(GLOB HEADER 
-    ${PROJECT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
-file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
-    )
-
-#create library 
 add_library(zeramath SHARED
     ${SOURCES}
     ${HEADER}
-    ${RESOURCES}
     )
-
-
 
 target_link_libraries(zeramath 
     PRIVATE
@@ -50,7 +17,6 @@ target_link_libraries(zeramath
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
-
 
 # announce headers - target perspective
 target_include_directories(zeramath
@@ -61,23 +27,17 @@ target_include_directories(zeramath
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-#set target Version
 set_target_properties(zeramath PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zeramath PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-#generate export header
 include(GenerateExportHeader)
 generate_export_header(zeramath)
 
-#install export header
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zeramath_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/math
     )
 
-
-
-# install library
 install(TARGETS zeramath
     EXPORT zeramathExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -112,9 +72,3 @@ install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/math
     )
-
-# spawn out some info on configuration
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-
-
