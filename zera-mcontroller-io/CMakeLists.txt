@@ -1,7 +1,3 @@
-# find required depemdencies
-find_package(Qt5 COMPONENTS Core CONFIG REQUIRED)
-
-# create executable
 add_executable(zera-mcontroller-io
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
@@ -14,7 +10,6 @@ target_include_directories(zera-mcontroller-io
    ${CMAKE_SOURCE_DIR}/zera-misc
 )
 
-# link dependencies
 target_link_libraries(zera-mcontroller-io
     PRIVATE
     Qt5::Core
@@ -26,7 +21,6 @@ target_link_libraries(zera-mcontroller-io
     "-Wl,--no-undefined"
 )
 
-# install application
 install(TARGETS zera-mcontroller-io
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
 )
