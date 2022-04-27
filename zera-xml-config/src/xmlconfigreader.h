@@ -44,6 +44,7 @@ namespace Zera
        * @return true for success
        */
       bool loadXML(QString filePath);
+      bool loadXMLFile(QString path);
 
       /**
        * @brief Parses the QString and sets the configuration if the XML data matches the schema file

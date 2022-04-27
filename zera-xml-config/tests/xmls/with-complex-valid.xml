@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testvals>
+  <yesno>1</yesno>
+  <ethernet>
+    <ip>2.35.1.27</ip>
+    <port>4808</port>
+  </ethernet>
+  <limits>87.7065058039451</limits>
+</testvals>
+
+

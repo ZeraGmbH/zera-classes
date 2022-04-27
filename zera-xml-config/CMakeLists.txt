@@ -117,6 +117,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         tests/qtest/main-unittest-qt.h
         tests/qtest/main-unittest-qt.cpp # must be first!!!
         ${QTUNITTESTS}
+        tests/test-data.qrc
     )
 
     target_include_directories(zeraxmlconfig-unittest-qt

@@ -73,6 +73,17 @@ bool cReader::loadXML(QString filePath)
     return retVal;
 }
 
+bool cReader::loadXMLFile(QString path)
+{
+    bool ok = false;
+    QFile xmlFile(path);
+    if(xmlFile.open(QFile::ReadOnly)) {
+        QString xml = xmlFile.readAll();
+        ok = loadXMLFromString(xml);
+    }
+    return ok;
+}
+
 bool cReader::loadXMLFromString(QString xmlString)
 {
     Q_D(cReader);
