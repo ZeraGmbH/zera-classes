@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>schemas/with-complex.xsd</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>xmls/with-complex-valid.xml</file>
+    </qresource>
+</RCC>
