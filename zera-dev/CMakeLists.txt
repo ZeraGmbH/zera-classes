@@ -38,7 +38,6 @@ target_include_directories(zeradev
 set_target_properties(zeradev PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zeradev PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-include(GenerateExportHeader)
 generate_export_header(zeradev)
 
 install(FILES
