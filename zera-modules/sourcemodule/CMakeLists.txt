@@ -211,8 +211,6 @@ install(
         ${SET_ZC_CONFIG_PATH}
     )
 
-find_package(Qt5Test REQUIRED)
-find_package(GTest)
 if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     message(STATUS "unittest sourcemodule")
     enable_testing()
@@ -277,7 +275,3 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     )
 
 endif()
-
-
-# spawn out some info on configuration
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
