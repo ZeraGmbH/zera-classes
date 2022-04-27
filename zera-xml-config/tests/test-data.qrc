@@ -4,5 +4,8 @@
     </qresource>
     <qresource prefix="/">
         <file>xmls/with-complex-valid.xml</file>
+        <file>xmls/with-complex-invalid-sequence.xml</file>
+        <file>xmls/with-complex-invalid-ip.xml</file>
+        <file>xmls/with-complex-invalid-yes-no.xml</file>
     </qresource>
 </RCC>

@@ -43,14 +43,14 @@ class cBurden1ModuleConfiguration: public cBaseModuleConfiguration
 public:
     cBurden1ModuleConfiguration();
     ~cBurden1ModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
+    virtual void setConfiguration(QByteArray xmlString) override;
+    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cBurden1ModuleConfigData* getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key);
-    virtual void completeConfiguration(bool ok);
-
+    virtual void configXMLInfo(QString key) override;
+private slots:
+    void completeConfiguration(bool ok);
 private:
     cBurden1ModuleConfigData *m_pBurden1ModulConfigData;  // configuration
 };
