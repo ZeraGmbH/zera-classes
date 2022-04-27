@@ -106,6 +106,9 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     add_test(NAME    zeraxmlconfig-unittest-qt
              COMMAND zeraxmlconfig-unittest-qt)
 
+    set(SET_SOURCEPATH "${CMAKE_CURRENT_SOURCE_DIR}")
+    add_definitions(-DSOURCEPATH="${SET_SOURCEPATH}")
+
     file(GLOB QTUNITTESTS
         tests/qtest/qt-unittest-*.cpp
         tests/qtest/qt-unittest-*.h
