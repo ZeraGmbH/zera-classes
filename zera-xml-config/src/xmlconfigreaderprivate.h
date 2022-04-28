@@ -21,10 +21,19 @@ public:
     }
     void insert(T_key key, T_value value)
     {
-        if(!contains(key)) {
+        if(!m_keyList.contains(key)) {
             m_keyList.append(key);
         }
         m_keyValueHash[key] = value;
+    }
+    bool set(T_key key, T_value value)
+    {
+        auto iter = m_keyValueHash.find(key);
+        if(iter != m_keyValueHash.end()) {
+            iter.value() = value;
+            return true;
+        }
+        return false;
     }
     T_value value(T_key key) const
     {
@@ -34,10 +43,6 @@ public:
             retVal = iter.value();
         }
         return retVal;
-    }
-    bool contains(T_key key) const
-    {
-        return m_keyList.contains(key);
     }
     QList<T_key> sortedKeys() const
     {
