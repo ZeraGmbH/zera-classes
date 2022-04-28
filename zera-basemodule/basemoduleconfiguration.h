@@ -1,7 +1,7 @@
 #ifndef BASEMODULECONFIGURATION_H
 #define BASEMODULECONFIGURATION_H
 
-#include "xmlsettings.h"
+#include <xmlsettings.h>
 
 // pure virtual base class for module configuration
 
