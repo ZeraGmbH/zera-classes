@@ -6,11 +6,8 @@
 #include <QString>
 #include <QHash>
 
-/**
- * @b A 2d structure that mirrors some of the Qt container API functions and preserves the order of inserted values
- */
-template<class T_key, class T_value> class FCKDUPHash {
-
+template<class T_key, class T_value> class HashWithSortedKeys
+{
 public:
     void clear()
     {
@@ -62,7 +59,7 @@ namespace Zera
         public:
             cReaderPrivate(cReader *parent);
         private:
-            FCKDUPHash<QString, QString>data;
+            HashWithSortedKeys<QString, QString>data;
             QString schemaFilePath;
             MessageHandler messageHandler;
             Zera::XMLConfig::cReader *q_ptr;
