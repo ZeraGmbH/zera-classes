@@ -114,13 +114,13 @@ bool cReader::loadXMLFromString(QString xmlString)
 QString cReader::getValue(QString key)
 {
     Q_D(cReader);
-    return d->data.value(key);
+    return d->data.getValue(key);
 }
 
 bool cReader::setValue(QString key, QString value)
 {
     Q_D(cReader);
-    return d->data.set(key, value);
+    return d->data.modifyExisting(key, value);
 }
 
 QString cReader::getXMLConfig()
@@ -139,7 +139,7 @@ QString cReader::getXMLConfig()
 
         parseLists(oldParents, parents, stream);
         oldParents = parents;
-        stream.writeTextElement(elementName, d->data.value(key));
+        stream.writeTextElement(elementName, d->data.getValue(key));
     }
     stream.writeEndDocument();
     return retVal;

@@ -21,7 +21,7 @@ public:
         }
         m_keyValueHash[key] = value;
     }
-    bool set(T_key key, T_value value)
+    bool modifyExisting(T_key key, T_value value)
     {
         auto iter = m_keyValueHash.find(key);
         if(iter != m_keyValueHash.end()) {
@@ -30,7 +30,7 @@ public:
         }
         return false;
     }
-    T_value value(T_key key) const
+    T_value getValue(T_key key) const
     {
         T_value retVal;
         auto iter = m_keyValueHash.find(key);
