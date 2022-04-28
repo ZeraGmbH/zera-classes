@@ -10,8 +10,8 @@
 #include <QTimer>
 #include <virtualmodule.h>
 
-#include "xmlsettings.h"
 #include "moduleactivist.h"
+#include <xmlsettings.h>
 #include <vf-cpp-rpc.h>
 
 #include <memory>
