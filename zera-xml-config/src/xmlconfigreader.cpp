@@ -146,7 +146,7 @@ QString cReader::getXMLConfig()
     stream.setAutoFormatting(true);
     stream.writeStartDocument();
 
-    for(QString key : d->data.sortedKeys()) {
+    for(QString key : d->data.getKeysSortedByCreationSequence()) {
         QString elementName;
         parents = key.split(":");
         elementName = parents.takeLast();

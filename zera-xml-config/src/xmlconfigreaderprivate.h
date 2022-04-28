@@ -2,11 +2,9 @@
 #define XMLCONFIGREADER_PRIVATE_H
 
 #include "messagehandler.h"
-
 #include <QList>
 #include <QString>
 #include <QHash>
-
 
 /**
  * @b A 2d structure that mirrors some of the Qt container API functions and preserves the order of inserted values
@@ -44,7 +42,7 @@ public:
         }
         return retVal;
     }
-    QList<T_key> sortedKeys() const
+    QList<T_key> getKeysSortedByCreationSequence() const
     {
         return m_keyList;
     }
