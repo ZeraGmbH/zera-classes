@@ -27,7 +27,6 @@ bool cReader::loadSchema(QString filePath)
 {
     bool retVal = false;
     QFile schemaFile(filePath);
-
     if(schemaFile.exists()) {
         Q_D(cReader);
         /// @todo evaluate wether clearing the data is reasonable
@@ -50,14 +49,9 @@ bool cReader::loadXML(QString filePath)
 
     if(schema.load(&schemaFile,QUrl(d->schemaFilePath))) {
         QXmlSchemaValidator sValidator(schema);
-
-        //qDebug() << "[zera-xml-config] schema is valid";
-
         if(sValidator.validate(QUrl(QString("file://%1").arg(filePath)))) {
             QFile xmlFile(filePath);
             xmlFile.open(QFile::ReadOnly);
-
-            //qDebug() << "[zera-xml-config] XML is valid";
             if(xml2Config(&xmlFile)) {
                 retVal = true;
             }
@@ -94,20 +88,12 @@ bool cReader::loadXMLFromString(QString xmlString)
 
     if(schema.load(&schemaFile,QUrl(d->schemaFilePath))) {
         QXmlSchemaValidator sValidator(schema);
-
-        //qDebug() << "[zera-xml-config] schema is valid";
         QByteArray baXmlData = xmlString.toUtf8();
         QBuffer xmlDevice(&baXmlData);
 
         xmlDevice.open(QBuffer::ReadOnly);
-
         if(sValidator.validate(&xmlDevice)) {
-            //reload the file
-            //xmlDevice.close();
-            //xmlDevice.open(QBuffer::ReadOnly);
             xmlDevice.seek(0);
-
-            //qDebug() << "[zera-xml-config] XML is valid";
             if(xml2Config(&xmlDevice)) {
                 retVal = true;
             }
@@ -161,11 +147,10 @@ QString cReader::getXMLConfig()
 
 bool cReader::xml2Config(QIODevice *xmlData)
 {
-    bool retVal = true;
-    QXmlStreamReader xmlReader;
     QStringList parents;
-
+    QXmlStreamReader xmlReader;
     xmlReader.setDevice(xmlData);
+    bool retVal = true;
 
     for(QXmlStreamReader::TokenType token; (!xmlReader.atEnd() && !xmlReader.hasError()); token = xmlReader.readNext()) {
         switch(token) {
@@ -176,18 +161,17 @@ bool cReader::xml2Config(QIODevice *xmlData)
             if(!xmlReader.text().isEmpty()&&!xmlReader.isWhitespace()) {
                 Q_D(cReader);
                 fullPath = parents.join(":");
-
                 d->data.insert(fullPath, xmlReader.text().toString());
                 valueChanged(fullPath);
             }
             break;
         }
-            // add the node name as parent if it is a start node: <text>
+        // add the node name as parent if it is a start node: <text>
         case QXmlStreamReader::StartElement: {
             parents.append(xmlReader.name().toString());
             break;
         }
-            // remove the last node from the parents if it is and end node: </text>
+        // remove the last node from the parents if it is and end node: </text>
         case QXmlStreamReader::EndElement: {
             parents.removeLast();
             break;
@@ -195,7 +179,6 @@ bool cReader::xml2Config(QIODevice *xmlData)
         default:
             break;
         }
-
     }
 
     /* Error handling. */

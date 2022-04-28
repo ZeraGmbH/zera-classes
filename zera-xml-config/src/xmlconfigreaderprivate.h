@@ -48,7 +48,6 @@ private:
     QHash<T_key, T_value> m_keyValueHash;
 };
 
-
 namespace Zera
 {
     namespace XMLConfig
