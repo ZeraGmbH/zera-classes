@@ -134,12 +134,7 @@ QString cReader::getValue(QString key)
 bool cReader::setValue(QString key, QString value)
 {
     Q_D(cReader);
-    bool retVal=false;
-    if(d->data.contains(key)) {
-        d->data.insert(key, value);
-        retVal=true;
-    }
-    return retVal;
+    return d->data.set(key, value);
 }
 
 QString cReader::getXMLConfig()
@@ -154,15 +149,13 @@ QString cReader::getXMLConfig()
     for(QString key : d->data.sortedKeys()) {
         QString elementName;
         parents = key.split(":");
-        elementName = parents.last();
-        parents.removeLast();
+        elementName = parents.takeLast();
 
         parseLists(oldParents, parents, stream);
         oldParents = parents;
         stream.writeTextElement(elementName, d->data.value(key));
     }
     stream.writeEndDocument();
-
     return retVal;
 }
 
