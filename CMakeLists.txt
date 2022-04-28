@@ -59,7 +59,7 @@ set(SUB_DIRS
     zera-mcontroller-io
     zera-comm/zera-i2c
     zera-comm/zera-i2c-ping
-    zera-dev
+    zera-i2c
     zera-misc
 )
 
