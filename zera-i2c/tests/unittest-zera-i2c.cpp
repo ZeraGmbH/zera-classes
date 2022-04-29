@@ -2,8 +2,6 @@
 #include <QString>
 #include "zera_mcontroller_errorflags.h"
 
-#define GTEST_OUT std::cerr << "[ OUT      ] "
-
 // These look odd but as long as firmware update scripts in meta-zera check
 // for the output of zera-mcontroller-io we have to make sure output is stable
 // whatever changes we modify in ZeraMcontrollerErrorFlags
@@ -35,7 +33,6 @@ TEST(TEST_ZERA_I2C, ERROR_MASK_LOWER_HARD) {
 
 TEST(TEST_ZERA_I2C, ERROR_MASK_LOWER_BOOT) {
     QString maskText = ZeraMcontrollerErrorFlags::getErrorMaskText(0x0000FFFF, true);
-    //GTEST_OUT << qPrintable(maskText) << std::endl;
     EXPECT_STREQ(qPrintable(maskText), "host-mask 0x0000 / µC-mask 0xFFFF / BL_ERR_FLAG_BUFFER_OVERFLOW | BL_ERR_FLAG_HEX_INVALID | BL_ERR_FLAG_LENGTH | BL_ERR_FLAG_CRC | BL_ERR_FLAG_CMD_INVALID | BL_ERR_FLAG_ADR_RANGE | BL_ERR_FLAG_EXECUTE | UNDEFINED_ERROR_BIT_7 | UNDEFINED_ERROR_BIT_8 | UNDEFINED_ERROR_BIT_9 | UNDEFINED_ERROR_BIT_10 | UNDEFINED_ERROR_BIT_11 | UNDEFINED_ERROR_BIT_12 | UNDEFINED_ERROR_BIT_13 | UNDEFINED_ERROR_BIT_14 | UNDEFINED_ERROR_BIT_15");
 }
 
