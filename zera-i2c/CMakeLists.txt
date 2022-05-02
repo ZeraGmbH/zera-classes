@@ -92,8 +92,6 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     )
 
     add_executable(zera-i2c-unittest
-        ${SOURCES}
-        ${HEADER}
         ${UNITTESTS}
     )
     # constexpr / EXPECT_EQ -> linker problems for c++ < 17
@@ -112,6 +110,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         PUBLIC
         gtest
         gtest_main
+        zeradev
         ${COMMON_LIBS}
     )
 endif()
