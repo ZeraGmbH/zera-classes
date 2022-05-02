@@ -13,6 +13,7 @@
 #include "moduleactivist.h"
 #include <xmlsettings.h>
 #include <vf-cpp-rpc.h>
+#include <proxy.h>
 
 #include <memory>
 

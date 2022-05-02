@@ -3,27 +3,10 @@
 #include <QObject>
 #include <QList>
 #include <QStateMachine>
-
-QT_BEGIN_NAMESPACE
-
-class QFinalState;
-class QState;
-class QStateMachine;
-
-QT_END_NAMESPACE
-
-namespace Zera
-{
-  namespace Proxy
-  {
-    class cProxy;
-  }
-}
-
+#include <QFinalState>
 
 namespace VeinEvent {
   class EventSystem;
-  class StorageSystem;
 }
 
 
