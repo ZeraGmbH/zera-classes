@@ -1,5 +1,3 @@
-add_subdirectory(zera-i2c)
-add_subdirectory(zera-i2c-ping)
 if(ZC_BUILD_MODULES)
     add_subdirectory(zera-proxy)
 endif()
