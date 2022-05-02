@@ -106,9 +106,6 @@ if(ZC_BUILD_MODULES)
 endif(ZC_BUILD_MODULES)
 
 find_package(GTest)
-if(${GTest_FOUND})
-    message(STATUS "building with unittest")
-    enable_testing()
-endif()
+enable_testing()
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
