@@ -48,7 +48,6 @@ if(ZC_BUILD_MODULES)
         zera-validator
         zera-basemodule
         zera-xml-config
-        zera-comm/zera-proxy
     )
 endif(ZC_BUILD_MODULES)
 
@@ -57,8 +56,7 @@ set(SUB_DIRS
     zera-math
     zera-intel-hex-checker
     zera-mcontroller-io
-    zera-comm/zera-i2c
-    zera-comm/zera-i2c-ping
+    zera-comm
     zera-i2c
     zera-misc
 )

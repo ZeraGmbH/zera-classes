@@ -29,8 +29,7 @@ target_include_directories(zerai2c
     PUBLIC
     $<INSTALL_INTERFACE:include/zera-classes/i2c>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
 set_target_properties(zerai2c PROPERTIES VERSION ${PROJECT_VERSION})
