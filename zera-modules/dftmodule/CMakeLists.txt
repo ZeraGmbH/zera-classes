@@ -67,7 +67,6 @@ target_link_libraries(dftmodule
     VeinMeta::VfComponent
     MeasurementModuleInterface
     zerabasemodule
-    zeraproxy
     zeramath
     zeramisc
     zeraxmlconfig

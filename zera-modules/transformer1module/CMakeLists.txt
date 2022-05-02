@@ -69,7 +69,6 @@ target_link_libraries(transformer1module
     VeinMeta::VfComponent
     MeasurementModuleInterface
     zerabasemodule
-    zeraproxy
     zeramath
     zeramisc
     zeraxmlconfig
