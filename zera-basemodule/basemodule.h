@@ -1,27 +1,20 @@
 #ifndef BASEMODULE_H
 #define BASEMODULE_H
 
+#include "moduleactivist.h"
+#include <virtualmodule.h>
+#include <xmlsettings.h>
+#include <proxy.h>
+#include <ve_eventsystem.h>
+#include <ve_storagesystem.h>
+#include <vf-cpp-rpc.h>
 #include <QObject>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 #include <QByteArray>
-#include <QTimer>
-#include <virtualmodule.h>
-
-#include "moduleactivist.h"
-#include <xmlsettings.h>
-#include <vf-cpp-rpc.h>
-#include <proxy.h>
-
 #include <memory>
-
-namespace VeinEvent
-{
-    class EventSystem;
-    class StorageSystem;
-}
 
 enum LastState
 {
