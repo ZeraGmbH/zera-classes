@@ -6,15 +6,13 @@
  * [1] smb://s-zera-stor01/data/EntwHard/Libraries/Atmel%20AVR/Docs/CommunicationProtocols.doc
  */
 
-#include <QString>
-#include <crcutils.h>
-#include <intelhexfileio.h>
-
-#include "dev_global.h"
+#include "zeradev_export.h"
 #include "protocol_zera_bootloader.h"
 #include "protocol_zera_hard.h"
 #include "zera_mcontroller_errorflags.h"
-
+#include <QString>
+#include <crcutils.h>
+#include <intelhexfileio.h>
 
 /**
  * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol

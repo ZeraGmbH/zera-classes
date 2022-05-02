@@ -1,8 +1,9 @@
 #ifndef F24LC256_H
 #define F24LC256_H
 
-#include "dev_global.h"
+#include "zeradev_export.h"
 #include "i2ceeprom_p.h"
+#include <QtCore/qglobal.h>
 
 class cF24LC256Private;
 

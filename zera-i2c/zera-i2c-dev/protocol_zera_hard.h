@@ -6,7 +6,8 @@
  * [1] smb://s-zera-stor01/data/EntwHard/Libraries/Atmel%20AVR/Docs/CommunicationProtocols.doc
  */
 
-#include "dev_global.h"
+#include "zeradev_export.h"
+#include <QtCore/qglobal.h>
 
 /**
  * @brief hardware command error flag definitions
