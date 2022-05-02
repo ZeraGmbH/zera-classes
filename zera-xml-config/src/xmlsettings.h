@@ -9,7 +9,7 @@
   @brief
   XMLSettings is pure virtual class, all derived classes will xml configuration facilitiy
  */
-class XMLSettings: public QObject
+class ZERAXMLCONFIG_EXPORT XMLSettings: public QObject
 {
     Q_OBJECT
 public:
