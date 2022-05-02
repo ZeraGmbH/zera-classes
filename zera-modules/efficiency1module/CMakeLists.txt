@@ -69,7 +69,6 @@ target_link_libraries(efficiency1module
     VeinMeta::VfComponent
     MeasurementModuleInterface
     zerabasemodule
-    zeraproxy
     zeramisc
     zeraxmlconfig
     zeravalidator 

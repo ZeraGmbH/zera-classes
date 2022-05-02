@@ -119,7 +119,6 @@ set(COMMON_LIBS
     VeinMeta::VfComponent
     MeasurementModuleInterface
     zerabasemodule
-    zeraproxy
     zeramisc
     zeraxmlconfig
     zeravalidator
