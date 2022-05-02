@@ -1,3 +1,6 @@
+add_subdirectory(zera-i2c)
+add_subdirectory(zera-i2c-ping)
+
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
