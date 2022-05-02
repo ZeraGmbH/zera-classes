@@ -123,18 +123,10 @@ add_library(scpimodule MODULE
 
 target_link_libraries(scpimodule 
     PRIVATE
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Network
     Qt5::SerialPort
-    VeinMeta::VfEvent
-    VeinMeta::VfHelpers
-    VeinMeta::VfComponent
-    MeasurementModuleInterface
+    Qt5::Gui
     zerabasemodule
     zeramisc
-    zeraxmlconfig
-    zeravalidator 
     Zera::SCPI
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

@@ -61,17 +61,8 @@ add_library(statusmodule MODULE
 
 target_link_libraries(statusmodule 
     PRIVATE
-    Qt5::Core
-    Qt5::Gui
-    Qt5::Network
-    VeinMeta::VfEvent
-    VeinMeta::VfHelpers
-    VeinMeta::VfComponent
-    MeasurementModuleInterface
     zerabasemodule
     zeramisc
-    zeraxmlconfig
-    zeravalidator 
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

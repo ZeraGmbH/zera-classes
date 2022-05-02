@@ -111,18 +111,9 @@ foreach(electronicburdenconfigfile ${SOURCE_DEVINFO})
 endforeach()
 
 set(COMMON_LIBS
-    Qt5::Core
-    Qt5::Network
     ${XERCES_LIBRARIES}
-    VeinMeta::VfEvent
-    VeinMeta::VfHelpers
-    VeinMeta::VfComponent
-    MeasurementModuleInterface
     zerabasemodule
     zeramisc
-    zeraxmlconfig
-    zeravalidator
-    zera-json-params
     serialportasyncblock
     )
 
