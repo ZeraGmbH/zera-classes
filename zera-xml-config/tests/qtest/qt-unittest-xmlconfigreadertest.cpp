@@ -4,8 +4,8 @@
 
 static QObject* pSourceIoTest = addTest(new XMLConfigReaderTest);
 
-static const QString xmlPath = QStringLiteral(SOURCEPATH) + QStringLiteral("/tests/xmls/");
-static const QString xsdPath = QStringLiteral(SOURCEPATH) + QStringLiteral("/tests/schemas/");
+static const QString xmlPath = QStringLiteral(SOURCEPATH) + QStringLiteral("/xmls/");
+static const QString xsdPath = QStringLiteral(SOURCEPATH) + QStringLiteral("/schemas/");
 
 void XMLConfigReaderTest::schemaFound()
 {
