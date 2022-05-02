@@ -24,8 +24,7 @@ target_include_directories(zeraproxy
     PUBLIC
     $<INSTALL_INTERFACE:include/zera-classes/proxy>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
 set_target_properties(zeraproxy PROPERTIES VERSION ${PROJECT_VERSION})
