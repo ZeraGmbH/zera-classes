@@ -47,32 +47,32 @@ Controller command examples for MT310s2
 
 * Get Serialnumber length: Exec cmd but do not read data to determine data length
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c1
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -d0 -c1
   ```
 
 * Read serialnumber: Read data by cmd with known data length
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c1 -l9
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -d0 -c1 -l9
   ```
 
 * Read serialnumber: Read data by cmd with unknown data length / convert result to ASCII
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c1 -lx -a1
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -d0 -c1 -lx -a1
   ```
 
 * Write serialnumber: Cmd with parameter / no data returned
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c6 -p'0x30 0x35 0x30 0x30 0x35 0x39 0x34 0x37 0x39'
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -d0 -c6 -p'0x30 0x35 0x30 0x30 0x35 0x39 0x34 0x37 0x39'
   ```
   or as ASCII
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c6 -A1 -p050059479
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -d0 -c6 -A1 -p050059479
   ```
 
 * Start bootloader: Cmd without parameter / no data returned
   __IMPORTANT NOTE__: When started by command, bootloader does not terminate  on timeout - it must be killed by command
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -d0 -c8
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -d0 -c8
   ```
 
 
@@ -87,26 +87,26 @@ otherwise it stops processing further commands. 'Exact' means:
 Working Examples:
 * Get Bootloader info len / data
   ```sh
-  BL_INFO_LEN=`zera-mcontroller-io -i /dev/i2c-0 -I21 -c0 | sed 's|^.*can return data bytes: ||g'`
-  BL_INFO=`zera-mcontroller-io -i /dev/i2c-0 -I21 -l$BL_INFO_LEN`
+  BL_INFO_LEN=`zera-mcontroller-io -i/dev/i2c-0 -I21 -c0 | sed 's|^.*can return data bytes: ||g'`
+  BL_INFO=`zera-mcontroller-io -i/dev/i2c-0 -I21 -l$BL_INFO_LEN`
   echo $BL_INFO
   ```
   or more simple with '-lx' and return bootloader version as ASCII
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -c0 -lx -a1
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -c0 -lx -a1
   ```
 
 * Write data to flash
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -f<hex-file-to-write>
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -f<hex-file-to-write>
   ```
 
 * Verify data in flash
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -F<hex-file-to-write>
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -F<hex-file-to-write>
   ```
 
 * Stop bootloader and start application
   ```sh
-  zera-mcontroller-io -i /dev/i2c-0 -I21 -c1
+  zera-mcontroller-io -i/dev/i2c-0 -I21 -c1
   ```
