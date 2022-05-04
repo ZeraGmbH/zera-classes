@@ -1,33 +1,16 @@
 #ifndef FFTMODULEMEASPROGRAM_H
 #define FFTMODULEMEASPROGRAM_H
 
-#include <QObject>
+#include "fftmodule.h"
+#include "fftmoduleconfigdata.h"
+#include <basedspmeasprogram.h>
+#include <measchannelinfo.h>
+#include <movingwindowfilter.h>
 #include <QList>
 #include <QHash>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
-
-#include "basedspmeasprogram.h"
-#include "measchannelinfo.h"
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-}
-
-class cDspMeasData;
-class QStateMachine;
-class QState;
-class QFinalState;
-
-class cVeinModuleComponent;
-class cVeinModuleParameter;
-class cVeinModuleMetaData;
-class cVeinModuleActvalue;
-class cMovingwindowFilter;
-
 
 namespace FFTMODULE
 {
@@ -59,32 +42,23 @@ enum fftmoduleCmds
 
 #define irqNr 7
 
-class cFftModuleConfigData;
-class cFftModule;
-
-
 class cFftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
     cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cFftModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
-
 protected:
     virtual void setDspVarList(); // dsp related stuff
     virtual void deleteDspVarList();
     virtual void setDspCmdList();
     virtual void deleteDspCmdList();
-
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cFftModuleConfigData* getConfData();
 
@@ -184,7 +158,6 @@ private slots:
 
     void newIntegrationtime(QVariant ti);
     void newRefChannel(QVariant chn);
-
 };
 
 }

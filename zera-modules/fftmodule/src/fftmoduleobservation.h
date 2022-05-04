@@ -1,24 +1,11 @@
 #ifndef FFTMODULEOBSERVATION_H
 #define FFTMODULEOBSERVATION_H
 
-#include <QStateMachine>
-#include <QState>
+#include <moduleactivist.h>
+#include <socket.h>
+#include <proxy.h>
+#include <service-interfaces/pcbinterface.h>
 #include <QFinalState>
-#include <QHash>
-
-#include "moduleactivist.h"
-#include "socket.h"
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
 
 namespace FFTMODULE
 {
@@ -33,25 +20,19 @@ class cFftModule;
 class cFftModuleObservation: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cFftModuleObservation(cFftModule* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
     virtual ~cFftModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
-
 signals:
     void moduleReconfigure(); // we emit a signal for module reconfiguration when we recognize significant changes
-
 protected:
     cFftModule* m_pFftmodule;
     Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pPCBServerSocket;
-
     Zera::Server::cPCBInterface* m_pPCBInterface;
-
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:   
     // statemachine for activating a rangemoduleobservation
     QState m_pcbConnectState; // we try to get a connection to our pcb server

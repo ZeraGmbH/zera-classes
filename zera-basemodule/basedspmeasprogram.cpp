@@ -5,7 +5,3 @@ cBaseDspMeasProgram::cBaseDspMeasProgram(Zera::Proxy::cProxy *proxy, std::shared
     : cBaseMeasProgram(proxy, pConfiguration)
 {
 }
-
-cBaseDspMeasProgram::~cBaseDspMeasProgram()
-{
-}

@@ -1,23 +1,8 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "power3module.h"
 #include "power3moduleconfiguration.h"
 #include "power3moduleconfigdata.h"
 #include "power3modulemeasprogram.h"
-#include "errormessages.h"
+#include <errormessages.h>
 
 namespace POWER3MODULE
 {

@@ -1,23 +1,14 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
+#include "transformer1module.h"
+#include "transformer1moduleconfiguration.h"
+#include "transformer1moduleconfigdata.h"
+#include "transformer1modulemeasprogram.h"
+#include "debug.h"
+#include "errormessages.h"
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>
 #include <veinmoduleerrorcomponent.h>
 #include <veinmodulemetadata.h>
-
-#include "debug.h"
-#include "transformer1module.h"
-#include "transformer1moduleconfiguration.h"
-#include "transformer1moduleconfigdata.h"
-#include "transformer1modulemeasprogram.h"
-#include "errormessages.h"
 
 namespace TRANSFORMER1MODULE
 {

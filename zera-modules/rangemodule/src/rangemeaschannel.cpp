@@ -1,13 +1,8 @@
-#include <QRegExp>
-#include <rminterface.h>
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <math.h>
-
-#include "debug.h"
-#include "errormessages.h"
 #include "rangemeaschannel.h"
+#include <errormessages.h>
+#include <reply.h>
+#include <QRegExp>
+#include <math.h>
 
 namespace RANGEMODULE
 {

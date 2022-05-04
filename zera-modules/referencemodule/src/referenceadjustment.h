@@ -1,34 +1,12 @@
 #ifndef REFERENCEADJUSTMENT_H
 #define REFERENCEADJUSTMENT_H
 
-#include <QObject>
-#include <QHash>
-#include <QTimer>
-#include <QStringList>
-#include <QList>
-#include <QVector>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-
-#include "moduleactivist.h"
-
-
-class cDspMeasData;
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cDSPInterface;
-    class cPCBInterface;
-}
-}
-
-class cReferenceModuleConfigData;
+#include "referencemoduleconfigdata.h"
+#include "referencemeaschannel.h"
+#include <moduleactivist.h>
+#include <proxy.h>
+#include <service-interfaces/dspinterface.h>
+#include <service-interfaces/pcbinterface.h>
 
 namespace REFERENCEMODULE
 {
@@ -44,27 +22,20 @@ enum adjustmentCmds
     setrange10V
 };
 
-
 class cReferenceModule;
-class cReferenceMeasChannel;
-class cReferenceModuleConfigData;
 
 class cReferenceAdjustment: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cReferenceAdjustment(cReferenceModule* module, Zera::Proxy::cProxy* proxy, cReferenceModuleConfigData* confData);
     virtual ~cReferenceAdjustment();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
-
 signals:
     void adjustContinue();
     void repeatStateMachine();
-
 private:
     cReferenceModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections

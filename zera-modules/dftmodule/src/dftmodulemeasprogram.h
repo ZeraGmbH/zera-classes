@@ -1,33 +1,14 @@
 #ifndef DFTMODULEMEASPROGRAM_H
 #define DFTMODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
+#include "dftmodule.h"
+#include "dftmoduleconfiguration.h"
+#include <basedspmeasprogram.h>
+#include <measchannelinfo.h>
+#include <movingwindowfilter.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
-
-#include "basedspmeasprogram.h"
-#include "measchannelinfo.h"
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-}
-
-class cDspMeasData;
-class QStateMachine;
-class QState;
-class QFinalState;
-
-class cVeinModuleComponent;
-class cVeinModuleParameter;
-class cVeinModuleMetaData;
-class cVeinModuleActvalue;
-class cMovingwindowFilter;
-
 
 namespace DFTMODULE
 {
@@ -59,13 +40,9 @@ enum dftmoduleCmds
 
 #define irqNr 3
 
-class cDftModuleConfigData;
-class cDftModule;
-
 class cDftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
     cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cDftModuleMeasProgram();
@@ -187,7 +164,6 @@ private slots:
 
     void newIntegrationtime(QVariant ti);
     void newRefChannel(QVariant refchn);
-
 };
 
 }

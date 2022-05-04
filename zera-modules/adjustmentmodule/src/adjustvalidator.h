@@ -12,8 +12,6 @@
 namespace ADJUSTMENTMODULE
 {
 
-class cAdjustmentModuleMeasProgram;
-
 class adjValidatorDatad
 {
 public:

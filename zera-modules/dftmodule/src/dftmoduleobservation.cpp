@@ -1,12 +1,8 @@
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
 #include "dftmoduleobservation.h"
 #include "dftmodule.h"
+#include <errormessages.h>
+#include <reply.h>
+#include <service-interfaces/pcbinterface.h>
 
 namespace DFTMODULE
 {

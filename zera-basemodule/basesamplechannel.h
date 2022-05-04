@@ -1,27 +1,10 @@
 #ifndef BASESAMPLECHANNEL_H
 #define BASESAMPLECHANNEL_H
 
-#include <QObject>
-#include <QByteArray>
-#include <QHash>
-#include <QVariant>
-
 #include "moduleactivist.h"
-
-class cSCPIConnection;
-class QString;
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
-
+#include <proxy.h>
+#include <service-interfaces/pcbinterface.h>
+#include <service-interfaces/rminterface.h>
 
 class cBaseSampleChannel: public cModuleActivist
 {
@@ -30,10 +13,8 @@ class cBaseSampleChannel: public cModuleActivist
 public:
     cBaseSampleChannel(Zera::Proxy::cProxy* proxy, QString name, quint8 chnnr);
     virtual ~cBaseSampleChannel(){}
-
     QString getName();
     QString getAlias();
-
 protected:
     Zera::Proxy::cProxy* m_pProxy;
     QString m_sName; // the channel's system name

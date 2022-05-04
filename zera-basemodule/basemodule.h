@@ -2,19 +2,16 @@
 #define BASEMODULE_H
 
 #include "moduleactivist.h"
+#include "basemoduleconfiguration.h"
+#include "veinmodulemetadata.h"
+#include <veinmoduleactvalue.h>
+#include <veinmoduleparameter.h>
 #include <virtualmodule.h>
 #include <xmlsettings.h>
 #include <proxy.h>
 #include <ve_eventsystem.h>
 #include <ve_storagesystem.h>
 #include <vf-cpp-rpc.h>
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-#include <QByteArray>
-#include <memory>
 
 enum LastState
 {
@@ -28,18 +25,6 @@ enum Status
     setup,      // we have setup our interface
     activated   // we have activated the module
 };
-
-
-class cVeinModuleMetaData;
-class cVeinModuleComponent;
-class cVeinModuleErrorComponent;
-class cVeinModuleActvalue;
-class cVeinModuleParameter;
-class cSCPIInfo;
-
-class cBaseMeasProgram;
-class cBaseModuleConfiguration;
-class cBaseMeasChannel;
 
 
 class cBaseModule : public ZeraModules::VirtualModule
@@ -154,7 +139,6 @@ protected slots:
     virtual void deactivationExec() = 0;
     virtual void deactivationDone() = 0;
     virtual void deactivationFinished() = 0;
-
 private:
     bool m_bConfCmd;
     bool m_bStartCmd;
@@ -164,8 +148,6 @@ private:
     QList<const QState*> m_StateList;
     int m_nLastState;
     int m_nStatus;
-
-
 private slots:
     void entryIdle();
     void entryIDLEIdle();
@@ -180,8 +162,6 @@ private slots:
     void entryRunUnset();
     void entryStopStart();
     void entryStopDone();
-
-
 };
 
 #endif // BASEMODULE_H

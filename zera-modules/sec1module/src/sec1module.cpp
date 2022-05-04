@@ -1,20 +1,10 @@
-#include <QJsonDocument>
-#include <QJsonObject>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "sec1module.h"
 #include "sec1moduleconfiguration.h"
 #include "sec1moduleconfigdata.h"
 #include "sec1modulemeasprogram.h"
-
+#include "debug.h"
+#include <QJsonDocument>
+#include <QJsonObject>
 
 namespace SEC1MODULE
 {

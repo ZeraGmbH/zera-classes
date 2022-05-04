@@ -1,17 +1,10 @@
-#include <QString>
-#include <QStateMachine>
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "samplemodule.h"
-#include "pllmeaschannel.h"
 #include "samplemodulemeasprogram.h"
 #include "samplemoduleconfiguration.h"
 #include "samplemoduleconfigdata.h"
+#include "samplemodule.h"
+#include "pllmeaschannel.h"
+#include <errormessages.h>
+#include <reply.h>
 
 namespace SAMPLEMODULE
 {

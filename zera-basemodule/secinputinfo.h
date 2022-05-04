@@ -1,17 +1,8 @@
 #ifndef SECINPUTINFO_H
 #define SECINPUTINFO_H
 
-
-#include <QObject>
-#include <QString>
-
 #include "socket.h"
-
-namespace Zera {
-namespace Server {
-    class cPCBInterface;
-}
-}
+#include <service-interfaces/pcbinterface.h>
 
 struct cSecInputInfo
 {

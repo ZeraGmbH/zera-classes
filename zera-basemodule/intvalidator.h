@@ -6,15 +6,11 @@
 class cIntValidator: public cParamValidator
 {
 public:
-    cIntValidator(){}
+    cIntValidator() { }
     cIntValidator(qint64 min, qint64 max, qint64 delta = 0);
     cIntValidator(const cIntValidator& ref);
-
-    virtual ~cIntValidator(){}
-
-    virtual bool isValidParam(QVariant& newValue);
-    virtual void exportMetaData(QJsonObject& jsObj);
-
+    virtual bool isValidParam(QVariant& newValue) override;
+    virtual void exportMetaData(QJsonObject& jsObj) override;
 private:
     qint64 m_nMin;
     qint64 m_nMax;

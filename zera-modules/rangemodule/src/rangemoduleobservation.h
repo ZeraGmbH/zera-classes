@@ -1,27 +1,11 @@
 #ifndef RANGEMODULEOBSERVATION_H
 #define RANGEMODULEOBSERVATION_H
 
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QHash>
-
 #include <moduleactivist.h>
 #include <socket.h>
-#include <reply.h>
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
-
+#include <proxy.h>
+#include <service-interfaces/pcbinterface.h>
+#include <QFinalState>
 
 namespace RANGEMODULE
 {
@@ -31,7 +15,6 @@ enum rangemoduleobservationCmds
     registernotifier,
     unregisternotifiers
 };
-
 
 class cRangeModule;
 

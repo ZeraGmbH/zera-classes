@@ -1,7 +1,6 @@
 #ifndef PLLOBSERMATIC_H
 #define PLLOBSERMATIC_H
 
-
 // cPllObsermatic is responsible for setting, observing, automatic setting
 // of pll channels. it works on a flexible list of system measurement channels.
 // it provides its interface :
@@ -9,62 +8,31 @@
 // ChannelXOVR   Output information of overload conditions
 // !!! important pll obsermatic must be activated after !!! activating pllchannels
 
-#include <QObject>
-#include <QList>
-#include <QVector>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QVariant>
-#include <QStringList>
-
-#include "moduleactivist.h"
 #include "samplemoduleconfigdata.h"
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-
-namespace  Server {
-    class cDSPInterface;
-}
-}
-
-
-class cDspMeasData;
-class cVeinModuleParameter;
-class cVeinModuleComponent;
+#include "pllmeaschannel.h"
+#include <moduleactivist.h>
+#include <proxy.h>
+#include <veinmoduleparameter.h>
 
 namespace SAMPLEMODULE
 {
-
 enum sampleObsermaticCmds
 {
     setpll
 };
 
-
 class cSampleModule;
-class cPllMeasChannel;
 
 class cPllObsermatic: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& confData);
     virtual ~cPllObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
-
-
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
-
 private:
     cSampleModule *m_pModule;
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections

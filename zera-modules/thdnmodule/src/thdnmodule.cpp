@@ -1,24 +1,20 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "thdnmodule.h"
+#include "debug.h"
 #include "thdnmoduleconfiguration.h"
 #include "thdnmoduleconfigdata.h"
 #include "thdnmodulemeasprogram.h"
 #include "thdnmoduleobservation.h"
 #include "errormessages.h"
+#include <proxy.h>
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleerrorcomponent.h>
+#include <veinmodulemetadata.h>
+#include <QByteArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
 
 namespace THDNMODULE
 {

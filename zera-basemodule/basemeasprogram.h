@@ -1,42 +1,21 @@
 #ifndef BASEMEASPROGRAM_H
 #define BASEMEASPROGRAM_H
 
-#include <QObject>
-#include <QStringList>
-#include <QVector>
-#include <QHash>
-#include <memory>
-#include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
-
-class cBaseModule;
-class cSocket;
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-
-namespace  Server {
-    class cRMInterface;
-    class cDSPInterface;
-    class cPCBInterface;
-}
-}
-
+#include "basemodule.h"
+#include "socket.h"
+#include "moduleactivist.h"
+#include <proxy.h>
+#include <service-interfaces/pcbinterface.h>
+#include <service-interfaces/rminterface.h>
 
 class cBaseMeasProgram: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cBaseMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual ~cBaseMeasProgram();
-
 signals:
     void actualValues(QVector<float>*);
-
 public slots:
     virtual void start() = 0; // difference between start and stop is that actual values
     virtual void stop() = 0; // in interface are not updated when stop

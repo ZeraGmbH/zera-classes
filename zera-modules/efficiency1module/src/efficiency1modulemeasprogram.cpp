@@ -1,25 +1,10 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QStringList>
-
-#include <ve_storagesystem.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponentinput.h>
-#include <veinmoduleactvalue.h>
-#include <veinmodulemetadata.h>
-#include <scpiinfo.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "measmodeinfo.h"
-#include "efficiency1module.h"
 #include "efficiency1modulemeasprogram.h"
+#include "efficiency1module.h"
 #include "efficiency1measdelegate.h"
 #include "efficiency1moduleconfiguration.h"
-
+#include <errormessages.h>
+#include <measmodeinfo.h>
+#include <reply.h>
 
 namespace EFFICIENCY1MODULE
 {

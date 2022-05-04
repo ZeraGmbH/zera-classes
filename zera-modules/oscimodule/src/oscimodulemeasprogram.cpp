@@ -1,29 +1,10 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <scpiinfo.h>
-#include <veinmodulemetadata.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
-#include <modulevalidator.h>
-#include <stringvalidator.h>
-#include <intvalidator.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
+#include "oscimodulemeasprogram.h"
 #include "oscimodule.h"
 #include "oscimoduleconfiguration.h"
-#include "oscimoduleconfigdata.h"
-#include "oscimodulemeasprogram.h"
+#include <stringvalidator.h>
+#include <intvalidator.h>
+#include <errormessages.h>
+#include <reply.h>
 
 namespace OSCIMODULE
 {

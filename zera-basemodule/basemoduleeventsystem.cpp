@@ -1,7 +1,5 @@
-#include <ve_commandevent.h>
-#include <vcmp_componentdata.h>
 #include "basemoduleeventsystem.h"
-#include "veinmodulecomponentinput.h"
+#include "veinmodulecomponent.h"
 
 bool cBaseModuleEventSystem::processEvent(QEvent *t_event)
 {

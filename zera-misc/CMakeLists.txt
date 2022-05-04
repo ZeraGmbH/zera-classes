@@ -1,47 +1,42 @@
 if(ZC_BUILD_MODULES)
-    find_package(Qt5 COMPONENTS Network CONFIG REQUIRED)
-
-    # sourcefiles required to build modules
     set(SOURCES_FOR_MODULE
-        secinterface_p.cpp
-        secinterface.cpp
-        rminterface_p.cpp
-        dspinterface_p.cpp
         ethadress.cpp
-        pcbinterface.cpp
         ethadress_p.cpp
-        rminterface.cpp
-        interface_p.cpp
-        pcbinterface_p.cpp
-        dspmeasdata.cpp
-        dspinterface.cpp
+        service-interfaces/dspinterface_p.cpp
+        service-interfaces/dspinterface.cpp
+        service-interfaces/dspmeasdata.cpp
+        service-interfaces/interface_p.cpp
+        service-interfaces/pcbinterface.cpp
+        service-interfaces/pcbinterface_p.cpp
+        service-interfaces/rminterface.cpp
+        service-interfaces/rminterface_p.cpp
+        service-interfaces/secinterface.cpp
+        service-interfaces/secinterface_p.cpp
     )
-    # header required to build modules
     set(HEADER_FOR_MODULE
-        dspvar.h
-        secinterface.h
-        rminterface.h
-        interface_p.h
-        dspmeasdata.h
-        dspinterface.h
-        dspinterface_p.h
-        rminterface_p.h
-        secinterface_p.h
+        service-interfaces/dspvar.h
+        service-interfaces/secinterface.h
+        service-interfaces/rminterface.h
+        service-interfaces/interface_p.h
+        service-interfaces/dspmeasdata.h
+        service-interfaces/dspinterface.h
+        service-interfaces/dspinterface_p.h
+        service-interfaces/rminterface_p.h
+        service-interfaces/secinterface_p.h
         ethadress_p.h
         ethadress.h
-        pcbinterface.h
-        pcbinterface_p.h
+        service-interfaces/pcbinterface.h
+        service-interfaces/pcbinterface_p.h
     )
 endif(ZC_BUILD_MODULES)
 
-# common + optional sources
+# common
 set(SOURCES
     intelhexfileio.cpp
     intelhexfileio_p.cpp
     ${SOURCES_FOR_MODULE}
 )
 
-# common + optional sources
 set(HEADER
     intelhexfileio.h
     intelhexfileio_p.h
@@ -92,7 +87,6 @@ install(TARGETS zeramisc
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
 )
 
-# configure *ConfigVersion.cmake
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeramiscConfigVersion.cmake
@@ -100,23 +94,19 @@ write_basic_package_version_file(
     COMPATIBILITY SameMinorVersion
     )
 
-# configure *Config.cmake
 configure_file(zeramiscConfig.cmake.in zeramiscConfig.cmake @ONLY)
 
-# install *Config(Version).cmake
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeramiscConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/zeramiscConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeramisc
     )
 
-# install targets cmake-files
 install(EXPORT zeramiscExport
     FILE zeramiscTargets.cmake
     NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeramisc
     )
 
-# install public headers
 install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc

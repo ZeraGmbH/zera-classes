@@ -1,23 +1,12 @@
-#include <QString>
-#include <QVector>
-#include <math.h>
-
-#include <dspinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
+#include "pllobsermatic.h"
+#include "pllmeaschannel.h"
+#include "samplemodule.h"
+#include "samplechannel.h"
+#include <errormessages.h>
 #include <scpiinfo.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleparameter.h>
-#include <modulevalidator.h>
 #include <stringvalidator.h>
 #include <boolvalidator.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "samplemodule.h"
-#include "pllmeaschannel.h"
-#include "pllobsermatic.h"
-#include "samplechannel.h"
+#include <math.h>
 
 namespace SAMPLEMODULE
 {

@@ -1,30 +1,15 @@
-#include <QtGlobal>
-#include <QString>
-#include <QStateMachine>
-#include <rminterface.h>
-#include <pcbinterface.h>
-#include <secinterface.h>
-#include <basemodule.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <scpiinfo.h>
-#include <modulevalidator.h>
+#include "sem1modulemeasprogram.h"
+#include "sem1module.h"
+#include "sem1moduleconfigdata.h"
+#include "sem1moduleconfiguration.h"
+#include "debug.h"
+#include <errormessages.h>
+#include <unithelper.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <stringvalidator.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
+#include <reply.h>
 #include <math.h>
-
-#include "debug.h"
-#include "reply.h"
-#include "errormessages.h"
-#include "sem1module.h"
-#include "sem1modulemeasprogram.h"
-#include "sem1moduleconfigdata.h"
-#include "sem1moduleconfiguration.h"
-#include "unithelper.h"
-
 
 namespace SEM1MODULE
 {

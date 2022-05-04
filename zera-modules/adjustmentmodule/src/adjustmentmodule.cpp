@@ -1,23 +1,9 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "adjustmentmodule.h"
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmoduleconfigdata.h"
 #include "adjustmentmodulemeasprogram.h"
-#include "errormessages.h"
+#include "debug.h"
+#include <errormessages.h>
 
 namespace ADJUSTMENTMODULE
 {

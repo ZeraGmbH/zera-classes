@@ -1,20 +1,11 @@
 #ifndef ELECTRONICBURDENMODULE_H
 #define ELECTRONICBURDENMODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-
-#include "basemeasmodule.h"
 #include "electronicburdenmoduleconfiguration.h"
-
+#include <basemeasmodule.h>
 
 namespace ELECTRONICBURDENMODULE
 {
-
-
 #define BaseModuleName "ElBurdenModule"
 #define BaseSCPIModuleName "EBU"
 
@@ -23,20 +14,17 @@ class ElectronicBurdenModuleProgram;
 
 class ElectronicBurdenModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     ElectronicBurdenModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
 
 protected:
-    ElectronicBurdenModuleProgram *m_pProgram; // our program, lets say the working horse
-
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
-
+    ElectronicBurdenModuleProgram *m_pProgram; // our program, lets say the working horse
 private slots:
     // entered immediately - no interim states for now
     void activationFinished();

@@ -1,32 +1,11 @@
 #ifndef RMSMODULEMEASPROGRAM_H
 #define RMSMODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
+#include "rmsmoduleconfigdata.h"
+#include <basedspmeasprogram.h>
+#include <measchannelinfo.h>
+#include <movingwindowsqare.h>
 #include <QFinalState>
-
-#include "basedspmeasprogram.h"
-#include "measchannelinfo.h"
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-}
-
-class cDspMeasData;
-class QStateMachine;
-class QState;
-class QFinalState;
-
-class cVeinModuleComponent;
-class cVeinModuleParameter;
-class cVeinModuleMetaData;
-class cVeinModuleActvalue;
-class cMovingwindowSqare;
 
 namespace RMSMODULE
 {
@@ -59,13 +38,11 @@ enum rmsmoduleCmds
 
 #define irqNr 2
 
-class cRmsModuleConfigData;
 class cRmsModule;
 
 class cRmsModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
     cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cRmsModuleMeasProgram();

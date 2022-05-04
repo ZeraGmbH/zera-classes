@@ -1,23 +1,18 @@
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include <QDebug>
-#include <QByteArray>
-
-#include "debug.h"
 #include "rangemodule.h"
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
 #include "rangemeaschannel.h"
 #include "rangemodulemeasprogram.h"
 #include "rangemoduleobservation.h"
-#include "adjustment.h"
 #include "rangeobsermatic.h"
+#include "debug.h"
+#include "adjustment.h"
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleerrorcomponent.h>
+#include <veinmodulemetadata.h>
+#include <QDebug>
+#include <QByteArray>
 
 namespace RANGEMODULE
 {

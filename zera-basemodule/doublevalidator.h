@@ -6,15 +6,11 @@
 class cDoubleValidator: public cParamValidator
 {
 public:
-    cDoubleValidator(){}
+    cDoubleValidator() { }
     cDoubleValidator(double min, double max, double delta);
     cDoubleValidator(const cDoubleValidator& ref);
-
-    virtual ~cDoubleValidator(){}
-
-    virtual bool isValidParam(QVariant& newValue);
-    virtual void exportMetaData(QJsonObject& jsObj);
-
+    virtual bool isValidParam(QVariant& newValue) override;
+    virtual void exportMetaData(QJsonObject& jsObj) override;
 private:
     double m_fMin;
     double m_fMax;

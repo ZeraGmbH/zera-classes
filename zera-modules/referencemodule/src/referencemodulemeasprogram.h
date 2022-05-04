@@ -1,29 +1,8 @@
 #ifndef REFERENCEMODULEMEASPROGRAM_H
 #define REFERENCEMODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-
-#include "basedspmeasprogram.h"
-
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
-
-
-class cDspMeasData;
-class QStateMachine;
-class QState;
-class QFinalState;
-
+#include "referencemoduleconfigdata.h"
+#include <basedspmeasprogram.h>
 
 namespace REFERENCEMODULE
 {
@@ -45,31 +24,24 @@ enum referencemoduleCmds
 #define irqNr 9
 
 class cReferenceModule;
-class cReferenceModuleConfigData;
-
 
 class cReferenceModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
     cReferenceModuleMeasProgram(cReferenceModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cReferenceModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
-
 protected:
     virtual void setDspVarList(); // dsp related stuff
     virtual void deleteDspVarList();
     virtual void setDspCmdList();
     virtual void deleteDspCmdList();
-
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cReferenceModuleConfigData* getConfData();
 

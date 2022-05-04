@@ -1,31 +1,13 @@
 #ifndef RMSMODULE_H
 #define RMSMODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
+#include "rmsmoduleobservation.h"
+#include "rmsmodulemeasprogram.h"
+#include <basemeasmodule.h>
 #include <QFinalState>
-#include <QList>
-
-#include "basemeasmodule.h"
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
 
 namespace RMSMODULE
 {
-
-class cRmsModuleConfiguration;
-class cRmsModuleMeasProgram;
-class cRmsModuleObservation;
-
 #define BaseModuleName "RMSModule"
 #define BaseSCPIModuleName "RMS"
 

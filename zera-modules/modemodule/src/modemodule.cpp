@@ -1,16 +1,12 @@
-#include <rminterface.h>
-#include <dspinterface.h>
+#include "modemodule.h"
+#include "modemoduleconfiguration.h"
+#include "modemoduleconfigdata.h"
+#include "modemoduleinit.h"
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>
 #include <veinmoduleerrorcomponent.h>
 #include <veinmodulemetadata.h>
-
-#include "modemodule.h"
-#include "modemoduleconfiguration.h"
-#include "modemoduleconfigdata.h"
-#include "modemoduleinit.h"
-
 
 namespace MODEMODULE
 {

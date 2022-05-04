@@ -1,24 +1,11 @@
 #ifndef OSCIMODULEOBSERVATION_H
 #define OSCIMODULEOBSERVATION_H
 
-#include <QStateMachine>
-#include <QState>
+#include <moduleactivist.h>
+#include <socket.h>
+#include <proxy.h>
+#include <service-interfaces/pcbinterface.h>
 #include <QFinalState>
-#include <QHash>
-
-#include "moduleactivist.h"
-#include "socket.h"
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
 
 namespace OSCIMODULE
 {

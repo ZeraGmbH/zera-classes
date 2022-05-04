@@ -1,55 +1,32 @@
 #ifndef REFERENCEMODULE_H
 #define REFERENCEMODULE_H
 
-#include <QObject>
+#include "referencemeaschannel.h"
+#include "referencemoduleobservation.h"
+#include "referencemodulemeasprogram.h"
+#include "referenceadjustment.h"
+#include <basemeasmodule.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 
-#include "basemeasmodule.h"
-
-
-
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
-
 namespace REFERENCEMODULE
 {
-
-class cReferenceMeasChannel;
-class cReferencecModuleConfiguration;
-class cReferenceModuleMeasProgram;
-class cReferenceAdjustment;
-class cReferenceModuleObservation;
-
-
 #define BaseModuleName "REFERENCEModule"
 #define BaseSCPIModuleName "REF"
 
-
 class cReferenceModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cReferenceModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
-
 protected:
     cReferenceModuleObservation *m_pReferenceModuleObservation;
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-    cReferenceAdjustment * m_pReferenceAdjustment; // our justifying and normation program
+    cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
@@ -85,7 +62,6 @@ private slots:
     void deactivationFinished();
 
     void referenceModuleReconfigure();
-
 };
 
 }

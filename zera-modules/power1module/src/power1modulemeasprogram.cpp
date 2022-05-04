@@ -1,34 +1,12 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <pcbinterface.h>
-#include <movingwindowfilter.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <scpiinfo.h>
-#include <veinmodulemetadata.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
-#include <veinmodulecomponentinput.h>
-#include <modulevalidator.h>
-#include <stringvalidator.h>
-#include <doublevalidator.h>
-#include <intvalidator.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "measmodeinfo.h"
+#include "power1modulemeasprogram.h"
 #include "power1module.h"
 #include "power1moduleconfigdata.h"
 #include "power1moduleconfiguration.h"
-#include "power1modulemeasprogram.h"
-
+#include <errormessages.h>
+#include <reply.h>
+#include <stringvalidator.h>
+#include <doublevalidator.h>
+#include <intvalidator.h>
 
 namespace POWER1MODULE
 {

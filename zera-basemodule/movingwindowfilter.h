@@ -1,14 +1,12 @@
 #ifndef MOVINGWINDOWFILTER_H
 #define MOVINGWINDOWFILTER_H
 
-#include <QObject>
 #include <QList>
 #include <QVector>
 #include <QTimer>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
-
 
 class cMovingwindowFilter: public QObject
 {

@@ -1,11 +1,10 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <pcbinterface.h>
+#include "thdnmodulemeasprogram.h"
+#include "thdnmodule.h"
+#include "thdnmoduleconfiguration.h"
+#include "thdnmoduleconfigdata.h"
+#include "debug.h"
+#include "errormessages.h"
+#include "reply.h"
 #include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>
@@ -17,15 +16,14 @@
 #include <modulevalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
+#include <service-interfaces/rminterface.h>
+#include <service-interfaces/dspinterface.h>
+#include <service-interfaces/pcbinterface.h>
 #include <math.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "thdnmodule.h"
-#include "thdnmoduleconfiguration.h"
-#include "thdnmoduleconfigdata.h"
-#include "thdnmodulemeasprogram.h"
+#include <QString>
+#include <QStateMachine>
+#include <QJsonObject>
+#include <QJsonArray>
 
 namespace THDNMODULE
 {

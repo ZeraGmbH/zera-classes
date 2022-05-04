@@ -1,31 +1,10 @@
 #ifndef OSCIMODULEMEASPROGRAM_H
 #define OSCIMODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
+#include "oscimoduleconfigdata.h"
+#include <basedspmeasprogram.h>
+#include <measchannelinfo.h>
 #include <QFinalState>
-
-#include "basedspmeasprogram.h"
-#include "measchannelinfo.h"
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-}
-
-class cDspMeasData;
-class QStateMachine;
-class QState;
-class QFinalState;
-
-class cVeinModuleComponent;
-class cVeinModuleParameter;
-class cVeinModuleMetaData;
-class cVeinModuleActvalue;
 
 namespace OSCIMODULE
 {
@@ -57,8 +36,6 @@ enum oscimoduleCmds
 
 #define irqNr 6
 
-class cBaseModule;
-class cOsciModuleConfigData;
 class cOsciModule;
 
 class cOsciModuleMeasProgram: public cBaseDspMeasProgram

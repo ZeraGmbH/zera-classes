@@ -1,20 +1,13 @@
-#include <QJsonDocument>
-#include <QJsonObject>
-
-#include <rminterface.h>
-#include <dspinterface.h>
+#include "sem1module.h"
+#include "sem1moduleconfiguration.h"
+#include "sem1moduleconfigdata.h"
+#include "sem1modulemeasprogram.h"
+#include "debug.h"
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>
 #include <veinmoduleerrorcomponent.h>
 #include <veinmodulemetadata.h>
-
-#include "debug.h"
-#include "sem1module.h"
-#include "sem1moduleconfiguration.h"
-#include "sem1moduleconfigdata.h"
-#include "sem1modulemeasprogram.h"
-
 
 namespace SEM1MODULE
 {

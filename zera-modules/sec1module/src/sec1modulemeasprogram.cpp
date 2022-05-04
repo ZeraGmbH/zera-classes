@@ -1,12 +1,10 @@
-#include <QtGlobal>
-#include <QString>
-#include <QStateMachine>
-#include <QJsonDocument>
-#include <QDateTime>
-#include <rminterface.h>
-#include <pcbinterface.h>
-#include <secinterface.h>
-#include <basemodule.h>
+#include "sec1modulemeasprogram.h"
+#include "sec1module.h"
+#include "sec1moduleconfigdata.h"
+#include "sec1moduleconfiguration.h"
+#include "unithelper.h"
+#include "debug.h"
+#include "errormessages.h"
 #include <proxy.h>
 #include <proxyclient.h>
 #include <scpiinfo.h>
@@ -15,18 +13,9 @@
 #include <regexvalidator.h>
 #include <intvalidator.h>
 #include <stringvalidator.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
+#include <reply.h>
+#include <QJsonDocument>
 #include <math.h>
-
-#include "debug.h"
-#include "reply.h"
-#include "errormessages.h"
-#include "sec1module.h"
-#include "sec1modulemeasprogram.h"
-#include "sec1moduleconfigdata.h"
-#include "sec1moduleconfiguration.h"
-#include "unithelper.h"
 
 namespace SEC1MODULE
 {

@@ -1,12 +1,7 @@
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
 #include "power1moduleobservation.h"
 #include "power1module.h"
+#include <errormessages.h>
+#include <reply.h>
 
 namespace POWER1MODULE
 {

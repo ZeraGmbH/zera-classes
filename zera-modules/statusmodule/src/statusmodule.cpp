@@ -1,16 +1,8 @@
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
 #include "statusmodule.h"
 #include "statusmoduleconfiguration.h"
 #include "statusmoduleconfigdata.h"
 #include "statusmoduleinit.h"
-
+#include <modulevalidator.h>
 
 namespace STATUSMODULE
 {

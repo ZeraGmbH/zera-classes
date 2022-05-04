@@ -1,37 +1,15 @@
 #ifndef SAMPLEMODULE_H
 #define SAMPLEMODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-
-#include "basemeasmodule.h"
-
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
+#include "samplemoduleobservation.h"
+#include "samplemodulemeasprogram.h"
+#include "samplechannel.h"
+#include "pllmeaschannel.h"
+#include "pllobsermatic.h"
+#include <basemeasmodule.h>
 
 namespace SAMPLEMODULE
 {
-
-class cSampleChannel;
-class cPllMeasChannel;
-class cSampleModuleConfiguration;
-class cSampleModuleMeasProgram;
-class cPllObsermatic;
-class cSampleModuleObservation;
-
-
 #define BaseModuleName "SampleModule"
 #define BaseSCPIModuleName "SAM"
 
@@ -83,7 +61,6 @@ private slots:
     void deactivationFinished();
 
     void sampleModuleReconfigure();
-
 };
 
 }

@@ -1,17 +1,12 @@
-#include <QString>
-#include <QStateMachine>
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-
-#include "debug.h"
-#include "errormessages.h"
+#include "referencemodulemeasprogram.h"
 #include "referencemodule.h"
 #include "referencemeaschannel.h"
-#include "referencemodulemeasprogram.h"
 #include "referencemoduleconfiguration.h"
-#include "referencemoduleconfigdata.h"
+#include "debug.h"
+#include <errormessages.h>
+#include <proxy.h>
+#include <proxyclient.h>
+#include <reply.h>
 
 namespace REFERENCEMODULE
 {

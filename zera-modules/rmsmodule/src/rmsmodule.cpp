@@ -1,24 +1,7 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "rmsmodule.h"
 #include "rmsmoduleconfiguration.h"
 #include "rmsmoduleconfigdata.h"
-#include "rmsmodulemeasprogram.h"
-#include "rmsmoduleobservation.h"
-#include "errormessages.h"
+#include <errormessages.h>
 
 namespace RMSMODULE
 {

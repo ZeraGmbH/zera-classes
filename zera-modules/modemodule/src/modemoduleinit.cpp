@@ -1,16 +1,14 @@
-#include <rminterface.h>
-#include <pcbinterface.h>
+#include "modemodule.h"
+#include "debug.h"
+#include "modemoduleinit.h"
+#include "modemoduleconfigdata.h"
 #include <proxy.h>
 #include <proxyclient.h>
 #include <reply.h>
 #include <errormessages.h>
-#include <dspinterface.h>
-
-#include "debug.h"
-#include "modemodule.h"
-#include "modemoduleinit.h"
-#include "modemoduleconfigdata.h"
-
+#include <service-interfaces/rminterface.h>
+#include <service-interfaces/pcbinterface.h>
+#include <service-interfaces/dspinterface.h>
 
 namespace MODEMODULE
 {

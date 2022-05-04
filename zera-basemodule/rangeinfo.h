@@ -1,7 +1,7 @@
 #ifndef RANGEINFO_H
 #define RANGEINFO_H
 
-#include <QObject>
+#include <QString>
 
 enum MMode
 {
@@ -11,20 +11,17 @@ enum MMode
     modeADJ = 8
 };
 
-
 enum SensorType
 {
     Direct = 0x100,
     Clamp = 0x200
 };
 
-
 class cRangeInfo
 {
 public:
     cRangeInfo(){}
     cRangeInfo(const cRangeInfo &obj);
-
     cRangeInfo operator=(const cRangeInfo& obj);
 
     QString name;

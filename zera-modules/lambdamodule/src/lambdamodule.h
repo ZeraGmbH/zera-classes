@@ -1,34 +1,11 @@
 #ifndef LAMBDAMODULE_H
 #define LAMBDAMODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-
-#include "basemeasmodule.h"
-
-class cModuleError;
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
+#include "lambdamodulemeasprogram.h"
+#include <basemeasmodule.h>
 
 namespace LAMBDAMODULE
 {
-
-class cLambdaModuleConfiguration;
-class cLambdaModuleMeasProgram;
-class cLambdaModuleObservation;
-
 #define BaseModuleName "LambdaModule"
 #define BaseSCPIModuleName "LAM"
 
@@ -41,7 +18,6 @@ public:
     virtual QByteArray getConfiguration() const;
 
 protected:
-    cLambdaModuleObservation *m_pPower3ModuleObservation;
     cLambdaModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
@@ -75,7 +51,6 @@ private slots:
     void deactivationFinished();
 
     void lambdaModuleReconfigure();
-
 };
 
 }

@@ -1,16 +1,10 @@
 #ifndef MEASCHANNELINFO_H
 #define MEASCHANNELINFO_H
 
+#include "socket.h"
+#include <service-interfaces/pcbinterface.h>
 #include <QObject>
 #include <QString>
-
-#include "socket.h"
-
-namespace Zera {
-namespace Server {
-    class cPCBInterface;
-}
-}
 
 struct cMeasChannelInfo
 {

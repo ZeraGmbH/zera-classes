@@ -1,47 +1,24 @@
 #ifndef POWER3MODULE_H
 #define POWER3MODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
+#include "power3modulemeasprogram.h"
+#include <basemeasmodule.h>
 #include <QList>
-
-#include "basemeasmodule.h"
 
 class cModuleError;
 
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
-
 namespace POWER3MODULE
 {
-
-class cPower3ModuleConfiguration;
-class cPower3ModuleMeasProgram;
-class cPower3ModuleObservation;
-
 #define BaseModuleName "Power3Module"
 #define BaseSCPIModuleName "PW3"
 
 class cPower3Module : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cPower3Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
-
 protected:
-    cPower3ModuleObservation *m_pPower3ModuleObservation;
     cPower3ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
@@ -62,7 +39,6 @@ protected:
 
 private:
     qint32 m_nActivationIt;
-
 private slots:
     void activationStart();
     void activationExec();
@@ -75,7 +51,6 @@ private slots:
     void deactivationFinished();
 
     void power3ModuleReconfigure();
-
 };
 
 }

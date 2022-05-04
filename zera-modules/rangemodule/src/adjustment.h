@@ -1,34 +1,13 @@
 #ifndef ADJUSTMENT_H
 #define ADJUSTMENT_H
 
-#include <QObject>
-#include <QHash>
-#include <QTimer>
-#include <QStringList>
-#include <QList>
-#include <QVector>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-
+#include "rangemodule.h"
 #include <moduleactivist.h>
-
-
-class cDspMeasData;
-class cVeinModuleComponent;
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cDSPInterface;
-    class cPCBInterface;
-}
-}
-
-class cSocket;
+#include <socket.h>
+#include <service-interfaces/dspinterface.h>
+#include <service-interfaces/pcbinterface.h>
+#include <QFinalState>
+#include <QTimer>
 
 namespace RANGEMODULE
 {
@@ -51,25 +30,18 @@ enum adjustmentCmds
 };
 
 
-class cRangeModule;
-class cRangeMeasChannel;
-
 class cAdjustManagement: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval);
     virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void ActionHandler(QVector<float> *actualValues); // entry after received actual values
-
 signals:
     void repeatStateMachine();
     void finishStateMachine();
-
 private:
     cRangeModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections

@@ -1,18 +1,11 @@
 #ifndef PLLMEASCHANNEL_H
 #define PLLMEASCHANNEL_H
 
-#include <QObject>
-#include <QHash>
-#include <QStringList>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QVariant>
-#include <pcbinterface.h>
-
-#include "reply.h"
-#include "basemeaschannel.h"
 #include "rangeinfo.h"
+#include <basemeaschannel.h>
+#include <service-interfaces/rminterface.h>
+#include <service-interfaces/pcbinterface.h>
+#include <QFinalState>
 
 namespace SAMPLEMODULE
 {
@@ -50,22 +43,16 @@ const double sqrt2 = 1.41421356;
 class cPllMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
-
 public:
     cPllMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     ~cPllMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
-
     quint32 setyourself4PLL(QString samplesysname); // a statemachine gets started that returns cmdDone(quint32 cmdnr)
     double getUrValue(); // returns upper range of actual range
-
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
-
-
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     QStringList m_RangeNameList; // a list of all ranges
     QHash<QString, cRangeInfo> m_RangeInfoHash; // a list of available and selectable ranges, alias will be the key

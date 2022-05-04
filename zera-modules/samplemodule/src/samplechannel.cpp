@@ -1,19 +1,14 @@
-#include <QRegExp>
-#include <rminterface.h>
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
+#include "samplechannel.h"
+#include "samplemodule.h"
+#include "samplemoduleconfigdata.h"
+#include "debug.h"
+#include <errormessages.h>
 #include <scpiinfo.h>
 #include <modulevalidator.h>
 #include <stringvalidator.h>
 #include <scpiinfo.h>
 #include <veinmoduleparameter.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "samplechannel.h"
-#include "samplemodule.h"
-#include "samplemoduleconfigdata.h"
+#include <reply.h>
 
 namespace SAMPLEMODULE
 {

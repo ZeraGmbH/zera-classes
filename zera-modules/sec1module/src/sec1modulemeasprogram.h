@@ -1,40 +1,14 @@
 #ifndef SEC1MODULEMEASPROGRAM_H
 #define SEC1MODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
-#include <QTimer>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QDateTime>
-
-#include "basemeasprogram.h"
+#include "sec1module.h"
+#include "sec1moduleconfigdata.h"
 #include "secinputinfo.h"
-#include "secinterface.h"
 #include "ecalcinfo.h"
 #include "clientactivecomponent.h"
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
-
-
-class cVeinModuleParameter;
-class cVeinModuleActvalue;
-class cStringValidator;
-
-class cDspMeasData;
-class cDspIFace;
-class QStateMachine;
-class QState;
-class QFinalState;
-
+#include <stringvalidator.h>
+#include <basemeasprogram.h>
+#include <QDateTime>
 
 namespace SEC1MODULE
 {
@@ -80,26 +54,18 @@ enum sec1moduleCmds
 
 #define irqPCBNotifier 16
 
-class cSec1Module;
-class cSec1ModuleConfigData;
-
 class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
-
 public:
     cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSec1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
-
-
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cSec1ModuleConfigData* getConfData();
 

@@ -1,33 +1,17 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <pcbinterface.h>
+#include "dftmodulemeasprogram.h"
+#include "dftmodule.h"
+#include "dftmoduleconfiguration.h"
+#include "dftmoduleconfigdata.h"
+#include "debug.h"
+#include <errormessages.h>
 #include <movingwindowfilter.h>
-#include <proxy.h>
-#include <proxyclient.h>
+#include <reply.h>
 #include <scpiinfo.h>
-#include <veinmodulemetadata.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
-#include <modulevalidator.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <math.h>
 #include <complex.h>
 #include <useratan.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "dftmodule.h"
-#include "dftmoduleconfiguration.h"
-#include "dftmoduleconfigdata.h"
-#include "dftmodulemeasprogram.h"
 
 namespace DFTMODULE
 {

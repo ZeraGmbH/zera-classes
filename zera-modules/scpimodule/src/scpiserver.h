@@ -1,39 +1,30 @@
 #ifndef SCPISERVER_H
 #define SCPISERVER_H
 
+#include "moduleinterface.h"
+#include "scpimoduleconfigdata.h"
+#include "scpiclient.h"
+#include "interfaceinterface.h"
+#include "statusinterface.h"
+#include "ieee4882interface.h"
+#include "scpiserialclient.h"
+#include <veinmoduleparameter.h>
+#include <veinmoduleactvalue.h>
 #include <QTimer>
-#include <QTcpServer>
-#include <QAbstractSocket>
-#include <QHash>
-#include <QState>
 #include <QFinalState>
 #include <QFile>
-
-#include "moduleactivist.h"
-#include "basemoduleeventsystem.h"
-
-
-class QSerialPort;
-class cVeinModuleParameter;
-class cVeinModuleActvalue;
+#include <QTcpServer>
+#include <QSerialPort>
+#include <moduleactivist.h>
+#include <basemoduleeventsystem.h>
 
 namespace SCPIMODULE
 {
-
 class cSCPIModule;
-class cSCPIModuleConfigData;
-class cSCPIInterface;
-class cModuleInterface;
-class cInterfaceInterface;
-class cStatusInterface;
-class cIEEE4882Interface;
-class cSCPIClient;
-class cSCPISerialClient;
 
 class cSCPIServer: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cSCPIServer(cSCPIModule* module, cSCPIModuleConfigData& configData);
     virtual ~cSCPIServer();
@@ -47,9 +38,7 @@ private:
 
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
-
     cBaseModuleEventSystem *m_pEventSystem;
-
     QTcpServer* m_pTcpServer;
     cSCPIInterface* m_pSCPIInterface;
     QList<cSCPIClient*> m_SCPIClientList;

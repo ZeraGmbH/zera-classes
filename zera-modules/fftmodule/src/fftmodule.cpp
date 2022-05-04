@@ -1,24 +1,19 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
+#include "fftmodule.h"
+#include "debug.h"
+#include "fftmoduleconfiguration.h"
+#include "fftmoduleconfigdata.h"
+#include "fftmodulemeasprogram.h"
+#include "fftmoduleobservation.h"
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>
 #include <veinmoduleerrorcomponent.h>
 #include <veinmodulemetadata.h>
-
-#include "debug.h"
-#include "fftmodule.h"
-#include "fftmoduleconfiguration.h"
-#include "fftmoduleconfigdata.h"
-#include "fftmodulemeasprogram.h"
-#include "fftmoduleobservation.h"
-
+#include <QByteArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QJsonValue>
 
 namespace FFTMODULE
 {
