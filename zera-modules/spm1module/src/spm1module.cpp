@@ -1,20 +1,13 @@
-#include <QJsonDocument>
-#include <QJsonObject>
-
-#include <rminterface.h>
-#include <dspinterface.h>
+#include "spm1module.h"
+#include "spm1moduleconfiguration.h"
+#include "spm1moduleconfigdata.h"
+#include "spm1modulemeasprogram.h"
+#include "debug.h"
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>
 #include <veinmoduleerrorcomponent.h>
 #include <veinmodulemetadata.h>
-
-#include "debug.h"
-#include "spm1module.h"
-#include "spm1moduleconfiguration.h"
-#include "spm1moduleconfigdata.h"
-#include "spm1modulemeasprogram.h"
-
 
 namespace SPM1MODULE
 {

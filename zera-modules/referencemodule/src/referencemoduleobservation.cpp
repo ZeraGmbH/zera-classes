@@ -1,11 +1,7 @@
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-
-#include "debug.h"
-#include "errormessages.h"
 #include "referencemoduleobservation.h"
 #include "referencemodule.h"
+#include <errormessages.h>
+#include <reply.h>
 
 namespace REFERENCEMODULE
 {

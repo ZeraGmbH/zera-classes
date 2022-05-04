@@ -1,7 +1,7 @@
 #ifndef METADATA_H
 #define METADATA_H
 
-#include <QObject>
+#include <QJsonObject>
 #include <QVariant>
 
 // pure virtual class for meta data export

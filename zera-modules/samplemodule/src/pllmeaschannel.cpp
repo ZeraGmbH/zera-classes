@@ -1,12 +1,6 @@
-#include <QRegExp>
-#include <rminterface.h>
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-
-#include "debug.h"
-#include "errormessages.h"
 #include "pllmeaschannel.h"
+#include <errormessages.h>
+#include <reply.h>
 
 namespace SAMPLEMODULE
 {

@@ -1,36 +1,18 @@
 #ifndef STATUSMODULE_H
 #define STATUSMODULE_H
 
-#include <QObject>
+#include "statusmoduleinit.h"
+#include <basemeasmodule.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 
-#include "basemeasmodule.h"
-
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
 namespace STATUSMODULE
 {
-
-
 #define BaseModuleName "StatusModule"
 #define BaseSCPIModuleName "DEV"
 #define ReleaseInfoFilePath "/opt/zera/conf/CHANGELOG"
-
-class cStatusModuleConfiguration;
-class cStatusModuleInit;
-
 
 class cStatusModule : public cBaseMeasModule
 {

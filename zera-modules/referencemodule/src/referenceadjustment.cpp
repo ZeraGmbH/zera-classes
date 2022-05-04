@@ -1,16 +1,11 @@
-#include <QSignalTransition>
-#include <dspinterface.h>
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <math.h>
-
-#include "debug.h"
-#include "errormessages.h"
 #include "referenceadjustment.h"
 #include "referencemoduleconfigdata.h"
 #include "referencemodule.h"
 #include "referencemeaschannel.h"
+#include <errormessages.h>
+#include <reply.h>
+#include <math.h>
+#include <QSignalTransition>
 
 namespace REFERENCEMODULE
 {

@@ -1,23 +1,8 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "efficiency1module.h"
 #include "efficiency1moduleconfiguration.h"
 #include "efficiency1moduleconfigdata.h"
 #include "efficiency1modulemeasprogram.h"
-#include "errormessages.h"
+#include <errormessages.h>
 
 namespace EFFICIENCY1MODULE
 {

@@ -1,25 +1,9 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QStringList>
-
-#include <ve_storagesystem.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponentinput.h>
-#include <veinmoduleactvalue.h>
-#include <veinmodulemetadata.h>
-#include <scpiinfo.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "measmodeinfo.h"
-#include "power3module.h"
 #include "power3modulemeasprogram.h"
+#include "power3module.h"
 #include "power3measdelegate.h"
 #include "power3moduleconfiguration.h"
-
+#include <errormessages.h>
+#include <reply.h>
 
 namespace POWER3MODULE
 {

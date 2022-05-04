@@ -1,28 +1,20 @@
 #ifndef SCPICLIENT_H
 #define SCPICLIENT_H
 
-#include <QObject>
-#include <QHash>
-#include <QList>
 #include <QUuid>
-
-class QTcpSocket;
-
+#include <QHash>
+#include "scpiinterface.h"
+#include "scpistatus.h"
+#include "scpimeasuredelegate.h"
+#include "scpiclientinfo.h"
+#include "ieee488-2.h"
+#include "scpimoduleconfigdata.h"
+#include "signalconnectiondelegate.h"
 
 namespace SCPIMODULE
 {
 
 class cSCPIModule;
-class cSCPIInterface;
-class cSCPIStatus;
-class cIEEE4882;
-class cSCPIModuleConfigData;
-class cStatusBitDescriptor;
-class cStatusBitSignal;
-class cSignalConnectionDelegate;
-class cSCPIClientInfo;
-class cSCPIMeasureDelegate;
-class cSCPIMeasure;
 
 class cSCPIClient: public QObject
 {
@@ -65,7 +57,6 @@ private:
     cSCPIModuleConfigData& m_ConfigData;
 
     QList<cSCPIStatus*> m_SCPIStatusList;
-    QList<cStatusBitSignal*> mStatusBitSignalList;
 
     QHash<cSCPIMeasure*, cSCPIMeasure*> m_SCPIMeasureTranslationHash;
     QUuid mClientId;

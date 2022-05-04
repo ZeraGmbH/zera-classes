@@ -1,59 +1,36 @@
 #ifndef REFERENCEMODULEOBSERVATION_H
 #define REFERENCEMODULEOBSERVATION_H
 
-#include <QStateMachine>
-#include <QState>
+#include <moduleactivist.h>
+#include <proxy.h>
+#include <socket.h>
+#include <service-interfaces/pcbinterface.h>
 #include <QFinalState>
-#include <QHash>
-
-#include "moduleactivist.h"
-#include "socket.h"
-#include "reply.h"
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
-
 
 namespace REFERENCEMODULE
 {
-
 enum referencemoduleobservationCmds
 {
     registernotifier,
     unregisternotifiers
 };
 
-
 class cReferenceModule;
 
 class cReferenceModuleObservation: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cReferenceModuleObservation(cReferenceModule* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
     virtual ~cReferenceModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
-
 signals:
     void moduleReconfigure(); // we emit a signal for module reconfiguration when we recognize significant changes
-
 protected:
     cReferenceModule* m_pReferencemodule;
     Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pPCBServerSocket;
-
     Zera::Server::cPCBInterface* m_pPCBInterface;
-
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 

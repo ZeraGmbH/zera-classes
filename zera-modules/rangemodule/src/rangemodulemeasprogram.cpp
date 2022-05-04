@@ -1,21 +1,10 @@
-#include <QString>
-#include <QStateMachine>
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleactvalue.h>
-#include <modulevalidator.h>
-#include <scpiinfo.h>
-
-#include "debug.h"
-#include "errormessages.h"
+#include "rangemodulemeasprogram.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
-#include "rangemodulemeasprogram.h"
 #include "rangemoduleconfiguration.h"
 #include "rangemoduleconfigdata.h"
+#include <errormessages.h>
+#include <reply.h>
 
 namespace RANGEMODULE
 {

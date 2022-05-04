@@ -1,29 +1,12 @@
-#include <QString>
-#include <QVector>
-#include <QPoint>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <math.h>
-#include <veinmodulemetadata.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleparameter.h>
-#include <modulevalidator.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <stringvalidator.h>
-#include <regexvalidator.h>
-#include <intvalidator.h>
-#include <boolvalidator.h>
-#include <scpiinfo.h>
-
-#include "debug.h"
-#include "errormessages.h"
 #include "rangemodule.h"
 #include "rangeobsermatic.h"
 #include "rangemeaschannel.h"
-
-
+#include <errormessages.h>
+#include <reply.h>
+#include <regexvalidator.h>
+#include <intvalidator.h>
+#include <boolvalidator.h>
+#include <math.h>
 
 namespace RANGEMODULE
 {

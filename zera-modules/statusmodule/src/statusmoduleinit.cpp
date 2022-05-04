@@ -1,24 +1,11 @@
-#include <QFile>
-#include <QTextStream>
-#include <QString>
-
-#include <rminterface.h>
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
+#include "statusmoduleinit.h"
+#include "statusmodule.h"
+#include "debug.h"
 #include <reply.h>
 #include <errormessages.h>
-#include <dspinterface.h>
-#include <veinmoduleparameter.h>
 #include <modulevalidator.h>
 #include <regexvalidator.h>
-#include <scpiinfo.h>
-
-#include "debug.h"
-#include "statusmodule.h"
-#include "statusmoduleinit.h"
-#include "statusmoduleconfigdata.h"
-
+#include <QFile>
 
 namespace STATUSMODULE
 {

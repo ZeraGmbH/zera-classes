@@ -9,9 +9,6 @@
 class cParamValidator
 {
 public:
-    cParamValidator(){}
-    virtual ~cParamValidator(){}
-
     virtual bool isValidParam(QVariant& newValue) = 0;
     virtual void exportMetaData(QJsonObject& jsObj) = 0;
 };

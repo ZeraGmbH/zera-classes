@@ -1,11 +1,3 @@
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
 #include "samplemodule.h"
 #include "samplemoduleconfiguration.h"
 #include "samplemoduleconfigdata.h"
@@ -14,7 +6,10 @@
 #include "samplemodulemeasprogram.h"
 #include "samplemoduleobservation.h"
 #include "pllobsermatic.h"
-
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleerrorcomponent.h>
+#include <veinmodulemetadata.h>
 
 namespace SAMPLEMODULE
 {

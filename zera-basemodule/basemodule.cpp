@@ -1,20 +1,3 @@
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QString>
-#include <QFile>
-#include <QSet>
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-#include <ve_commandevent.h>
-#include <vcmp_entitydata.h>
-#include <vcmp_componentdata.h>
-#include <ve_eventsystem.h>
-#include <virtualmodule.h>
-
 #include "basemodule.h"
 #include "debug.h"
 #include "basemoduleconfiguration.h"
@@ -24,6 +7,13 @@
 #include "veinmoduleerrorcomponent.h"
 #include "veinmoduleparameter.h"
 #include "scpiinfo.h"
+#include <ve_commandevent.h>
+#include <vcmp_entitydata.h>
+#include <vcmp_componentdata.h>
+#include <ve_eventsystem.h>
+#include <virtualmodule.h>
+#include <QJsonDocument>
+#include <QFile>
 
 cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject* parent)
     :ZeraModules::VirtualModule(parent), m_nEntityId(entityId), m_pStorageSystem(storagesystem), m_pProxy(proxy), m_pConfiguration(modcfg), m_nModuleNr(modnr)

@@ -1,33 +1,15 @@
-#include <QString>
-#include <QStateMachine>
-#include <QState>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QStringList>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <pcbinterface.h>
-#include <rminterface.h>
-
-#include <ve_storagesystem.h>
-#include <modulevalidator.h>
-#include <intvalidator.h>
-#include <veinmodulecomponentinput.h>
-#include <veinmoduleactvalue.h>
-#include <veinmoduleparameter.h>
-#include <scpiinfo.h>
-#include <math.h>
-#include <useratan.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "measmodeinfo.h"
-#include "adjustmentmodule.h"
 #include "adjustmentmodulemeasprogram.h"
+#include "adjustmentmodule.h"
 #include "adjustvalidator.h"
 #include "adjustmentmoduleconfiguration.h"
-
+#include "debug.h"
+#include <modulevalidator.h>
+#include <reply.h>
+#include <intvalidator.h>
+#include <useratan.h>
+#include <service-interfaces/rminterface.h>
+#include <errormessages.h>
+#include <math.h>
 
 namespace ADJUSTMENTMODULE
 {

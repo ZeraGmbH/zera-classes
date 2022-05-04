@@ -1,19 +1,10 @@
 #ifndef RANGEMEASCHANNEL_H
 #define RANGEMEASCHANNEL_H
 
-#include <QObject>
-#include <QHash>
-#include <QStringList>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QVariant>
-
-#include <pcbinterface.h>
-#include <reply.h>
+#include <service-interfaces/pcbinterface.h>
 #include <basemeaschannel.h>
 #include <rangeinfo.h>
-
+#include <QFinalState>
 
 namespace RANGEMODULE
 {
@@ -56,8 +47,6 @@ const double sqrt2 = 1.41421356;
 class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
-
-
 public:
     cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo);
     ~cRangeMeasChannel();

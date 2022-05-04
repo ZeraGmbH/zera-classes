@@ -1,5 +1,11 @@
-#include <rminterface.h>
-#include <dspinterface.h>
+#include "scpimodule.h"
+#include "modulevalidator.h"
+#include "scpimoduleconfiguration.h"
+#include "scpimoduleconfigdata.h"
+#include "scpiserver.h"
+#include "veinmodulecomponent.h"
+#include "veinmoduleerrorcomponent.h"
+#include "scpieventsystem.h"
 #include <proxy.h>
 #include <veinmodulemetadata.h>
 #include <veinmoduleactvalue.h>
@@ -8,21 +14,11 @@
 #include <ve_storagesystem.h>
 #include <ve_commandevent.h>
 #include <vcmp_entitydata.h>
-
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QJsonValue>
 
-#include "modulevalidator.h"
-
-#include "scpimodule.h"
-#include "scpimoduleconfiguration.h"
-#include "scpimoduleconfigdata.h"
-#include "scpiserver.h"
-#include "veinmodulecomponent.h"
-#include "veinmoduleerrorcomponent.h"
-#include "scpieventsystem.h"
 
 
 namespace SCPIMODULE

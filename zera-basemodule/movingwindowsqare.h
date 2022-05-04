@@ -3,13 +3,11 @@
 
 #include "movingwindowfilter.h"
 
-
 class cMovingwindowSqare: public cMovingwindowFilter
 {
     Q_OBJECT
 public:
     cMovingwindowSqare(float time);
-
 protected:
     virtual void addnewValues();
 };

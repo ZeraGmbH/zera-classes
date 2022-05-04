@@ -1,14 +1,4 @@
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
 #include "sourcemodule.h"
-#include "sourcemoduleconfiguration.h"
-#include "sourcemoduleprogram.h"
 
 SourceModule::SourceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
     :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new SourceModuleConfiguration()), parent)

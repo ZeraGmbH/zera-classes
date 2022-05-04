@@ -1,25 +1,9 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "dftmodule.h"
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
 #include "dftmodulemeasprogram.h"
 #include "dftmoduleobservation.h"
-#include "errormessages.h"
-
+#include <errormessages.h>
 
 namespace DFTMODULE
 {

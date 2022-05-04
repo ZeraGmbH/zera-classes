@@ -1,39 +1,13 @@
 #ifndef SEM1MODULEMEASPROGRAM_H
 #define SEM1MODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
-#include <QTimer>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-
-#include "basemeasprogram.h"
-#include "secinputinfo.h"
-#include "secinterface.h"
-#include "ecalcinfo.h"
-#include "clientactivecomponent.h"
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
-
-
-class cVeinModuleParameter;
-class cVeinModuleActvalue;
-class cStringValidator;
-
-class cDspMeasData;
-class cDspIFace;
-class QStateMachine;
-class QState;
-class QFinalState;
-
+#include "sem1moduleconfigdata.h"
+#include <basemeasprogram.h>
+#include <secinputinfo.h>
+#include <ecalcinfo.h>
+#include <clientactivecomponent.h>
+#include <proxy.h>
+#include <memory>
 
 namespace SEM1MODULE
 {
@@ -79,9 +53,8 @@ enum sem1moduleCmds
 
 #define irqPCBNotifier 16
 
-class cSem1Module;
-class cSem1ModuleConfigData;
 
+class cSem1Module;
 
 class cSem1ModuleMeasProgram: public cBaseMeasProgram
 {

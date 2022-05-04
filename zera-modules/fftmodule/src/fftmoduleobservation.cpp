@@ -1,12 +1,7 @@
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
 #include "fftmoduleobservation.h"
 #include "fftmodule.h"
+#include <errormessages.h>
+#include <reply.h>
 
 namespace FFTMODULE
 {

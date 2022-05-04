@@ -1,31 +1,10 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <pcbinterface.h>
-#include <movingwindowfilter.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <scpiinfo.h>
-#include <veinmodulemetadata.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
-#include <modulevalidator.h>
+#include "fftmodulemeasprogram.h"
+#include "fftmoduleconfiguration.h"
+#include <errormessages.h>
+#include <reply.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <math.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "fftmodule.h"
-#include "fftmoduleconfigdata.h"
-#include "fftmoduleconfiguration.h"
-#include "fftmodulemeasprogram.h"
 
 namespace FFTMODULE
 {

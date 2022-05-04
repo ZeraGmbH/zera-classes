@@ -1,17 +1,8 @@
 #ifndef ECALCINFO_H
 #define ECALCINFO_H
 
-
-#include <QObject>
-#include <QString>
-
 #include "socket.h"
-
-namespace Zera {
-namespace Server {
-    class cSECInterface;
-}
-}
+#include <service-interfaces/secinterface.h>
 
 struct cECalcChannelInfo
 {
@@ -19,6 +10,5 @@ struct cECalcChannelInfo
     cSocket secServersocket;
     Zera::Server::cSECInterface* secIFace;
 };
-
 
 #endif // ECALCINFO_H

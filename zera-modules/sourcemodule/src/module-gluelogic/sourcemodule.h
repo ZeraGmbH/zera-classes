@@ -1,25 +1,16 @@
 #ifndef SOURCEMODULE_H
 #define SOURCEMODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-
 #include "basemeasmodule.h"
 #include "sourcemoduleconfiguration.h"
+#include "sourcemoduleprogram.h"
 
 #define BaseModuleName "SourceModule"
 #define BaseSCPIModuleName "SRC"
 
-class SourceModuleConfiguration;
-class SourceModuleProgram;
-
 class SourceModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     SourceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;

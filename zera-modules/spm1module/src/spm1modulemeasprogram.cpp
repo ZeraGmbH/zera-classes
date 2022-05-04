@@ -1,29 +1,15 @@
-#include <QtGlobal>
-#include <QString>
-#include <QStateMachine>
-#include <rminterface.h>
-#include <pcbinterface.h>
-#include <secinterface.h>
-#include <basemodule.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <scpiinfo.h>
+#include "spm1modulemeasprogram.h"
+#include "spm1module.h"
+#include "spm1moduleconfiguration.h"
+#include "debug.h"
+#include "errormessages.h"
 #include <modulevalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <stringvalidator.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
+#include <reply.h>
+#include <unithelper.h>
 #include <math.h>
-
-#include "debug.h"
-#include "reply.h"
-#include "errormessages.h"
-#include "spm1module.h"
-#include "spm1modulemeasprogram.h"
-#include "spm1moduleconfigdata.h"
-#include "spm1moduleconfiguration.h"
-#include "unithelper.h"
 
 namespace SPM1MODULE
 {

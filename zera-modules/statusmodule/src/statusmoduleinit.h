@@ -1,34 +1,14 @@
 #ifndef STATUSMODULEINIT_H
 #define STATUSMODULEINIT_H
 
-#include <QObject>
-#include <QList>
-#include <QStateMachine>
-#include <QState>
+#include "statusmoduleconfigdata.h"
+#include <moduleactivist.h>
+#include <proxy.h>
+#include <veinmoduleparameter.h>
+#include <service-interfaces/dspinterface.h>
+#include <service-interfaces/pcbinterface.h>
+#include <service-interfaces/rminterface.h>
 #include <QFinalState>
-
-#include "moduleactivist.h"
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-    class cDSPInterface;
-}
-}
-
-
-class QStateMachine;
-class QState;
-class QFinalState;
-class cDspMeasData;
-class cVeinModuleParameter;
 
 namespace STATUSMODULE
 {
@@ -55,21 +35,16 @@ enum statusmoduleinitCmds
 }
 
 class cStatusModule;
-class cStatusModuleConfigData;
-
 
 class cStatusModuleInit: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy* proxy, cStatusModuleConfigData& configData);
     virtual ~cStatusModuleInit();
     virtual void generateInterface(); // here we export our interface (entities)
-
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cStatusModule* m_pModule; // the module we live in
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
@@ -166,6 +141,5 @@ private slots:
 };
 
 }
-
 
 #endif // STATUSMODULEINIT_H

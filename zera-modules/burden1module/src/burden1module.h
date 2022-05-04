@@ -1,34 +1,11 @@
 #ifndef BURDEN1MODULE_H
 #define BURDEN1MODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-
-#include "basemeasmodule.h"
-
-class cModuleError;
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
+#include "burden1modulemeasprogram.h"
+#include <basemeasmodule.h>
 
 namespace BURDEN1MODULE
 {
-
-class cBurden1ModuleConfiguration;
-class cBurden1ModuleMeasProgram;
-class cBurden1ModuleObservation;
-
 #define BaseModuleName "Burden1Module"
 #define BaseSCPIModuleName "BD1"
 
@@ -41,7 +18,6 @@ public:
     virtual QByteArray getConfiguration() const;
 
 protected:
-    cBurden1ModuleObservation *m_pBurden1ModuleObservation;
     cBurden1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
@@ -75,7 +51,6 @@ private slots:
     void deactivationFinished();
 
     void Burden1ModuleReconfigure();
-
 };
 
 }

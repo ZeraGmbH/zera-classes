@@ -1,27 +1,11 @@
 #ifndef BASEMEASCHANNEL_H
 #define BASEMEASCHANNEL_H
 
-#include <QObject>
-#include <QByteArray>
-#include <QHash>
-#include <QVariant>
 #include "moduleactivist.h"
 #include "socket.h"
-
-class cSCPIConnection;
-class QString;
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
-
-class cBaseModule;
+#include <proxy.h>
+#include <service-interfaces/rminterface.h>
+#include <service-interfaces/pcbinterface.h>
 
 class cBaseMeasChannel: public cModuleActivist
 {

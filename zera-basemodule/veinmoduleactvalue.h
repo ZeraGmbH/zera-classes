@@ -1,20 +1,8 @@
 #ifndef VEINMODULEACTVALUE_H
 #define VEINMODULEACTVALUE_H
 
-#include <QString>
-#include <QVariant>
-#include <QJsonArray>
-
-class cSCPIInfo;
-
 #include "veinmodulecomponent.h"
-
-namespace VeinEvent
-{
-    class EventSystem;
-    class StorageSystem;
-}
-
+#include "scpiinfo.h"
 
 class cVeinModuleActvalue: public cVeinModuleComponent
 {
@@ -22,13 +10,10 @@ class cVeinModuleActvalue: public cVeinModuleComponent
 public:
     cVeinModuleActvalue(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
     virtual ~cVeinModuleActvalue();
-
     virtual void exportSCPIInfo(QJsonArray &jsArr);
     void setSCPIInfo(cSCPIInfo* scpiinfo);
-
 private:
     cSCPIInfo *m_pscpiInfo;
-
 };
 
 

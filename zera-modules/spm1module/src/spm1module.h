@@ -1,34 +1,11 @@
 #ifndef SPM1MODULE_H
 #define SPM1MODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-
-#include "basemeasmodule.h"
-
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
-class cModuleInfo;
-class cModuleError;
+#include "spm1modulemeasprogram.h"
+#include <basemeasmodule.h>
 
 namespace SPM1MODULE
 {
-
-
-class cSpm1ModuleMeasProgram;
-
 #define BaseModuleName "SPM1Module"
 #define BaseSCPIModuleName "PM01"
 
@@ -36,18 +13,14 @@ class cSpm1ModuleMeasProgram;
 // so we will provide energy measurement type EM01 .. EM99
 // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
 
-
 class cSpm1Module : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cSpm1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
-
 protected:
     cSpm1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
@@ -78,7 +51,6 @@ private slots:
     void deactivationExec();
     void deactivationDone();
     void deactivationFinished();
-
 };
 
 }

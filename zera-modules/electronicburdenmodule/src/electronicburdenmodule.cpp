@@ -1,11 +1,3 @@
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
 #include "electronicburdenmodule.h"
 #include "electronicburdenmoduleconfiguration.h"
 #include "electronicburdenmoduleprogram.h"
@@ -37,7 +29,6 @@ void ElectronicBurdenModule::doConfiguration(QByteArray xmlConfigData)
     m_pConfiguration->setConfiguration(xmlConfigData);
 }
 
-
 void ElectronicBurdenModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
@@ -51,18 +42,15 @@ void ElectronicBurdenModule::setupModule()
     }
 }
 
-
 void ElectronicBurdenModule::startMeas()
 {
     // nothing to start here
 }
 
-
 void ElectronicBurdenModule::stopMeas()
 {
     // also nothing to stop
 }
-
 
 void ElectronicBurdenModule::activationFinished()
 {

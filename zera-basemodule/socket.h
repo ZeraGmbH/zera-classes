@@ -1,7 +1,6 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#include <QObject>
 #include <QString>
 
 struct cSocket

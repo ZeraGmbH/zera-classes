@@ -1,18 +1,15 @@
 #ifndef REFERENCEMEASCHANNEL_H
-#define REFERENCMEASCHANNEL_H
+#define REFERENCEMEASCHANNEL_H
 
-#include <QObject>
+#include <proxy.h>
+#include <rangeinfo.h>
 #include <QHash>
 #include <QStringList>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QVariant>
-#include <pcbinterface.h>
-
-#include "reply.h"
 #include "basemeaschannel.h"
-#include "rangeinfo.h"
 
 namespace REFERENCEMODULE
 {

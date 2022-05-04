@@ -1,6 +1,15 @@
 #ifndef RANGEOBSERMATIC_H
 #define RANGEOBSERMATIC_H
 
+#include "rangemoduleconfigdata.h"
+#include "rangemeaschannel.h"
+#include <moduleactivist.h>
+#include <veinmoduleparameter.h>
+#include <socket.h>
+#include <proxy.h>
+#include <stringvalidator.h>
+#include <service-interfaces/dspinterface.h>
+#include <QTimer>
 
 // cRangeObsermatic is responsible for setting, observing, automatic setting
 // and grouping measurement channel ranges. it works on a flexible list of
@@ -11,38 +20,6 @@
 // RangeAutomatic ON/OFF Input
 // GroupHandling ON/OFF Input
 // !!! important range obsermatic must be activated after !!! activating rangemeaschannels
-
-#include <QObject>
-#include <QList>
-#include <QVector>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QVariant>
-#include <QStringList>
-#include <QTimer>
-
-#include <moduleactivist.h>
-
-#include "rangemoduleconfigdata.h"
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
-namespace  Server {
-    class cDSPInterface;
-}
-}
-
-
-class cDspMeasData;
-class cVeinModuleParameter;
-class cVeinModuleComponent;
-class cStringValidator;
 
 namespace RANGEMODULE
 {
@@ -59,30 +36,21 @@ enum rangeObsermaticCmds
     nextCmd = setrange+32
 };
 
-
 class cRangeModule;
-class cRangeMeasChannel;
 
 class cRangeObsermatic: public cModuleActivist
 {
     Q_OBJECT
-
 public:
     cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
-
     cVeinModuleComponent *m_pRangingSignal;
-
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
     void catchChannelNewRangeList();
-
     void demoActValues(QVector<float> *actualValues);
-
-signals:
-
 private:
     bool m_bDemo;
     cRangeModule *m_pModule;

@@ -1,25 +1,9 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "power2module.h"
 #include "power2moduleconfiguration.h"
 #include "power2moduleconfigdata.h"
 #include "power2modulemeasprogram.h"
 #include "power2moduleobservation.h"
-
-#include "errormessages.h"
+#include <errormessages.h>
 
 namespace POWER2MODULE
 {

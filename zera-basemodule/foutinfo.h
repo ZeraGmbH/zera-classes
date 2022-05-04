@@ -1,11 +1,8 @@
 #ifndef FOUTINFO_H
 #define FOUTINFO_H
 
-namespace Zera {
-namespace Server {
-    class cPCBInterface;
-}
-}
+#include "socket.h"
+#include <service-interfaces/pcbinterface.h>
 
 enum foutmodes
 {
@@ -24,6 +21,5 @@ struct cFoutInfo
     cSocket pcbServersocket;
     Zera::Server::cPCBInterface* pcbIFace;
 };
-
 
 #endif // FOUTINFO_H

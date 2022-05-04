@@ -1,24 +1,14 @@
 #ifndef SAMPLECHANNEL_H
 #define SAMPLECHANNEL_H
 
-#include <QObject>
-#include <QHash>
-#include <QStringList>
-#include <QStateMachine>
-#include <QState>
+#include "samplemoduleconfigdata.h"
+#include <basesamplechannel.h>
+#include <proxy.h>
+#include <veinmoduleparameter.h>
 #include <QFinalState>
-#include <QVariant>
-#include <pcbinterface.h>
-
-#include "basesamplechannel.h"
-#include "reply.h"
-
-
-class cVeinModuleParameter;
 
 namespace SAMPLEMODULE
 {
-
 enum samplechannelCmds
 {
     sendsamplechannelrmident,
@@ -32,26 +22,19 @@ enum samplechannelCmds
     setsamplechannelrange
 };
 
-
 class cSampleModule;
-class cSampleModuleConfigData;
 
 class cSampleChannel: public cBaseSampleChannel
 {
     Q_OBJECT
-
 public:
     cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configdata, quint8 chnnr);
     ~cSampleChannel();
     virtual void generateInterface(); // here we export our interface (entities)
-
 signals:
     void cmdDone(quint32 cmdnr); // to signal we are ready
-
-
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cSampleModule* m_pModule;
     cSampleModuleConfigData& m_ConfigData;
@@ -72,10 +55,6 @@ private:
     QState m_pcbConnectionState; // we try to get a connection to our pcb server
     QState m_readChnAliasState; // we query our alias
     QState m_readRangelistState; // we query our range list
-
-    //QState m_readRangeProperties1State; // we build up a loop for querying all the ranges properties
-    //QState m_readRangeProperties2State; //
-    //QState m_readRangeProperties3State;
 
     QFinalState m_activationDoneState;
 

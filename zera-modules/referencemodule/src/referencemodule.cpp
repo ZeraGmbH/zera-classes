@@ -1,11 +1,3 @@
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
 #include "referencemodule.h"
 #include "referencemoduleconfiguration.h"
 #include "referencemoduleconfigdata.h"
@@ -13,6 +5,11 @@
 #include "referencemodulemeasprogram.h"
 #include "referencemoduleobservation.h"
 #include "referenceadjustment.h"
+#include <modulevalidator.h>
+#include <veinmodulecomponent.h>
+#include <veinmoduleerrorcomponent.h>
+#include <veinmodulemetadata.h>
+
 
 
 namespace REFERENCEMODULE

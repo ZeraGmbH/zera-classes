@@ -1,25 +1,10 @@
-#include <QString>
-#include <QStateMachine>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QStringList>
-
-#include <ve_storagesystem.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponentinput.h>
-#include <veinmoduleactvalue.h>
-#include <veinmodulemetadata.h>
-#include <scpiinfo.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "measmodeinfo.h"
-#include "lambdamodule.h"
 #include "lambdamodulemeasprogram.h"
+#include "lambdamodule.h"
 #include "lambdameasdelegate.h"
 #include "lambdamoduleconfiguration.h"
-
+#include <errormessages.h>
+#include <reply.h>
+#include <measmodeinfo.h>
 
 namespace LAMBDAMODULE
 {

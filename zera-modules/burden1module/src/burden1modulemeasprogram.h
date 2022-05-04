@@ -1,25 +1,15 @@
 #ifndef BURDEN1MODULEMEASPROGRAM_H
 #define BURDEN1MODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-
 #include "burden1moduleconfigdata.h"
-#include "basemeasworkprogram.h"
+#include "burden1measdelegate.h"
 #include "measchannelinfo.h"
 #include "measmodeinfo.h"
 #include "foutinfo.h"
-
-
-class cBaseModule;
-class cVeinModuleActvalue;
-class cVeinModuleMetaData;
-class cVeinModuleComponent;
-class cVeinModuleParameter;
+#include <basemeasworkprogram.h>
+#include <veinmoduleparameter.h>
+#include <veinmodulemetadata.h>
+#include <QFinalState>
 
 namespace BURDEN1MODULE
 {
@@ -67,11 +57,7 @@ enum Burden1moduleCmds
     setchannelrangenotifier
 };
 
-
-class cBurden1ModuleConfigData;
-class cBurden1MeasDelegate;
 class cBurden1Module;
-
 
 class cBurden1ModuleMeasProgram: public cBaseMeasWorkProgram
 {

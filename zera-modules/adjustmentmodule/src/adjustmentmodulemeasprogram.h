@@ -1,6 +1,12 @@
 #ifndef ADJUSTMENTMODULEMEASPROGRAM_H
 #define ADJUSTMENTMODULEMEASPROGRAM_H
 
+
+#include "adjustmentmoduleconfigdata.h"
+#include "basemeasworkprogram.h"
+#include "measchannelinfo.h"
+#include "measmodeinfo.h"
+#include "foutinfo.h"
 #include <QObject>
 #include <QList>
 #include <QHash>
@@ -8,13 +14,6 @@
 #include <QState>
 #include <QTimer>
 #include <QFinalState>
-#include <pcbinterface.h>
-
-#include "adjustmentmoduleconfigdata.h"
-#include "basemeasworkprogram.h"
-#include "measchannelinfo.h"
-#include "measmodeinfo.h"
-#include "foutinfo.h"
 
 namespace Zera {
 namespace Proxy {

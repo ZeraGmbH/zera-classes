@@ -1,30 +1,13 @@
 #ifndef POWER3MODULEMEASPROGRAM_H
 #define POWER3MODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-
 #include "power3moduleconfigdata.h"
-#include "basemeasworkprogram.h"
-#include "measchannelinfo.h"
-#include "measmodeinfo.h"
-#include "foutinfo.h"
-
-
-class cBaseModule;
-class cVeinModuleActvalue;
-class cVeinModuleMetaData;
-class cVeinModuleComponent;
-
-
-class QStateMachine;
-class QState;
-class QFinalState;
-
+#include "power3measdelegate.h"
+#include <basemeasworkprogram.h>
+#include <veinmoduleactvalue.h>
+#include <veinmodulemetadata.h>
+#include <QFinalState>
+#include <memory>
 
 namespace POWER3MODULE
 {
@@ -72,11 +55,7 @@ enum power3moduleCmds
     setchannelrangenotifier
 };
 
-
-class cPower3ModuleConfigData;
-class cPower3MeasDelegate;
 class cPower3Module;
-
 
 class cPower3ModuleMeasProgram: public cBaseMeasWorkProgram
 {

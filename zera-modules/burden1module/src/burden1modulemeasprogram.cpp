@@ -1,27 +1,15 @@
-#include <QString>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QStringList>
-
-#include <ve_storagesystem.h>
-#include <modulevalidator.h>
-#include <doublevalidator.h>
-#include <stringvalidator.h>
-#include <veinmodulecomponentinput.h>
-#include <veinmoduleactvalue.h>
-#include <veinmodulemetadata.h>
-#include <veinmoduleparameter.h>
-#include <scpiinfo.h>
-
-#include "debug.h"
-#include "errormessages.h"
-#include "reply.h"
-#include "measmodeinfo.h"
 #include "burden1module.h"
 #include "burden1modulemeasprogram.h"
 #include "burden1measdelegate.h"
 #include "burden1moduleconfiguration.h"
-
+#include "measmodeinfo.h"
+#include "debug.h"
+#include <errormessages.h>
+#include <reply.h>
+#include <modulevalidator.h>
+#include <doublevalidator.h>
+#include <stringvalidator.h>
+#include <scpiinfo.h>
 
 namespace BURDEN1MODULE
 {

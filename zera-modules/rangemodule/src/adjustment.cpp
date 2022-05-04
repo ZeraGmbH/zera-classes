@@ -1,16 +1,13 @@
-#include <QSignalTransition>
-#include <dspinterface.h>
-#include <pcbinterface.h>
-#include <proxy.h>
-#include <proxyclient.h>
-#include <veinmodulecomponent.h>
-#include <modulevalidator.h>
-
-#include "debug.h"
-#include "errormessages.h"
 #include "adjustment.h"
 #include "rangemodule.h"
 #include "rangemeaschannel.h"
+#include <errormessages.h>
+#include <reply.h>
+#include <veinmodulecomponent.h>
+#include <modulevalidator.h>
+#include <service-interfaces/rminterface.h>
+#include <service-interfaces/dspinterface.h>
+#include <QSignalTransition>
 
 namespace RANGEMODULE 
 {

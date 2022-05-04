@@ -1,25 +1,9 @@
-#include <QByteArray>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
-#include <QJsonValue>
-
-#include <rminterface.h>
-#include <dspinterface.h>
-#include <proxy.h>
-#include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
-
-#include "debug.h"
 #include "oscimodule.h"
 #include "oscimoduleconfiguration.h"
 #include "oscimoduleconfigdata.h"
 #include "oscimodulemeasprogram.h"
 #include "oscimoduleobservation.h"
-
-#include "errormessages.h"
+#include <errormessages.h>
 
 namespace OSCIMODULE
 {

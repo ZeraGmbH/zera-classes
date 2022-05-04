@@ -1,32 +1,10 @@
 #ifndef SEC1MODULE_H
 #define SEC1MODULE_H
 
-#include <QObject>
-#include <QStateMachine>
-#include <QState>
-#include <QFinalState>
-#include <QList>
-
-#include "basemeasmodule.h"
-
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
-class cModuleInfo;
-class cModuleError;
+#include <basemeasmodule.h>
 
 namespace SEC1MODULE
 {
-
-
 class cSec1ModuleMeasProgram;
 
 #define BaseModuleName "SEC1Module"
@@ -36,23 +14,19 @@ class cSec1ModuleMeasProgram;
 // so we will provide ecalculator type EC01 .. EC99
 // and each ec will have an additional scpi parent with its number 0001 .. 9999
 
-
 class cSec1Module : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cSec1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
-
 protected:
-    cSec1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
-
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here
     virtual void stopMeas();
 
+    cSec1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     // our states for base modules activation statemacine
     QState m_ActivationStartState;
     QState m_ActivationExecState;

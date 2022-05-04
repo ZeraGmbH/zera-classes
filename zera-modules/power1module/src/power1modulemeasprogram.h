@@ -1,39 +1,17 @@
 #ifndef POWERMODULEMEASPROGRAM_H
 #define POWERMODULEMEASPROGRAM_H
 
-#include <QObject>
-#include <QList>
-#include <QPair>
-#include <QHash>
-#include <QStateMachine>
-#include <QState>
+#include "power1moduleconfigdata.h"
+#include <basedspmeasprogram.h>
+#include <measchannelinfo.h>
+#include <measmodeinfo.h>
+#include <foutinfo.h>
+#include <veinmodulecomponentinput.h>
+#include <movingwindowfilter.h>
+#include <service-interfaces/rminterface.h>
+#include <service-interfaces/dspinterface.h>
+#include <service-interfaces/pcbinterface.h>
 #include <QFinalState>
-
-#include "basedspmeasprogram.h"
-#include "measchannelinfo.h"
-#include "measmodeinfo.h"
-#include "foutinfo.h"
-
-
-class cDspMeasData;
-class QStateMachine;
-class QState;
-class QFinalState;
-
-class cVeinModuleComponent;
-class cVeinModuleParameter;
-class cVeinModuleMetaData;
-class cVeinModuleActvalue;
-class cMovingwindowFilter;
-class cVeinModuleComponentInput;
-
-
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-}
-
 
 namespace POWER1MODULE
 {
@@ -99,30 +77,23 @@ enum measmode
 
 #define irqNr 5
 
-
-class cPower1ModuleConfigData;
 class cPower1Module;
-
 
 class cPower1ModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
     cPower1ModuleMeasProgram(cPower1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cPower1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
-
 protected:
     virtual void setDspVarList(); // dsp related stuff
     virtual void deleteDspVarList();
     virtual void setDspCmdList();
     virtual void deleteDspCmdList();
-
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
