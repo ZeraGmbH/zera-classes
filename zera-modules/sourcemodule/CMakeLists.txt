@@ -1,74 +1,44 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
-project(zera-sourcemodule LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-#C++ 11 Flag
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-#Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-include(FindPkgConfig)
-
-#Find dependecies
-find_package(Qt5 COMPONENTS Core Gui Network CONFIG REQUIRED)
-find_package(VfEvent REQUIRED)
-find_package(VfHelpers REQUIRED)
-find_Package(VfComponent REQUIRED)
-find_Package(zera-json-params REQUIRED)
-find_package(serialportasyncblock REQUIRED)
-pkg_check_modules(XERCES xerces-c REQUIRED)
-find_Package(VfCpp REQUIRED)
-
-#sum up project Files 
 file(GLOB SOURCES 
-    ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/io-device/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/io-queue/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/json/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/message-texts/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/source-device/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/source-protocols/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/source-scanner/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/vein/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-device/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-queue/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/json/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/message-texts/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-device/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-protocols/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-scanner/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/transaction-ids/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/vein/*.cpp
     )
 
 
 file(GLOB HEADER
-    ${PROJECT_SOURCE_DIR}/src/*.h
-    ${PROJECT_SOURCE_DIR}/src/io-device/*.h
-    ${PROJECT_SOURCE_DIR}/src/io-queue/*.h
-    ${PROJECT_SOURCE_DIR}/src/json/*.h
-    ${PROJECT_SOURCE_DIR}/src/message-texts/*.h
-    ${PROJECT_SOURCE_DIR}/src/source-device/*.h
-    ${PROJECT_SOURCE_DIR}/src/source-protocols/*.h
-    ${PROJECT_SOURCE_DIR}/src/source-scanner/*.h
-    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.h
-    ${PROJECT_SOURCE_DIR}/src/vein/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-device/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-queue/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/json/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/message-texts/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-device/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-protocols/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-scanner/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/transaction-ids/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/vein/*.h
     )
 
 file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 
 file(GLOB CONFIG_FILES
-    ${PROJECT_SOURCE_DIR}/configs/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/configs/*.xml
 )
 
 file(GLOB CONFIG_VALIDATOR
-    ${PROJECT_SOURCE_DIR}/configs/*.xsd
+    ${CMAKE_CURRENT_SOURCE_DIR}/configs/*.xsd
 )
 
 file(GLOB SOURCE_DEVINFO
-    ${PROJECT_SOURCE_DIR}/deviceinfo/*.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/deviceinfo/*.json
 )
 
 # auto-generate c++ xml access from xsd
@@ -121,7 +91,7 @@ add_custom_target(source-deviceinfo-dont-forget-qrc ALL
 # check if all configs made it into resource.qrc
 foreach(sourceconfigfile ${SOURCE_DEVINFO})
     get_filename_component(filename ${sourceconfigfile} NAME)
-    file(STRINGS ${PROJECT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
+    file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
     if(NOT lines)
         message(FATAL_ERROR "${filename} was not added to resource.qrc - source will not work!!")
     endif()
@@ -152,11 +122,11 @@ target_include_directories(sourcemodule-static
     )
 
 file(GLOB MODULE_SOURCES
-    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-gluelogic/*.cpp
     )
 
 file(GLOB MODULE_HEADERS
-    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-gluelogic/*.h
     )
 
 add_library(sourcemodule MODULE
@@ -179,13 +149,11 @@ target_include_directories(sourcemodule
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
-# install library
 install(TARGETS sourcemodule
     EXPORT sourcemoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
     )
 
-# configure *ConfigVersion.cmake
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     sourcemoduleConfigVersion.cmake
@@ -263,5 +231,4 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         Qt5::Test
         sourcemodule-static
     )
-
 endif()
