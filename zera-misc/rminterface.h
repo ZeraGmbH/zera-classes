@@ -1,33 +1,21 @@
 #ifndef RMINTERFACE_H
 #define RMINTERFACE_H
 
+#include "zeramisc_export.h"
+#include <proxyclient.h>
 #include <QObject>
 #include <QAbstractSocket>
 #include <QVariant>
-
-#include "zera_misc_global.h"
-
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
 
 namespace Zera
 {
 namespace Server
 {
-
 class cRMInterfacePrivate;
 
-
-class ZERA_MISCSHARED_EXPORT cRMInterface: public QObject
+class ZERAMISC_EXPORT cRMInterface: public QObject
 {
     Q_OBJECT
-
 public:
     cRMInterface();
     virtual void setClient(Zera::Proxy::cProxyClient *client);

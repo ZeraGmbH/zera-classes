@@ -1,14 +1,13 @@
 #ifndef ETHADRESS_H
 #define ETHADRESS_H
 
+#include "zeramisc_export.h"
 #include <QDataStream>
 #include <QString>
 
-#include "zera_misc_global.h"
-
 class cETHAdressPrivate;
 
-class ZERA_MISCSHARED_EXPORT cETHAdress
+class ZERAMISC_EXPORT cETHAdress
 {
 public:
     cETHAdress();

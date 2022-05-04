@@ -1,30 +1,19 @@
 #ifndef PCBINTERFACE_H
 #define PCBINTERFACE_H
 
+#include "zeramisc_export.h"
+#include <proxyclient.h>
 #include <QObject>
 #include <QAbstractSocket>
 #include <QVariant>
-
-#include "zera_misc_global.h"
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
-
 
 namespace Zera
 {
 namespace Server
 {
-
 class cPCBInterfacePrivate;
 
-
-class ZERA_MISCSHARED_EXPORT cPCBInterface: public QObject
+class ZERAMISC_EXPORT cPCBInterface: public QObject
 {
     Q_OBJECT
 
