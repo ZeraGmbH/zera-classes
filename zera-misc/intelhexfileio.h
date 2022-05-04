@@ -1,11 +1,9 @@
 #ifndef INTELHEXFILEIO_H
 #define INTELHEXFILEIO_H
 
+#include "zeramisc_export.h"
 #include <QString>
 #include <QList>
-
-#include "zera_misc_global.h"
-
 
 class cIntelHexFileIOPrivate; // forward
 
@@ -21,12 +19,9 @@ class cIntelHexFileIOPrivate; // forward
   */
 
 
-class ZERA_MISCSHARED_EXPORT cIntelHexFileIO
+class ZERAMISC_EXPORT cIntelHexFileIO
 {
 public:
-    /**
-      @b Initialise the const variables
-      */
     cIntelHexFileIO();
     virtual ~cIntelHexFileIO();
 
@@ -39,9 +34,6 @@ public:
       @b Set byte value which is used to set unwritten regions.
       */
     void setunwrittenByteValue(quint8 value);
-    /**
-      @b Return errors and warnings that occured while reading.
-      */
     QString getErrorsWarnings();
 
     /**
@@ -58,11 +50,6 @@ public:
      * @return true if no memory reagions were read
      */
     bool isEmpty();
-    /**
-     * @brief Check if hex-file contains memory block
-     * @param byteArray containing memory block to check for
-     * @return true memory block found
-     */
     bool contains(const QByteArray& byteArray);
 
 private:

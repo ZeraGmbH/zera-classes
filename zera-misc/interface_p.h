@@ -1,14 +1,13 @@
 #ifndef INTERFACE_P_H
 #define INTERFACE_P_H
 
+#include "zeramisc_export.h"
+#include <proxyclient.h>
+#include <netmessages.pb.h>
 #include <QObject>
 #include <QAbstractSocket>
 #include <QHash>
 #include <QVariant>
-#include <proxyclient.h>
-#include <netmessages.pb.h>
-
-#include "zera_misc_global.h"
 
 namespace Zera
 {
@@ -28,7 +27,6 @@ enum replies
 class cInterfacePrivate: public QObject
 {
     Q_OBJECT
-
 protected:
     quint32 sendCommand(QString cmd);
     quint32 sendCommand(QString cmd, QString par);

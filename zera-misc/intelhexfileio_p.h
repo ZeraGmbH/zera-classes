@@ -1,10 +1,9 @@
 #ifndef INTELHEXFILEIO_P_H
 #define INTELHEXFILEIO_P_H
 
+#include "zeramisc_export.h"
 #include <QString>
 #include <QList>
-
-#include "zera_misc_global.h"
 
 struct THexFileMemRegion
 {
@@ -31,18 +30,9 @@ struct THexFileMessage
 };
 
 
-/**
-  @brief
-  The implemention for cIntelHexFileIO.
-  */
-
-
 class cIntelHexFileIOPrivate
 {
 public:
-    /**
-      @b Initialise the const variables
-      */
     cIntelHexFileIOPrivate();
     /**
       @b Read the entire file and parse for memory regions.
@@ -53,9 +43,6 @@ public:
       @b Set byte value which is used to set unwritten regions.
       */
     void setunwrittenByteValue(quint8 value);
-    /**
-      @b Return errors and warnings that occured while reading.
-      */
     QString getErrorsWarnings();
 
     /**
@@ -72,11 +59,6 @@ public:
      * @return true if no memory reagions were read
      */
     bool isEmpty();
-    /**
-     * @brief Check if hex-file contains memory block
-     * @param byteArray containing memory block to check for
-     * @return true memory block found
-     */
     bool contains(const QByteArray &byteArray);
 
 

@@ -43,7 +43,6 @@ set(SOURCES
 
 # common + optional sources
 set(HEADER
-    zera_misc_global.h
     intelhexfileio.h
     intelhexfileio_p.h
     ${HEADER_FOR_MODULE}

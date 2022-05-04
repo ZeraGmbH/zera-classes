@@ -1,25 +1,13 @@
 #ifndef DSPINTERFACE_H
 #define DSPINTERFACE_H
 
+#include "zeramisc_export.h"
+#include "ethadress.h"
+#include "dspmeasdata.h"
+#include <proxyclient.h>
 #include <QObject>
 #include <QAbstractSocket>
 #include <QVariant>
-
-#include "zera_misc_global.h"
-#include "ethadress.h"
-#include "dspmeasdata.h"
-
-class cDspVar;
-
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
-
 
 namespace Zera
 {
@@ -31,7 +19,7 @@ typedef quint32 tRouting[16];
 class cDSPInterfacePrivate;
 
 
-class ZERA_MISCSHARED_EXPORT cDSPInterface: public QObject
+class ZERAMISC_EXPORT cDSPInterface: public QObject
 {
     Q_OBJECT
 
