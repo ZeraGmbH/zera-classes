@@ -9,6 +9,7 @@ public:
     typedef QSharedPointer<I2cMuxerInterface> Ptr;
     virtual void enableMuxChannel() = 0;
     virtual void disableMux() = 0;
+    virtual QString getDevIdString() = 0;
 };
 
 #endif // I2CMUXERINTERFACE_H

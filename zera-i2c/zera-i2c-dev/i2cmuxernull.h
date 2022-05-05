@@ -6,8 +6,9 @@
 class I2cMuxerNull : public I2cMuxerInterface
 {
 public:
-    virtual void enableMuxChannel() {}
-    virtual void disableMux() {}
+    virtual void enableMuxChannel() override {}
+    virtual void disableMux() override {}
+    virtual QString getDevIdString() override { return QStringLiteral("/dev/null"); }
 };
 
 #endif // I2CMUXERNULL_H

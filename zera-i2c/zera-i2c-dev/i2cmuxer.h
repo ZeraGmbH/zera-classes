@@ -12,6 +12,7 @@ public:
     I2cMuxer(QString deviceNode, ushort i2cMuxAdress, uchar muxCodeEnableChannel, uchar muxCodeDisable);
     void enableMuxChannel() override;
     void disableMux() override;
+    virtual QString getDevIdString() override;
 private:
     void switchMux(uchar muxCode);
     QString m_deviceNode;
