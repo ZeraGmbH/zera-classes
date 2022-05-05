@@ -16,9 +16,9 @@
 #include <modulevalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
-#include <service-interfaces/rminterface.h>
-#include <service-interfaces/dspinterface.h>
-#include <service-interfaces/pcbinterface.h>
+#include <rminterface.h>
+#include <dspinterface.h>
+#include <pcbinterface.h>
 #include <math.h>
 #include <QString>
 #include <QStateMachine>

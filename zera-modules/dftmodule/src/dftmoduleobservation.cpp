@@ -2,7 +2,7 @@
 #include "dftmodule.h"
 #include <errormessages.h>
 #include <reply.h>
-#include <service-interfaces/pcbinterface.h>
+#include <pcbinterface.h>
 
 namespace DFTMODULE
 {

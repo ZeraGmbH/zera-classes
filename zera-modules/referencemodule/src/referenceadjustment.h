@@ -5,8 +5,8 @@
 #include "referencemeaschannel.h"
 #include <moduleactivist.h>
 #include <proxy.h>
-#include <service-interfaces/dspinterface.h>
-#include <service-interfaces/pcbinterface.h>
+#include <dspinterface.h>
+#include <pcbinterface.h>
 
 namespace REFERENCEMODULE
 {

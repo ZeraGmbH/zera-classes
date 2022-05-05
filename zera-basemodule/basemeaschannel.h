@@ -4,8 +4,8 @@
 #include "moduleactivist.h"
 #include "socket.h"
 #include <proxy.h>
-#include <service-interfaces/rminterface.h>
-#include <service-interfaces/pcbinterface.h>
+#include <rminterface.h>
+#include <pcbinterface.h>
 
 class cBaseMeasChannel: public cModuleActivist
 {

@@ -5,8 +5,8 @@
 #include <reply.h>
 #include <veinmodulecomponent.h>
 #include <modulevalidator.h>
-#include <service-interfaces/rminterface.h>
-#include <service-interfaces/dspinterface.h>
+#include <rminterface.h>
+#include <dspinterface.h>
 #include <QSignalTransition>
 
 namespace RANGEMODULE 

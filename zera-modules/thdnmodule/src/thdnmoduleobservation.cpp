@@ -5,7 +5,7 @@
 #include "thdnmodule.h"
 #include <proxy.h>
 #include <proxyclient.h>
-#include <service-interfaces/pcbinterface.h>
+#include <pcbinterface.h>
 
 namespace THDNMODULE
 {

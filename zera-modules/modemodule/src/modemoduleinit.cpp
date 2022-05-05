@@ -6,9 +6,9 @@
 #include <proxyclient.h>
 #include <reply.h>
 #include <errormessages.h>
-#include <service-interfaces/rminterface.h>
-#include <service-interfaces/pcbinterface.h>
-#include <service-interfaces/dspinterface.h>
+#include <rminterface.h>
+#include <pcbinterface.h>
+#include <dspinterface.h>
 
 namespace MODEMODULE
 {
