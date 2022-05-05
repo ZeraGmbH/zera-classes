@@ -8,7 +8,7 @@
 #include <socket.h>
 #include <proxy.h>
 #include <stringvalidator.h>
-#include <service-interfaces/dspinterface.h>
+#include <dspinterface.h>
 #include <QTimer>
 
 // cRangeObsermatic is responsible for setting, observing, automatic setting

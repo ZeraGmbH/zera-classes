@@ -2,7 +2,7 @@
 #define ECALCINFO_H
 
 #include "socket.h"
-#include <service-interfaces/secinterface.h>
+#include <secinterface.h>
 
 struct cECalcChannelInfo
 {

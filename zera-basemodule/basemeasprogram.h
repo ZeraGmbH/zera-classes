@@ -6,8 +6,8 @@
 #include "socket.h"
 #include "moduleactivist.h"
 #include <proxy.h>
-#include <service-interfaces/pcbinterface.h>
-#include <service-interfaces/rminterface.h>
+#include <pcbinterface.h>
+#include <rminterface.h>
 
 class cBaseMeasProgram: public cModuleActivist
 {

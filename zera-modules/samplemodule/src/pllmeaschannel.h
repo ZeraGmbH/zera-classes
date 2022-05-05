@@ -3,8 +3,8 @@
 
 #include "rangeinfo.h"
 #include <basemeaschannel.h>
-#include <service-interfaces/rminterface.h>
-#include <service-interfaces/pcbinterface.h>
+#include <rminterface.h>
+#include <pcbinterface.h>
 #include <QFinalState>
 
 namespace SAMPLEMODULE

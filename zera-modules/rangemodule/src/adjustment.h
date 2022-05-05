@@ -4,8 +4,8 @@
 #include "rangemodule.h"
 #include <moduleactivist.h>
 #include <socket.h>
-#include <service-interfaces/dspinterface.h>
-#include <service-interfaces/pcbinterface.h>
+#include <dspinterface.h>
+#include <pcbinterface.h>
 #include <QFinalState>
 #include <QTimer>
 

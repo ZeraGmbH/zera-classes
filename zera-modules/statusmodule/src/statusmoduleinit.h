@@ -5,9 +5,9 @@
 #include <moduleactivist.h>
 #include <proxy.h>
 #include <veinmoduleparameter.h>
-#include <service-interfaces/dspinterface.h>
-#include <service-interfaces/pcbinterface.h>
-#include <service-interfaces/rminterface.h>
+#include <dspinterface.h>
+#include <pcbinterface.h>
+#include <rminterface.h>
 #include <QFinalState>
 
 namespace STATUSMODULE

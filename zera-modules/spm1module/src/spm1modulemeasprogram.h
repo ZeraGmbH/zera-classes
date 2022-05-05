@@ -8,7 +8,7 @@
 #include <ecalcinfo.h>
 #include <proxy.h>
 #include <memory>
-#include <service-interfaces/secinterface.h>
+#include <secinterface.h>
 
 namespace SPM1MODULE
 {

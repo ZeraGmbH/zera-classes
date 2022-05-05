@@ -2,7 +2,7 @@
 #define SECINPUTINFO_H
 
 #include "socket.h"
-#include <service-interfaces/pcbinterface.h>
+#include <pcbinterface.h>
 
 struct cSecInputInfo
 {

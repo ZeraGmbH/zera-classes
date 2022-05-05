@@ -8,9 +8,9 @@
 #include <foutinfo.h>
 #include <veinmodulecomponentinput.h>
 #include <movingwindowfilter.h>
-#include <service-interfaces/rminterface.h>
-#include <service-interfaces/dspinterface.h>
-#include <service-interfaces/pcbinterface.h>
+#include <rminterface.h>
+#include <dspinterface.h>
+#include <pcbinterface.h>
 #include <QFinalState>
 
 namespace POWER1MODULE

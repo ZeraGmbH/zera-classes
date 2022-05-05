@@ -4,7 +4,7 @@
 #include <moduleactivist.h>
 #include <socket.h>
 #include <proxy.h>
-#include <service-interfaces/pcbinterface.h>
+#include <pcbinterface.h>
 #include <QFinalState>
 
 namespace POWER1MODULE

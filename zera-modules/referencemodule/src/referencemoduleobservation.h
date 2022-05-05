@@ -4,7 +4,7 @@
 #include <moduleactivist.h>
 #include <proxy.h>
 #include <socket.h>
-#include <service-interfaces/pcbinterface.h>
+#include <pcbinterface.h>
 #include <QFinalState>
 
 namespace REFERENCEMODULE

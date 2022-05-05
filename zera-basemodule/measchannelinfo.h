@@ -2,7 +2,7 @@
 #define MEASCHANNELINFO_H
 
 #include "socket.h"
-#include <service-interfaces/pcbinterface.h>
+#include <pcbinterface.h>
 #include <QObject>
 #include <QString>
 

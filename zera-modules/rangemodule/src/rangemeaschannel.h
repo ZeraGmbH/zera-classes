@@ -1,7 +1,7 @@
 #ifndef RANGEMEASCHANNEL_H
 #define RANGEMEASCHANNEL_H
 
-#include <service-interfaces/pcbinterface.h>
+#include <pcbinterface.h>
 #include <basemeaschannel.h>
 #include <rangeinfo.h>
 #include <QFinalState>

@@ -2,7 +2,7 @@
 #define BASEDSPMEASPROGRAM_H
 
 #include "basemeasprogram.h"
-#include <service-interfaces/dspinterface.h>
+#include <dspinterface.h>
 
 class cBaseDspMeasProgram: public cBaseMeasProgram
 {
