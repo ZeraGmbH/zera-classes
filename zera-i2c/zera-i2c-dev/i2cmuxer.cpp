@@ -19,6 +19,11 @@ void I2cMuxer::disableMux()
     switchMux(m_muxCodeDisable);
 }
 
+QString I2cMuxer::getDevIdString()
+{
+    return QString("%1%2").arg(m_deviceNode).arg(m_i2cMuxAdress);
+}
+
 void I2cMuxer::switchMux(uchar muxCode)
 {
     // 1 adr byte, 1 byte data = mux code
