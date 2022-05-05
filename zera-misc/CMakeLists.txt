@@ -25,9 +25,10 @@ if(ZC_BUILD_MODULES)
         service-interfaces/secinterface_p.h
         ethadress_p.h
         ethadress.h
+        singleonoffreferencemanager.h
         service-interfaces/pcbinterface.h
         service-interfaces/pcbinterface_p.h
-    )
+)
 endif(ZC_BUILD_MODULES)
 
 # common
@@ -111,3 +112,5 @@ install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc
     )
+
+add_subdirectory(tests)
