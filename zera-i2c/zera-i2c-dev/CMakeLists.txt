@@ -12,7 +12,7 @@ add_library(zeradev SHARED
     )
 
 target_link_libraries(zeradev
-    PRIVATE
+    PUBLIC
     Qt5::Core
     zerai2c
     zeramath
