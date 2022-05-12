@@ -21,7 +21,7 @@ target_link_libraries(zeramath
 # announce headers - target perspective
 target_include_directories(zeramath
     PUBLIC
-    $<INSTALL_INTERFACE:include/zera-classes/math>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/math>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -47,7 +47,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeramathConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 # configure *Config.cmake

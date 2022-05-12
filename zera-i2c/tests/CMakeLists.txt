@@ -17,7 +17,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
 
     target_include_directories(zera-i2c-unittest
         PUBLIC
-        $<INSTALL_INTERFACE:include/zera-classes/dev>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/dev>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         )
 

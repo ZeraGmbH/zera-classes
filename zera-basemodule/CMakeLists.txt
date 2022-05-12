@@ -37,7 +37,7 @@ target_link_libraries(zerabasemodule
 # announce headers - target perspective
 target_include_directories(zerabasemodule
     PUBLIC
-    $<INSTALL_INTERFACE:include/zera-classes/basemodule>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -62,7 +62,7 @@ install(TARGETS zerabasemodule
 write_basic_package_version_file(
     zerabasemoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 # configure *Config.cmake

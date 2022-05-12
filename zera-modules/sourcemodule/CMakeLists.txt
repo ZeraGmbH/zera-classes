@@ -190,7 +190,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     sourcemoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 install(

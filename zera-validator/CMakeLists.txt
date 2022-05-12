@@ -24,7 +24,7 @@ target_link_libraries(zeravalidator
 # announce headers - target perspective
 target_include_directories(zeravalidator
     PUBLIC
-    $<INSTALL_INTERFACE:include/zeravalidator>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zeravalidator>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -50,7 +50,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeravalidatorConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 # configure *Config.cmake

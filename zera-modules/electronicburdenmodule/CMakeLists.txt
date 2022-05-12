@@ -134,7 +134,7 @@ target_link_libraries(electronicburdenmodule
 
 target_include_directories(electronicburdenmodule
     PUBLIC
-    $<INSTALL_INTERFACE:include/electronicburdenmodule>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/electronicburdenmodule>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
@@ -158,7 +158,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     electronicburdenmoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 install(
@@ -195,7 +195,7 @@ if (false)  # todo: unit tests!
 
     target_include_directories(electronicburdenmodule-unittest
         PUBLIC
-        $<INSTALL_INTERFACE:include/electronicburdenmodule>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/electronicburdenmodule>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -228,7 +228,7 @@ if (false)  # todo: unit tests!
 
     target_include_directories(electronicburdenmodule-unittest-qt
         PUBLIC
-        $<INSTALL_INTERFACE:include/electronicburdenmodule>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/electronicburdenmodule>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src

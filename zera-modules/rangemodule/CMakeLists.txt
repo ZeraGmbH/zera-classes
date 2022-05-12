@@ -129,7 +129,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     rangemoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 
@@ -165,7 +165,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
 
     target_include_directories(rangemodule-unittest
         PUBLIC
-        $<INSTALL_INTERFACE:include/rangemodule>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rangemodule>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -198,7 +198,7 @@ if(FALSE) # we have no qt-unittests yet
 
     target_include_directories(rangemodule-unittest-qt
         PUBLIC
-        $<INSTALL_INTERFACE:include/rangemodule>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rangemodule>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/src
