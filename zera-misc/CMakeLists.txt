@@ -67,7 +67,7 @@ target_link_libraries(zeramisc
 # announce headers - target perspective
 target_include_directories(zeramisc
     PUBLIC
-    $<INSTALL_INTERFACE:include/zera-classes/misc>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
@@ -93,7 +93,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeramiscConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 configure_file(zeramiscConfig.cmake.in zeramiscConfig.cmake @ONLY)

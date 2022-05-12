@@ -22,7 +22,7 @@ target_link_libraries(zeraproxy
 # announce headers - target perspective
 target_include_directories(zeraproxy
     PUBLIC
-    $<INSTALL_INTERFACE:include/zera-classes/proxy>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/proxy>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
@@ -47,7 +47,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeraproxyConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 # configure *Config.cmake

@@ -17,7 +17,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
 
     target_include_directories(zera-misc-unittest
         PUBLIC
-        $<INSTALL_INTERFACE:include/zera-classes/misc>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
         )
 

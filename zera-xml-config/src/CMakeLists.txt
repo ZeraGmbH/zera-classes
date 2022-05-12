@@ -22,7 +22,7 @@ target_link_libraries(zeraxmlconfig
 # announce headers - target perspective
 target_include_directories(zeraxmlconfig
     PUBLIC
-    $<INSTALL_INTERFACE:include/zeraxmlconfig>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zeraxmlconfig>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
@@ -48,7 +48,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeraxmlconfigConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 # configure *Config.cmake

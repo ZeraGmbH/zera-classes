@@ -24,7 +24,7 @@ target_link_libraries(zeradev
 # announce headers - target perspective
 target_include_directories(zeradev
     PUBLIC
-    $<INSTALL_INTERFACE:include/zera-classes/dev>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/dev>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
@@ -49,7 +49,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeradevConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 # configure *Config.cmake

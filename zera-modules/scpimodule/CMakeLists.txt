@@ -150,7 +150,7 @@ include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     scpimoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMinorVersion
+    COMPATIBILITY SameMajorVersion
     )
 
 if(NOT ZC_NO_CONFIG_INSTALL)
