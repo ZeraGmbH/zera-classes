@@ -19,7 +19,7 @@ function(SETUP_TESTS)
             )
         target_link_libraries(${_testname}
             PUBLIC
-            Qt${QT_MAJOR_VERISION}::Test
+            Qt5::Test
             VeinMeta::VfStorageHash
             sourcemodule-static
             )
