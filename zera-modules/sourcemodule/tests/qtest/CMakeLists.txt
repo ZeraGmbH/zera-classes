@@ -54,4 +54,5 @@ SETUP_TESTS(
    test_sourcedevicemanager
    test_sourcestatecontroller
    test_sourceperiodicpollerstate
+   test_sourceswitchjson
 )

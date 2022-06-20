@@ -1,16 +1,16 @@
-#include "main-unittest-qt.h"
-#include "qt-unittest-sourceswitchjson.h"
+#include "test_sourceswitchjson.h"
+#include "test_globals.h"
 #include "source-device/sourceio.h"
 #include "source-device/sourceswitchjson.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-QTEST_MAIN(SourceSwitchJsonTest);
+QTEST_MAIN(test_sourceswitchjson);
 
-void SourceSwitchJsonTest::init()
+void test_sourceswitchjson::init()
 {
 }
 
-void SourceSwitchJsonTest::signalSwitch()
+void test_sourceswitchjson::signalSwitch()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
@@ -30,7 +30,7 @@ void SourceSwitchJsonTest::signalSwitch()
     QCOMPARE(paramChangeCount, 1);
 }
 
-void SourceSwitchJsonTest::signalSwitchAfterError()
+void test_sourceswitchjson::signalSwitchAfterError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
@@ -53,7 +53,7 @@ void SourceSwitchJsonTest::signalSwitchAfterError()
     QCOMPARE(paramChangeCount, 1);
 }
 
-void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
+void test_sourceswitchjson::twoSignalsSwitchSameTwice()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
@@ -74,7 +74,7 @@ void SourceSwitchJsonTest::twoSignalsSwitchSameTwice()
     QCOMPARE(paramChangeCount, 2);
 }
 
-void SourceSwitchJsonTest::currentAndRequestedParamOnError()
+void test_sourceswitchjson::currentAndRequestedParamOnError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
@@ -102,7 +102,7 @@ void SourceSwitchJsonTest::currentAndRequestedParamOnError()
     QVERIFY(paramState.getParams() == switcher.getCurrLoadState().getParams());
 }
 
-void SourceSwitchJsonTest::changeParamOnSuccess()
+void test_sourceswitchjson::changeParamOnSuccess()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
