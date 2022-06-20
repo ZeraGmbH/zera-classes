@@ -4,7 +4,7 @@
 #include <QObject>
 #include "io-queue/ioqueue.h"
 
-class IoQueueTest : public QObject
+class test_ioqueue : public QObject
 {
     Q_OBJECT
 public slots:

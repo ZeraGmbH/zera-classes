@@ -28,4 +28,5 @@ endfunction()
 
 SETUP_TESTS(
    test_iodevice
+   test_ioqueue
 )
