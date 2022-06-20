@@ -10,6 +10,8 @@ add_library(testhelpers STATIC
     sourcedeviceerrorinjection-forunittest.cpp
     sourcescannerwithinstancecount-forunittest.h
     sourcescannerwithinstancecount-forunittest.cpp
+    veincomponentsetnotifier-forunittest.h
+    veincomponentsetnotifier-forunittest.cpp
     )
 
 target_link_libraries(testhelpers
@@ -55,4 +57,5 @@ SETUP_TESTS(
    test_sourcestatecontroller
    test_sourceperiodicpollerstate
    test_sourceswitchjson
+   test_sourcedevicefacade
 )
