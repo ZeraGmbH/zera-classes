@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class SourceSwitchJsonTest : public QObject
+class test_sourceswitchjson : public QObject
 {
     Q_OBJECT
 
