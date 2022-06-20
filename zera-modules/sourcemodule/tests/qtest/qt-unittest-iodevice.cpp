@@ -3,7 +3,7 @@
 #include "io-device/iodevicefactory.h"
 #include "io-device/iodevicedemo.h"
 
-static QObject* pIoDeviceTest = addTest(new IoDeviceTest);
+QTEST_MAIN(IoDeviceTest)
 
 void IoDeviceTest::init()
 {

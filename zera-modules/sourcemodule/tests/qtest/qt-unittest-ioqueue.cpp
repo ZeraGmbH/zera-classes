@@ -4,7 +4,7 @@
 #include "io-device/iodevicedemo.h"
 #include "source-protocols/iogroupgenerator.h"
 
-static QObject* pIoQueueTest = addTest(new IoQueueTest);
+QTEST_MAIN(IoQueueTest)
 
 void IoQueueTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {
