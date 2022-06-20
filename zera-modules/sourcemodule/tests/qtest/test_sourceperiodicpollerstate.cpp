@@ -1,15 +1,15 @@
-#include "main-unittest-qt.h"
-#include "qt-unittest-sourceperiodicpollerstate.h"
+#include "test_sourceperiodicpollerstate.h"
+#include "test_globals.h"
 #include "source-device/sourceperiodicpollerstate.h"
 
-QTEST_MAIN(SourceStatePeriodicPollerTest);
+QTEST_MAIN(test_sourceperiodicpollerstate);
 
-void SourceStatePeriodicPollerTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
+void test_sourceperiodicpollerstate::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {
     m_listIoGroupsReceived.append(workGroup);
 }
 
-void SourceStatePeriodicPollerTest::init()
+void test_sourceperiodicpollerstate::init()
 {
     m_sourceIo = nullptr;
     m_ioDevice = nullptr;
@@ -21,23 +21,23 @@ void SourceStatePeriodicPollerTest::init()
     m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, sourceProperties));
     m_transactionNotifier = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     connect(m_sourceIo.get(), &ISourceIo::sigResponseReceived,
-            this, &SourceStatePeriodicPollerTest::onIoQueueGroupFinished);
+            this, &test_sourceperiodicpollerstate::onIoQueueGroupFinished);
 }
 
-void SourceStatePeriodicPollerTest::pollAutoStart()
+void test_sourceperiodicpollerstate::pollAutoStart()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier);
     QVERIFY(poller.isPeriodicPollActive());
 }
 
-void SourceStatePeriodicPollerTest::pollStop()
+void test_sourceperiodicpollerstate::pollStop()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier);
     poller.stopPeriodicPoll();
     QVERIFY(!poller.isPeriodicPollActive());
 }
 
-void SourceStatePeriodicPollerTest::pollRestart()
+void test_sourceperiodicpollerstate::pollRestart()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier);
     poller.stopPeriodicPoll();
@@ -46,14 +46,14 @@ void SourceStatePeriodicPollerTest::pollRestart()
     QVERIFY(poller.isPeriodicPollActive());
 }
 
-void SourceStatePeriodicPollerTest::pollImmediatePass()
+void test_sourceperiodicpollerstate::pollImmediatePass()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier);
     poller.stopPeriodicPoll();
     QVERIFY(poller.tryStartPollNow());
 }
 
-void SourceStatePeriodicPollerTest::pollImmediateFail()
+void test_sourceperiodicpollerstate::pollImmediateFail()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier);
     poller.stopPeriodicPoll();
@@ -61,14 +61,14 @@ void SourceStatePeriodicPollerTest::pollImmediateFail()
     QVERIFY(!poller.tryStartPollNow());
 }
 
-void SourceStatePeriodicPollerTest::pollAutoStartNotification()
+void test_sourceperiodicpollerstate::pollAutoStartNotification()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier, 1);
     QTest::qWait(30);
     QVERIFY(m_listIoGroupsReceived.count() > 0);
 }
 
-void SourceStatePeriodicPollerTest::pollStopNotification()
+void test_sourceperiodicpollerstate::pollStopNotification()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier, 1);
     QTest::qWait(30);
@@ -77,7 +77,7 @@ void SourceStatePeriodicPollerTest::pollStopNotification()
     QCOMPARE(m_listIoGroupsReceived.count(), 0);
 }
 
-void SourceStatePeriodicPollerTest::pollChangeTimeNotification()
+void test_sourceperiodicpollerstate::pollChangeTimeNotification()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier, 500);
     QTest::qWait(shortQtEventTimeout);

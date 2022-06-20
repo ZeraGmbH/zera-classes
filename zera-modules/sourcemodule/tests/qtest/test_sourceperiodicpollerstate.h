@@ -4,7 +4,7 @@
 #include "source-device/sourceperiodicpollerstate.h"
 #include <QObject>
 
-class SourceStatePeriodicPollerTest : public QObject
+class test_sourceperiodicpollerstate : public QObject
 {
     Q_OBJECT
 public slots:

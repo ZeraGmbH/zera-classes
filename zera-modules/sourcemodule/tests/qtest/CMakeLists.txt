@@ -53,4 +53,5 @@ SETUP_TESTS(
    test_sourcescanner
    test_sourcedevicemanager
    test_sourcestatecontroller
+   test_sourceperiodicpollerstate
 )
