@@ -233,36 +233,4 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         sourcemodule-static
     )
 
-    add_test(NAME    sourcemodule-unittest-qt
-             COMMAND sourcemodule-unittest-qt)
-
-    file(GLOB QTUNITTESTS
-        tests/qtest/qt-unittest-*.cpp
-        tests/qtest/qt-unittest-*.h
-        tests/qtest/*forunittest.h
-        tests/qtest/*forunittest.cpp
-    )
-
-    add_executable(sourcemodule-unittest-qt
-        tests/qtest/main-unittest-qt.h
-        tests/qtest/main-unittest-qt.cpp # must be first!!!
-        ${QTUNITTESTS}
-        tests/qtest/test_globals.cpp
-    )
-
-    target_include_directories(sourcemodule-unittest-qt
-        PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        )
-
-    find_package(VfStorageHash REQUIRED)
-
-    target_link_libraries(sourcemodule-unittest-qt
-        PUBLIC
-        VeinMeta::VfStorageHash
-        Qt5::Test
-        sourcemodule-static
-    )
-
 endif()
