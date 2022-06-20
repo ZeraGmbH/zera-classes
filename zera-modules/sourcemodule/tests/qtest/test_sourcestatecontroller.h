@@ -3,7 +3,7 @@
 #include "io-device/iodevicefactory.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-class SourceStateControllerTest : public QObject
+class test_sourcestatecontroller : public QObject
 {
     Q_OBJECT
 public slots:

@@ -4,7 +4,11 @@
 find_package(VfStorageHash REQUIRED)
 
 add_library(testhelpers STATIC
+    test_globals.h
     test_globals.cpp
+    sourcedeviceerrorinjection-forunittest.h
+    sourcedeviceerrorinjection-forunittest.cpp
+    sourcescannerwithinstancecount-forunittest.h
     sourcescannerwithinstancecount-forunittest.cpp
     )
 
@@ -48,4 +52,5 @@ SETUP_TESTS(
    test_sourceio
    test_sourcescanner
    test_sourcedevicemanager
+   test_sourcestatecontroller
 )
