@@ -46,4 +46,5 @@ SETUP_TESTS(
    test_ioqueue
    test_iotransferdata
    test_sourceio
+   test_sourcescanner
 )

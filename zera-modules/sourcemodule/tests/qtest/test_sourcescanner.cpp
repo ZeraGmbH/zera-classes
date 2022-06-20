@@ -1,25 +1,25 @@
-#include "main-unittest-qt.h"
-#include "qt-unittest-sourcescanner.h"
+#include "test_sourcescanner.h"
+#include "test_globals.h"
 #include "io-device/iodevicefactory.h"
 #include "sourcescannerwithinstancecount-forunittest.h"
 #include "source-scanner/sourcescanneriodemo.h"
 #include "source-scanner/sourcescanneriozeraserial.h"
 
-QTEST_MAIN(SourceScannerTest);
+QTEST_MAIN(test_sourcescanner);
 
-void SourceScannerTest::init()
+void test_sourcescanner::init()
 {
     m_scanFinishCount = 0;
 }
 
-void SourceScannerTest::onScanFinishedForCheckInstanceCount(SourceScanner::Ptr scanner)
+void test_sourcescanner::onScanFinishedForCheckInstanceCount(SourceScanner::Ptr scanner)
 {
     Q_UNUSED(scanner);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 1);
     m_scanFinishCount++;
 }
 
-void SourceScannerTest::scannerDiesOnNoConnection()
+void test_sourcescanner::scannerDiesOnNoConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -33,14 +33,14 @@ void SourceScannerTest::scannerDiesOnNoConnection()
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
 
-void SourceScannerTest::scannerSurvivesUntilSlotDirectConnection()
+void test_sourcescanner::scannerSurvivesUntilSlotDirectConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
     SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, ioStrategy);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished,
-            this, &SourceScannerTest::onScanFinishedForCheckInstanceCount,
+            this, &test_sourcescanner::onScanFinishedForCheckInstanceCount,
             Qt::DirectConnection);
     scanner->startScan();
     scanner = nullptr;
@@ -50,14 +50,14 @@ void SourceScannerTest::scannerSurvivesUntilSlotDirectConnection()
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
 
-void SourceScannerTest::scannerSurvivesUntilSlotQueuedConnection()
+void test_sourcescanner::scannerSurvivesUntilSlotQueuedConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
     SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, ioStrategy);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished,
-            this, &SourceScannerTest::onScanFinishedForCheckInstanceCount,
+            this, &test_sourcescanner::onScanFinishedForCheckInstanceCount,
             Qt::QueuedConnection);
     scanner->startScan();
     scanner = nullptr;
@@ -67,7 +67,7 @@ void SourceScannerTest::scannerSurvivesUntilSlotQueuedConnection()
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
 
-void SourceScannerTest::scannerSurvivesUntilSlotLambdaConnection()
+void test_sourcescanner::scannerSurvivesUntilSlotLambdaConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -91,7 +91,7 @@ void SourceScannerTest::scannerSurvivesUntilSlotLambdaConnection()
 // !!! USE SourceScanner only on test below !!!
 ////////////////////////////////////////////////////////////////////////
 
-void SourceScannerTest::uuidPassedIdentical()
+void test_sourcescanner::uuidPassedIdentical()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -109,7 +109,7 @@ void SourceScannerTest::uuidPassedIdentical()
     QCOMPARE(uuid, uuidReceived);
 }
 
-void SourceScannerTest::ioDevicePassedIdentical()
+void test_sourcescanner::ioDevicePassedIdentical()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -125,7 +125,7 @@ void SourceScannerTest::ioDevicePassedIdentical()
     QCOMPARE(ioDevice.get(), ioDeviceReceived.get());
 }
 
-void SourceScannerTest::scannerReportsInvalidSourceAfterCreation()
+void test_sourcescanner::scannerReportsInvalidSourceAfterCreation()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -134,7 +134,7 @@ void SourceScannerTest::scannerReportsInvalidSourceAfterCreation()
     QCOMPARE(scanner->getSourcePropertiesFound().isValid(), false);
 }
 
-void SourceScannerTest::scannerReportsValidSourceAfterDemoIo()
+void test_sourcescanner::scannerReportsValidSourceAfterDemoIo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -152,7 +152,7 @@ void SourceScannerTest::scannerReportsValidSourceAfterDemoIo()
     QCOMPARE(props.isValid(), true);
 }
 
-void SourceScannerTest::scannerReportsValidSourceAfterZeraIo()
+void test_sourcescanner::scannerReportsValidSourceAfterZeraIo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoZeraSerial);
@@ -170,7 +170,7 @@ void SourceScannerTest::scannerReportsValidSourceAfterZeraIo()
     QCOMPARE(props.isValid(), true);
 }
 
-void SourceScannerTest::scannerReportsInvalidSourceAfterBrokenIo()
+void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open(QString());
@@ -189,7 +189,7 @@ void SourceScannerTest::scannerReportsInvalidSourceAfterBrokenIo()
     QCOMPARE(props.isValid(), false);
 }
 
-void SourceScannerTest::scannerReportsInvalidSourceAfterDemoIoResponseError()
+void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -214,7 +214,7 @@ void SourceScannerTest::scannerReportsInvalidSourceAfterDemoIoResponseError()
     QCOMPARE(props.isValid(), false);
 }
 
-void SourceScannerTest::scannerReportsInvalidSourceAfterZeraIoResponseError()
+void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoZeraSerial);

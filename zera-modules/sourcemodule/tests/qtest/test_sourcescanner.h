@@ -4,7 +4,7 @@
 #include "source-scanner/sourcescanner.h"
 #include <QObject>
 
-class SourceScannerTest : public QObject
+class test_sourcescanner : public QObject
 {
     Q_OBJECT
 
