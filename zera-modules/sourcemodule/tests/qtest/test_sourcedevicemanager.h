@@ -12,7 +12,7 @@ struct FinishEntry
     QString errMsg;
 };
 
-class SourceDeviceManagerTest : public QObject
+class test_sourcedevicemanager : public QObject
 {
     Q_OBJECT
 public slots:
