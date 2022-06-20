@@ -5,19 +5,19 @@ find_package(VfStorageHash REQUIRED)
 
 function(SETUP_TESTS)
     foreach(_testname ${ARGN})
-        add_test(NAME test_${_testname}
-                 COMMAND test_${_testname})
-        add_executable(test_${_testname}
-            test_${_testname}.h
-            test_${_testname}.cpp
+        add_test(NAME ${_testname}
+                 COMMAND ${_testname})
+        add_executable(${_testname}
+            ${_testname}.h
+            ${_testname}.cpp
             test_globals.cpp
             )
-        target_include_directories(test_${_testname}
+        target_include_directories(${_testname}
             PRIVATE
             $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
             ${PROJECT_SOURCE_DIR}/src
             )
-        target_link_libraries(test_${_testname}
+        target_link_libraries(${_testname}
             PUBLIC
             Qt${QT_MAJOR_VERISION}::Test
             VeinMeta::VfStorageHash
@@ -27,5 +27,5 @@ function(SETUP_TESTS)
 endfunction()
 
 SETUP_TESTS(
-   iodevice
+   test_iodevice
 )
