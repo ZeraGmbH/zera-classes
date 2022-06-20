@@ -1,5 +1,5 @@
-#include "main-unittest-qt.h"
-#include "qt-unittest-sourcestatecontroller.h"
+#include "test_sourcestatecontroller.h"
+#include "test_globals.h"
 #include "source-device/sourcestatecontroller.h"
 #include "source-device/sourceswitchjson.h"
 #include "io-device/iodevicedemo.h"
@@ -8,14 +8,14 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include <zera-json-params-state.h>
 
-QTEST_MAIN(SourceStateControllerTest);
+QTEST_MAIN(test_sourcestatecontroller);
 
-void SourceStateControllerTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
+void test_sourcestatecontroller::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {
     m_listIoGroupsReceived.append(workGroup);
 }
 
-void SourceStateControllerTest::init()
+void test_sourcestatecontroller::init()
 {
     m_sourceIo = nullptr;
     m_sourceIoWithError = nullptr;
@@ -27,11 +27,11 @@ void SourceStateControllerTest::init()
     m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, sourceProperties));
     m_sourceIoWithError = ISourceIo::Ptr(new SourceIoErrorInjection(m_sourceIo));
     connect(m_sourceIoWithError.get(), &ISourceIo::sigResponseReceived,
-            this, &SourceStateControllerTest::onIoQueueGroupFinished);
+            this, &test_sourcestatecontroller::onIoQueueGroupFinished);
 }
 
 
-void SourceStateControllerTest::statePollAutoStart()
+void test_sourcestatecontroller::statePollAutoStart()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
@@ -50,7 +50,7 @@ void SourceStateControllerTest::statePollAutoStart()
     QVERIFY(poller->isPeriodicPollActive());
 }
 
-void SourceStateControllerTest::statePollChangeTime()
+void test_sourcestatecontroller::statePollChangeTime()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
@@ -70,7 +70,7 @@ void SourceStateControllerTest::statePollChangeTime()
     QCOMPARE(statePollSignalCount, 1);
 }
 
-void SourceStateControllerTest::stateInitialIdle()
+void test_sourcestatecontroller::stateInitialIdle()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
@@ -91,7 +91,7 @@ void SourceStateControllerTest::stateInitialIdle()
     QCOMPARE(stateReceived, SourceStateController::States::IDLE);
 }
 
-void SourceStateControllerTest::switchOnCausesBusyOnOffState()
+void test_sourcestatecontroller::switchOnCausesBusyOnOffState()
 {
     setDemoIoFixedTimeout(m_ioDevice, 0);
 
@@ -118,7 +118,7 @@ void SourceStateControllerTest::switchOnCausesBusyOnOffState()
     QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
 }
 
-void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
+void test_sourcestatecontroller::switchOnOffCausesBusyTwoOnOffState()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -152,7 +152,7 @@ void SourceStateControllerTest::switchOnOffCausesBusyTwoOnOffState()
 
 
 
-void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
+void test_sourcestatecontroller::sequencePollSwitchErrorOnSwitch()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -180,7 +180,7 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnSwitch()
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
-void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
+void test_sourcestatecontroller::sequencePollSwitchErrorOnPoll()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -209,7 +209,7 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnPoll()
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_POLL);
 }
 
-void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
+void test_sourcestatecontroller::sequenceSwitchPollErrorOnSwitch()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -238,7 +238,7 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnSwitch()
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
-void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
+void test_sourcestatecontroller::sequenceSwitchPollErrorOnPoll()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -269,7 +269,7 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPoll()
     QCOMPARE(statesReceived[2], SourceStateController::States::ERROR_POLL);
 }
 
-void SourceStateControllerTest::sequenceSwitchPollErrorOnPostPoll()
+void test_sourcestatecontroller::sequenceSwitchPollErrorOnPostPoll()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -299,7 +299,7 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnPostPoll()
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
-void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
+void test_sourcestatecontroller::sequencePollSwitchErrorOnBoth()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -327,7 +327,7 @@ void SourceStateControllerTest::sequencePollSwitchErrorOnBoth()
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_POLL);
 }
 
-void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
+void test_sourcestatecontroller::sequenceSwitchPollErrorOnBoth()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -355,7 +355,7 @@ void SourceStateControllerTest::sequenceSwitchPollErrorOnBoth()
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 }
 
-void SourceStateControllerTest::pollStopsAfterSwitchError()
+void test_sourcestatecontroller::pollStopsAfterSwitchError()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -384,7 +384,7 @@ void SourceStateControllerTest::pollStopsAfterSwitchError()
     QVERIFY(!poller->isPeriodicPollActive());
 }
 
-void SourceStateControllerTest::pollStopsAfterPollError()
+void test_sourcestatecontroller::pollStopsAfterPollError()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -409,7 +409,7 @@ void SourceStateControllerTest::pollStopsAfterPollError()
     QVERIFY(!poller->isPeriodicPollActive());
 }
 
-void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwitch()
+void test_sourcestatecontroller::pollStopsAfterErrorAndRestartsAfterSuccessfulSwitch()
 {
     setDemoIoFixedTimeout(m_ioDevice, 1);
 
@@ -441,7 +441,7 @@ void SourceStateControllerTest::pollStopsAfterErrorAndRestartsAfterSuccessfulSwi
     QVERIFY(poller->isPeriodicPollActive());
 }
 
-void SourceStateControllerTest::setDemoResonseErrorIdx(int idx)
+void test_sourcestatecontroller::setDemoResonseErrorIdx(int idx)
 {
     static_cast<SourceIoErrorInjection*>(m_sourceIoWithError.get())->setDemoResonseErrorIdx(idx);
 }
