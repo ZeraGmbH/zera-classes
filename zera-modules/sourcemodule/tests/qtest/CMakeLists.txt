@@ -47,4 +47,5 @@ SETUP_TESTS(
    test_iotransferdata
    test_sourceio
    test_sourcescanner
+   test_sourcedevicemanager
 )
