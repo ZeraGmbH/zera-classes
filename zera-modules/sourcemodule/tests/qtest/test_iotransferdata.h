@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class IoTransferDataTest : public QObject
+class test_iotransferdata : public QObject
 {
     Q_OBJECT
 private slots:
