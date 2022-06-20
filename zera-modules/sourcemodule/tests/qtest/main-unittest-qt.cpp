@@ -2,11 +2,18 @@
 #include "io-device/iodevicefactory.h"
 
 static QList<QObject*> listTests;
+static QList<Ttest> listTestFuncs;
 
 QObject *addTest(QObject *test)
 {
     listTests.append(test);
     return test;
+}
+
+Ttest addTestFunc(Ttest ptr)
+{
+    listTestFuncs.append(ptr);
+    return ptr;
 }
 
 int main(int argc, char *argv[])
@@ -18,6 +25,9 @@ int main(int argc, char *argv[])
     // IoDeviceBase::prepareSendAndReceive
     qputenv("QT_FATAL_CRITICALS", "1");
 
+    while (!listTestFuncs.isEmpty()) {
+        status |= listTestFuncs.takeLast()(argc, argv);
+    }
     while(!listTests.isEmpty()) {
         QCoreApplication app(argc, argv);
         QObject *test = listTests.takeLast();
