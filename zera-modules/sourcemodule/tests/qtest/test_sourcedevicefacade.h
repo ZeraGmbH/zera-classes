@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class SourceDeviceFacadeTest : public QObject
+class test_sourcedevicefacade : public QObject
 {
     Q_OBJECT
 private slots:
