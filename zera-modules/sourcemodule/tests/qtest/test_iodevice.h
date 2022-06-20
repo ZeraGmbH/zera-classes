@@ -4,7 +4,7 @@
 #include <QTest>
 #include "io-device/iodevicebase.h"
 
-class IoDevice : public QObject
+class test_iodevice : public QObject
 {
     Q_OBJECT
 public slots:

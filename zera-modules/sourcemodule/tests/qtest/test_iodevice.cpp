@@ -3,9 +3,9 @@
 #include "io-device/iodevicefactory.h"
 #include "io-device/iodevicedemo.h"
 
-QTEST_MAIN(IoDevice)
+QTEST_MAIN(test_iodevice)
 
-void IoDevice::init()
+void test_iodevice::init()
 {
     m_ioIDReceived = -1;
     m_ioFinishReceiveCount = 0;
@@ -14,13 +14,13 @@ void IoDevice::init()
     m_listReceivedData.clear();
 }
 
-void IoDevice::generateBrokenIoDeviceForOutOfLimitType()
+void test_iodevice::generateBrokenIoDeviceForOutOfLimitType()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes(-1));
     QCOMPARE(IoDeviceTypes::BROKEN, ioDevice->getType());
 }
 
-void IoDevice::onIoFinish(int ioID, bool error)
+void test_iodevice::onIoFinish(int ioID, bool error)
 {
     m_ioIDReceived = ioID;
     m_ioFinishReceiveCount++;
@@ -30,25 +30,25 @@ void IoDevice::onIoFinish(int ioID, bool error)
     }
 }
 
-void IoDevice::baseReturnsIds()
+void test_iodevice::baseReturnsIds()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     checkIds(ioDevice);
 }
 
-void IoDevice::demoReturnsIds()
+void test_iodevice::demoReturnsIds()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     checkIds(ioDevice);
 }
 
-void IoDevice::serialReturnsIds()
+void test_iodevice::serialReturnsIds()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::ASYNCSERIAL);
     checkIds(ioDevice);
 }
 
-void IoDevice::baseCannotOpen()
+void test_iodevice::baseCannotOpen()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open("/dev/base/foo");
@@ -56,7 +56,7 @@ void IoDevice::baseCannotOpen()
     QVERIFY(ioDevice->getDeviceInfo().isEmpty());
 }
 
-void IoDevice::demoCanOpen()
+void test_iodevice::demoCanOpen()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     QString strBefore = "/dev/demo/foo";
@@ -65,7 +65,7 @@ void IoDevice::demoCanOpen()
     QCOMPARE(strBefore, ioDevice->getDeviceInfo());
 }
 
-void IoDevice::serialCannotOpen()
+void test_iodevice::serialCannotOpen()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::ASYNCSERIAL);
     ioDevice->open("/dev/serial/foo");
@@ -73,14 +73,14 @@ void IoDevice::serialCannotOpen()
     QVERIFY(ioDevice->getDeviceInfo().isEmpty());
 }
 
-void IoDevice::baseReportsErrorClose()
+void test_iodevice::baseReportsErrorClose()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     QVERIFY(!ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 1);
 }
 
-void IoDevice::baseReportsErrorOpen()
+void test_iodevice::baseReportsErrorOpen()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open(QString());
@@ -88,14 +88,14 @@ void IoDevice::baseReportsErrorOpen()
     checkNotifications(ioDevice, 1, 1);
 }
 
-void IoDevice::demoReportsErrorClose()
+void test_iodevice::demoReportsErrorClose()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     QVERIFY(!ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 1);
 }
 
-void IoDevice::demoReportsNoErrorOpen()
+void test_iodevice::demoReportsNoErrorOpen()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     ioDevice->open(QString());
@@ -103,14 +103,14 @@ void IoDevice::demoReportsNoErrorOpen()
     checkNotifications(ioDevice, 1, 0);
 }
 
-void IoDevice::serialReportsErrorClose()
+void test_iodevice::serialReportsErrorClose()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::ASYNCSERIAL);
     QVERIFY(!ioDevice->isOpen());
     checkNotifications(ioDevice, 1, 1);
 }
 
-void IoDevice::demoDelayNotOpen()
+void test_iodevice::demoDelayNotOpen()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
@@ -118,7 +118,7 @@ void IoDevice::demoDelayNotOpen()
     checkNotifications(ioDevice, 1, 1);
 }
 
-void IoDevice::demoDelayOpenDontWait()
+void test_iodevice::demoDelayOpenDontWait()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
@@ -126,7 +126,7 @@ void IoDevice::demoDelayOpenDontWait()
     checkNotifications(ioDevice, 0, 0);
 }
 
-void IoDevice::demoOpenDelayWait()
+void test_iodevice::demoOpenDelayWait()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected(1);
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
@@ -137,7 +137,7 @@ void IoDevice::demoOpenDelayWait()
     QCOMPARE(m_errorsReceived, 0);
 }
 
-void IoDevice::demoResponseList()
+void test_iodevice::demoResponseList()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
 
@@ -159,7 +159,7 @@ void IoDevice::demoResponseList()
     QCOMPARE(m_listReceivedData[2], "2\r");
 }
 
-void IoDevice::demoResponseListDelay()
+void test_iodevice::demoResponseListDelay()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected(10);
 
@@ -181,7 +181,7 @@ void IoDevice::demoResponseListDelay()
     QCOMPARE(m_listReceivedData[2], "2\r");
 }
 
-void IoDevice::demoResponseListErrorInjection()
+void test_iodevice::demoResponseListErrorInjection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
 
@@ -199,7 +199,7 @@ void IoDevice::demoResponseListErrorInjection()
     QCOMPARE(m_listReceivedData[1], "1\r");
 }
 
-void IoDevice::demoResponseAlwaysError()
+void test_iodevice::demoResponseAlwaysError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
     IoDeviceDemo* demoIO = static_cast<IoDeviceDemo*>(ioDevice.get());
@@ -224,7 +224,7 @@ void IoDevice::demoResponseAlwaysError()
     QCOMPARE(m_listReceivedData[2], "2\r");
 }
 
-void IoDevice::demoDelayFollowsDelay()
+void test_iodevice::demoDelayFollowsDelay()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
@@ -243,7 +243,7 @@ void IoDevice::demoDelayFollowsDelay()
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
 
-void IoDevice::demoDelayFollowsTimeout()
+void test_iodevice::demoDelayFollowsTimeout()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
     IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
@@ -260,7 +260,7 @@ void IoDevice::demoDelayFollowsTimeout()
     QCOMPARE(m_ioFinishReceiveCount, 1);
 }
 
-void IoDevice::baseCannotClose()
+void test_iodevice::baseCannotClose()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open("");
@@ -274,7 +274,7 @@ void IoDevice::baseCannotClose()
     QCOMPARE(countDiconnectReceived, 0);
 }
 
-void IoDevice::demoCanClose()
+void test_iodevice::demoCanClose()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDeviceWithDelayAndConnected();
 
@@ -287,7 +287,7 @@ void IoDevice::demoCanClose()
     QCOMPARE(countDiconnectReceived, 1);
 }
 
-void IoDevice::checkIds(IoDeviceBase::Ptr ioDevice)
+void test_iodevice::checkIds(IoDeviceBase::Ptr ioDevice)
 {
     IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingle::Ptr::create("", "");
     int ioID1 = ioDevice->sendAndReceive(dummyIoData);
@@ -295,9 +295,9 @@ void IoDevice::checkIds(IoDeviceBase::Ptr ioDevice)
     QVERIFY(ioID1 != ioID2);
 }
 
-void IoDevice::checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int errors)
+void test_iodevice::checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int errors)
 {
-    connect(ioDevice.get(), &IoDeviceBase::sigIoFinished, this, &IoDevice::onIoFinish);
+    connect(ioDevice.get(), &IoDeviceBase::sigIoFinished, this, &test_iodevice::onIoFinish);
     IoTransferDataSingle::Ptr dummyIoData = IoTransferDataSingle::Ptr::create("", "");
     ioDevice->sendAndReceive(dummyIoData);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
@@ -307,10 +307,10 @@ void IoDevice::checkNotifications(IoDeviceBase::Ptr ioDevice, int total, int err
     QCOMPARE(m_errorsReceived, errors);
 }
 
-IoDeviceBase::Ptr IoDevice::createOpenDemoIoDeviceWithDelayAndConnected(int responseDelay)
+IoDeviceBase::Ptr test_iodevice::createOpenDemoIoDeviceWithDelayAndConnected(int responseDelay)
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    connect(ioDevice.get(), &IoDeviceBase::sigIoFinished, this, &IoDevice::onIoFinish);
+    connect(ioDevice.get(), &IoDeviceBase::sigIoFinished, this, &test_iodevice::onIoFinish);
     if(responseDelay) {
         IoDeviceDemo* demoIoDevice = static_cast<IoDeviceDemo*>(ioDevice.get());
         demoIoDevice->setResponseDelay(false, responseDelay);
