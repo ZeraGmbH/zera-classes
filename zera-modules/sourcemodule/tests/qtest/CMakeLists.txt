@@ -30,4 +30,5 @@ SETUP_TESTS(
    test_iodevice
    test_ioqueue
    test_iotransferdata
+   test_sourceio
 )

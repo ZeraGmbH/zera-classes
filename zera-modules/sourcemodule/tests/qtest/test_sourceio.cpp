@@ -1,17 +1,17 @@
-#include "main-unittest-qt.h"
-#include "qt-unittest-sourceio.h"
+#include "test_sourceio.h"
+#include "test_globals.h"
 #include "io-device/iodevicefactory.h"
 #include "source-device/sourceio.h"
 #include "json/jsonstructureloader.h"
 #include <zera-json-params-state.h>
 
-QTEST_MAIN(SourceIoTest);
+QTEST_MAIN(test_sourceio);
 
-void SourceIoTest::init()
+void test_sourceio::init()
 {
 }
 
-void SourceIoTest::gettersOK()
+void test_sourceio::gettersOK()
 {
     QString name = "fooName";
     QString version = "fooVersion";
@@ -29,7 +29,7 @@ void SourceIoTest::gettersOK()
     QCOMPARE(version, sourceIo.getProperties().getVersion());
 }
 
-void SourceIoTest::signalResponses()
+void test_sourceio::signalResponses()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
@@ -58,7 +58,7 @@ void SourceIoTest::signalResponses()
     QCOMPARE(countResponseReceived, 2);
 }
 
-void SourceIoTest::signalResponsesOnOneError()
+void test_sourceio::signalResponsesOnOneError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
@@ -88,7 +88,7 @@ void SourceIoTest::signalResponsesOnOneError()
     QCOMPARE(countResponseReceived, 2);
 }
 
-void SourceIoTest::signalResponsesOnTwoErrors()
+void test_sourceio::signalResponsesOnTwoErrors()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");

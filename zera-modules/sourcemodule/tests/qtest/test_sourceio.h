@@ -4,7 +4,7 @@
 #include <QObject>
 #include "source-device/sourceio.h"
 
-class SourceIoTest : public QObject
+class test_sourceio : public QObject
 {
     Q_OBJECT
 
