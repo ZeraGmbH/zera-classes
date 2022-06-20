@@ -8,6 +8,7 @@ function(SETUP_TESTS)
         add_test(NAME test_${_testname}
                  COMMAND test_${_testname})
         add_executable(test_${_testname}
+            test_${_testname}.h
             test_${_testname}.cpp
             test_globals.cpp
             )
