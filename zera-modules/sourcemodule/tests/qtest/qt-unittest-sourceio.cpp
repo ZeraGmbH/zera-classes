@@ -5,7 +5,7 @@
 #include "json/jsonstructureloader.h"
 #include <zera-json-params-state.h>
 
-static QObject* pSourceIoTest = addTest(new SourceIoTest);
+QTEST_MAIN(SourceIoTest);
 
 void SourceIoTest::init()
 {

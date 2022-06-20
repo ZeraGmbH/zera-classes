@@ -6,8 +6,6 @@
 class SourceStateControllerTest : public QObject
 {
     Q_OBJECT
-    virtual ~SourceStateControllerTest();
-
 public slots:
     void onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup);
 

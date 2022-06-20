@@ -2,7 +2,7 @@
 #include "qt-unittest-sourceperiodicpollerstate.h"
 #include "source-device/sourceperiodicpollerstate.h"
 
-static QObject* pSourceIoTest = addTest(new SourceStatePeriodicPollerTest);
+QTEST_MAIN(SourceStatePeriodicPollerTest);
 
 void SourceStatePeriodicPollerTest::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {

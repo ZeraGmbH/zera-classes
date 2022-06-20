@@ -4,7 +4,7 @@
 #include "source-device/sourceswitchjson.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-static QObject* pSourceIoTest = addTest(new SourceSwitchJsonTest);
+QTEST_MAIN(SourceSwitchJsonTest);
 
 void SourceSwitchJsonTest::init()
 {

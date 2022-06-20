@@ -12,7 +12,7 @@
 
 #include <QString>
 
-static QObject* pSourceDeviceManagerTest = addTest(new SourceDeviceFacadeTest);
+QTEST_MAIN(SourceDeviceFacadeTest);
 
 void SourceDeviceFacadeTest::init()
 {

@@ -3,7 +3,7 @@
 #include "io-queue/ioqueueentry.h"
 #include "io-device/iodevicebase.h"
 
-static QObject* pIoQueueTest = addTest(new IoTransferDataTest);
+QTEST_MAIN(IoTransferDataTest);
 
 void IoTransferDataTest::init()
 {

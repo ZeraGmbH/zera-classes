@@ -2,7 +2,7 @@
 #include "qt-unittest-sourcedevicemanager.h"
 #include "source-device/sourcedevicemanager.h"
 
-static QObject* pSourceDeviceManagerTest = addTest(new SourceDeviceManagerTest);
+QTEST_MAIN(SourceDeviceManagerTest);
 
 FinishEntry::FinishEntry(int slotNo, QUuid uuid, QString errMsg)
 {
