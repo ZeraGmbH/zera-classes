@@ -106,6 +106,5 @@ if(ZC_BUILD_MODULES)
 endif(ZC_BUILD_MODULES)
 
 find_package(GTest)
-enable_testing()
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

@@ -1,10 +1,10 @@
 #ifndef QTUNITTESTSOURCEIODEVICE_H
 #define QTUNITTESTSOURCEIODEVICE_H
 
-#include <QObject>
+#include <QTest>
 #include "io-device/iodevicebase.h"
 
-class IoDeviceTest : public QObject
+class IoDevice : public QObject
 {
     Q_OBJECT
 public slots:

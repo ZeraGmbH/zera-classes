@@ -203,6 +203,7 @@ install(
 
 if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
     message(STATUS "unittest sourcemodule")
+    add_subdirectory(tests)
     enable_testing()
 
     add_test(NAME    sourcemodule-unittest
@@ -246,7 +247,7 @@ if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
         tests/qtest/main-unittest-qt.h
         tests/qtest/main-unittest-qt.cpp # must be first!!!
         ${QTUNITTESTS}
-        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+        tests/qtest/test_globals.cpp
     )
 
     target_include_directories(sourcemodule-unittest-qt
