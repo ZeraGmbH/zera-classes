@@ -1,14 +1,7 @@
 #include "main-unittest-qt.h"
 #include "io-device/iodevicefactory.h"
 
-static QList<QObject*> listTests;
 static QList<Ttest> listTestFuncs;
-
-QObject *addTest(QObject *test)
-{
-    listTests.append(test);
-    return test;
-}
 
 Ttest addTestFunc(Ttest ptr)
 {
@@ -26,13 +19,8 @@ int main(int argc, char *argv[])
     qputenv("QT_FATAL_CRITICALS", "1");
 
     while (!listTestFuncs.isEmpty()) {
-        status |= listTestFuncs.takeLast()(argc, argv);
-    }
-    while(!listTests.isEmpty()) {
-        QCoreApplication app(argc, argv);
-        QObject *test = listTests.takeLast();
-        status |= QTest::qExec(test, argc, argv);
-        delete test;
+        auto testFunc = listTestFuncs.takeLast();
+        status |= testFunc(argc, argv);
     }
     if(status) {
 #ifdef QT_DEBUG

@@ -20,8 +20,6 @@ Ttest addTestFunc(Ttest ptr);
     } \
     static Ttest dummy = addTestFunc(testFunc);
 
-QObject* addTest(QObject* test);
-
 IoDeviceBase::Ptr createOpenDemoIoDevice(QString deviceInfo = QString());
 void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs);
 
