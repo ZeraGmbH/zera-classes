@@ -59,6 +59,7 @@ set(SUB_DIRS
     zera-comm
     zera-i2c
     zera-misc
+    zera-service-common
 )
 
 set(MODULE_DIRS
