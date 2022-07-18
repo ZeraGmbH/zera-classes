@@ -1,0 +1,9 @@
+include(CMakeFindDependencyMacro)
+
+# dependencies
+find_dependency(Qt5 COMPONENTS Core CONFIG REQUIRED)
+find_dependency(zerai2c)
+
+# targets file
+include("${CMAKE_CURRENT_LIST_DIR}/zerameaschannelsTargets.cmake")
+
