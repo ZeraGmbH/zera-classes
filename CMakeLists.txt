@@ -56,7 +56,6 @@ set(SUB_DIRS
     zera-math
     zera-intel-hex-checker
     zera-mcontroller-io
-    zera-comm
     zera-i2c
     zera-misc
     zera-service-common
