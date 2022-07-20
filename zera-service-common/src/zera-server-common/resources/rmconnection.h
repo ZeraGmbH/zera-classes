@@ -7,8 +7,6 @@
 #include <QString>
 #include <QAbstractSocket>
 
-class XiQNetPeer;
-
 class cRMConnection: public QObject
 {
     Q_OBJECT
