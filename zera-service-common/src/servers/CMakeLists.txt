@@ -1,15 +1,18 @@
 set(HEADER
     meas-channels/justnode.h
+    resources/rmconnection.h
     )
 
 add_library(zeraservercommon SHARED
     ${HEADER}
     meas-channels/justnode.cpp
+    resources/rmconnection.cpp
     )
 
 target_link_libraries(zeraservercommon
     PUBLIC
     Qt5::Core
+    VeinMeta::xiqnet
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
