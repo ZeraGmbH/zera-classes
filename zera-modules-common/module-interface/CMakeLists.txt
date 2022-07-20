@@ -21,9 +21,8 @@ target_link_libraries(MeasurementModuleInterface
 target_include_directories(MeasurementModuleInterface
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-modules>
-    PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
 set_target_properties(MeasurementModuleInterface PROPERTIES VERSION ${PROJECT_VERSION})

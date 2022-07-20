@@ -1,6 +1,6 @@
 #include "main-unittest-qt.h"
 #include "qt-unittest-xmlconfigreadertest.h"
-#include "xmlconfigreader.h"
+#include <xmlconfigreader.h>
 
 static QObject* pSourceIoTest = addTest(new XMLConfigReaderTest);
 
