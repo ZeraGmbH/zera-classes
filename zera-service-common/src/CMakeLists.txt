@@ -1,1 +1,2 @@
-add_subdirectory(meas-channels)
+add_subdirectory(clients)
+add_subdirectory(servers)
