@@ -26,8 +26,7 @@ target_include_directories(zeravalidator
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zeravalidator>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
 set_target_properties(zeravalidator PROPERTIES VERSION ${PROJECT_VERSION})
