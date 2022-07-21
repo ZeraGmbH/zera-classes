@@ -40,6 +40,7 @@ if(ZC_BUILD_MODULES)
     add_subdirectory(zera-modules-common)
     add_subdirectory(zera-xml-config)
     add_subdirectory(zera-modules)
+    add_subdirectory(zera-proxy)
 endif(ZC_BUILD_MODULES)
 
 add_subdirectory(zera-math)
@@ -47,7 +48,6 @@ add_subdirectory(zera-intel-hex-checker)
 add_subdirectory(zera-mcontroller-io)
 add_subdirectory(zera-i2c)
 add_subdirectory(zera-misc)
-add_subdirectory(zera-service-common)
 
 enable_testing()
 
