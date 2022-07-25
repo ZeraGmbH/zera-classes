@@ -27,6 +27,27 @@ option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging 
 set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
 add_definitions(-DZC_DEV_STATE_PATH="${SET_ZC_DEV_STATE_PATH}")
 
+enable_testing()
+function(SETUP_TESTS)
+    foreach(_testname ${ARGN})
+        add_test(NAME ${_testname}
+                 COMMAND ${_testname})
+        add_executable(${_testname}
+            ${_testname}.h
+            ${_testname}.cpp
+            )
+        target_include_directories(${_testname}
+            PRIVATE
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+            ${PROJECT_SOURCE_DIR}/src
+            )
+        target_link_libraries(${_testname}
+            PUBLIC
+            testhelpers
+            )
+    endforeach()
+endfunction()
+
 if(ZC_BUILD_MODULES)
     find_package(Qt5 COMPONENTS Gui XmlPatterns CONFIG REQUIRED)
     find_package(VfEvent REQUIRED)
@@ -48,7 +69,5 @@ add_subdirectory(zera-intel-hex-checker)
 add_subdirectory(zera-mcontroller-io)
 add_subdirectory(zera-i2c)
 add_subdirectory(zera-misc)
-
-enable_testing()
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
