@@ -222,14 +222,14 @@ void cSCPIServer::activationDone()
 
 void cSCPIServer::shutdownTCPServer()
 {
+    if (m_bSerialScpiActive) {
+        destroySerialScpi();
+    }
     for(auto client : m_SCPIClientList) {
         delete client;
     }
     m_SCPIClientList.clear();
     m_pTcpServer->close();
-    if (m_bSerialScpiActive) {
-        destroySerialScpi();
-    }
     emit deactivationContinue();
 }
 
