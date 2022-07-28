@@ -22,7 +22,7 @@ include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 
 option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
-option(ZC_NO_CONFIG_INSTALL "Do not install configuration files - for debugging on PC" OFF)
+set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 
 set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
 add_definitions(-DZC_DEV_STATE_PATH="${SET_ZC_DEV_STATE_PATH}")
@@ -52,3 +52,5 @@ add_subdirectory(zera-misc)
 enable_testing()
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+
+add_subdirectory(cmake-post-install-force-last)

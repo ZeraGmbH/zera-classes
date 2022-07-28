@@ -60,9 +60,7 @@ write_basic_package_version_file(
     COMPATIBILITY SameMajorVersion
     )
 
-if(NOT ZC_NO_CONFIG_INSTALL)
-    install(
-        FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
-        DESTINATION ${SET_ZC_CONFIG_PATH}
-        )
-endif()
+install(
+    FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
+    DESTINATION ${SET_ZC_CONFIG_PATH}
+    )

@@ -133,13 +133,10 @@ write_basic_package_version_file(
     )
 
 
-if(NOT ZC_NO_CONFIG_INSTALL)
-    install(
-        FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
-        DESTINATION ${SET_ZC_CONFIG_PATH}
-        )
-endif()
-
+install(
+    FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
+    DESTINATION ${SET_ZC_CONFIG_PATH}
+    )
 
 find_package(Qt5Test REQUIRED)
 find_package(GTest)
@@ -212,10 +209,3 @@ if(FALSE) # we have no qt-unittests yet
 endif()
 
 endif()
-
-
-# spawn out some info on configuration
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
-
-
-
