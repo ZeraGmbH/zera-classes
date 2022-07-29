@@ -416,6 +416,12 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pResultAct; // and for the modules interface
     m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", m_pResultAct->getName(), "0", ""));
 
+    m_pRefFreqInput = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            key = QString("ACT_RefFreqInput"),
+                                            QString("Reference frequency input to find our power module"),
+                                            QVariant(getConfData()->m_sRefInput.m_sPar));
+    m_pModule->veinModuleParameterHash[key] = m_pRefFreqInput; // and for the modules interface
+    m_pRefFreqInput->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:REFFREQINPUT").arg(modNr), "2", m_pRefFreqInput->getName(), "0", ""));
 
     m_pUpperLimitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Uplimit"),
@@ -1877,24 +1883,23 @@ void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 
 void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QStringList sl;
-    QString s;
-
-    getConfData()->m_sRefInput.m_sPar = mREFSecInputSelectionHash[refinput.toString()]->name;
+    QString refInputName = mREFSecInputSelectionHash[refinput.toString()]->name;
+    getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
 
     // if the reference input changes P <-> Q <-> S it is necessary to change dut constanst unit and its validator
 
-    sl = getDutConstUnitValidator();
+    QStringList sl = getDutConstUnitValidator();
     initDutConstantUnit(sl);
     m_pDutConstanstUnitValidator->setValidator(sl);
-    s = getEnergyUnit();
+    QString s = getEnergyUnit();
     m_pEnergyAct->setUnit(s);
     m_pEnergyFinalAct->setUnit(s);
     m_pEnergyPar->setUnit(s);
     m_pEnergyAct->setValue(0.0);
     m_pEnergyFinalAct->setValue(0.0);
     m_pResultAct->setValue(0.0);
+    m_pRefFreqInput->setValue(refInputName);
     m_pModule->exportMetaData();
 
     emit m_pModule->parameterChanged();
