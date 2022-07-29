@@ -228,7 +228,6 @@
         </xs:sequence>
     </xs:complexType>
 
-
     <xs:complexType name="configurationmeasuretype">
         <xs:sequence>
             <xs:element name="modes" type="modestype" minOccurs="1" maxOccurs="1"/>
