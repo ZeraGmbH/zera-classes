@@ -34,6 +34,10 @@
                 <inp1>fo1</inp1>
                 <inp2>fo3</inp2>
             </refinput>
+            <refinput_appends>
+                <append1> AC</append1>
+                <append2> DC</append2>
+            </refinput_appends>
         </measure>
     </configuration>
     <parameter>

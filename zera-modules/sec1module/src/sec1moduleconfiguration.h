@@ -40,7 +40,8 @@ enum moduleconfigstate
 
     setDutInput1Name = 32,
     setRefInput1Name = 64,
-    setMode1Name = 96
+    setMode1Name = 96,
+    setRefInput1Append = 128
 };
 
 
