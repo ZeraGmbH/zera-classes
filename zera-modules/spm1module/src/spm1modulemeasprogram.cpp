@@ -177,18 +177,14 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, Zera::Proxy:
     m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
 }
 
-
 cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
 {
-    int n;
-
-    n = getConfData()->m_refInpList.count();
+    int n = getConfData()->m_refInpList.count();
     for (int i = 0; i < n; i++)
     {
         siInfo = mREFSpmInputInfoHash.take(getConfData()->m_refInpList.at(i));
         delete siInfo;
     }
-
     delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pRMClient);
     delete m_pSECInterface;
@@ -197,24 +193,20 @@ cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
     m_pProxy->releaseConnection(m_pPCBClient);
 }
 
-
 void cSpm1ModuleMeasProgram::start()
 {
 }
 
-
 void cSpm1ModuleMeasProgram::stop()
 {
 }
-
 
 void cSpm1ModuleMeasProgram::generateInterface()
 {
     QString s;
     QString key;
 
-    QString modNr;
-    modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
+    QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
     m_pRefInputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_RefInput"),
@@ -880,24 +872,17 @@ void cSpm1ModuleMeasProgram::setUnits()
 
 QStringList cSpm1ModuleMeasProgram::getEnergyUnitValidator()
 {
-    QStringList sl;
-
-    sl = getPowerUnitValidator();
-
+    QStringList sl = getPowerUnitValidator();
     for (int i = 0; i < sl.count(); i++)
         sl.replace(i, sl.at(i)+"h");
-
     return sl;
 }
 
 
 QString cSpm1ModuleMeasProgram::getEnergyUnit()
 {
-    QString s;
-
-    s = getPowerUnit();
+    QString s = getPowerUnit();
     s.append("h");
-
     return s;
 }
 
@@ -905,9 +890,7 @@ QString cSpm1ModuleMeasProgram::getEnergyUnit()
 QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    QString powType;
-
-    powType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
+    QString powType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
 
     if (powType.contains('P'))
         sl = getConfData()->m_ActiveUnitList;

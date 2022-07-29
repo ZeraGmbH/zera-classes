@@ -210,8 +210,7 @@ void cSem1ModuleMeasProgram::generateInterface()
     QString s;
     QString key;
 
-    QString modNr;
-    modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
+    QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
     m_pRefInputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_RefInput"),
@@ -872,13 +871,9 @@ void cSem1ModuleMeasProgram::setUnits()
 
 QStringList cSem1ModuleMeasProgram::getEnergyUnitValidator()
 {
-    QStringList sl;
-
-    sl = getPowerUnitValidator();
-
+    QStringList sl = getPowerUnitValidator();
     for (int i = 0; i < sl.count(); i++)
         sl.replace(i, sl.at(i)+"h");
-
     return sl;
 }
 
@@ -895,17 +890,13 @@ QString cSem1ModuleMeasProgram::getEnergyUnit()
 QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    QString powType;
-
-    powType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
-
+    QString powType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     if (powType.contains('P'))
         sl = getConfData()->m_ActiveUnitList;
     if (powType.contains('Q'))
         sl = getConfData()->m_ReactiveUnitList;
     if (powType.contains('S'))
         sl = getConfData()->m_ApparentUnitList;
-
     return sl;
 }
 
