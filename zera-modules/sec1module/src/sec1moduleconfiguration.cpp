@@ -249,14 +249,18 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
                 cmd -= setRefInput1Name;
                 cSec1ModuleConfigData::TRefInput refInput;
                 refInput.inputName = m_pXMLReader->getValue(key);
-                QString keyAppend = QString("sec1modconfpar:configuration:measure:refinput_appends:append%1").arg(cmd+1);
-                refInput.nameAppend = m_pXMLReader->getValue(keyAppend);
                 m_pSec1ModulConfigData->m_refInpList.replace(cmd, refInput);
             }
             else if ((cmd >= setMode1Name) && (cmd < setMode1Name + 32)) {
                 cmd -= setMode1Name;
                 name = m_pXMLReader->getValue(key);
                 m_pSec1ModulConfigData->m_ModeList.replace(cmd, name);
+            }
+            else if ((cmd >= setRefInput1Append) && (cmd < setRefInput1Append + 32)) {
+                cmd -= setRefInput1Append;
+                cSec1ModuleConfigData::TRefInput refInput = m_pSec1ModulConfigData->m_refInpList[cmd];
+                refInput.nameAppend = m_pXMLReader->getValue(key);
+                m_pSec1ModulConfigData->m_refInpList.replace(cmd, refInput);
             }
             break;
         }
