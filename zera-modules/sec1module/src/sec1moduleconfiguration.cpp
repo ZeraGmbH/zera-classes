@@ -169,14 +169,13 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
         }
         case setRefInputCount:
         {
-            QString name;
             m_pSec1ModulConfigData->m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
-            if (m_pSec1ModulConfigData->m_nRefInpCount > 0)
-            for (int i = 0; i < m_pSec1ModulConfigData->m_nRefInpCount; i++)
-                {
-                    m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                    m_pSec1ModulConfigData->m_refInpList.append(name);
-                }
+            for (int i = 0; i < m_pSec1ModulConfigData->m_nRefInpCount; i++) {
+                cSec1ModuleConfigData::TRefInput refInput;
+                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
+                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput_appends:append%1").arg(i+1)] = setRefInput1Append+i;
+                m_pSec1ModulConfigData->m_refInpList.append(refInput);
+            }
             break;
         }
         case setModeCount:
@@ -254,8 +253,11 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
                 if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32))
                 {
                     cmd -= setRefInput1Name;
-                    name = m_pXMLReader->getValue(key);
-                    m_pSec1ModulConfigData->m_refInpList.replace(cmd, name);
+                    cSec1ModuleConfigData::TRefInput refInput;
+                    refInput.inputName = m_pXMLReader->getValue(key);
+                    QString keyAppend = QString("sec1modconfpar:configuration:measure:refinput_appends:append%1").arg(cmd+1);
+                    refInput.nameAppend = m_pXMLReader->getValue(keyAppend);
+                    m_pSec1ModulConfigData->m_refInpList.replace(cmd, refInput);
                 }
                 else
                     if ((cmd >= setMode1Name) && (cmd < setMode1Name + 32))

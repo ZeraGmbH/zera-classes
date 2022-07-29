@@ -172,7 +172,8 @@ cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
     n = getConfData()->m_refInpList.count();
     for (int i = 0; i < n; i++)
     {
-        siInfo = mREFSecInputInfoHash.take(getConfData()->m_refInpList.at(i)); // change the hash for access via alias
+        cSec1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
+        siInfo = mREFSecInputInfoHash.take(refInput.inputName); // change the hash for access via alias
         delete siInfo;
     }
 
@@ -1230,7 +1231,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
     {
         // siInfo.muxchannel = getConfData()->m_refInpList.at(i).m_nMuxerCode;
         siInfo = new cSecInputInfo();
-        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i)] = siInfo;
+        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = siInfo;
     }
 
     InputNameList = mREFSecInputInfoHash.keys();
@@ -1997,6 +1998,15 @@ bool cSec1ModuleMeasProgram::found(QList<QString> &list, QString searched)
     for (int i = 0; i < list.count(); i++)
         if (list.at(i).contains(searched))
             return true;
+    return false;
+}
+
+bool cSec1ModuleMeasProgram::found(QList<cSec1ModuleConfigData::TRefInput> &list, QString searched)
+{
+    for (int i = 0; i < list.count(); i++) {
+        if (list.at(i).inputName.contains(searched))
+            return true;
+    }
     return false;
 }
 

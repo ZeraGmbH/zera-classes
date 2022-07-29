@@ -50,7 +50,12 @@ public:
     quint8 m_nModeCount;
     stringParameter m_sRefInput;
     stringParameter m_sDutInput;
-    QList<QString> m_refInpList;
+    struct TRefInput
+    {
+        QString inputName;
+        QString nameAppend;
+    };
+    QList<TRefInput> m_refInpList;
     QList<QString> m_dutInpList;
     QList<QString> m_ModeList;
     bool m_bEmbedded;
