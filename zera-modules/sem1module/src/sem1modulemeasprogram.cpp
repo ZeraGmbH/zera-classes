@@ -180,15 +180,12 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy:
 
 cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
 {
-    int n;
-
-    n = getConfData()->m_refInpList.count();
-    for (int i = 0; i < n; i++)
-    {
-        siInfo = mREFSemInputInfoHash.take(getConfData()->m_refInpList.at(i));
+    int n = getConfData()->m_refInpList.count();
+    for (int i = 0; i < n; i++) {
+        cSem1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
+        siInfo = mREFSemInputInfoHash.take(refInput.inputName); // change the hash for access via alias
         delete siInfo;
     }
-
     delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pRMClient);
     delete m_pSECInterface;
@@ -827,7 +824,7 @@ cSem1ModuleConfigData *cSem1ModuleMeasProgram::getConfData()
 
 void cSem1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pRefInputPar->setValue(QVariant(mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias));
+    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(getConfData()->m_sRefInput.m_sPar)));
     m_pTargetedPar->setValue(QVariant(getConfData()->m_bTargeted.m_nActive));
     m_pMeasTimePar->setValue(QVariant(getConfData()->m_nMeasTime.m_nPar));
     m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
@@ -837,10 +834,7 @@ void cSem1ModuleMeasProgram::setInterfaceComponents()
 
 void cSem1ModuleMeasProgram::setValidators()
 {
-    cStringValidator *sValidator;
-    QString s;
-
-    sValidator = new cStringValidator(m_REFAliasList);
+    cStringValidator *sValidator = new cStringValidator(m_REFAliasList);
     m_pRefInputPar->setValidator(sValidator);
 
     sValidator = new cStringValidator(getEnergyUnitValidator());
@@ -915,6 +909,19 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
+}
+
+QString cSem1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
+{
+    QString displayString = mREFSemInputInfoHash[inputName]->alias;
+    QList<cSem1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
+    for(const auto &entry : refInputList) {
+        if(entry.inputName == inputName) {
+            displayString += entry.nameAppend;
+            break;
+        }
+    }
+    return displayString;
 }
 
 
@@ -1013,7 +1020,7 @@ void cSem1ModuleMeasProgram::testSemInputs()
     {
         // siInfo.muxchannel = getConfData()->m_refInpList.at(i).m_nMuxerCode;
         siInfo = new cSecInputInfo();
-        mREFSemInputInfoHash[getConfData()->m_refInpList.at(i)] = siInfo;
+        mREFSemInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = siInfo;
     }
 
     InputNameList = mREFSemInputInfoHash.keys();
@@ -1137,15 +1144,14 @@ void cSem1ModuleMeasProgram::setsecINTNotifier()
 
 void cSem1ModuleMeasProgram::activationDone()
 {
-    int nref;
-
-    nref = getConfData()->m_refInpList.count();
+    cSem1ModuleConfigData *confData = getConfData();
+    int nref = confData->m_refInpList.count();
     if (nref > 0)
-    for (int i = 0; i < nref; i++)
-    {
-        m_REFAliasList.append(mREFSemInputInfoHash[getConfData()->m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        siInfo = mREFSemInputInfoHash[getConfData()->m_refInpList.at(i)]; // change the hash for access via alias
-        mREFSemInputSelectionHash[siInfo->alias] = siInfo;
+    for (int i = 0; i < nref; i++) {
+        QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
+        m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
+        siInfo = mREFSemInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
+        mREFSemInputSelectionHash[displayString] = siInfo;
     }
 
     connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSem1ModuleMeasProgram::Actualize);
@@ -1166,7 +1172,7 @@ void cSem1ModuleMeasProgram::activationDone()
     setUnits();
 
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(confData->m_sRefInput.m_sPar)] = fetchrefconstant;
 
     m_bActive = true;
     emit activated();
@@ -1516,28 +1522,13 @@ void cSem1ModuleMeasProgram::stopMeasuerment(bool bAbort)
     m_ActualizeTimer.stop();
 }
 
-
-bool cSem1ModuleMeasProgram::found(QList<QString> &list, QString searched)
+bool cSem1ModuleMeasProgram::found(QList<cSem1ModuleConfigData::TRefInput> &list, QString searched)
 {
-    for (int i = 0; i < list.count(); i++)
-        if (list.at(i).contains(searched))
+    for (int i = 0; i < list.count(); i++) {
+        if (list.at(i).inputName.contains(searched))
             return true;
+    }
     return false;
 }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -167,23 +167,17 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
 
 cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
 {
-    int n;
-
-    n = getConfData()->m_refInpList.count();
-    for (int i = 0; i < n; i++)
-    {
+    int n = getConfData()->m_refInpList.count();
+    for (int i = 0; i < n; i++) {
         cSec1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
         siInfo = mREFSecInputInfoHash.take(refInput.inputName); // change the hash for access via alias
         delete siInfo;
     }
-
     n = getConfData()->m_dutInpList.count();
-    for (int i = 0; i < n; i++)
-    {
+    for (int i = 0; i < n; i++) {
         siInfo = mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i)); // change the hash for access via alias
         delete siInfo;
     }
-
     delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pRMClient);
     delete m_pSECInterface;
@@ -993,10 +987,7 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 
 void cSec1ModuleMeasProgram::setValidators()
 {
-    cStringValidator *sValidator;
-    QString s;
-
-    sValidator = new cStringValidator(QStringList(getConfData()->m_ModeList));
+    cStringValidator *sValidator = new cStringValidator(QStringList(getConfData()->m_ModeList));
     m_pModePar->setValidator(sValidator);
 
     sValidator = new cStringValidator(m_DUTAliasList);
@@ -1008,7 +999,7 @@ void cSec1ModuleMeasProgram::setValidators()
     m_pDutConstanstUnitValidator = new cStringValidator(getDutConstUnitValidator());
     m_pDutConstantUnitPar->setValidator(m_pDutConstanstUnitValidator);
 
-    s = getEnergyUnit();
+    QString s = getEnergyUnit();
     m_pEnergyAct->setUnit(s);
     m_pEnergyFinalAct->setUnit(s);
     m_pEnergyPar->setUnit(s);
@@ -1428,10 +1419,8 @@ void cSec1ModuleMeasProgram::setsecINTNotifier()
 
 void cSec1ModuleMeasProgram::activationDone()
 {
-    int nref;
-
     cSec1ModuleConfigData *confData = getConfData();
-    nref = confData->m_refInpList.count();
+    int nref = confData->m_refInpList.count();
     if (nref > 0)
     for (int i = 0; i < nref; i++) {
         QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);

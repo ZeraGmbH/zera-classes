@@ -266,7 +266,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
         }
         m_bConfigError |= !ok;
     }
-
     else
         m_bConfigError = true;
 }
