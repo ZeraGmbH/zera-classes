@@ -104,7 +104,7 @@ QByteArray cSec1ModuleConfiguration::exportConfiguration()
     boolParameter* bPar;
 
     bPar = &m_pSec1ModulConfigData->m_bContinous;
-    m_pXMLReader->setValue(bPar->m_sKey, QString("1").arg(bPar->m_nActive));
+    m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
 
     dPar = &m_pSec1ModulConfigData->m_fUpperLimit;
     m_pXMLReader->setValue(dPar->m_sKey, QString("%1").arg(dPar->m_fPar));
