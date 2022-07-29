@@ -126,14 +126,13 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
             break;
         case setRefInputCount:
         {
-            QString name;
             m_pSem1ModulConfigData->m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
-            if (m_pSem1ModulConfigData->m_nRefInpCount > 0)
-            for (int i = 0; i < m_pSem1ModulConfigData->m_nRefInpCount; i++)
-                {
-                    m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
-                    m_pSem1ModulConfigData->m_refInpList.append(name);
-                }
+            for (int i = 0; i < m_pSem1ModulConfigData->m_nRefInpCount; i++) {
+                cSem1ModuleConfigData::TRefInput refInput;
+                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
+                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:refinput_appends:append%1").arg(i+1)] = setRefInput1Append+i;
+                m_pSem1ModulConfigData->m_refInpList.append(refInput);
+            }
             break;
         }
         case setActiveUnitCount:
@@ -198,38 +197,37 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
 
         default:
             QString name;
-            if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32))
-            {
+            if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32)) {
                 cmd -= setRefInput1Name;
-                name = m_pXMLReader->getValue(key);
-                m_pSem1ModulConfigData->m_refInpList.replace(cmd, name);
+                cSem1ModuleConfigData::TRefInput refInput;
+                refInput.inputName = m_pXMLReader->getValue(key);
+                m_pSem1ModulConfigData->m_refInpList.replace(cmd, refInput);
             }
-            else
-                if ((cmd >= setActiveUnit1Name) && (cmd < setActiveUnit1Name + 16))
-                {
-                    cmd -= setActiveUnit1Name;
-                    name = m_pXMLReader->getValue(key);
-                    m_pSem1ModulConfigData->m_ActiveUnitList.replace(cmd, name);
-                }
-                else
-                    if ((cmd >= setReactiveUnit1Name) && (cmd < setReactiveUnit1Name + 16))
-                    {
-                        cmd -= setReactiveUnit1Name;
-                        name = m_pXMLReader->getValue(key);
-                        m_pSem1ModulConfigData->m_ReactiveUnitList.replace(cmd, name);
-                    }
-                    else
-                        if ((cmd >= setApparentUnit1Name) && (cmd < setApparentUnit1Name + 16))
-                        {
-                            cmd -= setApparentUnit1Name;
-                            name = m_pXMLReader->getValue(key);
-                            m_pSem1ModulConfigData->m_ApparentUnitList.replace(cmd, name);
-                        }
+            else if ((cmd >= setActiveUnit1Name) && (cmd < setActiveUnit1Name + 16)) {
+                cmd -= setActiveUnit1Name;
+                name = m_pXMLReader->getValue(key);
+                m_pSem1ModulConfigData->m_ActiveUnitList.replace(cmd, name);
+            }
+            else if ((cmd >= setReactiveUnit1Name) && (cmd < setReactiveUnit1Name + 16)) {
+                cmd -= setReactiveUnit1Name;
+                name = m_pXMLReader->getValue(key);
+                m_pSem1ModulConfigData->m_ReactiveUnitList.replace(cmd, name);
+            }
+            else if ((cmd >= setApparentUnit1Name) && (cmd < setApparentUnit1Name + 16)) {
+                cmd -= setApparentUnit1Name;
+                name = m_pXMLReader->getValue(key);
+                m_pSem1ModulConfigData->m_ApparentUnitList.replace(cmd, name);
+            }
+            else if ((cmd >= setRefInput1Append) && (cmd < setRefInput1Append + 32)) {
+                cmd -= setRefInput1Append;
+                cSem1ModuleConfigData::TRefInput refInput = m_pSem1ModulConfigData->m_refInpList[cmd];
+                refInput.nameAppend = m_pXMLReader->getValue(key);
+                m_pSem1ModulConfigData->m_refInpList.replace(cmd, refInput);
+            }
             break;
         }
         m_bConfigError |= !ok;
     }
-
     else
         m_bConfigError = true;
 }

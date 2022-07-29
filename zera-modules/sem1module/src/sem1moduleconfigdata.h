@@ -47,7 +47,12 @@ public:
     quint8 m_nDebugLevel;
     quint8 m_nRefInpCount;
     stringParameter m_sRefInput;
-    QList<QString> m_refInpList;
+    struct TRefInput
+    {
+        QString inputName;
+        QString nameAppend;
+    };
+    QList<TRefInput> m_refInpList;
     quint8 m_nActiveUnitCount;
     QList<QString> m_ActiveUnitList;
     quint8 m_nReactiveUnitCount;

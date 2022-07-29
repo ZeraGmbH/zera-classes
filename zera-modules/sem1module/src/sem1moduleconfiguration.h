@@ -35,7 +35,8 @@ enum moduleconfigstate
     setRefInput1Name = 32,
     setActiveUnit1Name = 64,
     setReactiveUnit1Name = 80,
-    setApparentUnit1Name = 96
+    setApparentUnit1Name = 96,
+    setRefInput1Append = 128
 };
 
 
