@@ -309,6 +309,7 @@ private:
     const QString multiResultToJson();
     void multiResultToVein();
     double getUnitFactor();
+    QString getRefInputDisplayString(QString inputName);
 
 private slots:
     void resourceManagerConnect();

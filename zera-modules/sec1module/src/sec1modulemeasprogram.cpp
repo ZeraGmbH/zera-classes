@@ -978,7 +978,7 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
     cmpDependencies(); // dependant on mode we calculate parameters by ourself
 
     m_pDutInputPar->setValue(QVariant(mDUTSecInputInfoHash[getConfData()->m_sDutInput.m_sPar]->alias));
-    m_pRefInputPar->setValue(QVariant(mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias));
+    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(getConfData()->m_sRefInput.m_sPar)));
     m_pDutConstantPar->setValue(QVariant(getConfData()->m_fDutConstant.m_fPar));
     m_pRefConstantPar->setValue(QVariant(getConfData()->m_fRefConstant.m_fPar));
     m_pMRatePar->setValue(QVariant(getConfData()->m_nMRate.m_nPar));
@@ -1152,6 +1152,19 @@ double cSec1ModuleMeasProgram::getUnitFactor()
         factor = 1e6;
     }
     return factor;
+}
+
+QString cSec1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
+{
+    QString displayString = mREFSecInputInfoHash[inputName]->alias;
+    QList<cSec1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
+    for(const auto &entry : refInputList) {
+        if(entry.inputName == inputName) {
+            displayString += entry.nameAppend;
+            break;
+        }
+    }
+    return displayString;
 }
 
 void cSec1ModuleMeasProgram::resourceManagerConnect()
@@ -1420,12 +1433,11 @@ void cSec1ModuleMeasProgram::activationDone()
     cSec1ModuleConfigData *confData = getConfData();
     nref = confData->m_refInpList.count();
     if (nref > 0)
-    for (int i = 0; i < nref; i++)
-    {
-        // we could
-        m_REFAliasList.append(mREFSecInputInfoHash[confData->m_refInpList.at(i).inputName]->alias); // build up a fixed sorted list of alias
+    for (int i = 0; i < nref; i++) {
+        QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
+        m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
         siInfo = mREFSecInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
-        mREFSecInputSelectionHash[siInfo->alias] = siInfo;
+        mREFSecInputSelectionHash[displayString] = siInfo;
     }
 
     for (int i = 0; i < confData->m_dutInpList.count(); i++)
@@ -1546,7 +1558,6 @@ void cSec1ModuleMeasProgram::setMasterMux()
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
     m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, mREFSecInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
-
 }
 
 
