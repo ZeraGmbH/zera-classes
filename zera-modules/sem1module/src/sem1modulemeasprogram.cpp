@@ -317,6 +317,13 @@ void cSem1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pResultAct; // and for the modules interface
     m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", m_pResultAct->getName(), "0", "%"));
 
+    m_pRefFreqInput = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            key = QString("ACT_RefFreqInput"),
+                                            QString("Reference frequency input to find our power module"),
+                                            QVariant(getConfData()->m_sRefInput.m_sPar));
+    m_pModule->veinModuleParameterHash[key] = m_pRefFreqInput; // and for the modules interface
+    m_pRefFreqInput->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:REFFREQINPUT").arg(modNr), "2", m_pRefFreqInput->getName(), "0", ""));
+
     m_pUpperLimitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Uplimit"),
                                                 QString("Component for reading and setting the modules upper error limit"),
@@ -1420,13 +1427,14 @@ void cSem1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSem1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    getConfData()->m_sRefInput.m_sPar = mREFSemInputSelectionHash[refinput.toString()]->name;
+    QString refInputName = mREFSemInputSelectionHash[refinput.toString()]->name;
+    getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
-    // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
 
+    // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
     setValidators();
     setUnits();
-
+    m_pRefFreqInput->setValue(refInputName);
     emit m_pModule->parameterChanged();
 }
 
