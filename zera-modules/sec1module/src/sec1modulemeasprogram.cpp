@@ -1198,10 +1198,9 @@ void cSec1ModuleMeasProgram::readResourceTypes()
     if (found(getConfData()->m_dutInpList, "sh") || found(getConfData()->m_refInpList, "sh"))
         m_ResourceTypeList.append("SCHEAD");
     if (found(getConfData()->m_dutInpList, "hk") || found(getConfData()->m_refInpList, "hk"))
-    m_ResourceTypeList.append("HKEY");
+        m_ResourceTypeList.append("HKEY");
 
     emit activationContinue();
-
 }
 
 
@@ -1418,20 +1417,21 @@ void cSec1ModuleMeasProgram::activationDone()
 {
     int nref;
 
-    nref = getConfData()->m_refInpList.count();
+    cSec1ModuleConfigData *confData = getConfData();
+    nref = confData->m_refInpList.count();
     if (nref > 0)
     for (int i = 0; i < nref; i++)
     {
         // we could
-        m_REFAliasList.append(mREFSecInputInfoHash[getConfData()->m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        siInfo = mREFSecInputInfoHash[getConfData()->m_refInpList.at(i)]; // change the hash for access via alias
+        m_REFAliasList.append(mREFSecInputInfoHash[confData->m_refInpList.at(i).inputName]->alias); // build up a fixed sorted list of alias
+        siInfo = mREFSecInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
         mREFSecInputSelectionHash[siInfo->alias] = siInfo;
     }
 
-    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
+    for (int i = 0; i < confData->m_dutInpList.count(); i++)
     {
-        m_DUTAliasList.append(mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        siInfo = mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)]; // change the hash for access via alias
+        m_DUTAliasList.append(mDUTSecInputInfoHash[confData->m_dutInpList.at(i)]->alias); // build up a fixed sorted list of alias
+        siInfo = mDUTSecInputInfoHash[confData->m_dutInpList.at(i)]; // change the hash for access via alias
         mDUTSecInputSelectionHash[siInfo->alias] = siInfo;
     }
 
@@ -1479,7 +1479,7 @@ void cSec1ModuleMeasProgram::activationDone()
     setValidators();
 
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(confData->m_sRefInput.m_sPar)] = fetchrefconstant;
 
     m_bActive = true;
     emit activated();

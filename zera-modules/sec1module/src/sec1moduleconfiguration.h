@@ -58,12 +58,12 @@ class cSec1ModuleConfiguration: public cBaseModuleConfiguration
 public:
     cSec1ModuleConfiguration();
     ~cSec1ModuleConfiguration();
-    virtual void setConfiguration(QByteArray xmlString);
-    virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
+    virtual void setConfiguration(QByteArray xmlString) override;
+    virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cSec1ModuleConfigData* getConfigurationData();
 
 protected slots:
-    virtual void configXMLInfo(QString key);
+    virtual void configXMLInfo(QString key) override;
     virtual void completeConfiguration(bool ok);
 
 private:
