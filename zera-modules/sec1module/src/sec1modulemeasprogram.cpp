@@ -202,8 +202,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     QString s;
     QString key;
 
-    QString modNr;
-    modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
+    QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
     m_pModePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                           key = QString("PAR_Mode"),
@@ -1015,17 +1014,13 @@ void cSec1ModuleMeasProgram::setValidators()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    QString powType;
-
-    powType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
-
+    QString powType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
     if (powType.contains('Q'))
         sl << QString("I/kVarh") << QString("Varh/I");
     if (powType.contains('S'))
         sl << QString("I/kVAh") << QString("VAh/I");
-
     return sl;
 }
 
