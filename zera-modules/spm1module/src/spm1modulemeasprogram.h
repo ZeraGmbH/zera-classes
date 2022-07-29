@@ -162,6 +162,7 @@ private:
     cVeinModuleParameter* m_pEnergyAct;
     cVeinModuleParameter* m_pPowerAct;
     cVeinModuleParameter* m_pResultAct;
+    cVeinModuleParameter* m_pRefFreqInput;
     cVeinModuleParameter* m_pUpperLimitPar;
     cVeinModuleParameter* m_pLowerLimitPar;
     cVeinModuleParameter* m_pRatingAct;
