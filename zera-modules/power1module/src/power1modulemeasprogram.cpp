@@ -302,7 +302,7 @@ void cPower1ModuleMeasProgram::generateInterface()
             QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sPlug;
             pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_FOUT%1").arg(i),
-                                                              QString("Component for querying the modules output"),
+                                                              QString("Component for querying the modules output plug"),
                                                               QVariant(foutName));
             pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1OUT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
