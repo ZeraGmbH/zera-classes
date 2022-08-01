@@ -40,17 +40,17 @@
             <output>
                 <n>3</n>
                 <fout1>
-                    <name>fo0</name>
+                    <name>fo1</name>
                     <source>pmss</source>
                     <type>+</type>
                 </fout1>
                 <fout2>
-                    <name>fo1</name>
+                    <name>fo2</name>
                     <source>pmss</source>
                     <type>-</type>
                 </fout2>
                 <fout3>
-                    <name>fo2</name>
+                    <name>fo3</name>
                     <source>pmss</source>
                     <type>+-</type>
                 </fout3>
