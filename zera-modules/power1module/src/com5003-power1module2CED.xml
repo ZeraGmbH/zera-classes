@@ -28,17 +28,17 @@
                 <m3>3LB</m3>
                 <m4>2LB</m4>
             </modes>
-                <system>
-                    <pms1>m0,m3</pms1>
-                    <pms2>m1,m4</pms2>
-                    <pms3>m2,m5</pms3>
-                    <pms2w>pms3</pms2w>
-                </system>
-                <integrationmode>period</integrationmode>
-                <movingwindow>
-                    <on>0</on>
-                    <time>0.5</time>
-                </movingwindow>
+            <system>
+                <pms1>m0,m3</pms1>
+                <pms2>m1,m4</pms2>
+                <pms3>m2,m5</pms3>
+                <pms2w>pms3</pms2w>
+            </system>
+            <integrationmode>period</integrationmode>
+            <movingwindow>
+                <on>0</on>
+                <time>0.5</time>
+            </movingwindow>
         </measure>
         <frequencyoutput>
             <frequency>200000</frequency>

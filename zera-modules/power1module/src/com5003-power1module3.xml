@@ -1,5 +1,7 @@
-<?xml version="1.0"?>
-<pow1modconfpar>
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<pow1modconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
     <configuration>
         <connectivity>
             <debuglevel>0</debuglevel>
