@@ -35,6 +35,7 @@ public:
 private:
     void createSerialScpi();
     void destroySerialScpi();
+    void deleteSerialPort();
 
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;

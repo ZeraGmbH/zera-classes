@@ -77,9 +77,7 @@ cSCPIServer::~cSCPIServer()
 {
     delete m_pSCPIInterface;
     delete m_pTcpServer;
-    if (m_pSerialPort) {
-        delete m_pSerialPort;
-    }
+    deleteSerialPort();
 }
 
 
@@ -128,7 +126,7 @@ void cSCPIServer::createSerialScpi()
             m_bSerialScpiActive = true;
         }
         else {
-            delete m_pSerialPort;
+            deleteSerialPort();
         }
     }
     m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
@@ -141,13 +139,19 @@ void cSCPIServer::destroySerialScpi()
         deleteSCPIClient(m_pSerialClient);
         delete m_pSerialClient;
         m_pSerialPort->close();
-        delete m_pSerialPort;
+        deleteSerialPort();
         m_pSerialClient = nullptr;
-        m_pSerialPort = nullptr;
     }
     m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
 }
 
+void cSCPIServer::deleteSerialPort()
+{
+    if(m_pSerialPort) {
+        delete m_pSerialPort;
+        m_pSerialPort = nullptr;
+    }
+}
 
 void cSCPIServer::addSCPIClient()
 {
