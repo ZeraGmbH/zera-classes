@@ -13,7 +13,7 @@ class SourceVeinInterface : public QObject
 {
     Q_OBJECT
 public:
-    explicit SourceVeinInterface(QObject *parent = nullptr);
+    explicit SourceVeinInterface();
 
     cVeinModuleActvalue *getVeinDeviceInfoComponent();
     cVeinModuleActvalue *getVeinDeviceStateComponent();

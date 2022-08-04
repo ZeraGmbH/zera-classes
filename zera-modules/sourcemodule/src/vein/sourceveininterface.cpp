@@ -1,7 +1,7 @@
 #include "sourceveininterface.h"
 #include <veinmoduleparameter.h>
 
-SourceVeinInterface::SourceVeinInterface(QObject *parent) : QObject(parent)
+SourceVeinInterface::SourceVeinInterface()
 {
 }
 
