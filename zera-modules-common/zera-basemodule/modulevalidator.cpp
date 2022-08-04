@@ -29,9 +29,7 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                 if (m_keylist.indexOf(cName) != -1 ) {
                     // we only take new values if the old values are equal
                     if (cData->oldValue() == m_pModule->m_pStorageSystem->getStoredValue(m_pModule->m_nEntityId, cName)) {
-                        cVeinModuleParameter *param;
-
-                        param = m_Parameter2ValidateHash[cName];
+                        cVeinModuleParameter *param = m_Parameter2ValidateHash[cName];
                         param->transaction(t_cEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
                         t_cEvent->accept(); // it is an event for us ... the parameter will do the rest
                     }
