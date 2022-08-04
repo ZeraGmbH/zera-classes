@@ -1,17 +1,14 @@
 #ifndef SOURCEMODULEPROGRAM_H
 #define SOURCEMODULEPROGRAM_H
 
-#include <QUuid>
-#include <vf-cpp-rpc.h>
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
 #include "vein/sourceveininterface.h"
+#include "source-device/sourcedevicemanager.h"
+#include <vf-cpp-rpc.h>
+#include <QUuid>
 
-class cVeinModuleActvalue;
-class cVeinModuleParameter;
-class cJsonParamValidator;
 class SourceModule;
-class SourceDeviceManager;
 
 class SourceModuleProgram: public cBaseMeasWorkProgram
 {
