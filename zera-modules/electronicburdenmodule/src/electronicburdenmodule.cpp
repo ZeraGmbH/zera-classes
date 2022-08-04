@@ -13,10 +13,7 @@ ElectronicBurdenModule::ElectronicBurdenModule(quint8 modnr, Zera::Proxy::cProxy
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationMachine.setInitialState(&m_ActivationFinishedState);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &ElectronicBurdenModule::activationFinished);
-
     m_DeactivationMachine.setInitialState(&m_DeactivationFinishedState);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &ElectronicBurdenModule::deactivationFinished);
 }
 
 QByteArray ElectronicBurdenModule::getConfiguration() const

@@ -8,10 +8,7 @@ SourceModule::SourceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityI
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationMachine.setInitialState(&m_ActivationFinishedState);
-    connect(&m_ActivationFinishedState, &QState::entered, this, &SourceModule::activationFinished);
-
     m_DeactivationMachine.setInitialState(&m_DeactivationFinishedState);
-    connect(&m_DeactivationFinishedState, &QState::entered, this, &SourceModule::deactivationFinished);
     Q_INIT_RESOURCE(resource);
 }
 
