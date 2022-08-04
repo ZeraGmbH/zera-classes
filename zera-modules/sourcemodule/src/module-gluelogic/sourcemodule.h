@@ -36,6 +36,8 @@ private slots:
     virtual void deactivationStart() {}
     virtual void deactivationExec() {}
     virtual void deactivationDone() {}
+private:
+    QState m_stateSwitchAllOff;
 };
 
 #endif // SOURCEMODULE_H

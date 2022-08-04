@@ -31,6 +31,8 @@ void SourceModuleProgram::generateInterface()
     configuration* config = getConfigXMLWrapper();
     int maxSources = config->max_count_sources();
     m_pSourceDeviceManager = new SourceDeviceManager(maxSources);
+    connect(m_pSourceDeviceManager, &SourceDeviceManager::sigAllSlotsRemoved,
+            this, &SourceModuleProgram::sigLastSourceRemoved);
     connect(m_pSourceDeviceManager, &SourceDeviceManager::sigSourceScanFinished,
             this, &SourceModuleProgram::onSourceScanFinished, Qt::QueuedConnection);
     connect(m_pSourceDeviceManager, &SourceDeviceManager::sigSlotRemoved,
@@ -110,6 +112,11 @@ void SourceModuleProgram::generateInterface()
     }
 }
 
+void SourceModuleProgram::startDestroy()
+{
+    m_pSourceDeviceManager->closeAll();
+}
+
 QVariant SourceModuleProgram::RPC_ScanInterface(QVariantMap p_params)
 {
     int ioDeviceType = p_params["p_type"].toInt();
@@ -126,7 +133,6 @@ QVariant SourceModuleProgram::RPC_CloseSource(QVariantMap p_params)
     m_pSourceDeviceManager->closeSource(deviceInfo, uuid);
     return true;
 }
-
 
 configuration *SourceModuleProgram::getConfigXMLWrapper()
 {
@@ -168,7 +174,6 @@ void SourceModuleProgram::onSourceDeviceRemoved(int slot, QUuid uuid, QString er
     }
     updateDemoCount();
 }
-
 
 void SourceModuleProgram::newDemoSourceCount(QVariant getDemoCount)
 {
