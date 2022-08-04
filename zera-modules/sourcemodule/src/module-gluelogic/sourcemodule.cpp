@@ -8,7 +8,6 @@ SourceModule::SourceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityI
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_ActivationMachine.setInitialState(&m_ActivationFinishedState);
-    m_DeactivationMachine.setInitialState(&m_DeactivationFinishedState);
     Q_INIT_RESOURCE(resource);
 }
 
@@ -22,7 +21,6 @@ void SourceModule::doConfiguration(QByteArray xmlConfigData)
     m_pConfiguration->setConfiguration(xmlConfigData);
 }
 
-
 void SourceModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
@@ -31,23 +29,27 @@ void SourceModule::setupModule()
     m_pProgram = new SourceModuleProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pProgram);
 
+    m_DeactivationMachine.addState(&m_stateSwitchAllOff);
+    connect(&m_stateSwitchAllOff, &QState::entered, this, [&]() {
+        m_pProgram->startDestroy();
+    });
+    m_stateSwitchAllOff.addTransition(m_pProgram, &SourceModuleProgram::sigLastSourceRemoved, &m_DeactivationFinishedState);
+    m_DeactivationMachine.setInitialState(&m_stateSwitchAllOff);
+
     for (int i = 0; i < m_ModuleActivistList.count(); i++) {
         m_ModuleActivistList.at(i)->generateInterface();
     }
 }
-
 
 void SourceModule::startMeas()
 {
     // nothing to start here
 }
 
-
 void SourceModule::stopMeas()
 {
     // also nothing to stop
 }
-
 
 void SourceModule::activationFinished()
 {
@@ -57,7 +59,6 @@ void SourceModule::activationFinished()
 
     emit activationReady();
 }
-
 
 void SourceModule::deactivationFinished()
 {
