@@ -24,9 +24,9 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             // only transactions will be handled
             VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
             if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::TRANSACTION) {
-                QString cName;
+                QString cName = cData->componentName();
                 // does this component data belong to our module
-                if (m_keylist.indexOf(cName = cData->componentName()) != -1 ) {
+                if (m_keylist.indexOf(cName) != -1 ) {
                     // we only take new values if the old values are equal
                     if (cData->oldValue() == m_pModule->m_pStorageSystem->getStoredValue(m_pModule->m_nEntityId, cName)) {
                         cVeinModuleParameter *param;
