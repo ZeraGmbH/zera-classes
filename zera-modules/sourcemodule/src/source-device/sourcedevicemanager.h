@@ -15,6 +15,7 @@ public:
     void startSourceScan(const IoDeviceTypes ioDeviceType, const QString deviceInfo, const QUuid uuid);
     void closeSource(int slotNo, const QUuid uuid);
     void closeSource(QString ioDeviceInfo, const QUuid uuid);
+    void closeAll();
     void setDemoCount(int count);
 
     int getSlotCount();
@@ -24,6 +25,7 @@ public:
 signals:
     void sigSourceScanFinished(int slotNo, QUuid uuid, QString errMsg);
     void sigSlotRemoved(int slotNo, QUuid uuid, QString errMsg);
+    void sigAllSlotsRemoved();
 
 private slots:
     void onScanFinished(SourceScanner::Ptr scanner);
@@ -35,6 +37,7 @@ private:
     int findFreeSlot();
     void addSource(int slotPos, SourceDeviceFacade::Ptr deviceController);
     bool tryStartDemoDeviceRemove(int slotNo);
+    void checkHandleAllClosed();
     QVector<SourceDeviceFacade::Ptr> m_sourceControllers;
     QVector<QUuid> m_PendingRemoveHashes;
     int m_activeSlotCount = 0;
