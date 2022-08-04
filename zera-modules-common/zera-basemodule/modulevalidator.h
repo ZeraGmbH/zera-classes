@@ -16,7 +16,6 @@ public:
 private:
     cBaseModule* m_pModule;
     QHash<QString, cVeinModuleParameter*> m_Parameter2ValidateHash;
-    QList<QString> m_keylist;
 };
 
 #endif // MODULEVALIDATOR_H

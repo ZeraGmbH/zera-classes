@@ -26,10 +26,11 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::TRANSACTION) {
                 QString cName = cData->componentName();
                 // does this component data belong to our module
-                if (m_keylist.indexOf(cName) != -1 ) {
+                auto hashIter = m_Parameter2ValidateHash.find(cName);
+                if(hashIter != m_Parameter2ValidateHash.end()) {
                     // we only take new values if the old values are equal
                     if (cData->oldValue() == m_pModule->m_pStorageSystem->getStoredValue(m_pModule->m_nEntityId, cName)) {
-                        cVeinModuleParameter *param = m_Parameter2ValidateHash[cName];
+                        cVeinModuleParameter *param = hashIter.value();
                         param->transaction(t_cEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
                         t_cEvent->accept(); // it is an event for us ... the parameter will do the rest
                     }
@@ -69,6 +70,5 @@ void cModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 void cModuleValidator::setParameterHash(QHash<QString, cVeinModuleParameter *> &parameterhash)
 {
     m_Parameter2ValidateHash = parameterhash;
-    m_keylist = m_Parameter2ValidateHash.keys();
 }
 
