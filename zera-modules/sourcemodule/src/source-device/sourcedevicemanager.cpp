@@ -36,7 +36,7 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, cons
             if(ioDeviceType == IoDeviceTypes::DEMO) {
                 IoDeviceDemo* demoIO = static_cast<IoDeviceDemo*>(ioDevice.get());
                 demoIO->setResponseDelay(true, 0);
-                if(deviceInfo.toLower().contains("broken")) {
+                if(deviceInfo.contains("broken", Qt::CaseInsensitive)) {
                     demoIO->setAllTransfersError(true);
                 }
                 scannerStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
@@ -124,7 +124,7 @@ int SourceDeviceManager::getActiveSlotCount()
 int SourceDeviceManager::getDemoCount()
 {
     int demoCount = 0;
-    for(auto slot: m_sourceControllers) {
+    for(const auto &slot: qAsConst(m_sourceControllers)) {
         if(slot && slot->hasDemoIo()) {
             demoCount++;
         }
