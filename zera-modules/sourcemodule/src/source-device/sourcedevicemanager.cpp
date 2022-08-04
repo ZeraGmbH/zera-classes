@@ -111,6 +111,17 @@ void SourceDeviceManager::closeSource(QString ioDeviceInfo, const QUuid uuid)
     emit sigSlotRemovedQueued(-1, uuid, QString("No source found at %1").arg(ioDeviceInfo));
 }
 
+void SourceDeviceManager::closeAll()
+{
+    checkHandleAllClosed();
+    for(int slot = 0; slot<getSlotCount(); ++slot) {
+        SourceDeviceFacade::Ptr sourceController = getSourceController(slot);
+        if(sourceController) {
+            closeSource(slot, QUuid());
+        }
+    }
+}
+
 int SourceDeviceManager::getSlotCount()
 {
     return m_sourceControllers.size();
@@ -178,6 +189,7 @@ void SourceDeviceManager::onSourceClosed(int facadeId, QUuid uuid)
             break;
         }
     }
+    checkHandleAllClosed();
 }
 
 bool SourceDeviceManager::isValidSlotNo(int slotNo)
@@ -216,5 +228,12 @@ bool SourceDeviceManager::tryStartDemoDeviceRemove(int slotNo)
         removeStarted = true;
     }
     return removeStarted;
+}
+
+void SourceDeviceManager::checkHandleAllClosed()
+{
+    if(getActiveSlotCount() == 0) {
+        emit sigAllSlotsRemoved();
+    }
 }
 

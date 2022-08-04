@@ -30,6 +30,9 @@ private slots:
     void removeDevInfoUnknown();
     void removeDevInfoUuidIdentical();
 
+    void removeAllSignalOnEmpty();
+    void removeAllSignalOnSlots();
+
     void demoScanOne();
     void demoScanTooMany();
 
