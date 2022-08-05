@@ -131,7 +131,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterCreation()
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
-    QCOMPARE(scanner->getSourcePropertiesFound().isValid(), false);
+    QCOMPARE(scanner->getSourcePropertiesFound().wasSet(), false);
 }
 
 void test_sourcescanner::scannerReportsValidSourceAfterDemoIo()
@@ -141,7 +141,7 @@ void test_sourcescanner::scannerReportsValidSourceAfterDemoIo()
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
     SourceProperties props;
-    QCOMPARE(props.isValid(), false);
+    QCOMPARE(props.wasSet(), false);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
         props = scanner->getSourcePropertiesFound();
@@ -149,7 +149,7 @@ void test_sourcescanner::scannerReportsValidSourceAfterDemoIo()
 
     scanner->startScan();
     QTest::qWait(shortQtEventTimeout);
-    QCOMPARE(props.isValid(), true);
+    QCOMPARE(props.wasSet(), true);
 }
 
 void test_sourcescanner::scannerReportsValidSourceAfterZeraIo()
@@ -159,7 +159,7 @@ void test_sourcescanner::scannerReportsValidSourceAfterZeraIo()
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
     SourceProperties props;
-    QCOMPARE(props.isValid(), false);
+    QCOMPARE(props.wasSet(), false);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
         props = scanner->getSourcePropertiesFound();
@@ -167,7 +167,7 @@ void test_sourcescanner::scannerReportsValidSourceAfterZeraIo()
 
     scanner->startScan();
     QTest::qWait(shortQtEventTimeout);
-    QCOMPARE(props.isValid(), true);
+    QCOMPARE(props.wasSet(), true);
 }
 
 void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
@@ -177,8 +177,8 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
-    SourceProperties props(SOURCE_MT_COMMON, "", "");
-    QCOMPARE(props.isValid(), true);
+    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
+    QCOMPARE(props.wasSet(), true);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
         props = scanner->getSourcePropertiesFound();
@@ -186,7 +186,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
 
     scanner->startScan();
     QTest::qWait(shortQtEventTimeout);
-    QCOMPARE(props.isValid(), false);
+    QCOMPARE(props.wasSet(), false);
 }
 
 void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
@@ -196,14 +196,14 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
     IoQueueEntryList list = ioStrategy->getIoQueueEntriesForScan();
-    for(IoQueueEntry::Ptr entry : list) {
+    for(IoQueueEntry::Ptr entry : qAsConst(list)) {
         for(int idx = 0; idx<entry->getTransferCount(); ++idx) {
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
         }
     }
 
-    SourceProperties props(SOURCE_MT_COMMON, "", "");
-    QCOMPARE(props.isValid(), true);
+    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
+    QCOMPARE(props.wasSet(), true);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
         props = scanner->getSourcePropertiesFound();
@@ -211,7 +211,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
 
     scanner->startScan();
     QTest::qWait(shortQtEventTimeout);
-    QCOMPARE(props.isValid(), false);
+    QCOMPARE(props.wasSet(), false);
 }
 
 void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
@@ -221,14 +221,14 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
     IoQueueEntryList list = ioStrategy->getIoQueueEntriesForScan();
-    for(IoQueueEntry::Ptr entry : list) {
+    for(IoQueueEntry::Ptr entry : qAsConst(list)) {
         for(int idx = 0; idx<entry->getTransferCount(); ++idx) {
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
         }
     }
 
-    SourceProperties props(SOURCE_MT_COMMON, "", "");
-    QCOMPARE(props.isValid(), true);
+    SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
+    QCOMPARE(props.wasSet(), true);
 
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
         props = scanner->getSourcePropertiesFound();
@@ -236,5 +236,5 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
 
     scanner->startScan();
     QTest::qWait(shortQtEventTimeout);
-    QCOMPARE(props.isValid(), false);
+    QCOMPARE(props.wasSet(), false);
 }

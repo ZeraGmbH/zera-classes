@@ -14,7 +14,7 @@ void test_sourceswitchjson::signalSwitch()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
+    DefaultTestSourceProperties sourceProperties;
     SourceIo::Ptr sourceIo = SourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
@@ -34,8 +34,7 @@ void test_sourceswitchjson::signalSwitchAfterError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
     SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo);
     ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
@@ -57,8 +56,7 @@ void test_sourceswitchjson::twoSignalsSwitchSameTwice()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
 
@@ -78,8 +76,7 @@ void test_sourceswitchjson::currentAndRequestedParamOnError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
     SourceIoErrorInjection *pSourceIoWithError = new SourceIoErrorInjection(sourceIo);
     ISourceIo::Ptr sourceIoWithError = ISourceIo::Ptr(pSourceIoWithError);
     pSourceIoWithError->setDemoResonseErrorIdx(0);
@@ -106,8 +103,7 @@ void test_sourceswitchjson::changeParamOnSuccess()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
     setDemoIoFixedTimeout(ioDevice, 0);
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, sourceProperties));
+    ISourceIo::Ptr sourceIo = ISourceIo::Ptr(new SourceIo(ioDevice, DefaultTestSourceProperties()));
     SourceTransactionStartNotifier::Ptr notifyWrapperSwitch = SourceTransactionStartNotifier::Ptr::create(sourceIo);
     SourceSwitchJson switcher(sourceIo, notifyWrapperSwitch);
 

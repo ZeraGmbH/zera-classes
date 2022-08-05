@@ -23,7 +23,10 @@ SourceProperties SourceScannerIoDemo::evalResponses(int ioGroupId)
     if(entry && entry->passedAll()) {
         SupportedSourceTypes sourceType = getNextSourceType();
         JsonStructApi structureApi = JsonStructApi(JsonStructureLoader::loadJsonDefaultStructure(sourceType));
-        props = SourceProperties(sourceType, structureApi.getDeviceName(), structureApi.getDeviceVersion());
+        props = SourceProperties(sourceType,
+                                 structureApi.getDeviceName(),
+                                 structureApi.getDeviceVersion(),
+                                 SourceProtocols::ZERA_SERIAL);
     }
     return props;
 }

@@ -73,7 +73,7 @@ IoQueueEntry::Ptr SourceScannerIoZeraSerial::getDeviceScanGroup()
 {
     IoQueueEntry::Ptr ioScanOutInGroup = IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
     tIoTransferList scanList;
-    for(auto entry : deviceScanListSerial) {
+    for(auto entry : qAsConst(deviceScanListSerial)) {
         QList<QByteArray> expectedLeadList;
         for(auto detectInfoPair : entry.responseTypePairs) {
             expectedLeadList.append(detectInfoPair.expectedResponse);
@@ -126,11 +126,11 @@ SourceProperties SourceScannerIoZeraSerial::extractProperties(IoTransferDataSing
 {
     int ioPassedIdx = ioData->getPassIdxInExpectedLead();
     deviceDetectInfo detectInfo = deviceScanListSerial[idxInScanList];
-    SupportedSourceTypes type = detectInfo.responseTypePairs[ioPassedIdx].sourceType;
+    SupportedSourceTypes sourceType = detectInfo.responseTypePairs[ioPassedIdx].sourceType;
     QByteArray sendCmd = detectInfo.queryStr;
     QByteArray version = extractVersionFromResponse(ioData);
     QByteArray name = extractNameFromResponse(ioData, version, sendCmd);
-    SourceProperties sourceProperties(type, name, version);
+    SourceProperties sourceProperties(sourceType, name, version, SourceProtocols::ZERA_SERIAL);
     return sourceProperties;
 }
 
@@ -142,7 +142,7 @@ SourceProperties SourceScannerIoZeraSerial::evalResponsesForTransactionGroup(IoQ
         IoTransferDataSingle::Ptr singleIo = group->getTransfer(ioIdxInScanGroup);
         if(singleIo->getPassIdxInExpectedLead() >= 0) {
             properties = extractProperties(singleIo, ioIdxInScanGroup);
-            if(properties.isValid()) {
+            if(properties.wasSet()) {
                 break;
             }
         }

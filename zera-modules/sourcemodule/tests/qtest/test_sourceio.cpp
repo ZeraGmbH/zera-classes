@@ -21,19 +21,22 @@ void test_sourceio::gettersOK()
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::DEMO);
     ioDevice->open(info);
 
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, name, version);
+    SourceProperties sourceProperties(SOURCE_MT_COMMON,
+                                      name,
+                                      version,
+                                      SourceProtocols::ZERA_SERIAL);
     SourceIo sourceIo(ioDevice, sourceProperties);
 
     QCOMPARE(type, sourceIo.getProperties().getType());
     QCOMPARE(name, sourceIo.getProperties().getName());
     QCOMPARE(version, sourceIo.getProperties().getVersion());
+    QCOMPARE(SourceProtocols::ZERA_SERIAL, sourceIo.getProperties().getProtocol());
 }
 
 void test_sourceio::signalResponses()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceIo sourceIo(ioDevice, DefaultTestSourceProperties());
 
     int countResponseReceived = 0;
     connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
@@ -61,8 +64,7 @@ void test_sourceio::signalResponses()
 void test_sourceio::signalResponsesOnOneError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceIo sourceIo(ioDevice, DefaultTestSourceProperties());
 
     int countResponseReceived = 0;
     connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {
@@ -91,8 +93,7 @@ void test_sourceio::signalResponsesOnOneError()
 void test_sourceio::signalResponsesOnTwoErrors()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    SourceIo sourceIo(ioDevice, sourceProperties);
+    SourceIo sourceIo(ioDevice, DefaultTestSourceProperties());
 
     int countResponseReceived = 0;
     connect(&sourceIo, &SourceIo::sigResponseReceived, [&] {

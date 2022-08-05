@@ -44,7 +44,7 @@ void SourceScanner::onTransferGroupFinished(IoQueueEntry::Ptr transferGroup)
 {
     m_SourcePropertiesFound = m_ioStrategy->evalResponses(transferGroup->getGroupId());
     bool scanComplete = false;
-    if(m_SourcePropertiesFound.isValid()) {
+    if(m_SourcePropertiesFound.wasSet()) {
         scanComplete = true;
     }
     else {
