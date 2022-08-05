@@ -30,14 +30,16 @@ private slots:
     void removeDevInfoUnknown();
     void removeDevInfoUuidIdentical();
 
-    void removeAllSignalOnEmpty();
-    void removeAllSignalOnSlots();
-
     void demoScanOne();
     void demoScanTooMany();
 
     void demoScanAll();
     void demoScanAllAndRemove();
+
+    void noSingleSignalRemoveAllOnEmpty();
+    void noSingleSignalRemoveAllOnSlots();
+    void removeAllSignalOnEmpty();
+    void removeAllSignalOnSlots();
 
     void demoAddNotification();
     void demoAddNotificationTooMany();
