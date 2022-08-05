@@ -163,7 +163,7 @@ void test_sourcedevicemanager::removeDevInfoUuidIdentical()
     QCOMPARE(uuidsSet[2], uuidsReceived[2]);
 }
 
-void test_sourcedevicemanager::removeAllSignalOnEmpty()
+void test_sourcedevicemanager::noSingleSignalRemoveAllOnEmpty()
 {
     constexpr int slotCount = 3;
     SourceDeviceManager devMan(slotCount);
@@ -172,17 +172,12 @@ void test_sourcedevicemanager::removeAllSignalOnEmpty()
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int, QUuid) {
         singleRemoveCount++;
     });
-    int allRemoveCount = 0;
-    connect(&devMan, &SourceDeviceManager::sigAllSlotsRemoved, [&]() {
-        allRemoveCount++;
-    });
     devMan.closeAll();
     QTest::qWait(shortQtEventTimeout);
     QCOMPARE(singleRemoveCount, 0);
-    QCOMPARE(allRemoveCount, 1);
 }
 
-void test_sourcedevicemanager::removeAllSignalOnSlots()
+void test_sourcedevicemanager::noSingleSignalRemoveAllOnSlots()
 {
     constexpr int slotCount = 3;
     SourceDeviceManager devMan(slotCount);
@@ -195,13 +190,40 @@ void test_sourcedevicemanager::removeAllSignalOnSlots()
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int, QUuid) {
         singleRemoveCount++;
     });
+    devMan.closeAll();
+    QTest::qWait(shortQtEventTimeout);
+    QCOMPARE(singleRemoveCount, slotCount);
+}
+
+void test_sourcedevicemanager::removeAllSignalOnEmpty()
+{
+    constexpr int slotCount = 3;
+    SourceDeviceManager devMan(slotCount);
+
     int allRemoveCount = 0;
     connect(&devMan, &SourceDeviceManager::sigAllSlotsRemoved, [&]() {
         allRemoveCount++;
     });
     devMan.closeAll();
     QTest::qWait(shortQtEventTimeout);
-    QCOMPARE(singleRemoveCount, slotCount);
+    QCOMPARE(allRemoveCount, 1);
+}
+
+void test_sourcedevicemanager::removeAllSignalOnSlots()
+{
+    constexpr int slotCount = 3;
+    SourceDeviceManager devMan(slotCount);
+    for(int i=0; i<slotCount; i++) {
+        devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
+    }
+    QTest::qWait(shortQtEventTimeout);
+
+    int allRemoveCount = 0;
+    connect(&devMan, &SourceDeviceManager::sigAllSlotsRemoved, [&]() {
+        allRemoveCount++;
+    });
+    devMan.closeAll();
+    QTest::qWait(shortQtEventTimeout);
     QCOMPARE(allRemoveCount, 1);
 }
 
