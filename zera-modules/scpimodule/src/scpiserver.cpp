@@ -261,7 +261,8 @@ void cSCPIServer::testSerial()
 
 void cSCPIServer::newSerialOn(QVariant serialOn)
 {
-    if(serialOn.toBool()) {
+    bool on = serialOn.toBool();
+    if(on) {
         createSerialScpi();
         if(!m_SerialTestTimer.isActive()) {
             m_SerialTestTimer.start(serialPollTimerPeriod);
@@ -273,6 +274,8 @@ void cSCPIServer::newSerialOn(QVariant serialOn)
             m_SerialTestTimer.stop();
         }
     }
+    m_ConfigData.m_SerialDevice.m_nOn = on;
+    emit m_pModule->parameterChanged();
 }
 
 }
