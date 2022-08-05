@@ -17,8 +17,7 @@ void test_sourceperiodicpollerstate::init()
     m_listIoGroupsReceived.clear();
 
     m_ioDevice = createOpenDemoIoDevice();
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, sourceProperties));
+    m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, DefaultTestSourceProperties()));
     m_transactionNotifier = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     connect(m_sourceIo.get(), &ISourceIo::sigResponseReceived,
             this, &test_sourceperiodicpollerstate::onIoQueueGroupFinished);

@@ -23,8 +23,7 @@ void test_sourcestatecontroller::init()
     m_listIoGroupsReceived.clear();
 
     m_ioDevice = createOpenDemoIoDevice();
-    SourceProperties sourceProperties(SOURCE_MT_COMMON, "", "");
-    m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, sourceProperties));
+    m_sourceIo = ISourceIo::Ptr(new SourceIo(m_ioDevice, DefaultTestSourceProperties()));
     m_sourceIoWithError = ISourceIo::Ptr(new SourceIoErrorInjection(m_sourceIo));
     connect(m_sourceIoWithError.get(), &ISourceIo::sigResponseReceived,
             this, &test_sourcestatecontroller::onIoQueueGroupFinished);

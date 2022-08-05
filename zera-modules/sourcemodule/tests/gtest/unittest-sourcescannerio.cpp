@@ -53,8 +53,8 @@ static SourceProperties findSources(NameVersion dev)
         }
         // evaluate responses
         SourceProperties sourceFoundQuestionMark = scannerIo.evalResponses(group->getGroupId());
-        if(sourceFoundQuestionMark.isValid()) {
-            if(sourceFound.isValid()) {
+        if(sourceFoundQuestionMark.wasSet()) {
+            if(sourceFound.wasSet()) {
                 // found more than one -> make invalid again
                 sourceFound = SourceProperties();
             }
@@ -74,10 +74,10 @@ TEST(SCANNER_IO_ZERA, FIND_DEVICES_KNOWN) {
             << NameVersion("MT3000","V1.03", "STSFGMT", SOURCE_MT_COMMON)
             << NameVersion("FG301", "V1.04", "TSFG301", SOURCE_DEMO_FG_4PHASE);
 
-    for(auto dev : nameVersion) {
+    for(const auto &dev : qAsConst(nameVersion)) {
         SourceProperties sourceFound = findSources(dev);
 
-        EXPECT_TRUE(sourceFound.isValid());
+        EXPECT_TRUE(sourceFound.wasSet());
         EXPECT_EQ(sourceFound.getType(), dev.devType);
         EXPECT_EQ(sourceFound.getName(), dev.devName);
         EXPECT_EQ(sourceFound.getVersion(), dev.devVersion);
@@ -90,10 +90,10 @@ TEST(SCANNER_IO_ZERA, NO_FIND_ON_UNKNOWN_RESPONSE_LEAD) {
             << NameVersion("MT400", "V1.00", "TSMT", SOURCE_MT_CURRENT_ONLY)
             << NameVersion("MT400", "V1.00", "STSFG", SOURCE_MT_CURRENT_ONLY);
 
-    for(auto dev : nameVersion) {
+    for(const auto &dev : qAsConst(nameVersion)) {
         SourceProperties sourceFound = findSources(dev);
 
-        EXPECT_FALSE(sourceFound.isValid());
+        EXPECT_FALSE(sourceFound.wasSet());
     }
 }
 
@@ -108,7 +108,7 @@ TEST(SCANNER_IO_DEMO, GENERATES_INVALID_ON_NO_IO) {
     SourceScannerIoDemo scannerIo;
     IoQueueEntryList queueList = scannerIo.getIoQueueEntriesForScan();
     SourceProperties props = scannerIo.evalResponses(queueList[0]->getGroupId());
-    EXPECT_FALSE(props.isValid());
+    EXPECT_FALSE(props.wasSet());
 }
 
 TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {

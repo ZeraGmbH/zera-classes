@@ -8,20 +8,20 @@
 class SourceProperties
 {
 public:
-    SourceProperties();
+    SourceProperties(); // unset
     SourceProperties(SupportedSourceTypes type,
                      QString name,
                      QString version,
-                     SourceProtocols protocol = SourceProtocols::ZERA_SERIAL);
+                     SourceProtocols protocol);
 
-    bool isValid() const;
+    bool wasSet() const;
     SupportedSourceTypes getType() const;
     QString getName() const;
     QString getVersion() const;
     SourceProtocols getProtocol() const;
 
 private:
-    bool m_isValid = false;
+    bool m_wasSet = false;
     SupportedSourceTypes m_type = SOURCE_MT_COMMON;
     QString m_name;
     QString m_version;

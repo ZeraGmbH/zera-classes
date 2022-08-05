@@ -159,7 +159,7 @@ void SourceDeviceManager::onScanFinished(SourceScanner::Ptr scanner)
     QString erorDesc;
     int freeSlot = -1;
     SourceDeviceFacade::Ptr sourceControllerFound = nullptr;
-    if(props.isValid()) {
+    if(props.wasSet()) {
         freeSlot = findFreeSlot();
         if(freeSlot >= 0) {
             sourceControllerFound = SourceDeviceFacade::Ptr::create(scanner->getIoDevice(), scanner->getSourcePropertiesFound());

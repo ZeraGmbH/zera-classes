@@ -4,18 +4,22 @@ SourceProperties::SourceProperties()
 {
 }
 
-SourceProperties::SourceProperties(SupportedSourceTypes type, QString name, QString version, SourceProtocols protocol) :
-    m_isValid(true),
+SourceProperties::SourceProperties(SupportedSourceTypes type,
+                                   QString name,
+                                   QString version,
+                                   SourceProtocols protocol) :
+    m_wasSet(true),
     m_type(type),
     m_name(name),
     m_version(version),
     m_protocol(protocol)
+
 {
 }
 
-bool SourceProperties::isValid() const
+bool SourceProperties::wasSet() const
 {
-    return m_isValid;
+    return m_wasSet;
 }
 
 SupportedSourceTypes SourceProperties::getType() const
@@ -37,4 +41,3 @@ SourceProtocols SourceProperties::getProtocol() const
 {
     return m_protocol;
 }
-
