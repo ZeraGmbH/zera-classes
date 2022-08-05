@@ -60,6 +60,8 @@ void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cSCPIModuleConfiguration::exportConfiguration()
 {
+    m_pXMLReader->setValue("scpimodconfpar:configuration:connectivity:serialdevice:on",
+                           QString("%1").arg(m_pSCPIModulConfigData->m_SerialDevice.m_nOn));
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
