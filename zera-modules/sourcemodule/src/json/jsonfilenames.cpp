@@ -56,6 +56,13 @@ QString JsonFilenames::getJsonFileName(SupportedSourceTypes type)
     return fileName;
 }
 
+QString JsonFilenames::getJsonSourcesConnectedFileName()
+{
+    QString statePath = getJsonStateDir();
+    createDirIfNotExist(statePath);
+    return statePath + "sources-connected.json";
+}
+
 QString JsonFilenames::getJsonStateDir()
 {
     QString statePath(ZC_DEV_STATE_PATH);
