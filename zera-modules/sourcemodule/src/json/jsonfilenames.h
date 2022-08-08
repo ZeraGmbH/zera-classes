@@ -11,7 +11,7 @@ public:
     static QString getJsonStatePath(SupportedSourceTypes type);
     static QString getJsonStatePath(QString deviceName, QString deviceVersion);
     static QString getJsonFileName(SupportedSourceTypes type);
-
+    static QString getJsonSourcesConnectedFileName();
 private:
     static QString getJsonStateDir();
     static void createDirIfNotExist(QString path);
