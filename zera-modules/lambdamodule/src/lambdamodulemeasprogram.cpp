@@ -34,16 +34,13 @@ cLambdaModuleMeasProgram::cLambdaModuleMeasProgram(cLambdaModule* module, std::s
     connect(&m_deactivateDoneState, &QState::entered, this, &cLambdaModuleMeasProgram::deactivateMeasDone);
 }
 
-
 cLambdaModuleMeasProgram::~cLambdaModuleMeasProgram()
 {
 }
 
-
 void cLambdaModuleMeasProgram::start()
 {
 }
-
 
 void cLambdaModuleMeasProgram::stop()
 {
@@ -54,14 +51,11 @@ cLambdaModuleConfigData *cLambdaModuleMeasProgram::getConfData()
     return qobject_cast<cLambdaModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cLambdaModuleMeasProgram::generateInterface()
 {
     cVeinModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Lambda%1").arg(i+1),
                                             QString("Component forwards lambda actual values"),
@@ -83,38 +77,27 @@ void cLambdaModuleMeasProgram::generateInterface()
                                                 QString("SIG_Measuring"),
                                                 QString("Component forwards a signal indicating measurement activity"),
                                                 QVariant(0));
-
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
 }
 
-
 void cLambdaModuleMeasProgram::searchActualValues()
 {
-    bool error;
-
-    error = false;
+    bool error = false;
     QList<cVeinModuleComponentInput*> inputList;
-
-    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
         // we first test that wanted input components exist
         if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
-             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) )
-        {
+             (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
             cLambdaMeasDelegate* cLMD;
-            cVeinModuleComponentInput *vmci;
-
-            if (i == (getConfData()->m_nLambdaSystemCount-1))
-            {
+            if (i == (getConfData()->m_nLambdaSystemCount-1)) {
                 cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i), true);
                 connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
             }
             else
                 cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i));
-
             m_LambdaMeasDelegateList.append(cLMD);
 
-            vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+            cVeinModuleComponentInput *vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
             inputList.append(vmci);
             connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
 
@@ -125,16 +108,13 @@ void cLambdaModuleMeasProgram::searchActualValues()
         else
             error = true;
     }
-
     if (error)
         emit activationError();
-    else
-    {
+    else {
         m_pEventSystem->setInputList(inputList);
         emit activationContinue();
     }
 }
-
 
 void cLambdaModuleMeasProgram::activateDone()
 {
@@ -142,24 +122,18 @@ void cLambdaModuleMeasProgram::activateDone()
     emit activated();
 }
 
-
-
 void cLambdaModuleMeasProgram::deactivateMeas()
 {
     m_bActive = false;
-
     for (int i = 0; i < m_LambdaMeasDelegateList.count(); i++)
         delete m_LambdaMeasDelegateList.at(i);
-
     emit deactivationContinue();
 }
-
 
 void cLambdaModuleMeasProgram::deactivateMeasDone()
 {
     emit deactivated();
 }
-
 
 void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 {
@@ -167,6 +141,3 @@ void cLambdaModuleMeasProgram::setMeasureSignal(int signal)
 }
 
 }
-
-
-
