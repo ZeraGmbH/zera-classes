@@ -754,6 +754,10 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 errcount = m_ActionErrorcountHash.take(setmeaschannelrange);
                 errcount++;
                 m_ActionErrorcountHash[setmeaschannelrange] = errcount;
+                qWarning("Set range %s on %s failed with %i!",
+                         qPrintable(m_sNewRange),
+                         qPrintable(getAlias()),
+                         reply);
                 if (errcount > 1) {
                     emit errMsg((tr(setRangeErrMsg)));
     #ifdef DEBUG
