@@ -1,34 +1,14 @@
 #ifndef RANGEMODULEMEASPROGRAM_H
 #define RANGEMODULEMEASPROGRAM_H
 
-#include <QObject>
+#include "rangemoduleconfigdata.h"
+#include <basemeasmodule.h>
+#include <basedspmeasprogram.h>
+#include <proxyclient.h>
 #include <QList>
 #include <QStateMachine>
-#include <QState>
 #include <QFinalState>
 #include <QTimer>
-
-#include <basedspmeasprogram.h>
-
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxyClient;
-}
-}
-
-
-class cDspMeasData;
-class cDspIFace;
-class QStateMachine;
-class QState;
-class QFinalState;
-class cModuleSignal;
-class cModuleValidator;
-class cVeinModuleComponent;
-class cVeinModuleActvalue;
 
 namespace RANGEMODULE
 {
@@ -49,10 +29,7 @@ enum rangemoduleCmds
 
 #define irqNr 1
 
-class cBaseModule;
 class cRangeModule;
-class cRangeModuleConfigData;
-
 
 class cRangeModuleMeasProgram: public cBaseDspMeasProgram
 {
