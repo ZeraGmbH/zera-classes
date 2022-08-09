@@ -69,6 +69,7 @@ private:
 
     cVeinModuleComponent *m_pMeasureSignal;
     QList<cVeinModuleActvalue*> m_ActValueList;
+    QTimer m_dspWatchdogTimer;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
@@ -102,6 +103,7 @@ private:
 
     void setActualValuesNames();
     void setSCPIMeasInfo();
+    void restartDspWachdog();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
@@ -125,7 +127,7 @@ private slots:
     void dataReadDSP();
 
     void handleDemoPeriodicTimer();
-
+    void onDspWatchdogTimeout();
 };
 
 }

@@ -79,6 +79,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, Zera::Pro
     connect(&m_dataAcquisitionState, &QState::entered, this, &cRangeModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
+    connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
     if(m_bDemo) {
         // Demo timer for dummy actual values
         m_demoPeriodicTimer.setSingleShot(false);
@@ -259,6 +260,7 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
 
     if (msgnr == 0) // 0 was reserved for async. messages
     {
+        restartDspWachdog();
         QString sintnr;
         // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
@@ -453,6 +455,12 @@ void cRangeModuleMeasProgram::setSCPIMeasInfo()
     }
 }
 
+void cRangeModuleMeasProgram::restartDspWachdog()
+{
+    m_dspWatchdogTimer.stop();
+    m_dspWatchdogTimer.setSingleShot(true);
+    m_dspWatchdogTimer.start(3000);
+}
 
 void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
@@ -533,8 +541,8 @@ void cRangeModuleMeasProgram::activateDSPdone()
     m_bActive = true;
     setActualValuesNames();
     setSCPIMeasInfo();
-
     m_pMeasureSignal->setValue(QVariant(1));
+    restartDspWachdog();
     emit activated();
 }
 
@@ -614,6 +622,12 @@ void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
         actualValues.append(randAmplitude);
     }
     emit sigDemoActualValues(&actualValues);
+}
+
+void cRangeModuleMeasProgram::onDspWatchdogTimeout()
+{
+    qCritical("Rangemodule: DSP is stuck!");
+    restartDspWachdog();
 }
 
 }
