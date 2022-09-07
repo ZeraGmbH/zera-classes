@@ -24,7 +24,7 @@
                 <m1>2LW</m1>
             </modes>
             <system>
-                <pms1>m1,m4</pms1>
+                <pms1>m2,m7</pms1>
                 <pms2w>pms1</pms2w>
             </system>
             <integrationmode>time</integrationmode>
@@ -39,7 +39,7 @@
             <output>
             <n>1</n>
             <fout1>
-                <name>fo1</name>
+                <name>fo2</name>
                 <source>pms1</source>
                 <type>+-</type>
                 <scaling>
