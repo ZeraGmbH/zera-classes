@@ -14,20 +14,17 @@ class VeinComponentSetNotifier : public VeinEvent::EventSystem
 {
     Q_OBJECT
 public:
-    VeinComponentSetNotifier();
-    static constexpr int entityId = 1;
-
+    VeinComponentSetNotifier(int entityId);
     void addComponentToNotify(QString componentName, cVeinModuleComponent* component);
 signals:
     void sigComponentChanged(QString componentName, QVariant newValue);
 private:
-    void createEntity();
+    void createEntity(int entityId);
     bool processEvent(QEvent *t_event) override;
 
     VeinEvent::EventHandler m_eventHandler;
     VeinStorage::VeinHash m_storageHash;
     QHash <QString, cVeinModuleComponent*> m_hashComponentsListening;
-
 };
 
 #endif // VENCOMPONENTNOTIFIER_H

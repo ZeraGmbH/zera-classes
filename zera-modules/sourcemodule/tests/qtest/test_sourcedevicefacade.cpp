@@ -43,6 +43,7 @@ static const QString componentNameActState = QStringLiteral("act_state");
 static const QString componentNameActInfo = QStringLiteral("act_info");
 static const QString componentNameParLoad = QStringLiteral("par_load");
 static const QString noDescription = QStringLiteral("no-description");
+static constexpr int defaultEntityId = 1;
 
 struct TVeinObjects
 {
@@ -52,13 +53,13 @@ struct TVeinObjects
     cVeinModuleParameter veinDeviceParameter;
     cJsonParamValidator veinDeviceParameterValidator;
     TVeinObjects(QJsonObject jsonStructure, VeinEvent::EventSystem *veinEventSystem) :
-        veinActDeviceState(VeinComponentSetNotifier::entityId,
+        veinActDeviceState(defaultEntityId,
                            veinEventSystem,
                            componentNameActState, noDescription, QVariant()),
-        veinActDeviceInfo(VeinComponentSetNotifier::entityId,
+        veinActDeviceInfo(defaultEntityId,
                           veinEventSystem,
                           componentNameActInfo, noDescription, QVariant()),
-        veinDeviceParameter(VeinComponentSetNotifier::entityId,
+        veinDeviceParameter(defaultEntityId,
                             veinEventSystem,
                             componentNameParLoad, noDescription, QVariant())
     {
@@ -76,7 +77,7 @@ void test_sourcedevicefacade::checkVeinInitialStatus()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
-    VeinComponentSetNotifier veinEventSystem;
+    VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> statesReceived;
@@ -105,7 +106,7 @@ void test_sourcedevicefacade::checkVeinInitialInfo()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
-    VeinComponentSetNotifier veinEventSystem;
+    VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameActInfo, &vein.veinActDeviceInfo);
     QList<QJsonObject> infosReceived;
@@ -131,7 +132,7 @@ void test_sourcedevicefacade::checkVeinInitialLoad()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
-    VeinComponentSetNotifier veinEventSystem;
+    VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     QList<QJsonObject> loadsReceived;
@@ -160,7 +161,7 @@ void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
-    VeinComponentSetNotifier veinEventSystem;
+    VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> statesReceived;
@@ -193,7 +194,7 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice(deviceInfo);
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
-    VeinComponentSetNotifier veinEventSystem;
+    VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     QList<QJsonObject> loadsReceived;
@@ -232,7 +233,7 @@ void test_sourcedevicefacade::checkVeinSwitchError()
     demoIO->setResponseDelay(false, 1); // at least our vein stub gets confused on high fire
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
-    VeinComponentSetNotifier veinEventSystem;
+    VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
@@ -286,7 +287,7 @@ void test_sourcedevicefacade::checkVeinStateError()
     demoIO->setResponseDelay(false, 1); // at least our vein stub gets confused on high fire
     QJsonObject jsonStructure = JsonStructureLoader::loadJsonStructure(DefaultTestSourceProperties());
 
-    VeinComponentSetNotifier veinEventSystem;
+    VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
     veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);

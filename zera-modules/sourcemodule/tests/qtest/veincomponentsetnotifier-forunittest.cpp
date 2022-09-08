@@ -9,11 +9,11 @@ using VeinEvent::CommandEvent;
 using VeinEvent::EventData;
 using VeinComponent::ComponentData;
 
-VeinComponentSetNotifier::VeinComponentSetNotifier()
+VeinComponentSetNotifier::VeinComponentSetNotifier(int entityId)
 {
     m_eventHandler.addSubsystem(this);
     m_eventHandler.addSubsystem(&m_storageHash);
-    createEntity();
+    createEntity(entityId);
 }
 
 void VeinComponentSetNotifier::addComponentToNotify(QString componentName, cVeinModuleComponent *component)
@@ -21,7 +21,7 @@ void VeinComponentSetNotifier::addComponentToNotify(QString componentName, cVein
     m_hashComponentsListening[componentName] = component;
 }
 
-void VeinComponentSetNotifier::createEntity()
+void VeinComponentSetNotifier::createEntity(int entityId)
 {
     VeinComponent::EntityData *entityData = new VeinComponent::EntityData();
     entityData->setCommand(VeinComponent::EntityData::Command::ECMD_ADD);
