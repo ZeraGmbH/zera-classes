@@ -16,9 +16,9 @@ VeinComponentSetNotifier::VeinComponentSetNotifier(int entityId)
     createEntity(entityId);
 }
 
-void VeinComponentSetNotifier::addComponentToNotify(QString componentName, cVeinModuleComponent *component)
+void VeinComponentSetNotifier::addComponentToNotify(QString componentName, const QVariant *componentValue)
 {
-    m_hashComponentsListening[componentName] = component;
+    m_hashComponentValuesListening[componentName] = componentValue;
 }
 
 void VeinComponentSetNotifier::createEntity(int entityId)
@@ -41,11 +41,11 @@ bool VeinComponentSetNotifier::processEvent(QEvent *t_event)
                 ComponentData *cData = static_cast<ComponentData *>(evData);
                 if(cData->eventCommand() == ComponentData::Command::CCMD_SET) {
                     QString componentName = cData->componentName();
-                    auto iter = m_hashComponentsListening.find(componentName);
-                    if(iter != m_hashComponentsListening.end()) {
+                    auto iter = m_hashComponentValuesListening.find(componentName);
+                    if(iter != m_hashComponentValuesListening.end()) {
                         int entityId = evData->entityId();
                         QVariant oldValue = m_storageHash.getStoredValue(entityId, componentName);
-                        QVariant newValue = iter.value()->getValue();
+                        const QVariant newValue = *iter.value();
                         if(oldValue != newValue) {
                             emit sigComponentChanged(componentName, newValue);
                         }
