@@ -15,7 +15,7 @@ public:
     void setChannelName(QString name); // channel name for json export can be empty
     QString getChannelName();
     void setUnit(QString unit);
-    QVariant getValue();
+    const QVariant& getValue() const;
     QString getUnit();
     QString getName();
 signals:
