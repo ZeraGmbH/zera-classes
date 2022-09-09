@@ -45,7 +45,7 @@ void cVeinModuleComponent::setUnit(QString unit)
     m_sChannelUnit = unit;
 }
 
-const QVariant& cVeinModuleComponent::getValue() const
+QVariant cVeinModuleComponent::getValue()
 {
     return m_vValue;
 }
