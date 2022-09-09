@@ -79,7 +79,7 @@ void test_sourceperiodicpollerstate::pollStopNotification()
 void test_sourceperiodicpollerstate::pollChangeTimeNotification()
 {
     SourceStatePeriodicPoller poller(m_transactionNotifier, 500);
-    QTest::qWait(shortQtEventTimeout);
+    QCoreApplication::processEvents();
     QCOMPARE(m_listIoGroupsReceived.count(), 0);
     poller.setPollTime(10);
     QTest::qWait(20);
