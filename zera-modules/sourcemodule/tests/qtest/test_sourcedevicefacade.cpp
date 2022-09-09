@@ -79,7 +79,7 @@ void test_sourcedevicefacade::checkVeinInitialStatus()
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
-    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState.getValue());
+    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> statesReceived;
     connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
         QCOMPARE(componentName, componentNameActState);
@@ -108,7 +108,7 @@ void test_sourcedevicefacade::checkVeinInitialInfo()
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
-    veinEventSystem.addComponentToNotify(componentNameActInfo, &vein.veinActDeviceInfo.getValue());
+    veinEventSystem.addComponentToNotify(componentNameActInfo, &vein.veinActDeviceInfo);
     QList<QJsonObject> infosReceived;
     connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
         QCOMPARE(componentName, componentNameActInfo);
@@ -134,7 +134,7 @@ void test_sourcedevicefacade::checkVeinInitialLoad()
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
-    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter.getValue());
+    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     QList<QJsonObject> loadsReceived;
     connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
         QCOMPARE(componentName, componentNameParLoad);
@@ -163,7 +163,7 @@ void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
-    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState.getValue());
+    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> statesReceived;
     connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
         QCOMPARE(componentName, componentNameActState);
@@ -196,7 +196,7 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
-    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter.getValue());
+    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
     QList<QJsonObject> loadsReceived;
     connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
         QCOMPARE(componentName, componentNameParLoad);
@@ -235,8 +235,8 @@ void test_sourcedevicefacade::checkVeinSwitchError()
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
-    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter.getValue());
-    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState.getValue());
+    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
+    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> loadsReceived;
     QList<QJsonObject> statesReceived;
     connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
@@ -289,8 +289,8 @@ void test_sourcedevicefacade::checkVeinStateError()
 
     VeinComponentSetNotifier veinEventSystem(defaultEntityId);
     TVeinObjects vein(jsonStructure, &veinEventSystem);
-    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter.getValue());
-    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState.getValue());
+    veinEventSystem.addComponentToNotify(componentNameParLoad, &vein.veinDeviceParameter);
+    veinEventSystem.addComponentToNotify(componentNameActState, &vein.veinActDeviceState);
     QList<QJsonObject> loadsReceived;
     QList<QJsonObject> statesReceived;
     connect(&veinEventSystem, &VeinComponentSetNotifier::sigComponentChanged, [&] (QString componentName, QVariant newValue) {
