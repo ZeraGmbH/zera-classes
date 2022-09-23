@@ -140,7 +140,7 @@ install(
 
 find_package(Qt5Test REQUIRED)
 find_package(GTest)
-if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
+if(${GTest_FOUND})
     message(STATUS "unittest rangemodule")
     enable_testing()
 

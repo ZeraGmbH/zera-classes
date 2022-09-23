@@ -201,7 +201,7 @@ install(
         ${SET_ZC_CONFIG_PATH}
     )
 
-if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
+if(${GTest_FOUND})
     message(STATUS "unittest sourcemodule")
     add_subdirectory(tests)
     enable_testing()

@@ -1,4 +1,4 @@
-if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
+if(${GTest_FOUND})
     message(STATUS "unittest zera-misc")
     enable_testing()
 
