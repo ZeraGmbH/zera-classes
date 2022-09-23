@@ -14,7 +14,7 @@ set(REPO_VERSION ${PROJECT_VERSION})
 
 find_package(Qt5 COMPONENTS Core Network CONFIG REQUIRED)
 find_package(Qt5Test REQUIRED)
-find_package(GTest)
+find_package(GTest REQUIRED)
 
 include(FeatureSummary)
 include(GNUInstallDirs)
