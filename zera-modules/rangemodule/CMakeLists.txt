@@ -139,41 +139,41 @@ install(
     )
 
 find_package(Qt5Test REQUIRED)
-find_package(GTest)
-if(${GTest_FOUND})
-    message(STATUS "unittest rangemodule")
-    enable_testing()
+find_package(GTest REQUIRED)
 
-    add_test(NAME    rangemodule-unittest
-             COMMAND rangemodule-unittest)
+message(STATUS "unittest rangemodule")
+enable_testing()
 
-    file(GLOB UNITTESTS
-        tests/unittest-*.cpp
+add_test(NAME    rangemodule-unittest
+         COMMAND rangemodule-unittest)
+
+file(GLOB UNITTESTS
+    tests/unittest-*.cpp
+)
+
+add_executable(rangemodule-unittest
+    ${SOURCES}
+    ${HEADER}
+    ${RESOURCES}
+    ${UNITTESTS}
+)
+# constexpr / EXPECT_EQ -> linker problems for c++ < 17
+set_property(TARGET rangemodule-unittest PROPERTY CXX_STANDARD 17)
+
+target_include_directories(rangemodule-unittest
+    PUBLIC
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rangemodule>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
     )
 
-    add_executable(rangemodule-unittest
-        ${SOURCES}
-        ${HEADER}
-        ${RESOURCES}
-        ${UNITTESTS}
-    )
-    # constexpr / EXPECT_EQ -> linker problems for c++ < 17
-    set_property(TARGET rangemodule-unittest PROPERTY CXX_STANDARD 17)
-
-    target_include_directories(rangemodule-unittest
-        PUBLIC
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/rangemodule>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        )
-
-    target_link_libraries(rangemodule-unittest
-        PUBLIC
-        gtest
-        gtest_main
-        ${COMMON_LIBS}
-    )
+target_link_libraries(rangemodule-unittest
+    PUBLIC
+    gtest
+    gtest_main
+    ${COMMON_LIBS}
+)
 
 if(FALSE) # we have no qt-unittests yet
     add_test(NAME    rangemodule-unittest-qt
@@ -206,6 +206,4 @@ if(FALSE) # we have no qt-unittests yet
         Qt5::Test
         ${COMMON_LIBS}
     )
-endif()
-
 endif()
