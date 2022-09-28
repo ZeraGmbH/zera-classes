@@ -84,15 +84,18 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy:
     connect(&m_activationDoneState, &QState::entered, this, &cSem1ModuleMeasProgram::activationDone);
 
     // setting up statemachine to free the occupied resources
+    m_stopECalculatorState.addTransition(this, &cSem1ModuleMeasProgram::deactivationContinue, &m_freeECalculatorState);
     m_freeECalculatorState.addTransition(this, &cSem1ModuleMeasProgram::deactivationContinue, &m_freeECResource);
     m_freeECResource.addTransition(this, &cSem1ModuleMeasProgram::deactivationContinue, &m_deactivationDoneState);
 
+    m_deactivationMachine.addState(&m_stopECalculatorState);
     m_deactivationMachine.addState(&m_freeECalculatorState);
     m_deactivationMachine.addState(&m_freeECResource);
     m_deactivationMachine.addState(&m_deactivationDoneState);
 
-    m_deactivationMachine.setInitialState(&m_freeECalculatorState);
+    m_deactivationMachine.setInitialState(&m_stopECalculatorState);
 
+    connect(&m_stopECalculatorState, &QState::entered, this, &cSem1ModuleMeasProgram::stopECCalculator);
     connect(&m_freeECalculatorState, &QState::entered, this, &cSem1ModuleMeasProgram::freeECalculator);
     connect(&m_freeECResource, &QState::entered, this, &cSem1ModuleMeasProgram::freeECResource);
     connect(&m_deactivationDoneState, &QState::entered, this, &cSem1ModuleMeasProgram::deactivationDone);
@@ -691,6 +694,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             case stopmeas:
                 if (reply == ack) {
+                    emit deactivationContinue();
                 }
                 else
                 {
@@ -1174,6 +1178,11 @@ void cSem1ModuleMeasProgram::activationDone()
 
     m_bActive = true;
     emit activated();
+}
+
+void cSem1ModuleMeasProgram::stopECCalculator()
+{
+    stopMeasuerment(true);
 }
 
 

@@ -100,6 +100,7 @@ private:
     QFinalState m_activationDoneState; // and then we have finished
 
     // statemachine for deactivating
+    QState m_stopECalculatorState; // we stop running measurement
     QState m_freeECalculatorState; // we give back our ecalcunits to sec server
     QState m_freeECResource; // and also give them back to the resource manager
     QFinalState m_deactivationDoneState;
@@ -221,6 +222,7 @@ private slots:
     void setsecINTNotifier();
     void activationDone();
 
+    void stopECCalculator();
     void freeECalculator();
     void freeECResource();
     void deactivationDone();
