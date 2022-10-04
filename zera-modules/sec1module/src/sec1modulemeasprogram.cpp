@@ -1100,10 +1100,6 @@ void cSec1ModuleMeasProgram::cmpDependencies()
     if (mode == "energy")
     {
         // we calcute the new mrate and target
-        double test = constant;
-        test *= getConfData()->m_fEnergy.m_fPar;
-        test = floor(test);
-        //quint32 itest = (quint32) test;
         getConfData()->m_nMRate.m_nPar = ceil(constant * getConfData()->m_fEnergy.m_fPar);
         getConfData()->m_nTarget.m_nPar = floor(getConfData()->m_nMRate.m_nPar * getConfData()->m_fRefConstant.m_fPar / constant);
     }
