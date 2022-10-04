@@ -61,6 +61,7 @@ public:
     bool m_bEmbedded;
     stringParameter m_sMode;
     doubleParameter m_fDutConstant;
+    stringParameter m_sDutConstantUnit;
     doubleParameter m_fRefConstant;
     boolParameter m_bContinous;
     doubleParameter m_fT0Value;
