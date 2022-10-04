@@ -1038,7 +1038,13 @@ QString cSec1ModuleMeasProgram::getEnergyUnit()
 
 void cSec1ModuleMeasProgram::initDutConstantUnit(QStringList sl)
 {
-    m_sDutConstantUnit = sl.at(0);
+    QString lastDutUnit = getConfData()->m_sDutConstantUnit.m_sPar;
+    if(lastDutUnit.isEmpty() || !sl.contains(lastDutUnit)) {
+        m_sDutConstantUnit = sl.at(0);
+    }
+    else {
+        m_sDutConstantUnit = lastDutUnit;
+    }
     m_pDutConstantUnitPar->setValue(m_sDutConstantUnit);
 }
 
@@ -1851,6 +1857,7 @@ void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString co
 void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
 {
     m_sDutConstantUnit = dutconstunit.toString();
+    getConfData()->m_sDutConstantUnit.m_sPar = m_sDutConstantUnit;
     setInterfaceComponents(); // to compute the dependencies
     quint32 flagsForRecalc = ECALCSTATUS::READY;
     if (m_pContinuousPar->getValue().toInt() != 0) {
