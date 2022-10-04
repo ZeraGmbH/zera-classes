@@ -1,5 +1,6 @@
 #include "multipleresulthelper.h"
 #include <QJsonObject>
+#include <QDateTime>
 #include <math.h>
 
 void MultipleResultHelper::clear()
