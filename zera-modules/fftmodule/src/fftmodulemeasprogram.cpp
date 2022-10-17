@@ -700,22 +700,15 @@ void cFftModuleMeasProgram::setActualValuesNames()
 
 void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
-    int i;
-    if (m_bActive) // maybe we are deactivating !!!!
-    {
-        int n = m_ActValueList.count();
-        for (i = 0; i < n; i++) // we set n fft "values"
-        {
+    if (m_bActive) { // maybe we are deactivating !!!!
+        for (int i = 0; i < m_ActValueList.count(); i++) {
             QList<double> fftList;
             int m = getConfData()->m_nFftOrder;
             int offs = i * m * 2;
-
-            for (int j = 0; j < m; j++)
-            {
+            for (int j = 0; j < m; j++) {
                 fftList.append(actualValues->at(offs + j*2));
                 fftList.append(actualValues->at(offs + j*2 +1));
             }
-
             QVariant list;
             list = QVariant::fromValue<QList<double> >(fftList);
             m_ActValueList.at(i)->setValue(list); // and set entities
