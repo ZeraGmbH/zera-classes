@@ -67,25 +67,17 @@ bool cModuleInterface::setupInterface()
             QJsonDocument jsonDoc;
             jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
 
-            if ( !jsonDoc.isNull() && jsonDoc.isObject() )
-            {
-                QString scpiModuleName;
-                QJsonObject jsonObj;
-                QJsonArray jsonArr, jsonCmdArr;
+            if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
+                const QJsonObject jsonObj = jsonDoc.object();
+                const QJsonObject jsonScpiInfo = jsonObj["SCPIInfo"].toObject();
+                QString scpiModuleName = jsonScpiInfo["Name"].toString();
 
-                jsonObj = jsonDoc.object();
-
-                jsonObj = jsonObj["SCPIInfo"].toObject();
-                scpiModuleName = jsonObj["Name"].toString();
-
-                jsonArr = jsonObj["Cmd"].toArray();
-
-                // we iterate over all cmds
-                for (int j = 0; j < jsonArr.count(); j++)
-                {
+                QJsonArray jsonScpiCmdArr = jsonScpiInfo["Cmd"].toArray();
+                QJsonArray jsonCmdArr;
+                for (int j = 0; j < jsonScpiCmdArr.count(); j++) {
                     cSCPICmdInfo *scpiCmdInfo;
 
-                    jsonCmdArr = jsonArr[j].toArray();
+                    jsonCmdArr = jsonScpiCmdArr[j].toArray();
                     scpiCmdInfo = new cSCPICmdInfo();
 
                     scpiCmdInfo->scpiModuleName = scpiModuleName;
@@ -99,9 +91,7 @@ bool cModuleInterface::setupInterface()
 
                     addSCPICommand(scpiCmdInfo); // we add our command now
                 }
-
             }
-
             else
                 noError = false;
         }
