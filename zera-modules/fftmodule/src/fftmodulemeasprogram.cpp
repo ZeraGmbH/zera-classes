@@ -663,6 +663,8 @@ void cFftModuleMeasProgram::setSCPIMeasInfo()
     {
         pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
         m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_DCValueList.at(i)->getChannelName() + "_DC", "8", m_DCValueList.at(i)->getName(), "0", m_DCValueList.at(i)->getUnit());
+        m_DCValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
 
@@ -695,6 +697,8 @@ void cFftModuleMeasProgram::setActualValuesNames()
 
         m_ActValueList.at(i)->setChannelName(name);
         m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
+        m_DCValueList.at(i)->setChannelName(name);
+        m_DCValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
     }
 }
 
