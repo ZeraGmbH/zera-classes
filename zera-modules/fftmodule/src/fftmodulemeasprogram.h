@@ -64,6 +64,7 @@ private:
 
     cFftModule* m_pModule;
     QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<cVeinModuleActvalue*> m_DCValueList;
     cVeinModuleMetaData* m_pFFTCountInfo;
     cVeinModuleMetaData* m_pFFTOrderInfo;
     cVeinModuleComponent* m_pMeasureSignal;
