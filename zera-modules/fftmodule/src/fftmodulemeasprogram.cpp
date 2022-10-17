@@ -701,17 +701,17 @@ void cFftModuleMeasProgram::setActualValuesNames()
 void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
-        for (int i = 0; i < m_ActValueList.count(); i++) {
+        for (int channel = 0; channel < m_ActValueList.count(); channel++) {
+            int maxOrder = getConfData()->m_nFftOrder;
+            int offs = channel * maxOrder * 2;
             QList<double> fftList;
-            int m = getConfData()->m_nFftOrder;
-            int offs = i * m * 2;
-            for (int j = 0; j < m; j++) {
-                fftList.append(actualValues->at(offs + j*2));
-                fftList.append(actualValues->at(offs + j*2 +1));
+            for (int order = 0; order < maxOrder; order++) {
+                fftList.append(actualValues->at(offs + order*2));
+                fftList.append(actualValues->at(offs + order*2 +1));
             }
             QVariant list;
             list = QVariant::fromValue<QList<double> >(fftList);
-            m_ActValueList.at(i)->setValue(list); // and set entities
+            m_ActValueList.at(channel)->setValue(list);
         }
     }
 }
