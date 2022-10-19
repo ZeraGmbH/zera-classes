@@ -13,7 +13,7 @@ cSCPIDelegate::cSCPIDelegate(QString cmdParent, QString cmd, quint8 type)
 
 void cSCPIDelegate::setCommand(cSCPI *scpiCmdInterface)
 {
-    scpiCmdInterface->genSCPICmd(m_sCmdParent.split(":"), this);
+    scpiCmdInterface->insertScpiCmd(m_sCmdParent.split(":"), this);
 }
 
 
