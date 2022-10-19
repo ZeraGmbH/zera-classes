@@ -20,7 +20,7 @@ public:
     cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
     virtual ~cSCPIParameterDelegate();
 
-    virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
+    virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
 
 signals:
     void clientinfoSignal(QString, cSCPIClientInfo*);

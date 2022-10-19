@@ -23,7 +23,7 @@ public:
     cSCPIMeasureDelegate(const cSCPIMeasureDelegate& delegate, QHash<cSCPIMeasure*, cSCPIMeasure*>& scpiMeasureTranslationHash);
     ;
     virtual ~cSCPIMeasureDelegate();
-    virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
+    virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
     virtual bool executeClient(cSCPIClient *client);
     void addscpimeasureObject(cSCPIMeasure* measureobject);
 
