@@ -17,7 +17,7 @@ class cSCPIStatusDelegate: public cSCPIDelegate
 
 public:
     cSCPIStatusDelegate(QString cmdParent, QString cmd, quint8 type, quint8 cmdCode, quint8 statindex);
-    virtual bool executeSCPI(cSCPIClient *client, QString& sInput);
+    virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
 
 signals:
     void signalExecuteSCPI(cSCPIClient* client, int cmdCode, int statIndex, const QString &sInput);
