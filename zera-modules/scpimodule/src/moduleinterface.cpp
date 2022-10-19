@@ -129,7 +129,7 @@ void cModuleInterface::actualizeInterface(QVariant modInterface)
 
                 //cSCPICmdInfo *scpiCmdInfo;
                 QString cmdComplete;
-                cmdComplete = QString("%1:%2:%3").arg(jsonCmdArr[0].toString()).arg(scpiModuleName).arg(jsonCmdArr[1].toString());
+                cmdComplete = QString("%1:%2:%3").arg(jsonCmdArr[0].toString(), scpiModuleName, jsonCmdArr[1].toString());
                 m_scpiPropertyDelegateHash[cmdComplete]->setOutput(modInterface);
                 /*
                 scpiCmdInfo = new cSCPICmdInfo();
@@ -190,7 +190,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         cSCPIDelegate* delegate;
 
         QString cmdComplete;
-        cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel).arg(scpiCmdInfo->scpiModuleName).arg(scpiCmdInfo->scpiCommand);
+        cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
         QStringList nodeNames = cmdComplete.split(':');
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
@@ -212,7 +212,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint8 cmdType, quint8 measCode, cSCPIMeasure *measureObject)
 {
     cSCPIMeasureDelegate* delegate;
-    QString cmdcomplete = QString("%1:%2").arg(cmdparent).arg(cmd);
+    QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
 
     if (m_scpiMeasureDelegateHash.contains(cmdcomplete))
     {
