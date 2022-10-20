@@ -52,7 +52,6 @@ file(GLOB SOURCES
     ${PROJECT_SOURCE_DIR}/src/scpieventsystem.cpp
     ${PROJECT_SOURCE_DIR}/src/scpipropertydelegate.cpp
     ${PROJECT_SOURCE_DIR}/src/scpiclientinfo.cpp
-    ${PROJECT_SOURCE_DIR}/src/scpicmdinfo.cpp
     )
 
 file(GLOB HEADER
