@@ -18,6 +18,8 @@ public:
     int entityId;
     QString componentName;
     QString refType; // 0 means component itself otherwise the component's validation data
+
+    QString entityDescription;
 };
 
 }

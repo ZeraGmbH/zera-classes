@@ -70,6 +70,7 @@ bool cModuleInterface::setupInterface()
             if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                 const QJsonObject jsonObj = jsonDoc.object();
                 const QJsonObject jsonScpiInfo = jsonObj["SCPIInfo"].toObject();
+                const QJsonObject jsonComponentInfo = jsonObj["ComponentInfo"].toObject();
                 QString scpiModuleName = jsonScpiInfo["Name"].toString();
 
                 QJsonArray jsonScpiCmdArr = jsonScpiInfo["Cmd"].toArray();
@@ -86,6 +87,7 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
                     scpiCmdInfo->componentName = jsonCmdArr[3].toString();
+                    scpiCmdInfo->entityDescription = jsonComponentInfo[scpiCmdInfo->componentName]["Description"].toString();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
                     scpiCmdInfo->unit = jsonCmdArr[5].toString();
 
@@ -177,11 +179,11 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         addSCPIMeasureCommand(QString("INIT"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, SCPIModelType::init, measureObject);
         addSCPIMeasureCommand(QString("FETCH"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, SCPIModelType::fetch, measureObject);
 
-        addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::measure, measureObject);
-        addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::configure, measureObject);
-        addSCPIMeasureCommand(QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::read, measureObject);
-        addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::init, measureObject);
-        addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::fetch, measureObject);
+        addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::measure, measureObject, scpiCmdInfo->entityDescription);
+        addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::configure, measureObject, scpiCmdInfo->entityDescription);
+        addSCPIMeasureCommand(QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::read, measureObject, scpiCmdInfo->entityDescription);
+        addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::init, measureObject, scpiCmdInfo->entityDescription);
+        addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::fetch, measureObject, scpiCmdInfo->entityDescription);
 
     }
     else
@@ -195,8 +197,10 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
 
-        if (scpiCmdInfo->refType == "0")
+        if (scpiCmdInfo->refType == "0") {
             delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
+            delegate->setDescription(scpiCmdInfo->entityDescription);
+        }
         else
         {
             delegate = new cSCPIPropertyDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
@@ -209,7 +213,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 }
 
 
-void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint8 cmdType, quint8 measCode, cSCPIMeasure *measureObject)
+void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint8 cmdType, quint8 measCode, cSCPIMeasure *measureObject, QString description)
 {
     cSCPIMeasureDelegate* delegate;
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
@@ -225,6 +229,7 @@ void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, qui
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         m_pSCPIInterface->addSCPICommand(delegate);
     }
+    delegate->setDescription(description);
 }
 
 }
