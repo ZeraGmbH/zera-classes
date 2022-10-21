@@ -240,7 +240,7 @@ void cBaseModule::setupModule()
 
     m_pModuleEntityName = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                    QString("EntityName"),
-                                                   QString("Component forwards the modules name"),
+                                                   QString("Module's name"),
                                                    QVariant(m_sModuleName));
 
     veinModuleComponentList.append(m_pModuleEntityName);
@@ -251,7 +251,7 @@ void cBaseModule::setupModule()
 
     m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
-                                                           QString("Component forwards the modules interface"),
+                                                           QString("Module's interface details"),
                                                            QByteArray());
 
     veinModuleComponentList.append(m_pModuleInterfaceComponent);

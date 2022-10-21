@@ -104,7 +104,7 @@ void cRangeObsermatic::generateInterface()
 
         pParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_Channel%1Range").arg(i+1),
-                                              QString("Component for reading and setting the channels range"),
+                                              QString("Channel's range"),
                                               QVariant(s = "Unkown"),
                                               true); // we prefer deferred notification for synchronization purpose
 
@@ -206,21 +206,21 @@ void cRangeObsermatic::generateInterface()
 
     m_pParRangeAutomaticOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          QString("PAR_RangeAutomatic"),
-                                                         QString("Component for switching on/off the range automatic"),
+                                                         QString("Range automatic on/off"),
                                                          QVariant(0));
 
     m_pModule->veinModuleParameterHash["PAR_RangeAutomatic"] = m_pParRangeAutomaticOnOff; // for modules use
 
     m_pParGroupingOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    QString("PAR_ChannelGrouping"),
-                                                   QString("Component for switching on/off channel grouping"),
+                                                   QString("Channel grouping on/off"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash["PAR_ChannelGrouping"] = m_pParGroupingOnOff; // for modules use
 
     m_pParOverloadOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    QString("PAR_Overload"),
-                                                   QString("Component for reading and resetting overload"),
+                                                   QString("Overload (reset)"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash["PAR_Overload"] = m_pParOverloadOnOff; // for modules use

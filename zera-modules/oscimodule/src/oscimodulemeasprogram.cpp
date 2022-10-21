@@ -139,7 +139,7 @@ void cOsciModuleMeasProgram::generateInterface()
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_OSCI%1").arg(i+1),
-                                            QString("Component forwards the oscillogram "),
+                                            QString("Measures samples"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
@@ -150,7 +150,7 @@ void cOsciModuleMeasProgram::generateInterface()
 
     m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
-                                                      QString("Component for setting the modules reference channel"),
+                                                      QString("Reference channel"),
                                                       QVariant(getConfData()->m_RefChannel.m_sPar));
 
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
@@ -163,7 +163,7 @@ void cOsciModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);

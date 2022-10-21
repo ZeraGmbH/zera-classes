@@ -54,7 +54,7 @@ void SourceModuleProgram::generateInterface()
 
     m_pVeinDemoSourceCount = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_DemoSources"),
-                                                       QString("Component for setting number of demo sources"),
+                                                       QString("Number of demo sources"),
                                                        QVariant(int(0)));
     m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
     connect(m_pVeinDemoSourceCount, &cVeinModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);

@@ -55,7 +55,7 @@ void cPllObsermatic::generateInterface()
 
     m_pPllChannel = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              key = QString("PAR_PllChannel"),
-                                             QString("Component for reading and setting the pll reference channel"),
+                                             QString("PLL reference channel"),
                                              QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar));
 
     m_pModule->veinModuleParameterHash[key] = m_pPllChannel; // for modules use
@@ -66,7 +66,7 @@ void cPllObsermatic::generateInterface()
 
     m_pParPllAutomaticOnOff = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_PllAutomaticOnOff"),
-                                                       QString("Component for reading and setting the pll automatic"),
+                                                       QString("PLL automatic on/off"),
                                                        QVariant(m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive));
 
     m_pModule->veinModuleParameterHash[key] = m_pParPllAutomaticOnOff; // for modules use

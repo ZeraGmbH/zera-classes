@@ -190,7 +190,7 @@ void cThdnModuleMeasProgram::generateInterface()
 
     m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
-                                                           QString("Component for setting the modules integration time"),
+                                                           QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("sec");
     m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "sec"));

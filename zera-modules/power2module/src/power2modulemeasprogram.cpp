@@ -267,21 +267,21 @@ void cPower2ModuleMeasProgram::generateInterface()
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PP%1").arg(i+1),
-                                            QString("Component forwards the positive power actual value"),
+                                            QString("Actual value positive power"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PM%1").arg(i+1),
-                                            QString("Component forwards the negative power actual value"),
+                                            QString("Actual value negative power"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_P%1").arg(i+1),
-                                            QString("Component forwards the power actual value"),
+                                            QString("Actual power value"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
@@ -311,7 +311,7 @@ void cPower2ModuleMeasProgram::generateInterface()
     // our parameters we deal with
     m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
-                                                         QString("Component for setting the modules measuring mode"),
+                                                         QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
 
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
@@ -329,13 +329,13 @@ void cPower2ModuleMeasProgram::generateInterface()
     if (btime)
     {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
-        s = QString("Component for setting the modules integration time");
+        s = QString("Integration time");
         unit = QString("sec");
     }
     else
     {
         val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
-        s = QString("Component for setting the modules integration period");
+        s = QString("Integration period");
         unit = QString("period");
     }
 
@@ -367,7 +367,7 @@ void cPower2ModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);

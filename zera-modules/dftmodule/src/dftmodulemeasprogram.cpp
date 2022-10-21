@@ -160,7 +160,7 @@ void cDftModuleMeasProgram::generateInterface()
         {
             pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
-                                                QString("Component forwards the dft actual value for phase neutral"),
+                                                QString("DFT actual value phase/neutral"),
                                                 QVariant(0.0) );
             m_ActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
@@ -173,7 +173,7 @@ void cDftModuleMeasProgram::generateInterface()
         {
             pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPP%1").arg(p+1),
-                                                QString("Component forwards the dft actual value for phase phase"),
+                                                QString("DFT actual value phase/phase"),
                                                 QVariant(0.0) );
             m_ActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
@@ -184,7 +184,7 @@ void cDftModuleMeasProgram::generateInterface()
 
     m_pRFieldActualValue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    QString("ACT_RFIELD"),
-                                                   QString("Component forwards the rotating field"),
+                                                   QString("Phase sequence"),
                                                    QVariant("") );
 
     m_pModule->veinModuleActvalueList.append(m_pRFieldActualValue); // we add the component for the modules interface
@@ -199,7 +199,7 @@ void cDftModuleMeasProgram::generateInterface()
 
     m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
-                                                           QString("Component for setting the modules integration time"),
+                                                           QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
     m_pIntegrationTimeParameter->setUnit("sec");
     m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "sec"));
@@ -212,7 +212,7 @@ void cDftModuleMeasProgram::generateInterface()
 
     m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
-                                                      QString("Component for setting the modules reference channel"),
+                                                      QString("Reference channel"),
                                                       QVariant(getConfData()->m_sRefChannel.m_sPar));
 
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
@@ -222,7 +222,7 @@ void cDftModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);

@@ -268,7 +268,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PQS%1").arg(i+1),
-                                            QString("Component forwards the power actual value"),
+                                            QString("Actual power value"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
@@ -292,7 +292,7 @@ void cPower1ModuleMeasProgram::generateInterface()
             // Note: Although components are 'PAR_' they are not changable currently
             pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_FOUTConstant%1").arg(i),
-                                                              QString("Component for querying the modules frequency output constant"),
+                                                              QString("Frequency output constant"),
                                                               QVariant(0));
             pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
@@ -302,7 +302,7 @@ void cPower1ModuleMeasProgram::generateInterface()
             QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sPlug;
             pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_FOUT%1").arg(i),
-                                                              QString("Component for querying the modules output plug"),
+                                                              QString("Frequency output plug"),
                                                               QVariant(foutName));
             pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1OUT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
@@ -358,7 +358,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     // our parameters we deal with
     m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
-                                                         QString("Component for setting the modules measuring mode"),
+                                                         QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
 
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
@@ -378,13 +378,13 @@ void cPower1ModuleMeasProgram::generateInterface()
     if (btime)
     {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
-        s = QString("Component for setting the modules integration time");
+        s = QString("Integration time");
         unit = QString("sec");
     }
     else
     {
         val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
-        s = QString("Component for setting the modules integration period");
+        s = QString("Integration period");
         unit = QString("period");
     }
 
@@ -413,7 +413,7 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
