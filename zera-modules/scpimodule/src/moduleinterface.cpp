@@ -237,6 +237,11 @@ void cModuleInterface::setXmlComponentInfo(cSCPIDelegate *delegate, const QJsonO
     QString desc = componentInfo["Description"].toString();
     if(!desc.isEmpty())
         delegate->setXmlAttribute("Description", desc);
+    QJsonObject validator = componentInfo["Validation"].toObject();
+    QString validatorType = validator["Type"].toString();
+    if(!validatorType.isEmpty()) {
+        delegate->setXmlAttribute("DataType", validatorType);
+    }
 }
 
 }
