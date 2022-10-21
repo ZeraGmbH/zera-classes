@@ -4,6 +4,7 @@
 #include "baseinterface.h"
 #include <QHash>
 #include <QJsonObject>
+#include <QJsonArray>
 
 namespace SCPIMODULE
 {
@@ -44,6 +45,7 @@ private:
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject, QJsonObject veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(cSCPIDelegate* delegate, const QJsonObject &componentInfo);
+    QJsonArray getValidatorEntries(QJsonObject validator);
 };
 
 }

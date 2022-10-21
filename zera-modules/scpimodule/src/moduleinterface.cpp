@@ -241,7 +241,31 @@ void cModuleInterface::setXmlComponentInfo(cSCPIDelegate *delegate, const QJsonO
     QString validatorType = validator["Type"].toString();
     if(!validatorType.isEmpty()) {
         delegate->setXmlAttribute("DataType", validatorType);
+        if(validatorType == "STRING") {
+            QJsonArray validatorEntryArray = getValidatorEntries(validator);
+            QStringList validStrings;
+            for(const auto &entry : qAsConst(validatorEntryArray)) {
+                validStrings.append(entry.toString());
+            }
+            if(!validStrings.isEmpty()) {
+                delegate->setXmlAttribute("ValidPar", validStrings.join(","));
+            }
+        }
+        if(validatorType == "INTEGER" || validatorType == "DOUBLE") {
+            QJsonArray validatorEntryArray = getValidatorEntries(validator);
+            QString minVal = validatorEntryArray[0].toVariant().toString();
+            QString maxVal = validatorEntryArray[1].toVariant().toString();
+            if(!minVal.isEmpty() && !maxVal.isEmpty()) {
+                delegate->setXmlAttribute("Min", minVal);
+                delegate->setXmlAttribute("Max", maxVal);
+            }
+        }
     }
+}
+
+QJsonArray cModuleInterface::getValidatorEntries(QJsonObject validator)
+{
+    return validator["Data"].toArray();
 }
 
 }
