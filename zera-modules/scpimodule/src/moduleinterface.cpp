@@ -266,6 +266,11 @@ void cModuleInterface::setXmlComponentValidatorInfo(cSCPIDelegate *delegate, con
                 delegate->setXmlAttribute("Max", maxVal);
             }
         }
+        else if(validatorType == "REGEX") {
+            delegate->setXmlAttribute("DataType", "STRING");
+            QString regEx = validator["Data"].toString();
+            delegate->setXmlAttribute("RegEx", regEx);
+        }
     }
 }
 
