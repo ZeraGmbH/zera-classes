@@ -71,7 +71,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Burden%1").arg(i+1),
-                                            QString("Component forwards burden actual value"),
+                                            QString("Burden actual value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("BRD%1").arg(i+1));
         pActvalue->setUnit("VA");
@@ -84,7 +84,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PFactor%1").arg(i+1),
-                                            QString("Component forwards burden powerfactor"),
+                                            QString("Burden powerfactor"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("POF%1").arg(i+1));
         pActvalue->setUnit("");
@@ -97,7 +97,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Ratio%1").arg(i+1),
-                                            QString("Component forwards Burden ratio value"),
+                                            QString("Burden ratio value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("%");
@@ -111,7 +111,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pNominalRangeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_NominalRange"),
-                                                        QString("Component for setting the modules nominal range"),
+                                                        QString("Nominal range"),
                                                         QVariant(getConfData()->nominalRange.m_fValue));
     s = QString(getConfData()->m_Unit);
     m_pNominalRangeParameter->setUnit(s);
@@ -124,7 +124,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pNominalRangeFactorParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_NominalRangeFactor"),
-                                                              QString("Component for setting the modules nominal range factor"),
+                                                              QString("Nominal range factor"),
                                                               QVariant(getConfData()->nominalRangeFactor.m_sPar));
     m_pNominalRangeFactorParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","RFACTOR", "10", "PAR_NominalRangeFactor", "0", ""));
 
@@ -136,7 +136,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pNominalBurdenParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_NominalBurden"),
-                                                         QString("Component for setting the modules nominal burden"),
+                                                         QString("Nominal burden"),
                                                          QVariant(getConfData()->nominalBurden.m_fValue));
     s = QString("VA");
     m_pNominalBurdenParameter->setUnit(s);
@@ -149,7 +149,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pWireLengthParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_WireLength"),
-                                                      QString("Component for setting the modules wire length value"),
+                                                      QString("Wire length value"),
                                                       QVariant(getConfData()->wireLength.m_fValue));
     s = QString("m");
     m_pWireLengthParameter->setUnit(s);
@@ -162,7 +162,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pWireCrosssectionParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                             key = QString("PAR_WCrosssection"),
-                                                            QString("Component for setting the modules wire crosssection value"),
+                                                            QString("Wire crosssection value"),
                                                             QVariant(getConfData()->wireCrosssection.m_fValue));
     s = QString("mm²");
     m_pWireCrosssectionParameter->setUnit(s);
@@ -178,7 +178,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);

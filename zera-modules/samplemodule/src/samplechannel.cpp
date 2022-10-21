@@ -80,7 +80,7 @@ void cSampleChannel::generateInterface()
 
     m_pChannelRange = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_ChannelRange"),
-                                               QString("Component for reading and setting the sampling channel's range"),
+                                               QString("Sampling channel's range"),
                                                QVariant(m_ConfigData.m_ObsermaticConfPar.m_pllRange.m_sPar));
 
     m_pModule->veinModuleParameterHash[key] = m_pChannelRange; // for modules use

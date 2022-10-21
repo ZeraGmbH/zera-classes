@@ -209,28 +209,28 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pModePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                           key = QString("PAR_Mode"),
-                                          QString("Component for reading and setting the modules mode"),
+                                          QString("Mode"),
                                           QVariant(s = "Unknown"));
     m_pModePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MODE").arg(modNr), "10", m_pModePar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pModePar; // for modules use
 
     m_pDutInputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_DutInput"),
-                                              QString("Component for reading and setting the modules dut input"),
+                                              QString("DUT input"),
                                               QVariant(s = "Unknown"));
     m_pDutInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DUTSOURCE").arg(modNr), "10", m_pDutInputPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutInputPar; // for modules use
 
     m_pRefInputPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_RefInput"),
-                                              QString("Component for reading and setting the modules ref input"),
+                                              QString("REF input"),
                                               QVariant(s = "Unknown"));
     m_pRefInputPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFSOURCE").arg(modNr), "10", m_pRefInputPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefInputPar; // for modules use
 
     m_pRefConstantPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_RefConstant"),
-                                                 QString("Component for reading and setting the modules ref constant"),
+                                                 QString("REF constant"),
                                                  QVariant((double)0.0));
     m_pRefConstantPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), "10", m_pRefConstantPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefConstantPar; // for modules use
@@ -240,7 +240,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutConstantPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstant"),
-                                                 QString("Component for reading and setting the modules dut constant"),
+                                                 QString("DUT constant"),
                                                  QVariant((double)0.0));
     m_pDutConstantPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DUTCONSTANT").arg(modNr), "10", m_pDutConstantPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantPar; // for modules use
@@ -299,14 +299,14 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutConstantUnitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_DUTConstUnit"),
-                                                     QString("Component for reading and setting the modules ref constant unit"),
+                                                     QString("REF constant unit"),
                                                      QVariant(s = "Unknown"));
     m_pDutConstantUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DCUNIT").arg(modNr), "10", m_pDutConstantUnitPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantUnitPar; // for modules use
 
     m_pMRatePar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MRate"),
-                                           QString("Component for reading and setting the modules measuring rate"),
+                                           QString("Measuring rate"),
                                            QVariant((double)0.0));
     m_pMRatePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MRATE").arg(modNr), "10", m_pMRatePar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pMRatePar; // for modules use
@@ -316,7 +316,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pTargetPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("PAR_Target"),
-                                            QString("Component for reading and setting the modules target value"),
+                                            QString("Target value"),
                                             QVariant((double)0.0));
     m_pTargetPar->setSCPIInfo(new cSCPIInfo("CALCULATE",QString("%1:TARGET").arg(modNr), "10", m_pTargetPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pTargetPar; // for modules use
@@ -325,7 +325,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pEnergyPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("PAR_Energy"),
-                                            QString("Component for reading and setting the modules energy value"),
+                                            QString("Energy value"),
                                             QVariant((double)0.0));
     m_pEnergyPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:PARENERGY").arg(modNr), "10", m_pEnergyPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyPar; // for modules use
@@ -334,7 +334,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pStartStopPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_StartStop"),
-                                               QString("Component start/stops measurement"),
+                                               QString("Start/stop measurement"),
                                                QVariant((int)0));
     m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:START").arg(modNr), "10", m_pStartStopPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] =  m_pStartStopPar; // for modules use
@@ -351,7 +351,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pContinuousPar->setValidator(iValidator);
     m_pMeasCountPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MeasCount"),
-                                           QString("Component for setting the number of measurements"),
+                                           QString("Number of measurements"),
                                            QVariant((int)1));
     m_pMeasCountPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MCOUNT").arg(modNr), "10", m_pMeasCountPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pMeasCountPar; // for modules use
@@ -427,7 +427,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pUpperLimitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Uplimit"),
-                                                QString("Component for reading and setting the modules upper error limit"),
+                                                QString("Upper error limit"),
                                                 QVariant((double)10.0));
     m_pUpperLimitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:UPLIMIT").arg(modNr), "10", m_pUpperLimitPar->getName(), "0", "%"));
     m_pModule->veinModuleParameterHash[key] = m_pUpperLimitPar; // for modules use
@@ -436,7 +436,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pLowerLimitPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Lolimit"),
-                                                QString("Component for reading and setting the modules lower error limit"),
+                                                QString("Lower error limit"),
                                                 QVariant((double)-10.0));
     m_pLowerLimitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:LOLIMIT").arg(modNr), "10", m_pLowerLimitPar->getName(), "0", "%"));
     m_pModule->veinModuleParameterHash[key] = m_pLowerLimitPar; // for modules use
@@ -445,7 +445,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pResultUnit = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_ResultUnit"),
-                                              QString("Component for reading and setting result unit"),
+                                              QString("Result unit"),
                                               QVariant(s = "%"));
     m_pResultUnit->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:RESULTUNIT").arg(modNr), "10", m_pResultUnit->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pResultUnit; // for modules use

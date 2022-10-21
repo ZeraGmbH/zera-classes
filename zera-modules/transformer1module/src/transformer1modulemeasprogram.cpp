@@ -162,7 +162,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pPrimClampPrimParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_PrimClampPrim"),
-                                                         QString("Component for setting the modules primary clamp primary value"),
+                                                         QString("Clamp primary value"),
                                                          QVariant(getConfData()->primClampPrim.m_fValue));
     s = QString(getConfData()->m_clampUnit[0]);
     m_pPrimClampPrimParameter->setUnit(s);
@@ -176,7 +176,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pPrimClampSecParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_PrimClampSec"),
-                                                        QString("Component for setting the modules primary clamp secondary value"),
+                                                        QString("Primary clamp secondary value"),
                                                         QVariant(getConfData()->primClampSec.m_fValue));
     s = QString(getConfData()->m_clampUnit[1]);
     m_pPrimClampSecParameter->setUnit(s);
@@ -189,7 +189,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pSecClampPrimParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_SecClampPrim"),
-                                                        QString("Component for setting the modules secondary clamp primary value"),
+                                                        QString("Secondary clamp primary value"),
                                                         QVariant(getConfData()->secClampPrim.m_fValue));
     s = QString(getConfData()->m_clampUnit[2]);
     m_pSecClampPrimParameter->setUnit(s);
@@ -202,7 +202,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pSecClampSecParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_SecClampSec"),
-                                                       QString("Component for setting the modules secondary clamp secondary value"),
+                                                       QString("Secondary clamp secondary value"),
                                                        QVariant(getConfData()->secClampSec.m_fValue));
     s = QString(getConfData()->m_clampUnit[3]);
     m_pSecClampSecParameter->setUnit(s);
@@ -215,7 +215,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pPrimDutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_DutPrimary"),
-                                                   QString("Component for setting the modules dut primary value"),
+                                                   QString("DUT primary value"),
                                                    QVariant(getConfData()->dutPrim.m_fValue));
     s = QString(getConfData()->m_clampUnit[4]);
     m_pPrimDutParameter->setUnit(s);
@@ -228,7 +228,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pSecDutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_DutSecondary"),
-                                                  QString("Component for setting the modules dut secondary value"),
+                                                  QString("DUT secondary value"),
                                                   QVariant(getConfData()->dutSec.m_fValue));
     s = QString(getConfData()->m_clampUnit[5]);
     m_pSecDutParameter->setUnit(s);

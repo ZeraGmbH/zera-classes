@@ -301,7 +301,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARComputation = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_Computation"),
-                                                 QString("Component for starting computation of adjustment coefficients"),
+                                                 QString("Start computation of adjustment coefficients"),
                                                  QVariant(int(0)),
                                                  false); // no deferred notification necessary
 
@@ -315,7 +315,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARStorage = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              key = QString("PAR_Storage"),
-                                             QString("Component for saving adjustment data"),
+                                             QString("Save adjustment data"),
                                              QVariant(int(0)),
                                              true); // deferred notification necessary
 
@@ -329,7 +329,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustGainStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_AdjustGainStatus"),
-                                                  QString("Component for setting gain adjustment status"),
+                                                  QString("Gain adjustment status"),
                                                   QVariant(int(0)),
                                                   true); // deferred notification necessary
 
@@ -340,7 +340,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustPhaseStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_AdjustPhaseStatus"),
-                                                       QString("Component for setting phase adjustment status"),
+                                                       QString("Phase adjustment status"),
                                                        QVariant(int(0)),
                                                        true); // deferred notification necessary
 
@@ -351,7 +351,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustOffsetStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_AdjustOffsetStatus"),
-                                                        QString("Component for setting offset adjustment status"),
+                                                        QString("Offset adjustment status"),
                                                         QVariant(int(0)),
                                                         true); // deferred notification necessary
 
@@ -363,7 +363,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustInit = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_AdjustInit"),
-                                                QString("Component for initialiazing of adjustment data"),
+                                                QString("Initialize adjustment data"),
                                                 QVariant(int(0)),
                                                 false); // no deferred notification necessary
 
@@ -375,7 +375,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustAmplitude = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_AdjustAmplitude"),
-                                                     QString("Component for setting 1 amplitude adjustment node"),
+                                                     QString("One amplitude adjustment node"),
                                                      QVariant(QString("")),
                                                      true); // deferred notification necessary
 
@@ -388,7 +388,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustPhase = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_AdjustPhase"),
-                                                 QString("Component for setting 1 phase adjustment node"),
+                                                 QString("One phase adjustment node"),
                                                  QVariant(QString("")),
                                                  true); // no deferred notification necessary
 
@@ -400,7 +400,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustOffset = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_Adjustoffset"),
-                                                  QString("Component for setting 1 offset adjustment node"),
+                                                  QString("One offset adjustment node"),
                                                   QVariant(QString("")),
                                                   true); // no deferred notification necessary
 
@@ -412,7 +412,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustSend = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_AdjustSend"),
-                                                QString("Component for sending command to specified port"),
+                                                QString("Send command to specified port"),
                                                 QVariant(QString("")),
                                                 false,
                                                 true); // deferred query notification necessary !!!!!
@@ -425,7 +425,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustPCBData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_AdjustPCBData"),
-                                                   QString("Component for reading and setting pcb adjustment data"),
+                                                   QString("Get and set pcb adjustment data"),
                                                    QVariant(QString("")),
                                                    true,  // deferred command notification necessary !!!!!
                                                    true); // deferred query notification necessary !!!!!
@@ -438,7 +438,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 
     m_pPARAdjustClampData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_AdjustCLAMPData"),
-                                                     QString("Component for reading and setting clamp adjustment data"),
+                                                     QString("Get and set clamp adjustment data"),
                                                      QVariant(QString("")),
                                                      true, // deferred command notification necessary !!!!!
                                                      true); // deferred query notification necessary !!!!!

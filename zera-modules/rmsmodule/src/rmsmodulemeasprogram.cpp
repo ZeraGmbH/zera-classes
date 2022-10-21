@@ -189,13 +189,13 @@ void cRmsModuleMeasProgram::generateInterface()
     if (btime)
     {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
-        s = QString("Component for setting the modules integration time");
+        s = QString("Integration time");
         unit = QString("sec");
     }
     else
     {
         val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
-        s = QString("Component for setting the modules integration period");
+        s = QString("Integration period");
         unit = QString("period");
     }
 

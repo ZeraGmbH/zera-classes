@@ -110,7 +110,7 @@ void cStatusModuleInit::generateInterface()
     QString key;
     m_pPCBServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_PCBServerVersion"),
-                                                   QString("Component forwards the pcb server version"),
+                                                   QString("PCB-server version"),
                                                    QVariant(QString("")) );
 
     m_pModule->veinModuleParameterHash[key] = m_pPCBServerVersion; // for modules use
@@ -119,7 +119,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pCtrlVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("INF_CTRLVersion"),
-                                              QString("Component forwards the controler version"),
+                                              QString("Controler version"),
                                               QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pCtrlVersion;
@@ -128,7 +128,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pFPGAVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("INF_FPGAVersion"),
-                                              QString("Component forwards the fpga version"),
+                                              QString("FPGA version"),
                                               QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pFPGAVersion;
@@ -137,7 +137,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pSerialNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_SerialNr"),
-                                               QString("Component for reading and writing the devices serial number"),
+                                               QString("Serial number"),
                                                QVariant(QString("") ), true, false); // we select deferred notification
 
     m_pModule->veinModuleParameterHash[key] = m_pSerialNumber;
@@ -148,7 +148,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pDSPServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_DSPServerVersion"),
-                                                   QString("Component forwards the dsp server version"),
+                                                   QString("DCP-server version"),
                                                    QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pDSPServerVersion;
@@ -157,7 +157,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pDSPProgramVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                     key = QString("INF_DSPVersion"),
-                                                    QString("Component forwards the dsp software version"),
+                                                    QString("DSP software version"),
                                                     QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pDSPProgramVersion;
@@ -166,7 +166,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pReleaseNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("INF_ReleaseNr"),
-                                                QString("Component forwards the devices release number"),
+                                                QString("Release number"),
                                                 QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pReleaseNumber;
@@ -174,7 +174,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pDeviceType = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("INF_DeviceType"),
-                                                QString("Component forwards the devices type"),
+                                                QString("Device type"),
                                                 QVariant(QString()));
 
     m_pModule->veinModuleParameterHash[key] = m_pDeviceType;
@@ -182,7 +182,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pCPUInfo = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("INF_CpuInfo"),
-                                                QString("Component forwards CPU/SOM info"),
+                                                QString("CPU/SOM info"),
                                                 QVariant(QString("")));
 
     m_pModule->veinModuleParameterHash[key] = m_pCPUInfo;
@@ -190,7 +190,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pAdjustmentStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_Adjusted"),
-                                                   QString("Component forwards information about device adjustment"),
+                                                   QString("Adjustment information"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pAdjustmentStatus;
@@ -198,7 +198,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pAdjustmentChksum = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_AdjChksum"),
-                                                   QString("Component forwards checksum of device adjustment data"),
+                                                   QString("Device adjustment data checksum"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pAdjustmentChksum;

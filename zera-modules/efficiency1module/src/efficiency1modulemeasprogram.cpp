@@ -64,7 +64,7 @@ void cEfficiency1ModuleMeasProgram::generateInterface()
 
     pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                         QString("ACT_EFC1"),
-                                        QString("Component forwards efficiency actual values"),
+                                        QString("Efficiency actual values"),
                                         QVariant(0.0) );
     pActvalue->setChannelName(QString("EFC1"));
     pActvalue->setUnit(""); // no unit
@@ -80,7 +80,7 @@ void cEfficiency1ModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
