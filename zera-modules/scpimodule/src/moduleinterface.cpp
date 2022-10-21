@@ -237,11 +237,16 @@ void cModuleInterface::setXmlComponentInfo(cSCPIDelegate *delegate, const QJsonO
     QString desc = componentInfo["Description"].toString();
     if(!desc.isEmpty())
         delegate->setXmlAttribute("Description", desc);
+    setXmlComponentValidatorInfo(delegate, componentInfo);
+}
+
+void cModuleInterface::setXmlComponentValidatorInfo(cSCPIDelegate *delegate, const QJsonObject &componentInfo)
+{
     QJsonObject validator = componentInfo["Validation"].toObject();
     QString validatorType = validator["Type"].toString();
     if(!validatorType.isEmpty()) {
-        delegate->setXmlAttribute("DataType", validatorType);
         if(validatorType == "STRING") {
+            delegate->setXmlAttribute("DataType", validatorType);
             QJsonArray validatorEntryArray = getValidatorEntries(validator);
             QStringList validStrings;
             for(const auto &entry : qAsConst(validatorEntryArray)) {
@@ -251,7 +256,8 @@ void cModuleInterface::setXmlComponentInfo(cSCPIDelegate *delegate, const QJsonO
                 delegate->setXmlAttribute("ValidPar", validStrings.join(","));
             }
         }
-        if(validatorType == "INTEGER" || validatorType == "DOUBLE") {
+        else if(validatorType == "INTEGER" || validatorType == "DOUBLE") {
+            delegate->setXmlAttribute("DataType", validatorType);
             QJsonArray validatorEntryArray = getValidatorEntries(validator);
             QString minVal = validatorEntryArray[0].toVariant().toString();
             QString maxVal = validatorEntryArray[1].toVariant().toString();
