@@ -44,7 +44,7 @@ private:
 
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject, QString description="");
-
+    void setXmlDesciption(cSCPIDelegate* delegate, const QString &desc);
 
 };
 

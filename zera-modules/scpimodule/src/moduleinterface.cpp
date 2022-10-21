@@ -199,7 +199,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 
         if (scpiCmdInfo->refType == "0") {
             delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
-            delegate->setDescription(scpiCmdInfo->entityDescription);
+            setXmlDesciption(delegate, scpiCmdInfo->entityDescription);
         }
         else
         {
@@ -229,7 +229,12 @@ void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, qui
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         m_pSCPIInterface->addSCPICommand(delegate);
     }
-    delegate->setDescription(description);
+    setXmlDesciption(delegate, description);
+}
+
+void cModuleInterface::setXmlDesciption(cSCPIDelegate *delegate, const QString &desc)
+{
+    delegate->setXmlAttribute("Description", desc);
 }
 
 }
