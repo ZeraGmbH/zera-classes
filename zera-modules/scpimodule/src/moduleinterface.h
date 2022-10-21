@@ -45,6 +45,7 @@ private:
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
     void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject, QJsonObject veinComponentInfo = QJsonObject());
     void setXmlComponentInfo(cSCPIDelegate* delegate, const QJsonObject &componentInfo);
+    void setXmlComponentValidatorInfo(cSCPIDelegate* delegate, const QJsonObject &componentInfo);
     QJsonArray getValidatorEntries(QJsonObject validator);
 };
 
