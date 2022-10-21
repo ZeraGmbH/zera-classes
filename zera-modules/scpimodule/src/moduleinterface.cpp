@@ -234,7 +234,8 @@ void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, qui
 
 void cModuleInterface::setXmlDesciption(cSCPIDelegate *delegate, const QString &desc)
 {
-    delegate->setXmlAttribute("Description", desc);
+    if(!desc.isEmpty())
+        delegate->setXmlAttribute("Description", desc);
 }
 
 }
