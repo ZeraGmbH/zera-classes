@@ -87,7 +87,7 @@ bool cModuleInterface::setupInterface()
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
                     scpiCmdInfo->componentName = jsonCmdArr[3].toString();
-                    scpiCmdInfo->entityDescription = jsonComponentInfo[scpiCmdInfo->componentName]["Description"].toString();
+                    scpiCmdInfo->veinComponentInfo = jsonComponentInfo[scpiCmdInfo->componentName].toObject();
                     scpiCmdInfo->refType = jsonCmdArr[4].toString();
                     scpiCmdInfo->unit = jsonCmdArr[5].toString();
 
@@ -179,11 +179,11 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         addSCPIMeasureCommand(QString("INIT"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isCmd, SCPIModelType::init, measureObject);
         addSCPIMeasureCommand(QString("FETCH"), scpiCmdInfo->scpiModuleName, SCPI::isNode | SCPI::isQuery, SCPIModelType::fetch, measureObject);
 
-        addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::measure, measureObject, scpiCmdInfo->entityDescription);
-        addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::configure, measureObject, scpiCmdInfo->entityDescription);
-        addSCPIMeasureCommand(QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::read, measureObject, scpiCmdInfo->entityDescription);
-        addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::init, measureObject, scpiCmdInfo->entityDescription);
-        addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::fetch, measureObject, scpiCmdInfo->entityDescription);
+        addSCPIMeasureCommand(QString("MEASURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::measure, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("CONFIGURE:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::configure, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("READ:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::read, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("INIT:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isCmd, SCPIModelType::init, measureObject, scpiCmdInfo->veinComponentInfo);
+        addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::fetch, measureObject, scpiCmdInfo->veinComponentInfo);
 
     }
     else
@@ -199,7 +199,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 
         if (scpiCmdInfo->refType == "0") {
             delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
-            setXmlDesciption(delegate, scpiCmdInfo->entityDescription);
+            setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
         else
         {
@@ -213,7 +213,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 }
 
 
-void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint8 cmdType, quint8 measCode, cSCPIMeasure *measureObject, QString description)
+void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint8 cmdType, quint8 measCode, cSCPIMeasure *measureObject, QJsonObject veinComponentInfo)
 {
     cSCPIMeasureDelegate* delegate;
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
@@ -229,11 +229,12 @@ void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, qui
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         m_pSCPIInterface->addSCPICommand(delegate);
     }
-    setXmlDesciption(delegate, description);
+    setXmlComponentInfo(delegate, veinComponentInfo);
 }
 
-void cModuleInterface::setXmlDesciption(cSCPIDelegate *delegate, const QString &desc)
+void cModuleInterface::setXmlComponentInfo(cSCPIDelegate *delegate, const QJsonObject &componentInfo)
 {
+    QString desc = componentInfo["Description"].toString();
     if(!desc.isEmpty())
         delegate->setXmlAttribute("Description", desc);
 }

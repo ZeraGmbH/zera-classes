@@ -2,6 +2,7 @@
 #define SCPICMDINFO_H
 
 #include <QString>
+#include <QJsonObject>
 
 namespace SCPIMODULE
 {
@@ -19,7 +20,7 @@ public:
     QString componentName;
     QString refType; // 0 means component itself otherwise the component's validation data
 
-    QString entityDescription;
+    QJsonObject veinComponentInfo;
 };
 
 }

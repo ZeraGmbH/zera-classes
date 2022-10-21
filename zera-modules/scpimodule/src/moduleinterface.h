@@ -1,10 +1,9 @@
 #ifndef SCPIMODULEINTERFACE_H
 #define SCPIMODULEINTERFACE_H
 
-#include <QObject>
-#include <QHash>
-
 #include "baseinterface.h"
+#include <QHash>
+#include <QJsonObject>
 
 namespace SCPIMODULE
 {
@@ -43,9 +42,8 @@ private:
     QHash<QString, cSCPIPropertyDelegate*> m_scpiPropertyDelegateHash; // a hash with property delegates taht might need actualization when something changes
 
     void addSCPICommand(cSCPICmdInfo *scpiCmdInfo);
-    void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject, QString description="");
-    void setXmlDesciption(cSCPIDelegate* delegate, const QString &desc);
-
+    void addSCPIMeasureCommand(QString cmdparent, QString cmd,  quint8 cmdType, quint8 measCode, cSCPIMeasure* measureObject, QJsonObject veinComponentInfo = QJsonObject());
+    void setXmlComponentInfo(cSCPIDelegate* delegate, const QJsonObject &componentInfo);
 };
 
 }
