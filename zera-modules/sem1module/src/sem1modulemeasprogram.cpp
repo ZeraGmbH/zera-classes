@@ -277,7 +277,7 @@ void cSem1ModuleMeasProgram::generateInterface()
 
     m_pStartStopPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_StartStop"),
-                                               QString("Component start/stops measurement"),
+                                               QString("Start/stop measurement"),
                                                QVariant((int)0));
     m_pStartStopPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:START").arg(modNr), "10", "PAR_StartStop", "0", ""));
     m_pModule->veinModuleParameterHash[key] =  m_pStartStopPar; // for modules use
@@ -286,35 +286,35 @@ void cSem1ModuleMeasProgram::generateInterface()
 
     m_pStatusAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Status"),
-                                            QString("Component holds status information"),
+                                            QString("Status information"),
                                             QVariant((int)0) );
     m_pModule->veinModuleParameterHash[key] =  m_pStatusAct; // and for the modules interface
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
 
     m_pTimeAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                           key = QString("ACT_Time"),
-                                          QString("Component holds measuring time information"),
+                                          QString("Measurement time"),
                                           QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pTimeAct; // and for the modules interface
     m_pTimeAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:TIME").arg(modNr), "2", m_pTimeAct->getName(), "0", "sec"));
 
     m_pEnergyAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Energy"),
-                                            QString("Component holds energy since last start information"),
+                                            QString("Energy since last start"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyAct; // and for the modules interface
     m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENERGY").arg(modNr), "2", m_pEnergyAct->getName(), "0", ""));
 
     m_pPowerAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("ACT_Power"),
-                                           QString("Component holds mean power since last start information"),
+                                           QString("Mean power since last start"),
                                            QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pPowerAct; // and for the modules interface
     m_pPowerAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:POWER").arg(modNr), "2", m_pPowerAct->getName(), "0", ""));
 
     m_pResultAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Result"),
-                                            QString("Component holds the result of last measurement"),
+                                            QString("Result of last measurement"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pResultAct; // and for the modules interface
     m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", m_pResultAct->getName(), "0", "%"));
@@ -346,7 +346,7 @@ void cSem1ModuleMeasProgram::generateInterface()
 
     m_pRatingAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("ACT_Rating"),
-                                               QString("Component holds the rating for the last measurement"),
+                                               QString("Evaluation for the last measurement"),
                                                QVariant((int) -1));
     m_pModule->veinModuleParameterHash[key] = m_pRatingAct; // and for the modules interface
     m_pRatingAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RATING").arg(modNr), "2", m_pRatingAct->getName(), "0", ""));

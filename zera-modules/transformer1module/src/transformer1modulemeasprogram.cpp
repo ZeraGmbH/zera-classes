@@ -83,7 +83,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Error%1").arg(i+1),
-                                            QString("Component forwards transformer transmission error value"),
+                                            QString("Transformer transmission error value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("ERR%1").arg(i+1));
         pActvalue->setUnit("%");
@@ -96,7 +96,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Angle%1").arg(i+1),
-                                            QString("Component forwards transformer angle deviation value"),
+                                            QString("Transformer angle deviation value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("ANG%1").arg(i+1));
         pActvalue->setUnit("°");
@@ -109,7 +109,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Ratio%1").arg(i+1),
-                                            QString("Component forwards transformer ratio value"),
+                                            QString("Transformer ratio value"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("RAT%1").arg(i+1));
         pActvalue->setUnit("");
@@ -122,7 +122,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_INSecondary%1").arg(i+1),
-                                            QString("Component forwards reference N secondary input"),
+                                            QString("Reference N secondary input"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("INSEC%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[0]));
@@ -135,7 +135,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_IXSecondary%1").arg(i+1),
-                                            QString("Component forwards decive under test secondary input"),
+                                            QString("DUT secondary input"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("IXSEC%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[2]));
@@ -148,7 +148,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_IXPrimary%1").arg(i+1),
-                                            QString("Component forwards decive under test primary input"),
+                                            QString("DUT test primary input"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("IXPRIM%1").arg(i+1));
         pActvalue->setUnit(QString(getConfData()->m_clampUnit[4]));
@@ -244,7 +244,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
