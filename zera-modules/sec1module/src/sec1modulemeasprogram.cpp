@@ -249,7 +249,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutConstantUScaleNum = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantUScaleNum"),
-                                                 QString("Component to cale the dut constant in case tranformers are used (U fraction numerator)"),
+                                                 QString("Scale the dut constant in case tranformers are used (U fraction numerator)"),
                                                  QVariant("1"));
     m_pDutConstantUScaleNum->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTUSCALENUM").arg(modNr), "10", key, "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantUScaleNum; // for modules use
@@ -259,7 +259,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutConstantUScaleDenom = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantUScaleDenom"),
-                                                 QString("Component to cale the dut constant in case tranformers are used (U fraction denominator)"),
+                                                 QString("Scale the dut constant in case tranformers are used (U fraction denominator)"),
                                                  QVariant("1"));
     m_pDutConstantUScaleDenom->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTUSCALEDENOM").arg(modNr), "10", key, "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantUScaleDenom; // for modules use
@@ -268,7 +268,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutConstantIScaleNum = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantIScaleNum"),
-                                                 QString("Component to cale the dut constant in case tranformers are used (I fraction numerator)"),
+                                                 QString("Scale the dut constant in case tranformers are used (I fraction numerator)"),
                                                  QVariant("1"));
     m_pDutConstantIScaleNum->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALENUM").arg(modNr), "10", key, "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantIScaleNum; // for modules use
@@ -278,7 +278,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutConstantIScaleDenom = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantIScaleDenom"),
-                                                 QString("Component to cale the dut constant in case tranformers are used (I fraction denominator)"),
+                                                 QString("Scale the dut constant in case tranformers are used (I fraction denominator)"),
                                                  QVariant("1"));
     m_pDutConstantIScaleDenom->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALEDENOM").arg(modNr), "10", key, "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantIScaleDenom; // for modules use
@@ -288,7 +288,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutTypeMeasurePoint = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutTypeMeasurePoint"),
-                                                 QString("Component to cale the dut constant in case tranformers are used (I fraction denominator)"),
+                                                 QString("Scale the dut constant in case tranformers are used (I fraction denominator)"),
                                                  QVariant("CsIsUs"));
     m_pDutTypeMeasurePoint->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALEDENOM").arg(modNr), "10", key, "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutTypeMeasurePoint; // for modules use
@@ -343,7 +343,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pContinuousPar = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Continuous"),
-                                                QString("Component enables/disables continuous measurement"),
+                                                QString("Enables/disable continuous measurement"),
                                                 QVariant(int(0)));
     m_pContinuousPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:CONTINUOUS").arg(modNr), "10", m_pContinuousPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] =  m_pContinuousPar; // for modules use
@@ -384,21 +384,21 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pStatusAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Status"),
-                                            QString("Component holds status information"),
+                                            QString("Status information"),
                                             QVariant((int)0) );
     m_pModule->veinModuleParameterHash[key] =  m_pStatusAct; // for modules use
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
 
     m_pProgressAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("ACT_Progress"),
-                                              QString("Component holds progress information"),
+                                              QString("Progress information"),
                                               QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pProgressAct; // and for the modules interface
     m_pProgressAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:PROGRESS").arg(modNr), "2", m_pProgressAct->getName(), "0", ""));
 
     m_pEnergyAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Energy"),
-                                            QString("Component holds energy since last start information"),
+                                            QString("Energy since last start"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyAct; // and for the modules interface
     m_pEnergyAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENERGY").arg(modNr), "2", m_pEnergyAct->getName(), "0", ""));
@@ -406,14 +406,14 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pEnergyFinalAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("ACT_EnergyFinal"),
-                                                 QString("Component holds energy from last measurement"),
+                                                 QString("Energy of last measurement"),
                                                  QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pEnergyFinalAct; // and for the modules interface
     m_pEnergyFinalAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ENFINAL").arg(modNr), "2", m_pEnergyFinalAct->getName(), "0", ""));
 
     m_pResultAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Result"),
-                                            QString("Component holds the result of last measurement"),
+                                            QString("Result of last measurement"),
                                             QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pResultAct; // and for the modules interface
     m_pResultAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RESULT").arg(modNr), "2", m_pResultAct->getName(), "0", ""));
@@ -453,7 +453,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pRatingAct = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("ACT_Rating"),
-                                               QString("Component holds the rating for the last measurement"),
+                                               QString("Evaluation last measurement"),
                                                QVariant((int) -1));
     m_pModule->veinModuleParameterHash[key] = m_pRatingAct; // and for the modules interface
     m_pRatingAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:RATING").arg(modNr), "2", m_pRatingAct->getName(), "0", ""));

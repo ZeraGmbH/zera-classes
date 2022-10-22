@@ -77,7 +77,7 @@ void cPllObsermatic::generateInterface()
 
     m_pPllSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("SIG_PLL"),
-                                            QString("Component forwards information that pll channel is changing"),
+                                            QString("Signal on pll channel changing"),
                                             QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pPllSignal);

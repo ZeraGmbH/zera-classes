@@ -118,7 +118,7 @@ void cRangeObsermatic::generateInterface()
 
         pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               QString("SIG_Channel%1OVL").arg(i+1),
-                                              QString("Component forwards the channels overload status"),
+                                              QString("Channels overload status"),
                                               QVariant(int(0)) );
 
         m_RangeOVLComponentList.append(pComponent);
@@ -126,7 +126,7 @@ void cRangeObsermatic::generateInterface()
 
         pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               QString("INF_Channel%1OVLREJ").arg(i+1),
-                                              QString("Component forwards the channels maximum range possible peak rejection"),
+                                              QString("Channel's maximum range peak rejection"),
                                               QVariant(double(0.0)) );
 
         m_RangeOVLRejectionComponentList.append(pComponent);
@@ -134,7 +134,7 @@ void cRangeObsermatic::generateInterface()
 
         pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               QString("INF_Channel%1ActREJ").arg(i+1),
-                                              QString("Component forwards the channels actual rejection"),
+                                              QString("Channel's actual rejection"),
                                               QVariant(double(0.0)) );
 
         m_RangeActRejectionComponentList.append(pComponent);
@@ -142,7 +142,7 @@ void cRangeObsermatic::generateInterface()
 
         pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               QString("INF_Channel%1ActOVLREJ").arg(i+1),
-                                              QString("Component forwards the channels actual range possible peak rejection"),
+                                              QString("Channel's actual range peak rejection"),
                                               QVariant(double(0.0)) );
 
         m_RangeActOVLRejectionComponentList.append(pComponent);
@@ -184,7 +184,7 @@ void cRangeObsermatic::generateInterface()
 
         pComponent = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               QString("INF_PreScalingInfoGroup%1").arg(i),
-                                              QString("Component forwards the channels actual range possible peak rejection"),
+                                              QString("Channel's actual range peak rejection"),
                                               QVariant(double(1.0)) );
 
 
@@ -227,14 +227,14 @@ void cRangeObsermatic::generateInterface()
 
     m_pComponentOverloadMax = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        QString("INF_OverloadMax"),
-                                                       QString("Component signals maximum range overload condition"),
+                                                       QString("Maximum range overload condition"),
                                                        QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pComponentOverloadMax);
 
     m_pRangingSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Ranging"),
-                                                QString("Component forwards information that ranges are changing"),
+                                                QString("Signal on changing ranges"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pRangingSignal);

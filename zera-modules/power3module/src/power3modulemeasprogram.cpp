@@ -63,7 +63,7 @@ void cPower3ModuleMeasProgram::generateInterface()
     {
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_HPP%1").arg(i+1),
-                                            QString("Component forwards harmonic power active values"),
+                                            QString("Harmonic power active values"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("P%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("W");
@@ -76,7 +76,7 @@ void cPower3ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_HPQ%1").arg(i+1),
-                                            QString("Component forwards harmonic power reactive values"),
+                                            QString("Harmonic power reactive values"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("Q%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("Var");
@@ -89,7 +89,7 @@ void cPower3ModuleMeasProgram::generateInterface()
 
         pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_HPS%1").arg(i+1),
-                                            QString("Component forwards harmonic power apparent values"),
+                                            QString("Harmonic power apparent values"),
                                             QVariant(0.0) );
         pActvalue->setChannelName(QString("S%1").arg(i+1)); // we take "system" as name because we export real- and imaginary part
         pActvalue->setUnit("VA");
@@ -107,7 +107,7 @@ void cPower3ModuleMeasProgram::generateInterface()
 
     m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
-                                                QString("Component forwards a signal indicating measurement activity"),
+                                                QString("Signal indicating measurement activity"),
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);

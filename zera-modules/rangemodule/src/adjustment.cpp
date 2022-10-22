@@ -113,7 +113,7 @@ void cAdjustManagement::generateInterface()
 {
     m_pAdjustmentInfo = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  QString("INF_Adjusted"),
-                                                 QString("Component forwards information about device adjustment"),
+                                                 QString("Adjustment information"),
                                                  QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pAdjustmentInfo);
