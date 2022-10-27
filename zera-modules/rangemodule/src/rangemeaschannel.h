@@ -74,7 +74,7 @@ public:
     bool isRMSOverload(double ampl); // test if ampl is overload condition
     bool isADCOverload(double ampl); // test if ampl is adc overload condition
 
-    QString getOptRange(double ampl, QString rngAlias); // returns opt. range alias
+    QString getOptRange(double rms, QString rngAlias); // returns opt. range alias
     QString getMaxRange(); // returns alias of the range with max ur value
     QString getMaxRange(QString rngAlias); // returns alias of the range with max ur value
     QString getRangeListAlias();
