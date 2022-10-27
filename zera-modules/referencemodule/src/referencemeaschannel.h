@@ -42,8 +42,6 @@ enum rangemeaschannelCmds
     resetmeaschannelstatus
 };
 
-const double sqrt2 = 1.41421356;
-
 class cReferenceMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
