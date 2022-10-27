@@ -35,8 +35,6 @@ enum pllmeaschannelCmds
 
 #define notifierNr 1
 
-const double sqrt2 = 1.41421356;
-
 // we have to hold object of all pll meas channels that can be used for pll selection
 // because they provide necessary information for measuring program as well as pll observation
 
