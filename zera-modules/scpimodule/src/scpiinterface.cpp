@@ -40,9 +40,7 @@ void cSCPIInterface::addSCPICommand(cSCPIDelegate *delegate)
 bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 {
     cSCPIObject* scpiObject;
-    QString dummy;
-
-    if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd, dummy)) != 0)
+    if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0)
     {
         cSCPIDelegate* scpiDelegate = static_cast<cSCPIDelegate*>(scpiObject);
         return scpiDelegate->executeSCPI(client, cmd);
