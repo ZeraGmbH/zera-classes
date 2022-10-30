@@ -18,7 +18,7 @@ class cSCPIDelegate: public QObject, public cSCPIObject
    Q_OBJECT
 
 public:
-    cSCPIDelegate(){}
+    cSCPIDelegate();
     cSCPIDelegate(QString cmdParent, QString cmd, quint8 type);
     virtual ~cSCPIDelegate(){}
 
