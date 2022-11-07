@@ -37,7 +37,7 @@
     </configuration>
     <parameter>
         <sample>
-            <pllauto>0</pllauto>
+            <pllauto>1</pllauto>
             <pllchannel>UL1</pllchannel>
             <range>F70Hz</range>
         </sample>
