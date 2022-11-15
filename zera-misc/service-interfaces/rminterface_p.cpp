@@ -28,7 +28,6 @@ void cRMInterfacePrivate::setClient(Proxy::cProxyClient *client)
 
 quint32 cRMInterfacePrivate::rmIdent(QString name)
 {
-    QString cmd;
     quint32 msgnr;
 
     ProtobufMessage::NetMessage envelope;
@@ -49,8 +48,7 @@ quint32 cRMInterfacePrivate::addResource(QString type, QString name, int n, QStr
     quint32 msgnr;
 
     msgnr = sendCommand(cmd = QString("RES:ADD"), par = QString("%1;%2;%3;%4;%5;")
-            .arg(type)
-            .arg(name)
+            .arg(type, name)
             .arg(n)
             .arg(description)
             .arg(port));
@@ -65,9 +63,7 @@ quint32 cRMInterfacePrivate::removeResource(QString type, QString name)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("RES:REM"), par = QString("%1;%2;")
-            .arg(type)
-            .arg(name));
+    msgnr = sendCommand(cmd = QString("RES:REM"), par = QString("%1;%2;").arg(type, name));
 
     m_MsgNrCmdList[msgnr] = removeresource;
     return msgnr;
@@ -103,7 +99,7 @@ quint32 cRMInterfacePrivate::getResourceInfo(QString type, QString name)
     QString cmd;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("RES:%1:%2?").arg(type).arg(name));
+    msgnr = sendCommand(cmd = QString("RES:%1:%2?").arg(type, name));
 
     m_MsgNrCmdList[msgnr] = getresources;
     return msgnr;
@@ -115,7 +111,7 @@ quint32 cRMInterfacePrivate::setResource(QString type, QString name, int n)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("RES:%1:%2").arg(type).arg(name), par = QString("SET;%1;").arg(n));
+    msgnr = sendCommand(cmd = QString("RES:%1:%2").arg(type, name), par = QString("SET;%1;").arg(n));
 
     m_MsgNrCmdList[msgnr] = setresource;
     return msgnr;
@@ -127,7 +123,7 @@ quint32 cRMInterfacePrivate::freeResource(QString type, QString name)
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("RES:%1:%2").arg(type).arg(name) , par = QString("FREE;"));
+    msgnr = sendCommand(cmd = QString("RES:%1:%2").arg(type, name) , par = QString("FREE;"));
 
     m_MsgNrCmdList[msgnr] = freeresource;
     return msgnr;
