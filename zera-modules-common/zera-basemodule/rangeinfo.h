@@ -20,10 +20,6 @@ enum SensorType
 class cRangeInfo
 {
 public:
-    cRangeInfo(){}
-    cRangeInfo(const cRangeInfo &obj);
-    cRangeInfo operator=(const cRangeInfo& obj);
-
     QString name;
     qint32 type;
     bool avail;
