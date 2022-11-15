@@ -241,7 +241,7 @@ quint32 cPCBInterfacePrivate::getAdjOffsetCorrection(QString chnName, QString rn
     QString cmd, par;
     quint32 msgnr;
 
-    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJO?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
+    msgnr = sendCommand(cmd = QString("SENS:%1:%2:CORR:ADJOFFSET?").arg(chnName).arg(rngName), par= QString("%1;").arg(at));
     m_MsgNrCmdList[msgnr] = PCB::getoffsetcorrection;
     return msgnr;
 }
