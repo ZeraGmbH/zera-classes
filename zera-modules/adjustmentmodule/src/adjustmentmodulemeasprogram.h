@@ -53,6 +53,7 @@ enum adjustmentmoduleCmds
     getadjphasecorrection,
     setphasenode,
     getadjoffsetcorrection,
+    getadjoffsetrejection,
     setoffsetnode,
     getpcbadjustmentdata,
     setpcbadjustmentdata,
@@ -119,14 +120,19 @@ private:
 
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
-    Zera::Server::cPCBInterface* m_AdjustPCBInterface; //we use the following 7 parameters globally defined for easier
-    QString m_sAdjustSysName; // use within statemachines ... we have to keep in mind that adjustment
-    QString m_sAdjustChannel; // commands can only be used in sequence not in parallel
+    Zera::Server::cPCBInterface* m_AdjustPCBInterface;
+    // we use the following 8 parameters globally defined for easier
+    // use within statemachines ... we have to keep in mind that adjustment
+    // commands can only be used in sequence not in parallel
+    QString m_sAdjustSysName;
+    QString m_sAdjustChannel;
     QString m_sAdjustRange;
     double m_AdjustTargetValue;
     double m_AdjustActualValue;
     double m_AdjustFrequency;
     double m_AdjustCorrection;
+    double m_AdjustRejection;
+
     int m_AdjustEntity;
     QString m_AdjustComponent;
     bool m_bAuthorized;
@@ -211,6 +217,7 @@ private:
     // statemachine for offset adjustment
     QStateMachine m_adjustOffsetMachine;
     QState m_adjustoffsetGetCorrState;
+    QState m_adjustoffsetGetRejection;
     QState m_adjustoffsetSetNodeState;
     QFinalState m_adjustoffsetFinishState;
 
@@ -269,6 +276,7 @@ private slots:
 
     void setAdjustOffsetStartCommand(QVariant var);
     void adjustoffsetGetCorr();
+    void adjustoffsetGetRejection();
     void adjustoffsetSetNode();
 
     void transparentDataSend2Port(QVariant var);
