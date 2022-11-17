@@ -261,6 +261,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     m_pPARAdjustAmplitude->setValidator(adjValidatord);
 
     // validator for offset adjustment
+    cDoubleValidator dOffsetValidator = cDoubleValidator(-2000, 2000,1e-7);
     adjValidatord = new cAdjustValidator3d(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++)
     {
@@ -268,7 +269,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
         if (getConfData()->m_AdjChannelInfoHash[sysName]->offsetAdjInfo.m_bAvail)
         {
             adjChnInfo = m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
-            adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
+            adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dOffsetValidator);
         }
     }
     m_pPARAdjustOffset->setValidator(adjValidatord);
