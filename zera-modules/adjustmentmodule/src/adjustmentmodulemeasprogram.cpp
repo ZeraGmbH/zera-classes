@@ -118,24 +118,30 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     connect(&m_adjustamplitudeGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr);
     connect(&m_adjustamplitudeSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeSetNode);
 
-    m_adjustoffsetGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetGetRejection);
-    m_adjustoffsetGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
-    m_adjustoffsetGetRejection.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetSetNodeState);
-    m_adjustoffsetGetRejection.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
+    m_adjustOffsetGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustOffsetGetRejection);
+    m_adjustOffsetGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
+    m_adjustOffsetGetRejection.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustOffsetGetRejectionValue);
+    m_adjustOffsetGetRejection.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
+    m_adjustOffsetGetRejectionValue.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetSetNodeState);
+    m_adjustOffsetGetRejectionValue.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
     m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetFinishState);
     m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
-    m_adjustOffsetMachine.addState(&m_adjustoffsetGetCorrState);
-    m_adjustOffsetMachine.addState(&m_adjustoffsetGetRejection);
+    m_adjustOffsetMachine.addState(&m_adjustOffsetGetCorrState);
+    m_adjustOffsetMachine.addState(&m_adjustOffsetGetRejection);
+    m_adjustOffsetMachine.addState(&m_adjustOffsetGetRejectionValue);
     m_adjustOffsetMachine.addState(&m_adjustoffsetSetNodeState);
     m_adjustOffsetMachine.addState(&m_adjustoffsetFinishState);
-    m_adjustOffsetMachine.setInitialState(&m_adjustoffsetGetCorrState);
+    m_adjustOffsetMachine.setInitialState(&m_adjustOffsetGetCorrState);
 
-    connect(&m_adjustoffsetGetCorrState, &QState::entered, this, [&] () {
+    connect(&m_adjustOffsetGetCorrState, &QState::entered, this, [&] () {
         m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
-        m_MsgNrCmdList[m_AdjustPCBInterface->getAdjOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjoffsetcorrection;
+        m_MsgNrCmdList[m_AdjustPCBInterface->getAdjOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = enGetAdjOffsetCorrection;
     });
-    connect(&m_adjustoffsetGetRejection, &QState::entered, this, [&] () {
-        m_MsgNrCmdList[m_AdjustPCBInterface->getRejection(m_sAdjustSysName, m_sAdjustRange)] = getadjoffsetrejection;
+    connect(&m_adjustOffsetGetRejection, &QState::entered, this, [&] () {
+        m_MsgNrCmdList[m_AdjustPCBInterface->getRejection(m_sAdjustSysName, m_sAdjustRange)] = enGetAdjOffsetRejection;
+    });
+    connect(&m_adjustOffsetGetRejectionValue, &QState::entered, this, [&] () {
+        m_MsgNrCmdList[m_AdjustPCBInterface->getUrvalue(m_sAdjustSysName, m_sAdjustRange)] = enGetAdjOffsetRejectionValue;
     });
     connect(&m_adjustoffsetSetNodeState, &QState::entered, this, [&] () {
         cAdjustIterators *pits;
@@ -1224,7 +1230,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case getadjoffsetcorrection:
+            case enGetAdjOffsetCorrection:
                 if (reply == ack)
                 {
                     m_AdjustCorrection = answer.toDouble();
@@ -1242,7 +1248,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 break;
 
-            case getadjoffsetrejection:
+            case enGetAdjOffsetRejection:
                 if (reply == ack)
                 {
                     m_AdjustRejection = answer.toDouble();
@@ -1250,10 +1256,28 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                 }
                 else
                 {
-                    emit errMsg(readOffsetCorrErrMsg);
+                    emit errMsg(readrangerejectionErrMsg);
                     emit adjustError();
 #ifdef DEBUG
-                    qDebug() << readOffsetCorrErrMsg;
+                    qDebug() << readrangerejectionErrMsg;
+#endif
+                    emit executionError();
+                    m_pPARAdjustOffset->setError();
+                }
+                break;
+
+            case enGetAdjOffsetRejectionValue:
+                if (reply == ack)
+                {
+                    m_AdjustRejectionValue = answer.toDouble();
+                    emit adjustoffsetContinue();
+                }
+                else
+                {
+                    emit errMsg(readrangeurvalueErrMsg);
+                    emit adjustError();
+#ifdef DEBUG
+                    qDebug() << readrangeurvalueErrMsg;
 #endif
                     emit executionError();
                     m_pPARAdjustOffset->setError();
