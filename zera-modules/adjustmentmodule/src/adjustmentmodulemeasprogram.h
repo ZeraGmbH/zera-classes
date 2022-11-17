@@ -275,8 +275,6 @@ private slots:
     void adjustphaseSetNode();
 
     void setAdjustOffsetStartCommand(QVariant var);
-    void adjustoffsetGetCorr();
-    void adjustoffsetSetNode();
 
     void transparentDataSend2Port(QVariant var);
     void writePCBAdjustmentData(QVariant var);
