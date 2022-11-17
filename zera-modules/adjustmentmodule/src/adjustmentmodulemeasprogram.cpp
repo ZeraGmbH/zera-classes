@@ -130,11 +130,23 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_adjustOffsetMachine.addState(&m_adjustoffsetFinishState);
     m_adjustOffsetMachine.setInitialState(&m_adjustoffsetGetCorrState);
 
-    connect(&m_adjustoffsetGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustoffsetGetCorr);
+    connect(&m_adjustoffsetGetCorrState, &QState::entered, this, [&] () {
+        m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
+        m_MsgNrCmdList[m_AdjustPCBInterface->getAdjOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjoffsetcorrection;
+    });
     connect(&m_adjustoffsetGetRejection, &QState::entered, this, [&] () {
         m_MsgNrCmdList[m_AdjustPCBInterface->getRejection(m_sAdjustSysName, m_sAdjustRange)] = getadjoffsetrejection;
     });
-    connect(&m_adjustoffsetSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustoffsetSetNode);
+    connect(&m_adjustoffsetSetNodeState, &QState::entered, this, [&] () {
+        cAdjustIterators *pits;
+        if (m_adjustIteratorHash.contains(m_sAdjustChannel))
+            pits = m_adjustIteratorHash[m_sAdjustChannel];
+        else
+            m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
+        double Corr = (m_AdjustActualValue - m_AdjustTargetValue) * m_AdjustRejection - m_AdjustCorrection;
+        m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
+        pits->m_nAdjustOffsetIt++;
+    });
 
     m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustphaseContinue, &m_adjustphaseSetNodeState);
     m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustphaseFinishState);
@@ -886,28 +898,6 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
     m_AdjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
     m_AdjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
     m_adjustOffsetMachine.start();
-}
-
-
-void cAdjustmentModuleMeasProgram::adjustoffsetGetCorr()
-{
-    m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
-    m_MsgNrCmdList[m_AdjustPCBInterface->getAdjOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjoffsetcorrection;
-}
-
-void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()
-{
-    cAdjustIterators *pits;
-    double Corr;
-
-    if (m_adjustIteratorHash.contains(m_sAdjustChannel))
-        pits = m_adjustIteratorHash[m_sAdjustChannel];
-    else
-        m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
-
-    Corr = (m_AdjustActualValue - m_AdjustTargetValue) * m_AdjustRejection - m_AdjustCorrection;
-    m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
-    pits->m_nAdjustOffsetIt++;
 }
 
 
