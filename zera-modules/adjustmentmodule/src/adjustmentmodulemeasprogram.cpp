@@ -131,7 +131,9 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_adjustOffsetMachine.setInitialState(&m_adjustoffsetGetCorrState);
 
     connect(&m_adjustoffsetGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustoffsetGetCorr);
-    connect(&m_adjustoffsetGetRejection, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustoffsetGetRejection);
+    connect(&m_adjustoffsetGetRejection, &QState::entered, this, [&] () {
+        m_MsgNrCmdList[m_AdjustPCBInterface->getRejection(m_sAdjustSysName, m_sAdjustRange)] = getadjoffsetrejection;
+    });
     connect(&m_adjustoffsetSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustoffsetSetNode);
 
     m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustphaseContinue, &m_adjustphaseSetNodeState);
@@ -891,11 +893,6 @@ void cAdjustmentModuleMeasProgram::adjustoffsetGetCorr()
 {
     m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
     m_MsgNrCmdList[m_AdjustPCBInterface->getAdjOffsetCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjoffsetcorrection;
-}
-
-void cAdjustmentModuleMeasProgram::adjustoffsetGetRejection()
-{
-    m_MsgNrCmdList[m_AdjustPCBInterface->getRejection(m_sAdjustSysName, m_sAdjustRange)] = getadjoffsetrejection;
 }
 
 void cAdjustmentModuleMeasProgram::adjustoffsetSetNode()

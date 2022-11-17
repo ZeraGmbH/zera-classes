@@ -276,7 +276,6 @@ private slots:
 
     void setAdjustOffsetStartCommand(QVariant var);
     void adjustoffsetGetCorr();
-    void adjustoffsetGetRejection();
     void adjustoffsetSetNode();
 
     void transparentDataSend2Port(QVariant var);
