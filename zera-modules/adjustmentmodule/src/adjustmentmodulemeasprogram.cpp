@@ -149,7 +149,11 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
             pits = m_adjustIteratorHash[m_sAdjustChannel];
         else
             m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
-        double Corr = (m_AdjustActualValue - m_AdjustTargetValue) * m_AdjustRejection - m_AdjustCorrection;
+        double rawActual = m_AdjustActualValue;
+        if(fabs(m_AdjustCorrection) > 1e-3) {
+            rawActual = m_AdjustActualValue - m_AdjustCorrection * m_AdjustRejectionValue / m_AdjustRejection;
+        }
+        double Corr = (m_AdjustTargetValue - rawActual) * m_AdjustRejection / m_AdjustRejectionValue;
         m_MsgNrCmdList[m_AdjustPCBInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
         pits->m_nAdjustOffsetIt++;
     });
