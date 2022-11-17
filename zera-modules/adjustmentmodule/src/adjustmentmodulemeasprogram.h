@@ -52,8 +52,9 @@ enum adjustmentmoduleCmds
     setgainnode,
     getadjphasecorrection,
     setphasenode,
-    getadjoffsetcorrection,
-    getadjoffsetrejection,
+    enGetAdjOffsetCorrection,
+    enGetAdjOffsetRejection,
+    enGetAdjOffsetRejectionValue,
     setoffsetnode,
     getpcbadjustmentdata,
     setpcbadjustmentdata,
@@ -121,7 +122,7 @@ private:
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
     Zera::Server::cPCBInterface* m_AdjustPCBInterface;
-    // we use the following 8 parameters globally defined for easier
+    // we use the following 9 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
     QString m_sAdjustSysName;
@@ -132,6 +133,7 @@ private:
     double m_AdjustFrequency;
     double m_AdjustCorrection;
     double m_AdjustRejection;
+    double m_AdjustRejectionValue;
 
     int m_AdjustEntity;
     QString m_AdjustComponent;
@@ -216,8 +218,9 @@ private:
 
     // statemachine for offset adjustment
     QStateMachine m_adjustOffsetMachine;
-    QState m_adjustoffsetGetCorrState;
-    QState m_adjustoffsetGetRejection;
+    QState m_adjustOffsetGetCorrState;
+    QState m_adjustOffsetGetRejection;
+    QState m_adjustOffsetGetRejectionValue;
     QState m_adjustoffsetSetNodeState;
     QFinalState m_adjustoffsetFinishState;
 
