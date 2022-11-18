@@ -513,61 +513,35 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(rmidentErrMSG)));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(rmidentErrMSG));
                 break;
 
             case testsec1resource:
                 if ((reply == ack) && (answer.toString().contains("SEC1")))
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(resourcetypeErrMsg));
                 break;
 
             case setecresource:
                 if (reply == ack)
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(setresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << setresourceErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(setresourceErrMsg));
                 break;
 
             case readresourcetypes:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_ResourceTypeList = answer.toString().split(';');
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(resourcetypeErrMsg));
                 break;
 
             case readresource:
             {
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_ResourceHash[m_ResourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
                     if (m_nIt < m_ResourceTypeList.count())
@@ -576,13 +550,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                         emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(resourceErrMsg));
                 break;
             }
 
@@ -590,8 +558,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 QStringList sl;
                 sl = answer.toString().split(';');
-                if ((reply == ack) && (sl.length() >= 2))
-                {
+                if ((reply == ack) && (sl.length() >= 2)) {
                     m_MasterEcalculator.name = sl.at(0);
                     m_MasterEcalculator.secIFace = m_pSECInterface;
                     m_MasterEcalculator.secServersocket = getConfData()->m_SECServerSocket;
@@ -601,49 +568,29 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(fetchsececalcunitErrMsg)));
-#ifdef DEBUG
-                    qDebug() << fetchsececalcunitErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(fetchsececalcunitErrMsg));
                 break;
             }
 
             case readrefInputalias:
             {
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     siInfo->alias = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readaliasErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(readaliasErrMsg));
                 break;
             }
 
             case readdutInputalias:
             {
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     siInfo->alias = answer.toString();
                     emit activationContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readaliasErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(tr(readaliasErrMsg));
                 break;
             }
 
@@ -651,32 +598,19 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack) // we only continue if sec server manager acknowledges
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(freesececalcunitErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freesececalcunitErrMsg;
-#endif
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(tr(freesececalcunitErrMsg));
                 break;
 
             case freeecresource:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit deactivationContinue();
                 else
-                {
-                    emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
-                    emit deactivationError();
-                }
+                    notifyDeactivationError(tr(freeresourceErrMsg));
                 break;
 
             case actualizeprogress:
             {
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     // Still running and not waiting for next?
                     if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
                         m_nDUTPulseCounterActual = answer.toUInt(&ok);
@@ -691,15 +625,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                {
-                    {
-                        emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                        qDebug() << readsecregisterErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             }
 
@@ -718,15 +644,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                {
-                    {
-                        emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                        qDebug() << readsecregisterErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             }
 
@@ -743,69 +661,31 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     }
                 }
                 else
-                {
-                    {
-                        emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                        qDebug() << readsecregisterErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             }
 
             case setsync:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg((tr(setsyncErrMsg)));
-#ifdef DEBUG
-                        qDebug() << setsyncErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(setsyncErrMsg);
                 break;
 
             case enableinterrupt:
             case setmeaspulses:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg((tr(writesecregisterErrMsg)));
-#ifdef DEBUG
-                        qDebug() << writesecregisterErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(writesecregisterErrMsg);
                 break;
 
             case setmastermux:
             case setslavemux:
                 if (reply == ack)
-                {
                     emit setupContinue();
-                }
                 else
-                {
-                    {
-                        emit errMsg((tr(setmuxErrMsg)));
-#ifdef DEBUG
-                        qDebug() << setmuxErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(setmuxErrMsg);
                 break;
 
             case setmastermeasmode:
@@ -815,15 +695,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit setupContinue();
                 }
                 else
-                {
-                    {
-                        emit errMsg((tr(setcmdidErrMsg)));
-#ifdef DEBUG
-                        qDebug() << setcmdidErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(setcmdidErrMsg);
                 break;
 
             case startmeasurement:
@@ -832,15 +704,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit setupContinue();
                 }
                 else
-                {
-                    {
-                        emit errMsg((tr(startmeasErrMsg)));
-#ifdef DEBUG
-                        qDebug() << startmeasErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(startmeasErrMsg);
                 break;
 
             case stopmeas:
@@ -848,61 +712,34 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit deactivationContinue();
                 }
                 else
-                {
-                    {
-                        emit errMsg((tr(stopmeasErrMsg)));
-#ifdef DEBUG
-                        qDebug() << stopmeasErrMsg;
-#endif
-                        emit executionError();
-                    }
-                }
+                    notifyExecutionError(stopmeasErrMsg);
                 break;
 
             case setpcbrefconstantnotifier:
                 if (reply == ack) // we only continue if pcb server acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                    qDebug() << registerpcbnotifierErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(registerpcbnotifierErrMsg);
                 break;
 
             case setsecintnotifier:
                 if (reply == ack) // we only continue if sec server acknowledges
                     emit activationContinue();
                 else
-                {
-                    emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                    qDebug() << registerpcbnotifierErrMsg;
-#endif
-                    emit activationError();
-                }
+                    notifyActivationError(registerpcbnotifierErrMsg);
                 break;
 
 
             case fetchrefconstant:
             {
-                if (reply == ack) // we only continue if sec server acknowledges
-                {
+                if (reply == ack)  {// we only continue if sec server acknowledges
                     double constant;
                     constant = answer.toDouble(&ok);
                     m_pRefConstantPar->setValue(QVariant(constant));
                     newRefConstant(QVariant(constant));
                 }
                 else
-                {
-                    emit errMsg((tr(readrefconstantErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readrefconstantErrMsg;
-#endif
-                    emit executionError();
-                }
+                    notifyExecutionError(readrefconstantErrMsg);
                 break;
             }
 
@@ -913,31 +750,16 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
-                    emit executionError();
-                }
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
             case resetintregister:
                 if (reply == ack) // we only continue if sec server acknowledges
-                {
                     emit interruptContinue();
-                }
                 else
-                {
-                    emit errMsg((tr(writesecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writesecregisterErrMsg;
-#endif
-                    emit executionError();
-                }
+                    notifyExecutionError(writesecregisterErrMsg);
                 break;
             case readvicount:
-                if (reply == ack) // we only continue if sec server acknowledges
-                {
+                if (reply == ack) { // we only continue if sec server acknowledges
                     // On high frequency continuous measurements chances are high
                     // that an abort comes in while we fetch final energy counter.
                     // All aborts (user / change ranges) stop measurement and that
@@ -953,13 +775,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     emit interruptContinue();
                 }
                 else
-                {
-                    emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
-                    emit executionError();
-                }
+                    notifyExecutionError(readsecregisterErrMsg);
                 break;
 
             }
