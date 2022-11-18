@@ -97,7 +97,6 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 
 public:
     cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual ~cAdjustmentModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
     bool isAuthorized();
 
@@ -118,7 +117,7 @@ public slots:
 
 private:
     cAdjustmentModuleConfigData* getConfData();
-    void setUpAvtivationsStateMachine();
+    void setUpActivationsStateMachine();
 
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
@@ -237,17 +236,6 @@ private:
 private slots:
     void setInterfaceValidation();
 
-    void readResourceInfo();
-    void readResourceInfoLoop();
-    void pcbConnection();
-    void pcbConnectionLoop();
-    void readChnAlias();
-    void readChnAliasLoop();
-    void readRangelist();
-    void readRangelistLoop();
-    void searchActualValues();
-    void activationDone();
-
     void deactivateMeas();
     void deactivateMeasDone();
 
@@ -281,8 +269,6 @@ private slots:
     void readPCBAdjustmentData(QVariant);
     void writeCLAMPAdjustmentData(QVariant var);
     void readCLAMPAdjustmentData(QVariant);
-
-    void fetchAuthorizationStatus();
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
