@@ -20,7 +20,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_bAuthorized = true; // per default we are authorized
 
-    setUpAvtivationsStateMachine();
+    setUpActivationsStateMachine();
 
     // setting up statemachine deactivation
     m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
@@ -122,17 +122,10 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     connect(&m_adjustphaseSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustphaseSetNode);
 }
 
-
-cAdjustmentModuleMeasProgram::~cAdjustmentModuleMeasProgram()
-{
-}
-
-
 void cAdjustmentModuleMeasProgram::start()
 {
     // nothing to start
 }
-
 
 void cAdjustmentModuleMeasProgram::stop()
 {
@@ -144,39 +137,8 @@ cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
     return qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-void cAdjustmentModuleMeasProgram::setUpAvtivationsStateMachine()
+void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
 {
-    m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
-    m_readResourceState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
-    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionState);
-    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readResourceInfoState);
-    m_pcbConnectionState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionLoopState);
-    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasState);
-    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_pcbConnectionState);
-    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
-    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistState);
-    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readChnAliasState);
-    m_readRangelistState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistLoopState);
-    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_searchActualValuesState);
-    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readRangelistState);
-    m_searchActualValuesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_activationDoneState);
-
-    m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_readResourceInfoState);
-    m_activationMachine.addState(&m_readResourceInfoLoopState);
-    m_activationMachine.addState(&m_pcbConnectionState);
-    m_activationMachine.addState(&m_pcbConnectionLoopState);
-    m_activationMachine.addState(&m_readChnAliasState);
-    m_activationMachine.addState(&m_readChnAliasLoopState);
-    m_activationMachine.addState(&m_readRangelistState);
-    m_activationMachine.addState(&m_readRangelistLoopState);
-    m_activationMachine.addState(&m_searchActualValuesState);
-    m_activationMachine.addState(&m_activationDoneState);
-
     // m_rmConnectState.addTransition is done in rmConnectState entered handler
     m_activationMachine.addState(&m_rmConnectState);
     m_activationMachine.setInitialState(&m_rmConnectState);
@@ -186,41 +148,241 @@ void cAdjustmentModuleMeasProgram::setUpAvtivationsStateMachine()
         m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
         m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
-        m_pRMInterface->setClient(m_pRMClient); //
-        // todo insert timer for timeout
-
+        m_pRMInterface->setClient(m_pRMClient);
         connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
         m_pProxy->startConnection(m_pRMClient);
     });
+
+    m_activationMachine.addState(&m_IdentifyState);
+    m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     connect(&m_IdentifyState, &QState::entered, this, [&]() {
         m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("Adjustment"))] = sendrmident;
     });
+    m_cmdFinishCallbacks[sendrmident] = [&](quint8 reply, QVariant) {
+        if (reply == ack) // we only continue if resource manager acknowledges
+            emit activationContinue();
+        else
+            notifyActivationError(tr(rmidentErrMSG));
+    };
+
+    m_activationMachine.addState(&m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
     connect(&m_readResourceTypesState, &QState::entered, this, [&]() {
         m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
     });
+    m_cmdFinishCallbacks[readresourcetypes] = [&](quint8 reply, QVariant answer) {
+        if ((reply == ack) && (answer.toString().contains("SENSE")))
+            emit activationContinue();
+        else
+            notifyActivationError(tr(resourcetypeErrMsg));
+    };
+
+    m_activationMachine.addState(&m_readResourceState);
+    m_readResourceState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoState);
     connect(&m_readResourceState, &QState::entered, this, [&]() {
         m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
-        activationIt = 0; // we prepare iteration for querying the pcbservers
+        activationIt = 0; // we prepare querying loop of channels
     });
-    connect(&m_readResourceInfoState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfo);
-    connect(&m_readResourceInfoLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfoLoop);
-    connect(&m_pcbConnectionState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnection);
-    connect(&m_pcbConnectionLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnectionLoop);
-    connect(&m_readChnAliasState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAlias);
-    connect(&m_readChnAliasLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAliasLoop);
-    connect(&m_readRangelistState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelist);
-    connect(&m_readRangelistLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelistLoop);
-    connect(&m_searchActualValuesState, &QState::entered, this, &cAdjustmentModuleMeasProgram::searchActualValues);
-    connect(&m_activationDoneState, &QState::entered, this, &cAdjustmentModuleMeasProgram::activationDone);
-}
+    m_cmdFinishCallbacks[readresource] = [&](quint8 reply, QVariant answer) {
+        bool allPresent = false;
+        if (reply == ack) {
+            QString s = answer.toString();
+            allPresent = true;
+            int n = getConfData()->m_nAdjustmentChannelCount;
+            for (int i = 0; i < n; i++)
+                allPresent = allPresent && s.contains(getConfData()->m_AdjChannelList.at(i));
+        }
+        if (allPresent)
+            emit activationContinue();
+        else
+            notifyActivationError(tr(resourceErrMsg));
+    };
 
+    m_activationMachine.addState(&m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
+    connect(&m_readResourceInfoState, &QState::entered, this, [&]() {
+        m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(activationIt))] = readresourceinfo;
+    });
+    m_cmdFinishCallbacks[readresourceinfo] = [&](quint8 reply, QVariant answer) {
+        QStringList sl = answer.toString().split(';');
+        if ((reply ==ack) && (sl.length() >= 4)) {
+            bool ok;
+            int port = sl.at(3).toInt(&ok);
+            if (ok) {
+                m_chnPortHash[getConfData()->m_AdjChannelList.at(activationIt)] = port;
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(tr(resourceInfoErrMsg));
+        }
+        else
+            notifyActivationError(tr(resourceInfoErrMsg));
+    };
+
+    m_activationMachine.addState(&m_readResourceInfoLoopState);
+    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionState);
+    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readResourceInfoState);
+    connect(&m_readResourceInfoLoopState, &QState::entered, this, [&]() {
+        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
+        if (activationIt == 0)
+            emit activationContinue();
+        else
+            emit activationLoop();
+    });
+
+    m_activationMachine.addState(&m_pcbConnectionState);
+    m_pcbConnectionState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionLoopState);
+    connect(&m_pcbConnectionState, &QState::entered, this, [&] {
+        QString sChannel = getConfData()->m_AdjChannelList.at(activationIt); // current channel m0/m1/..
+        cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
+        m_adjustChannelInfoHash[sChannel] = adjustChannelInfo;
+        int port = m_chnPortHash[getConfData()->m_AdjChannelList.at(activationIt)];
+        if (m_portChannelHash.contains(port)) {
+            // the channels share the same interface
+            adjustChannelInfo->m_pPCBInterface = m_adjustChannelInfoHash[m_portChannelHash[port] ]->m_pPCBInterface;
+            emit activationContinue();
+        }
+        else {
+            m_portChannelHash[port] = sChannel;
+            Zera::Proxy::cProxyClient* pcbclient = m_pProxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
+            m_pcbClientList.append(pcbclient);
+            m_pcbConnectionState.addTransition(pcbclient, &Zera::Proxy::cProxyClient::connected, &m_pcbConnectionLoopState);
+            pcbInterface = new Zera::Server::cPCBInterface();
+            m_pcbInterfaceList.append(pcbInterface);
+            pcbInterface->setClient(pcbclient);
+            connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
+            adjustChannelInfo->m_pPCBInterface = pcbInterface;
+            m_pProxy->startConnection((pcbclient));
+        }
+    });
+
+    m_activationMachine.addState(&m_pcbConnectionLoopState);
+    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasState);
+    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_pcbConnectionState);
+    connect(&m_pcbConnectionLoopState, &QState::entered, this, [&]() {
+        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
+        if (activationIt == 0)
+            emit activationContinue();
+        else
+            emit activationLoop();
+
+    });
+
+    m_activationMachine.addState(&m_readChnAliasState);
+    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
+    connect(&m_readChnAliasState, &QState::entered, this, [&]() {
+        QString name = getConfData()->m_AdjChannelList.at(activationIt);
+        m_MsgNrCmdList[m_adjustChannelInfoHash[name]->m_pPCBInterface->getAlias(name)] = readchnalias;
+    });
+    m_cmdFinishCallbacks[readchnalias] = [&](quint8 reply, QVariant answer) {
+        if (reply == ack) {
+            QString alias = answer.toString();
+            QString sysName = getConfData()->m_AdjChannelList.at(activationIt);
+            m_AliasChannelHash[alias] = sysName;
+            m_adjustChannelInfoHash[sysName]->m_sAlias = alias;
+            emit activationContinue();
+        }
+        else
+            notifyActivationError(tr(readaliasErrMsg));
+    };
+
+    m_activationMachine.addState(&m_readChnAliasLoopState);
+    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistState);
+    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readChnAliasState);
+    connect(&m_readChnAliasLoopState, &QState::entered, this, [&]() {
+        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
+        if (activationIt == 0)
+            emit activationContinue();
+        else
+            emit activationLoop();
+    });
+
+    m_activationMachine.addState(&m_readRangelistState);
+    m_readRangelistState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistLoopState);
+    connect(&m_readRangelistState, &QState::entered, this, [&]() {
+        QString name = getConfData()->m_AdjChannelList.at(activationIt);
+        m_MsgNrCmdList[m_adjustChannelInfoHash[name]->m_pPCBInterface->getRangeList(name)] = readrangelist;
+    });
+    m_cmdFinishCallbacks[readrangelist] = [&](quint8 reply, QVariant answer) {
+        if (reply == ack) {
+            m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(activationIt)]->m_sRangelist = answer.toStringList();
+            emit activationContinue();
+        }
+        else
+            notifyActivationError(tr(readrangelistErrMsg));
+    };
+
+    m_activationMachine.addState(&m_readRangelistLoopState);
+    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_searchActualValuesState);
+    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readRangelistState);
+    connect(&m_readRangelistLoopState, &QState::entered, this, [&]() {
+        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
+        if (activationIt == 0)
+            emit activationContinue();
+        else
+            emit activationLoop();
+    });
+
+    m_activationMachine.addState(&m_searchActualValuesState);
+    m_searchActualValuesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_activationDoneState);
+    connect(&m_searchActualValuesState, &QState::entered, this, [&] () {
+        bool error = false;
+        adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
+        if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+            error = true;
+        adjInfo = getConfData()->m_ReferenceFrequency;
+        if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+            error = true;
+        for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
+            // we test if all configured actual value data exist
+            QString chn = getConfData()->m_AdjChannelList.at(i);
+
+            adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
+            if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+                error = true;
+                break;
+            }
+            adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
+            if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+                error = true;
+                break;
+            }
+            adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
+            if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+                error = true;
+                break;
+            }
+        }
+        if (error)
+            notifyActivationError(tr(moduleActValueErrMsg));
+        else
+            emit activationContinue();
+    });
+
+    m_activationMachine.addState(&m_activationDoneState);
+    connect(&m_activationDoneState, &QState::entered, this, [&]() {
+        m_bActive = true;
+        setInterfaceValidation();
+        connect(&m_AuthTimer, &QTimer::timeout, this , [&]() {
+            QList<QString> sysnameList = m_AliasChannelHash.values();
+            m_AdjustPCBInterface = m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
+            m_MsgNrCmdList[m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
+        });
+        m_AuthTimer.start(5000);
+        emit activated();
+    });
+    m_cmdFinishCallbacks[getauthorizationstatus] = [&](quint8 reply, QVariant answer) {
+        if (reply == ack)
+            m_bAuthorized = (answer.toInt() > 0);
+        else
+            emit errMsg(readauthorizationErrMSG);
+    };
+}
 
 void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
 {
-    QStringList sl;
-
     receivedPar = var;
-    sl = var.toString().split(',');
+    QStringList sl = var.toString().split(',');
     m_sAdjustChannel = sl.at(0);
     m_sAdjustRange = sl.at(1);
     m_AdjustTargetValue = sl.at(2).toDouble();
@@ -228,53 +390,37 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
     m_AdjustPCBInterface = m_adjustChannelInfoHash[m_sAdjustSysName]->m_pPCBInterface;
 }
 
-
 double cAdjustmentModuleMeasProgram::cmpPhase(QVariant var)
 {
-    QList<double> list;
-    double phi;
-
-    list = var.value<QList<double> >();
-    phi = userAtan(list.at(1), list.at(0));
+    QList<double> list = var.value<QList<double> >();
+    double phi = userAtan(list.at(1), list.at(0));
     return phi;
 }
 
-
 double cAdjustmentModuleMeasProgram::symAngle(double ang)
 {
-    double a;
-
-    a = ang;
+    double a = ang;
     while (a > 180.0)
         a -= 360.0;
     while (a < -180.0)
         a += 360.0;
-
     return a;
 }
-
 
 void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 {
     // we must set the validators for the adjustment commands now
     // we know the channel names and their ranges now
     // ....very special validator
-
-    cAdjustValidator3d* adjValidatord;
-    cAdjustValidator3i* adjValidatori;
-    cAdjustValidatorFine* adjValidatorFine;
-
     cAdjustChannelInfo* adjChnInfo;
     QString sysName;
 
     // first the validator for amplitude adjustment
     cDoubleValidator dValidator = cDoubleValidator(0, 2000,1e-7);
-    adjValidatord = new cAdjustValidator3d(this);
-    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++)
-    {
+    cAdjustValidator3d* adjValidatord = new cAdjustValidator3d(this);
+    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[sysName]->amplitudeAdjInfo.m_bAvail)
-        {
+        if (getConfData()->m_AdjChannelInfoHash[sysName]->amplitudeAdjInfo.m_bAvail) {
             adjChnInfo = m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
@@ -284,11 +430,9 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     // validator for offset adjustment
     cDoubleValidator dOffsetValidator = cDoubleValidator(-2000, 2000,1e-7);
     adjValidatord = new cAdjustValidator3d(this);
-    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[sysName]->offsetAdjInfo.m_bAvail)
-        {
+        if (getConfData()->m_AdjChannelInfoHash[sysName]->offsetAdjInfo.m_bAvail) {
             adjChnInfo = m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dOffsetValidator);
         }
@@ -298,11 +442,9 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     // validator for angle adjustment
     dValidator = cDoubleValidator(0, 360,1e-7);
     adjValidatord = new cAdjustValidator3d(this);
-    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++)
-    {
+    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
-        if (getConfData()->m_AdjChannelInfoHash[sysName]->phaseAdjInfo.m_bAvail)
-        {
+        if (getConfData()->m_AdjChannelInfoHash[sysName]->phaseAdjInfo.m_bAvail) {
             adjChnInfo = m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
@@ -311,10 +453,8 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     // validator for adjustment status setting
     cIntValidator iValidator = cIntValidator(0,255);
-
-    adjValidatori = new cAdjustValidator3i(this);
-    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++)
-    {
+    cAdjustValidator3i* adjValidatori = new cAdjustValidator3i(this);
+    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         adjChnInfo = m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
         adjValidatori->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, iValidator);
     }
@@ -324,24 +464,20 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     adjValidatori = new cAdjustValidator3i(*adjValidatori);
     m_pPARAdjustOffsetStatus->setValidator(adjValidatori);
 
-    cAdjustValidator2* adjInitValidator;
-
-    adjInitValidator = new cAdjustValidator2(this);
-    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++)
-    {
+    cAdjustValidator2* adjInitValidator = new cAdjustValidator2(this);
+    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         adjChnInfo = m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
         adjInitValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist);
     }
     m_pPARAdjustInit->setValidator(adjInitValidator);
 
-    adjValidatorFine = new cAdjustValidatorFine(); // we accept every thing here and test command when we work on it
+    cAdjustValidatorFine* adjValidatorFine = new cAdjustValidatorFine(); // we accept every thing here and test command when we work on it
     m_pPARAdjustSend->setValidator(adjValidatorFine);
     adjValidatorFine = new cAdjustValidatorFine();
     m_pPARAdjustPCBData->setValidator(adjValidatorFine);
     adjValidatorFine = new cAdjustValidatorFine();
     m_pPARAdjustClampData->setValidator(adjValidatorFine);
 }
-
 
 void cAdjustmentModuleMeasProgram::generateInterface()
 {
@@ -500,179 +636,10 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     connect(m_pPARAdjustClampData, &cVeinModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
 }
 
-
 bool cAdjustmentModuleMeasProgram::isAuthorized()
 {
     return m_bAuthorized;
 }
-
-
-void cAdjustmentModuleMeasProgram::readResourceInfo()
-{
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(activationIt))] = readresourceinfo;
-}
-
-
-void cAdjustmentModuleMeasProgram::readResourceInfoLoop()
-{
-    activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-    if (activationIt == 0)
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
-
-void cAdjustmentModuleMeasProgram::pcbConnection()
-{
-    QString sChannel;
-    int port;
-    Zera::Proxy::cProxyClient* pcbclient;
-
-    cAdjustChannelInfo* adjustChannelInfo;
-
-    sChannel = getConfData()->m_AdjChannelList.at(activationIt); // the system channel name we work on
-    adjustChannelInfo = new cAdjustChannelInfo();
-    m_adjustChannelInfoHash[sChannel] = adjustChannelInfo;
-
-    port = m_chnPortHash[getConfData()->m_AdjChannelList.at(activationIt)]; // the port
-    if (m_portChannelHash.contains(port))
-    {
-        // the channels share the same interface
-        adjustChannelInfo->m_pPCBInterface = m_adjustChannelInfoHash[m_portChannelHash[port] ]->m_pPCBInterface;
-        emit activationContinue();
-    }
-    else
-    {
-        m_portChannelHash[port] = sChannel;
-        pcbclient = m_pProxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
-        m_pcbClientList.append(pcbclient);
-        m_pcbConnectionState.addTransition(pcbclient, &Zera::Proxy::cProxyClient::connected, &m_pcbConnectionLoopState);
-        pcbInterface = new Zera::Server::cPCBInterface();
-        m_pcbInterfaceList.append(pcbInterface);
-        pcbInterface->setClient(pcbclient);
-        connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
-        adjustChannelInfo->m_pPCBInterface = pcbInterface;
-        m_pProxy->startConnection((pcbclient));
-    }
-}
-
-
-void cAdjustmentModuleMeasProgram::pcbConnectionLoop()
-{
-    activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-    if (activationIt == 0)
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
-
-void cAdjustmentModuleMeasProgram::readChnAlias()
-{
-    QString name;
-
-    name = getConfData()->m_AdjChannelList.at(activationIt);
-    m_MsgNrCmdList[m_adjustChannelInfoHash[name]->m_pPCBInterface->getAlias(name)] = readchnalias;
-}
-
-
-void cAdjustmentModuleMeasProgram::readChnAliasLoop()
-{
-    activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-    if (activationIt == 0)
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
-
-void cAdjustmentModuleMeasProgram::readRangelist()
-{
-    QString name;
-
-    name = getConfData()->m_AdjChannelList.at(activationIt);
-    m_MsgNrCmdList[m_adjustChannelInfoHash[name]->m_pPCBInterface->getRangeList(name)] = readrangelist;
-}
-
-
-void cAdjustmentModuleMeasProgram::readRangelistLoop()
-{
-    activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-    if (activationIt == 0)
-        emit activationContinue();
-    else
-        emit activationLoop();
-}
-
-
-void cAdjustmentModuleMeasProgram::searchActualValues()
-{
-    bool error;
-    adjInfoType adjInfo;
-
-    error = false;
-
-    adjInfo = getConfData()->m_ReferenceAngle;
-    if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-        error = true;
-    adjInfo = getConfData()->m_ReferenceFrequency;
-    if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-        error = true;
-
-    for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++)
-    {
-        // we test if all configured actual value data exist
-        QString chn;
-
-        chn = getConfData()->m_AdjChannelList.at(i);
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
-
-        if (adjInfo.m_bAvail)
-            if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            {
-                error = true;
-                break;
-            }
-
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
-
-        if (adjInfo.m_bAvail)
-            if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            {
-                error = true;
-                break;
-            }
-
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
-
-        if (adjInfo.m_bAvail)
-            if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            {
-                error = true;
-                break;
-            }
-    }
-
-    if (error)
-    {
-        emit errMsg(moduleActValueErrMsg);
-        emit activationError();
-    }
-    else
-        emit activationContinue();
-}
-
-
-void cAdjustmentModuleMeasProgram::activationDone()
-{
-    m_bActive = true;
-    setInterfaceValidation();
-    connect(&m_AuthTimer, &QTimer::timeout, this , &cAdjustmentModuleMeasProgram::fetchAuthorizationStatus);
-    m_AuthTimer.start(5000);
-    emit activated();
-}
-
 
 void cAdjustmentModuleMeasProgram::deactivateMeas()
 {
@@ -680,29 +647,24 @@ void cAdjustmentModuleMeasProgram::deactivateMeas()
     emit deactivationContinue();
 }
 
-
 void cAdjustmentModuleMeasProgram::deactivateMeasDone()
 {
     emit deactivated();
 }
 
-
 void cAdjustmentModuleMeasProgram::computationStartCommand(QVariant var)
 {
-    if (var.toInt() == 1)
-    {
+    if (var.toInt() == 1) {
         computationIt = 0;
         m_computationMachine.start();
     }
 }
-
 
 void cAdjustmentModuleMeasProgram::computationStart()
 {
     // we have to start adjustment coefficient computation for all particpating pcbservers
     m_MsgNrCmdList[m_pcbInterfaceList.at(computationIt)->adjustComputation()] = adjustcomputation;
 }
-
 
 void cAdjustmentModuleMeasProgram::computationTest()
 {
@@ -713,26 +675,20 @@ void cAdjustmentModuleMeasProgram::computationTest()
         emit computationContinue();
 }
 
-
 void cAdjustmentModuleMeasProgram::computationFinished()
 {
     m_pPARComputation->setValue(QVariant(0));
 }
 
-
 void cAdjustmentModuleMeasProgram::storageStartCommand(QVariant var)
 {
-    int par;
-    par = var.toInt();
-
-    if ((par == 1) || (par == 2))
-    {
+    int par = var.toInt();
+    if ((par == 1) || (par == 2)) {
         storageIt = 0;
         storageType = par;
         m_storageMachine.start();
     }
 }
-
 
 void cAdjustmentModuleMeasProgram::storageStart()
 {
@@ -743,7 +699,6 @@ void cAdjustmentModuleMeasProgram::storageStart()
         m_MsgNrCmdList[m_pcbInterfaceList.at(storageIt)->adjustStorageClamp()] = adjuststorage;
 }
 
-
 void cAdjustmentModuleMeasProgram::storageTest()
 {
     storageIt++;
@@ -753,74 +708,43 @@ void cAdjustmentModuleMeasProgram::storageTest()
         emit storageContinue();
 }
 
-
 void cAdjustmentModuleMeasProgram::storageFinished()
 {
     m_pPARStorage->setValue(QVariant(0));
 }
 
-
 void cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand(QVariant var)
 {
-    QString sysName;
-    QStringList sl;
-    cAdjustChannelInfo* adjChannelinfo;
-
-    sl = var.toString().split(',');
-    sysName = m_AliasChannelHash[sl.at(0)];
-    adjChannelinfo = m_adjustChannelInfoHash[sysName];
-
+    QStringList sl = var.toString().split(',');
+    QString sysName = m_AliasChannelHash[sl.at(0)];
+    cAdjustChannelInfo* adjChannelinfo = m_adjustChannelInfoHash[sysName];
     m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->setAdjustGainStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustgainstatus;
 }
 
-
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand(QVariant var)
 {
-    QString sysName;
-    QStringList sl;
-    cAdjustChannelInfo* adjChannelinfo;
-
-    sl = var.toString().split(',');
-    sysName = m_AliasChannelHash[sl.at(0)];
-    adjChannelinfo = m_adjustChannelInfoHash[sysName];
-
+    QStringList sl = var.toString().split(',');
+    QString sysName = m_AliasChannelHash[sl.at(0)];
+    cAdjustChannelInfo* adjChannelinfo = m_adjustChannelInfoHash[sysName];
     m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->setAdjustPhaseStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustphasestatus;
-
 }
-
 
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand(QVariant var)
 {
-    QString sysName;
-    QStringList sl;
-    cAdjustChannelInfo* adjChannelinfo;
-
-    sl = var.toString().split(',');
-    sysName = m_AliasChannelHash[sl.at(0)];
-    adjChannelinfo = m_adjustChannelInfoHash[sysName];
-
+    QStringList sl = var.toString().split(',');
+    QString sysName = m_AliasChannelHash[sl.at(0)];
+    cAdjustChannelInfo* adjChannelinfo = m_adjustChannelInfoHash[sysName];
     m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->setAdjustOffsetStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustoffsetstatus;
 }
 
-
 void cAdjustmentModuleMeasProgram::setAdjustInitStartCommand(QVariant var)
 {
-    QString chnName;
-    QStringList sl;
-    cAdjustIterators *pits; // pointer iterators
-
-    sl = var.toString().split(',');
-    chnName = sl.at(0);
+    QStringList sl = var.toString().split(',');
+    QString chnName = sl.at(0);
     if (m_adjustIteratorHash.contains(chnName))
-    {
-        pits = m_adjustIteratorHash.take(chnName);
-        delete pits;
-    }
-
-    pits = new cAdjustIterators();
-    m_adjustIteratorHash[chnName] = pits;
+        delete m_adjustIteratorHash.take(chnName);
+    m_adjustIteratorHash[chnName] = new cAdjustIterators();
 }
-
 
 void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
 {
@@ -830,32 +754,26 @@ void cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand(QVariant var)
     m_adjustAmplitudeMachine.start();
 }
 
-
 void cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr()
 {
     m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
     m_MsgNrCmdList[m_AdjustPCBInterface->getAdjGainCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustActualValue)] = getadjgaincorrection;
 }
 
-
 void cAdjustmentModuleMeasProgram::adjustamplitudeSetNode()
 {
-    cAdjustIterators *pits;
-    double Corr;
-
     // we will not crash if the user forgot to initialize the iterators
     // but we will get error messages from server if the iterator becomes
     // greater than adjustment order
+    cAdjustIterators *pits;
     if (m_adjustIteratorHash.contains(m_sAdjustChannel))
         pits = m_adjustIteratorHash[m_sAdjustChannel];
     else
         m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
-
-    Corr = m_AdjustTargetValue * m_AdjustCorrection / m_AdjustActualValue ; // we simlpy correct the actualvalue before calculating corr
+    double Corr = m_AdjustTargetValue * m_AdjustCorrection / m_AdjustActualValue ; // we simlpy correct the actualvalue before calculating corr
     m_MsgNrCmdList[m_AdjustPCBInterface->setGainNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustGainIt, Corr, m_AdjustTargetValue)] = setgainnode;
     pits->m_nAdjustGainIt++;
 }
-
 
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
 {
@@ -865,7 +783,6 @@ void cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand(QVariant var)
     m_adjustPhaseMachine.start();
 }
 
-
 void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
 {
     m_AdjustActualValue = cmpPhase(m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent));
@@ -873,22 +790,17 @@ void cAdjustmentModuleMeasProgram::adjustphaseGetCorr()
     m_MsgNrCmdList[m_AdjustPCBInterface->getAdjPhaseCorrection(m_sAdjustSysName, m_sAdjustRange, m_AdjustFrequency)] = getadjphasecorrection;
 }
 
-
 void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 {
     cAdjustIterators *pits;
-    double Corr;
-
     if (m_adjustIteratorHash.contains(m_sAdjustChannel))
         pits = m_adjustIteratorHash[m_sAdjustChannel];
     else
         m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
-
-    Corr = symAngle((m_AdjustActualValue + m_AdjustCorrection) - m_AdjustTargetValue); // we simlpy correct the actualvalue before calculating corr
+    double Corr = symAngle((m_AdjustActualValue + m_AdjustCorrection) - m_AdjustTargetValue); // we simlpy correct the actualvalue before calculating corr
     m_MsgNrCmdList[m_AdjustPCBInterface->setPhaseNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustPhaseIt, Corr, m_AdjustFrequency)] = setphasenode;
     pits->m_nAdjustPhaseIt++;
 }
-
 
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 {
@@ -898,26 +810,18 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
     m_adjustOffsetMachine.start();
 }
 
-
 void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
 {
-    QList<QString> sl;
-    int port;
-
-    sl = var.toString().split(',');
-    if (sl.count() == 2) // we expect a port number and a command
-    {
-        port = sl.at(0).toInt();
-        if (m_portChannelHash.contains(port))
-        {
+    QList<QString> sl = var.toString().split(',');
+    if (sl.count() == 2) { // we expect a port number and a command
+        int port = sl.at(0).toInt();
+        if (m_portChannelHash.contains(port)) {
             m_MsgNrCmdList[m_adjustChannelInfoHash[m_portChannelHash[port]]->m_pPCBInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
             return;
         }
     }
-
     m_pPARAdjustSend->setError();
 }
-
 
 void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
 {
@@ -925,12 +829,10 @@ void cAdjustmentModuleMeasProgram::writePCBAdjustmentData(QVariant var)
     m_MsgNrCmdList[m_AdjustPCBInterface->setPCBAdjustmentData(var.toString())] = setpcbadjustmentdata;
 }
 
-
 void cAdjustmentModuleMeasProgram::readPCBAdjustmentData(QVariant)
 {
     m_MsgNrCmdList[m_AdjustPCBInterface->getPCBAdjustmentData()] = getpcbadjustmentdata;
 }
-
 
 void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
 {
@@ -938,403 +840,165 @@ void cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData(QVariant var)
     m_MsgNrCmdList[m_AdjustPCBInterface->setClampAdjustmentData(var.toString())] = setclampadjustmentdata;
 }
 
-
 void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData(QVariant)
 {
     m_MsgNrCmdList[m_AdjustPCBInterface->getClampAdjustmentData()] = getclampadjustmentdata;
 }
 
-
-void cAdjustmentModuleMeasProgram::fetchAuthorizationStatus()
-{
-    QList<QString> sysnameList;
-    sysnameList = m_AliasChannelHash.values();
-    m_AdjustPCBInterface = m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
-
-    m_MsgNrCmdList[m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
-}
-
-
 void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) { // 0 was reserved for async. messages
         // that we will ignore
     }
-    else
-    {
+    else {
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
+            if(handleFinishCallback(cmd, reply, answer))
+                return;
             switch (cmd)
             {
-            case sendrmident:
-                if (reply == ack) // we only continue if resource manager acknowledges
-                    emit activationContinue();
-                else
-                {
-                    emit errMsg(tr(rmidentErrMSG));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
-                    emit activationError();
-                }
-                break;
-
-            case readresourcetypes:
-                if ((reply == ack) && (answer.toString().contains("SENSE")))
-                    emit activationContinue();
-                else
-                {
-                    emit errMsg((tr(resourcetypeErrMsg)));
-        #ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-        #endif
-                    emit activationError();
-                }
-                break;
-
-            case readresource:
-            {
-                bool allPresent;
-
-                allPresent = false;
-                if (reply == ack)
-                {
-                    int n;
-                    QString s;
-
-                    s = answer.toString();
-                    allPresent = true;
-                    n = getConfData()->m_nAdjustmentChannelCount;
-                    for (int i = 0; i < n; i++)
-                        allPresent = allPresent && s.contains(getConfData()->m_AdjChannelList.at(i));
-                }
-
-                if (allPresent)
-                    emit activationContinue();
-                else
-                {
-                    emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceErrMsg;
-#endif
-                    emit activationError();
-                }
-                break;
-            }
-
-            case readresourceinfo:
-            {
-                bool ok;
-                int port;
-                QStringList sl;
-
-                sl = answer.toString().split(';');
-                if ((reply ==ack) && (sl.length() >= 4))
-                {
-                    port = sl.at(3).toInt(&ok);
-
-                    if (ok)
-                    {
-                        m_chnPortHash[getConfData()->m_AdjChannelList.at(activationIt)] = port;
-                        emit activationContinue();
-                    }
-
-                    else
-                    {
-                        emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                        qDebug() << resourceInfoErrMsg;
-#endif
-                        emit activationError();
-                    }
-                }
-
-                else
-                {
-                    emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceInfoErrMsg;
-#endif
-                    emit activationError();
-                }
-
-                break;
-
-            }
-
-            case readchnalias:
-            {
-                if (reply == ack)
-                {
-                    QString alias, sysName;
-                    alias = answer.toString();
-                    sysName = getConfData()->m_AdjChannelList.at(activationIt);
-                    m_AliasChannelHash[alias] = sysName;
-                    m_adjustChannelInfoHash[sysName]->m_sAlias = alias;
-                    emit activationContinue();
-                }
-                else
-                {
-                    emit errMsg((tr(readaliasErrMsg)));
-        #ifdef DEBUG
-                    qDebug() << readaliasErrMsg;
-        #endif
-                    emit activationError();
-                }
-                break;
-            }
-
-            case readrangelist:
-                if (reply == ack)
-                {
-                    m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(activationIt)]->m_sRangelist = answer.toStringList();
-                    emit activationContinue();
-                }
-                else
-                {
-                    emit errMsg((tr(readrangelistErrMsg)));
-        #ifdef DEBUG
-                    qDebug() << readrangelistErrMsg;
-        #endif
-                    emit activationError();
-                }
-                break;
 
             case adjustcomputation:
                 if (reply == ack)
-                {
                     emit computationContinue();
-                }
-                else
-                {
+                else {
                     m_computationMachine.stop();
-                    emit errMsg((tr(adjustcomputationPCBErrMSG)));
-#ifdef DEBUG
-                    qDebug() << adjustcomputationPCBErrMSG;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(adjustcomputationPCBErrMSG));
                 }
                 break;
 
             case adjuststorage:
                 if (reply == ack)
-                {
                     emit storageContinue();
-                }
-                else
-                {
+                else {
                     m_storageMachine.stop();
-                    emit errMsg((tr(adjuststoragePCBErrMSG)));
-#ifdef DEBUG
-                    qDebug() << adjuststoragePCBErrMSG;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(adjuststoragePCBErrMSG));
                     m_pPARStorage->setError();
                 }
                 break;
 
             case setadjustgainstatus:
                 if (reply == ack)
-                {
                     m_pPARAdjustGainStatus->setValue(QVariant(0));
-                }
-                else
-                {
-                    emit errMsg((tr(adjuststatusPCBErrMSG)));
-#ifdef DEBUG
-                    qDebug() << adjuststatusPCBErrMSG;
-#endif
-                    emit executionError();
+                else {
+                    notifyExecutionError(tr(adjuststatusPCBErrMSG));
                     m_pPARAdjustGainStatus->setError();
                 }
                 break;
 
             case setadjustphasestatus:
                 if (reply == ack)
-                {
                     m_pPARAdjustPhaseStatus->setValue(QVariant(0));
-                }
-                else
-                {
-                    emit errMsg((tr(adjuststatusPCBErrMSG)));
-#ifdef DEBUG
-                    qDebug() << adjuststatusPCBErrMSG;
-#endif
-                    emit executionError();
+                else {
+                    notifyExecutionError(tr(adjuststatusPCBErrMSG));
                     m_pPARAdjustPhaseStatus->setError();
                 }
                 break;
 
-
             case setadjustoffsetstatus:
                 if (reply == ack)
-                {
                     m_pPARAdjustOffsetStatus->setValue(QVariant(0));
-                }
-                else
-                {
-                    emit errMsg((tr(adjuststatusPCBErrMSG)));
-#ifdef DEBUG
-                    qDebug() << adjuststatusPCBErrMSG;
-#endif
-                    emit executionError();
+                else {
+                    notifyExecutionError(tr(adjuststatusPCBErrMSG));
                     m_pPARAdjustOffsetStatus->setError();
                 }
                 break;
 
-
             case getadjgaincorrection:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_AdjustCorrection = answer.toDouble();
                     emit adjustamplitudeContinue();
                 }
-                else
-                {
-                    emit errMsg(readGainCorrErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << readGainCorrErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(readGainCorrErrMsg));
                     m_pPARAdjustAmplitude->setError();
                 }
                 break;
 
             case setgainnode:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     emit adjustamplitudeContinue();
                     m_pPARAdjustAmplitude->setValue(receivedPar);
                 }
-                else
-                {
-                    emit errMsg(setGainNodeErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << setGainNodeErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(setGainNodeErrMsg));
                     m_pPARAdjustAmplitude->setError();
                 }
                 break;
 
             case enGetAdjOffsetCorrection:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_AdjustCorrection = answer.toDouble();
                     emit adjustoffsetContinue();
                 }
-                else
-                {
-                    emit errMsg(readOffsetCorrErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << readOffsetCorrErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(readOffsetCorrErrMsg));
                     m_pPARAdjustOffset->setError();
                 }
                 break;
 
             case enGetAdjOffsetRejection:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_AdjustRejection = answer.toDouble();
                     emit adjustoffsetContinue();
                 }
-                else
-                {
-                    emit errMsg(readrangerejectionErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << readrangerejectionErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(readrangerejectionErrMsg));
                     m_pPARAdjustOffset->setError();
                 }
                 break;
 
             case enGetAdjOffsetRejectionValue:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_AdjustRejectionValue = answer.toDouble();
                     emit adjustoffsetContinue();
                 }
-                else
-                {
-                    emit errMsg(readrangeurvalueErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << readrangeurvalueErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(readrangeurvalueErrMsg));
                     m_pPARAdjustOffset->setError();
                 }
                 break;
 
             case setoffsetnode:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_pPARAdjustOffset->setValue(receivedPar);
                     emit adjustoffsetContinue();
                 }
-                else
-                {
-                    emit errMsg(setOffsetNodeErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << setOffsetNodeErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(setOffsetNodeErrMsg));
                     m_pPARAdjustOffset->setError();
                 }
                 break;
 
             case getadjphasecorrection:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_AdjustCorrection = answer.toDouble();
                     emit adjustphaseContinue();
                 }
-                else
-                {
-                    emit errMsg(readPhaseCorrErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << readPhaseCorrErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(readPhaseCorrErrMsg));
                     m_pPARAdjustPhase->setError();
                 }
                 break;
 
             case setphasenode:
-                if (reply == ack)
-                {
+                if (reply == ack) {
                     m_pPARAdjustPhase->setValue(receivedPar);
                     emit adjustphaseContinue();
                 }
-                else
-                {
-                    emit errMsg(setPhaseNodeErrMsg);
+                else {
                     emit adjustError();
-#ifdef DEBUG
-                    qDebug() << setPhaseNodeErrMsg;
-#endif
-                    emit executionError();
+                    notifyExecutionError(tr(setPhaseNodeErrMsg));
                     m_pPARAdjustPhase->setError();
                 }
-                break;
-
-            case getauthorizationstatus:
-                if (reply == ack)
-                    m_bAuthorized = (answer.toInt() > 0);
-                else
-                    emit errMsg(readauthorizationErrMSG);
                 break;
 
             case sendtransparentcmd:
@@ -1346,19 +1010,16 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case getpcbadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustPCBData->setValue(answer);
-                else
-                {
+                else {
                     m_pPARAdjustPCBData->setError();
                     emit errMsg(readPCBXMLMSG);
                 }
                 break;
 
-
             case setpcbadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustPCBData->setValue(receivedPar);
-                else
-                {
+                else {
                     m_pPARAdjustPCBData->setError();
                     emit errMsg(writePCBXMLMSG);
                 }
@@ -1367,8 +1028,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case getclampadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustClampData->setValue(answer);
-                else
-                {
+                else {
                     m_pPARAdjustClampData->setError();
                     emit errMsg(readClampXMLMSG);
                 }
@@ -1377,8 +1037,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
             case setclampadjustmentdata:
                 if (reply == ack)
                     m_pPARAdjustClampData->setValue(receivedPar);
-                else
-                {
+                else {
                     m_pPARAdjustClampData->setError();
                     emit errMsg(writeClampXMLMSG);
                 }
@@ -1394,6 +1053,3 @@ cAdjustIterators::cAdjustIterators()
 }
 
 }
-
-
-
