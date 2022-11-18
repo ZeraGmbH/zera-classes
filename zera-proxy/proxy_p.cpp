@@ -107,8 +107,10 @@ quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMess
     QByteArray ba = m_ConnectionHash[client]->m_binUUID;
     message->set_clientid(ba.data(), ba.size()); // we put the client's id into message
 
-    if (m_nMessageNumber == 0) m_nMessageNumber++; // we never use 0 as message number (reserved)
-    message->set_messagenr(nr = m_nMessageNumber);
+    if (m_nMessageNumber == 0)
+        m_nMessageNumber++; // we never use 0 as message number (reserved)
+    nr = m_nMessageNumber;
+    message->set_messagenr(nr);
     m_nMessageNumber++; // increment message number
 
     m_ConnectionHash[client]->m_pNetClient->sendMessage(*message);
