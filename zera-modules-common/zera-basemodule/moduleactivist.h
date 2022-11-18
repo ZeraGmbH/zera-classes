@@ -5,6 +5,8 @@
 #include <QObject>
 #include <QJsonArray>
 #include <QStateMachine>
+#include <QHash>
+#include <functional>
 
 // pure virtual class for all objects living in a module, which generate an interface
 // and/or which can do something after it got activated
@@ -39,9 +41,12 @@ protected:
     void notifyActivationError(QVariant value, int dest = globalDest);
     void notifyDeactivationError(QVariant value, int dest = globalDest);
     void notifyExecutionError(QVariant value, int dest = globalDest);
+    bool handleFinishCallback(int cmdNumber, quint8 reply, QVariant answer);
+
     bool m_bActive;
     QStateMachine m_activationMachine;
     QStateMachine m_deactivationMachine;
+    QHash<int, std::function<void(quint8 reply, QVariant answer)>> m_cmdFinishCallbacks;
 };
 
 #endif // MODULEACITIVIST_H
