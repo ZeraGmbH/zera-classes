@@ -118,6 +118,7 @@ public slots:
 
 private:
     cAdjustmentModuleConfigData* getConfData();
+    void setUpAvtivationsStateMachine();
 
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
@@ -236,10 +237,6 @@ private:
 private slots:
     void setInterfaceValidation();
 
-    void rmConnect();
-    void sendRMIdent();
-    void readResourceTypes();
-    void readResource();
     void readResourceInfo();
     void readResourceInfoLoop();
     void pcbConnection();

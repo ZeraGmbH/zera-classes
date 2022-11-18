@@ -20,56 +20,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_pRMInterface = new Zera::Server::cRMInterface();
     m_bAuthorized = true; // per default we are authorized
 
-    // setting up statemachine for "activating" adjustment
-    // m_rmConnectState.addTransition is done in rmConnect
-    m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
-    m_readResourceState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
-    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionState);
-    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readResourceInfoState);
-    m_pcbConnectionState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionLoopState);
-    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasState);
-    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_pcbConnectionState);
-    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
-    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistState);
-    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readChnAliasState);
-    m_readRangelistState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistLoopState);
-    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_searchActualValuesState);
-    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readRangelistState);
-    m_searchActualValuesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_activationDoneState);
-
-    m_activationMachine.addState(&m_rmConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.addState(&m_readResourceState);
-    m_activationMachine.addState(&m_readResourceInfoState);
-    m_activationMachine.addState(&m_readResourceInfoLoopState);
-    m_activationMachine.addState(&m_pcbConnectionState);
-    m_activationMachine.addState(&m_pcbConnectionLoopState);
-    m_activationMachine.addState(&m_readChnAliasState);
-    m_activationMachine.addState(&m_readChnAliasLoopState);
-    m_activationMachine.addState(&m_readRangelistState);
-    m_activationMachine.addState(&m_readRangelistLoopState);
-    m_activationMachine.addState(&m_searchActualValuesState);
-    m_activationMachine.addState(&m_activationDoneState);
-
-    m_activationMachine.setInitialState(&m_rmConnectState);
-
-    connect(&m_rmConnectState, &QState::entered, this, &cAdjustmentModuleMeasProgram::rmConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cAdjustmentModuleMeasProgram::sendRMIdent);
-    connect(&m_readResourceTypesState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceTypes);
-    connect(&m_readResourceState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResource);
-    connect(&m_readResourceInfoState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfo);
-    connect(&m_readResourceInfoLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfoLoop);
-    connect(&m_pcbConnectionState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnection);
-    connect(&m_pcbConnectionLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnectionLoop);
-    connect(&m_readChnAliasState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAlias);
-    connect(&m_readChnAliasLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAliasLoop);
-    connect(&m_readRangelistState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelist);
-    connect(&m_readRangelistLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelistLoop);
-    connect(&m_searchActualValuesState, &QState::entered, this, &cAdjustmentModuleMeasProgram::searchActualValues);
-    connect(&m_activationDoneState, &QState::entered, this, &cAdjustmentModuleMeasProgram::activationDone);
+    setUpAvtivationsStateMachine();
 
     // setting up statemachine deactivation
     m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
@@ -191,6 +142,76 @@ void cAdjustmentModuleMeasProgram::stop()
 cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
 {
     return qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
+void cAdjustmentModuleMeasProgram::setUpAvtivationsStateMachine()
+{
+    m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
+    m_readResourceState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoState);
+    m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
+    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionState);
+    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readResourceInfoState);
+    m_pcbConnectionState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionLoopState);
+    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasState);
+    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_pcbConnectionState);
+    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
+    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistState);
+    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readChnAliasState);
+    m_readRangelistState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistLoopState);
+    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_searchActualValuesState);
+    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readRangelistState);
+    m_searchActualValuesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_activationDoneState);
+
+    m_activationMachine.addState(&m_IdentifyState);
+    m_activationMachine.addState(&m_readResourceTypesState);
+    m_activationMachine.addState(&m_readResourceState);
+    m_activationMachine.addState(&m_readResourceInfoState);
+    m_activationMachine.addState(&m_readResourceInfoLoopState);
+    m_activationMachine.addState(&m_pcbConnectionState);
+    m_activationMachine.addState(&m_pcbConnectionLoopState);
+    m_activationMachine.addState(&m_readChnAliasState);
+    m_activationMachine.addState(&m_readChnAliasLoopState);
+    m_activationMachine.addState(&m_readRangelistState);
+    m_activationMachine.addState(&m_readRangelistLoopState);
+    m_activationMachine.addState(&m_searchActualValuesState);
+    m_activationMachine.addState(&m_activationDoneState);
+
+    // m_rmConnectState.addTransition is done in rmConnectState entered handler
+    m_activationMachine.addState(&m_rmConnectState);
+    m_activationMachine.setInitialState(&m_rmConnectState);
+    connect(&m_rmConnectState, &QState::entered, this, [&]() {
+        // we instantiate a working resource manager interface first
+        // so first we try to get a connection to resource manager over proxy
+        m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+        m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+        // and then we set connection resource manager interface's connection
+        m_pRMInterface->setClient(m_pRMClient); //
+        // todo insert timer for timeout
+
+        connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
+        m_pProxy->startConnection(m_pRMClient);
+    });
+    connect(&m_IdentifyState, &QState::entered, this, [&]() {
+        m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("Adjustment"))] = sendrmident;
+    });
+    connect(&m_readResourceTypesState, &QState::entered, this, [&]() {
+        m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    });
+    connect(&m_readResourceState, &QState::entered, this, [&]() {
+        m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+        activationIt = 0; // we prepare iteration for querying the pcbservers
+    });
+    connect(&m_readResourceInfoState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfo);
+    connect(&m_readResourceInfoLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readResourceInfoLoop);
+    connect(&m_pcbConnectionState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnection);
+    connect(&m_pcbConnectionLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::pcbConnectionLoop);
+    connect(&m_readChnAliasState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAlias);
+    connect(&m_readChnAliasLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readChnAliasLoop);
+    connect(&m_readRangelistState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelist);
+    connect(&m_readRangelistLoopState, &QState::entered, this, &cAdjustmentModuleMeasProgram::readRangelistLoop);
+    connect(&m_searchActualValuesState, &QState::entered, this, &cAdjustmentModuleMeasProgram::searchActualValues);
+    connect(&m_activationDoneState, &QState::entered, this, &cAdjustmentModuleMeasProgram::activationDone);
 }
 
 
@@ -483,40 +504,6 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 bool cAdjustmentModuleMeasProgram::isAuthorized()
 {
     return m_bAuthorized;
-}
-
-
-void cAdjustmentModuleMeasProgram::rmConnect()
-{
-    // we instantiate a working resource manager interface first
-    // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
-    // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
-    // todo insert timer for timeout
-
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pRMClient);
-}
-
-
-void cAdjustmentModuleMeasProgram::sendRMIdent()
-{
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("Adjustment"))] = sendrmident;
-}
-
-
-void cAdjustmentModuleMeasProgram::readResourceTypes()
-{
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
-}
-
-
-void cAdjustmentModuleMeasProgram::readResource()
-{
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
-    activationIt = 0; // we prepare iteration for querying the pcbservers
 }
 
 
