@@ -36,6 +36,9 @@ public slots:
     virtual void deactivate(); // what do you think ? yes you're right
     virtual void generateInterface() = 0; // here we export our interface (entities)
 protected:
+    void notifyActivationError(QVariant value, int dest = globalDest);
+    void notifyDeactivationError(QVariant value, int dest = globalDest);
+    void notifyExecutionError(QVariant value, int dest = globalDest);
     bool m_bActive;
     QStateMachine m_activationMachine;
     QStateMachine m_deactivationMachine;
