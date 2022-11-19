@@ -1,12 +1,20 @@
 #include "adjustmentmoduleactivator.h"
 #include "adjustmentmodule.h"
+#include "adjustmentmoduleconfiguration.h"
+
 #include "errormessages.h"
 #include "reply.h"
 
 namespace ADJUSTMENTMODULE
 {
 
-AdjustmentModuleActivator::AdjustmentModuleActivator(AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData) :
+AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
+                                                     Zera::Proxy::cProxy *proxy,
+                                                     std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
+                                                     AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData) :
+    m_proxy(proxy),
+    m_module(module),
+    m_configuration(pConfiguration),
     m_moduleAndServices(moduleObjects),
     m_activationData(activationData)
 {
@@ -20,12 +28,12 @@ void AdjustmentModuleActivator::setUpStateMachine()
     connect(&m_rmConnectState, &QState::entered, this, [&]() {
         // we instantiate a working resource manager interface first
         // so first we try to get a connection to resource manager over proxy
-        m_moduleAndServices.m_pRMClient = m_moduleAndServices.m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+        m_moduleAndServices.m_pRMClient = m_proxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
         m_rmConnectState.addTransition(m_moduleAndServices.m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
         m_moduleAndServices.m_pRMInterface->setClient(m_moduleAndServices.m_pRMClient);
         connect(m_moduleAndServices.m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-        m_moduleAndServices.m_pProxy->startConnection(m_moduleAndServices.m_pRMClient);
+        m_proxy->startConnection(m_moduleAndServices.m_pRMClient);
     });
 
     m_activationMachine.addState(&m_IdentifyState);
@@ -119,7 +127,7 @@ void AdjustmentModuleActivator::setUpStateMachine()
         }
         else {
             m_activationData.m_portChannelHash[port] = sChannel;
-            Zera::Proxy::cProxyClient* pcbclient = m_moduleAndServices.m_pProxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
+            Zera::Proxy::cProxyClient* pcbclient = m_proxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
             m_activationData.m_pcbClientList.append(pcbclient);
             m_pcbConnectionState.addTransition(pcbclient, &Zera::Proxy::cProxyClient::connected, &m_pcbConnectionLoopState);
             m_moduleAndServices.pcbInterface = new Zera::Server::cPCBInterface();
@@ -127,7 +135,7 @@ void AdjustmentModuleActivator::setUpStateMachine()
             m_moduleAndServices.pcbInterface->setClient(pcbclient);
             connect(m_moduleAndServices.pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
             adjustChannelInfo->m_pPCBInterface = m_moduleAndServices.pcbInterface;
-            m_moduleAndServices.m_pProxy->startConnection((pcbclient));
+            m_proxy->startConnection((pcbclient));
         }
     });
 
@@ -203,27 +211,27 @@ void AdjustmentModuleActivator::setUpStateMachine()
     connect(&m_searchActualValuesState, &QState::entered, this, [&] () {
         bool error = false;
         adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
-        if (!m_moduleAndServices.m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+        if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
             error = true;
         adjInfo = getConfData()->m_ReferenceFrequency;
-        if (!m_moduleAndServices.m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+        if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
             error = true;
         for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
             // we test if all configured actual value data exist
             QString chn = getConfData()->m_AdjChannelList.at(i);
 
             adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
-            if (adjInfo.m_bAvail && !m_moduleAndServices.m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+            if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
                 error = true;
                 break;
             }
             adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
-            if (adjInfo.m_bAvail && !m_moduleAndServices.m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+            if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
                 error = true;
                 break;
             }
             adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
-            if (adjInfo.m_bAvail && !m_moduleAndServices.m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+            if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
                 error = true;
                 break;
             }
@@ -263,7 +271,7 @@ void AdjustmentModuleActivator::catchInterfaceAnswer(quint32 msgnr, quint8 reply
 
 cAdjustmentModuleConfigData *AdjustmentModuleActivator::getConfData()
 {
-    return m_moduleAndServices.m_confData;
+    return qobject_cast<cAdjustmentModuleConfiguration*>(m_configuration.get())->getConfigurationData();
 }
 
 }
