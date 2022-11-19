@@ -3,6 +3,7 @@
 
 #include "adjustmentmodulecommon.h"
 #include "moduleactivist.h"
+#include "basemoduleconfiguration.h"
 #include <QState>
 #include <QFinalState>
 #include <QStateMachine>
@@ -16,7 +17,10 @@ class AdjustmentModuleActivator : public cModuleActivist
 {
     Q_OBJECT
 public:
-    AdjustmentModuleActivator(AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData);
+    AdjustmentModuleActivator(cAdjustmentModule* module,
+                              Zera::Proxy::cProxy* proxy,
+                              std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
+                              AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData);
     void setUpStateMachine();
 signals:
 private slots:
@@ -26,6 +30,9 @@ private:
 
     AdjustmentServersAndConfig &m_moduleAndServices;
     AdjustmentModuleActivateData &m_activationData;
+    cAdjustmentModule* m_module;
+    Zera::Proxy::cProxy *m_proxy;
+    std::shared_ptr<cBaseModuleConfiguration> m_configuration;
 
     QState m_rmConnectState; // we must connect first to resource manager
     QState m_IdentifyState; // we must identify ourself at resource manager

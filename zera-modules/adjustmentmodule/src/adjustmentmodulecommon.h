@@ -14,12 +14,9 @@ class cAdjustmentModule;
 
 struct AdjustmentServersAndConfig
 {
-    cAdjustmentModule *m_pModule;
-    cAdjustmentModuleConfigData *m_confData;
     Zera::Server::cRMInterface *m_pRMInterface;
     Zera::Proxy::cProxyClient *m_pRMClient;
     Zera::Server::cPCBInterface *pcbInterface;
-    Zera::Proxy::cProxy *m_pProxy;
     Zera::Server::cPCBInterface *m_AdjustPCBInterface;
     std::function<void(void)> setInterfaceValidation;
 };
