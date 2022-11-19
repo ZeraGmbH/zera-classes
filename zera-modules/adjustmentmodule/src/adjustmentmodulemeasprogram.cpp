@@ -649,6 +649,7 @@ void cAdjustmentModuleMeasProgram::deactivateMeas()
 
 void cAdjustmentModuleMeasProgram::deactivateMeasDone()
 {
+    m_pProxy->releaseConnection(m_pRMClient);
     emit deactivated();
 }
 
