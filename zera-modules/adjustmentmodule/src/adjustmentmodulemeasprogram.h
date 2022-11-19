@@ -1,7 +1,6 @@
 #ifndef ADJUSTMENTMODULEMEASPROGRAM_H
 #define ADJUSTMENTMODULEMEASPROGRAM_H
 
-
 #include "adjustmentmoduleconfigdata.h"
 #include "basemeasworkprogram.h"
 #include "measchannelinfo.h"
