@@ -2,7 +2,6 @@
 #include "adjustmentmoduleconfiguration.h"
 #include "adjustmentmoduleconfigdata.h"
 #include "adjustmentmodulemeasprogram.h"
-#include "debug.h"
 #include <errormessages.h>
 
 namespace ADJUSTMENTMODULE
