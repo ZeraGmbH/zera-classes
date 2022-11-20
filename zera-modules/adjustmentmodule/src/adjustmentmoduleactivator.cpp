@@ -245,21 +245,9 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
     m_activationMachine.addState(&m_activationDoneState);
     connect(&m_activationDoneState, &QState::entered, this, [&]() {
         m_bActive = true;
-        m_moduleAndServices.setInterfaceValidation();
-        connect(&m_AuthTimer, &QTimer::timeout, this , [&]() {
-            QList<QString> sysnameList = m_activationData.m_AliasChannelHash.values();
-            m_moduleAndServices.m_AdjustPCBInterface = m_activationData.m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
-            m_MsgNrCmdList[m_moduleAndServices.m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
-        });
-        m_AuthTimer.start(5000);
+        emit activationReadyForInterface();
         emit activated();
     });
-    m_cmdFinishCallbacks[getauthorizationstatus] = [&](quint8 reply, QVariant answer) {
-        if (reply == ack)
-            m_activationData.m_bAuthorized = (answer.toInt() > 0);
-        else
-            emit errMsg(readauthorizationErrMSG);
-    };
 }
 
 void AdjustmentModuleActivator::setUpDeactivationStateMachine()
@@ -269,7 +257,6 @@ void AdjustmentModuleActivator::setUpDeactivationStateMachine()
     m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
     connect(&m_deactivateState, &QState::entered, this, [&]() {
         m_bActive = false;
-        m_AuthTimer.stop();
         emit deactivationContinue();
     });
 
