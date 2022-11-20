@@ -9,11 +9,6 @@
 
 namespace ADJUSTMENTMODULE
 {
-class cAdjustmentModule;
-
-struct AdjustmentServersAndConfig
-{
-};
 
 class cAdjustChannelInfo;
 

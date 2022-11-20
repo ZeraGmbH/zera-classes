@@ -11,11 +11,10 @@ namespace ADJUSTMENTMODULE
 AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
                                                      Zera::Proxy::cProxy *proxy,
                                                      std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
-                                                     AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData) :
+                                                     AdjustmentModuleActivateData &activationData) :
     m_proxy(proxy),
     m_module(module),
     m_configuration(pConfiguration),
-    m_moduleAndServices(moduleObjects),
     m_activationData(activationData)
 {
 }
