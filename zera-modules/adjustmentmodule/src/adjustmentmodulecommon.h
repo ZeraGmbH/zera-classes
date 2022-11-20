@@ -13,7 +13,6 @@ class cAdjustmentModule;
 
 struct AdjustmentServersAndConfig
 {
-    Zera::Server::cPCBInterface *m_AdjustPCBInterface;
 };
 
 class cAdjustChannelInfo;
