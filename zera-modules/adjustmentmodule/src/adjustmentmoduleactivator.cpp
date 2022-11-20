@@ -265,8 +265,8 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
 void AdjustmentModuleActivator::setUpDeactivationStateMachine()
 {
     m_deactivationMachine.addState(&m_deactivateState);
-    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
     m_deactivationMachine.setInitialState(&m_deactivateState);
+    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
     connect(&m_deactivateState, &QState::entered, this, [&]() {
         m_bActive = false;
         m_AuthTimer.stop();
