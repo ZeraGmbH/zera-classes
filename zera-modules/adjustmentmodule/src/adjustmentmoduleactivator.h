@@ -2,6 +2,7 @@
 #define ADJUSTMENTMODULEACTIVATOR_H
 
 #include "adjustmentmodulecommon.h"
+#include "adjustmentmodule.h"
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
 #include "rminterface.h"
@@ -21,7 +22,7 @@ public:
     AdjustmentModuleActivator(cAdjustmentModule* module,
                               Zera::Proxy::cProxy* proxy,
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
-                              AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData);
+                              AdjustmentModuleActivateData &activationData);
     void setUpActivationStateMachine();
     void setUpDeactivationStateMachine();
 
@@ -34,7 +35,6 @@ private slots:
 private:
     cAdjustmentModuleConfigData *getConfData();
 
-    AdjustmentServersAndConfig &m_moduleAndServices;
     AdjustmentModuleActivateData &m_activationData;
     cAdjustmentModule* m_module;
     Zera::Proxy::cProxy *m_proxy;
