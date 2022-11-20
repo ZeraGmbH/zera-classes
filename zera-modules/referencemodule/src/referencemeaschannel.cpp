@@ -8,7 +8,6 @@ namespace REFERENCEMODULE
 cReferenceMeasChannel::cReferenceMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
     :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
     // setting up statemachine for "activating" reference meas channel
@@ -97,7 +96,6 @@ cReferenceMeasChannel::cReferenceMeasChannel(Zera::Proxy::cProxy* proxy, cSocket
 
 cReferenceMeasChannel::~cReferenceMeasChannel()
 {
-    delete m_pRMInterface;
     delete m_pPCBInterface;
 }
 
@@ -474,10 +472,10 @@ void cReferenceMeasChannel::rmConnect()
     m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
     m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
+    m_rmInterface.setClient(m_pRMClient); //
     // todo insert timer for timeout
 
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     m_pProxy->startConnection(m_pRMClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -497,25 +495,25 @@ void cReferenceMeasChannel::rmConnect()
 
 void cReferenceMeasChannel::sendRMIdent()
 {
-   m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("ReferenceMeasChannel%1").arg(m_nChannelNr))] = sendmeaschannelrmident;
+   m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ReferenceMeasChannel%1").arg(m_nChannelNr))] = sendmeaschannelrmident;
 }
 
 
 void cReferenceMeasChannel::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
 }
 
 
 void cReferenceMeasChannel::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
 }
 
 
 void cReferenceMeasChannel::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", m_sName)] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", m_sName)] = readresourceinfo;
 }
 
 
@@ -605,7 +603,7 @@ void cReferenceMeasChannel::deactivationInit()
 void cReferenceMeasChannel::deactivationDone()
 {
     // and disconnect for our servers afterwards
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
 }

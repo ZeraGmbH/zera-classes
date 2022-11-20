@@ -31,7 +31,6 @@ namespace THDNMODULE
 cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
@@ -130,8 +129,6 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, Zera::Proxy:
 
 cThdnModuleMeasProgram::~cThdnModuleMeasProgram()
 {
-    delete m_pRMInterface;
-
     if (m_pcbIFaceList.count() > 0)
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
@@ -704,28 +701,28 @@ void cThdnModuleMeasProgram::resourceManagerConnect()
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient);
+    m_rmInterface.setClient(m_pRMClient);
     m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     m_pProxy->startConnection(m_pRMClient);
 }
 
 
 void cThdnModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("ThdnModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ThdnModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
 void cThdnModuleMeasProgram::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
 }
 
 
 void cThdnModuleMeasProgram::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
 }
 
 
@@ -739,7 +736,7 @@ void cThdnModuleMeasProgram::readResourceInfos()
 void cThdnModuleMeasProgram::readResourceInfo()
 {
     channelInfoRead = channelInfoReadList.takeLast();
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
 }
 
 
@@ -832,13 +829,13 @@ void cThdnModuleMeasProgram::claimPGRMem()
 {
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
-    m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
+    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
 
 
 void cThdnModuleMeasProgram::claimUSERMem()
 {
-   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
+   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
 
 
@@ -888,19 +885,19 @@ void cThdnModuleMeasProgram::freePGRMem()
     // we always destroy the whole interface even in case of new configuration while running
     // so the list are gone anyway
 
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
 
 void cThdnModuleMeasProgram::freeUSERMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = freeusermem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
 
 
 void cThdnModuleMeasProgram::deactivateDSPdone()
 {
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
     for (int i = 0; i < m_pcbIFaceList.count(); i++)
         disconnect(m_pcbIFaceList.at(i), 0 ,this, 0);

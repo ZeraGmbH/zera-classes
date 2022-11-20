@@ -14,7 +14,6 @@ class cAdjustmentModule;
 
 struct AdjustmentServersAndConfig
 {
-    Zera::Server::cRMInterface *m_pRMInterface;
     Zera::Proxy::cProxyClient *m_pRMClient;
     Zera::Server::cPCBInterface *pcbInterface;
     Zera::Server::cPCBInterface *m_AdjustPCBInterface;

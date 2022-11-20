@@ -13,7 +13,6 @@ namespace STATUSMODULE
 cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy* proxy, cStatusModuleConfigData& configData)
     :m_pModule(module), m_pProxy(proxy), m_ConfigData(configData)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
     m_pDSPInterface = new Zera::Server::cDSPInterface();
 
@@ -99,7 +98,6 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
 
 cStatusModuleInit::~cStatusModuleInit()
 {
-    delete m_pRMInterface;
     delete m_pPCBInterface;
     delete m_pDSPInterface;
 }
@@ -478,9 +476,9 @@ void cStatusModuleInit::resourceManagerConnect()
     // first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
+    m_rmInterface.setClient(m_pRMClient); //
     m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -488,7 +486,7 @@ void cStatusModuleInit::resourceManagerConnect()
 
 void cStatusModuleInit::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("VersionModuleInit%1").arg(m_pModule->getModuleNr()))] = STATUSMODINIT::sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("VersionModuleInit%1").arg(m_pModule->getModuleNr()))] = STATUSMODINIT::sendrmident;
 }
 
 
@@ -598,7 +596,7 @@ void cStatusModuleInit::deactivationDone()
     m_pProxy->releaseConnection(m_pDSPClient);
     m_pProxy->releaseConnection(m_pPCBClient);
     // and disconnect from our servers afterwards
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();

@@ -4,6 +4,7 @@
 #include "adjustmentmodulecommon.h"
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
+#include "rminterface.h"
 #include <QState>
 #include <QFinalState>
 #include <QStateMachine>
@@ -33,6 +34,7 @@ private:
     cAdjustmentModule* m_module;
     Zera::Proxy::cProxy *m_proxy;
     std::shared_ptr<cBaseModuleConfiguration> m_configuration;
+    Zera::Server::cRMInterface m_rmInterface;
 
     QState m_rmConnectState; // we must connect first to resource manager
     QState m_IdentifyState; // we must identify ourself at resource manager

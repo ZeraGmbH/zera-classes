@@ -16,7 +16,6 @@ namespace SAMPLEMODULE
 cSampleChannel::cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configdata, quint8 chnnr)
     :m_pModule(module), m_ConfigData(configdata), cBaseSampleChannel(proxy, configdata.m_ObsermaticConfPar.m_sSampleSystem, chnnr)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
     // setting up statemachine for "activating" sample channel
@@ -68,7 +67,6 @@ cSampleChannel::~cSampleChannel()
 {
     m_pProxy->releaseConnection(m_pRMClient);
     m_pProxy->releaseConnection(m_pPCBClient);
-    delete m_pRMInterface;
     delete m_pPCBInterface;
 }
 
@@ -276,10 +274,10 @@ void cSampleChannel::rmConnect()
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
+    m_rmInterface.setClient(m_pRMClient); //
     // todo insert timer for timeout
 
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -296,31 +294,31 @@ void cSampleChannel::rmConnect()
 
 void cSampleChannel::sendRMIdent()
 {
-   m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("SampleChannel%1").arg(m_nChannelNr))] = sendsamplechannelrmident;
+   m_MsgNrCmdList[m_rmInterface.rmIdent(QString("SampleChannel%1").arg(m_nChannelNr))] = sendsamplechannelrmident;
 }
 
 
 void cSampleChannel::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypessamplechannel;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypessamplechannel;
 }
 
 
 void cSampleChannel::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SAMPLE")] = readresourcesamplechannel;
+    m_MsgNrCmdList[m_rmInterface.getResources("SAMPLE")] = readresourcesamplechannel;
 }
 
 
 void cSampleChannel::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SAMPLE", m_sName)] = readresourceinfosamplechannel;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SAMPLE", m_sName)] = readresourceinfosamplechannel;
 }
 
 
 void cSampleChannel::claimResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->setResource("SAMPLE", m_sName, 1)] = claimresource;
+    m_MsgNrCmdList[m_rmInterface.setResource("SAMPLE", m_sName, 1)] = claimresource;
 }
 
 
@@ -360,14 +358,14 @@ void cSampleChannel::activationDone()
 void cSampleChannel::deactivationInit()
 {
     // deactivation means we have to free our resources
-    m_MsgNrCmdList[m_pRMInterface->freeResource("SAMPLE", m_sName)] = freeresource;
+    m_MsgNrCmdList[m_rmInterface.freeResource("SAMPLE", m_sName)] = freeresource;
 }
 
 
 void cSampleChannel::deactivationDone()
 {
     // and disconnect for our servers afterwards
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
 }

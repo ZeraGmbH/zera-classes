@@ -8,7 +8,6 @@ namespace SAMPLEMODULE
 cPllMeasChannel::cPllMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
     :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
     // setting up statemachine for "activating" pll meas channel
@@ -103,7 +102,6 @@ cPllMeasChannel::~cPllMeasChannel()
 {
     m_pProxy->releaseConnection(m_pRMClient);
     m_pProxy->releaseConnection(m_pPCBClient);
-    delete m_pRMInterface;
     delete m_pPCBInterface;
 }
 
@@ -452,10 +450,10 @@ void cPllMeasChannel::rmConnect()
     m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
     m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
+    m_rmInterface.setClient(m_pRMClient); //
     // todo insert timer for timeout
 
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -475,25 +473,25 @@ void cPllMeasChannel::rmConnect()
 
 void cPllMeasChannel::sendRMIdent()
 {
-   m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = sendpllchannelrmident;
+   m_MsgNrCmdList[m_rmInterface.rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = sendpllchannelrmident;
 }
 
 
 void cPllMeasChannel::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
 }
 
 
 void cPllMeasChannel::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
 }
 
 
 void cPllMeasChannel::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", m_sName)] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", m_sName)] = readresourceinfo;
 }
 
 
@@ -583,7 +581,7 @@ void cPllMeasChannel::activationDone()
 void cPllMeasChannel::deactivationInit()
 {
     // deactivation means we have to free our resources
-    // m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = freeresource;
+    // m_MsgNrCmdList[m_rmInterface.freeResource("SENSE", m_sName)] = freeresource;
     // but we didn't claim here so we continue at once
     m_bActive = false;
     emit deactivationContinue();
@@ -593,7 +591,7 @@ void cPllMeasChannel::deactivationInit()
 void cPllMeasChannel::deactivationDone()
 {
     // and disconnect for our servers afterwards
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
 }

@@ -10,7 +10,6 @@ namespace RANGEMODULE
 cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo)
     :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
     // setting up statemachine for "activating" meas channel
@@ -120,7 +119,6 @@ cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsock
 
 cRangeMeasChannel::~cRangeMeasChannel()
 {
-    delete m_pRMInterface;
     delete m_pPCBInterface;
 }
 
@@ -1058,10 +1056,10 @@ void cRangeMeasChannel::rmConnect()
         m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
         m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
-        m_pRMInterface->setClient(m_pRMClient); //
+        m_rmInterface.setClient(m_pRMClient); //
         // todo insert timer for timeout
 
-        connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
+        connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
         m_pProxy->startConnection(m_pRMClient);
         // resource manager liste sense abfragen
         // bin ich da drin ?
@@ -1089,31 +1087,31 @@ void cRangeMeasChannel::rmConnect()
 
 void cRangeMeasChannel::sendRMIdent()
 {
-   m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = sendmeaschannelrmident;
+   m_MsgNrCmdList[m_rmInterface.rmIdent(QString("MeasChannel%1").arg(m_nChannelNr))] = sendmeaschannelrmident;
 }
 
 
 void cRangeMeasChannel::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
 }
 
 
 void cRangeMeasChannel::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
 }
 
 
 void cRangeMeasChannel::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", m_sName)] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", m_sName)] = readresourceinfo;
 }
 
 
 void cRangeMeasChannel::claimResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", m_sName, 1)] = claimresource;
+    m_MsgNrCmdList[m_rmInterface.setResource("SENSE", m_sName, 1)] = claimresource;
 }
 
 
@@ -1181,7 +1179,7 @@ void cRangeMeasChannel::deactivationInit()
 {
     // deactivation means we have to free our resources
     m_bActive = false;
-    m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", m_sName)] = freeresource;
+    m_MsgNrCmdList[m_rmInterface.freeResource("SENSE", m_sName)] = freeresource;
 }
 
 
@@ -1197,7 +1195,7 @@ void cRangeMeasChannel::deactivationDone()
         m_pProxy->releaseConnection(m_pRMClient);
         m_pProxy->releaseConnection(m_pPCBClient);
         // and disconnect for our servers afterwards
-        disconnect(m_pRMInterface, 0, this, 0);
+        disconnect(&m_rmInterface, 0, this, 0);
         disconnect(m_pPCBInterface, 0, this, 0);
     }
     emit deactivated();

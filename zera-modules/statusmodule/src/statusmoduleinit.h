@@ -56,7 +56,7 @@ private:
     Zera::Proxy::cProxyClient *m_pPCBClient;
     Zera::Server::cDSPInterface *m_pDSPInterface;
     Zera::Proxy::cProxyClient *m_pDSPClient;
-    Zera::Server::cRMInterface* m_pRMInterface;
+    Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
 
     // statemachine for activating gets the following states

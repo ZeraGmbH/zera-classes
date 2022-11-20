@@ -23,7 +23,7 @@ public slots:
 protected:
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
-    Zera::Server::cRMInterface* m_pRMInterface;
+    Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
     // we hold an interface for every channel because it could be possible that our measuring
     // channels are spread over several pcb's

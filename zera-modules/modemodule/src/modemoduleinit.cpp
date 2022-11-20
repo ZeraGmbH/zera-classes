@@ -16,7 +16,6 @@ namespace MODEMODULE
 cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy, cModeModuleConfigData& configData)
     :m_pModule(module), m_pProxy(proxy), m_ConfigData(configData)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
     m_pDSPInterface = new Zera::Server::cDSPInterface();
 
@@ -86,7 +85,6 @@ cModeModuleInit::cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy
 
 cModeModuleInit::~cModeModuleInit()
 {
-    delete m_pRMInterface;
     delete m_pPCBInterface;
     delete m_pDSPInterface;
 }
@@ -297,9 +295,9 @@ void cModeModuleInit::resourceManagerConnect()
     // first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
+    m_rmInterface.setClient(m_pRMClient); //
     m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -307,31 +305,31 @@ void cModeModuleInit::resourceManagerConnect()
 
 void cModeModuleInit::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("ModeModuleInit%1").arg(m_pModule->getModuleNr()))] = MODEMODINIT::sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("ModeModuleInit%1").arg(m_pModule->getModuleNr()))] = MODEMODINIT::sendrmident;
 }
 
 
 void cModeModuleInit::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = MODEMODINIT::readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = MODEMODINIT::readresourcetypes;
 }
 
 
 void cModeModuleInit::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = MODEMODINIT::readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = MODEMODINIT::readresource;
 }
 
 
 void cModeModuleInit::readResourceInfo()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", "MMODE")] = MODEMODINIT::readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", "MMODE")] = MODEMODINIT::readresourceinfo;
 }
 
 
 void cModeModuleInit::claimResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->setResource("SENSE", "MMODE", 1)] = MODEMODINIT::claimresource;
+    m_MsgNrCmdList[m_rmInterface.setResource("SENSE", "MMODE", 1)] = MODEMODINIT::claimresource;
 }
 
 
@@ -493,7 +491,7 @@ void cModeModuleInit::freeResource()
 {
     m_pProxy->releaseConnection(m_pDSPClient);
     m_pProxy->releaseConnection(m_pPCBClient);
-    m_MsgNrCmdList[m_pRMInterface->freeResource("SENSE", "MMODE")] = MODEMODINIT::freeresource;
+    m_MsgNrCmdList[m_rmInterface.freeResource("SENSE", "MMODE")] = MODEMODINIT::freeresource;
 }
 
 
@@ -501,7 +499,7 @@ void cModeModuleInit::deactivationDone()
 {
     m_pProxy->releaseConnection(m_pRMClient);
     // and disconnect from our servers afterwards
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
 }
