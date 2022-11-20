@@ -236,7 +236,7 @@ void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
             Zera::Proxy::cProxyClient* pcbclient = m_pProxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
             m_pcbClientList.append(pcbclient);
             m_pcbConnectionState.addTransition(pcbclient, &Zera::Proxy::cProxyClient::connected, &m_pcbConnectionLoopState);
-            pcbInterface = new Zera::Server::cPCBInterface();
+            Zera::Server::cPCBInterface *pcbInterface = new Zera::Server::cPCBInterface();
             m_pcbInterfaceList.append(pcbInterface);
             pcbInterface->setClient(pcbclient);
             connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);

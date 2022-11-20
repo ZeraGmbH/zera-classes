@@ -147,7 +147,6 @@ private:
 
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
-    Zera::Server::cPCBInterface *pcbInterface;
 
     QHash<QString,int> m_chnPortHash; // a hash for our channels ethernet ports
     QHash<int, QString> m_portChannelHash; // a list of ports for which we have established connection
