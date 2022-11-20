@@ -20,17 +20,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_bAuthorized = true; // per default we are authorized
 
     setUpActivationsStateMachine();
-
-    // setting up statemachine deactivation
-    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
-
-    m_deactivationMachine.addState(&m_deactivateState);
-    m_deactivationMachine.addState(&m_deactivateDoneState);
-
-    m_deactivationMachine.setInitialState(&m_deactivateState);
-
-    connect(&m_deactivateState, &QState::entered, this, &cAdjustmentModuleMeasProgram::deactivateMeas);
-    connect(&m_deactivateDoneState, &QState::entered, this, &cAdjustmentModuleMeasProgram::deactivateMeasDone);
+    setUpDectivationsStateMachine();
 
     m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationTestState);
     m_computationTestState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationStartState);
@@ -378,6 +368,24 @@ void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
     };
 }
 
+void cAdjustmentModuleMeasProgram::setUpDectivationsStateMachine()
+{
+    m_deactivationMachine.addState(&m_deactivateState);
+    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
+    m_deactivationMachine.setInitialState(&m_deactivateState);
+    connect(&m_deactivateState, &QState::entered, this, [&]() {
+        m_bActive = false;
+        m_AuthTimer.stop();
+        emit deactivationContinue();
+    });
+
+    m_deactivationMachine.addState(&m_deactivateDoneState);
+    connect(&m_deactivateDoneState, &QState::entered, this, [&]() {
+        m_pProxy->releaseConnection(m_pRMClient);
+        emit deactivated();
+    });
+}
+
 void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
 {
     receivedPar = var;
@@ -638,18 +646,6 @@ void cAdjustmentModuleMeasProgram::generateInterface()
 bool cAdjustmentModuleMeasProgram::isAuthorized()
 {
     return m_bAuthorized;
-}
-
-void cAdjustmentModuleMeasProgram::deactivateMeas()
-{
-    m_bActive = false;
-    emit deactivationContinue();
-}
-
-void cAdjustmentModuleMeasProgram::deactivateMeasDone()
-{
-    m_pProxy->releaseConnection(m_pRMClient);
-    emit deactivated();
 }
 
 void cAdjustmentModuleMeasProgram::computationStartCommand(QVariant var)
