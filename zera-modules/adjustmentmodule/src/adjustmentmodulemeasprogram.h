@@ -123,7 +123,7 @@ private:
 
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
-    Zera::Server::cPCBInterface* m_AdjustPCBInterface;
+    Zera::Server::cPCBInterface* m_currAdjustPCBInterface;
     // we use the following 9 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
