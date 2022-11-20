@@ -125,7 +125,7 @@ private:
     void setRefChannelValidator();
     void initRFieldMeasurement();
 
-    cMovingwindowFilter* m_pMovingwindowFilter;
+    cMovingwindowFilter m_movingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

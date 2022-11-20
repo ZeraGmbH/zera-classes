@@ -14,7 +14,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, Zera::
     :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
-    m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSenseState);
@@ -232,27 +231,25 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, Zera::
 cPower2ModuleMeasProgram::~cPower2ModuleMeasProgram()
 {
     delete m_pDSPInterFace;
-    delete m_pMovingwindowFilter;
 }
 
 
 void cPower2ModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow)
-    {
-        m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
-        connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    if (getConfData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+        connect(this, &cPower2ModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cPower2ModuleMeasProgram::setInterfaceActualValues);
     }
     else
-        connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+        connect(this, &cPower2ModuleMeasProgram::actualValues, this, &cPower2ModuleMeasProgram::setInterfaceActualValues);
 }
 
 
 void cPower2ModuleMeasProgram::stop()
 {
-    disconnect(this, SIGNAL(actualValues(QVector<float>*)), 0, 0);
-    disconnect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), 0, 0);
+    disconnect(this, &cPower2ModuleMeasProgram::actualValues, 0, 0);
+    disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
 }
 
 
@@ -1935,7 +1932,7 @@ void cPower2ModuleMeasProgram::newIntegrationtime(QVariant ti)
     if (getConfData()->m_sIntegrationMode == "time")
     {
         if (getConfData()->m_bmovingWindow)
-            m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+            m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
         {
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")

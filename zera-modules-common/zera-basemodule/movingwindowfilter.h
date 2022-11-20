@@ -12,7 +12,7 @@ class cMovingwindowFilter: public QObject
 {
     Q_OBJECT
 public:
-    cMovingwindowFilter(float time);
+    cMovingwindowFilter(float time = 1.0);
 
 signals:
     void actualValues(QVector<float>*);

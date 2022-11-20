@@ -118,7 +118,7 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
-    cMovingwindowSqare* m_pMovingwindowFilter;
+    cMovingwindowSqare m_movingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

@@ -1,15 +1,15 @@
 #ifndef THDNMODULEMEASPROGRAM_H
 #define THDNMODULEMEASPROGRAM_H
 
-#include <QObject>
+#include "basedspmeasprogram.h"
+#include "measchannelinfo.h"
+#include "movingwindowfilter.h"
 #include <QList>
 #include <QHash>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 
-#include "basedspmeasprogram.h"
-#include "measchannelinfo.h"
 
 namespace Zera {
 namespace Proxy {
@@ -140,7 +140,7 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
-    cMovingwindowFilter* m_pMovingwindowFilter;
+    cMovingwindowFilter m_movingwindowFilter;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

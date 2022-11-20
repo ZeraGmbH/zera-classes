@@ -9,11 +9,10 @@
 namespace RMSMODULE
 {
 
-cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
-    :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
+cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+    cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
-    m_pMovingwindowFilter = new cMovingwindowSqare(1.0);
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
@@ -111,17 +110,15 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cP
 cRmsModuleMeasProgram::~cRmsModuleMeasProgram()
 {
     delete m_pDSPInterFace;
-    delete m_pMovingwindowFilter;
 }
 
 
 void cRmsModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow)
-    {
-        m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        connect(this, SIGNAL(actualValues(QVector<float>*)), m_pMovingwindowFilter, SLOT(receiveActualValues(QVector<float>*)));
-        connect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
+    if (getConfData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+        connect(this, &cRmsModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
     }
     else
         connect(this, SIGNAL(actualValues(QVector<float>*)), this, SLOT(setInterfaceActualValues(QVector<float>*)));
@@ -131,7 +128,7 @@ void cRmsModuleMeasProgram::start()
 void cRmsModuleMeasProgram::stop()
 {
     disconnect(this, SIGNAL(actualValues(QVector<float>*)), 0, 0);
-    disconnect(m_pMovingwindowFilter, SIGNAL(actualValues(QVector<float>*)), 0, 0);
+    disconnect(&m_movingwindowFilter, SIGNAL(actualValues(QVector<float>*)), 0, 0);
 }
 
 
@@ -1038,7 +1035,7 @@ void cRmsModuleMeasProgram::newIntegrationtime(QVariant ti)
     if (getConfData()->m_sIntegrationMode == "time")
     {
         if (getConfData()->m_bmovingWindow)
-            m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+            m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
         {
             m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
