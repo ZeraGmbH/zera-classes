@@ -20,7 +20,7 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
 {
 }
 
-void AdjustmentModuleActivator::setUpStateMachine()
+void AdjustmentModuleActivator::setUpActivationStateMachine()
 {
     // m_rmConnectState.addTransition is done in rmConnectState entered handler
     m_activationMachine.addState(&m_rmConnectState);
@@ -28,12 +28,12 @@ void AdjustmentModuleActivator::setUpStateMachine()
     connect(&m_rmConnectState, &QState::entered, this, [&]() {
         // we instantiate a working resource manager interface first
         // so first we try to get a connection to resource manager over proxy
-        m_moduleAndServices.m_pRMClient = m_proxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-        m_rmConnectState.addTransition(m_moduleAndServices.m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+        m_pRMClient = m_proxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+        m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
-        m_rmInterface.setClient(m_moduleAndServices.m_pRMClient);
+        m_rmInterface.setClient(m_pRMClient);
         connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-        m_proxy->startConnection(m_moduleAndServices.m_pRMClient);
+        m_proxy->startConnection(m_pRMClient);
     });
 
     m_activationMachine.addState(&m_IdentifyState);
@@ -260,6 +260,24 @@ void AdjustmentModuleActivator::setUpStateMachine()
         else
             emit errMsg(readauthorizationErrMSG);
     };
+}
+
+void AdjustmentModuleActivator::setUpDeactivationStateMachine()
+{
+    m_deactivationMachine.addState(&m_deactivateState);
+    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
+    m_deactivationMachine.setInitialState(&m_deactivateState);
+    connect(&m_deactivateState, &QState::entered, this, [&]() {
+        m_bActive = false;
+        m_AuthTimer.stop();
+        emit deactivationContinue();
+    });
+
+    m_deactivationMachine.addState(&m_deactivateDoneState);
+    connect(&m_deactivateDoneState, &QState::entered, this, [&]() {
+        m_proxy->releaseConnection(m_pRMClient);
+        emit deactivated();
+    });
 }
 
 void AdjustmentModuleActivator::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
