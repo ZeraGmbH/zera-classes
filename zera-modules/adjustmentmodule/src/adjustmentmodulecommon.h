@@ -2,7 +2,6 @@
 #define ADJUSTMENTMODULECOMMON_H
 
 #include "adjustmentmoduleconfigdata.h"
-#include "rminterface.h"
 #include "pcbinterface.h"
 #include "proxy.h"
 #include <QList>
@@ -14,7 +13,6 @@ class cAdjustmentModule;
 
 struct AdjustmentServersAndConfig
 {
-    Zera::Proxy::cProxyClient *m_pRMClient;
     Zera::Server::cPCBInterface *pcbInterface;
     Zera::Server::cPCBInterface *m_AdjustPCBInterface;
     std::function<void(void)> setInterfaceValidation;

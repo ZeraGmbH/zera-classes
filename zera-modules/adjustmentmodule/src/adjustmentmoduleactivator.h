@@ -22,7 +22,8 @@ public:
                               Zera::Proxy::cProxy* proxy,
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                               AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData);
-    void setUpStateMachine();
+    void setUpActivationStateMachine();
+    void setUpDeactivationStateMachine();
 signals:
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -35,6 +36,7 @@ private:
     Zera::Proxy::cProxy *m_proxy;
     std::shared_ptr<cBaseModuleConfiguration> m_configuration;
     Zera::Server::cRMInterface m_rmInterface;
+    Zera::Proxy::cProxyClient *m_pRMClient;
 
     QState m_rmConnectState; // we must connect first to resource manager
     QState m_IdentifyState; // we must identify ourself at resource manager
@@ -50,6 +52,9 @@ private:
     QState m_readRangelistLoopState;
     QState m_searchActualValuesState;
     QFinalState m_activationDoneState;
+
+    QState m_deactivateState;
+    QFinalState m_deactivateDoneState;
 
     QHash<quint32, int> m_MsgNrCmdList;
     int activationIt;
