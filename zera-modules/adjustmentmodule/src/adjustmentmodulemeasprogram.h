@@ -118,6 +118,7 @@ public slots:
 private:
     cAdjustmentModuleConfigData* getConfData();
     void setUpActivationsStateMachine();
+    void setUpDectivationsStateMachine();
 
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
@@ -235,9 +236,6 @@ private:
 
 private slots:
     void setInterfaceValidation();
-
-    void deactivateMeas();
-    void deactivateMeasDone();
 
     void computationStartCommand(QVariant var);
     void computationStart();
