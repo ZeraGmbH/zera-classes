@@ -12,7 +12,6 @@ namespace OSCIMODULE
 cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
     m_IdentifyState.addTransition(this, &cOsciModuleMeasProgram::activationContinue, &m_readResourceTypesState);
@@ -110,7 +109,6 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy:
 
 cOsciModuleMeasProgram::~cOsciModuleMeasProgram()
 {
-    delete m_pRMInterface;
     delete m_pDSPInterFace;
 }
 
@@ -693,28 +691,28 @@ void cOsciModuleMeasProgram::resourceManagerConnect()
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient);
+    m_rmInterface.setClient(m_pRMClient);
     m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
 }
 
 
 void cOsciModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("OsciModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("OsciModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
 void cOsciModuleMeasProgram::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
 }
 
 
 void cOsciModuleMeasProgram::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
 }
 
 
@@ -728,7 +726,7 @@ void cOsciModuleMeasProgram::readResourceInfos()
 void cOsciModuleMeasProgram::readResourceInfo()
 {
     channelInfoRead = channelInfoReadList.takeLast();
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
 }
 
 
@@ -821,13 +819,13 @@ void cOsciModuleMeasProgram::claimPGRMem()
 {
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
-    m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
+    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
 
 
 void cOsciModuleMeasProgram::claimUSERMem()
 {
-   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
+   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
 
 
@@ -875,13 +873,13 @@ void cOsciModuleMeasProgram::freePGRMem()
     deleteDspVarList();
     deleteDspCmdList();
 
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
 
 void cOsciModuleMeasProgram::freeUSERMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = freeusermem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
 
 
@@ -899,7 +897,7 @@ void cOsciModuleMeasProgram::deactivateDSPdone()
         m_pcbClientList.clear();
     }
 
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
     emit deactivated();

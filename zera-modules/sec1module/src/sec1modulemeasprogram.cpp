@@ -24,7 +24,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy:
     :cBaseMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pSECInterface = new Zera::Server::cSECInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
@@ -181,7 +180,6 @@ cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
         siInfo = mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i)); // change the hash for access via alias
         delete siInfo;
     }
-    delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pRMClient);
     delete m_pSECInterface;
     m_pProxy->releaseConnection(m_pSECClient);
@@ -985,9 +983,9 @@ void cSec1ModuleMeasProgram::resourceManagerConnect()
     // first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
+    m_rmInterface.setClient(m_pRMClient); //
     resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -995,26 +993,26 @@ void cSec1ModuleMeasProgram::resourceManagerConnect()
 
 void cSec1ModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("Sec1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Sec1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
 void cSec1ModuleMeasProgram::testSEC1Resource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = testsec1resource;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = testsec1resource;
 }
 
 
 void cSec1ModuleMeasProgram::setECResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->setResource("SEC1", "ECALCULATOR", 2)] = setecresource;
+    m_MsgNrCmdList[m_rmInterface.setResource("SEC1", "ECALCULATOR", 2)] = setecresource;
 }
 
 
 
 void cSec1ModuleMeasProgram::readResourceTypes()
 {
-    //m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    //m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
     // instead of taking all resourcetypes we take predefined types if we found them in our config
 
     if (found(getConfData()->m_dutInpList, "fi") || found(getConfData()->m_refInpList, "fi"))
@@ -1040,7 +1038,7 @@ void cSec1ModuleMeasProgram::readResources()
 void cSec1ModuleMeasProgram::readResource()
 {
     QString resourcetype = m_ResourceTypeList.at(m_nIt);
-    m_MsgNrCmdList[m_pRMInterface->getResources(resourcetype)] = readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
 }
 
 
@@ -1323,7 +1321,7 @@ void cSec1ModuleMeasProgram::freeECalculator()
 
 void cSec1ModuleMeasProgram::freeECResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("SEC1", "ECALCULATOR")] = freeecresource;
+    m_MsgNrCmdList[m_rmInterface.freeResource("SEC1", "ECALCULATOR")] = freeecresource;
 }
 
 
@@ -1331,7 +1329,7 @@ void cSec1ModuleMeasProgram::deactivationDone()
 {
     m_pProxy->releaseConnection(m_pRMClient);
 
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pSECInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
 

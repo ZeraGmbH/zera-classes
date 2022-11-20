@@ -1,13 +1,12 @@
 #ifndef MODEMODULEINIT_H
 #define MODEMODULEINIT_H
 
-#include <QObject>
+#include "moduleactivist.h"
+#include "rminterface.h"
 #include <QList>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
-
-#include "moduleactivist.h"
 
 namespace Zera
 {
@@ -83,7 +82,7 @@ private:
     Zera::Proxy::cProxyClient *m_pPCBClient;
     Zera::Server::cDSPInterface *m_pDSPInterface;
     Zera::Proxy::cProxyClient *m_pDSPClient;
-    Zera::Server::cRMInterface* m_pRMInterface;
+    Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
 
     QString m_sDescription;

@@ -13,7 +13,6 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, Zera::
     :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and dspserver interface
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
     m_ChannelList = getConfData()->m_ObsermaticConfPar.m_pllChannelList;
@@ -75,7 +74,6 @@ cSampleModuleMeasProgram::cSampleModuleMeasProgram(cSampleModule* module, Zera::
 
 cSampleModuleMeasProgram::~cSampleModuleMeasProgram()
 {
-    delete m_pRMInterface;
     m_pProxy->releaseConnection(m_pRMClient);
     delete m_pDSPInterFace;
     m_pProxy->releaseConnection(m_pDspClient);
@@ -346,9 +344,9 @@ void cSampleModuleMeasProgram::resourceManagerConnect()
     // first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
+    m_rmInterface.setClient(m_pRMClient); //
     resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     m_pProxy->startConnection(m_pRMClient);
 }
@@ -356,7 +354,7 @@ void cSampleModuleMeasProgram::resourceManagerConnect()
 
 void cSampleModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("SampleModule%1").arg(m_pModule->getModuleNr()))] = sendrmidentsample;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("SampleModule%1").arg(m_pModule->getModuleNr()))] = sendrmidentsample;
 }
 
 
@@ -376,13 +374,13 @@ void cSampleModuleMeasProgram::claimPGRMem()
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
 
-    m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
+    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
 
 
 void cSampleModuleMeasProgram::claimUSERMem()
 {
-   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
+   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
 
 
@@ -425,19 +423,19 @@ void cSampleModuleMeasProgram::freePGRMem()
     // we always destroy the whole interface even in case of new configuration while running
     // so the list are gone anyway
 
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
 
 void cSampleModuleMeasProgram::freeUSERMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = freeusermem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
 
 
 void cSampleModuleMeasProgram::deactivateDSPdone()
 {
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
     emit deactivated();
 }

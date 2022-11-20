@@ -12,7 +12,6 @@ namespace FFTMODULE
 cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
@@ -112,7 +111,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cP
 
 cFftModuleMeasProgram::~cFftModuleMeasProgram()
 {
-    delete m_pRMInterface;
     delete m_pDSPInterFace;
     delete m_pMovingwindowFilter;
 }
@@ -746,27 +744,27 @@ void cFftModuleMeasProgram::resourceManagerConnect()
     m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // todo insert timer for timeout and/or connect error conditions.....
     // and then we set resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient); //
-    connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
+    m_rmInterface.setClient(m_pRMClient); //
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
     m_pProxy->startConnection(m_pRMClient);
 }
 
 
 void cFftModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("FftModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("FftModule%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
 void cFftModuleMeasProgram::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
 }
 
 
 void cFftModuleMeasProgram::readResource()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
 }
 
 
@@ -780,7 +778,7 @@ void cFftModuleMeasProgram::readResourceInfos()
 void cFftModuleMeasProgram::readResourceInfo()
 {
     channelInfoRead = channelInfoReadList.takeLast();
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelInfoRead)] = readresourceinfo;
 }
 
 
@@ -876,13 +874,13 @@ void cFftModuleMeasProgram::claimPGRMem()
     // if we've got dsp server connection we set up our measure program and claim the resources
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
-    m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
+    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
 
 
 void cFftModuleMeasProgram::claimUSERMem()
 {
-   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
+   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
 
 
@@ -931,13 +929,13 @@ void cFftModuleMeasProgram::freePGRMem()
     deleteDspVarList();
     deleteDspCmdList();
 
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
 
 void cFftModuleMeasProgram::freeUSERMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = freeusermem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
 
 
@@ -956,7 +954,7 @@ void cFftModuleMeasProgram::deactivateDSPdone()
         m_pcbIFaceList.clear();
     }
 
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
     emit deactivated();

@@ -13,7 +13,6 @@ namespace POWER2MODULE
 cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
@@ -232,7 +231,6 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, Zera::
 
 cPower2ModuleMeasProgram::~cPower2ModuleMeasProgram()
 {
-    delete m_pRMInterface;
     delete m_pDSPInterFace;
     delete m_pMovingwindowFilter;
 }
@@ -1327,28 +1325,28 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
     // so first we try to get a connection to resource manager over proxy
     m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
-    m_pRMInterface->setClient(m_pRMClient);
+    m_rmInterface.setClient(m_pRMClient);
     m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
-    connect(m_pRMInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     m_pProxy->startConnection(m_pRMClient);
 }
 
 
 void cPower2ModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("Power2Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Power2Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
 void cPower2ModuleMeasProgram::readResourceTypes()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
 }
 
 
 void cPower2ModuleMeasProgram::readResourceSense()
 {
-    m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresourcesense;
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresourcesense;
 }
 
 
@@ -1362,7 +1360,7 @@ void cPower2ModuleMeasProgram::readResourceSenseInfos()
 void cPower2ModuleMeasProgram::readResourceSenseInfo()
 {
     infoRead = infoReadList.takeLast();
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", infoRead)] = readresourcesenseinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", infoRead)] = readresourcesenseinfo;
 }
 
 
@@ -1378,7 +1376,7 @@ void cPower2ModuleMeasProgram::readResourceSenseInfoDone()
 void cPower2ModuleMeasProgram::readResourceSource()
 {
     if (getConfData()->m_nFreqOutputCount > 0) // do we have any frequency output
-        m_MsgNrCmdList[m_pRMInterface->getResources("SOURCE")] = readresourcesource; // then we read the needed info
+        m_MsgNrCmdList[m_rmInterface.getResources("SOURCE")] = readresourcesource; // then we read the needed info
     else
         emit activationSkip(); // otherwise we will skip
 }
@@ -1393,7 +1391,7 @@ void cPower2ModuleMeasProgram::claimResourcesSource()
 void cPower2ModuleMeasProgram::claimResourceSource()
 {
     infoRead = infoReadList.takeLast();
-    m_MsgNrCmdList[m_pRMInterface->setResource("SOURCE", infoRead, 1)] = claimresourcesource;
+    m_MsgNrCmdList[m_rmInterface.setResource("SOURCE", infoRead, 1)] = claimresourcesource;
 }
 
 
@@ -1416,7 +1414,7 @@ void cPower2ModuleMeasProgram::readResourceSourceInfos()
 void cPower2ModuleMeasProgram::readResourceSourceInfo()
 {
     infoRead = infoReadList.takeLast();
-    m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SOURCE", infoRead)] = readresourcesourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SOURCE", infoRead)] = readresourcesourceinfo;
 }
 
 
@@ -1606,13 +1604,13 @@ void cPower2ModuleMeasProgram::claimPGRMem()
 {
     setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
-    m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
+    m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
 
 
 void cPower2ModuleMeasProgram::claimUSERMem()
 {
-   m_MsgNrCmdList[m_pRMInterface->setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
+   m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "USERMEM", m_nDspMemUsed)] = claimusermem;
 }
 
 
@@ -1670,13 +1668,13 @@ void cPower2ModuleMeasProgram::freePGRMem()
     deleteDspVarList();
     deleteDspCmdList();
 
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "PGRMEMC")] = freepgrmem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
 
 void cPower2ModuleMeasProgram::freeUSERMem()
 {
-    m_MsgNrCmdList[m_pRMInterface->freeResource("DSP1", "USERMEM")] = freeusermem;
+    m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "USERMEM")] = freeusermem;
 }
 
 
@@ -1695,7 +1693,7 @@ void cPower2ModuleMeasProgram::freeFreqOutputs()
 void cPower2ModuleMeasProgram::freeFreqOutput()
 {
     infoRead = infoReadList.takeFirst();
-    m_MsgNrCmdList[m_pRMInterface->freeResource("SOURCE", infoRead)] = freeresourcesource;
+    m_MsgNrCmdList[m_rmInterface.freeResource("SOURCE", infoRead)] = freeresourcesource;
 }
 
 
@@ -1746,7 +1744,7 @@ void cPower2ModuleMeasProgram::deactivateDSPdone()
         m_pcbIFaceList.clear();
     }
 
-    disconnect(m_pRMInterface, 0, this, 0);
+    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
     emit deactivated();

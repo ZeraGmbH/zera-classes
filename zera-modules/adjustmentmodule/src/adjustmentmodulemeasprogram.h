@@ -2,6 +2,7 @@
 #define ADJUSTMENTMODULEMEASPROGRAM_H
 
 #include "adjustmentmoduleconfigdata.h"
+#include "rminterface.h"
 #include "basemeasworkprogram.h"
 #include "measchannelinfo.h"
 #include "measmodeinfo.h"
@@ -143,7 +144,7 @@ private:
     double cmpPhase(QVariant var);
     double symAngle(double ang);
 
-    Zera::Server::cRMInterface* m_pRMInterface;
+    Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
     Zera::Server::cPCBInterface *pcbInterface;
 

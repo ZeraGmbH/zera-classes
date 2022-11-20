@@ -17,7 +17,6 @@ namespace ADJUSTMENTMODULE
 cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseMeasWorkProgram(pConfiguration), m_pModule(module), m_pProxy(proxy)
 {
-    m_pRMInterface = new Zera::Server::cRMInterface();
     m_bAuthorized = true; // per default we are authorized
 
     setUpActivationsStateMachine();
@@ -148,15 +147,15 @@ void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
         m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
         m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
-        m_pRMInterface->setClient(m_pRMClient);
-        connect(m_pRMInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
+        m_rmInterface.setClient(m_pRMClient);
+        connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
         m_pProxy->startConnection(m_pRMClient);
     });
 
     m_activationMachine.addState(&m_IdentifyState);
     m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     connect(&m_IdentifyState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_pRMInterface->rmIdent(QString("Adjustment"))] = sendrmident;
+        m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Adjustment"))] = sendrmident;
     });
     m_cmdFinishCallbacks[sendrmident] = [&](quint8 reply, QVariant) {
         if (reply == ack) // we only continue if resource manager acknowledges
@@ -168,7 +167,7 @@ void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
     m_activationMachine.addState(&m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
     connect(&m_readResourceTypesState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_pRMInterface->getResourceTypes()] = readresourcetypes;
+        m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
     });
     m_cmdFinishCallbacks[readresourcetypes] = [&](quint8 reply, QVariant answer) {
         if ((reply == ack) && (answer.toString().contains("SENSE")))
@@ -180,7 +179,7 @@ void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
     m_activationMachine.addState(&m_readResourceState);
     m_readResourceState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoState);
     connect(&m_readResourceState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_pRMInterface->getResources("SENSE")] = readresource;
+        m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
         activationIt = 0; // we prepare querying loop of channels
     });
     m_cmdFinishCallbacks[readresource] = [&](quint8 reply, QVariant answer) {
@@ -201,7 +200,7 @@ void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
     m_activationMachine.addState(&m_readResourceInfoState);
     m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
     connect(&m_readResourceInfoState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_pRMInterface->getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(activationIt))] = readresourceinfo;
+        m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(activationIt))] = readresourceinfo;
     });
     m_cmdFinishCallbacks[readresourceinfo] = [&](quint8 reply, QVariant answer) {
         QStringList sl = answer.toString().split(';');
