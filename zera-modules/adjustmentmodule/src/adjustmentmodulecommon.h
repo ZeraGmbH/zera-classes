@@ -13,7 +13,6 @@ class cAdjustmentModule;
 
 struct AdjustmentServersAndConfig
 {
-    Zera::Server::cPCBInterface *pcbInterface;
     Zera::Server::cPCBInterface *m_AdjustPCBInterface;
     std::function<void(void)> setInterfaceValidation;
 };
