@@ -207,7 +207,7 @@ private:
     QState m_setFrequencyScalesState;
     QFinalState m_setFoutConstantState;
 
-    cMovingwindowFilter* m_pMovingwindowFilter;
+    cMovingwindowFilter m_movingwindowFilter;
 
     void setActualValuesNames();
     void setSCPIMeasInfo();

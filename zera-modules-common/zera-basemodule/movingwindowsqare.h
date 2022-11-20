@@ -7,7 +7,7 @@ class cMovingwindowSqare: public cMovingwindowFilter
 {
     Q_OBJECT
 public:
-    cMovingwindowSqare(float time);
+    cMovingwindowSqare(float time = 1.0);
 protected:
     virtual void addnewValues();
 };

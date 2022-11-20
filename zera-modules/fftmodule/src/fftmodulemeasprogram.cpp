@@ -13,7 +13,6 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cP
     :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
-    m_pMovingwindowFilter = new cMovingwindowFilter(1.0);
 
     m_IdentifyState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cFftModuleMeasProgram::activationContinue, &m_readResourceState);
@@ -112,17 +111,15 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cP
 cFftModuleMeasProgram::~cFftModuleMeasProgram()
 {
     delete m_pDSPInterFace;
-    delete m_pMovingwindowFilter;
 }
 
 
 void cFftModuleMeasProgram::start()
 {
-    if (getConfData()->m_bmovingWindow)
-    {
-        m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
-        connect(this, &cFftModuleMeasProgram::actualValues, m_pMovingwindowFilter, &cMovingwindowFilter::receiveActualValues);
-        connect(m_pMovingwindowFilter, &cMovingwindowFilter::actualValues, this, &cFftModuleMeasProgram::setInterfaceActualValues);
+    if (getConfData()->m_bmovingWindow) {
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
+        connect(this, &cFftModuleMeasProgram::actualValues, &m_movingwindowFilter, &cMovingwindowFilter::receiveActualValues);
+        connect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, &cFftModuleMeasProgram::setInterfaceActualValues);
     }
     else
         connect(this, &cFftModuleMeasProgram::actualValues, this, &cFftModuleMeasProgram::setInterfaceActualValues);
@@ -132,7 +129,7 @@ void cFftModuleMeasProgram::start()
 void cFftModuleMeasProgram::stop()
 {
     disconnect(this, &cFftModuleMeasProgram::actualValues, 0, 0);
-    disconnect(m_pMovingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
+    disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
 }
 
 
@@ -1038,7 +1035,7 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
     getConfData()->m_fMeasInterval.m_fValue = ti.toDouble(&ok);
 
     if (getConfData()->m_bmovingWindow)
-        m_pMovingwindowFilter->setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
+        m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else
     {
         m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
