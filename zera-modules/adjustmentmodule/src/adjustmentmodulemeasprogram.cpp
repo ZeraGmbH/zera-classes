@@ -19,8 +19,16 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 {
     m_bAuthorized = true; // per default we are authorized
 
+    connect(this, &cAdjustmentModuleMeasProgram::activationReadyForInterface, this, &cAdjustmentModuleMeasProgram::onActivationReadyForInterface);
     setUpActivationsStateMachine();
     setUpDectivationsStateMachine();
+
+    m_cmdFinishCallbacks[getauthorizationstatus] = [&](quint8 reply, QVariant answer) {
+        if (reply == ack)
+            m_bAuthorized = (answer.toInt() > 0);
+        else
+            emit errMsg(readauthorizationErrMSG);
+    };
 
     m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationTestState);
     m_computationTestState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationStartState);
@@ -351,21 +359,9 @@ void cAdjustmentModuleMeasProgram::setUpActivationsStateMachine()
     m_activationMachine.addState(&m_activationDoneState);
     connect(&m_activationDoneState, &QState::entered, this, [&]() {
         m_bActive = true;
-        setInterfaceValidation();
-        connect(&m_AuthTimer, &QTimer::timeout, this , [&]() {
-            QList<QString> sysnameList = m_AliasChannelHash.values();
-            m_AdjustPCBInterface = m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
-            m_MsgNrCmdList[m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
-        });
-        m_AuthTimer.start(5000);
+        emit activationReadyForInterface();
         emit activated();
     });
-    m_cmdFinishCallbacks[getauthorizationstatus] = [&](quint8 reply, QVariant answer) {
-        if (reply == ack)
-            m_bAuthorized = (answer.toInt() > 0);
-        else
-            emit errMsg(readauthorizationErrMSG);
-    };
 }
 
 void cAdjustmentModuleMeasProgram::setUpDectivationsStateMachine()
@@ -412,6 +408,17 @@ double cAdjustmentModuleMeasProgram::symAngle(double ang)
     while (a < -180.0)
         a += 360.0;
     return a;
+}
+
+void cAdjustmentModuleMeasProgram::onActivationReadyForInterface()
+{
+    setInterfaceValidation();
+    connect(&m_AuthTimer, &QTimer::timeout, this , [&]() {
+        QList<QString> sysnameList = m_AliasChannelHash.values();
+        m_AdjustPCBInterface = m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
+        m_MsgNrCmdList[m_AdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
+    });
+    m_AuthTimer.start(5000);
 }
 
 void cAdjustmentModuleMeasProgram::setInterfaceValidation()

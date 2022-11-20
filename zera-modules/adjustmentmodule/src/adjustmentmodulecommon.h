@@ -14,7 +14,6 @@ class cAdjustmentModule;
 struct AdjustmentServersAndConfig
 {
     Zera::Server::cPCBInterface *m_AdjustPCBInterface;
-    std::function<void(void)> setInterfaceValidation;
 };
 
 class cAdjustChannelInfo;
@@ -27,7 +26,6 @@ struct AdjustmentModuleActivateData
     QHash<int, QString> m_portChannelHash; // a list of ports for which we have established connection
     QList<Zera::Server::cPCBInterface*> m_pcbInterfaceList; // a list of pcbinterfaces ... for clean up
     QHash<QString, QString> m_AliasChannelHash; // we use this hash for easier access
-    bool m_bAuthorized;
 };
 }
 #endif // ADJUSTMENTMODULECOMMON_H

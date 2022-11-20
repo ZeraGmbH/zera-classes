@@ -109,7 +109,7 @@ signals:
     void adjustoffsetContinue();
     void adjustphaseContinue();
     void adjustError();
-
+    void activationReadyForInterface();
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -119,6 +119,7 @@ private:
     cAdjustmentModuleConfigData* getConfData();
     void setUpActivationsStateMachine();
     void setUpDectivationsStateMachine();
+    void setInterfaceValidation();
 
     cAdjustmentModule* m_pModule;
     Zera::Proxy::cProxy* m_pProxy;
@@ -234,7 +235,7 @@ private:
     QTimer m_AuthTimer;
 
 private slots:
-    void setInterfaceValidation();
+    void onActivationReadyForInterface();
 
     void computationStartCommand(QVariant var);
     void computationStart();

@@ -24,9 +24,13 @@ public:
                               AdjustmentServersAndConfig &moduleObjects, AdjustmentModuleActivateData &activationData);
     void setUpActivationStateMachine();
     void setUpDeactivationStateMachine();
+
 signals:
+    void activationReadyForInterface();
+
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+
 private:
     cAdjustmentModuleConfigData *getConfData();
 
@@ -58,8 +62,6 @@ private:
 
     QHash<quint32, int> m_MsgNrCmdList;
     int activationIt;
-    // timer for cyclic eeprom access enable (authorization) query
-    QTimer m_AuthTimer;
 };
 
 }
