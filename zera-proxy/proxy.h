@@ -24,42 +24,13 @@ class ZERAPROXYSHARED_EXPORT cProxy: public QObject
 
 public:
     /**
-      * @brief See [P.157+ Design patterns Gang of Four]
+      * @brief See [P.127+ Design patterns Gang of Four]
       */
     static cProxy* getInstance();
-
-    /**
-     * @brief getConnection
-     * @param ipadress
-     * @param port
-     * @return client over which data transfer takes place
-     */
     cProxyClient* getConnection(QString ipadress, quint16 port);
-
-    /**
-     * @brief getConnection
-     * @param port, ipadress is default adress
-     * @return client over which data transfer takes place
-     */
     cProxyClient* getConnection(quint16 port);
-
-    /**
-     * @brief startConnection
-     * @param client, that wants it's interface to be started
-    */
     void startConnection(cProxyClient *client);
-
-    /**
-     * @brief releaseConnection
-     * @param cProxyClient*
-     * @return true if connection is released
-     */
     bool releaseConnection(cProxyClient* client);
-
-    /**
-      * @brief setIPAdress: default adress is localhost, can be overwritten here
-      * @param ipAddress
-      */
     void setIPAdress(QString ipAddress);
 
 protected:
