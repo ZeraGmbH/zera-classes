@@ -12,10 +12,10 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
                                                      Zera::Proxy::cProxy *proxy,
                                                      std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                                                      AdjustmentModuleActivateData &activationData) :
-    m_proxy(proxy),
+    m_activationData(activationData),
     m_module(module),
-    m_configuration(pConfiguration),
-    m_activationData(activationData)
+    m_proxy(proxy),
+    m_configuration(pConfiguration)
 {
 }
 
