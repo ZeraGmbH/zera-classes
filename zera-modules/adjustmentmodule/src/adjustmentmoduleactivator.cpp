@@ -152,7 +152,7 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
     });
 
     m_activationMachine.addState(&m_readChnAliasState);
-    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
+    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_registerNotifier);
     connect(&m_readChnAliasState, &QState::entered, this, [&]() {
         QString name = getConfData()->m_AdjChannelList.at(activationIt);
         m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[name]->m_pPCBInterface->getAlias(name)] = readchnalias;
@@ -167,6 +167,20 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
         }
         else
             notifyActivationError(tr(readaliasErrMsg));
+    };
+
+    m_activationMachine.addState(&m_registerNotifier);
+    m_registerNotifier.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
+    connect(&m_registerNotifier, &QState::entered, this, [&]() {
+        QString channel = getConfData()->m_AdjChannelList.at(activationIt); // current channel m0/m1/..
+        Zera::Server::cPCBInterface* pcbInterface = m_activationData.m_adjustChannelInfoHash[channel]->m_pPCBInterface;
+        m_MsgNrCmdList[pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(channel),"1")] = registerNotifier;
+    });
+    m_cmdFinishCallbacks[registerNotifier] = [&](quint8 reply, QVariant) {
+        if (reply == ack)
+            emit activationContinue();
+        else
+            notifyActivationError(tr(registerpcbnotifierErrMsg));
     };
 
     m_activationMachine.addState(&m_readChnAliasLoopState);
