@@ -1,13 +1,14 @@
 #ifndef ADJUSTMENTMODULE_H
 #define ADJUSTMENTMODULE_H
 
-#include "adjustmentmodulemeasprogram.h"
 #include <basemeasmodule.h>
 
 namespace ADJUSTMENTMODULE
 {
 #define BaseModuleName "AdjustmentModule"
 #define BaseSCPIModuleName "ADJ"
+
+class cAdjustmentModuleMeasProgram;
 
 class cAdjustmentModule : public cBaseMeasModule
 {

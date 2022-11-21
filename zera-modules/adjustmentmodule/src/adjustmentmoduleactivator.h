@@ -25,9 +25,11 @@ public:
                               AdjustmentModuleActivateData &activationData);
     void setUpActivationStateMachine();
     void setUpDeactivationStateMachine();
-
+public slots:
+    void generateInterface() override {}
 signals:
-    void activationReadyForInterface();
+    void sigActivationReady();
+    void sigDeactivationReady();
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

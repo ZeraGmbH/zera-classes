@@ -1,5 +1,6 @@
 #include "adjustmentmoduleactivator.h"
 #include "adjustmentmodule.h"
+#include "adjustmentmodulemeasprogram.h"
 #include "adjustmentmoduleconfiguration.h"
 
 #include "errormessages.h"
@@ -244,8 +245,7 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
     m_activationMachine.addState(&m_activationDoneState);
     connect(&m_activationDoneState, &QState::entered, this, [&]() {
         m_bActive = true;
-        emit activationReadyForInterface();
-        emit activated();
+        emit sigActivationReady();
     });
 }
 
@@ -262,7 +262,7 @@ void AdjustmentModuleActivator::setUpDeactivationStateMachine()
     m_deactivationMachine.addState(&m_deactivateDoneState);
     connect(&m_deactivateDoneState, &QState::entered, this, [&]() {
         m_proxy->releaseConnection(m_pRMClient);
-        emit deactivated();
+        emit sigDeactivationReady();
     });
 }
 

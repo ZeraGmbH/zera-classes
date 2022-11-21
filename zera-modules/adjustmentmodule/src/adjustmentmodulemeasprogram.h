@@ -3,6 +3,7 @@
 
 #include "adjustmentmoduleconfigdata.h"
 #include "adjustmentmodulecommon.h"
+#include "adjustmentmoduleactivator.h"
 #include "rminterface.h"
 #include "basemeasworkprogram.h"
 #include "measchannelinfo.h"
@@ -98,7 +99,7 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 
 public:
     cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
-    virtual void generateInterface(); // here we export our interface (entities)
+    void generateInterface() override; // here we export our interface (entities)
     bool isAuthorized();
 
 signals:
@@ -110,21 +111,20 @@ signals:
     void adjustoffsetContinue();
     void adjustphaseContinue();
     void adjustError();
-    void activationReadyForInterface();
+    void activationReady();
 
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    void start()  override; // difference between start and stop is that actual values
+    void stop() override; // in interface are not updated when stop
+    void activate() override;
+    void deactivate() override;
 
 private:
     cAdjustmentModuleConfigData* getConfData();
-    void setUpActivationsStateMachine();
-    void setUpDectivationsStateMachine();
     void setInterfaceValidation();
-
     cAdjustmentModule* m_pModule;
-    Zera::Proxy::cProxy* m_pProxy;
     Zera::Server::cPCBInterface* m_currAdjustPCBInterface;
+    AdjustmentModuleActivator m_activator;
     // we use the following 9 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
@@ -147,7 +147,6 @@ private:
     double cmpPhase(QVariant var);
     double symAngle(double ang);
 
-    Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
 
     AdjustmentModuleActivateData m_commonObjects;
@@ -169,28 +168,6 @@ private:
     cVeinModuleParameter* m_pPARAdjustSend;
     cVeinModuleParameter* m_pPARAdjustPCBData;
     cVeinModuleParameter* m_pPARAdjustClampData;
-
-    // statemachine for activating gets the following states
-    QState m_rmConnectState; // we must connect first to resource manager
-    QState m_IdentifyState; // we must identify ourself at resource manager
-    QState m_readResourceTypesState; // we ask for a list of all resources
-    QState m_readResourceState; // we look for all our resources needed
-    QState m_readResourceInfoState; // we look for resource specification
-    QState m_readResourceInfoLoopState;
-    QState m_pcbConnectionState; // we try to get a connection to all our pcb servers
-    QState m_pcbConnectionLoopState;
-    QState m_readChnAliasState; // we query all our channels alias
-    QState m_readChnAliasLoopState;
-    QState m_readRangelistState; // we query the range list for all our channels
-    QState m_readRangelistLoopState;
-    QState m_searchActualValuesState;
-    QFinalState m_activationDoneState;
-
-    int activationIt;
-
-    // statemachine for deactivating
-    QState m_deactivateState;
-    QFinalState m_deactivateDoneState;
 
     // statemachine for computation of adjustment values
     QStateMachine m_computationMachine;
@@ -231,7 +208,8 @@ private:
     QTimer m_AuthTimer;
 
 private slots:
-    void onActivationReadyForInterface();
+    void onActivationReady();
+    void onDeactivationReady();
 
     void computationStartCommand(QVariant var);
     void computationStart();
