@@ -49,6 +49,7 @@ private:
     QState m_readResourceTypesState; // we ask for a list of all resources
     QState m_readResourceState; // we look for all our resources needed
     QState m_readResourceInfoState; // we look for resource specification
+    QState m_registerNotifier; // get informed about range changes
     QState m_readResourceInfoLoopState;
     QState m_pcbConnectionState; // we try to get a connection to all our pcb servers
     QState m_pcbConnectionLoopState;

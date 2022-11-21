@@ -63,7 +63,8 @@ enum adjustmentmoduleCmds
     getclampadjustmentdata,
     setclampadjustmentdata,
     getauthorizationstatus,
-    sendtransparentcmd
+    sendtransparentcmd,
+    registerNotifier
 };
 
 
