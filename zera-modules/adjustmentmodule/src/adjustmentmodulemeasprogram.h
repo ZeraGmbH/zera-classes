@@ -2,6 +2,7 @@
 #define ADJUSTMENTMODULEMEASPROGRAM_H
 
 #include "adjustmentmoduleconfigdata.h"
+#include "adjustmentmodulecommon.h"
 #include "rminterface.h"
 #include "basemeasworkprogram.h"
 #include "measchannelinfo.h"
@@ -149,12 +150,7 @@ private:
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::cProxyClient* m_pRMClient;
 
-    QHash<QString,int> m_chnPortHash; // a hash for our channels ethernet ports
-    QHash<int, QString> m_portChannelHash; // a list of ports for which we have established connection
-    QHash<QString, QString> m_AliasChannelHash; // we use this hash for easier access
-    QList<Zera::Proxy::cProxyClient*> m_pcbClientList; // a list with our pcb clients ... for clean up
-    QList<Zera::Server::cPCBInterface*> m_pcbInterfaceList; // a list of pcbinterfaces ... for clean up
-    QHash<QString, cAdjustChannelInfo*> m_adjustChannelInfoHash;
+    AdjustmentModuleActivateData m_commonObjects;
     QHash<quint32, int> m_MsgNrCmdList;
     QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
     int m_nAdjustGainIt;
