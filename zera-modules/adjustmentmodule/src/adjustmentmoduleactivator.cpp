@@ -267,10 +267,38 @@ void AdjustmentModuleActivator::setUpDeactivationStateMachine()
 {
     m_deactivationMachine.addState(&m_deactivateState);
     m_deactivationMachine.setInitialState(&m_deactivateState);
-    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
+    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_unregisterState);
+    m_deactivateState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationSkip, &m_deactivateDoneState);
     connect(&m_deactivateState, &QState::entered, this, [&]() {
         m_bActive = false;
-        emit deactivationContinue();
+        deactivationIt = m_activationData.m_pcbInterfaceList.constBegin();
+        if (deactivationIt != m_activationData.m_pcbInterfaceList.constEnd())
+            emit deactivationContinue();
+        else
+            emit deactivationSkip();
+    });
+
+    m_deactivationMachine.addState(&m_unregisterState);
+    m_unregisterState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_unregisterLoopState);
+    connect(&m_unregisterState, &QState::entered, this, [&]() {
+       m_MsgNrCmdList[(*deactivationIt)->unregisterNotifiers() ] = unregisterNotifiers ;
+    });
+    m_cmdFinishCallbacks[unregisterNotifiers] = [&](quint8 reply, QVariant answer) {
+        if (reply == ack)
+            emit deactivationContinue();
+        else
+            notifyActivationError(tr(unregisterpcbnotifierErrMsg));
+    };
+
+    m_deactivationMachine.addState(&m_unregisterLoopState);
+    m_unregisterLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationContinue, &m_deactivateDoneState);
+    m_unregisterLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::deactivationLoop, &m_unregisterState);
+    connect(&m_unregisterLoopState, &QState::entered, this, [&]() {
+        deactivationIt++;
+        if (deactivationIt == m_activationData.m_pcbInterfaceList.constEnd())
+            emit deactivationContinue();
+        else
+            emit deactivationLoop();
     });
 
     m_deactivationMachine.addState(&m_deactivateDoneState);
