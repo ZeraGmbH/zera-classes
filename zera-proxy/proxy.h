@@ -28,10 +28,8 @@ public:
       */
     static cProxy* getInstance();
     cProxyClient* getConnection(QString ipadress, quint16 port);
-    cProxyClient* getConnection(quint16 port);
     void startConnection(cProxyClient *client);
     bool releaseConnection(cProxyClient* client);
-    void setIPAdress(QString ipAddress);
 
 protected:
     /**
