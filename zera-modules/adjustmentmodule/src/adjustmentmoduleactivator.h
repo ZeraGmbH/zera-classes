@@ -6,11 +6,13 @@
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
 #include "rminterface.h"
+#include "pcbinterface.h"
 #include <QState>
 #include <QFinalState>
 #include <QStateMachine>
 #include <QTimer>
 #include <functional>
+#include <QList>
 
 namespace ADJUSTMENTMODULE
 {
@@ -61,10 +63,13 @@ private:
     QFinalState m_activationDoneState;
 
     QState m_deactivateState;
+    QState m_unregisterState;
+    QState m_unregisterLoopState;
     QFinalState m_deactivateDoneState;
 
     QHash<quint32, int> m_MsgNrCmdList;
-    int activationIt;
+    int activationIt = 0;
+    QList<Zera::Server::cPCBInterface*>::ConstIterator deactivationIt;
 };
 
 }
