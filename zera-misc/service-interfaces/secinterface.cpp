@@ -7,9 +7,14 @@ namespace Zera
 namespace Server
 {
 
-cSECInterface::cSECInterface()
-    :d_ptr(new cSECInterfacePrivate(this))
+cSECInterface::cSECInterface() :
+    d_ptr(new cSECInterfacePrivate(this))
 {
+}
+
+cSECInterface::~cSECInterface()
+{
+    delete d_ptr;
 }
 
 
