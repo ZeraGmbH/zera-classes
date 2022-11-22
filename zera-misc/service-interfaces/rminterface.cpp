@@ -7,16 +7,21 @@ namespace Zera
 namespace Server
 {
 
-cRMInterface::cRMInterface()
-    :d_ptr(new cRMInterfacePrivate(this))
+cRMInterface::cRMInterface() :
+    d_ptr(new cRMInterfacePrivate(this))
 {
 }
 
+cRMInterface::~cRMInterface()
+{
+    delete d_ptr;
+}
 
-void cRMInterface::setClient(Proxy::cProxyClient *client)
+
+void cRMInterface::setClientSmart(Proxy::ProxyClientPtr client)
 {
     Q_D(cRMInterface);
-    return d->setClient(client);
+    return d->setClientSmart(client);
 }
 
 

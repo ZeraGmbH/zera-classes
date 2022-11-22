@@ -6,15 +6,14 @@ namespace Zera
 namespace Server
 {
 
-
-cPCBInterface::cPCBInterface()
-    :d_ptr(new cPCBInterfacePrivate(this))
+cPCBInterface::cPCBInterface() :
+    d_ptr(new cPCBInterfacePrivate(this))
 {
 }
 
-
 cPCBInterface::~cPCBInterface()
 {
+    delete d_ptr;
 }
 
 

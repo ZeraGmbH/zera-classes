@@ -8,9 +8,14 @@ namespace Server
 {
 
 
-cDSPInterface::cDSPInterface()
-    :d_ptr(new cDSPInterfacePrivate(this))
+cDSPInterface::cDSPInterface() :
+    d_ptr(new cDSPInterfacePrivate(this))
 {
+}
+
+cDSPInterface::~cDSPInterface()
+{
+    delete d_ptr;
 }
 
 
