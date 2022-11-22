@@ -180,7 +180,6 @@ cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
         siInfo = mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i)); // change the hash for access via alias
         delete siInfo;
     }
-    m_pProxy->releaseConnection(m_pRMClient);
     delete m_pSECInterface;
     m_pProxy->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;
@@ -981,13 +980,13 @@ QString cSec1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 void cSec1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = m_pProxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient); //
-    resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    m_rmInterface.setClientSmart(m_rmClient);
+    resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
 }
 
 
@@ -1327,8 +1326,6 @@ void cSec1ModuleMeasProgram::freeECResource()
 
 void cSec1ModuleMeasProgram::deactivationDone()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
-
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pSECInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);

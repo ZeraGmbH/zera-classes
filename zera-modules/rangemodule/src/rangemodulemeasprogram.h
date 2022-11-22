@@ -97,7 +97,7 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
-    Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Proxy::ProxyClientPtr m_rmClient;
 
     QTimer m_demoPeriodicTimer;
 

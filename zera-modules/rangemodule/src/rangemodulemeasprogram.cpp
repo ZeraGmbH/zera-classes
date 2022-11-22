@@ -205,10 +205,7 @@ void cRangeModuleMeasProgram::setDspCmdList()
     // we compute or copy our wanted actual values
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
-        quint8 chnnr;
-
         cRangeMeasChannel* mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        chnnr = mchn->getDSPChannelNr();
         m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(mchn->getDSPChannelNr())); // for each channel we work on
         m_pDSPInterFace->addCycListItem( s = QString("SETPEAK(MEASSIGNAL,CHXPEAK+%1)").arg(i)); // here we have signal with dc regardless subdc is configured
         //m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL)").arg(chnnr)); // for each channel we work on
@@ -475,13 +472,13 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
 void cRangeModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = m_pProxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient); //
-    resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    m_rmInterface.setClientSmart(m_rmClient); //
+    resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
 }
 
 
@@ -572,7 +569,6 @@ void cRangeModuleMeasProgram::freeUSERMem()
 
 void cRangeModuleMeasProgram::deactivateDSPdone()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
     emit deactivated();

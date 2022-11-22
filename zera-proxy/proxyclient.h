@@ -41,6 +41,8 @@ signals:
     void connected();
 };
 
+typedef std::shared_ptr<cProxyClient> ProxyClientPtr;
+
 }
 }
 

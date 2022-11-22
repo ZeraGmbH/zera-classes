@@ -18,6 +18,7 @@ class cProxyClientPrivate: public cProxyClient
 
 public:
     cProxyClientPrivate(cProxyPrivate* proxy);
+    virtual ~cProxyClientPrivate();
     void transmitAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message);
     void transmitError(QAbstractSocket::SocketError errorCode);
     void transmitDisConnection();

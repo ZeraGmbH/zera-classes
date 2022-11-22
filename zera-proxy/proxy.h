@@ -1,11 +1,9 @@
 #ifndef PROXY_H
 #define PROXY_H
 
-#include <QObject>
-
 #include "proxy_global.h"
-
-
+#include "proxyclient.h"
+#include <QObject>
 
 namespace Zera
 {
@@ -28,7 +26,9 @@ public:
       */
     static cProxy* getInstance();
     cProxyClient* getConnection(QString ipadress, quint16 port);
+    ProxyClientPtr getConnectionSmart(QString ipadress, quint16 port);
     void startConnection(cProxyClient *client);
+    void startConnectionSmart(ProxyClientPtr client);
     bool releaseConnection(cProxyClient* client);
 
 protected:

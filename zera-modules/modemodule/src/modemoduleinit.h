@@ -83,7 +83,7 @@ private:
     Zera::Server::cDSPInterface *m_pDSPInterface;
     Zera::Proxy::cProxyClient *m_pDSPClient;
     Zera::Server::cRMInterface m_rmInterface;
-    Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Proxy::ProxyClientPtr m_rmClient;
 
     QString m_sDescription;
     quint16 m_nPort; // the port adress of pcb server

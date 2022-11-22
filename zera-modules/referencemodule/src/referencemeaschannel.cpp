@@ -469,14 +469,14 @@ void cReferenceMeasChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-    m_rmConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    m_rmClient = m_pProxy->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    m_rmConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
     // and then we set connection resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient); //
+    m_rmInterface.setClientSmart(m_rmClient); //
     // todo insert timer for timeout
 
     connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
     // nein -> fehler activierung
@@ -594,7 +594,6 @@ void cReferenceMeasChannel::activationDone()
 
 void cReferenceMeasChannel::deactivationInit()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
     m_pProxy->releaseConnection(m_pPCBClient);
     emit deactivationContinue();
 }

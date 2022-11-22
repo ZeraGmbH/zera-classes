@@ -121,7 +121,7 @@ private:
     QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
 
-    Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Proxy::ProxyClientPtr m_rmClient;
     Zera::Proxy::cProxyClient* m_pSECClient;
     Zera::Proxy::cProxyClient* m_pPCBClient;
 

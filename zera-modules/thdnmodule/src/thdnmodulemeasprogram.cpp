@@ -137,8 +137,6 @@ cThdnModuleMeasProgram::~cThdnModuleMeasProgram()
 
     delete m_pDSPInterFace;
     m_pProxy->releaseConnection(m_pDspClient);
-
-    m_pProxy->releaseConnection(m_pRMClient);
 }
 
 
@@ -697,12 +695,12 @@ void cThdnModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = m_pProxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient);
-    m_resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    m_rmInterface.setClientSmart(m_rmClient);
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
     connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
 }
 
 

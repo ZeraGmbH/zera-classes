@@ -44,7 +44,7 @@ private:
     Zera::Proxy::cProxy *m_proxy;
     std::shared_ptr<cBaseModuleConfiguration> m_configuration;
     Zera::Server::cRMInterface m_rmInterface;
-    Zera::Proxy::cProxyClient *m_pRMClient;
+    Zera::Proxy::ProxyClientPtr m_rmClient;
 
     QState m_rmConnectState; // we must connect first to resource manager
     QState m_IdentifyState; // we must identify ourself at resource manager

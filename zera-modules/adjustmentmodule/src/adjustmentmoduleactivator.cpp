@@ -28,12 +28,12 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
     connect(&m_rmConnectState, &QState::entered, this, [&]() {
         // we instantiate a working resource manager interface first
         // so first we try to get a connection to resource manager over proxy
-        m_pRMClient = m_proxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-        m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+        m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+        m_rmConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
-        m_rmInterface.setClient(m_pRMClient);
+        m_rmInterface.setClientSmart(m_rmClient);
         connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-        m_proxy->startConnection(m_pRMClient);
+        m_proxy->startConnectionSmart(m_rmClient);
     });
 
     m_activationMachine.addState(&m_IdentifyState);
@@ -303,7 +303,6 @@ void AdjustmentModuleActivator::setUpDeactivationStateMachine()
 
     m_deactivationMachine.addState(&m_deactivateDoneState);
     connect(&m_deactivateDoneState, &QState::entered, this, [&]() {
-        m_proxy->releaseConnection(m_pRMClient);
         emit sigDeactivationReady();
     });
 }

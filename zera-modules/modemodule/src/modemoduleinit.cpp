@@ -293,13 +293,13 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
 void cModeModuleInit::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_rmClient = m_pProxy->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient); //
-    m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    m_rmInterface.setClientSmart(m_rmClient); //
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cModeModuleInit::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
 }
 
 
@@ -497,7 +497,6 @@ void cModeModuleInit::freeResource()
 
 void cModeModuleInit::deactivationDone()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
     // and disconnect from our servers afterwards
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);

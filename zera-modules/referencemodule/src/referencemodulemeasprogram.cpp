@@ -341,13 +341,13 @@ cReferenceModuleConfigData *cReferenceModuleMeasProgram::getConfData()
 void cReferenceModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = m_pProxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient); //
-    resourceManagerConnectState.addTransition(m_pRMClient, SIGNAL(connected()), &m_IdentifyState);
+    m_rmInterface.setClientSmart(m_rmClient); //
+    resourceManagerConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
     connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
 }
 
 
@@ -432,7 +432,6 @@ void cReferenceModuleMeasProgram::freeUSERMem()
 
 void cReferenceModuleMeasProgram::deactivateDSPdone()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterFace, 0, this, 0);
     emit deactivated();

@@ -159,7 +159,7 @@ private:
     qint32 m_RangeQueryIt;
     cRangeInfo m_CurrRangeInfo;
 
-    Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Proxy::ProxyClientPtr m_rmClient;
     Zera::Proxy::cProxyClient* m_pPCBClient;
 
     void setRangeListAlias();

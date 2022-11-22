@@ -13,8 +13,10 @@
 namespace SAMPLEMODULE
 {
 
-cSampleChannel::cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configdata, quint8 chnnr)
-    :m_pModule(module), m_ConfigData(configdata), cBaseSampleChannel(proxy, configdata.m_ObsermaticConfPar.m_sSampleSystem, chnnr)
+cSampleChannel::cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& configdata, quint8 chnnr) :
+    cBaseSampleChannel(proxy, configdata.m_ObsermaticConfPar.m_sSampleSystem, chnnr),
+    m_pModule(module),
+    m_ConfigData(configdata)
 {
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
@@ -65,7 +67,6 @@ cSampleChannel::cSampleChannel(cSampleModule* module,Zera::Proxy::cProxy* proxy,
 
 cSampleChannel::~cSampleChannel()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
     m_pProxy->releaseConnection(m_pPCBClient);
     delete m_pPCBInterface;
 }
@@ -271,14 +272,14 @@ void cSampleChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
-    m_rmConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    m_rmClient = m_pProxy->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_rmConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient); //
+    m_rmInterface.setClientSmart(m_rmClient); //
     // todo insert timer for timeout
 
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
     // nein -> fehler activierung
