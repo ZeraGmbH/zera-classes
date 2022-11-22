@@ -24,7 +24,7 @@ protected:
     Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
     Zera::Server::cRMInterface m_rmInterface;
-    Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Proxy::ProxyClientPtr m_rmClient;
     // we hold an interface for every channel because it could be possible that our measuring
     // channels are spread over several pcb's
     QList<Zera::Server::cPCBInterface*> m_pcbIFaceList; // our interface(s) to pcb

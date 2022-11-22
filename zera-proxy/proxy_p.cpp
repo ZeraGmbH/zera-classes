@@ -22,26 +22,22 @@ cProxyPrivate::cProxyPrivate(cProxy *parent):
 
 cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
 {
-    cProxyNetPeer* netClient = searchConnection(ipadress, port);
-    if(!netClient)  {// look for existing connection
-        netClient = new cProxyNetPeer(this);
-        netClient->setWrapper(&protobufWrapper);
-        connect(netClient, &cProxyNetPeer::sigMessageReceived, this, &cProxyPrivate::receiveMessage);
-        connect(netClient, &cProxyNetPeer::sigSocketError, this, &cProxyPrivate::receiveTcpError);
-        connect(netClient, &cProxyNetPeer::sigConnectionEstablished, this, &cProxyPrivate::registerConnection);
-        connect(netClient, &cProxyNetPeer::sigConnectionClosed, this, &cProxyPrivate::registerDisConnection);
-    }
-
-    cProxyClientPrivate *proxyclient = new cProxyClientPrivate(this);
-
     QUuid uuid = QUuid::createUuid(); // we use a per client uuid
     QByteArray binUUid = uuid.toRfc4122();
 
-    cProxyConnection *connection = new cProxyConnection(ipadress, port, binUUid, netClient);
+    cProxyNetPeer *proxyPeer = getProxyNetPeer(ipadress, port);
+    cProxyClientPrivate *proxyclient = new cProxyClientPrivate(this);
+    cProxyConnection *connection = new cProxyConnection(ipadress, port, binUUid, proxyPeer);
     m_ConnectionHash[proxyclient] = connection;
     m_ClientHash[binUUid] = proxyclient;
 
     return proxyclient;
+}
+
+ProxyClientPtr cProxyPrivate::getConnectionSmart(QString ipadress, quint16 port)
+{
+    cProxyClient* client = getConnection(ipadress, port);
+    return ProxyClientPtr(client);
 }
 
 void cProxyPrivate::startConnection(cProxyClientPrivate *client)
@@ -145,6 +141,20 @@ void cProxyPrivate::registerDisConnection()
             client->transmitDisConnection(); // so this client will be forwarded connection
         }
     }
+}
+
+cProxyNetPeer *cProxyPrivate::getProxyNetPeer(QString ipadress, quint16 port)
+{
+    cProxyNetPeer* netClient = searchConnection(ipadress, port);
+    if(!netClient)  {// look for existing connection
+        netClient = new cProxyNetPeer(this);
+        netClient->setWrapper(&protobufWrapper);
+        connect(netClient, &cProxyNetPeer::sigMessageReceived, this, &cProxyPrivate::receiveMessage);
+        connect(netClient, &cProxyNetPeer::sigSocketError, this, &cProxyPrivate::receiveTcpError);
+        connect(netClient, &cProxyNetPeer::sigConnectionEstablished, this, &cProxyPrivate::registerConnection);
+        connect(netClient, &cProxyNetPeer::sigConnectionClosed, this, &cProxyPrivate::registerDisConnection);
+    }
+    return netClient;
 }
 
 cProxyNetPeer* cProxyPrivate::searchConnection(QString ip, quint16 port)

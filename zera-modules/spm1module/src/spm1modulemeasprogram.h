@@ -128,7 +128,7 @@ private:
     QState m_readFinalTimeCounterState;
     QFinalState m_setEMResultState;
 
-    Zera::Proxy::cProxyClient* m_pRMClient;
+    Zera::Proxy::ProxyClientPtr m_rmClient;
     Zera::Proxy::cProxyClient* m_pSECClient;
     Zera::Proxy::cProxyClient* m_pPCBClient;
 

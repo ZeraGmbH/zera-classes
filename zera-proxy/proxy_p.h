@@ -34,6 +34,7 @@ protected:
     cProxyPrivate(cProxy *parent);
     ~cProxyPrivate(){}
     cProxyClient* getConnection(QString ipadress, quint16 port);
+    ProxyClientPtr getConnectionSmart(QString ipadress, quint16 port);
     void startConnection(cProxyClientPrivate *client);
     bool releaseConnection(cProxyClientPrivate *client);
 
@@ -54,8 +55,7 @@ protected slots:
     void registerDisConnection();
 
 private:
-    Q_DISABLE_COPY(cProxyPrivate)
-    Q_DECLARE_PUBLIC(cProxy)
+    cProxyNetPeer *getProxyNetPeer(QString ipadress, quint16 port);
 
     XiQNetWrapper protobufWrapper;
     cProxyNetPeer *searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
@@ -63,6 +63,8 @@ private:
     QHash<QByteArray, cProxyClientPrivate*> m_ClientHash; // information for faster redirecting
     quint32 m_nMessageNumber; // message number, .. we never use 0
 
+    Q_DISABLE_COPY(cProxyPrivate)
+    Q_DECLARE_PUBLIC(cProxy)
 };
 
 }

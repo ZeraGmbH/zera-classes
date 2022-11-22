@@ -9,10 +9,14 @@ namespace Zera
 namespace Proxy
 {
 
-cProxyClientPrivate::cProxyClientPrivate(cProxyPrivate* proxy)
-    :m_pProxy(proxy)
+cProxyClientPrivate::cProxyClientPrivate(cProxyPrivate* proxy) : m_pProxy(proxy)
 {
     setParent(proxy);
+}
+
+cProxyClientPrivate::~cProxyClientPrivate()
+{
+    cProxy::getInstance()->releaseConnection(this);
 }
 
 

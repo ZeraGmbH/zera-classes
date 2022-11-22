@@ -474,13 +474,13 @@ void cStatusModuleInit::setInterfaceComponents()
 void cStatusModuleInit::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_pRMClient = m_pProxy->getConnection(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_rmClient = m_pProxy->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
-    m_rmInterface.setClient(m_pRMClient); //
-    m_resourceManagerConnectState.addTransition(m_pRMClient, &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    m_rmInterface.setClientSmart(m_rmClient); //
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pRMClient);
+    m_pProxy->startConnectionSmart(m_rmClient);
 }
 
 
@@ -592,7 +592,6 @@ void cStatusModuleInit::activationDone()
 
 void cStatusModuleInit::deactivationDone()
 {
-    m_pProxy->releaseConnection(m_pRMClient);
     m_pProxy->releaseConnection(m_pDSPClient);
     m_pProxy->releaseConnection(m_pPCBClient);
     // and disconnect from our servers afterwards
