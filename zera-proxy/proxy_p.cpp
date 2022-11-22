@@ -17,14 +17,11 @@ cProxy* cProxyPrivate::singletonInstance=0;
 cProxyPrivate::cProxyPrivate(cProxy *parent):
     q_ptr(parent)
 {
-    m_sIPAdress = "127.0.0.1"; // our default
     m_nMessageNumber = 0;
 }
 
 cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
 {
-    if(ipadress == "")
-        ipadress = m_sIPAdress;
     cProxyNetPeer* netClient = searchConnection(ipadress, port);
     if(!netClient)  {// look for existing connection
         netClient = new cProxyNetPeer(this);
@@ -45,11 +42,6 @@ cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
     m_ClientHash[binUUid] = proxyclient;
 
     return proxyclient;
-}
-
-cProxyClient* cProxyPrivate::getConnection(quint16 port)
-{
-    return getConnection(m_sIPAdress, port);
 }
 
 void cProxyPrivate::startConnection(cProxyClientPrivate *client)
@@ -96,11 +88,6 @@ quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMess
 
     m_ConnectionHash[client]->m_pNetClient->sendMessage(*message);
     return nr;
-}
-
-void cProxyPrivate::setIPAdress(QString ipAddress)
-{
-    m_sIPAdress = ipAddress;
 }
 
 void cProxyPrivate::receiveMessage(std::shared_ptr<google::protobuf::Message> message)

@@ -34,11 +34,8 @@ protected:
     cProxyPrivate(cProxy *parent);
     ~cProxyPrivate(){}
     cProxyClient* getConnection(QString ipadress, quint16 port);
-    cProxyClient* getConnection(quint16 port);
     void startConnection(cProxyClientPrivate *client);
     bool releaseConnection(cProxyClientPrivate *client);
-
-    void setIPAdress(QString ipAddress);
 
     /**
        * @brief singletonInstance
@@ -64,7 +61,6 @@ private:
     cProxyNetPeer *searchConnection(QString ip, quint16 port); // we search for a netclient that matches ip, port
     QHash<cProxyClientPrivate*, cProxyConnection*> m_ConnectionHash; // holds network connection for each client
     QHash<QByteArray, cProxyClientPrivate*> m_ClientHash; // information for faster redirecting
-    QString m_sIPAdress; // ip adress for all zera servers, default localhost
     quint32 m_nMessageNumber; // message number, .. we never use 0
 
 };
