@@ -8,12 +8,13 @@ class test_blockunblockwrapper : public QObject
 {
     Q_OBJECT
 signals:
-    void dummyDone();
-    void dummyError(QString);
+    void sigNone();
 private slots:
     void detectSignal();
-    void detectNoSignalOnAbort();
+    void detectSignalWithNoneErrSig();
+    void handleAbort();
     void detectError();
+    void detectTimeout();
 };
 
 #endif // TEST_BLOCKUNBLOCKWRAPPER_H
