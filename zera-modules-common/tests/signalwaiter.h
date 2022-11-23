@@ -3,40 +3,60 @@
 
 #include <QObject>
 #include <QEventLoop>
+#include <QTimer>
 
 class SignalWaiter : public QObject
 {
     Q_OBJECT
-signals:
-    void defaultNoError(QString);
 public:
+    enum WaitResult {
+        WAIT_OK_SIG,
+        WAIT_ERR_SIG,
+        WAIT_ABORT,
+        WAIT_TIMEOUT,
+        WAIT_UNDEF
+    };
     template <typename Func1>
-    bool WaitForSignal(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal, int)
+    WaitResult WaitForSignal(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal,
+                       int timeout = 0)
     {
-        return WaitForSignal(doneSender, doneSignal, this, &SignalWaiter::defaultNoError);
+        return WaitForSignal(doneSender, doneSignal, this, &SignalWaiter::sigDefaultNoError, timeout);
     }
     template <typename Func1, typename Func2>
-    bool WaitForSignal(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal,
-                       const typename QtPrivate::FunctionPointer<Func2>::Object *errorSender, Func2 errorSignal)
+    WaitResult WaitForSignal(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal,
+                             const typename QtPrivate::FunctionPointer<Func2>::Object *errorSender, Func2 errorSignal,
+                             int timeout = 0)
     {
-        m_error.clear();
-        bool signalReceived = false;
-        connect(doneSender, doneSignal, [&] () {
-            signalReceived = true;
+        WaitResult result = WAIT_UNDEF;
+        connect(doneSender, doneSignal, [&]() {
+            result = WAIT_OK_SIG;
             m_eventLoop.quit();
         });
-        connect(errorSender, errorSignal, [&] (QString error) {
-            m_error = error;
+        connect(errorSender, errorSignal, [&]() {
+            result = WAIT_ERR_SIG;
             m_eventLoop.quit();
         });
+        connect(this, &SignalWaiter::sigAbort, [&]() {
+            result = WAIT_ABORT;
+            m_eventLoop.quit();
+        });
+        QTimer timer;
+        connect(&timer, &QTimer::timeout, this, [&]() {
+            result = WAIT_TIMEOUT;
+            m_eventLoop.quit();
+        });
+        if(timeout > 0) {
+            timer.start(timeout);
+        }
         m_eventLoop.exec();
-        return signalReceived;
+        return result;
     };
-    void abort() { m_eventLoop.quit(); }
-    QString getError() { return m_error; }
+    void abort() { emit sigAbort(); }
+signals:
+    void sigDefaultNoError();
+    void sigAbort();
 private:
     QEventLoop m_eventLoop;
-    QString m_error;
 };
 
 #endif // SIGNALWAITER_H
