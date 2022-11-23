@@ -54,20 +54,20 @@ public:
     cSECInterface();
     virtual ~cSECInterface();
     void setClient(Zera::Proxy::cProxyClient *client);
-    quint32 setECalcUnit(int n); // we want n eclac units, answer is the names of them
-    quint32 freeECalcUnits(); // free all the units the client had set
-    quint32 writeRegister(QString chnname, quint8 reg, quint32 value); // transp. register access
-    quint32 readRegister(QString chnname, quint8 reg);
+    virtual quint32 setECalcUnit(int n); // we want n eclac units, answer is the names of them
+    virtual quint32 freeECalcUnits(); // free all the units the client had set
+    virtual quint32 writeRegister(QString chnname, quint8 reg, quint32 value); // transp. register access
+    virtual quint32 readRegister(QString chnname, quint8 reg);
 
-    quint32 setSync(QString chnname, QString syncchn);
-    quint32 setMux(QString chnname, QString inpname);
-    quint32 setCmdid(QString chnname, quint8 cmdid);
-    quint32 start(QString chnname);
-    quint32 stop(QString chnname);
-    quint32 intAck(QString chnname, quint8 interrupt);
+    virtual quint32 setSync(QString chnname, QString syncchn);
+    virtual quint32 setMux(QString chnname, QString inpname);
+    virtual quint32 setCmdid(QString chnname, quint8 cmdid);
+    virtual quint32 start(QString chnname);
+    virtual quint32 stop(QString chnname);
+    virtual quint32 intAck(QString chnname, quint8 interrupt);
 
-    quint32 registerNotifier(QString query); // register for notification on change
-    quint32 unregisterNotifiers(); // unregister from all notifications
+    virtual quint32 registerNotifier(QString query); // register for notification on change
+    virtual quint32 unregisterNotifiers(); // unregister from all notifications
     static constexpr quint32 maxSecCounterInitVal = std::numeric_limits<quint32>::max() - 1;
 signals:
     void tcpError(QAbstractSocket::SocketError errorCode);
