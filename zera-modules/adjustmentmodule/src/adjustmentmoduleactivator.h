@@ -43,14 +43,14 @@ private:
     void setUpResourceTypeHandler();
     bool readChannels();
     void setUpReadChannelsHandler();
-    bool readPortNo(int channelNo);
+    bool readPortNo(QString channelName);
     void setUpReadPortHandler();
-    bool openPcbConnection(int channelNo);
-    bool readChannelAlias(int channelNo);
+    bool openPcbConnection(QString channelName);
+    bool readChannelAlias(QString channelName);
     void setUpReadChannelAliasHandler();
-    bool regNotifier(int channelNo);
+    bool regNotifier(QString channelName);
     void setUpRegisterNotifierHandler();
-    bool readRangeList(int channelNo);
+    bool readRangeList(QString channelName);
     void setUpRangeListHandler();
     bool checkExternalVeinComponents();
 
