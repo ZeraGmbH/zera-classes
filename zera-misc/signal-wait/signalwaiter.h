@@ -28,13 +28,16 @@ public:
         setup(doneSender, doneSignal, errorSender, errorSignal, timeout);
     }
 
-    WaitResult wait() {
+    bool wait() {
         if(!m_signalReceived) {
             if(m_timeoutMs > 0) {
                 m_timeoutTimer.start(m_timeoutMs);
             }
             m_eventLoop.exec();
         }
+        return m_waitResult == WAIT_OK_SIG;
+    }
+    WaitResult getResult() {
         return m_waitResult;
     }
     void abort() { emit sigAbort(); }

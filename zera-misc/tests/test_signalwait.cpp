@@ -10,14 +10,16 @@ void test_signalwait::detectSignal()
     QTimer timer;
     SignalWaiter waiter(&timer, &QTimer::timeout);
     timer.start(1);
-    QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
+    QVERIFY(waiter.wait());
+    QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.getResult());
 }
 
 void test_signalwait::detectDirectEarlyEmitSignal()
 {
     SignalWaiter waiter(this, &test_signalwait::sigTest);
     emit sigTest();
-    QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
+    QVERIFY(waiter.wait());
+    QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.getResult());
 }
 
 void test_signalwait::detectSignalWithNoneErrSig()
@@ -26,7 +28,8 @@ void test_signalwait::detectSignalWithNoneErrSig()
     SignalWaiter waiter(&timer, &QTimer::timeout,
                         this, &test_signalwait::sigNone);
     timer.start(1);
-    QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
+    QVERIFY(waiter.wait());
+    QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.getResult());
 }
 
 void test_signalwait::handleAbort()
@@ -37,7 +40,8 @@ void test_signalwait::handleAbort()
     connect(&timer, &QTimer::timeout, this, [&]() {
         waiter.abort();
     });
-    QCOMPARE(SignalWaiter::WAIT_ABORT, waiter.wait());
+    QVERIFY(!waiter.wait());
+    QCOMPARE(SignalWaiter::WAIT_ABORT, waiter.getResult());
 }
 
 void test_signalwait::detectError()
@@ -46,14 +50,16 @@ void test_signalwait::detectError()
     SignalWaiter waiter(this, &test_signalwait::sigNone,
                         &timer, &QTimer::timeout);
     timer.start(1);
-    QCOMPARE(SignalWaiter::WAIT_ERR_SIG, waiter.wait());
+    QVERIFY(!waiter.wait());
+    QCOMPARE(SignalWaiter::WAIT_ERR_SIG, waiter.getResult());
 }
 
 void test_signalwait::detectTimeout()
 {
     SignalWaiter waiter(this, &test_signalwait::sigNone,
                         this, &test_signalwait::sigNone, 1);
-    QCOMPARE(SignalWaiter::WAIT_TIMEOUT, waiter.wait());
+    QVERIFY(!waiter.wait());
+    QCOMPARE(SignalWaiter::WAIT_TIMEOUT, waiter.getResult());
 }
 
 void test_signalwait::timeoutStartsOnWait()
@@ -67,7 +73,8 @@ void test_signalwait::timeoutStartsOnWait()
 
     QElapsedTimer timer;
     timer.start();
-    QCOMPARE(SignalWaiter::WAIT_TIMEOUT, waiter.wait());
+    QVERIFY(!waiter.wait());
+    QCOMPARE(SignalWaiter::WAIT_TIMEOUT, waiter.getResult());
     int elapsed = timer.elapsed();
     QVERIFY(elapsed >= 25);
 }
