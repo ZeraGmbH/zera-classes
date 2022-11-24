@@ -36,7 +36,7 @@ void AdjustmentModuleActivator::activate()
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
         // Alarm: This assumes channels configured elsewhere having same index :(
         QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
-        if(!readPortNo(channelName))
+        if(!readIpPortNo(channelName))
             return;
         if(!openPcbConnection(channelName))
             return;
@@ -66,7 +66,7 @@ void AdjustmentModuleActivator::setupServerResponseHandlers()
     setUpRmIdentHandler();
     setUpResourceTypeHandler();
     setUpReadChannelsHandler();
-    setUpReadPortHandler();
+    setUpReadIpPortHandler();
     setUpReadChannelAliasHandler();
     setUpRegisterNotifierHandler();
     setUpRangeListHandler();
@@ -178,7 +178,7 @@ void AdjustmentModuleActivator::setUpReadChannelsHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readPortNo(QString channelName)
+bool AdjustmentModuleActivator::readIpPortNo(QString channelName)
 {
     SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
                         this, &AdjustmentModuleActivator::activationError,
@@ -187,7 +187,7 @@ bool AdjustmentModuleActivator::readPortNo(QString channelName)
     return waiter.wait();
 }
 
-void AdjustmentModuleActivator::setUpReadPortHandler()
+void AdjustmentModuleActivator::setUpReadIpPortHandler()
 {
     m_cmdFinishCallbacks[readresourceinfo] = [&](quint8 reply, QVariant answer) {
         QStringList sl = answer.toString().split(';');

@@ -43,8 +43,8 @@ private:
     void setUpResourceTypeHandler();
     bool readChannels();
     void setUpReadChannelsHandler();
-    bool readPortNo(QString channelName);
-    void setUpReadPortHandler();
+    bool readIpPortNo(QString channelName);
+    void setUpReadIpPortHandler();
     bool openPcbConnection(QString channelName);
     bool readChannelAlias(QString channelName);
     void setUpReadChannelAliasHandler();
