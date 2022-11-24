@@ -48,12 +48,12 @@ private:
                              int timeout = 0)
     {
         m_timeoutMs = timeout;
-        connect(doneSender, doneSignal, [&]() {
+        connect(doneSender, doneSignal, this, [&]() {
             m_signalReceived = true;
             m_waitResult = WAIT_OK_SIG;
             m_eventLoop.quit();
         });
-        connect(errorSender, errorSignal, [&]() {
+        connect(errorSender, errorSignal, this, [&]() {
             m_signalReceived = true;
             m_waitResult = WAIT_ERR_SIG;
             m_eventLoop.quit();
