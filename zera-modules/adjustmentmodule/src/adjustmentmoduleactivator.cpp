@@ -23,6 +23,8 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
 
 void AdjustmentModuleActivator::activate()
 {
+    if(!checkExternalVeinComponents())
+        return;
     if(!openRMConnection())
         return;
     if(!sendRmIdent())
@@ -31,16 +33,20 @@ void AdjustmentModuleActivator::activate()
         return;
     if(!readChannels())
         return;
-    for(m_loopCountForHandler = 0; m_loopCountForHandler<getConfData()->m_nAdjustmentChannelCount; m_loopCountForHandler++) {
-        if(!readPortNo(m_loopCountForHandler)) // port
+    for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
+        if(!readPortNo(m_currentChannel)) // port
             return;
-        if(!openPcbConnection(m_loopCountForHandler))
+        if(!openPcbConnection(m_currentChannel))
             return;
-        if(!readChannelAlias(m_loopCountForHandler))
+        if(!readChannelAlias(m_currentChannel))
             return;
-
+        if(!regNotifier(m_currentChannel))
+            return;
+        if(!readRangeList(m_currentChannel))
+            return;
     }
-    m_activationMachine.start();
+    m_bActive = true;
+    emit sigActivationReady();
 }
 
 void AdjustmentModuleActivator::setupServerResponseHandlers()
@@ -50,6 +56,35 @@ void AdjustmentModuleActivator::setupServerResponseHandlers()
     setUpReadChannelsHandler();
     setUpReadPortHandler();
     setUpReadChannelAliasHandler();
+    setUpRegisterNotifierHandler();
+    setUpRangeListHandler();
+}
+
+bool AdjustmentModuleActivator::checkExternalVeinComponents()
+{
+    bool ok = true;
+    adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
+    if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+        ok = false;
+    adjInfo = getConfData()->m_ReferenceFrequency;
+    if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+        ok = false;
+
+    for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
+        // we test if all configured actual value data exist
+        QString chn = getConfData()->m_AdjChannelList.at(i);
+
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
+        if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+            ok = false;
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
+        if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+            ok = false;
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
+        if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+            ok = false;
+    }
+    return ok;
 }
 
 bool AdjustmentModuleActivator::openRMConnection()
@@ -147,7 +182,7 @@ void AdjustmentModuleActivator::setUpReadPortHandler()
             bool ok;
             int port = sl.at(3).toInt(&ok);
             if (ok) {
-                m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(m_loopCountForHandler)] = port;
+                m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(m_currentChannel)] = port;
                 emit activationContinue();
             }
             else
@@ -200,7 +235,7 @@ void AdjustmentModuleActivator::setUpReadChannelAliasHandler()
     m_cmdFinishCallbacks[readchnalias] = [&](quint8 reply, QVariant answer) {
         if (reply == ack) {
             QString alias = answer.toString();
-            QString sysName = getConfData()->m_AdjChannelList.at(m_loopCountForHandler);
+            QString sysName = getConfData()->m_AdjChannelList.at(m_currentChannel);
             m_activationData.m_AliasChannelHash[alias] = sysName;
             m_activationData.m_adjustChannelInfoHash[sysName]->m_sAlias = alias;
             emit activationContinue();
@@ -210,109 +245,56 @@ void AdjustmentModuleActivator::setUpReadChannelAliasHandler()
     };
 }
 
-
-
-
-void AdjustmentModuleActivator::deactivate()
+bool AdjustmentModuleActivator::regNotifier(int channelNo)
 {
-    m_deactivationMachine.start();
+    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
+                        this, &AdjustmentModuleActivator::activationError,
+                        TRANSACTION_TIMEOUT);
+    QString channel = getConfData()->m_AdjChannelList.at(channelNo); // current channel m0/m1/..
+    Zera::Server::cPCBInterface* pcbInterface = m_activationData.m_adjustChannelInfoHash[channel]->m_pPCBInterface;
+    m_MsgNrCmdList[pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(channel),"1")] = registerNotifier;
+    return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
 }
 
-void AdjustmentModuleActivator::setUpActivationStateMachine()
+void AdjustmentModuleActivator::setUpRegisterNotifierHandler()
 {
-    m_activationMachine.addState(&m_registerNotifier);
-    m_activationMachine.setInitialState(&m_registerNotifier);
-    m_registerNotifier.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
-    connect(&m_registerNotifier, &QState::entered, this, [&]() {
-        QString channel = getConfData()->m_AdjChannelList.at(activationIt); // current channel m0/m1/..
-        Zera::Server::cPCBInterface* pcbInterface = m_activationData.m_adjustChannelInfoHash[channel]->m_pPCBInterface;
-        m_MsgNrCmdList[pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(channel),"1")] = registerNotifier;
-    });
     m_cmdFinishCallbacks[registerNotifier] = [&](quint8 reply, QVariant) {
         if (reply == ack)
             emit activationContinue();
         else
             notifyActivationError(tr(registerpcbnotifierErrMsg));
     };
+}
 
-    m_activationMachine.addState(&m_readChnAliasLoopState);
-    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistState);
-    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_registerNotifier);
-    connect(&m_readChnAliasLoopState, &QState::entered, this, [&]() {
-        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-        if (activationIt == 0)
-            emit activationContinue();
-        else
-            emit activationLoop();
-    });
+bool AdjustmentModuleActivator::readRangeList(int channelNo)
+{
+    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
+                        this, &AdjustmentModuleActivator::activationError,
+                        TRANSACTION_TIMEOUT);
+    QString name = getConfData()->m_AdjChannelList.at(channelNo);
+    m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[name]->m_pPCBInterface->getRangeList(name)] = readrangelist;
+    return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
+}
 
-    m_activationMachine.addState(&m_readRangelistState);
-    m_readRangelistState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistLoopState);
-    connect(&m_readRangelistState, &QState::entered, this, [&]() {
-        QString name = getConfData()->m_AdjChannelList.at(activationIt);
-        m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[name]->m_pPCBInterface->getRangeList(name)] = readrangelist;
-    });
+void AdjustmentModuleActivator::setUpRangeListHandler()
+{
     m_cmdFinishCallbacks[readrangelist] = [&](quint8 reply, QVariant answer) {
         if (reply == ack) {
-            m_activationData.m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(activationIt)]->m_sRangelist = answer.toStringList();
+            m_activationData.m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(m_currentChannel)]->m_sRangelist = answer.toStringList();
             emit activationContinue();
         }
         else
             notifyActivationError(tr(readrangelistErrMsg));
     };
+}
 
-    m_activationMachine.addState(&m_readRangelistLoopState);
-    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_searchActualValuesState);
-    m_readRangelistLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readRangelistState);
-    connect(&m_readRangelistLoopState, &QState::entered, this, [&]() {
-        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-        if (activationIt == 0)
-            emit activationContinue();
-        else
-            emit activationLoop();
-    });
 
-    m_activationMachine.addState(&m_searchActualValuesState);
-    m_searchActualValuesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_activationDoneState);
-    connect(&m_searchActualValuesState, &QState::entered, this, [&] () {
-        bool error = false;
-        adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
-        if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            error = true;
-        adjInfo = getConfData()->m_ReferenceFrequency;
-        if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            error = true;
-        for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-            // we test if all configured actual value data exist
-            QString chn = getConfData()->m_AdjChannelList.at(i);
 
-            adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
-            if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-                error = true;
-                break;
-            }
-            adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
-            if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-                error = true;
-                break;
-            }
-            adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
-            if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
-                error = true;
-                break;
-            }
-        }
-        if (error)
-            notifyActivationError(tr(moduleActValueErrMsg));
-        else
-            emit activationContinue();
-    });
 
-    m_activationMachine.addState(&m_activationDoneState);
-    connect(&m_activationDoneState, &QState::entered, this, [&]() {
-        m_bActive = true;
-        emit sigActivationReady();
-    });
+
+void AdjustmentModuleActivator::deactivate()
+{
+    m_deactivationMachine.start();
 }
 
 void AdjustmentModuleActivator::setUpDeactivationStateMachine()
@@ -335,7 +317,7 @@ void AdjustmentModuleActivator::setUpDeactivationStateMachine()
     connect(&m_unregisterState, &QState::entered, this, [&]() {
        m_MsgNrCmdList[(*deactivationIt)->unregisterNotifiers() ] = unregisterNotifiers ;
     });
-    m_cmdFinishCallbacks[unregisterNotifiers] = [&](quint8 reply, QVariant answer) {
+    m_cmdFinishCallbacks[unregisterNotifiers] = [&](quint8 reply, QVariant) {
         if (reply == ack)
             emit deactivationContinue();
         else
