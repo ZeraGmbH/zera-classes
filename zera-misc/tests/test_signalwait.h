@@ -17,6 +17,7 @@ private slots:
     void handleAbort();
     void detectError();
     void detectTimeout();
+    void timeoutStartsOnWait();
 };
 
 #endif // TEST_BLOCKUNBLOCKWRAPPER_H
