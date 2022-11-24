@@ -72,6 +72,7 @@ target_include_directories(zeramisc
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/signal-wait>
     )
 
 set_target_properties(zeramisc PROPERTIES VERSION ${PROJECT_VERSION})
