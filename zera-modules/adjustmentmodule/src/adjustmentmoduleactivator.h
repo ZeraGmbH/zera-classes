@@ -7,12 +7,9 @@
 #include "basemoduleconfiguration.h"
 #include "rminterface.h"
 #include "pcbinterface.h"
-#include <QState>
-#include <QFinalState>
-#include <QStateMachine>
 #include <QTimer>
-#include <functional>
 #include <QList>
+#include <functional>
 
 namespace ADJUSTMENTMODULE
 {
@@ -26,7 +23,6 @@ public:
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                               AdjustmentModuleActivateData &activationData);
     void setupServerResponseHandlers();
-    void setUpDeactivationStateMachine();
 public slots:
     void generateInterface() override {}
     void activate() override;
@@ -58,6 +54,9 @@ private:
     void setUpRangeListHandler();
     bool checkExternalVeinComponents();
 
+    bool unregNotifier(int pcbInterfaceNo);
+    void setUpUnregisterNotifierHandler();
+
     AdjustmentModuleActivateData &m_activationData;
     cAdjustmentModule* m_module;
     Zera::Proxy::cProxy *m_proxy;
@@ -65,16 +64,8 @@ private:
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
-    QFinalState m_activationDoneState;
-
-    QState m_deactivateState;
-    QState m_unregisterState;
-    QState m_unregisterLoopState;
-    QFinalState m_deactivateDoneState;
-
     QHash<quint32, int> m_MsgNrCmdList;
     int m_currentChannel = 0;
-    QList<Zera::Server::cPCBInterface*>::ConstIterator deactivationIt;
 
     const int CONNECTION_TIMEOUT = 25000;
     const int TRANSACTION_TIMEOUT = 3000;
