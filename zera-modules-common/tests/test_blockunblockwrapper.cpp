@@ -13,6 +13,13 @@ void test_blockunblockwrapper::detectSignal()
     QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
 }
 
+void test_blockunblockwrapper::detectDirectEarlyEmitSignal()
+{
+    SignalWaiter waiter(this, &test_blockunblockwrapper::sigTest);
+    emit sigTest();
+    QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
+}
+
 void test_blockunblockwrapper::detectSignalWithNoneErrSig()
 {
     QTimer timer;

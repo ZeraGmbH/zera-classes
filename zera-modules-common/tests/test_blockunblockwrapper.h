@@ -9,8 +9,10 @@ class test_blockunblockwrapper : public QObject
     Q_OBJECT
 signals:
     void sigNone();
+    void sigTest();
 private slots:
     void detectSignal();
+    void detectDirectEarlyEmitSignal();
     void detectSignalWithNoneErrSig();
     void handleAbort();
     void detectError();
