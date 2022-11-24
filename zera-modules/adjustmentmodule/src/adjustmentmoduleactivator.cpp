@@ -26,10 +26,12 @@ bool AdjustmentModuleActivator::openRMConnection()
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     SignalWaiter waiter(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, 25000);
     m_rmInterface.setClientSmart(m_rmClient);
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
     m_proxy->startConnectionSmart(m_rmClient);
     SignalWaiter::WaitResult res = waiter.wait();
-    return res == SignalWaiter::WAIT_OK_SIG;
+    bool ok = (res == SignalWaiter::WAIT_OK_SIG);
+    if(ok)
+        connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
+    return ok;
 }
 
 void AdjustmentModuleActivator::activate()
