@@ -55,3 +55,19 @@ void test_signalwait::detectTimeout()
                         this, &test_signalwait::sigNone, 1);
     QCOMPARE(SignalWaiter::WAIT_TIMEOUT, waiter.wait());
 }
+
+void test_signalwait::timeoutStartsOnWait()
+{
+    SignalWaiter waiter(this, &test_signalwait::sigTest, 30);
+    QEventLoop eventLoop;
+    QTimer::singleShot(5, this, [&]() {
+        eventLoop.quit();
+    });
+    eventLoop.exec();
+
+    QElapsedTimer timer;
+    timer.start();
+    QCOMPARE(SignalWaiter::WAIT_TIMEOUT, waiter.wait());
+    int elapsed = timer.elapsed();
+    QVERIFY(elapsed >= 25);
+}

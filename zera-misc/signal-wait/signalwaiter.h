@@ -29,8 +29,12 @@ public:
     }
 
     WaitResult wait() {
-        if(!m_signalReceived)
+        if(!m_signalReceived) {
+            if(m_timeoutMs > 0) {
+                m_timeoutTimer.start(m_timeoutMs);
+            }
             m_eventLoop.exec();
+        }
         return m_waitResult;
     }
     void abort() { emit sigAbort(); }
@@ -43,6 +47,7 @@ private:
                              const typename QtPrivate::FunctionPointer<Func2>::Object *errorSender, Func2 errorSignal,
                              int timeout = 0)
     {
+        m_timeoutMs = timeout;
         connect(doneSender, doneSignal, [&]() {
             m_signalReceived = true;
             m_waitResult = WAIT_OK_SIG;
@@ -62,13 +67,11 @@ private:
             m_waitResult = WAIT_TIMEOUT;
             m_eventLoop.quit();
         });
-        if(timeout > 0) {
-            m_timeoutTimer.start(timeout);
-        }
     };
 
     QEventLoop m_eventLoop;
     QTimer m_timeoutTimer;
+    int m_timeoutMs = 0;
     WaitResult m_waitResult = WAIT_UNDEF;
     bool m_signalReceived = false;
 };
