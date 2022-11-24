@@ -46,9 +46,13 @@ private:
     void setUpRmIdentHandler();
     bool readResourceTypes();
     void setUpResourceTypeHandler();
-    bool readResourceState();
-    void setUpResourceStateHandler();
-
+    bool readChannels();
+    void setUpReadChannelsHandler();
+    bool readPortNo(int channelNo);
+    void setUpReadPortHandler();
+    bool openPcbConnection(int channelNo);
+    bool readChannelAlias(int channelNo);
+    void setUpReadChannelAliasHandler();
     AdjustmentModuleActivateData &m_activationData;
     cAdjustmentModule* m_module;
     Zera::Proxy::cProxy *m_proxy;
@@ -56,12 +60,7 @@ private:
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
-    QState m_readResourceInfoState; // we look for resource specification
     QState m_registerNotifier; // get informed about range changes
-    QState m_readResourceInfoLoopState;
-    QState m_pcbConnectionState; // we try to get a connection to all our pcb servers
-    QState m_pcbConnectionLoopState;
-    QState m_readChnAliasState; // we query all our channels alias
     QState m_readChnAliasLoopState;
     QState m_readRangelistState; // we query the range list for all our channels
     QState m_readRangelistLoopState;
@@ -75,6 +74,7 @@ private:
 
     QHash<quint32, int> m_MsgNrCmdList;
     int activationIt = 0;
+    int m_loopCountForHandler = 0;
     QList<Zera::Server::cPCBInterface*>::ConstIterator deactivationIt;
 
     const int CONNECTION_TIMEOUT = 25000;

@@ -29,8 +29,17 @@ void AdjustmentModuleActivator::activate()
         return;
     if(!readResourceTypes())
         return;
-    if(!readResourceState())
+    if(!readChannels())
         return;
+    for(m_loopCountForHandler = 0; m_loopCountForHandler<getConfData()->m_nAdjustmentChannelCount; m_loopCountForHandler++) {
+        if(!readPortNo(m_loopCountForHandler)) // port
+            return;
+        if(!openPcbConnection(m_loopCountForHandler))
+            return;
+        if(!readChannelAlias(m_loopCountForHandler))
+            return;
+
+    }
     m_activationMachine.start();
 }
 
@@ -38,7 +47,9 @@ void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
     setUpRmIdentHandler();
     setUpResourceTypeHandler();
-    setUpResourceStateHandler();
+    setUpReadChannelsHandler();
+    setUpReadPortHandler();
+    setUpReadChannelAliasHandler();
 }
 
 bool AdjustmentModuleActivator::openRMConnection()
@@ -92,7 +103,7 @@ void AdjustmentModuleActivator::setUpResourceTypeHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readResourceState()
+bool AdjustmentModuleActivator::readChannels()
 {
     SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
                         this, &AdjustmentModuleActivator::activationError,
@@ -101,7 +112,7 @@ bool AdjustmentModuleActivator::readResourceState()
     return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
 }
 
-void AdjustmentModuleActivator::setUpResourceStateHandler()
+void AdjustmentModuleActivator::setUpReadChannelsHandler()
 {
     m_cmdFinishCallbacks[readresource] = [&](quint8 reply, QVariant answer) {
         bool allPresent = false;
@@ -119,6 +130,86 @@ void AdjustmentModuleActivator::setUpResourceStateHandler()
     };
 }
 
+bool AdjustmentModuleActivator::readPortNo(int channelNo)
+{
+    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
+                        this, &AdjustmentModuleActivator::activationError,
+                        TRANSACTION_TIMEOUT);
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(channelNo))] = readresourceinfo;
+    return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
+}
+
+void AdjustmentModuleActivator::setUpReadPortHandler()
+{
+    m_cmdFinishCallbacks[readresourceinfo] = [&](quint8 reply, QVariant answer) {
+        QStringList sl = answer.toString().split(';');
+        if ((reply ==ack) && (sl.length() >= 4)) {
+            bool ok;
+            int port = sl.at(3).toInt(&ok);
+            if (ok) {
+                m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(m_loopCountForHandler)] = port;
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(tr(resourceInfoErrMsg));
+        }
+        else
+            notifyActivationError(tr(resourceInfoErrMsg));
+    };
+}
+
+bool AdjustmentModuleActivator::openPcbConnection(int channelNo)
+{
+    QString sChannel = getConfData()->m_AdjChannelList.at(channelNo); // current channel m0/m1/..
+    cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
+    m_activationData.m_adjustChannelInfoHash[sChannel] = adjustChannelInfo;
+    int port = m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(channelNo)];
+    if (m_activationData.m_portChannelHash.contains(port)) {
+        // the channels share the same interface
+        adjustChannelInfo->m_pPCBInterface = m_activationData.m_adjustChannelInfoHash[m_activationData.m_portChannelHash[port] ]->m_pPCBInterface;
+        return true;
+    }
+    else {
+        m_activationData.m_portChannelHash[port] = sChannel;
+        Zera::Proxy::cProxyClient* pcbclient = m_proxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
+        m_activationData.m_pcbClientList.append(pcbclient);
+
+        SignalWaiter waiterConnect(pcbclient, &Zera::Proxy::cProxyClient::connected, 25000);
+        Zera::Server::cPCBInterface *pcbInterface = new Zera::Server::cPCBInterface();
+        m_activationData.m_pcbInterfaceList.append(pcbInterface);
+        pcbInterface->setClient(pcbclient);
+        connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
+        adjustChannelInfo->m_pPCBInterface = pcbInterface;
+        m_proxy->startConnection((pcbclient));
+        return waiterConnect.wait() == SignalWaiter::WAIT_OK_SIG;
+    }
+}
+
+bool AdjustmentModuleActivator::readChannelAlias(int channelNo)
+{
+    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
+                        this, &AdjustmentModuleActivator::activationError,
+                        TRANSACTION_TIMEOUT);
+    QString name = getConfData()->m_AdjChannelList.at(channelNo);
+    m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[name]->m_pPCBInterface->getAlias(name)] = readchnalias;
+    return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
+}
+
+void AdjustmentModuleActivator::setUpReadChannelAliasHandler()
+{
+    m_cmdFinishCallbacks[readchnalias] = [&](quint8 reply, QVariant answer) {
+        if (reply == ack) {
+            QString alias = answer.toString();
+            QString sysName = getConfData()->m_AdjChannelList.at(m_loopCountForHandler);
+            m_activationData.m_AliasChannelHash[alias] = sysName;
+            m_activationData.m_adjustChannelInfoHash[sysName]->m_sAlias = alias;
+            emit activationContinue();
+        }
+        else
+            notifyActivationError(tr(readaliasErrMsg));
+    };
+}
+
 
 
 
@@ -129,96 +220,8 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setUpActivationStateMachine()
 {
-    m_activationMachine.addState(&m_readResourceInfoState);
-    m_activationMachine.setInitialState(&m_readResourceInfoState);
-    m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
-    connect(&m_readResourceInfoState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(activationIt))] = readresourceinfo;
-    });
-    m_cmdFinishCallbacks[readresourceinfo] = [&](quint8 reply, QVariant answer) {
-        QStringList sl = answer.toString().split(';');
-        if ((reply ==ack) && (sl.length() >= 4)) {
-            bool ok;
-            int port = sl.at(3).toInt(&ok);
-            if (ok) {
-                m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(activationIt)] = port;
-                emit activationContinue();
-            }
-            else
-                notifyActivationError(tr(resourceInfoErrMsg));
-        }
-        else
-            notifyActivationError(tr(resourceInfoErrMsg));
-    };
-
-    m_activationMachine.addState(&m_readResourceInfoLoopState);
-    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionState);
-    m_readResourceInfoLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readResourceInfoState);
-    connect(&m_readResourceInfoLoopState, &QState::entered, this, [&]() {
-        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-        if (activationIt == 0)
-            emit activationContinue();
-        else
-            emit activationLoop();
-    });
-
-    m_activationMachine.addState(&m_pcbConnectionState);
-    m_pcbConnectionState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_pcbConnectionLoopState);
-    connect(&m_pcbConnectionState, &QState::entered, this, [&] {
-        QString sChannel = getConfData()->m_AdjChannelList.at(activationIt); // current channel m0/m1/..
-        cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
-        m_activationData.m_adjustChannelInfoHash[sChannel] = adjustChannelInfo;
-        int port = m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(activationIt)];
-        if (m_activationData.m_portChannelHash.contains(port)) {
-            // the channels share the same interface
-            adjustChannelInfo->m_pPCBInterface = m_activationData.m_adjustChannelInfoHash[m_activationData.m_portChannelHash[port] ]->m_pPCBInterface;
-            emit activationContinue();
-        }
-        else {
-            m_activationData.m_portChannelHash[port] = sChannel;
-            Zera::Proxy::cProxyClient* pcbclient = m_proxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
-            m_activationData.m_pcbClientList.append(pcbclient);
-            m_pcbConnectionState.addTransition(pcbclient, &Zera::Proxy::cProxyClient::connected, &m_pcbConnectionLoopState);
-            Zera::Server::cPCBInterface *pcbInterface = new Zera::Server::cPCBInterface();
-            m_activationData.m_pcbInterfaceList.append(pcbInterface);
-            pcbInterface->setClient(pcbclient);
-            connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-            adjustChannelInfo->m_pPCBInterface = pcbInterface;
-            m_proxy->startConnection((pcbclient));
-        }
-    });
-
-    m_activationMachine.addState(&m_pcbConnectionLoopState);
-    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasState);
-    m_pcbConnectionLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_pcbConnectionState);
-    connect(&m_pcbConnectionLoopState, &QState::entered, this, [&]() {
-        activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
-        if (activationIt == 0)
-            emit activationContinue();
-        else
-            emit activationLoop();
-
-    });
-
-    m_activationMachine.addState(&m_readChnAliasState);
-    m_readChnAliasState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_registerNotifier);
-    connect(&m_readChnAliasState, &QState::entered, this, [&]() {
-        QString name = getConfData()->m_AdjChannelList.at(activationIt);
-        m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[name]->m_pPCBInterface->getAlias(name)] = readchnalias;
-    });
-    m_cmdFinishCallbacks[readchnalias] = [&](quint8 reply, QVariant answer) {
-        if (reply == ack) {
-            QString alias = answer.toString();
-            QString sysName = getConfData()->m_AdjChannelList.at(activationIt);
-            m_activationData.m_AliasChannelHash[alias] = sysName;
-            m_activationData.m_adjustChannelInfoHash[sysName]->m_sAlias = alias;
-            emit activationContinue();
-        }
-        else
-            notifyActivationError(tr(readaliasErrMsg));
-    };
-
     m_activationMachine.addState(&m_registerNotifier);
+    m_activationMachine.setInitialState(&m_registerNotifier);
     m_registerNotifier.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readChnAliasLoopState);
     connect(&m_registerNotifier, &QState::entered, this, [&]() {
         QString channel = getConfData()->m_AdjChannelList.at(activationIt); // current channel m0/m1/..
@@ -234,7 +237,7 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
 
     m_activationMachine.addState(&m_readChnAliasLoopState);
     m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readRangelistState);
-    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_readChnAliasState);
+    m_readChnAliasLoopState.addTransition(this, &cAdjustmentModuleMeasProgram::activationLoop, &m_registerNotifier);
     connect(&m_readChnAliasLoopState, &QState::entered, this, [&]() {
         activationIt = (activationIt + 1) % getConfData()->m_nAdjustmentChannelCount;
         if (activationIt == 0)
