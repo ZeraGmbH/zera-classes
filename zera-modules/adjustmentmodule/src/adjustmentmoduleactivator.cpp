@@ -209,7 +209,7 @@ bool AdjustmentModuleActivator::openPcbConnection(int channelNo)
     QString sChannel = getConfData()->m_AdjChannelList.at(channelNo); // current channel m0/m1/..
     cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
     m_activationData.m_adjustChannelInfoHash[sChannel] = adjustChannelInfo;
-    int port = m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(channelNo)];
+    int port = m_activationData.m_chnPortHash[sChannel];
     if (m_activationData.m_portChannelHash.contains(port)) {
         // the channels share the same interface
         adjustChannelInfo->m_pPCBInterface = m_activationData.m_adjustChannelInfoHash[m_activationData.m_portChannelHash[port] ]->m_pPCBInterface;
