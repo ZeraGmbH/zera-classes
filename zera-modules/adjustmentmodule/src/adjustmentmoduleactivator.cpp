@@ -307,6 +307,16 @@ void AdjustmentModuleActivator::setUpDeactivationStateMachine()
     });
 }
 
+void AdjustmentModuleActivator::activate()
+{
+    m_activationMachine.start();
+}
+
+void AdjustmentModuleActivator::deactivate()
+{
+    m_deactivationMachine.start();
+}
+
 void AdjustmentModuleActivator::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (m_MsgNrCmdList.contains(msgnr)) {
