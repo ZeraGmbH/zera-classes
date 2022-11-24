@@ -1,11 +1,11 @@
-#include "test_blockunblockwrapper.h"
+#include "test_signalwait.h"
 #include "signalwaiter.h"
 #include <QTest>
 #include <QTimer>
 
-QTEST_MAIN(test_blockunblockwrapper)
+QTEST_MAIN(test_signalwait)
 
-void test_blockunblockwrapper::detectSignal()
+void test_signalwait::detectSignal()
 {
     QTimer timer;
     SignalWaiter waiter(&timer, &QTimer::timeout);
@@ -13,26 +13,26 @@ void test_blockunblockwrapper::detectSignal()
     QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
 }
 
-void test_blockunblockwrapper::detectDirectEarlyEmitSignal()
+void test_signalwait::detectDirectEarlyEmitSignal()
 {
-    SignalWaiter waiter(this, &test_blockunblockwrapper::sigTest);
+    SignalWaiter waiter(this, &test_signalwait::sigTest);
     emit sigTest();
     QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
 }
 
-void test_blockunblockwrapper::detectSignalWithNoneErrSig()
+void test_signalwait::detectSignalWithNoneErrSig()
 {
     QTimer timer;
     SignalWaiter waiter(&timer, &QTimer::timeout,
-                        this, &test_blockunblockwrapper::sigNone);
+                        this, &test_signalwait::sigNone);
     timer.start(1);
     QCOMPARE(SignalWaiter::WAIT_OK_SIG, waiter.wait());
 }
 
-void test_blockunblockwrapper::handleAbort()
+void test_signalwait::handleAbort()
 {
     QTimer timer;
-    SignalWaiter waiter(this, &test_blockunblockwrapper::sigNone);
+    SignalWaiter waiter(this, &test_signalwait::sigNone);
     timer.start(1);
     connect(&timer, &QTimer::timeout, this, [&]() {
         waiter.abort();
@@ -40,18 +40,18 @@ void test_blockunblockwrapper::handleAbort()
     QCOMPARE(SignalWaiter::WAIT_ABORT, waiter.wait());
 }
 
-void test_blockunblockwrapper::detectError()
+void test_signalwait::detectError()
 {
     QTimer timer;
-    SignalWaiter waiter(this, &test_blockunblockwrapper::sigNone,
+    SignalWaiter waiter(this, &test_signalwait::sigNone,
                         &timer, &QTimer::timeout);
     timer.start(1);
     QCOMPARE(SignalWaiter::WAIT_ERR_SIG, waiter.wait());
 }
 
-void test_blockunblockwrapper::detectTimeout()
+void test_signalwait::detectTimeout()
 {
-    SignalWaiter waiter(this, &test_blockunblockwrapper::sigNone,
-                        this, &test_blockunblockwrapper::sigNone, 1);
+    SignalWaiter waiter(this, &test_signalwait::sigNone,
+                        this, &test_signalwait::sigNone, 1);
     QCOMPARE(SignalWaiter::WAIT_TIMEOUT, waiter.wait());
 }
