@@ -57,7 +57,6 @@ function(SETUP_TESTS)
         target_include_directories(${_testname}
             PUBLIC
             ${PROJECT_SOURCE_DIR}/src
-            ${CMAKE_CURRENT_SOURCE_DIR}/../signal-wait
             )
         target_link_libraries(${_testname}
             PUBLIC
