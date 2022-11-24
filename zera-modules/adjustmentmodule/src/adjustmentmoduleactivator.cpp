@@ -25,7 +25,11 @@ void AdjustmentModuleActivator::activate()
 {
     if(!openRMConnection())
         return;
-    if(!setRmIdent())
+    if(!sendRmIdent())
+        return;
+    if(!readResourceTypes())
+        return;
+    if(!readResourceState())
         return;
     m_activationMachine.start();
 }
@@ -33,6 +37,8 @@ void AdjustmentModuleActivator::activate()
 void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
     setUpRmIdentHandler();
+    setUpResourceTypeHandler();
+    setUpResourceStateHandler();
 }
 
 bool AdjustmentModuleActivator::openRMConnection()
@@ -48,7 +54,7 @@ bool AdjustmentModuleActivator::openRMConnection()
     return ok;
 }
 
-bool AdjustmentModuleActivator::setRmIdent()
+bool AdjustmentModuleActivator::sendRmIdent()
 {
     SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
                         this, &AdjustmentModuleActivator::activationError,
@@ -67,35 +73,36 @@ void AdjustmentModuleActivator::setUpRmIdentHandler()
     };
 }
 
-
-
-
-void AdjustmentModuleActivator::deactivate()
+bool AdjustmentModuleActivator::readResourceTypes()
 {
-    m_deactivationMachine.start();
+    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
+                        this, &AdjustmentModuleActivator::activationError,
+                        TRANSACTION_TIMEOUT);
+    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
+    return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
 }
 
-void AdjustmentModuleActivator::setUpActivationStateMachine()
+void AdjustmentModuleActivator::setUpResourceTypeHandler()
 {
-    m_activationMachine.addState(&m_readResourceTypesState);
-    m_activationMachine.setInitialState(&m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
-    connect(&m_readResourceTypesState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
-    });
     m_cmdFinishCallbacks[readresourcetypes] = [&](quint8 reply, QVariant answer) {
         if ((reply == ack) && (answer.toString().contains("SENSE")))
             emit activationContinue();
         else
             notifyActivationError(tr(resourcetypeErrMsg));
     };
+}
 
-    m_activationMachine.addState(&m_readResourceState);
-    m_readResourceState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoState);
-    connect(&m_readResourceState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
-        activationIt = 0; // we prepare querying loop of channels
-    });
+bool AdjustmentModuleActivator::readResourceState()
+{
+    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
+                        this, &AdjustmentModuleActivator::activationError,
+                        TRANSACTION_TIMEOUT);
+    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
+    return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
+}
+
+void AdjustmentModuleActivator::setUpResourceStateHandler()
+{
     m_cmdFinishCallbacks[readresource] = [&](quint8 reply, QVariant answer) {
         bool allPresent = false;
         if (reply == ack) {
@@ -110,8 +117,20 @@ void AdjustmentModuleActivator::setUpActivationStateMachine()
         else
             notifyActivationError(tr(resourceErrMsg));
     };
+}
 
+
+
+
+void AdjustmentModuleActivator::deactivate()
+{
+    m_deactivationMachine.start();
+}
+
+void AdjustmentModuleActivator::setUpActivationStateMachine()
+{
     m_activationMachine.addState(&m_readResourceInfoState);
+    m_activationMachine.setInitialState(&m_readResourceInfoState);
     m_readResourceInfoState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceInfoLoopState);
     connect(&m_readResourceInfoState, &QState::entered, this, [&]() {
         m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(activationIt))] = readresourceinfo;

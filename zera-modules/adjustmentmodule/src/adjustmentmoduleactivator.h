@@ -42,8 +42,12 @@ private slots:
 private:
     cAdjustmentModuleConfigData *getConfData();
     bool openRMConnection();
-    bool setRmIdent();
+    bool sendRmIdent();
     void setUpRmIdentHandler();
+    bool readResourceTypes();
+    void setUpResourceTypeHandler();
+    bool readResourceState();
+    void setUpResourceStateHandler();
 
     AdjustmentModuleActivateData &m_activationData;
     cAdjustmentModule* m_module;
@@ -52,8 +56,6 @@ private:
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
-    QState m_readResourceTypesState; // we ask for a list of all resources
-    QState m_readResourceState; // we look for all our resources needed
     QState m_readResourceInfoState; // we look for resource specification
     QState m_registerNotifier; // get informed about range changes
     QState m_readResourceInfoLoopState;
