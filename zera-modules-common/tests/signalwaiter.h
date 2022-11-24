@@ -24,7 +24,8 @@ public:
     }
 
     WaitResult wait() {
-        m_eventLoop.exec();
+        if(!m_signalReceived)
+            m_eventLoop.exec();
         return m_waitResult;
     }
     void abort() { emit sigAbort(); }
@@ -38,14 +39,17 @@ private:
                              int timeout = 0)
     {
         connect(doneSender, doneSignal, [&]() {
+            m_signalReceived = true;
             m_waitResult = WAIT_OK_SIG;
             m_eventLoop.quit();
         });
         connect(errorSender, errorSignal, [&]() {
+            m_signalReceived = true;
             m_waitResult = WAIT_ERR_SIG;
             m_eventLoop.quit();
         });
         connect(this, &SignalWaiter::sigAbort, [&]() {
+            m_signalReceived = true;
             m_waitResult = WAIT_ABORT;
             m_eventLoop.quit();
         });
@@ -61,6 +65,7 @@ private:
     QEventLoop m_eventLoop;
     QTimer m_timeoutTimer;
     WaitResult m_waitResult = WAIT_UNDEF;
+    bool m_signalReceived = false;
 };
 
 #endif // SIGNALWAITER_H
