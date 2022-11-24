@@ -29,6 +29,8 @@ public:
     void setUpDeactivationStateMachine();
 public slots:
     void generateInterface() override {}
+    void activate() override;
+    void deactivate() override;
 signals:
     void sigActivationReady();
     void sigDeactivationReady();
