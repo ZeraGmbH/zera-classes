@@ -5,6 +5,7 @@
 
 #include "errormessages.h"
 #include "reply.h"
+#include "signalwaiter.h"
 
 namespace ADJUSTMENTMODULE
 {
@@ -20,23 +21,32 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
 {
 }
 
+bool AdjustmentModuleActivator::openRMConnection()
+{
+    m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    SignalWaiter waiter(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, 25000);
+    m_rmInterface.setClientSmart(m_rmClient);
+    m_proxy->startConnectionSmart(m_rmClient);
+    SignalWaiter::WaitResult res = waiter.wait();
+    return res == SignalWaiter::WAIT_OK_SIG;
+}
+
+void AdjustmentModuleActivator::activate()
+{
+    if(!openRMConnection())
+        return;
+    m_activationMachine.start();
+}
+
+void AdjustmentModuleActivator::deactivate()
+{
+    m_deactivationMachine.start();
+}
+
 void AdjustmentModuleActivator::setUpActivationStateMachine()
 {
-    // m_rmConnectState.addTransition is done in rmConnectState entered handler
-    m_activationMachine.addState(&m_rmConnectState);
-    m_activationMachine.setInitialState(&m_rmConnectState);
-    connect(&m_rmConnectState, &QState::entered, this, [&]() {
-        // we instantiate a working resource manager interface first
-        // so first we try to get a connection to resource manager over proxy
-        m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-        m_rmConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
-        // and then we set connection resource manager interface's connection
-        m_rmInterface.setClientSmart(m_rmClient);
-        connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-        m_proxy->startConnectionSmart(m_rmClient);
-    });
-
     m_activationMachine.addState(&m_IdentifyState);
+    m_activationMachine.setInitialState(&m_IdentifyState);
     m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     connect(&m_IdentifyState, &QState::entered, this, [&]() {
         m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Adjustment"))] = sendrmident;
@@ -307,15 +317,6 @@ void AdjustmentModuleActivator::setUpDeactivationStateMachine()
     });
 }
 
-void AdjustmentModuleActivator::activate()
-{
-    m_activationMachine.start();
-}
-
-void AdjustmentModuleActivator::deactivate()
-{
-    m_deactivationMachine.start();
-}
 
 void AdjustmentModuleActivator::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
@@ -328,5 +329,6 @@ cAdjustmentModuleConfigData *AdjustmentModuleActivator::getConfData()
 {
     return qobject_cast<cAdjustmentModuleConfiguration*>(m_configuration.get())->getConfigurationData();
 }
+
 
 }

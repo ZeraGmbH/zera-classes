@@ -40,6 +40,7 @@ private slots:
 
 private:
     cAdjustmentModuleConfigData *getConfData();
+    bool openRMConnection();
 
     AdjustmentModuleActivateData &m_activationData;
     cAdjustmentModule* m_module;
@@ -48,7 +49,6 @@ private:
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
-    QState m_rmConnectState; // we must connect first to resource manager
     QState m_IdentifyState; // we must identify ourself at resource manager
     QState m_readResourceTypesState; // we ask for a list of all resources
     QState m_readResourceState; // we look for all our resources needed
