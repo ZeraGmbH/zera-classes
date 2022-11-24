@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QString>
 
-class test_blockunblockwrapper : public QObject
+class test_signalwait : public QObject
 {
     Q_OBJECT
 signals:

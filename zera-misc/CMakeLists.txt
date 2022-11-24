@@ -28,6 +28,7 @@ if(ZC_BUILD_MODULES)
         singleonoffreferencemanager.h
         service-interfaces/pcbinterface.h
         service-interfaces/pcbinterface_p.h
+        signal-wait/signalwaiter.h
 )
 endif(ZC_BUILD_MODULES)
 
