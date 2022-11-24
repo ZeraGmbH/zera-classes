@@ -34,15 +34,17 @@ void AdjustmentModuleActivator::activate()
     if(!readChannels())
         return;
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
-        if(!readPortNo(m_currentChannel)) // port
+        // Alarm: This assumes channels configured elsewhere having same index :(
+        QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
+        if(!readPortNo(channelName))
             return;
-        if(!openPcbConnection(m_currentChannel))
+        if(!openPcbConnection(channelName))
             return;
-        if(!readChannelAlias(m_currentChannel))
+        if(!readChannelAlias(channelName))
             return;
-        if(!regNotifier(m_currentChannel))
+        if(!regNotifier(channelName))
             return;
-        if(!readRangeList(m_currentChannel))
+        if(!readRangeList(channelName))
             return;
     }
     m_bActive = true;
@@ -176,12 +178,12 @@ void AdjustmentModuleActivator::setUpReadChannelsHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readPortNo(int channelNo)
+bool AdjustmentModuleActivator::readPortNo(QString channelName)
 {
     SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
                         this, &AdjustmentModuleActivator::activationError,
                         TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", getConfData()->m_AdjChannelList.at(channelNo))] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelName)] = readresourceinfo;
     return waiter.wait();
 }
 
@@ -204,19 +206,18 @@ void AdjustmentModuleActivator::setUpReadPortHandler()
     };
 }
 
-bool AdjustmentModuleActivator::openPcbConnection(int channelNo)
+bool AdjustmentModuleActivator::openPcbConnection(QString channelName)
 {
-    QString sChannel = getConfData()->m_AdjChannelList.at(channelNo); // current channel m0/m1/..
     cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
-    m_activationData.m_adjustChannelInfoHash[sChannel] = adjustChannelInfo;
-    int port = m_activationData.m_chnPortHash[sChannel];
+    m_activationData.m_adjustChannelInfoHash[channelName] = adjustChannelInfo;
+    int port = m_activationData.m_chnPortHash[channelName];
     if (m_activationData.m_portChannelHash.contains(port)) {
         // the channels share the same interface
         adjustChannelInfo->m_pPCBInterface = m_activationData.m_adjustChannelInfoHash[m_activationData.m_portChannelHash[port] ]->m_pPCBInterface;
         return true;
     }
     else {
-        m_activationData.m_portChannelHash[port] = sChannel;
+        m_activationData.m_portChannelHash[port] = channelName;
         Zera::Proxy::cProxyClient* pcbclient = m_proxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
         m_activationData.m_pcbClientList.append(pcbclient);
 
@@ -231,13 +232,12 @@ bool AdjustmentModuleActivator::openPcbConnection(int channelNo)
     }
 }
 
-bool AdjustmentModuleActivator::readChannelAlias(int channelNo)
+bool AdjustmentModuleActivator::readChannelAlias(QString channelName)
 {
     SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
                         this, &AdjustmentModuleActivator::activationError,
                         TRANSACTION_TIMEOUT);
-    QString name = getConfData()->m_AdjChannelList.at(channelNo);
-    m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[name]->m_pPCBInterface->getAlias(name)] = readchnalias;
+    m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[channelName]->m_pPCBInterface->getAlias(channelName)] = readchnalias;
     return waiter.wait();
 }
 
@@ -256,14 +256,13 @@ void AdjustmentModuleActivator::setUpReadChannelAliasHandler()
     };
 }
 
-bool AdjustmentModuleActivator::regNotifier(int channelNo)
+bool AdjustmentModuleActivator::regNotifier(QString channelName)
 {
     SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
                         this, &AdjustmentModuleActivator::activationError,
                         TRANSACTION_TIMEOUT);
-    QString channel = getConfData()->m_AdjChannelList.at(channelNo); // current channel m0/m1/..
-    Zera::Server::cPCBInterface* pcbInterface = m_activationData.m_adjustChannelInfoHash[channel]->m_pPCBInterface;
-    m_MsgNrCmdList[pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(channel),"1")] = registerNotifier;
+    Zera::Server::cPCBInterface* pcbInterface = m_activationData.m_adjustChannelInfoHash[channelName]->m_pPCBInterface;
+    m_MsgNrCmdList[pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(channelName),"1")] = registerNotifier;
     return waiter.wait();
 }
 
@@ -277,13 +276,12 @@ void AdjustmentModuleActivator::setUpRegisterNotifierHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readRangeList(int channelNo)
+bool AdjustmentModuleActivator::readRangeList(QString channelName)
 {
     SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
                         this, &AdjustmentModuleActivator::activationError,
                         TRANSACTION_TIMEOUT);
-    QString name = getConfData()->m_AdjChannelList.at(channelNo);
-    m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[name]->m_pPCBInterface->getRangeList(name)] = readrangelist;
+    m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[channelName]->m_pPCBInterface->getRangeList(channelName)] = readrangelist;
     return waiter.wait();
 }
 
