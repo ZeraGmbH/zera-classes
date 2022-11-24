@@ -21,6 +21,20 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
 {
 }
 
+void AdjustmentModuleActivator::activate()
+{
+    if(!openRMConnection())
+        return;
+    if(!setRmIdent())
+        return;
+    m_activationMachine.start();
+}
+
+void AdjustmentModuleActivator::setupServerResponseHandlers()
+{
+    setUpRmIdentHandler();
+}
+
 bool AdjustmentModuleActivator::openRMConnection()
 {
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
@@ -34,12 +48,27 @@ bool AdjustmentModuleActivator::openRMConnection()
     return ok;
 }
 
-void AdjustmentModuleActivator::activate()
+bool AdjustmentModuleActivator::setRmIdent()
 {
-    if(!openRMConnection())
-        return;
-    m_activationMachine.start();
+    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
+                        this, &AdjustmentModuleActivator::activationError,
+                        TRANSACTION_TIMEOUT);
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Adjustment"))] = sendrmident;
+    return waiter.wait() == SignalWaiter::WAIT_OK_SIG;
 }
+
+void AdjustmentModuleActivator::setUpRmIdentHandler()
+{
+    m_cmdFinishCallbacks[sendrmident] = [&](quint8 reply, QVariant) {
+        if (reply == ack)
+            emit activationContinue();
+        else
+            notifyActivationError(tr(rmidentErrMSG));
+    };
+}
+
+
+
 
 void AdjustmentModuleActivator::deactivate()
 {
@@ -48,20 +77,8 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setUpActivationStateMachine()
 {
-    m_activationMachine.addState(&m_IdentifyState);
-    m_activationMachine.setInitialState(&m_IdentifyState);
-    m_IdentifyState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceTypesState);
-    connect(&m_IdentifyState, &QState::entered, this, [&]() {
-        m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Adjustment"))] = sendrmident;
-    });
-    m_cmdFinishCallbacks[sendrmident] = [&](quint8 reply, QVariant) {
-        if (reply == ack) // we only continue if resource manager acknowledges
-            emit activationContinue();
-        else
-            notifyActivationError(tr(rmidentErrMSG));
-    };
-
     m_activationMachine.addState(&m_readResourceTypesState);
+    m_activationMachine.setInitialState(&m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cAdjustmentModuleMeasProgram::activationContinue, &m_readResourceState);
     connect(&m_readResourceTypesState, &QState::entered, this, [&]() {
         m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;

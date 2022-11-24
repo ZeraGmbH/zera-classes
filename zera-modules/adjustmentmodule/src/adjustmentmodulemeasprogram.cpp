@@ -23,6 +23,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigDeactivationReady, this, &cAdjustmentModuleMeasProgram::onDeactivationReady);
+    m_activator.setupServerResponseHandlers();
     m_activator.setUpActivationStateMachine();
     m_activator.setUpDeactivationStateMachine();
 
