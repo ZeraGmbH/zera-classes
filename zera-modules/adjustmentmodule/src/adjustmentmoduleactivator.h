@@ -26,7 +26,6 @@ public:
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                               AdjustmentModuleActivateData &activationData);
     void setupServerResponseHandlers();
-    void setUpActivationStateMachine();
     void setUpDeactivationStateMachine();
 public slots:
     void generateInterface() override {}
@@ -53,6 +52,12 @@ private:
     bool openPcbConnection(int channelNo);
     bool readChannelAlias(int channelNo);
     void setUpReadChannelAliasHandler();
+    bool regNotifier(int channelNo);
+    void setUpRegisterNotifierHandler();
+    bool readRangeList(int channelNo);
+    void setUpRangeListHandler();
+    bool checkExternalVeinComponents();
+
     AdjustmentModuleActivateData &m_activationData;
     cAdjustmentModule* m_module;
     Zera::Proxy::cProxy *m_proxy;
@@ -60,11 +65,6 @@ private:
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
-    QState m_registerNotifier; // get informed about range changes
-    QState m_readChnAliasLoopState;
-    QState m_readRangelistState; // we query the range list for all our channels
-    QState m_readRangelistLoopState;
-    QState m_searchActualValuesState;
     QFinalState m_activationDoneState;
 
     QState m_deactivateState;
@@ -73,8 +73,7 @@ private:
     QFinalState m_deactivateDoneState;
 
     QHash<quint32, int> m_MsgNrCmdList;
-    int activationIt = 0;
-    int m_loopCountForHandler = 0;
+    int m_currentChannel = 0;
     QList<Zera::Server::cPCBInterface*>::ConstIterator deactivationIt;
 
     const int CONNECTION_TIMEOUT = 25000;
