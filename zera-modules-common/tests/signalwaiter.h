@@ -5,6 +5,11 @@
 #include <QEventLoop>
 #include <QTimer>
 
+/**
+ * @brief A class for blocked wait on signals. It enables structured code for
+ * simple sequences e.g as an alternate using QStateMachines which creates
+ * uneasy to read and unflexible code
+ */
 class SignalWaiter : public QObject
 {
     Q_OBJECT
