@@ -117,7 +117,7 @@ protected:
 
     cVeinModuleMetaData *m_pModuleName;
     cVeinModuleMetaData *m_pModuleDescription;
-    cVeinModuleErrorComponent *m_pModuleErrorComponent; // here we export errors the module encountered
+    cVeinModuleErrorComponent *m_pModuleErrorComponent=nullptr; // here we export errors the module encountered
     cVeinModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
     cVeinModuleComponent *m_pModuleEntityName;
 
