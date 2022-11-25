@@ -18,6 +18,7 @@ private slots:
     void detectError();
     void detectTimeout();
     void timeoutStartsOnWait();
+    void dummyWaiterReturnsImmediately();
 };
 
 #endif // TEST_BLOCKUNBLOCKWRAPPER_H

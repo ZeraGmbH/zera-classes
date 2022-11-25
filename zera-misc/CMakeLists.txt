@@ -35,6 +35,7 @@ endif(ZC_BUILD_MODULES)
 set(SOURCES
     intelhexfileio.cpp
     intelhexfileio_p.cpp
+    signal-wait/signalwaiter.cpp
     ${SOURCES_FOR_MODULE}
 )
 
