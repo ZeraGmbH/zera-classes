@@ -3,7 +3,6 @@
 #include "burden1measdelegate.h"
 #include "burden1moduleconfiguration.h"
 #include "measmodeinfo.h"
-#include "debug.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <modulevalidator.h>

@@ -2,7 +2,6 @@
 #include "sec1moduleconfiguration.h"
 #include "sec1moduleconfigdata.h"
 #include "sec1modulemeasprogram.h"
-#include "debug.h"
 #include <QJsonDocument>
 #include <QJsonObject>
 

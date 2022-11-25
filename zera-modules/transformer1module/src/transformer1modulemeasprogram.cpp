@@ -13,7 +13,6 @@
 #include <veinmoduleparameter.h>
 #include <scpiinfo.h>
 
-#include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
 #include "measmodeinfo.h"

@@ -1,5 +1,4 @@
 #include "fftmodule.h"
-#include "debug.h"
 #include "fftmoduleconfiguration.h"
 #include "fftmoduleconfigdata.h"
 #include "fftmodulemeasprogram.h"

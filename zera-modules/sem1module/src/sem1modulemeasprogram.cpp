@@ -2,7 +2,6 @@
 #include "sem1module.h"
 #include "sem1moduleconfigdata.h"
 #include "sem1moduleconfiguration.h"
-#include "debug.h"
 #include <errormessages.h>
 #include <unithelper.h>
 #include <doublevalidator.h>

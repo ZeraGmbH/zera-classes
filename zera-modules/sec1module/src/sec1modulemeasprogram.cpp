@@ -3,7 +3,6 @@
 #include "sec1moduleconfigdata.h"
 #include "sec1moduleconfiguration.h"
 #include "unithelper.h"
-#include "debug.h"
 #include "errormessages.h"
 #include <proxy.h>
 #include <proxyclient.h>

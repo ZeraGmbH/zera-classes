@@ -2,7 +2,6 @@
 #include "adjustmentmodule.h"
 #include "adjustvalidator.h"
 #include "adjustmentmoduleconfiguration.h"
-#include "debug.h"
 #include <modulevalidator.h>
 #include <reply.h>
 #include <intvalidator.h>

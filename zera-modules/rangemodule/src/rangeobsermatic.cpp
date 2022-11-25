@@ -73,15 +73,6 @@ void cRangeObsermatic::ActionHandler(QVector<float> *actualValues)
             m_nWaitAfterRanging--;
         }
         else {
-            // qInfo() << "range obsermatic new actual values";
-
-#ifdef DEBUG
-            QVector<float> actualValuesStack=*actualValues;
-            qInfo() << QString("PEAK %1 ; %2 ; %3 ;").arg(actualValuesStack[0]).arg(actualValuesStack[1]).arg(actualValuesStack[2])
-                     << QString("%1 ; %2 ; %3").arg(actualValuesStack[3]).arg(actualValuesStack[4]).arg(actualValuesStack[5]);
-#endif
-            // qInfo() << QString("RMS %1 ; %2 ; %3").arg(actualValuesStack[6]).arg(actualValuesStack[7]).arg(actualValuesStack[8]);
-
             rangeObservation(); // first we test for overload conditions
             rangeAutomatic(); // let rangeautomatic do its job
             groupHandling(); // and look for grouping channels if necessary
@@ -444,9 +435,6 @@ void cRangeObsermatic::setRanges(bool force)
 
         if ( s != m_actChannelRangeList.at(i) || force) {
             if (!change) { // signal is only set once regardingless there is more than 1 range to change
-#ifdef DEBUG
-                qInfo("Ranging started");
-#endif
                 m_pRangingSignal->setValue(QVariant(int(1)));
             }
             change = true;
@@ -485,10 +473,6 @@ void cRangeObsermatic::setRanges(bool force)
                 m_groupOvlList.replace(i, false);
                 m_pComponentOverloadMax->setValue(0);
             }
-
-#ifdef DEBUG
-            qInfo() << QString("setRange Ch%1; %2; Scale=%3").arg(chn).arg(s).arg(m_pfScale[chn]);
-#endif
         }
 
         else {
@@ -748,9 +732,6 @@ void cRangeObsermatic::readStatus()
             m_MsgNrCmdList[pmChn->readStatus()] = readstatus;
             m_nReadStatusPending++;
         }
-#ifdef DEBUG
-        qInfo("readStatus / m_nReadStatusPending: %i", m_nReadStatusPending);
-#endif
     }
 }
 
@@ -762,9 +743,6 @@ void cRangeObsermatic::analyzeStatus()
         pmChn = m_RangeMeasChannelList.at(i);
         m_hardOvlList.replace(i, pmChn->isHWOverload());
     }
-#ifdef DEBUG
-    qInfo() << "Status analyzed:" << m_hardOvlList;
-#endif
 }
 
 
@@ -906,9 +884,6 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
                 }
                 else {
                     emit errMsg((tr(readdspgaincorrErrMsg)));
-#ifdef DEBUG
-                    qInfo() << readdspgaincorrErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -918,9 +893,6 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
                 }
                 else {
                     emit errMsg((tr(writedspgaincorrErrMsg)));
-#ifdef DEBUG
-                    qInfo() << writedspgaincorrErrMsg;
-#endif
                     // emit activationError();
                     emit executionError(); // we also emit exec error because
                 }
@@ -971,9 +943,6 @@ void cRangeObsermatic::catchChannelReply(quint32 msgnr)
             if (m_nRangeSetPending > 0) {
                 m_nRangeSetPending--;
                 if (m_nRangeSetPending == 0) {
-#ifdef DEBUG
-                    qInfo("Ranging finished");
-#endif
                     m_pRangingSignal->setValue(QVariant(0));
                     m_nWaitAfterRanging = 1;
                 }

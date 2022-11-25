@@ -15,7 +15,6 @@
 #include <modulevalidator.h>
 #include <boolvalidator.h>
 
-#include "debug.h"
 #include "errormessages.h"
 #include "scpimoduleconfigdata.h"
 #include "scpimodule.h"

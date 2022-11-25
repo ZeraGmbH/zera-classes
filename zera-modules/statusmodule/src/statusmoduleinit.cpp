@@ -1,6 +1,5 @@
 #include "statusmoduleinit.h"
 #include "statusmodule.h"
-#include "debug.h"
 #include <reply.h>
 #include <errormessages.h>
 #include <modulevalidator.h>

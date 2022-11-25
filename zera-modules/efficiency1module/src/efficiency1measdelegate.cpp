@@ -3,7 +3,6 @@
 #include <veinmoduleactvalue.h>
 #include <veinmodulecomponentinput.h>
 
-#include "debug.h"
 #include "efficiency1measdelegate.h"
 
 

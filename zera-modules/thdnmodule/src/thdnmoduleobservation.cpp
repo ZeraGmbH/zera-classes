@@ -1,5 +1,4 @@
 #include "thdnmoduleobservation.h"
-#include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
 #include "thdnmodule.h"
