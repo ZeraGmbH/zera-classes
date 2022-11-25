@@ -49,18 +49,23 @@ add_custom_target(adjustmentmodule-configs ALL
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     )
 
-# create library
-add_library(adjustmentmodule MODULE
+add_library(adjustmentmodule-static STATIC
     ${SOURCES}
     ${HEADER}
+)
+target_link_libraries(adjustmentmodule-static
+    zerabasemodule
+    zeramath
+    zeramisc
+)
+# create library
+add_library(adjustmentmodule MODULE
     ${RESOURCES}
     )
 
 target_link_libraries(adjustmentmodule
     PRIVATE
-    zerabasemodule
-    zeramath
-    zeramisc
+    adjustmentmodule-static
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -91,4 +96,8 @@ install(
     FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
     DESTINATION ${SET_ZC_CONFIG_PATH}
     )
+
+enable_testing()
+add_subdirectory(tests)
+
 
