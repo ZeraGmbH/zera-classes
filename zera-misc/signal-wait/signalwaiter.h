@@ -15,40 +15,33 @@ class SignalWaiter : public QObject, public BlockedWaitInterface
 {
     Q_OBJECT
 public:
+    SignalWaiter();
     template <typename Func1>
     SignalWaiter(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal,
-                 int timeout = 0) {
+                 int timeout = 0)
+    {
         setup(doneSender, doneSignal, this, &SignalWaiter::sigDefaultNoError, timeout);
     }
     template <typename Func1, typename Func2>
     SignalWaiter(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal,
                  const typename QtPrivate::FunctionPointer<Func2>::Object *errorSender, Func2 errorSignal,
-                 int timeout = 0) {
+                 int timeout = 0)
+    {
         setup(doneSender, doneSignal, errorSender, errorSignal, timeout);
     }
-
-    bool wait() override {
-        if(!m_signalReceived) {
-            if(m_timeoutMs > 0) {
-                m_timeoutTimer.start(m_timeoutMs);
-            }
-            m_eventLoop.exec();
-        }
-        return m_waitResult == WAIT_OK_SIG;
-    }
-    WaitResult getResult() override {
-        return m_waitResult;
-    }
-    void abort() { emit sigAbort(); }
+    bool wait() override;
+    WaitResult getResult() override;
+    void abort();
 signals:
     void sigDefaultNoError();
     void sigAbort();
 private:
     template <typename Func1, typename Func2>
     void setup(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal,
-                             const typename QtPrivate::FunctionPointer<Func2>::Object *errorSender, Func2 errorSignal,
-                             int timeout = 0)
+               const typename QtPrivate::FunctionPointer<Func2>::Object *errorSender, Func2 errorSignal,
+               int timeout = 0)
     {
+        m_signalsConnected = true;
         m_timeoutMs = timeout;
         connect(doneSender, doneSignal, this, [&]() {
             m_signalReceived = true;
@@ -76,6 +69,7 @@ private:
     int m_timeoutMs = 0;
     WaitResult m_waitResult = WAIT_UNDEF;
     bool m_signalReceived = false;
+    bool m_signalsConnected = false;
 };
 
 #endif // SIGNALWAITER_H

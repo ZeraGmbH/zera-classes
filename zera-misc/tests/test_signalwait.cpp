@@ -78,3 +78,14 @@ void test_signalwait::timeoutStartsOnWait()
     int elapsed = timer.elapsed();
     QVERIFY(elapsed >= 25);
 }
+
+void test_signalwait::dummyWaiterReturnsImmediately()
+{
+    SignalWaiter waiter;
+    QElapsedTimer timer;
+    timer.start();
+    waiter.wait();
+    int elapsed = timer.elapsed();
+    QVERIFY(elapsed < 1);
+    QCOMPARE(SignalWaiter::WAIT_UNDEF, waiter.getResult());
+}
