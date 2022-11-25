@@ -25,26 +25,27 @@ void AdjustmentModuleActivator::activate()
 {
     if(!checkExternalVeinComponents())
         return;
-    if(!openRMConnection())
+    if(!openRMConnection()->wait())
         return;
-    if(!sendRmIdent())
+    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
+    if(!sendRmIdent()->wait())
         return;
-    if(!readResourceTypes())
+    if(!readResourceTypes()->wait())
         return;
-    if(!readChannels())
+    if(!readChannels()->wait())
         return;
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
         // Alarm: This assumes channels configured elsewhere having same index :(
         QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
-        if(!readIpPortNo(channelName))
+        if(!readIpPortNo(channelName)->wait())
             return;
-        if(!openPcbConnection(channelName))
+        if(!openPcbConnection(channelName)->wait())
             return;
-        if(!readChannelAlias(channelName))
+        if(!readChannelAlias(channelName)->wait())
             return;
-        if(!regNotifier(channelName))
+        if(!regNotifier(channelName)->wait())
             return;
-        if(!readRangeList(channelName))
+        if(!readRangeList(channelName)->wait())
             return;
     }
     m_bActive = true;
@@ -54,7 +55,7 @@ void AdjustmentModuleActivator::activate()
 void AdjustmentModuleActivator::deactivate()
 {
     for(int pcbInterfaceNo = 0; pcbInterfaceNo<m_activationData.m_pcbInterfaceList.count(); ++pcbInterfaceNo) {
-        if(!unregNotifier(pcbInterfaceNo))
+        if(!unregNotifier(pcbInterfaceNo)->wait())
             return;
     }
     m_bActive = false;
@@ -101,25 +102,24 @@ bool AdjustmentModuleActivator::checkExternalVeinComponents()
     return ok;
 }
 
-bool AdjustmentModuleActivator::openRMConnection()
+BlockedWaitInterfacePtr AdjustmentModuleActivator::openRMConnection()
 {
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    SignalWaiter waiter(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, 25000);
+    BlockedWaitInterfacePtr waiter =
+            std::make_unique<SignalWaiter>(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, CONNECTION_TIMEOUT);
     m_rmInterface.setClientSmart(m_rmClient);
     m_proxy->startConnectionSmart(m_rmClient);
-    bool ok = waiter.wait();
-    if(waiter.wait())
-        connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-    return ok;
+    return waiter;
 }
 
-bool AdjustmentModuleActivator::sendRmIdent()
+BlockedWaitInterfacePtr AdjustmentModuleActivator::sendRmIdent()
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
-                        this, &AdjustmentModuleActivator::activationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter =
+            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
+                                           this, &AdjustmentModuleActivator::activationError,
+                                           TRANSACTION_TIMEOUT);
     m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Adjustment"))] = sendrmident;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpRmIdentHandler()
@@ -132,13 +132,14 @@ void AdjustmentModuleActivator::setUpRmIdentHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readResourceTypes()
+BlockedWaitInterfacePtr AdjustmentModuleActivator::readResourceTypes()
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
-                        this, &AdjustmentModuleActivator::activationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter =
+            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
+                                           this, &AdjustmentModuleActivator::activationError,
+                                           TRANSACTION_TIMEOUT);
     m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpResourceTypeHandler()
@@ -151,13 +152,14 @@ void AdjustmentModuleActivator::setUpResourceTypeHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readChannels()
+BlockedWaitInterfacePtr AdjustmentModuleActivator::readChannels()
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
-                        this, &AdjustmentModuleActivator::activationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter =
+            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
+                                           this, &AdjustmentModuleActivator::activationError,
+                                           TRANSACTION_TIMEOUT);
     m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpReadChannelsHandler()
@@ -178,13 +180,14 @@ void AdjustmentModuleActivator::setUpReadChannelsHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readIpPortNo(QString channelName)
+BlockedWaitInterfacePtr AdjustmentModuleActivator::readIpPortNo(QString channelName)
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
-                        this, &AdjustmentModuleActivator::activationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter =
+            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
+                                           this, &AdjustmentModuleActivator::activationError,
+                                           TRANSACTION_TIMEOUT);
     m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelName)] = readresourceinfo;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpReadIpPortHandler()
@@ -206,39 +209,39 @@ void AdjustmentModuleActivator::setUpReadIpPortHandler()
     };
 }
 
-bool AdjustmentModuleActivator::openPcbConnection(QString channelName)
+BlockedWaitInterfacePtr AdjustmentModuleActivator::openPcbConnection(QString channelName)
 {
+    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>();
     cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
     m_activationData.m_adjustChannelInfoHash[channelName] = adjustChannelInfo;
     int port = m_activationData.m_chnPortHash[channelName];
     if (m_activationData.m_portChannelHash.contains(port)) {
         // the channels share the same interface
         adjustChannelInfo->m_pPCBInterface = m_activationData.m_adjustChannelInfoHash[m_activationData.m_portChannelHash[port] ]->m_pPCBInterface;
-        return true;
     }
     else {
         m_activationData.m_portChannelHash[port] = channelName;
         Zera::Proxy::cProxyClient* pcbclient = m_proxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
         m_activationData.m_pcbClientList.append(pcbclient);
 
-        SignalWaiter waiterConnect(pcbclient, &Zera::Proxy::cProxyClient::connected, 25000);
+        waiter = std::make_unique<SignalWaiter>(pcbclient, &Zera::Proxy::cProxyClient::connected, CONNECTION_TIMEOUT);
         Zera::Server::cPCBInterface *pcbInterface = new Zera::Server::cPCBInterface();
         m_activationData.m_pcbInterfaceList.append(pcbInterface);
         pcbInterface->setClient(pcbclient);
         connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
         adjustChannelInfo->m_pPCBInterface = pcbInterface;
         m_proxy->startConnection((pcbclient));
-        return waiterConnect.wait();
     }
+    return waiter;
 }
 
-bool AdjustmentModuleActivator::readChannelAlias(QString channelName)
+BlockedWaitInterfacePtr AdjustmentModuleActivator::readChannelAlias(QString channelName)
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
-                        this, &AdjustmentModuleActivator::activationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
+                                                                    this, &AdjustmentModuleActivator::activationError,
+                                                                    TRANSACTION_TIMEOUT);
     m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[channelName]->m_pPCBInterface->getAlias(channelName)] = readchnalias;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpReadChannelAliasHandler()
@@ -256,14 +259,14 @@ void AdjustmentModuleActivator::setUpReadChannelAliasHandler()
     };
 }
 
-bool AdjustmentModuleActivator::regNotifier(QString channelName)
+BlockedWaitInterfacePtr AdjustmentModuleActivator::regNotifier(QString channelName)
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
-                        this, &AdjustmentModuleActivator::activationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
+                                                                    this, &AdjustmentModuleActivator::activationError,
+                                                                    TRANSACTION_TIMEOUT);
     Zera::Server::cPCBInterface* pcbInterface = m_activationData.m_adjustChannelInfoHash[channelName]->m_pPCBInterface;
     m_MsgNrCmdList[pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(channelName),"1")] = registerNotifier;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpRegisterNotifierHandler()
@@ -276,13 +279,13 @@ void AdjustmentModuleActivator::setUpRegisterNotifierHandler()
     };
 }
 
-bool AdjustmentModuleActivator::readRangeList(QString channelName)
+BlockedWaitInterfacePtr AdjustmentModuleActivator::readRangeList(QString channelName)
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::activationContinue,
-                        this, &AdjustmentModuleActivator::activationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
+                                                                    this, &AdjustmentModuleActivator::activationError,
+                                                                    TRANSACTION_TIMEOUT);
     m_MsgNrCmdList[m_activationData.m_adjustChannelInfoHash[channelName]->m_pPCBInterface->getRangeList(channelName)] = readrangelist;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpRangeListHandler()
@@ -297,13 +300,13 @@ void AdjustmentModuleActivator::setUpRangeListHandler()
     };
 }
 
-bool AdjustmentModuleActivator::unregNotifier(int pcbInterfaceNo)
+BlockedWaitInterfacePtr AdjustmentModuleActivator::unregNotifier(int pcbInterfaceNo)
 {
-    SignalWaiter waiter(this, &AdjustmentModuleActivator::deactivationContinue,
-                        this, &AdjustmentModuleActivator::deactivationError,
-                        TRANSACTION_TIMEOUT);
+    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::deactivationContinue,
+                                                                    this, &AdjustmentModuleActivator::deactivationError,
+                                                                    TRANSACTION_TIMEOUT);
     m_MsgNrCmdList[m_activationData.m_pcbInterfaceList[pcbInterfaceNo]->unregisterNotifiers() ] = unregisterNotifiers ;
-    return waiter.wait();
+    return waiter;
 }
 
 void AdjustmentModuleActivator::setUpUnregisterNotifierHandler()

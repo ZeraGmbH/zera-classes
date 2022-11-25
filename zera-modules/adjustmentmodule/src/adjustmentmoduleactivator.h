@@ -7,6 +7,7 @@
 #include "basemoduleconfiguration.h"
 #include "rminterface.h"
 #include "pcbinterface.h"
+#include "blockedwaitinterface.h"
 #include <QTimer>
 #include <QList>
 #include <functional>
@@ -36,25 +37,25 @@ private slots:
 
 private:
     cAdjustmentModuleConfigData *getConfData();
-    bool openRMConnection();
-    bool sendRmIdent();
+    BlockedWaitInterfacePtr openRMConnection();
+    BlockedWaitInterfacePtr sendRmIdent();
     void setUpRmIdentHandler();
-    bool readResourceTypes();
+    BlockedWaitInterfacePtr readResourceTypes();
     void setUpResourceTypeHandler();
-    bool readChannels();
+    BlockedWaitInterfacePtr readChannels();
     void setUpReadChannelsHandler();
-    bool readIpPortNo(QString channelName);
+    BlockedWaitInterfacePtr readIpPortNo(QString channelName);
     void setUpReadIpPortHandler();
-    bool openPcbConnection(QString channelName);
-    bool readChannelAlias(QString channelName);
+    BlockedWaitInterfacePtr openPcbConnection(QString channelName);
+    BlockedWaitInterfacePtr readChannelAlias(QString channelName);
     void setUpReadChannelAliasHandler();
-    bool regNotifier(QString channelName);
+    BlockedWaitInterfacePtr regNotifier(QString channelName);
     void setUpRegisterNotifierHandler();
-    bool readRangeList(QString channelName);
+    BlockedWaitInterfacePtr readRangeList(QString channelName);
     void setUpRangeListHandler();
     bool checkExternalVeinComponents();
 
-    bool unregNotifier(int pcbInterfaceNo);
+    BlockedWaitInterfacePtr unregNotifier(int pcbInterfaceNo);
     void setUpUnregisterNotifierHandler();
 
     AdjustmentModuleActivateData &m_activationData;
