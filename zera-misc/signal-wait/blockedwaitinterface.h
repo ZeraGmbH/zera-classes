@@ -1,6 +1,8 @@
 #ifndef BLOCKEDWAITINTERFACE_H
 #define BLOCKEDWAITINTERFACE_H
 
+#include <memory>
+
 class BlockedWaitInterface
 {
 public:
@@ -8,6 +10,10 @@ public:
 
     virtual bool wait() = 0;
     virtual WaitResult getResult() = 0;
+
+    virtual ~BlockedWaitInterface() = default;
 };
+
+typedef std::unique_ptr<BlockedWaitInterface> BlockedWaitInterfacePtr;
 
 #endif // BLOCKEDWAITINTERFACE_H
