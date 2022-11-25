@@ -3,7 +3,6 @@
 #include <veinmoduleactvalue.h>
 #include <useratan.h>
 
-#include "debug.h"
 #include "transformer1measdelegate.h"
 
 

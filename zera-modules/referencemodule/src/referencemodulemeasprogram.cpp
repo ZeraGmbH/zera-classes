@@ -2,7 +2,6 @@
 #include "referencemodule.h"
 #include "referencemeaschannel.h"
 #include "referencemoduleconfiguration.h"
-#include "debug.h"
 #include <errormessages.h>
 #include <proxy.h>
 #include <proxyclient.h>

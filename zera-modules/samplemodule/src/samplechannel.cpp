@@ -1,7 +1,6 @@
 #include "samplechannel.h"
 #include "samplemodule.h"
 #include "samplemoduleconfigdata.h"
-#include "debug.h"
 #include <errormessages.h>
 #include <scpiinfo.h>
 #include <modulevalidator.h>

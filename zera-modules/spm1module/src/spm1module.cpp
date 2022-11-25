@@ -2,7 +2,6 @@
 #include "spm1moduleconfiguration.h"
 #include "spm1moduleconfigdata.h"
 #include "spm1modulemeasprogram.h"
-#include "debug.h"
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>

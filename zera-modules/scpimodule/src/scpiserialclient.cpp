@@ -2,7 +2,6 @@
 
 #include <QDebug>
 
-#include "debug.h"
 #include "scpiinterface.h"
 #include "ieee488-2.h"
 #include "scpiserialclient.h"

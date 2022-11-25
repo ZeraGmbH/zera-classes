@@ -5,7 +5,6 @@
 #include "rangemodulemeasprogram.h"
 #include "rangemoduleobservation.h"
 #include "rangeobsermatic.h"
-#include "debug.h"
 #include "adjustment.h"
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>

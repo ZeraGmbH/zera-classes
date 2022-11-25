@@ -2,7 +2,6 @@
 #include "transformer1moduleconfiguration.h"
 #include "transformer1moduleconfigdata.h"
 #include "transformer1modulemeasprogram.h"
-#include "debug.h"
 #include "errormessages.h"
 #include <proxy.h>
 #include <modulevalidator.h>

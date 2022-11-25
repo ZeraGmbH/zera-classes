@@ -2,7 +2,6 @@
 #include "sem1moduleconfiguration.h"
 #include "sem1moduleconfigdata.h"
 #include "sem1modulemeasprogram.h"
-#include "debug.h"
 #include <proxy.h>
 #include <modulevalidator.h>
 #include <veinmodulecomponent.h>

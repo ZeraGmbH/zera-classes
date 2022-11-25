@@ -161,9 +161,6 @@ void cReferenceAdjustment::writeOffsetAdjustment()
     quint8 dspchn;
     float cval;
 
-#ifdef DEBUG
-    QVector<float> corrData;
-#endif
     // first we have to compute the offset correction data for dsp
     for (int i = 0; i < m_ChannelList.count(); i++)
     {

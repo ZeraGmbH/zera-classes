@@ -1,5 +1,4 @@
 #include "basemodule.h"
-#include "debug.h"
 #include "basemoduleconfiguration.h"
 #include "veinmodulemetadata.h"
 #include "veinmoduleactvalue.h"

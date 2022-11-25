@@ -2,7 +2,6 @@
 #include "thdnmodule.h"
 #include "thdnmoduleconfiguration.h"
 #include "thdnmoduleconfigdata.h"
-#include "debug.h"
 #include "errormessages.h"
 #include "reply.h"
 #include <movingwindowfilter.h>

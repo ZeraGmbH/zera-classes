@@ -2,7 +2,6 @@
 #include "burden1moduleconfiguration.h"
 #include "burden1moduleconfigdata.h"
 #include "burden1modulemeasprogram.h"
-#include "debug.h"
 #include <errormessages.h>
 
 namespace BURDEN1MODULE

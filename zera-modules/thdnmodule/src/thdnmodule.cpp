@@ -1,5 +1,4 @@
 #include "thdnmodule.h"
-#include "debug.h"
 #include "thdnmoduleconfiguration.h"
 #include "thdnmoduleconfigdata.h"
 #include "thdnmodulemeasprogram.h"

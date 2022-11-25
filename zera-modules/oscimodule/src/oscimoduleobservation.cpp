@@ -1,5 +1,4 @@
 #include "oscimoduleobservation.h"
-#include "debug.h"
 #include "oscimodule.h"
 #include <proxy.h>
 #include <proxyclient.h>

@@ -1,7 +1,6 @@
 #include "spm1modulemeasprogram.h"
 #include "spm1module.h"
 #include "spm1moduleconfiguration.h"
-#include "debug.h"
 #include "errormessages.h"
 #include <modulevalidator.h>
 #include <doublevalidator.h>

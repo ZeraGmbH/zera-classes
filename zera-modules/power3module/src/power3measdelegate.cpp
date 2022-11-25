@@ -3,7 +3,6 @@
 #include <veinmoduleactvalue.h>
 #include <math.h>
 
-#include "debug.h"
 #include "power3measdelegate.h"
 
 

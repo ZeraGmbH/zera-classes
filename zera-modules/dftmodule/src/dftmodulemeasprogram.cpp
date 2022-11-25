@@ -2,7 +2,6 @@
 #include "dftmodule.h"
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
-#include "debug.h"
 #include <errormessages.h>
 #include <movingwindowfilter.h>
 #include <reply.h>
