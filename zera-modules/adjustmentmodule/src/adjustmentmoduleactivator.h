@@ -65,6 +65,7 @@ private:
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
+    QHash<QString,int> m_chnPortHash; // a hash for our channels ethernet ports
     QHash<quint32, int> m_MsgNrCmdList;
     int m_currentChannel = 0;
 

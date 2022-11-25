@@ -198,7 +198,7 @@ void AdjustmentModuleActivator::setUpReadIpPortHandler()
             bool ok;
             int port = sl.at(3).toInt(&ok);
             if (ok) {
-                m_activationData.m_chnPortHash[getConfData()->m_AdjChannelList.at(m_currentChannel)] = port;
+                m_chnPortHash[getConfData()->m_AdjChannelList.at(m_currentChannel)] = port;
                 emit activationContinue();
             }
             else
@@ -214,7 +214,7 @@ BlockedWaitInterfacePtr AdjustmentModuleActivator::openPcbConnection(QString cha
     BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>();
     cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
     m_activationData.m_adjustChannelInfoHash[channelName] = adjustChannelInfo;
-    int port = m_activationData.m_chnPortHash[channelName];
+    int port = m_chnPortHash[channelName];
     if (m_activationData.m_portChannelHash.contains(port)) {
         // the channels share the same interface
         adjustChannelInfo->m_pPCBInterface = m_activationData.m_adjustChannelInfoHash[m_activationData.m_portChannelHash[port] ]->m_pPCBInterface;
