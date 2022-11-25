@@ -241,9 +241,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(rmidentErrMSG)));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -257,9 +254,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readPCBServerVersionErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readPCBServerVersionErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -273,9 +267,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readPCBCtrlVersionErrMSG)));
-#ifdef DEBUG
-                    qDebug() << readPCBCtrlVersionErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -289,9 +280,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readPCBFPGAVersionErrMSG)));
-#ifdef DEBUG
-                    qDebug() << readPCBFPGAVersionErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -306,9 +294,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readPCBSerialNrErrMSG)));
-#ifdef DEBUG
-                    qDebug() << readPCBSerialNrErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -324,9 +309,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 {
                     m_pSerialNumber->setError(); // in case of error we send an error event
                     emit errMsg(tr(writePCBSerialNrErrMSG));
-#ifdef DEBUG
-                    qDebug() << writePCBSerialNrErrMSG;
-#endif
                 }
                 break;
 
@@ -338,9 +320,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 else {
                     emit errMsg((tr(readadjstatusErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readadjstatusErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -354,9 +333,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readadjchksumErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readadjchksumErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -370,9 +346,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readDSPServerVersionErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readDSPServerVersionErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -386,9 +359,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readDSPProgramVersionErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readDSPProgramVersionErrMsg;
-#endif
                     emit activationError();
                 }
                 break;

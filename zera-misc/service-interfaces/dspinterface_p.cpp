@@ -366,7 +366,6 @@ quint32 cDSPInterfacePrivate::dspMemoryWrite(cDspMeasData *memgroup)
     quint32 msgnr;
     QString cmd, par;
     msgnr = sendCommand(cmd = QString("MEM:WRIT"), par = memgroup->writeCommand());
-    // qDebug() << QString("%1 %2").arg(cmd).arg(par);
     m_MsgNrCmdList[msgnr] = dspmemorywrite;
     return msgnr;
 }

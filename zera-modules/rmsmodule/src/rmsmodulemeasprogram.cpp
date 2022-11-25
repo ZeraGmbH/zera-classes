@@ -348,7 +348,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -375,9 +374,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg(tr(rmidentErrMSG));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -387,9 +383,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << claimresourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -399,9 +392,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << claimresourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -411,9 +401,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspvarlistwriteErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspvarlistwriteErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -423,9 +410,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspcmdlistwriteErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspcmdlistwriteErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -435,9 +419,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspactiveErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspactiveErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -448,9 +429,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -473,18 +451,12 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     else
                     {
                         emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                        qDebug() << resourceErrMsg;
-#endif
                         emit activationError();
                     }
                 }
                 else
                 {
                     emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -511,18 +483,12 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     else
                     {
                         emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                        qDebug() << resourceInfoErrMsg;
-#endif
                         emit activationError();
                     }
                 }
                 else
                 {
                     emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceInfoErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -537,9 +503,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             else
             {
                 emit errMsg((tr(readsamplerateErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readsamplerateErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -560,9 +523,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readaliasErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -584,9 +544,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(readunitErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readunitErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -608,9 +565,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(readdspchannelErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readdspchannelErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -624,9 +578,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(writedspmemoryErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspmemoryErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -637,9 +588,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspdeactiveErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspdeactiveErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -649,9 +597,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -661,9 +606,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -675,9 +617,6 @@ void cRmsModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 {
                     m_dataAcquisitionMachine.stop();
                     emit errMsg((tr(dataaquisitionErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dataaquisitionErrMsg;
-#endif
                     emit executionError(); // but we send error message
                 }
                 break;
@@ -999,29 +938,6 @@ void cRmsModuleMeasProgram::dataReadDSP()
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
 
-#ifdef DEBUG
-        bool ok;
-        QString s;
-        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-        {
-            QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
-            QString ts;
-
-            if (sl.count() == 1)
-                ts = QString("RMS_%1:%2[%3];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                        .arg(m_ModuleActualValues.at(i))
-                        .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-            else
-                ts = QString("RMS_%1-%2:%3[%4];").arg(m_measChannelInfoHash.value(sl.at(0)).alias)
-                        .arg(m_measChannelInfoHash.value(sl.at(1)).alias)
-                        .arg(m_ModuleActualValues.at(i))
-                        .arg(m_measChannelInfoHash.value(sl.at(0)).unit);
-
-            s += ts;
-        }
-
-        qDebug() << s;
-#endif
     }
 }
 

@@ -247,7 +247,6 @@ void cAdjustManagement::writeOffsetCorr()
 
 void cAdjustManagement::getGainCorr1()
 {
-    // qDebug() << "Adjustmentstatemachine";
     if (m_bActive){
         double actualValue=m_ChannelList.at(m_nChannelIt)->getRmsValue();
         double preScalingFact=m_ChannelList[m_nChannelIt]->getPreScaling();
@@ -266,7 +265,6 @@ void cAdjustManagement::getGainCorr2()
         measChannel = m_ChannelList.at(m_nChannelIt);
         fCorr = measChannel->getGainCorrection();
         m_fGainCorr[measChannel->getDSPChannelNr()] = fCorr;
-        //qDebug() << QString("GainCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();
@@ -298,7 +296,6 @@ void cAdjustManagement::getPhaseCorr2()
         measChannel = m_ChannelList.at(m_nChannelIt);
         fCorr = measChannel->getPhaseCorrection();
         m_fPhaseCorr[measChannel->getDSPChannelNr()] = fCorr;
-        // qDebug() << QString("PhaseCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
             emit repeatStateMachine();
@@ -334,7 +331,6 @@ void cAdjustManagement::getOffsetCorr2()
         // Offset is an summand. It must be multiplied with the
         // scale factor.
         m_fOffsetCorr[measChannel->getDSPChannelNr()] = fCorr*preScale;
-        // qDebug() << QString("OffsetCorr%1: %2").arg(m_nChannelIt).arg(fCorr);
 
         m_nChannelIt++;
         if (m_nChannelIt < m_ChannelNameList.count())
@@ -374,9 +370,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readdspgaincorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readdspgaincorrErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -386,9 +379,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readdspphasecorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readdspphasecorrErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -398,9 +388,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readdspoffsetcorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readdspoffsetcorrErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -411,9 +398,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(writesubdcErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writesubdcErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -426,9 +410,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspgaincorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspgaincorrErrMsg;
-#endif
                 }
                 break;
 
@@ -439,9 +420,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspphasecorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspphasecorrErrMsg;
-#endif
                 }
                 break;
 
@@ -452,9 +430,6 @@ void cAdjustManagement::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspoffsetcorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspoffsetcorrErrMsg;
-#endif
                 }
                 break;
 

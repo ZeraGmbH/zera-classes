@@ -53,7 +53,6 @@ void cFftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -76,9 +75,6 @@ void cFftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             else
             {
                 emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                qDebug() << registerpcbnotifierErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -88,9 +84,6 @@ void cFftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
             else
             {
                 emit errMsg((tr(unregisterpcbnotifierErrMsg)));
-#ifdef DEBUG
-                qDebug() << unregisterpcbnotifierErrMsg;
-#endif
                 emit activationError();
             }
             break;

@@ -50,7 +50,6 @@ void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         bool ok;
         int service = sintnr.toInt(&ok);
@@ -71,9 +70,6 @@ void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             }
             else {
                 emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                qDebug() << registerpcbnotifierErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -83,9 +79,6 @@ void cRangeModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
             }
             else {
                 emit errMsg((tr(unregisterpcbnotifierErrMsg)));
-#ifdef DEBUG
-                qDebug() << unregisterpcbnotifierErrMsg;
-#endif
                 emit activationError();
             }
             break;

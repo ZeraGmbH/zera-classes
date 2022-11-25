@@ -355,9 +355,6 @@ void cBaseModule::exportMetaData()
     QByteArray ba;
     ba = jsonDoc.toJson();
 
-#ifdef DEBUG
-    qDebug() << jsonDoc.toJson();
-#endif
     m_pModuleInterfaceComponent->setValue(QVariant(ba));
 }
 

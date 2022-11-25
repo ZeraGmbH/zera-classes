@@ -119,12 +119,6 @@ void cBurden1MeasDelegate::computeOutput()
     m_pActPowerFactor->setValue(m_fActPowerFactor);
     m_pActRelativeBurden->setValue(m_fActRelativeBurden);
 
-#ifdef DEBUG
-    QString ts;
-    ts = QString("Burden: %1; cosß: %2; rel.Burden: %3%").arg(m_fActBurden).arg(m_fActPowerFactor).arg(m_fActRelativeBurden);
-    qDebug() << ts;
-#endif
-
 }
 
 

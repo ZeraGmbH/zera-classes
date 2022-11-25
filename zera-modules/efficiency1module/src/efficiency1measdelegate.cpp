@@ -76,12 +76,6 @@ void cEfficiency1MeasDelegate::computeOutput()
 
     m_pActValue->setValue(QVariant(m_fEfficiency));
 
-#ifdef DEBUG
-        QString ts;
-        ts = QString("Efficiency: %1;").arg(m_fEfficiency);
-        qDebug() << ts;
-#endif
-
     if (m_bSignal)
         emit measuring(1);
 

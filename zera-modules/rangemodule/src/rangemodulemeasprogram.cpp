@@ -257,7 +257,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
     {
         restartDspWachdog();
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -292,9 +291,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(rmidentErrMSG)));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -305,9 +301,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << claimresourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -317,9 +310,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << claimresourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -329,9 +319,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(dspvarlistwriteErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspvarlistwriteErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -341,9 +328,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(dspcmdlistwriteErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspcmdlistwriteErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -353,9 +337,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(dspactiveErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspactiveErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -366,9 +347,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(dspdeactiveErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspdeactiveErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -378,9 +356,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -390,9 +365,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                 else
                 {
                     emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -406,9 +378,6 @@ void cRangeModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, 
                     // perhaps we emit some error here ?
                     {
                         emit errMsg((tr(dataaquisitionErrMsg)));
-#ifdef DEBUG
-                        qDebug() << dataaquisitionErrMsg;
-#endif
                         emit executionError();
                     }
                 }

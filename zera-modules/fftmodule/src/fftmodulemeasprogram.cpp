@@ -306,7 +306,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -333,9 +332,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg(tr(rmidentErrMSG));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -345,9 +341,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << claimresourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -357,9 +350,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << claimresourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -369,9 +359,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspvarlistwriteErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspvarlistwriteErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -381,9 +368,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspcmdlistwriteErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspcmdlistwriteErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -393,9 +377,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspactiveErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspactiveErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -406,9 +387,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -431,18 +409,12 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     else
                     {
                         emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                        qDebug() << resourceErrMsg;
-#endif
                         emit activationError();
                     }
                 }
                 else
                 {
                     emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -469,18 +441,12 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                     else
                     {
                         emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                        qDebug() << resourceInfoErrMsg;
-#endif
                         emit activationError();
                     }
                 }
                 else
                 {
                     emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceInfoErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -495,9 +461,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(readsamplerateErrMsg)));
-        #ifdef DEBUG
-                    qDebug() << readsamplerateErrMsg;
-        #endif
                     emit activationError();
                 }
                 break;
@@ -518,9 +481,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readaliasErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -542,9 +502,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(readunitErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readunitErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -566,9 +523,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(readdspchannelErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readdspchannelErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -582,9 +536,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(writedspmemoryErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspmemoryErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -595,9 +546,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(dspdeactiveErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dspdeactiveErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -607,9 +555,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -619,9 +564,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 else
                 {
                     emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -633,9 +575,6 @@ void cFftModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
                 {
                     m_dataAcquisitionMachine.stop();
                     emit errMsg((tr(dataaquisitionErrMsg)));
-#ifdef DEBUG
-                    qDebug() << dataaquisitionErrMsg;
-#endif
                     emit executionError(); // but we send error message
                 }
                 break;
@@ -1006,23 +945,6 @@ void cFftModuleMeasProgram::dataReadDSP()
 
         emit actualValues(&m_FFTModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
-
-#ifdef DEBUG
-        QString s, ts;
-        for (int i = 0; i < m_ActValueList.count(); i++)
-        {
-            for (int j = 0; j < getConfData()->m_nFftOrder; j++)
-            {
-                ts = QString("FFT(%1(%2)):(%3,%4)[%5];").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).alias)
-                        .arg(j)
-                        .arg(m_FFTModuleActualValues.at((i*getConfData()->m_nFftOrder+j)*2))
-                        .arg(m_FFTModuleActualValues.at((i*getConfData()->m_nFftOrder+j)*2+1))
-                        .arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).unit);
-                s += ts;
-            }
-            qDebug() << s;
-        }
-#endif
     }
 }
 

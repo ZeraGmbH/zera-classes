@@ -218,7 +218,6 @@ bool cRangeMeasChannel::isPossibleRange(QString range)
 bool cRangeMeasChannel::isRMSOverload(double ampl)
 {
     cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
-    // qDebug() << QString("Ampl: %1; Rng: %2").arg(ampl).arg(ri.alias);
     double ovrRecectionFactor = ri.ovrejection / ri.rejection;
     return ((ri.urvalue * ovrRecectionFactor) < ampl);
 }
@@ -442,7 +441,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
     if (msgnr == 0) {// 0 was reserved for async. messages
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service) {
@@ -468,9 +466,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg(tr(rmidentErrMSG));
-    #ifdef DEBUG
-                qDebug() << rmidentErrMSG;
-    #endif
                 emit activationError();
             }
             break;
@@ -481,9 +476,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(resourcetypeErrMsg)));
-    #ifdef DEBUG
-                qDebug() << resourcetypeErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -494,9 +486,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(resourceErrMsg)));
-    #ifdef DEBUG
-                qDebug() << resourceErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -521,18 +510,12 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
                 else {
                     emit errMsg((tr(resourceInfoErrMsg)));
-    #ifdef DEBUG
-                    qDebug() << resourceInfoErrMsg;
-    #endif
                     emit activationError();
                 }
             }
 
             else {
                 emit errMsg((tr(resourceInfoErrMsg)));
-    #ifdef DEBUG
-                qDebug() << resourceInfoErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -543,9 +526,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(claimresourceErrMsg)));
-    #ifdef DEBUG
-                qDebug() << claimresourceErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -556,9 +536,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(freeresourceErrMsg)));
-    #ifdef DEBUG
-                qDebug() << freeresourceErrMsg;
-    #endif
                 emit deactivationError();
             }
             break;
@@ -569,9 +546,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(unregisterpcbnotifierErrMsg)));
-    #ifdef DEBUG
-                qDebug() << unregisterpcbnotifierErrMsg;
-    #endif
                 emit deactivationError();
             }
             break;
@@ -583,9 +557,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readdspchannelErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readdspchannelErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -597,9 +568,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readaliasErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readaliasErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -611,9 +579,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readsamplerateErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readsamplerateErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -625,9 +590,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readunitErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readunitErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -639,9 +601,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangelistErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangelistErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -653,9 +612,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangealiasErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangealiasErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -667,9 +623,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangetypeErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangetypeErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -681,9 +634,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangeurvalueErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangeurvalueErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -695,9 +645,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangerejectionErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangerejectionErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -709,9 +656,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangeovrejectionErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangeovrejectionErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -723,9 +667,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangeadcrejectionErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangeadcrejectionErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -737,9 +678,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readrangeavailErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readrangeavailErrMsg;
-    #endif
                 emit activationError();
             }
             break;
@@ -758,9 +696,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                          reply);
                 if (errcount > 1) {
                     emit errMsg((tr(setRangeErrMsg)));
-    #ifdef DEBUG
-                    qDebug() << setRangeErrMsg;
-    #endif
                     emit executionError();
                 }
             } // perhaps some error output
@@ -777,9 +712,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 m_ActionErrorcountHash[readgaincorrection] = errcount;
                 if (errcount > 1) {
                     emit errMsg((tr(readGainCorrErrMsg)));
-    #ifdef DEBUG
-                    qDebug() << readGainCorrErrMsg;
-    #endif
                     emit executionError();
                 }
             }
@@ -796,9 +728,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 m_ActionErrorcountHash[readoffsetcorrection] = errcount;
                 if (errcount > 1) {
                     emit errMsg((tr(readOffsetCorrErrMsg)));
-    #ifdef DEBUG
-                    qDebug() << readOffsetCorrErrMsg;
-    #endif
                     emit executionError();
                 }
             }
@@ -816,9 +745,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (errcount > 1)
                 {
                     emit errMsg((tr(readPhaseCorrErrMsg)));
-    #ifdef DEBUG
-                    qDebug() << readPhaseCorrErrMsg;
-    #endif
                     emit executionError();
                 }
             }
@@ -831,9 +757,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(readChannelStatusErrMsg)));
-    #ifdef DEBUG
-                qDebug() << readChannelStatusErrMsg;
-    #endif
                 emit executionError();
             }
             emit cmdDone(msgnr);
@@ -844,9 +767,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(resetChannelStatusErrMsg)));
-    #ifdef DEBUG
-                qDebug() << resetChannelStatusErrMsg;
-    #endif
                 emit executionError();
             } // perhaps some error output
             emit cmdDone(msgnr);
@@ -858,9 +778,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(resetChannelStatusErrMsg)));
-    #ifdef DEBUG
-                qDebug() << resetChannelStatusErrMsg;
-    #endif
                 emit activationError();
             } // perhaps some error output
             break;
@@ -871,9 +788,6 @@ void cRangeMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             }
             else {
                 emit errMsg((tr(registerpcbnotifierErrMsg)));
-    #ifdef DEBUG
-                qDebug() << registerpcbnotifierErrMsg;
-    #endif
                 emit activationError();
             } // perhaps some error output
             break;

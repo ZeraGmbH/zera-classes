@@ -57,12 +57,6 @@ void cLambdaMeasDelegate::computeOutput()
         }
     }
 
-#ifdef DEBUG
-    QString ts;
-    ts = QString("Lambda: %1").arg(lambda);
-    qDebug() << ts;
-#endif
-
     m_pActValue->setValue(lambda);
 }
 

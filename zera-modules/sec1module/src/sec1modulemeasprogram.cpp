@@ -485,7 +485,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -1119,9 +1118,6 @@ void cSec1ModuleMeasProgram::testSecInputs()
     else
     {
         emit errMsg((tr(resourceErrMsg)));
-        #ifdef DEBUG
-            qDebug() << resourceErrMsg;
-        #endif
         emit activationError();
     }
 

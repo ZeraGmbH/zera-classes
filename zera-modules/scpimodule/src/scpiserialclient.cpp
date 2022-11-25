@@ -31,10 +31,6 @@ void cSCPISerialClient::receiveAnswer(QString answ)
     answer = answ + endChar;
     answer.replace("\n", endChar);
 
-#ifdef DEBUG
-    qDebug() << answer.toLatin1();
-#endif
-
     ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
 }
