@@ -111,9 +111,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     emit errMsg((tr(rmidentErrMSG)));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -124,9 +121,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -137,9 +131,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -161,17 +152,11 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                     }
                     else {
                         emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                        qDebug() << resourceInfoErrMsg;
-#endif
                         emit activationError();
                     }
                 }
                 else {
                     emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceInfoErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -183,9 +168,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     emit errMsg((tr(claimresourceErrMsg)));
-        #ifdef DEBUG
-                    qDebug() << claimresourceErrMsg;
-        #endif
                     emit activationError();
                 }
                 break;
@@ -196,9 +178,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     emit errMsg((tr(setMeasModeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << setMeasModeErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -211,9 +190,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspgaincorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspgaincorrErrMsg;
-#endif
                 }
                 break;
 
@@ -225,9 +201,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspphasecorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspphasecorrErrMsg;
-#endif
                 }
                 break;
 
@@ -239,9 +212,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspoffsetcorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspoffsetcorrErrMsg;
-#endif
                 }
                 break;
 
@@ -252,9 +222,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 else {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writesubdcErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writesubdcErrMsg;
-#endif
                 }
                 break;
 
@@ -266,9 +233,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(setsamplingsystemErrmsg)));
-#ifdef DEBUG
-                    qDebug() << setsamplingsystemErrmsg;
-#endif
                 }
                 break;
 
@@ -278,9 +242,6 @@ void cModeModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 }
                 else {
                     emit errMsg((tr(freeresourceErrMsg)));
-        #ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-        #endif
                     emit deactivationError();
                 }
                 break;
@@ -370,9 +331,6 @@ void cModeModuleInit::writeGainCorr()
         data[i] = 1.0;
     }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr;
-#ifdef DEBUG
-    qDebug() << "writeGainCorr";
-#endif
 }
 
 
@@ -387,9 +345,6 @@ void cModeModuleInit::writeGainCorr2()
         data[i] = 1.0;
     }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writegaincorr2;
-#ifdef DEBUG
-    qDebug() << "writeGainCorr2";
-#endif
 }
 
 
@@ -404,9 +359,6 @@ void cModeModuleInit::writePhaseCorr()
         data[i] = 0.0;
     }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr;
-#ifdef DEBUG
-    qDebug() << "writePhaseCorr";
-#endif
 }
 
 
@@ -421,9 +373,6 @@ void cModeModuleInit::writePhaseCorr2()
         data[i] = 0.0;
     }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writephasecorr2;
-#ifdef DEBUG
-    qDebug() << "writePhaseCorr2";
-#endif
 }
 
 
@@ -438,9 +387,6 @@ void cModeModuleInit::writeOffsetCorr()
         data[i] = 0.0;
     }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
-#ifdef DEBUG
-    qDebug() << "writeOffsetCorr";
-#endif
 }
 
 
@@ -455,9 +401,6 @@ void cModeModuleInit::writeOffsetCorr2()
         data[i] = 0.0;
     }
     m_MsgNrCmdList[m_pDSPInterface->dspMemoryWrite(m_pCorrectionDSP)] = MODEMODINIT::writeoffsetcorr;
-#ifdef DEBUG
-    qDebug() << "writeOffsetCorr2";
-#endif
 }
 
 

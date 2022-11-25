@@ -57,7 +57,6 @@ void cThdnModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -80,9 +79,6 @@ void cThdnModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             else
             {
                 emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                qDebug() << registerpcbnotifierErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -92,9 +88,6 @@ void cThdnModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             else
             {
                 emit errMsg((tr(unregisterpcbnotifierErrMsg)));
-#ifdef DEBUG
-                qDebug() << unregisterpcbnotifierErrMsg;
-#endif
                 emit deactivationError();
             }
             break;

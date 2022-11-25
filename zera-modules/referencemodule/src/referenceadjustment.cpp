@@ -67,25 +67,9 @@ void cReferenceAdjustment::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
 
-#ifdef DEBUG
-    qDebug() << "Reference Module Actual Values received";
-    QString s;
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        double dc = sqrt((m_ActualValues.at(i*2) * m_ActualValues.at(i*2)) + (m_ActualValues.at(i*2+1) * m_ActualValues.at(i*2+1))) / 2.0;
-
-        s = s + QString("DC(%1)=%2;").arg(m_ChannelList.at(i)->getAlias()).arg(dc);
-    }
-
-    qDebug() << s;
-#endif
-
     if (m_nIgnoreCount > 0)
     {
         m_nIgnoreCount--;
-#ifdef DEBUG
-        qDebug() << "Ignored";
-#endif
     }
     else
         // m_bactive in case measurement is faster than adjusting
@@ -191,19 +175,7 @@ void cReferenceAdjustment::writeOffsetAdjustment()
         double dc = m_ActualValues.at(i*2) / 2.0; // we only use the real part of dft but must devide by 2
         cval = -dc /* * rej / (gaink * urv)*/;
         m_fOffset2Corr[dspchn] = cval;
-#ifdef DEBUG
-        corrData.append(cval);
-#endif
     }
-
-#ifdef DEBUG
-    QString s = "RefModule: ";
-    for (int i = 0; i < m_ChannelList.count(); i++)
-    {
-        s = s + QString("K(%1)=%2;").arg(m_ChannelList.at(i)->getAlias()).arg(corrData.at(i));
-    }
-    qDebug() << s;
-#endif
 
     if (m_bActive)
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pOffset2CorrectionDSP)] = writeoffsetadjustment;
@@ -269,9 +241,6 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 else
                 {
                     emit errMsg((tr(setMeasModeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << setMeasModeErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -281,9 +250,6 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 else
                 {
                     emit errMsg((tr(setMeasModeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << setMeasModeErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -293,9 +259,6 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 else
                 {
                     emit errMsg((tr(readdspgaincorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readdspgaincorrErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -306,9 +269,6 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 else
                 {
                     emit errMsg((tr(readdspoffsetcorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readdspoffsetcorrErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -320,9 +280,6 @@ void cReferenceAdjustment::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVa
                 {
                     // perhaps we emit some error here ?
                     emit errMsg((tr(writedspoffsetcorrErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writedspoffsetcorrErrMsg;
-#endif
                 }
                 break;
 

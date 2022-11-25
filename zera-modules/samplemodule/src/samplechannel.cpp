@@ -103,9 +103,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg(tr(rmidentErrMSG));
-#ifdef DEBUG
-            qDebug() << rmidentErrMSG;
-#endif
             emit activationError();
         }
         break;
@@ -115,9 +112,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-            qDebug() << resourcetypeErrMsg;
-#endif
             emit activationError();
         }
         break;
@@ -127,9 +121,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-            qDebug() << resourceErrMsg;
-#endif
             emit activationError();
         }
         break;
@@ -156,9 +147,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
             else
             {
                 emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                qDebug() << resourceInfoErrMsg;
-#endif
                 emit activationError();
             }
         }
@@ -166,9 +154,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-            qDebug() << resourceInfoErrMsg;
-#endif
             emit activationError();
         }
 
@@ -181,9 +166,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(claimresourceErrMsg)));
-#ifdef DEBUG
-            qDebug() << claimresourceErrMsg;
-#endif
             emit activationError();
         }
         break;
@@ -193,9 +175,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-            qDebug() << freeresourceErrMsg;
-#endif
             emit deactivationError();
         }
         break;
@@ -208,9 +187,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-            qDebug() << readaliasErrMsg;
-#endif
             emit activationError();
         }
         break;
@@ -223,9 +199,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(readrangelistErrMsg)));
-#ifdef DEBUG
-            qDebug() << readrangelistErrMsg;
-#endif
             emit activationError();
         }
         break;
@@ -235,9 +208,6 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         else
         {
             emit errMsg((tr(setRangeErrMsg)));
-#ifdef DEBUG
-            qDebug() << setRangeErrMsg;
-#endif
             emit executionError();
         }; // perhaps some error output
         break;

@@ -189,18 +189,12 @@ void cSCPIServer::setupTCPServer()
 
     if (!noError) {
         emit errMsg((tr(interfacejsonErrMsg)));
-#ifdef DEBUG
-        qDebug() << interfacejsonErrMsg;
-#endif
     }
 
     noError = noError && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
 
     if(!noError) {
         emit errMsg((tr(interfaceETHErrMsg)));
-#ifdef DEBUG
-        qDebug() << interfaceETHErrMsg;
-#endif
     }
 
     if (m_ConfigData.m_SerialDevice.m_nOn == 1) {

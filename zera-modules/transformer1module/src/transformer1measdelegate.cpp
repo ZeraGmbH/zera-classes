@@ -113,12 +113,6 @@ void cTransformer1MeasDelegate::computeOutput()
     double IXPrim = fabs(inp2) * dRatio * c1_sqrt2;
     m_pActIXPrimary->setValue(IXPrim);
 
-#ifdef DEBUG
-    QString ts;
-    ts = QString("TransmissionError: %1; Angle: %2; Ratio: %3").arg(dError).arg(dAngleError).arg(dRatio);
-    qDebug() << ts;
-#endif
-
 }
 
 

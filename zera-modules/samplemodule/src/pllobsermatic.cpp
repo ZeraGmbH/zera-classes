@@ -38,10 +38,6 @@ cPllObsermatic::~cPllObsermatic()
 void cPllObsermatic::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
-#ifdef DEBUG
-    qDebug() << QString("RMS %1 ; %2 ; %3 ;").arg(m_ActualValues[0]).arg(m_ActualValues[1]).arg(m_ActualValues[2])
-             << QString("%1 ; %2 ; %3").arg(m_ActualValues[3]).arg(m_ActualValues[4]).arg(m_ActualValues[5]);
-#endif
 
     pllAutomatic(); // let pllautomatic do its job
 }
@@ -180,9 +176,6 @@ void cPllObsermatic::newPllChannel(QVariant channel)
 
     if (m_sNewPllChannel != m_sActPllChannel)
     {
-#ifdef DEBUG
-        qDebug() << QString("New PLL-Channel: %1 selected").arg(m_sNewPllChannel);
-#endif
         m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
         m_MsgNrCmdList[m_pllMeasChannelHash[m_sNewPllChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
     }
@@ -198,18 +191,12 @@ void cPllObsermatic::newPllAuto(QVariant pllauto)
 
     if ( (m_bPllAutomatic = (pllauto.toInt(&ok) == 1)) )
     {
-#ifdef DEBUG
-        qDebug() << "PLL Automatic on";
-#endif
         m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 1;
         pllAutomatic(); // call once if switched to automatic
     }
     else
     {
         m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 0;
-#ifdef DEBUG
-        qDebug() << "PLL Automatic off";
-#endif
     }
 
     emit m_pModule->parameterChanged();

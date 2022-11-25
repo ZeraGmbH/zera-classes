@@ -369,7 +369,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -396,9 +395,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(rmidentErrMSG)));
-#ifdef DEBUG
-                    qDebug() << rmidentErrMSG;
-#endif
                     emit activationError();
                 }
                 break;
@@ -409,9 +405,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -422,9 +415,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(setresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << setresourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -438,9 +428,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourcetypeErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -459,9 +446,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -487,9 +471,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(fetchsececalcunitErrMsg)));
-#ifdef DEBUG
-                    qDebug() << fetchsececalcunitErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -505,9 +486,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readaliasErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -519,9 +497,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(freesececalcunitErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freesececalcunitErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -532,9 +507,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(freeresourceErrMsg)));
-#ifdef DEBUG
-                    qDebug() << freeresourceErrMsg;
-#endif
                     emit deactivationError();
                 }
                 break;
@@ -551,9 +523,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else {
                     emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -573,9 +542,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else {
                     emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -593,9 +559,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 else {
                     emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -610,9 +573,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     {
                         emit errMsg((tr(setsyncErrMsg)));
-#ifdef DEBUG
-                        qDebug() << setsyncErrMsg;
-#endif
                         emit executionError();
                     }
                 }
@@ -628,9 +588,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     {
                         emit errMsg((tr(writesecregisterErrMsg)));
-#ifdef DEBUG
-                        qDebug() << writesecregisterErrMsg;
-#endif
                         emit executionError();
                     }
                 }
@@ -646,9 +603,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     {
                         emit errMsg((tr(setmuxErrMsg)));
-#ifdef DEBUG
-                        qDebug() << setmuxErrMsg;
-#endif
                         emit executionError();
                     }
                 }
@@ -664,9 +618,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     {
                         emit errMsg((tr(setcmdidErrMsg)));
-#ifdef DEBUG
-                        qDebug() << setcmdidErrMsg;
-#endif
                         emit executionError();
                     }
                 }
@@ -681,9 +632,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     {
                         emit errMsg((tr(startmeasErrMsg)));
-#ifdef DEBUG
-                        qDebug() << startmeasErrMsg;
-#endif
                         emit executionError();
                     }
                 }
@@ -697,9 +645,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 {
                     {
                         emit errMsg((tr(stopmeasErrMsg)));
-#ifdef DEBUG
-                        qDebug() << stopmeasErrMsg;
-#endif
                         emit executionError();
                     }
                 }
@@ -711,9 +656,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                    qDebug() << registerpcbnotifierErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -724,9 +666,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                    qDebug() << registerpcbnotifierErrMsg;
-#endif
                     emit activationError();
                 }
                 break;
@@ -744,9 +683,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(readrefconstantErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readrefconstantErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -761,9 +697,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -775,9 +708,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(writesecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << writesecregisterErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -796,9 +726,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -811,9 +738,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 else
                 {
                     emit errMsg((tr(readsecregisterErrMsg)));
-#ifdef DEBUG
-                    qDebug() << readsecregisterErrMsg;
-#endif
                     emit executionError();
                 }
                 break;
@@ -1052,9 +976,6 @@ void cSem1ModuleMeasProgram::testSemInputs()
     else
     {
         emit errMsg((tr(resourceErrMsg)));
-        #ifdef DEBUG
-            qDebug() << resourceErrMsg;
-        #endif
         emit activationError();
     }
 }

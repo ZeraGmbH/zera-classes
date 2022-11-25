@@ -137,7 +137,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
-        // qDebug() << "meas program interrupt";
         sintnr = answer.toString().section(':', 1, 1);
         int service = sintnr.toInt(&ok);
         switch (service)
@@ -160,9 +159,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg(tr(rmidentErrMSG));
-#ifdef DEBUG
-                qDebug() << rmidentErrMSG;
-#endif
                 emit activationError();
             }
             break;
@@ -172,9 +168,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(resourcetypeErrMsg)));
-#ifdef DEBUG
-                qDebug() << resourcetypeErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -184,9 +177,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(resourceErrMsg)));
-#ifdef DEBUG
-                qDebug() << resourceErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -212,9 +202,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
                 else
                 {
                     emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                    qDebug() << resourceInfoErrMsg;
-#endif
                     emit activationError();
                 }
             }
@@ -222,9 +209,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(resourceInfoErrMsg)));
-#ifdef DEBUG
-                qDebug() << resourceInfoErrMsg;
-#endif
                 emit activationError();
             }
 
@@ -240,9 +224,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readdspchannelErrMsg)));
-#ifdef DEBUG
-                qDebug() << readdspchannelErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -254,9 +235,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(getRangeErrMsg)));
-#ifdef DEBUG
-                qDebug() << getRangeErrMsg;
-#endif
             }
             break;
         case readchnalias:
@@ -268,9 +246,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readaliasErrMsg)));
-#ifdef DEBUG
-                qDebug() << readaliasErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -283,9 +258,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readsamplerateErrMsg)));
-#ifdef DEBUG
-                qDebug() << readsamplerateErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -298,9 +270,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readunitErrMsg)));
-#ifdef DEBUG
-                qDebug() << readunitErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -313,9 +282,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readrangelistErrMsg)));
-#ifdef DEBUG
-                qDebug() << readrangelistErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -328,9 +294,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readrangealiasErrMsg)));
-#ifdef DEBUG
-                qDebug() << readrangealiasErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -343,9 +306,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readrangetypeErrMsg)));
-#ifdef DEBUG
-                qDebug() << readrangetypeErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -358,9 +318,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readrangeurvalueErrMsg)));
-#ifdef DEBUG
-                qDebug() << readrangeurvalueErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -373,9 +330,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readrangerejectionErrMsg)));
-#ifdef DEBUG
-                qDebug() << readrangerejectionErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -388,9 +342,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readrangeovrejectionErrMsg)));
-#ifdef DEBUG
-                qDebug() << readrangeovrejectionErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -403,9 +354,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(readrangeavailErrMsg)));
-#ifdef DEBUG
-                qDebug() << readrangeavailErrMsg;
-#endif
                 emit activationError();
             }
             break;
@@ -415,9 +363,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(setPllErrMsg)));
-#ifdef DEBUG
-                qDebug() << setPllErrMsg;
-#endif
                 emit executionError();
             }; // perhaps some error output
             emit cmdDone(msgnr);
@@ -430,9 +375,6 @@ void cPllMeasChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant
             else
             {
                 emit errMsg((tr(registerpcbnotifierErrMsg)));
-#ifdef DEBUG
-                qDebug() << registerpcbnotifierErrMsg;
-#endif
                 emit activationError();
             }
             break;
