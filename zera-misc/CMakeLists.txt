@@ -42,6 +42,7 @@ set(HEADER
     intelhexfileio.h
     intelhexfileio_p.h
     signal-wait/signalwaiter.h
+    signal-wait/blockedwaitinterface.h
     ${HEADER_FOR_MODULE}
 )
 

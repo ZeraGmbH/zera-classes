@@ -1,6 +1,7 @@
 #ifndef SIGNALWAITER_H
 #define SIGNALWAITER_H
 
+#include "blockedwaitinterface.h"
 #include <QObject>
 #include <QEventLoop>
 #include <QTimer>
@@ -10,12 +11,10 @@
  * simple sequences e.g as an alternate using QStateMachines which creates
  * uneasy to read and unflexible code
  */
-class SignalWaiter : public QObject
+class SignalWaiter : public QObject, public BlockedWaitInterface
 {
     Q_OBJECT
 public:
-    enum WaitResult { WAIT_OK_SIG, WAIT_ERR_SIG, WAIT_ABORT, WAIT_TIMEOUT, WAIT_UNDEF };
-
     template <typename Func1>
     SignalWaiter(const typename QtPrivate::FunctionPointer<Func1>::Object *doneSender, Func1 doneSignal,
                  int timeout = 0) {
@@ -28,7 +27,7 @@ public:
         setup(doneSender, doneSignal, errorSender, errorSignal, timeout);
     }
 
-    bool wait() {
+    bool wait() override {
         if(!m_signalReceived) {
             if(m_timeoutMs > 0) {
                 m_timeoutTimer.start(m_timeoutMs);
@@ -37,7 +36,7 @@ public:
         }
         return m_waitResult == WAIT_OK_SIG;
     }
-    WaitResult getResult() {
+    WaitResult getResult() override {
         return m_waitResult;
     }
     void abort() { emit sigAbort(); }
