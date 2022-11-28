@@ -36,6 +36,9 @@ set(SOURCES
     intelhexfileio.cpp
     intelhexfileio_p.cpp
     signal-wait/signalwaiter.cpp
+    task-runner/taskparallel.cpp
+    task-runner/tasksequence.cpp
+    task-runner/tasktimeoutdecorator.cpp
     ${SOURCES_FOR_MODULE}
 )
 
@@ -44,6 +47,10 @@ set(HEADER
     intelhexfileio_p.h
     signal-wait/signalwaiter.h
     signal-wait/blockedwaitinterface.h
+    task-runner/taskcomposit.h
+    task-runner/taskparallel.h
+    task-runner/tasksequence.h
+    task-runner/tasktimeoutdecorator.h
     ${HEADER_FOR_MODULE}
 )
 
@@ -75,6 +82,7 @@ target_include_directories(zeramisc
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/signal-wait>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/task-runner>
     )
 
 set_target_properties(zeramisc PROPERTIES VERSION ${PROJECT_VERSION})
