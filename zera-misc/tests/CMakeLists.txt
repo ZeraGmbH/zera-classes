@@ -31,17 +31,21 @@ target_link_libraries(zera-misc-unittest
 # Inspired by
 # https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
 
-add_library(test_helpers STATIC
+add_library(helpers STATIC
+    taskfortest.h
+    taskfortest.cpp
     )
 
-target_include_directories(test_helpers
+target_include_directories(helpers
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-target_link_libraries(test_helpers
+target_link_libraries(helpers
     PUBLIC
     Qt5::Core
+    Qt5::Test
+    zeramisc
     )
 
 enable_testing()
@@ -54,19 +58,16 @@ function(SETUP_TESTS)
             ${_testname}.h
             ${_testname}.cpp
             )
-        target_include_directories(${_testname}
-            PUBLIC
-            ${PROJECT_SOURCE_DIR}/src
-            )
         target_link_libraries(${_testname}
             PUBLIC
             Qt5::Test
-            zeramisc
-            test_helpers
+            helpers
             )
     endforeach()
 endfunction()
 
 SETUP_TESTS(
     test_signalwait
+    test_taskfortest
+    test_tasksequence
 )
