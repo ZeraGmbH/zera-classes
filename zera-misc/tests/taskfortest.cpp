@@ -1,6 +1,11 @@
 #include "taskfortest.h"
 #include <QTest>
 
+TaskInterfacePtr TaskForTest::create(int delayMs, bool finishError)
+{
+    return std::make_unique<TaskForTest>(delayMs, finishError);
+}
+
 TaskForTest::TaskForTest(int delayMs, bool finishError) :
     m_delayMs(delayMs),
     m_finishError(finishError)

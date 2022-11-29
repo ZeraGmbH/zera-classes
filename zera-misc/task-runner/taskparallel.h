@@ -7,8 +7,12 @@ class TaskParallel : public TaskComposite
 {
     Q_OBJECT
 public:
-    void addTask(TaskComposite* task);
+    static std::unique_ptr<TaskParallel> create();
+    TaskParallel();
+    void addTask(TaskInterfacePtr task);
     void start() override;
 };
+
+typedef std::unique_ptr<TaskParallel> TaskParallelPtr;
 
 #endif // TASKPARALLEL_H

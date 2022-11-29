@@ -1,7 +1,11 @@
 #include "tasktimeoutdecorator.h"
 
+std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecorator::create(TaskInterfacePtr decoratedTask, int timeout)
+{
+    return std::make_unique<TaskTimeoutDecorator>(std::move(decoratedTask), timeout);
+}
 
-TaskTimeoutDecorator::TaskTimeoutDecorator(TaskComposite *decoratedTask, int timeout, QObject *parent)
+TaskTimeoutDecorator::TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int timeout)
 {
 
 }
