@@ -9,7 +9,7 @@ void test_tasksequence::oneOk()
     TaskSequencePtr taskSeq = TaskSequence::create();
     taskSeq->addTask(TaskForTest::create(0, false));
     int okCount = 0;
-    connect(taskSeq.get(), &TaskSequence::finishOk, [&]() {
+    connect(taskSeq.get(), &TaskSequence::sigFinish, [&]() {
         okCount++;
     });
     taskSeq->start();

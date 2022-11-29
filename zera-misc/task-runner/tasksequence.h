@@ -12,9 +12,9 @@ public:
     TaskSequence();
     void addTask(TaskInterfacePtr task);
     void start() override;
+
 private slots:
-    void onFinishCurrOk();
-    void onFinishCurrErr();
+    void onFinishCurr(bool ok);
 private:
     bool next();
     void connectCurrent();
