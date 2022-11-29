@@ -10,8 +10,7 @@ class TaskComposite : public QObject
 public:
     virtual void start() = 0;
 signals:
-    void finishOk();
-    void finishErr();
+    void sigFinish(bool ok);
 };
 
 typedef std::unique_ptr<TaskComposite> TaskInterfacePtr;

@@ -11,16 +11,16 @@ void test_taskfortest::onePassImmediate()
 {
     TaskForTest task(0, false);
     int countOk = 0;
+    int countErr = 0;
     int delay = 1000;
     QElapsedTimer timer;
-    connect(&task, &TaskForTest::finishOk, [&]() {
-        countOk++;
+    connect(&task, &TaskForTest::sigFinish, [&](bool ok) {
+        if(ok)
+            countOk++;
+        else
+            countErr++;
         delay = timer.elapsed();
     } );
-    int countErr = 0;
-    connect(&task, &TaskForTest::finishErr, [&]() {
-        countErr++;
-    });
 
     timer.start();
     task.start();
@@ -35,14 +35,14 @@ void test_taskfortest::oneErrImmediate()
 {
     TaskForTest task(0, true);
     int countOk = 0;
-    connect(&task, &TaskForTest::finishOk, [&]() {
-        countOk++;
-    });
     int countErr = 0;
     int delay = 1000;
     QElapsedTimer timer;
-    connect(&task, &TaskForTest::finishErr, [&]() {
-        countErr++;
+    connect(&task, &TaskForTest::sigFinish, [&](bool ok) {
+        if(ok)
+            countOk++;
+        else
+            countErr++;
         delay = timer.elapsed();
     });
 
@@ -59,15 +59,15 @@ void test_taskfortest::onePassDelayed()
 {
     TaskForTest task(DELAY_TIME, false);
     int countOk = 0;
+    int countErr = 0;
     int delay = 0;
     QElapsedTimer timer;
-    connect(&task, &TaskForTest::finishOk, [&]() {
-        countOk++;
+    connect(&task, &TaskForTest::sigFinish, [&](bool ok) {
+        if(ok)
+            countOk++;
+        else
+            countErr++;
         delay = timer.elapsed();
-    } );
-    int countErr = 0;
-    connect(&task, &TaskForTest::finishErr, [&]() {
-        countErr++;
     });
 
     timer.start();
@@ -84,15 +84,15 @@ void test_taskfortest::oneErrDelayed()
     TaskForTest task(DELAY_TIME, true);
     int countOk = 0;
     int delay = 0;
-    QElapsedTimer timer;
-    connect(&task, &TaskForTest::finishOk, [&]() {
-        countOk++;
-    } );
     int countErr = 0;
-    connect(&task, &TaskForTest::finishErr, [&]() {
-        countErr++;
+    QElapsedTimer timer;
+    connect(&task, &TaskForTest::sigFinish, [&](bool ok) {
+        if(ok)
+            countOk++;
+        else
+            countErr++;
         delay = timer.elapsed();
-    });
+    } );
 
     timer.start();
     task.start();

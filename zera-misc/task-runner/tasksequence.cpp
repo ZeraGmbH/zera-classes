@@ -1,6 +1,5 @@
 #include "tasksequence.h"
 
-
 std::unique_ptr<TaskSequence> TaskSequence::create()
 {
     return std::make_unique<TaskSequence>();
@@ -21,14 +20,9 @@ void TaskSequence::start()
         m_current->start();
 }
 
-void TaskSequence::onFinishCurrOk()
+void TaskSequence::onFinishCurr(bool ok)
 {
-    emit finishOk();
-}
-
-void TaskSequence::onFinishCurrErr()
-{
-
+    emit sigFinish(ok);
 }
 
 bool TaskSequence::next()
@@ -45,6 +39,5 @@ bool TaskSequence::next()
 
 void TaskSequence::connectCurrent()
 {
-    connect(m_current.get(), &TaskComposite::finishOk, this, &TaskSequence::onFinishCurrOk);
-    connect(m_current.get(), &TaskComposite::finishErr, this, &TaskSequence::onFinishCurrErr);
+    connect(m_current.get(), &TaskComposite::sigFinish, this, &TaskSequence::onFinishCurr);
 }

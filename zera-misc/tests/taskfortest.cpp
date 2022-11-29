@@ -25,8 +25,5 @@ void TaskForTest::start()
 
 void TaskForTest::doEmit()
 {
-    if(!m_finishError)
-        emit finishOk();
-    else
-        emit finishErr();
+    emit sigFinish(!m_finishError);
 }
