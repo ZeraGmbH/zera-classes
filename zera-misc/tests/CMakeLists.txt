@@ -70,4 +70,5 @@ SETUP_TESTS(
     test_signalwait
     test_taskfortest
     test_tasksequence
+    test_timeoutdecorator
 )

@@ -1,8 +1,10 @@
 #include "test_tasksequence.h"
 #include "tasksequence.h"
 #include "taskfortest.h"
-#include <QTest>
 #include <QElapsedTimer>
+#include <QTest>
+
+QTEST_MAIN(test_tasksequence)
 
 void test_tasksequence::init()
 {
@@ -12,8 +14,6 @@ void test_tasksequence::init()
 void test_tasksequence::startEmpty()
 {
     TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->start();
-    QCoreApplication::processEvents();
     int okCount = 0;
     int errCount = 0;
     connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
@@ -184,6 +184,4 @@ void test_tasksequence::oneOkOneErrorOneOk()
     QCOMPARE(TaskForTest::getErrCount(), 1);
     QCOMPARE(TaskForTest::getDtorCount(), 3);
 }
-
-QTEST_MAIN(test_tasksequence)
 
