@@ -25,6 +25,11 @@ cAdjustmentModuleConfiguration::~cAdjustmentModuleConfiguration()
 
 void cAdjustmentModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
+    setConfig(xmlString, defaultXSDFile);
+}
+
+void cAdjustmentModuleConfiguration::setConfig(QByteArray xmlString, QString xsdFilename)
+{
     m_bConfigured = m_bConfigError = false;
 
     if (m_pAdjustmentModulConfigData) delete m_pAdjustmentModulConfigData;
@@ -49,10 +54,11 @@ void cAdjustmentModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["adjmodconfpar:configuration:adjustment:channel:n"] = setChannelCount;
     // rest of hash table is initialized dynamically depending on channel count
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
+    if (m_pXMLReader->loadSchema(xsdFilename))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     else
         m_bConfigError = true;
+
 }
 
 

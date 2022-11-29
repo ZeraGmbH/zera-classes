@@ -7,7 +7,7 @@ class test_adjustmentmoduleactivator : public QObject
 {
     Q_OBJECT
 private slots:
-    void instanciate();
+    void instantiate();
 };
 
 #endif // TEST_ADJUSTMENTMODULEACTIVATOR_H
