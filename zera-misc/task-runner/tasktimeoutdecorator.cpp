@@ -12,5 +12,4 @@ TaskTimeoutDecorator::TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int t
 
 void TaskTimeoutDecorator::start()
 {
-
 }

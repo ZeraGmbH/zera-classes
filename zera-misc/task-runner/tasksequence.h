@@ -17,7 +17,9 @@ private slots:
     void onFinishCurr(bool ok);
 private:
     bool next();
+    void setNext();
     void connectCurrent();
+    void cleanup();
     std::list<TaskInterfacePtr> m_tasks;
     TaskInterfacePtr m_current;
 };

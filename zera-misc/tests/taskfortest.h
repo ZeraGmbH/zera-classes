@@ -7,16 +7,24 @@
 class TaskForTest : public TaskComposite
 {
 public:
-    static TaskInterfacePtr create(int delayMs, bool finishError);
-    TaskForTest(int delayMs, bool finishError);
+    static TaskInterfacePtr create(int delayMs, bool finishOk);
+    TaskForTest(int delayMs, bool finishOk);
+    ~TaskForTest() override;
     void start() override;
+    static void resetCounters();
+    static int getOkCount() { return m_finishOkCount; }
+    static int getErrCount() { return m_finishErrCount; }
+    static int getDtorCount() { return m_dtorCount; }
 private slots:
     void doEmit();
 private:
     int m_delayMs;
-    bool m_finishError;
+    bool m_finishOk;
     QTimer m_delayTimer;
     bool m_started = false;
+    static int m_finishOkCount;
+    static int m_finishErrCount;
+    static int m_dtorCount;
 };
 
 #endif // TASKFORTEST_H

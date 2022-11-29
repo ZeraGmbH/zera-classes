@@ -9,6 +9,7 @@ class TaskComposite : public QObject
     Q_OBJECT
 public:
     virtual void start() = 0;
+    virtual ~TaskComposite() = default;
 signals:
     void sigFinish(bool ok);
 };
