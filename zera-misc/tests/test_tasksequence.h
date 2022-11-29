@@ -7,6 +7,7 @@ class test_tasksequence : public QObject
 {
     Q_OBJECT
 private slots:
+    void oneOk();
 };
 
 #endif // TEST_TASKSEQUENCE_H

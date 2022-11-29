@@ -7,6 +7,7 @@
 class TaskForTest : public TaskComposite
 {
 public:
+    static TaskInterfacePtr create(int delayMs, bool finishError);
     TaskForTest(int delayMs, bool finishError);
     void start() override;
 private slots:

@@ -2,13 +2,26 @@
 #define TASKSEQUENCE_H
 
 #include "taskcomposit.h"
+#include <list>
 
 class TaskSequence : public TaskComposite // for now abort on error
 {
     Q_OBJECT
 public:
-    void addTask(TaskComposite* task);
+    static std::unique_ptr<TaskSequence> create();
+    TaskSequence();
+    void addTask(TaskInterfacePtr task);
     void start() override;
+private slots:
+    void onFinishCurrOk();
+    void onFinishCurrErr();
+private:
+    bool next();
+    void connectCurrent();
+    std::list<TaskInterfacePtr> m_tasks;
+    TaskInterfacePtr m_current;
 };
+
+typedef std::unique_ptr<TaskSequence> TaskSequencePtr;
 
 #endif // TASKSEQUENCE_H

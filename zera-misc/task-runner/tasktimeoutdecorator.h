@@ -7,8 +7,11 @@ class TaskTimeoutDecorator : public TaskComposite
 {
     Q_OBJECT
 public:
-    explicit TaskTimeoutDecorator(TaskComposite* decoratedTask, int timeout, QObject *parent=nullptr);
+    static std::unique_ptr<TaskTimeoutDecorator> create(TaskInterfacePtr decoratedTask, int timeout);
+    TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int timeout);
     void start() override;
 };
+
+typedef std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecoratorPtr;
 
 #endif // TASKTIMEOUTDECORATOR_H
