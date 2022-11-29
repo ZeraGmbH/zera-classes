@@ -6,21 +6,24 @@
 #include <QFile>
 #include <QByteArray>
 
-QTEST_MAIN(test_adjustmentmoduleactivator)
+QTEST_MAIN(test_adjustmentmoduleactivator);
 
-void test_adjustmentmoduleactivator::instanciate()
+void test_adjustmentmoduleactivator::instantiate()
 {
     using namespace ADJUSTMENTMODULE;
     AdjustmentModuleActivateData activationData;
     Zera::Proxy::cProxy* proxy= Zera::Proxy::cProxy::getInstance();
 
-    std::shared_ptr<cBaseModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();
+    std::shared_ptr<cAdjustmentModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();
 
     QString configPath = QString(MODMAN_CONFIG_PATH);
+    QString xsdpath = configPath+ "/adjustmentmodule.xsd";
+
     QFile xmlFile(configPath + "/mt310s2-adjustmentmodule.xml");
     xmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
+
     QByteArray xmlConfigData = xmlFile.readAll();
-    pConfiguration->setConfiguration(xmlConfigData); // trouble loading xsd
+    pConfiguration->setConfig(xmlConfigData, xsdpath);
 
     VeinStorage::VeinHash storagesystem;
     cAdjustmentModule module(1, proxy, 3, &storagesystem);
@@ -28,4 +31,3 @@ void test_adjustmentmoduleactivator::instanciate()
     AdjustmentModuleActivator obj(&module, proxy, pConfiguration, activationData);
     obj.setupServerResponseHandlers();
 }
-

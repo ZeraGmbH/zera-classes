@@ -57,6 +57,7 @@ public:
     cAdjustmentModuleConfiguration();
     ~cAdjustmentModuleConfiguration();
     virtual void setConfiguration(QByteArray xmlString) override;
+    void setConfig(QByteArray xmlString, QString xsdFilename);
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cAdjustmentModuleConfigData* getConfigurationData();
 
