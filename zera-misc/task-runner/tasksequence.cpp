@@ -18,26 +18,43 @@ void TaskSequence::start()
 {
     if(next())
         m_current->start();
+    else
+        emit sigFinish(true);
 }
 
 void TaskSequence::onFinishCurr(bool ok)
 {
-    emit sigFinish(ok);
+    if(next() && ok)
+        m_current->start();
+    else {
+        cleanup();
+        emit sigFinish(ok);
+    }
 }
 
 bool TaskSequence::next()
 {
-    if(!m_tasks.empty()) {
-        m_current = std::move(m_tasks.back());
-        m_tasks.pop_back();
-        connectCurrent();
-    }
+    if(!m_tasks.empty())
+        setNext();
     else
         m_current = nullptr;
     return m_current != nullptr;
 }
 
+void TaskSequence::setNext()
+{
+    m_current = std::move(m_tasks.back());
+    m_tasks.pop_back();
+    connectCurrent();
+}
+
 void TaskSequence::connectCurrent()
 {
     connect(m_current.get(), &TaskComposite::sigFinish, this, &TaskSequence::onFinishCurr);
+}
+
+void TaskSequence::cleanup()
+{
+    m_current = nullptr;
+    m_tasks.clear();
 }
