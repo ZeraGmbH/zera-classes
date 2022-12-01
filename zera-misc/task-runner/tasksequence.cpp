@@ -14,12 +14,15 @@ void TaskSequence::addTask(TaskInterfacePtr task)
     m_tasks.push_front(std::move(task));
 }
 
-void TaskSequence::start()
+int TaskSequence::start()
 {
-    if(next())
+    m_taskId = TaskComposite::getNextTaskId();
+    if(next()) {
         m_current->start();
+    }
     else
-        emit sigFinish(true);
+        emit sigFinish(true, m_taskId);
+    return m_taskId;
 }
 
 void TaskSequence::onFinishCurr(bool ok)
@@ -28,7 +31,7 @@ void TaskSequence::onFinishCurr(bool ok)
         m_current->start();
     else {
         cleanup();
-        emit sigFinish(ok);
+        emit sigFinish(ok, m_taskId);
     }
 }
 
