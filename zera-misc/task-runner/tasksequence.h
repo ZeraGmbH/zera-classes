@@ -11,7 +11,7 @@ public:
     static std::unique_ptr<TaskSequence> create();
     TaskSequence();
     void addTask(TaskInterfacePtr task);
-    void start() override;
+    int start() override;
 
 private slots:
     void onFinishCurr(bool ok);
@@ -22,6 +22,7 @@ private:
     void cleanup();
     std::list<TaskInterfacePtr> m_tasks;
     TaskInterfacePtr m_current;
+    int m_taskId;
 };
 
 typedef std::unique_ptr<TaskSequence> TaskSequencePtr;

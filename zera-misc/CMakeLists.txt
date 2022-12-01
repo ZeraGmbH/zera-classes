@@ -36,6 +36,7 @@ set(SOURCES
     intelhexfileio.cpp
     intelhexfileio_p.cpp
     signal-wait/signalwaiter.cpp
+    task-runner/taskcomposite.cpp
     task-runner/taskparallel.cpp
     task-runner/tasksequence.cpp
     task-runner/tasktimeoutdecorator.cpp

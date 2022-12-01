@@ -15,13 +15,15 @@ TaskTimeoutDecorator::TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int t
         connect(&m_timer, &QTimer::timeout, this, &TaskTimeoutDecorator::onTimeout);
 }
 
-void TaskTimeoutDecorator::start()
+int TaskTimeoutDecorator::start()
 {
+    m_taskId = TaskComposite::getNextTaskId();
     m_timer.start(m_timeout);
     if(m_decoratedTask)
         m_decoratedTask->start();
     else
         emitFinish(true);
+    return m_taskId;
 }
 
 void TaskTimeoutDecorator::onFinishDecorated(bool ok)
@@ -39,7 +41,7 @@ void TaskTimeoutDecorator::emitFinish(bool ok)
 {
     if(!m_emitted){
         m_decoratedTask = nullptr;
-        emit sigFinish(ok);
+        emit sigFinish(ok, m_taskId);
         m_emitted = true;
     }
 }
