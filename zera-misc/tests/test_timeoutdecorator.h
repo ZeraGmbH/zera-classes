@@ -11,6 +11,9 @@ private slots:
     void startEmpty();
     void oneOkWithoutDelay();
     void oneErrWithoutDelay();
+    void oneOkWithDelayAndInfiniteTimeout();
+    void noTimeoutOnEarlyOk();
+    void delayEqualsTimeout();
 };
 
 #endif // TEST_TIMEOUTDECORATOR_H

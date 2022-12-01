@@ -11,18 +11,35 @@ TaskTimeoutDecorator::TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int t
 {
     if(m_decoratedTask)
         connect(m_decoratedTask.get(), &TaskComposite::sigFinish, this, &TaskTimeoutDecorator::onFinishDecorated);
+    if(m_timeout)
+        connect(&m_timer, &QTimer::timeout, this, &TaskTimeoutDecorator::onTimeout);
 }
 
 void TaskTimeoutDecorator::start()
 {
+    m_timer.start(m_timeout);
     if(m_decoratedTask)
         m_decoratedTask->start();
     else
-        emit sigFinish(true);
+        emitFinish(true);
 }
 
 void TaskTimeoutDecorator::onFinishDecorated(bool ok)
 {
-    m_decoratedTask = nullptr;
-    emit sigFinish(ok);
+    m_timer.stop();
+    emitFinish(ok);
+}
+
+void TaskTimeoutDecorator::onTimeout()
+{
+    emitFinish(false);
+}
+
+void TaskTimeoutDecorator::emitFinish(bool ok)
+{
+    if(!m_emitted){
+        m_decoratedTask = nullptr;
+        emit sigFinish(ok);
+        m_emitted = true;
+    }
 }
