@@ -2,6 +2,7 @@
 #define TASKTIMEOUTDECORATOR_H
 
 #include "taskcomposit.h"
+#include <QTimer>
 
 class TaskTimeoutDecorator : public TaskComposite
 {
@@ -12,10 +13,13 @@ public:
     void start() override;
 private slots:
     void onFinishDecorated(bool ok);
+    void onTimeout();
 private:
+    void emitFinish(bool ok);
     TaskInterfacePtr m_decoratedTask;
     int m_timeout;
-
+    QTimer m_timer;
+    bool m_emitted = false;
 };
 
 typedef std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecoratorPtr;
