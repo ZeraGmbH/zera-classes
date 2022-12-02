@@ -141,7 +141,8 @@ void test_taskfortest::taskId()
     connect(&task1, &TaskForTest::sigFinish, [&](bool, int taskId) {
         taskIdReceived1 = taskId;
     } );
-    int taskId1 = task1.start();
+    int taskId1 = task1.getTaskId();
+    task1.start();
     QCOMPARE(taskIdReceived1, taskId1);
 
     TaskForTest task2(0, true);
@@ -149,7 +150,8 @@ void test_taskfortest::taskId()
     connect(&task2, &TaskForTest::sigFinish, [&](bool, int taskId) {
         taskIdReceived2 = taskId;
     } );
-    int taskId2 = task2.start();
+    int taskId2 = task2.getTaskId();
+    task2.start();
     QCOMPARE(taskIdReceived2, taskId2);
     QVERIFY(taskId1 != taskId2);
 }

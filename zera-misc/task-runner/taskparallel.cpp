@@ -1,35 +1,45 @@
 #include "taskparallel.h"
-
+#include <QList>
 
 std::unique_ptr<TaskParallel> TaskParallel::create()
 {
     return std::make_unique<TaskParallel>();
 }
 
-TaskParallel::TaskParallel()
-{
-}
-
 void TaskParallel::addTask(TaskInterfacePtr task)
 {
-    m_task = std::move(task);
+    m_addedTasks.push_back(std::move(task));
 }
 
-int TaskParallel::start()
+void TaskParallel::start()
 {
-    m_taskId = TaskComposite::getNextTaskId();
-    if(m_task) {
-        connect(m_task.get(), &TaskComposite::sigFinish, this, &TaskParallel::onFinishTask);
-        m_task->start();
-    }
+    if(!m_addedTasks.empty())
+        startTasksDirectConnectionSafe();
     else
-        emit sigFinish(true, m_taskId);
-    return m_taskId;
+        emit sigFinish(true, getTaskId());
 }
 
-void TaskParallel::onFinishTask(bool ok)
+void TaskParallel::onFinishTask(bool ok, int taskId)
 {
-    m_task = nullptr;
-    emit sigFinish(ok, m_taskId);
+    if(m_startedTasks.erase(taskId)) {
+        m_allOk = m_allOk && ok;
+        if(m_startedTasks.empty())
+            emit sigFinish(m_allOk, getTaskId());
+    }
 }
 
+void TaskParallel::startTasksDirectConnectionSafe()
+{
+    m_allOk = true;
+    QList<int> taskIdsToStart;
+    while(!m_addedTasks.empty()) {
+        auto task = std::move(m_addedTasks.back());
+        m_addedTasks.pop_back();
+        connect(task.get(), &TaskComposite::sigFinish, this, &TaskParallel::onFinishTask);
+        int taskId = task->getTaskId();
+        taskIdsToStart.push_back(taskId);
+        m_startedTasks[taskId] = std::move(task);
+    }
+    for(const int &taskId : taskIdsToStart)
+        m_startedTasks[taskId]->start();
+}

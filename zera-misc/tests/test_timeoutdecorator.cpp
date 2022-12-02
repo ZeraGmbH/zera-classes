@@ -32,6 +32,26 @@ void test_timeoutdecorator::startEmpty()
     QCOMPARE(TaskForTest::getDtorCount(), 0);
 }
 
+void test_timeoutdecorator::startEmptyCheckDelayed()
+{
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(nullptr, 1);
+    int okCount = 0;
+    int errCount = 0;
+    connect(task.get(), &TaskTimeoutDecorator::sigFinish, [&](bool ok) {
+        if(ok)
+            okCount++;
+        else
+            errCount++;
+    });
+    task->start();
+    QTest::qWait(DELAY_TIME);
+    QCOMPARE(okCount, 1);
+    QCOMPARE(errCount, 0);
+    QCOMPARE(TaskForTest::getOkCount(), 0);
+    QCOMPARE(TaskForTest::getErrCount(), 0);
+    QCOMPARE(TaskForTest::getDtorCount(), 0);
+}
+
 void test_timeoutdecorator::oneOkWithoutDelay()
 {
     TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(TaskForTest::create(0, true), 1000);
@@ -163,7 +183,8 @@ void test_timeoutdecorator::taskId()
     connect(&task1, &TaskForTest::sigFinish, [&](bool, int taskId) {
         taskIdReceived1 = taskId;
     } );
-    int taskId1 = task1.start();
+    int taskId1 = task1.getTaskId();
+    task1.start();
     QCOMPARE(taskIdReceived1, taskId1);
 
     TaskForTest task2(0, true);
@@ -171,7 +192,8 @@ void test_timeoutdecorator::taskId()
     connect(&task2, &TaskForTest::sigFinish, [&](bool, int taskId) {
         taskIdReceived2 = taskId;
     } );
-    int taskId2 = task2.start();
+    int taskId2 = task2.getTaskId();
+    task2.start();
     QCOMPARE(taskIdReceived2, taskId2);
     QVERIFY(taskId1 != taskId2);
 }

@@ -10,7 +10,7 @@ public:
     static TaskInterfacePtr create(int delayMs, bool finishOk);
     TaskForTest(int delayMs, bool finishOk);
     ~TaskForTest() override;
-    int start() override;
+    void start() override;
     static void resetCounters();
     static int getOkCount() { return m_finishOkCount; }
     static int getErrCount() { return m_finishErrCount; }
@@ -22,7 +22,6 @@ private:
     bool m_finishOk;
     QTimer m_delayTimer;
     bool m_started = false;
-    int m_taskId = 0;
     static int m_finishOkCount;
     static int m_finishErrCount;
     static int m_dtorCount;

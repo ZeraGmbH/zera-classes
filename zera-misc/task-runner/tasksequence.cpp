@@ -5,24 +5,17 @@ std::unique_ptr<TaskSequence> TaskSequence::create()
     return std::make_unique<TaskSequence>();
 }
 
-TaskSequence::TaskSequence()
-{
-}
-
-void TaskSequence::addTask(TaskInterfacePtr task)
+void TaskSequence::appendTask(TaskInterfacePtr task)
 {
     m_tasks.push_front(std::move(task));
 }
 
-int TaskSequence::start()
+void TaskSequence::start()
 {
-    m_taskId = TaskComposite::getNextTaskId();
-    if(next()) {
+    if(next())
         m_current->start();
-    }
     else
         emit sigFinish(true, m_taskId);
-    return m_taskId;
 }
 
 void TaskSequence::onFinishCurr(bool ok)
@@ -48,11 +41,6 @@ void TaskSequence::setNext()
 {
     m_current = std::move(m_tasks.back());
     m_tasks.pop_back();
-    connectCurrent();
-}
-
-void TaskSequence::connectCurrent()
-{
     connect(m_current.get(), &TaskComposite::sigFinish, this, &TaskSequence::onFinishCurr);
 }
 

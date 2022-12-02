@@ -13,16 +13,16 @@ void test_tasksequence::init()
 
 void test_tasksequence::startEmpty()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
+    TaskSequencePtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
@@ -33,17 +33,17 @@ void test_tasksequence::startEmpty()
 
 void test_tasksequence::oneOk()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->addTask(TaskForTest::create(0, true));
+    TaskSequencePtr task = TaskSequence::create();
+    task->appendTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
@@ -54,18 +54,18 @@ void test_tasksequence::oneOk()
 
 void test_tasksequence::twoOk()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->addTask(TaskForTest::create(0, true));
-    taskSeq->addTask(TaskForTest::create(0, true));
+    TaskSequencePtr task = TaskSequence::create();
+    task->appendTask(TaskForTest::create(0, true));
+    task->appendTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
@@ -76,17 +76,17 @@ void test_tasksequence::twoOk()
 
 void test_tasksequence::oneError()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->addTask(TaskForTest::create(0, false));
+    TaskSequencePtr task = TaskSequence::create();
+    task->appendTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
@@ -97,18 +97,18 @@ void test_tasksequence::oneError()
 
 void test_tasksequence::twoError()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->addTask(TaskForTest::create(0, false));
-    taskSeq->addTask(TaskForTest::create(0, false));
+    TaskSequencePtr task = TaskSequence::create();
+    task->appendTask(TaskForTest::create(0, false));
+    task->appendTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
@@ -119,19 +119,19 @@ void test_tasksequence::twoError()
 
 void test_tasksequence::threeError()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->addTask(TaskForTest::create(0, false));
-    taskSeq->addTask(TaskForTest::create(0, false));
-    taskSeq->addTask(TaskForTest::create(0, false));
+    TaskSequencePtr task = TaskSequence::create();
+    task->appendTask(TaskForTest::create(0, false));
+    task->appendTask(TaskForTest::create(0, false));
+    task->appendTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
@@ -142,18 +142,18 @@ void test_tasksequence::threeError()
 
 void test_tasksequence::oneErrorOneOk()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->addTask(TaskForTest::create(0, false));
-    taskSeq->addTask(TaskForTest::create(0, true));
+    TaskSequencePtr task = TaskSequence::create();
+    task->appendTask(TaskForTest::create(0, false));
+    task->appendTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
@@ -164,19 +164,19 @@ void test_tasksequence::oneErrorOneOk()
 
 void test_tasksequence::oneOkOneErrorOneOk()
 {
-    TaskSequencePtr taskSeq = TaskSequence::create();
-    taskSeq->addTask(TaskForTest::create(0, true));
-    taskSeq->addTask(TaskForTest::create(0, false));
-    taskSeq->addTask(TaskForTest::create(0, true));
+    TaskSequencePtr task = TaskSequence::create();
+    task->appendTask(TaskForTest::create(0, true));
+    task->appendTask(TaskForTest::create(0, false));
+    task->appendTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
-    connect(taskSeq.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    taskSeq->start();
+    task->start();
     QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
@@ -192,7 +192,8 @@ void test_tasksequence::taskId()
     connect(&task1, &TaskForTest::sigFinish, [&](bool, int taskId) {
         taskIdReceived1 = taskId;
     } );
-    int taskId1 = task1.start();
+    int taskId1 = task1.getTaskId();
+    task1.start();
     QCOMPARE(taskIdReceived1, taskId1);
 
     TaskForTest task2(0, true);
@@ -200,7 +201,8 @@ void test_tasksequence::taskId()
     connect(&task2, &TaskForTest::sigFinish, [&](bool, int taskId) {
         taskIdReceived2 = taskId;
     } );
-    int taskId2 = task2.start();
+    int taskId2 = task2.getTaskId();
+    task2.start();
     QCOMPARE(taskIdReceived2, taskId2);
     QVERIFY(taskId1 != taskId2);
 }
