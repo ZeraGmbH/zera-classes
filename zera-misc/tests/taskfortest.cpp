@@ -22,17 +22,15 @@ TaskForTest::~TaskForTest()
     m_dtorCount++;
 }
 
-int TaskForTest::start()
+void TaskForTest::start()
 {
     if(m_started)
         qFatal("Started Twice");
     m_started = true;
-    m_taskId = TaskComposite::getNextTaskId();
     if(m_delayMs <= 0)
         doEmit();
     else
         m_delayTimer.start(m_delayMs);
-    return m_taskId;
 }
 
 void TaskForTest::resetCounters()
@@ -49,5 +47,5 @@ void TaskForTest::doEmit()
         m_finishOkCount++;
     else
         m_finishErrCount++;
-    emit sigFinish(m_finishOk, m_taskId);
+    emit sigFinish(m_finishOk, getTaskId());
 }

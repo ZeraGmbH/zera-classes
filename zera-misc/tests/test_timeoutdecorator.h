@@ -9,6 +9,7 @@ class test_timeoutdecorator : public QObject
 private slots:
     void init();
     void startEmpty();
+    void startEmptyCheckDelayed();
     void oneOkWithoutDelay();
     void oneErrWithoutDelay();
     void oneOkWithDelayAndInfiniteTimeout();

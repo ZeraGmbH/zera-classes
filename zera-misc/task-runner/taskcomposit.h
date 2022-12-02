@@ -8,14 +8,18 @@ class TaskComposite : public QObject
 {
     Q_OBJECT
 public:
-    virtual int start() = 0;
+    TaskComposite();
     virtual ~TaskComposite() = default;
+    int getTaskId() const;
+
+    virtual void start() = 0;
 signals:
     void sigFinish(bool ok, int taskId);
-protected:
-    static int getNextTaskId();
+
 private:
-    static int m_currTaskId;
+    static int getNextTaskId();
+    int m_taskId = 0;
+    static int m_taskIdForNext;
 };
 
 typedef std::unique_ptr<TaskComposite> TaskInterfacePtr;
