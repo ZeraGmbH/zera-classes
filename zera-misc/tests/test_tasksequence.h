@@ -16,6 +16,7 @@ private slots:
     void threeError();
     void oneErrorOneOk();
     void oneOkOneErrorOneOk();
+    void taskId();
 };
 
 #endif // TEST_TASKSEQUENCE_H
