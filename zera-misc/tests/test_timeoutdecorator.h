@@ -14,6 +14,7 @@ private slots:
     void oneOkWithDelayAndInfiniteTimeout();
     void noTimeoutOnEarlyOk();
     void delayEqualsTimeout();
+    void taskId();
 };
 
 #endif // TEST_TIMEOUTDECORATOR_H

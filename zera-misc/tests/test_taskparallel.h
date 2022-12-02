@@ -10,6 +10,7 @@ private slots:
     void init();
     void startEmpty();
     void startErrorTask();
+    void taskId();
 };
 
 #endif // TEST_TASKPARALLEL_H

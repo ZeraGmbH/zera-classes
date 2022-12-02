@@ -18,21 +18,18 @@ void test_timeoutdecorator::startEmpty()
     TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(nullptr, 1000);
     int okCount = 0;
     int errCount = 0;
-    int taskIdReceived = 42;
-    connect(task.get(), &TaskTimeoutDecorator::sigFinish, [&](bool ok, int taskId) {
-        taskIdReceived = taskId;
+    connect(task.get(), &TaskTimeoutDecorator::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
             errCount++;
     });
-    int taskId = task->start();
+    task->start();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
     QCOMPARE(TaskForTest::getOkCount(), 0);
     QCOMPARE(TaskForTest::getErrCount(), 0);
     QCOMPARE(TaskForTest::getDtorCount(), 0);
-    QCOMPARE(taskId, taskIdReceived);
 }
 
 void test_timeoutdecorator::oneOkWithoutDelay()
@@ -142,10 +139,8 @@ void test_timeoutdecorator::delayEqualsTimeout()
     int okCount = 0;
     int errCount = 0;
     int delay = 0;
-    int taskIdReceived = 42;
     QElapsedTimer timer;
-    connect(task.get(), &TaskTimeoutDecorator::sigFinish, [&](bool ok, int taskId) {
-        taskIdReceived = taskId;
+    connect(task.get(), &TaskTimeoutDecorator::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -153,12 +148,31 @@ void test_timeoutdecorator::delayEqualsTimeout()
         delay = timer.elapsed();
     });
     timer.start();
-    int taskId = task->start();
+    task->start();
     QTest::qWait(1.5*DELAY_TIME);
     QCOMPARE(okCount+errCount, 1);
     QCOMPARE(TaskForTest::getDtorCount(), 1);
     QVERIFY(delay >= DELAY_TIME);
     QVERIFY(delay < 2*DELAY_TIME);
-    QCOMPARE(taskIdReceived, taskId);
+}
+
+void test_timeoutdecorator::taskId()
+{
+    TaskForTest task1(0, true);
+    int taskIdReceived1 = 42;
+    connect(&task1, &TaskForTest::sigFinish, [&](bool, int taskId) {
+        taskIdReceived1 = taskId;
+    } );
+    int taskId1 = task1.start();
+    QCOMPARE(taskIdReceived1, taskId1);
+
+    TaskForTest task2(0, true);
+    int taskIdReceived2 = 67;
+    connect(&task2, &TaskForTest::sigFinish, [&](bool, int taskId) {
+        taskIdReceived2 = taskId;
+    } );
+    int taskId2 = task2.start();
+    QCOMPARE(taskIdReceived2, taskId2);
+    QVERIFY(taskId1 != taskId2);
 }
 

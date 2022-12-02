@@ -18,10 +18,8 @@ void test_taskfortest::onePassImmediate()
     int countOk = 0;
     int countErr = 0;
     int delay = 1000;
-    int taskIdReceived = 42;
     QElapsedTimer timer;
-    connect(&task, &TaskForTest::sigFinish, [&](bool ok, int taskId) {
-        taskIdReceived = taskId;
+    connect(&task, &TaskForTest::sigFinish, [&](bool ok) {
         if(ok)
             countOk++;
         else
@@ -30,13 +28,12 @@ void test_taskfortest::onePassImmediate()
     } );
 
     timer.start();
-    int taskId = task.start();
+    task.start();
     QCoreApplication::processEvents();
 
     QCOMPARE(countOk, 1);
     QCOMPARE(countErr, 0);
     QVERIFY(delay < DELAY_TIME/2);
-    QCOMPARE(taskIdReceived, taskId);
 }
 
 void test_taskfortest::oneErrImmediate()
@@ -45,10 +42,8 @@ void test_taskfortest::oneErrImmediate()
     int countOk = 0;
     int countErr = 0;
     int delay = 1000;
-    int taskIdReceived = 42;
     QElapsedTimer timer;
-    connect(&task, &TaskForTest::sigFinish, [&](bool ok, int taskId) {
-        taskIdReceived = taskId;
+    connect(&task, &TaskForTest::sigFinish, [&](bool ok) {
         if(ok)
             countOk++;
         else
@@ -57,13 +52,12 @@ void test_taskfortest::oneErrImmediate()
     });
 
     timer.start();
-    int taskId = task.start();
+    task.start();
     QCoreApplication::processEvents();
 
     QCOMPARE(countOk, 0);
     QCOMPARE(countErr, 1);
     QVERIFY(delay < DELAY_TIME/2);
-    QCOMPARE(taskId, taskIdReceived);
 }
 
 void test_taskfortest::onePassDelayed()
@@ -72,10 +66,8 @@ void test_taskfortest::onePassDelayed()
     int countOk = 0;
     int countErr = 0;
     int delay = 0;
-    int taskIdReceived = 42;
     QElapsedTimer timer;
-    connect(&task, &TaskForTest::sigFinish, [&](bool ok, int taskId) {
-        taskIdReceived = taskId;
+    connect(&task, &TaskForTest::sigFinish, [&](bool ok) {
         if(ok)
             countOk++;
         else
@@ -84,13 +76,12 @@ void test_taskfortest::onePassDelayed()
     });
 
     timer.start();
-    int taskId = task.start();
+    task.start();
     QTest::qWait(2*DELAY_TIME);
 
     QCOMPARE(countOk, 1);
     QCOMPARE(countErr, 0);
     QVERIFY(delay >= DELAY_TIME);
-    QCOMPARE(taskIdReceived, taskId);
 }
 
 void test_taskfortest::oneErrDelayed()
@@ -141,4 +132,24 @@ void test_taskfortest::oneDtorCount()
         TaskForTest task(0, true);
     }
     QCOMPARE(TaskForTest::getDtorCount(), 1);
+}
+
+void test_taskfortest::taskId()
+{
+    TaskForTest task1(0, true);
+    int taskIdReceived1 = 42;
+    connect(&task1, &TaskForTest::sigFinish, [&](bool, int taskId) {
+        taskIdReceived1 = taskId;
+    } );
+    int taskId1 = task1.start();
+    QCOMPARE(taskIdReceived1, taskId1);
+
+    TaskForTest task2(0, true);
+    int taskIdReceived2 = 67;
+    connect(&task2, &TaskForTest::sigFinish, [&](bool, int taskId) {
+        taskIdReceived2 = taskId;
+    } );
+    int taskId2 = task2.start();
+    QCOMPARE(taskIdReceived2, taskId2);
+    QVERIFY(taskId1 != taskId2);
 }
