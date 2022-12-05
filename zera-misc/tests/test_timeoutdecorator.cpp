@@ -15,7 +15,7 @@ void test_timeoutdecorator::init()
 
 void test_timeoutdecorator::startEmpty()
 {
-    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(nullptr, 1000);
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::wrapTimeout(1000, nullptr);
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskTimeoutDecorator::sigFinish, [&](bool ok) {
@@ -34,7 +34,7 @@ void test_timeoutdecorator::startEmpty()
 
 void test_timeoutdecorator::startEmptyCheckDelayed()
 {
-    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(nullptr, 1);
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::wrapTimeout(1, nullptr);
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskTimeoutDecorator::sigFinish, [&](bool ok) {
@@ -54,7 +54,7 @@ void test_timeoutdecorator::startEmptyCheckDelayed()
 
 void test_timeoutdecorator::oneOkWithoutDelay()
 {
-    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(TaskForTest::create(0, true), 1000);
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::wrapTimeout(1000, TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     int delay = 1000;
@@ -78,7 +78,7 @@ void test_timeoutdecorator::oneOkWithoutDelay()
 
 void test_timeoutdecorator::oneErrWithoutDelay()
 {
-    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(TaskForTest::create(0, false), 1000);
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::wrapTimeout(1000, TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
     int delay = 1000;
@@ -103,7 +103,7 @@ void test_timeoutdecorator::oneErrWithoutDelay()
 
 void test_timeoutdecorator::oneOkWithDelayAndInfiniteTimeout()
 {
-    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(TaskForTest::create(1000, true), DELAY_TIME);
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::wrapTimeout(DELAY_TIME, TaskForTest::create(1000, true));
     int okCount = 0;
     int errCount = 0;
     int delay = 0;
@@ -129,7 +129,7 @@ void test_timeoutdecorator::oneOkWithDelayAndInfiniteTimeout()
 
 void test_timeoutdecorator::noTimeoutOnEarlyOk()
 {
-    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(TaskForTest::create(DELAY_TIME/2, true), DELAY_TIME);
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::wrapTimeout(DELAY_TIME, TaskForTest::create(DELAY_TIME/2, true));
     int okCount = 0;
     int errCount = 0;
     int delay = 0;
@@ -155,7 +155,7 @@ void test_timeoutdecorator::noTimeoutOnEarlyOk()
 
 void test_timeoutdecorator::delayEqualsTimeout()
 {
-    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::create(TaskForTest::create(DELAY_TIME, true), DELAY_TIME);
+    TaskTimeoutDecoratorPtr task = TaskTimeoutDecorator::wrapTimeout(DELAY_TIME, TaskForTest::create(DELAY_TIME, true));
     int okCount = 0;
     int errCount = 0;
     int delay = 0;
