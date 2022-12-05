@@ -21,13 +21,15 @@ find_Package(VfComponent REQUIRED)
 
 #sum up project Files
 file(GLOB SOURCES
-    ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/tasks/*.cpp
     )
 
 file(GLOB HEADER
+    ${PROJECT_SOURCE_DIR}/*.h
     ${PROJECT_SOURCE_DIR}/src/*.h
-     ${PROJECT_SOURCE_DIR}/*.h
+    ${PROJECT_SOURCE_DIR}/src/tasks/*.h
     )
 
 file(GLOB RESOURCES
@@ -53,6 +55,13 @@ add_library(adjustmentmodule-static STATIC
     ${SOURCES}
     ${HEADER}
 )
+
+target_include_directories(adjustmentmodule-static
+    PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/tasks>
+    )
+
 target_link_libraries(adjustmentmodule-static
     zerabasemodule
     zeramath
