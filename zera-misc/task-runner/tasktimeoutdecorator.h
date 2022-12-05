@@ -8,7 +8,7 @@ class TaskTimeoutDecorator : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskTimeoutDecorator> create(TaskInterfacePtr decoratedTask, int timeout);
+    static std::unique_ptr<TaskTimeoutDecorator> wrapTimeout(int timeout, TaskInterfacePtr decoratedTask);
     TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int timeout);
     void start() override;
 private slots:
@@ -18,7 +18,7 @@ private:
     void startDecoratedTask();
     void emitFinish(bool ok);
     TaskInterfacePtr m_decoratedTask;
-    int m_timeout;
+    int m_timeoutMs;
     QTimer m_timer;
 };
 

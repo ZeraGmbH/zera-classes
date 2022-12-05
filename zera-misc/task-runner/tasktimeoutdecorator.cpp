@@ -1,13 +1,13 @@
 #include "tasktimeoutdecorator.h"
 
-std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecorator::create(TaskInterfacePtr decoratedTask, int timeout)
+std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecorator::wrapTimeout(int timeout, TaskInterfacePtr decoratedTask)
 {
     return std::make_unique<TaskTimeoutDecorator>(std::move(decoratedTask), timeout);
 }
 
 TaskTimeoutDecorator::TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int timeout) :
     m_decoratedTask(std::move(decoratedTask)),
-    m_timeout(timeout)
+    m_timeoutMs(timeout)
 {
 }
 
@@ -32,9 +32,9 @@ void TaskTimeoutDecorator::onTimeout()
 
 void TaskTimeoutDecorator::startDecoratedTask()
 {
-    if(m_timeout) {
+    if(m_timeoutMs) {
         connect(&m_timer, &QTimer::timeout, this, &TaskTimeoutDecorator::onTimeout);
-        m_timer.start(m_timeout);
+        m_timer.start(m_timeoutMs);
     }
     connect(m_decoratedTask.get(), &TaskComposite::sigFinish, this, &TaskTimeoutDecorator::onFinishDecorated);
     m_decoratedTask->start();
