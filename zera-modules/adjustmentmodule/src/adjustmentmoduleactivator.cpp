@@ -4,6 +4,7 @@
 #include "adjustmentmoduleconfiguration.h"
 #include "tasktimeoutdecorator.h"
 #include "taskrmconnectionstart.h"
+#include "taskrmsendident.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -31,17 +32,18 @@ void AdjustmentModuleActivator::activate()
 
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(CONNECTION_TIMEOUT,
                                                                    TaskRmConnectionStart::create(m_rmClient)));
+    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
+                                                                   TaskRmSendIdent::create(m_rmInterface)));
 
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
 }
+
 void AdjustmentModuleActivator::activateContinue(bool ok)
 {
     if(!ok)
         return;
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-    if(!sendRmIdent()->wait())
-        return;
+    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
     if(!readResourceTypes()->wait())
         return;
     if(!readChannels()->wait())
@@ -76,7 +78,6 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
-    setUpRmIdentHandler();
     setUpResourceTypeHandler();
     setUpReadChannelsHandler();
     setUpReadIpPortHandler();
@@ -116,28 +117,9 @@ bool AdjustmentModuleActivator::checkExternalVeinComponents()
 
 void AdjustmentModuleActivator::openRMConnection()
 {
+    m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    m_rmInterface.setClientSmart(m_rmClient);
-}
-
-BlockedWaitInterfacePtr AdjustmentModuleActivator::sendRmIdent()
-{
-    BlockedWaitInterfacePtr waiter =
-            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
-                                           this, &AdjustmentModuleActivator::activationError,
-                                           TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Adjustment"))] = sendrmident;
-    return waiter;
-}
-
-void AdjustmentModuleActivator::setUpRmIdentHandler()
-{
-    m_cmdFinishCallbacks[sendrmident] = [&](quint8 reply, QVariant) {
-        if (reply == ack)
-            emit activationContinue();
-        else
-            notifyActivationError(tr(rmidentErrMSG));
-    };
+    m_rmInterface->setClientSmart(m_rmClient);
 }
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::readResourceTypes()
@@ -146,7 +128,7 @@ BlockedWaitInterfacePtr AdjustmentModuleActivator::readResourceTypes()
             std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
                                            this, &AdjustmentModuleActivator::activationError,
                                            TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
+    m_MsgNrCmdList[m_rmInterface->getResourceTypes()] = readresourcetypes;
     return waiter;
 }
 
@@ -166,7 +148,7 @@ BlockedWaitInterfacePtr AdjustmentModuleActivator::readChannels()
             std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
                                            this, &AdjustmentModuleActivator::activationError,
                                            TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface.getResources("SENSE")] = readresource;
+    m_MsgNrCmdList[m_rmInterface->getResources("SENSE")] = readresource;
     return waiter;
 }
 
@@ -194,7 +176,7 @@ BlockedWaitInterfacePtr AdjustmentModuleActivator::readIpPortNo(QString channelN
             std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
                                            this, &AdjustmentModuleActivator::activationError,
                                            TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface.getResourceInfo("SENSE", channelName)] = readresourceinfo;
+    m_MsgNrCmdList[m_rmInterface->getResourceInfo("SENSE", channelName)] = readresourceinfo;
     return waiter;
 }
 

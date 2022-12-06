@@ -42,8 +42,6 @@ private:
     TaskSequence m_activationTasks;
 
     void openRMConnection();
-    BlockedWaitInterfacePtr sendRmIdent();
-    void setUpRmIdentHandler();
     BlockedWaitInterfacePtr readResourceTypes();
     void setUpResourceTypeHandler();
     BlockedWaitInterfacePtr readChannels();
@@ -66,7 +64,7 @@ private:
     cAdjustmentModule* m_module;
     Zera::Proxy::cProxy *m_proxy;
     std::shared_ptr<cBaseModuleConfiguration> m_configuration;
-    Zera::Server::cRMInterface m_rmInterface;
+    Zera::Server::RMInterfacePtr m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
     QHash<QString,int> m_chnPortHash; // a hash for our channels ethernet ports
