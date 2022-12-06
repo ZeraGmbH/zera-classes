@@ -6,6 +6,7 @@
 #include "taskrmconnectionstart.h"
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
+#include "taskrmreadchannels.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -39,6 +40,9 @@ void AdjustmentModuleActivator::activate()
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
                                                                    TaskRmCheckResourceType::create(m_rmInterface),
                                                                    [&]{ emit errMsg(resourcetypeErrMsg); }));
+    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
+                                                                   TaskRmReadChannels::create(m_rmInterface, getConfData()->m_AdjChannelList),
+                                                                   [&]{ emit errMsg(resourceErrMsg); }));
 
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
@@ -49,8 +53,6 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
     if(!ok)
         return;
     connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-    if(!readChannels()->wait())
-        return;
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
         // Alarm: This assumes channels configured elsewhere having same index :(
         QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
@@ -81,7 +83,6 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
-    setUpReadChannelsHandler();
     setUpReadIpPortHandler();
     setUpReadChannelAliasHandler();
     setUpRegisterNotifierHandler();
@@ -122,34 +123,6 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
-}
-
-BlockedWaitInterfacePtr AdjustmentModuleActivator::readChannels()
-{
-    BlockedWaitInterfacePtr waiter =
-            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
-                                           this, &AdjustmentModuleActivator::activationError,
-                                           TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface->getResources("SENSE")] = readresource;
-    return waiter;
-}
-
-void AdjustmentModuleActivator::setUpReadChannelsHandler()
-{
-    m_cmdFinishCallbacks[readresource] = [&](quint8 reply, QVariant answer) {
-        bool allPresent = false;
-        if (reply == ack) {
-            QString s = answer.toString();
-            allPresent = true;
-            int n = getConfData()->m_nAdjustmentChannelCount;
-            for (int i = 0; i < n; i++)
-                allPresent = allPresent && s.contains(getConfData()->m_AdjChannelList.at(i));
-        }
-        if (allPresent)
-            emit activationContinue();
-        else
-            notifyActivationError(tr(resourceErrMsg));
-    };
 }
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::readIpPortNo(QString channelName)

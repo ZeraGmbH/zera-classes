@@ -44,8 +44,6 @@ private:
 
     void openRMConnection();
 
-    BlockedWaitInterfacePtr readChannels();
-    void setUpReadChannelsHandler();
     BlockedWaitInterfacePtr readIpPortNo(QString channelName);
     void setUpReadIpPortHandler();
     BlockedWaitInterfacePtr openPcbConnection(QString channelName);
