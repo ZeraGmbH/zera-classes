@@ -27,7 +27,7 @@ void TaskRmSendIdent::onRmAnswer(quint32 msgnr, quint8 reply)
     if(msgnr == m_msgnr) {
         if(reply != ack)
             m_errMsgFunction(rmidentErrMSG);
-        emit sigFinish(reply == ack, getTaskId());
+        finishTask(reply == ack);
     }
 }
 

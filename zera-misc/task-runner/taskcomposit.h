@@ -10,12 +10,13 @@ class TaskComposite : public QObject
 public:
     TaskComposite();
     virtual ~TaskComposite() = default;
-    int getTaskId() const;
-
     virtual void start() = 0;
+    int getTaskId() const;
 signals:
     void sigFinish(bool ok, int taskId);
 
+protected:
+    void finishTask(bool ok);
 private:
     static int getNextTaskId();
     int m_taskId = 0;

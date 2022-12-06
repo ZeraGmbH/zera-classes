@@ -15,7 +15,7 @@ void TaskSequence::start()
     if(next())
         m_current->start();
     else
-        emit sigFinish(true, m_taskId);
+        finishTask(true);
 }
 
 void TaskSequence::onFinishCurr(bool ok)
@@ -24,7 +24,7 @@ void TaskSequence::onFinishCurr(bool ok)
         m_current->start();
     else {
         cleanup();
-        emit sigFinish(ok, m_taskId);
+        finishTask(ok);
     }
 }
 
