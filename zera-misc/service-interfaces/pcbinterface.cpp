@@ -23,6 +23,12 @@ void cPCBInterface::setClient(Proxy::cProxyClient *client)
     return d->setClient(client);
 }
 
+void cPCBInterface::setClientSmart(Proxy::ProxyClientPtr client)
+{
+    Q_D(cPCBInterface);
+    return d->setClientSmart(client);
+}
+
 
 quint32 cPCBInterface::getDSPChannel(QString chnName)
 {
