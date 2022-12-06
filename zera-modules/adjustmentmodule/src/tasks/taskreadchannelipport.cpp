@@ -23,7 +23,7 @@ void TaskReadChannelIpPort::onRmAnswer(quint32 msgnr, quint8 reply, QVariant ans
 {
     if(m_msgnr == msgnr) {
         bool ok = false;
-        QStringList sl = answer.toString().split(';');
+        QStringList sl = answer.toString().split(';', Qt::SkipEmptyParts);
         if (reply == ack && sl.length() >= 4) {
             int port = sl.at(3).toInt(&ok);
             if (ok)
