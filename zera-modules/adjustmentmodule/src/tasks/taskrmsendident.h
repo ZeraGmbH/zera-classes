@@ -6,21 +6,21 @@
 #include <QVariant>
 #include <functional>
 
-namespace ADJUSTMENTMODULE
-{
+namespace ADJUSTMENTMODULE {
+
 class TaskRmSendIdent : public TaskComposite
 {
     Q_OBJECT
 public:
     static std::unique_ptr<TaskRmSendIdent> create(
-            Zera::Server::cRMInterface* rmInterface,
+            Zera::Server::RMInterfacePtr rmInterface,
             std::function<void(QVariant)> errMsgFunction = [](QVariant){});
-    TaskRmSendIdent(Zera::Server::cRMInterface* rmInterface, std::function<void(QVariant)> errMsgFunction);
+    TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface, std::function<void(QVariant)> errMsgFunction);
     void start() override;
 private slots:
     void onRmAnswer(quint32 msgnr, quint8 reply);
 private:
-    Zera::Server::cRMInterface* m_rmInterface;
+    Zera::Server::RMInterfacePtr m_rmInterface;
     std::function<void(QVariant)> m_errMsgFunction;
     quint32 m_msgnr;
 };

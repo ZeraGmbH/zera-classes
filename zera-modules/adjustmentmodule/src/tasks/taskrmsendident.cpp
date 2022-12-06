@@ -5,12 +5,12 @@
 namespace ADJUSTMENTMODULE
 {
 
-std::unique_ptr<TaskRmSendIdent> TaskRmSendIdent::create(Zera::Server::cRMInterface *rmInterface, std::function<void (QVariant)> errMsgFunction)
+std::unique_ptr<TaskRmSendIdent> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface, std::function<void (QVariant)> errMsgFunction)
 {
     return std::make_unique<TaskRmSendIdent>(rmInterface, errMsgFunction);
 }
 
-TaskRmSendIdent::TaskRmSendIdent(Zera::Server::cRMInterface *rmInterface, std::function<void (QVariant)> errMsgFunction) :
+TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface, std::function<void (QVariant)> errMsgFunction) :
     m_rmInterface(rmInterface),
     m_errMsgFunction(errMsgFunction)
 {
@@ -18,7 +18,7 @@ TaskRmSendIdent::TaskRmSendIdent(Zera::Server::cRMInterface *rmInterface, std::f
 
 void TaskRmSendIdent::start()
 {
-    connect(m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmSendIdent::onRmAnswer);
+    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmSendIdent::onRmAnswer);
     m_msgnr = m_rmInterface->rmIdent(QString("Adjustment"));
 }
 
