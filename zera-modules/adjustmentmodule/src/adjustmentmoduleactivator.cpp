@@ -2,6 +2,8 @@
 #include "adjustmentmodule.h"
 #include "adjustmentmodulemeasprogram.h"
 #include "adjustmentmoduleconfiguration.h"
+#include "tasktimeoutdecorator.h"
+#include "taskrmconnectionstart.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -25,14 +27,17 @@ void AdjustmentModuleActivator::activate()
 {
     if(!checkExternalVeinComponents())
         return;
+    openRMConnection();
+
+    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(CONNECTION_TIMEOUT,
+                                                                   TaskRmConnectionStart::create(m_rmClient)));
+
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
 }
 void AdjustmentModuleActivator::activateContinue(bool ok)
 {
     if(!ok)
-        return;
-    if(!openRMConnection()->wait())
         return;
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
     if(!sendRmIdent()->wait())
@@ -109,15 +114,10 @@ bool AdjustmentModuleActivator::checkExternalVeinComponents()
     return ok;
 }
 
-BlockedWaitInterfacePtr AdjustmentModuleActivator::openRMConnection()
+void AdjustmentModuleActivator::openRMConnection()
 {
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface.setClientSmart(m_rmClient);
-
-    BlockedWaitInterfacePtr waiter =
-            std::make_unique<SignalWaiter>(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, CONNECTION_TIMEOUT);
-    m_proxy->startConnectionSmart(m_rmClient);
-    return waiter;
 }
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::sendRmIdent()
