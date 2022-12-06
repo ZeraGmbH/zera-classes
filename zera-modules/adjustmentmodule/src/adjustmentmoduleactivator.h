@@ -7,6 +7,7 @@
 #include "basemoduleconfiguration.h"
 #include "rminterface.h"
 #include "pcbinterface.h"
+#include "tasksequence.h"
 #include "blockedwaitinterface.h"
 #include <QTimer>
 #include <QList>
@@ -34,9 +35,12 @@ signals:
 
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void activateContinue(bool ok);
 
 private:
     cAdjustmentModuleConfigData *getConfData();
+    TaskSequence m_activationTasks;
+
     BlockedWaitInterfacePtr openRMConnection();
     BlockedWaitInterfacePtr sendRmIdent();
     void setUpRmIdentHandler();
