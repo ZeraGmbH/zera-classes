@@ -7,7 +7,7 @@
 #include "taskserverconnectionstart.h"
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
-#include "taskrmreadchannels.h"
+#include "taskrmcheckchannelsavail.h"
 #include "taskreadchannelipport.h"
 
 #include "errormessages.h"
@@ -43,18 +43,18 @@ void AdjustmentModuleActivator::activate()
                                                                    TaskRmCheckResourceType::create(m_rmInterface),
                                                                    [&]{ emit errMsg(resourcetypeErrMsg); }));
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                   TaskRmReadChannels::create(m_rmInterface, getConfData()->m_AdjChannelList),
+                                                                   TaskRmCheckChannelsAvail::create(m_rmInterface, getConfData()->m_AdjChannelList),
                                                                    [&]{ emit errMsg(resourceErrMsg); }));
 
-
-
-
+    TaskParallelPtr parallelTasks = TaskParallel::create();
     for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
         QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
-        m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                       TaskReadChannelIpPort::create(m_rmInterface, channelName, m_chnPortHash),
-                                                                       [&]{ emit errMsg(resourceInfoErrMsg); }));
+        parallelTasks->addTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
+                                                                 TaskReadChannelIpPort::create(m_rmInterface, channelName, m_chnPortHash),
+                                                                 [&]{ emit errMsg(resourceInfoErrMsg); }));
     }
+    m_activationTasks.appendTask(std::move(parallelTasks));
+
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
 }
