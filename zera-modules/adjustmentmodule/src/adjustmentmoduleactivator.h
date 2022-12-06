@@ -41,7 +41,7 @@ private:
     cAdjustmentModuleConfigData *getConfData();
     TaskSequence m_activationTasks;
 
-    BlockedWaitInterfacePtr openRMConnection();
+    void openRMConnection();
     BlockedWaitInterfacePtr sendRmIdent();
     void setUpRmIdentHandler();
     BlockedWaitInterfacePtr readResourceTypes();
