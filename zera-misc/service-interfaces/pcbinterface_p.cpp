@@ -26,6 +26,12 @@ void cPCBInterfacePrivate::setClient(Proxy::cProxyClient *client)
     connect(m_pClient, &Proxy::cProxyClient::tcpError, this, &cPCBInterfacePrivate::receiveError);
 }
 
+void cPCBInterfacePrivate::setClientSmart(Proxy::ProxyClientPtr client)
+{
+    m_clientSmart = client;
+    setClient(client.get());
+}
+
 
 quint32 cPCBInterfacePrivate::getDSPChannel(QString chnName)
 {

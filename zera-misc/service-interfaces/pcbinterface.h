@@ -21,6 +21,7 @@ public:
     cPCBInterface();
     virtual ~cPCBInterface();
     void setClient(Zera::Proxy::cProxyClient *client);
+    void setClientSmart(Zera::Proxy::ProxyClientPtr client);
     // all commands to sense interface
     virtual quint32 getDSPChannel(QString chnName); // int
     virtual quint32 getStatus(QString chnName); // int
