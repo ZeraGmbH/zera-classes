@@ -16,7 +16,7 @@ void TaskParallel::start()
     if(!m_addedTasks.empty())
         startTasksDirectConnectionSafe();
     else
-        emit sigFinish(true, getTaskId());
+        finishTask(true);
 }
 
 void TaskParallel::onFinishTask(bool ok, int taskId)
@@ -24,7 +24,7 @@ void TaskParallel::onFinishTask(bool ok, int taskId)
     if(m_startedTasks.erase(taskId)) {
         m_allOk = m_allOk && ok;
         if(m_startedTasks.empty())
-            emit sigFinish(m_allOk, getTaskId());
+            finishTask(m_allOk);
     }
 }
 

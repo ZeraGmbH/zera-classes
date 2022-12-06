@@ -47,5 +47,5 @@ void TaskForTest::doEmit()
         m_finishOkCount++;
     else
         m_finishErrCount++;
-    emit sigFinish(m_finishOk, getTaskId());
+    finishTask(m_finishOk);
 }

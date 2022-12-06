@@ -21,7 +21,7 @@ void TaskRmConnectionStart::start()
 
 void TaskRmConnectionStart::onConnected()
 {
-    emit sigFinish(true, getTaskId());
+    finishTask(true);
 }
 
 }

@@ -44,5 +44,5 @@ void TaskTimeoutDecorator::emitFinish(bool ok)
 {
     m_decoratedTask = nullptr;
     m_timer.stop();
-    emit sigFinish(ok, getTaskId());
+    finishTask(ok);
 }
