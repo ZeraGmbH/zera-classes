@@ -3,14 +3,14 @@
 #include "proxy.h"
 #include "proxyclient.h"
 
-namespace ADJUSTMENTMODULE
-{
-std::unique_ptr<TaskRmConnectionOpen> TaskRmConnectionOpen::create(Zera::Server::cRMInterface *rmInterface, Zera::Proxy::ProxyClientPtr rmClient)
+namespace ADJUSTMENTMODULE {
+
+std::unique_ptr<TaskRmConnectionOpen> TaskRmConnectionOpen::create(Zera::Server::RMInterfacePtr rmInterface, Zera::Proxy::ProxyClientPtr rmClient)
 {
     return std::make_unique<TaskRmConnectionOpen>(rmInterface, rmClient);
 }
 
-TaskRmConnectionOpen::TaskRmConnectionOpen(Zera::Server::cRMInterface *rmInterface, Zera::Proxy::ProxyClientPtr rmClient) :
+TaskRmConnectionOpen::TaskRmConnectionOpen(Zera::Server::RMInterfacePtr rmInterface, Zera::Proxy::ProxyClientPtr rmClient) :
     m_rmInterface(rmInterface),
     m_rmClient(rmClient)
 {
