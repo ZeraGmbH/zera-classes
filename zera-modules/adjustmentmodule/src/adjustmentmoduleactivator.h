@@ -9,8 +9,6 @@
 #include "pcbinterface.h"
 #include "tasksequence.h"
 #include "blockedwaitinterface.h"
-#include <QTimer>
-#include <QList>
 #include <functional>
 
 namespace ADJUSTMENTMODULE

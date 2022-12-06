@@ -3,7 +3,8 @@
 #include "adjustmentmodulemeasprogram.h"
 #include "adjustmentmoduleconfiguration.h"
 #include "tasktimeoutdecorator.h"
-#include "taskrmconnectionstart.h"
+#include "taskparallel.h"
+#include "taskserverconnectionstart.h"
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
 #include "taskrmreadchannels.h"
@@ -34,7 +35,7 @@ void AdjustmentModuleActivator::activate()
     openRMConnection();
 
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(CONNECTION_TIMEOUT,
-                                                                   TaskRmConnectionStart::create(m_rmClient)));
+                                                                   TaskServerConnectionStart::create(m_rmClient)));
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
                                                                    TaskRmSendIdent::create(m_rmInterface),
                                                                    [&]{ emit errMsg(rmidentErrMSG); }));
