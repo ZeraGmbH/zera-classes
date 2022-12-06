@@ -16,6 +16,8 @@ private slots:
     void oneErrCount();
     void oneDtorCount();
     void taskId();
+    void errorHandler();
+    void noerrorHandler();
 };
 
 #endif // TEST_TASKFORTEST_H
