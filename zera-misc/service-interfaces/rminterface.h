@@ -6,11 +6,10 @@
 #include <QObject>
 #include <QAbstractSocket>
 #include <QVariant>
+#include <memory>
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera { namespace Server {
+
 class cRMInterfacePrivate;
 
 class ZERAMISC_EXPORT cRMInterface: public QObject
@@ -38,8 +37,8 @@ private:
     cRMInterfacePrivate *d_ptr;
 };
 
-}
-}
+typedef std::shared_ptr<cRMInterface> RMInterfacePtr;
 
+} }
 
 #endif // RMINTERFACE_H
