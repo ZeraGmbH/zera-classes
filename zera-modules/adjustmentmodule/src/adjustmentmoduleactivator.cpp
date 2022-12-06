@@ -7,6 +7,7 @@
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
 #include "taskrmreadchannels.h"
+#include "taskreadchannelipport.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -44,6 +45,15 @@ void AdjustmentModuleActivator::activate()
                                                                    TaskRmReadChannels::create(m_rmInterface, getConfData()->m_AdjChannelList),
                                                                    [&]{ emit errMsg(resourceErrMsg); }));
 
+
+
+
+    for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
+        QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
+        m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
+                                                                       TaskReadChannelIpPort::create(m_rmInterface, channelName, m_chnPortHash),
+                                                                       [&]{ emit errMsg(resourceInfoErrMsg); }));
+    }
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
 }
@@ -54,10 +64,7 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
         return;
     connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
-        // Alarm: This assumes channels configured elsewhere having same index :(
         QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
-        if(!readIpPortNo(channelName)->wait())
-            return;
         if(!openPcbConnection(channelName)->wait())
             return;
         if(!readChannelAlias(channelName)->wait())
@@ -83,7 +90,6 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
-    setUpReadIpPortHandler();
     setUpReadChannelAliasHandler();
     setUpRegisterNotifierHandler();
     setUpRangeListHandler();
@@ -123,35 +129,6 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
-}
-
-BlockedWaitInterfacePtr AdjustmentModuleActivator::readIpPortNo(QString channelName)
-{
-    BlockedWaitInterfacePtr waiter =
-            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
-                                           this, &AdjustmentModuleActivator::activationError,
-                                           TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface->getResourceInfo("SENSE", channelName)] = readresourceinfo;
-    return waiter;
-}
-
-void AdjustmentModuleActivator::setUpReadIpPortHandler()
-{
-    m_cmdFinishCallbacks[readresourceinfo] = [&](quint8 reply, QVariant answer) {
-        QStringList sl = answer.toString().split(';');
-        if ((reply ==ack) && (sl.length() >= 4)) {
-            bool ok;
-            int port = sl.at(3).toInt(&ok);
-            if (ok) {
-                m_chnPortHash[getConfData()->m_AdjChannelList.at(m_currentChannel)] = port;
-                emit activationContinue();
-            }
-            else
-                notifyActivationError(tr(resourceInfoErrMsg));
-        }
-        else
-            notifyActivationError(tr(resourceInfoErrMsg));
-    };
 }
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::openPcbConnection(QString channelName)
