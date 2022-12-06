@@ -20,17 +20,19 @@ void TaskRmReadChannels::start()
 
 void TaskRmReadChannels::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool allPresent = true;
-    if (reply == ack) {
-        QString sAnswer = answer.toString();
-        for(const auto &expectedChannel : qAsConst(m_expectedChannels)) {
-            if(!sAnswer.contains(expectedChannel)) {
-                allPresent = false;
-                break;
+    if(m_msgnr == msgnr) {
+        bool allPresent = true;
+        if (reply == ack) {
+            QString sAnswer = answer.toString();
+            for(const auto &expectedChannel : qAsConst(m_expectedChannels)) {
+                if(!sAnswer.contains(expectedChannel)) {
+                    allPresent = false;
+                    break;
+                }
             }
         }
+        else
+            allPresent = false;
+        finishTask(allPresent);
     }
-    else
-        allPresent = false;
-    finishTask(allPresent);
 }
