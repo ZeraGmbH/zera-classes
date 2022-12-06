@@ -5,6 +5,7 @@
 #include "tasktimeoutdecorator.h"
 #include "taskrmconnectionstart.h"
 #include "taskrmsendident.h"
+#include "taskrmcheckresourcetype.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -35,6 +36,9 @@ void AdjustmentModuleActivator::activate()
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
                                                                    TaskRmSendIdent::create(m_rmInterface),
                                                                    [&]{ emit errMsg(rmidentErrMSG); }));
+    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
+                                                                   TaskRmCheckResourceType::create(m_rmInterface),
+                                                                   [&]{ emit errMsg(resourcetypeErrMsg); }));
 
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
@@ -45,8 +49,6 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
     if(!ok)
         return;
     connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-    if(!readResourceTypes()->wait())
-        return;
     if(!readChannels()->wait())
         return;
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
@@ -79,7 +81,6 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
-    setUpResourceTypeHandler();
     setUpReadChannelsHandler();
     setUpReadIpPortHandler();
     setUpReadChannelAliasHandler();
@@ -121,26 +122,6 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
-}
-
-BlockedWaitInterfacePtr AdjustmentModuleActivator::readResourceTypes()
-{
-    BlockedWaitInterfacePtr waiter =
-            std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
-                                           this, &AdjustmentModuleActivator::activationError,
-                                           TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_rmInterface->getResourceTypes()] = readresourcetypes;
-    return waiter;
-}
-
-void AdjustmentModuleActivator::setUpResourceTypeHandler()
-{
-    m_cmdFinishCallbacks[readresourcetypes] = [&](quint8 reply, QVariant answer) {
-        if ((reply == ack) && (answer.toString().contains("SENSE")))
-            emit activationContinue();
-        else
-            notifyActivationError(tr(resourcetypeErrMsg));
-    };
 }
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::readChannels()

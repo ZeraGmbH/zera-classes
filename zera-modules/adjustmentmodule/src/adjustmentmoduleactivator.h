@@ -43,8 +43,7 @@ private:
     TaskSequence m_activationTasks;
 
     void openRMConnection();
-    BlockedWaitInterfacePtr readResourceTypes();
-    void setUpResourceTypeHandler();
+
     BlockedWaitInterfacePtr readChannels();
     void setUpReadChannelsHandler();
     BlockedWaitInterfacePtr readIpPortNo(QString channelName);
