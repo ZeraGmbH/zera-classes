@@ -1,13 +1,9 @@
 #include "taskcomposit.h"
 
-TaskComposite::TaskComposite()
+TaskComposite::TaskComposite(std::function<void()> additionalErrorHandler) :
+    m_taskId(getNextTaskId()),
+    m_additionalErrorHandler(additionalErrorHandler)
 {
-    m_taskId = getNextTaskId();
-}
-
-void TaskComposite::setAdditionalErrorHandler(std::function<void ()> additionalErrorHandler)
-{
-    m_additionalErrorHandler = additionalErrorHandler;
 }
 
 int TaskComposite::getTaskId() const

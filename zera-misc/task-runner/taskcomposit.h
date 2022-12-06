@@ -9,9 +9,8 @@ class TaskComposite : public QObject
 {
     Q_OBJECT
 public:
-    TaskComposite();
+    TaskComposite(std::function<void()> additionalErrorHandler = []{});
     virtual ~TaskComposite() = default;
-    void setAdditionalErrorHandler(std::function<void()> additionalErrorHandler);
     virtual void start() = 0;
     int getTaskId() const;
 signals:

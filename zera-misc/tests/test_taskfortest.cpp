@@ -158,9 +158,8 @@ void test_taskfortest::taskId()
 
 void test_taskfortest::errorHandler()
 {
-    TaskForTest task1(0, false);
     int errorCount = 0;
-    task1.setAdditionalErrorHandler([&]{
+    TaskForTest task1(0, false, [&]{
         errorCount++;
     });
     task1.start();
@@ -169,9 +168,8 @@ void test_taskfortest::errorHandler()
 
 void test_taskfortest::noerrorHandler()
 {
-    TaskForTest task1(0, true);
     int errorCount = 0;
-    task1.setAdditionalErrorHandler([&]{
+    TaskForTest task1(0, true, [&]{
         errorCount++;
     });
     task1.start();
