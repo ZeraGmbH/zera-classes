@@ -19,6 +19,8 @@ include(GNUInstallDirs)
 include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 
+enable_testing()
+
 option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 
@@ -47,7 +49,6 @@ add_subdirectory(zera-mcontroller-io)
 add_subdirectory(zera-i2c)
 add_subdirectory(zera-misc)
 
-enable_testing()
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
