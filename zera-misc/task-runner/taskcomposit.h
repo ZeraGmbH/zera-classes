@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <memory>
+#include <functional>
 
 class TaskComposite : public QObject
 {
@@ -10,6 +11,7 @@ class TaskComposite : public QObject
 public:
     TaskComposite();
     virtual ~TaskComposite() = default;
+    void setAdditionalErrorHandler(std::function<void()> additionalErrorHandler);
     virtual void start() = 0;
     int getTaskId() const;
 signals:
@@ -20,6 +22,7 @@ protected:
 private:
     static int getNextTaskId();
     int m_taskId = 0;
+    std::function<void()> m_additionalErrorHandler = []{};
     static int m_taskIdForNext;
 };
 
