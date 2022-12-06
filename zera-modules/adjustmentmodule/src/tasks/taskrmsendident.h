@@ -3,8 +3,6 @@
 
 #include "taskcomposit.h"
 #include "rminterface.h"
-#include <QVariant>
-#include <functional>
 
 namespace ADJUSTMENTMODULE {
 
@@ -12,16 +10,13 @@ class TaskRmSendIdent : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskRmSendIdent> create(
-            Zera::Server::RMInterfacePtr rmInterface,
-            std::function<void(QVariant)> errMsgFunction = [](QVariant){});
-    TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface, std::function<void(QVariant)> errMsgFunction);
+    static std::unique_ptr<TaskRmSendIdent> create(Zera::Server::RMInterfacePtr rmInterface);
+    TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface);
     void start() override;
 private slots:
     void onRmAnswer(quint32 msgnr, quint8 reply);
 private:
     Zera::Server::RMInterfacePtr m_rmInterface;
-    std::function<void(QVariant)> m_errMsgFunction;
     quint32 m_msgnr;
 };
 }

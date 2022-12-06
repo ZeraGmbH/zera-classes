@@ -5,14 +5,13 @@
 namespace ADJUSTMENTMODULE
 {
 
-std::unique_ptr<TaskRmSendIdent> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface, std::function<void (QVariant)> errMsgFunction)
+std::unique_ptr<TaskRmSendIdent> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface)
 {
-    return std::make_unique<TaskRmSendIdent>(rmInterface, errMsgFunction);
+    return std::make_unique<TaskRmSendIdent>(rmInterface);
 }
 
-TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface, std::function<void (QVariant)> errMsgFunction) :
-    m_rmInterface(rmInterface),
-    m_errMsgFunction(errMsgFunction)
+TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface) :
+    m_rmInterface(rmInterface)
 {
 }
 
@@ -25,8 +24,6 @@ void TaskRmSendIdent::start()
 void TaskRmSendIdent::onRmAnswer(quint32 msgnr, quint8 reply)
 {
     if(msgnr == m_msgnr) {
-        if(reply != ack)
-            m_errMsgFunction(rmidentErrMSG);
         finishTask(reply == ack);
     }
 }

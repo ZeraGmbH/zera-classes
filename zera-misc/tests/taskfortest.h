@@ -7,8 +7,8 @@
 class TaskForTest : public TaskComposite
 {
 public:
-    static TaskInterfacePtr create(int delayMs, bool finishOk);
-    TaskForTest(int delayMs, bool finishOk);
+    static TaskInterfacePtr create(int delayMs, bool finishOk, std::function<void()> additionalErrorHandler = []{});
+    TaskForTest(int delayMs, bool finishOk, std::function<void ()> additionalErrorHandler = []{});
     ~TaskForTest() override;
     void start() override;
     static void resetCounters();

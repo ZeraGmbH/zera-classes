@@ -33,7 +33,8 @@ void AdjustmentModuleActivator::activate()
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(CONNECTION_TIMEOUT,
                                                                    TaskRmConnectionStart::create(m_rmClient)));
     m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                   TaskRmSendIdent::create(m_rmInterface)));
+                                                                   TaskRmSendIdent::create(m_rmInterface),
+                                                                   [&]{ emit errMsg(rmidentErrMSG); }));
 
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();

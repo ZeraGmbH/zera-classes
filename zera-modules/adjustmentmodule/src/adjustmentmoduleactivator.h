@@ -39,6 +39,7 @@ private slots:
 
 private:
     cAdjustmentModuleConfigData *getConfData();
+
     TaskSequence m_activationTasks;
 
     void openRMConnection();
