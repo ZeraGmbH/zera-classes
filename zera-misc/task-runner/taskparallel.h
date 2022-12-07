@@ -10,15 +10,15 @@ class TaskParallel : public TaskComposite
     Q_OBJECT
 public:
     static std::unique_ptr<TaskParallel> create();
-    void addTask(TaskInterfacePtr task);
+    void addTask(TaskCompositePtr task);
     void start() override;
 private slots:
     void onFinishTask(bool ok, int taskId);
 private:
     void startTasksDirectConnectionSafe();
 
-    std::list<TaskInterfacePtr> m_addedTasks;
-    std::unordered_map<int, TaskInterfacePtr> m_startedTasks;
+    std::list<TaskCompositePtr> m_addedTasks;
+    std::unordered_map<int, TaskCompositePtr> m_startedTasks;
     bool m_allOk = false;
 };
 

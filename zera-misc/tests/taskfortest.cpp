@@ -1,7 +1,7 @@
 #include "taskfortest.h"
 #include <QTest>
 
-TaskInterfacePtr TaskForTest::create(int delayMs, bool finishOk, std::function<void ()> additionalErrorHandler)
+TaskCompositePtr TaskForTest::create(int delayMs, bool finishOk, std::function<void ()> additionalErrorHandler)
 {
     return std::make_unique<TaskForTest>(delayMs, finishOk, additionalErrorHandler);
 }

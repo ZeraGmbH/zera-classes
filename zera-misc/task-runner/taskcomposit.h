@@ -25,7 +25,7 @@ private:
     static int m_taskIdForNext;
 };
 
-typedef std::unique_ptr<TaskComposite> TaskInterfacePtr;
+typedef std::unique_ptr<TaskComposite> TaskCompositePtr;
 
 
 #endif // TASKCOMPOSIT_H
