@@ -9,6 +9,7 @@
 #include "taskrmcheckresourcetype.h"
 #include "taskrmcheckchannelsavail.h"
 #include "taskreadchannelipport.h"
+#include "taskchannelpcbconnectionsstart.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -50,10 +51,14 @@ void AdjustmentModuleActivator::activate()
     for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
         QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
         parallelTasks->addTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                 TaskReadChannelIpPort::create(m_rmInterface, channelName, m_chnPortHash),
+                                                                 TaskReadChannelIpPort::create(m_rmInterface, channelName, m_activationData->m_chnPortHash),
                                                                  [&]{ emit errMsg(resourceInfoErrMsg); }));
     }
     m_activationTasks.appendTask(std::move(parallelTasks));
+    m_activationTasks.appendTask(TaskChannelPcbConnectionsStart::create(m_activationData,
+                                                                        getConfData()->m_AdjChannelList,
+                                                                        getConfData()->m_PCBSocket.m_sIP,
+                                                                        CONNECTION_TIMEOUT));
 
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
@@ -66,8 +71,6 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
     connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
         QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
-        if(!openPcbConnection(channelName)->wait())
-            return;
         if(!readChannelAlias(channelName)->wait())
             return;
         if(!regNotifier(channelName)->wait())
@@ -130,32 +133,6 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
-}
-
-BlockedWaitInterfacePtr AdjustmentModuleActivator::openPcbConnection(QString channelName)
-{
-    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>();
-    cAdjustChannelInfo* adjustChannelInfo = new cAdjustChannelInfo();
-    m_activationData->m_adjustChannelInfoHash[channelName] = adjustChannelInfo;
-    int port = m_chnPortHash[channelName];
-    if (m_activationData->m_portChannelHash.contains(port)) {
-        // the channels share the same interface
-        adjustChannelInfo->m_pPCBInterface = m_activationData->m_adjustChannelInfoHash[m_activationData->m_portChannelHash[port] ]->m_pPCBInterface;
-    }
-    else {
-        m_activationData->m_portChannelHash[port] = channelName;
-        Zera::Proxy::cProxyClient* pcbclient = m_proxy->getConnection(getConfData()->m_PCBSocket.m_sIP, port);
-        m_activationData->m_pcbClientList.append(pcbclient);
-
-        waiter = std::make_unique<SignalWaiter>(pcbclient, &Zera::Proxy::cProxyClient::connected, CONNECTION_TIMEOUT);
-        Zera::Server::cPCBInterface *pcbInterface = new Zera::Server::cPCBInterface();
-        m_activationData->m_pcbInterfaceList.append(pcbInterface);
-        pcbInterface->setClient(pcbclient);
-        connect(pcbInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-        adjustChannelInfo->m_pPCBInterface = pcbInterface;
-        m_proxy->startConnection((pcbclient));
-    }
-    return waiter;
 }
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::readChannelAlias(QString channelName)

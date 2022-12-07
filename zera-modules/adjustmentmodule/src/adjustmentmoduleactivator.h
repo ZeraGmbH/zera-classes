@@ -42,7 +42,6 @@ private:
 
     void openRMConnection();
 
-    BlockedWaitInterfacePtr openPcbConnection(QString channelName);
     BlockedWaitInterfacePtr readChannelAlias(QString channelName);
     void setUpReadChannelAliasHandler();
     BlockedWaitInterfacePtr regNotifier(QString channelName);
@@ -61,7 +60,6 @@ private:
     Zera::Server::RMInterfacePtr m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
-    QHash<QString,int> m_chnPortHash; // a hash for our channels ethernet ports
     QHash<quint32, int> m_MsgNrCmdList;
     int m_currentChannel = 0;
 
