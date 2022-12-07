@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) \
 }
 
 
-static constexpr int shortQtEventTimeout = 10;
+static constexpr int shortQtEventTimeout = 15;
 
 IoDeviceBase::Ptr createOpenDemoIoDevice(QString deviceInfo = QString());
 void setDemoIoFixedTimeout(IoDeviceBase::Ptr ioDevice, int timeoutMs);
