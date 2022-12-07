@@ -44,7 +44,7 @@ void test_sourcestatecontroller::statePollAutoStart()
         statePollSignalCount++;
     });
 
-    QTest::qWait(shortQtEventTimeout);
+    QTest::qWait(2*shortQtEventTimeout);
     QVERIFY(statePollSignalCount > 0);
     QVERIFY(poller->isPeriodicPollActive());
 }
