@@ -57,15 +57,15 @@ void test_sourcestatecontroller::statePollChangeTime()
     SourceTransactionStartNotifier::Ptr notifyWrapperState = SourceTransactionStartNotifier::Ptr::create(m_sourceIo);
     SourceStatePeriodicPoller::Ptr poller = SourceStatePeriodicPoller::Ptr::create(notifyWrapperState);
     SourceStateController stateWatcher(notifyWrapperSwitch, notifyWrapperState, poller);
-    poller->setPollTime(10);
+    poller->setPollTime(shortQtEventTimeout);
     int statePollSignalCount = 0;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] {
         statePollSignalCount++;
     });
 
-    QTest::qWait(shortQtEventTimeout);
+    QTest::qWait(shortQtEventTimeout/2);
     QCOMPARE(statePollSignalCount, 0);
-    QTest::qWait(20);
+    QTest::qWait(2*shortQtEventTimeout);
     QCOMPARE(statePollSignalCount, 1);
 }
 
