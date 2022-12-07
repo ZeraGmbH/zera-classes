@@ -6,6 +6,7 @@
 #include "proxy.h"
 #include <QList>
 #include <QHash>
+#include <memory>
 
 namespace ADJUSTMENTMODULE
 {
@@ -20,5 +21,7 @@ struct AdjustmentModuleActivateData
     QList<Zera::Server::cPCBInterface*> m_pcbInterfaceList; // a list of pcbinterfaces ... for clean up
     QHash<QString, QString> m_AliasChannelHash; // we use this hash for easier access
 };
+
+typedef std::shared_ptr<AdjustmentModuleActivateData> AdjustmentModuleActivateDataPtr;
 }
 #endif // ADJUSTMENTMODULECOMMON_H

@@ -16,7 +16,8 @@ namespace ADJUSTMENTMODULE
 cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module),
-    m_activator(module, proxy, pConfiguration, m_commonObjects)
+    m_commonActivationObjects(std::make_shared<AdjustmentModuleActivateData>()),
+    m_activator(module, proxy, pConfiguration, m_commonActivationObjects)
 {
     m_bAuthorized = true; // per default we are authorized
 
@@ -152,8 +153,8 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
     m_sAdjustChannel = sl.at(0);
     m_sAdjustRange = sl.at(1);
     m_AdjustTargetValue = sl.at(2).toDouble();
-    m_sAdjustSysName = m_commonObjects.m_AliasChannelHash[m_sAdjustChannel];
-    m_currAdjustPCBInterface = m_commonObjects.m_adjustChannelInfoHash[m_sAdjustSysName]->m_pPCBInterface;
+    m_sAdjustSysName = m_commonActivationObjects->m_AliasChannelHash[m_sAdjustChannel];
+    m_currAdjustPCBInterface = m_commonActivationObjects->m_adjustChannelInfoHash[m_sAdjustSysName]->m_pPCBInterface;
 }
 
 double cAdjustmentModuleMeasProgram::cmpPhase(QVariant var)
@@ -175,13 +176,13 @@ double cAdjustmentModuleMeasProgram::symAngle(double ang)
 
 void cAdjustmentModuleMeasProgram::onActivationReady()
 {
-    for(auto iter=m_commonObjects.m_pcbInterfaceList.constBegin(); iter!=m_commonObjects.m_pcbInterfaceList.constEnd(); iter++)
+    for(auto iter=m_commonActivationObjects->m_pcbInterfaceList.constBegin(); iter!=m_commonActivationObjects->m_pcbInterfaceList.constEnd(); iter++)
         connect(*iter, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
     setInterfaceValidation();
 
     connect(&m_AuthTimer, &QTimer::timeout, this , [&]() {
-        QList<QString> sysnameList = m_commonObjects.m_AliasChannelHash.values();
-        m_currAdjustPCBInterface = m_commonObjects.m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
+        QList<QString> sysnameList = m_commonActivationObjects->m_AliasChannelHash.values();
+        m_currAdjustPCBInterface = m_commonActivationObjects->m_adjustChannelInfoHash[sysnameList.at(0)]->m_pPCBInterface;
         m_MsgNrCmdList[m_currAdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
     });
     m_AuthTimer.start(5000);
@@ -208,7 +209,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[sysName]->amplitudeAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonObjects.m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
     }
@@ -220,7 +221,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[sysName]->offsetAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonObjects.m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dOffsetValidator);
         }
     }
@@ -232,7 +233,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[sysName]->phaseAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonObjects.m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
     }
@@ -242,7 +243,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     cIntValidator iValidator = cIntValidator(0,255);
     cAdjustValidator3i* adjValidatori = new cAdjustValidator3i(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        adjChnInfo = m_commonObjects.m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+        adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
         adjValidatori->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, iValidator);
     }
     m_pPARAdjustGainStatus->setValidator(adjValidatori);
@@ -253,7 +254,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     cAdjustValidator2* adjInitValidator = new cAdjustValidator2(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        adjChnInfo = m_commonObjects.m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+        adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
         adjInitValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist);
     }
     m_pPARAdjustInit->setValidator(adjInitValidator);
@@ -439,13 +440,13 @@ void cAdjustmentModuleMeasProgram::computationStartCommand(QVariant var)
 void cAdjustmentModuleMeasProgram::computationStart()
 {
     // we have to start adjustment coefficient computation for all particpating pcbservers
-    m_MsgNrCmdList[m_commonObjects.m_pcbInterfaceList.at(computationIt)->adjustComputation()] = adjustcomputation;
+    m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterfaceList.at(computationIt)->adjustComputation()] = adjustcomputation;
 }
 
 void cAdjustmentModuleMeasProgram::computationTest()
 {
     computationIt++;
-    if (computationIt == m_commonObjects.m_pcbInterfaceList.count())
+    if (computationIt == m_commonActivationObjects->m_pcbInterfaceList.count())
         emit computationDone();
     else
         emit computationContinue();
@@ -470,15 +471,15 @@ void cAdjustmentModuleMeasProgram::storageStart()
 {
     // we have to start saving adjustment data for all particpating pcbservers
     if (storageType == 1)
-        m_MsgNrCmdList[m_commonObjects.m_pcbInterfaceList.at(storageIt)->adjustStorage()] = adjuststorage;
+        m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterfaceList.at(storageIt)->adjustStorage()] = adjuststorage;
     else
-        m_MsgNrCmdList[m_commonObjects.m_pcbInterfaceList.at(storageIt)->adjustStorageClamp()] = adjuststorage;
+        m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterfaceList.at(storageIt)->adjustStorageClamp()] = adjuststorage;
 }
 
 void cAdjustmentModuleMeasProgram::storageTest()
 {
     storageIt++;
-    if (storageIt == m_commonObjects.m_pcbInterfaceList.count())
+    if (storageIt == m_commonActivationObjects->m_pcbInterfaceList.count())
         emit storageDone();
     else
         emit storageContinue();
@@ -492,24 +493,24 @@ void cAdjustmentModuleMeasProgram::storageFinished()
 void cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects.m_AliasChannelHash[sl.at(0)];
-    cAdjustChannelInfo* adjChannelinfo = m_commonObjects.m_adjustChannelInfoHash[sysName];
+    QString sysName = m_commonActivationObjects->m_AliasChannelHash[sl.at(0)];
+    cAdjustChannelInfo* adjChannelinfo = m_commonActivationObjects->m_adjustChannelInfoHash[sysName];
     m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->setAdjustGainStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustgainstatus;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects.m_AliasChannelHash[sl.at(0)];
-    cAdjustChannelInfo* adjChannelinfo = m_commonObjects.m_adjustChannelInfoHash[sysName];
+    QString sysName = m_commonActivationObjects->m_AliasChannelHash[sl.at(0)];
+    cAdjustChannelInfo* adjChannelinfo = m_commonActivationObjects->m_adjustChannelInfoHash[sysName];
     m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->setAdjustPhaseStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustphasestatus;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects.m_AliasChannelHash[sl.at(0)];
-    cAdjustChannelInfo* adjChannelinfo = m_commonObjects.m_adjustChannelInfoHash[sysName];
+    QString sysName = m_commonActivationObjects->m_AliasChannelHash[sl.at(0)];
+    cAdjustChannelInfo* adjChannelinfo = m_commonActivationObjects->m_adjustChannelInfoHash[sysName];
     m_MsgNrCmdList[adjChannelinfo->m_pPCBInterface->setAdjustOffsetStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustoffsetstatus;
 }
 
@@ -591,8 +592,8 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
     QList<QString> sl = var.toString().split(',');
     if (sl.count() == 2) { // we expect a port number and a command
         int port = sl.at(0).toInt();
-        if (m_commonObjects.m_portChannelHash.contains(port)) {
-            m_MsgNrCmdList[m_commonObjects.m_adjustChannelInfoHash[m_commonObjects.m_portChannelHash[port]]->m_pPCBInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
+        if (m_commonActivationObjects->m_portChannelHash.contains(port)) {
+            m_MsgNrCmdList[m_commonActivationObjects->m_adjustChannelInfoHash[m_commonActivationObjects->m_portChannelHash[port]]->m_pPCBInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
             return;
         }
     }

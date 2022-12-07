@@ -11,7 +11,7 @@ QTEST_MAIN(test_adjustmentmoduleactivator);
 void test_adjustmentmoduleactivator::instantiate()
 {
     using namespace ADJUSTMENTMODULE;
-    AdjustmentModuleActivateData activationData;
+    AdjustmentModuleActivateDataPtr activationData = std::make_shared<AdjustmentModuleActivateData>();
     Zera::Proxy::cProxy* proxy= Zera::Proxy::cProxy::getInstance();
 
     std::shared_ptr<cAdjustmentModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();

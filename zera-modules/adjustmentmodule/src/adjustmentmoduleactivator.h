@@ -21,7 +21,7 @@ public:
     AdjustmentModuleActivator(cAdjustmentModule* module,
                               Zera::Proxy::cProxy* proxy,
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
-                              AdjustmentModuleActivateData &activationData);
+                              AdjustmentModuleActivateDataPtr activationData);
     void setupServerResponseHandlers();
 public slots:
     void generateInterface() override {}
@@ -54,7 +54,7 @@ private:
     BlockedWaitInterfacePtr unregNotifier(int pcbInterfaceNo);
     void setUpUnregisterNotifierHandler();
 
-    AdjustmentModuleActivateData &m_activationData;
+    AdjustmentModuleActivateDataPtr m_activationData;
     cAdjustmentModule* m_module;
     Zera::Proxy::cProxy *m_proxy;
     std::shared_ptr<cBaseModuleConfiguration> m_configuration;
