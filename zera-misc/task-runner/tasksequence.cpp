@@ -5,7 +5,7 @@ std::unique_ptr<TaskSequence> TaskSequence::create()
     return std::make_unique<TaskSequence>();
 }
 
-void TaskSequence::appendTask(TaskInterfacePtr task)
+void TaskSequence::appendTask(TaskCompositePtr task)
 {
     m_tasks.push_front(std::move(task));
 }

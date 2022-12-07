@@ -1,11 +1,11 @@
 #include "tasktimeoutdecorator.h"
 
-std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecorator::wrapTimeout(int timeout, TaskInterfacePtr decoratedTask, std::function<void ()> additionalErrorHandler)
+std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecorator::wrapTimeout(int timeout, TaskCompositePtr decoratedTask, std::function<void ()> additionalErrorHandler)
 {
     return std::make_unique<TaskTimeoutDecorator>(std::move(decoratedTask), timeout, additionalErrorHandler);
 }
 
-TaskTimeoutDecorator::TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int timeout, std::function<void ()> additionalErrorHandler) :
+TaskTimeoutDecorator::TaskTimeoutDecorator(TaskCompositePtr decoratedTask, int timeout, std::function<void ()> additionalErrorHandler) :
     TaskComposite(additionalErrorHandler),
     m_decoratedTask(std::move(decoratedTask)),
     m_timeoutMs(timeout)

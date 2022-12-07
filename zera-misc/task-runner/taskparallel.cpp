@@ -6,7 +6,7 @@ std::unique_ptr<TaskParallel> TaskParallel::create()
     return std::make_unique<TaskParallel>();
 }
 
-void TaskParallel::addTask(TaskInterfacePtr task)
+void TaskParallel::addTask(TaskCompositePtr task)
 {
     m_addedTasks.push_back(std::move(task));
 }

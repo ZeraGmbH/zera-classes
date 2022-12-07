@@ -8,8 +8,8 @@ class TaskTimeoutDecorator : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskTimeoutDecorator> wrapTimeout(int timeout, TaskInterfacePtr decoratedTask, std::function<void()> additionalErrorHandler = []{});
-    TaskTimeoutDecorator(TaskInterfacePtr decoratedTask, int timeout, std::function<void()> additionalErrorHandler = []{});
+    static std::unique_ptr<TaskTimeoutDecorator> wrapTimeout(int timeout, TaskCompositePtr decoratedTask, std::function<void()> additionalErrorHandler = []{});
+    TaskTimeoutDecorator(TaskCompositePtr decoratedTask, int timeout, std::function<void()> additionalErrorHandler = []{});
     void start() override;
 private slots:
     void onFinishDecorated(bool ok);
@@ -17,7 +17,7 @@ private slots:
 private:
     void startDecoratedTask();
     void emitFinish(bool ok);
-    TaskInterfacePtr m_decoratedTask;
+    TaskCompositePtr m_decoratedTask;
     int m_timeoutMs;
     QTimer m_timer;
 };
