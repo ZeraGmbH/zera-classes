@@ -126,7 +126,6 @@ private:
     void setInterfaceValidation();
     cAdjustmentModule* m_pModule;
     Zera::Server::cPCBInterface* m_currAdjustPCBInterface;
-    AdjustmentModuleActivator m_activator;
     // we use the following 9 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
@@ -151,7 +150,8 @@ private:
 
     Zera::Proxy::cProxyClient* m_pRMClient;
 
-    AdjustmentModuleActivateData m_commonObjects;
+    AdjustmentModuleActivateDataPtr m_commonActivationObjects;
+    AdjustmentModuleActivator m_activator;
     QHash<quint32, int> m_MsgNrCmdList;
     QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
     int m_nAdjustGainIt;
