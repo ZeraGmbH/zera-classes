@@ -13,6 +13,7 @@
 #include "taskrmreadchannelalias.h"
 #include "taskchannelregisternotifier.h"
 #include "taskchannelreadranges.h"
+#include "taskchannelunregisternotifier.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -85,17 +86,24 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
 
 void AdjustmentModuleActivator::deactivate()
 {
-    for(int pcbInterfaceNo = 0; pcbInterfaceNo<m_activationData->m_pcbInterfaceList.count(); ++pcbInterfaceNo) {
-        if(!unregNotifier(pcbInterfaceNo)->wait())
-            return;
+    TaskParallelPtr parallelTasks = TaskParallel::create();
+    for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
+        QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
+        parallelTasks->addTask(TaskChannelUnregisterNotifier::create(m_activationData, channelName,
+                                                                     TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
     }
-    m_bActive = false;
-    emit sigDeactivationReady();
+    m_activationTasks.appendTask(std::move(parallelTasks));
+    connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::deactivateContinue);
+    m_activationTasks.start();
 }
 
-void AdjustmentModuleActivator::setupServerResponseHandlers()
+void AdjustmentModuleActivator::deactivateContinue(bool ok)
 {
-    setUpUnregisterNotifierHandler();
+    if(!ok)
+        return;
+    disconnect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
+    m_bActive = false;
+    emit sigDeactivationReady();
 }
 
 bool AdjustmentModuleActivator::checkExternalVeinComponents()
@@ -130,25 +138,6 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
-}
-
-BlockedWaitInterfacePtr AdjustmentModuleActivator::unregNotifier(int pcbInterfaceNo)
-{
-    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::deactivationContinue,
-                                                                    this, &AdjustmentModuleActivator::deactivationError,
-                                                                    TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_activationData->m_pcbInterfaceList[pcbInterfaceNo]->unregisterNotifiers() ] = unregisterNotifiers ;
-    return waiter;
-}
-
-void AdjustmentModuleActivator::setUpUnregisterNotifierHandler()
-{
-    m_cmdFinishCallbacks[unregisterNotifiers] = [&](quint8 reply, QVariant) {
-        if (reply == ack)
-            emit deactivationContinue();
-        else
-            notifyActivationError(tr(unregisterpcbnotifierErrMsg));
-    };
 }
 
 void AdjustmentModuleActivator::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)

@@ -22,7 +22,6 @@ public:
                               Zera::Proxy::cProxy* proxy,
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                               AdjustmentModuleActivateDataPtr activationData);
-    void setupServerResponseHandlers();
 public slots:
     void generateInterface() override {}
     void activate() override;
@@ -34,6 +33,7 @@ signals:
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void activateContinue(bool ok);
+    void deactivateContinue(bool ok);
 
 private:
     cAdjustmentModuleConfigData *getConfData();
@@ -42,9 +42,6 @@ private:
 
     void openRMConnection();
     bool checkExternalVeinComponents();
-
-    BlockedWaitInterfacePtr unregNotifier(int pcbInterfaceNo);
-    void setUpUnregisterNotifierHandler();
 
     AdjustmentModuleActivateDataPtr m_activationData;
     cAdjustmentModule* m_module;
