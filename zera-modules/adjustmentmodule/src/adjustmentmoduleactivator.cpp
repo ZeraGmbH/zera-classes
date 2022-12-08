@@ -19,12 +19,10 @@ namespace ADJUSTMENTMODULE
 {
 
 AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
-                                                     Zera::Proxy::cProxy *proxy,
                                                      std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                                                      AdjustmentModuleActivateDataPtr activationData) :
     m_activationData(activationData),
     m_module(module),
-    m_proxy(proxy),
     m_configuration(pConfiguration)
 {
 }
@@ -75,8 +73,6 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
 {
     if(!ok)
         return;
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-    m_bActive = true;
     emit sigActivationReady();
 }
 
@@ -88,17 +84,15 @@ void AdjustmentModuleActivator::deactivate()
         parallelTasks->addTask(TaskChannelUnregisterNotifier::create(m_activationData, channelName,
                                                                      TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
     }
-    m_activationTasks.appendTask(std::move(parallelTasks));
-    connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::deactivateContinue);
-    m_activationTasks.start();
+    m_deactivationTasks.appendTask(std::move(parallelTasks));
+    connect(&m_deactivationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::deactivateContinue);
+    m_deactivationTasks.start();
 }
 
 void AdjustmentModuleActivator::deactivateContinue(bool ok)
 {
     if(!ok)
         return;
-    disconnect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-    m_bActive = false;
     emit sigDeactivationReady();
 }
 
@@ -132,15 +126,8 @@ bool AdjustmentModuleActivator::checkExternalVeinComponents()
 void AdjustmentModuleActivator::openRMConnection()
 {
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
-    m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
-}
-
-void AdjustmentModuleActivator::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
-{
-    if (m_MsgNrCmdList.contains(msgnr)) {
-        handleFinishCallback(m_MsgNrCmdList.take(msgnr), reply, answer);
-    }
 }
 
 cAdjustmentModuleConfigData *AdjustmentModuleActivator::getConfData()

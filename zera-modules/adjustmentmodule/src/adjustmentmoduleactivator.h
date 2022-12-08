@@ -13,44 +13,38 @@
 namespace ADJUSTMENTMODULE
 {
 
-class AdjustmentModuleActivator : public cModuleActivist
+class AdjustmentModuleActivator : public QObject
 {
     Q_OBJECT
 public:
     AdjustmentModuleActivator(cAdjustmentModule* module,
-                              Zera::Proxy::cProxy* proxy,
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                               AdjustmentModuleActivateDataPtr activationData);
 public slots:
-    void generateInterface() override {}
-    void activate() override;
-    void deactivate() override;
+    void activate();
+    void deactivate();
 signals:
     void sigActivationReady();
     void sigDeactivationReady();
+    void errMsg(QVariant value, int dest = globalDest);
 
 private slots:
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void activateContinue(bool ok);
     void deactivateContinue(bool ok);
-
 private:
     cAdjustmentModuleConfigData *getConfData();
 
     TaskSequence m_activationTasks;
+    TaskSequence m_deactivationTasks;
 
     void openRMConnection();
     bool checkExternalVeinComponents();
 
     AdjustmentModuleActivateDataPtr m_activationData;
     cAdjustmentModule* m_module;
-    Zera::Proxy::cProxy *m_proxy;
     std::shared_ptr<cBaseModuleConfiguration> m_configuration;
     Zera::Server::RMInterfacePtr m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
-
-    QHash<quint32, int> m_MsgNrCmdList;
-    int m_currentChannel = 0;
 
     const int CONNECTION_TIMEOUT = 25000;
     const int TRANSACTION_TIMEOUT = 3000;

@@ -13,16 +13,17 @@
 namespace ADJUSTMENTMODULE
 {
 
-cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy*, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module),
     m_commonActivationObjects(std::make_shared<AdjustmentModuleActivateData>()),
-    m_activator(module, proxy, pConfiguration, m_commonActivationObjects)
+    m_activator(module, pConfiguration, m_commonActivationObjects)
 {
     m_bAuthorized = true; // per default we are authorized
 
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigDeactivationReady, this, &cAdjustmentModuleMeasProgram::onDeactivationReady);
+    connect(&m_activator, &AdjustmentModuleActivator::errMsg, this, &cAdjustmentModuleMeasProgram::errMsg);
 
     m_cmdFinishCallbacks[getauthorizationstatus] = [&](quint8 reply, QVariant answer) {
         if (reply == ack)
@@ -185,12 +186,14 @@ void cAdjustmentModuleMeasProgram::onActivationReady()
         m_MsgNrCmdList[m_currAdjustPCBInterface->getAuthorizationStatus()] = getauthorizationstatus;
     });
     m_AuthTimer.start(5000);
+    m_bActive = true;
     emit activated();
 }
 
 void cAdjustmentModuleMeasProgram::onDeactivationReady()
 {
     m_AuthTimer.stop();
+    m_bActive = false;
     emit deactivated();
 }
 
