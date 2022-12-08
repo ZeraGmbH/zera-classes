@@ -2,7 +2,6 @@
 #include "adjustmentmodule.h"
 #include "adjustmentmodulemeasprogram.h"
 #include "adjustmentmoduleconfiguration.h"
-#include "taskparallel.h"
 #include "taskserverconnectionstart.h"
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
@@ -27,9 +26,25 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
 {
 }
 
+TaskParallelPtr AdjustmentModuleActivator::getChannelsReadTasks()
+{
+    TaskParallelPtr parallelTasks = TaskParallel::create();
+    for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
+        TaskSequencePtr perChannelTasks = TaskSequence::create();
+        perChannelTasks->appendTask(TaskRmReadChannelAlias::create(m_activationData, channelName,
+                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
+        perChannelTasks->appendTask(TaskChannelRegisterNotifier::create(m_activationData, channelName,
+                                                                        TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
+        perChannelTasks->appendTask(TaskChannelReadRanges::create(m_activationData, channelName,
+                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
+        parallelTasks->addTask(std::move(perChannelTasks));
+    }
+    return parallelTasks;
+}
+
 void AdjustmentModuleActivator::activate()
 {
-    if(!checkExternalVeinComponents())
+    if(!checkExternalVeinComponents()) // this should not be here
         return;
     openRMConnection();
 
@@ -40,8 +55,7 @@ void AdjustmentModuleActivator::activate()
                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceErrMsg); }));
 
     TaskParallelPtr parallelTasks = TaskParallel::create();
-    for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
-        QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
+    for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
         parallelTasks->addTask(TaskReadChannelIpPort::create(m_rmInterface, channelName, m_activationData->m_chnPortHash,
                                                              TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceInfoErrMsg); }));
     }
@@ -50,20 +64,7 @@ void AdjustmentModuleActivator::activate()
                                                                         getConfData()->m_AdjChannelList,
                                                                         getConfData()->m_PCBSocket.m_sIP,
                                                                         CONNECTION_TIMEOUT));
-    parallelTasks = TaskParallel::create();
-    for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
-        TaskSequencePtr perChannelTasks = TaskSequence::create();
-
-        QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
-        perChannelTasks->appendTask(TaskRmReadChannelAlias::create(m_activationData, channelName,
-                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
-        perChannelTasks->appendTask(TaskChannelRegisterNotifier::create(m_activationData, channelName,
-                                                                        TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
-        perChannelTasks->appendTask(TaskChannelReadRanges::create(m_activationData, channelName,
-                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
-        parallelTasks->addTask(std::move(perChannelTasks));
-    }
-    m_activationTasks.appendTask(std::move(parallelTasks));
+    m_activationTasks.appendTask(getChannelsReadTasks());
 
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
@@ -79,8 +80,7 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
 void AdjustmentModuleActivator::deactivate()
 {
     TaskParallelPtr parallelTasks = TaskParallel::create();
-    for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
-        QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
+    for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
         parallelTasks->addTask(TaskChannelUnregisterNotifier::create(m_activationData, channelName,
                                                                      TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
     }
@@ -109,7 +109,6 @@ bool AdjustmentModuleActivator::checkExternalVeinComponents()
     for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
         // we test if all configured actual value data exist
         QString chn = getConfData()->m_AdjChannelList.at(i);
-
         adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
         if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
             ok = false;

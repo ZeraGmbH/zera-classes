@@ -3,12 +3,11 @@
 
 #include "adjustmentmodulecommon.h"
 #include "adjustmentmodule.h"
-#include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
 #include "rminterface.h"
 #include "pcbinterface.h"
 #include "tasksequence.h"
-#include <functional>
+#include "taskparallel.h"
 
 namespace ADJUSTMENTMODULE
 {
@@ -20,9 +19,9 @@ public:
     AdjustmentModuleActivator(cAdjustmentModule* module,
                               std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                               AdjustmentModuleActivateDataPtr activationData);
-public slots:
     void activate();
     void deactivate();
+    TaskParallelPtr getChannelsReadTasks();
 signals:
     void sigActivationReady();
     void sigDeactivationReady();
@@ -33,12 +32,11 @@ private slots:
     void deactivateContinue(bool ok);
 private:
     cAdjustmentModuleConfigData *getConfData();
+    void openRMConnection();
+    bool checkExternalVeinComponents(); // TODO remove from here -> get rid of module / configuration
 
     TaskSequence m_activationTasks;
     TaskSequence m_deactivationTasks;
-
-    void openRMConnection();
-    bool checkExternalVeinComponents();
 
     AdjustmentModuleActivateDataPtr m_activationData;
     cAdjustmentModule* m_module;
