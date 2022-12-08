@@ -115,6 +115,7 @@ public slots:
 
 private:
     cAdjustmentModuleConfigData* getConfData();
+    bool checkExternalVeinComponents();
     void setInterfaceValidation();
     cAdjustmentModule* m_pModule;
     Zera::Server::cPCBInterface* m_currAdjustPCBInterface;
