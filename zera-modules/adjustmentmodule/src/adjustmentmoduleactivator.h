@@ -8,7 +8,6 @@
 #include "rminterface.h"
 #include "pcbinterface.h"
 #include "tasksequence.h"
-#include "blockedwaitinterface.h"
 #include <functional>
 
 namespace ADJUSTMENTMODULE
