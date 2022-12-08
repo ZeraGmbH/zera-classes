@@ -21,7 +21,7 @@ public:
                               AdjustmentModuleActivateDataPtr activationData);
     void activate();
     void deactivate();
-    TaskParallelPtr getChannelsReadTasks();
+    TaskCompositePtr getChannelsReadTasks();
 signals:
     void sigActivationReady();
     void sigDeactivationReady();
