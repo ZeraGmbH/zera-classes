@@ -10,6 +10,7 @@
 #include "taskrmcheckchannelsavail.h"
 #include "taskreadchannelipport.h"
 #include "taskchannelpcbconnectionsstart.h"
+#include "taskrmreadchannelalias.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -59,6 +60,14 @@ void AdjustmentModuleActivator::activate()
                                                                         getConfData()->m_AdjChannelList,
                                                                         getConfData()->m_PCBSocket.m_sIP,
                                                                         CONNECTION_TIMEOUT));
+    parallelTasks = TaskParallel::create();
+    for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
+        QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
+        parallelTasks->addTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
+                                                                 TaskRmReadChannelAlias::create(m_activationData, channelName),
+                                                                 [&]{ emit errMsg(readaliasErrMsg); }));
+    }
+    m_activationTasks.appendTask(std::move(parallelTasks));
 
     connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
     m_activationTasks.start();
@@ -71,8 +80,6 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
     connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
     for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
         QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
-        if(!readChannelAlias(channelName)->wait())
-            return;
         if(!regNotifier(channelName)->wait())
             return;
         if(!readRangeList(channelName)->wait())
@@ -94,7 +101,6 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
-    setUpReadChannelAliasHandler();
     setUpRegisterNotifierHandler();
     setUpRangeListHandler();
 
@@ -135,29 +141,6 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface->setClientSmart(m_rmClient);
 }
 
-BlockedWaitInterfacePtr AdjustmentModuleActivator::readChannelAlias(QString channelName)
-{
-    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
-                                                                    this, &AdjustmentModuleActivator::activationError,
-                                                                    TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_activationData->m_adjustChannelInfoHash[channelName]->m_pPCBInterface->getAlias(channelName)] = readchnalias;
-    return waiter;
-}
-
-void AdjustmentModuleActivator::setUpReadChannelAliasHandler()
-{
-    m_cmdFinishCallbacks[readchnalias] = [&](quint8 reply, QVariant answer) {
-        if (reply == ack) {
-            QString alias = answer.toString();
-            QString sysName = getConfData()->m_AdjChannelList.at(m_currentChannel);
-            m_activationData->m_AliasChannelHash[alias] = sysName;
-            m_activationData->m_adjustChannelInfoHash[sysName]->m_sAlias = alias;
-            emit activationContinue();
-        }
-        else
-            notifyActivationError(tr(readaliasErrMsg));
-    };
-}
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::regNotifier(QString channelName)
 {
