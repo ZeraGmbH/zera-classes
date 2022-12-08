@@ -662,7 +662,7 @@ void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData(QVariant)
 void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
-        m_activator.getChannelsReadTasks();
+        qWarning("Interrupt received");
     }
     else {
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface
