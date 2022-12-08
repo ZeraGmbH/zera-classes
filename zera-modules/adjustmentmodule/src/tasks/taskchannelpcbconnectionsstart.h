@@ -11,16 +11,10 @@ class TaskChannelPcbConnectionsStart : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(
-            AdjustmentModuleActivateDataPtr activateData,
-            QStringList channels,
-            QString pcbServerIp,
-            int connectTimeout);
-    TaskChannelPcbConnectionsStart(
-            AdjustmentModuleActivateDataPtr activateData,
-            QStringList channels,
-            QString pcbServerIp,
-            int connectTimeout);
+    static std::unique_ptr<TaskComposite> create(AdjustmentModuleActivateDataPtr activateData,QStringList channels,
+                                                 QString pcbServerIp, int connectTimeout);
+    TaskChannelPcbConnectionsStart(AdjustmentModuleActivateDataPtr activateData, QStringList channels,
+                                   QString pcbServerIp, int connectTimeout);
     void start() override;
 private:
     AdjustmentModuleActivateDataPtr m_activationData;
