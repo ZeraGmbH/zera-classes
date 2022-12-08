@@ -39,12 +39,6 @@ namespace ADJUSTMENTMODULE
 
 enum adjustmentmoduleCmds
 {
-    sendrmident,
-    readresourcetypes,
-    readresource,
-    readresourceinfo,
-    readchnalias,
-    readrangelist,
     adjustcomputation,
     adjuststorage,
     setadjustgainstatus,
@@ -64,8 +58,6 @@ enum adjustmentmoduleCmds
     setclampadjustmentdata,
     getauthorizationstatus,
     sendtransparentcmd,
-    registerNotifier,
-    unregisterNotifiers
 };
 
 
