@@ -12,7 +12,6 @@ void test_adjustmentmoduleactivator::instantiate()
 {
     using namespace ADJUSTMENTMODULE;
     AdjustmentModuleActivateDataPtr activationData = std::make_shared<AdjustmentModuleActivateData>();
-    Zera::Proxy::cProxy* proxy= Zera::Proxy::cProxy::getInstance();
 
     std::shared_ptr<cAdjustmentModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();
 
@@ -26,7 +25,5 @@ void test_adjustmentmoduleactivator::instantiate()
     pConfiguration->setConfig(xmlConfigData, xsdpath);
 
     VeinStorage::VeinHash storagesystem;
-    cAdjustmentModule module(1, proxy, 3, &storagesystem);
-
-    AdjustmentModuleActivator obj(&module, pConfiguration, activationData);
+    AdjustmentModuleActivator obj(pConfiguration, activationData);
 }

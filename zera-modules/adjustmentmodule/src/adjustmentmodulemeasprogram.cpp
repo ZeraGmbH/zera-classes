@@ -17,7 +17,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module),
     m_commonActivationObjects(std::make_shared<AdjustmentModuleActivateData>()),
-    m_activator(module, pConfiguration, m_commonActivationObjects)
+    m_activator(pConfiguration, m_commonActivationObjects)
 {
     m_bAuthorized = true; // per default we are authorized
 
@@ -133,6 +133,8 @@ void cAdjustmentModuleMeasProgram::stop()
 
 void cAdjustmentModuleMeasProgram::activate()
 {
+    if(!checkExternalVeinComponents())
+        return;
     m_activator.activate();
 }
 
@@ -144,6 +146,39 @@ void cAdjustmentModuleMeasProgram::deactivate()
 cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
 {
     return qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+}
+
+bool cAdjustmentModuleMeasProgram::checkExternalVeinComponents()
+{
+    bool ok = true;
+    adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
+    if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+        ok = false;
+    adjInfo = getConfData()->m_ReferenceFrequency;
+    if (!m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
+        ok = false;
+
+    for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
+        // we test if all configured actual value data exist
+        QString chn = getConfData()->m_AdjChannelList.at(i);
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
+        const QString errMagTemplate = "Entity %1 / componen %2 not found";
+        if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            ok = false;
+        }
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
+        if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            ok = false;
+        }
+        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
+        if (adjInfo.m_bAvail && !m_pModule->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent)) {
+            emit errMsg(errMagTemplate.arg(adjInfo.m_nEntity).arg(adjInfo.m_sComponent));
+            ok = false;
+        }
+    }
+    return ok;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
@@ -627,7 +662,7 @@ void cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData(QVariant)
 void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if (msgnr == 0) { // 0 was reserved for async. messages
-        qWarning("interrupt received");
+        m_activator.getChannelsReadTasks();
     }
     else {
         // because rangemodulemeasprogram, adjustment and rangeobsermatic share the same dsp interface

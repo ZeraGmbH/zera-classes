@@ -17,11 +17,9 @@
 namespace ADJUSTMENTMODULE
 {
 
-AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
-                                                     std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
+AdjustmentModuleActivator::AdjustmentModuleActivator(std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
                                                      AdjustmentModuleActivateDataPtr activationData) :
     m_activationData(activationData),
-    m_module(module),
     m_configuration(pConfiguration)
 {
 }
@@ -44,8 +42,6 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
 
 void AdjustmentModuleActivator::activate()
 {
-    if(!checkExternalVeinComponents()) // this should not be here
-        return;
     openRMConnection();
 
     m_activationTasks.appendTask(TaskServerConnectionStart::create(m_rmClient, CONNECTION_TIMEOUT));
@@ -94,32 +90,6 @@ void AdjustmentModuleActivator::deactivateContinue(bool ok)
     if(!ok)
         return;
     emit sigDeactivationReady();
-}
-
-bool AdjustmentModuleActivator::checkExternalVeinComponents()
-{
-    bool ok = true;
-    adjInfoType adjInfo = getConfData()->m_ReferenceAngle;
-    if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-        ok = false;
-    adjInfo = getConfData()->m_ReferenceFrequency;
-    if (!m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-        ok = false;
-
-    for (int i = 0; ok && i<getConfData()->m_nAdjustmentChannelCount; i++) {
-        // we test if all configured actual value data exist
-        QString chn = getConfData()->m_AdjChannelList.at(i);
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->amplitudeAdjInfo;
-        if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            ok = false;
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->phaseAdjInfo;
-        if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            ok = false;
-        adjInfo = getConfData()->m_AdjChannelInfoHash[chn]->offsetAdjInfo;
-        if (adjInfo.m_bAvail && !m_module->m_pStorageSystem->hasStoredValue(adjInfo.m_nEntity, adjInfo.m_sComponent))
-            ok = false;
-    }
-    return ok;
 }
 
 void AdjustmentModuleActivator::openRMConnection()
