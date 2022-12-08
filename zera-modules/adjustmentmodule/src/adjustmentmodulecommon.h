@@ -8,8 +8,7 @@
 #include <QHash>
 #include <memory>
 
-namespace ADJUSTMENTMODULE
-{
+namespace ADJUSTMENTMODULE {
 
 class cAdjustChannelInfo;
 

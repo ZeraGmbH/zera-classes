@@ -42,8 +42,6 @@ private:
 
     void openRMConnection();
 
-    BlockedWaitInterfacePtr regNotifier(QString channelName);
-    void setUpRegisterNotifierHandler();
     BlockedWaitInterfacePtr readRangeList(QString channelName);
     void setUpRangeListHandler();
     bool checkExternalVeinComponents();
