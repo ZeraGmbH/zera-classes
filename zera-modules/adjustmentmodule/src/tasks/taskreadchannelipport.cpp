@@ -1,7 +1,7 @@
 #include "taskreadchannelipport.h"
 #include "reply.h"
 
-std::unique_ptr<TaskReadChannelIpPort> TaskReadChannelIpPort::create(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString, int> &channelPortHash)
+std::unique_ptr<TaskComposite> TaskReadChannelIpPort::create(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString, int> &channelPortHash)
 {
     return std::make_unique<TaskReadChannelIpPort>(rmInterface, channelName, channelPortHash);
 }

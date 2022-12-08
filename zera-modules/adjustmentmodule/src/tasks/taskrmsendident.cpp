@@ -5,7 +5,7 @@
 namespace ADJUSTMENTMODULE
 {
 
-std::unique_ptr<TaskRmSendIdent> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface)
+std::unique_ptr<TaskComposite> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface)
 {
     return std::make_unique<TaskRmSendIdent>(rmInterface);
 }

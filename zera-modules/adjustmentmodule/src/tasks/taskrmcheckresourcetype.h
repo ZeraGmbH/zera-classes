@@ -9,7 +9,7 @@ class TaskRmCheckResourceType : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskRmCheckResourceType> create(
+    static std::unique_ptr<TaskComposite> create(
             Zera::Server::RMInterfacePtr rmInterface,
             QString checkResourceType = "SENSE");
     TaskRmCheckResourceType(

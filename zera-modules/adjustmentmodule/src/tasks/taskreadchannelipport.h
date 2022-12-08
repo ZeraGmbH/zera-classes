@@ -8,7 +8,7 @@ class TaskReadChannelIpPort : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskReadChannelIpPort> create(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString,int> &channelPortHash);
+    static std::unique_ptr<TaskComposite> create(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString,int> &channelPortHash);
     TaskReadChannelIpPort(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString,int> &channelPortHash);
     void start() override;
 private slots:

@@ -10,7 +10,7 @@ TaskRmReadChannelAlias::TaskRmReadChannelAlias(AdjustmentModuleActivateDataPtr a
 {
 }
 
-std::unique_ptr<TaskRmReadChannelAlias> TaskRmReadChannelAlias::create(AdjustmentModuleActivateDataPtr activationData, QString channelName)
+std::unique_ptr<TaskComposite> TaskRmReadChannelAlias::create(AdjustmentModuleActivateDataPtr activationData, QString channelName)
 {
     return std::make_unique<TaskRmReadChannelAlias>(activationData, channelName);
 }

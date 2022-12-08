@@ -9,7 +9,7 @@ class TaskRmCheckChannelsAvail : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskRmCheckChannelsAvail> create(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels);
+    static std::unique_ptr<TaskComposite> create(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels);
     TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels);
     void start() override;
 private slots:
