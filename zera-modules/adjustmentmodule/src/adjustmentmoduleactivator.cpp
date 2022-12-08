@@ -12,6 +12,7 @@
 #include "taskchannelpcbconnectionsstart.h"
 #include "taskrmreadchannelalias.h"
 #include "taskchannelregisternotifier.h"
+#include "taskchannelreadranges.h"
 
 #include "errormessages.h"
 #include "reply.h"
@@ -63,6 +64,8 @@ void AdjustmentModuleActivator::activate()
                                                                    TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
         perChannelTasks->appendTask(TaskChannelRegisterNotifier::create(m_activationData, channelName,
                                                                         TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
+        perChannelTasks->appendTask(TaskChannelReadRanges::create(m_activationData, channelName,
+                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
         parallelTasks->addTask(std::move(perChannelTasks));
     }
     m_activationTasks.appendTask(std::move(parallelTasks));
@@ -76,11 +79,6 @@ void AdjustmentModuleActivator::activateContinue(bool ok)
     if(!ok)
         return;
     connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &AdjustmentModuleActivator::catchInterfaceAnswer);
-    for(m_currentChannel = 0; m_currentChannel<getConfData()->m_nAdjustmentChannelCount; m_currentChannel++) {
-        QString channelName = getConfData()->m_AdjChannelList.at(m_currentChannel); // current channel m0/m1/
-        if(!readRangeList(channelName)->wait())
-            return;
-    }
     m_bActive = true;
     emit sigActivationReady();
 }
@@ -97,8 +95,6 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::setupServerResponseHandlers()
 {
-    setUpRangeListHandler();
-
     setUpUnregisterNotifierHandler();
 }
 
@@ -134,28 +130,6 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = m_proxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
-}
-
-
-BlockedWaitInterfacePtr AdjustmentModuleActivator::readRangeList(QString channelName)
-{
-    BlockedWaitInterfacePtr waiter = std::make_unique<SignalWaiter>(this, &AdjustmentModuleActivator::activationContinue,
-                                                                    this, &AdjustmentModuleActivator::activationError,
-                                                                    TRANSACTION_TIMEOUT);
-    m_MsgNrCmdList[m_activationData->m_adjustChannelInfoHash[channelName]->m_pPCBInterface->getRangeList(channelName)] = readrangelist;
-    return waiter;
-}
-
-void AdjustmentModuleActivator::setUpRangeListHandler()
-{
-    m_cmdFinishCallbacks[readrangelist] = [&](quint8 reply, QVariant answer) {
-        if (reply == ack) {
-            m_activationData->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(m_currentChannel)]->m_sRangelist = answer.toStringList();
-            emit activationContinue();
-        }
-        else
-            notifyActivationError(tr(readrangelistErrMsg));
-    };
 }
 
 BlockedWaitInterfacePtr AdjustmentModuleActivator::unregNotifier(int pcbInterfaceNo)
