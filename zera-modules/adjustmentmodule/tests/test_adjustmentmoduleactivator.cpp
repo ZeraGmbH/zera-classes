@@ -28,5 +28,5 @@ void test_adjustmentmoduleactivator::instantiate()
     VeinStorage::VeinHash storagesystem;
     cAdjustmentModule module(1, proxy, 3, &storagesystem);
 
-    AdjustmentModuleActivator obj(&module, proxy, pConfiguration, activationData);
+    AdjustmentModuleActivator obj(&module, pConfiguration, activationData);
 }
