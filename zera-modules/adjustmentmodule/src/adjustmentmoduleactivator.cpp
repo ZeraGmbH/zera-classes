@@ -26,7 +26,7 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(std::shared_ptr<cBaseModule
 
 TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
 {
-    TaskParallelPtr parallelTasks = TaskParallel::create();
+    TaskParallelPtr channelReadTasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
         TaskSequencePtr perChannelTasks = TaskSequence::create();
         perChannelTasks->appendTask(TaskRmReadChannelAlias::create(m_activationData, channelName,
@@ -35,9 +35,9 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
                                                                         TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
         perChannelTasks->appendTask(TaskChannelReadRanges::create(m_activationData, channelName,
                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
-        parallelTasks->addTask(std::move(perChannelTasks));
+        channelReadTasks->addTask(std::move(perChannelTasks));
     }
-    return parallelTasks;
+    return channelReadTasks;
 }
 
 void AdjustmentModuleActivator::activate()
