@@ -42,8 +42,6 @@ private:
 
     void openRMConnection();
 
-    BlockedWaitInterfacePtr readChannelAlias(QString channelName);
-    void setUpReadChannelAliasHandler();
     BlockedWaitInterfacePtr regNotifier(QString channelName);
     void setUpRegisterNotifierHandler();
     BlockedWaitInterfacePtr readRangeList(QString channelName);
