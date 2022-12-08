@@ -23,7 +23,6 @@ void test_tasksequence::startEmpty()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
     QCOMPARE(TaskForTest::getOkCount(), 0);
@@ -44,7 +43,6 @@ void test_tasksequence::oneOk()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
     QCOMPARE(TaskForTest::getOkCount(), 1);
@@ -66,7 +64,6 @@ void test_tasksequence::twoOk()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
     QCOMPARE(TaskForTest::getOkCount(), 2);
@@ -87,7 +84,6 @@ void test_tasksequence::oneError()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
     QCOMPARE(TaskForTest::getOkCount(), 0);
@@ -109,7 +105,6 @@ void test_tasksequence::twoError()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
     QCOMPARE(TaskForTest::getOkCount(), 0);
@@ -132,7 +127,6 @@ void test_tasksequence::threeError()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
     QCOMPARE(TaskForTest::getOkCount(), 0);
@@ -154,7 +148,6 @@ void test_tasksequence::oneErrorOneOk()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
     QCOMPARE(TaskForTest::getOkCount(), 0);
@@ -177,7 +170,6 @@ void test_tasksequence::oneOkOneErrorOneOk()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
     QCOMPARE(TaskForTest::getOkCount(), 1);
