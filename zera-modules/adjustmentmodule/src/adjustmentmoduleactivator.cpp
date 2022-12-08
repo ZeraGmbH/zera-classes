@@ -2,7 +2,6 @@
 #include "adjustmentmodule.h"
 #include "adjustmentmodulemeasprogram.h"
 #include "adjustmentmoduleconfiguration.h"
-#include "tasktimeoutdecorator.h"
 #include "taskparallel.h"
 #include "taskserverconnectionstart.h"
 #include "taskrmsendident.h"
@@ -14,10 +13,7 @@
 #include "taskchannelregisternotifier.h"
 #include "taskchannelreadranges.h"
 #include "taskchannelunregisternotifier.h"
-
 #include "errormessages.h"
-#include "reply.h"
-#include "signalwaiter.h"
 
 namespace ADJUSTMENTMODULE
 {
