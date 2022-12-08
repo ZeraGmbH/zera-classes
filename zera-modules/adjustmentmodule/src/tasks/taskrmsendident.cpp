@@ -23,9 +23,8 @@ void TaskRmSendIdent::start()
 
 void TaskRmSendIdent::onRmAnswer(quint32 msgnr, quint8 reply)
 {
-    if(msgnr == m_msgnr) {
+    if(msgnr == m_msgnr)
         finishTask(reply == ack);
-    }
 }
 
 }
