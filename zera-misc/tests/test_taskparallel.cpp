@@ -44,7 +44,6 @@ void test_taskparallel::startErrorTask()
             errCount++;
     });
     task->start();
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
     QCOMPARE(TaskForTest::getOkCount(), 0);
@@ -67,7 +66,6 @@ void test_taskparallel::startPassImmediateDelayed()
     });
     task->start();
 
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 0);
     QCOMPARE(TaskForTest::getOkCount(), 1);
@@ -98,7 +96,6 @@ void test_taskparallel::startThreeImmediateMiddleFail()
     });
     task->start();
 
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
     QCOMPARE(TaskForTest::getOkCount(), 2);
@@ -122,7 +119,6 @@ void test_taskparallel::startThreeImmediateAllOk()
     });
     task->start();
 
-    QCoreApplication::processEvents();
     QCOMPARE(okCount, 1);
     QCOMPARE(errCount, 0);
     QCOMPARE(TaskForTest::getOkCount(), 3);
