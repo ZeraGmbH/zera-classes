@@ -26,7 +26,7 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(cAdjustmentModule *module,
 {
 }
 
-TaskParallelPtr AdjustmentModuleActivator::getChannelsReadTasks()
+TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
 {
     TaskParallelPtr parallelTasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
