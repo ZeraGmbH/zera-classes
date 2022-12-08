@@ -29,5 +29,4 @@ void test_adjustmentmoduleactivator::instantiate()
     cAdjustmentModule module(1, proxy, 3, &storagesystem);
 
     AdjustmentModuleActivator obj(&module, proxy, pConfiguration, activationData);
-    obj.setupServerResponseHandlers();
 }
