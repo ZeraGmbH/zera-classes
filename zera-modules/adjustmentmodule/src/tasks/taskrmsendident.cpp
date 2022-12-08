@@ -1,6 +1,6 @@
 #include "taskrmsendident.h"
 #include "reply.h"
-#include "errormessages.h"
+#include "tasktimeoutdecorator.h"
 
 namespace ADJUSTMENTMODULE
 {
@@ -8,6 +8,11 @@ namespace ADJUSTMENTMODULE
 std::unique_ptr<TaskComposite> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface)
 {
     return std::make_unique<TaskRmSendIdent>(rmInterface);
+}
+
+std::unique_ptr<TaskComposite> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface, int timeout, std::function<void ()> additionalErrorHandler)
+{
+    return TaskTimeoutDecorator::wrapTimeout(timeout, create(rmInterface), additionalErrorHandler);
 }
 
 TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface) :

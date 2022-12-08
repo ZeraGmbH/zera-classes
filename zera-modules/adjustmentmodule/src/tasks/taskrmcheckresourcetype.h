@@ -9,12 +9,10 @@ class TaskRmCheckResourceType : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(
-            Zera::Server::RMInterfacePtr rmInterface,
-            QString checkResourceType = "SENSE");
-    TaskRmCheckResourceType(
-            Zera::Server::RMInterfacePtr rmInterface,
-            QString checkResourceType);
+    static std::unique_ptr<TaskComposite> create(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType = "SENSE");
+    static std::unique_ptr<TaskComposite> create(Zera::Server::RMInterfacePtr rmInterface, int timeout,
+                                                 std::function<void()> additionalErrorHandler = []{}, QString checkResourceType = "SENSE");
+    TaskRmCheckResourceType( Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType);
     void start() override;
 private slots:
     void onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer);

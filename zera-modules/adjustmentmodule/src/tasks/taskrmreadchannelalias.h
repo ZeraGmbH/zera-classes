@@ -12,6 +12,8 @@ class TaskRmReadChannelAlias : public TaskComposite
     Q_OBJECT
 public:
     static std::unique_ptr<TaskComposite> create(AdjustmentModuleActivateDataPtr activationData, QString channelName);
+    static std::unique_ptr<TaskComposite> create(AdjustmentModuleActivateDataPtr activationData, QString channelName,
+                                                 int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskRmReadChannelAlias(AdjustmentModuleActivateDataPtr activationData, QString channelName);
     void start() override;
 private slots:

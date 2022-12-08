@@ -1,9 +1,16 @@
 #include "taskreadchannelipport.h"
+#include "tasktimeoutdecorator.h"
 #include "reply.h"
 
 std::unique_ptr<TaskComposite> TaskReadChannelIpPort::create(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString, int> &channelPortHash)
 {
     return std::make_unique<TaskReadChannelIpPort>(rmInterface, channelName, channelPortHash);
+}
+
+std::unique_ptr<TaskComposite> TaskReadChannelIpPort::create(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString, int> &channelPortHash,
+                                                             int timeout, std::function<void ()> additionalErrorHandler)
+{
+    return TaskTimeoutDecorator::wrapTimeout(timeout, create(rmInterface, channelName, channelPortHash), additionalErrorHandler);
 }
 
 TaskReadChannelIpPort::TaskReadChannelIpPort(Zera::Server::RMInterfacePtr rmInterface, QString channelName, QHash<QString, int> &channelPortHash) :

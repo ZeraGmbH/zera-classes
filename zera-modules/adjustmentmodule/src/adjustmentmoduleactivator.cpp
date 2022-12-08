@@ -36,24 +36,17 @@ void AdjustmentModuleActivator::activate()
         return;
     openRMConnection();
 
-    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(CONNECTION_TIMEOUT,
-                                                                   TaskServerConnectionStart::create(m_rmClient)));
-    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                   TaskRmSendIdent::create(m_rmInterface),
-                                                                   [&]{ emit errMsg(rmidentErrMSG); }));
-    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                   TaskRmCheckResourceType::create(m_rmInterface),
-                                                                   [&]{ emit errMsg(resourcetypeErrMsg); }));
-    m_activationTasks.appendTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                   TaskRmCheckChannelsAvail::create(m_rmInterface, getConfData()->m_AdjChannelList),
-                                                                   [&]{ emit errMsg(resourceErrMsg); }));
+    m_activationTasks.appendTask(TaskServerConnectionStart::create(m_rmClient, CONNECTION_TIMEOUT));
+    m_activationTasks.appendTask(TaskRmSendIdent::create(m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
+    m_activationTasks.appendTask(TaskRmCheckResourceType::create(m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourcetypeErrMsg); }));
+    m_activationTasks.appendTask(TaskRmCheckChannelsAvail::create(m_rmInterface, getConfData()->m_AdjChannelList,
+                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceErrMsg); }));
 
     TaskParallelPtr parallelTasks = TaskParallel::create();
     for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
         QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
-        parallelTasks->addTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                 TaskReadChannelIpPort::create(m_rmInterface, channelName, m_activationData->m_chnPortHash),
-                                                                 [&]{ emit errMsg(resourceInfoErrMsg); }));
+        parallelTasks->addTask(TaskReadChannelIpPort::create(m_rmInterface, channelName, m_activationData->m_chnPortHash,
+                                                             TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceInfoErrMsg); }));
     }
     m_activationTasks.appendTask(std::move(parallelTasks));
     m_activationTasks.appendTask(TaskChannelPcbConnectionsStart::create(m_activationData,
@@ -63,9 +56,8 @@ void AdjustmentModuleActivator::activate()
     parallelTasks = TaskParallel::create();
     for(int currChannel = 0; currChannel<getConfData()->m_nAdjustmentChannelCount; currChannel++) {
         QString channelName = getConfData()->m_AdjChannelList.at(currChannel); // current channel m0/m1/
-        parallelTasks->addTask(TaskTimeoutDecorator::wrapTimeout(TRANSACTION_TIMEOUT,
-                                                                 TaskRmReadChannelAlias::create(m_activationData, channelName),
-                                                                 [&]{ emit errMsg(readaliasErrMsg); }));
+        parallelTasks->addTask(TaskRmReadChannelAlias::create(m_activationData, channelName,
+                                                              TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
     }
     m_activationTasks.appendTask(std::move(parallelTasks));
 
