@@ -1,7 +1,7 @@
 #include "taskrmcheckchannelsavail.h"
 #include "reply.h"
 
-std::unique_ptr<TaskRmCheckChannelsAvail> TaskRmCheckChannelsAvail::create(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels)
+std::unique_ptr<TaskComposite> TaskRmCheckChannelsAvail::create(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels)
 {
     return std::make_unique<TaskRmCheckChannelsAvail>(rmInterface, expectedChannels);
 }

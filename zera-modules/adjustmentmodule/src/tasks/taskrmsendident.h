@@ -10,7 +10,7 @@ class TaskRmSendIdent : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskRmSendIdent> create(Zera::Server::RMInterfacePtr rmInterface);
+    static std::unique_ptr<TaskComposite> create(Zera::Server::RMInterfacePtr rmInterface);
     TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface);
     void start() override;
 private slots:

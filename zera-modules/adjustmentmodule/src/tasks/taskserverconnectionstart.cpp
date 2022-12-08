@@ -1,7 +1,7 @@
 #include "taskserverconnectionstart.h"
 #include "proxy.h"
 
-std::unique_ptr<TaskServerConnectionStart> TaskServerConnectionStart::create(Zera::Proxy::ProxyClientPtr client)
+std::unique_ptr<TaskComposite> TaskServerConnectionStart::create(Zera::Proxy::ProxyClientPtr client)
 {
     return std::make_unique<TaskServerConnectionStart>(client);
 }

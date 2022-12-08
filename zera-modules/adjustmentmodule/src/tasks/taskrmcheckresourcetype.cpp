@@ -1,7 +1,7 @@
 #include "taskrmcheckresourcetype.h"
 #include "reply.h"
 
-std::unique_ptr<TaskRmCheckResourceType> TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType)
+std::unique_ptr<TaskComposite> TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType)
 {
     return std::make_unique<TaskRmCheckResourceType>(rmInterface, checkResourceType);
 }
