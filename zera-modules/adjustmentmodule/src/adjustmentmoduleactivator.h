@@ -41,9 +41,6 @@ private:
     TaskSequence m_activationTasks;
 
     void openRMConnection();
-
-    BlockedWaitInterfacePtr readRangeList(QString channelName);
-    void setUpRangeListHandler();
     bool checkExternalVeinComponents();
 
     BlockedWaitInterfacePtr unregNotifier(int pcbInterfaceNo);
