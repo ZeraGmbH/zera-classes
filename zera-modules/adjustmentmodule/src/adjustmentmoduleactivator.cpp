@@ -63,9 +63,9 @@ void AdjustmentModuleActivator::activate()
         perChannelTasks->appendTask(TaskRmReadChannelAlias::create(m_activationData, channelName,
                                                                    TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
         perChannelTasks->appendTask(TaskChannelRegisterNotifier::create(m_activationData, channelName,
-                                                                        TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
+                                                                        TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
         perChannelTasks->appendTask(TaskChannelReadRanges::create(m_activationData, channelName,
-                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
+                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
         parallelTasks->addTask(std::move(perChannelTasks));
     }
     m_activationTasks.appendTask(std::move(parallelTasks));
