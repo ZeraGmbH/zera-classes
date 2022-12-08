@@ -1,4 +1,5 @@
 #include "taskrmreadchannelalias.h"
+#include "tasktimeoutdecorator.h"
 #include "reply.h"
 #include "adjustmentmodulemeasprogram.h"
 
@@ -13,6 +14,11 @@ TaskRmReadChannelAlias::TaskRmReadChannelAlias(AdjustmentModuleActivateDataPtr a
 std::unique_ptr<TaskComposite> TaskRmReadChannelAlias::create(AdjustmentModuleActivateDataPtr activationData, QString channelName)
 {
     return std::make_unique<TaskRmReadChannelAlias>(activationData, channelName);
+}
+
+std::unique_ptr<TaskComposite> TaskRmReadChannelAlias::create(AdjustmentModuleActivateDataPtr activationData, QString channelName, int timeout, std::function<void ()> additionalErrorHandler)
+{
+    return TaskTimeoutDecorator::wrapTimeout(timeout, create(activationData, channelName), additionalErrorHandler);
 }
 
 void TaskRmReadChannelAlias::start()
