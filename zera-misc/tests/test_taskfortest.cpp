@@ -156,22 +156,3 @@ void test_taskfortest::taskId()
     QVERIFY(taskId1 != taskId2);
 }
 
-void test_taskfortest::errorHandler()
-{
-    int errorCount = 0;
-    TaskForTest task1(0, false, [&]{
-        errorCount++;
-    });
-    task1.start();
-    QCOMPARE(errorCount, 1);
-}
-
-void test_taskfortest::noerrorHandler()
-{
-    int errorCount = 0;
-    TaskForTest task1(0, true, [&]{
-        errorCount++;
-    });
-    task1.start();
-    QCOMPARE(errorCount, 0);
-}

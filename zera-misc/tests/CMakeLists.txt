@@ -71,4 +71,5 @@ SETUP_TESTS(
     test_tasksequence
     test_timeoutdecorator
     test_taskparallel
+    test_taskextraerrorhandler
 )
