@@ -15,7 +15,6 @@ public:
 private slots:
     void onFinishTask(bool ok, int taskId);
 private:
-    void addTask(TaskCompositePtr task);
     void startTasksDirectConnectionSafe();
 
     std::list<TaskCompositePtr> m_addedTasks;

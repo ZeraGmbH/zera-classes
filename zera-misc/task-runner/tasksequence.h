@@ -15,7 +15,6 @@ public:
 private slots:
     void onFinishCurr(bool ok);
 private:
-    void appendTask(TaskCompositePtr task);
     bool next();
     void setNext();
     void cleanup();
