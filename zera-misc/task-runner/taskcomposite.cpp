@@ -1,8 +1,7 @@
 #include "taskcomposit.h"
 
-TaskComposite::TaskComposite(std::function<void()> additionalErrorHandler) :
-    m_taskId(getNextTaskId()),
-    m_additionalErrorHandler(additionalErrorHandler)
+TaskComposite::TaskComposite() :
+    m_taskId(getNextTaskId())
 {
 }
 
@@ -13,8 +12,6 @@ int TaskComposite::getTaskId() const
 
 void TaskComposite::finishTask(bool ok)
 {
-    if(!ok)
-        m_additionalErrorHandler();
     emit sigFinish(ok, m_taskId);
 }
 

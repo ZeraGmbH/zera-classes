@@ -1,17 +1,16 @@
 #include "taskfortest.h"
 #include <QTest>
 
-TaskCompositePtr TaskForTest::create(int delayMs, bool finishOk, std::function<void ()> additionalErrorHandler)
+TaskCompositePtr TaskForTest::create(int delayMs, bool finishOk)
 {
-    return std::make_unique<TaskForTest>(delayMs, finishOk, additionalErrorHandler);
+    return std::make_unique<TaskForTest>(delayMs, finishOk);
 }
 
 int TaskForTest::m_finishOkCount = 0;
 int TaskForTest::m_finishErrCount = 0;
 int TaskForTest::m_dtorCount = 0;
 
-TaskForTest::TaskForTest(int delayMs, bool finishOk, std::function<void ()> additionalErrorHandler) :
-    TaskComposite(additionalErrorHandler),
+TaskForTest::TaskForTest(int delayMs, bool finishOk) :
     m_delayMs(delayMs),
     m_finishOk(finishOk)
 {

@@ -36,6 +36,7 @@ set(SOURCES
     intelhexfileio.cpp
     intelhexfileio_p.cpp
     task-runner/taskcomposite.cpp
+    task-runner/taskextraerrorhandler.cpp
     task-runner/taskparallel.cpp
     task-runner/tasksequence.cpp
     task-runner/tasktimeoutdecorator.cpp
@@ -46,6 +47,7 @@ set(HEADER
     intelhexfileio.h
     intelhexfileio_p.h
     task-runner/taskcomposit.h
+    task-runner/taskextraerrorhandler.h
     task-runner/taskparallel.h
     task-runner/tasksequence.h
     task-runner/tasktimeoutdecorator.h
