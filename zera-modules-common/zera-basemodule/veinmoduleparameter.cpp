@@ -69,6 +69,8 @@ void cVeinModuleParameter::setSCPIInfo(cSCPIInfo *scpiinfo)
 
 void cVeinModuleParameter::setValidator(cParamValidator *validator)
 {
+    if(m_pValidator)
+        delete m_pValidator;
     m_pValidator = validator;
 }
 
