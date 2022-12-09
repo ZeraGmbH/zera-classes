@@ -53,7 +53,7 @@ void AdjustmentModuleActivator::activate()
     TaskParallelPtr parallelTasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
         parallelTasks->addSubTask(TaskReadChannelIpPort::create(m_rmInterface, channelName, m_activationData->m_chnPortHash,
-                                                             TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceInfoErrMsg); }));
+                                                                TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceInfoErrMsg); }));
     }
     m_activationTasks.addSubTask(std::move(parallelTasks));
     m_activationTasks.addSubTask(TaskChannelPcbConnectionsStart::create(m_activationData,
@@ -78,7 +78,7 @@ void AdjustmentModuleActivator::deactivate()
     TaskParallelPtr parallelTasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
         parallelTasks->addSubTask(TaskChannelUnregisterNotifier::create(m_activationData, channelName,
-                                                                     TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
+                                                                        TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
     }
     m_deactivationTasks.addSubTask(std::move(parallelTasks));
     connect(&m_deactivationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::deactivateContinue);
