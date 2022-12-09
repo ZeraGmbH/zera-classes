@@ -25,5 +25,4 @@ private:
 
 typedef std::unique_ptr<TaskComposite> TaskCompositePtr;
 
-
 #endif // TASKCOMPOSIT_H
