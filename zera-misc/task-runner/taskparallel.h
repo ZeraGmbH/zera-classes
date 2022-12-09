@@ -1,20 +1,21 @@
 #ifndef TASKPARALLEL_H
 #define TASKPARALLEL_H
 
-#include "taskcomposit.h"
+#include "taskcontainer.h"
 #include <list>
 #include <unordered_map>
 
-class TaskParallel : public TaskComposite
+class TaskParallel : public TaskContainer
 {
     Q_OBJECT
 public:
     static std::unique_ptr<TaskParallel> create();
-    void addTask(TaskCompositePtr task);
     void start() override;
+    void addSubTask(TaskCompositePtr task) override;
 private slots:
     void onFinishTask(bool ok, int taskId);
 private:
+    void addTask(TaskCompositePtr task);
     void startTasksDirectConnectionSafe();
 
     std::list<TaskCompositePtr> m_addedTasks;

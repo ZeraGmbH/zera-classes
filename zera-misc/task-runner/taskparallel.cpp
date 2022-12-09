@@ -19,6 +19,11 @@ void TaskParallel::start()
         finishTask(true);
 }
 
+void TaskParallel::addSubTask(TaskCompositePtr task)
+{
+    addTask(std::move(task));
+}
+
 void TaskParallel::onFinishTask(bool ok, int taskId)
 {
     if(m_startedTasks.erase(taskId)) {

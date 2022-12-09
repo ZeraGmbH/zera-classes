@@ -18,6 +18,11 @@ void TaskSequence::start()
         finishTask(true);
 }
 
+void TaskSequence::addSubTask(TaskCompositePtr task)
+{
+    appendTask(std::move(task));
+}
+
 void TaskSequence::onFinishCurr(bool ok)
 {
     if(next() && ok)

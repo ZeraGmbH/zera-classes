@@ -20,7 +20,6 @@ public:
                               AdjustmentModuleActivateDataPtr activationData);
     void activate();
     void deactivate();
-    TaskCompositePtr getChannelsReadTasks();
 signals:
     void sigActivationReady();
     void sigDeactivationReady();
@@ -32,6 +31,7 @@ private slots:
 private:
     cAdjustmentModuleConfigData *getConfData();
     void openRMConnection();
+    TaskCompositePtr getChannelsReadTasks();
 
     TaskSequence m_activationTasks;
     TaskSequence m_deactivationTasks;

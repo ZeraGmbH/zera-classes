@@ -33,7 +33,7 @@ void test_tasksequence::startEmpty()
 void test_tasksequence::oneOk()
 {
     TaskSequencePtr task = TaskSequence::create();
-    task->appendTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
@@ -53,8 +53,8 @@ void test_tasksequence::oneOk()
 void test_tasksequence::twoOk()
 {
     TaskSequencePtr task = TaskSequence::create();
-    task->appendTask(TaskForTest::create(0, true));
-    task->appendTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
@@ -74,7 +74,7 @@ void test_tasksequence::twoOk()
 void test_tasksequence::oneError()
 {
     TaskSequencePtr task = TaskSequence::create();
-    task->appendTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
@@ -94,8 +94,8 @@ void test_tasksequence::oneError()
 void test_tasksequence::twoError()
 {
     TaskSequencePtr task = TaskSequence::create();
-    task->appendTask(TaskForTest::create(0, false));
-    task->appendTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
@@ -115,9 +115,9 @@ void test_tasksequence::twoError()
 void test_tasksequence::threeError()
 {
     TaskSequencePtr task = TaskSequence::create();
-    task->appendTask(TaskForTest::create(0, false));
-    task->appendTask(TaskForTest::create(0, false));
-    task->appendTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
@@ -137,8 +137,8 @@ void test_tasksequence::threeError()
 void test_tasksequence::oneErrorOneOk()
 {
     TaskSequencePtr task = TaskSequence::create();
-    task->appendTask(TaskForTest::create(0, false));
-    task->appendTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
@@ -158,9 +158,9 @@ void test_tasksequence::oneErrorOneOk()
 void test_tasksequence::oneOkOneErrorOneOk()
 {
     TaskSequencePtr task = TaskSequence::create();
-    task->appendTask(TaskForTest::create(0, true));
-    task->appendTask(TaskForTest::create(0, false));
-    task->appendTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {

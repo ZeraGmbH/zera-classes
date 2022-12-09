@@ -34,7 +34,7 @@ void test_taskparallel::startEmpty()
 void test_taskparallel::startErrorTask()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -54,8 +54,8 @@ void test_taskparallel::startErrorTask()
 void test_taskparallel::startPassImmediateDelayed()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addTask(TaskForTest::create(0, true));
-    task->addTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -83,9 +83,9 @@ void test_taskparallel::startPassImmediateDelayed()
 void test_taskparallel::startThreeImmediateMiddleFail()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addTask(TaskForTest::create(0, true));
-    task->addTask(TaskForTest::create(0, false));
-    task->addTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -106,9 +106,9 @@ void test_taskparallel::startThreeImmediateMiddleFail()
 void test_taskparallel::startThreeImmediateAllOk()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addTask(TaskForTest::create(0, true));
-    task->addTask(TaskForTest::create(0, true));
-    task->addTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -129,9 +129,9 @@ void test_taskparallel::startThreeImmediateAllOk()
 void test_taskparallel::startThreeDelayedMiddleFail()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addTask(TaskForTest::create(DELAY_TIME, true));
-    task->addTask(TaskForTest::create(DELAY_TIME, false));
-    task->addTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, false));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -153,9 +153,9 @@ void test_taskparallel::startThreeDelayedMiddleFail()
 void test_taskparallel::startThreeDelayedAllOk()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addTask(TaskForTest::create(DELAY_TIME, true));
-    task->addTask(TaskForTest::create(DELAY_TIME, true));
-    task->addTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {

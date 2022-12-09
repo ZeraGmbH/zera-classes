@@ -1,20 +1,21 @@
 #ifndef TASKSEQUENCE_H
 #define TASKSEQUENCE_H
 
-#include "taskcomposit.h"
+#include "taskcontainer.h"
 #include <list>
 
-class TaskSequence : public TaskComposite // for now abort on error
+class TaskSequence : public TaskContainer // for now abort on error
 {
     Q_OBJECT
 public:
     static std::unique_ptr<TaskSequence> create();
-    void appendTask(TaskCompositePtr task);
     void start() override;
+    void addSubTask(TaskCompositePtr task) override;
 
 private slots:
     void onFinishCurr(bool ok);
 private:
+    void appendTask(TaskCompositePtr task);
     bool next();
     void setNext();
     void cleanup();
