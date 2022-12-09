@@ -22,6 +22,9 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(std::shared_ptr<cBaseModule
     m_activationData(activationData),
     m_configuration(pConfiguration)
 {
+    connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::onActivateContinue);
+    connect(&m_deactivationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::onDeactivateContinue);
+    connect(&m_reloadRangesTasks, &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onReloadRanges);
 }
 
 TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
@@ -31,8 +34,6 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
         TaskSequencePtr perChannelTasks = TaskSequence::create();
         perChannelTasks->addSubTask(TaskRmReadChannelAlias::create(m_activationData, channelName,
                                                                    TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
-        perChannelTasks->addSubTask(TaskChannelRegisterNotifier::create(m_activationData, channelName,
-                                                                        TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
         perChannelTasks->addSubTask(TaskChannelReadRanges::create(m_activationData, channelName,
                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
         channelReadTasks->addSubTask(std::move(perChannelTasks));
@@ -61,12 +62,16 @@ void AdjustmentModuleActivator::activate()
                                                                         getConfData()->m_PCBSocket.m_sIP,
                                                                         CONNECTION_TIMEOUT));
     m_activationTasks.addSubTask(getChannelsReadTasks());
-
-    connect(&m_activationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::activateContinue);
+    parallelTasks = TaskParallel::create();
+    for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
+        parallelTasks->addSubTask(TaskChannelRegisterNotifier::create(m_activationData, channelName,
+                                                                      TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
+    }
+    m_activationTasks.addSubTask(std::move(parallelTasks));
     m_activationTasks.start();
 }
 
-void AdjustmentModuleActivator::activateContinue(bool ok)
+void AdjustmentModuleActivator::onActivateContinue(bool ok)
 {
     if(!ok)
         return;
@@ -81,15 +86,27 @@ void AdjustmentModuleActivator::deactivate()
                                                                         TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
     }
     m_deactivationTasks.addSubTask(std::move(parallelTasks));
-    connect(&m_deactivationTasks, &TaskSequence::sigFinish, this, &AdjustmentModuleActivator::deactivateContinue);
     m_deactivationTasks.start();
 }
 
-void AdjustmentModuleActivator::deactivateContinue(bool ok)
+void AdjustmentModuleActivator::reloadRanges()
+{
+    m_reloadRangesTasks.addSubTask(getChannelsReadTasks());
+    m_reloadRangesTasks.start();
+}
+
+void AdjustmentModuleActivator::onDeactivateContinue(bool ok)
 {
     if(!ok)
         return;
     emit sigDeactivationReady();
+}
+
+void AdjustmentModuleActivator::onReloadRanges(bool ok)
+{
+    if(!ok)
+        return;
+    emit sigRangesReloaded();
 }
 
 void AdjustmentModuleActivator::openRMConnection()

@@ -20,14 +20,17 @@ public:
                               AdjustmentModuleActivateDataPtr activationData);
     void activate();
     void deactivate();
+    void reloadRanges();
 signals:
     void sigActivationReady();
     void sigDeactivationReady();
+    void sigRangesReloaded();
     void errMsg(QVariant value, int dest = globalDest);
 
 private slots:
-    void activateContinue(bool ok);
-    void deactivateContinue(bool ok);
+    void onActivateContinue(bool ok);
+    void onDeactivateContinue(bool ok);
+    void onReloadRanges(bool ok);
 private:
     cAdjustmentModuleConfigData *getConfData();
     void openRMConnection();
@@ -35,6 +38,7 @@ private:
 
     TaskSequence m_activationTasks;
     TaskSequence m_deactivationTasks;
+    TaskSequence m_reloadRangesTasks;
 
     AdjustmentModuleActivateDataPtr m_activationData;
     std::shared_ptr<cBaseModuleConfiguration> m_configuration;
