@@ -205,6 +205,7 @@ private:
 private slots:
     void onActivationReady();
     void onDeactivationReady();
+    void onNewRanges();
 
     void computationStartCommand(QVariant var);
     void computationStart();
