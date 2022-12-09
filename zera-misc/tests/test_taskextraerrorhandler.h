@@ -7,8 +7,10 @@ class test_taskextraerrorhandler : public QObject
 {
     Q_OBJECT
 private slots:
+    void startEmpty();
     void handleError();
     void handleNoError();
+    void taskId();
 };
 
 #endif // TEST_TASKEXTRAERRORHANDLER_H
