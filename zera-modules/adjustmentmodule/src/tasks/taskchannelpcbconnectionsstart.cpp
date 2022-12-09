@@ -43,7 +43,7 @@ void TaskChannelPcbConnectionsStart::start()
             m_activationData->m_pcbInterfaceList.append(pcbInterface);
             pcbInterface->setClientSmart(pcbclient);
             adjustChannelInfo->m_pPCBInterface = pcbInterface;
-            m_pcbActivationTasks.addTask(TaskServerConnectionStart::create(pcbclient, m_connectTimeout));
+            m_pcbActivationTasks.addSubTask(TaskServerConnectionStart::create(pcbclient, m_connectTimeout));
         }
     }
     connect(&m_pcbActivationTasks, &TaskParallel::sigFinish, this, &TaskChannelPcbConnectionsStart::sigFinish);
