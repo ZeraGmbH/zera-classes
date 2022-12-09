@@ -47,6 +47,7 @@ set(HEADER
     intelhexfileio.h
     intelhexfileio_p.h
     task-runner/taskcomposit.h
+    task-runner/taskcontainer.h
     task-runner/taskextraerrorhandler.h
     task-runner/taskparallel.h
     task-runner/tasksequence.h
