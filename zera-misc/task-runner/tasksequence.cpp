@@ -5,11 +5,6 @@ std::unique_ptr<TaskSequence> TaskSequence::create()
     return std::make_unique<TaskSequence>();
 }
 
-void TaskSequence::appendTask(TaskCompositePtr task)
-{
-    m_tasks.push_front(std::move(task));
-}
-
 void TaskSequence::start()
 {
     if(next())
@@ -20,7 +15,7 @@ void TaskSequence::start()
 
 void TaskSequence::addSubTask(TaskCompositePtr task)
 {
-    appendTask(std::move(task));
+    m_tasks.push_front(std::move(task));
 }
 
 void TaskSequence::onFinishCurr(bool ok)

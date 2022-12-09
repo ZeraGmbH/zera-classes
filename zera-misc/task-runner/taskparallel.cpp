@@ -6,11 +6,6 @@ std::unique_ptr<TaskParallel> TaskParallel::create()
     return std::make_unique<TaskParallel>();
 }
 
-void TaskParallel::addTask(TaskCompositePtr task)
-{
-    m_addedTasks.push_back(std::move(task));
-}
-
 void TaskParallel::start()
 {
     if(!m_addedTasks.empty())
@@ -21,7 +16,7 @@ void TaskParallel::start()
 
 void TaskParallel::addSubTask(TaskCompositePtr task)
 {
-    addTask(std::move(task));
+    m_addedTasks.push_back(std::move(task));
 }
 
 void TaskParallel::onFinishTask(bool ok, int taskId)
