@@ -5,8 +5,6 @@
 
 QTEST_MAIN(test_taskfortest)
 
-static constexpr int DELAY_TIME = 10;
-
 void test_taskfortest::init()
 {
     TaskForTest::resetCounters();

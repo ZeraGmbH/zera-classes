@@ -18,6 +18,7 @@ private:
     bool next();
     void setNext();
     void cleanup();
+    bool m_started = false;
     std::list<TaskCompositePtr> m_tasks;
     TaskCompositePtr m_current;
     int m_taskId;

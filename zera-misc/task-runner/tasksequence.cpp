@@ -7,10 +7,13 @@ std::unique_ptr<TaskSequence> TaskSequence::create()
 
 void TaskSequence::start()
 {
-    if(next())
-        m_current->start();
-    else
-        finishTask(true);
+    if(!m_started) {
+        m_started = true;
+        if(next())
+            m_current->start();
+        else
+            finishTask(true);
+    }
 }
 
 void TaskSequence::addSubTask(TaskCompositePtr task)
@@ -46,6 +49,7 @@ void TaskSequence::setNext()
 
 void TaskSequence::cleanup()
 {
+    m_started = false;
     m_current = nullptr;
     m_tasks.clear();
 }

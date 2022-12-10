@@ -3,10 +3,7 @@
 #include "tasktimeoutdecorator.h"
 #include <QTest>
 
-
 QTEST_MAIN(test_timeoutdecorator)
-
-static constexpr int DELAY_TIME = 10;
 
 void test_timeoutdecorator::init()
 {

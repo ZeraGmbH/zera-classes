@@ -17,6 +17,8 @@ private slots:
     void oneErrorOneOk();
     void oneOkOneErrorOneOk();
     void taskId();
+    void onRunningAddAndStartOne();
+    void twoTransactions();
 };
 
 #endif // TEST_TASKSEQUENCE_H
