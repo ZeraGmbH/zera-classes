@@ -32,7 +32,6 @@ void test_taskparallel::startEmpty()
 void test_taskparallel::startErrorTask()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addSubTask(TaskForTest::create(0, false));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -41,6 +40,7 @@ void test_taskparallel::startErrorTask()
         else
             errCount++;
     });
+    task->addSubTask(TaskForTest::create(0, false));
     task->start();
     QCOMPARE(okCount, 0);
     QCOMPARE(errCount, 1);
@@ -52,8 +52,6 @@ void test_taskparallel::startErrorTask()
 void test_taskparallel::startPassImmediateDelayed()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addSubTask(TaskForTest::create(0, true));
-    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -62,6 +60,8 @@ void test_taskparallel::startPassImmediateDelayed()
         else
             errCount++;
     });
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     task->start();
 
     QCOMPARE(okCount, 0);
@@ -81,9 +81,6 @@ void test_taskparallel::startPassImmediateDelayed()
 void test_taskparallel::startThreeImmediateMiddleFail()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addSubTask(TaskForTest::create(0, true));
-    task->addSubTask(TaskForTest::create(0, false));
-    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -92,6 +89,9 @@ void test_taskparallel::startThreeImmediateMiddleFail()
         else
             errCount++;
     });
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, false));
+    task->addSubTask(TaskForTest::create(0, true));
     task->start();
 
     QCOMPARE(okCount, 0);
@@ -104,9 +104,6 @@ void test_taskparallel::startThreeImmediateMiddleFail()
 void test_taskparallel::startThreeImmediateAllOk()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addSubTask(TaskForTest::create(0, true));
-    task->addSubTask(TaskForTest::create(0, true));
-    task->addSubTask(TaskForTest::create(0, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -115,6 +112,9 @@ void test_taskparallel::startThreeImmediateAllOk()
         else
             errCount++;
     });
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
+    task->addSubTask(TaskForTest::create(0, true));
     task->start();
 
     QCOMPARE(okCount, 1);
@@ -127,9 +127,6 @@ void test_taskparallel::startThreeImmediateAllOk()
 void test_taskparallel::startThreeDelayedMiddleFail()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
-    task->addSubTask(TaskForTest::create(DELAY_TIME, false));
-    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -138,6 +135,9 @@ void test_taskparallel::startThreeDelayedMiddleFail()
         else
             errCount++;
     });
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, false));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     task->start();
 
     QTest::qWait(DELAY_TIME*1.5);
@@ -151,9 +151,6 @@ void test_taskparallel::startThreeDelayedMiddleFail()
 void test_taskparallel::startThreeDelayedAllOk()
 {
     TaskParallelPtr task = TaskParallel::create();
-    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
-    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
-    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     int okCount = 0;
     int errCount = 0;
     connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
@@ -162,6 +159,9 @@ void test_taskparallel::startThreeDelayedAllOk()
         else
             errCount++;
     });
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
     task->start();
 
     QTest::qWait(DELAY_TIME*1.5);
@@ -192,6 +192,62 @@ void test_taskparallel::taskId()
     task2.start();
     QCOMPARE(taskIdReceived2, taskId2);
     QVERIFY(taskId1 != taskId2);
+}
+
+void test_taskparallel::onRunningAddAndStartOne()
+{
+    TaskParallelPtr task = TaskParallel::create();
+    int okCount = 0;
+    int errCount = 0;
+    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+        if(ok)
+            okCount++;
+        else
+            errCount++;
+    });
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->start();
+
+    task->addSubTask(TaskForTest::create(0, true));
+    task->start();
+    QCOMPARE(TaskForTest::getOkCount(), 1);
+    QCOMPARE(TaskForTest::getErrCount(), 0);
+    QCOMPARE(TaskForTest::getDtorCount(), 1);
+    QCOMPARE(okCount, 0);
+    QCOMPARE(errCount, 0);
+
+    QTest::qWait(DELAY_TIME*1.5);
+
+    QCOMPARE(okCount, 1);
+    QCOMPARE(errCount, 0);
+    QCOMPARE(TaskForTest::getOkCount(), 2);
+    QCOMPARE(TaskForTest::getErrCount(), 0);
+    QCOMPARE(TaskForTest::getDtorCount(), 2);
+}
+
+void test_taskparallel::twoTransactions()
+{
+    TaskParallelPtr task = TaskParallel::create();
+    int okCount = 0;
+    int errCount = 0;
+    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+        if(ok)
+            okCount++;
+        else
+            errCount++;
+    });
+    task->addSubTask(TaskForTest::create(0, true));
+    task->start();
+    QCOMPARE(okCount, 1);
+    QCOMPARE(errCount, 0);
+
+    task->addSubTask(TaskForTest::create(0, true));
+    task->start();
+    QCOMPARE(okCount, 2);
+    QCOMPARE(errCount, 0);
+    QCOMPARE(TaskForTest::getOkCount(), 2);
+    QCOMPARE(TaskForTest::getErrCount(), 0);
+    QCOMPARE(TaskForTest::getDtorCount(), 2);
 }
 
 
