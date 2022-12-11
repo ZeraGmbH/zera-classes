@@ -179,18 +179,20 @@ void test_tasksequence::oneOkOneErrorOneOk()
 
 void test_tasksequence::taskId()
 {
-    TaskForTest task1(0, true);
+    TaskSequence task1;
+    task1.addSubTask(TaskForTest::create(0, true));
     int taskIdReceived1 = 42;
-    connect(&task1, &TaskForTest::sigFinish, [&](bool, int taskId) {
+    connect(&task1, &TaskSequence::sigFinish, [&](bool, int taskId) {
         taskIdReceived1 = taskId;
     } );
     int taskId1 = task1.getTaskId();
     task1.start();
     QCOMPARE(taskIdReceived1, taskId1);
 
-    TaskForTest task2(0, true);
+    TaskSequence task2;
+    task2.addSubTask(TaskForTest::create(0, true));
     int taskIdReceived2 = 67;
-    connect(&task2, &TaskForTest::sigFinish, [&](bool, int taskId) {
+    connect(&task2, &TaskSequence::sigFinish, [&](bool, int taskId) {
         taskIdReceived2 = taskId;
     } );
     int taskId2 = task2.getTaskId();

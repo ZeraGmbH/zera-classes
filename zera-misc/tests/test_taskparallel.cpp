@@ -174,18 +174,20 @@ void test_taskparallel::startThreeDelayedAllOk()
 
 void test_taskparallel::taskId()
 {
-    TaskForTest task1(0, true);
+    TaskParallel task1;
+    task1.addSubTask(TaskForTest::create(0, true));
     int taskIdReceived1 = 42;
-    connect(&task1, &TaskForTest::sigFinish, [&](bool, int taskId) {
+    connect(&task1, &TaskParallel::sigFinish, [&](bool, int taskId) {
         taskIdReceived1 = taskId;
     } );
     int taskId1 = task1.getTaskId();
     task1.start();
     QCOMPARE(taskIdReceived1, taskId1);
 
-    TaskForTest task2(0, true);
+    TaskParallel task2;
+    task2.addSubTask(TaskForTest::create(0, true));
     int taskIdReceived2 = 67;
-    connect(&task2, &TaskForTest::sigFinish, [&](bool, int taskId) {
+    connect(&task2, &TaskParallel::sigFinish, [&](bool, int taskId) {
         taskIdReceived2 = taskId;
     } );
     int taskId2 = task2.getTaskId();
