@@ -16,6 +16,7 @@ private slots:
     void startThreeDelayedMiddleFail();
     void startThreeDelayedAllOk();
     void taskId();
+    void startTwice();
     void onRunningAddAndStartOne();
     void twoTransactions();
 };

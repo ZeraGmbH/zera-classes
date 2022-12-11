@@ -10,7 +10,7 @@ void TaskParallel::start()
 {
     if(!m_addedTasks.empty())
         startTasksDirectConnectionSafe();
-    else
+    else if(m_startedTasks.empty())
         finishTask(true);
 }
 
