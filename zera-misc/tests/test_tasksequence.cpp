@@ -199,6 +199,35 @@ void test_tasksequence::taskId()
     QVERIFY(taskId1 != taskId2);
 }
 
+void test_tasksequence::startTwice()
+{
+    TaskSequencePtr task = TaskSequence::create();
+    int okCount = 0;
+    int errCount = 0;
+    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+        if(ok)
+            okCount++;
+        else
+            errCount++;
+    });
+    task->addSubTask(TaskForTest::create(DELAY_TIME, true));
+    task->start();
+    task->start();
+    QCOMPARE(TaskForTest::getOkCount(), 0);
+    QCOMPARE(TaskForTest::getErrCount(), 0);
+    QCOMPARE(TaskForTest::getDtorCount(), 0);
+    QCOMPARE(okCount, 0);
+    QCOMPARE(errCount, 0);
+
+    QTest::qWait(DELAY_TIME*1.5);
+
+    QCOMPARE(okCount, 1);
+    QCOMPARE(errCount, 0);
+    QCOMPARE(TaskForTest::getOkCount(), 1);
+    QCOMPARE(TaskForTest::getErrCount(), 0);
+    QCOMPARE(TaskForTest::getDtorCount(), 1);
+}
+
 void test_tasksequence::onRunningAddAndStartOne()
 {
     TaskSequencePtr task = TaskSequence::create();
