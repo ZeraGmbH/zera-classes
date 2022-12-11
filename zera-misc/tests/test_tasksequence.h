@@ -17,6 +17,7 @@ private slots:
     void oneErrorOneOk();
     void oneOkOneErrorOneOk();
     void taskId();
+    void startTwice();
     void onRunningAddAndStartOne();
     void twoTransactions();
 };
