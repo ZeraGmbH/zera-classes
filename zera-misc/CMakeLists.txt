@@ -21,6 +21,7 @@ if(ZC_BUILD_MODULES)
         service-interfaces/dspmeasdata.h
         service-interfaces/dspinterface.h
         service-interfaces/dspinterface_p.h
+        service-interfaces/reply.h
         service-interfaces/rminterface_p.h
         service-interfaces/secinterface_p.h
         ethadress_p.h
