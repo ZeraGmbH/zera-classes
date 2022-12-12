@@ -41,6 +41,9 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
 
 void AdjustmentModuleActivator::activate()
 {
+    for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
+        m_activationData->m_adjustChannelInfoHash[channelName] = std::make_unique<cAdjustChannelInfo>();
+    }
     openRMConnection();
     openPcbConnection();
 
