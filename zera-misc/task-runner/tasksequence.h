@@ -8,7 +8,7 @@ class TaskSequence : public TaskContainer // for now abort on error
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskSequence> create();
+    static std::unique_ptr<TaskContainer> create();
     void start() override;
     void addSubTask(TaskCompositePtr task) override;
 
@@ -23,7 +23,5 @@ private:
     TaskCompositePtr m_current;
     int m_taskId;
 };
-
-typedef std::unique_ptr<TaskSequence> TaskSequencePtr;
 
 #endif // TASKSEQUENCE_H

@@ -12,10 +12,10 @@ void test_taskparallel::init()
 
 void test_taskparallel::startEmpty()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -31,10 +31,10 @@ void test_taskparallel::startEmpty()
 
 void test_taskparallel::startErrorTask()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -51,10 +51,10 @@ void test_taskparallel::startErrorTask()
 
 void test_taskparallel::startPassImmediateDelayed()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -80,10 +80,10 @@ void test_taskparallel::startPassImmediateDelayed()
 
 void test_taskparallel::startThreeImmediateMiddleFail()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -103,10 +103,10 @@ void test_taskparallel::startThreeImmediateMiddleFail()
 
 void test_taskparallel::startThreeImmediateAllOk()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -126,10 +126,10 @@ void test_taskparallel::startThreeImmediateAllOk()
 
 void test_taskparallel::startThreeDelayedMiddleFail()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -150,10 +150,10 @@ void test_taskparallel::startThreeDelayedMiddleFail()
 
 void test_taskparallel::startThreeDelayedAllOk()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -198,10 +198,10 @@ void test_taskparallel::taskId()
 
 void test_taskparallel::startTwice()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -227,10 +227,10 @@ void test_taskparallel::startTwice()
 
 void test_taskparallel::onRunningAddAndStartOne()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -258,10 +258,10 @@ void test_taskparallel::onRunningAddAndStartOne()
 
 void test_taskparallel::twoTransactions()
 {
-    TaskParallelPtr task = TaskParallel::create();
+    TaskContainerPtr task = TaskParallel::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskParallel::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else

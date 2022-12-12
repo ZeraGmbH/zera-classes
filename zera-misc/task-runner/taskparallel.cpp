@@ -1,7 +1,7 @@
 #include "taskparallel.h"
 #include <QList>
 
-std::unique_ptr<TaskParallel> TaskParallel::create()
+std::unique_ptr<TaskContainer> TaskParallel::create()
 {
     return std::make_unique<TaskParallel>();
 }

@@ -9,7 +9,7 @@ class TaskParallel : public TaskContainer
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskParallel> create();
+    static std::unique_ptr<TaskContainer> create();
     void start() override;
     void addSubTask(TaskCompositePtr task) override;
 private slots:
@@ -21,7 +21,5 @@ private:
     std::unordered_map<int, TaskCompositePtr> m_startedTasks;
     bool m_allOk = false;
 };
-
-typedef std::unique_ptr<TaskParallel> TaskParallelPtr;
 
 #endif // TASKPARALLEL_H

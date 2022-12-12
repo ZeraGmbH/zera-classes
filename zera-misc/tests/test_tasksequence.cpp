@@ -13,10 +13,10 @@ void test_tasksequence::init()
 
 void test_tasksequence::startEmpty()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -32,10 +32,10 @@ void test_tasksequence::startEmpty()
 
 void test_tasksequence::oneOk()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -52,10 +52,10 @@ void test_tasksequence::oneOk()
 
 void test_tasksequence::twoOk()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -73,10 +73,10 @@ void test_tasksequence::twoOk()
 
 void test_tasksequence::oneError()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -93,10 +93,10 @@ void test_tasksequence::oneError()
 
 void test_tasksequence::twoError()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -114,10 +114,10 @@ void test_tasksequence::twoError()
 
 void test_tasksequence::threeError()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -136,10 +136,10 @@ void test_tasksequence::threeError()
 
 void test_tasksequence::oneErrorOneOk()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -157,10 +157,10 @@ void test_tasksequence::oneErrorOneOk()
 
 void test_tasksequence::oneOkOneErrorOneOk()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -203,10 +203,10 @@ void test_tasksequence::taskId()
 
 void test_tasksequence::startTwice()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -232,10 +232,10 @@ void test_tasksequence::startTwice()
 
 void test_tasksequence::onRunningAddAndStartOne()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else
@@ -263,10 +263,10 @@ void test_tasksequence::onRunningAddAndStartOne()
 
 void test_tasksequence::twoTransactions()
 {
-    TaskSequencePtr task = TaskSequence::create();
+    TaskContainerPtr task = TaskSequence::create();
     int okCount = 0;
     int errCount = 0;
-    connect(task.get(), &TaskSequence::sigFinish, [&](bool ok) {
+    connect(task.get(), &TaskContainer::sigFinish, [&](bool ok) {
         if(ok)
             okCount++;
         else

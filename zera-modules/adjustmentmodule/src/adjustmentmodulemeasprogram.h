@@ -102,6 +102,8 @@ public slots:
 
 private:
     cAdjustmentModuleConfigData* getConfData();
+    void openRmConnection();
+    void openPcbConnection();
     bool checkExternalVeinComponents();
     void setInterfaceValidation();
     void setAdjustEnvironment(QVariant var);
@@ -127,7 +129,7 @@ private:
     bool m_bAuthorized;
     QVariant receivedPar;
 
-    AdjustmentModuleActivateDataPtr m_commonActivationObjects;
+    AdjustmentModuleCommonPtr m_commonObjects;
     AdjustmentModuleActivator m_activator;
     QHash<quint32, int> m_MsgNrCmdList;
     QHash<QString, cAdjustIterators*> m_adjustIteratorHash;

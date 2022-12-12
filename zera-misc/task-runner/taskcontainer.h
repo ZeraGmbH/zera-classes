@@ -9,4 +9,6 @@ public:
     virtual void addSubTask(TaskCompositePtr task) = 0;
 };
 
+typedef std::unique_ptr<TaskContainer> TaskContainerPtr;
+
 #endif // TASKCONTAINER_H
