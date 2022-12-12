@@ -10,15 +10,15 @@ class TaskChannelReadRanges : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(AdjustmentModuleActivateDataPtr activationData, QString channelName);
-    static std::unique_ptr<TaskComposite> create(AdjustmentModuleActivateDataPtr activationData, QString channelName,
+    static std::unique_ptr<TaskComposite> create(AdjustmentModuleCommonPtr activationData, QString channelName);
+    static std::unique_ptr<TaskComposite> create(AdjustmentModuleCommonPtr activationData, QString channelName,
                                                  int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelReadRanges(AdjustmentModuleActivateDataPtr activationData, QString channelName);
+    TaskChannelReadRanges(AdjustmentModuleCommonPtr activationData, QString channelName);
     void start() override;
 private slots:
     void onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
-    AdjustmentModuleActivateDataPtr m_activationData;
+    AdjustmentModuleCommonPtr m_commonObjects;
     QString m_channelName;
     quint32 m_msgnr;
 };

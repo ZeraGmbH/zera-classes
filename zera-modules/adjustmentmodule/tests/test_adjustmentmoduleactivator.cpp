@@ -11,9 +11,9 @@ QTEST_MAIN(test_adjustmentmoduleactivator);
 void test_adjustmentmoduleactivator::instantiate()
 {
     using namespace ADJUSTMENTMODULE;
-    AdjustmentModuleActivateDataPtr activationData = std::make_shared<AdjustmentModuleActivateData>();
+    AdjustmentModuleCommonPtr activationData = std::make_shared<AdjustmentModuleCommon>();
 
-    std::shared_ptr<cAdjustmentModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();
+    /*std::shared_ptr<cAdjustmentModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();
 
     QString configPath = QString(MODMAN_CONFIG_PATH);
     QString xsdpath = configPath+ "/adjustmentmodule.xsd";
@@ -24,6 +24,9 @@ void test_adjustmentmoduleactivator::instantiate()
     QByteArray xmlConfigData = xmlFile.readAll();
     pConfiguration->setConfig(xmlConfigData, xsdpath);
 
-    VeinStorage::VeinHash storagesystem;
-    AdjustmentModuleActivator obj(pConfiguration, activationData);
+    VeinStorage::VeinHash storagesystem; */
+    cSocket rmSocket;
+    cSocket pcbSocket;
+    AdjustmentModuleActivator obj(QStringList() << "m0" << "m1"  << "m2",
+                                  activationData);
 }

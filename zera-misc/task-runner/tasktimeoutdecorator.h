@@ -23,6 +23,4 @@ private:
     QTimer m_timer;
 };
 
-typedef std::unique_ptr<TaskTimeoutDecorator> TaskTimeoutDecoratorPtr;
-
 #endif // TASKTIMEOUTDECORATOR_H

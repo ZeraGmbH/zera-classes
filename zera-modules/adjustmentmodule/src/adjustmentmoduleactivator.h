@@ -2,11 +2,11 @@
 #define ADJUSTMENTMODULEACTIVATOR_H
 
 #include "adjustmentmodulecommon.h"
-#include "basemoduleconfiguration.h"
 #include "rminterface.h"
 #include "pcbinterface.h"
 #include "tasksequence.h"
 #include "taskparallel.h"
+#include "socket.h"
 #include <veinmoduleerrorcomponent.h>
 
 namespace ADJUSTMENTMODULE
@@ -16,8 +16,8 @@ class AdjustmentModuleActivator : public QObject
 {
     Q_OBJECT
 public:
-    AdjustmentModuleActivator(std::shared_ptr<cBaseModuleConfiguration> pConfiguration,
-                              AdjustmentModuleActivateDataPtr activationData);
+    AdjustmentModuleActivator(QStringList configuredChannels,
+                              AdjustmentModuleCommonPtr activationData);
     void activate();
     void deactivate();
     void reloadRanges();
@@ -32,19 +32,15 @@ private slots:
     void onDeactivateContinue(bool ok);
     void onReloadRanges(bool ok);
 private:
-    cAdjustmentModuleConfigData *getConfData();
-    void openRMConnection();
-    void openPcbConnection();
     TaskCompositePtr getChannelsReadTasks();
+
+    QStringList m_configuredChannels;
 
     TaskSequence m_activationTasks;
     TaskSequence m_deactivationTasks;
     TaskSequence m_reloadRangesTasks;
 
-    AdjustmentModuleActivateDataPtr m_activationData;
-    std::shared_ptr<cBaseModuleConfiguration> m_configuration;
-    Zera::Server::RMInterfacePtr m_rmInterface;
-    Zera::Proxy::ProxyClientPtr m_rmClient;
+    AdjustmentModuleCommonPtr m_commonObjects;
 
     const int CONNECTION_TIMEOUT = 25000;
     const int TRANSACTION_TIMEOUT = 3000;
