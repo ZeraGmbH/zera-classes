@@ -34,6 +34,7 @@ private slots:
 private:
     cAdjustmentModuleConfigData *getConfData();
     void openRMConnection();
+    void openPcbConnection();
     TaskCompositePtr getChannelsReadTasks();
 
     TaskSequence m_activationTasks;
