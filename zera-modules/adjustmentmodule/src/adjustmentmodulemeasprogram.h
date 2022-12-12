@@ -98,9 +98,7 @@ public:
 
 signals:
     void computationContinue();
-    void computationDone();
     void storageContinue();
-    void storageDone();
     void adjustamplitudeContinue();
     void adjustoffsetContinue();
     void adjustphaseContinue();
@@ -167,16 +165,12 @@ private:
     // statemachine for computation of adjustment values
     QStateMachine m_computationMachine;
     QState m_computationStartState;
-    QState m_computationTestState;
     QFinalState m_computationFinishState;
-    int computationIt;
 
     // statemachine for storage of adjustment values
     QStateMachine m_storageMachine;
     QState m_storageStartState;
-    QState m_storageTestState;
     QFinalState m_storageFinishState;
-    int storageIt;
     int storageType;
 
     // statemachine for amplitude adjustment
@@ -209,12 +203,10 @@ private slots:
 
     void computationStartCommand(QVariant var);
     void computationStart();
-    void computationTest();
     void computationFinished();
 
     void storageStartCommand(QVariant var);
     void storageStart();
-    void storageTest();
     void storageFinished();
 
     void setAdjustGainStatusStartCommand(QVariant var);

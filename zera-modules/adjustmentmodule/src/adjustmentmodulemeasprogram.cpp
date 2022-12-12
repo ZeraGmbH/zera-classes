@@ -33,28 +33,20 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
             emit errMsg(readauthorizationErrMSG);
     };
 
-    m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationTestState);
-    m_computationTestState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationStartState);
-    m_computationTestState.addTransition(this, &cAdjustmentModuleMeasProgram::computationDone, &m_computationFinishState);
+    m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationFinishState);
     m_computationMachine.addState(&m_computationStartState);
-    m_computationMachine.addState(&m_computationTestState);
     m_computationMachine.addState(&m_computationFinishState);
     m_computationMachine.setInitialState(&m_computationStartState);
 
     connect(&m_computationStartState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationStart);
-    connect(&m_computationTestState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationTest);
     connect(&m_computationFinishState, &QState::entered, this, &cAdjustmentModuleMeasProgram::computationFinished);
 
-    m_storageStartState.addTransition(this, &cAdjustmentModuleMeasProgram::storageContinue, &m_storageTestState);
-    m_storageTestState.addTransition(this, &cAdjustmentModuleMeasProgram::storageContinue, &m_storageStartState);
-    m_storageTestState.addTransition(this, &cAdjustmentModuleMeasProgram::storageDone, &m_storageFinishState);
+    m_storageStartState.addTransition(this, &cAdjustmentModuleMeasProgram::storageContinue, &m_storageFinishState);
     m_storageMachine.addState(&m_storageStartState);
-    m_storageMachine.addState(&m_storageTestState);
     m_storageMachine.addState(&m_storageFinishState);
     m_storageMachine.setInitialState(&m_storageStartState);
 
     connect(&m_storageStartState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageStart);
-    connect(&m_storageTestState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageTest);
     connect(&m_storageFinishState, &QState::entered, this, &cAdjustmentModuleMeasProgram::storageFinished);
 
     m_adjustamplitudeGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustamplitudeContinue, &m_adjustamplitudeSetNodeState);
@@ -212,8 +204,8 @@ double cAdjustmentModuleMeasProgram::symAngle(double ang)
 
 void cAdjustmentModuleMeasProgram::onActivationReady()
 {
-    for(auto iter=m_commonActivationObjects->m_pcbInterfaceList.constBegin(); iter!=m_commonActivationObjects->m_pcbInterfaceList.constEnd(); iter++)
-        connect(*iter, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_commonActivationObjects->m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+            this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
     setInterfaceValidation();
 
     connect(&m_AuthTimer, &QTimer::timeout, this , [&]() {
@@ -474,25 +466,13 @@ bool cAdjustmentModuleMeasProgram::isAuthorized()
 
 void cAdjustmentModuleMeasProgram::computationStartCommand(QVariant var)
 {
-    if (var.toInt() == 1) {
-        computationIt = 0;
+    if (var.toInt() == 1)
         m_computationMachine.start();
-    }
 }
 
 void cAdjustmentModuleMeasProgram::computationStart()
 {
-    // we have to start adjustment coefficient computation for all particpating pcbservers
-    m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterfaceList.at(computationIt)->adjustComputation()] = adjustcomputation;
-}
-
-void cAdjustmentModuleMeasProgram::computationTest()
-{
-    computationIt++;
-    if (computationIt == m_commonActivationObjects->m_pcbInterfaceList.count())
-        emit computationDone();
-    else
-        emit computationContinue();
+    m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterface->adjustComputation()] = adjustcomputation;
 }
 
 void cAdjustmentModuleMeasProgram::computationFinished()
@@ -504,7 +484,6 @@ void cAdjustmentModuleMeasProgram::storageStartCommand(QVariant var)
 {
     int par = var.toInt();
     if ((par == 1) || (par == 2)) {
-        storageIt = 0;
         storageType = par;
         m_storageMachine.start();
     }
@@ -514,18 +493,9 @@ void cAdjustmentModuleMeasProgram::storageStart()
 {
     // we have to start saving adjustment data for all particpating pcbservers
     if (storageType == 1)
-        m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterfaceList.at(storageIt)->adjustStorage()] = adjuststorage;
+        m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterface->adjustStorage()] = adjuststorage;
     else
-        m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterfaceList.at(storageIt)->adjustStorageClamp()] = adjuststorage;
-}
-
-void cAdjustmentModuleMeasProgram::storageTest()
-{
-    storageIt++;
-    if (storageIt == m_commonActivationObjects->m_pcbInterfaceList.count())
-        emit storageDone();
-    else
-        emit storageContinue();
+        m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterface->adjustStorageClamp()] = adjuststorage;
 }
 
 void cAdjustmentModuleMeasProgram::storageFinished()
@@ -635,8 +605,8 @@ void cAdjustmentModuleMeasProgram::transparentDataSend2Port(QVariant var)
     QList<QString> sl = var.toString().split(',');
     if (sl.count() == 2) { // we expect a port number and a command
         int port = sl.at(0).toInt();
-        if (m_commonActivationObjects->m_portChannelHash.contains(port)) {
-            m_MsgNrCmdList[m_commonActivationObjects->m_adjustChannelInfoHash[m_commonActivationObjects->m_portChannelHash[port]]->m_pPCBInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
+        if (port == getConfData()->m_PCBSocket.m_nPort) {
+            m_MsgNrCmdList[m_commonActivationObjects->m_pcbInterface->transparentCommand(sl.at(1))] = sendtransparentcmd;
             return;
         }
     }

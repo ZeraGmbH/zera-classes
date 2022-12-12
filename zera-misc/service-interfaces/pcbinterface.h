@@ -116,7 +116,8 @@ private:
     cPCBInterfacePrivate *d_ptr;
 };
 
-}
-}
+typedef std::shared_ptr<cPCBInterface> PcbInterfacePtr;
+
+} }
 
 #endif // PCBINTERFACE_H

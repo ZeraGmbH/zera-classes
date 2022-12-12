@@ -6,8 +6,6 @@
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
 #include "taskrmcheckchannelsavail.h"
-#include "taskreadchannelipport.h"
-#include "taskchannelpcbconnectionsstart.h"
 #include "taskrmreadchannelalias.h"
 #include "taskchannelregisternotifier.h"
 #include "taskchannelreadranges.h"
@@ -44,25 +42,17 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
 void AdjustmentModuleActivator::activate()
 {
     openRMConnection();
+    openPcbConnection();
 
     m_activationTasks.addSubTask(TaskServerConnectionStart::create(m_rmClient, CONNECTION_TIMEOUT));
     m_activationTasks.addSubTask(TaskRmSendIdent::create(m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
     m_activationTasks.addSubTask(TaskRmCheckResourceType::create(m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourcetypeErrMsg); }));
     m_activationTasks.addSubTask(TaskRmCheckChannelsAvail::create(m_rmInterface, getConfData()->m_AdjChannelList,
                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceErrMsg); }));
+    m_activationTasks.addSubTask(TaskServerConnectionStart::create(m_activationData->m_pcbClient, CONNECTION_TIMEOUT));
 
-    TaskParallelPtr parallelTasks = TaskParallel::create();
-    for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
-        parallelTasks->addSubTask(TaskReadChannelIpPort::create(m_rmInterface, channelName, m_activationData->m_chnPortHash,
-                                                                TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceInfoErrMsg); }));
-    }
-    m_activationTasks.addSubTask(std::move(parallelTasks));
-    m_activationTasks.addSubTask(TaskChannelPcbConnectionsStart::create(m_activationData,
-                                                                        getConfData()->m_AdjChannelList,
-                                                                        getConfData()->m_PCBSocket.m_sIP,
-                                                                        CONNECTION_TIMEOUT));
     m_activationTasks.addSubTask(getChannelsReadTasks());
-    parallelTasks = TaskParallel::create();
+    TaskParallelPtr parallelTasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(getConfData()->m_AdjChannelList)) {
         parallelTasks->addSubTask(TaskChannelRegisterNotifier::create(m_activationData, channelName,
                                                                       TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
@@ -114,6 +104,13 @@ void AdjustmentModuleActivator::openRMConnection()
     m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
     m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_rmInterface->setClientSmart(m_rmClient);
+}
+
+void AdjustmentModuleActivator::openPcbConnection()
+{
+    m_activationData->m_pcbInterface = std::make_shared<Zera::Server::cPCBInterface>();
+    m_activationData->m_pcbClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_PCBSocket.m_sIP, getConfData()->m_PCBSocket.m_nPort);
+    m_activationData->m_pcbInterface->setClientSmart(m_activationData->m_pcbClient);
 }
 
 cAdjustmentModuleConfigData *AdjustmentModuleActivator::getConfData()
