@@ -42,6 +42,7 @@ set(SOURCES
     task-runner/tasksequence.cpp
     task-runner/tasktimeoutdecorator.cpp
     tasks-common/taskserverconnectionstart.cpp
+    tasks-common/taskrmcheckresourcetype.cpp
     tasks-common/taskrmsendident.cpp
     ${SOURCES_FOR_MODULE}
 )
@@ -56,6 +57,7 @@ set(HEADER
     task-runner/tasksequence.h
     task-runner/tasktimeoutdecorator.h
     tasks-common/taskserverconnectionstart.h
+    tasks-common/taskrmcheckresourcetype.h
     tasks-common/taskrmsendident.h
     ${HEADER_FOR_MODULE}
 )
