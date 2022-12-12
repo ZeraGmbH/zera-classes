@@ -24,8 +24,8 @@ TaskChannelReadRanges::TaskChannelReadRanges(AdjustmentModuleActivateDataPtr act
 
 void TaskChannelReadRanges::start()
 {
-    connect(m_activationData->m_adjustChannelInfoHash[m_channelName]->m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadRanges::onRmAnswer);
-    m_msgnr = m_activationData->m_adjustChannelInfoHash[m_channelName]->m_pPCBInterface->getRangeList(m_channelName);
+    connect(m_activationData->m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadRanges::onRmAnswer);
+    m_msgnr = m_activationData->m_pcbInterface->getRangeList(m_channelName);
 }
 
 void TaskChannelReadRanges::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)

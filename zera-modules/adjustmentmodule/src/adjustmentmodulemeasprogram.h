@@ -72,7 +72,6 @@ public:
 
     QString m_sAlias;
     QStringList m_sRangelist;
-    Zera::Server::cPCBInterface* m_pPCBInterface;
 };
 
 
@@ -115,8 +114,11 @@ private:
     cAdjustmentModuleConfigData* getConfData();
     bool checkExternalVeinComponents();
     void setInterfaceValidation();
+    void setAdjustEnvironment(QVariant var);
+    double cmpPhase(QVariant var);
+    double symAngle(double ang);
+
     cAdjustmentModule* m_pModule;
-    Zera::Server::cPCBInterface* m_currAdjustPCBInterface;
     // we use the following 9 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
@@ -134,12 +136,6 @@ private:
     QString m_AdjustComponent;
     bool m_bAuthorized;
     QVariant receivedPar;
-
-    void setAdjustEnvironment(QVariant var);
-    double cmpPhase(QVariant var);
-    double symAngle(double ang);
-
-    Zera::Proxy::cProxyClient* m_pRMClient;
 
     AdjustmentModuleActivateDataPtr m_commonActivationObjects;
     AdjustmentModuleActivator m_activator;

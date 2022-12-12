@@ -23,8 +23,8 @@ std::unique_ptr<TaskComposite> TaskRmReadChannelAlias::create(AdjustmentModuleAc
 
 void TaskRmReadChannelAlias::start()
 {
-    connect(m_activationData->m_adjustChannelInfoHash[m_channelName]->m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &TaskRmReadChannelAlias::onRmAnswer);
-    m_msgnr = m_activationData->m_adjustChannelInfoHash[m_channelName]->m_pPCBInterface->getAlias(m_channelName);
+    connect(m_activationData->m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskRmReadChannelAlias::onRmAnswer);
+    m_msgnr = m_activationData->m_pcbInterface->getAlias(m_channelName);
 }
 
 void TaskRmReadChannelAlias::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)

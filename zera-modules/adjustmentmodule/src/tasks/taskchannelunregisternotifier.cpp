@@ -24,8 +24,8 @@ TaskChannelUnregisterNotifier::TaskChannelUnregisterNotifier(AdjustmentModuleAct
 
 void TaskChannelUnregisterNotifier::start()
 {
-    connect(m_activationData->m_adjustChannelInfoHash[m_channelName]->m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelUnregisterNotifier::onRmAnswer);
-    m_msgnr = m_activationData->m_adjustChannelInfoHash[m_channelName]->m_pPCBInterface->unregisterNotifiers();
+    connect(m_activationData->m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelUnregisterNotifier::onRmAnswer);
+    m_msgnr = m_activationData->m_pcbInterface->unregisterNotifiers();
 }
 
 void TaskChannelUnregisterNotifier::onRmAnswer(quint32 msgnr, quint8 reply, QVariant)
