@@ -40,6 +40,7 @@ set(SOURCES
     task-runner/taskparallel.cpp
     task-runner/tasksequence.cpp
     task-runner/tasktimeoutdecorator.cpp
+    tasks-common/taskserverconnectionstart.cpp
     ${SOURCES_FOR_MODULE}
 )
 
@@ -52,6 +53,7 @@ set(HEADER
     task-runner/taskparallel.h
     task-runner/tasksequence.h
     task-runner/tasktimeoutdecorator.h
+    tasks-common/taskserverconnectionstart.h
     ${HEADER_FOR_MODULE}
 )
 
@@ -83,6 +85,7 @@ target_include_directories(zeramisc
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/task-runner>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common>
     )
 
 set_target_properties(zeramisc PROPERTIES VERSION ${PROJECT_VERSION})
