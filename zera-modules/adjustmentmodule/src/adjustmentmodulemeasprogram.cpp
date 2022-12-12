@@ -242,7 +242,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[sysName]->amplitudeAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
     }
@@ -254,7 +254,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[sysName]->offsetAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dOffsetValidator);
         }
     }
@@ -266,7 +266,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
         sysName = getConfData()->m_AdjChannelList.at(i);
         if (getConfData()->m_AdjChannelInfoHash[sysName]->phaseAdjInfo.m_bAvail) {
-            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+            adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
             adjValidatord->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, dValidator);
         }
     }
@@ -276,7 +276,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     cIntValidator iValidator = cIntValidator(0,255);
     cAdjustValidator3i* adjValidatori = new cAdjustValidator3i(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+        adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
         adjValidatori->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist, iValidator);
     }
     m_pPARAdjustGainStatus->setValidator(adjValidatori);
@@ -287,7 +287,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
 
     cAdjustValidator2* adjInitValidator = new cAdjustValidator2(this);
     for (int i = 0; i < getConfData()->m_nAdjustmentChannelCount; i++) {
-        adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)];
+        adjChnInfo = m_commonActivationObjects->m_adjustChannelInfoHash[getConfData()->m_AdjChannelList.at(i)].get();
         adjInitValidator->addValidator(adjChnInfo->m_sAlias, adjChnInfo->m_sRangelist);
     }
     m_pPARAdjustInit->setValidator(adjInitValidator);

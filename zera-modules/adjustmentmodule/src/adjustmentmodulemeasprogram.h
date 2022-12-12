@@ -65,16 +65,6 @@ class cAdjustmentModuleConfigData;
 class cAdjustmentModule;
 
 
-class cAdjustChannelInfo
-{
-public:
-    cAdjustChannelInfo(){}
-
-    QString m_sAlias;
-    QStringList m_sRangelist;
-};
-
-
 class cAdjustIterators
 {
 public:
