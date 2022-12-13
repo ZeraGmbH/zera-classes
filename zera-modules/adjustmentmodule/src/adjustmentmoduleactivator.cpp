@@ -21,16 +21,14 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChann
     m_configuredChannels(configuredChannels),
     m_commonObjects(activationData)
 {
-    connect(&m_activationTasks, &TaskContainer::sigFinish, this, &AdjustmentModuleActivator::onActivateContinue);
-    connect(&m_deactivationTasks, &TaskContainer::sigFinish, this, &AdjustmentModuleActivator::onDeactivateContinue);
+    connect(&m_activationTasks,   &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onActivateContinue);
+    connect(&m_deactivationTasks, &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onDeactivateContinue);
     connect(&m_reloadRangesTasks, &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onReloadRanges);
 }
 
 void AdjustmentModuleActivator::activate()
 {
-    for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        m_commonObjects->m_adjustChannelInfoHash[channelName] = std::make_unique<AdjustChannelInfo>();
-    }
+    initChannelInfoHash();
     addStaticActivationTasks();
     addDynChannelActivationTasks();
     m_activationTasks.start();
@@ -38,10 +36,10 @@ void AdjustmentModuleActivator::activate()
 
 void AdjustmentModuleActivator::onActivateContinue(bool ok)
 {
-    if(!ok)
-        return;
-    fillChannelAliasHash();
-    emit sigActivationReady();
+    if(ok) {
+        fillChannelAliasHash();
+        emit sigActivationReady();
+    }
 }
 
 void AdjustmentModuleActivator::deactivate()
@@ -52,9 +50,8 @@ void AdjustmentModuleActivator::deactivate()
 
 void AdjustmentModuleActivator::onDeactivateContinue(bool ok)
 {
-    if(!ok)
-        return;
-    emit sigDeactivationReady();
+    if(ok)
+        emit sigDeactivationReady();
 }
 
 void AdjustmentModuleActivator::reloadRanges()
@@ -65,12 +62,11 @@ void AdjustmentModuleActivator::reloadRanges()
 
 void AdjustmentModuleActivator::onReloadRanges(bool ok)
 {
-    if(!ok)
-        return;
-    emit sigRangesReloaded();
+    if(ok)
+        emit sigRangesReloaded();
 }
 
-void ADJUSTMENTMODULE::AdjustmentModuleActivator::addStaticActivationTasks()
+void AdjustmentModuleActivator::addStaticActivationTasks()
 {
     m_activationTasks.addSub(TaskServerConnectionStart::create(m_commonObjects->m_rmClient, CONNECTION_TIMEOUT));
     m_activationTasks.addSub(TaskRmSendIdent::create(m_commonObjects->m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
@@ -95,8 +91,8 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
         TaskContainerPtr perChannelTasks = TaskSequence::create();
         perChannelTasks->addSub(TaskChannelReadAlias::create(m_commonObjects->m_pcbInterface, channelName,
-                                                               m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sAlias,
-                                                               TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
+                                                             m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sAlias,
+                                                             TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
         perChannelTasks->addSub(TaskChannelReadRanges::create(m_commonObjects->m_pcbInterface, channelName,
                                                               m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sRangelist,
                                                               TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
@@ -108,10 +104,9 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
 TaskCompositePtr AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
 {
     TaskContainerPtr tasks = TaskParallel::create();
-    for(const auto &channelName : qAsConst(m_configuredChannels)) {
+    for(const auto &channelName : qAsConst(m_configuredChannels))
         tasks->addSub(TaskChannelRegisterNotifier::create(m_commonObjects->m_pcbInterface, channelName,
                                                           TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
-    }
     return tasks;
 }
 
@@ -121,12 +116,16 @@ TaskCompositePtr AdjustmentModuleActivator::getDeactivationTasks()
                                           TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); });
 }
 
-void AdjustmentModuleActivator::fillChannelAliasHash()
+void AdjustmentModuleActivator::initChannelInfoHash()
 {
-    for(const auto& entry : m_commonObjects->m_adjustChannelInfoHash) {
-       m_commonObjects->m_channelAliasHash[entry.second->m_sAlias] = entry.first;
-    }
+    for(const auto &channelName : qAsConst(m_configuredChannels))
+        m_commonObjects->m_adjustChannelInfoHash[channelName] = std::make_unique<AdjustChannelInfo>();
 }
 
+void AdjustmentModuleActivator::fillChannelAliasHash()
+{
+    for(const auto& entry : m_commonObjects->m_adjustChannelInfoHash)
+       m_commonObjects->m_channelAliasHash[entry.second->m_sAlias] = entry.first;
+}
 
 }
