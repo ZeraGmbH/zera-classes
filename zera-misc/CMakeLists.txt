@@ -42,10 +42,12 @@ set(SOURCES
     task-runner/taskparallel.cpp
     task-runner/tasksequence.cpp
     task-runner/tasktimeoutdecorator.cpp
+    tasks-common/taskchannelregisternotifier.cpp
     tasks-common/taskserverconnectionstart.cpp
     tasks-common/taskrmcheckchannelsavail.cpp
     tasks-common/taskrmcheckresourcetype.cpp
     tasks-common/taskrmsendident.cpp
+    tasks-common/taskunregisternotifier.cpp
     ${SOURCES_FOR_MODULE}
 )
 
@@ -59,10 +61,12 @@ set(HEADER
     task-runner/taskparallel.h
     task-runner/tasksequence.h
     task-runner/tasktimeoutdecorator.h
+    tasks-common/taskchannelregisternotifier.h
     tasks-common/taskserverconnectionstart.h
     tasks-common/taskrmcheckchannelsavail.h
     tasks-common/taskrmcheckresourcetype.h
     tasks-common/taskrmsendident.h
+    tasks-common/taskunregisternotifier.h
     ${HEADER_FOR_MODULE}
 )
 

@@ -1,5 +1,4 @@
 #include "taskchannelregisternotifier.h"
-#include "adjustmentmodulemeasprogram.h"
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
