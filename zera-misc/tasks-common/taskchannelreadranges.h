@@ -4,8 +4,6 @@
 #include "taskcomposit.h"
 #include "pcbinterface.h"
 
-namespace ADJUSTMENTMODULE {
-
 class TaskChannelReadRanges : public TaskComposite
 {
     Q_OBJECT
@@ -25,6 +23,5 @@ private:
     QStringList &m_targetRangeList;
     quint32 m_msgnr;
 };
-}
 
 #endif // TASKCHANNELREADRANGES_H
