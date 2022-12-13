@@ -72,4 +72,5 @@ SETUP_TESTS(
     test_timeoutdecorator
     test_taskparallel
     test_taskextraerrorhandler
+    test_taskimmediatelambda
 )
