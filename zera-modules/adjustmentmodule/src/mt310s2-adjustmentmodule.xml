@@ -39,8 +39,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN1</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC1</component>
                     </offsetinfo>
                 </chn1>
                 <chn2>
@@ -57,8 +57,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN2</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC2</component>
                     </offsetinfo>
                 </chn2>
                 <chn3>
@@ -75,8 +75,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN3</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC3</component>
                     </offsetinfo>
                 </chn3>
                 <chn4>
@@ -93,8 +93,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN4</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC4</component>
                     </offsetinfo>
                 </chn4>
                 <chn5>
@@ -111,8 +111,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN5</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC5</component>
                     </offsetinfo>
                 </chn5>
                 <chn6>
@@ -129,8 +129,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN6</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC6</component>
                     </offsetinfo>
                 </chn6>
                 <chn7>
@@ -147,8 +147,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN7</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC7</component>
                     </offsetinfo>
                 </chn7>
                 <chn8>
@@ -165,8 +165,8 @@
                     </phaseinfo>
                     <offsetinfo>
                         <avail>0</avail>
-                        <entity>1040</entity>
-                        <component>ACT_RMSPN8</component>
+                        <entity>1060</entity>
+                        <component>ACT_DC8</component>
                     </offsetinfo>
                 </chn8>
             </channel>
