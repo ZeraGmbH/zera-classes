@@ -106,7 +106,7 @@ TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getChannelsRegiste
 {
     TaskContainerPtr tasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        tasks->addSub(TaskChannelRegisterNotifier::create(m_commonObjects, channelName,
+        tasks->addSub(TaskChannelRegisterNotifier::create(m_commonObjects->m_pcbInterface, channelName,
                                                           TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
     }
     return tasks;
