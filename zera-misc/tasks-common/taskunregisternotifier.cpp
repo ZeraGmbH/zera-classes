@@ -26,7 +26,6 @@ void TaskUnregisterNotifier::start()
 
 void TaskUnregisterNotifier::onRmAnswer(quint32 msgnr, quint8 reply, QVariant)
 {
-    if(msgnr == m_msgnr) {
+    if(msgnr == m_msgnr)
         finishTask(reply == ack);
-    }
 }
