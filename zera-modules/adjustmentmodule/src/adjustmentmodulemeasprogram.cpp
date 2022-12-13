@@ -504,10 +504,9 @@ void cAdjustmentModuleMeasProgram::storageStartCommand(QVariant var)
 
 void cAdjustmentModuleMeasProgram::storageStart()
 {
-    // we have to start saving adjustment data for all particpating pcbservers
-    if (storageType == 1)
+    if (storageType == 1) // internal
         m_MsgNrCmdList[m_commonObjects->m_pcbInterface->adjustStorage()] = adjuststorage;
-    else
+    else                  // clamp
         m_MsgNrCmdList[m_commonObjects->m_pcbInterface->adjustStorageClamp()] = adjuststorage;
 }
 
