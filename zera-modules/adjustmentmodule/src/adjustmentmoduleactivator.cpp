@@ -29,7 +29,7 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChann
 void AdjustmentModuleActivator::activate()
 {
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        m_commonObjects->m_adjustChannelInfoHash[channelName] = std::make_unique<cAdjustChannelInfo>();
+        m_commonObjects->m_adjustChannelInfoHash[channelName] = std::make_unique<AdjustChannelInfo>();
     }
     addStaticActivationTasks();
     addDynChannelActivationTasks();

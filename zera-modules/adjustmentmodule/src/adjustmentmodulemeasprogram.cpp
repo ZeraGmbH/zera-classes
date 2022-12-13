@@ -197,7 +197,7 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
     m_sAdjustChannel = sl.at(0);
     m_sAdjustRange = sl.at(1);
     m_AdjustTargetValue = sl.at(2).toDouble();
-    m_sAdjustSysName = m_commonObjects->m_AliasChannelHash[m_sAdjustChannel];
+    m_sAdjustSysName = m_commonObjects->m_adjustChannelInfoHash[m_sAdjustChannel]->m_sAlias;
 }
 
 double cAdjustmentModuleMeasProgram::cmpPhase(QVariant var)
@@ -248,7 +248,7 @@ void cAdjustmentModuleMeasProgram::setInterfaceValidation()
     // we must set the validators for the adjustment commands now
     // we know the channel names and their ranges now
     // ....very special validator
-    cAdjustChannelInfo* adjChnInfo;
+    AdjustChannelInfo* adjChnInfo;
     QString sysName;
 
     // first the validator for amplitude adjustment
@@ -519,21 +519,21 @@ void cAdjustmentModuleMeasProgram::storageFinished()
 void cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects->m_AliasChannelHash[sl.at(0)];
+    QString sysName = m_commonObjects->m_adjustChannelInfoHash[sl.at(0)]->m_sAlias;
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setAdjustGainStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustgainstatus;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects->m_AliasChannelHash[sl.at(0)];
+    QString sysName = m_commonObjects->m_adjustChannelInfoHash[sl.at(0)]->m_sAlias;
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setAdjustPhaseStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustphasestatus;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects->m_AliasChannelHash[sl.at(0)];
+    QString sysName = m_commonObjects->m_adjustChannelInfoHash[sl.at(0)]->m_sAlias;
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setAdjustOffsetStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustoffsetstatus;
 }
 

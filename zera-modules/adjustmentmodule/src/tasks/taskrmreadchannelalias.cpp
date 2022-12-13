@@ -32,7 +32,6 @@ void TaskRmReadChannelAlias::onRmAnswer(quint32 msgnr, quint8 reply, QVariant an
     if(m_msgnr == msgnr) {
         if (reply == ack) {
             QString alias = answer.toString();
-            m_commonObjects->m_AliasChannelHash[alias] = m_channelName;
             m_commonObjects->m_adjustChannelInfoHash[m_channelName]->m_sAlias = alias;
             finishTask(true);
         }
