@@ -1,10 +1,10 @@
-#ifndef TASKRMREADCHANNELALIAS_H
-#define TASKRMREADCHANNELALIAS_H
+#ifndef TASKCHANNELREADALIAS_H
+#define TASKCHANNELREADALIAS_H
 
 #include "pcbinterface.h"
 #include "taskcomposit.h"
 
-class TaskRmReadChannelAlias : public TaskComposite
+class TaskChannelReadAlias : public TaskComposite
 {
     Q_OBJECT
 public:
@@ -13,7 +13,7 @@ public:
     static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
                                                  QString& targetAlias,
                                                  int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskRmReadChannelAlias(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName, QString& targetAlias);
+    TaskChannelReadAlias(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName, QString& targetAlias);
     void start() override;
 private slots:
     void onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -24,4 +24,4 @@ private:
     quint32 m_msgnr;
 };
 
-#endif // TASKRMREADCHANNELALIAS_H
+#endif // TASKCHANNELREADALIAS_H

@@ -6,7 +6,7 @@
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
 #include "taskrmcheckchannelsavail.h"
-#include "taskrmreadchannelalias.h"
+#include "taskchannelreadalias.h"
 #include "taskchannelregisternotifier.h"
 #include "taskchannelreadranges.h"
 #include "taskunregisternotifier.h"
@@ -93,7 +93,7 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
     TaskContainerPtr channelTasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
         TaskContainerPtr perChannelTasks = TaskSequence::create();
-        perChannelTasks->addSub(TaskRmReadChannelAlias::create(m_commonObjects->m_pcbInterface, channelName,
+        perChannelTasks->addSub(TaskChannelReadAlias::create(m_commonObjects->m_pcbInterface, channelName,
                                                                m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sAlias,
                                                                TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
         perChannelTasks->addSub(TaskChannelReadRanges::create(m_commonObjects->m_pcbInterface, channelName,
