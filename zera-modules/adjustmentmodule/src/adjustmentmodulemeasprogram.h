@@ -107,13 +107,10 @@ private:
     bool checkExternalVeinComponents();
     void setInterfaceValidation();
     void setAdjustEnvironment(QVariant var);
-    void fillChannelAliasHash();
     double cmpPhase(QVariant var);
     double symAngle(double ang);
 
     cAdjustmentModule* m_pModule;
-
-    QHash<QString/*UL1,UL2...*/, QString/*m0,m1*/> m_AliasChannelHash;
     // we use the following 9 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
