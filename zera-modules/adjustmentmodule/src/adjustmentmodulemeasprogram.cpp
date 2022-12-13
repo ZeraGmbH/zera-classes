@@ -197,7 +197,7 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
     m_sAdjustChannel = sl.at(0);
     m_sAdjustRange = sl.at(1);
     m_AdjustTargetValue = sl.at(2).toDouble();
-    m_sAdjustSysName = m_AliasChannelHash[m_sAdjustChannel];;
+    m_sAdjustSysName = m_AliasChannelHash[m_sAdjustChannel];
 }
 
 double cAdjustmentModuleMeasProgram::cmpPhase(QVariant var)
