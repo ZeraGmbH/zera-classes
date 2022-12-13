@@ -37,6 +37,7 @@ private:
     TaskCompositePtr getChannelsReadTasks();
     TaskCompositePtr getChannelsRegisterNotifyTasks();
     TaskCompositePtr getDeactivationTasks();
+    void fillChannelAliasHash();
 
     QStringList m_configuredChannels;
 

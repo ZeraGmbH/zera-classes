@@ -40,6 +40,7 @@ void AdjustmentModuleActivator::onActivateContinue(bool ok)
 {
     if(!ok)
         return;
+    fillChannelAliasHash();
     emit sigActivationReady();
 }
 
@@ -104,7 +105,7 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
     return channelTasks;
 }
 
-TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
+TaskCompositePtr AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
 {
     TaskContainerPtr tasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
@@ -114,10 +115,18 @@ TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getChannelsRegiste
     return tasks;
 }
 
-TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getDeactivationTasks()
+TaskCompositePtr AdjustmentModuleActivator::getDeactivationTasks()
 {
     return TaskUnregisterNotifier::create(m_commonObjects->m_pcbInterface,
                                           TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); });
 }
+
+void AdjustmentModuleActivator::fillChannelAliasHash()
+{
+    for(const auto& entry : m_commonObjects->m_adjustChannelInfoHash) {
+       m_commonObjects->m_channelAliasHash[entry.second->m_sAlias] = entry.first;
+    }
+}
+
 
 }
