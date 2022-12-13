@@ -24,7 +24,7 @@ struct AdjustmentModuleCommon
     Zera::Server::RMInterfacePtr m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;
 
-    std::unordered_map<QString, std::unique_ptr<AdjustChannelInfo>> m_adjustChannelInfoHash;
+    std::unordered_map<QString/* m0,m1..*/, std::unique_ptr<AdjustChannelInfo>> m_adjustChannelInfoHash;
 };
 
 typedef std::shared_ptr<AdjustmentModuleCommon> AdjustmentModuleCommonPtr;
