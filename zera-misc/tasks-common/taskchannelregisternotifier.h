@@ -4,8 +4,6 @@
 #include "taskcomposit.h"
 #include "pcbinterface.h"
 
-namespace ADJUSTMENTMODULE {
-
 class TaskChannelRegisterNotifier : public TaskComposite
 {
     Q_OBJECT
@@ -22,7 +20,5 @@ private:
     QString m_channelName;
     quint32 m_msgnr;
 };
-
-}
 
 #endif // TASKCHANNELREGISTERNOTIFIER_H

@@ -2,8 +2,6 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-namespace ADJUSTMENTMODULE {
-
 std::unique_ptr<TaskComposite> TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName)
 {
     return std::make_unique<TaskChannelRegisterNotifier>(pcbInterface, channelName);
@@ -34,4 +32,3 @@ void TaskChannelRegisterNotifier::onRmAnswer(quint32 msgnr, quint8 reply, QVaria
     }
 }
 
-}
