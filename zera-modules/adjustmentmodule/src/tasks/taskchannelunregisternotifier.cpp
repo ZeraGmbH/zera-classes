@@ -3,29 +3,27 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-namespace ADJUSTMENTMODULE {
-
-std::unique_ptr<TaskComposite> TaskChannelUnregisterNotifier::create(AdjustmentModuleCommonPtr activationData, QString channelName)
+std::unique_ptr<TaskComposite> TaskChannelUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName)
 {
-    return std::make_unique<TaskChannelUnregisterNotifier>(activationData, channelName);
+    return std::make_unique<TaskChannelUnregisterNotifier>(pcbInterface, channelName);
 }
 
-std::unique_ptr<TaskComposite> TaskChannelUnregisterNotifier::create(AdjustmentModuleCommonPtr activationData, QString channelName,
-                                                                   int timeout, std::function<void ()> additionalErrorHandler)
+std::unique_ptr<TaskComposite> TaskChannelUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
+                                                                     int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(activationData, channelName), additionalErrorHandler);
+    return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface, channelName), additionalErrorHandler);
 }
 
-TaskChannelUnregisterNotifier::TaskChannelUnregisterNotifier(AdjustmentModuleCommonPtr activationData, QString channelName) :
-    m_commonObjects(activationData),
+TaskChannelUnregisterNotifier::TaskChannelUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName) :
+    m_pcbInterface(pcbInterface),
     m_channelName(channelName)
 {
 }
 
 void TaskChannelUnregisterNotifier::start()
 {
-    connect(m_commonObjects->m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelUnregisterNotifier::onRmAnswer);
-    m_msgnr = m_commonObjects->m_pcbInterface->unregisterNotifiers();
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelUnregisterNotifier::onRmAnswer);
+    m_msgnr = m_pcbInterface->unregisterNotifiers();
 }
 
 void TaskChannelUnregisterNotifier::onRmAnswer(quint32 msgnr, quint8 reply, QVariant)
@@ -33,6 +31,4 @@ void TaskChannelUnregisterNotifier::onRmAnswer(quint32 msgnr, quint8 reply, QVar
     if(msgnr == m_msgnr) {
         finishTask(reply == ack);
     }
-}
-
 }
