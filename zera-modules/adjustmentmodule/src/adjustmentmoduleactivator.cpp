@@ -10,6 +10,7 @@
 #include "taskchannelregisternotifier.h"
 #include "taskchannelreadranges.h"
 #include "taskchannelunregisternotifier.h"
+#include "taskimmediatelambda.h"
 #include "errormessages.h"
 
 namespace ADJUSTMENTMODULE
@@ -25,39 +26,13 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChann
     connect(&m_reloadRangesTasks, &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onReloadRanges);
 }
 
-TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
-{
-    TaskContainerPtr channelReadTasks = TaskParallel::create();
-    for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        TaskContainerPtr perChannelTasks = TaskSequence::create();
-        perChannelTasks->addSubTask(TaskRmReadChannelAlias::create(m_commonObjects, channelName,
-                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
-        perChannelTasks->addSubTask(TaskChannelReadRanges::create(m_commonObjects, channelName,
-                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
-        channelReadTasks->addSubTask(std::move(perChannelTasks));
-    }
-    return channelReadTasks;
-}
-
 void AdjustmentModuleActivator::activate()
 {
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
         m_commonObjects->m_adjustChannelInfoHash[channelName] = std::make_unique<cAdjustChannelInfo>();
     }
-    m_activationTasks.addSubTask(TaskServerConnectionStart::create(m_commonObjects->m_rmClient, CONNECTION_TIMEOUT));
-    m_activationTasks.addSubTask(TaskRmSendIdent::create(m_commonObjects->m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
-    m_activationTasks.addSubTask(TaskRmCheckResourceType::create(m_commonObjects->m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourcetypeErrMsg); }));
-    m_activationTasks.addSubTask(TaskRmCheckChannelsAvail::create(m_commonObjects->m_rmInterface, m_configuredChannels,
-                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceErrMsg); }));
-    m_activationTasks.addSubTask(TaskServerConnectionStart::create(m_commonObjects->m_pcbClient, CONNECTION_TIMEOUT));
-
-    m_activationTasks.addSubTask(getChannelsReadTasks());
-    TaskContainerPtr parallelTasks = TaskParallel::create();
-    for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        parallelTasks->addSubTask(TaskChannelRegisterNotifier::create(m_commonObjects, channelName,
-                                                                      TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
-    }
-    m_activationTasks.addSubTask(std::move(parallelTasks));
+    addStaticActivationTasks();
+    addDynChannelActivationTasks();
     m_activationTasks.start();
 }
 
@@ -70,19 +45,8 @@ void AdjustmentModuleActivator::onActivateContinue(bool ok)
 
 void AdjustmentModuleActivator::deactivate()
 {
-    TaskContainerPtr parallelTasks = TaskParallel::create();
-    for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        parallelTasks->addSubTask(TaskChannelUnregisterNotifier::create(m_commonObjects, channelName,
-                                                                        TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
-    }
-    m_deactivationTasks.addSubTask(std::move(parallelTasks));
+    m_deactivationTasks.addSubTask(getDeactivationTasks());
     m_deactivationTasks.start();
-}
-
-void AdjustmentModuleActivator::reloadRanges()
-{
-    m_reloadRangesTasks.addSubTask(getChannelsReadTasks());
-    m_reloadRangesTasks.start();
 }
 
 void AdjustmentModuleActivator::onDeactivateContinue(bool ok)
@@ -92,11 +56,70 @@ void AdjustmentModuleActivator::onDeactivateContinue(bool ok)
     emit sigDeactivationReady();
 }
 
+void AdjustmentModuleActivator::reloadRanges()
+{
+    m_reloadRangesTasks.addSubTask(getChannelsReadTasks());
+    m_reloadRangesTasks.start();
+}
+
 void AdjustmentModuleActivator::onReloadRanges(bool ok)
 {
     if(!ok)
         return;
     emit sigRangesReloaded();
+}
+
+void ADJUSTMENTMODULE::AdjustmentModuleActivator::addStaticActivationTasks()
+{
+    m_activationTasks.addSubTask(TaskServerConnectionStart::create(m_commonObjects->m_rmClient, CONNECTION_TIMEOUT));
+    m_activationTasks.addSubTask(TaskRmSendIdent::create(m_commonObjects->m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
+    m_activationTasks.addSubTask(TaskRmCheckResourceType::create(m_commonObjects->m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourcetypeErrMsg); }));
+    m_activationTasks.addSubTask(TaskRmCheckChannelsAvail::create(m_commonObjects->m_rmInterface, m_configuredChannels,
+                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceErrMsg); }));
+    m_activationTasks.addSubTask(TaskServerConnectionStart::create(m_commonObjects->m_pcbClient, CONNECTION_TIMEOUT));
+}
+
+void AdjustmentModuleActivator::addDynChannelActivationTasks()
+{
+    m_activationTasks.addSubTask(TaskImmediateLambda::create([&](){
+        m_activationTasks.addSubTask(getChannelsReadTasks());
+        m_activationTasks.addSubTask(getChannelsRegisterNotifyTasks());
+        return true;
+    }));
+}
+
+TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
+{
+    TaskContainerPtr channelTasks = TaskParallel::create();
+    for(const auto &channelName : qAsConst(m_configuredChannels)) {
+        TaskContainerPtr perChannelTasks = TaskSequence::create();
+        perChannelTasks->addSubTask(TaskRmReadChannelAlias::create(m_commonObjects, channelName,
+                                                                   TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
+        perChannelTasks->addSubTask(TaskChannelReadRanges::create(m_commonObjects, channelName,
+                                                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
+        channelTasks->addSubTask(std::move(perChannelTasks));
+    }
+    return channelTasks;
+}
+
+TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
+{
+    TaskContainerPtr tasks = TaskParallel::create();
+    for(const auto &channelName : qAsConst(m_configuredChannels)) {
+        tasks->addSubTask(TaskChannelRegisterNotifier::create(m_commonObjects, channelName,
+                                                              TRANSACTION_TIMEOUT, [&]{ emit errMsg(registerpcbnotifierErrMsg); }));
+    }
+    return tasks;
+}
+
+TaskContainerPtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getDeactivationTasks()
+{
+    TaskContainerPtr tasks = TaskParallel::create();
+    for(const auto &channelName : qAsConst(m_configuredChannels)) {
+        tasks->addSubTask(TaskChannelUnregisterNotifier::create(m_commonObjects, channelName,
+                                                                TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
+    }
+    return tasks;
 }
 
 }
