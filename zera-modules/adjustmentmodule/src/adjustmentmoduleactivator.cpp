@@ -112,14 +112,10 @@ TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getChannelsRegiste
     return tasks;
 }
 
-TaskContainerPtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getDeactivationTasks()
+TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getDeactivationTasks()
 {
-    TaskContainerPtr tasks = TaskParallel::create();
-    for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        tasks->addSub(TaskChannelUnregisterNotifier::create(m_commonObjects->m_pcbInterface, channelName,
-                                                            TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
-    }
-    return tasks;
+    return TaskChannelUnregisterNotifier::create(m_commonObjects->m_pcbInterface,
+                                                 TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); });
 }
 
 }
