@@ -9,7 +9,7 @@
 #include "taskrmreadchannelalias.h"
 #include "taskchannelregisternotifier.h"
 #include "taskchannelreadranges.h"
-#include "taskchannelunregisternotifier.h"
+#include "taskunregisternotifier.h"
 #include "taskimmediatelambda.h"
 #include "errormessages.h"
 
@@ -114,8 +114,8 @@ TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getChannelsRegiste
 
 TaskCompositePtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getDeactivationTasks()
 {
-    return TaskChannelUnregisterNotifier::create(m_commonObjects->m_pcbInterface,
-                                                 TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); });
+    return TaskUnregisterNotifier::create(m_commonObjects->m_pcbInterface,
+                                          TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); });
 }
 
 }
