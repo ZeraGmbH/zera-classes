@@ -36,7 +36,7 @@ private:
     void addDynChannelActivationTasks();
     TaskCompositePtr getChannelsReadTasks();
     TaskCompositePtr getChannelsRegisterNotifyTasks();
-    TaskContainerPtr getDeactivationTasks();
+    TaskCompositePtr getDeactivationTasks();
 
     QStringList m_configuredChannels;
 
