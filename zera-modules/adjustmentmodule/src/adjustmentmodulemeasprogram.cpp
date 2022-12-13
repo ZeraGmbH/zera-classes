@@ -197,7 +197,7 @@ void cAdjustmentModuleMeasProgram::setAdjustEnvironment(QVariant var)
     m_sAdjustChannel = sl.at(0);
     m_sAdjustRange = sl.at(1);
     m_AdjustTargetValue = sl.at(2).toDouble();
-    m_sAdjustSysName = m_commonObjects->m_adjustChannelInfoHash[m_sAdjustChannel]->m_sAlias;
+    m_sAdjustSysName = m_AliasChannelHash[m_sAdjustChannel];;
 }
 
 double cAdjustmentModuleMeasProgram::cmpPhase(QVariant var)
@@ -217,8 +217,16 @@ double cAdjustmentModuleMeasProgram::symAngle(double ang)
     return a;
 }
 
+void cAdjustmentModuleMeasProgram::fillChannelAliasHash()
+{
+    for(const auto& entry : m_commonObjects->m_adjustChannelInfoHash) {
+       m_AliasChannelHash[entry.second->m_sAlias] = entry.first;
+    }
+}
+
 void cAdjustmentModuleMeasProgram::onActivationReady()
 {
+    fillChannelAliasHash();
     connect(m_commonObjects->m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
             this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
     setInterfaceValidation();
@@ -519,21 +527,21 @@ void cAdjustmentModuleMeasProgram::storageFinished()
 void cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects->m_adjustChannelInfoHash[sl.at(0)]->m_sAlias;
+    QString sysName = m_AliasChannelHash[sl.at(0)];;
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setAdjustGainStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustgainstatus;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects->m_adjustChannelInfoHash[sl.at(0)]->m_sAlias;
+    QString sysName = m_AliasChannelHash[sl.at(0)];;
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setAdjustPhaseStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustphasestatus;
 }
 
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand(QVariant var)
 {
     QStringList sl = var.toString().split(',');
-    QString sysName = m_commonObjects->m_adjustChannelInfoHash[sl.at(0)]->m_sAlias;
+    QString sysName = m_AliasChannelHash[sl.at(0)];;
     m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setAdjustOffsetStatus(sysName, sl.at(1), sl.at(2).toInt())] = setadjustoffsetstatus;
 }
 
