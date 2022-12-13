@@ -116,7 +116,7 @@ TaskContainerPtr ADJUSTMENTMODULE::AdjustmentModuleActivator::getDeactivationTas
 {
     TaskContainerPtr tasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        tasks->addSub(TaskChannelUnregisterNotifier::create(m_commonObjects, channelName,
+        tasks->addSub(TaskChannelUnregisterNotifier::create(m_commonObjects->m_pcbInterface, channelName,
                                                             TRANSACTION_TIMEOUT, [&]{ emit errMsg(unregisterpcbnotifierErrMsg); }));
     }
     return tasks;
