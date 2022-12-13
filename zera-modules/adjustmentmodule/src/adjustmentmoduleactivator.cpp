@@ -95,7 +95,8 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
         TaskContainerPtr perChannelTasks = TaskSequence::create();
         perChannelTasks->addSub(TaskRmReadChannelAlias::create(m_commonObjects, channelName,
                                                                TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
-        perChannelTasks->addSub(TaskChannelReadRanges::create(m_commonObjects, channelName,
+        perChannelTasks->addSub(TaskChannelReadRanges::create(m_commonObjects->m_pcbInterface, channelName,
+                                                              m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sRangelist,
                                                               TRANSACTION_TIMEOUT, [&]{ emit errMsg(readrangelistErrMsg); }));
         channelTasks->addSub(std::move(perChannelTasks));
     }
