@@ -31,12 +31,8 @@ void TaskChannelReadAlias::start()
 void TaskChannelReadAlias::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
-        if (reply == ack) {
-            QString alias = answer.toString();
-            m_targetAlias = alias;
-            finishTask(true);
-        }
-        else
-            finishTask(false);
+        if (reply == ack)
+            m_targetAlias = answer.toString();
+        finishTask(reply == ack);
     }
 }

@@ -28,7 +28,7 @@ void TaskRmCheckResourceType::start()
 void TaskRmCheckResourceType::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(msgnr == m_msgnr) {
-        if ((reply == ack) && (answer.toString().contains(m_checkResourceType)))
+        if((reply == ack) && (answer.toString().contains(m_checkResourceType)))
             finishTask(true);
         else
             finishTask(false);
