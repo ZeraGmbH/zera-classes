@@ -32,7 +32,11 @@ private slots:
     void onDeactivateContinue(bool ok);
     void onReloadRanges(bool ok);
 private:
+    void addStaticActivationTasks();
+    void addDynChannelActivationTasks();
     TaskCompositePtr getChannelsReadTasks();
+    TaskCompositePtr getChannelsRegisterNotifyTasks();
+    TaskContainerPtr getDeactivationTasks();
 
     QStringList m_configuredChannels;
 
