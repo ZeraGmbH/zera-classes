@@ -12,8 +12,19 @@ if(ZC_BUILD_MODULES)
         service-interfaces/rminterface_p.cpp
         service-interfaces/secinterface.cpp
         service-interfaces/secinterface_p.cpp
+        tasks-common/taskchannelreadalias.cpp
+        tasks-common/taskchannelreadranges.cpp
+        tasks-common/taskchannelregisternotifier.cpp
+        tasks-common/taskserverconnectionstart.cpp
+        tasks-common/taskrmcheckchannelsavail.cpp
+        tasks-common/taskrmcheckresourcetype.cpp
+        tasks-common/taskrmsendident.cpp
+        tasks-common/taskunregisternotifier.cpp
     )
     set(HEADER_FOR_MODULE
+        ethadress_p.h
+        ethadress.h
+        singleonoffreferencemanager.h
         service-interfaces/dspvar.h
         service-interfaces/secinterface.h
         service-interfaces/rminterface.h
@@ -24,11 +35,16 @@ if(ZC_BUILD_MODULES)
         service-interfaces/reply.h
         service-interfaces/rminterface_p.h
         service-interfaces/secinterface_p.h
-        ethadress_p.h
-        ethadress.h
-        singleonoffreferencemanager.h
         service-interfaces/pcbinterface.h
         service-interfaces/pcbinterface_p.h
+        tasks-common/taskchannelreadalias.h
+        tasks-common/taskchannelreadranges.h
+        tasks-common/taskchannelregisternotifier.h
+        tasks-common/taskserverconnectionstart.h
+        tasks-common/taskrmcheckchannelsavail.h
+        tasks-common/taskrmcheckresourcetype.h
+        tasks-common/taskrmsendident.h
+        tasks-common/taskunregisternotifier.h
 )
 endif(ZC_BUILD_MODULES)
 
@@ -42,14 +58,6 @@ set(SOURCES
     task-runner/taskparallel.cpp
     task-runner/tasksequence.cpp
     task-runner/tasktimeoutdecorator.cpp
-    tasks-common/taskchannelreadalias.cpp
-    tasks-common/taskchannelreadranges.cpp
-    tasks-common/taskchannelregisternotifier.cpp
-    tasks-common/taskserverconnectionstart.cpp
-    tasks-common/taskrmcheckchannelsavail.cpp
-    tasks-common/taskrmcheckresourcetype.cpp
-    tasks-common/taskrmsendident.cpp
-    tasks-common/taskunregisternotifier.cpp
     ${SOURCES_FOR_MODULE}
 )
 
@@ -63,14 +71,6 @@ set(HEADER
     task-runner/taskparallel.h
     task-runner/tasksequence.h
     task-runner/tasktimeoutdecorator.h
-    tasks-common/taskchannelreadalias.h
-    tasks-common/taskchannelreadranges.h
-    tasks-common/taskchannelregisternotifier.h
-    tasks-common/taskserverconnectionstart.h
-    tasks-common/taskrmcheckchannelsavail.h
-    tasks-common/taskrmcheckresourcetype.h
-    tasks-common/taskrmsendident.h
-    tasks-common/taskunregisternotifier.h
     ${HEADER_FOR_MODULE}
 )
 
