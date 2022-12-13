@@ -14,7 +14,7 @@ void TaskParallel::start()
         finishTask(true);
 }
 
-void TaskParallel::addSubTask(TaskCompositePtr task)
+void TaskParallel::addSub(TaskCompositePtr task)
 {
     m_addedTasks.push_back(std::move(task));
 }

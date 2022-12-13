@@ -11,7 +11,7 @@ class TaskParallel : public TaskContainer
 public:
     static std::unique_ptr<TaskContainer> create();
     void start() override;
-    void addSubTask(TaskCompositePtr task) override;
+    void addSub(TaskCompositePtr task) override;
 private slots:
     void onFinishTask(bool ok, int taskId);
 private:
