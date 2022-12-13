@@ -2,9 +2,6 @@
 #include "reply.h"
 #include "tasktimeoutdecorator.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 std::unique_ptr<TaskComposite> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface)
 {
     return std::make_unique<TaskRmSendIdent>(rmInterface);
@@ -30,6 +27,4 @@ void TaskRmSendIdent::onRmAnswer(quint32 msgnr, quint8 reply)
 {
     if(msgnr == m_msgnr)
         finishTask(reply == ack);
-}
-
 }

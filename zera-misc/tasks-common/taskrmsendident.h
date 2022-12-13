@@ -4,8 +4,6 @@
 #include "taskcomposit.h"
 #include "rminterface.h"
 
-namespace ADJUSTMENTMODULE {
-
 class TaskRmSendIdent : public TaskComposite
 {
     Q_OBJECT
@@ -21,6 +19,5 @@ private:
     Zera::Server::RMInterfacePtr m_rmInterface;
     quint32 m_msgnr;
 };
-}
 
 #endif // TASKRMSENDIDENT_H
