@@ -10,7 +10,7 @@ class TaskSequence : public TaskContainer // for now abort on error
 public:
     static std::unique_ptr<TaskContainer> create();
     void start() override;
-    void addSubTask(TaskCompositePtr task) override;
+    void addSub(TaskCompositePtr task) override;
 
 private slots:
     void onFinishCurr(bool ok);

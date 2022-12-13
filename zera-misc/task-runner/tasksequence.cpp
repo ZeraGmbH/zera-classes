@@ -16,7 +16,7 @@ void TaskSequence::start()
     }
 }
 
-void TaskSequence::addSubTask(TaskCompositePtr task)
+void TaskSequence::addSub(TaskCompositePtr task)
 {
     m_tasks.push_front(std::move(task));
 }

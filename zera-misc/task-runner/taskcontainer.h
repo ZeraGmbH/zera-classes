@@ -6,7 +6,7 @@
 class TaskContainer : public TaskComposite
 {
 public:
-    virtual void addSubTask(TaskCompositePtr task) = 0;
+    virtual void addSub(TaskCompositePtr task) = 0;
 };
 
 typedef std::unique_ptr<TaskContainer> TaskContainerPtr;
