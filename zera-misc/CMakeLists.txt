@@ -42,6 +42,7 @@ set(SOURCES
     task-runner/taskparallel.cpp
     task-runner/tasksequence.cpp
     task-runner/tasktimeoutdecorator.cpp
+    tasks-common/taskchannelreadranges.cpp
     tasks-common/taskchannelregisternotifier.cpp
     tasks-common/taskserverconnectionstart.cpp
     tasks-common/taskrmcheckchannelsavail.cpp
@@ -61,6 +62,7 @@ set(HEADER
     task-runner/taskparallel.h
     task-runner/tasksequence.h
     task-runner/tasktimeoutdecorator.h
+    tasks-common/taskchannelreadranges.h
     tasks-common/taskchannelregisternotifier.h
     tasks-common/taskserverconnectionstart.h
     tasks-common/taskrmcheckchannelsavail.h

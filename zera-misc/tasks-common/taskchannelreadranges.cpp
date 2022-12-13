@@ -1,9 +1,6 @@
 #include "taskchannelreadranges.h"
-#include "adjustmentmodulemeasprogram.h"
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
-
-namespace ADJUSTMENTMODULE {
 
 std::unique_ptr<TaskComposite> TaskChannelReadRanges::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
                                                              QStringList &targetRangeList)
@@ -38,6 +35,4 @@ void TaskChannelReadRanges::onRmAnswer(quint32 msgnr, quint8 reply, QVariant ans
             m_targetRangeList = answer.toStringList();
         finishTask(reply == ack);
     }
-}
-
 }
