@@ -8,11 +8,10 @@ class TaskChannelReadRanges : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
-                                                 QStringList &targetRangeList);
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
-                                                 QStringList &targetRangeList,
-                                                 int timeout, std::function<void()> additionalErrorHandler = []{});
+    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                   QString channelName,
+                                   QStringList &targetRangeList,
+                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskChannelReadRanges(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName, QStringList &targetRangeList);
     void start() override;
 private slots:
