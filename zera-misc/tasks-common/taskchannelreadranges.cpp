@@ -2,17 +2,17 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskChannelReadRanges::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
-                                                             QStringList &targetRangeList)
+TaskCompositePtr TaskChannelReadRanges::create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                               QString channelName,
+                                               QStringList &targetRangeList,
+                                               int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return std::make_unique<TaskChannelReadRanges>(pcbInterface, channelName, targetRangeList);
-}
-
-std::unique_ptr<TaskComposite> TaskChannelReadRanges::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
-                                                             QStringList &targetRangeList,
-                                                             int timeout, std::function<void ()> additionalErrorHandler)
-{
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface, channelName, targetRangeList), additionalErrorHandler);
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskChannelReadRanges>(
+                                                 pcbInterface,
+                                                 channelName,
+                                                 targetRangeList),
+                                             additionalErrorHandler);
 }
 
 TaskChannelReadRanges::TaskChannelReadRanges(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName, QStringList &targetRangeList) :
