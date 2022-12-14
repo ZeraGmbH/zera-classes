@@ -3,6 +3,7 @@
 #include "adjustvalidator.h"
 #include "adjustmentmoduleconfiguration.h"
 #include "taskoffsetgetcorrection.h"
+#include "taskchannelgetrejection.h"
 #include <modulevalidator.h>
 #include <reply.h>
 #include <intvalidator.h>
@@ -71,21 +72,15 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     connect(&m_adjustamplitudeGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr);
     connect(&m_adjustamplitudeSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeSetNode);
 
-    m_adjustOffsetGetRejection.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustOffsetGetRejectionValue);
-    m_adjustOffsetGetRejection.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
     m_adjustOffsetGetRejectionValue.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetSetNodeState);
     m_adjustOffsetGetRejectionValue.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
     m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetFinishState);
     m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
-    m_adjustOffsetMachine.addState(&m_adjustOffsetGetRejection);
     m_adjustOffsetMachine.addState(&m_adjustOffsetGetRejectionValue);
     m_adjustOffsetMachine.addState(&m_adjustoffsetSetNodeState);
     m_adjustOffsetMachine.addState(&m_adjustoffsetFinishState);
-    m_adjustOffsetMachine.setInitialState(&m_adjustOffsetGetRejection);
+    m_adjustOffsetMachine.setInitialState(&m_adjustOffsetGetRejectionValue);
 
-    connect(&m_adjustOffsetGetRejection, &QState::entered, this, [&] () {
-        m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getRejection(m_sAdjustSysName, m_sAdjustRange)] = enGetAdjOffsetRejection;
-    });
     connect(&m_adjustOffsetGetRejectionValue, &QState::entered, this, [&] () {
         m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getUrvalue(m_sAdjustSysName, m_sAdjustRange)] = enGetAdjOffsetRejectionValue;
     });
@@ -613,7 +608,14 @@ void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
                                                          m_sAdjustSysName, m_sAdjustRange, m_AdjustTargetValue,
                                                          m_AdjustCorrection,
                                                          TRANSACTION_TIMEOUT, [&]{
-        notifyExecutionError(tr(readOffsetCorrErrMsg));
+        notifyExecutionError(readOffsetCorrErrMsg);
+        m_pPARAdjustOffset->setError();
+    }));
+    m_offsetTasks.addSub(TaskChannelGetRejection::create(m_commonObjects->m_pcbInterface,
+                                                         m_sAdjustSysName, m_sAdjustRange,
+                                                         m_AdjustRejection,
+                                                         TRANSACTION_TIMEOUT, [&]{
+        notifyExecutionError(readrangerejectionErrMsg);
         m_pPARAdjustOffset->setError();
     }));
     m_offsetTasks.start();
@@ -735,18 +737,6 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
                     emit adjustError();
                     notifyExecutionError(tr(setGainNodeErrMsg));
                     m_pPARAdjustAmplitude->setError();
-                }
-                break;
-
-            case enGetAdjOffsetRejection:
-                if (reply == ack) {
-                    m_AdjustRejection = answer.toDouble();
-                    emit adjustoffsetContinue();
-                }
-                else {
-                    emit adjustError();
-                    notifyExecutionError(tr(readrangerejectionErrMsg));
-                    m_pPARAdjustOffset->setError();
                 }
                 break;
 
