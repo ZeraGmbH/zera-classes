@@ -69,7 +69,7 @@ void AdjustmentModuleActivator::onReloadRanges(bool ok)
 void AdjustmentModuleActivator::addStaticActivationTasks()
 {
     m_activationTasks.addSub(TaskServerConnectionStart::create(m_commonObjects->m_rmClient, CONNECTION_TIMEOUT));
-    m_activationTasks.addSub(TaskRmSendIdent::create(m_commonObjects->m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
+    m_activationTasks.addSub(TaskRmSendIdent::create(m_commonObjects->m_rmInterface, "Adjustment", TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
     m_activationTasks.addSub(TaskRmCheckResourceType::create(m_commonObjects->m_rmInterface, TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourcetypeErrMsg); }));
     m_activationTasks.addSub(TaskRmCheckChannelsAvail::create(m_commonObjects->m_rmInterface, m_configuredChannels,
                                                               TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourceErrMsg); }));
