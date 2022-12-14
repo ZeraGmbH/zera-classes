@@ -2,30 +2,26 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                             QString channelSysName, QString rangeName,
-                                                             double &urValue)
+TaskCompositePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                               QString channelSysName, QString rangeName,
+                                               double &valueReceived,
+                                               int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return std::make_unique<TaskChannelGetUrValue>(pcbInterface,
-                                                   channelSysName, rangeName, urValue);
-}
-
-std::unique_ptr<TaskComposite> TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                             QString channelSysName, QString rangeName,
-                                                             double &urValue,
-                                                             int timeout, std::function<void ()> additionalErrorHandler)
-{
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface,
-                                                             channelSysName, rangeName,
-                                                             urValue),
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskChannelGetUrValue>(
+                                                 pcbInterface,
+                                                 channelSysName, rangeName,
+                                                 valueReceived),
                                              additionalErrorHandler);
 }
 
-TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::Server::PcbInterfacePtr pcbInterface, QString channelSysName, QString rangeName, double &urValue) :
+TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::Server::PcbInterfacePtr pcbInterface,
+                                             QString channelSysName, QString rangeName,
+                                             double &valueReceived) :
     m_pcbInterface(pcbInterface),
     m_channelSysName(channelSysName),
     m_rangeName(rangeName),
-    m_urValue(urValue)
+    m_valueReceived(valueReceived)
 {
 }
 
@@ -39,7 +35,7 @@ void TaskChannelGetUrValue::onRmAnswer(quint32 msgnr, quint8 reply, QVariant ans
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)
-            m_urValue = answer.toDouble();
+            m_valueReceived = answer.toDouble();
         finishTask(reply == ack);
     }
 }
