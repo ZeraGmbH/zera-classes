@@ -3,8 +3,8 @@
 #include "reply.h"
 
 TaskCompositePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface,
-                                                               int timeout, std::function<void ()> additionalErrorHandler,
-                                                               QString checkResourceType)
+                                                 int timeout, std::function<void ()> additionalErrorHandler,
+                                                 QString checkResourceType)
 {
     return TaskTimeoutDecorator::wrapTimeout(timeout,
                                              std::make_unique<TaskRmCheckResourceType>(

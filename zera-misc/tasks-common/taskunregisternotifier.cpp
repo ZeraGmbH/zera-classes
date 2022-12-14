@@ -2,15 +2,12 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface)
-{
-    return std::make_unique<TaskUnregisterNotifier>(pcbInterface);
-}
-
-std::unique_ptr<TaskComposite> TaskUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskCompositePtr TaskUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                               int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface), additionalErrorHandler);
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskUnregisterNotifier>(pcbInterface),
+                                             additionalErrorHandler);
 }
 
 TaskUnregisterNotifier::TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface) :

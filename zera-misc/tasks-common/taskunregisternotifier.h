@@ -8,9 +8,8 @@ class TaskUnregisterNotifier : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface);
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                 int timeout, std::function<void()> additionalErrorHandler = []{});
+    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface);
     void start() override;
 private slots:
