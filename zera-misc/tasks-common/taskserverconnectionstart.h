@@ -8,12 +8,9 @@ class TaskServerConnectionStart : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(Zera::Proxy::ProxyClientPtr client);
-    static std::unique_ptr<TaskComposite> create(Zera::Proxy::ProxyClientPtr client, int timeout);
-
+    static TaskCompositePtr create(Zera::Proxy::ProxyClientPtr client, int timeout);
     TaskServerConnectionStart(Zera::Proxy::ProxyClientPtr client);
     void start() override;
-
 private slots:
     void onConnected();
 private:
