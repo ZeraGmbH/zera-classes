@@ -3,14 +3,16 @@
 #include "reply.h"
 
 std::unique_ptr<TaskComposite> TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                               QString channelSysName, QString rangeName, double &rejectionValue)
+                                                               QString channelSysName, QString rangeName,
+                                                               double &rejectionValue)
 {
     return std::make_unique<TaskChannelGetRejection>(pcbInterface,
                                                      channelSysName, rangeName, rejectionValue);
 }
 
 std::unique_ptr<TaskComposite> TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                               QString channelSysName, QString rangeName, double &rejectionValue,
+                                                               QString channelSysName, QString rangeName,
+                                                               double &rejectionValue,
                                                                int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface,
@@ -20,7 +22,8 @@ std::unique_ptr<TaskComposite> TaskChannelGetRejection::create(Zera::Server::Pcb
 }
 
 TaskChannelGetRejection::TaskChannelGetRejection(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                 QString channelSysName, QString rangeName, double &rejectionValue) :
+                                                 QString channelSysName, QString rangeName,
+                                                 double &rejectionValue) :
     m_pcbInterface(pcbInterface),
     m_channelSysName(channelSysName),
     m_rangeName(rangeName),
