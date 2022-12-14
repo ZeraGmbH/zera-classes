@@ -8,9 +8,9 @@ class TaskChannelRegisterNotifier : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName);
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
-                                                 int timeout, std::function<void()> additionalErrorHandler = []{});
+    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                   QString channelName,
+                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName);
     void start() override;
 private slots:

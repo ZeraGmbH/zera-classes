@@ -2,15 +2,14 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName)
+TaskCompositePtr TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
+                                                     int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return std::make_unique<TaskChannelRegisterNotifier>(pcbInterface, channelName);
-}
-
-std::unique_ptr<TaskComposite> TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
-                                                                   int timeout, std::function<void ()> additionalErrorHandler)
-{
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface, channelName), additionalErrorHandler);
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskChannelRegisterNotifier>(
+                                                 pcbInterface,
+                                                 channelName),
+                                             additionalErrorHandler);
 }
 
 TaskChannelRegisterNotifier::TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName) :
