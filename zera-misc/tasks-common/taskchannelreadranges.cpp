@@ -15,7 +15,9 @@ TaskCompositePtr TaskChannelReadRanges::create(Zera::Server::PcbInterfacePtr pcb
                                              additionalErrorHandler);
 }
 
-TaskChannelReadRanges::TaskChannelReadRanges(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName, QStringList &targetRangeList) :
+TaskChannelReadRanges::TaskChannelReadRanges(Zera::Server::PcbInterfacePtr pcbInterface,
+                                             QString channelName,
+                                             QStringList &targetRangeList) :
     m_pcbInterface(pcbInterface),
     m_channelName(channelName),
     m_targetRangeList(targetRangeList)
