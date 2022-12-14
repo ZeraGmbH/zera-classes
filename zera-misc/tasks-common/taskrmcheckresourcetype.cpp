@@ -2,15 +2,14 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType)
+TaskCompositePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface,
+                                                               int timeout, std::function<void ()> additionalErrorHandler,
+                                                               QString checkResourceType)
 {
-    return std::make_unique<TaskRmCheckResourceType>(rmInterface, checkResourceType);
-}
-
-std::unique_ptr<TaskComposite> TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface,
-                                                               int timeout, std::function<void ()> additionalErrorHandler, QString checkResourceType)
-{
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(rmInterface,checkResourceType), additionalErrorHandler);
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskRmCheckResourceType>(
+                                                 rmInterface, checkResourceType),
+                                             additionalErrorHandler);
 }
 
 TaskRmCheckResourceType::TaskRmCheckResourceType(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType) :
