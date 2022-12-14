@@ -1,0 +1,47 @@
+#include "taskoffsetgetcorrection.h"
+#include "tasktimeoutdecorator.h"
+#include "reply.h"
+
+std::unique_ptr<TaskComposite> TaskOffsetGetCorrection::create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                                               QString channelSysName, QString rangeName, double ourActualValue, double &correctionValue)
+{
+    return std::make_unique<TaskOffsetGetCorrection>(pcbInterface,
+                                                     channelSysName, rangeName, ourActualValue, correctionValue);
+}
+
+std::unique_ptr<TaskComposite> TaskOffsetGetCorrection::create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                                               QString channelSysName, QString rangeName, double ourActualValue,
+                                                               double &correctionValue, int timeout, std::function<void ()> additionalErrorHandler)
+{
+    return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface,
+                                                             channelSysName, rangeName, ourActualValue,
+                                                             correctionValue),
+                                             additionalErrorHandler);
+
+}
+
+TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::Server::PcbInterfacePtr pcbInterface,
+                                                 QString channelSysName, QString rangeName, double ourActualValue,
+                                                 double &correctionValue) :
+    m_pcbInterface(pcbInterface),
+    m_channelSysName(channelSysName),
+    m_rangeName(rangeName),
+    m_ourActualValue(ourActualValue),
+    m_correctionValue(correctionValue)
+{
+}
+
+void TaskOffsetGetCorrection::start()
+{
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskOffsetGetCorrection::onRmAnswer);
+    m_msgnr = m_pcbInterface->getAdjOffsetCorrection(m_channelSysName, m_rangeName, m_ourActualValue);
+}
+
+void TaskOffsetGetCorrection::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+{
+    if(m_msgnr == msgnr) {
+        if (reply == ack)
+            m_correctionValue = answer.toDouble();
+        finishTask(reply == ack);
+    }
+}
