@@ -9,6 +9,7 @@
 #include "measchannelinfo.h"
 #include "measmodeinfo.h"
 #include "foutinfo.h"
+#include "tasksequence.h"
 #include <QObject>
 #include <QList>
 #include <QHash>
@@ -48,7 +49,6 @@ enum adjustmentmoduleCmds
     setgainnode,
     getadjphasecorrection,
     setphasenode,
-    enGetAdjOffsetCorrection,
     enGetAdjOffsetRejection,
     enGetAdjOffsetRejectionValue,
     setoffsetnode,
@@ -168,8 +168,10 @@ private:
     QFinalState m_adjustamplitudeFinishState;
 
     // statemachine for offset adjustment
+    TaskSequence m_offsetTasks;
+
+
     QStateMachine m_adjustOffsetMachine;
-    QState m_adjustOffsetGetCorrState;
     QState m_adjustOffsetGetRejection;
     QState m_adjustOffsetGetRejectionValue;
     QState m_adjustoffsetSetNodeState;
