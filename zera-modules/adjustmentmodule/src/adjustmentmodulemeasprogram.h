@@ -49,7 +49,6 @@ enum adjustmentmoduleCmds
     setgainnode,
     getadjphasecorrection,
     setphasenode,
-    enGetAdjOffsetRejectionValue,
     setoffsetnode,
     getpcbadjustmentdata,
     setpcbadjustmentdata,
@@ -169,7 +168,6 @@ private:
     TaskSequence m_offsetTasks;
     // statemachine for offset adjustment
     QStateMachine m_adjustOffsetMachine;
-    QState m_adjustOffsetGetRejectionValue;
     QState m_adjustoffsetSetNodeState;
     QFinalState m_adjustoffsetFinishState;
 
