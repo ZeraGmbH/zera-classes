@@ -1,15 +1,13 @@
 #include "taskrmsendident.h"
-#include "reply.h"
 #include "tasktimeoutdecorator.h"
+#include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface)
+TaskCompositePtr TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface,
+                                         int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return std::make_unique<TaskRmSendIdent>(rmInterface);
-}
-
-std::unique_ptr<TaskComposite> TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface, int timeout, std::function<void ()> additionalErrorHandler)
-{
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(rmInterface), additionalErrorHandler);
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskRmSendIdent>(rmInterface),
+                                             additionalErrorHandler);
 }
 
 TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface) :
