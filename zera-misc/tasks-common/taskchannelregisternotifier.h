@@ -14,7 +14,7 @@ public:
     TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName);
     void start() override;
 private slots:
-    void onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     Zera::Server::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;

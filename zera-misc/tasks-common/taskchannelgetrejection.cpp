@@ -27,11 +27,11 @@ TaskChannelGetRejection::TaskChannelGetRejection(Zera::Server::PcbInterfacePtr p
 
 void TaskChannelGetRejection::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelGetRejection::onRmAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelGetRejection::onServerAnswer);
     m_msgnr = m_pcbInterface->getRejection(m_channelSysName, m_rangeName);
 }
 
-void TaskChannelGetRejection::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskChannelGetRejection::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)

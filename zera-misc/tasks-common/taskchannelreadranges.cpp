@@ -26,11 +26,11 @@ TaskChannelReadRanges::TaskChannelReadRanges(Zera::Server::PcbInterfacePtr pcbIn
 
 void TaskChannelReadRanges::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadRanges::onRmAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadRanges::onServerAnswer);
     m_msgnr = m_pcbInterface->getRangeList(m_channelName);
 }
 
-void TaskChannelReadRanges::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskChannelReadRanges::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(msgnr == m_msgnr) {
         if (reply == ack)

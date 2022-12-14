@@ -29,11 +29,11 @@ TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::Server::PcbInterfacePtr p
 
 void TaskOffsetGetCorrection::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskOffsetGetCorrection::onRmAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskOffsetGetCorrection::onServerAnswer);
     m_msgnr = m_pcbInterface->getAdjOffsetCorrection(m_channelSysName, m_rangeName, m_ourActualValue);
 }
 
-void TaskOffsetGetCorrection::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskOffsetGetCorrection::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)

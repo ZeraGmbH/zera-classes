@@ -22,11 +22,11 @@ TaskRmCheckChannelsAvail::TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr 
 
 void TaskRmCheckChannelsAvail::start()
 {
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmCheckChannelsAvail::onRmAnswer);
+    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmCheckChannelsAvail::onServerAnswer);
     m_msgnr = m_rmInterface->getResources("SENSE");
 }
 
-void TaskRmCheckChannelsAvail::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskRmCheckChannelsAvail::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
         bool allPresent = true;
