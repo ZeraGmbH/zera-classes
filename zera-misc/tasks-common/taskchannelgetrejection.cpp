@@ -2,32 +2,26 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                               QString channelSysName, QString rangeName,
-                                                               double &rejectionValue)
+TaskCompositePtr TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                                 QString channelSysName, QString rangeName,
+                                                 double &valueReceived,
+                                                 int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return std::make_unique<TaskChannelGetRejection>(pcbInterface,
-                                                     channelSysName, rangeName, rejectionValue);
-}
-
-std::unique_ptr<TaskComposite> TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                               QString channelSysName, QString rangeName,
-                                                               double &rejectionValue,
-                                                               int timeout, std::function<void ()> additionalErrorHandler)
-{
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(pcbInterface,
-                                                             channelSysName, rangeName,
-                                                             rejectionValue),
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskChannelGetRejection>(
+                                                 pcbInterface,
+                                                 channelSysName, rangeName,
+                                                 valueReceived),
                                              additionalErrorHandler);
 }
 
 TaskChannelGetRejection::TaskChannelGetRejection(Zera::Server::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName,
-                                                 double &rejectionValue) :
+                                                 double &valueReceived) :
     m_pcbInterface(pcbInterface),
     m_channelSysName(channelSysName),
     m_rangeName(rangeName),
-    m_rejectionValue(rejectionValue)
+    m_valueReceived(valueReceived)
 {
 }
 
@@ -41,7 +35,7 @@ void TaskChannelGetRejection::onRmAnswer(quint32 msgnr, quint8 reply, QVariant a
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)
-            m_rejectionValue = answer.toDouble();
+            m_valueReceived = answer.toDouble();
         finishTask(reply == ack);
     }
 }

@@ -8,12 +8,13 @@ class TaskChannelGetOvRejection : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                 QString channelSysName, QString rangeName,
-                                                 double &valueReceived,
-                                                 int timeout, std::function<void()> additionalErrorHandler = []{});
+    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                   QString channelSysName, QString rangeName,
+                                   double &valueReceived,
+                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskChannelGetOvRejection(Zera::Server::PcbInterfacePtr pcbInterface,
-                              QString channelSysName, QString rangeName, double &valueReceived);
+                              QString channelSysName, QString rangeName,
+                              double &valueReceived);
     void start() override;
 private slots:
     void onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer);
