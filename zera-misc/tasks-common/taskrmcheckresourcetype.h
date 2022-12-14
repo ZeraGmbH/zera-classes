@@ -16,7 +16,7 @@ public:
     TaskRmCheckResourceType(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType);
     void start() override;
 private slots:
-    void onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     Zera::Server::RMInterfacePtr m_rmInterface;
     QString m_checkResourceType;

@@ -27,11 +27,11 @@ TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::Server::PcbInterfacePtr pcbIn
 
 void TaskChannelGetUrValue::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelGetUrValue::onRmAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelGetUrValue::onServerAnswer);
     m_msgnr = m_pcbInterface->getUrvalue(m_channelSysName, m_rangeName);
 }
 
-void TaskChannelGetUrValue::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskChannelGetUrValue::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)

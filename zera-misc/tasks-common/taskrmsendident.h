@@ -13,7 +13,7 @@ public:
     TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface);
     void start() override;
 private slots:
-    void onRmAnswer(quint32 msgnr, quint8 reply);
+    void onServerAnswer(quint32 msgnr, quint8 reply);
 private:
     Zera::Server::RMInterfacePtr m_rmInterface;
     quint32 m_msgnr;

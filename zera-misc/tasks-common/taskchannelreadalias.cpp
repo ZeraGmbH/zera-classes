@@ -26,11 +26,11 @@ TaskChannelReadAlias::TaskChannelReadAlias(Zera::Server::PcbInterfacePtr pcbInte
 
 void TaskChannelReadAlias::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadAlias::onRmAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadAlias::onServerAnswer);
     m_msgnr = m_pcbInterface->getAlias(m_channelName);
 }
 
-void TaskChannelReadAlias::onRmAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskChannelReadAlias::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)

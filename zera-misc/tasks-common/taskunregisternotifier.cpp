@@ -17,11 +17,11 @@ TaskUnregisterNotifier::TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcb
 
 void TaskUnregisterNotifier::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskUnregisterNotifier::onRmAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskUnregisterNotifier::onServerAnswer);
     m_msgnr = m_pcbInterface->unregisterNotifiers();
 }
 
-void TaskUnregisterNotifier::onRmAnswer(quint32 msgnr, quint8 reply, QVariant)
+void TaskUnregisterNotifier::onServerAnswer(quint32 msgnr, quint8 reply, QVariant)
 {
     if(msgnr == m_msgnr)
         finishTask(reply == ack);

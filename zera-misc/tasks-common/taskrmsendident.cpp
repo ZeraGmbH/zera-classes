@@ -17,11 +17,11 @@ TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface) :
 
 void TaskRmSendIdent::start()
 {
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmSendIdent::onRmAnswer);
+    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmSendIdent::onServerAnswer);
     m_msgnr = m_rmInterface->rmIdent(QString("Adjustment"));
 }
 
-void TaskRmSendIdent::onRmAnswer(quint32 msgnr, quint8 reply)
+void TaskRmSendIdent::onServerAnswer(quint32 msgnr, quint8 reply)
 {
     if(msgnr == m_msgnr)
         finishTask(reply == ack);
