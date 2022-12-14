@@ -2,18 +2,19 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-std::unique_ptr<TaskComposite> TaskRmCheckChannelsAvail::create(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels)
+TaskCompositePtr TaskRmCheckChannelsAvail::create(Zera::Server::RMInterfacePtr rmInterface,
+                                                  QStringList expectedChannels,
+                                                  int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return std::make_unique<TaskRmCheckChannelsAvail>(rmInterface, expectedChannels);
+    return TaskTimeoutDecorator::wrapTimeout(timeout,
+                                             std::make_unique<TaskRmCheckChannelsAvail>(
+                                                 rmInterface,
+                                                 expectedChannels),
+                                             additionalErrorHandler);
 }
 
-std::unique_ptr<TaskComposite> TaskRmCheckChannelsAvail::create(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels,
-                                                                int timeout, std::function<void ()> additionalErrorHandler)
-{
-    return TaskTimeoutDecorator::wrapTimeout(timeout, create(rmInterface, expectedChannels), additionalErrorHandler);
-}
-
-TaskRmCheckChannelsAvail::TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr rmInterface, QStringList expectedChannels) :
+TaskRmCheckChannelsAvail::TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr rmInterface,
+                                                   QStringList expectedChannels) :
     m_rmInterface(rmInterface),
     m_expectedChannels(expectedChannels)
 {

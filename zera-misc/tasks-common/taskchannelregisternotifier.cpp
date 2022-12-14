@@ -12,7 +12,8 @@ TaskCompositePtr TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfaceP
                                              additionalErrorHandler);
 }
 
-TaskChannelRegisterNotifier::TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName) :
+TaskChannelRegisterNotifier::TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface,
+                                                         QString channelName) :
     m_pcbInterface(pcbInterface),
     m_channelName(channelName)
 {
