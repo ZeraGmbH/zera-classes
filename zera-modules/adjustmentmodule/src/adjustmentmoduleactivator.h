@@ -47,9 +47,6 @@ private:
     TaskSequence m_reloadRangesTasks;
 
     AdjustmentModuleCommonPtr m_commonObjects;
-
-    const int CONNECTION_TIMEOUT = 25000;
-    const int TRANSACTION_TIMEOUT = 3000;
 };
 
 }

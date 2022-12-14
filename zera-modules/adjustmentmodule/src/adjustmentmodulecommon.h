@@ -28,6 +28,9 @@ struct AdjustmentModuleCommon
     QHash<QString/*UL1,UL2...*/, QString/*m0,m1*/> m_channelAliasHash;
 };
 
+const int CONNECTION_TIMEOUT = 25000;
+const int TRANSACTION_TIMEOUT = 3000;
+
 typedef std::shared_ptr<AdjustmentModuleCommon> AdjustmentModuleCommonPtr;
 
 #endif // ADJUSTMENTMODULECOMMON_H
