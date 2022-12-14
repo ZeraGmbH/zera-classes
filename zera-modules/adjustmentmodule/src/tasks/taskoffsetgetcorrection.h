@@ -8,13 +8,10 @@ class TaskOffsetGetCorrection : public TaskComposite
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                 QString channelSysName, QString rangeName, double ourActualValue,
-                                                 double &correctionValue);
-    static std::unique_ptr<TaskComposite> create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                 QString channelSysName, QString rangeName, double ourActualValue,
-                                                 double &correctionValue,
-                                                 int timeout, std::function<void()> additionalErrorHandler = []{});
+    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+                                   QString channelSysName, QString rangeName, double ourActualValue,
+                                   double &correctionValue,
+                                   int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskOffsetGetCorrection(Zera::Server::PcbInterfacePtr pcbInterface,
                             QString channelSysName, QString rangeName, double ourActualValue,
                             double &correctionValue);
