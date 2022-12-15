@@ -3,7 +3,7 @@
 #include "reply.h"
 
 TaskCompositePtr TaskUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                                              int timeout, std::function<void ()> additionalErrorHandler)
+                                                int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskTimeoutDecorator::wrapTimeout(timeout,
                                              std::make_unique<TaskUnregisterNotifier>(pcbInterface),

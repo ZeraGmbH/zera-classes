@@ -19,8 +19,7 @@ TaskChannelGetOvRejection::TaskChannelGetOvRejection(Zera::Server::PcbInterfaceP
                                                      QString channelSysName, QString rangeName,
                                                      double &valueReceived) :
     m_pcbInterface(pcbInterface),
-    m_channelSysName(channelSysName),
-    m_rangeName(rangeName),
+    m_channelSysName(channelSysName), m_rangeName(rangeName),
     m_valueReceived(valueReceived)
 {
 }

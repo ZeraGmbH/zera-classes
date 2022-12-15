@@ -20,9 +20,7 @@ TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::Server::PcbInterfacePtr p
                                                  QString channelSysName, QString rangeName, double ourActualValue,
                                                  double &correctionValue) :
     m_pcbInterface(pcbInterface),
-    m_channelSysName(channelSysName),
-    m_rangeName(rangeName),
-    m_ourActualValue(ourActualValue),
+    m_channelSysName(channelSysName), m_rangeName(rangeName), m_ourActualValue(ourActualValue),
     m_correctionValue(correctionValue)
 {
 }
