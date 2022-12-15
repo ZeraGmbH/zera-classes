@@ -27,7 +27,8 @@ TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::Server::PcbInterfacePtr pcbIn
 
 void TaskChannelGetUrValue::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelGetUrValue::onServerAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+            this, &TaskChannelGetUrValue::onServerAnswer);
     m_msgnr = m_pcbInterface->getUrvalue(m_channelSysName, m_rangeName);
 }
 

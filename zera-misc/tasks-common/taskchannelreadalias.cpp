@@ -26,7 +26,8 @@ TaskChannelReadAlias::TaskChannelReadAlias(Zera::Server::PcbInterfacePtr pcbInte
 
 void TaskChannelReadAlias::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadAlias::onServerAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+            this, &TaskChannelReadAlias::onServerAnswer);
     m_msgnr = m_pcbInterface->getAlias(m_channelName);
 }
 

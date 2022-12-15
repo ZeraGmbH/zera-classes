@@ -20,7 +20,8 @@ TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface, QStri
 
 void TaskRmSendIdent::start()
 {
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmSendIdent::onServerAnswer);
+    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer,
+            this, &TaskRmSendIdent::onServerAnswer);
     m_msgnr = m_rmInterface->rmIdent(m_ident);
 }
 

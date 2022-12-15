@@ -27,7 +27,8 @@ TaskChannelGetRejection::TaskChannelGetRejection(Zera::Server::PcbInterfacePtr p
 
 void TaskChannelGetRejection::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelGetRejection::onServerAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+            this, &TaskChannelGetRejection::onServerAnswer);
     m_msgnr = m_pcbInterface->getRejection(m_channelSysName, m_rangeName);
 }
 

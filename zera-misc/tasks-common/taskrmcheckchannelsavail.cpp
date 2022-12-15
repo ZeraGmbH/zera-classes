@@ -22,7 +22,8 @@ TaskRmCheckChannelsAvail::TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr 
 
 void TaskRmCheckChannelsAvail::start()
 {
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmCheckChannelsAvail::onServerAnswer);
+    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer,
+            this, &TaskRmCheckChannelsAvail::onServerAnswer);
     m_msgnr = m_rmInterface->getResources("SENSE");
 }
 
