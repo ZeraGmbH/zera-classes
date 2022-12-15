@@ -26,7 +26,8 @@ TaskChannelReadRanges::TaskChannelReadRanges(Zera::Server::PcbInterfacePtr pcbIn
 
 void TaskChannelReadRanges::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelReadRanges::onServerAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+            this, &TaskChannelReadRanges::onServerAnswer);
     m_msgnr = m_pcbInterface->getRangeList(m_channelName);
 }
 

@@ -20,7 +20,8 @@ TaskRmCheckResourceType::TaskRmCheckResourceType(Zera::Server::RMInterfacePtr rm
 
 void TaskRmCheckResourceType::start()
 {
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer, this, &TaskRmCheckResourceType::onServerAnswer);
+    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer,
+            this, &TaskRmCheckResourceType::onServerAnswer);
     m_msgnr = m_rmInterface->getResourceTypes();
 }
 

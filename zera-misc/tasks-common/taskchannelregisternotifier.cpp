@@ -21,7 +21,8 @@ TaskChannelRegisterNotifier::TaskChannelRegisterNotifier(Zera::Server::PcbInterf
 
 void TaskChannelRegisterNotifier::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskChannelRegisterNotifier::onServerAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+            this, &TaskChannelRegisterNotifier::onServerAnswer);
     m_msgnr = m_pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_channelName), "1");
 }
 

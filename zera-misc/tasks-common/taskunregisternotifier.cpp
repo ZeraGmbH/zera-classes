@@ -17,7 +17,8 @@ TaskUnregisterNotifier::TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcb
 
 void TaskUnregisterNotifier::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer, this, &TaskUnregisterNotifier::onServerAnswer);
+    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+            this, &TaskUnregisterNotifier::onServerAnswer);
     m_msgnr = m_pcbInterface->unregisterNotifiers();
 }
 
