@@ -69,7 +69,6 @@ public:
     cAdjustIterators();
 
     int m_nAdjustGainIt;
-    int m_nAdjustOffsetIt;
     int m_nAdjustPhaseIt;
 };
 
