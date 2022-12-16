@@ -80,18 +80,12 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_adjustOffsetMachine.setInitialState(&m_adjustoffsetSetNodeState);
 
     connect(&m_adjustoffsetSetNodeState, &QState::entered, this, [&] () {
-        cAdjustIterators *pits;
-        if (m_adjustIteratorHash.contains(m_sAdjustChannel))
-            pits = m_adjustIteratorHash[m_sAdjustChannel];
-        else
-            m_adjustIteratorHash[m_sAdjustChannel] = pits = new cAdjustIterators();
         double rawActual = m_AdjustActualValue;
         if(fabs(m_AdjustCorrection) > 1e-3) {
             rawActual = m_AdjustActualValue - m_AdjustCorrection * m_AdjustRejectionValue / m_AdjustRejection;
         }
         double Corr = (m_AdjustTargetValue - rawActual) * m_AdjustRejection / m_AdjustRejectionValue;
-        m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, pits->m_nAdjustOffsetIt, Corr, m_AdjustTargetValue)] = setoffsetnode;
-        pits->m_nAdjustOffsetIt++;
+        m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, 0, Corr, m_AdjustTargetValue)] = setoffsetnode;
     });
 
     m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustphaseContinue, &m_adjustphaseSetNodeState);
@@ -826,7 +820,7 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 
 cAdjustIterators::cAdjustIterators()
 {
-    m_nAdjustGainIt = m_nAdjustOffsetIt = m_nAdjustPhaseIt = 0;
+    m_nAdjustGainIt = m_nAdjustPhaseIt = 0;
 }
 
 }
