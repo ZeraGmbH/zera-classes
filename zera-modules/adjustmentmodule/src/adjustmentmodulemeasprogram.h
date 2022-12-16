@@ -108,7 +108,7 @@ private:
     double symAngle(double ang);
 
     cAdjustmentModule* m_pModule;
-    // we use the following 9 parameters globally defined for easier
+    // we use the following 7 parameters globally defined for easier
     // use within statemachines ... we have to keep in mind that adjustment
     // commands can only be used in sequence not in parallel
     QString m_sAdjustSysName;
@@ -118,8 +118,6 @@ private:
     double m_AdjustActualValue;
     double m_AdjustFrequency;
     double m_AdjustCorrection;
-    double m_AdjustRejection;
-    double m_AdjustRejectionValue;
 
     int m_AdjustEntity;
     QString m_AdjustComponent;
