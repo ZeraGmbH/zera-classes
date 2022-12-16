@@ -2,9 +2,7 @@
 #include "adjustmentmodule.h"
 #include "adjustvalidator.h"
 #include "adjustmentmoduleconfiguration.h"
-#include "taskoffsetgetcorrection.h"
-#include "taskchannelgetrejection.h"
-#include "taskchannelgeturvalue.h"
+#include "taskoffset.h"
 #include <modulevalidator.h>
 #include <reply.h>
 #include <intvalidator.h>
@@ -33,7 +31,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 
     connect(&m_offsetTasks, &TaskComposite::sigFinish, [&](bool ok) {
         if(ok)
-            m_adjustOffsetMachine.start();
+            m_pPARAdjustOffset->setValue(receivedPar);
     });
 
 
@@ -72,21 +70,6 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 
     connect(&m_adjustamplitudeGetCorrState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeGetCorr);
     connect(&m_adjustamplitudeSetNodeState, &QState::entered, this, &cAdjustmentModuleMeasProgram::adjustamplitudeSetNode);
-
-    m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustoffsetContinue, &m_adjustoffsetFinishState);
-    m_adjustoffsetSetNodeState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustoffsetFinishState);
-    m_adjustOffsetMachine.addState(&m_adjustoffsetSetNodeState);
-    m_adjustOffsetMachine.addState(&m_adjustoffsetFinishState);
-    m_adjustOffsetMachine.setInitialState(&m_adjustoffsetSetNodeState);
-
-    connect(&m_adjustoffsetSetNodeState, &QState::entered, this, [&] () {
-        double rawActual = m_AdjustActualValue;
-        if(fabs(m_AdjustCorrection) > 1e-3) {
-            rawActual = m_AdjustActualValue - m_AdjustCorrection * m_AdjustRejectionValue / m_AdjustRejection;
-        }
-        double Corr = (m_AdjustTargetValue - rawActual) * m_AdjustRejection / m_AdjustRejectionValue;
-        m_MsgNrCmdList[m_commonObjects->m_pcbInterface->setOffsetNode(m_sAdjustSysName, m_sAdjustRange, 0, Corr, m_AdjustTargetValue)] = setoffsetnode;
-    });
 
     m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustphaseContinue, &m_adjustphaseSetNodeState);
     m_adjustphaseGetCorrState.addTransition(this, &cAdjustmentModuleMeasProgram::adjustError, &m_adjustphaseFinishState);
@@ -589,31 +572,16 @@ void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
-
     m_AdjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
     m_AdjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
     m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
-    m_offsetTasks.addSub(TaskOffsetGetCorrection::create(m_commonObjects->m_pcbInterface,
-                                                         m_sAdjustSysName, m_sAdjustRange, m_AdjustTargetValue,
-                                                         m_AdjustCorrection,
-                                                         TRANSACTION_TIMEOUT, [&]{
-        notifyExecutionError(readOffsetCorrErrMsg);
-        m_pPARAdjustOffset->setError();
-    }));
-    m_offsetTasks.addSub(TaskChannelGetRejection::create(m_commonObjects->m_pcbInterface,
-                                                         m_sAdjustSysName, m_sAdjustRange,
-                                                         m_AdjustRejection,
-                                                         TRANSACTION_TIMEOUT, [&]{
-        notifyExecutionError(readrangerejectionErrMsg);
-        m_pPARAdjustOffset->setError();
-    }));
-    m_offsetTasks.addSub(TaskChannelGetUrValue::create(m_commonObjects->m_pcbInterface,
-                                                       m_sAdjustSysName, m_sAdjustRange,
-                                                       m_AdjustRejectionValue,
-                                                       TRANSACTION_TIMEOUT, [&]{
-        notifyExecutionError(readrangeurvalueErrMsg);
-        m_pPARAdjustOffset->setError();
-    }));
+    m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbInterface,
+                                            m_sAdjustSysName, m_sAdjustRange,
+                                            m_AdjustActualValue, m_AdjustTargetValue,
+                                            TRANSACTION_TIMEOUT, [&](QString errMsg){
+                             notifyExecutionError(errMsg);
+                             m_pPARAdjustOffset->setError();
+                         }));
     m_offsetTasks.start();
 }
 

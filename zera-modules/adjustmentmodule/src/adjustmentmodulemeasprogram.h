@@ -161,11 +161,7 @@ private:
     QState m_adjustamplitudeSetNodeState;
     QFinalState m_adjustamplitudeFinishState;
 
-    TaskSequence m_offsetTasks;
-    // statemachine for offset adjustment
-    QStateMachine m_adjustOffsetMachine;
-    QState m_adjustoffsetSetNodeState;
-    QFinalState m_adjustoffsetFinishState;
+    TaskParallel m_offsetTasks;
 
     // statemachine for phase adjustment
     QStateMachine m_adjustPhaseMachine;
