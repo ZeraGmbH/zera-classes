@@ -131,9 +131,6 @@ private:
     AdjustmentModuleActivator m_activator;
     QHash<quint32, int> m_MsgNrCmdList;
     QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
-    int m_nAdjustGainIt;
-    int m_nAdjustOffsetIt;
-    int m_nAdjustPhaseIt;
 
     cVeinModuleParameter* m_pPARComputation;
     cVeinModuleParameter* m_pPARStorage;
