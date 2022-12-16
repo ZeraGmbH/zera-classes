@@ -572,12 +572,12 @@ void cAdjustmentModuleMeasProgram::adjustphaseSetNode()
 void cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand(QVariant var)
 {
     setAdjustEnvironment(var);
-    m_AdjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
-    m_AdjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
-    m_AdjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(m_AdjustEntity, m_AdjustComponent).toDouble();
+    int adjustEntity = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_nEntity;
+    QString adjustComponent = getConfData()->m_AdjChannelInfoHash[m_sAdjustSysName]->offsetAdjInfo.m_sComponent;
+    double adjustActualValue = m_pModule->m_pStorageSystem->getStoredValue(adjustEntity, adjustComponent).toDouble();
     m_offsetTasks.addSub(TaskOffset::create(m_commonObjects->m_pcbInterface,
                                             m_sAdjustSysName, m_sAdjustRange,
-                                            m_AdjustActualValue, m_AdjustTargetValue,
+                                            adjustActualValue, m_AdjustTargetValue,
                                             TRANSACTION_TIMEOUT, [&](QString errMsg){
                              notifyExecutionError(errMsg);
                              m_pPARAdjustOffset->setError();
