@@ -124,7 +124,7 @@ private:
     int m_AdjustEntity;
     QString m_AdjustComponent;
     bool m_bAuthorized;
-    QVariant receivedPar;
+    QVariant m_receivedPar;
 
     AdjustmentModuleCommonPtr m_commonObjects;
     AdjustmentModuleActivator m_activator;
