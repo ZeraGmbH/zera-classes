@@ -68,8 +68,8 @@ void test_taskfortest::onePassCount()
     TaskForTest task(0, true);
     task.start();
     QCoreApplication::processEvents();
-    QCOMPARE(TaskForTest::getOkCount(), 1);
-    QCOMPARE(TaskForTest::getErrCount(), 0);
+    QCOMPARE(TaskForTest::okCount(), 1);
+    QCOMPARE(TaskForTest::errCount(), 0);
 }
 
 void test_taskfortest::oneErrCount()
@@ -77,8 +77,8 @@ void test_taskfortest::oneErrCount()
     TaskForTest task(0, false);
     task.start();
     QCoreApplication::processEvents();
-    QCOMPARE(TaskForTest::getOkCount(), 0);
-    QCOMPARE(TaskForTest::getErrCount(), 1);
+    QCOMPARE(TaskForTest::okCount(), 0);
+    QCOMPARE(TaskForTest::errCount(), 1);
 }
 
 void test_taskfortest::oneDtorCount()
@@ -86,7 +86,7 @@ void test_taskfortest::oneDtorCount()
     {
         TaskForTest task(0, true);
     }
-    QCOMPARE(TaskForTest::getDtorCount(), 1);
+    QCOMPARE(TaskForTest::dtorCount(), 1);
 }
 
 void test_taskfortest::taskId()
