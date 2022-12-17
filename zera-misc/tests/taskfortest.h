@@ -14,9 +14,9 @@ public:
     ~TaskForTest() override;
     void start() override;
     static void resetCounters();
-    static int getOkCount() { return m_finishOkCount; }
-    static int getErrCount() { return m_finishErrCount; }
-    static int getDtorCount() { return m_dtorCount; }
+    static int okCount() { return m_finishOkCount; }
+    static int errCount() { return m_finishErrCount; }
+    static int dtorCount() { return m_dtorCount; }
 private slots:
     void doEmit();
 private:

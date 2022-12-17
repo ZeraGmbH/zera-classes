@@ -1,5 +1,6 @@
 #include "test_taskimmediatelambda.h"
 #include "taskimmediatelambda.h"
+#include "tasktesthelper.h"
 #include "tasksequence.h"
 #include <QTest>
 
@@ -10,17 +11,10 @@ void test_taskimmediatelambda::startPass()
     TaskCompositePtr task = TaskImmediateLambda::create([&](){
         return true;
     });
-    int okCount = 0;
-    int errCount = 0;
-    connect(task.get(), &TaskComposite::sigFinish, [&](bool ok) {
-        if(ok)
-            okCount++;
-        else
-            errCount++;
-    });
+    TaskTestHelper helper(task.get());
     task->start();
-    QCOMPARE(okCount, 1);
-    QCOMPARE(errCount, 0);
+    QCOMPARE(helper.okCount(), 1);
+    QCOMPARE(helper.errCount(), 0);
 }
 
 void test_taskimmediatelambda::startFail()
@@ -28,15 +22,8 @@ void test_taskimmediatelambda::startFail()
     TaskCompositePtr task = TaskImmediateLambda::create([&](){
         return false;
     });
-    int okCount = 0;
-    int errCount = 0;
-    connect(task.get(), &TaskComposite::sigFinish, [&](bool ok) {
-        if(ok)
-            okCount++;
-        else
-            errCount++;
-    });
+    TaskTestHelper helper(task.get());
     task->start();
-    QCOMPARE(okCount, 0);
-    QCOMPARE(errCount, 1);
+    QCOMPARE(helper.okCount(), 0);
+    QCOMPARE(helper.errCount(), 1);
 }
