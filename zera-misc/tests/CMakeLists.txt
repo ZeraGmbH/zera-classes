@@ -34,6 +34,8 @@ target_link_libraries(zera-misc-unittest
 add_library(helpers STATIC
     taskfortest.h
     taskfortest.cpp
+    tasktesthelper.h
+    tasktesthelper.cpp
     )
 
 target_include_directories(helpers
