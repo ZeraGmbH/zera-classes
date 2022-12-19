@@ -2,23 +2,23 @@
 #define TASKRMCHECKCHANNELSAVAIL_H
 
 #include "taskcomposit.h"
-#include "rminterface.h"
+#include "rmabstractinterface.h"
 #include <QStringList>
 
 class TaskRmCheckChannelsAvail : public TaskComposite
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::RMInterfacePtr rmInterface,
+    static TaskCompositePtr create(RmAbstractInterfacePtr rmInterface,
                                    QStringList expectedChannels,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr rmInterface,
+    TaskRmCheckChannelsAvail(RmAbstractInterfacePtr rmInterface,
                              QStringList expectedChannels);
     void start() override;
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
-    Zera::Server::RMInterfacePtr m_rmInterface;
+    RmAbstractInterfacePtr m_rmInterface;
     QStringList m_expectedChannels;
     quint32 m_msgnr;
 };

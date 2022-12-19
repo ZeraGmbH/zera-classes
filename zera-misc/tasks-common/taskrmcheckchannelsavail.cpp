@@ -2,7 +2,7 @@
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-TaskCompositePtr TaskRmCheckChannelsAvail::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskCompositePtr TaskRmCheckChannelsAvail::create(RmAbstractInterfacePtr rmInterface,
                                                   QStringList expectedChannels,
                                                   int timeout, std::function<void ()> additionalErrorHandler)
 {
@@ -13,7 +13,7 @@ TaskCompositePtr TaskRmCheckChannelsAvail::create(Zera::Server::RMInterfacePtr r
                                              additionalErrorHandler);
 }
 
-TaskRmCheckChannelsAvail::TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr rmInterface,
+TaskRmCheckChannelsAvail::TaskRmCheckChannelsAvail(RmAbstractInterfacePtr rmInterface,
                                                    QStringList expectedChannels) :
     m_rmInterface(rmInterface),
     m_expectedChannels(expectedChannels)
@@ -22,7 +22,7 @@ TaskRmCheckChannelsAvail::TaskRmCheckChannelsAvail(Zera::Server::RMInterfacePtr 
 
 void TaskRmCheckChannelsAvail::start()
 {
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer,
+    connect(m_rmInterface.get(), &RmAbstractInterface::serverAnswer,
             this, &TaskRmCheckChannelsAvail::onServerAnswer);
     m_msgnr = m_rmInterface->getResources("SENSE");
 }
