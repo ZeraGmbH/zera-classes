@@ -497,7 +497,7 @@ void cPllMeasChannel::readRangeProperties3()
 
 void cPllMeasChannel::setSenseChannelRangeNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("sens:%1:rang?").arg(m_sName), QString("%1").arg(notifierNr))] = setchannelrangenotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("sens:%1:rang?").arg(m_sName), notifierNr)] = setchannelrangenotifier;
 }
 
 

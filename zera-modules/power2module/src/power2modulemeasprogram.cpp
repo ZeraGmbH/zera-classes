@@ -1476,7 +1476,7 @@ void cPower2ModuleMeasProgram::setSenseChannelRangeNotifier()
     infoRead = infoReadList.takeFirst();
     notifierNr++;
     // we will get irq+1 .. irq+6 for notification if ranges change
-    m_MsgNrCmdList[ m_measChannelInfoHash[infoRead].pcbIFace->registerNotifier(QString("sens:%1:rang?").arg(infoRead), QString("%1").arg(notifierNr))] = setchannelrangenotifier;
+    m_MsgNrCmdList[ m_measChannelInfoHash[infoRead].pcbIFace->registerNotifier(QString("sens:%1:rang?").arg(infoRead), notifierNr)] = setchannelrangenotifier;
 
 }
 

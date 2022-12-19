@@ -507,7 +507,7 @@ void cStatusModuleInit::pcbserverReadAdjChksum()
 
 void cStatusModuleInit::registerClampCatalogNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), QString("1"))] = STATUSMODINIT::registernotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), 1)] = STATUSMODINIT::registernotifier;
 }
 
 void cStatusModuleInit::unregisterClampCatalogNotifier()
