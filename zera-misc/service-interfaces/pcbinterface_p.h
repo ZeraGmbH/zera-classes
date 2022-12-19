@@ -159,7 +159,7 @@ public:
     // resource query more generell
     virtual quint32 resourceAliasQuery(QString resourceType, QString resourceName);
 
-    virtual quint32 registerNotifier(QString query, QString notifier); // register for notification on change
+    virtual quint32 registerNotifier(QString query, int notifyId); // register for notification on change
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
     // all commands to system interface

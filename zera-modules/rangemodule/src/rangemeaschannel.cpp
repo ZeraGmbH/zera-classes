@@ -1078,7 +1078,7 @@ void cRangeMeasChannel::resetStatusSlot()
 
 void cRangeMeasChannel::setNotifierRangeCat()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName),"1")] = registerNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_sName), 1)] = registerNotifier;
 }
 
 
