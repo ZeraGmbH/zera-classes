@@ -1,10 +1,10 @@
 #include "rmtestanswers.h"
 
-RmTestAnswer::RmTestAnswer(quint8 reply, QVariant answer, MsgIdType msgIdType)
+RmTestAnswer::RmTestAnswer(quint8 reply, QVariant answer, AnswerType answerType)
 {
     this->reply = reply;
     this->answer = answer;
-    this->msgIdType = msgIdType;
+    this->answerType = answerType;
 }
 
 RmTestAnswers::RmTestAnswers(QList<RmTestAnswer> answers) :

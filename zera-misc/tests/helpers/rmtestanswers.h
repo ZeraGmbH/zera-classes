@@ -7,16 +7,17 @@
 
 struct RmTestAnswer
 {
-    enum MsgIdType
+    enum AnswerType
     {
-        DEFAULT,
-        INTERRUPT,
-        OTHER
+        MSG_ID_MATCH,
+        MSG_ID_INTERRUPT,
+        MSG_ID_OTHER,
+        TCP_ERROR
     };
-    RmTestAnswer(quint8 reply, QVariant answer, MsgIdType msgIdType = DEFAULT);
+    RmTestAnswer(quint8 reply, QVariant answer, AnswerType answerType = MSG_ID_MATCH);
     quint8 reply;
     QVariant answer;
-    MsgIdType msgIdType;
+    AnswerType answerType;
 };
 
 class RmTestAnswers

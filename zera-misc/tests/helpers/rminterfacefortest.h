@@ -2,14 +2,14 @@
 #define RMINTERFACEFORTEST_H
 
 #include "rmtestanswers.h"
-#include "rmabstractinterface.h"
+#include "abstractrminterface.h"
 #include "msgidgenerator.h"
 
-class RmInterfaceForTest : public RmAbstractInterface
+class RmInterfaceForTest : public AbstractRmInterface
 {
     Q_OBJECT
 public:
-    static RmAbstractInterfacePtr create(QList<RmTestAnswer> answers);
+    static AbstractRmInterfacePtr create(QList<RmTestAnswer> answers);
     RmInterfaceForTest(QList<RmTestAnswer> answers);
     quint32 getResources(QString type) override;
 private:

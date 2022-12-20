@@ -78,4 +78,5 @@ SETUP_TESTS(
     test_taskparallel
     test_taskextraerrorhandler
     test_taskimmediatelambda
+    test_taskrmgetchannelsavail
 )

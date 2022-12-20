@@ -2,7 +2,7 @@
 #define RMINTERFACE_H
 
 #include "zeramisc_export.h"
-#include "rmabstractinterface.h"
+#include "abstractrminterface.h"
 #include <proxyclient.h>
 #include <memory>
 
@@ -10,7 +10,7 @@ namespace Zera { namespace Server {
 
 class cRMInterfacePrivate;
 
-class ZERAMISC_EXPORT cRMInterface: public RmAbstractInterface
+class ZERAMISC_EXPORT cRMInterface: public AbstractRmInterface
 {
     Q_OBJECT
 public:
