@@ -1,47 +1,43 @@
 #include "taskrmchannelscheckavail.h"
-#include "tasktimeoutdecorator.h"
-#include "reply.h"
+#include "taskrmchannelsgetavail.h"
 
 TaskCompositePtr TaskRmChannelsCheckAvail::create(AbstractRmInterfacePtr rmInterface,
                                                   QStringList expectedChannels,
                                                   int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
-                                             std::make_unique<TaskRmChannelsCheckAvail>(
-                                                 rmInterface,
-                                                 expectedChannels),
-                                             additionalErrorHandler);
+    return std::make_unique<TaskRmChannelsCheckAvail>(rmInterface,
+                                                      expectedChannels,
+                                                      timeout, additionalErrorHandler);
 }
 
 TaskRmChannelsCheckAvail::TaskRmChannelsCheckAvail(AbstractRmInterfacePtr rmInterface,
-                                                   QStringList expectedChannels) :
-    m_rmInterface(rmInterface),
+                                                   QStringList expectedChannels,
+                                                   int timeout, std::function<void ()> additionalErrorHandler) :
+    m_taskGetChannelList(TaskRmChannelsGetAvail::create(rmInterface,
+                                                        timeout,
+                                                        m_receivedChannels,
+                                                        additionalErrorHandler)),
     m_expectedChannels(expectedChannels)
 {
 }
 
 void TaskRmChannelsCheckAvail::start()
 {
-    connect(m_rmInterface.get(), &AbstractRmInterface::serverAnswer,
-            this, &TaskRmChannelsCheckAvail::onServerAnswer);
-    m_msgnr = m_rmInterface->getResources("SENSE");
+    connect(m_taskGetChannelList.get(), &TaskComposite::sigFinish,
+            this, &TaskRmChannelsCheckAvail::onChannelGetFinish);
+    m_taskGetChannelList->start();
 }
 
-void TaskRmChannelsCheckAvail::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskRmChannelsCheckAvail::onChannelGetFinish(bool ok)
 {
-    if(m_msgnr == msgnr) {
-        bool allPresent = true;
-        if (reply == ack) {
-            QString sAnswer = answer.toString();
-            for(const auto &expectedChannel : qAsConst(m_expectedChannels)) {
-                if(!sAnswer.contains(expectedChannel)) {
-                    allPresent = false;
-                    break;
-                }
+    if(ok) {
+        for(const auto &expectedChannel : qAsConst(m_expectedChannels)) {
+            if(!m_receivedChannels.contains(expectedChannel)) {
+                ok = false;
+                break;
             }
         }
-        else
-            allPresent = false;
-        finishTask(allPresent);
     }
+    m_taskGetChannelList = nullptr;
+    emit sigFinish(ok, getTaskId());
 }

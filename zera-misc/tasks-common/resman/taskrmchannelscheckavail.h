@@ -13,14 +13,15 @@ public:
                                    QStringList expectedChannels,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskRmChannelsCheckAvail(AbstractRmInterfacePtr rmInterface,
-                             QStringList expectedChannels);
+                             QStringList expectedChannels,
+                             int timeout, std::function<void()> additionalErrorHandler = []{});
     void start() override;
 private slots:
-    void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void onChannelGetFinish(bool ok);
 private:
-    AbstractRmInterfacePtr m_rmInterface;
+    TaskCompositePtr m_taskGetChannelList;
+    QStringList m_receivedChannels;
     QStringList m_expectedChannels;
-    quint32 m_msgnr;
 };
 
 #endif // TASKRMCHANNELSCHECKAVAIL_H
