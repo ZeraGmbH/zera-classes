@@ -1,23 +1,23 @@
-#include "taskrmgetchannelsavail.h"
+#include "taskrmchannelsgetavail.h"
 #include "tasktimeoutdecorator.h"
 
-QStringList TaskRmGetChannelsAvail::m_defaultSenseResourcesIgnored = QStringList() << "mmode";
+QStringList TaskRmChannelsGetAvail::m_defaultSenseResourcesIgnored = QStringList() << "mmode";
 
-TaskCompositePtr TaskRmGetChannelsAvail::create(AbstractRmInterfacePtr rmInterface,
+TaskCompositePtr TaskRmChannelsGetAvail::create(AbstractRmInterfacePtr rmInterface,
                                                 int timeout,
                                                 QStringList &channelSysNameList,
                                                 std::function<void ()> additionalErrorHandler,
                                                 QStringList senseResourcesIgnored)
 {
     return TaskTimeoutDecorator::wrapTimeout(timeout,
-                                             std::make_unique<TaskRmGetChannelsAvail>(
+                                             std::make_unique<TaskRmChannelsGetAvail>(
                                                  rmInterface,
                                                  channelSysNameList,
                                                  senseResourcesIgnored),
                                              additionalErrorHandler);
 }
 
-TaskRmGetChannelsAvail::TaskRmGetChannelsAvail(AbstractRmInterfacePtr rmInterface,
+TaskRmChannelsGetAvail::TaskRmChannelsGetAvail(AbstractRmInterfacePtr rmInterface,
                                                QStringList &channelSysNameList,
                                                QStringList senseResourcesIgnored) :
     TaskServerTransactionTemplate(rmInterface),
@@ -27,18 +27,18 @@ TaskRmGetChannelsAvail::TaskRmGetChannelsAvail(AbstractRmInterfacePtr rmInterfac
 {
 }
 
-quint32 TaskRmGetChannelsAvail::sendToServer()
+quint32 TaskRmChannelsGetAvail::sendToServer()
 {
     return m_rmInterface->getResources("SENSE");
 }
 
-bool TaskRmGetChannelsAvail::handleServerAnswer(QVariant answer)
+bool TaskRmChannelsGetAvail::handleServerAnswer(QVariant answer)
 {
     fillChannelList(answer);
     return true;
 }
 
-void TaskRmGetChannelsAvail::fillChannelList(QVariant answer)
+void TaskRmChannelsGetAvail::fillChannelList(QVariant answer)
 {
     QStringList channelList = answer.toString().split(";", Qt::SkipEmptyParts);
     for(const auto &channel : qAsConst(channelList)) {

@@ -1,17 +1,17 @@
-#ifndef TASKCHANNELREADALIAS_H
-#define TASKCHANNELREADALIAS_H
+#ifndef TASKCHANNELGETALIAS_H
+#define TASKCHANNELGETALIAS_H
 
 #include "pcbinterface.h"
 #include "taskcomposit.h"
 
-class TaskChannelReadAlias : public TaskComposite
+class TaskChannelGetAlias : public TaskComposite
 {
     Q_OBJECT
 public:
     static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
                                    QString& valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelReadAlias(Zera::Server::PcbInterfacePtr pcbInterface,
+    TaskChannelGetAlias(Zera::Server::PcbInterfacePtr pcbInterface,
                          QString channelName,
                          QString& valueReceived);
     void start() override;
@@ -24,4 +24,4 @@ private:
     quint32 m_msgnr;
 };
 
-#endif // TASKCHANNELREADALIAS_H
+#endif // TASKCHANNELGETALIAS_H

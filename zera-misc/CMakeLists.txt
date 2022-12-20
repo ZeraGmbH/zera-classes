@@ -1,5 +1,6 @@
 if(ZC_BUILD_MODULES)
     file(GLOB SOURCES_FOR_MODULE
+        channels/*.cpp
         service-interfaces/*.cpp
         tasks-common/*.cpp
         tasks-common/pcb-server/*.cpp
@@ -11,6 +12,7 @@ if(ZC_BUILD_MODULES)
         ethadress_p.cpp
     )
     file(GLOB HEADER_FOR_MODULE
+        channels/*.h
         service-interfaces/*.h
         tasks-common/*.h
         tasks-common/pcb-server/*.h
@@ -71,6 +73,7 @@ target_include_directories(zeramisc
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/channels>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/task-runner>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common>

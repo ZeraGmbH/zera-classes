@@ -4,7 +4,7 @@
 #include "taskcomposit.h"
 #include "pcbinterface.h"
 
-class TaskChannelReadRanges : public TaskComposite
+class TaskChannelGetRangeList : public TaskComposite
 {
     Q_OBJECT
 public:
@@ -12,7 +12,7 @@ public:
                                    QString channelName,
                                    QStringList &targetRangeList,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelReadRanges(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName, QStringList &targetRangeList);
+    TaskChannelGetRangeList(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName, QStringList &targetRangeList);
     void start() override;
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);

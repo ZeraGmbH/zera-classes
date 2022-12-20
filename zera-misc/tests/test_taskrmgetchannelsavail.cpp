@@ -1,5 +1,5 @@
 #include "test_taskrmgetchannelsavail.h"
-#include "taskrmgetchannelsavail.h"
+#include "taskrmchannelsgetavail.h"
 #include "rminterfacefortest.h"
 #include "taskfortest.h"
 #include "tasktesthelper.h"
@@ -15,7 +15,7 @@ void test_taskrmgetchannelsavail::getThreeChannels()
     AbstractRmInterfacePtr rmInterface = RmInterfaceForTest::create(answers);
 
     QStringList channelList;
-    TaskCompositePtr task = TaskRmGetChannelsAvail::create(rmInterface,
+    TaskCompositePtr task = TaskRmChannelsGetAvail::create(rmInterface,
                                                            DELAY_TIME,
                                                            channelList);
     task->start();
@@ -31,7 +31,7 @@ void test_taskrmgetchannelsavail::getThreeChannelsIgnoreMMode()
     AbstractRmInterfacePtr rmInterface = RmInterfaceForTest::create(answers);
 
     QStringList channelList;
-    TaskCompositePtr task = TaskRmGetChannelsAvail::create(rmInterface,
+    TaskCompositePtr task = TaskRmChannelsGetAvail::create(rmInterface,
                                                            DELAY_TIME,
                                                            channelList);
     task->start();
