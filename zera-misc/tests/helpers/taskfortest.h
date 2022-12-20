@@ -2,9 +2,8 @@
 #define TASKFORTEST_H
 
 #include "taskcomposit.h"
+#include "testdefaults.h"
 #include <QTimer>
-
-static constexpr int DELAY_TIME = 10;
 
 class TaskForTest : public TaskComposite
 {
