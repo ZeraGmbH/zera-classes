@@ -9,11 +9,6 @@ class test_taskrmgetchannelsavail : public QObject
 private slots:
     void getThreeChannels();
     void getThreeChannelsIgnoreMMode();
-    void noChannelsOnNack();
-    void okReceiveOnAck();
-    void errReceiveOnNack();
-    void noReceiveOnOther();
-    void errReceiveOnTcpError();
 };
 
 #endif // TEST_TASKRMGETCHANNELSAVAIL_H

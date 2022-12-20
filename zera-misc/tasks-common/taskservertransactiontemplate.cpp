@@ -2,16 +2,16 @@
 #include "reply.h"
 
 TaskServerTransactionTemplate::TaskServerTransactionTemplate(AbstractServerInterfacePtr server) :
-    m_server(server)
+    m_abstractServer(server)
 {
 }
 
 void TaskServerTransactionTemplate::start()
 {
-    connect(m_server.get(), &AbstractServerInterface::serverAnswer,
+    connect(m_abstractServer.get(), &AbstractServerInterface::serverAnswer,
             this, &TaskServerTransactionTemplate::onServerAnswer,
             Qt::QueuedConnection);
-    connect(m_server.get(), &AbstractServerInterface::tcpError,
+    connect(m_abstractServer.get(), &AbstractServerInterface::tcpError,
             this, &TaskServerTransactionTemplate::onServerError,
             Qt::QueuedConnection);
     m_msgnr = sendToServer();
