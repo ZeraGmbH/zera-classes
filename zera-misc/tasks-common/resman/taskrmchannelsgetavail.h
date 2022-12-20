@@ -19,7 +19,7 @@ public:
                            QStringList senseResourcesIgnored = m_defaultSenseResourcesIgnored);
     quint32 sendToServer() override;
 protected:
-    bool handleServerAnswer(QVariant answer) override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
 private:
     void fillChannelList(QVariant answer);
     AbstractRmInterfacePtr m_rmInterface;

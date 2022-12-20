@@ -12,7 +12,7 @@ public:
     TaskServerTransactionTemplateTest(AbstractRmInterfacePtr server, QString &receivedAnswer);
     virtual quint32 sendToServer();
 protected:
-    virtual bool handleServerAnswer(QVariant answer);
+    virtual bool handleCheckedServerAnswer(QVariant answer);
 private:
     AbstractRmInterfacePtr m_rmserver;
     QString &m_receivedAnswer;

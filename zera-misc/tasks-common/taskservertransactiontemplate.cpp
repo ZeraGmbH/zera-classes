@@ -22,7 +22,7 @@ void TaskServerTransactionTemplate::onServerAnswer(quint32 msgnr, quint8 reply, 
     if(m_msgnr == msgnr) {
         bool ok = (reply == ack);
         if (ok)
-            ok = handleServerAnswer(answer);
+            ok = handleCheckedServerAnswer(answer);
         finishTask(ok);
     }
 }

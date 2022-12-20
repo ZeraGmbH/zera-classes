@@ -32,7 +32,7 @@ quint32 TaskRmChannelsGetAvail::sendToServer()
     return m_rmInterface->getResources("SENSE");
 }
 
-bool TaskRmChannelsGetAvail::handleServerAnswer(QVariant answer)
+bool TaskRmChannelsGetAvail::handleCheckedServerAnswer(QVariant answer)
 {
     fillChannelList(answer);
     return true;
