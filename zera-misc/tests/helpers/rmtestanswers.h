@@ -6,15 +6,23 @@
 
 struct RmTestAnswer
 {
-    RmTestAnswer(quint8 reply, QVariant answer);
+    enum MsgIdType
+    {
+        DEFAULT,
+        INTERRUPT,
+        OTHER
+    };
+    RmTestAnswer(quint8 reply, QVariant answer, MsgIdType msgIdType = DEFAULT);
     quint8 reply;
     QVariant answer;
+    MsgIdType msgIdType;
 };
 
 class RmTestAnswers
 {
 public:
     RmTestAnswers(QList<RmTestAnswer> answers);
+    RmTestAnswer take();
 private:
     QList<RmTestAnswer> m_answers;
 };
