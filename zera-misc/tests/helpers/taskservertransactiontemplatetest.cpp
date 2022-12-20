@@ -17,7 +17,7 @@ quint32 TaskServerTransactionTemplateTest::sendToServer()
     return m_rmserver->getResources("");
 }
 
-bool TaskServerTransactionTemplateTest::handleServerAnswer(QVariant answer)
+bool TaskServerTransactionTemplateTest::handleCheckedServerAnswer(QVariant answer)
 {
     m_receivedAnswer = answer.toString();
     return true;

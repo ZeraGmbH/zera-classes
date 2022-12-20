@@ -14,7 +14,7 @@ public:
     void start() override;
     virtual quint32 sendToServer() = 0;
 protected:
-    virtual bool handleServerAnswer(QVariant answer) = 0;
+    virtual bool handleCheckedServerAnswer(QVariant answer) = 0;
 
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
