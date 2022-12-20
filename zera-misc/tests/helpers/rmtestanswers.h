@@ -1,6 +1,7 @@
 #ifndef RMTESTANSWERS_H
 #define RMTESTANSWERS_H
 
+#include "reply.h"
 #include <QVariant>
 #include <QList>
 
