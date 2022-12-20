@@ -2,6 +2,7 @@ if(ZC_BUILD_MODULES)
     file(GLOB SOURCES_FOR_MODULE
         service-interfaces/*.cpp
         tasks-common/*.cpp
+        tasks-common/pcb-server/*.cpp
         )
     set(SOURCES_FOR_MODULE
         ${SOURCES_FOR_MODULE}
@@ -11,6 +12,7 @@ if(ZC_BUILD_MODULES)
     file(GLOB HEADER_FOR_MODULE
         service-interfaces/*.h
         tasks-common/*.h
+        tasks-common/pcb-server/*.h
         )
     set(HEADER_FOR_MODULE
         ${HEADER_FOR_MODULE}
@@ -70,6 +72,7 @@ target_include_directories(zeramisc
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/task-runner>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common/pcb-server>
     )
 
 set_target_properties(zeramisc PROPERTIES VERSION ${PROJECT_VERSION})
