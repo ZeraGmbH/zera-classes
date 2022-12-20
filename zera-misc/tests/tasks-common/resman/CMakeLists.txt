@@ -19,8 +19,5 @@ function(SETUP_TESTS)
 endfunction()
 
 SETUP_TESTS(
-    test_taskimmediatelambda
-    test_taskparallel
-    test_tasksequence
-    test_timeoutdecorator
+    test_taskrmchannelsgetavail
 )
