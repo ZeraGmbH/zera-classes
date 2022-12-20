@@ -79,4 +79,5 @@ SETUP_TESTS(
     test_taskextraerrorhandler
     test_taskimmediatelambda
     test_taskrmgetchannelsavail
+    test_taskservertransactiontemplate
 )

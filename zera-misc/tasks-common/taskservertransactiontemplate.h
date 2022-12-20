@@ -21,7 +21,7 @@ private slots:
     void onServerError(QAbstractSocket::SocketError);
 private:
     quint32 m_msgnr = 0;
-    AbstractServerInterfacePtr m_server;
+    AbstractServerInterfacePtr m_abstractServer;
 };
 
 #endif // TASKSERVERTRANSACTIONTEMPLATE_H
