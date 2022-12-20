@@ -1,6 +1,7 @@
 enable_testing()
 
 add_subdirectory(helpers)
+add_subdirectory(task-runner)
 
 add_test(NAME    zera-misc-unittest
          COMMAND zera-misc-unittest)
@@ -51,11 +52,7 @@ endfunction()
 
 SETUP_TESTS(
     test_taskfortest
-    test_tasksequence
-    test_timeoutdecorator
-    test_taskparallel
     test_taskextraerrorhandler
-    test_taskimmediatelambda
     test_taskrmgetchannelsavail
     test_taskservertransactiontemplate
 )
