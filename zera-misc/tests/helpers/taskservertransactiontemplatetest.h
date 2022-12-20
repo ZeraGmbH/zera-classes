@@ -10,10 +10,10 @@ class TaskServerTransactionTemplateTest : public TaskServerTransactionTemplate
 public:
     static TaskCompositePtr create(AbstractRmInterfacePtr server, QString &receivedAnswer);
     TaskServerTransactionTemplateTest(AbstractRmInterfacePtr server, QString &receivedAnswer);
-    virtual quint32 sendToServer();
-protected:
-    virtual bool handleCheckedServerAnswer(QVariant answer);
+
 private:
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
     AbstractRmInterfacePtr m_rmserver;
     QString &m_receivedAnswer;
 };
