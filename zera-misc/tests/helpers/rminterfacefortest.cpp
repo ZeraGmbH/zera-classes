@@ -1,11 +1,13 @@
 #include "rminterfacefortest.h"
 
-RmInterfaceForTest::RmInterfaceForTest(RmTestAnswers answers) :
+RmAbstractInterfacePtr RmInterfaceForTest::create(QList<RmTestAnswer> answers)
+{
+    return std::make_shared<RmInterfaceForTest>(answers);
+}
+
+RmInterfaceForTest::RmInterfaceForTest(QList<RmTestAnswer> answers) :
     m_answers(answers)
 {
-    connect(this, &RmInterfaceForTest::serverAnswerQueued,
-            this, &RmInterfaceForTest::serverAnswer,
-            Qt::QueuedConnection);
 }
 
 quint32 RmInterfaceForTest::getResources(QString type)
@@ -29,6 +31,6 @@ quint32 RmInterfaceForTest::sendAnswer()
         msgIdReturned = m_msgIds.nextId();
         break;
     }
-    emit serverAnswerQueued(msgIdSend, answer.reply, answer.answer);
+    emit serverAnswer(msgIdSend, answer.reply, answer.answer);
     return msgIdReturned;
 }
