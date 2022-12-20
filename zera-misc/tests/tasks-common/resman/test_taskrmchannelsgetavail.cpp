@@ -1,15 +1,15 @@
-#include "test_taskrmgetchannelsavail.h"
+#include "test_taskrmchannelsgetavail.h"
 #include "taskrmchannelsgetavail.h"
 #include "rminterfacefortest.h"
 #include "taskfortest.h"
 #include "tasktesthelper.h"
 #include <QTest>
 
-QTEST_MAIN(test_taskrmgetchannelsavail)
+QTEST_MAIN(test_taskrmchannelsgetavail)
 
 static const char* defaultResponse = "m0;m1;m2";
 
-void test_taskrmgetchannelsavail::getThreeChannels()
+void test_taskrmchannelsgetavail::getThreeChannels()
 {
     QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
     AbstractRmInterfacePtr rmInterface = RmInterfaceForTest::create(answers);
@@ -25,7 +25,7 @@ void test_taskrmgetchannelsavail::getThreeChannels()
     QCOMPARE(channelList, expectedChannels);
 }
 
-void test_taskrmgetchannelsavail::getThreeChannelsIgnoreMMode()
+void test_taskrmchannelsgetavail::getThreeChannelsIgnoreMMode()
 {
     QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "m0;m1;m2;MMODE");
     AbstractRmInterfacePtr rmInterface = RmInterfaceForTest::create(answers);
