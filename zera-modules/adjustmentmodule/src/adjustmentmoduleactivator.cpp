@@ -5,10 +5,10 @@
 #include "taskserverconnectionstart.h"
 #include "taskrmsendident.h"
 #include "taskrmcheckresourcetype.h"
-#include "taskrmcheckchannelsavail.h"
-#include "taskchannelreadalias.h"
+#include "taskrmchannelscheckavail.h"
+#include "taskchannelgetalias.h"
 #include "taskchannelregisternotifier.h"
-#include "taskchannelreadranges.h"
+#include "taskchannelgetrangelist.h"
 #include "taskunregisternotifier.h"
 #include "taskimmediatelambda.h"
 #include "errormessages.h"
@@ -78,7 +78,7 @@ void AdjustmentModuleActivator::addStaticActivationTasks()
     m_activationTasks.addSub(TaskRmCheckResourceType::create(
                                  m_commonObjects->m_rmInterface,
                                  TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourcetypeErrMsg); }));
-    m_activationTasks.addSub(TaskRmCheckChannelsAvail::create(
+    m_activationTasks.addSub(TaskRmChannelsCheckAvail::create(
                                  m_commonObjects->m_rmInterface,
                                  m_configuredChannels,
                                  TRANSACTION_TIMEOUT,[&]{ emit errMsg(resourceErrMsg); }));
@@ -101,12 +101,12 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
     TaskContainerPtr channelTasks = TaskParallel::create();
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
         TaskContainerPtr perChannelTasks = TaskSequence::create();
-        perChannelTasks->addSub(TaskChannelReadAlias::create(
+        perChannelTasks->addSub(TaskChannelGetAlias::create(
                                     m_commonObjects->m_pcbInterface,
                                     channelName,
                                     m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sAlias,
                                     TRANSACTION_TIMEOUT, [&]{ emit errMsg(readaliasErrMsg); }));
-        perChannelTasks->addSub(TaskChannelReadRanges::create(
+        perChannelTasks->addSub(TaskChannelGetRangeList::create(
                                     m_commonObjects->m_pcbInterface,
                                     channelName,
                                     m_commonObjects->m_adjustChannelInfoHash[channelName]->m_sRangelist,

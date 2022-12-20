@@ -1,21 +1,21 @@
-#include "taskchannelreadalias.h"
+#include "taskchannelgetalias.h"
 #include "tasktimeoutdecorator.h"
 #include "reply.h"
 
-TaskCompositePtr TaskChannelReadAlias::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskCompositePtr TaskChannelGetAlias::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                               QString channelName,
                                               QString &valueReceived,
                                               int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskTimeoutDecorator::wrapTimeout(timeout,
-                                             std::make_unique<TaskChannelReadAlias>(
+                                             std::make_unique<TaskChannelGetAlias>(
                                                  pcbInterface,
                                                  channelName,
                                                  valueReceived),
                                              additionalErrorHandler);
 }
 
-TaskChannelReadAlias::TaskChannelReadAlias(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskChannelGetAlias::TaskChannelGetAlias(Zera::Server::PcbInterfacePtr pcbInterface,
                                            QString channelName,
                                            QString &valueReceived) :
     m_pcbInterface(pcbInterface),
@@ -24,14 +24,14 @@ TaskChannelReadAlias::TaskChannelReadAlias(Zera::Server::PcbInterfacePtr pcbInte
 {
 }
 
-void TaskChannelReadAlias::start()
+void TaskChannelGetAlias::start()
 {
     connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
-            this, &TaskChannelReadAlias::onServerAnswer);
+            this, &TaskChannelGetAlias::onServerAnswer);
     m_msgnr = m_pcbInterface->getAlias(m_channelName);
 }
 
-void TaskChannelReadAlias::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+void TaskChannelGetAlias::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
     if(m_msgnr == msgnr) {
         if (reply == ack)

@@ -1,18 +1,18 @@
-#ifndef TASKRMCHECKCHANNELSAVAIL_H
-#define TASKRMCHECKCHANNELSAVAIL_H
+#ifndef TASKRMCHANNELSCHECKAVAIL_H
+#define TASKRMCHANNELSCHECKAVAIL_H
 
 #include "taskcomposit.h"
 #include "abstractrminterface.h"
 #include <QStringList>
 
-class TaskRmCheckChannelsAvail : public TaskComposite
+class TaskRmChannelsCheckAvail : public TaskComposite
 {
     Q_OBJECT
 public:
     static TaskCompositePtr create(AbstractRmInterfacePtr rmInterface,
                                    QStringList expectedChannels,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskRmCheckChannelsAvail(AbstractRmInterfacePtr rmInterface,
+    TaskRmChannelsCheckAvail(AbstractRmInterfacePtr rmInterface,
                              QStringList expectedChannels);
     void start() override;
 private slots:
@@ -23,4 +23,4 @@ private:
     quint32 m_msgnr;
 };
 
-#endif // TASKRMCHECKCHANNELSAVAIL_H
+#endif // TASKRMCHANNELSCHECKAVAIL_H

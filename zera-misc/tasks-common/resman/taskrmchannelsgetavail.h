@@ -1,11 +1,11 @@
-#ifndef TASKRMGETCHANNELSAVAIL_H
-#define TASKRMGETCHANNELSAVAIL_H
+#ifndef TASKRMCHANNELSGETAVAIL_H
+#define TASKRMCHANNELSGETAVAIL_H
 
 #include "taskservertransactiontemplate.h"
 #include "abstractrminterface.h"
 #include <QStringList>
 
-class TaskRmGetChannelsAvail : public TaskServerTransactionTemplate
+class TaskRmChannelsGetAvail : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
@@ -14,7 +14,7 @@ public:
                                    QStringList &channelSysNameList,
                                    std::function<void()> additionalErrorHandler = []{},
                                    QStringList senseResourcesIgnored = m_defaultSenseResourcesIgnored);
-    TaskRmGetChannelsAvail(AbstractRmInterfacePtr rmInterface,
+    TaskRmChannelsGetAvail(AbstractRmInterfacePtr rmInterface,
                            QStringList &channelSysNameList,
                            QStringList senseResourcesIgnored = m_defaultSenseResourcesIgnored);
     quint32 sendToServer() override;
@@ -28,4 +28,4 @@ private:
     static QStringList m_defaultSenseResourcesIgnored;
 };
 
-#endif // TASKRMGETCHANNELSAVAIL_H
+#endif // TASKRMCHANNELSGETAVAIL_H
