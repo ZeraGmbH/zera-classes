@@ -17,10 +17,10 @@ public:
     TaskRmChannelsGetAvail(AbstractRmInterfacePtr rmInterface,
                            QStringList &channelSysNameList,
                            QStringList senseResourcesIgnored = m_defaultSenseResourcesIgnored);
-    quint32 sendToServer() override;
-protected:
-    bool handleCheckedServerAnswer(QVariant answer) override;
+
 private:
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
     void fillChannelList(QVariant answer);
     AbstractRmInterfacePtr m_rmInterface;
     QStringList &m_channelSysNameList;

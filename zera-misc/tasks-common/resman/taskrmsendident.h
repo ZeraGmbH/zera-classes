@@ -14,10 +14,10 @@ public:
     TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface,
                     QString ident,
                     int timeout, std::function<void()> additionalErrorHandler = []{});
-    quint32 sendToServer() override;
-protected:
-    bool handleCheckedServerAnswer(QVariant answer) override;
+
 private:
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::Server::RMInterfacePtr m_rmInterface;
     QString m_ident;
 };

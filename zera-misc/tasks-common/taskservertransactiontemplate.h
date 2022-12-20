@@ -12,14 +12,13 @@ class TaskServerTransactionTemplate : public TaskComposite
 public:
     TaskServerTransactionTemplate(AbstractServerInterfacePtr server);
     void start() override;
-    virtual quint32 sendToServer() = 0;
-protected:
-    virtual bool handleCheckedServerAnswer(QVariant answer) = 0;
 
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void onServerError(QAbstractSocket::SocketError);
 private:
+    virtual quint32 sendToServer() = 0;
+    virtual bool handleCheckedServerAnswer(QVariant answer) = 0;
     quint32 m_msgnr = 0;
     AbstractServerInterfacePtr m_abstractServer;
 };
