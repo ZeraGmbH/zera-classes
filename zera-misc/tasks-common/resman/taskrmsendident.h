@@ -11,9 +11,7 @@ public:
     static TaskCompositePtr create(Zera::Server::RMInterfacePtr rmInterface,
                                    QString ident,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface,
-                    QString ident,
-                    int timeout, std::function<void()> additionalErrorHandler = []{});
+    TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface, QString ident);
 
 private:
     quint32 sendToServer() override;
