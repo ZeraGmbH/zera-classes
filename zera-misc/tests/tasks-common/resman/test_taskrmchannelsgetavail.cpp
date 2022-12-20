@@ -1,7 +1,6 @@
 #include "test_taskrmchannelsgetavail.h"
 #include "taskrmchannelsgetavail.h"
 #include "rminterfacefortest.h"
-#include "taskfortest.h"
 #include "tasktesthelper.h"
 #include <QTest>
 
