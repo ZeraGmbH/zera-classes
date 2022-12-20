@@ -21,7 +21,7 @@ void test_taskfortest::onePassImmediate()
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
-    QVERIFY(helper.signalDelay() < DELAY_TIME/2);
+    QVERIFY(helper.signalDelayMs() < DELAY_TIME/2);
 }
 
 void test_taskfortest::oneErrImmediate()
@@ -34,7 +34,7 @@ void test_taskfortest::oneErrImmediate()
 
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
-    QVERIFY(helper.signalDelay() < DELAY_TIME/2);
+    QVERIFY(helper.signalDelayMs() < DELAY_TIME/2);
 }
 
 void test_taskfortest::onePassDelayed()
@@ -47,7 +47,7 @@ void test_taskfortest::onePassDelayed()
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
-    QVERIFY(helper.signalDelay() >= DELAY_TIME);
+    QVERIFY(helper.signalDelayMs() >= DELAY_TIME);
 }
 
 void test_taskfortest::oneErrDelayed()
@@ -60,7 +60,7 @@ void test_taskfortest::oneErrDelayed()
 
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
-    QVERIFY(helper.signalDelay() >= DELAY_TIME);
+    QVERIFY(helper.signalDelayMs() >= DELAY_TIME);
 }
 
 void test_taskfortest::onePassCount()
