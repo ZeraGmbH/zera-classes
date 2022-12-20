@@ -46,7 +46,7 @@ void test_timeoutdecorator::oneOkWithoutDelay()
     QCOMPARE(TaskForTest::okCount(), 1);
     QCOMPARE(TaskForTest::errCount(), 0);
     QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelay() < DELAY_TIME/2);
+    QVERIFY(helper.signalDelayMs() < DELAY_TIME/2);
 }
 
 void test_timeoutdecorator::oneErrWithoutDelay()
@@ -59,7 +59,7 @@ void test_timeoutdecorator::oneErrWithoutDelay()
     QCOMPARE(TaskForTest::okCount(), 0);
     QCOMPARE(TaskForTest::errCount(), 1);
     QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelay() < DELAY_TIME/2);
+    QVERIFY(helper.signalDelayMs() < DELAY_TIME/2);
 
 }
 
@@ -74,8 +74,8 @@ void test_timeoutdecorator::oneOkWithDelayAndInfiniteTimeout()
     QCOMPARE(TaskForTest::okCount(), 0);
     QCOMPARE(TaskForTest::errCount(), 0);
     QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelay() >= DELAY_TIME);
-    QVERIFY(helper.signalDelay() < 2*DELAY_TIME);
+    QVERIFY(helper.signalDelayMs() >= DELAY_TIME);
+    QVERIFY(helper.signalDelayMs() < 2*DELAY_TIME);
 }
 
 void test_timeoutdecorator::noTimeoutOnEarlyOk()
@@ -89,8 +89,8 @@ void test_timeoutdecorator::noTimeoutOnEarlyOk()
     QCOMPARE(TaskForTest::okCount(), 1);
     QCOMPARE(TaskForTest::errCount(), 0);
     QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelay() >= DELAY_TIME/2);
-    QVERIFY(helper.signalDelay() < 2*DELAY_TIME);
+    QVERIFY(helper.signalDelayMs() >= DELAY_TIME/2);
+    QVERIFY(helper.signalDelayMs() < 2*DELAY_TIME);
 }
 
 void test_timeoutdecorator::delayEqualsTimeout()
@@ -101,8 +101,8 @@ void test_timeoutdecorator::delayEqualsTimeout()
     QTest::qWait(1.5*DELAY_TIME);
     QCOMPARE(helper.okCount() + helper.errCount(), 1);
     QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelay() >= DELAY_TIME);
-    QVERIFY(helper.signalDelay() < 2*DELAY_TIME);
+    QVERIFY(helper.signalDelayMs() >= DELAY_TIME);
+    QVERIFY(helper.signalDelayMs() < 2*DELAY_TIME);
 }
 
 void test_timeoutdecorator::taskId()

@@ -12,6 +12,6 @@ void TaskTestHelper::onTaskFinish(bool ok, int taskId)
         m_okCount++;
     else
         m_errCount++;
-    m_signalDelay = m_elapsedTimer.elapsed();
+    m_signalDelayMs = m_elapsedTimer.elapsed();
     m_taskIdsReceived.append(taskId);
 }
