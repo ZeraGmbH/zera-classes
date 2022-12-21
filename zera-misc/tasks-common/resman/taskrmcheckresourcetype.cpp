@@ -1,8 +1,7 @@
 #include "taskrmcheckresourcetype.h"
 #include "tasktimeoutdecorator.h"
-#include "reply.h"
 
-TaskCompositePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskCompositePtr TaskRmCheckResourceType::create(AbstractRmInterfacePtr rmInterface,
                                                  int timeout, std::function<void ()> additionalErrorHandler,
                                                  QString checkResourceType)
 {
@@ -12,25 +11,19 @@ TaskCompositePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rm
                                              additionalErrorHandler);
 }
 
-TaskRmCheckResourceType::TaskRmCheckResourceType(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType) :
+TaskRmCheckResourceType::TaskRmCheckResourceType(AbstractRmInterfacePtr rmInterface, QString checkResourceType) :
+    TaskServerTransactionTemplate(rmInterface),
     m_rmInterface(rmInterface),
-    m_checkResourceType(checkResourceType)
+    m_checkResourceType(checkResourceType.toUpper())
 {
 }
 
-void TaskRmCheckResourceType::start()
+quint32 TaskRmCheckResourceType::sendToServer()
 {
-    connect(m_rmInterface.get(), &Zera::Server::cRMInterface::serverAnswer,
-            this, &TaskRmCheckResourceType::onServerAnswer);
-    m_msgnr = m_rmInterface->getResourceTypes();
+    return m_rmInterface->getResourceTypes();
 }
 
-void TaskRmCheckResourceType::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+bool TaskRmCheckResourceType::handleCheckedServerAnswer(QVariant answer)
 {
-    if(msgnr == m_msgnr) {
-        if((reply == ack) && (answer.toString().contains(m_checkResourceType)))
-            finishTask(true);
-        else
-            finishTask(false);
-    }
+    return answer.toString().toUpper().contains(m_checkResourceType);
 }

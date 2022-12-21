@@ -21,4 +21,5 @@ endfunction()
 SETUP_TESTS(
     test_taskrmchannelsgetavail
     test_taskrmchannelscheckavail
+    test_taskrmcheckresourcetype
 )
