@@ -18,7 +18,6 @@ private:
     bool handleCheckedServerAnswer(QVariant answer) override;
     AbstractRmInterfacePtr m_rmInterface;
     QString m_checkResourceType;
-    quint32 m_msgnr;
 };
 
 #endif // TASKRMCHECKRESOURCETYPE_H
