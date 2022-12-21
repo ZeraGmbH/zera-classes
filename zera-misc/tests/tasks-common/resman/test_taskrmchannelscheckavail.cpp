@@ -13,9 +13,11 @@ static const char* defaultResponse = "m0;m1;m2";
 void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
+    proxyClient->setAnswers(answers);
 
     QStringList expectedChannels = QString(defaultResponse).split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rmInterface,
@@ -31,9 +33,11 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
+    proxyClient->setAnswers(answers);
 
     QStringList expectedChannels = QString("m0;m1").split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rmInterface,
@@ -49,9 +53,11 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
+    proxyClient->setAnswers(answers);
 
     QStringList expectedChannels = QString("foo").split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rmInterface,

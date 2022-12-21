@@ -1,14 +1,14 @@
 #include "proxyclientfortest.h"
 #include <reply.h>
 
-Zera::Proxy::ProxyClientPtr ProxyClientForTest::create(RmTestAnswers answers)
+std::shared_ptr<ProxyClientForTest> ProxyClientForTest::create()
 {
-    return std::make_shared<ProxyClientForTest>(answers);
+    return std::make_shared<ProxyClientForTest>();
 }
 
-ProxyClientForTest::ProxyClientForTest(RmTestAnswers answers) :
-    m_answers(answers)
+void ProxyClientForTest::setAnswers(RmTestAnswers answers)
 {
+    m_answers = answers;
 }
 
 quint32 ProxyClientForTest::transmitCommand(ProtobufMessage::NetMessage *message)

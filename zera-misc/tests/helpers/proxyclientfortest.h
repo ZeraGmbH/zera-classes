@@ -10,8 +10,8 @@ class ProxyClientForTest : public Zera::Proxy::cProxyClient
 {
     Q_OBJECT
 public:
-    static Zera::Proxy::ProxyClientPtr create(RmTestAnswers answers);
-    ProxyClientForTest(RmTestAnswers answers);
+    static std::shared_ptr<ProxyClientForTest> create();
+    void setAnswers(RmTestAnswers answers);
     quint32 transmitCommand(ProtobufMessage::NetMessage *message) override;
 
 private:
@@ -23,5 +23,7 @@ private:
     RmTestAnswers m_answers;
     QStringList m_receivedCommands;
 };
+
+typedef std::shared_ptr<ProxyClientForTest> ProxyClientForTestPtr;
 
 #endif // PROXYCLIENTFORTEST_H

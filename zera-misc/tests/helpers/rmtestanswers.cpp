@@ -7,6 +7,10 @@ RmTestAnswer::RmTestAnswer(quint8 reply, QVariant answer, AnswerType answerType)
     this->answerType = answerType;
 }
 
+RmTestAnswers::RmTestAnswers()
+{
+}
+
 RmTestAnswers::RmTestAnswers(QList<RmTestAnswer> answers) :
     m_answers(answers)
 {
