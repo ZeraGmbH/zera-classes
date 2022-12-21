@@ -13,12 +13,11 @@ void ProxyClientForTest::setAnswers(RmTestAnswers answers)
 
 quint32 ProxyClientForTest::transmitCommand(ProtobufMessage::NetMessage *message)
 {
+    storeMessage(message);
     if(!m_answers.isEmpty()) {
         RmTestAnswer answer = m_answers.take();
-        if(answer.answerType !=RmTestAnswer::TCP_ERROR) {
-            storeMessage(message);
+        if(answer.answerType !=RmTestAnswer::TCP_ERROR)
             return sendAnswer(message, answer);
-        }
         else {
             emit tcpError(QAbstractSocket::RemoteHostClosedError);
             return 0;
