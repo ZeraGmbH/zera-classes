@@ -42,10 +42,10 @@ quint32 ProxyClientForTest::sendAnswer(ProtobufMessage::NetMessage *message, RmT
 void ProxyClientForTest::storeMessage(ProtobufMessage::NetMessage *message)
 {
     ProtobufMessage::NetMessage::ScpiCommand scpiCmd = message->scpi();
-    QString strCmd =
-            QString::fromStdString(scpiCmd.command()) +
-            " " +
-            QString::fromStdString(scpiCmd.parameter());
+    QString strCmd = QString::fromStdString(scpiCmd.command());
+    QString param = QString::fromStdString(scpiCmd.parameter());
+    if(!param.isEmpty())
+        strCmd += " " + param;
     m_receivedCommands.append(strCmd);
 }
 
