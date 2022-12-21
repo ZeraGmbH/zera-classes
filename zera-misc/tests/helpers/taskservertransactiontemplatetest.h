@@ -2,19 +2,19 @@
 #define TASKSERVERTRANSACTIONTEMPLATETEST_H
 
 #include "taskservertransactiontemplate.h"
-#include "abstractrminterface.h"
+#include "rminterface.h"
 
 class TaskServerTransactionTemplateTest : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(AbstractRmInterfacePtr server, QString &receivedAnswer);
-    TaskServerTransactionTemplateTest(AbstractRmInterfacePtr server, QString &receivedAnswer);
+    static TaskCompositePtr create(Zera::Server::RMInterfacePtr server, QString &receivedAnswer);
+    TaskServerTransactionTemplateTest(Zera::Server::RMInterfacePtr server, QString &receivedAnswer);
 
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
-    AbstractRmInterfacePtr m_rmserver;
+    Zera::Server::RMInterfacePtr m_rmserver;
     QString &m_receivedAnswer;
 };
 
