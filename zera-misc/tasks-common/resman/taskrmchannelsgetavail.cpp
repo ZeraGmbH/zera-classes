@@ -3,7 +3,7 @@
 
 QStringList TaskRmChannelsGetAvail::m_defaultSenseResourcesIgnored = QStringList() << "mmode";
 
-TaskCompositePtr TaskRmChannelsGetAvail::create(AbstractRmInterfacePtr rmInterface,
+TaskCompositePtr TaskRmChannelsGetAvail::create(Zera::Server::RMInterfacePtr rmInterface,
                                                 int timeout,
                                                 QStringList &channelSysNameList,
                                                 std::function<void ()> additionalErrorHandler,
@@ -17,7 +17,7 @@ TaskCompositePtr TaskRmChannelsGetAvail::create(AbstractRmInterfacePtr rmInterfa
                                              additionalErrorHandler);
 }
 
-TaskRmChannelsGetAvail::TaskRmChannelsGetAvail(AbstractRmInterfacePtr rmInterface,
+TaskRmChannelsGetAvail::TaskRmChannelsGetAvail(Zera::Server::RMInterfacePtr rmInterface,
                                                QStringList &channelSysNameList,
                                                QStringList senseResourcesIgnored) :
     TaskServerTransactionTemplate(rmInterface),

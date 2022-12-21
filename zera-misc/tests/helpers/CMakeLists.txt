@@ -19,5 +19,6 @@ target_link_libraries(helpers
     Qt5::Network
     Qt5::Test
     zeramisc
+    zeraproxy
     )
 

@@ -2,15 +2,16 @@
 #define RMINTERFACE_H
 
 #include "zeramisc_export.h"
-#include "abstractrminterface.h"
+#include "abstractserverInterface.h"
 #include <proxyclient.h>
 #include <memory>
+
 
 namespace Zera { namespace Server {
 
 class cRMInterfacePrivate;
 
-class ZERAMISC_EXPORT cRMInterface: public AbstractRmInterface
+class ZERAMISC_EXPORT cRMInterface: public AbstractServerInterface
 {
     Q_OBJECT
 public:
@@ -20,8 +21,8 @@ public:
     virtual quint32 rmIdent(QString name);
     virtual quint32 addResource(QString type, QString name, int n, QString description, quint16 port);
     virtual quint32 removeResource(QString type, QString name);
-    quint32 getResourceTypes() override;
-    quint32 getResources(QString type) override;
+    virtual quint32 getResourceTypes();
+    virtual quint32 getResources(QString type);
     virtual quint32 getResourceInfo(QString type, QString name);
     virtual quint32 setResource(QString type, QString name, int n);
     virtual quint32 freeResource(QString type, QString name);
