@@ -41,7 +41,7 @@ void test_taskparallel::startPassImmediateDelayed()
     TaskContainerPtr task = TaskParallel::create();
     TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(0, true));
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
     task->start();
 
     QCOMPARE(helper.okCount(), 0);
@@ -50,7 +50,7 @@ void test_taskparallel::startPassImmediateDelayed()
     QCOMPARE(TaskForTest::errCount(), 0);
     QCOMPARE(TaskForTest::dtorCount(), 1);
 
-    QTest::qWait(WAIT_TIME);
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
     QCOMPARE(TaskForTest::okCount(), 2);
@@ -94,12 +94,12 @@ void test_taskparallel::startThreeDelayedMiddleFail()
 {
     TaskContainerPtr task = TaskParallel::create();
     TaskTestHelper helper(task.get());
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
-    task->addSub(TaskForTest::create(DELAY_TIME, false));
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, false));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
     task->start();
 
-    QTest::qWait(WAIT_TIME);
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
     QCOMPARE(TaskForTest::okCount(), 2);
@@ -111,12 +111,12 @@ void test_taskparallel::startThreeDelayedAllOk()
 {
     TaskContainerPtr task = TaskParallel::create();
     TaskTestHelper helper(task.get());
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
     task->start();
 
-    QTest::qWait(WAIT_TIME);
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
     QCOMPARE(TaskForTest::okCount(), 3);
@@ -146,7 +146,7 @@ void test_taskparallel::startTwice()
 {
     TaskContainerPtr task = TaskParallel::create();
     TaskTestHelper helper(task.get());
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
     task->start();
     task->start();
     QCOMPARE(TaskForTest::okCount(), 0);
@@ -155,7 +155,7 @@ void test_taskparallel::startTwice()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(WAIT_TIME);
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -168,7 +168,7 @@ void test_taskparallel::onRunningAddAndStartOne()
 {
     TaskContainerPtr task = TaskParallel::create();
     TaskTestHelper helper(task.get());
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
     task->start();
 
     task->addSub(TaskForTest::create(0, true));
@@ -179,7 +179,7 @@ void test_taskparallel::onRunningAddAndStartOne()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(WAIT_TIME);
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);

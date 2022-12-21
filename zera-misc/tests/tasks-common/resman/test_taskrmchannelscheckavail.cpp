@@ -21,7 +21,7 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
     QStringList expectedChannels = QString(defaultResponse).split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
                                                              expectedChannels,
-                                                             DELAY_TIME);
+                                                             TIMEOUT_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -35,7 +35,7 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
     QStringList expectedChannels = QString("m0;m1").split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
                                                              expectedChannels,
-                                                             DELAY_TIME);
+                                                             TIMEOUT_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -49,7 +49,7 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
     QStringList expectedChannels = QString("foo").split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
                                                              expectedChannels,
-                                                             DELAY_TIME);
+                                                             TIMEOUT_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();

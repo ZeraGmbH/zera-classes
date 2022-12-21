@@ -20,7 +20,7 @@ void test_taskrmchannelsgetavail::getThreeChannels()
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
     QStringList channelList;
     TaskCompositePtr task = TaskRmChannelsGetAvail::create(m_rmInterface,
-                                                           DELAY_TIME,
+                                                           TIMEOUT_INFINITE,
                                                            channelList);
     task->start();
     QCoreApplication::processEvents();
@@ -33,7 +33,7 @@ void test_taskrmchannelsgetavail::getThreeChannelsIgnoreMMode()
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "m0;m1;m2;MMODE"));
     QStringList channelList;
     TaskCompositePtr task = TaskRmChannelsGetAvail::create(m_rmInterface,
-                                                           DELAY_TIME,
+                                                           TIMEOUT_INFINITE,
                                                            channelList);
     task->start();
     QCoreApplication::processEvents();

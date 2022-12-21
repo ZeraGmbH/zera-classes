@@ -16,7 +16,7 @@ void test_taskrmcheckresourcetype::init()
 void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "sense:foo"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, DELAY_TIME);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -27,7 +27,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "SENSE:FOO"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, DELAY_TIME);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -38,7 +38,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 void test_taskrmcheckresourcetype::errorOnNoResources()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, ""));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, DELAY_TIME);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -49,7 +49,7 @@ void test_taskrmcheckresourcetype::errorOnNoResources()
 void test_taskrmcheckresourcetype::errorOnMissingResource()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "foo:bar"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, DELAY_TIME);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
