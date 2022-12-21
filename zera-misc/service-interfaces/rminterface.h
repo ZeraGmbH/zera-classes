@@ -20,7 +20,7 @@ public:
     virtual quint32 rmIdent(QString name);
     virtual quint32 addResource(QString type, QString name, int n, QString description, quint16 port);
     virtual quint32 removeResource(QString type, QString name);
-    virtual quint32 getResourceTypes();
+    quint32 getResourceTypes() override;
     quint32 getResources(QString type) override;
     virtual quint32 getResourceInfo(QString type, QString name);
     virtual quint32 setResource(QString type, QString name, int n);

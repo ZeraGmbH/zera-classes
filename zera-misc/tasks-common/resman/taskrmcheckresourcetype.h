@@ -1,24 +1,22 @@
 #ifndef TASKRMCHECKRESOURCETYPE_H
 #define TASKRMCHECKRESOURCETYPE_H
 
-#include "taskcomposit.h"
-#include "rminterface.h"
-#include <QString>
+#include "taskservertransactiontemplate.h"
+#include "abstractrminterface.h"
 
-class TaskRmCheckResourceType : public TaskComposite
+class TaskRmCheckResourceType : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::RMInterfacePtr rmInterface,
+    static TaskCompositePtr create(AbstractRmInterfacePtr rmInterface,
                                    int timeout,
                                    std::function<void()> additionalErrorHandler = []{},
                                    QString checkResourceType = "SENSE");
-    TaskRmCheckResourceType(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType);
-    void start() override;
-private slots:
-    void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    TaskRmCheckResourceType(AbstractRmInterfacePtr rmInterface, QString checkResourceType);
 private:
-    Zera::Server::RMInterfacePtr m_rmInterface;
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
+    AbstractRmInterfacePtr m_rmInterface;
     QString m_checkResourceType;
     quint32 m_msgnr;
 };

@@ -12,6 +12,7 @@ public:
     static AbstractRmInterfacePtr create(QList<RmTestAnswer> answers);
     RmInterfaceForTest(QList<RmTestAnswer> answers);
     quint32 getResources(QString type) override;
+    quint32 getResourceTypes() override;
 private:
     quint32 sendAnswer();
     RmTestAnswers m_answers;

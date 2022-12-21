@@ -15,6 +15,11 @@ quint32 RmInterfaceForTest::getResources(QString type)
     return sendAnswer();
 }
 
+quint32 RmInterfaceForTest::getResourceTypes()
+{
+    return sendAnswer();
+}
+
 quint32 RmInterfaceForTest::sendAnswer()
 {
     RmTestAnswer answer = m_answers.take();
