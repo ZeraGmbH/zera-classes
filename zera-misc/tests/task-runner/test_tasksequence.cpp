@@ -152,7 +152,7 @@ void test_tasksequence::startTwice()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(DELAY_TIME*1.5);
+    QTest::qWait(WAIT_TIME);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -176,7 +176,7 @@ void test_tasksequence::onRunningAddAndStartOne()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(DELAY_TIME*1.5);
+    QTest::qWait(WAIT_TIME);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);

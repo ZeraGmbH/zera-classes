@@ -4,7 +4,6 @@
 #include "tasktesthelper.h"
 #include <QTest>
 
-
 QTEST_MAIN(test_taskrmcheckresourcetype)
 
 void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
