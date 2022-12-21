@@ -12,6 +12,7 @@ private slots:
     void okOnExpectedEqualGet();
     void okOnExpectedPartOfGet();
     void errOnExpectedNotPartOfGet();
+    void timeoutAndErrFunc();
 private:
     Zera::Server::RMInterfacePtr m_rmInterface;
     ProxyClientForTestPtr m_proxyClient;

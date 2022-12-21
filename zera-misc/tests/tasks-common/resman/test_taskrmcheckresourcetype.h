@@ -13,6 +13,7 @@ private slots:
     void okOnMatchingResourceUpperCase();
     void errorOnNoResources();
     void errorOnMissingResource();
+    void timeoutAndErrFunc();
 private:
     Zera::Server::RMInterfacePtr m_rmInterface;
     ProxyClientForTestPtr m_proxyClient;

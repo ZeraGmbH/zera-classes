@@ -40,3 +40,21 @@ void test_taskrmchannelsgetavail::getThreeChannelsIgnoreMMode()
     QStringList expectedChannels = QString(defaultResponse).split(";");
     QCOMPARE(channelList, expectedChannels);
 }
+
+void test_taskrmchannelsgetavail::timeoutAndErrFunc()
+{
+    int localErrorCount = 0;
+    QStringList channelList;
+    TaskCompositePtr task = TaskRmChannelsGetAvail::create(m_rmInterface,
+                                                           DEFAULT_TIMEOUT,
+                                                           channelList,
+                                                           [&]{
+        localErrorCount++;
+    });
+    TaskTestHelper helper(task.get());
+    task->start();
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
+    QCOMPARE(localErrorCount, 1);
+    QCOMPARE(helper.okCount(), 0);
+    QCOMPARE(helper.errCount(), 1);
+}

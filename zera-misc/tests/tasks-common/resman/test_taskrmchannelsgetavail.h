@@ -11,6 +11,7 @@ private slots:
     void init();
     void getThreeChannels();
     void getThreeChannelsIgnoreMMode();
+    void timeoutAndErrFunc();
 private:
     Zera::Server::RMInterfacePtr m_rmInterface;
     ProxyClientForTestPtr m_proxyClient;
