@@ -56,3 +56,18 @@ void test_taskrmcheckresourcetype::errorOnMissingResource()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
 }
+
+void test_taskrmcheckresourcetype::timeoutAndErrFunc()
+{
+    int localErrorCount = 0;
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, DEFAULT_TIMEOUT,
+                                                           [&]{
+        localErrorCount++;
+    });
+    TaskTestHelper helper(task.get());
+    task->start();
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
+    QCOMPARE(localErrorCount, 1);
+    QCOMPARE(helper.okCount(), 0);
+    QCOMPARE(helper.errCount(), 1);
+}

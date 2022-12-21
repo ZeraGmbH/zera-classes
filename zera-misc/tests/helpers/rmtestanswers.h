@@ -28,6 +28,7 @@ public:
     RmTestAnswers();
     RmTestAnswers(RmTestAnswerList answers);
     RmTestAnswer take();
+    bool isEmpty();
 private:
     RmTestAnswerList m_answers;
 };

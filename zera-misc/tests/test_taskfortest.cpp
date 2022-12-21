@@ -21,7 +21,7 @@ void test_taskfortest::onePassImmediate()
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
-    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT/2);
+    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT_MIN);
 }
 
 void test_taskfortest::oneErrImmediate()
@@ -34,7 +34,7 @@ void test_taskfortest::oneErrImmediate()
 
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
-    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT/2);
+    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT_MIN);
 }
 
 void test_taskfortest::onePassDelayed()

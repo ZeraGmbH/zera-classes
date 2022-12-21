@@ -10,10 +10,10 @@ private slots:
     void init();
     void startEmpty();
     void startEmptyCheckDelayed();
-    void oneOkWithoutDelay();
-    void oneErrWithoutDelay();
-    void oneOkWithDelayAndInfiniteTimeout();
-    void noTimeoutOnEarlyOk();
+    void immediateOk();
+    void immediateError();
+    void infiniteTask();
+    void delayedOk();
     void delayEqualsTimeout();
     void taskId();
 };

@@ -21,3 +21,8 @@ RmTestAnswer RmTestAnswers::take()
     return m_answers.takeFirst();
 }
 
+bool RmTestAnswers::isEmpty()
+{
+    return m_answers.isEmpty();
+}
+
