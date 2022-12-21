@@ -19,7 +19,6 @@ void test_taskrmchannelsgetavail::getThreeChannels()
                                                            channelList);
     task->start();
     QCoreApplication::processEvents();
-    QCOMPARE(channelList.count(), 3);
     QStringList expectedChannels = QString(defaultResponse).split(";");
     QCOMPARE(channelList, expectedChannels);
 }
@@ -35,7 +34,6 @@ void test_taskrmchannelsgetavail::getThreeChannelsIgnoreMMode()
                                                            channelList);
     task->start();
     QCoreApplication::processEvents();
-    QCOMPARE(channelList.count(), 3);
     QStringList expectedChannels = QString(defaultResponse).split(";");
     QCOMPARE(channelList, expectedChannels);
 }
