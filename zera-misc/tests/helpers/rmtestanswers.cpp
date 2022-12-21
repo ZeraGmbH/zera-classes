@@ -11,7 +11,7 @@ RmTestAnswers::RmTestAnswers()
 {
 }
 
-RmTestAnswers::RmTestAnswers(QList<RmTestAnswer> answers) :
+RmTestAnswers::RmTestAnswers(RmTestAnswerList answers) :
     m_answers(answers)
 {
 }
