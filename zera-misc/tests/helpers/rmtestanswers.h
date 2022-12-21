@@ -23,6 +23,7 @@ struct RmTestAnswer
 class RmTestAnswers
 {
 public:
+    RmTestAnswers();
     RmTestAnswers(QList<RmTestAnswer> answers);
     RmTestAnswer take();
 private:

@@ -14,9 +14,11 @@ static const char* defaultResponse = "m0;m1;m2";
 void test_taskservertransactiontemplate::actionOnAck()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
+    proxyClient->setAnswers(answers);
 
     QString received;
     TaskCompositePtr task = TaskServerTransactionTemplateTest::create(rmInterface, received);
@@ -28,9 +30,11 @@ void test_taskservertransactiontemplate::actionOnAck()
 void test_taskservertransactiontemplate::noActionOnNack()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(nack, defaultResponse);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(nack, defaultResponse);
+    proxyClient->setAnswers(answers);
 
     QString received;
     TaskCompositePtr task = TaskServerTransactionTemplateTest::create(rmInterface, received);
@@ -42,9 +46,11 @@ void test_taskservertransactiontemplate::noActionOnNack()
 void test_taskservertransactiontemplate::okSignalOnAck()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
+    proxyClient->setAnswers(answers);
 
     QString received;
     TaskCompositePtr task = TaskServerTransactionTemplateTest::create(rmInterface, received);
@@ -59,9 +65,11 @@ void test_taskservertransactiontemplate::okSignalOnAck()
 void test_taskservertransactiontemplate::errSignalOnNack()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(nack, defaultResponse);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(nack, defaultResponse);
+    proxyClient->setAnswers(answers);
 
     QString received;
     TaskCompositePtr task = TaskServerTransactionTemplateTest::create(rmInterface, received);
@@ -76,9 +84,11 @@ void test_taskservertransactiontemplate::errSignalOnNack()
 void test_taskservertransactiontemplate::noReceiveOnOther()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse, RmTestAnswer::MSG_ID_OTHER);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse, RmTestAnswer::MSG_ID_OTHER);
+    proxyClient->setAnswers(answers);
 
     QString received;
     TaskCompositePtr task = TaskServerTransactionTemplateTest::create(rmInterface, received);
@@ -93,9 +103,11 @@ void test_taskservertransactiontemplate::noReceiveOnOther()
 void test_taskservertransactiontemplate::errReceiveOnTcpError()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse, RmTestAnswer::TCP_ERROR);
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse, RmTestAnswer::TCP_ERROR);
+    proxyClient->setAnswers(answers);
 
     QString received;
     TaskCompositePtr task = TaskServerTransactionTemplateTest::create(rmInterface, received);

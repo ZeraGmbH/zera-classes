@@ -11,9 +11,11 @@ QTEST_MAIN(test_taskrmcheckresourcetype)
 void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "sense:foo");
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "sense:foo");
+    proxyClient->setAnswers(answers);
 
     TaskCompositePtr task = TaskRmCheckResourceType::create(rmInterface, DELAY_TIME);
     TaskTestHelper helper(task.get());
@@ -26,9 +28,11 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "SENSE:FOO");
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "SENSE:FOO");
+    proxyClient->setAnswers(answers);
 
     TaskCompositePtr task = TaskRmCheckResourceType::create(rmInterface, DELAY_TIME);
     TaskTestHelper helper(task.get());
@@ -41,9 +45,11 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 void test_taskrmcheckresourcetype::errorOnNoResources()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "");
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "");
+    proxyClient->setAnswers(answers);
 
     TaskCompositePtr task = TaskRmCheckResourceType::create(rmInterface, DELAY_TIME);
     TaskTestHelper helper(task.get());
@@ -56,9 +62,11 @@ void test_taskrmcheckresourcetype::errorOnNoResources()
 void test_taskrmcheckresourcetype::errorOnMissingResource()
 {
     Zera::Server::RMInterfacePtr rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "foo:bar");
-    Zera::Proxy::ProxyClientPtr proxyClient = ProxyClientForTest::create(answers);
+    ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
+
+    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "foo:bar");
+    proxyClient->setAnswers(answers);
 
     TaskCompositePtr task = TaskRmCheckResourceType::create(rmInterface, DELAY_TIME);
     TaskTestHelper helper(task.get());
