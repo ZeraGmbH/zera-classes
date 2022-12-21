@@ -56,4 +56,3 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
 }
-
