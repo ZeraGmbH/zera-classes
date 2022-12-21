@@ -16,7 +16,7 @@ void test_taskrmchannelsgetavail::getThreeChannels()
     ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
 
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, defaultResponse);
+    QList<RmTestAnswer> answers = RmTestAnswerList() << RmTestAnswer(ack, defaultResponse);
     proxyClient->setAnswers(answers);
 
     QStringList channelList;
@@ -35,7 +35,7 @@ void test_taskrmchannelsgetavail::getThreeChannelsIgnoreMMode()
     ProxyClientForTestPtr proxyClient = ProxyClientForTest::create();
     rmInterface->setClientSmart(proxyClient);
 
-    QList<RmTestAnswer> answers = QList<RmTestAnswer>() << RmTestAnswer(ack, "m0;m1;m2;MMODE");
+    QList<RmTestAnswer> answers = RmTestAnswerList() << RmTestAnswer(ack, "m0;m1;m2;MMODE");
     proxyClient->setAnswers(answers);
 
     QStringList channelList;
