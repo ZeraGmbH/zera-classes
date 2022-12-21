@@ -50,7 +50,7 @@ void test_taskparallel::startPassImmediateDelayed()
     QCOMPARE(TaskForTest::errCount(), 0);
     QCOMPARE(TaskForTest::dtorCount(), 1);
 
-    QTest::qWait(DELAY_TIME*1.5);
+    QTest::qWait(WAIT_TIME);
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
     QCOMPARE(TaskForTest::okCount(), 2);
@@ -99,7 +99,7 @@ void test_taskparallel::startThreeDelayedMiddleFail()
     task->addSub(TaskForTest::create(DELAY_TIME, true));
     task->start();
 
-    QTest::qWait(DELAY_TIME*1.5);
+    QTest::qWait(WAIT_TIME);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
     QCOMPARE(TaskForTest::okCount(), 2);
@@ -116,7 +116,7 @@ void test_taskparallel::startThreeDelayedAllOk()
     task->addSub(TaskForTest::create(DELAY_TIME, true));
     task->start();
 
-    QTest::qWait(DELAY_TIME*1.5);
+    QTest::qWait(WAIT_TIME);
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
     QCOMPARE(TaskForTest::okCount(), 3);
@@ -155,7 +155,7 @@ void test_taskparallel::startTwice()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(DELAY_TIME*1.5);
+    QTest::qWait(WAIT_TIME);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -179,7 +179,7 @@ void test_taskparallel::onRunningAddAndStartOne()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(DELAY_TIME*1.5);
+    QTest::qWait(WAIT_TIME);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
