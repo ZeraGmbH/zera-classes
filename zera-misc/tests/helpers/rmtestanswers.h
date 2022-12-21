@@ -20,14 +20,16 @@ struct RmTestAnswer
     AnswerType answerType;
 };
 
+typedef QList<RmTestAnswer> RmTestAnswerList;
+
 class RmTestAnswers
 {
 public:
     RmTestAnswers();
-    RmTestAnswers(QList<RmTestAnswer> answers);
+    RmTestAnswers(RmTestAnswerList answers);
     RmTestAnswer take();
 private:
-    QList<RmTestAnswer> m_answers;
+    RmTestAnswerList m_answers;
 };
 
 #endif // RMTESTANSWERS_H
