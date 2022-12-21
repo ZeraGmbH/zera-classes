@@ -143,7 +143,7 @@ void test_tasksequence::startTwice()
 {
     TaskContainerPtr task = TaskSequence::create();
     TaskTestHelper helper(task.get());
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
     task->start();
     task->start();
     QCOMPARE(TaskForTest::okCount(), 0);
@@ -152,7 +152,7 @@ void test_tasksequence::startTwice()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(WAIT_TIME);
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -165,7 +165,7 @@ void test_tasksequence::onRunningAddAndStartOne()
 {
     TaskContainerPtr task = TaskSequence::create();
     TaskTestHelper helper(task.get());
-    task->addSub(TaskForTest::create(DELAY_TIME, true));
+    task->addSub(TaskForTest::create(DEFAULT_TIMEOUT, true));
     task->start();
 
     task->addSub(TaskForTest::create(0, true));
@@ -176,7 +176,7 @@ void test_tasksequence::onRunningAddAndStartOne()
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 0);
 
-    QTest::qWait(WAIT_TIME);
+    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
