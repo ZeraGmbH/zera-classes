@@ -6,7 +6,6 @@ include(CMakeFindDependencyMacro)
 # dependencies
 find_dependency(Qt5 COMPONENTS Core CONFIG REQUIRED)
 find_dependency(
-    Qt5::Gui
     Qt5::Network
     MeasurementModuleInterface
     zeravalidator
