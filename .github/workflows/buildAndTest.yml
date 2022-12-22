@@ -40,12 +40,19 @@ jobs:
             export CC=clang
             export CXX=clang++
           fi
-
+          # no modules (native)
           cmake $GITHUB_WORKSPACE \
            -DCMAKE_PREFIX_PATH="$HOME/install/usr;/usr" \
            -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
-           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc"
-          # compile / install
+           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc" \
+           -DZC_BUILD_MODULES=OFF
+           make -j $(getconf _NPROCESSORS_ONLN)
+          # full (cross)
+          cmake $GITHUB_WORKSPACE \
+           -DCMAKE_PREFIX_PATH="$HOME/install/usr;/usr" \
+           -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
+           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc" \
+           -DZC_BUILD_MODULES=ON
            make -j $(getconf _NPROCESSORS_ONLN)
       - name: unittest
         run: |
