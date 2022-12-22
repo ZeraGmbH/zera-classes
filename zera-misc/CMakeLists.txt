@@ -122,4 +122,6 @@ install(
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc
     )
 
-add_subdirectory(tests)
+if(ZC_BUILD_MODULES)
+    add_subdirectory(tests)
+endif()
