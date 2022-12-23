@@ -41,9 +41,8 @@ target_link_libraries(statusmodule
     "-Wl,--no-undefined"
     )
 
-# we build a module -> no public headers
 target_include_directories(statusmodule
-    PRIVATE
+    PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
@@ -51,13 +50,6 @@ target_include_directories(statusmodule
 install(TARGETS statusmodule
     EXPORT statusmoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
-    )
-
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    statusmoduleConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
     )
 
 install(
