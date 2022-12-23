@@ -1,6 +1,5 @@
 enable_testing()
 
-add_subdirectory(helpers)
 add_subdirectory(task-runner)
 add_subdirectory(tasks-common)
 
@@ -46,7 +45,7 @@ function(SETUP_TESTS)
         target_link_libraries(${_testname}
             PUBLIC
             Qt5::Test
-            helpers
+            task-test-helpers
             )
     endforeach()
 endfunction()

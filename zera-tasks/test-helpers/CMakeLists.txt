@@ -3,17 +3,16 @@ file(GLOB HELPER_SOURCES
     *.cpp
 )
 
-add_library(helpers STATIC
+add_library(task-test-helpers STATIC
     ${HELPER_SOURCES}
     )
 
-target_include_directories(helpers
+target_include_directories(task-test-helpers
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/helpers>
     )
 
-target_link_libraries(helpers
+target_link_libraries(task-test-helpers
     PUBLIC
     Qt5::Core
     Qt5::Network
