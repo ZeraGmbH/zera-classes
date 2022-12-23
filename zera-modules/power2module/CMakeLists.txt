@@ -1,45 +1,21 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
-project(zera-power2module LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-#Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-
-#Find dependecies
-find_package(Qt5 COMPONENTS Core Gui Network CONFIG REQUIRED)
-find_package(VfEvent REQUIRED)
-find_package(VfHelpers REQUIRED)
-find_Package(VfComponent REQUIRED)
-
-#sum up project Files 
 file(GLOB SOURCES 
-    ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
     )
 
 file(GLOB HEADER
-    ${PROJECT_SOURCE_DIR}/src/*.h
-     ${PROJECT_SOURCE_DIR}/*.h
+     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
 file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 
 file(GLOB CONFIG_FILES
-    ${PROJECT_SOURCE_DIR}/src/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.xml
 )
 
 file(GLOB CONFIG_VALIDATOR
-    ${PROJECT_SOURCE_DIR}/src/*.xsd
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.xsd
 )
 
 # check for valid config files / display in qt-creator
@@ -49,7 +25,6 @@ add_custom_target(power2module-configs ALL
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     )
 
-# create library
 add_library(power2module MODULE
     ${SOURCES}
     ${HEADER}
@@ -64,25 +39,15 @@ target_link_libraries(power2module
     "-Wl,--no-undefined"
     )
 
-# we build a module -> no public headers
 target_include_directories(power2module
-    PRIVATE
+    PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-# install library
 install(TARGETS power2module
     EXPORT power2moduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
-    )
-
-# configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    power2moduleConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
     )
 
 install(
