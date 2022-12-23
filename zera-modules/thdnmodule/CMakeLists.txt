@@ -38,9 +38,8 @@ target_link_libraries(thdnmodule
     "-Wl,--no-undefined"
     )
 
-# we build a module -> no public headers
 target_include_directories(thdnmodule
-    PRIVATE
+    PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
@@ -48,13 +47,6 @@ target_include_directories(thdnmodule
 install(TARGETS thdnmodule
     EXPORT thdnmoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
-    )
-
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    thdnmoduleConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
     )
 
 install(
