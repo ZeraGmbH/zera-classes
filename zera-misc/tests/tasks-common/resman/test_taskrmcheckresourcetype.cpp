@@ -2,6 +2,7 @@
 #include "taskrmcheckresourcetype.h"
 #include "rmtestanswers.h"
 #include "tasktesthelper.h"
+#include <scpifullcmdcheckerfortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskrmcheckresourcetype)
@@ -11,6 +12,17 @@ void test_taskrmcheckresourcetype::init()
     m_rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
     m_proxyClient = ProxyClientForTest::create();
     m_rmInterface->setClientSmart(m_proxyClient);
+}
+
+void test_taskrmcheckresourcetype::checkScpiSend()
+{
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
+    task->start();
+    QCoreApplication::processEvents();
+    QStringList scpiSent = m_proxyClient->getReceivedCommands();
+    QCOMPARE(scpiSent.count(), 1);
+    ScpiFullCmdCheckerForTest scpiChecker("RESOURCE:TYPE:CAT", SCPI::isQuery);
+    QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
 void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
