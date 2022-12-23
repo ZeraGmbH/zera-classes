@@ -45,6 +45,7 @@ if(ZC_BUILD_MODULES)
     add_subdirectory(zera-xml-config)
     add_subdirectory(zera-modules)
     add_subdirectory(zera-proxy)
+    add_subdirectory(zera-tasks)
 endif(ZC_BUILD_MODULES)
 
 add_subdirectory(zera-math)

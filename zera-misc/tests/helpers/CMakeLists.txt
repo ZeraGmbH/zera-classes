@@ -20,6 +20,7 @@ target_link_libraries(helpers
     Qt5::Test
     zeramisc
     zeraproxy
+    tasks-base
     Zera::SCPI
     )
 
