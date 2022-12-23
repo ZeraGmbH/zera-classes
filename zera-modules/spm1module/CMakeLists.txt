@@ -1,11 +1,9 @@
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
 file(GLOB RESOURCES 
@@ -41,9 +39,8 @@ target_link_libraries(spm1module
     "-Wl,--no-undefined"
     )
 
-# we build a module -> no public headers
 target_include_directories(spm1module
-    PRIVATE
+    PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
@@ -51,14 +48,6 @@ target_include_directories(spm1module
 install(TARGETS spm1module
     EXPORT spm1moduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
-    )
-
-# configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    spm1moduleConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
     )
 
 install(
