@@ -27,21 +27,13 @@ if(ZC_BUILD_MODULES)
 )
 endif(ZC_BUILD_MODULES)
 
-file(GLOB SOURCES
-    task-runner/*.cpp
-    )
 set(SOURCES
-    ${SOURCES}
     ${SOURCES_FOR_MODULE}
     intelhexfileio.cpp
     intelhexfileio_p.cpp
 )
 
-file(GLOB HEADER
-    task-runner/*.h
-    )
 set(HEADER
-    ${HEADER}
     ${HEADER_FOR_MODULE}
     intelhexfileio.h
     intelhexfileio_p.h
@@ -56,6 +48,7 @@ if(ZC_BUILD_MODULES)
     set(DEPS_FOR_MODULE
         Qt5::Network
         zeraproxy
+        tasks-base
     )
 endif(ZC_BUILD_MODULES)
 
@@ -75,7 +68,6 @@ target_include_directories(zeramisc
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/channels>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/task-runner>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common/pcb-server>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common/resman>
