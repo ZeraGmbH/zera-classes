@@ -26,6 +26,11 @@ quint32 ProxyClientForTest::transmitCommand(ProtobufMessage::NetMessage *message
     return 0;
 }
 
+QStringList ProxyClientForTest::getReceivedCommands() const
+{
+    return m_receivedCommands;
+}
+
 quint32 ProxyClientForTest::sendAnswer(ProtobufMessage::NetMessage *message, RmTestAnswer answer)
 {
     std::shared_ptr<ProtobufMessage::NetMessage> answerMessage = std::make_shared<ProtobufMessage::NetMessage>(*message);
