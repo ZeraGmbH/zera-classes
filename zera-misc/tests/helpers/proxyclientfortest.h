@@ -13,6 +13,7 @@ public:
     static std::shared_ptr<ProxyClientForTest> create();
     void setAnswers(RmTestAnswers answers);
     quint32 transmitCommand(ProtobufMessage::NetMessage *message) override;
+    QStringList getReceivedCommands() const;
 
 private:
     quint32 sendAnswer(ProtobufMessage::NetMessage *message, RmTestAnswer answer);
