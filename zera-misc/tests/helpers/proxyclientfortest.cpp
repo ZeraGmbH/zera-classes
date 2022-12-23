@@ -26,6 +26,11 @@ quint32 ProxyClientForTest::transmitCommand(ProtobufMessage::NetMessage *message
     return 0;
 }
 
+QStringList ProxyClientForTest::getReceivedIdents() const
+{
+    return m_receivedIdents;
+}
+
 QStringList ProxyClientForTest::getReceivedCommands() const
 {
     return m_receivedCommands;
@@ -45,6 +50,15 @@ quint32 ProxyClientForTest::sendAnswer(ProtobufMessage::NetMessage *message, RmT
 }
 
 void ProxyClientForTest::storeMessage(ProtobufMessage::NetMessage *message)
+{
+    if(message->has_reply() &&
+           message->reply().rtype() == ProtobufMessage::NetMessage::NetReply::IDENT)
+        m_receivedIdents.append(QString::fromStdString(message->reply().body()));
+    if(message->has_scpi())
+        storeScpi(message);
+}
+
+void ProxyClientForTest::storeScpi(ProtobufMessage::NetMessage *message)
 {
     ProtobufMessage::NetMessage::ScpiCommand scpiCmd = message->scpi();
     QString strCmd = QString::fromStdString(scpiCmd.command());

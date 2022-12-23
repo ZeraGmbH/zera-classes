@@ -9,6 +9,7 @@ class test_taskrmcheckresourcetype : public QObject
     Q_OBJECT
 private slots:
     void init();
+    void checkScpiSend();
     void okOnMatchingResourceLowerCase();
     void okOnMatchingResourceUpperCase();
     void errorOnNoResources();

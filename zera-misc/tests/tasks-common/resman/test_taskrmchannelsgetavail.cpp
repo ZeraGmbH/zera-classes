@@ -2,6 +2,7 @@
 #include "taskrmchannelsgetavail.h"
 #include "rmtestanswers.h"
 #include "tasktesthelper.h"
+#include <scpifullcmdcheckerfortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskrmchannelsgetavail)
@@ -13,6 +14,20 @@ void test_taskrmchannelsgetavail::init()
     m_rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
     m_proxyClient = ProxyClientForTest::create();
     m_rmInterface->setClientSmart(m_proxyClient);
+}
+
+void test_taskrmchannelsgetavail::checkScpiSend()
+{
+    QStringList channelList;
+    TaskCompositePtr task = TaskRmChannelsGetAvail::create(m_rmInterface,
+                                                           TIMEOUT_INFINITE,
+                                                           channelList);
+    task->start();
+    QCoreApplication::processEvents();
+    QStringList scpiSent = m_proxyClient->getReceivedCommands();
+    QCOMPARE(scpiSent.count(), 1);
+    ScpiFullCmdCheckerForTest scpiChecker("RESOURCE:SENSE:CAT", SCPI::isQuery);
+    QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
 void test_taskrmchannelsgetavail::getThreeChannels()
