@@ -27,7 +27,6 @@ add_custom_target(transformer1module-configs ALL
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     )
 
-# create library
 add_library(transformer1module MODULE
     ${SOURCES}
     ${HEADER}
@@ -43,25 +42,15 @@ target_link_libraries(transformer1module
     "-Wl,--no-undefined"
     )
 
-# we build a module -> no public headers
 target_include_directories(transformer1module
-    PRIVATE
+    PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-# install library
 install(TARGETS transformer1module
     EXPORT transformer1moduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
-    )
-
-# configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    transformer1moduleConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
     )
 
 install(
