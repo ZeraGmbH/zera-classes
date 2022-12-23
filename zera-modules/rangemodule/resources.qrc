@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/">
         <file>src/rangemodule.xsd</file>
-        <file>topic/PreScalingGroup.json</file>
     </qresource>
 </RCC>
