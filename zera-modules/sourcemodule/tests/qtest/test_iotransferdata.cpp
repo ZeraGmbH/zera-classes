@@ -1,7 +1,7 @@
 #include "test_iotransferdata.h"
 #include "test_globals.h"
 #include "io-queue/ioqueueentry.h"
-#include "io-device/iodevicebase.h"
+#include "iodevicebase.h"
 
 QTEST_MAIN(test_iotransferdata);
 

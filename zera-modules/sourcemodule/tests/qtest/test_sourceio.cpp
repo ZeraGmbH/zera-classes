@@ -1,6 +1,6 @@
 #include "test_sourceio.h"
 #include "test_globals.h"
-#include "io-device/iodevicefactory.h"
+#include "iodevicefactory.h"
 #include "source-device/sourceio.h"
 #include "json/jsonstructureloader.h"
 #include <zera-json-params-state.h>

@@ -1,6 +1,6 @@
 #include <QObject>
 
-#include "io-device/iodevicefactory.h"
+#include "iodevicefactory.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
 class test_sourcestatecontroller : public QObject

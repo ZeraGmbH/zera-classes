@@ -2,8 +2,8 @@
 #define TEST_GLOBALS_H
 
 #include <QtTest>
-#include "io-device/iodevicebase.h"
-#include "io-device/iodevicedemo.h"
+#include "iodevicebase.h"
+#include "iodevicedemo.h"
 #include "source-device/sourceproperties.h"
 
 #undef QTEST_MAIN

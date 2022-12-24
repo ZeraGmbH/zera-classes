@@ -1,7 +1,7 @@
 #ifndef SOURCESTATEPERIODICPOLLER_H
 #define SOURCESTATEPERIODICPOLLER_H
 
-#include "source-device/sourceperiodicpollerstate.h"
+#include "sourceperiodicpollerstate.h"
 #include <QObject>
 
 class test_sourceperiodicpollerstate : public QObject

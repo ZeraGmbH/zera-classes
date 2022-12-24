@@ -2,7 +2,7 @@
 #define QTUNITTESTSOURCEIODEVICE_H
 
 #include <QTest>
-#include "io-device/iodevicebase.h"
+#include "iodevicebase.h"
 
 class test_iodevice : public QObject
 {

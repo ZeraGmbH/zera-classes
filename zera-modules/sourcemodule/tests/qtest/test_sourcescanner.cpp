@@ -1,6 +1,6 @@
 #include "test_sourcescanner.h"
 #include "test_globals.h"
-#include "io-device/iodevicefactory.h"
+#include "iodevicefactory.h"
 #include "sourcescannerwithinstancecount-forunittest.h"
 #include "source-scanner/sourcescanneriodemo.h"
 #include "source-scanner/sourcescanneriozeraserial.h"

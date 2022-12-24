@@ -1,7 +1,7 @@
 #include "test_ioqueue.h"
 #include "test_globals.h"
-#include "io-device/iodevicefactory.h"
-#include "io-device/iodevicedemo.h"
+#include "iodevicefactory.h"
+#include "iodevicedemo.h"
 #include "source-protocols/iogroupgenerator.h"
 
 QTEST_MAIN(test_ioqueue)

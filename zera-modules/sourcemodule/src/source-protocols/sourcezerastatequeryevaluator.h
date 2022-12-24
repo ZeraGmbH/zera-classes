@@ -1,7 +1,7 @@
 #ifndef SOURCEZERASTATEQUERYEVALUATOR_H
 #define SOURCEZERASTATEQUERYEVALUATOR_H
 
-#include "io-device/ioquerycontentevaluator.h"
+#include "ioquerycontentevaluator.h"
 
 class SourceZeraStateQueryEvaluator : public IIoQueryContentEvaluator
 {

@@ -3,7 +3,7 @@
 #include "veincomponentsetnotifier-forunittest.h"
 #include "source-device/sourcedevicefacade.h"
 #include "vein/sourceveininterface.h"
-#include "io-device/iodevicefactory.h"
+#include "iodevicefactory.h"
 #include "json/jsonstructureloader.h"
 #include "json/persistentjsonstate.h"
 #include <veinmoduleparameter.h>

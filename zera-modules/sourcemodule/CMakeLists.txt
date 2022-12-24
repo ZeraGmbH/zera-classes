@@ -143,9 +143,12 @@ target_link_libraries(sourcemodule-static
     )
 
 target_include_directories(sourcemodule-static
-    PRIVATE
+    PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/io-device>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/source-device>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/source-scanner>
     )
 
 file(GLOB MODULE_SOURCES
@@ -169,12 +172,6 @@ target_link_libraries(sourcemodule
     "-Wl,--no-undefined"
     )
 
-# we build a module -> no public headers
-target_include_directories(sourcemodule
-    PRIVATE
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    ${CMAKE_CURRENT_SOURCE_DIR}/src
-    )
 
 # install library
 install(TARGETS sourcemodule
