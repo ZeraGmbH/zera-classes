@@ -1,6 +1,5 @@
 enable_testing()
 
-add_subdirectory(task-runner)
 add_subdirectory(tasks-common)
 
 add_test(NAME    zera-misc-unittest
@@ -28,9 +27,4 @@ target_link_libraries(zera-misc-unittest
     gtest_main
     Qt5::Core
     zeramisc
-)
-
-SETUP_QTESTS(
-    test_taskextraerrorhandler
-    test_taskservertransactiontemplate
 )
