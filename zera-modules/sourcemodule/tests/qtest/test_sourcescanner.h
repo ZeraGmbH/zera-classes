@@ -1,7 +1,7 @@
 #ifndef SOURCESCANNERTEST_H
 #define SOURCESCANNERTEST_H
 
-#include "source-scanner/sourcescanner.h"
+#include "sourcescanner.h"
 #include <QObject>
 
 class test_sourcescanner : public QObject

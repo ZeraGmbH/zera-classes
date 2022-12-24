@@ -2,7 +2,7 @@
 #include "test_globals.h"
 #include "source-device/sourcestatecontroller.h"
 #include "source-device/sourceswitchjson.h"
-#include "io-device/iodevicedemo.h"
+#include "iodevicedemo.h"
 #include "json/jsonstructureloader.h"
 
 #include "sourcedeviceerrorinjection-forunittest.h"

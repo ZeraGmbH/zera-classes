@@ -6,7 +6,7 @@
 #include "ioqueueentry.h"
 #include "ioqueueentrylist.h"
 #include "ioqueuebehaviors.h"
-#include "io-device/iodevicebase.h"
+#include "iodevicebase.h"
 #include "transaction-ids/idkeeper.h"
 
 class IoQueue : public QObject

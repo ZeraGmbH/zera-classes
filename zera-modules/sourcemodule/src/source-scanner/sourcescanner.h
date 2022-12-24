@@ -5,7 +5,7 @@
 #include "source-protocols/sourceprotocols.h"
 #include "source-device/sourceio.h"
 #include "source-device/sourceproperties.h"
-#include "io-device/iodevicetypes.h"
+#include "iodevicetypes.h"
 #include "transaction-ids/idkeeper.h"
 #include <QObject>
 #include <QUuid>

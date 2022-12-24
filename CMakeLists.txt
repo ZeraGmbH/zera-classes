@@ -21,6 +21,26 @@ include(CMakePackageConfigHelpers)
 include(FindPkgConfig)
 
 enable_testing()
+# Inspired by
+# https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
+function(SETUP_QTESTS)
+    foreach(_testname ${ARGN})
+        add_test(NAME ${_testname}
+                 COMMAND ${_testname})
+        add_executable(${_testname}
+            ${_testname}.h
+            ${_testname}.cpp
+            )
+        target_link_libraries(${_testname}
+            PUBLIC
+            Qt5::Test
+            task-test-helpers
+            source-module-testhelpers
+            zerabasemodule
+            VeinMeta::VfStorageHash
+            )
+    endforeach()
+endfunction()
 
 option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
@@ -33,8 +53,9 @@ if(ZC_BUILD_MODULES)
     find_package(VfEvent REQUIRED)
     find_package(VfHelpers REQUIRED)
     find_package(VfComponent REQUIRED)
-    find_package(zera-json-params REQUIRED)
+    find_package(VfStorageHash REQUIRED)
     find_Package(VfCpp REQUIRED)
+    find_package(zera-json-params REQUIRED)
     find_package(xiqnet REQUIRED)
     find_package(SCPI REQUIRED)
     find_package(serialportasyncblock REQUIRED)

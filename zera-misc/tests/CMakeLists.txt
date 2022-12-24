@@ -30,28 +30,7 @@ target_link_libraries(zera-misc-unittest
     zeramisc
 )
 
-enable_testing()
-
-# Inspired by
-# https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
-function(SETUP_TESTS)
-    foreach(_testname ${ARGN})
-        add_test(NAME ${_testname}
-                 COMMAND ${_testname})
-        add_executable(${_testname}
-            ${_testname}.h
-            ${_testname}.cpp
-            )
-        target_link_libraries(${_testname}
-            PUBLIC
-            Qt5::Test
-            task-test-helpers
-            )
-    endforeach()
-endfunction()
-
-SETUP_TESTS(
-    test_taskfortest
+SETUP_QTESTS(
     test_taskextraerrorhandler
     test_taskservertransactiontemplate
 )

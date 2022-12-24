@@ -1,7 +1,7 @@
 #ifndef SOURCEDEVICEOBJCONTAINER_H
 #define SOURCEDEVICEOBJCONTAINER_H
 
-#include "io-device/iodevicebase.h"
+#include "iodevicebase.h"
 #include "sourceproperties.h"
 #include "sourceio.h"
 #include "sourcetransactionstartnotifier.h"

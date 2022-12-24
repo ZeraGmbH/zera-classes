@@ -2,7 +2,7 @@
 #define IOQUEUEGROUP_H
 
 #include "ioqueuebehaviors.h"
-#include "io-device/iotransferdatasingle.h"
+#include "iotransferdatasingle.h"
 #include "transaction-ids/idgenerator.h"
 #include <QSharedPointer>
 

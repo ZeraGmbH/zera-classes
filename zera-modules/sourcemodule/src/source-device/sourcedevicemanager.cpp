@@ -1,6 +1,6 @@
 #include "sourcedevicemanager.h"
-#include "io-device/iodevicefactory.h"
-#include "io-device/iodevicedemo.h"
+#include "iodevicefactory.h"
+#include "iodevicedemo.h"
 #include "source-scanner/sourcescanneriodemo.h"
 #include "source-scanner/sourcescanneriozeraserial.h"
 #include <random>

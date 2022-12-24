@@ -2,7 +2,7 @@
 #define SOURCEDEVICEMANAGER_H
 
 #include <QObject>
-#include "source-device/sourcedevicemanager.h"
+#include "sourcedevicemanager.h"
 
 struct FinishEntry
 {

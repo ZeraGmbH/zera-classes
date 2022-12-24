@@ -2,7 +2,7 @@
 #include <QCoreApplication>
 #include <QTimer>
 #include <QTemporaryFile>
-#include "io-device/filedisappearwatcher.h"
+#include "filedisappearwatcher.h"
 
 static int disappearOrNotExistentCount = 0;
 
