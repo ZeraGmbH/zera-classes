@@ -1,30 +1,7 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
 project(zera-electronicburdenmodule LANGUAGES CXX
     VERSION ${REPO_VERSION}
 )
 
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-#Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-include(FindPkgConfig)
-
-#Find dependecies
-find_package(Qt5 COMPONENTS Core Network CONFIG REQUIRED)
-find_package(VfEvent REQUIRED)
-find_package(VfHelpers REQUIRED)
-find_Package(VfComponent REQUIRED)
-find_Package(zera-json-params REQUIRED)
-find_package(serialportasyncblock REQUIRED)
-pkg_check_modules(XERCES xerces-c REQUIRED)
-find_Package(VfCpp REQUIRED)
-
-#sum up project Files 
 file(GLOB SOURCES 
     ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/*.cpp
@@ -165,80 +142,3 @@ install(
     DESTINATION
         ${SET_ZC_CONFIG_PATH}
     )
-
-find_package(Qt5Test REQUIRED)
-find_package(GTest)
-if (false)  # todo: unit tests!
-#if(NOT CMAKE_CROSSCOMPILING AND ${GTest_FOUND})
-    message(STATUS "unittest electronicburdenmodule")
-    enable_testing()
-
-    add_test(NAME    electronicburdenmodule-unittest
-             COMMAND electronicburdenmodule-unittest)
-
-    file(GLOB UNITTESTS
-        tests/unittest-*.cpp
-    )
-
-    add_executable(electronicburdenmodule-unittest
-        ${SOURCES}
-        ${HEADER}
-        ${RESOURCES}
-        ${UNITTESTS}
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.cxx
-    )
-    # constexpr / EXPECT_EQ -> linker problems for c++ < 17
-    set_property(TARGET electronicburdenmodule-unittest PROPERTY CXX_STANDARD 17)
-
-    target_include_directories(electronicburdenmodule-unittest
-        PUBLIC
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/electronicburdenmodule>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        )
-
-    target_link_libraries(electronicburdenmodule-unittest
-        PUBLIC
-        gtest
-        gtest_main
-        ${COMMON_LIBS}
-    )
-
-    add_test(NAME    electronicburdenmodule-unittest-qt
-             COMMAND electronicburdenmodule-unittest-qt)
-
-    file(GLOB QTUNITTESTS
-        tests/qt-unittest-*.cpp
-        tests/qt-unittest-*.h
-    )
-
-    add_executable(electronicburdenmodule-unittest-qt
-        tests/main-unittest-qt.h
-        tests/main-unittest-qt.cpp # must be first!!!
-        ${SOURCES}
-        ${HEADER}
-        ${RESOURCES}
-        ${QTUNITTESTS}
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.cxx
-    )
-
-    target_include_directories(electronicburdenmodule-unittest-qt
-        PUBLIC
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/electronicburdenmodule>
-        $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-        PRIVATE
-        ${CMAKE_CURRENT_SOURCE_DIR}/src
-        )
-
-    target_link_libraries(electronicburdenmodule-unittest-qt
-        PUBLIC
-        Qt5::Test
-        ${COMMON_LIBS}
-    )
-
-endif()
-
-
-# spawn out some info on configuration
-feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

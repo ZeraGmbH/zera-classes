@@ -1,6 +1,3 @@
-cmake_minimum_required(VERSION 3.1)
-
-#set project name and language
 project(zera-sourcemodule LANGUAGES CXX
     VERSION ${REPO_VERSION}
 )
@@ -9,22 +6,6 @@ project(zera-sourcemodule LANGUAGES CXX
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-#Adding cmake functions like feature_summary()
-include(FeatureSummary)
-include(GNUInstallDirs)
-include(FindPkgConfig)
-
-#Find dependecies
-find_package(Qt5 COMPONENTS Core Network CONFIG REQUIRED)
-find_package(VfEvent REQUIRED)
-find_package(VfHelpers REQUIRED)
-find_Package(VfComponent REQUIRED)
-find_Package(zera-json-params REQUIRED)
-find_package(serialportasyncblock REQUIRED)
-pkg_check_modules(XERCES xerces-c REQUIRED)
-find_Package(VfCpp REQUIRED)
-
-#sum up project Files 
 file(GLOB SOURCES 
     ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-device/*.cpp
@@ -177,14 +158,6 @@ target_link_libraries(sourcemodule
 install(TARGETS sourcemodule
     EXPORT sourcemoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
-    )
-
-# configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-    sourcemoduleConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
     )
 
 install(
