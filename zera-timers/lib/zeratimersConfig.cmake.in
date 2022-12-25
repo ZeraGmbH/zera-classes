@@ -1,0 +1,6 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(Qt5 COMPONENTS Core CONFIG REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/zeratasksbaseTargets.cmake")
+
