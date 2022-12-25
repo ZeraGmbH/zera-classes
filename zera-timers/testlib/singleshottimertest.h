@@ -9,10 +9,12 @@ class SingleShotTimerTest : public ZeraTimerTemplate, public TimerForTestInterfa
     Q_OBJECT
 public:
     SingleShotTimerTest(int expireTimeMs);
+    ~SingleShotTimerTest();
     void start() override;
     void stop() override;
     void fireExpired() override;
-    ~SingleShotTimerTest();
+private:
+    void removeFromRunner();
 };
 
 #endif // SINGLESHOTTIMERTEST_H
