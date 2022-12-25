@@ -14,7 +14,7 @@ class TimerRunnerForTest
 {
 public:
     static TimerRunnerForTest *getInstance();
-    void addTimer(TimerForTestInterface* timer, int expiredMs, bool periodic);
+    void addTimer(TimerForTestInterface* timer, int expiredMs, bool singleShot);
     void removeTimer(TimerForTestInterface* timer);
     void processTimers(int durationMs);
     int getCurrentTimeMs();
@@ -26,7 +26,7 @@ private:
     struct TTimerEntry
     {
         int expireMs;
-        bool peridic;
+        bool singleShot;
     };
     QMap<int, QMap<TimerForTestInterface*, TTimerEntry>> m_expireMap;
 };

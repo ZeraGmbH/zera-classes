@@ -9,13 +9,13 @@ TimerRunnerForTest *TimerRunnerForTest::getInstance()
     return m_instance;
 }
 
-void TimerRunnerForTest::addTimer(TimerForTestInterface *timer, int expiredMs, bool periodic)
+void TimerRunnerForTest::addTimer(TimerForTestInterface *timer, int expiredMs, bool singleShot)
 {
     removeTimer(timer);
     int expireTime = calcExpireTime(expiredMs);
     if(!m_expireMap.contains(expireTime))
         m_expireMap[expireTime] = QMap<TimerForTestInterface*, TTimerEntry>();
-    m_expireMap[expireTime][timer] = TTimerEntry({expiredMs, periodic});
+    m_expireMap[expireTime][timer] = TTimerEntry({expiredMs, singleShot});
 }
 
 void TimerRunnerForTest::removeTimer(TimerForTestInterface *timer)
