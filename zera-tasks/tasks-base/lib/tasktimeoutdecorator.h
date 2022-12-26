@@ -2,7 +2,8 @@
 #define TASKTIMEOUTDECORATOR_H
 
 #include "taskcomposit.h"
-#include <QTimer>
+#include <zeratimertemplate.h>
+#include <memory>
 
 class TaskTimeoutDecorator : public TaskComposite
 {
@@ -10,7 +11,7 @@ class TaskTimeoutDecorator : public TaskComposite
 public:
     static TaskCompositePtr wrapTimeout(int timeout, TaskCompositePtr decoratedTask,
                                         std::function<void()> additionalErrorHandler = []{});
-    TaskTimeoutDecorator(TaskCompositePtr decoratedTask, int timeout);
+    TaskTimeoutDecorator(ZeraTimerTemplatePtr timer, TaskCompositePtr decoratedTask);
     void start() override;
 private slots:
     void onFinishDecorated(bool ok);
@@ -19,8 +20,7 @@ private:
     void startDecoratedTask();
     void emitFinish(bool ok);
     TaskCompositePtr m_decoratedTask;
-    int m_timeoutMs;
-    QTimer m_timer;
+    std::unique_ptr<ZeraTimerTemplate> m_timer;
 };
 
 #endif // TASKTIMEOUTDECORATOR_H

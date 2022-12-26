@@ -2,6 +2,7 @@
 #define ZERATIMERTEMPLATE_H
 
 #include <QObject>
+#include <memory>
 
 class ZeraTimerTemplate : public QObject
 {
@@ -16,5 +17,7 @@ protected:
 signals:
     void sigExpired();
 };
+
+typedef std::unique_ptr<ZeraTimerTemplate> ZeraTimerTemplatePtr;
 
 #endif // ZERATIMERTEMPLATE_H

@@ -13,6 +13,7 @@ add_library(tasks-base SHARED
 target_link_libraries(tasks-base
     PUBLIC
     Qt5::Core
+    zera-timers
     )
 
 target_include_directories(tasks-base
