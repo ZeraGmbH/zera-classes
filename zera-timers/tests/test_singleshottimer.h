@@ -42,4 +42,18 @@ private:
     std::unique_ptr<TimerRunnerForTest> m_elapsedTestTimerRunner;
 };
 
+
+class TestEventLoop : public QObject
+{
+    Q_OBJECT
+public:
+    TestEventLoop(ZeraTimerTemplate* timer) {
+        connect(timer, &ZeraTimerTemplate::sigExpired,
+                this, &TestEventLoop::sigExpireReceived,
+                Qt::QueuedConnection);
+    };
+signals:
+    void sigExpireReceived();
+};
+
 #endif // TEST_SINGLESHOTTIMER_H
