@@ -2,7 +2,7 @@
 #define TIMERTESTDEFAULTS_H
 
 static constexpr int DEFAULT_EXPIRE = 50;
-static constexpr int DEFAULT_EXPIRE_WAIT = DEFAULT_EXPIRE * 1.2;
+static constexpr int DEFAULT_EXPIRE_WAIT = DEFAULT_EXPIRE * 2;
 static constexpr int EXPIRE_INFINITE = 1000000;
 
 #endif // TIMERTESTDEFAULTS_H
