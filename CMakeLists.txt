@@ -34,6 +34,7 @@ function(SETUP_QTESTS)
         target_link_libraries(${_testname}
             PUBLIC
             Qt5::Test
+            zera-timers-testlib
             task-test-helpers
             source-module-testhelpers
             zerabasemodule
@@ -74,7 +75,7 @@ add_subdirectory(zera-intel-hex-checker)
 add_subdirectory(zera-mcontroller-io)
 add_subdirectory(zera-i2c)
 add_subdirectory(zera-misc)
-
+add_subdirectory(zera-timers)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
