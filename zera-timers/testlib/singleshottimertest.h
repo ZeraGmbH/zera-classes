@@ -4,7 +4,7 @@
 #include "zeratimertemplate.h"
 #include "timerrunnerfortest.h"
 
-class SingleShotTimerTest : public ZeraTimerTemplate, public TimerForTestInterface
+class SingleShotTimerTest : public ZeraTimerTemplate, public TimerForTestTemplate
 {
     Q_OBJECT
 public:

@@ -2,6 +2,8 @@
 #define TEST_SINGLESHOTTIMER_H
 
 #include "zeratimertemplate.h"
+#include "timerrunnerfortest.h"
+#include "singleshottimertest.h"
 #include <QObject>
 #include <QElapsedTimer>
 #include <memory>
@@ -32,10 +34,12 @@ private slots:
     void queuedConnectetionsOnExpireTest();
 
 private:
-    void inspectTimer(ZeraTimerTemplate* timer);
+    void inspectTimerByDelay(ZeraTimerTemplate* timer);
+    void inspectTimerByRunner(SingleShotTimerTest *timer);
     int m_expireCount;
     int m_expireTime;
     std::unique_ptr<QElapsedTimer> m_elapsedTimer;
+    std::unique_ptr<TimerRunnerForTest> m_elapsedTestTimerRunner;
 };
 
 #endif // TEST_SINGLESHOTTIMER_H
