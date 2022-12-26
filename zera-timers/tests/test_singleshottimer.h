@@ -33,6 +33,9 @@ private slots:
     void queuedConnectetionsOnExpire();
     void queuedConnectetionsOnExpireTest();
 
+    void infiniteExpire();
+    void infiniteExpireTest();
+
 private:
     void inspectTimerByDelay(ZeraTimerTemplate* timer);
     void inspectTimerByRunner(SingleShotTimerTest *timer);
