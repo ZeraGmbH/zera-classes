@@ -1,4 +1,5 @@
 #include "timerrunnerfortest.h"
+#include <QCoreApplication>
 
 void TimerForTestTemplate::setRunner(TimerRunnerForTest *timeRunner)
 {
@@ -44,6 +45,7 @@ void TimerRunnerForTest::processTimers(int durationMs)
                     // TODO once periodic timers are implemented
                 }
                 timerIter.key()->fireExpired();
+                QCoreApplication::processEvents();
             }
         }
     }
