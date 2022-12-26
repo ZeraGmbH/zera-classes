@@ -8,7 +8,7 @@ QTEST_MAIN(test_singleshottimer)
 static bool isExpireTimeWithinLimits(int measuredTime, int expectedTime)
 {
     int minAllowed = expectedTime;
-    int maxAllowed = expectedTime * 1.2;
+    int maxAllowed = expectedTime * 1.5;
     bool ok = measuredTime>=minAllowed && measuredTime<=maxAllowed;
     if(!ok) {
         qWarning("Measured: %i / Expected: %i", measuredTime, expectedTime);
