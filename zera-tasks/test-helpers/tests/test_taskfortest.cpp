@@ -17,7 +17,6 @@ void test_taskfortest::onePassImmediate()
     TaskTestHelper helper(&task);
 
     task.start();
-    QCoreApplication::processEvents();
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -30,7 +29,6 @@ void test_taskfortest::oneErrImmediate()
     TaskTestHelper helper(&task);
 
     task.start();
-    QCoreApplication::processEvents();
 
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
@@ -67,7 +65,6 @@ void test_taskfortest::onePassCount()
 {
     TaskForTest task(0, true);
     task.start();
-    QCoreApplication::processEvents();
     QCOMPARE(TaskForTest::okCount(), 1);
     QCOMPARE(TaskForTest::errCount(), 0);
 }
@@ -76,7 +73,6 @@ void test_taskfortest::oneErrCount()
 {
     TaskForTest task(0, false);
     task.start();
-    QCoreApplication::processEvents();
     QCOMPARE(TaskForTest::okCount(), 0);
     QCOMPARE(TaskForTest::errCount(), 1);
 }
