@@ -1,6 +1,7 @@
 #ifndef TIMERRUNNERFORTEST_H
 #define TIMERRUNNERFORTEST_H
 
+#include "timertestdefaults.h"
 #include <QMap>
 #include <QList>
 
