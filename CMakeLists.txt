@@ -68,6 +68,7 @@ if(ZC_BUILD_MODULES)
     add_subdirectory(zera-modules)
     add_subdirectory(zera-proxy)
     add_subdirectory(zera-tasks)
+    add_subdirectory(zera-timers)
 endif(ZC_BUILD_MODULES)
 
 add_subdirectory(zera-math)
@@ -75,7 +76,6 @@ add_subdirectory(zera-intel-hex-checker)
 add_subdirectory(zera-mcontroller-io)
 add_subdirectory(zera-i2c)
 add_subdirectory(zera-misc)
-add_subdirectory(zera-timers)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
