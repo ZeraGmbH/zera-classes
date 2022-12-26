@@ -1,18 +1,19 @@
 #include "tasktimeoutdecorator.h"
 #include "taskextraerrorhandler.h"
+#include "singleshottimerqt.h"
 
 TaskCompositePtr TaskTimeoutDecorator::wrapTimeout(int timeout, TaskCompositePtr decoratedTask, std::function<void ()> additionalErrorHandler)
 {
     return TaskExtraErrorHandler::create(
                 std::make_unique<TaskTimeoutDecorator>(
-                    std::move(decoratedTask),
-                    timeout),
+                    SingleShotTimerQt::create(timeout),
+                    std::move(decoratedTask)),
                 additionalErrorHandler);
 }
 
-TaskTimeoutDecorator::TaskTimeoutDecorator(TaskCompositePtr decoratedTask, int timeout) :
+TaskTimeoutDecorator::TaskTimeoutDecorator(ZeraTimerTemplatePtr timer, TaskCompositePtr decoratedTask) :
     m_decoratedTask(std::move(decoratedTask)),
-    m_timeoutMs(timeout)
+    m_timer(std::move(timer))
 {
 }
 
@@ -26,7 +27,7 @@ void TaskTimeoutDecorator::start()
 
 void TaskTimeoutDecorator::onFinishDecorated(bool ok)
 {
-    m_timer.stop();
+    m_timer->stop();
     emitFinish(ok);
 }
 
@@ -37,10 +38,9 @@ void TaskTimeoutDecorator::onTimeout()
 
 void TaskTimeoutDecorator::startDecoratedTask()
 {
-    if(m_timeoutMs) {
-        connect(&m_timer, &QTimer::timeout, this, &TaskTimeoutDecorator::onTimeout);
-        m_timer.start(m_timeoutMs);
-    }
+    connect(m_timer.get(), &ZeraTimerTemplate::sigExpired,
+            this, &TaskTimeoutDecorator::onTimeout);
+    m_timer->start();
     connect(m_decoratedTask.get(), &TaskComposite::sigFinish, this, &TaskTimeoutDecorator::onFinishDecorated);
     m_decoratedTask->start();
 }
@@ -48,6 +48,6 @@ void TaskTimeoutDecorator::startDecoratedTask()
 void TaskTimeoutDecorator::emitFinish(bool ok)
 {
     m_decoratedTask = nullptr;
-    m_timer.stop();
+    m_timer->stop();
     finishTask(ok);
 }
