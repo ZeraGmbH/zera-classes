@@ -42,7 +42,6 @@ private:
     int m_expireCount;
     int m_expireTime;
     std::unique_ptr<QElapsedTimer> m_elapsedTimer;
-    std::unique_ptr<TimerRunnerForTest> m_elapsedTestTimerRunner;
 };
 
 

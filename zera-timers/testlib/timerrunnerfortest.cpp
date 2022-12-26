@@ -1,26 +1,35 @@
 #include "timerrunnerfortest.h"
 #include <QCoreApplication>
 
-void TimerForTestTemplate::setRunner(TimerRunnerForTest *timeRunner)
+TimerRunnerForTest *TimerRunnerForTest::m_instance = nullptr;
+
+TimerRunnerForTest *TimerRunnerForTest::getInstance()
 {
-    m_timeRunner = timeRunner;
+    if(m_instance == nullptr)
+        m_instance = new TimerRunnerForTest;
+    return m_instance;
 }
 
+void TimerRunnerForTest::reset()
+{
+    delete m_instance;
+    m_instance = nullptr;
+}
 
-void TimerRunnerForTest::addTimer(TimerForTestTemplate *timer, int expiredMs, bool singleShot)
+void TimerRunnerForTest::addTimer(TimerForTestInterface *timer, int expiredMs, bool singleShot)
 {
     removeTimer(timer);
     int expireTime = calcExpireTime(expiredMs);
     if(!m_expireMap.contains(expireTime))
-        m_expireMap[expireTime] = QMap<TimerForTestTemplate*, TTimerEntry>();
+        m_expireMap[expireTime] = QMap<TimerForTestInterface*, TTimerEntry>();
     m_expireMap[expireTime][timer] = TTimerEntry({expiredMs, singleShot});
 }
 
-void TimerRunnerForTest::removeTimer(TimerForTestTemplate *timer)
+void TimerRunnerForTest::removeTimer(TimerForTestInterface *timer)
 {
     QList<int> emptyExpireEntries;
     for(auto iter=m_expireMap.begin(); iter!=m_expireMap.end(); iter++) {
-        QMap<TimerForTestTemplate*, TTimerEntry> &expireList = iter.value();
+        QMap<TimerForTestInterface*, TTimerEntry> &expireList = iter.value();
         expireList.remove(timer);
         if(expireList.isEmpty())
             emptyExpireEntries.append(iter.key());
@@ -38,7 +47,7 @@ void TimerRunnerForTest::processTimers(int durationMs)
         if(entryExpireTime <= nextCurrentTimeMs) {
             m_currentTimeMs = entryExpireTime;
             expireEntriesToRemove.append(entryExpireTime);
-            QMap<TimerForTestTemplate*, TTimerEntry> &expireMap = iter.value();
+            QMap<TimerForTestInterface*, TTimerEntry> &expireMap = iter.value();
             for(auto timerIter=expireMap.cbegin(); timerIter!=expireMap.cend(); timerIter++) {
                 TTimerEntry entry = timerIter.value();
                 if(!entry.singleShot) {

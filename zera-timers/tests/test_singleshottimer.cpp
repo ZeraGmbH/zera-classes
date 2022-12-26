@@ -22,7 +22,7 @@ void test_singleshottimer::init()
     m_expireCount = 0;
     m_expireTime = 0;
     m_elapsedTimer = std::make_unique<QElapsedTimer>();
-    m_elapsedTestTimerRunner = std::make_unique<TimerRunnerForTest>();
+    TimerRunnerForTest::reset();
 }
 
 void test_singleshottimer::inspectTimerByDelay(ZeraTimerTemplate *timer)
@@ -36,10 +36,9 @@ void test_singleshottimer::inspectTimerByDelay(ZeraTimerTemplate *timer)
 
 void test_singleshottimer::inspectTimerByRunner(SingleShotTimerTest *timer)
 {
-    timer->setRunner(m_elapsedTestTimerRunner.get());
     connect(timer, &SingleShotTimerQt::sigExpired, [&]{
         m_expireCount++;
-        m_expireTime = m_elapsedTestTimerRunner->getCurrentTimeMs();
+        m_expireTime = TimerRunnerForTest::getInstance()->getCurrentTimeMs();
     });
 }
 
@@ -62,7 +61,7 @@ void test_singleshottimer::signalOnExpireTimingTest()
     inspectTimerByRunner(&timer);
 
     timer.start();
-    m_elapsedTestTimerRunner->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(m_expireCount, 1);
     QCOMPARE(m_expireTime, DEFAULT_EXPIRE); // on point
@@ -89,9 +88,9 @@ void test_singleshottimer::restartTimingTest()
     inspectTimerByRunner(&timer);
 
     timer.start();
-    m_elapsedTestTimerRunner->processTimers(DEFAULT_EXPIRE/2);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE/2);
     timer.start();
-    m_elapsedTestTimerRunner->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(m_expireCount, 1);
     QCOMPARE(m_expireTime, DEFAULT_EXPIRE*1.5); // on point
@@ -118,9 +117,9 @@ void test_singleshottimer::stopWhilePendingTest()
     inspectTimerByRunner(&timer);
 
     timer.start();
-    m_elapsedTestTimerRunner->processTimers(DEFAULT_EXPIRE/2);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE/2);
     timer.stop();
-    m_elapsedTestTimerRunner->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(m_expireCount, 0);
     QCOMPARE(m_expireTime, 0);
@@ -154,7 +153,7 @@ void test_singleshottimer::queuedConnectetionsOnExpireTest()
     });
 
     timer.start();
-    m_elapsedTestTimerRunner->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(expireReceived, 1);
 }
@@ -178,7 +177,7 @@ void test_singleshottimer::infiniteExpireTest()
     inspectTimerByRunner(&timer);
 
     timer.start();
-    m_elapsedTestTimerRunner->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(m_expireCount, 0);
     QCOMPARE(m_expireTime, 0);

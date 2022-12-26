@@ -4,24 +4,23 @@
 #include <QMap>
 #include <QList>
 
-class TimerRunnerForTest;
-class TimerForTestTemplate
+class TimerForTestInterface
 {
 public:
     virtual void fireExpired() = 0;
-    void setRunner(TimerRunnerForTest* timeRunner);
-protected:
-    TimerRunnerForTest* m_timeRunner;
 };
 
 class TimerRunnerForTest
 {
 public:
-    void addTimer(TimerForTestTemplate* timer, int expiredMs, bool singleShot);
-    void removeTimer(TimerForTestTemplate* timer);
+    static TimerRunnerForTest* getInstance();
+    static void reset();
+    void addTimer(TimerForTestInterface* timer, int expiredMs, bool singleShot);
+    void removeTimer(TimerForTestInterface* timer);
     void processTimers(int durationMs);
     int getCurrentTimeMs();
 private:
+    TimerRunnerForTest() = default;
     int calcExpireTime(int expiredMs);
     int m_currentTimeMs = 0;
     struct TTimerEntry
@@ -29,7 +28,8 @@ private:
         int expireMs;
         bool singleShot;
     };
-    QMap<int, QMap<TimerForTestTemplate*, TTimerEntry>> m_expireMap;
+    QMap<int, QMap<TimerForTestInterface*, TTimerEntry>> m_expireMap;
+    static TimerRunnerForTest* m_instance;
 };
 
 #endif // TIMERRUNNERFORTEST_H
