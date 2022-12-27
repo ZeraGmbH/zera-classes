@@ -6,12 +6,12 @@
 #include <QTimer>
 #include <zeratimertemplate.h>
 
-class TaskForTestNew : public TaskComposite
+class TaskForTest : public TaskComposite
 {
 public:
     static TaskCompositePtr create(int delayMs, bool finishOk);
-    TaskForTestNew(int delayMs, bool finishOk);
-    ~TaskForTestNew() override;
+    TaskForTest(int delayMs, bool finishOk);
+    ~TaskForTest() override;
     void start() override;
     static void resetCounters();
     static int okCount() { return m_finishOkCount; }
