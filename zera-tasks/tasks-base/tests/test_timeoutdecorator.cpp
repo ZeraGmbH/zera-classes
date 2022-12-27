@@ -2,119 +2,123 @@
 #include "taskfortest.h"
 #include "tasktimeoutdecorator.h"
 #include "tasktesthelper.h"
+#include <singleshottimertest.h>
+#include <timerrunnerfortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_timeoutdecorator)
 
 void test_timeoutdecorator::init()
 {
-    TaskForTest::resetCounters();
+    TaskForTestNew::resetCounters();
+    TimerRunnerForTest::reset();
+}
+
+static TaskCompositePtr wrapSimulatedTimeout(int timeout, TaskCompositePtr decoratedTask)
+{
+    return std::make_unique<TaskTimeoutDecorator>(
+                std::make_unique<SingleShotTimerTest>(timeout),
+                std::move(decoratedTask));
 }
 
 void test_timeoutdecorator::startEmpty()
 {
-    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(TIMEOUT_INFINITE, nullptr);
-    TaskTestHelper helper(task.get());
+    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(EXPIRE_INFINITE, nullptr);
+    TaskTestHelperNew helper(task.get());
     task->start();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
-    QCOMPARE(TaskForTest::okCount(), 0);
-    QCOMPARE(TaskForTest::errCount(), 0);
-    QCOMPARE(TaskForTest::dtorCount(), 0);
+    QCOMPARE(TaskForTestNew::okCount(), 0);
+    QCOMPARE(TaskForTestNew::errCount(), 0);
+    QCOMPARE(TaskForTestNew::dtorCount(), 0);
 }
 
 void test_timeoutdecorator::startEmptyCheckDelayed()
 {
-    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(1, nullptr);
-    TaskTestHelper helper(task.get());
+    TaskCompositePtr task = wrapSimulatedTimeout(1, nullptr);
+    TaskTestHelperNew helper(task.get());
     task->start();
-    QTest::qWait(DEFAULT_TIMEOUT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
-    QCOMPARE(TaskForTest::okCount(), 0);
-    QCOMPARE(TaskForTest::errCount(), 0);
-    QCOMPARE(TaskForTest::dtorCount(), 0);
+    QCOMPARE(TaskForTestNew::okCount(), 0);
+    QCOMPARE(TaskForTestNew::errCount(), 0);
+    QCOMPARE(TaskForTestNew::dtorCount(), 0);
 }
 
 void test_timeoutdecorator::immediateOk()
 {
-    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(TIMEOUT_INFINITE, TaskForTest::create(0, true));
-    TaskTestHelper helper(task.get());
+    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(EXPIRE_INFINITE, TaskForTestNew::create(0, true));
+    TaskTestHelperNew helper(task.get());
     task->start();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
-    QCOMPARE(TaskForTest::okCount(), 1);
-    QCOMPARE(TaskForTest::errCount(), 0);
-    QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT_MIN);
+    QCOMPARE(TaskForTestNew::okCount(), 1);
+    QCOMPARE(TaskForTestNew::errCount(), 0);
+    QCOMPARE(TaskForTestNew::dtorCount(), 1);
 }
 
 void test_timeoutdecorator::immediateError()
 {
-    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(TIMEOUT_INFINITE, TaskForTest::create(0, false));
-    TaskTestHelper helper(task.get());
+    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(EXPIRE_INFINITE, TaskForTestNew::create(0, false));
+    TaskTestHelperNew helper(task.get());
     task->start();
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
-    QCOMPARE(TaskForTest::okCount(), 0);
-    QCOMPARE(TaskForTest::errCount(), 1);
-    QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT_MIN);
-
+    QCOMPARE(TaskForTestNew::okCount(), 0);
+    QCOMPARE(TaskForTestNew::errCount(), 1);
+    QCOMPARE(TaskForTestNew::dtorCount(), 1);
 }
 
 void test_timeoutdecorator::infiniteTask()
 {
-    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(DEFAULT_TIMEOUT, TaskForTest::create(TIMEOUT_INFINITE, true));
-    TaskTestHelper helper(task.get());
+    TaskCompositePtr task = wrapSimulatedTimeout(DEFAULT_EXPIRE, TaskForTestNew::create(EXPIRE_INFINITE, true));
+    TaskTestHelperNew helper(task.get());
     task->start();
-    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
-    QCOMPARE(TaskForTest::okCount(), 0);
-    QCOMPARE(TaskForTest::errCount(), 0);
-    QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelayMs() >= DEFAULT_TIMEOUT);
-    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT_WAIT);
+    QCOMPARE(TaskForTestNew::okCount(), 0);
+    QCOMPARE(TaskForTestNew::errCount(), 0);
+    QCOMPARE(TaskForTestNew::dtorCount(), 1);
+    QCOMPARE(helper.signalDelayMs(), DEFAULT_EXPIRE);
 }
 
 void test_timeoutdecorator::delayedOk()
 {
-    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(DEFAULT_TIMEOUT, TaskForTest::create(DEFAULT_TIMEOUT_MIN, true));
-    TaskTestHelper helper(task.get());
+    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(DEFAULT_EXPIRE, TaskForTestNew::create(DEFAULT_EXPIRE/2, true));
+    TaskTestHelperNew helper(task.get());
     task->start();
-    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
-    QCOMPARE(TaskForTest::okCount(), 1);
-    QCOMPARE(TaskForTest::errCount(), 0);
-    QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelayMs() >= DEFAULT_TIMEOUT_MIN);
-    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT_WAIT);
+    QCOMPARE(TaskForTestNew::okCount(), 1);
+    QCOMPARE(TaskForTestNew::errCount(), 0);
+    QCOMPARE(TaskForTestNew::dtorCount(), 1);
+    QCOMPARE(helper.signalDelayMs(), DEFAULT_EXPIRE/2);
 }
 
 void test_timeoutdecorator::delayEqualsTimeout()
 {
-    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(DEFAULT_TIMEOUT, TaskForTest::create(DEFAULT_TIMEOUT, true));
-    TaskTestHelper helper(task.get());
+    TaskCompositePtr task = TaskTimeoutDecorator::wrapTimeout(DEFAULT_EXPIRE, TaskForTestNew::create(DEFAULT_EXPIRE, true));
+    TaskTestHelperNew helper(task.get());
     task->start();
-    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(helper.okCount() + helper.errCount(), 1);
-    QCOMPARE(TaskForTest::dtorCount(), 1);
-    QVERIFY(helper.signalDelayMs() >= DEFAULT_TIMEOUT);
-    QVERIFY(helper.signalDelayMs() < DEFAULT_TIMEOUT_WAIT);
+    QCOMPARE(TaskForTestNew::dtorCount(), 1);
+    QCOMPARE(helper.signalDelayMs(), DEFAULT_EXPIRE);
 }
 
 void test_timeoutdecorator::taskId()
 {
-    TaskForTest task1(0, true);
-    TaskTestHelper helper1(&task1);
+    TaskForTestNew task1(0, true);
+    TaskTestHelperNew helper1(&task1);
     int taskId1 = task1.getTaskId();
     task1.start();
     QCOMPARE(helper1.lastTaskIdReceived(), taskId1);
 
-    TaskForTest task2(0, true);
-    TaskTestHelper helper2(&task2);
+    TaskForTestNew task2(0, true);
+    TaskTestHelperNew helper2(&task2);
     int taskId2 = task2.getTaskId();
     task2.start();
     QCOMPARE(helper2.lastTaskIdReceived(), taskId2);
