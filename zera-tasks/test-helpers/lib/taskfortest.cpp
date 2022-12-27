@@ -2,30 +2,30 @@
 #include <singleshottimertest.h>
 #include <QTest>
 
-TaskCompositePtr TaskForTestNew::create(int delayMs, bool finishOk)
+TaskCompositePtr TaskForTest::create(int delayMs, bool finishOk)
 {
-    return std::make_unique<TaskForTestNew>(delayMs, finishOk);
+    return std::make_unique<TaskForTest>(delayMs, finishOk);
 }
 
-int TaskForTestNew::m_finishOkCount = 0;
-int TaskForTestNew::m_finishErrCount = 0;
-int TaskForTestNew::m_dtorCount = 0;
+int TaskForTest::m_finishOkCount = 0;
+int TaskForTest::m_finishErrCount = 0;
+int TaskForTest::m_dtorCount = 0;
 
-TaskForTestNew::TaskForTestNew(int delayMs, bool finishOk) :
+TaskForTest::TaskForTest(int delayMs, bool finishOk) :
     m_delayMs(delayMs),
     m_delayTimer(std::make_unique<SingleShotTimerTest>(delayMs)),
     m_finishOk(finishOk)
 {
     connect(m_delayTimer.get(), &ZeraTimerTemplate::sigExpired,
-            this, &TaskForTestNew::doEmit);
+            this, &TaskForTest::doEmit);
 }
 
-TaskForTestNew::~TaskForTestNew()
+TaskForTest::~TaskForTest()
 {
     m_dtorCount++;
 }
 
-void TaskForTestNew::start()
+void TaskForTest::start()
 {
     if(m_started)
         qFatal("Started Twice");
@@ -36,7 +36,7 @@ void TaskForTestNew::start()
         m_delayTimer->start();
 }
 
-void TaskForTestNew::resetCounters()
+void TaskForTest::resetCounters()
 {
     m_finishOkCount = 0;
     m_finishErrCount = 0;
@@ -44,7 +44,7 @@ void TaskForTestNew::resetCounters()
 
 }
 
-void TaskForTestNew::doEmit()
+void TaskForTest::doEmit()
 {
     if(m_finishOk)
         m_finishOkCount++;

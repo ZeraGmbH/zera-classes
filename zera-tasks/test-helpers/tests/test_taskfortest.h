@@ -8,21 +8,14 @@ class test_taskfortest : public QObject
     Q_OBJECT
 private slots:
     void init();
-    void onePassImmediateNew();
-
-    void oneErrImmediateNew();
-
-    void onePassDelayedNew();
-
-    void oneErrDelayedNew();
-
-    void onePassCountNew();
-
-    void oneErrCountNew();
-
-    void oneDtorCountNew();
-
-    void taskIdNew();
+    void onePassImmediate();
+    void oneErrImmediate();
+    void onePassDelayed();
+    void oneErrDelayed();
+    void onePassCount();
+    void oneErrCount();
+    void oneDtorCount();
+    void taskId();
 };
 
 #endif // TEST_TASKFORTEST_H

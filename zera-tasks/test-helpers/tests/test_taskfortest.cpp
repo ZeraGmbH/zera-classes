@@ -8,13 +8,13 @@ QTEST_MAIN(test_taskfortest)
 
 void test_taskfortest::init()
 {
-    TaskForTestNew::resetCounters();
+    TaskForTest::resetCounters();
     TimerRunnerForTest::reset();
 }
 
-void test_taskfortest::onePassImmediateNew()
+void test_taskfortest::onePassImmediate()
 {
-    TaskForTestNew task(0, true);
+    TaskForTest task(0, true);
     TaskTestHelperNew helper(&task);
 
     task.start();
@@ -23,9 +23,9 @@ void test_taskfortest::onePassImmediateNew()
     QCOMPARE(helper.errCount(), 0);
 }
 
-void test_taskfortest::oneErrImmediateNew()
+void test_taskfortest::oneErrImmediate()
 {
-    TaskForTestNew task(0, false);
+    TaskForTest task(0, false);
     TaskTestHelperNew helper(&task);
 
     task.start();
@@ -34,9 +34,9 @@ void test_taskfortest::oneErrImmediateNew()
     QCOMPARE(helper.errCount(), 1);
 }
 
-void test_taskfortest::onePassDelayedNew()
+void test_taskfortest::onePassDelayed()
 {
-    TaskForTestNew task(DEFAULT_EXPIRE, true);
+    TaskForTest task(DEFAULT_EXPIRE, true);
     TaskTestHelperNew helper(&task);
 
     task.start();
@@ -47,9 +47,9 @@ void test_taskfortest::onePassDelayedNew()
     QCOMPARE(helper.signalDelayMs(), DEFAULT_EXPIRE);
 }
 
-void test_taskfortest::oneErrDelayedNew()
+void test_taskfortest::oneErrDelayed()
 {
-    TaskForTestNew task(DEFAULT_EXPIRE, false);
+    TaskForTest task(DEFAULT_EXPIRE, false);
     TaskTestHelperNew helper(&task);
 
     task.start();
@@ -60,39 +60,39 @@ void test_taskfortest::oneErrDelayedNew()
     QCOMPARE(helper.signalDelayMs(), DEFAULT_EXPIRE);
 }
 
-void test_taskfortest::onePassCountNew()
+void test_taskfortest::onePassCount()
 {
-    TaskForTestNew task(0, true);
+    TaskForTest task(0, true);
     task.start();
-    QCOMPARE(TaskForTestNew::okCount(), 1);
-    QCOMPARE(TaskForTestNew::errCount(), 0);
+    QCOMPARE(TaskForTest::okCount(), 1);
+    QCOMPARE(TaskForTest::errCount(), 0);
 }
 
-void test_taskfortest::oneErrCountNew()
+void test_taskfortest::oneErrCount()
 {
-    TaskForTestNew task(0, false);
+    TaskForTest task(0, false);
     task.start();
-    QCOMPARE(TaskForTestNew::okCount(), 0);
-    QCOMPARE(TaskForTestNew::errCount(), 1);
+    QCOMPARE(TaskForTest::okCount(), 0);
+    QCOMPARE(TaskForTest::errCount(), 1);
 }
 
-void test_taskfortest::oneDtorCountNew()
+void test_taskfortest::oneDtorCount()
 {
     {
-        TaskForTestNew task(0, true);
+        TaskForTest task(0, true);
     }
-    QCOMPARE(TaskForTestNew::dtorCount(), 1);
+    QCOMPARE(TaskForTest::dtorCount(), 1);
 }
 
-void test_taskfortest::taskIdNew()
+void test_taskfortest::taskId()
 {
-    TaskForTestNew task1(0, true);
+    TaskForTest task1(0, true);
     TaskTestHelperNew helper1(&task1);
     int taskId1 = task1.getTaskId();
     task1.start();
     QCOMPARE(helper1.lastTaskIdReceived(), taskId1);
 
-    TaskForTestNew task2(0, true);
+    TaskForTest task2(0, true);
     TaskTestHelperNew helper2(&task2);
     int taskId2 = task2.getTaskId();
     task2.start();
