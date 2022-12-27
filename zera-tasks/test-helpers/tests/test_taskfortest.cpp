@@ -15,7 +15,7 @@ void test_taskfortest::init()
 void test_taskfortest::onePassImmediate()
 {
     TaskForTest task(0, true);
-    TaskTestHelperNew helper(&task);
+    TaskTestHelper helper(&task);
 
     task.start();
 
@@ -26,7 +26,7 @@ void test_taskfortest::onePassImmediate()
 void test_taskfortest::oneErrImmediate()
 {
     TaskForTest task(0, false);
-    TaskTestHelperNew helper(&task);
+    TaskTestHelper helper(&task);
 
     task.start();
 
@@ -37,7 +37,7 @@ void test_taskfortest::oneErrImmediate()
 void test_taskfortest::onePassDelayed()
 {
     TaskForTest task(DEFAULT_EXPIRE, true);
-    TaskTestHelperNew helper(&task);
+    TaskTestHelper helper(&task);
 
     task.start();
     TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
@@ -50,7 +50,7 @@ void test_taskfortest::onePassDelayed()
 void test_taskfortest::oneErrDelayed()
 {
     TaskForTest task(DEFAULT_EXPIRE, false);
-    TaskTestHelperNew helper(&task);
+    TaskTestHelper helper(&task);
 
     task.start();
     TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
@@ -87,13 +87,13 @@ void test_taskfortest::oneDtorCount()
 void test_taskfortest::taskId()
 {
     TaskForTest task1(0, true);
-    TaskTestHelperNew helper1(&task1);
+    TaskTestHelper helper1(&task1);
     int taskId1 = task1.getTaskId();
     task1.start();
     QCOMPARE(helper1.lastTaskIdReceived(), taskId1);
 
     TaskForTest task2(0, true);
-    TaskTestHelperNew helper2(&task2);
+    TaskTestHelper helper2(&task2);
     int taskId2 = task2.getTaskId();
     task2.start();
     QCOMPARE(helper2.lastTaskIdReceived(), taskId2);

@@ -16,7 +16,7 @@ void test_taskparallel::init()
 void test_taskparallel::startEmpty()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -28,7 +28,7 @@ void test_taskparallel::startEmpty()
 void test_taskparallel::startErrorTask()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(0, false));
     task->start();
     QCOMPARE(helper.okCount(), 0);
@@ -41,7 +41,7 @@ void test_taskparallel::startErrorTask()
 void test_taskparallel::startPassImmediateDelayed()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(0, true));
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
     task->start();
@@ -64,7 +64,7 @@ void test_taskparallel::startPassImmediateDelayed()
 void test_taskparallel::startThreeImmediateMiddleFail()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(0, true));
     task->addSub(TaskForTest::create(0, false));
     task->addSub(TaskForTest::create(0, true));
@@ -80,7 +80,7 @@ void test_taskparallel::startThreeImmediateMiddleFail()
 void test_taskparallel::startThreeImmediateAllOk()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(0, true));
     task->addSub(TaskForTest::create(0, true));
     task->addSub(TaskForTest::create(0, true));
@@ -96,7 +96,7 @@ void test_taskparallel::startThreeImmediateAllOk()
 void test_taskparallel::startThreeDelayedMiddleFail()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, false));
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
@@ -114,7 +114,7 @@ void test_taskparallel::startThreeDelayedMiddleFail()
 void test_taskparallel::startThreeDelayedAllOk()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
@@ -132,14 +132,14 @@ void test_taskparallel::startThreeDelayedAllOk()
 void test_taskparallel::taskId()
 {
     TaskParallel task1;
-    TaskTestHelperNew helper1(&task1);
+    TaskTestHelper helper1(&task1);
     task1.addSub(TaskForTest::create(0, true));
     int taskId1 = task1.getTaskId();
     task1.start();
     QCOMPARE(helper1.lastTaskIdReceived(), taskId1);
 
     TaskParallel task2;
-    TaskTestHelperNew helper2(&task2);
+    TaskTestHelper helper2(&task2);
     task2.addSub(TaskForTest::create(0, true));
     int taskId2 = task2.getTaskId();
     task2.start();
@@ -150,7 +150,7 @@ void test_taskparallel::taskId()
 void test_taskparallel::startTwice()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
     task->start();
     task->start();
@@ -173,7 +173,7 @@ void test_taskparallel::startTwice()
 void test_taskparallel::onRunningAddAndStartOne()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(DEFAULT_EXPIRE, true));
     task->start();
 
@@ -198,7 +198,7 @@ void test_taskparallel::onRunningAddAndStartOne()
 void test_taskparallel::twoTransactions()
 {
     TaskContainerPtr task = TaskParallel::create();
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->addSub(TaskForTest::create(0, true));
     task->start();
     QCOMPARE(helper.okCount(), 1);

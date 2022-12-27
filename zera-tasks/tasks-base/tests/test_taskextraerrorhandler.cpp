@@ -16,7 +16,7 @@ void test_taskextraerrorhandler::init()
 void test_taskextraerrorhandler::startEmpty()
 {
     TaskCompositePtr task = TaskExtraErrorHandler::create(nullptr,[&]{});
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -28,7 +28,7 @@ void test_taskextraerrorhandler::handleError()
     TaskCompositePtr task = TaskExtraErrorHandler::create(TaskForTest::create(DEFAULT_EXPIRE, false),[&]{
         extraErrCount++;
     });
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(extraErrCount, 1);
@@ -43,7 +43,7 @@ void test_taskextraerrorhandler::handleNoError()
     TaskCompositePtr task = TaskExtraErrorHandler::create(TaskForTest::create(DEFAULT_EXPIRE, true),[&]{
         extraErrCount++;
     });
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(extraErrCount, 0);

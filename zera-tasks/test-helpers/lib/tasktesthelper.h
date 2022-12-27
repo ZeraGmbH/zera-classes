@@ -7,11 +7,11 @@
 #include <QElapsedTimer>
 #include <QList>
 
-class TaskTestHelperNew : public QObject
+class TaskTestHelper : public QObject
 {
     Q_OBJECT
 public:
-    explicit TaskTestHelperNew(TaskComposite *taskUnderTest);
+    explicit TaskTestHelper(TaskComposite *taskUnderTest);
     int okCount() const { return m_okCount; }
     int errCount()  const { return m_errCount; }
     int signalDelayMs() const { return m_signalDelayMs; }

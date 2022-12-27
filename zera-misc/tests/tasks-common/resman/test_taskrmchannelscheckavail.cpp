@@ -22,7 +22,7 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
                                                              expectedChannels,
                                                              TIMEOUT_INFINITE);
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(helper.okCount(), 1);
@@ -36,7 +36,7 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
                                                              expectedChannels,
                                                              TIMEOUT_INFINITE);
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(helper.okCount(), 1);
@@ -50,7 +50,7 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
                                                              expectedChannels,
                                                              TIMEOUT_INFINITE);
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(helper.okCount(), 0);
@@ -66,7 +66,7 @@ void test_taskrmchannelscheckavail::timeoutAndErrFunc()
                                                              [&]{
         localErrorCount++;
     });
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QTest::qWait(DEFAULT_TIMEOUT_WAIT);
     QCOMPARE(localErrorCount, 1);
