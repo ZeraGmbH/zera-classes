@@ -66,7 +66,7 @@ void test_taskrmchannelsgetavail::timeoutAndErrFunc()
                                                            [&]{
         localErrorCount++;
     });
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QTest::qWait(DEFAULT_TIMEOUT_WAIT);
     QCOMPARE(localErrorCount, 1);

@@ -11,7 +11,7 @@ void test_taskimmediatelambda::startPass()
     TaskCompositePtr task = TaskImmediateLambda::create([&](){
         return true;
     });
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -22,7 +22,7 @@ void test_taskimmediatelambda::startFail()
     TaskCompositePtr task = TaskImmediateLambda::create([&](){
         return false;
     });
-    TaskTestHelperNew helper(task.get());
+    TaskTestHelper helper(task.get());
     task->start();
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);

@@ -1,12 +1,12 @@
 #include "tasktesthelper.h"
 #include <timerrunnerfortest.h>
 
-TaskTestHelperNew::TaskTestHelperNew(TaskComposite *taskUnderTest)
+TaskTestHelper::TaskTestHelper(TaskComposite *taskUnderTest)
 {
-    connect(taskUnderTest, &TaskComposite::sigFinish, this, &TaskTestHelperNew::onTaskFinish);
+    connect(taskUnderTest, &TaskComposite::sigFinish, this, &TaskTestHelper::onTaskFinish);
 }
 
-void TaskTestHelperNew::onTaskFinish(bool ok, int taskId)
+void TaskTestHelper::onTaskFinish(bool ok, int taskId)
 {
     if(ok)
         m_okCount++;
