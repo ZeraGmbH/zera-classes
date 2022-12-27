@@ -30,7 +30,7 @@ private:
     };
     typedef QMap<TimerForTestInterface*, TTimerEntry> ExpireEntries;
     typedef QMap<int/*expireTimeMs*/, ExpireEntries> ExpireMap;
-    void processExpiredTimers(const ExpireMap &map);
+    bool processExpiredTimers(const ExpireMap &map);
     void removeTimers(const QList<int> &expiredTimes);
     int m_currentTimeMs = 0;
     ExpireMap m_expireMap;

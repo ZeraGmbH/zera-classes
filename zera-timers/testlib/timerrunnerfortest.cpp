@@ -44,6 +44,7 @@ void TimerRunnerForTest::removeTimer(TimerForTestInterface *timer)
 
 void TimerRunnerForTest::processTimers(int durationMs)
 {
+    Q_ASSERT(durationMs >= 0);
     int nextCurrentTimeMs = calcExpireTime(durationMs);
     QMap<int, QMap<TimerForTestInterface*, TTimerEntry>> expiredMap;
     for(auto iter=m_expireMap.cbegin(); iter!=m_expireMap.cend(); iter++) {
@@ -51,12 +52,16 @@ void TimerRunnerForTest::processTimers(int durationMs)
         if(entryExpireTime <= nextCurrentTimeMs)
             expiredMap[entryExpireTime] = iter.value();
     }
-    processExpiredTimers(expiredMap);
-    m_currentTimeMs = nextCurrentTimeMs;
+    if(!processExpiredTimers(expiredMap))
+        m_currentTimeMs = nextCurrentTimeMs;
+    else
+        // fired timers can add more timers - so:
+        processTimers(nextCurrentTimeMs - m_currentTimeMs);
 }
 
-void TimerRunnerForTest::processExpiredTimers(const ExpireMap &map)
+bool TimerRunnerForTest::processExpiredTimers(const ExpireMap &map)
 {
+    bool timerFired = false;
     QList<int> expiredTimes;
     for(auto iter=map.cbegin(); iter!=map.cend(); iter++) {
         int entryExpireTime = iter.key();
@@ -68,11 +73,13 @@ void TimerRunnerForTest::processExpiredTimers(const ExpireMap &map)
             if(!entry.singleShot) {
                 // TODO once periodic timers are implemented
             }
+            timerFired = true;
             timerIter.key()->fireExpired();
             QCoreApplication::processEvents();
         }
     }
     removeTimers(expiredTimes);
+    return timerFired;
 }
 
 void TimerRunnerForTest::removeTimers(const QList<int> &expiredTimes)
