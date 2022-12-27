@@ -29,7 +29,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "sense:foo"));
     TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
-    TaskTestHelper helper(task.get());
+    TaskTestHelperNew helper(task.get());
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(helper.okCount(), 1);
@@ -40,7 +40,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "SENSE:FOO"));
     TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
-    TaskTestHelper helper(task.get());
+    TaskTestHelperNew helper(task.get());
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(helper.okCount(), 1);
@@ -51,7 +51,7 @@ void test_taskrmcheckresourcetype::errorOnNoResources()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, ""));
     TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
-    TaskTestHelper helper(task.get());
+    TaskTestHelperNew helper(task.get());
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(helper.okCount(), 0);
@@ -62,7 +62,7 @@ void test_taskrmcheckresourcetype::errorOnMissingResource()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "foo:bar"));
     TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
-    TaskTestHelper helper(task.get());
+    TaskTestHelperNew helper(task.get());
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(helper.okCount(), 0);
@@ -76,7 +76,7 @@ void test_taskrmcheckresourcetype::timeoutAndErrFunc()
                                                            [&]{
         localErrorCount++;
     });
-    TaskTestHelper helper(task.get());
+    TaskTestHelperNew helper(task.get());
     task->start();
     QTest::qWait(DEFAULT_TIMEOUT_WAIT);
     QCOMPARE(localErrorCount, 1);
