@@ -16,6 +16,11 @@ void TimerRunnerForTest::reset()
     m_instance = nullptr;
 }
 
+int TimerRunnerForTest::getCurrentTimeMs()
+{
+    return m_currentTimeMs;
+}
+
 void TimerRunnerForTest::addTimer(TimerForTestInterface *timer, int expiredMs, bool singleShot)
 {
     removeTimer(timer);
@@ -27,49 +32,56 @@ void TimerRunnerForTest::addTimer(TimerForTestInterface *timer, int expiredMs, b
 
 void TimerRunnerForTest::removeTimer(TimerForTestInterface *timer)
 {
-    QList<int> emptyExpireEntries;
+    QList<int> emptyEntries;
     for(auto iter=m_expireMap.begin(); iter!=m_expireMap.end(); iter++) {
-        QMap<TimerForTestInterface*, TTimerEntry> &expireList = iter.value();
+        ExpireEntries &expireList = iter.value();
         expireList.remove(timer);
         if(expireList.isEmpty())
-            emptyExpireEntries.append(iter.key());
+            emptyEntries.append(iter.key());
     }
-    for(auto expireTimeEmpty : emptyExpireEntries)
-        m_expireMap.remove(expireTimeEmpty);
+    removeTimers(emptyEntries);
 }
 
 void TimerRunnerForTest::processTimers(int durationMs)
 {
-    QList<int> expireEntriesToRemove;
     int nextCurrentTimeMs = calcExpireTime(durationMs);
-    for(auto iter=m_expireMap.begin(); iter!=m_expireMap.end(); iter++) {
+    QMap<int, QMap<TimerForTestInterface*, TTimerEntry>> expiredMap;
+    for(auto iter=m_expireMap.cbegin(); iter!=m_expireMap.cend(); iter++) {
         int entryExpireTime = iter.key();
-        if(entryExpireTime <= nextCurrentTimeMs) {
-            m_currentTimeMs = entryExpireTime;
-            expireEntriesToRemove.append(entryExpireTime);
-            QMap<TimerForTestInterface*, TTimerEntry> &expireMap = iter.value();
-            for(auto timerIter=expireMap.cbegin(); timerIter!=expireMap.cend(); timerIter++) {
-                TTimerEntry entry = timerIter.value();
-                if(!entry.singleShot) {
-                    // TODO once periodic timers are implemented
-                }
-                timerIter.key()->fireExpired();
-                QCoreApplication::processEvents();
-            }
-        }
+        if(entryExpireTime <= nextCurrentTimeMs)
+            expiredMap[entryExpireTime] = iter.value();
     }
-    for(auto entryToRemove : expireEntriesToRemove)
-        m_expireMap.remove(entryToRemove);
+    processExpiredTimers(expiredMap);
     m_currentTimeMs = nextCurrentTimeMs;
 }
 
-int TimerRunnerForTest::getCurrentTimeMs()
+void TimerRunnerForTest::processExpiredTimers(const ExpireMap &map)
 {
-    return m_currentTimeMs;
+    QList<int> expiredTimes;
+    for(auto iter=map.cbegin(); iter!=map.cend(); iter++) {
+        int entryExpireTime = iter.key();
+        expiredTimes.append(entryExpireTime);
+        m_currentTimeMs = entryExpireTime;
+        const ExpireEntries &expireMap = iter.value();
+        for(auto timerIter=expireMap.cbegin(); timerIter!=expireMap.cend(); timerIter++) {
+            TTimerEntry entry = timerIter.value();
+            if(!entry.singleShot) {
+                // TODO once periodic timers are implemented
+            }
+            timerIter.key()->fireExpired();
+            QCoreApplication::processEvents();
+        }
+    }
+    removeTimers(expiredTimes);
+}
+
+void TimerRunnerForTest::removeTimers(const QList<int> &expiredTimes)
+{
+    for(int expireTime : expiredTimes)
+        m_expireMap.remove(expireTime);
 }
 
 int TimerRunnerForTest::calcExpireTime(int expiredMs)
 {
     return m_currentTimeMs + expiredMs;
 }
-

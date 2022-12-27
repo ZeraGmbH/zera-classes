@@ -23,13 +23,17 @@ public:
 private:
     TimerRunnerForTest() = default;
     int calcExpireTime(int expiredMs);
-    int m_currentTimeMs = 0;
     struct TTimerEntry
     {
         int expireMs;
         bool singleShot;
     };
-    QMap<int, QMap<TimerForTestInterface*, TTimerEntry>> m_expireMap;
+    typedef QMap<TimerForTestInterface*, TTimerEntry> ExpireEntries;
+    typedef QMap<int/*expireTimeMs*/, ExpireEntries> ExpireMap;
+    void processExpiredTimers(const ExpireMap &map);
+    void removeTimers(const QList<int> &expiredTimes);
+    int m_currentTimeMs = 0;
+    ExpireMap m_expireMap;
     static TimerRunnerForTest* m_instance;
 };
 
