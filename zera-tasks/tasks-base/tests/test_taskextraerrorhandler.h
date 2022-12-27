@@ -7,6 +7,7 @@ class test_taskextraerrorhandler : public QObject
 {
     Q_OBJECT
 private slots:
+    void init();
     void startEmpty();
     void handleError();
     void handleNoError();
