@@ -34,6 +34,7 @@ function(SETUP_QTESTS)
         target_link_libraries(${_testname}
             PUBLIC
             Qt5::Test
+            tasks-base-testlib
             zera-timers-testlib
             task-test-helpers
             source-module-testhelpers
