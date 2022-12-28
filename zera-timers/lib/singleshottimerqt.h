@@ -9,7 +9,6 @@ class SingleShotTimerQt : public ZeraTimerTemplate
 {
     Q_OBJECT
 public:
-    static ZeraTimerTemplatePtr create(int expireTimeMs);
     explicit SingleShotTimerQt(int expireTimeMs);
     void setHighAccuracy(bool on);
     void start() override;
