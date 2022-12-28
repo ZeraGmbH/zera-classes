@@ -2,7 +2,6 @@
 #define TASKFORTEST_H
 
 #include "taskcomposit.h"
-#include "testdefaults.h"
 #include <QTimer>
 #include <zeratimertemplate.h>
 

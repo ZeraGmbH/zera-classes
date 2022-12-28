@@ -1,7 +1,7 @@
 #include "test_tasksequence.h"
 #include "tasksequence.h"
 #include "taskfortest.h"
-#include "tasktesthelper.h"
+#include <tasktesthelper.h>
 #include <timerrunnerfortest.h>
 #include <QTest>
 

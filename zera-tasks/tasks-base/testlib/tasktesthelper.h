@@ -2,7 +2,6 @@
 #define TASKTESTHELPER_H
 
 #include <taskcomposit.h>
-#include "testdefaults.h"
 #include <QObject>
 #include <QElapsedTimer>
 #include <QList>

@@ -1,8 +1,10 @@
 #include "test_taskrmcheckresourcetype.h"
 #include "taskrmcheckresourcetype.h"
 #include "rmtestanswers.h"
-#include "tasktesthelper.h"
 #include <scpifullcmdcheckerfortest.h>
+#include <tasktesthelper.h>
+#include <timerrunnerfortest.h>
+#include <zeratimerfactorymethodstest.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskrmcheckresourcetype)
@@ -12,11 +14,13 @@ void test_taskrmcheckresourcetype::init()
     m_rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
     m_proxyClient = ProxyClientForTest::create();
     m_rmInterface->setClientSmart(m_proxyClient);
+    TimerRunnerForTest::reset();
+    ZeraTimerFactoryMethodsTest::enableTest();
 }
 
 void test_taskrmcheckresourcetype::checkScpiSend()
 {
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
     QStringList scpiSent = m_proxyClient->getReceivedCommands();
@@ -28,7 +32,7 @@ void test_taskrmcheckresourcetype::checkScpiSend()
 void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "sense:foo"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -39,7 +43,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "SENSE:FOO"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -50,7 +54,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 void test_taskrmcheckresourcetype::errorOnNoResources()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, ""));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -61,7 +65,7 @@ void test_taskrmcheckresourcetype::errorOnNoResources()
 void test_taskrmcheckresourcetype::errorOnMissingResource()
 {
     m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "foo:bar"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, TIMEOUT_INFINITE);
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -72,14 +76,15 @@ void test_taskrmcheckresourcetype::errorOnMissingResource()
 void test_taskrmcheckresourcetype::timeoutAndErrFunc()
 {
     int localErrorCount = 0;
-    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, DEFAULT_TIMEOUT,
+    TaskCompositePtr task = TaskRmCheckResourceType::create(m_rmInterface, DEFAULT_EXPIRE,
                                                            [&]{
         localErrorCount++;
     });
     TaskTestHelper helper(task.get());
     task->start();
-    QTest::qWait(DEFAULT_TIMEOUT_WAIT);
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(localErrorCount, 1);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
+    QCOMPARE(helper.signalDelayMs(), DEFAULT_EXPIRE);
 }

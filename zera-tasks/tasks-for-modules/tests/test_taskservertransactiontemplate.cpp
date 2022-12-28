@@ -1,7 +1,7 @@
 #include "test_taskservertransactiontemplate.h"
 #include "taskservertransactiontemplatetest.h"
 #include "taskfortest.h"
-#include "tasktesthelper.h"
+#include <tasktesthelper.h>
 #include "rmtestanswers.h"
 #include <QTest>
 
