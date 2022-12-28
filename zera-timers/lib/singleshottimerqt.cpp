@@ -1,6 +1,6 @@
 #include "singleshottimerqt.h"
 
-std::unique_ptr<ZeraTimerTemplate> SingleShotTimerQt::create(int expireTimeMs)
+ZeraTimerTemplatePtr SingleShotTimerQt::create(int expireTimeMs)
 {
     return std::make_unique<SingleShotTimerQt>(expireTimeMs);
 }

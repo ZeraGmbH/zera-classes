@@ -9,7 +9,7 @@ class SingleShotTimerQt : public ZeraTimerTemplate
 {
     Q_OBJECT
 public:
-    static std::unique_ptr<ZeraTimerTemplate> create(int expireTimeMs);
+    static ZeraTimerTemplatePtr create(int expireTimeMs);
     explicit SingleShotTimerQt(int expireTimeMs);
     void setHighAccuracy(bool on);
     void start() override;
