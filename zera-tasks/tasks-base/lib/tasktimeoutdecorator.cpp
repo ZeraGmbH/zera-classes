@@ -2,11 +2,22 @@
 #include "taskextraerrorhandler.h"
 #include "singleshottimerqt.h"
 
-TaskCompositePtr TaskTimeoutDecorator::wrapTimeout(int timeout, TaskCompositePtr decoratedTask, std::function<void ()> additionalErrorHandler)
+TaskCompositePtr TaskTimeoutDecorator::wrapTimeout(int timeout, TaskCompositePtr decoratedTask,
+                                                   std::function<void ()> additionalErrorHandler)
 {
     return TaskExtraErrorHandler::create(
                 std::make_unique<TaskTimeoutDecorator>(
                     SingleShotTimerQt::create(timeout),
+                    std::move(decoratedTask)),
+                additionalErrorHandler);
+}
+
+TaskCompositePtr TaskTimeoutDecorator::wrapTimeout(ZeraTimerTemplatePtr timer, TaskCompositePtr decoratedTask,
+                                                   std::function<void ()> additionalErrorHandler)
+{
+    return TaskExtraErrorHandler::create(
+                std::make_unique<TaskTimeoutDecorator>(
+                    std::move(timer),
                     std::move(decoratedTask)),
                 additionalErrorHandler);
 }
