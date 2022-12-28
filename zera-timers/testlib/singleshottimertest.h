@@ -8,6 +8,7 @@ class SingleShotTimerTest : public ZeraTimerTemplate, public TimerForTestInterfa
 {
     Q_OBJECT
 public:
+    static ZeraTimerTemplatePtr create(int expireTimeMs);
     SingleShotTimerTest(int expireTimeMs);
     ~SingleShotTimerTest();
     void start() override;
