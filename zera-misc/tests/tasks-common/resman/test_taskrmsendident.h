@@ -1,7 +1,7 @@
 #ifndef TEST_TASKRMSENDIDENT_H
 #define TEST_TASKRMSENDIDENT_H
 
-#include "rminterface.h"
+#include <rminterface.h>
 #include "proxyclientfortest.h"
 
 class test_taskrmsendident : public QObject

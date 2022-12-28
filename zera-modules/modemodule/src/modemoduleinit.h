@@ -2,7 +2,7 @@
 #define MODEMODULEINIT_H
 
 #include "moduleactivist.h"
-#include "rminterface.h"
+#include <rminterface.h>
 #include <QList>
 #include <QStateMachine>
 #include <QState>

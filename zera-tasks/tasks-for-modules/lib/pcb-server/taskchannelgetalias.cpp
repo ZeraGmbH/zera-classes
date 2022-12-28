@@ -1,6 +1,6 @@
 #include "taskchannelgetalias.h"
 #include "tasktimeoutdecorator.h"
-#include "reply.h"
+#include <reply.h>
 
 TaskCompositePtr TaskChannelGetAlias::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                               QString channelName,

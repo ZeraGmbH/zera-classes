@@ -1,6 +1,6 @@
 #include "thdnmoduleobservation.h"
 #include "errormessages.h"
-#include "reply.h"
+#include <reply.h>
 #include "thdnmodule.h"
 #include <proxy.h>
 #include <proxyclient.h>

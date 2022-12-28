@@ -2,8 +2,8 @@
 #define ADJUSTMENTMODULEACTIVATOR_H
 
 #include "adjustmentmodulecommon.h"
-#include "rminterface.h"
-#include "pcbinterface.h"
+#include <rminterface.h>
+#include <pcbinterface.h>
 #include "tasksequence.h"
 #include "taskparallel.h"
 #include "socket.h"

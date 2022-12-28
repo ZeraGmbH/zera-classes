@@ -1,6 +1,6 @@
 #include "taskchannelgeturvalue.h"
 #include "tasktimeoutdecorator.h"
-#include "reply.h"
+#include <reply.h>
 
 TaskCompositePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                QString channelSysName, QString rangeName,

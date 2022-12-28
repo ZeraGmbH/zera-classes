@@ -3,7 +3,7 @@
 #include "thdnmoduleconfiguration.h"
 #include "thdnmoduleconfigdata.h"
 #include "errormessages.h"
-#include "reply.h"
+#include <reply.h>
 #include <movingwindowfilter.h>
 #include <proxy.h>
 #include <proxyclient.h>

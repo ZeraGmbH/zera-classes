@@ -2,9 +2,6 @@ if(ZC_BUILD_MODULES)
     file(GLOB SOURCES_FOR_MODULE
         channels/*.cpp
         service-interfaces/*.cpp
-        tasks-common/*.cpp
-        tasks-common/pcb-server/*.cpp
-        tasks-common/resman/*.cpp
         )
     set(SOURCES_FOR_MODULE
         ${SOURCES_FOR_MODULE}
@@ -14,9 +11,6 @@ if(ZC_BUILD_MODULES)
     file(GLOB HEADER_FOR_MODULE
         channels/*.h
         service-interfaces/*.h
-        tasks-common/*.h
-        tasks-common/pcb-server/*.h
-        tasks-common/resman/*.h
         )
     set(HEADER_FOR_MODULE
         ${HEADER_FOR_MODULE}
@@ -48,19 +42,17 @@ if(ZC_BUILD_MODULES)
     set(DEPS_FOR_MODULE
         Qt5::Network
         zeraproxy
-        tasks-base
     )
 endif(ZC_BUILD_MODULES)
 
 target_link_libraries(zeramisc 
-    PRIVATE
+    PUBLIC
     Qt5::Core
     ${DEPS_FOR_MODULE}
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
 )
 
-# announce headers - target perspective
 target_include_directories(zeramisc
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/misc>
@@ -68,9 +60,6 @@ target_include_directories(zeramisc
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/channels>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/service-interfaces>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common/pcb-server>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tasks-common/resman>
     )
 
 set_target_properties(zeramisc PROPERTIES VERSION ${PROJECT_VERSION})

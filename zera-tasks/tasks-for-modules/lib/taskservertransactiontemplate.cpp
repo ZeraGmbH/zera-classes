@@ -1,5 +1,5 @@
 #include "taskservertransactiontemplate.h"
-#include "reply.h"
+#include <reply.h>
 
 TaskServerTransactionTemplate::TaskServerTransactionTemplate(AbstractServerInterfacePtr server) :
     m_abstractServer(server)

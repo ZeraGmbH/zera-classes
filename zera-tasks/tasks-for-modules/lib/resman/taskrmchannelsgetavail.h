@@ -2,7 +2,7 @@
 #define TASKRMCHANNELSGETAVAIL_H
 
 #include "taskservertransactiontemplate.h"
-#include "rminterface.h"
+#include <rminterface.h>
 #include <QStringList>
 
 class TaskRmChannelsGetAvail : public TaskServerTransactionTemplate

@@ -2,7 +2,7 @@
 #define TASKRMCHECKRESOURCETYPE_H
 
 #include "taskservertransactiontemplate.h"
-#include "rminterface.h"
+#include <rminterface.h>
 
 class TaskRmCheckResourceType : public TaskServerTransactionTemplate
 {
