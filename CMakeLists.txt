@@ -36,7 +36,7 @@ function(SETUP_QTESTS)
             Qt5::Test
             tasks-base-testlib
             zera-timers-testlib
-            task-test-helpers
+            tasks-for-modules-testlib
             source-module-testhelpers
             zerabasemodule
             VeinMeta::VfStorageHash
