@@ -1,10 +1,10 @@
-#ifndef TASKCHANNELGETURVALUE_H
-#define TASKCHANNELGETURVALUE_H
+#ifndef TASKCHANNELGETREJECTION_H
+#define TASKCHANNELGETREJECTION_H
 
 #include "taskcomposit.h"
-#include "pcbinterface.h"
+#include <pcbinterface.h>
 
-class TaskChannelGetUrValue : public TaskComposite
+class TaskChannelGetRejection : public TaskComposite
 {
     Q_OBJECT
 public:
@@ -12,9 +12,9 @@ public:
                                    QString channelSysName, QString rangeName,
                                    double &valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelGetUrValue(Zera::Server::PcbInterfacePtr pcbInterface,
-                          QString channelSysName, QString rangeName,
-                          double &valueReceived);
+    TaskChannelGetRejection(Zera::Server::PcbInterfacePtr pcbInterface,
+                            QString channelSysName, QString rangeName,
+                            double &valueReceived);
     void start() override;
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -26,4 +26,4 @@ private:
     quint32 m_msgnr;
 };
 
-#endif // TASKCHANNELGETURVALUE_H
+#endif // TASKCHANNELGETREJECTION_H

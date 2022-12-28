@@ -1,8 +1,8 @@
 #ifndef TASKCHANNELGETALIAS_H
 #define TASKCHANNELGETALIAS_H
 
-#include "pcbinterface.h"
 #include "taskcomposit.h"
+#include <pcbinterface.h>
 
 class TaskChannelGetAlias : public TaskComposite
 {

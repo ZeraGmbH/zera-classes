@@ -43,6 +43,7 @@ target_link_libraries(adjustmentmodule-static
     zeramath
     zeramisc
     tasks-base
+    tasks-for-modules
 )
 
 add_library(adjustmentmodule MODULE

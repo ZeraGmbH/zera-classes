@@ -4,7 +4,7 @@
 #include "adjustmentmoduleconfigdata.h"
 #include "adjustmentmodulecommon.h"
 #include "adjustmentmoduleactivator.h"
-#include "rminterface.h"
+#include <rminterface.h>
 #include "basemeasworkprogram.h"
 #include "measchannelinfo.h"
 #include "measmodeinfo.h"

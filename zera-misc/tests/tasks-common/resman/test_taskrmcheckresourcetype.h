@@ -1,7 +1,7 @@
 #ifndef TEST_TASKRMCHECKRESOURCETYPE_H
 #define TEST_TASKRMCHECKRESOURCETYPE_H
 
-#include "rminterface.h"
+#include <rminterface.h>
 #include "proxyclientfortest.h"
 
 class test_taskrmcheckresourcetype : public QObject

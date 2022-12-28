@@ -2,7 +2,7 @@
 #define TASKRMSENDIDENT_H
 
 #include "taskservertransactiontemplate.h"
-#include "rminterface.h"
+#include <rminterface.h>
 
 class TaskRmSendIdent : public TaskServerTransactionTemplate
 {

@@ -17,7 +17,7 @@ target_link_libraries(tasks-for-modules-testlib
     Qt5::Core
     Qt5::Network
     Qt5::Test
-    zeramisc
+    tasks-for-modules
     zeraproxy
     tasks-base
     zera-timers-testlib

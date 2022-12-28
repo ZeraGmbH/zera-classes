@@ -2,7 +2,7 @@
 #define TASKRMCHANNELSCHECKAVAIL_H
 
 #include "taskcomposit.h"
-#include "rminterface.h"
+#include <rminterface.h>
 #include <QStringList>
 
 class TaskRmChannelsCheckAvail : public TaskComposite

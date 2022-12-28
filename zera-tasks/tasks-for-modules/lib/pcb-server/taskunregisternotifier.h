@@ -1,24 +1,22 @@
-#ifndef TASKCHANNELREGISTERNOTIFIER_H
-#define TASKCHANNELREGISTERNOTIFIER_H
+#ifndef TASKUNREGISTERNOTIFIER_H
+#define TASKUNREGISTERNOTIFIER_H
 
 #include "taskcomposit.h"
-#include "pcbinterface.h"
+#include <pcbinterface.h>
 
-class TaskChannelRegisterNotifier : public TaskComposite
+class TaskUnregisterNotifier : public TaskComposite
 {
     Q_OBJECT
 public:
     static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
-                                   QString channelName,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName);
+    TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface);
     void start() override;
 private slots:
     void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     Zera::Server::PcbInterfacePtr m_pcbInterface;
-    QString m_channelName;
     quint32 m_msgnr;
 };
 
-#endif // TASKCHANNELREGISTERNOTIFIER_H
+#endif // TASKUNREGISTERNOTIFIER_H

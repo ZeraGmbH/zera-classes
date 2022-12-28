@@ -1,6 +1,6 @@
 #include "taskchannelgetrangelist.h"
 #include "tasktimeoutdecorator.h"
-#include "reply.h"
+#include <reply.h>
 
 TaskCompositePtr TaskChannelGetRangeList::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                QString channelName,

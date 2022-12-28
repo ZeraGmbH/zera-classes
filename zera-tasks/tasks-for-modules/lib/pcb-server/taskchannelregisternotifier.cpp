@@ -1,6 +1,6 @@
 #include "taskchannelregisternotifier.h"
 #include "tasktimeoutdecorator.h"
-#include "reply.h"
+#include <reply.h>
 
 TaskCompositePtr TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
                                                      int timeout, std::function<void ()> additionalErrorHandler)

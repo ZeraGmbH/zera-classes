@@ -2,7 +2,7 @@
 #define TASKSERVERTRANSACTIONTEMPLATETEST_H
 
 #include "taskservertransactiontemplate.h"
-#include "rminterface.h"
+#include <rminterface.h>
 
 class TaskServerTransactionTemplateTest : public TaskServerTransactionTemplate
 {

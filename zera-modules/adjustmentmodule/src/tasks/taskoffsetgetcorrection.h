@@ -2,7 +2,7 @@
 #define TASKOFFSETGETCORRECTION_H
 
 #include "taskcomposit.h"
-#include "pcbinterface.h"
+#include <pcbinterface.h>
 
 class TaskOffsetGetCorrection : public TaskComposite
 {

@@ -2,7 +2,7 @@
 #define TASKCHANNELGETOVREJECTION_H
 
 #include "taskcomposit.h"
-#include "pcbinterface.h"
+#include <pcbinterface.h>
 
 class TaskChannelGetOvRejection : public TaskComposite
 {

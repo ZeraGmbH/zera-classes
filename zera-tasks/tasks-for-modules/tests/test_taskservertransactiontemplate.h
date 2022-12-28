@@ -1,7 +1,7 @@
 #ifndef TEST_TASKSERVERTRANSACTIONTEMPLATE_H
 #define TEST_TASKSERVERTRANSACTIONTEMPLATE_H
 
-#include "rminterface.h"
+#include <rminterface.h>
 #include "proxyclientfortest.h"
 
 class test_taskservertransactiontemplate : public QObject

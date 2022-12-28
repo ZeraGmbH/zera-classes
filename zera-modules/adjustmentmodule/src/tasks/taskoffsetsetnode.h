@@ -2,7 +2,7 @@
 #define TASKSETOFFSETNODE_H
 
 #include "taskcomposit.h"
-#include "pcbinterface.h"
+#include <pcbinterface.h>
 
 class TaskOffsetSetNode : public TaskComposite
 {

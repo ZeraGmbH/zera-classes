@@ -1,6 +1,6 @@
 #include "taskoffsetgetcorrection.h"
 #include "tasktimeoutdecorator.h"
-#include "reply.h"
+#include <reply.h>
 
 TaskCompositePtr TaskOffsetGetCorrection::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName, double ourActualValue,

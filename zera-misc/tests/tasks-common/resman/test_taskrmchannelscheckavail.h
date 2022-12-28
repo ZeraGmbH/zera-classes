@@ -1,7 +1,7 @@
 #ifndef TEST_TASKRMCHANNELSCHECKAVAIL_H
 #define TEST_TASKRMCHANNELSCHECKAVAIL_H
 
-#include "rminterface.h"
+#include <rminterface.h>
 #include "proxyclientfortest.h"
 
 class test_taskrmchannelscheckavail : public QObject
