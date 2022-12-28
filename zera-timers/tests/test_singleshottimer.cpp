@@ -125,14 +125,14 @@ void test_singleshottimer::stopWhilePendingTest()
     QCOMPARE(m_expireTime, 0);
 }
 
-void test_singleshottimer::queuedConnectetionsOnExpire()
+void test_singleshottimer::queuedConnectionsOnExpire()
 {
     SingleShotTimerQt timer(DEFAULT_EXPIRE);
     timer.setHighAccuracy(true);
     inspectTimerByDelay(&timer);
-    TestEventLoop evTest(&timer);
+    TimerEventLoopWrapper evTest(&timer);
     int expireReceived = 0;
-    connect(&evTest, &TestEventLoop::sigExpireReceived, [&]{
+    connect(&evTest, &TimerEventLoopWrapper::sigExpireReceived, [&]{
         expireReceived++;
     });
 
@@ -142,13 +142,13 @@ void test_singleshottimer::queuedConnectetionsOnExpire()
     QCOMPARE(expireReceived, 1);
 }
 
-void test_singleshottimer::queuedConnectetionsOnExpireTest()
+void test_singleshottimer::queuedConnectionsOnExpireTest()
 {
     SingleShotTimerTest timer(DEFAULT_EXPIRE);
     inspectTimerByRunner(&timer);
-    TestEventLoop evTest(&timer);
+    TimerEventLoopWrapper evTest(&timer);
     int expireReceived = 0;
-    connect(&evTest, &TestEventLoop::sigExpireReceived, [&]{
+    connect(&evTest, &TimerEventLoopWrapper::sigExpireReceived, [&]{
         expireReceived++;
     });
 
@@ -156,6 +156,90 @@ void test_singleshottimer::queuedConnectetionsOnExpireTest()
     TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(expireReceived, 1);
+}
+
+void test_singleshottimer::nestedStart()
+{
+    SingleShotTimerQt timer1(DEFAULT_EXPIRE/2);
+    timer1.setHighAccuracy(true);
+    inspectTimerByDelay(&timer1);
+    SingleShotTimerQt timer2(DEFAULT_EXPIRE/2);
+    timer2.setHighAccuracy(true);
+    inspectTimerByDelay(&timer2);
+    connect(&timer1, &ZeraTimerTemplate::sigExpired, [&]{
+        timer2.start();
+    });
+
+    timer1.start();
+    QTest::qWait(DEFAULT_EXPIRE_WAIT);
+
+    QCOMPARE(m_expireCount, 2);
+}
+
+void test_singleshottimer::nestedStartTest()
+{
+    SingleShotTimerTest timer1(DEFAULT_EXPIRE/2);
+    inspectTimerByDelay(&timer1);
+    SingleShotTimerTest timer2(DEFAULT_EXPIRE/2);
+    inspectTimerByDelay(&timer2);
+    connect(&timer1, &ZeraTimerTemplate::sigExpired, [&]{
+        timer2.start();
+    });
+
+    timer1.start();
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+
+    QCOMPARE(m_expireCount, 2);
+}
+
+void test_singleshottimer::nestedStartQueued()
+{
+    SingleShotTimerQt timer1(DEFAULT_EXPIRE/2);
+    timer1.setHighAccuracy(true);
+    inspectTimerByDelay(&timer1);
+    EventLoopWrapper evLoop1;
+    connect(&evLoop1, &EventLoopWrapper::sigReceiveEventLoop, [&]{
+        timer1.start();
+    });
+    SingleShotTimerQt timer2(DEFAULT_EXPIRE/2);
+    timer2.setHighAccuracy(true);
+    inspectTimerByDelay(&timer2);
+    EventLoopWrapper evLoop2;
+    connect(&evLoop2, &EventLoopWrapper::sigReceiveEventLoop, [&]{
+        timer2.start();
+    });
+    connect(&timer1, &ZeraTimerTemplate::sigExpired, [&]{
+        evLoop2.start();
+    });
+
+    evLoop1.start();
+    QTest::qWait(DEFAULT_EXPIRE_WAIT);
+
+    QCOMPARE(m_expireCount, 2);
+}
+
+void test_singleshottimer::nestedStartQueuedTest()
+{
+    SingleShotTimerTest timer1(DEFAULT_EXPIRE/2);
+    inspectTimerByDelay(&timer1);
+    EventLoopWrapper evLoop1;
+    connect(&evLoop1, &EventLoopWrapper::sigReceiveEventLoop, [&]{
+        timer1.start();
+    });
+    SingleShotTimerTest timer2(DEFAULT_EXPIRE/2);
+    inspectTimerByDelay(&timer2);
+    EventLoopWrapper evLoop2;
+    connect(&evLoop2, &EventLoopWrapper::sigReceiveEventLoop, [&]{
+        timer2.start();
+    });
+    connect(&timer1, &ZeraTimerTemplate::sigExpired, [&]{
+        evLoop2.start();
+    });
+
+    evLoop1.start();
+    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+
+    QCOMPARE(m_expireCount, 2);
 }
 
 void test_singleshottimer::infiniteExpire()
