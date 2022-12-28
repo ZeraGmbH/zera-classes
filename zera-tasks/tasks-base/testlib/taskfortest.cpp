@@ -1,6 +1,5 @@
 #include "taskfortest.h"
 #include <singleshottimertest.h>
-#include <QTest>
 
 TaskCompositePtr TaskForTest::create(int delayMs, bool finishOk)
 {
