@@ -1,7 +1,5 @@
 enable_testing()
 
-add_subdirectory(tasks-common)
-
 add_test(NAME    zera-misc-unittest
          COMMAND zera-misc-unittest)
 
