@@ -6,7 +6,6 @@
 #include <proxyclient.h>
 #include <memory>
 
-
 namespace Zera { namespace Server {
 
 class cRMInterfacePrivate;
