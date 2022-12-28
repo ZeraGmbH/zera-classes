@@ -12,6 +12,7 @@ private slots:
     void startEmptyCheckDelayed();
     void immediateOk();
     void immediateError();
+    void immediateErrorWithErrFunc();
     void infiniteTask();
     void delayedOk();
     void delayEqualsTimeout();
