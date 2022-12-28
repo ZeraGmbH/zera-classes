@@ -2,10 +2,8 @@
 #define PCBINTERFACE_H
 
 #include "zeramisc_export.h"
+#include "abstractserverInterface.h"
 #include <proxyclient.h>
-#include <QObject>
-#include <QAbstractSocket>
-#include <QVariant>
 
 namespace Zera
 {
@@ -13,7 +11,7 @@ namespace Server
 {
 class cPCBInterfacePrivate;
 
-class ZERAMISC_EXPORT cPCBInterface: public QObject
+class ZERAMISC_EXPORT cPCBInterface: public AbstractServerInterface
 {
     Q_OBJECT
 
@@ -106,10 +104,6 @@ public:
 
     // sending a transparent command
     virtual quint32 transparentCommand(QString cmd);
-
-signals:
-    void tcpError(QAbstractSocket::SocketError errorCode);
-    void serverAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
 private:
     Q_DECLARE_PRIVATE(cPCBInterface)
