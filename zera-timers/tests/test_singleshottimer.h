@@ -30,8 +30,14 @@ private slots:
     void stopWhilePending();
     void stopWhilePendingTest();
 
-    void queuedConnectetionsOnExpire();
-    void queuedConnectetionsOnExpireTest();
+    void queuedConnectionsOnExpire();
+    void queuedConnectionsOnExpireTest();
+
+    void nestedStart();
+    void nestedStartTest();
+
+    void nestedStartQueued();
+    void nestedStartQueuedTest();
 
     void infiniteExpire();
     void infiniteExpireTest();
@@ -44,16 +50,32 @@ private:
     std::unique_ptr<QElapsedTimer> m_elapsedTimer;
 };
 
-
-class TestEventLoop : public QObject
+class EventLoopWrapper : public QObject
 {
     Q_OBJECT
 public:
-    TestEventLoop(ZeraTimerTemplate* timer) {
-        connect(timer, &ZeraTimerTemplate::sigExpired,
-                this, &TestEventLoop::sigExpireReceived,
+    EventLoopWrapper() {
+        connect(this, &EventLoopWrapper::sigStart,
+                this, &EventLoopWrapper::sigReceiveEventLoop,
                 Qt::QueuedConnection);
-    };
+    }
+    void start() {
+        emit sigStart();
+    }
+signals:
+    void sigStart();
+    void sigReceiveEventLoop();
+};
+
+class TimerEventLoopWrapper : public QObject
+{
+    Q_OBJECT
+public:
+    TimerEventLoopWrapper(ZeraTimerTemplate* timer) {
+        connect(timer, &ZeraTimerTemplate::sigExpired,
+                this, &TimerEventLoopWrapper::sigExpireReceived,
+                Qt::QueuedConnection);
+    }
 signals:
     void sigExpireReceived();
 };
