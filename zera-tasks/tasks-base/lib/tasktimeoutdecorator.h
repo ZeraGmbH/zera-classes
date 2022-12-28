@@ -11,8 +11,6 @@ class TaskTimeoutDecorator : public TaskComposite
 public:
     static TaskCompositePtr wrapTimeout(int timeout, TaskCompositePtr decoratedTask,
                                         std::function<void()> additionalErrorHandler = []{});
-    static TaskCompositePtr wrapTimeout(ZeraTimerTemplatePtr timer, TaskCompositePtr decoratedTask,
-                                        std::function<void()> additionalErrorHandler = []{});
     TaskTimeoutDecorator(ZeraTimerTemplatePtr timer, TaskCompositePtr decoratedTask);
     void start() override;
 private slots:
