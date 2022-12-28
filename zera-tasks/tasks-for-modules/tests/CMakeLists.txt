@@ -3,3 +3,4 @@ SETUP_QTESTS(
     test_taskservertransactiontemplate
 )
 
+add_subdirectory(resman)
