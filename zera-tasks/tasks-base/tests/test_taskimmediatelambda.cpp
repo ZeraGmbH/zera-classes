@@ -1,6 +1,6 @@
 #include "test_taskimmediatelambda.h"
 #include "taskimmediatelambda.h"
-#include "tasktesthelper.h"
+#include <tasktesthelper.h>
 #include "tasksequence.h"
 #include <QTest>
 

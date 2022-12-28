@@ -1,7 +1,7 @@
 #include "test_taskparallel.h"
 #include "taskparallel.h"
 #include "taskfortest.h"
-#include "tasktesthelper.h"
+#include <tasktesthelper.h>
 #include <timerrunnerfortest.h>
 #include <QTest>
 

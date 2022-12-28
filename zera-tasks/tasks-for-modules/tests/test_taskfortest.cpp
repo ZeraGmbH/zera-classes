@@ -1,6 +1,6 @@
 #include "test_taskfortest.h"
 #include "taskfortest.h"
-#include "tasktesthelper.h"
+#include <tasktesthelper.h>
 #include <timerrunnerfortest.h>
 #include <QTest>
 
