@@ -1,10 +1,5 @@
 #include "singleshottimertest.h"
 
-ZeraTimerTemplatePtr SingleShotTimerTest::create(int expireTimeMs)
-{
-    return std::make_unique<SingleShotTimerTest>(expireTimeMs);
-}
-
 SingleShotTimerTest::SingleShotTimerTest(int expireTimeMs) :
     ZeraTimerTemplate(expireTimeMs)
 {
