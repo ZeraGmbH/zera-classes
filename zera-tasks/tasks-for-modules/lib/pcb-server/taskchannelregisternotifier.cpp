@@ -1,6 +1,5 @@
 #include "taskchannelregisternotifier.h"
 #include "tasktimeoutdecorator.h"
-#include <reply.h>
 
 TaskCompositePtr TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
                                                      int timeout, std::function<void ()> additionalErrorHandler)
@@ -14,21 +13,18 @@ TaskCompositePtr TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfaceP
 
 TaskChannelRegisterNotifier::TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface,
                                                          QString channelName) :
+    TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelName(channelName)
 {
 }
 
-void TaskChannelRegisterNotifier::start()
+quint32 TaskChannelRegisterNotifier::sendToServer()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
-            this, &TaskChannelRegisterNotifier::onServerAnswer);
-    m_msgnr = m_pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_channelName), 1);
+    return m_pcbInterface->registerNotifier(QString("SENS:%1:RANG:CAT?").arg(m_channelName), 1);
 }
 
-void TaskChannelRegisterNotifier::onServerAnswer(quint32 msgnr, quint8 reply, QVariant)
+bool TaskChannelRegisterNotifier::handleCheckedServerAnswer(QVariant answer)
 {
-    if(msgnr == m_msgnr)
-        finishTask(reply == ack);
+    return true;
 }
-
