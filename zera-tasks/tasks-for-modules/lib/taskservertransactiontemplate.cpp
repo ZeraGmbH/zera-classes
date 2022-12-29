@@ -9,11 +9,9 @@ TaskServerTransactionTemplate::TaskServerTransactionTemplate(AbstractServerInter
 void TaskServerTransactionTemplate::start()
 {
     connect(m_abstractServer.get(), &AbstractServerInterface::serverAnswer,
-            this, &TaskServerTransactionTemplate::onServerAnswer,
-            Qt::QueuedConnection);
+            this, &TaskServerTransactionTemplate::onServerAnswer);
     connect(m_abstractServer.get(), &AbstractServerInterface::tcpError,
-            this, &TaskServerTransactionTemplate::onServerError,
-            Qt::QueuedConnection);
+            this, &TaskServerTransactionTemplate::onServerError);
     m_msgnr = sendToServer();
 }
 
