@@ -1,6 +1,5 @@
 #include "taskchannelgetrejection.h"
 #include "tasktimeoutdecorator.h"
-#include <reply.h>
 
 TaskCompositePtr TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName,
@@ -18,24 +17,20 @@ TaskCompositePtr TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr p
 TaskChannelGetRejection::TaskChannelGetRejection(Zera::Server::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName,
                                                  double &valueReceived) :
+    TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelSysName(channelSysName), m_rangeName(rangeName),
     m_valueReceived(valueReceived)
 {
 }
 
-void TaskChannelGetRejection::start()
+quint32 TaskChannelGetRejection::sendToServer()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
-            this, &TaskChannelGetRejection::onServerAnswer);
-    m_msgnr = m_pcbInterface->getRejection(m_channelSysName, m_rangeName);
+    return m_pcbInterface->getRejection(m_channelSysName, m_rangeName);
 }
 
-void TaskChannelGetRejection::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+bool TaskChannelGetRejection::handleCheckedServerAnswer(QVariant answer)
 {
-    if(m_msgnr == msgnr) {
-        if (reply == ack)
-            m_valueReceived = answer.toDouble();
-        finishTask(reply == ack);
-    }
+    m_valueReceived = answer.toDouble();
+    return true;
 }
