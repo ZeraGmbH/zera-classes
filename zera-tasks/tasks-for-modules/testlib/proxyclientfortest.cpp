@@ -6,6 +6,13 @@ std::shared_ptr<ProxyClientForTest> ProxyClientForTest::create()
     return std::make_shared<ProxyClientForTest>();
 }
 
+ProxyClientForTest::ProxyClientForTest()
+{
+    connect(this, &ProxyClientForTest::sigQueueAnswer,
+            this, &ProxyClientForTest::onQueueAnswer,
+            Qt::QueuedConnection);
+}
+
 void ProxyClientForTest::setAnswers(RmTestAnswers answers)
 {
     m_answers = answers;
@@ -16,8 +23,11 @@ quint32 ProxyClientForTest::transmitCommand(ProtobufMessage::NetMessage *message
     storeMessage(message);
     if(!m_answers.isEmpty()) {
         RmTestAnswer answer = m_answers.take();
-        if(answer.answerType !=RmTestAnswer::TCP_ERROR)
-            return sendAnswer(message, answer);
+        if(answer.answerType !=RmTestAnswer::TCP_ERROR) {
+            quint32 msgId = pushAnswer(message, answer);
+            emit sigQueueAnswer();
+            return msgId;
+        }
         else {
             emit tcpError(QAbstractSocket::RemoteHostClosedError);
             return 0;
@@ -36,16 +46,20 @@ QStringList ProxyClientForTest::getReceivedCommands() const
     return m_receivedCommands;
 }
 
-quint32 ProxyClientForTest::sendAnswer(ProtobufMessage::NetMessage *message, RmTestAnswer answer)
+void ProxyClientForTest::onQueueAnswer()
+{
+    emit answerAvailable(m_pendingNetAnswers.takeFirst());
+
+}
+
+quint32 ProxyClientForTest::pushAnswer(ProtobufMessage::NetMessage *message, RmTestAnswer answer)
 {
     std::shared_ptr<ProtobufMessage::NetMessage> answerMessage = std::make_shared<ProtobufMessage::NetMessage>(*message);
-    quint32 messageNr = calcMessageNr(answer, answerMessage.get());
-
     ProtobufMessage::NetMessage::NetReply *answerReply = answerMessage->mutable_reply();
     answerReply->set_body(answer.answer.toString().toStdString());
     setReply(answerReply, answer);
-
-    emit answerAvailable(answerMessage);
+    quint32 messageNr = calcMessageNr(answer, answerMessage.get());
+    m_pendingNetAnswers.append(answerMessage);
     return messageNr;
 }
 
