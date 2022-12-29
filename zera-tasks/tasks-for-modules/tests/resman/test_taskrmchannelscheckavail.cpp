@@ -1,29 +1,18 @@
 #include "test_taskrmchannelscheckavail.h"
 #include "taskrmchannelscheckavail.h"
-#include "rmtestanswers.h"
-#include <tasktesthelper.h>
-#include <timerrunnerfortest.h>
-#include <zeratimerfactorymethodstest.h>
+#include "rminitfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskrmchannelscheckavail)
 
 static const char* defaultResponse = "m0;m1;m2";
 
-void test_taskrmchannelscheckavail::init()
-{
-    m_rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    m_proxyClient = ProxyClientForTest::create();
-    m_rmInterface->setClientSmart(m_proxyClient);
-    TimerRunnerForTest::reset();
-    ZeraTimerFactoryMethodsTest::enableTest();
-}
-
 void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 {
-    m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    RmInitForTest rm;
+    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString(defaultResponse).split(";");
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
+    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
                                                              EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -35,9 +24,10 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 
 void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 {
-    m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    RmInitForTest rm;
+    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("m0;m1").split(";");
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
+    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
                                                              EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -49,9 +39,10 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 
 void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
 {
-    m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    RmInitForTest rm;
+    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("foo").split(";");
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
+    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
                                                              EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -63,8 +54,9 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
 
 void test_taskrmchannelscheckavail::timeoutAndErrFunc()
 {
+    RmInitForTest rm;
     int localErrorCount = 0;
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(m_rmInterface,
+    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              QStringList(),
                                                              DEFAULT_EXPIRE,
                                                              [&]{
