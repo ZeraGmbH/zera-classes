@@ -1,10 +1,10 @@
 #ifndef TASKCHANNELGETOVREJECTION_H
 #define TASKCHANNELGETOVREJECTION_H
 
-#include "taskcomposit.h"
+#include "taskservertransactiontemplate.h"
 #include <pcbinterface.h>
 
-class TaskChannelGetOvRejection : public TaskComposite
+class TaskChannelGetOvRejection : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
@@ -15,10 +15,9 @@ public:
     TaskChannelGetOvRejection(Zera::Server::PcbInterfacePtr pcbInterface,
                               QString channelSysName, QString rangeName,
                               double &valueReceived);
-    void start() override;
-private slots:
-    void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::Server::PcbInterfacePtr m_pcbInterface;
     QString m_channelSysName;
     QString m_rangeName;
