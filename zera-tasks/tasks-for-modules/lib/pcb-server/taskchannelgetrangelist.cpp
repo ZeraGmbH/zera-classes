@@ -18,24 +18,20 @@ TaskCompositePtr TaskChannelGetRangeList::create(Zera::Server::PcbInterfacePtr p
 TaskChannelGetRangeList::TaskChannelGetRangeList(Zera::Server::PcbInterfacePtr pcbInterface,
                                              QString channelName,
                                              QStringList &targetRangeList) :
+    TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelName(channelName),
     m_targetRangeList(targetRangeList)
 {
 }
 
-void TaskChannelGetRangeList::start()
+quint32 TaskChannelGetRangeList::sendToServer()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
-            this, &TaskChannelGetRangeList::onServerAnswer);
-    m_msgnr = m_pcbInterface->getRangeList(m_channelName);
+    return m_pcbInterface->getRangeList(m_channelName);
 }
 
-void TaskChannelGetRangeList::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+bool TaskChannelGetRangeList::handleCheckedServerAnswer(QVariant answer)
 {
-    if(msgnr == m_msgnr) {
-        if (reply == ack)
-            m_targetRangeList = answer.toStringList();
-        finishTask(reply == ack);
-    }
+    m_targetRangeList = answer.toStringList();
+    return true;
 }
