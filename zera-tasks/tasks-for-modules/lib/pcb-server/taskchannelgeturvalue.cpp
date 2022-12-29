@@ -1,6 +1,5 @@
 #include "taskchannelgeturvalue.h"
 #include "tasktimeoutdecorator.h"
-#include <reply.h>
 
 TaskCompositePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                QString channelSysName, QString rangeName,
@@ -18,24 +17,20 @@ TaskCompositePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcb
 TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::Server::PcbInterfacePtr pcbInterface,
                                              QString channelSysName, QString rangeName,
                                              double &valueReceived) :
+    TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),
     m_channelSysName(channelSysName), m_rangeName(rangeName),
     m_valueReceived(valueReceived)
 {
 }
 
-void TaskChannelGetUrValue::start()
+quint32 TaskChannelGetUrValue::sendToServer()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
-            this, &TaskChannelGetUrValue::onServerAnswer);
-    m_msgnr = m_pcbInterface->getUrvalue(m_channelSysName, m_rangeName);
+    return m_pcbInterface->getUrvalue(m_channelSysName, m_rangeName);
 }
 
-void TaskChannelGetUrValue::onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer)
+bool TaskChannelGetUrValue::handleCheckedServerAnswer(QVariant answer)
 {
-    if(m_msgnr == msgnr) {
-        if (reply == ack)
-            m_valueReceived = answer.toDouble();
-        finishTask(reply == ack);
-    }
+    m_valueReceived = answer.toDouble();
+    return true;
 }
