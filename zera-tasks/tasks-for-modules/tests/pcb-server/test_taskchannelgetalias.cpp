@@ -1,10 +1,6 @@
 #include "test_taskchannelgetalias.h"
 #include "taskchannelgetalias.h"
-#include "rmtestanswers.h"
-#include <tasktesthelper.h>
-#include <scpifullcmdcheckerfortest.h>
-#include <timerrunnerfortest.h>
-#include <zeratimerfactorymethodstest.h>
+#include "pcbinitfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgetalias)
@@ -12,25 +8,17 @@ QTEST_MAIN(test_taskchannelgetalias)
 static const char* channelName = "m0";
 static const char* defaultResponse = "UL1";
 
-void test_taskchannelgetalias::init()
-{
-    m_pcbInterface =  std::make_shared<Zera::Server::cPCBInterface>();
-    m_proxyClient = ProxyClientForTest::create();
-    m_pcbInterface->setClientSmart(m_proxyClient);
-    TimerRunnerForTest::reset();
-    ZeraTimerFactoryMethodsTest::enableTest();
-}
-
 void test_taskchannelgetalias::checkScpiSend()
 {
+    PcbInitForTest pcb;
     QString channelAlias;
-    TaskCompositePtr task = TaskChannelGetAlias::create(m_pcbInterface,
+    TaskCompositePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
                                                         channelName,
                                                         channelAlias,
                                                         EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
-    QStringList scpiSent = m_proxyClient->getReceivedCommands();
+    QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SENSE:%1:ALIAS").arg(channelName);
     ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isQuery);
@@ -39,9 +27,10 @@ void test_taskchannelgetalias::checkScpiSend()
 
 void test_taskchannelgetalias::returnsAliasProperly()
 {
-    m_proxyClient->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString(defaultResponse)));
+    PcbInitForTest pcb;
+    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString(defaultResponse)));
     QString channelAlias;
-    TaskCompositePtr task = TaskChannelGetAlias::create(m_pcbInterface,
+    TaskCompositePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
                                                         channelName,
                                                         channelAlias,
                                                         EXPIRE_INFINITE);
@@ -52,9 +41,10 @@ void test_taskchannelgetalias::returnsAliasProperly()
 
 void test_taskchannelgetalias::timeoutAndErrFunc()
 {
+    PcbInitForTest pcb;
     int localErrorCount = 0;
     QString channelAlias;
-    TaskCompositePtr task = TaskChannelGetAlias::create(m_pcbInterface,
+    TaskCompositePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
                                                         channelName,
                                                         channelAlias,
                                                         DEFAULT_EXPIRE,

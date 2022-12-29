@@ -21,6 +21,7 @@ target_link_libraries(tasks-for-modules-testlib
     zeraproxy
     tasks-base
     zera-timers-testlib
+    tasks-base-testlib
     Zera::SCPI
     )
 

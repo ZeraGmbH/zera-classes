@@ -1,42 +1,32 @@
 #include "test_taskrmsendident.h"
 #include "taskrmsendident.h"
-#include "rmtestanswers.h"
-#include <tasktesthelper.h>
-#include <timerrunnerfortest.h>
-#include <zeratimerfactorymethodstest.h>
+#include "rminitfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskrmsendident)
 
 static const char* testIdent = "foo";
 
-void test_taskrmsendident::init()
-{
-    m_rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
-    m_proxyClient = ProxyClientForTest::create();
-    m_rmInterface->setClientSmart(m_proxyClient);
-    TimerRunnerForTest::reset();
-    ZeraTimerFactoryMethodsTest::enableTest();
-}
-
 void test_taskrmsendident::checkSend()
 {
-    TaskCompositePtr task = TaskRmSendIdent::create(m_rmInterface,
+    RmInitForTest rm;
+    TaskCompositePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
                                                     testIdent,
                                                     EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
-    QCOMPARE(m_proxyClient->getReceivedCommands().count(), 0);
-    QStringList identsSent = m_proxyClient->getReceivedIdents();
+    QCOMPARE(rm.getProxyClient()->getReceivedCommands().count(), 0);
+    QStringList identsSent = rm.getProxyClient()->getReceivedIdents();
     QCOMPARE(identsSent.count(), 1);
     QCOMPARE(identsSent[0], testIdent);
 }
 
 void test_taskrmsendident::timeoutAndErrFunc()
 {
+    RmInitForTest rm;
     int localErrorCount = 0;
     QStringList channelList;
-    TaskCompositePtr task = TaskRmSendIdent::create(m_rmInterface,
+    TaskCompositePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
                                                     testIdent,
                                                     DEFAULT_EXPIRE,
                                                     [&]{
