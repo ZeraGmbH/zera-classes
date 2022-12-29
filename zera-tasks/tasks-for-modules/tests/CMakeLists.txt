@@ -3,4 +3,5 @@ SETUP_QTESTS(
     test_taskservertransactiontemplate
 )
 
+add_subdirectory(pcb-server)
 add_subdirectory(resman)

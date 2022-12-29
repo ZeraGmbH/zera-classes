@@ -1,10 +1,10 @@
 #ifndef TASKCHANNELGETALIAS_H
 #define TASKCHANNELGETALIAS_H
 
-#include "taskcomposit.h"
+#include "taskservertransactiontemplate.h"
 #include <pcbinterface.h>
 
-class TaskChannelGetAlias : public TaskComposite
+class TaskChannelGetAlias : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
@@ -14,10 +14,9 @@ public:
     TaskChannelGetAlias(Zera::Server::PcbInterfacePtr pcbInterface,
                          QString channelName,
                          QString& valueReceived);
-    void start() override;
-private slots:
-    void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::Server::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;
     QString& m_valueReceived;
