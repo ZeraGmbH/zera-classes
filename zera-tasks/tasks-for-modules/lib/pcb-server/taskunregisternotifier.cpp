@@ -11,19 +11,17 @@ TaskCompositePtr TaskUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pc
 }
 
 TaskUnregisterNotifier::TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface) :
+    TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface)
 {
 }
 
-void TaskUnregisterNotifier::start()
+quint32 TaskUnregisterNotifier::sendToServer()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
-            this, &TaskUnregisterNotifier::onServerAnswer);
-    m_msgnr = m_pcbInterface->unregisterNotifiers();
+    return m_pcbInterface->unregisterNotifiers();
 }
 
-void TaskUnregisterNotifier::onServerAnswer(quint32 msgnr, quint8 reply, QVariant)
+bool TaskUnregisterNotifier::handleCheckedServerAnswer(QVariant answer)
 {
-    if(msgnr == m_msgnr)
-        finishTask(reply == ack);
+    return true;
 }
