@@ -1,20 +1,19 @@
 #ifndef TASKUNREGISTERNOTIFIER_H
 #define TASKUNREGISTERNOTIFIER_H
 
-#include "taskcomposit.h"
+#include "taskservertransactiontemplate.h"
 #include <pcbinterface.h>
 
-class TaskUnregisterNotifier : public TaskComposite
+class TaskUnregisterNotifier : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
     static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface);
-    void start() override;
-private slots:
-    void onServerAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
+    quint32 sendToServer() override;
+    bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::Server::PcbInterfacePtr m_pcbInterface;
     quint32 m_msgnr;
 };

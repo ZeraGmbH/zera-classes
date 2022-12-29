@@ -5,4 +5,5 @@ SETUP_QTESTS(
     test_taskchannelgetrejection
     test_taskchannelgeturvalue
     test_taskchannelregisternotifier
+    test_taskunregisternotifier
     )
