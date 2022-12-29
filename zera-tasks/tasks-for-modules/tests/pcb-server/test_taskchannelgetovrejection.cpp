@@ -7,15 +7,15 @@ QTEST_MAIN(test_taskchannelgetovrejection)
 
 static const char* channelSysName = "m0";
 static const char* rangeName = "250V";
-static double defaultOvrRecection = 123456.0; // although treated as double - it is more an int...
+static double defaultOvRejection = 123456.0; // although treated as double - it is more an int...
 
 void test_taskchannelgetovrejection::checkScpiSend()
 {
     PcbInitForTest pcb;
-    double ovrRecection;
+    double ovRejection;
     TaskCompositePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
                                                               channelSysName, rangeName,
-                                                              ovrRecection,
+                                                              ovRejection,
                                                               EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
@@ -29,25 +29,25 @@ void test_taskchannelgetovrejection::checkScpiSend()
 void test_taskchannelgetovrejection::returnsOvrRejectionProperly()
 {
     PcbInitForTest pcb;
-    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString("%1").arg(defaultOvrRecection)));
-    double ovrRecection = 0.0;
+    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString("%1").arg(defaultOvRejection)));
+    double ovRejection = 0.0;
     TaskCompositePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
                                                               channelSysName, rangeName,
-                                                              ovrRecection,
+                                                              ovRejection,
                                                               EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
-    QCOMPARE(ovrRecection, defaultOvrRecection);
+    QCOMPARE(ovRejection, defaultOvRejection);
 }
 
 void test_taskchannelgetovrejection::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    double ovrRecection = 0.0;
+    double ovRejection = 0.0;
     TaskCompositePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
                                                               channelSysName, rangeName,
-                                                              ovrRecection,
+                                                              ovRejection,
                                                               DEFAULT_EXPIRE,
                                                               [&]{
         localErrorCount++;

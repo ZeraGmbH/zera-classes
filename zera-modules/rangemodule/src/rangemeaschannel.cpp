@@ -218,8 +218,8 @@ bool cRangeMeasChannel::isPossibleRange(QString range)
 bool cRangeMeasChannel::isRMSOverload(double ampl)
 {
     cRangeInfo& ri = m_RangeInfoHash[m_sActRange];
-    double ovrRecectionFactor = ri.ovrejection / ri.rejection;
-    return ((ri.urvalue * ovrRecectionFactor) < ampl);
+    double ovrRejectionFactor = ri.ovrejection / ri.rejection;
+    return ((ri.urvalue * ovrRejectionFactor) < ampl);
 }
 
 
@@ -265,19 +265,19 @@ QString cRangeMeasChannel::getOptRange(double rms, QString rngAlias)
     for (i = 0; i < riList.count(); i++) {
         const cRangeInfo& ri = riList.at(i);
         double newUrvalue = ri.urvalue;
-        double ovrRecectionFactor = ri.ovrejection / ri.rejection; // typically 1.25
+        double ovrRejectionFactor = ri.ovrejection / ri.rejection; // typically 1.25
         // actual range?
         if(rngAlias == ri.alias) {
             // are we in hysteresis area?
-            if(rms > newUrvalue * ovrRecectionFactor * enterRangeLimit &&
-                    rms < newUrvalue * ovrRecectionFactor * keepRangeLimit) {
+            if(rms > newUrvalue * ovrRejectionFactor * enterRangeLimit &&
+                    rms < newUrvalue * ovrRejectionFactor * keepRangeLimit) {
                 // let's keep actual range
                 p=i;
                 break;
             }
         }
         // (re-)enter range
-        if ((rms <= newUrvalue * ovrRecectionFactor * enterRangeLimit) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
+        if ((rms <= newUrvalue * ovrRejectionFactor * enterRangeLimit) && (newUrvalue < newAmpl) && (ri.type == actRngType)) {
             newAmpl = newUrvalue;
             p=i;
         }

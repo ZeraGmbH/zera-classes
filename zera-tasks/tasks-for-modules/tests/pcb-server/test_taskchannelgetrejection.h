@@ -8,7 +8,7 @@ class test_taskchannelgetrejection : public QObject
     Q_OBJECT
 private slots:
     void checkScpiSend();
-    void returnsOvrRejectionProperly();
+    void returnsRejectionProperly();
     void timeoutAndErrFunc();
 };
 
