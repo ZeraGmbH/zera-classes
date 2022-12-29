@@ -56,8 +56,8 @@ public:
     virtual quint32 unregisterNotifiers(); // unregister from all notifications
 
 protected slots:
-    virtual void receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message) override;
-    virtual void receiveError(QAbstractSocket::SocketError errorCode) override;
+    void receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message) override;
+    void receiveError(QAbstractSocket::SocketError errorCode) override;
 
 private:
     Q_DECLARE_PUBLIC(cSECInterface)
