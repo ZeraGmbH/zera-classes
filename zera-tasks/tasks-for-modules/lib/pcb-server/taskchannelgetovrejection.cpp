@@ -1,6 +1,5 @@
 #include "taskchannelgetovrejection.h"
 #include "tasktimeoutdecorator.h"
-#include <reply.h>
 
 TaskCompositePtr TaskChannelGetOvRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                    QString channelSysName, QString rangeName,

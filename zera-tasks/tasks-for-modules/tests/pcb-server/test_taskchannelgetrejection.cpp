@@ -7,7 +7,7 @@ QTEST_MAIN(test_taskchannelgetrejection)
 
 static const char* channelSysName = "m0";
 static const char* rangeName = "250V";
-static double defaultRecection = 123456.0; // although treated as double - it is more an int...
+static double defaultRejection = 123456.0; // although treated as double - it is more an int...
 
 void test_taskchannelgetrejection::checkScpiSend()
 {
@@ -26,10 +26,10 @@ void test_taskchannelgetrejection::checkScpiSend()
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
-void test_taskchannelgetrejection::returnsOvrRejectionProperly()
+void test_taskchannelgetrejection::returnsRejectionProperly()
 {
     PcbInitForTest pcb;
-    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString("%1").arg(defaultRecection)));
+    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString("%1").arg(defaultRejection)));
     double rejection = 0.0;
     TaskCompositePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
                                                             channelSysName, rangeName,
@@ -37,7 +37,7 @@ void test_taskchannelgetrejection::returnsOvrRejectionProperly()
                                                             EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
-    QCOMPARE(rejection, defaultRecection);
+    QCOMPARE(rejection, defaultRejection);
 }
 
 void test_taskchannelgetrejection::timeoutAndErrFunc()
