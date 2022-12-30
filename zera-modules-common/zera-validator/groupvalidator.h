@@ -1,15 +1,14 @@
 #ifndef ZERA_BASEVALIDATOR_H
 #define ZERA_BASEVALIDATOR_H
 
-#include "zera-validator_global.h"
-
+#include "zeravalidator_export.h"
 #include <ve_eventsystem.h>
 
 namespace Zera
 {
   class CommandValidator;
 
-  class ZERAVALIDATORSHARED_EXPORT GroupValidator : public VeinEvent::EventSystem
+  class ZERAVALIDATOR_EXPORT GroupValidator : public VeinEvent::EventSystem
   {
     Q_OBJECT
   public:

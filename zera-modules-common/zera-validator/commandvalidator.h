@@ -1,7 +1,7 @@
 #ifndef ZERA_COMPONENTVALIDATOR_H
 #define ZERA_COMPONENTVALIDATOR_H
 
-#include "zera-validator_global.h"
+#include "zeravalidator_export.h"
 #include <ve_eventsystem.h>
 #include <ve_commandevent.h>
 
@@ -10,7 +10,7 @@ namespace Zera
 /**
    * @brief Spezialized form of EventSystem that validates events of the type CommandEvent
    */
-class ZERAVALIDATORSHARED_EXPORT CommandValidator : public VeinEvent::EventSystem
+class ZERAVALIDATOR_EXPORT CommandValidator : public VeinEvent::EventSystem
 {
     Q_OBJECT
 public:
