@@ -11,11 +11,10 @@ add_library(zeravalidator SHARED
     ${HEADER}
     )
 
-target_link_libraries(zeravalidator 
-    PRIVATE
+target_link_libraries(zeravalidator
+    PUBLIC
+    zera-json-params
     VeinMeta::VfEvent
-    VeinMeta::VfComponent
-    VeinMeta::VfHelpers
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
