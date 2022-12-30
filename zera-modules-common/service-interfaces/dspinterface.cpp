@@ -110,20 +110,6 @@ quint32 cDSPInterface::setSignalRouting(tRouting *routingtab)
 }
 
 
-quint32 cDSPInterface::setDsp61850SourceAdr(cETHAdress &ethadr)
-{
-    Q_D(cDSPInterface);
-    return d->setDsp61850SourceAdr(ethadr);
-}
-
-
-quint32 cDSPInterface::setDsp61850DestAdr(cETHAdress &ethadr)
-{
-    Q_D(cDSPInterface);
-    return d->setDsp61850DestAdr(ethadr);
-}
-
-
 quint32 cDSPInterface::setDsp61850PriorityTagged(quint32 priotag)
 {
     Q_D(cDSPInterface);

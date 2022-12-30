@@ -1,8 +1,7 @@
 #ifndef DSPINTERFACE_H
 #define DSPINTERFACE_H
 
-#include "zeramisc_export.h"
-#include "ethadress.h"
+#include "zera-service-interfaces_export.h"
 #include "dspmeasdata.h"
 #include <proxyclient.h>
 #include <QObject>
@@ -19,7 +18,7 @@ typedef quint32 tRouting[16];
 class cDSPInterfacePrivate;
 
 
-class ZERAMISC_EXPORT cDSPInterface: public QObject
+class ZERA_SERVICE_INTERFACES_EXPORT cDSPInterface: public QObject
 {
     Q_OBJECT
 
@@ -39,8 +38,6 @@ public:
     virtual void clearCmdList(); // clears all cmd lists
     virtual void clearMemLists(); // clears all memory lists (memhandles)
     virtual quint32 setSignalRouting(tRouting* routingtab); // set signal routing
-    virtual quint32 setDsp61850SourceAdr(cETHAdress& ethadr); // set eth source adr
-    virtual quint32 setDsp61850DestAdr(cETHAdress& ethadr); // set eth dest adr
     virtual quint32 setDsp61850PriorityTagged(quint32 priotag); // set entries for eth frame decoder
     virtual quint32 setDsp61850EthTypeAppId(quint32 typAppid); // same
     virtual quint32 setDsp61850EthSynchronisation(quint32 syncdata); // setting strong sync. and dataset

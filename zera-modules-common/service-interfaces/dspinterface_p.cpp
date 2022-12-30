@@ -162,28 +162,6 @@ quint32 cDSPInterfacePrivate::setSignalRouting(tRouting *routingtab)
 }
 
 
-quint32 cDSPInterfacePrivate::setDsp61850SourceAdr(cETHAdress &ethadr)
-{
-    QString cmd;
-    quint32 msgnr;
-
-    msgnr = sendCommand(cmd = QString("SYST:DSP:EN61:MAC:SADR"), ethadr.getMacAdress());
-    m_MsgNrCmdList[msgnr] = setdsp61850sourceadr;
-    return msgnr;
-}
-
-
-quint32 cDSPInterfacePrivate::setDsp61850DestAdr(cETHAdress &ethadr)
-{
-    QString cmd;
-    quint32 msgnr;
-
-    msgnr = sendCommand(cmd = QString("SYST:DSP:EN61:MAC:DADR"), ethadr.getMacAdress());
-    m_MsgNrCmdList[msgnr] = setdsp61850destadr;
-    return msgnr;
-}
-
-
 quint32 cDSPInterfacePrivate::setDsp61850PriorityTagged(quint32 priotag)
 {
     QString cmd, par;

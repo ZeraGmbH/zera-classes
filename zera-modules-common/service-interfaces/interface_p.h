@@ -1,7 +1,6 @@
 #ifndef INTERFACE_P_H
 #define INTERFACE_P_H
 
-#include "zeramisc_export.h"
 #include <proxyclient.h>
 #include <netmessages.pb.h>
 #include <QObject>

@@ -16,10 +16,8 @@ add_library(tasks-for-modules SHARED
 
 target_link_libraries(tasks-for-modules
     PUBLIC
-    Qt5::Core
-    zera-timers
     tasks-base
-    zeramisc
+    zera-service-interfaces
     )
 
 target_include_directories(tasks-for-modules
