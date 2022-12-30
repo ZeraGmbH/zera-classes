@@ -41,7 +41,6 @@ target_include_directories(adjustmentmodule-static
 target_link_libraries(adjustmentmodule-static
     zerabasemodule
     zeramath
-    zeramisc
     tasks-base
     tasks-for-modules
 )

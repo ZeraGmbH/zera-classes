@@ -37,7 +37,6 @@ target_link_libraries(transformer1module
     PRIVATE
     zerabasemodule
     zeramath
-    zeramisc
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

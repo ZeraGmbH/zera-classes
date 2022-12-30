@@ -34,7 +34,6 @@ add_library(modemodule MODULE
 target_link_libraries(modemodule 
     PRIVATE
     zerabasemodule
-    zeramisc
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

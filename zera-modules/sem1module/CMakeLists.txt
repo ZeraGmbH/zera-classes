@@ -36,7 +36,6 @@ add_library(sem1module MODULE
 target_link_libraries(sem1module 
     PRIVATE
     zerabasemodule
-    zeramisc
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
