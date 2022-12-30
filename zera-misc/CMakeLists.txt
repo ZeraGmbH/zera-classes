@@ -16,7 +16,6 @@ if(ZC_BUILD_MODULES)
         ${HEADER_FOR_MODULE}
         ethadress_p.h
         ethadress.h
-        errormessages.h
         singleonoffreferencemanager.h
 )
 endif(ZC_BUILD_MODULES)
