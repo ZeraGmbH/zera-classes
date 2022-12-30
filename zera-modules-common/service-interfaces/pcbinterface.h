@@ -1,7 +1,7 @@
 #ifndef PCBINTERFACE_H
 #define PCBINTERFACE_H
 
-#include "zeramisc_export.h"
+#include "zera-service-interfaces_export.h"
 #include "abstractserverInterface.h"
 #include <proxyclient.h>
 
@@ -11,7 +11,7 @@ namespace Server
 {
 class cPCBInterfacePrivate;
 
-class ZERAMISC_EXPORT cPCBInterface: public AbstractServerInterface
+class ZERA_SERVICE_INTERFACES_EXPORT cPCBInterface: public AbstractServerInterface
 {
     Q_OBJECT
 

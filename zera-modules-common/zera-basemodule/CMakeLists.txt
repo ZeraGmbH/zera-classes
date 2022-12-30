@@ -25,7 +25,7 @@ target_link_libraries(zerabasemodule
     zeraxmlconfig
     zera-json-params
     zeraproxy
-    zeramisc
+    zera-service-interfaces
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
