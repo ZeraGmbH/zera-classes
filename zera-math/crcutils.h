@@ -1,8 +1,8 @@
 #ifndef CRCUTILS_H
 #define CRCUTILS_H
 
+#include "zeramath_export.h"
 #include <QtGlobal>
-#include "math_global.h"
 
 /******************************************************************************************/
 /**
