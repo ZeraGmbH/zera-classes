@@ -136,38 +136,21 @@ quint32 cRMInterfacePrivate::freeResource(QString type, QString name)
 
 void cRMInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
-    if (message->has_reply())
-    {
-        quint32 lmsgnr;
-        QString lmsg = "";
-        int lreply;
-
-        lmsgnr = message->messagenr();
-
-        if (message->reply().has_body())
-        {
-            lmsg = QString::fromStdString(message->reply().body());
-        }
-
-        lreply = message->reply().rtype();
-
-        int lastCmd = m_MsgNrCmdList.take(lmsgnr);
-
+    TAnswerDecoded decodedAnswer;
+    if(decodeProtobuffAnswer(message, decodedAnswer)) {
         Q_Q(cRMInterface);
-
-        switch (lastCmd)
-        {
+        switch (decodedAnswer.cmdSendEnumVal) {
         case rmident:
         case addresource:
         case removeresource:
         case setresource:
         case freeresource:
-            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
             break;
         case getresourcetypes:
         case getresources:
         case getresourceinfo:
-            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
             break;
         }
     }
