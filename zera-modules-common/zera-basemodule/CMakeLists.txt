@@ -23,7 +23,6 @@ target_link_libraries(zerabasemodule
     MeasurementModuleInterface
     zeravalidator
     zeraxmlconfig
-    zera-json-params
     zeraproxy
     zera-service-interfaces
     VeinMeta::VfEvent
