@@ -33,7 +33,6 @@ add_library(thdnmodule MODULE
 
 target_link_libraries(thdnmodule 
     zerabasemodule
-    zeramisc
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

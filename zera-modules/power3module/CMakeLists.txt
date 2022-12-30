@@ -34,7 +34,6 @@ add_library(power3module MODULE
 target_link_libraries(power3module 
     PRIVATE
     zerabasemodule
-    zeramisc
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

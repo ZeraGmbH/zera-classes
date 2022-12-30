@@ -87,7 +87,6 @@ endforeach()
 set(COMMON_LIBS
     ${XERCES_LIBRARIES}
     zerabasemodule
-    zeramisc
     serialportasyncblock
     )
 

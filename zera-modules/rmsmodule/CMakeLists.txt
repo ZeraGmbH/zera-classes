@@ -34,7 +34,6 @@ add_library(rmsmodule MODULE
 target_link_libraries(rmsmodule 
     PRIVATE
     zerabasemodule
-    zeramisc
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

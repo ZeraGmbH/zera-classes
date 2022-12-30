@@ -35,7 +35,6 @@ target_link_libraries(dftmodule
     PRIVATE
     zerabasemodule
     zeramath
-    zeramisc
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
