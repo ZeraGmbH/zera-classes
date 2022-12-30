@@ -1,7 +1,7 @@
 #ifndef GAUSSMATRIX_H
 #define GAUSSMATRIX_H
 
-#include "math_global.h"
+#include "zeramath_export.h"
 
 /******************************************************************************************/
 /**
@@ -12,15 +12,9 @@
  * @author Peter Lohmer p.lohmer@zera.de
 *******************************************************************************************/
 
-
-
-
 class cGaussMatrixPrivate; // forward
 class cGaussNode;
 
-/**
-  @b class for a gauss matrix
-  */
 class ZERAMATH_EXPORT cGaussMatrix
 {
 public:
@@ -45,11 +39,6 @@ public:
     */
     double getKoeff(int);
 private:
-    /**
-      @b D'pointer to the private library internal structure
-
-      this is used to hide the internal structure, and thus make the library ABI safe
-      */
     cGaussMatrixPrivate *d_ptr;
 };
 
