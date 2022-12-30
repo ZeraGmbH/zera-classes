@@ -774,32 +774,10 @@ quint32 cPCBInterfacePrivate::writeSerialNr(QString serNr)
 
 void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
-    if (message->has_reply())
-    {
-        quint32 lmsgnr;
-        QString lmsg = "";
-        quint8 lreply = 0;
-
-        lmsgnr = message->messagenr();
-
-        if (message->reply().has_body())
-        {
-            lmsg = QString::fromStdString(message->reply().body());
-        }
-
-        lreply = message->reply().rtype();
-
-
-        int lastCmd;
-
-        if (lmsgnr == 0)
-            lastCmd = PCB::pcbinterrupt;
-        else
-            lastCmd = m_MsgNrCmdList.take(lmsgnr);
-
+    TAnswerDecoded decodedAnswer;
+    if(decodeProtobuffAnswer(message, decodedAnswer, PCB::pcbinterrupt)) {
         Q_Q(cPCBInterface);
-
-        switch (lastCmd)
+        switch (decodedAnswer.cmdSendEnumVal)
         {
         case PCB::getdspchannel:
         case PCB::getstatus:
@@ -808,7 +786,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getdspchannelsource:
         case PCB::getadjustmentstatus:
         case PCB::getauthorizationstatus:
-            emit q->serverAnswer(lmsgnr, lreply, returnInt(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnInt(decodedAnswer.msgBody));
             break;
 
         case PCB::getalias:
@@ -832,12 +810,12 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getpcberrorstatus:
         case PCB::getpowtypesource:
         case PCB::transparentcommand:
-            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
             break;
 
         case PCB::getrangelist:
         case PCB::getrangelistsample:
-            emit q->serverAnswer(lmsgnr, lreply, returnStringList(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnStringList(decodedAnswer.msgBody));
             break;
 
         case PCB::geturvalue:
@@ -850,11 +828,11 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getphasecorrection:
         case PCB::getformfactorsource:
         case PCB::getconstantsource:
-            emit q->serverAnswer(lmsgnr, lreply, returnDouble(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnDouble(decodedAnswer.msgBody));
             break;
 
         case PCB::isavail:
-            emit q->serverAnswer(lmsgnr, lreply, returnBool(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnBool(decodedAnswer.msgBody));
             break;
 
         case PCB::setoffsetnode:
@@ -880,7 +858,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::setadjustpcbxml:
         case PCB::setadjustclampxml:
         case PCB::setserialnumber:
-            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
             break;
         }
     } // hmm ... we have to look what to do otherwise
