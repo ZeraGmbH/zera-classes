@@ -4,6 +4,9 @@
 #include "zeratimertemplate.h"
 #include <functional>
 
+/* Use ZeraTimerFactoryMethods to create zera-timers - otherwise tests will fail
+ * (see testlib/ZeraTimerFactoryMethodsTest why)
+*/
 class ZeraTimerFactoryMethods
 {
 public:
