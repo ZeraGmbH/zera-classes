@@ -75,7 +75,6 @@ endif(ZC_BUILD_MODULES)
 
 add_subdirectory(zera-math)
 add_subdirectory(zera-intel-hex-checker)
-add_subdirectory(zera-mcontroller-io)
 add_subdirectory(zera-i2c)
 add_subdirectory(zera-misc)
 
