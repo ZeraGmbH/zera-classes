@@ -19,7 +19,6 @@ target_link_libraries(zeraxmlconfig
     "-Wl,--no-undefined"
     )
 
-# announce headers - target perspective
 target_include_directories(zeraxmlconfig
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zeraxmlconfig>
@@ -42,31 +41,25 @@ install(TARGETS zeraxmlconfig
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
-# configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeraxmlconfigConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
     )
 
-# configure *Config.cmake
 configure_file(zeraxmlconfigConfig.cmake.in zeraxmlconfigConfig.cmake @ONLY)
 
-# install *Config(Version).cmake
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeraxmlconfigConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/zeraxmlconfigConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeraxmlconfig
     )
 
-# install targets cmake-files
 install(EXPORT zeraxmlconfigExport
     FILE zeraxmlconfigTargets.cmake
     NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeraxmlconfig
     )
 
-# install public headers
 install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeraxmlconfig

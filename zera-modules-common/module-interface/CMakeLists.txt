@@ -32,7 +32,6 @@ install(TARGETS MeasurementModuleInterface
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
-include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     MeasurementModuleInterfaceConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}

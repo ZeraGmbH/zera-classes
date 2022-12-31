@@ -19,7 +19,6 @@ target_link_libraries(zeraproxy
     "-Wl,--no-undefined"
     )
 
-# announce headers - target perspective
 target_include_directories(zeraproxy
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/proxy>
@@ -42,31 +41,25 @@ install(TARGETS zeraproxy
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
-# configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zeraproxyConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
     )
 
-# configure *Config.cmake
 configure_file(zeraproxyConfig.cmake.in zeraproxyConfig.cmake @ONLY)
 
-# install *Config(Version).cmake
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeraproxyConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/zeraproxyConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeraproxy
     )
 
-# install targets cmake-files
 install(EXPORT zeraproxyExport
     FILE zeraproxyTargets.cmake
     NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeraproxy
     )
 
-# install public headers
 install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/proxy

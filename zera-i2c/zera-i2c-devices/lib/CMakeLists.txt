@@ -42,7 +42,6 @@ install(TARGETS zera-i2c-devices
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
-include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     zera-i2c-devicesConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}

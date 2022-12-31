@@ -6,14 +6,9 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
-file(GLOB RESOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
-    )
-
 add_library(zerabasemodule SHARED
     ${SOURCES}
     ${HEADER}
-    ${RESOURCES}
     )
 
 target_link_libraries(zerabasemodule 
@@ -33,7 +28,6 @@ target_link_libraries(zerabasemodule
     "-Wl,--no-undefined"
     )
 
-# announce headers - target perspective
 target_include_directories(zerabasemodule
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule>
@@ -56,30 +50,25 @@ install(TARGETS zerabasemodule
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
-# configure *ConfigVersion.cmake
 write_basic_package_version_file(
     zerabasemoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
     COMPATIBILITY SameMajorVersion
     )
 
-# configure *Config.cmake
 configure_file(zerabasemoduleConfig.cmake.in zerabasemoduleConfig.cmake @ONLY)
 
-# install *Config(Version).cmake
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zerabasemoduleConfig.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/zerabasemoduleConfigVersion.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zerabasemodule
     )
 
-# install targets cmake-files
 install(EXPORT zerabasemoduleExport
     FILE zerabasemoduleTargets.cmake
     NAMESPACE ZeraClasses::
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zerabasemodule
     )
 
-# install public headers
 install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule
