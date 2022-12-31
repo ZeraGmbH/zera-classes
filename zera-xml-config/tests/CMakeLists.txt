@@ -1,5 +1,3 @@
-enable_testing()
-
 add_test(NAME    zeraxmlconfig-unittest-qt
          COMMAND zeraxmlconfig-unittest-qt)
 
@@ -25,4 +23,3 @@ target_link_libraries(zeraxmlconfig-unittest-qt
     Qt5::Test
     zeraxmlconfig
 )
-

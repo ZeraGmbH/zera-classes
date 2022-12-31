@@ -11,7 +11,7 @@ add_library(MeasurementModuleInterface SHARED
     )
 
 target_link_libraries(MeasurementModuleInterface 
-    PRIVATE
+    PUBLIC
     Qt5::Core
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

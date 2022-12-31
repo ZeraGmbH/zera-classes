@@ -73,7 +73,5 @@ install(
     DESTINATION ${SET_ZC_CONFIG_PATH}
     )
 
-enable_testing()
 add_subdirectory(tests)
-
 
