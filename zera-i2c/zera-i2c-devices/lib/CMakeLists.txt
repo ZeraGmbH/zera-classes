@@ -15,7 +15,7 @@ target_link_libraries(zera-i2c-devices
     PUBLIC
     Qt5::Core
     zerai2c
-    zeramisc
+    zera-intel-hex
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

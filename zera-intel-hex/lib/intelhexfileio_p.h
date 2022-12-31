@@ -1,7 +1,6 @@
 #ifndef INTELHEXFILEIO_P_H
 #define INTELHEXFILEIO_P_H
 
-#include "zeramisc_export.h"
 #include <QString>
 #include <QList>
 
