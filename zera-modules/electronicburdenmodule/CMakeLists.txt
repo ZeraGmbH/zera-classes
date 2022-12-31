@@ -113,21 +113,17 @@ target_include_directories(electronicburdenmodule
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-# we build a module -> no public headers
 target_include_directories(electronicburdenmodule
     PRIVATE
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-# install library
 install(TARGETS electronicburdenmodule
     EXPORT electronicburdenmoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
     )
 
-# configure *ConfigVersion.cmake
-include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
     electronicburdenmoduleConfigVersion.cmake
     VERSION ${PACKAGE_VERSION}
