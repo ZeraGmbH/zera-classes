@@ -2,7 +2,6 @@ file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
 
-
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
@@ -12,8 +11,8 @@ add_library(zerai2c SHARED
     ${HEADER}
     )
 
-target_link_libraries(zerai2c 
-    PRIVATE
+target_link_libraries(zerai2c
+    PUBLIC
     Qt5::Core
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

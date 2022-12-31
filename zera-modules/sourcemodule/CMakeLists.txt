@@ -2,10 +2,6 @@ project(zera-sourcemodule LANGUAGES CXX
     VERSION ${REPO_VERSION}
 )
 
-#Automoc and RCC ON. Needed in QT projects
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
 file(GLOB SOURCES 
     ${PROJECT_SOURCE_DIR}/src/*.cpp
     ${PROJECT_SOURCE_DIR}/src/io-device/*.cpp
@@ -152,8 +148,6 @@ target_link_libraries(sourcemodule
     "-Wl,--no-undefined"
     )
 
-
-# install library
 install(TARGETS sourcemodule
     EXPORT sourcemoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
@@ -167,9 +161,7 @@ install(
         ${SET_ZC_CONFIG_PATH}
     )
 
-message(STATUS "unittest sourcemodule")
 add_subdirectory(tests)
-enable_testing()
 
 add_test(NAME    sourcemodule-unittest
          COMMAND sourcemodule-unittest)

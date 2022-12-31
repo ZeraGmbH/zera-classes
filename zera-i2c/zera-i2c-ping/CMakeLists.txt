@@ -3,7 +3,6 @@ add_executable(zera-i2c-ping
 )
 
 target_link_libraries(zera-i2c-ping
-    PRIVATE
     Qt5::Core
     zerai2c
     # ask linker to help us finding unresolved symbols

@@ -12,7 +12,7 @@ add_library(zeraxmlconfig SHARED
     )
 
 target_link_libraries(zeraxmlconfig 
-    PRIVATE
+    PUBLIC
     Qt5::Core
     Qt5::XmlPatterns
     # ask linker to help us finding unresolved symbols
