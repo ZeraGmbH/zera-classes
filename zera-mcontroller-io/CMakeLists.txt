@@ -13,7 +13,7 @@ target_include_directories(zera-mcontroller-io
 target_link_libraries(zera-mcontroller-io
     PRIVATE
     Qt5::Core
-    zeradev
+    zera-i2c-devices
     zerai2c
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

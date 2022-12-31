@@ -1,13 +1,13 @@
 #ifndef F24LC256_H
 #define F24LC256_H
 
-#include "zeradev_export.h"
+#include "zera-i2c-devices_export.h"
 #include "i2ceeprom_p.h"
 #include <QtCore/qglobal.h>
 
 class cF24LC256Private;
 
-class ZERADEV_EXPORT cF24LC256: public cI2CEEPromPrivate
+class ZERA_I2C_DEVICES_EXPORT cF24LC256: public cI2CEEPromPrivate
 {
 public:
     cF24LC256(QString devNode, short adr);
