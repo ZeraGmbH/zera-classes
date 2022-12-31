@@ -1,14 +1,6 @@
 include(CMakeFindDependencyMacro)
 
-# Capturing values from configure (optional)
-#set(my-config-var @my-config-var@)
-
-# dependencies
 find_dependency(Qt5 COMPONENTS Core CONFIG REQUIRED)
-find_dependency(VfHelpers REQUIRED)
-find_dependency(VfComponent REQUIRED)
-find_dependency(VfEvent REQUIRED)
 
-# targets file
 include("${CMAKE_CURRENT_LIST_DIR}/zerai2cTargets.cmake")
 

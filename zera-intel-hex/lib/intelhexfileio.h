@@ -1,7 +1,7 @@
 #ifndef INTELHEXFILEIO_H
 #define INTELHEXFILEIO_H
 
-#include "zeramisc_export.h"
+#include "zera-intel-hex_export.h"
 #include <QString>
 #include <QList>
 
@@ -19,7 +19,7 @@ class cIntelHexFileIOPrivate; // forward
   */
 
 
-class ZERAMISC_EXPORT cIntelHexFileIO
+class ZERA_INTEL_HEX_EXPORT cIntelHexFileIO
 {
 public:
     cIntelHexFileIO();

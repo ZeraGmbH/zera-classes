@@ -11,8 +11,7 @@ target_include_directories(zera-intel-hex-checker
 
 target_link_libraries(zera-intel-hex-checker
     PRIVATE
-    Qt5::Core
-    zeramisc
+    zera-intel-hex
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
 )
