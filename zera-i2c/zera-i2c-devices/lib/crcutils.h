@@ -1,7 +1,7 @@
 #ifndef CRCUTILS_H
 #define CRCUTILS_H
 
-#include "zeramath_export.h"
+#include "zera-i2c-devices_export.h"
 #include <QtGlobal>
 
 /******************************************************************************************/
@@ -18,7 +18,7 @@
   cMaxim1WireCRC is a class to support crc generation introduced from MAXIM for 1 wire connections.
   crc is calculated with polynomial = x^8 + x^5 + x^4 + 1
   */
-class ZERAMATH_EXPORT cMaxim1WireCRC
+class ZERA_I2C_DEVICES_EXPORT cMaxim1WireCRC
 {
 public:
     /**
