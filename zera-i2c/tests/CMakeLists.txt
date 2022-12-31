@@ -25,6 +25,6 @@ target_link_libraries(zera-i2c-unittest
     gtest
     gtest_main
     Qt5::Core
-    zeradev
+    zera-i2c-devices
     zerai2c
 )

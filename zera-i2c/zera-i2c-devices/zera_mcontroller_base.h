@@ -6,7 +6,7 @@
  * [1] smb://s-zera-stor01/data/EntwHard/Libraries/Atmel%20AVR/Docs/CommunicationProtocols.doc
  */
 
-#include "zeradev_export.h"
+#include "zera-i2c-devices_export.h"
 #include "protocol_zera_bootloader.h"
 #include "protocol_zera_hard.h"
 #include "zera_mcontroller_errorflags.h"
@@ -17,7 +17,7 @@
 /**
  * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol
  */
-class ZERADEV_EXPORT ZeraMcontrollerBase
+class ZERA_I2C_DEVICES_EXPORT ZeraMcontrollerBase
 {
 public:
     /**
