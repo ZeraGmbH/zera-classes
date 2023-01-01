@@ -3,7 +3,6 @@ include(CMakeFindDependencyMacro)
 find_dependency(
     zera-json-params
     zera-vein-moduleinterface
-    VeinMeta::VfCpp
 )
 
 include("${CMAKE_CURRENT_LIST_DIR}/zeravalidatorTargets.cmake")

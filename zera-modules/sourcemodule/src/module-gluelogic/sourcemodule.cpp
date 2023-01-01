@@ -3,6 +3,7 @@
 SourceModule::SourceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
     :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new SourceModuleConfiguration()), parent)
 {
+    m_rpcEventSystem = new VfModuleRpc(entityId);
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("Module to access voltage and current sources");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
@@ -16,6 +17,11 @@ QByteArray SourceModule::getConfiguration() const
     return m_pConfiguration->exportConfiguration();
 }
 
+VfModuleRpc *SourceModule::getRpcEventSystem() const
+{
+    return m_rpcEventSystem;
+}
+
 void SourceModule::doConfiguration(QByteArray xmlConfigData)
 {
     m_pConfiguration->setConfiguration(xmlConfigData);
@@ -24,6 +30,7 @@ void SourceModule::doConfiguration(QByteArray xmlConfigData)
 void SourceModule::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
+    emit addEventSystem(m_rpcEventSystem);
     cBaseModule::setupModule();
 
     m_pProgram = new SourceModuleProgram(this, m_pConfiguration);
