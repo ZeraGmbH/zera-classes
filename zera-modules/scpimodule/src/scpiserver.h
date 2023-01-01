@@ -16,7 +16,6 @@
 #include <QTcpServer>
 #include <QSerialPort>
 #include <moduleactivist.h>
-#include <basemoduleeventsystem.h>
 
 namespace SCPIMODULE
 {
@@ -39,7 +38,6 @@ private:
 
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
-    cBaseModuleEventSystem *m_pEventSystem;
     QTcpServer* m_pTcpServer;
     cSCPIInterface* m_pSCPIInterface;
     QList<cSCPIClient*> m_SCPIClientList;
