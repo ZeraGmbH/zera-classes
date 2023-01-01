@@ -3,7 +3,6 @@
 #include <modulevalidator.h>
 #include <intvalidator.h>
 #include <jsonparamvalidator.h>
-#include <vf-cpp-rpc.h>
 
 #include "basedspmeasprogram.h"
 #include "electronicburdenmoduleprogram.h"
