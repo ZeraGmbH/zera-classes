@@ -1,13 +1,13 @@
 #ifndef MODULEVALIDATOR_H
 #define MODULEVALIDATOR_H
 
-#include <commandvalidator.h>
+#include <veincommandfiltereventsystem.h>
 #include <veinmoduleparameter.h>
 #include <ve_storagesystem.h>
 #include <vf-cpp-rpc.h>
 #include <QHash>
 
-class ModuleValidator : public Zera::CommandValidator
+class ModuleValidator : public VeinCommandFilterEventSystem
 {
     Q_OBJECT
 public:
