@@ -14,8 +14,6 @@ public:
     ModuleValidator(int entityId,
                     VeinEvent::StorageSystem* storageSystem,
                     QHash<QString, VfCpp::cVeinModuleRpc::Ptr> *veinModuleRpcList);
-    virtual ~ModuleValidator() = default;
-
     virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
     void setParameterHash(QHash<QString, cVeinModuleParameter *>&parameterhash);
 private:
