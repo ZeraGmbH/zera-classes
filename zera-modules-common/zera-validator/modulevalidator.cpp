@@ -5,6 +5,7 @@
 ModuleValidator::ModuleValidator(int entityId,
                                  VeinEvent::StorageSystem *storageSystem,
                                  QHash<QString, VfCpp::cVeinModuleRpc::Ptr> *veinModuleRpcList) :
+    VeinCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId),
     m_storageSystem(storageSystem),
     m_veinModuleRpcList(veinModuleRpcList)
