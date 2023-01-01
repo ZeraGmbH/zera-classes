@@ -11,7 +11,7 @@ namespace POWER1MODULE
 cPower1Module::cPower1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
     :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower1ModuleConfiguration()), parent)
 {
-    m_pEventSystem= std::make_shared<cBaseModuleEventSystem>();
+    m_inputComponentEventSystem = new VeinInputComponentsEventSystem;
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures power with configured measuring and integration modes");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
@@ -46,29 +46,25 @@ cPower1Module::cPower1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entit
 
 }
 
-
 QByteArray cPower1Module::getConfiguration() const
 {
     return m_pConfiguration->exportConfiguration();
 }
 
-std::shared_ptr<cBaseModuleEventSystem> cPower1Module::getPEventSystem() const
+VeinInputComponentsEventSystem *cPower1Module::getPEventSystem() const
 {
-    return m_pEventSystem;
+    return m_inputComponentEventSystem;
 }
-
-
 
 void cPower1Module::doConfiguration(QByteArray xmlConfigData)
 {
     m_pConfiguration->setConfiguration(xmlConfigData);
 }
 
-
 void cPower1Module::setupModule()
 {
     emit addEventSystem(m_pModuleValidator);
-    emit addEventSystem(m_pEventSystem.get());// Add Eventsystem for input components as raw pointer
+    emit addEventSystem(m_inputComponentEventSystem);// Add Eventsystem for input components as raw pointer
     cBaseMeasModule::setupModule();
 
     cPower1ModuleConfigData* pConfData;
