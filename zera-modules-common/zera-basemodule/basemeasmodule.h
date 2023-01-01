@@ -1,6 +1,7 @@
 #ifndef BASEMEASMODULE
 #define BASEMEASMODULE
 
+#include "basemodule.h"
 #include "modulevalidator.h"
 #include <ve_storagesystem.h>
 #include <memory>
@@ -15,7 +16,7 @@ public:
                     VeinEvent::StorageSystem* storagesystem,
                     std::shared_ptr<cBaseModuleConfiguration> modcfg,
                     QObject *parent = 0);
-    cModuleValidator* m_pModuleValidator;
+    ModuleValidator* m_pModuleValidator;
 };
 
 #endif // BASEMEASMODULE

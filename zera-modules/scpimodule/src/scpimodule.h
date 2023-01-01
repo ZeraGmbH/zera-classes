@@ -1,15 +1,14 @@
 #ifndef SCPIMODULE_H
 #define SCPIMODULE_H
 
-#include <QObject>
+#include "scpiclientinfo.h"
+#include <basemodule.h>
+#include <modulevalidator.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QHash>
 #include <QMultiHash>
-
-#include "scpiclientinfo.h"
-#include "basemodule.h"
 
 
 namespace Zera {
@@ -27,8 +26,6 @@ namespace VeinEvent
     class EventSystem;
     class StorageSystem;
 }
-
-class cModuleValidator;
 
 namespace SCPIMODULE
 {
@@ -56,7 +53,7 @@ public:
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
     cSCPIEventSystem* m_pSCPIEventSystem;
-    cModuleValidator* m_pModuleValidator;
+    ModuleValidator* m_pModuleValidator;
 
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
@@ -79,10 +76,6 @@ protected slots:
 
 private:
     qint32 m_nActivationIt;
-
-
-private slots:
-
 };
 
 }
