@@ -17,7 +17,6 @@ target_link_libraries(zerabasemodule
     zeravalidator
     zeraxmlconfig
     zera-service-interfaces
-    VeinMeta::VfCpp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
