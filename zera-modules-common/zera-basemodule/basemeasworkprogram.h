@@ -2,8 +2,8 @@
 #define BASEMEASWORKPROGRAM
 
 #include "moduleactivist.h"
-#include "basemoduleeventsystem.h"
 #include "basemoduleconfiguration.h"
+#include <veininputcomponentseventsystem.h>
 
 class cBaseMeasWorkProgram: public cModuleActivist
 {
@@ -11,7 +11,7 @@ class cBaseMeasWorkProgram: public cModuleActivist
 public:
     cBaseMeasWorkProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseMeasWorkProgram();
-    cBaseModuleEventSystem* getEventSystem();
+    VeinInputComponentsEventSystem* getEventSystem();
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -19,7 +19,7 @@ public slots:
     virtual void stop() = 0; // in interface are not updated when stop
 protected:
     QVector<float> m_ModuleActualValues; // a modules actual values
-    cBaseModuleEventSystem *m_pEventSystem;
+    VeinInputComponentsEventSystem *m_pEventSystem;
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
 };
 
