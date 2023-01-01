@@ -1,11 +1,9 @@
 #ifndef ELECTRONICBURDENMODULEPROGRAM_H
 #define ELECTRONICBURDENMODULEPROGRAM_H
 
-#include <QUuid>
-#include <vf-cpp-rpc.h>
-#include "basemeasworkprogram.h"
 #include "electronicburdenmoduleconfiguration.h"
 #include "veininterface.h"
+#include <basemeasworkprogram.h>
 
 class cVeinModuleActvalue;
 class cVeinModuleParameter;
