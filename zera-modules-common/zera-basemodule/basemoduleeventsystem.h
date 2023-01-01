@@ -2,20 +2,17 @@
 #define BASEMODULEEVENTSYSTEM
 
 #include "veinmodulecomponentinput.h"
-#include <ve_eventsystem.h>
-#include <ve_commandevent.h>
+#include <veincommandfiltereventsystem.h>
 #include <QList>
 
-class cBaseModuleEventSystem: public VeinEvent::EventSystem
+class cBaseModuleEventSystem : public VeinCommandFilterEventSystem
 {
     Q_OBJECT
 public:
-    cBaseModuleEventSystem(){}
-    // EventSystem interface
-    bool processEvent(QEvent *t_event) override final;
+    cBaseModuleEventSystem();
     void setInputList(QList<cVeinModuleComponentInput*>& inputlist);
 private:
-    virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
+    void processCommandEvent(VeinEvent::CommandEvent *commandEvent) override;
     QList<cVeinModuleComponentInput*> m_InputList;
 };
 
