@@ -13,17 +13,8 @@ add_library(zera-vein-moduleinterface SHARED
 
 target_link_libraries(zera-vein-moduleinterface
     PUBLIC
-    Qt5::Core
-    Qt5::Network
-    MeasurementModuleInterface
-    zeravalidator
-    zeraxmlconfig
-    zeraproxy
-    zera-service-interfaces
     VeinMeta::VfEvent
-    VeinMeta::VfHelpers
     VeinMeta::VfComponent
-    VeinMeta::VfCpp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
