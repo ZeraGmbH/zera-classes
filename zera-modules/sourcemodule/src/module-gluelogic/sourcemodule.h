@@ -1,9 +1,10 @@
 #ifndef SOURCEMODULE_H
 #define SOURCEMODULE_H
 
-#include "basemeasmodule.h"
 #include "sourcemoduleconfiguration.h"
 #include "sourcemoduleprogram.h"
+#include <basemeasmodule.h>
+#include <vfmodulerpc.h>
 
 #define BaseModuleName "SourceModule"
 #define BaseSCPIModuleName "SRC"
@@ -14,6 +15,7 @@ class SourceModule : public cBaseMeasModule
 public:
     SourceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
+    VfModuleRpc *getRpcEventSystem() const;
 
 protected:
     SourceModuleProgram *m_pProgram; // our program, lets say the working horse
@@ -38,6 +40,7 @@ private slots:
     virtual void deactivationDone() {}
 private:
     QState m_stateSwitchAllOff;
+    VfModuleRpc *m_rpcEventSystem;
 };
 
 #endif // SOURCEMODULE_H

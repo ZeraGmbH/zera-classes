@@ -144,6 +144,7 @@ add_library(sourcemodule MODULE
 target_link_libraries(sourcemodule
     PUBLIC
     sourcemodule-static
+    vf-cpp-module-wrappers
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

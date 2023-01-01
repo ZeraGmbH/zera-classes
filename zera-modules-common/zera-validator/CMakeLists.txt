@@ -15,7 +15,6 @@ target_link_libraries(zeravalidator
     PUBLIC
     zera-json-params
     zera-vein-moduleinterface
-    VeinMeta::VfCpp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

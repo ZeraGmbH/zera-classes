@@ -282,8 +282,6 @@ void cBaseModule::unsetModule()
     }
     veinModuleActvalueList.clear();
 
-    veinModuleRpcList.clear();
-
     for (auto scpiCommand : scpiCommandList) {
         delete scpiCommand;
     }

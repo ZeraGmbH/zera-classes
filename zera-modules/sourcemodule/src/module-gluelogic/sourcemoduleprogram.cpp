@@ -3,7 +3,6 @@
 #include <modulevalidator.h>
 #include <intvalidator.h>
 #include <jsonparamvalidator.h>
-#include <vf-cpp-rpc.h>
 
 #include "basedspmeasprogram.h"
 #include "sourcemoduleprogram.h"
@@ -66,14 +65,14 @@ void SourceModuleProgram::generateInterface()
                                              VfCpp::cVeinModuleRpc::Param({{"p_type", "int"},{"p_deviceInfo", "QString"}}),
                                              false, // !!! threaded on: signals do not reach theit slots
                                              false));
-    m_pModule->veinModuleRpcList[m_sharedPtrRpcScanInterface->rpcName()] = m_sharedPtrRpcScanInterface; // for module's event handling
+    m_pModule->getRpcEventSystem()->addRpc(m_sharedPtrRpcScanInterface);
 
     m_sharedPtrRpcRemoveInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              this, "RPC_CloseSource",
                                              VfCpp::cVeinModuleRpc::Param({{"p_deviceInfo", "QString"}}),
                                              false, // !!! threaded on: signals do not reach theit slots
                                              false));
-    m_pModule->veinModuleRpcList[m_sharedPtrRpcRemoveInterface->rpcName()] = m_sharedPtrRpcRemoveInterface; // for module's event handling
+    m_pModule->getRpcEventSystem()->addRpc(m_sharedPtrRpcRemoveInterface);
 
     // per source components
     cVeinModuleActvalue* pVeinAct;
