@@ -20,6 +20,7 @@ target_link_libraries(zerabasemodule
     zeraxmlconfig
     zeraproxy
     zera-service-interfaces
+    zera-vein-moduleinterface
     VeinMeta::VfEvent
     VeinMeta::VfHelpers
     VeinMeta::VfComponent
