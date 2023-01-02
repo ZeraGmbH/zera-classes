@@ -1,10 +1,10 @@
 #ifndef CJSONVALIDATORNOSCHEMA_H
 #define CJSONVALIDATORNOSCHEMA_H
 
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 #include <zera-json-params-state.h>
 
-class cJsonParamValidator : public cParamValidator
+class cJsonParamValidator : public ValidatorInterface
 {
 public:
     cJsonParamValidator();

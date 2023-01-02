@@ -1,9 +1,9 @@
 #ifndef BOOLVALIDATOR_H
 #define BOOLVALIDATOR_H
 
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 
-class cBoolValidator: public cParamValidator
+class cBoolValidator: public ValidatorInterface
 {
 public:
     virtual bool isValidParam(QVariant& newValue) override;

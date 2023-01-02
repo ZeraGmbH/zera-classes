@@ -1,9 +1,9 @@
 #ifndef REGEXVALIDATOR_H
 #define REGEXVALIDATOR_H
 
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 
-class cRegExValidator: public cParamValidator
+class cRegExValidator: public ValidatorInterface
 {
 public:
     cRegExValidator(QString regex);

@@ -1,10 +1,10 @@
 #ifndef STRINGVALIDATOR_H
 #define STRINGVALIDATOR_H
 
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 #include <QStringList>
 
-class cStringValidator: public cParamValidator
+class cStringValidator: public ValidatorInterface
 {
 public:
     cStringValidator(QString possibilities); // all possible strings with ';' delimiter
