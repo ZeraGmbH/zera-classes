@@ -1,8 +1,8 @@
 include(CMakeFindDependencyMacro)
 
 find_dependency(
+    Qt5::Core
     zera-json-params
-    vf-moduleinterface
 )
 
 include("${CMAKE_CURRENT_LIST_DIR}/zeravalidatorTargets.cmake")

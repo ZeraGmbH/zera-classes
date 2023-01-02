@@ -15,7 +15,7 @@ add_library(zerabasemodule SHARED
 target_link_libraries(zerabasemodule 
     PUBLIC
     MeasurementModuleInterface
-    zeravalidator
+    vf-moduleinterface
     zeraxmlconfig
     zera-service-interfaces
     # ask linker to help us finding unresolved symbols

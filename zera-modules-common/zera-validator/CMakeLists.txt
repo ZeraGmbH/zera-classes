@@ -13,8 +13,8 @@ add_library(zeravalidator SHARED
 
 target_link_libraries(zeravalidator
     PUBLIC
+    Qt5::Core
     zera-json-params
-    vf-moduleinterface
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

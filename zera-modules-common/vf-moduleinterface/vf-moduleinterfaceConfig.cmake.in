@@ -1,6 +1,7 @@
 include(CMakeFindDependencyMacro)
 
 find_dependency(
+    zeravalidator
     VeinMeta::VfEvent
     VeinMeta::VfComponent
 )

@@ -2,7 +2,7 @@ include(CMakeFindDependencyMacro)
 
 find_dependency(
     MeasurementModuleInterface
-    zeravalidator
+    vf-moduleinterface
     zeraxmlconfig
     zera-service-interfaces
 )
