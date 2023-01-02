@@ -4,6 +4,7 @@ file(GLOB SOURCES
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/declare-only/*.h
     )
 
 add_library(zerabasemodule SHARED
@@ -26,6 +27,7 @@ target_include_directories(zerabasemodule
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/basemodule>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/declare-only>
     )
 
 set_target_properties(zerabasemodule PROPERTIES VERSION ${PROJECT_VERSION})
