@@ -6,19 +6,19 @@ VfModuleRpc::VfModuleRpc(int entityId) :
 {
 }
 
-void VfModuleRpc::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
+void VfModuleRpc::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
-    if(t_cEvent->eventData()->entityId() == m_entityId &&
-            t_cEvent->eventData()->type() == VeinComponent::RemoteProcedureData::dataType()) {
-        VeinComponent::RemoteProcedureData *rpcData = static_cast<VeinComponent::RemoteProcedureData *>(t_cEvent->eventData());
+    if(commandEvent->eventData()->entityId() == m_entityId &&
+            commandEvent->eventData()->type() == VeinComponent::RemoteProcedureData::dataType()) {
+        VeinComponent::RemoteProcedureData *rpcData = static_cast<VeinComponent::RemoteProcedureData *>(commandEvent->eventData());
         if(rpcData->command() == VeinComponent::RemoteProcedureData::Command::RPCMD_CALL) {
             if(m_rpcHash.contains(rpcData->procedureName())) {
                 const QUuid callId = rpcData->invokationData().value(VeinComponent::RemoteProcedureData::s_callIdString).toUuid();
                 Q_ASSERT(!callId.isNull());
                 m_rpcHash[rpcData->procedureName()]->callFunction(callId,
-                                                                  t_cEvent->peerId(),
+                                                                  commandEvent->peerId(),
                                                                   rpcData->invokationData());
-                t_cEvent->accept();
+                commandEvent->accept();
             }
             else {
                 VF_ASSERT(false, QStringC(QString("No remote procedure with entityId: %1 name: %2").arg(m_entityId).arg(rpcData->procedureName())));
@@ -29,8 +29,8 @@ void VfModuleRpc::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                 eData->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL);
                 eData->setEventTarget(VeinEvent::EventData::EventTarget::ET_ALL);
                 VeinEvent::CommandEvent *errorEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
-                errorEvent->setPeerId(t_cEvent->peerId());
-                t_cEvent->accept();
+                errorEvent->setPeerId(commandEvent->peerId());
+                commandEvent->accept();
                 emit sigSendEvent(errorEvent);
             }
         }

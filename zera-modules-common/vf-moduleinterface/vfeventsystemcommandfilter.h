@@ -9,7 +9,7 @@ class VfEventSystemCommandFilter : public VeinEvent::EventSystem
     Q_OBJECT
 public:
     VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype subtypeToFilter);
-    virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent) = 0;
+    virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent) = 0;
     bool processEvent(QEvent *event) override final;
 private:
     VeinEvent::CommandEvent::EventSubtype m_subtypeToFilter;
