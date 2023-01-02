@@ -13,6 +13,7 @@ add_library(vf-moduleinterface SHARED
 
 target_link_libraries(vf-moduleinterface
     PUBLIC
+    zeravalidator
     VeinMeta::VfEvent
     VeinMeta::VfComponent
     # ask linker to help us finding unresolved symbols
