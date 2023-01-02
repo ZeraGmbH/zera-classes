@@ -6,18 +6,18 @@
 #include "paramvalidator.h"
 #include <QUuid>
 
-class cVeinModuleParameter: public cVeinModuleComponent
+class VfModuleParameter: public VfModuleComponent
 {
     Q_OBJECT
 public:
-    cVeinModuleParameter(int entityId,
+    VfModuleParameter(int entityId,
                          VeinEvent::EventSystem *eventsystem,
                          QString name,
                          QString description,
                          QVariant initval,
                          bool deferredNotification = false,
                          bool deferredQueryNotification = false);
-    virtual ~cVeinModuleParameter();
+    virtual ~VfModuleParameter();
 
     bool hasDeferredNotification();
     bool hasDeferredQueryNotification();

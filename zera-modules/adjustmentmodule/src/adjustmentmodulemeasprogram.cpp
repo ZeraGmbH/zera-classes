@@ -3,7 +3,6 @@
 #include "adjustvalidator.h"
 #include "adjustmentmoduleconfiguration.h"
 #include "taskoffset.h"
-#include <modulevalidator.h>
 #include <reply.h>
 #include <intvalidator.h>
 #include <useratan.h>
@@ -289,7 +288,7 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     cIntValidator* iValidator;
     cSCPIInfo* scpiInfo;
 
-    m_pPARComputation = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARComputation = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_Computation"),
                                                  QString("Start computation of adjustment coefficients"),
                                                  QVariant(int(0)),
@@ -300,10 +299,10 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pPARComputation->setSCPIInfo(scpiInfo);
     iValidator = new cIntValidator(0,1);
     m_pPARComputation->setValidator(iValidator);
-    connect(m_pPARComputation, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::computationStartCommand);
+    connect(m_pPARComputation, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::computationStartCommand);
 
 
-    m_pPARStorage = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARStorage = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              key = QString("PAR_Storage"),
                                              QString("Save adjustment data"),
                                              QVariant(int(0)),
@@ -314,10 +313,10 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pPARStorage->setSCPIInfo(scpiInfo);
     iValidator = new cIntValidator(1,2);
     m_pPARStorage->setValidator(iValidator);
-    connect(m_pPARStorage, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::storageStartCommand);
+    connect(m_pPARStorage, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::storageStartCommand);
 
 
-    m_pPARAdjustGainStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustGainStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_AdjustGainStatus"),
                                                   QString("Gain adjustment status"),
                                                   QVariant(int(0)),
@@ -326,9 +325,9 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustGainStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "GSTATUS", "10", m_pPARAdjustGainStatus->getName(), "0", "");
     m_pPARAdjustGainStatus->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustGainStatus, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand);
+    connect(m_pPARAdjustGainStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustGainStatusStartCommand);
 
-    m_pPARAdjustPhaseStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustPhaseStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_AdjustPhaseStatus"),
                                                        QString("Phase adjustment status"),
                                                        QVariant(int(0)),
@@ -337,9 +336,9 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustPhaseStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "PSTATUS", "10", m_pPARAdjustPhaseStatus->getName(), "0", "");
     m_pPARAdjustPhaseStatus->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustPhaseStatus, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand);
+    connect(m_pPARAdjustPhaseStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStatusStartCommand);
 
-    m_pPARAdjustOffsetStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustOffsetStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_AdjustOffsetStatus"),
                                                         QString("Offset adjustment status"),
                                                         QVariant(int(0)),
@@ -348,10 +347,10 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustOffsetStatus;
     scpiInfo = new cSCPIInfo("CALCULATE", "OSTATUS", "10", m_pPARAdjustOffsetStatus->getName(), "0", "");
     m_pPARAdjustOffsetStatus->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustOffsetStatus, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand);
+    connect(m_pPARAdjustOffsetStatus, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStatusStartCommand);
 
 
-    m_pPARAdjustInit = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustInit = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_AdjustInit"),
                                                 QString("Initialize adjustment data"),
                                                 QVariant(int(0)),
@@ -360,10 +359,10 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPARAdjustInit;
     scpiInfo = new cSCPIInfo("CALCULATE", "INIT", "10", m_pPARAdjustInit->getName(), "0", "");
     m_pPARAdjustInit->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustInit, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustInitStartCommand);
+    connect(m_pPARAdjustInit, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustInitStartCommand);
 
 
-    m_pPARAdjustAmplitude = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustAmplitude = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_AdjustAmplitude"),
                                                      QString("One amplitude adjustment node"),
                                                      QVariant(QString("")),
@@ -373,10 +372,10 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     scpiInfo = new cSCPIInfo("CALCULATE", "AMPLITUDE", "10", m_pPARAdjustAmplitude->getName(), "0", "");
     m_pPARAdjustAmplitude->setSCPIInfo(scpiInfo);
     // we will set the validator later after activation we will know the channel names and their ranges
-    connect(m_pPARAdjustAmplitude, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand);
+    connect(m_pPARAdjustAmplitude, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustAmplitudeStartCommand);
 
 
-    m_pPARAdjustPhase = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustPhase = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_AdjustPhase"),
                                                  QString("One phase adjustment node"),
                                                  QVariant(QString("")),
@@ -386,9 +385,9 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     scpiInfo = new cSCPIInfo("CALCULATE", "PHASE", "10", m_pPARAdjustPhase->getName(), "0", "");
     m_pPARAdjustPhase->setSCPIInfo(scpiInfo);
     // we will set the validator later after activation we will know the channel names and their ranges
-    connect(m_pPARAdjustPhase, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand);
+    connect(m_pPARAdjustPhase, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustPhaseStartCommand);
 
-    m_pPARAdjustOffset = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustOffset = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                   key = QString("PAR_Adjustoffset"),
                                                   QString("One offset adjustment node"),
                                                   QVariant(QString("")),
@@ -398,9 +397,9 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "OFFSET", "10", m_pPARAdjustOffset->getName(), "0", "");
     m_pPARAdjustOffset->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustOffset, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand);
+    connect(m_pPARAdjustOffset, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::setAdjustOffsetStartCommand);
 
-    m_pPARAdjustSend = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustSend = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_AdjustSend"),
                                                 QString("Send command to specified port"),
                                                 QVariant(QString("")),
@@ -411,9 +410,9 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "SEND", "2", m_pPARAdjustSend->getName(), "0", "");
     m_pPARAdjustSend->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustSend, &cVeinModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::transparentDataSend2Port);
+    connect(m_pPARAdjustSend, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::transparentDataSend2Port);
 
-    m_pPARAdjustPCBData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustPCBData = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("PAR_AdjustPCBData"),
                                                    QString("Get and set pcb adjustment data"),
                                                    QVariant(QString("")),
@@ -423,10 +422,10 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "PCB", "18", m_pPARAdjustPCBData->getName(), "0", "");
     m_pPARAdjustPCBData->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustPCBData, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writePCBAdjustmentData);
-    connect(m_pPARAdjustPCBData, &cVeinModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readPCBAdjustmentData);
+    connect(m_pPARAdjustPCBData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writePCBAdjustmentData);
+    connect(m_pPARAdjustPCBData, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readPCBAdjustmentData);
 
-    m_pPARAdjustClampData = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPARAdjustClampData = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      key = QString("PAR_AdjustCLAMPData"),
                                                      QString("Get and set clamp adjustment data"),
                                                      QVariant(QString("")),
@@ -436,8 +435,8 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     // we will set the validator later after activation we will know the channel names and their ranges
     scpiInfo = new cSCPIInfo("CALCULATE", "CLAMP", "18", m_pPARAdjustClampData->getName(), "0", "");
     m_pPARAdjustClampData->setSCPIInfo(scpiInfo);
-    connect(m_pPARAdjustClampData, &cVeinModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData);
-    connect(m_pPARAdjustClampData, &cVeinModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
+    connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData);
+    connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
 }
 
 bool cAdjustmentModuleMeasProgram::isAuthorized()

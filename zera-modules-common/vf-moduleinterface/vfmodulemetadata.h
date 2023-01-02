@@ -5,11 +5,11 @@
 #include <QString>
 #include <QVariant>
 
-class cVeinModuleMetaData: public cMetaData
+class VfModuleMetaData: public cMetaData
 {
     Q_OBJECT
 public:
-    cVeinModuleMetaData(QString name, QVariant value);
+    VfModuleMetaData(QString name, QVariant value);
     virtual void exportMetaData(QJsonObject &jsObj) override;
 public slots:
     void setValue(QVariant value) override;

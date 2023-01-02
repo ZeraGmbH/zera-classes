@@ -4,7 +4,6 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <vfmodulecomponent.h>
-#include <modulevalidator.h>
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <QSignalTransition>
@@ -111,7 +110,7 @@ void cAdjustManagement::ActionHandler(QVector<float> *actualValues)
 
 void cAdjustManagement::generateInterface()
 {
-    m_pAdjustmentInfo = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pAdjustmentInfo = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  QString("INF_Adjusted"),
                                                  QString("Adjustment information"),
                                                  QVariant(0));

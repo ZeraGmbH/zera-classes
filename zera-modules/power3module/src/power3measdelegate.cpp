@@ -9,7 +9,7 @@
 namespace  POWER3MODULE
 {
 
-cPower3MeasDelegate::cPower3MeasDelegate(cVeinModuleActvalue *pactvalue, cVeinModuleActvalue *qactvalue, cVeinModuleActvalue *sactvalue, bool withSignal)
+cPower3MeasDelegate::cPower3MeasDelegate(VfModuleActvalue *pactvalue, VfModuleActvalue *qactvalue, VfModuleActvalue *sactvalue, bool withSignal)
     :m_ppActValue(pactvalue), m_pqActValue(qactvalue), m_psActValue(sactvalue), m_bSignal(withSignal)
 {
 }

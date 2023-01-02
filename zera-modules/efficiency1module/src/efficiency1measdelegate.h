@@ -5,8 +5,8 @@
 #include <QVariant>
 #include <QHash>
 
-class cVeinModuleActvalue;
-class cVeinModuleComponentInput;
+class VfModuleActvalue;
+class VfModuleComponentInput;
 
 namespace EFFICIENCY1MODULE
 {
@@ -17,10 +17,10 @@ class cEfficiency1MeasDelegate : public QObject
 
 public:
     cEfficiency1MeasDelegate(){}
-    cEfficiency1MeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal = false);
+    cEfficiency1MeasDelegate(VfModuleActvalue *actvalue, bool withSignal = false);
 
-    void addInputPowerValue(cVeinModuleComponentInput *input);
-    void addOutputPowerValue(cVeinModuleComponentInput *input);
+    void addInputPowerValue(VfModuleComponentInput *input);
+    void addOutputPowerValue(VfModuleComponentInput *input);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -30,11 +30,11 @@ signals:
     void measuring(int);
 
 private:
-    cVeinModuleActvalue *m_pActValue;
+    VfModuleActvalue *m_pActValue;
     bool m_bSignal;
-    QHash<cVeinModuleComponentInput*, double> input1Hash;
-    QHash<cVeinModuleComponentInput*, double> input2Hash;
-    cVeinModuleComponentInput *lastInput;
+    QHash<VfModuleComponentInput*, double> input1Hash;
+    QHash<VfModuleComponentInput*, double> input2Hash;
+    VfModuleComponentInput *lastInput;
     double m_fEfficiency;
 
     void computeOutput();

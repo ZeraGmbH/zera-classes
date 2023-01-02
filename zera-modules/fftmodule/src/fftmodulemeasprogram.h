@@ -63,13 +63,13 @@ private:
     cFftModuleConfigData* getConfData();
 
     cFftModule* m_pModule;
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    QList<cVeinModuleActvalue*> m_DCValueList;
-    cVeinModuleMetaData* m_pFFTCountInfo;
-    cVeinModuleMetaData* m_pFFTOrderInfo;
-    cVeinModuleComponent* m_pMeasureSignal;
-    cVeinModuleParameter* m_pRefChannelParameter;
-    cVeinModuleParameter* m_pIntegrationTimeParameter;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<VfModuleActvalue*> m_DCValueList;
+    VfModuleMetaData* m_pFFTCountInfo;
+    VfModuleMetaData* m_pFFTOrderInfo;
+    VfModuleComponent* m_pMeasureSignal;
+    VfModuleParameter* m_pRefChannelParameter;
+    VfModuleParameter* m_pIntegrationTimeParameter;
     quint16 m_nfftLen;
 
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;

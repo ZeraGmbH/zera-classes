@@ -76,15 +76,15 @@ private:
     cBurden1ModuleConfigData* getConfData();
 
     cBurden1Module* m_pModule;
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pBRSCountInfo; // the number of Burden system we are configured for
-    cVeinModuleComponent* m_pMeasureSignal;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    VfModuleMetaData* m_pBRSCountInfo; // the number of Burden system we are configured for
+    VfModuleComponent* m_pMeasureSignal;
 
-    cVeinModuleParameter* m_pNominalRangeParameter;
-    cVeinModuleParameter* m_pNominalRangeFactorParameter;
-    cVeinModuleParameter* m_pNominalBurdenParameter;
-    cVeinModuleParameter* m_pWireLengthParameter;
-    cVeinModuleParameter* m_pWireCrosssectionParameter;
+    VfModuleParameter* m_pNominalRangeParameter;
+    VfModuleParameter* m_pNominalRangeFactorParameter;
+    VfModuleParameter* m_pNominalBurdenParameter;
+    VfModuleParameter* m_pWireLengthParameter;
+    VfModuleParameter* m_pWireCrosssectionParameter;
 
     QList<cBurden1MeasDelegate*> m_Burden1MeasDelegateList;
 

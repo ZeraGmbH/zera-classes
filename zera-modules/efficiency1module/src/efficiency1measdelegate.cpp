@@ -9,31 +9,31 @@
 namespace  EFFICIENCY1MODULE
 {
 
-cEfficiency1MeasDelegate::cEfficiency1MeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal)
+cEfficiency1MeasDelegate::cEfficiency1MeasDelegate(VfModuleActvalue *actvalue, bool withSignal)
     :m_pActValue(actvalue), m_bSignal(withSignal)
 {
 }
 
 
-void cEfficiency1MeasDelegate::addInputPowerValue(cVeinModuleComponentInput *input)
+void cEfficiency1MeasDelegate::addInputPowerValue(VfModuleComponentInput *input)
 {
     input1Hash[input] = 0.0;
     lastInput = input;
-    connect(input, &cVeinModuleComponentInput::sigValueChanged, this, &cEfficiency1MeasDelegate::actValueInput1);
+    connect(input, &VfModuleComponentInput::sigValueChanged, this, &cEfficiency1MeasDelegate::actValueInput1);
 }
 
 
-void cEfficiency1MeasDelegate::addOutputPowerValue(cVeinModuleComponentInput *input)
+void cEfficiency1MeasDelegate::addOutputPowerValue(VfModuleComponentInput *input)
 {
     input2Hash[input] = 0.0;
     lastInput = input;
-    connect(input, &cVeinModuleComponentInput::sigValueChanged, this, &cEfficiency1MeasDelegate::actValueInput2);
+    connect(input, &VfModuleComponentInput::sigValueChanged, this, &cEfficiency1MeasDelegate::actValueInput2);
 }
 
 
 void cEfficiency1MeasDelegate::actValueInput1(QVariant val)
 {
-    cVeinModuleComponentInput* input = qobject_cast<cVeinModuleComponentInput*>(QObject::sender());
+    VfModuleComponentInput* input = qobject_cast<VfModuleComponentInput*>(QObject::sender());
     input1Hash.remove(input);
     input1Hash[input] = val.toDouble();
     if (input == lastInput)
@@ -43,7 +43,7 @@ void cEfficiency1MeasDelegate::actValueInput1(QVariant val)
 
 void cEfficiency1MeasDelegate::actValueInput2(QVariant val)
 {
-    cVeinModuleComponentInput* input = qobject_cast<cVeinModuleComponentInput*>(QObject::sender());
+    VfModuleComponentInput* input = qobject_cast<VfModuleComponentInput*>(QObject::sender());
     input2Hash.remove(input);
     input2Hash[input] = val.toDouble();
     if (input == lastInput)

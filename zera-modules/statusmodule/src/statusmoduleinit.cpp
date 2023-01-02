@@ -2,7 +2,6 @@
 #include "statusmodule.h"
 #include <reply.h>
 #include <errormessages.h>
-#include <modulevalidator.h>
 #include <regexvalidator.h>
 #include <QFile>
 
@@ -105,7 +104,7 @@ cStatusModuleInit::~cStatusModuleInit()
 void cStatusModuleInit::generateInterface()
 {
     QString key;
-    m_pPCBServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pPCBServerVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_PCBServerVersion"),
                                                    QString("PCB-server version"),
                                                    QVariant(QString("")) );
@@ -114,7 +113,7 @@ void cStatusModuleInit::generateInterface()
     m_pPCBServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCBSERVER", "2", key , "0", ""));
 
 
-    m_pCtrlVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pCtrlVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("INF_CTRLVersion"),
                                               QString("Controler version"),
                                               QVariant(QString("") ));
@@ -123,7 +122,7 @@ void cStatusModuleInit::generateInterface()
     m_pCtrlVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:CONTROLER", "2", key, "0", ""));
 
 
-    m_pFPGAVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pFPGAVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("INF_FPGAVersion"),
                                               QString("FPGA version"),
                                               QVariant(QString("") ));
@@ -132,7 +131,7 @@ void cStatusModuleInit::generateInterface()
     m_pFPGAVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:FPGA", "2", key, "0", ""));
 
 
-    m_pSerialNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pSerialNumber = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_SerialNr"),
                                                QString("Serial number"),
                                                QVariant(QString("") ), true, false); // we select deferred notification
@@ -143,7 +142,7 @@ void cStatusModuleInit::generateInterface()
     regValidator = new cRegExValidator("^\\d{9}$");
     m_pSerialNumber->setValidator(regValidator);
 
-    m_pDSPServerVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDSPServerVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_DSPServerVersion"),
                                                    QString("DCP-server version"),
                                                    QVariant(QString("") ));
@@ -152,7 +151,7 @@ void cStatusModuleInit::generateInterface()
     m_pDSPServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSPSERVER", "2", key, "0", ""));
 
 
-    m_pDSPProgramVersion = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDSPProgramVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                     key = QString("INF_DSPVersion"),
                                                     QString("DSP software version"),
                                                     QVariant(QString("") ));
@@ -161,7 +160,7 @@ void cStatusModuleInit::generateInterface()
     m_pDSPProgramVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:DSP", "2", key, "0", ""));
 
 
-    m_pReleaseNumber = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pReleaseNumber = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("INF_ReleaseNr"),
                                                 QString("Release number"),
                                                 QVariant(QString("") ));
@@ -169,7 +168,7 @@ void cStatusModuleInit::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pReleaseNumber;
     m_pReleaseNumber->setSCPIInfo(new cSCPIInfo("STATUS", "RELEASE", "2", key, "0", ""));
 
-    m_pDeviceType = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pDeviceType = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("INF_DeviceType"),
                                                 QString("Device type"),
                                                 QVariant(QString()));
@@ -177,7 +176,7 @@ void cStatusModuleInit::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pDeviceType;
     m_pDeviceType->setSCPIInfo(new cSCPIInfo("STATUS", "DEVTYPE", "2", key, "0", ""));
 
-    m_pCPUInfo = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pCPUInfo = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("INF_CpuInfo"),
                                                 QString("CPU/SOM info"),
                                                 QVariant(QString("")));
@@ -185,7 +184,7 @@ void cStatusModuleInit::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pCPUInfo;
     m_pCPUInfo->setSCPIInfo(new cSCPIInfo("STATUS", "CPUINFO", "2", key, "0", ""));
 
-    m_pAdjustmentStatus = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pAdjustmentStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_Adjusted"),
                                                    QString("Adjustment information"),
                                                    QVariant(0));
@@ -193,7 +192,7 @@ void cStatusModuleInit::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pAdjustmentStatus;
     m_pAdjustmentStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ADJUSTMENT", "2", key, "0", ""));
 
-    m_pAdjustmentChksum = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pAdjustmentChksum = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_AdjChksum"),
                                                    QString("Device adjustment data checksum"),
                                                    QVariant(0));
@@ -552,7 +551,7 @@ void cStatusModuleInit::activationDone()
     }
     setInterfaceComponents();
     if(!m_ConfigData.m_bDemo) {
-        connect(m_pSerialNumber, &cVeinModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
+        connect(m_pSerialNumber, &VfModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
     }
     m_bActive = true;
     emit activated();

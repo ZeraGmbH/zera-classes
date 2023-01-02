@@ -5,7 +5,6 @@
 #include "measmodeinfo.h"
 #include <errormessages.h>
 #include <reply.h>
-#include <modulevalidator.h>
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <scpiinfo.h>
@@ -62,13 +61,13 @@ cBurden1ModuleConfigData *cBurden1ModuleMeasProgram::getConfData()
 
 void cBurden1ModuleMeasProgram::generateInterface()
 {
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
     QString key, s;
 
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++)
     {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Burden%1").arg(i+1),
                                             QString("Burden actual value"),
                                             QVariant(0.0) );
@@ -81,7 +80,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PFactor%1").arg(i+1),
                                             QString("Burden powerfactor"),
                                             QVariant(0.0) );
@@ -94,7 +93,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Ratio%1").arg(i+1),
                                             QString("Burden ratio value"),
                                             QVariant(0.0) );
@@ -108,7 +107,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pNominalRangeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pNominalRangeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_NominalRange"),
                                                         QString("Nominal range"),
                                                         QVariant(getConfData()->nominalRange.m_fValue));
@@ -121,7 +120,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     m_pNominalRangeParameter->setValidator(dValidator);
     m_pModule->veinModuleParameterHash[key] = m_pNominalRangeParameter; // for modules use
 
-    m_pNominalRangeFactorParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pNominalRangeFactorParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_NominalRangeFactor"),
                                                               QString("Nominal range factor"),
                                                               QVariant(getConfData()->nominalRangeFactor.m_sPar));
@@ -133,7 +132,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pNominalRangeFactorParameter; // for modules use
 
 
-    m_pNominalBurdenParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pNominalBurdenParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_NominalBurden"),
                                                          QString("Nominal burden"),
                                                          QVariant(getConfData()->nominalBurden.m_fValue));
@@ -146,7 +145,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pNominalBurdenParameter; // for modules use
 
-    m_pWireLengthParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pWireLengthParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_WireLength"),
                                                       QString("Wire length value"),
                                                       QVariant(getConfData()->wireLength.m_fValue));
@@ -159,7 +158,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pWireLengthParameter; // for modules use
 
-    m_pWireCrosssectionParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pWireCrosssectionParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                             key = QString("PAR_WCrosssection"),
                                                             QString("Wire crosssection value"),
                                                             QVariant(getConfData()->wireCrosssection.m_fValue));
@@ -172,10 +171,10 @@ void cBurden1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pWireCrosssectionParameter; // for modules use
 
-    m_pBRSCountInfo = new cVeinModuleMetaData(QString("BRSCount"), QVariant(getConfData()->m_nBurdenSystemCount));
+    m_pBRSCountInfo = new VfModuleMetaData(QString("BRSCount"), QVariant(getConfData()->m_nBurdenSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pBRSCountInfo);
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -189,7 +188,7 @@ void cBurden1ModuleMeasProgram::searchActualValues()
     bool error;
 
     error = false;
-    QList<cVeinModuleComponentInput*> inputList;
+    QList<VfModuleComponentInput*> inputList;
 
     for (int i = 0; i < getConfData()->m_nBurdenSystemCount; i++)
     {
@@ -198,7 +197,7 @@ void cBurden1ModuleMeasProgram::searchActualValues()
              (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector)) )
         {
             cBurden1MeasDelegate* cBMD;
-            cVeinModuleComponentInput* vmci;
+            VfModuleComponentInput* vmci;
 
             if (i == (getConfData()->m_nBurdenSystemCount-1))
             {
@@ -210,13 +209,13 @@ void cBurden1ModuleMeasProgram::searchActualValues()
 
             m_Burden1MeasDelegateList.append(cBMD);
 
-            vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
+            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputVoltageVector);
             inputList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cBMD, &cBurden1MeasDelegate::actValueInput1);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cBMD, &cBurden1MeasDelegate::actValueInput1);
 
-            vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
+            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_BurdenSystemConfigList.at(i).m_sInputCurrentVector);
             inputList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cBMD,  &cBurden1MeasDelegate::actValueInput2);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cBMD,  &cBurden1MeasDelegate::actValueInput2);
         }
         else
             error = true;
@@ -236,11 +235,11 @@ void cBurden1ModuleMeasProgram::activateDone()
 {
     setParameters();
 
-    connect(m_pNominalBurdenParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalBurden);
-    connect(m_pNominalRangeParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalRange);
-    connect(m_pNominalRangeFactorParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalFactorRange);
-    connect(m_pWireLengthParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newWireLength);
-    connect(m_pWireCrosssectionParameter, &cVeinModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newWireCrosssection);
+    connect(m_pNominalBurdenParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalBurden);
+    connect(m_pNominalRangeParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalRange);
+    connect(m_pNominalRangeFactorParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newNominalFactorRange);
+    connect(m_pWireLengthParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newWireLength);
+    connect(m_pWireCrosssectionParameter, &VfModuleParameter::sigValueChanged, this, &cBurden1ModuleMeasProgram::newWireCrosssection);
 
     m_bActive = true;
     emit activated();

@@ -4,12 +4,12 @@
 #include <QString>
 #include <QVariant>
 
-class cVeinModuleComponentInput: public QObject
+class VfModuleComponentInput: public QObject
 {
     Q_OBJECT
 
 public:
-    cVeinModuleComponentInput(int entityid, QString name) :
+    VfModuleComponentInput(int entityid, QString name) :
         m_nEntityId(entityid),
         m_sName(name) { }
     int m_nEntityId;

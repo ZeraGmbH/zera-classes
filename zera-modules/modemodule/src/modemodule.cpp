@@ -3,7 +3,6 @@
 #include "modemoduleconfigdata.h"
 #include "modemoduleinit.h"
 #include <proxy.h>
-#include <modulevalidator.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -74,7 +73,7 @@ void cModeModule::setupModule()
     m_ModuleActivistList.append(m_pModeModuleInit);
     connect(m_pModeModuleInit, &cModeModuleInit::activated, this, &cModeModule::activationContinue);
     connect(m_pModeModuleInit, &cModeModuleInit::deactivated, this, &cModeModule::deactivationContinue);
-    connect(m_pModeModuleInit, &cModeModuleInit::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pModeModuleInit, &cModeModuleInit::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

@@ -5,7 +5,6 @@
 #include "thdnmoduleobservation.h"
 #include "errormessages.h"
 #include <proxy.h>
-#include <modulevalidator.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>

@@ -5,12 +5,12 @@
 #include <ve_eventsystem.h>
 #include <vcmp_componentdata.h>
 
-class cVeinModuleComponent: public cMetaData
+class VfModuleComponent: public cMetaData
 {
     Q_OBJECT
 public:
-    cVeinModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
-    ~cVeinModuleComponent();
+    VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
+    ~VfModuleComponent();
     virtual void exportMetaData(QJsonObject &jsObj);
     void setChannelName(QString name); // channel name for json export can be empty
     QString getChannelName();

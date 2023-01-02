@@ -237,28 +237,28 @@ void cBaseModule::setupModule()
     VeinEvent::CommandEvent *tmpEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, eData);
     m_pModuleEventSystem->sigSendEvent(tmpEvent);
 
-    m_pModuleEntityName = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
+    m_pModuleEntityName = new VfModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                    QString("EntityName"),
                                                    QString("Module's name"),
                                                    QVariant(m_sModuleName));
 
     veinModuleComponentList.append(m_pModuleEntityName);
 
-    m_pModuleErrorComponent = new cVeinModuleErrorComponent(m_nEntityId, m_pModuleEventSystem,
+    m_pModuleErrorComponent = new VfModuleErrorComponent(m_nEntityId, m_pModuleEventSystem,
                                                             QString("Error_Messages"),
                                                             m_sModuleName);
 
-    m_pModuleInterfaceComponent = new cVeinModuleComponent(m_nEntityId, m_pModuleEventSystem,
+    m_pModuleInterfaceComponent = new VfModuleComponent(m_nEntityId, m_pModuleEventSystem,
                                                            QString("INF_ModuleInterface"),
                                                            QString("Module's interface details"),
                                                            QByteArray());
 
     veinModuleComponentList.append(m_pModuleInterfaceComponent);
 
-    m_pModuleName = new cVeinModuleMetaData(QString("Name"), QVariant(m_sModuleName));
+    m_pModuleName = new VfModuleMetaData(QString("Name"), QVariant(m_sModuleName));
     veinModuleMetaDataList.append(m_pModuleName);
 
-    m_pModuleDescription = new cVeinModuleMetaData(QString("Description"), QVariant(m_sModuleDescription));
+    m_pModuleDescription = new VfModuleMetaData(QString("Description"), QVariant(m_sModuleDescription));
     veinModuleMetaDataList.append(m_pModuleDescription);
 }
 

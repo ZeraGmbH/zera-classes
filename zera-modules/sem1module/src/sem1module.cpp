@@ -3,7 +3,6 @@
 #include "sem1moduleconfigdata.h"
 #include "sem1modulemeasprogram.h"
 #include <proxy.h>
-#include <modulevalidator.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -71,7 +70,7 @@ void cSem1Module::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSem1ModuleMeasProgram::activated, this, &cSem1Module::activationContinue);
     connect(m_pMeasProgram, &cSem1ModuleMeasProgram::deactivated, this, &cSem1Module::deactivationContinue);
-    connect(m_pMeasProgram, &cSem1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pMeasProgram, &cSem1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

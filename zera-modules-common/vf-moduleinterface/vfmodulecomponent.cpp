@@ -6,18 +6,18 @@
 #include <ve_eventsystem.h>
 #include "vfmodulecomponent.h"
 
-cVeinModuleComponent::cVeinModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)
+VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)
     :m_nEntityId(entityId), m_pEventSystem(eventsystem), m_sName(name), m_sDescription(description), m_vValue(initval)
 {
     sendNotification(VeinComponent::ComponentData::Command::CCMD_ADD);
 }
 
-cVeinModuleComponent::~cVeinModuleComponent()
+VfModuleComponent::~VfModuleComponent()
 {
     sendNotification(VeinComponent::ComponentData::Command::CCMD_REMOVE);
 }
 
-void cVeinModuleComponent::exportMetaData(QJsonObject &jsObj)
+void VfModuleComponent::exportMetaData(QJsonObject &jsObj)
 {
     QJsonObject jsonObj;
     jsonObj.insert("Description", m_sDescription);
@@ -30,43 +30,43 @@ void cVeinModuleComponent::exportMetaData(QJsonObject &jsObj)
     jsObj.insert(m_sName, jsonObj);
 }
 
-void cVeinModuleComponent::setChannelName(QString name)
+void VfModuleComponent::setChannelName(QString name)
 {
     m_sChannelName = name;
 }
 
-QString cVeinModuleComponent::getChannelName()
+QString VfModuleComponent::getChannelName()
 {
     return m_sChannelName;
 }
 
-void cVeinModuleComponent::setUnit(QString unit)
+void VfModuleComponent::setUnit(QString unit)
 {
     m_sChannelUnit = unit;
 }
 
-QVariant cVeinModuleComponent::getValue()
+QVariant VfModuleComponent::getValue()
 {
     return m_vValue;
 }
 
-QString cVeinModuleComponent::getUnit()
+QString VfModuleComponent::getUnit()
 {
     return m_sChannelUnit;
 }
 
-QString cVeinModuleComponent::getName()
+QString VfModuleComponent::getName()
 {
     return m_sName;
 }
 
-void cVeinModuleComponent::setValue(QVariant value)
+void VfModuleComponent::setValue(QVariant value)
 {
     m_vValue = value;
     sendNotification(VeinComponent::ComponentData::Command::CCMD_SET);
 }
 
-void cVeinModuleComponent::setError()
+void VfModuleComponent::setError()
 {
     VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
     cData->setEntityId(m_nEntityId);
@@ -90,7 +90,7 @@ void cVeinModuleComponent::setError()
     m_pEventSystem->sigSendEvent(cEvent);
 }
 
-void cVeinModuleComponent::sendNotification(VeinComponent::ComponentData::Command vcmd)
+void VfModuleComponent::sendNotification(VeinComponent::ComponentData::Command vcmd)
 {
     VeinComponent::ComponentData *cData = new VeinComponent::ComponentData();
     cData->setEntityId(m_nEntityId);

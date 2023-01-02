@@ -16,7 +16,7 @@ VeinComponentSetNotifier::VeinComponentSetNotifier(int entityId)
     createEntity(entityId);
 }
 
-void VeinComponentSetNotifier::addComponentToNotify(QString componentName, cVeinModuleComponent *component)
+void VeinComponentSetNotifier::addComponentToNotify(QString componentName, VfModuleComponent *component)
 {
     m_hashComponentsListening[componentName] = component;
 }

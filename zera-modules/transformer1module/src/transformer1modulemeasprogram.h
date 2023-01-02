@@ -16,10 +16,10 @@
 
 
 class cBaseModule;
-class cVeinModuleActvalue;
-class cVeinModuleMetaData;
-class cVeinModuleComponent;
-class cVeinModuleParameter;
+class VfModuleActvalue;
+class VfModuleMetaData;
+class VfModuleComponent;
+class VfModuleParameter;
 
 class QStateMachine;
 class QState;
@@ -95,16 +95,16 @@ private:
     cTransformer1ModuleConfigData* getConfData();
 
     cTransformer1Module* m_pModule;
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pTRSCountInfo; // the number of transformer system we are configured for
-    cVeinModuleComponent* m_pMeasureSignal;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    VfModuleMetaData* m_pTRSCountInfo; // the number of transformer system we are configured for
+    VfModuleComponent* m_pMeasureSignal;
 
-    cVeinModuleParameter* m_pPrimClampPrimParameter;
-    cVeinModuleParameter* m_pPrimClampSecParameter;
-    cVeinModuleParameter* m_pSecClampPrimParameter;
-    cVeinModuleParameter* m_pSecClampSecParameter;
-    cVeinModuleParameter* m_pPrimDutParameter;
-    cVeinModuleParameter* m_pSecDutParameter;
+    VfModuleParameter* m_pPrimClampPrimParameter;
+    VfModuleParameter* m_pPrimClampSecParameter;
+    VfModuleParameter* m_pSecClampPrimParameter;
+    VfModuleParameter* m_pSecClampSecParameter;
+    VfModuleParameter* m_pPrimDutParameter;
+    VfModuleParameter* m_pSecDutParameter;
 
     QList<cTransformer1MeasDelegate*> m_Transformer1MeasDelegateList;
 

@@ -5,7 +5,7 @@
 #include <QTimer>
 #include <QVariant>
 
-class cVeinModuleParameter;
+class VfModuleParameter;
 
 /**
  * @brief ClientActiveComponent is a simple helper fo performance/energy
@@ -34,7 +34,7 @@ public:
      * @param component: The component to watch for client changes
      * @param iInactiveTimeoutMs: Maximum time inactive clients are detected as gone
      */
-    void init(cVeinModuleParameter* component, int iInactiveTimeoutMs = 2000);
+    void init(VfModuleParameter* component, int iInactiveTimeoutMs = 2000);
     /**
      * @brief areClientsActive: Client activity getter
      * @return guess...
@@ -52,7 +52,7 @@ private slots:
     void onClientTimeout();
 
 private:
-    cVeinModuleParameter* m_pClientActiveNotifyPar = nullptr;
+    VfModuleParameter* m_pClientActiveNotifyPar = nullptr;
     bool m_bClientActive = false;
     QTimer m_inactiveTimer;
 };

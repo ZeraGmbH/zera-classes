@@ -1,16 +1,13 @@
-#include "modulevalidator.h"
-#include <vcmp_remoteproceduredata.h>
-#include <vcmp_errordata.h>
+#include "vfmoduleparameventsytem.h"
 
-ModuleValidator::ModuleValidator(int entityId,
-                                 VeinEvent::StorageSystem *storageSystem) :
-    VeinCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
+VfModuleParamEventSytem::VfModuleParamEventSytem(int entityId, VeinEvent::StorageSystem *storageSystem) :
+    VfCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId),
     m_storageSystem(storageSystem)
 {
 }
 
-void ModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
+void VfModuleParamEventSytem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 {
     if (t_cEvent->eventData()->entityId() == m_entityId) {
         // is it a command event for setting component data
@@ -18,11 +15,11 @@ void ModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
             VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
             QString cName = cData->componentName();
             // does this component data belong to our module
-            auto hashIter = m_Parameter2ValidateHash.find(cName);
-            if(hashIter != m_Parameter2ValidateHash.end()) {
+            auto hashIter = m_parameterHash.find(cName);
+            if(hashIter != m_parameterHash.end()) {
                 // we only take new values if the old values are equal
                 if (cData->oldValue() == m_storageSystem->getStoredValue(m_entityId, cName)) {
-                    cVeinModuleParameter *param = hashIter.value();
+                    VfModuleParameter *param = hashIter.value();
                     param->transaction(t_cEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
                     t_cEvent->accept(); // it is an event for us ... the parameter will do the rest
                 }
@@ -31,7 +28,7 @@ void ModuleValidator::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
     }
 }
 
-void ModuleValidator::setParameterHash(QHash<QString, cVeinModuleParameter *> &parameterhash)
+void VfModuleParamEventSytem::setParameterHash(const QHash<QString, VfModuleParameter *> &parameterHash)
 {
-    m_Parameter2ValidateHash = parameterhash;
+    m_parameterHash = parameterHash;
 }

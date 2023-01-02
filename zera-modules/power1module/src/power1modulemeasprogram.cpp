@@ -257,11 +257,11 @@ void cPower1ModuleMeasProgram::stop()
 void cPower1ModuleMeasProgram::generateInterface()
 {
     QString key;
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
 
     for (int i = 0; i < 4; i++) // we have fixed number of power values (4)
     {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PQS%1").arg(i+1),
                                             QString("Actual power value"),
                                             QVariant(0.0) );
@@ -269,23 +269,23 @@ void cPower1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pPQSCountInfo = new cVeinModuleMetaData(QString("PQSCount"), QVariant(4));
+    m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(4));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new cVeinModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
+    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
-    m_pFoutCount = new cVeinModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
+    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
-    cVeinModuleParameter* pFoutParameter;
+    VfModuleParameter* pFoutParameter;
 
-    QList<cVeinModuleComponentInput*> inputList;
+    QList<VfModuleComponentInput*> inputList;
 
     if (getConfData()->m_nFreqOutputCount > 0)
     {
         for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
         {
             // Note: Although components are 'PAR_' they are not changable currently
-            pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pFoutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_FOUTConstant%1").arg(i),
                                                               QString("Frequency output constant"),
                                                               QVariant(0));
@@ -295,7 +295,7 @@ void cPower1ModuleMeasProgram::generateInterface()
             m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
 
             QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sPlug;
-            pFoutParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pFoutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                               key = QString("PAR_FOUT%1").arg(i),
                                                               QString("Frequency output plug"),
                                                               QVariant(foutName));
@@ -305,13 +305,13 @@ void cPower1ModuleMeasProgram::generateInterface()
 
             // This code seems to identify fout channels using the list positions.
             // If no scaling Information is provided we will add null pointers to keep the positions correct
-            cVeinModuleComponentInput* pUScaleInput=nullptr;
-            cVeinModuleComponentInput* pIScaleInput=nullptr;
+            VfModuleComponentInput* pUScaleInput=nullptr;
+            VfModuleComponentInput* pIScaleInput=nullptr;
             if(getConfData()->m_FreqOutputConfList.length() > i){
                 int entityId=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
                 QString componentName=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
                 if(entityId != -1 && componentName != ""){
-                    pUScaleInput= new cVeinModuleComponentInput(entityId,componentName);
+                    pUScaleInput= new VfModuleComponentInput(entityId,componentName);
                     pUScaleInput->setValue(1);
                     inputList.append(pUScaleInput);
                 }
@@ -319,19 +319,19 @@ void cPower1ModuleMeasProgram::generateInterface()
                 componentName=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
 
                 if(entityId != -1 && componentName != ""){
-                    pIScaleInput= new cVeinModuleComponentInput(entityId,componentName);
+                    pIScaleInput= new VfModuleComponentInput(entityId,componentName);
                     pIScaleInput->setValue(1);
                     inputList.append(pIScaleInput);
                 }
             }
-            QPair<cVeinModuleComponentInput*,cVeinModuleComponentInput*> tmpScalePair(pUScaleInput,pIScaleInput);
+            QPair<VfModuleComponentInput*,VfModuleComponentInput*> tmpScalePair(pUScaleInput,pIScaleInput);
             m_pScalingInputs.append(tmpScalePair);
         }
         m_pModule->getPEventSystem()->setInputList(inputList);
-        for(QPair<cVeinModuleComponentInput*,cVeinModuleComponentInput*> ele : m_pScalingInputs){
+        for(QPair<VfModuleComponentInput*,VfModuleComponentInput*> ele : m_pScalingInputs){
             if(ele.first != nullptr && ele.second != nullptr){
-                connect(ele.first,&cVeinModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
-                connect(ele.second,&cVeinModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
+                connect(ele.first,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
+                connect(ele.second,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
             }
         }
     }
@@ -351,7 +351,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "P", "W", actPower, mqref);
 
     // our parameters we deal with
-    m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
@@ -383,7 +383,7 @@ void cPower1ModuleMeasProgram::generateInterface()
         unit = QString("period");
     }
 
-    m_pIntegrationParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_Interval"),
                                                        s,
                                                        val);
@@ -406,7 +406,7 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

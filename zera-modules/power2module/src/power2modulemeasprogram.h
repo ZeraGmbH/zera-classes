@@ -98,13 +98,13 @@ private:
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pPQSCountInfo; // the number of values we produce
-    cVeinModuleMetaData* m_pFoutCount; // number of our frequence outputs
-    cVeinModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
-    cVeinModuleParameter* m_pIntegrationParameter;
-    cVeinModuleParameter* m_pMeasuringmodeParameter;
-    cVeinModuleComponent* m_pMeasureSignal;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    VfModuleMetaData* m_pPQSCountInfo; // the number of values we produce
+    VfModuleMetaData* m_pFoutCount; // number of our frequence outputs
+    VfModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
+    VfModuleParameter* m_pIntegrationParameter;
+    VfModuleParameter* m_pMeasuringmodeParameter;
+    VfModuleComponent* m_pMeasureSignal;
 
     QList<QString> infoReadList; // a list of all channel info we have to read
     QString infoRead; // the actual channel info we are working on

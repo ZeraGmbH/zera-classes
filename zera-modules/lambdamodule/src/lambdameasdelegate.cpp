@@ -10,7 +10,7 @@
 namespace  LAMBDAMODULE
 {
 
-cLambdaMeasDelegate::cLambdaMeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal)
+cLambdaMeasDelegate::cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal)
     :m_pActValue(actvalue), m_bSignal(withSignal)
 {
 }

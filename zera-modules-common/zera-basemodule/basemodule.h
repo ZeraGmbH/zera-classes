@@ -49,10 +49,10 @@ public:
     int m_nEntityId;
     VeinEvent::StorageSystem* m_pStorageSystem;
 
-    QList<cVeinModuleMetaData*> veinModuleMetaDataList; // only meta information
-    QList<cVeinModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
-    QList<cVeinModuleActvalue*> veinModuleActvalueList; // actvalues are components that need an interface
-    QHash<QString, cVeinModuleParameter*> veinModuleParameterHash; // parameters are components that need an interface and validation
+    QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
+    QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
+    QList<VfModuleActvalue*> veinModuleActvalueList; // actvalues are components that need an interface
+    QHash<QString, VfModuleParameter*> veinModuleParameterHash; // parameters are components that need an interface and validation
     QList<cSCPIInfo*> scpiCommandList; // a list of commands that work without existing component, it uses a component's validation data for additional queries
 
 signals:
@@ -113,11 +113,11 @@ protected:
     QString m_sSCPIModuleName;
     quint8 m_nModuleNr;
 
-    cVeinModuleMetaData *m_pModuleName;
-    cVeinModuleMetaData *m_pModuleDescription;
-    cVeinModuleErrorComponent *m_pModuleErrorComponent=nullptr; // here we export errors the module encountered
-    cVeinModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
-    cVeinModuleComponent *m_pModuleEntityName;
+    VfModuleMetaData *m_pModuleName;
+    VfModuleMetaData *m_pModuleDescription;
+    VfModuleErrorComponent *m_pModuleErrorComponent=nullptr; // here we export errors the module encountered
+    VfModuleComponent *m_pModuleInterfaceComponent; // here we export the modules interface as json file
+    VfModuleComponent *m_pModuleEntityName;
 
     virtual void doConfiguration(QByteArray xmlString) = 0; // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module

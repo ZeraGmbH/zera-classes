@@ -143,7 +143,7 @@ void cDftModuleMeasProgram::generateInterface()
 {
     QString key;
 
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     int n,p;
     n = p = 0; //
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
@@ -152,7 +152,7 @@ void cDftModuleMeasProgram::generateInterface()
         // we have 1 or 2 entries for each value
         if (sl.count() == 1) // in this case we have phase,neutral value
         {
-            pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
                                                 QString("DFT actual value phase/neutral"),
                                                 QVariant(0.0) );
@@ -165,7 +165,7 @@ void cDftModuleMeasProgram::generateInterface()
         else
 
         {
-            pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPP%1").arg(p+1),
                                                 QString("DFT actual value phase/phase"),
                                                 QVariant(0.0) );
@@ -176,22 +176,22 @@ void cDftModuleMeasProgram::generateInterface()
         }
     }
 
-    m_pRFieldActualValue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRFieldActualValue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    QString("ACT_RFIELD"),
                                                    QString("Phase sequence"),
                                                    QVariant("") );
 
     m_pModule->veinModuleActvalueList.append(m_pRFieldActualValue); // we add the component for the modules interface
 
-    m_pDFTPNCountInfo = new cVeinModuleMetaData(QString("DFTPNCount"), QVariant(n));
+    m_pDFTPNCountInfo = new VfModuleMetaData(QString("DFTPNCount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pDFTPNCountInfo);
-    m_pDFTPPCountInfo = new cVeinModuleMetaData(QString("DFTPPCount"), QVariant(p));
+    m_pDFTPPCountInfo = new VfModuleMetaData(QString("DFTPPCount"), QVariant(p));
     m_pModule->veinModuleMetaDataList.append(m_pDFTPPCountInfo);
-    m_pDFTOrderInfo = new cVeinModuleMetaData(QString("DFTOrder"), QVariant(getConfData()->m_nDftOrder));
+    m_pDFTOrderInfo = new VfModuleMetaData(QString("DFTOrder"), QVariant(getConfData()->m_nDftOrder));
 
 
 
-    m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
@@ -204,7 +204,7 @@ void cDftModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
-    m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
                                                       QString("Reference channel"),
                                                       QVariant(getConfData()->m_sRefChannel.m_sPar));
@@ -214,7 +214,7 @@ void cDftModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
     // we must set validator after activation because we don't know the channel names here
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -893,8 +893,8 @@ void cDftModuleMeasProgram::activateDSPdone()
     initRFieldMeasurement();
 
     m_pMeasureSignal->setValue(QVariant(1));
-    connect(m_pIntegrationTimeParameter, &cVeinModuleParameter::sigValueChanged, this, &cDftModuleMeasProgram::newIntegrationtime);
-    connect(m_pRefChannelParameter, &cVeinModuleParameter::sigValueChanged, this, &cDftModuleMeasProgram::newRefChannel);
+    connect(m_pIntegrationTimeParameter, &VfModuleParameter::sigValueChanged, this, &cDftModuleMeasProgram::newIntegrationtime);
+    connect(m_pRefChannelParameter, &VfModuleParameter::sigValueChanged, this, &cDftModuleMeasProgram::newRefChannel);
 
     emit activated();
 }

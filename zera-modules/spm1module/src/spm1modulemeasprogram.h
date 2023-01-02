@@ -148,27 +148,27 @@ private:
     cECalcChannelInfo m_SlaveEcalculator;
     cECalcChannelInfo m_Slave2Ecalculator;
 
-    cVeinModuleParameter* m_pRefInputPar;
-    cVeinModuleParameter* m_pRefConstantPar;
-    cVeinModuleParameter* m_pTargetedPar;
-    cVeinModuleParameter* m_pMeasTimePar;
+    VfModuleParameter* m_pRefInputPar;
+    VfModuleParameter* m_pRefConstantPar;
+    VfModuleParameter* m_pTargetedPar;
+    VfModuleParameter* m_pMeasTimePar;
 
-    cVeinModuleParameter* m_pT0InputPar;
-    cVeinModuleParameter* m_pT1InputPar;
-    cVeinModuleParameter* m_pInputUnitPar;
-    cVeinModuleParameter* m_pStartStopPar;
+    VfModuleParameter* m_pT0InputPar;
+    VfModuleParameter* m_pT1InputPar;
+    VfModuleParameter* m_pInputUnitPar;
+    VfModuleParameter* m_pStartStopPar;
 
-    cVeinModuleParameter* m_pStatusAct;
-    cVeinModuleParameter* m_pTimeAct;
-    cVeinModuleParameter* m_pEnergyAct;
-    cVeinModuleParameter* m_pPowerAct;
-    cVeinModuleParameter* m_pResultAct;
-    cVeinModuleParameter* m_pRefFreqInput;
-    cVeinModuleParameter* m_pUpperLimitPar;
-    cVeinModuleParameter* m_pLowerLimitPar;
-    cVeinModuleParameter* m_pRatingAct;
+    VfModuleParameter* m_pStatusAct;
+    VfModuleParameter* m_pTimeAct;
+    VfModuleParameter* m_pEnergyAct;
+    VfModuleParameter* m_pPowerAct;
+    VfModuleParameter* m_pResultAct;
+    VfModuleParameter* m_pRefFreqInput;
+    VfModuleParameter* m_pUpperLimitPar;
+    VfModuleParameter* m_pLowerLimitPar;
+    VfModuleParameter* m_pRatingAct;
 
-    cVeinModuleParameter* m_pClientNotifierPar;
+    VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
 
     void setInterfaceComponents();

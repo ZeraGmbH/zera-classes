@@ -60,8 +60,8 @@ private:
     cSCPISerialClient *m_pSerialClient;
     QTimer m_SerialTestTimer;
     bool m_bSerialScpiActive;
-    cVeinModuleParameter* m_pVeinParamSerialOn = nullptr;
-    cVeinModuleActvalue* m_pVeinSerialScpiDevFileName = nullptr;
+    VfModuleParameter* m_pVeinParamSerialOn = nullptr;
+    VfModuleActvalue* m_pVeinSerialScpiDevFileName = nullptr;
 
 private slots:
     void addSCPIClient();

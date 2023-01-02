@@ -2,8 +2,8 @@
 #include "paramvalidator.h"
 #include "scpiinfo.h"
 
-cVeinModuleParameter::cVeinModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification, bool deferredQueryNotification)
-    :cVeinModuleComponent(entityId, eventsystem, name, description, initval),
+VfModuleParameter::VfModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification, bool deferredQueryNotification)
+    :VfModuleComponent(entityId, eventsystem, name, description, initval),
       m_bDeferredNotification(deferredNotification),
       m_bDeferredQueryNotification(deferredQueryNotification),
       m_pValidator(nullptr),
@@ -11,23 +11,23 @@ cVeinModuleParameter::cVeinModuleParameter(int entityId, VeinEvent::EventSystem 
 {
 }
 
-cVeinModuleParameter::~cVeinModuleParameter()
+VfModuleParameter::~VfModuleParameter()
 {
     delete m_pValidator;
     delete m_pscpiInfo;
 }
 
-bool cVeinModuleParameter::hasDeferredNotification()
+bool VfModuleParameter::hasDeferredNotification()
 {
     return m_bDeferredNotification;
 }
 
-bool cVeinModuleParameter::hasDeferredQueryNotification()
+bool VfModuleParameter::hasDeferredQueryNotification()
 {
     return m_bDeferredQueryNotification;
 }
 
-bool cVeinModuleParameter::isValidParameter(QVariant& value)
+bool VfModuleParameter::isValidParameter(QVariant& value)
 {
     if (m_pValidator != 0) {
         return m_pValidator->isValidParam(value);
@@ -37,7 +37,7 @@ bool cVeinModuleParameter::isValidParameter(QVariant& value)
     }
 }
 
-void cVeinModuleParameter::exportMetaData(QJsonObject &jsObj)
+void VfModuleParameter::exportMetaData(QJsonObject &jsObj)
 {
     QJsonObject jsonObj;
     jsonObj.insert("Description", m_sDescription);
@@ -55,26 +55,26 @@ void cVeinModuleParameter::exportMetaData(QJsonObject &jsObj)
     jsObj.insert(m_sName, jsonObj);
 }
 
-void cVeinModuleParameter::exportSCPIInfo(QJsonArray &jsArr)
+void VfModuleParameter::exportSCPIInfo(QJsonArray &jsArr)
 {
     if (m_pscpiInfo) {
         m_pscpiInfo->appendSCPIInfo(jsArr);
     }
 }
 
-void cVeinModuleParameter::setSCPIInfo(cSCPIInfo *scpiinfo)
+void VfModuleParameter::setSCPIInfo(cSCPIInfo *scpiinfo)
 {
     m_pscpiInfo = scpiinfo;
 }
 
-void cVeinModuleParameter::setValidator(cParamValidator *validator)
+void VfModuleParameter::setValidator(cParamValidator *validator)
 {
     if(m_pValidator)
         delete m_pValidator;
     m_pValidator = validator;
 }
 
-void cVeinModuleParameter::transaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd)
+void VfModuleParameter::transaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd)
 {
     mClientIdList.append(clientId);
     if (vccmd == VeinComponent::ComponentData::Command::CCMD_FETCH) {

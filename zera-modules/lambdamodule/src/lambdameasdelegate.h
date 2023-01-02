@@ -5,7 +5,7 @@
 #include <QVariant>
 #include <QList>
 
-class cVeinModuleActvalue;
+class VfModuleActvalue;
 
 namespace LAMBDAMODULE
 {
@@ -15,7 +15,7 @@ class cLambdaMeasDelegate : public QObject
     Q_OBJECT
 
 public:
-    cLambdaMeasDelegate(cVeinModuleActvalue *actvalue, bool withSignal = false);
+    cLambdaMeasDelegate(VfModuleActvalue *actvalue, bool withSignal = false);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -25,7 +25,7 @@ signals:
     void measuring(int);
 
 private:
-    cVeinModuleActvalue *m_pActValue;
+    VfModuleActvalue *m_pActValue;
     bool m_bSignal;
     double input1;
     double input2;

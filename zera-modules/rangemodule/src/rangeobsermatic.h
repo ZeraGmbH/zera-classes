@@ -45,7 +45,7 @@ public:
     cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
-    cVeinModuleComponent *m_pRangingSignal;
+    VfModuleComponent *m_pRangingSignal;
 public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
@@ -75,19 +75,19 @@ private:
     QStringList m_actChannelRangeNotifierList; // we hold a list to avoid unnecessary notifications
 
     // our interface entities
-    QList<cVeinModuleParameter*> m_RangeParameterList;
-    QList<cVeinModuleComponent*> m_RangeOVLComponentList;
-    QList<cVeinModuleComponent*> m_RangeOVLRejectionComponentList;
-    QList<cVeinModuleComponent*> m_RangeActRejectionComponentList;
-    QList<cVeinModuleComponent*> m_RangeActOVLRejectionComponentList;
-    QList<cVeinModuleParameter*> m_RangeGroupPreScalingList;
-    QList<cVeinModuleParameter*> m_RangeGroupPreScalingEnabledList;
-    QList<cVeinModuleComponent*> m_RangeGroupPreScalingInfo;
+    QList<VfModuleParameter*> m_RangeParameterList;
+    QList<VfModuleComponent*> m_RangeOVLComponentList;
+    QList<VfModuleComponent*> m_RangeOVLRejectionComponentList;
+    QList<VfModuleComponent*> m_RangeActRejectionComponentList;
+    QList<VfModuleComponent*> m_RangeActOVLRejectionComponentList;
+    QList<VfModuleParameter*> m_RangeGroupPreScalingList;
+    QList<VfModuleParameter*> m_RangeGroupPreScalingEnabledList;
+    QList<VfModuleComponent*> m_RangeGroupPreScalingInfo;
 
-    cVeinModuleParameter* m_pParRangeAutomaticOnOff;
-    cVeinModuleParameter* m_pParGroupingOnOff;
-    cVeinModuleParameter* m_pParOverloadOnOff;
-    cVeinModuleComponent* m_pComponentOverloadMax;
+    VfModuleParameter* m_pParRangeAutomaticOnOff;
+    VfModuleParameter* m_pParGroupingOnOff;
+    VfModuleParameter* m_pParOverloadOnOff;
+    VfModuleComponent* m_pComponentOverloadMax;
 
     cDspMeasData* m_pGainCorrection2DSP; // copy of dsp internal correction data
     float* m_pfScale;

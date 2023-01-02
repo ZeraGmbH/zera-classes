@@ -12,7 +12,6 @@
 
 #include <vfmoduleparameter.h>
 #include <vfmoduleactvalue.h>
-#include <modulevalidator.h>
 #include <boolvalidator.h>
 
 #include "errormessages.h"
@@ -83,16 +82,16 @@ cSCPIServer::~cSCPIServer()
 void cSCPIServer::generateInterface()
 {
     QString key;
-    m_pVeinParamSerialOn = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pVeinParamSerialOn = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_SerialScpiActive"),
                                                        QString("Enable/disable serial SCPI"),
                                                        QVariant(m_bSerialScpiActive));
     m_pVeinParamSerialOn->setValidator(new cBoolValidator());
-    connect(m_pVeinParamSerialOn, &cVeinModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
+    connect(m_pVeinParamSerialOn, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
     m_pModule->veinModuleParameterHash[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
 
 
-    m_pVeinSerialScpiDevFileName = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pVeinSerialScpiDevFileName = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                     QString("ACT_SerialScpiDeviceFile"),
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );

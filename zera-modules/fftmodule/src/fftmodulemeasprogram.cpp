@@ -136,17 +136,17 @@ void cFftModuleMeasProgram::stop()
 void cFftModuleMeasProgram::generateInterface()
 {
     QString key;
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     int n = getConfData()->m_valueChannelList.count();
     for (int i = 0; i < n; i++) {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_FFT%1").arg(i+1),
                                             QString("FFT actual values"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_DC%1").arg(i+1),
                                             QString("DC actual value"),
                                             QVariant(0.0) );
@@ -154,12 +154,12 @@ void cFftModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue);
     }
 
-    m_pFFTCountInfo = new cVeinModuleMetaData(QString("FFTCount"), QVariant(n));
+    m_pFFTCountInfo = new VfModuleMetaData(QString("FFTCount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pFFTCountInfo);
-    m_pFFTOrderInfo = new cVeinModuleMetaData(QString("FFTOrder"), QVariant(getConfData()->m_nFftOrder));
+    m_pFFTOrderInfo = new VfModuleMetaData(QString("FFTOrder"), QVariant(getConfData()->m_nFftOrder));
     m_pModule->veinModuleMetaDataList.append(m_pFFTOrderInfo);
 
-    m_pIntegrationTimeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationTimeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
@@ -172,7 +172,7 @@ void cFftModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
     m_pIntegrationTimeParameter->setValidator(dValidator);
 
-    m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
                                                       QString("Reference channel"),
                                                       QVariant(getConfData()->m_RefChannel.m_sPar));
@@ -184,7 +184,7 @@ void cFftModuleMeasProgram::generateInterface()
     m_pRefChannelParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","REFCHANNEL", "10", "PAR_RefChannel", "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefChannelParameter; // for modules use
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -846,8 +846,8 @@ void cFftModuleMeasProgram::activateDSPdone()
     setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
-    connect(m_pIntegrationTimeParameter, &cVeinModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newIntegrationtime);
-    connect(m_pRefChannelParameter, &cVeinModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newRefChannel);
+    connect(m_pIntegrationTimeParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newIntegrationtime);
+    connect(m_pRefChannelParameter, &VfModuleParameter::sigValueChanged, this, &cFftModuleMeasProgram::newRefChannel);
     emit activated();
 }
 

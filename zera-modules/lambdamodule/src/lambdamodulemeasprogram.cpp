@@ -53,10 +53,10 @@ cLambdaModuleConfigData *cLambdaModuleMeasProgram::getConfData()
 
 void cLambdaModuleMeasProgram::generateInterface()
 {
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
     for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Lambda%1").arg(i+1),
                                             QString("Actual lambda value"),
                                             QVariant(0.0) );
@@ -70,10 +70,10 @@ void cLambdaModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pLAMBDACountInfo = new cVeinModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
+    m_pLAMBDACountInfo = new VfModuleMetaData(QString("LambdaCount"), QVariant(getConfData()->m_nLambdaSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pLAMBDACountInfo);
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -83,7 +83,7 @@ void cLambdaModuleMeasProgram::generateInterface()
 void cLambdaModuleMeasProgram::searchActualValues()
 {
     bool error = false;
-    QList<cVeinModuleComponentInput*> inputList;
+    QList<VfModuleComponentInput*> inputList;
     for (int i = 0; i < getConfData()->m_nLambdaSystemCount; i++) {
         // we first test that wanted input components exist
         if ( (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP)) &&
@@ -97,13 +97,13 @@ void cLambdaModuleMeasProgram::searchActualValues()
                 cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i));
             m_LambdaMeasDelegateList.append(cLMD);
 
-            cVeinModuleComponentInput *vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
+            VfModuleComponentInput *vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);
             inputList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput1);
 
-            vmci = new cVeinModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
+            vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS);
             inputList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cLMD, &cLambdaMeasDelegate::actValueInput2);
         }
         else
             error = true;

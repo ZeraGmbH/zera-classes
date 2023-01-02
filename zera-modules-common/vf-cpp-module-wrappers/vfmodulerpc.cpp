@@ -1,7 +1,7 @@
 #include "vfmodulerpc.h"
 
 VfModuleRpc::VfModuleRpc(int entityId) :
-    VeinCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
+    VfCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId)
 {
 }

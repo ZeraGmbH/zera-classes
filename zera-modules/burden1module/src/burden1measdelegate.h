@@ -6,7 +6,7 @@
 #include <QList>
 #include <complex.h>
 
-class cVeinModuleActvalue;
+class VfModuleActvalue;
 
 namespace BURDEN1MODULE
 {
@@ -16,7 +16,7 @@ class cBurden1MeasDelegate : public QObject
     Q_OBJECT
 
 public:
-    cBurden1MeasDelegate(cVeinModuleActvalue *actburden, cVeinModuleActvalue *actpowerfactor, cVeinModuleActvalue *actrelburden, QString mode, bool withSignal = false);
+    cBurden1MeasDelegate(VfModuleActvalue *actburden, VfModuleActvalue *actpowerfactor, VfModuleActvalue *actrelburden, QString mode, bool withSignal = false);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -31,9 +31,9 @@ signals:
     void measuring(int);
 
 private:
-    cVeinModuleActvalue *m_pActBurden; // output is actual burden corrected to nominal burden
-    cVeinModuleActvalue *m_pActPowerFactor; // and angle cosß
-    cVeinModuleActvalue *m_pActRelativeBurden; // % value of nominal burden
+    VfModuleActvalue *m_pActBurden; // output is actual burden corrected to nominal burden
+    VfModuleActvalue *m_pActPowerFactor; // and angle cosß
+    VfModuleActvalue *m_pActRelativeBurden; // % value of nominal burden
     QString m_sMode;
 
     bool m_bSignal;

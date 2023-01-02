@@ -69,7 +69,7 @@ void cBurden1Module::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cBurden1ModuleMeasProgram::activated, this, &cBurden1Module::activationContinue);
     connect(m_pMeasProgram, &cBurden1ModuleMeasProgram::deactivated, this, &cBurden1Module::deactivationContinue);
-    connect(m_pMeasProgram, &cBurden1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pMeasProgram, &cBurden1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     emit addEventSystem(m_pMeasProgram->getEventSystem());
 

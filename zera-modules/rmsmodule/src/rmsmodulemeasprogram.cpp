@@ -136,7 +136,7 @@ void cRmsModuleMeasProgram::generateInterface()
 {
     QString key;
 
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     int n,p;
     n = p = 0; //
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
@@ -145,7 +145,7 @@ void cRmsModuleMeasProgram::generateInterface()
         // we have 1 or 2 entries for each value
         if (sl.count() == 1) // in this case we have phase,neutral value
         {
-            pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPN%1").arg(n+1),
                                                 QString("Actual rms value phase/neutral"),
                                                 QVariant(0.0) );
@@ -158,7 +158,7 @@ void cRmsModuleMeasProgram::generateInterface()
         else
 
         {
-            pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+            pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_RMSPP%1").arg(p+1),
                                                 QString("Actual rms value phase/phase"),
                                                 QVariant(0.0) );
@@ -169,9 +169,9 @@ void cRmsModuleMeasProgram::generateInterface()
         }
     }
 
-    m_pRMSPNCountInfo = new cVeinModuleMetaData(QString("RMSPNCount"), QVariant(n));
+    m_pRMSPNCountInfo = new VfModuleMetaData(QString("RMSPNCount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pRMSPNCountInfo);
-    m_pRMSPPCountInfo = new cVeinModuleMetaData(QString("RMSPPCount"), QVariant(p));
+    m_pRMSPPCountInfo = new VfModuleMetaData(QString("RMSPPCount"), QVariant(p));
     m_pModule->veinModuleMetaDataList.append(m_pRMSPPCountInfo);
 
 
@@ -194,7 +194,7 @@ void cRmsModuleMeasProgram::generateInterface()
         unit = QString("period");
     }
 
-    m_pIntegrationParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                            key = QString("PAR_Interval"),
                                                            s,
                                                            val);
@@ -217,7 +217,7 @@ void cRmsModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
