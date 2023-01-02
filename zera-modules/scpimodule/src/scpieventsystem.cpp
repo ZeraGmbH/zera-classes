@@ -22,48 +22,23 @@
 namespace SCPIMODULE
 {
 
-cSCPIEventSystem::cSCPIEventSystem(cSCPIModule* module)
-    :m_pModule(module), VeinEvent::EventSystem()
+cSCPIEventSystem::cSCPIEventSystem(cSCPIModule* module) :
+      VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION),
+      m_pModule(module)
 {
 }
 
-
-bool cSCPIEventSystem::processEvent(QEvent *t_event)
-{
-    bool retVal = false;
-
-    if(t_event->type() == VeinEvent::CommandEvent::eventType())
-    {
-        VeinEvent::CommandEvent *cEvent = 0;
-        cEvent = static_cast<VeinEvent::CommandEvent *>(t_event);
-        if(cEvent != 0)
-        {
-            switch(cEvent->eventSubtype())
-            {
-            case VeinEvent::CommandEvent::EventSubtype::NOTIFICATION:
-                retVal = true;
-                processCommandEvent(cEvent);
-                break;
-              default:
-                break;
-            }
-        }
-    }
-    return retVal;
-}
-
-
-void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
+void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
     // is it a command event for setting component data
-    if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
+    if (commandEvent->eventData()->type() == VeinComponent::ComponentData::dataType())
     {
         // only notifications will be handled
-        if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
+        if (commandEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
         {
             QString cName;
             int entityId;
-            VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
+            VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData());
             cName = cData->componentName();
             entityId = cData->entityId();
 
@@ -95,7 +70,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                     clientinfo = clientinfolist.at(i);
 
                     QUuid clientId;
-                    clientId = t_cEvent->peerId();
+                    clientId = commandEvent->peerId();
                     if (clientId.isNull() || clientId == clientinfo->getClient()->getClientId()) // test if this client sent command for this parameter
                     {
                         if (clientinfo->entityId() == entityId)
@@ -112,7 +87,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                             }
                             else
                             {
-                                QString answer = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData())->newValue().toString();
+                                QString answer = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData())->newValue().toString();
                                 myConn = connect(this, &cSCPIEventSystem::SignalAnswer, clientinfo->getClient(), &cSCPIClient::receiveAnswer);
                                 emit SignalAnswer(answer);
                                 disconnect(myConn);
@@ -148,15 +123,15 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 
     else
         // or is it command event for error notification
-        if (t_cEvent->eventData()->type() == VeinComponent::ErrorData::dataType() )
+        if (commandEvent->eventData()->type() == VeinComponent::ErrorData::dataType() )
         {
             // only notifications will be handled
-            if (t_cEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
+            if (commandEvent->eventSubtype() == VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
             {
                 QString cName;
                 int entityId;
                 VeinComponent::ErrorData* eData;
-                eData = static_cast<VeinComponent::ErrorData*> (t_cEvent->eventData());
+                eData = static_cast<VeinComponent::ErrorData*> (commandEvent->eventData());
                 VeinComponent::ComponentData* cData = new VeinComponent::ComponentData();
                 cData->deserialize(eData->originalData());
 
@@ -175,7 +150,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
                         clientinfo = clientinfolist.at(i);
                         if (clientinfo->entityId() == entityId)
                         {
-                            t_cEvent->accept();  // we caused the error event due to wrong parameter
+                            commandEvent->accept();  // we caused the error event due to wrong parameter
                             m_pModule->scpiParameterCmdInfoHash.remove(cName, clientinfo);
                             QMetaObject::Connection myConn = connect(this, &cSCPIEventSystem::clientinfoSignal, clientinfo->getClient(), &cSCPIClient::removeSCPIClientInfo, Qt::QueuedConnection);
                             emit clientinfoSignal(cName);

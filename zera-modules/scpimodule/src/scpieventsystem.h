@@ -1,7 +1,7 @@
 #ifndef SCPIEVENTSYSTEM
 #define SCPIEVENTSYSTEM
 
-#include <ve_eventsystem.h>
+#include <vfeventsystemcommandfilter.h>
 
 namespace VeinEvent
 {
@@ -13,15 +13,12 @@ namespace SCPIMODULE
 
 class cSCPIModule;
 
-class cSCPIEventSystem: public VeinEvent::EventSystem
+class cSCPIEventSystem: public VfEventSystemCommandFilter
 {
     Q_OBJECT
 
 public:
     cSCPIEventSystem(cSCPIModule* module);
-    // EventSystem interface
-    bool processEvent(QEvent *t_event) override final;
-
 signals:
     void status(quint8);
     void SignalAnswer(QString);
@@ -29,7 +26,7 @@ signals:
 
 private:
     cSCPIModule* m_pModule;
-    virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
+    void processCommandEvent(VeinEvent::CommandEvent *commandEvent) override;
 };
 }
 
