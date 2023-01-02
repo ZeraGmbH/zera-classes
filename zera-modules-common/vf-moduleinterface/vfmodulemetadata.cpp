@@ -1,5 +1,5 @@
 #include <QJsonObject>
-#include "veinmodulemetadata.h"
+#include "vfmodulemetadata.h"
 
 cVeinModuleMetaData::cVeinModuleMetaData(QString name, QVariant value)
     :m_sName(name), m_vValue(value)

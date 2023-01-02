@@ -4,7 +4,7 @@
 #include "samplemoduleconfigdata.h"
 #include <basesamplechannel.h>
 #include <proxy.h>
-#include <veinmoduleparameter.h>
+#include <vfmoduleparameter.h>
 #include <QFinalState>
 
 namespace SAMPLEMODULE

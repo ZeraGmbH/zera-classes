@@ -4,7 +4,7 @@
 #include <vcmp_errordata.h>
 #include <ve_commandevent.h>
 #include <ve_eventsystem.h>
-#include "veinmodulecomponent.h"
+#include "vfmodulecomponent.h"
 
 cVeinModuleComponent::cVeinModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)
     :m_nEntityId(entityId), m_pEventSystem(eventsystem), m_sName(name), m_sDescription(description), m_vValue(initval)

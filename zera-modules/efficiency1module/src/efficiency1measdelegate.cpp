@@ -1,7 +1,7 @@
 #include <QDebug>
 
-#include <veinmoduleactvalue.h>
-#include <veinmodulecomponentinput.h>
+#include <vfmoduleactvalue.h>
+#include <vfmodulecomponentinput.h>
 
 #include "efficiency1measdelegate.h"
 

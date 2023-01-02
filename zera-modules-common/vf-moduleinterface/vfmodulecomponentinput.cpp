@@ -1,4 +1,4 @@
-#include "veinmodulecomponentinput.h"
+#include "vfmodulecomponentinput.h"
 
 QVariant cVeinModuleComponentInput::value() const
 {

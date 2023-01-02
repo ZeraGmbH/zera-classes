@@ -4,7 +4,7 @@
 #include "rangemoduleconfigdata.h"
 #include "rangemeaschannel.h"
 #include <moduleactivist.h>
-#include <veinmoduleparameter.h>
+#include <vfmoduleparameter.h>
 #include <socket.h>
 #include <proxy.h>
 #include <stringvalidator.h>

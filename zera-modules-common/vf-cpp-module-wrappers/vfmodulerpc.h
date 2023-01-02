@@ -1,7 +1,7 @@
 #ifndef VFMODULERPC_H
 #define VFMODULERPC_H
 
-#include <veincommandfiltereventsystem.h>
+#include <vfcommandfiltereventsystem.h>
 #include <vf-cpp-rpc.h>
 #include <QHash>
 

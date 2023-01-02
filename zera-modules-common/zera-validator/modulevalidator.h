@@ -1,8 +1,8 @@
 #ifndef MODULEVALIDATOR_H
 #define MODULEVALIDATOR_H
 
-#include <veincommandfiltereventsystem.h>
-#include <veinmoduleparameter.h>
+#include <vfcommandfiltereventsystem.h>
+#include <vfmoduleparameter.h>
 #include <ve_storagesystem.h>
 #include <QHash>
 

@@ -7,7 +7,7 @@
 #include "tasksequence.h"
 #include "taskparallel.h"
 #include "socket.h"
-#include <veinmoduleerrorcomponent.h>
+#include <vfmoduleerrorcomponent.h>
 
 namespace ADJUSTMENTMODULE
 {

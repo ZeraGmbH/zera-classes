@@ -12,7 +12,7 @@
 #include "pllmeaschannel.h"
 #include <moduleactivist.h>
 #include <proxy.h>
-#include <veinmoduleparameter.h>
+#include <vfmoduleparameter.h>
 
 namespace SAMPLEMODULE
 {

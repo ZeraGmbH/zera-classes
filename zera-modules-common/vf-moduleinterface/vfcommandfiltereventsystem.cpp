@@ -1,4 +1,4 @@
-#include "veincommandfiltereventsystem.h"
+#include "vfcommandfiltereventsystem.h"
 
 VeinCommandFilterEventSystem::VeinCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype subtypeToFilter) :
     m_subtypeToFilter(subtypeToFilter)

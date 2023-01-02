@@ -6,8 +6,8 @@
 #include "iodevicefactory.h"
 #include "json/jsonstructureloader.h"
 #include "json/persistentjsonstate.h"
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
+#include <vfmoduleparameter.h>
+#include <vfmoduleactvalue.h>
 #include <jsonparamvalidator.h>
 
 #include <QString>

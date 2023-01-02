@@ -6,7 +6,7 @@
 #include <measchannelinfo.h>
 #include <measmodeinfo.h>
 #include <foutinfo.h>
-#include <veinmodulecomponentinput.h>
+#include <vfmodulecomponentinput.h>
 #include <movingwindowfilter.h>
 #include <rminterface.h>
 #include <dspinterface.h>
