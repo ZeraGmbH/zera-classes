@@ -1,17 +1,17 @@
-#include "vfinputcomponentseventsystem.h"
+#include "vfeventsysteminputcomponents.h"
 #include "vfmodulecomponent.h"
 
-VfInputComponentsEventSystem::VfInputComponentsEventSystem() :
-    VfCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
+VfEventSystemInputComponents::VfEventSystemInputComponents() :
+    VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
 {
 }
 
-void VfInputComponentsEventSystem::setInputList(QList<VfModuleComponentInput *> &inputComponentList)
+void VfEventSystemInputComponents::setInputList(QList<VfModuleComponentInput *> &inputComponentList)
 {
     m_inputComponentList = inputComponentList;
 }
 
-void VfInputComponentsEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
+void VfEventSystemInputComponents::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
     // is it a command event for setting component data
     if (commandEvent->eventData()->type() == VeinComponent::ComponentData::dataType()) {

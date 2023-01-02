@@ -1,19 +1,19 @@
-#ifndef VEININPUTCOMPONENTSEVENTSYSTEM_H
-#define VEININPUTCOMPONENTSEVENTSYSTEM_H
+#ifndef VFEVENTSYSTEMINPUTCOMPONENTS_H
+#define VFEVENTSYSTEMINPUTCOMPONENTS_H
 
-#include "vfcommandfiltereventsystem.h"
+#include "vfeventsystemcommandfilter.h"
 #include "vfmodulecomponentinput.h"
 #include <QList>
 
-class VfInputComponentsEventSystem : public VfCommandFilterEventSystem
+class VfEventSystemInputComponents : public VfEventSystemCommandFilter
 {
     Q_OBJECT
 public:
-    VfInputComponentsEventSystem();
+    VfEventSystemInputComponents();
     void setInputList(QList<VfModuleComponentInput*>& inputComponentList);
 private:
     void processCommandEvent(VeinEvent::CommandEvent *commandEvent) override;
     QList<VfModuleComponentInput*> m_inputComponentList;
 };
 
-#endif // VEININPUTCOMPONENTSEVENTSYSTEM_H
+#endif // VFEVENTSYSTEMINPUTCOMPONENTS_H

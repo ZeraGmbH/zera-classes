@@ -1,13 +1,13 @@
-#include "vfmoduleparameventsytem.h"
+#include "vfeventsytemmoduleparam.h"
 
-VfModuleParamEventSytem::VfModuleParamEventSytem(int entityId, VeinEvent::StorageSystem *storageSystem) :
-    VfCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
+VfEventSytemModuleParam::VfEventSytemModuleParam(int entityId, VeinEvent::StorageSystem *storageSystem) :
+    VfEventSystemCommandFilter(VeinEvent::CommandEvent::EventSubtype::TRANSACTION),
     m_entityId(entityId),
     m_storageSystem(storageSystem)
 {
 }
 
-void VfModuleParamEventSytem::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
+void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
 {
     if (t_cEvent->eventData()->entityId() == m_entityId) {
         // is it a command event for setting component data
@@ -28,7 +28,7 @@ void VfModuleParamEventSytem::processCommandEvent(VeinEvent::CommandEvent *t_cEv
     }
 }
 
-void VfModuleParamEventSytem::setParameterHash(const QHash<QString, VfModuleParameter *> &parameterHash)
+void VfEventSytemModuleParam::setParameterHash(const QHash<QString, VfModuleParameter *> &parameterHash)
 {
     m_parameterHash = parameterHash;
 }

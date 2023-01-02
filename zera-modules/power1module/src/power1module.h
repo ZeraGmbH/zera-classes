@@ -9,7 +9,7 @@
 #include <memory> // std header for smart pointer
 
 #include "basemeasmodule.h"
-#include <vfinputcomponentseventsystem.h>
+#include <vfeventsysteminputcomponents.h>
 
 namespace Zera {
 namespace Server {
@@ -40,14 +40,14 @@ public:
     cPower1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
     virtual QByteArray getConfiguration() const;
 
-    VfInputComponentsEventSystem *getPEventSystem() const;
+    VfEventSystemInputComponents *getPEventSystem() const;
 
 protected:
     cPower1ModuleObservation *m_pPower1ModuleObservation;
     cPower1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     // we do not inherit cBaseMeasWorkProgram so have an own event system for input components :(
     // came in 6828db17069aa94f62a976ebd3e15061976d0006 - the start of pre-scale mess
-    VfInputComponentsEventSystem *m_inputComponentEventSystem;
+    VfEventSystemInputComponents *m_inputComponentEventSystem;
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
     virtual void startMeas(); // we make the measuring program start here

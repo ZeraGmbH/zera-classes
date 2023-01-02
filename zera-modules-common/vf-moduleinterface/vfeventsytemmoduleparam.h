@@ -1,16 +1,16 @@
-#ifndef VFMODULEPARAMEVENTSYTEM_H
-#define VFMODULEPARAMEVENTSYTEM_H
+#ifndef VFEVENTSYTEMMODULEPARAM_H
+#define VFEVENTSYTEMMODULEPARAM_H
 
-#include <vfcommandfiltereventsystem.h>
-#include <vfmoduleparameter.h>
+#include "vfeventsystemcommandfilter.h"
+#include "vfmoduleparameter.h"
 #include <ve_storagesystem.h>
 #include <QHash>
 
-class VfModuleParamEventSytem : public VfCommandFilterEventSystem
+class VfEventSytemModuleParam : public VfEventSystemCommandFilter
 {
     Q_OBJECT
 public:
-    VfModuleParamEventSytem(int entityId, VeinEvent::StorageSystem* storageSystem);
+    VfEventSytemModuleParam(int entityId, VeinEvent::StorageSystem* storageSystem);
     virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
     void setParameterHash(const QHash<QString, VfModuleParameter*> &parameterHash);
 private:
@@ -19,4 +19,4 @@ private:
     QHash<QString, VfModuleParameter*> m_parameterHash;
 };
 
-#endif // VFMODULEPARAMEVENTSYTEM_H
+#endif // VFEVENTSYTEMMODULEPARAM_H

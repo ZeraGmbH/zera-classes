@@ -2,7 +2,7 @@
 #define BASEMEASMODULE
 
 #include "basemodule.h"
-#include "vfmoduleparameventsytem.h"
+#include "vfeventsytemmoduleparam.h"
 #include <ve_storagesystem.h>
 #include <memory>
 
@@ -16,7 +16,7 @@ public:
                     VeinEvent::StorageSystem* storagesystem,
                     std::shared_ptr<cBaseModuleConfiguration> modcfg,
                     QObject *parent = 0);
-    VfModuleParamEventSytem* m_pModuleValidator;
+    VfEventSytemModuleParam* m_pModuleValidator;
 };
 
 #endif // BASEMEASMODULE
