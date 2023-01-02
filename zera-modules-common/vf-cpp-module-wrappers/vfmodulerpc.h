@@ -1,11 +1,11 @@
 #ifndef VFMODULERPC_H
 #define VFMODULERPC_H
 
-#include <vfcommandfiltereventsystem.h>
+#include <vfeventsystemcommandfilter.h>
 #include <vf-cpp-rpc.h>
 #include <QHash>
 
-class VfModuleRpc : public VfCommandFilterEventSystem
+class VfModuleRpc : public VfEventSystemCommandFilter
 {
     Q_OBJECT
 public:

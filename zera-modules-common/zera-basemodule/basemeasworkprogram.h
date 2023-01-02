@@ -3,7 +3,7 @@
 
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
-#include <vfinputcomponentseventsystem.h>
+#include <vfeventsysteminputcomponents.h>
 
 class cBaseMeasWorkProgram: public cModuleActivist
 {
@@ -11,7 +11,7 @@ class cBaseMeasWorkProgram: public cModuleActivist
 public:
     cBaseMeasWorkProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseMeasWorkProgram();
-    VfInputComponentsEventSystem* getEventSystem();
+    VfEventSystemInputComponents* getEventSystem();
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -19,7 +19,7 @@ public slots:
     virtual void stop() = 0; // in interface are not updated when stop
 protected:
     QVector<float> m_ModuleActualValues; // a modules actual values
-    VfInputComponentsEventSystem *m_pEventSystem;
+    VfEventSystemInputComponents *m_pEventSystem;
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
 };
 

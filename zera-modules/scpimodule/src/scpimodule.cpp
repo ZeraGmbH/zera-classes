@@ -31,7 +31,7 @@ cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId,
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_pSCPIEventSystem = new cSCPIEventSystem(this);
-    m_pModuleValidator = new VfModuleParamEventSytem(entityId, storagesystem);
+    m_pModuleValidator = new VfEventSytemModuleParam(entityId, storagesystem);
 }
 
 
