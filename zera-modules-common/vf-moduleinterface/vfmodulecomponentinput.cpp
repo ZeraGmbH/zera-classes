@@ -1,11 +1,11 @@
 #include "vfmodulecomponentinput.h"
 
-QVariant cVeinModuleComponentInput::value() const
+QVariant VfModuleComponentInput::value() const
 {
     return m_value;
 }
 
-void cVeinModuleComponentInput::setValue(const QVariant &value)
+void VfModuleComponentInput::setValue(const QVariant &value)
 {
     m_value = value;
 }

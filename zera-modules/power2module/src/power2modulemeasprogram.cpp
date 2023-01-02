@@ -256,25 +256,25 @@ void cPower2ModuleMeasProgram::stop()
 void cPower2ModuleMeasProgram::generateInterface()
 {
     QString key;
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
 
     for (int i = 0; i < 4; i++) // // we have fixed number of power values (12)
     {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PP%1").arg(i+1),
                                             QString("Actual value positive power"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PM%1").arg(i+1),
                                             QString("Actual value negative power"),
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_P%1").arg(i+1),
                                             QString("Actual power value"),
                                             QVariant(0.0) );
@@ -283,11 +283,11 @@ void cPower2ModuleMeasProgram::generateInterface()
 
     }
 
-    m_pPQSCountInfo = new cVeinModuleMetaData(QString("PQSCount"), QVariant(12));
+    m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(12));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
-    m_pNomFrequencyInfo =  new cVeinModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
+    m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
-    m_pFoutCount = new cVeinModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
+    m_pFoutCount = new VfModuleMetaData(QString("FOUTCount"), QVariant(getConfData()->m_nFreqOutputCount));
     m_pModule->veinModuleMetaDataList.append(m_pFoutCount);
 
     // a list with all possible measuring modes
@@ -304,7 +304,7 @@ void cPower2ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["2LSg"] = cMeasModeInfo(tr("2LSg"), "S", "VA", appPower, m2lsg);
 
     // our parameters we deal with
-    m_pMeasuringmodeParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
@@ -337,7 +337,7 @@ void cPower2ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
 
-    m_pIntegrationParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pIntegrationParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_Interval"),
                                                        s,
                                                        val);
@@ -360,7 +360,7 @@ void cPower2ModuleMeasProgram::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationParameter; // for modules use
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));

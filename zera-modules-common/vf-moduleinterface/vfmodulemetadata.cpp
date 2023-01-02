@@ -1,17 +1,17 @@
 #include <QJsonObject>
 #include "vfmodulemetadata.h"
 
-cVeinModuleMetaData::cVeinModuleMetaData(QString name, QVariant value)
+VfModuleMetaData::VfModuleMetaData(QString name, QVariant value)
     :m_sName(name), m_vValue(value)
 {
 }
 
-void cVeinModuleMetaData::exportMetaData(QJsonObject &jsObj)
+void VfModuleMetaData::exportMetaData(QJsonObject &jsObj)
 {
     jsObj.insert(m_sName, m_vValue.toString());
 }
 
-void cVeinModuleMetaData::setValue(QVariant value)
+void VfModuleMetaData::setValue(QVariant value)
 {
     m_vValue = value;
 }

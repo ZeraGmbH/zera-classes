@@ -5,17 +5,17 @@ SourceVeinInterface::SourceVeinInterface()
 {
 }
 
-cVeinModuleActvalue *SourceVeinInterface::getVeinDeviceInfoComponent()
+VfModuleActvalue *SourceVeinInterface::getVeinDeviceInfoComponent()
 {
     return m_veinDeviceInfo;
 }
 
-cVeinModuleActvalue *SourceVeinInterface::getVeinDeviceStateComponent()
+VfModuleActvalue *SourceVeinInterface::getVeinDeviceStateComponent()
 {
     return m_veinDeviceState;
 }
 
-cVeinModuleParameter *SourceVeinInterface::getVeinDeviceParameterComponent()
+VfModuleParameter *SourceVeinInterface::getVeinDeviceParameterComponent()
 {
     return m_veinDeviceParameter;
 }
@@ -25,20 +25,20 @@ cJsonParamValidator *SourceVeinInterface::getVeinDeviceParameterValidator()
     return m_veinDeviceParameterValidator;
 }
 
-void SourceVeinInterface::setVeinDeviceInfoComponent(cVeinModuleActvalue *veinDeviceInfo)
+void SourceVeinInterface::setVeinDeviceInfoComponent(VfModuleActvalue *veinDeviceInfo)
 {
     m_veinDeviceInfo = veinDeviceInfo;
 }
 
-void SourceVeinInterface::setVeinDeviceStateComponent(cVeinModuleActvalue *veinDeviceState)
+void SourceVeinInterface::setVeinDeviceStateComponent(VfModuleActvalue *veinDeviceState)
 {
     m_veinDeviceState = veinDeviceState;
 }
 
-void SourceVeinInterface::setVeinDeviceParameterComponent(cVeinModuleParameter *veinDeviceParameter)
+void SourceVeinInterface::setVeinDeviceParameterComponent(VfModuleParameter *veinDeviceParameter)
 {
     m_veinDeviceParameter = veinDeviceParameter;
-    connect(m_veinDeviceParameter, &cVeinModuleParameter::sigValueChanged,
+    connect(m_veinDeviceParameter, &VfModuleParameter::sigValueChanged,
             this, &SourceVeinInterface::onNewVeinLoadParams);
 }
 

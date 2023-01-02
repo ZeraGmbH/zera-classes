@@ -74,9 +74,9 @@ private:
     cPower3ModuleConfigData* getConfData();
 
     cPower3Module* m_pModule;
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pHPWCountInfo; // the number of values we produce
-    cVeinModuleComponent* m_pMeasureSignal;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    VfModuleMetaData* m_pHPWCountInfo; // the number of values we produce
+    VfModuleComponent* m_pMeasureSignal;
 
     QList<cPower3MeasDelegate*> m_Power3MeasDelegateList;
 

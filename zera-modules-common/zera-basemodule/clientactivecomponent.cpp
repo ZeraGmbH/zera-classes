@@ -7,13 +7,13 @@ ClientActiveComponent::ClientActiveComponent(QObject *parent) : QObject(parent)
     connect(&m_inactiveTimer, &QTimer::timeout, this, &ClientActiveComponent::onClientTimeout);
 }
 
-void ClientActiveComponent::init(cVeinModuleParameter *component, int iInactiveTimeoutMs)
+void ClientActiveComponent::init(VfModuleParameter *component, int iInactiveTimeoutMs)
 {
     if(m_pClientActiveNotifyPar) {
-        disconnect(m_pClientActiveNotifyPar, &cVeinModuleParameter::sigValueChanged, this, &ClientActiveComponent::onClientNotification);
+        disconnect(m_pClientActiveNotifyPar, &VfModuleParameter::sigValueChanged, this, &ClientActiveComponent::onClientNotification);
     }
     m_pClientActiveNotifyPar = component;
-    connect(m_pClientActiveNotifyPar, &cVeinModuleParameter::sigValueChanged, this, &ClientActiveComponent::onClientNotification);
+    connect(m_pClientActiveNotifyPar, &VfModuleParameter::sigValueChanged, this, &ClientActiveComponent::onClientNotification);
     m_inactiveTimer.setInterval(iInactiveTimeoutMs);
     m_bClientActive = false;
 }

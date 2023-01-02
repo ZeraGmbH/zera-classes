@@ -1,12 +1,9 @@
-#include <vfmoduleactvalue.h>
-#include <vfmoduleparameter.h>
-#include <modulevalidator.h>
-#include <intvalidator.h>
-#include <jsonparamvalidator.h>
-
-#include "basedspmeasprogram.h"
 #include "electronicburdenmoduleprogram.h"
 #include "electronicburdenmodule.h"
+#include <vfmoduleactvalue.h>
+#include <vfmoduleparameter.h>
+#include <intvalidator.h>
+#include <jsonparamvalidator.h>
 
 namespace ELECTRONICBURDENMODULE
 {
@@ -24,28 +21,28 @@ ElectronicBurdenModuleProgram::~ElectronicBurdenModuleProgram()
 void ElectronicBurdenModuleProgram::generateInterface()
 {
     QString key;
-    m_pVeinDemoTest = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pVeinDemoTest = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                        key = QString("PAR_DemoTest"),
                                                        QString("Demo Test demonstration value"),
                                                        QVariant(int(0)));
     m_pVeinDemoTest->setValidator(new cIntValidator(0, 10));
-    connect(m_pVeinDemoTest, &cVeinModuleParameter::sigValueChanged, this, &ElectronicBurdenModuleProgram::newDemoTest);
+    connect(m_pVeinDemoTest, &VfModuleParameter::sigValueChanged, this, &ElectronicBurdenModuleProgram::newDemoTest);
     m_pModule->veinModuleParameterHash[key] = m_pVeinDemoTest; // auto delete / meta-data / scpi
 
-    cVeinModuleActvalue* pVeinAct;
-    cVeinModuleParameter* pVeinParam;
+    VfModuleActvalue* pVeinAct;
+    VfModuleParameter* pVeinParam;
     cJsonParamValidator *jsonValidator;
 
     m_pVeinInterface = new VeinInterface;
     // device info (Don' movit down - our clients need it first!!)
-    pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    pVeinAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                         QString("ACT_DeviceInfo"),
                                         QString("Burden info/capabiliities"),
                                         QJsonObject());
     m_pVeinInterface->setVeinDeviceInfoComponent(pVeinAct);
     m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
-    pVeinAct = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    pVeinAct = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                         QString("ACT_DeviceState"),
                                         QString("Burden status"),
                                         QJsonObject());
@@ -53,7 +50,7 @@ void ElectronicBurdenModuleProgram::generateInterface()
     m_pModule->veinModuleActvalueList.append(pVeinAct); // auto delete / meta-data / scpi
 
     // device param
-    pVeinParam = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    pVeinParam = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                         key = QString("PAR_BurdenState"),
                                                         QString("Burden parameters in JSON format"),
                                                         QJsonObject());

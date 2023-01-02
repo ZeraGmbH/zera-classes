@@ -5,12 +5,9 @@
 #include "referencemodulemeasprogram.h"
 #include "referencemoduleobservation.h"
 #include "referenceadjustment.h"
-#include <modulevalidator.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
-
-
 
 namespace REFERENCEMODULE
 {

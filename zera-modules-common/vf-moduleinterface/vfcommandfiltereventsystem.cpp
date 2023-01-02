@@ -1,11 +1,11 @@
 #include "vfcommandfiltereventsystem.h"
 
-VeinCommandFilterEventSystem::VeinCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype subtypeToFilter) :
+VfCommandFilterEventSystem::VfCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype subtypeToFilter) :
     m_subtypeToFilter(subtypeToFilter)
 {
 }
 
-bool VeinCommandFilterEventSystem::processEvent(QEvent *event)
+bool VfCommandFilterEventSystem::processEvent(QEvent *event)
 {
     bool retVal = false;
     if(event->type() == VeinEvent::CommandEvent::eventType()) {

@@ -129,13 +129,13 @@ void cOsciModuleMeasProgram::generateInterface()
 {
     QString key;
 
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     int n;
     n = getConfData()->m_valueChannelList.count();
 
     for (int i = 0; i < n; i++)
     {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_OSCI%1").arg(i+1),
                                             QString("Measures samples"),
                                             QVariant(0.0) );
@@ -143,10 +143,10 @@ void cOsciModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pOsciCountInfo = new cVeinModuleMetaData(QString("OSCICount"), QVariant(n));
+    m_pOsciCountInfo = new VfModuleMetaData(QString("OSCICount"), QVariant(n));
     m_pModule->veinModuleMetaDataList.append(m_pOsciCountInfo);
 
-    m_pRefChannelParameter = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pRefChannelParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                       key = QString("PAR_RefChannel"),
                                                       QString("Reference channel"),
                                                       QVariant(getConfData()->m_RefChannel.m_sPar));
@@ -159,7 +159,7 @@ void cOsciModuleMeasProgram::generateInterface()
     sValidator = new cStringValidator(getConfData()->m_valueChannelList);
     m_pRefChannelParameter->setValidator(sValidator);
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -793,7 +793,7 @@ void cOsciModuleMeasProgram::activateDSPdone()
     setSCPIMeasInfo();
 
     m_pMeasureSignal->setValue(QVariant(1));
-    connect(m_pRefChannelParameter, &cVeinModuleParameter::sigValueChanged, this, &cOsciModuleMeasProgram::newRefChannel);
+    connect(m_pRefChannelParameter, &VfModuleParameter::sigValueChanged, this, &cOsciModuleMeasProgram::newRefChannel);
     emit activated();
 }
 

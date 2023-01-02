@@ -4,7 +4,6 @@
 #include "transformer1modulemeasprogram.h"
 #include "errormessages.h"
 #include <proxy.h>
-#include <modulevalidator.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -74,7 +73,7 @@ void cTransformer1Module::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cTransformer1ModuleMeasProgram::activated, this, &cTransformer1Module::activationContinue);
     connect(m_pMeasProgram, &cTransformer1ModuleMeasProgram::deactivated, this, &cTransformer1Module::deactivationContinue);
-    connect(m_pMeasProgram, &cTransformer1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pMeasProgram, &cTransformer1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     emit addEventSystem(m_pMeasProgram->getEventSystem());
 

@@ -5,7 +5,7 @@
 #include <QVariant>
 #include <QList>
 
-class cVeinModuleActvalue;
+class VfModuleActvalue;
 
 namespace POWER3MODULE
 {
@@ -15,7 +15,7 @@ class cPower3MeasDelegate : public QObject
     Q_OBJECT
 
 public:
-    cPower3MeasDelegate(cVeinModuleActvalue *pactvalue, cVeinModuleActvalue *qactvalue, cVeinModuleActvalue *sactvalue, bool withSignal = false);
+    cPower3MeasDelegate(VfModuleActvalue *pactvalue, VfModuleActvalue *qactvalue, VfModuleActvalue *sactvalue, bool withSignal = false);
 
 public slots:
     void actValueInput1(QVariant val);
@@ -25,9 +25,9 @@ signals:
     void measuring(int);
 
 private:
-    cVeinModuleActvalue *m_ppActValue;
-    cVeinModuleActvalue *m_pqActValue;
-    cVeinModuleActvalue *m_psActValue;
+    VfModuleActvalue *m_ppActValue;
+    VfModuleActvalue *m_pqActValue;
+    VfModuleActvalue *m_psActValue;
     bool m_bSignal;
     QList<double> input1;
     QList<double> input2;

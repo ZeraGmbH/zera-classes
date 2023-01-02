@@ -9,7 +9,7 @@
 namespace  TRANSFORMER1MODULE
 {
 
-cTransformer1MeasDelegate::cTransformer1MeasDelegate(cVeinModuleActvalue *acttrfError, cVeinModuleActvalue *acttrfAngleError, cVeinModuleActvalue *acttrfRatio, cVeinModuleActvalue *actinsec, cVeinModuleActvalue *actixsec, cVeinModuleActvalue *ixprim, bool withSignal)
+cTransformer1MeasDelegate::cTransformer1MeasDelegate(VfModuleActvalue *acttrfError, VfModuleActvalue *acttrfAngleError, VfModuleActvalue *acttrfRatio, VfModuleActvalue *actinsec, VfModuleActvalue *actixsec, VfModuleActvalue *ixprim, bool withSignal)
     :m_pActTransformerError(acttrfError), m_pActTransformerAngleError(acttrfAngleError), m_pActTransformerRatio(acttrfRatio), m_pActINSecondary(actinsec), m_pActIXSecondary(actixsec), m_pActIXPrimary(ixprim), m_bSignal(withSignal)
 {
 }

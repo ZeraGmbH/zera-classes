@@ -9,11 +9,11 @@ enum destType
     globalDest
 };
 
-class cVeinModuleErrorComponent: public QObject
+class VfModuleErrorComponent: public QObject
 {
     Q_OBJECT
 public:
-    cVeinModuleErrorComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString modulename);
+    VfModuleErrorComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString modulename);
 public slots:
     void setValue(QVariant value, int dest = globalDest); // here we have to emit event for notification
 protected:

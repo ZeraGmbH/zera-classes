@@ -65,10 +65,10 @@ private:
 
     cOsciModule* m_pModule;
 
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pOsciCountInfo;
-    cVeinModuleComponent* m_pMeasureSignal;
-    cVeinModuleParameter* m_pRefChannelParameter;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    VfModuleMetaData* m_pOsciCountInfo;
+    VfModuleComponent* m_pMeasureSignal;
+    VfModuleParameter* m_pRefChannelParameter;
 
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read

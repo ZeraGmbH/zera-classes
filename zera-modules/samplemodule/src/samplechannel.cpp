@@ -3,7 +3,6 @@
 #include "samplemoduleconfigdata.h"
 #include <errormessages.h>
 #include <scpiinfo.h>
-#include <modulevalidator.h>
 #include <stringvalidator.h>
 #include <scpiinfo.h>
 #include <vfmoduleparameter.h>
@@ -76,7 +75,7 @@ void cSampleChannel::generateInterface()
     QString key;
     cSCPIInfo *scpiInfo;
 
-    m_pChannelRange = new cVeinModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pChannelRange = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("PAR_ChannelRange"),
                                                QString("Sampling channel's range"),
                                                QVariant(m_ConfigData.m_ObsermaticConfPar.m_pllRange.m_sPar));
@@ -320,7 +319,7 @@ void cSampleChannel::activationDone()
     setChannelNameMetaInfo(); // we set our real name now
     setRangeValidator(); // and the list of possible ranges
 
-    connect(m_pChannelRange, &cVeinModuleParameter::sigValueChanged, this, &cSampleChannel::newPLLRange);
+    connect(m_pChannelRange, &VfModuleParameter::sigValueChanged, this, &cSampleChannel::newPLLRange);
     emit activated();
 }
 

@@ -68,7 +68,7 @@ void cEfficiency1Module::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cEfficiency1ModuleMeasProgram::activated, this, &cEfficiency1Module::activationContinue);
     connect(m_pMeasProgram, &cEfficiency1ModuleMeasProgram::deactivated, this, &cEfficiency1Module::deactivationContinue);
-    connect(m_pMeasProgram, &cEfficiency1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pMeasProgram, &cEfficiency1ModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     emit addEventSystem(m_pMeasProgram->getEventSystem());
 

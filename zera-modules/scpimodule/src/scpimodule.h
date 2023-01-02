@@ -3,7 +3,7 @@
 
 #include "scpiclientinfo.h"
 #include <basemodule.h>
-#include <modulevalidator.h>
+#include "vfmoduleparameventsytem.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -53,7 +53,7 @@ public:
     QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
     cSCPIEventSystem* m_pSCPIEventSystem;
-    ModuleValidator* m_pModuleValidator;
+    VfModuleParamEventSytem* m_pModuleValidator;
 
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world

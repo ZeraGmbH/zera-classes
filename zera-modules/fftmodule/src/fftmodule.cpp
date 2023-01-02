@@ -4,7 +4,6 @@
 #include "fftmodulemeasprogram.h"
 #include "fftmoduleobservation.h"
 #include <proxy.h>
-#include <modulevalidator.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -81,14 +80,14 @@ void cFftModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::activated, this, &cFftModule::activationContinue);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::deactivated, this, &cFftModule::deactivationContinue);
-    connect(m_pMeasProgram, &cFftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pMeasProgram, &cFftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // and module observation in case we have to react to naming changes
     m_pFftModuleObservation = new cFftModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pFftModuleObservation);
     connect(m_pFftModuleObservation, &cFftModuleObservation::activated, this, &cFftModule::activationContinue);
     connect(m_pFftModuleObservation, &cFftModuleObservation::deactivated, this, &cFftModule::deactivationContinue);
-    connect(m_pFftModuleObservation, &cFftModuleObservation::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pFftModuleObservation, &cFftModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

@@ -3,7 +3,7 @@
 cBaseMeasWorkProgram::cBaseMeasWorkProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     m_pConfiguration(pConfiguration)
 {
-    m_pEventSystem = new VeinInputComponentsEventSystem();
+    m_pEventSystem = new VfInputComponentsEventSystem();
 }
 
 cBaseMeasWorkProgram::~cBaseMeasWorkProgram()
@@ -11,7 +11,7 @@ cBaseMeasWorkProgram::~cBaseMeasWorkProgram()
     delete m_pEventSystem;
 }
 
-VeinInputComponentsEventSystem *cBaseMeasWorkProgram::getEventSystem()
+VfInputComponentsEventSystem *cBaseMeasWorkProgram::getEventSystem()
 {
     return m_pEventSystem;
 }

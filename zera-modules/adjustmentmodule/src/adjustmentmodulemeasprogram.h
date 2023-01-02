@@ -29,10 +29,10 @@ namespace  Server {
 }
 
 class cBaseModule;
-class cVeinModuleActvalue;
-class cVeinModuleMetaData;
-class cVeinModuleComponent;
-class cVeinModuleParameter;
+class VfModuleActvalue;
+class VfModuleMetaData;
+class VfModuleComponent;
+class VfModuleParameter;
 
 
 namespace ADJUSTMENTMODULE
@@ -129,18 +129,18 @@ private:
     QHash<quint32, int> m_MsgNrCmdList;
     QHash<QString, cAdjustIterators*> m_adjustIteratorHash;
 
-    cVeinModuleParameter* m_pPARComputation;
-    cVeinModuleParameter* m_pPARStorage;
-    cVeinModuleParameter* m_pPARAdjustGainStatus;
-    cVeinModuleParameter* m_pPARAdjustPhaseStatus;
-    cVeinModuleParameter* m_pPARAdjustOffsetStatus;
-    cVeinModuleParameter* m_pPARAdjustInit;
-    cVeinModuleParameter* m_pPARAdjustAmplitude;
-    cVeinModuleParameter* m_pPARAdjustPhase;
-    cVeinModuleParameter* m_pPARAdjustOffset;
-    cVeinModuleParameter* m_pPARAdjustSend;
-    cVeinModuleParameter* m_pPARAdjustPCBData;
-    cVeinModuleParameter* m_pPARAdjustClampData;
+    VfModuleParameter* m_pPARComputation;
+    VfModuleParameter* m_pPARStorage;
+    VfModuleParameter* m_pPARAdjustGainStatus;
+    VfModuleParameter* m_pPARAdjustPhaseStatus;
+    VfModuleParameter* m_pPARAdjustOffsetStatus;
+    VfModuleParameter* m_pPARAdjustInit;
+    VfModuleParameter* m_pPARAdjustAmplitude;
+    VfModuleParameter* m_pPARAdjustPhase;
+    VfModuleParameter* m_pPARAdjustOffset;
+    VfModuleParameter* m_pPARAdjustSend;
+    VfModuleParameter* m_pPARAdjustPCBData;
+    VfModuleParameter* m_pPARAdjustClampData;
 
     // statemachine for computation of adjustment values
     QStateMachine m_computationMachine;

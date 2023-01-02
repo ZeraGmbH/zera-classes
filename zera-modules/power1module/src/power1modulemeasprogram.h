@@ -106,17 +106,17 @@ private:
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
 
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    QList<cVeinModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
-    cVeinModuleMetaData* m_pPQSCountInfo; // the number of values we produce
-    cVeinModuleMetaData* m_pFoutCount; // number of our frequence outputs
-    cVeinModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
-    cVeinModuleParameter* m_pIntegrationParameter;
-    cVeinModuleParameter* m_pMeasuringmodeParameter;
-    cVeinModuleParameter* m_pConstantParameter;
-    cVeinModuleComponent* m_pMeasureSignal;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<VfModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
+    VfModuleMetaData* m_pPQSCountInfo; // the number of values we produce
+    VfModuleMetaData* m_pFoutCount; // number of our frequence outputs
+    VfModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
+    VfModuleParameter* m_pIntegrationParameter;
+    VfModuleParameter* m_pMeasuringmodeParameter;
+    VfModuleParameter* m_pConstantParameter;
+    VfModuleComponent* m_pMeasureSignal;
 
-    QList<QPair<cVeinModuleComponentInput*,cVeinModuleComponentInput*>> m_pScalingInputs; //scaling component list
+    QList<QPair<VfModuleComponentInput*,VfModuleComponentInput*>> m_pScalingInputs; //scaling component list
 
     QList<QString> infoReadList; // a list of all channel info we have to read
     QString infoRead; // the actual channel info we are working on

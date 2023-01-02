@@ -3,8 +3,8 @@
 
 #include <QObject>
 
-class cVeinModuleActvalue;
-class cVeinModuleParameter;
+class VfModuleActvalue;
+class VfModuleParameter;
 class cJsonParamValidator;
 
 class VeinInterface : public QObject
@@ -13,22 +13,22 @@ class VeinInterface : public QObject
 public:
     explicit VeinInterface(QObject *parent = nullptr);
     // getters
-    cVeinModuleActvalue *getVeinDeviceInfoComponent();
-    cVeinModuleActvalue *getVeinDeviceStateComponent();
-    cVeinModuleParameter *getVeinDeviceParameterComponent();
+    VfModuleActvalue *getVeinDeviceInfoComponent();
+    VfModuleActvalue *getVeinDeviceStateComponent();
+    VfModuleParameter *getVeinDeviceParameterComponent();
     cJsonParamValidator *getVeinDeviceParameterValidator();
 
     // setters
-    void setVeinDeviceInfoComponent(cVeinModuleActvalue *veinDeviceInfo);
-    void setVeinDeviceStateComponent(cVeinModuleActvalue* veinDeviceState);
-    void setVeinDeviceParameterComponent(cVeinModuleParameter* veinDeviceParameter);
+    void setVeinDeviceInfoComponent(VfModuleActvalue *veinDeviceInfo);
+    void setVeinDeviceStateComponent(VfModuleActvalue* veinDeviceState);
+    void setVeinDeviceParameterComponent(VfModuleParameter* veinDeviceParameter);
     void setVeinDeviceParameterValidator(cJsonParamValidator* veinDeviceParameterValidator);
 signals:
 
 private:
-    cVeinModuleActvalue* m_veinDeviceInfo = nullptr;
-    cVeinModuleActvalue* m_veinDeviceState = nullptr;
-    cVeinModuleParameter* m_veinDeviceParameter = nullptr;
+    VfModuleActvalue* m_veinDeviceInfo = nullptr;
+    VfModuleActvalue* m_veinDeviceState = nullptr;
+    VfModuleParameter* m_veinDeviceParameter = nullptr;
     cJsonParamValidator* m_veinDeviceParameterValidator = nullptr;
 
 };

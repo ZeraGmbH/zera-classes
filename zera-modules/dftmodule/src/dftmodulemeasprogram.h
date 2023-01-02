@@ -65,8 +65,8 @@ private:
     cDftModuleConfigData* getConfData();
 
     cDftModule* m_pModule;
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleActvalue* m_pRFieldActualValue;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    VfModuleActvalue* m_pRFieldActualValue;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
@@ -74,12 +74,12 @@ private:
     QString channelInfoRead; // the actual channel info we are working on
     quint32 m_nSRate; // number of samples / signal period
 
-    cVeinModuleComponent* m_pMeasureSignal;
-    cVeinModuleParameter* m_pIntegrationTimeParameter;
-    cVeinModuleParameter* m_pRefChannelParameter;
-    cVeinModuleMetaData* m_pDFTPNCountInfo;
-    cVeinModuleMetaData* m_pDFTPPCountInfo;
-    cVeinModuleMetaData* m_pDFTOrderInfo;
+    VfModuleComponent* m_pMeasureSignal;
+    VfModuleParameter* m_pIntegrationTimeParameter;
+    VfModuleParameter* m_pRefChannelParameter;
+    VfModuleMetaData* m_pDFTPNCountInfo;
+    VfModuleMetaData* m_pDFTPPCountInfo;
+    VfModuleMetaData* m_pDFTOrderInfo;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;

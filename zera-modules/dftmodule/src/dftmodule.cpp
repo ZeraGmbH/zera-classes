@@ -72,14 +72,14 @@ void cDftModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::activated, this, &cDftModule::activationContinue);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::deactivated, this, &cDftModule::deactivationContinue);
-    connect(m_pMeasProgram, &cDftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pMeasProgram, &cDftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // and module observation in case we have to react to naming changes
     m_pDftModuleObservation = new cDftModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pDftModuleObservation);
     connect(m_pDftModuleObservation, &cDftModuleObservation::activated, this, &cDftModule::activationContinue);
     connect(m_pDftModuleObservation, &cDftModuleObservation::deactivated, this, &cDftModule::deactivationContinue);
-    connect(m_pDftModuleObservation, &cDftModuleObservation::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pDftModuleObservation, &cDftModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();

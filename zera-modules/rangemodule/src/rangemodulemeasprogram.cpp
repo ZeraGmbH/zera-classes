@@ -120,11 +120,11 @@ void cRangeModuleMeasProgram::syncRanging(QVariant sync)
 
 void cRangeModuleMeasProgram::generateInterface()
 {
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
 
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_Channel%1Peak").arg(i+1),
                                             QString("Actual peak value"),
                                             QVariant(0.0) );
@@ -132,7 +132,7 @@ void cRangeModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                         QString("ACT_Frequency"),
                                         QString("Actual frequency"),
                                         QVariant(0.0) );
@@ -143,7 +143,7 @@ void cRangeModuleMeasProgram::generateInterface()
     m_ActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0) );

@@ -4,12 +4,12 @@
 #include "vfmodulecomponent.h"
 #include "scpiinfo.h"
 
-class cVeinModuleActvalue: public cVeinModuleComponent
+class VfModuleActvalue: public VfModuleComponent
 {
     Q_OBJECT
 public:
-    cVeinModuleActvalue(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
-    virtual ~cVeinModuleActvalue();
+    VfModuleActvalue(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
+    virtual ~VfModuleActvalue();
     virtual void exportSCPIInfo(QJsonArray &jsArr);
     void setSCPIInfo(cSCPIInfo* scpiinfo);
 private:

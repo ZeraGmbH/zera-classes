@@ -5,7 +5,7 @@
 #include <vf-cpp-rpc.h>
 #include <QHash>
 
-class VfModuleRpc : public VeinCommandFilterEventSystem
+class VfModuleRpc : public VfCommandFilterEventSystem
 {
     Q_OBJECT
 public:

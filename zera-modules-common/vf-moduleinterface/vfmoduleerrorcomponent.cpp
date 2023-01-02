@@ -7,12 +7,12 @@
 #include <ve_eventsystem.h>
 #include "vfmoduleerrorcomponent.h"
 
-cVeinModuleErrorComponent::cVeinModuleErrorComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString modulename)
+VfModuleErrorComponent::VfModuleErrorComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString modulename)
     :m_nEntityId(entityId), m_pEventSystem(eventsystem), m_sName(name), m_sModuleName(modulename)
 {
 }
 
-void cVeinModuleErrorComponent::setValue(QVariant value, int dest)
+void VfModuleErrorComponent::setValue(QVariant value, int dest)
 {
     qWarning("Module %s reported error: %s", qPrintable(m_sModuleName), qPrintable(value.toString()));
     QJsonObject jsObj;

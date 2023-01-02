@@ -1,5 +1,4 @@
 #include "scpimodule.h"
-#include "modulevalidator.h"
 #include "scpimoduleconfiguration.h"
 #include "scpimoduleconfigdata.h"
 #include "scpiserver.h"
@@ -32,7 +31,7 @@ cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId,
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
 
     m_pSCPIEventSystem = new cSCPIEventSystem(this);
-    m_pModuleValidator = new ModuleValidator(entityId, storagesystem);
+    m_pModuleValidator = new VfModuleParamEventSytem(entityId, storagesystem);
 }
 
 
@@ -70,7 +69,7 @@ void cSCPIModule::setupModule()
     m_ModuleActivistList.append(m_pSCPIServer);
     connect(m_pSCPIServer, &cSCPIServer::activated, this, &cSCPIModule::activationContinue);
     connect(m_pSCPIServer, &cSCPIServer::deactivated, this, &cSCPIModule::deactivationContinue);
-    connect(m_pSCPIServer, &cSCPIServer::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pSCPIServer, &cSCPIServer::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // we already post meta information here because setting up interface looks for valid meta info
     exportMetaData();

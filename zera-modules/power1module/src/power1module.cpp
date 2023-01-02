@@ -11,7 +11,7 @@ namespace POWER1MODULE
 cPower1Module::cPower1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
     :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower1ModuleConfiguration()), parent)
 {
-    m_inputComponentEventSystem = new VeinInputComponentsEventSystem;
+    m_inputComponentEventSystem = new VfInputComponentsEventSystem;
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures power with configured measuring and integration modes");
     m_sSCPIModuleName = QString("%1%2").arg(BaseSCPIModuleName).arg(modnr);
@@ -51,7 +51,7 @@ QByteArray cPower1Module::getConfiguration() const
     return m_pConfiguration->exportConfiguration();
 }
 
-VeinInputComponentsEventSystem *cPower1Module::getPEventSystem() const
+VfInputComponentsEventSystem *cPower1Module::getPEventSystem() const
 {
     return m_inputComponentEventSystem;
 }

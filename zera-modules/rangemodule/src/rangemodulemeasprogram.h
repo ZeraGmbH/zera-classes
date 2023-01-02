@@ -67,8 +67,8 @@ private:
     quint16 m_nSamples;
     QStringList m_ChannelList; // the list of actual values we work on
 
-    cVeinModuleComponent *m_pMeasureSignal;
-    QList<cVeinModuleActvalue*> m_ActValueList;
+    VfModuleComponent *m_pMeasureSignal;
+    QList<VfModuleActvalue*> m_ActValueList;
     QTimer m_dspWatchdogTimer;
 
     cDspMeasData* m_pTmpDataDsp;

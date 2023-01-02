@@ -39,7 +39,7 @@ private:
     cSampleModule* m_pModule;
     cSampleModuleConfigData& m_ConfigData;
 
-    cVeinModuleParameter *m_pChannelRange;
+    VfModuleParameter *m_pChannelRange;
 
     QStringList m_RangeNameList; // a list of all range's names
     QString m_sActRange; // the actual range set

@@ -10,7 +10,7 @@
 namespace  BURDEN1MODULE
 {
 
-cBurden1MeasDelegate::cBurden1MeasDelegate(cVeinModuleActvalue *actburden, cVeinModuleActvalue *actpowerfactor, cVeinModuleActvalue *actrelburden, QString mode, bool withSignal)
+cBurden1MeasDelegate::cBurden1MeasDelegate(VfModuleActvalue *actburden, VfModuleActvalue *actpowerfactor, VfModuleActvalue *actrelburden, QString mode, bool withSignal)
     :m_pActBurden(actburden), m_pActPowerFactor(actpowerfactor), m_pActRelativeBurden(actrelburden), m_sMode(mode), m_bSignal(withSignal)
 {
 }

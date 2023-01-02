@@ -5,8 +5,8 @@
 #include "veininterface.h"
 #include <basemeasworkprogram.h>
 
-class cVeinModuleActvalue;
-class cVeinModuleParameter;
+class VfModuleActvalue;
+class VfModuleParameter;
 class cJsonParamValidator;
 
 namespace ELECTRONICBURDENMODULE
@@ -31,7 +31,7 @@ private:
     configuration* getConfigXMLWrapper();
 
     ElectronicBurdenModule* m_pModule; // the module we live in
-    cVeinModuleParameter* m_pVeinDemoTest = nullptr;
+    VfModuleParameter* m_pVeinDemoTest = nullptr;
     VeinInterface* m_pVeinInterface = nullptr;
 
 private slots:

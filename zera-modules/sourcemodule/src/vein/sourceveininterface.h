@@ -5,8 +5,8 @@
 #include <QJsonObject>
 #include <QVariant>
 
-class cVeinModuleActvalue;
-class cVeinModuleParameter;
+class VfModuleActvalue;
+class VfModuleParameter;
 class cJsonParamValidator;
 
 class SourceVeinInterface : public QObject
@@ -15,14 +15,14 @@ class SourceVeinInterface : public QObject
 public:
     explicit SourceVeinInterface();
 
-    cVeinModuleActvalue *getVeinDeviceInfoComponent();
-    cVeinModuleActvalue *getVeinDeviceStateComponent();
-    cVeinModuleParameter *getVeinDeviceParameterComponent();
+    VfModuleActvalue *getVeinDeviceInfoComponent();
+    VfModuleActvalue *getVeinDeviceStateComponent();
+    VfModuleParameter *getVeinDeviceParameterComponent();
     cJsonParamValidator *getVeinDeviceParameterValidator();
 
-    void setVeinDeviceInfoComponent(cVeinModuleActvalue *veinDeviceInfo);
-    void setVeinDeviceStateComponent(cVeinModuleActvalue* veinDeviceState);
-    void setVeinDeviceParameterComponent(cVeinModuleParameter* veinDeviceParameter);
+    void setVeinDeviceInfoComponent(VfModuleActvalue *veinDeviceInfo);
+    void setVeinDeviceStateComponent(VfModuleActvalue* veinDeviceState);
+    void setVeinDeviceParameterComponent(VfModuleParameter* veinDeviceParameter);
     void setVeinDeviceParameterValidator(cJsonParamValidator* veinDeviceParameterValidator);
 signals:
     void sigNewLoadParams(QJsonObject params);
@@ -30,9 +30,9 @@ signals:
 private slots:
     void onNewVeinLoadParams(QVariant params);
 private:
-    cVeinModuleActvalue* m_veinDeviceInfo = nullptr;
-    cVeinModuleActvalue* m_veinDeviceState = nullptr;
-    cVeinModuleParameter* m_veinDeviceParameter = nullptr;
+    VfModuleActvalue* m_veinDeviceInfo = nullptr;
+    VfModuleActvalue* m_veinDeviceState = nullptr;
+    VfModuleParameter* m_veinDeviceParameter = nullptr;
     cJsonParamValidator* m_veinDeviceParameterValidator = nullptr;
 };
 

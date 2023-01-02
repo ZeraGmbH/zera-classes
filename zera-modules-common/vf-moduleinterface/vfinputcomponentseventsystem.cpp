@@ -1,17 +1,17 @@
 #include "vfinputcomponentseventsystem.h"
 #include "vfmodulecomponent.h"
 
-VeinInputComponentsEventSystem::VeinInputComponentsEventSystem() :
-    VeinCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
+VfInputComponentsEventSystem::VfInputComponentsEventSystem() :
+    VfCommandFilterEventSystem(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION)
 {
 }
 
-void VeinInputComponentsEventSystem::setInputList(QList<cVeinModuleComponentInput *> &inputComponentList)
+void VfInputComponentsEventSystem::setInputList(QList<VfModuleComponentInput *> &inputComponentList)
 {
     m_inputComponentList = inputComponentList;
 }
 
-void VeinInputComponentsEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
+void VfInputComponentsEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
     // is it a command event for setting component data
     if (commandEvent->eventData()->type() == VeinComponent::ComponentData::dataType()) {
@@ -20,7 +20,7 @@ void VeinInputComponentsEventSystem::processCommandEvent(VeinEvent::CommandEvent
         int entityId = componentData->entityId();
         // now let's look if we need this input
         for (int i = 0; i < m_inputComponentList.count(); i++) {
-            cVeinModuleComponentInput *vmci = m_inputComponentList.at(i);
+            VfModuleComponentInput *vmci = m_inputComponentList.at(i);
             if ( (vmci->m_sName == componentName) && (vmci->m_nEntityId == entityId) ) {
                 vmci->setValue(componentData->newValue());
                 emit vmci->sigValueChanged(componentData->newValue());

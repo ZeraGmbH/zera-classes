@@ -62,7 +62,7 @@ private:
     QTimer m_AdjustTimer;
     bool m_bAdjustTrigger;
 
-    cVeinModuleComponent *m_pAdjustmentInfo;
+    VfModuleComponent *m_pAdjustmentInfo;
 
     // statemachine for activating gets the following states
     QState m_pcbserverConnectState;

@@ -24,7 +24,7 @@ namespace Zera
 
 
 
-class cVeinModuleMetaData;
+class VfModuleMetaData;
 
 namespace RANGEMODULE
 {
@@ -72,8 +72,8 @@ protected slots:
     virtual void deactivationFinished();
 
 private:
-    cVeinModuleMetaData* m_pChannelCountInfo;
-    cVeinModuleMetaData* m_pGroupCountInfo;
+    VfModuleMetaData* m_pChannelCountInfo;
+    VfModuleMetaData* m_pGroupCountInfo;
     qint32 m_nActivationIt;
     bool m_bDemo;
 

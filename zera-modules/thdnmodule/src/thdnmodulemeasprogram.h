@@ -22,10 +22,10 @@ class QStateMachine;
 class QState;
 class QFinalState;
 
-class cVeinModuleComponent;
-class cVeinModuleParameter;
-class cVeinModuleMetaData;
-class cVeinModuleActvalue;
+class VfModuleComponent;
+class VfModuleParameter;
+class VfModuleMetaData;
+class VfModuleActvalue;
 class cMovingwindowFilter;
 
 
@@ -88,10 +88,10 @@ private:
     cThdnModuleConfigData* getConfData();
 
     cThdnModule* m_pModule;
-    QList<cVeinModuleActvalue*> m_ActValueList; // the list of actual values we work on
-    cVeinModuleMetaData* m_pThdnCountInfo;
-    cVeinModuleComponent* m_pMeasureSignal;
-    cVeinModuleParameter* m_pIntegrationTimeParameter;
+    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    VfModuleMetaData* m_pThdnCountInfo;
+    VfModuleComponent* m_pMeasureSignal;
+    VfModuleParameter* m_pIntegrationTimeParameter;
 
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read

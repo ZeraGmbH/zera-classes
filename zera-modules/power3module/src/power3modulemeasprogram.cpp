@@ -56,12 +56,12 @@ cPower3ModuleConfigData *cPower3ModuleMeasProgram::getConfData()
 
 void cPower3ModuleMeasProgram::generateInterface()
 {
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
 
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++)
     {
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_HPP%1").arg(i+1),
                                             QString("Harmonic power active values"),
                                             QVariant(0.0) );
@@ -74,7 +74,7 @@ void cPower3ModuleMeasProgram::generateInterface()
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_HPQ%1").arg(i+1),
                                             QString("Harmonic power reactive values"),
                                             QVariant(0.0) );
@@ -87,7 +87,7 @@ void cPower3ModuleMeasProgram::generateInterface()
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-        pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+        pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_HPS%1").arg(i+1),
                                             QString("Harmonic power apparent values"),
                                             QVariant(0.0) );
@@ -102,10 +102,10 @@ void cPower3ModuleMeasProgram::generateInterface()
 
     }
 
-    m_pHPWCountInfo = new cVeinModuleMetaData(QString("HPWCount"), QVariant(getConfData()->m_nPowerSystemCount));
+    m_pHPWCountInfo = new VfModuleMetaData(QString("HPWCount"), QVariant(getConfData()->m_nPowerSystemCount));
     m_pModule->veinModuleMetaDataList.append(m_pHPWCountInfo);
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -119,7 +119,7 @@ void cPower3ModuleMeasProgram::searchActualValues()
     bool error;
 
     error = false;
-    QList<cVeinModuleComponentInput*> inputList;
+    QList<VfModuleComponentInput*> inputList;
 
     for (int i = 0; i < getConfData()->m_nPowerSystemCount; i++)
     {
@@ -128,7 +128,7 @@ void cPower3ModuleMeasProgram::searchActualValues()
              (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI)) )
         {
             cPower3MeasDelegate* cPMD;
-            cVeinModuleComponentInput *vmci;
+            VfModuleComponentInput *vmci;
 
             if (i == (getConfData()->m_nPowerSystemCount-1))
             {
@@ -140,13 +140,13 @@ void cPower3ModuleMeasProgram::searchActualValues()
 
             m_Power3MeasDelegateList.append(cPMD);
 
-            vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
+            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputU);
             inputList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput1);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput1);
 
-            vmci = new cVeinModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
+            vmci = new VfModuleComponentInput(getConfData()->m_nModuleId, getConfData()->m_powerSystemConfigList.at(i).m_sInputI);
             inputList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput2);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cPMD, &cPower3MeasDelegate::actValueInput2);
         }
         else
             error = true;

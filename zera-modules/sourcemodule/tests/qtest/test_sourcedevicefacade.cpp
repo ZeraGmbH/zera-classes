@@ -48,9 +48,9 @@ static constexpr int defaultEntityId = 1;
 struct TVeinObjects
 {
     SourceVeinInterface veinInterface;
-    cVeinModuleActvalue veinActDeviceState;
-    cVeinModuleActvalue veinActDeviceInfo;
-    cVeinModuleParameter veinDeviceParameter;
+    VfModuleActvalue veinActDeviceState;
+    VfModuleActvalue veinActDeviceInfo;
+    VfModuleParameter veinDeviceParameter;
     cJsonParamValidator veinDeviceParameterValidator;
     TVeinObjects(QJsonObject jsonStructure, VeinEvent::EventSystem *veinEventSystem) :
         veinActDeviceState(defaultEntityId,

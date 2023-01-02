@@ -5,15 +5,15 @@
 #include "vfmodulecomponentinput.h"
 #include <QList>
 
-class VeinInputComponentsEventSystem : public VeinCommandFilterEventSystem
+class VfInputComponentsEventSystem : public VfCommandFilterEventSystem
 {
     Q_OBJECT
 public:
-    VeinInputComponentsEventSystem();
-    void setInputList(QList<cVeinModuleComponentInput*>& inputComponentList);
+    VfInputComponentsEventSystem();
+    void setInputList(QList<VfModuleComponentInput*>& inputComponentList);
 private:
     void processCommandEvent(VeinEvent::CommandEvent *commandEvent) override;
-    QList<cVeinModuleComponentInput*> m_inputComponentList;
+    QList<VfModuleComponentInput*> m_inputComponentList;
 };
 
 #endif // VEININPUTCOMPONENTSEVENTSYSTEM_H

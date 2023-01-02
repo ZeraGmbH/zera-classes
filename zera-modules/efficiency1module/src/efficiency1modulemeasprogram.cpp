@@ -59,10 +59,10 @@ cEfficiency1ModuleConfigData *cEfficiency1ModuleMeasProgram::getConfData()
 
 void cEfficiency1ModuleMeasProgram::generateInterface()
 {
-    cVeinModuleActvalue *pActvalue;
+    VfModuleActvalue *pActvalue;
     cSCPIInfo* pSCPIInfo;
 
-    pActvalue = new cVeinModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                         QString("ACT_EFC1"),
                                         QString("Efficiency actual values"),
                                         QVariant(0.0) );
@@ -75,10 +75,10 @@ void cEfficiency1ModuleMeasProgram::generateInterface()
     m_ActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
-    m_pEFFCountInfo = new cVeinModuleMetaData(QString("EFCCount"), QVariant(1));
+    m_pEFFCountInfo = new VfModuleMetaData(QString("EFCCount"), QVariant(1));
     m_pModule->veinModuleMetaDataList.append(m_pEFFCountInfo);
 
-    m_pMeasureSignal = new cVeinModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+    m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("SIG_Measuring"),
                                                 QString("Signal indicating measurement activity"),
                                                 QVariant(0));
@@ -111,10 +111,10 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
 
     if (!error)
     {
-        QList<cVeinModuleComponentInput*> vmciList;
+        QList<VfModuleComponentInput*> vmciList;
 
         cEfficiency1MeasDelegate* cEMD;
-        cVeinModuleComponentInput *vmci;
+        VfModuleComponentInput *vmci;
 
         cEMD = new cEfficiency1MeasDelegate(m_ActValueList.at(0), true);
         connect(cEMD, &cEfficiency1MeasDelegate::measuring, this, &cEfficiency1ModuleMeasProgram::setMeasureSignal);
@@ -123,18 +123,18 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
 
         for (int i = 0; i < getConfData()->m_PowerInputConfiguration.m_nPowerSystemCount; i++)
         {
-            vmci = new cVeinModuleComponentInput(getConfData()->m_PowerInputConfiguration.m_nModuleId, getConfData()->m_PowerInputConfiguration.powerInputList.at(i));
+            vmci = new VfModuleComponentInput(getConfData()->m_PowerInputConfiguration.m_nModuleId, getConfData()->m_PowerInputConfiguration.powerInputList.at(i));
             cEMD->addInputPowerValue(vmci);
             vmciList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cEMD, &cEfficiency1MeasDelegate::actValueInput1);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cEMD, &cEfficiency1MeasDelegate::actValueInput1);
         }
 
         for (int i = 0; i < getConfData()->m_PowerOutputConfiguration.m_nPowerSystemCount; i++)
         {
-            vmci = new cVeinModuleComponentInput(getConfData()->m_PowerOutputConfiguration.m_nModuleId, getConfData()->m_PowerOutputConfiguration.powerInputList.at(i));
+            vmci = new VfModuleComponentInput(getConfData()->m_PowerOutputConfiguration.m_nModuleId, getConfData()->m_PowerOutputConfiguration.powerInputList.at(i));
             cEMD->addOutputPowerValue(vmci);
             vmciList.append(vmci);
-            connect(vmci, &cVeinModuleComponentInput::sigValueChanged, cEMD, &cEfficiency1MeasDelegate::actValueInput2);
+            connect(vmci, &VfModuleComponentInput::sigValueChanged, cEMD, &cEfficiency1MeasDelegate::actValueInput2);
         }
 
         m_pEventSystem->setInputList(vmciList);

@@ -6,7 +6,6 @@
 #include "rangemoduleobservation.h"
 #include "rangeobsermatic.h"
 #include "adjustment.h"
-#include <modulevalidator.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -61,10 +60,10 @@ void cRangeModule::setupModule()
     pConfData = qobject_cast<cRangeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
     m_bDemo = pConfData->m_bDemo;
 
-    m_pChannelCountInfo = new cVeinModuleMetaData(QString("ChannelCount"), QVariant(pConfData->m_nChannelCount));
+    m_pChannelCountInfo = new VfModuleMetaData(QString("ChannelCount"), QVariant(pConfData->m_nChannelCount));
     veinModuleMetaDataList.append(m_pChannelCountInfo);
 
-    m_pGroupCountInfo = new cVeinModuleMetaData(QString("GroupCount"), QVariant(pConfData->m_nGroupCount));
+    m_pGroupCountInfo = new VfModuleMetaData(QString("GroupCount"), QVariant(pConfData->m_nGroupCount));
     veinModuleMetaDataList.append(m_pGroupCountInfo);
 
 
@@ -83,7 +82,7 @@ void cRangeModule::setupModule()
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cRangeMeasChannel::activated, this, &cRangeModule::activationContinue);
         connect(pchn, &cRangeMeasChannel::deactivated, this, &cRangeModule::deactivationContinue);
-        connect(pchn, &cRangeMeasChannel::errMsg, m_pModuleErrorComponent , &cVeinModuleErrorComponent::setValue);
+        connect(pchn, &cRangeMeasChannel::errMsg, m_pModuleErrorComponent , &VfModuleErrorComponent::setValue);
     }
 
     // we need some program that does the range handling (observation, automatic, setting and grouping)
@@ -98,7 +97,7 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, &cRangeObsermatic::activated, this, &cRangeModule::activationContinue);
     connect(m_pRangeObsermatic, &cRangeObsermatic::deactivated, this, &cRangeModule::deactivationContinue);
-    connect(m_pRangeObsermatic, &cRangeObsermatic::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pRangeObsermatic, &cRangeObsermatic::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // we have to connect all cmddone from our meas channel to range obsermatic
     // this is also used for synchronizing purpose
@@ -115,7 +114,7 @@ void cRangeModule::setupModule()
         m_ModuleActivistList.append(m_pAdjustment);
         connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
         connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);
-        connect(m_pAdjustment, &cAdjustManagement::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+        connect(m_pAdjustment, &cAdjustManagement::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
     }
 
     // at last we need some program that does the measuring on dsp
@@ -123,14 +122,14 @@ void cRangeModule::setupModule()
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);
-    connect(m_pMeasProgram, &cRangeModuleMeasProgram::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+    connect(m_pMeasProgram, &cRangeModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     if(!m_bDemo) {
         m_pRangeModuleObservation = new cRangeModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
         m_ModuleActivistList.append(m_pRangeModuleObservation);
         connect(m_pRangeModuleObservation, &cRangeModuleObservation::activated, this, &cRangeModule::activationContinue);
         connect(m_pRangeModuleObservation, &cRangeModuleObservation::deactivated, this, &cRangeModule::deactivationContinue);
-        connect(m_pRangeModuleObservation, &cRangeModuleObservation::errMsg, m_pModuleErrorComponent, &cVeinModuleErrorComponent::setValue);
+        connect(m_pRangeModuleObservation, &cRangeModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
     }
     else {
         connect(m_pMeasProgram, &cRangeModuleMeasProgram::sigDemoActualValues, this, &cRangeModule::setPeakRmsAndFrequencyValues);
@@ -189,7 +188,7 @@ void cRangeModule::activationFinished()
         // and to the range obsermatic
         connect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pRangeObsermatic, &cRangeObsermatic::ActionHandler);
         // we connect a signal that range has changed to measurement for synchronizing purpose
-        connect(m_pRangeObsermatic->m_pRangingSignal, &cVeinModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
+        connect(m_pRangeObsermatic->m_pRangingSignal, &VfModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
 
         // if we get informed we have to reconfigure
         connect(m_pRangeModuleObservation, &cRangeModuleObservation::moduleReconfigure, this, &cRangeModule::rangeModuleReconfigure);
@@ -216,7 +215,7 @@ void cRangeModule::deactivationStart()
         disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, this, &cRangeModule::setPeakRmsAndFrequencyValues);
         disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pAdjustment, &cAdjustManagement::ActionHandler);
         disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pRangeObsermatic, &cRangeObsermatic::ActionHandler);
-        disconnect(m_pRangeObsermatic->m_pRangingSignal, &cVeinModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
+        disconnect(m_pRangeObsermatic->m_pRangingSignal, &VfModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
 
         for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
         {
