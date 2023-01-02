@@ -1,18 +1,18 @@
-#ifndef PARAMVALIDATOR_H
-#define PARAMVALIDATOR_H
+#ifndef VALIDATORINTERFACE_H
+#define VALIDATORINTERFACE_H
 
 #include <QVariant>
 #include <QJsonObject>
 
 // pure virtual class for parameter validation
 
-class cParamValidator
+class ValidatorInterface
 {
 public:
     virtual bool isValidParam(QVariant& newValue) = 0;
     virtual void exportMetaData(QJsonObject& jsObj) = 0;
-    virtual ~cParamValidator() = default;
+    virtual ~ValidatorInterface() = default;
 };
 
 
-#endif // PARAMVALIDATOR_H
+#endif // VALIDATORINTERFACE_H

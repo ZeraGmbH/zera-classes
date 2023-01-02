@@ -30,7 +30,7 @@ public:
 };
 
 
-class cAdjustValidator3d: public cParamValidator
+class cAdjustValidator3d: public ValidatorInterface
 {
 public:
     cAdjustValidator3d(cAdjustmentModuleMeasProgram *measprogram);
@@ -47,7 +47,7 @@ private:
 };
 
 
-class cAdjustValidator3i: public cParamValidator
+class cAdjustValidator3i: public ValidatorInterface
 {
 public:
     cAdjustValidator3i(cAdjustmentModuleMeasProgram *measprogram);
@@ -66,7 +66,7 @@ private:
 
 
 
-class cAdjustValidator2: public cParamValidator
+class cAdjustValidator2: public ValidatorInterface
 {
 public:
     cAdjustValidator2(cAdjustmentModuleMeasProgram *measprogram);
@@ -83,7 +83,7 @@ private:
 };
 
 
-class cAdjustValidatorFine: public cParamValidator
+class cAdjustValidatorFine: public ValidatorInterface
 {
 public:
     cAdjustValidatorFine(){}

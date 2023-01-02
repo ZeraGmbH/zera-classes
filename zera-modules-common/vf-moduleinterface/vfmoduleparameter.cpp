@@ -1,5 +1,5 @@
 #include "vfmoduleparameter.h"
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 #include "scpiinfo.h"
 
 VfModuleParameter::VfModuleParameter(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval, bool deferredNotification, bool deferredQueryNotification)
@@ -67,7 +67,7 @@ void VfModuleParameter::setSCPIInfo(cSCPIInfo *scpiinfo)
     m_pscpiInfo = scpiinfo;
 }
 
-void VfModuleParameter::setValidator(cParamValidator *validator)
+void VfModuleParameter::setValidator(ValidatorInterface *validator)
 {
     if(m_pValidator)
         delete m_pValidator;

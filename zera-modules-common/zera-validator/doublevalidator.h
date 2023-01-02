@@ -1,9 +1,9 @@
 #ifndef DOUBLEVALIDATOR_H
 #define DOUBLEVALIDATOR_H
 
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 
-class cDoubleValidator: public cParamValidator
+class cDoubleValidator: public ValidatorInterface
 {
 public:
     cDoubleValidator() { }

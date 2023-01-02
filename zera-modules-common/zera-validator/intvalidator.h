@@ -1,9 +1,9 @@
 #ifndef INTVALIDATOR_H
 #define INTVALIDATOR_H
 
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 
-class cIntValidator: public cParamValidator
+class cIntValidator: public ValidatorInterface
 {
 public:
     cIntValidator() { }

@@ -3,7 +3,7 @@
 
 #include "vfmodulecomponent.h"
 #include "scpiinfo.h"
-#include "paramvalidator.h"
+#include "validatorinterface.h"
 #include <QUuid>
 
 class VfModuleParameter: public VfModuleComponent
@@ -26,13 +26,13 @@ public:
     virtual void exportMetaData(QJsonObject &jsObj);
     virtual void exportSCPIInfo(QJsonArray &jsArr);
     void setSCPIInfo(cSCPIInfo* scpiinfo);
-    void setValidator(cParamValidator* validator);
+    void setValidator(ValidatorInterface* validator);
     void transaction(QUuid clientId, QVariant newValue, QVariant oldValue, VeinComponent::ComponentData::Command vccmd);
 
 private:
     bool m_bDeferredNotification; //
     bool m_bDeferredQueryNotification;
-    cParamValidator* m_pValidator;
+    ValidatorInterface* m_pValidator;
     cSCPIInfo* m_pscpiInfo;
 };
 
