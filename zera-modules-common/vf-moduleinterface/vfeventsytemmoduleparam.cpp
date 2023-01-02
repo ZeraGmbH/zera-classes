@@ -7,12 +7,12 @@ VfEventSytemModuleParam::VfEventSytemModuleParam(int entityId, VeinEvent::Storag
 {
 }
 
-void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *t_cEvent)
+void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *commandEvent)
 {
-    if (t_cEvent->eventData()->entityId() == m_entityId) {
+    if (commandEvent->eventData()->entityId() == m_entityId) {
         // is it a command event for setting component data
-        if (t_cEvent->eventData()->type() == VeinComponent::ComponentData::dataType()) {
-            VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (t_cEvent->eventData());
+        if (commandEvent->eventData()->type() == VeinComponent::ComponentData::dataType()) {
+            VeinComponent::ComponentData* cData = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData());
             QString cName = cData->componentName();
             // does this component data belong to our module
             auto hashIter = m_parameterHash.find(cName);
@@ -20,8 +20,8 @@ void VfEventSytemModuleParam::processCommandEvent(VeinEvent::CommandEvent *t_cEv
                 // we only take new values if the old values are equal
                 if (cData->oldValue() == m_storageSystem->getStoredValue(m_entityId, cName)) {
                     VfModuleParameter *param = hashIter.value();
-                    param->transaction(t_cEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
-                    t_cEvent->accept(); // it is an event for us ... the parameter will do the rest
+                    param->transaction(commandEvent->peerId(), cData->newValue(), cData->oldValue(), cData->eventCommand());
+                    commandEvent->accept(); // it is an event for us ... the parameter will do the rest
                 }
             }
         }

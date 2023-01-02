@@ -10,7 +10,7 @@ class VfModuleRpc : public VfEventSystemCommandFilter
     Q_OBJECT
 public:
     VfModuleRpc(int entityId);
-    virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
+    virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
     void addRpc(VfCpp::cVeinModuleRpc::Ptr rpc);
 private:
     int m_entityId;

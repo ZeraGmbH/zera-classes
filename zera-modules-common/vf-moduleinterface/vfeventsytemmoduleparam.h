@@ -11,7 +11,7 @@ class VfEventSytemModuleParam : public VfEventSystemCommandFilter
     Q_OBJECT
 public:
     VfEventSytemModuleParam(int entityId, VeinEvent::StorageSystem* storageSystem);
-    virtual void processCommandEvent(VeinEvent::CommandEvent *t_cEvent);
+    virtual void processCommandEvent(VeinEvent::CommandEvent *commandEvent);
     void setParameterHash(const QHash<QString, VfModuleParameter*> &parameterHash);
 private:
     int m_entityId;
