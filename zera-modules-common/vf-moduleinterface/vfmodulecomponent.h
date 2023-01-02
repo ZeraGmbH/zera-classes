@@ -11,7 +11,7 @@ class VfModuleComponent: public cMetaData
 public:
     VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval);
     ~VfModuleComponent();
-    virtual void exportMetaData(QJsonObject &jsObj);
+    void exportMetaData(QJsonObject &jsObj) override;
     void setChannelName(QString name); // channel name for json export can be empty
     QString getChannelName();
     void setUnit(QString unit);
@@ -22,7 +22,7 @@ signals:
     void sigValueChanged(QVariant); // we connect here if we want to do something on changed values
     void sigValueQuery(QVariant); // we connect here if we want to read a value before returning data from storage ...perhaps with parameter
 public slots:
-    void setValue(QVariant value); // here we have to emit event for notification
+    void setValue(QVariant value) override; // here we have to emit event for notification
     void setError(); // here we have to emit event for error notification
 protected:
     int m_nEntityId;
