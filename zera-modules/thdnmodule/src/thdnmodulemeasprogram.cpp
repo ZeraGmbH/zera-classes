@@ -8,10 +8,10 @@
 #include <proxy.h>
 #include <proxyclient.h>
 #include <scpiinfo.h>
-#include <veinmodulemetadata.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
+#include <vfmodulemetadata.h>
+#include <vfmodulecomponent.h>
+#include <vfmoduleparameter.h>
+#include <vfmoduleactvalue.h>
 #include <modulevalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>

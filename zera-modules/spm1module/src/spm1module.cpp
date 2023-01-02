@@ -4,9 +4,9 @@
 #include "spm1modulemeasprogram.h"
 #include <proxy.h>
 #include <modulevalidator.h>
-#include <veinmodulecomponent.h>
-#include <veinmoduleerrorcomponent.h>
-#include <veinmodulemetadata.h>
+#include <vfmodulecomponent.h>
+#include <vfmoduleerrorcomponent.h>
+#include <vfmodulemetadata.h>
 
 namespace SPM1MODULE
 {

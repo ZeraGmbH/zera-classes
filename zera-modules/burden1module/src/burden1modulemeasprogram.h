@@ -7,8 +7,8 @@
 #include "measmodeinfo.h"
 #include "foutinfo.h"
 #include <basemeasworkprogram.h>
-#include <veinmoduleparameter.h>
-#include <veinmodulemetadata.h>
+#include <vfmoduleparameter.h>
+#include <vfmodulemetadata.h>
 #include <QFinalState>
 
 namespace BURDEN1MODULE

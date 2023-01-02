@@ -1,4 +1,4 @@
-#include "veinmoduleactvalue.h"
+#include "vfmoduleactvalue.h"
 #include "scpiinfo.h"
 
 cVeinModuleActvalue::cVeinModuleActvalue(int entityId,  VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)

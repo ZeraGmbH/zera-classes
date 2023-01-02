@@ -1,7 +1,7 @@
 #ifndef VEINMODULEACTVALUE_H
 #define VEINMODULEACTVALUE_H
 
-#include "veinmodulecomponent.h"
+#include "vfmodulecomponent.h"
 #include "scpiinfo.h"
 
 class cVeinModuleActvalue: public cVeinModuleComponent

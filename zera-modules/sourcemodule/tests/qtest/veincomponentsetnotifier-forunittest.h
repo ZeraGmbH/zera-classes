@@ -1,7 +1,7 @@
 #ifndef VENCOMPONENTNOTIFIER_H
 #define VENCOMPONENTNOTIFIER_H
 
-#include <veinmodulecomponent.h>
+#include <vfmodulecomponent.h>
 #include <ve_eventsystem.h>
 #include <ve_eventhandler.h>
 #include <vs_veinhash.h>

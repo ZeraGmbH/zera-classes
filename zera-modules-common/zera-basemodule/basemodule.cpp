@@ -1,10 +1,10 @@
 #include "basemodule.h"
 #include "basemoduleconfiguration.h"
-#include "veinmodulemetadata.h"
-#include "veinmoduleactvalue.h"
-#include "veinmodulecomponent.h"
-#include "veinmoduleerrorcomponent.h"
-#include "veinmoduleparameter.h"
+#include "vfmodulemetadata.h"
+#include "vfmoduleactvalue.h"
+#include "vfmodulecomponent.h"
+#include "vfmoduleerrorcomponent.h"
+#include "vfmoduleparameter.h"
 #include "scpiinfo.h"
 #include <ve_commandevent.h>
 #include <vcmp_entitydata.h>

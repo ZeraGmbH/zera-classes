@@ -6,7 +6,7 @@
 #include <modulevalidator.h>
 #include <stringvalidator.h>
 #include <scpiinfo.h>
-#include <veinmoduleparameter.h>
+#include <vfmoduleparameter.h>
 #include <reply.h>
 
 namespace SAMPLEMODULE

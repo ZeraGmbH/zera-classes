@@ -1,7 +1,7 @@
 #ifndef VEINMODULEPARAMETER_H
 #define VEINMODULEPARAMETER_H
 
-#include "veinmodulecomponent.h"
+#include "vfmodulecomponent.h"
 #include "scpiinfo.h"
 #include "paramvalidator.h"
 #include <QUuid>

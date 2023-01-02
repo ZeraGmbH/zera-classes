@@ -1,6 +1,6 @@
 #include <QDebug>
 
-#include <veinmoduleactvalue.h>
+#include <vfmoduleactvalue.h>
 #include <math.h>
 
 #include "power3measdelegate.h"

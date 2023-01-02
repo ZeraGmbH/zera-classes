@@ -7,10 +7,10 @@
 #include <ve_storagesystem.h>
 #include <modulevalidator.h>
 #include <doublevalidator.h>
-#include <veinmodulecomponentinput.h>
-#include <veinmoduleactvalue.h>
-#include <veinmodulemetadata.h>
-#include <veinmoduleparameter.h>
+#include <vfmodulecomponentinput.h>
+#include <vfmoduleactvalue.h>
+#include <vfmodulemetadata.h>
+#include <vfmoduleparameter.h>
 #include <scpiinfo.h>
 
 #include "errormessages.h"

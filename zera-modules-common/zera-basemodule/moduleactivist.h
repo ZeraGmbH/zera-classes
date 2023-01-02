@@ -1,7 +1,7 @@
 #ifndef MODULEACTIVIST_H
 #define MODULEACTIVIST_H
 
-#include "veinmoduleerrorcomponent.h"
+#include "vfmoduleerrorcomponent.h"
 #include <QObject>
 #include <QJsonArray>
 #include <QStateMachine>

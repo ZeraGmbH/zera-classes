@@ -10,8 +10,8 @@
 #include <QtSerialPort/QSerialPort>
 //#include <QtSerialPort/QSerialPortInfo>
 
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
+#include <vfmoduleparameter.h>
+#include <vfmoduleactvalue.h>
 #include <modulevalidator.h>
 #include <boolvalidator.h>
 

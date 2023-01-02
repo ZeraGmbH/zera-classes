@@ -1,8 +1,8 @@
 #include "sourcedevicefacade.h"
 #include "json/jsonstructureloader.h"
 #include "message-texts/messagetexts.h"
-#include <veinmoduleactvalue.h>
-#include <veinmoduleparameter.h>
+#include <vfmoduleactvalue.h>
+#include <vfmoduleparameter.h>
 #include <jsonparamvalidator.h>
 
 #include <QVariant>

@@ -4,8 +4,8 @@
 #include "power3moduleconfigdata.h"
 #include "power3measdelegate.h"
 #include <basemeasworkprogram.h>
-#include <veinmoduleactvalue.h>
-#include <veinmodulemetadata.h>
+#include <vfmoduleactvalue.h>
+#include <vfmodulemetadata.h>
 #include <QFinalState>
 #include <memory>
 

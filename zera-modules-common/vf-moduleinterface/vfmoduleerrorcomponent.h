@@ -1,7 +1,7 @@
 #ifndef VEINMODULEERRORCOMPONENT
 #define VEINMODULEERRORCOMPONENT
 
-#include "veinmodulecomponent.h"
+#include "vfmodulecomponent.h"
 
 enum destType
 {

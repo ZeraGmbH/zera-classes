@@ -3,7 +3,7 @@
 #include "rangemeaschannel.h"
 #include <errormessages.h>
 #include <reply.h>
-#include <veinmodulecomponent.h>
+#include <vfmodulecomponent.h>
 #include <modulevalidator.h>
 #include <rminterface.h>
 #include <dspinterface.h>

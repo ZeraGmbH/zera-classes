@@ -1,8 +1,8 @@
 #ifndef VEININPUTCOMPONENTSEVENTSYSTEM_H
 #define VEININPUTCOMPONENTSEVENTSYSTEM_H
 
-#include "veincommandfiltereventsystem.h"
-#include "veinmodulecomponentinput.h"
+#include "vfcommandfiltereventsystem.h"
+#include "vfmodulecomponentinput.h"
 #include <QList>
 
 class VeinInputComponentsEventSystem : public VeinCommandFilterEventSystem

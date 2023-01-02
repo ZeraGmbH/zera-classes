@@ -14,7 +14,7 @@ add_library(zeravalidator SHARED
 target_link_libraries(zeravalidator
     PUBLIC
     zera-json-params
-    zera-vein-moduleinterface
+    vf-moduleinterface
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

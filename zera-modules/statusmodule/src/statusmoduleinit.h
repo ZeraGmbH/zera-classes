@@ -4,7 +4,7 @@
 #include "statusmoduleconfigdata.h"
 #include <moduleactivist.h>
 #include <proxy.h>
-#include <veinmoduleparameter.h>
+#include <vfmoduleparameter.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
 #include <rminterface.h>

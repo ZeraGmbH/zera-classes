@@ -1,7 +1,7 @@
 #include <QDebug>
 #include <QtGlobal>
 
-#include <veinmoduleactvalue.h>
+#include <vfmoduleactvalue.h>
 #include <math.h>
 
 #include "lambdameasdelegate.h"

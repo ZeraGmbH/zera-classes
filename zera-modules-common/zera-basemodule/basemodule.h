@@ -3,9 +3,9 @@
 
 #include "moduleactivist.h"
 #include "basemoduleconfiguration.h"
-#include "veinmodulemetadata.h"
-#include <veinmoduleactvalue.h>
-#include <veinmoduleparameter.h>
+#include "vfmodulemetadata.h"
+#include <vfmoduleactvalue.h>
+#include <vfmoduleparameter.h>
 #include <virtualmodule.h>
 #include <xmlsettings.h>
 #include <proxy.h>

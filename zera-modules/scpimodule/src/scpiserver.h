@@ -8,8 +8,8 @@
 #include "statusinterface.h"
 #include "ieee4882interface.h"
 #include "scpiserialclient.h"
-#include <veinmoduleparameter.h>
-#include <veinmoduleactvalue.h>
+#include <vfmoduleparameter.h>
+#include <vfmoduleactvalue.h>
 #include <QTimer>
 #include <QFinalState>
 #include <QFile>

@@ -9,7 +9,7 @@
 #include <memory> // std header for smart pointer
 
 #include "basemeasmodule.h"
-#include <veininputcomponentseventsystem.h>
+#include <vfinputcomponentseventsystem.h>
 
 namespace Zera {
 namespace Server {
