@@ -42,6 +42,7 @@ function(SETUP_QTESTS)
             tasks-base-testlib
             zera-timers-testlib
             zera-proxy-testlib
+            service-interfaces-testlib
             module-tasks-testlib
             source-module-testhelpers
             zera-basemodule
