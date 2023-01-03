@@ -1,0 +1,46 @@
+file(GLOB SOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    )
+
+file(GLOB HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    )
+
+add_library(service-interfaces SHARED
+    ${HEADER}
+    ${SOURCES}
+    )
+
+target_link_libraries(service-interfaces
+    PUBLIC
+    zera-proxy
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
+    )
+
+target_include_directories(service-interfaces
+    PUBLIC
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/service-interfaces>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    )
+
+set_target_properties(service-interfaces PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(service-interfaces PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+
+generate_export_header(service-interfaces)
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/service-interfaces_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/service-interfaces
+    )
+
+export(TARGETS service-interfaces NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS service-interfaces
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+install(
+    FILES ${HEADER}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/service-interfaces
+    )
