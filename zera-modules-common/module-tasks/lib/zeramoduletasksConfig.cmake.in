@@ -1,9 +1,8 @@
 include(CMakeFindDependencyMacro)
 
-find_dependency(Qt5 COMPONENTS Core CONFIG REQUIRED)
 find_dependency(
-    zera-timers
     tasks-base
+    zera-service-interfaces
     )
 
 include("${CMAKE_CURRENT_LIST_DIR}/zeramoduletasksTargets.cmake")
