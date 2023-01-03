@@ -1,7 +1,7 @@
 #ifndef SECINTERFACE_H
 #define SECINTERFACE_H
 
-#include "zera-service-interfaces_export.h"
+#include "service-interfaces_export.h"
 #include <proxyclient.h>
 #include <QObject>
 #include <QAbstractSocket>
@@ -47,7 +47,7 @@ namespace Server
 {
 class cSECInterfacePrivate;
 
-class ZERA_SERVICE_INTERFACES_EXPORT cSECInterface: public QObject
+class SERVICE_INTERFACES_EXPORT cSECInterface: public QObject
 {
     Q_OBJECT
 public:

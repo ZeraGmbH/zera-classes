@@ -6,63 +6,41 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
-add_library(zera-service-interfaces SHARED
+add_library(service-interfaces SHARED
     ${HEADER}
     ${SOURCES}
     )
 
-target_link_libraries(zera-service-interfaces
+target_link_libraries(service-interfaces
     PUBLIC
-    Qt5::Core
-    Qt5::Network
     zera-proxy
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
 
-target_include_directories(zera-service-interfaces
+target_include_directories(service-interfaces
     PUBLIC
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-service-interfaces>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/service-interfaces>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-set_target_properties(zera-service-interfaces PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(zera-service-interfaces PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+set_target_properties(service-interfaces PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(service-interfaces PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-generate_export_header(zera-service-interfaces)
-
+generate_export_header(service-interfaces)
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/zera-service-interfaces_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-service-interfaces
+    ${CMAKE_CURRENT_BINARY_DIR}/service-interfaces_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/service-interfaces
     )
 
-install(TARGETS zera-service-interfaces
-    EXPORT zera-service-interfacesExport
+export(TARGETS service-interfaces NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS service-interfaces
+    EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-write_basic_package_version_file(
-    zera-service-interfacesConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
-    )
-
-configure_file(zera-service-interfacesConfig.cmake.in zera-service-interfacesConfig.cmake @ONLY)
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zera-service-interfacesConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/zera-service-interfacesConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-service-interfaces
-    )
-
-install(EXPORT zera-service-interfacesExport
-    FILE zera-service-interfacesTargets.cmake
-    NAMESPACE ZeraClasses::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-service-interfaces
     )
 
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-service-interfaces
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/service-interfaces
     )
-

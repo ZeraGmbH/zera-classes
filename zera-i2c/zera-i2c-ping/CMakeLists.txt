@@ -3,8 +3,7 @@ add_executable(zera-i2c-ping
 )
 
 target_link_libraries(zera-i2c-ping
-    Qt5::Core
-    zerai2c
+    zera-i2c
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

@@ -19,6 +19,6 @@ target_include_directories(tasks-base-testlib
 target_link_libraries(tasks-base-testlib
     PUBLIC
     Qt5::Core
-    tasks-base
+    zera-tasks-base
     zera-timers-testlib
 )

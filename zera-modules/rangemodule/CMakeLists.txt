@@ -33,7 +33,7 @@ add_library(rangemodule MODULE
 
 target_link_libraries(rangemodule
     PRIVATE
-    zerabasemodule
+    zera-basemodule
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

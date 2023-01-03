@@ -16,8 +16,8 @@ add_library(module-tasks SHARED
 
 target_link_libraries(module-tasks
     PUBLIC
-    tasks-base
-    zera-service-interfaces
+    zera-tasks-base
+    service-interfaces
     )
 
 target_include_directories(module-tasks
@@ -31,33 +31,19 @@ target_include_directories(module-tasks
 set_target_properties(module-tasks PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(module-tasks PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-install(TARGETS module-tasks
-    EXPORT zeramoduletasksExport
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-write_basic_package_version_file(
-    zeramoduletasksConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
-    )
-
-configure_file(zeramoduletasksConfig.cmake.in zeramoduletasksConfig.cmake @ONLY)
-
+generate_export_header(module-tasks)
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/zeramoduletasksConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/zeramoduletasksConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-module-tasks
+    ${CMAKE_CURRENT_BINARY_DIR}/module-tasks_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/module-tasks
     )
 
-install(EXPORT zeramoduletasksExport
-    FILE zeramoduletasksTargets.cmake
-    NAMESPACE ZeraClasses::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-module-tasks
+export(TARGETS module-tasks NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS module-tasks
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
 install(
     FILES ${HEADER}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/module-tasks
     )
-

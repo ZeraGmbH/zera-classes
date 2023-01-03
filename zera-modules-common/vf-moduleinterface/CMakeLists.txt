@@ -13,7 +13,7 @@ add_library(vf-moduleinterface SHARED
 
 target_link_libraries(vf-moduleinterface
     PUBLIC
-    zeravalidator
+    zera-validator
     VeinMeta::VfEvent
     VeinMeta::VfComponent
     # ask linker to help us finding unresolved symbols
@@ -22,7 +22,7 @@ target_link_libraries(vf-moduleinterface
 
 target_include_directories(vf-moduleinterface
     PUBLIC
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/vf-moduleinterface>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/vf-moduleinterface>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
@@ -31,37 +31,18 @@ set_target_properties(vf-moduleinterface PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(vf-moduleinterface PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
 generate_export_header(vf-moduleinterface)
-
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/vf-moduleinterface_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vf-moduleinterface
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/vf-moduleinterface
     )
 
+export(TARGETS vf-moduleinterface NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
 install(TARGETS vf-moduleinterface
-    EXPORT vf-moduleinterfaceExport
+    EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-write_basic_package_version_file(
-    vf-moduleinterfaceConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
-    )
-
-configure_file(vf-moduleinterfaceConfig.cmake.in vf-moduleinterfaceConfig.cmake @ONLY)
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/vf-moduleinterfaceConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/vf-moduleinterfaceConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/vf-moduleinterface
-    )
-
-install(EXPORT vf-moduleinterfaceExport
-    FILE vf-moduleinterfaceTargets.cmake
-    NAMESPACE ZeraClasses::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/vf-moduleinterface
     )
 
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vf-moduleinterface
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/vf-moduleinterface
     )

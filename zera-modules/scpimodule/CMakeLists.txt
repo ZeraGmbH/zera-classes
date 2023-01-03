@@ -34,7 +34,7 @@ add_library(scpimodule MODULE
 target_link_libraries(scpimodule 
     PRIVATE
     Qt5::SerialPort
-    zerabasemodule
+    zera-basemodule
     Zera::SCPI
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"

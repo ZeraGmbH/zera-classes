@@ -1,71 +1,67 @@
-project(zera-sourcemodule LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
 file(GLOB SOURCES 
-    ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/io-device/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/io-queue/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/json/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/message-texts/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/source-device/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/source-protocols/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/source-scanner/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/vein/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-device/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-queue/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/json/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/message-texts/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-device/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-protocols/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-scanner/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/transaction-ids/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/vein/*.cpp
     )
 
 
 file(GLOB HEADER
-    ${PROJECT_SOURCE_DIR}/src/*.h
-    ${PROJECT_SOURCE_DIR}/src/io-device/*.h
-    ${PROJECT_SOURCE_DIR}/src/io-queue/*.h
-    ${PROJECT_SOURCE_DIR}/src/json/*.h
-    ${PROJECT_SOURCE_DIR}/src/message-texts/*.h
-    ${PROJECT_SOURCE_DIR}/src/source-device/*.h
-    ${PROJECT_SOURCE_DIR}/src/source-protocols/*.h
-    ${PROJECT_SOURCE_DIR}/src/source-scanner/*.h
-    ${PROJECT_SOURCE_DIR}/src/transaction-ids/*.h
-    ${PROJECT_SOURCE_DIR}/src/vein/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-device/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/io-queue/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/json/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/message-texts/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-device/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-protocols/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/source-scanner/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/transaction-ids/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/vein/*.h
     )
 
 file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 
 file(GLOB CONFIG_FILES
-    ${PROJECT_SOURCE_DIR}/configs/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/configs/*.xml
 )
 
 file(GLOB CONFIG_VALIDATOR
-    ${PROJECT_SOURCE_DIR}/configs/*.xsd
+    ${CMAKE_CURRENT_SOURCE_DIR}/configs/*.xsd
 )
 
 file(GLOB SOURCE_DEVINFO
-    ${PROJECT_SOURCE_DIR}/deviceinfo/*.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/deviceinfo/*.json
 )
 
 # auto-generate c++ xml access from xsd
 add_custom_command(
     OUTPUT
-        ${PROJECT_BINARY_DIR}/sourcemodule-config.hxx
-        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.hxx
+        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.cxx
     COMMAND
-        xsdcxx cxx-tree --std c++11 --generate-serialization --output-dir "${PROJECT_BINARY_DIR}" ${CONFIG_VALIDATOR}
+        xsdcxx cxx-tree --std c++11 --generate-serialization --output-dir "${CMAKE_CURRENT_BINARY_DIR}" ${CONFIG_VALIDATOR}
     DEPENDS
         ${CONFIG_VALIDATOR}
 )
 
 add_custom_target(sourcemodule-config-wrappers ALL
     DEPENDS
-        ${PROJECT_BINARY_DIR}/sourcemodule-config.hxx
-        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.hxx
+        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.cxx
 )
 
 set_property(
     SOURCE
-        ${PROJECT_BINARY_DIR}/sourcemodule-config.hxx
-        ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.hxx
+        ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.cxx
     PROPERTY SKIP_AUTOMOC ON
 )
 
@@ -95,7 +91,7 @@ add_custom_target(source-deviceinfo-dont-forget-qrc ALL
 # check if all configs made it into resource.qrc
 foreach(sourceconfigfile ${SOURCE_DEVINFO})
     get_filename_component(filename ${sourceconfigfile} NAME)
-    file(STRINGS ${PROJECT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
+    file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
     if(NOT lines)
         message(FATAL_ERROR "${filename} was not added to resource.qrc - source will not work!!")
     endif()
@@ -103,7 +99,7 @@ endforeach()
 
 set(COMMON_LIBS
     ${XERCES_LIBRARIES}
-    zerabasemodule
+    zera-basemodule
     serialportasyncblock
     )
 
@@ -128,17 +124,17 @@ target_include_directories(sourcemodule-static
     )
 
 file(GLOB MODULE_SOURCES
-    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-gluelogic/*.cpp
     )
 
 file(GLOB MODULE_HEADERS
-    ${PROJECT_SOURCE_DIR}/src/module-gluelogic/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-gluelogic/*.h
     )
 
 add_library(sourcemodule MODULE
     ${MODULE_SOURCES}
     ${MODULE_HEADERS}
-    ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+    ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.cxx
     )
 
 target_link_libraries(sourcemodule
@@ -173,7 +169,7 @@ file(GLOB UNITTESTS
 
 add_executable(sourcemodule-unittest
     ${UNITTESTS}
-    ${PROJECT_BINARY_DIR}/sourcemodule-config.cxx
+    ${CMAKE_CURRENT_BINARY_DIR}/sourcemodule-config.cxx
 )
 # constexpr / EXPECT_EQ -> linker problems for c++ < 17
 set_property(TARGET sourcemodule-unittest PROPERTY CXX_STANDARD 17)

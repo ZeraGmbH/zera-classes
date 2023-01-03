@@ -24,29 +24,16 @@ target_include_directories(module-shared
 set_target_properties(module-shared PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(module-shared PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-install(TARGETS module-shared
-    EXPORT zeramodulesharedExport
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-write_basic_package_version_file(
-    zeramodulesharedConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
-    )
-
-configure_file(zeramodulesharedConfig.cmake.in zeramodulesharedConfig.cmake @ONLY)
-
+generate_export_header(module-shared)
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/zeramodulesharedConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/zeramodulesharedConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-module-shared
+    ${CMAKE_CURRENT_BINARY_DIR}/module-shared_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/module-shared
     )
 
-install(EXPORT zeramodulesharedExport
-    FILE zeramodulesharedTargets.cmake
-    NAMESPACE ZeraClasses::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-module-shared
+export(TARGETS module-shared NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS module-shared
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
 install(

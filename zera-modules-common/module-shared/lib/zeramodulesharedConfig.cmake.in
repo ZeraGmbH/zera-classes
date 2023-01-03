@@ -1,8 +1,0 @@
-include(CMakeFindDependencyMacro)
-
-find_dependency(
-    module-tasks
-    )
-
-include("${CMAKE_CURRENT_LIST_DIR}/zeramodulesharedTargets.cmake")
-
