@@ -30,34 +30,15 @@ set_target_properties(zera-proxy PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zera-proxy PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
 generate_export_header(zera-proxy)
-
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zera-proxy_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/proxy
     )
 
+export(TARGETS zera-proxy NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
 install(TARGETS zera-proxy
-    EXPORT zera-proxyExport
+    EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-write_basic_package_version_file(
-    zera-proxyConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
-    )
-
-configure_file(zera-proxyConfig.cmake.in zera-proxyConfig.cmake @ONLY)
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zera-proxyConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/zera-proxyConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-proxy
-    )
-
-install(EXPORT zera-proxyExport
-    FILE zera-proxyTargets.cmake
-    NAMESPACE ZeraClasses::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-proxy
     )
 
 install(

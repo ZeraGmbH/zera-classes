@@ -39,8 +39,8 @@ target_include_directories(adjustmentmodule-static
     )
 
 target_link_libraries(adjustmentmodule-static
-    zerabasemodule
-    zeramath
+    zera-basemodule
+    zera-math
     module-tasks
 )
 

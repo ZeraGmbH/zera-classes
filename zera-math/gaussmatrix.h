@@ -1,7 +1,7 @@
 #ifndef GAUSSMATRIX_H
 #define GAUSSMATRIX_H
 
-#include "zeramath_export.h"
+#include "zera-math_export.h"
 
 /******************************************************************************************/
 /**
@@ -15,7 +15,7 @@
 class cGaussMatrixPrivate; // forward
 class cGaussNode;
 
-class ZERAMATH_EXPORT cGaussMatrix
+class ZERA_MATH_EXPORT cGaussMatrix
 {
 public:
     /**

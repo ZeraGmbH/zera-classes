@@ -33,7 +33,7 @@ add_library(lambdamodule MODULE
 
 target_link_libraries(lambdamodule 
     PRIVATE
-    zerabasemodule
+    zera-basemodule
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

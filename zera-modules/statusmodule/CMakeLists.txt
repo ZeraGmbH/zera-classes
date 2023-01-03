@@ -35,7 +35,7 @@ add_library(statusmodule MODULE
 
 target_link_libraries(statusmodule 
     PRIVATE
-    zerabasemodule
+    zera-basemodule
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

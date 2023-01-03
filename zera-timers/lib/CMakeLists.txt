@@ -18,39 +18,26 @@ target_link_libraries(zera-timers
 target_include_directories(zera-timers
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/zera-timers>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/timers>
     )
 
 set_target_properties(zera-timers PROPERTIES VERSION ${PROJECT_VERSION})
 set_target_properties(zera-timers PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-install(TARGETS zera-timers
-    EXPORT zeratimersExport
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-write_basic_package_version_file(
-    zeratimersConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
-    )
-
-configure_file(zeratimersConfig.cmake.in zeratimersConfig.cmake @ONLY)
-
+generate_export_header(zera-i2c)
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/zeratimersConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/zeratimersConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-zera-timers
+    ${CMAKE_CURRENT_BINARY_DIR}/zera-i2c_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/timers
     )
 
-install(EXPORT zeratimersExport
-    FILE zeratimersTargets.cmake
-    NAMESPACE ZeraClasses::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zera-zera-timers
+export(TARGETS zera-timers FILE ZeraClassesTargets.cmake)
+install(TARGETS zera-timers
+    EXPORT ZeraClassesExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     )
 
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/zera-timers
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/timers
     )
 

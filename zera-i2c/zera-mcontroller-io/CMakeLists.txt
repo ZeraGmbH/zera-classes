@@ -3,9 +3,7 @@ add_executable(zera-mcontroller-io
 )
 
 target_link_libraries(zera-mcontroller-io
-    Qt5::Core
     zera-i2c-devices
-    zerai2c
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
 )

@@ -1,7 +1,7 @@
 #ifndef XMLCONFIGREADER_H
 #define XMLCONFIGREADER_H
 
-#include "zeraxmlconfig_export.h"
+#include "zera-xmlconfig_export.h"
 #include <QObject>
 #include <QXmlStreamReader>
 #include <QXmlStreamWriter>
@@ -21,7 +21,7 @@ namespace Zera
      * @brief The XMLConfigReader class
      * Reads XSD and XML files as configuration
      */
-    class ZERAXMLCONFIG_EXPORT cReader : public QObject
+    class ZERA_XMLCONFIG_EXPORT cReader : public QObject
     {
       Q_OBJECT
 

@@ -1,54 +1,50 @@
-project(zera-electronicburdenmodule LANGUAGES CXX
-    VERSION ${REPO_VERSION}
-)
-
 file(GLOB SOURCES 
-    ${PROJECT_SOURCE_DIR}/src/*.cpp
-    ${PROJECT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     )
 
 file(GLOB HEADER
-    ${PROJECT_SOURCE_DIR}/src/*.h
-     ${PROJECT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
 file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 
 file(GLOB CONFIG_FILES
-    ${PROJECT_SOURCE_DIR}/configs/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/configs/*.xml
 )
 
 file(GLOB CONFIG_VALIDATOR
-    ${PROJECT_SOURCE_DIR}/configs/*.xsd
+    ${CMAKE_CURRENT_SOURCE_DIR}/configs/*.xsd
 )
 
 file(GLOB SOURCE_DEVINFO
-    ${PROJECT_SOURCE_DIR}/deviceinfo/*.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/deviceinfo/*.json
 )
 
 # auto-generate c++ xml access from xsd
 add_custom_command(
     OUTPUT
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.hxx
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.cxx
+        ${CMAKE_CURRENT_BINARY_DIR}/electronicburdenmodule-config.hxx
+        ${CMAKE_CURRENT_BINARY_DIR}/electronicburdenmodule-config.cxx
     COMMAND
-        xsdcxx cxx-tree --std c++11 --generate-serialization --output-dir "${PROJECT_BINARY_DIR}" ${CONFIG_VALIDATOR}
+        xsdcxx cxx-tree --std c++11 --generate-serialization --output-dir "${CMAKE_CURRENT_BINARY_DIR}" ${CONFIG_VALIDATOR}
     DEPENDS
         ${CONFIG_VALIDATOR}
 )
 
 add_custom_target(electronicburdenmodule-config-wrappers ALL
     DEPENDS
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.hxx
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.cxx
+        ${CMAKE_CURRENT_BINARY_DIR}/electronicburdenmodule-config.hxx
+        ${CMAKE_CURRENT_BINARY_DIR}/electronicburdenmodule-config.cxx
 )
 
 set_property(
     SOURCE
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.hxx
-        ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.cxx
+        ${CMAKE_CURRENT_BINARY_DIR}/electronicburdenmodule-config.hxx
+        ${CMAKE_CURRENT_BINARY_DIR}/electronicburdenmodule-config.cxx
     PROPERTY SKIP_AUTOMOC ON
 )
 
@@ -78,7 +74,7 @@ add_custom_target(electronicburden-deviceinfo-dont-forget-qrc ALL
 # check if all configs made it into resource.qrc
 foreach(electronicburdenconfigfile ${SOURCE_DEVINFO})
     get_filename_component(filename ${electronicburdenconfigfile} NAME)
-    file(STRINGS ${PROJECT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
+    file(STRINGS ${CMAKE_CURRENT_SOURCE_DIR}/resource.qrc lines REGEX "${filename}")
     if(NOT lines)
         message(FATAL_ERROR "${filename} was not added to resource.qrc - electronic burden will not work!!")
     endif()
@@ -86,7 +82,7 @@ endforeach()
 
 set(COMMON_LIBS
     ${XERCES_LIBRARIES}
-    zerabasemodule
+    zera-basemodule
     serialportasyncblock
     )
 
@@ -95,7 +91,7 @@ add_library(electronicburdenmodule MODULE
     ${SOURCES}
     ${HEADER}
     ${RESOURCES}
-    ${PROJECT_BINARY_DIR}/electronicburdenmodule-config.cxx
+    ${CMAKE_CURRENT_BINARY_DIR}/electronicburdenmodule-config.cxx
     )
 
 target_link_libraries(electronicburdenmodule
@@ -122,12 +118,6 @@ target_include_directories(electronicburdenmodule
 install(TARGETS electronicburdenmodule
     EXPORT electronicburdenmoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
-    )
-
-write_basic_package_version_file(
-    electronicburdenmoduleConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
     )
 
 install(

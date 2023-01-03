@@ -1,7 +1,0 @@
-include(CMakeFindDependencyMacro)
-
-find_dependency(Qt5 COMPONENTS Core CONFIG REQUIRED)
-find_dependency(zerai2c)
-
-include("${CMAKE_CURRENT_LIST_DIR}/zera-i2c-devicesTargets.cmake")
-

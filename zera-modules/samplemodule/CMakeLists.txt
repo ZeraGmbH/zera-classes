@@ -33,7 +33,7 @@ add_library(samplemodule MODULE
 
 target_link_libraries(samplemodule 
     PRIVATE
-    zerabasemodule
+    zera-basemodule
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

@@ -1,7 +1,7 @@
 #ifndef RMINTERFACE_H
 #define RMINTERFACE_H
 
-#include "zera-service-interfaces_export.h"
+#include "service-interfaces_export.h"
 #include "abstractserverInterface.h"
 #include <proxyclient.h>
 #include <memory>
@@ -10,7 +10,7 @@ namespace Zera { namespace Server {
 
 class cRMInterfacePrivate;
 
-class ZERA_SERVICE_INTERFACES_EXPORT cRMInterface: public AbstractServerInterface
+class SERVICE_INTERFACES_EXPORT cRMInterface: public AbstractServerInterface
 {
     Q_OBJECT
 public:

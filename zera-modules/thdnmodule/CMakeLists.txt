@@ -32,7 +32,7 @@ add_library(thdnmodule MODULE
     )
 
 target_link_libraries(thdnmodule 
-    zerabasemodule
+    zera-basemodule
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

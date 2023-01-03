@@ -1,7 +1,7 @@
 #ifndef DSPINTERFACE_H
 #define DSPINTERFACE_H
 
-#include "zera-service-interfaces_export.h"
+#include "service-interfaces_export.h"
 #include "dspmeasdata.h"
 #include <proxyclient.h>
 #include <QObject>
@@ -18,7 +18,7 @@ typedef quint32 tRouting[16];
 class cDSPInterfacePrivate;
 
 
-class ZERA_SERVICE_INTERFACES_EXPORT cDSPInterface: public QObject
+class SERVICE_INTERFACES_EXPORT cDSPInterface: public QObject
 {
     Q_OBJECT
 

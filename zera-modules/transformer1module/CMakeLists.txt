@@ -35,8 +35,8 @@ add_library(transformer1module MODULE
 
 target_link_libraries(transformer1module 
     PRIVATE
-    zerabasemodule
-    zeramath
+    zera-basemodule
+    zera-math
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

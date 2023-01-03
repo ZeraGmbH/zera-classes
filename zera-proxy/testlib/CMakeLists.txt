@@ -20,6 +20,6 @@ target_link_libraries(zera-proxy-testlib
     PUBLIC
     Qt5::Core
     zera-proxy
-    zera-service-interfaces
+    service-interfaces
     zera-timers-testlib
 )

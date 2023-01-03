@@ -6,12 +6,12 @@ file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     )
 
-add_library(zeravalidator SHARED
+add_library(zera-validator SHARED
     ${SOURCES}
     ${HEADER}
     )
 
-target_link_libraries(zeravalidator
+target_link_libraries(zera-validator
     PUBLIC
     Qt5::Core
     zera-json-params
@@ -19,48 +19,29 @@ target_link_libraries(zeravalidator
     "-Wl,--no-undefined"
     )
 
-target_include_directories(zeravalidator
+target_include_directories(zera-validator
     PUBLIC
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zeravalidator>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/validator>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
-set_target_properties(zeravalidator PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(zeravalidator PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
+set_target_properties(zera-validator PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(zera-validator PROPERTIES SOVERSION ${PROJECT_VERSION_MAJOR})
 
-generate_export_header(zeravalidator)
-
+generate_export_header(zera-validator)
 install(FILES
-    ${CMAKE_CURRENT_BINARY_DIR}/zeravalidator_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeravalidator
+    ${CMAKE_CURRENT_BINARY_DIR}/zera-validator_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/validator
     )
 
-install(TARGETS zeravalidator
-    EXPORT zeravalidatorExport
+export(TARGETS zera-validator NAMESPACE Zera:: FILE ZeraClassesTargets.cmake)
+install(TARGETS zera-validator
+    EXPORT ZeraClassesExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-write_basic_package_version_file(
-    zeravalidatorConfigVersion.cmake
-    VERSION ${PACKAGE_VERSION}
-    COMPATIBILITY SameMajorVersion
-    )
-
-configure_file(zeravalidatorConfig.cmake.in zeravalidatorConfig.cmake @ONLY)
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeravalidatorConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/zeravalidatorConfigVersion.cmake"
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeravalidator
-    )
-
-install(EXPORT zeravalidatorExport
-    FILE zeravalidatorTargets.cmake
-    NAMESPACE ZeraClasses::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeravalidator
     )
 
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeravalidator
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/validator
     )

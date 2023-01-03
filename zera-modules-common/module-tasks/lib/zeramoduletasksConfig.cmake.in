@@ -1,9 +1,0 @@
-include(CMakeFindDependencyMacro)
-
-find_dependency(
-    tasks-base
-    zera-service-interfaces
-    )
-
-include("${CMAKE_CURRENT_LIST_DIR}/zeramoduletasksTargets.cmake")
-
