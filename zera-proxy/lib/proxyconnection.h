@@ -1,15 +1,10 @@
 #ifndef PROXYCONNECTION_H
 #define PROXYCONNECTION_H
 
-#include <QObject>
+#include "proxynetpeer.h"
 #include <QByteArray>
 
-class cProxyNetPeer;
-
-namespace Zera
-{
-namespace Proxy
-{
+namespace Zera { namespace Proxy {
 
 struct cProxyConnection
 {
@@ -21,7 +16,6 @@ struct cProxyConnection
     cProxyNetPeer *m_pNetClient;
 };
 
-}
-}
+}}
 
 #endif // PROXYCONNECTION_H

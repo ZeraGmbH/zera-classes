@@ -1,6 +1,8 @@
 #include "test_taskchannelgeturvalue.h"
 #include "taskchannelgeturvalue.h"
 #include "pcbinitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgeturvalue)
@@ -29,7 +31,7 @@ void test_taskchannelgeturvalue::checkScpiSend()
 void test_taskchannelgeturvalue::returnsUrValueProperly()
 {
     PcbInitForTest pcb;
-    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString("%1").arg(defaultUrValue)));
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultUrValue)));
     double urValue = 0.0;
     TaskCompositePtr task = TaskChannelGetUrValue::create(pcb.getPcbInterface(),
                                                           channelSysName, rangeName,

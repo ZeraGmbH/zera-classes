@@ -1,6 +1,8 @@
 #include "test_taskchannelgetovrejection.h"
 #include "taskchannelgetovrejection.h"
 #include "pcbinitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgetovrejection)
@@ -29,7 +31,7 @@ void test_taskchannelgetovrejection::checkScpiSend()
 void test_taskchannelgetovrejection::returnsOvrRejectionProperly()
 {
     PcbInitForTest pcb;
-    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString("%1").arg(defaultOvRejection)));
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultOvRejection)));
     double ovRejection = 0.0;
     TaskCompositePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
                                                               channelSysName, rangeName,

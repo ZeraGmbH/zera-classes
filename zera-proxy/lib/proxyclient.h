@@ -1,11 +1,9 @@
 #ifndef PROXYCLIENT_H
 #define PROXYCLIENT_H
 
+#include "zera-proxy_export.h"
 #include <QObject>
 #include <QAbstractSocket>
-
-#include "proxy_global.h"
-
 #include <memory>
 
 namespace ProtobufMessage
@@ -13,19 +11,13 @@ namespace ProtobufMessage
     class NetMessage;
 }
 
-
-namespace Zera
-{
-namespace Proxy
-{
+namespace Zera { namespace Proxy {
 
 class cProxyClientPrivate;
 
-
-class ZERAPROXYSHARED_EXPORT cProxyClient: public QObject
+class ZERA_PROXY_EXPORT cProxyClient : public QObject
 {
     Q_OBJECT
-
 public:
     /**
      * @brief transmitCommand
@@ -43,7 +35,6 @@ signals:
 
 typedef std::shared_ptr<cProxyClient> ProxyClientPtr;
 
-}
-}
+}}
 
 #endif // PROXYCLIENT_H

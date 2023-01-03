@@ -1,6 +1,8 @@
 #include "test_taskchannelgetrangelist.h"
 #include "taskchannelgetrangelist.h"
 #include "pcbinitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgetrangelist)
@@ -28,7 +30,7 @@ void test_taskchannelgetrangelist::checkScpiSend()
 void test_taskchannelgetrangelist::returnsRangeListProperly()
 {
     PcbInitForTest pcb;
-    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList rangeList;
     TaskCompositePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
                                                             channelSysName,

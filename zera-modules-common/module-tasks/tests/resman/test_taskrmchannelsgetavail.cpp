@@ -1,6 +1,8 @@
 #include "test_taskrmchannelsgetavail.h"
 #include "taskrmchannelsgetavail.h"
 #include "rminitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskrmchannelsgetavail)
@@ -25,7 +27,7 @@ void test_taskrmchannelsgetavail::checkScpiSend()
 void test_taskrmchannelsgetavail::getThreeChannels()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList channelList;
     TaskCompositePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
                                                            EXPIRE_INFINITE,
@@ -39,7 +41,7 @@ void test_taskrmchannelsgetavail::getThreeChannels()
 void test_taskrmchannelsgetavail::getThreeChannelsIgnoreMMode()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "m0;m1;m2;MMODE"));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "m0;m1;m2;MMODE"));
     QStringList channelList;
     TaskCompositePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
                                                            EXPIRE_INFINITE,

@@ -1,6 +1,8 @@
 #include "test_taskrmcheckresourcetype.h"
 #include "taskrmcheckresourcetype.h"
 #include "rminitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskrmcheckresourcetype)
@@ -20,7 +22,7 @@ void test_taskrmcheckresourcetype::checkScpiSend()
 void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "sense:foo"));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "sense:foo"));
     TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
@@ -32,7 +34,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "SENSE:FOO"));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "SENSE:FOO"));
     TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
@@ -44,7 +46,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 void test_taskrmcheckresourcetype::errorOnNoResources()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, ""));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, ""));
     TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
@@ -56,7 +58,7 @@ void test_taskrmcheckresourcetype::errorOnNoResources()
 void test_taskrmcheckresourcetype::errorOnMissingResource()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, "foo:bar"));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "foo:bar"));
     TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();

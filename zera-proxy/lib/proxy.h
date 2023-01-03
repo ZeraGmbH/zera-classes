@@ -1,22 +1,19 @@
 #ifndef PROXY_H
 #define PROXY_H
 
-#include "proxy_global.h"
+#include "zera-proxy_export.h"
 #include "proxyclient.h"
 #include <QObject>
+#include <functional>
 
-namespace Zera
+namespace Zera { namespace Proxy
 {
-namespace Proxy
-{
-
 class cProxyClient;
 class cProxyPrivate;
 
-class ZERAPROXYSHARED_EXPORT cProxy: public QObject
+class ZERA_PROXY_EXPORT cProxy: public QObject
 {
     Q_OBJECT
-
 public:
     static cProxy* getInstance();
     cProxyClient* getConnection(QString ipadress, quint16 port);
@@ -24,18 +21,15 @@ public:
     void startConnection(cProxyClient *client);
     void startConnectionSmart(ProxyClientPtr client);
     bool releaseConnection(cProxyClient* client);
-
 protected:
     explicit cProxy(QObject* parent = 0);
     ~cProxy();
     cProxyPrivate *d_ptr;
-
 private:
     Q_DISABLE_COPY(cProxy)
     Q_DECLARE_PRIVATE(cProxy)
 };
 
-}
-}
+}}
 
 #endif // PROXY_H

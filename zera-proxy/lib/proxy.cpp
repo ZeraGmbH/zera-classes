@@ -1,10 +1,7 @@
 #include "proxy.h"
 #include "proxy_p.h"
 
-namespace Zera
-{
-namespace Proxy
-{
+namespace Zera { namespace Proxy {
 
 cProxy* cProxy::getInstance()
 {
@@ -56,5 +53,4 @@ cProxy::~cProxy()
     delete d_ptr;
 }
 
-}
-}
+}}

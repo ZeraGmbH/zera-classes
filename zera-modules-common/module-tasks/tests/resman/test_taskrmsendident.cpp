@@ -1,6 +1,8 @@
 #include "test_taskrmsendident.h"
 #include "taskrmsendident.h"
 #include "rminitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskrmsendident)

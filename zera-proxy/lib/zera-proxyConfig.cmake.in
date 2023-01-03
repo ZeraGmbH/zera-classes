@@ -1,0 +1,9 @@
+include(CMakeFindDependencyMacro)
+
+find_dependency(Qt5 COMPONENTS Network CONFIG REQUIRED)
+find_dependency(
+    xiqnet
+    )
+
+include("${CMAKE_CURRENT_LIST_DIR}/zeraproxyTargets.cmake")
+
