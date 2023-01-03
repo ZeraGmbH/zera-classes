@@ -23,6 +23,6 @@ target_link_libraries(module-tasks-testlib
     zera-timers-testlib
     tasks-base-testlib
     Zera::SCPI
-    scpi-testlib
+    Zera::scpi-testlib
     )
 
