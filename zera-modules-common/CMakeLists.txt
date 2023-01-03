@@ -1,4 +1,5 @@
 add_subdirectory(module-interface)
+add_subdirectory(module-tasks)
 add_subdirectory(service-interfaces)
 add_subdirectory(vf-cpp-module-wrappers)
 add_subdirectory(zera-validator)
