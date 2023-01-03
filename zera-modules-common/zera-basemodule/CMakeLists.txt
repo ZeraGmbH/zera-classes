@@ -14,7 +14,7 @@ add_library(zera-basemodule SHARED
 
 target_link_libraries(zera-basemodule
     PUBLIC
-    module-interface
+    module-qt-plugin-interface
     vf-moduleinterface
     zera-xmlconfig
     service-interfaces
