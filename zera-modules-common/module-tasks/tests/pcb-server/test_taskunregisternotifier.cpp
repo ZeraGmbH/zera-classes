@@ -1,6 +1,8 @@
 #include "test_taskunregisternotifier.h"
 #include "taskunregisternotifier.h"
 #include "pcbinitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskunregisternotifier)

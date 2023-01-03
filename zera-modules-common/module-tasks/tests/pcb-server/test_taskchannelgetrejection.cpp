@@ -1,6 +1,8 @@
 #include "test_taskchannelgetrejection.h"
 #include "taskchannelgetrejection.h"
 #include "pcbinitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgetrejection)
@@ -29,7 +31,7 @@ void test_taskchannelgetrejection::checkScpiSend()
 void test_taskchannelgetrejection::returnsRejectionProperly()
 {
     PcbInitForTest pcb;
-    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString("%1").arg(defaultRejection)));
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultRejection)));
     double rejection = 0.0;
     TaskCompositePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
                                                             channelSysName, rangeName,

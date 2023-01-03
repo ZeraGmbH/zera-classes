@@ -36,6 +36,7 @@ function(SETUP_QTESTS)
             Qt5::Test
             tasks-base-testlib
             zera-timers-testlib
+            zera-proxy-testlib
             module-tasks-testlib
             source-module-testhelpers
             zerabasemodule

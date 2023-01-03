@@ -1,7 +1,7 @@
 #include "test_timeoutdecorator.h"
 #include "taskfortest.h"
 #include "tasktimeoutdecorator.h"
-#include <tasktesthelper.h>
+#include "tasktesthelper.h"
 #include <singleshottimertest.h>
 #include <timerrunnerfortest.h>
 #include <zeratimerfactorymethodstest.h>

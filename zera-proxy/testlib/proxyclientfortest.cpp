@@ -1,6 +1,8 @@
 #include "proxyclientfortest.h"
 #include <reply.h>
 
+namespace Zera { namespace Proxy {
+
 std::shared_ptr<ProxyClientForTest> ProxyClientForTest::create()
 {
     return std::make_shared<ProxyClientForTest>();
@@ -13,7 +15,7 @@ ProxyClientForTest::ProxyClientForTest()
             Qt::QueuedConnection);
 }
 
-void ProxyClientForTest::setAnswers(RmTestAnswers answers)
+void ProxyClientForTest::setAnswers(ServerTestAnswers answers)
 {
     m_answers = answers;
 }
@@ -22,8 +24,8 @@ quint32 ProxyClientForTest::transmitCommand(ProtobufMessage::NetMessage *message
 {
     storeMessage(message);
     if(!m_answers.isEmpty()) {
-        RmTestAnswer answer = m_answers.take();
-        if(answer.answerType !=RmTestAnswer::TCP_ERROR) {
+        ServerTestAnswer answer = m_answers.take();
+        if(answer.answerType !=ServerTestAnswer::TCP_ERROR) {
             quint32 msgId = pushAnswer(message, answer);
             emit sigQueueAnswer();
             return msgId;
@@ -52,7 +54,7 @@ void ProxyClientForTest::onQueueAnswer()
 
 }
 
-quint32 ProxyClientForTest::pushAnswer(ProtobufMessage::NetMessage *message, RmTestAnswer answer)
+quint32 ProxyClientForTest::pushAnswer(ProtobufMessage::NetMessage *message, ServerTestAnswer answer)
 {
     std::shared_ptr<ProtobufMessage::NetMessage> answerMessage = std::make_shared<ProtobufMessage::NetMessage>(*message);
     ProtobufMessage::NetMessage::NetReply *answerReply = answerMessage->mutable_reply();
@@ -82,7 +84,7 @@ void ProxyClientForTest::storeScpi(ProtobufMessage::NetMessage *message)
     m_receivedCommands.append(strCmd);
 }
 
-quint32 ProxyClientForTest::calcMessageNr(RmTestAnswer answer, ProtobufMessage::NetMessage* answerMessage)
+quint32 ProxyClientForTest::calcMessageNr(ServerTestAnswer answer, ProtobufMessage::NetMessage* answerMessage)
 {
     quint32 messageNr = 0;
     switch(answer.answerType)
@@ -91,11 +93,11 @@ quint32 ProxyClientForTest::calcMessageNr(RmTestAnswer answer, ProtobufMessage::
         messageNr = m_msgIds.nextId();
         answerMessage->set_messagenr(messageNr);
         break;
-    case RmTestAnswer::MSG_ID_OTHER:
+    case ServerTestAnswer::MSG_ID_OTHER:
         messageNr = m_msgIds.nextId();
         answerMessage->set_messagenr(-messageNr);
         break;
-    case RmTestAnswer::MSG_ID_INTERRUPT:
+    case ServerTestAnswer::MSG_ID_INTERRUPT:
         messageNr = 0;
         answerMessage->set_messagenr(messageNr);
         break;
@@ -103,7 +105,7 @@ quint32 ProxyClientForTest::calcMessageNr(RmTestAnswer answer, ProtobufMessage::
     return messageNr;
 }
 
-void ProxyClientForTest::setReply(ProtobufMessage::NetMessage::NetReply *answerReply, RmTestAnswer answer)
+void ProxyClientForTest::setReply(ProtobufMessage::NetMessage::NetReply *answerReply, ServerTestAnswer answer)
 {
     switch(answer.reply) {
     case ack:
@@ -118,3 +120,4 @@ void ProxyClientForTest::setReply(ProtobufMessage::NetMessage::NetReply *answerR
     }
 }
 
+}}

@@ -7,10 +7,7 @@
 #include <xiqnetpeer.h>
 #include <netmessages.pb.h>
 
-namespace Zera
-{
-namespace Proxy
-{
+namespace Zera { namespace Proxy {
 
 cProxy* cProxyPrivate::singletonInstance=0;
 
@@ -69,7 +66,6 @@ bool cProxyPrivate::releaseConnection(cProxyClientPrivate *client)
     }
     return false;
 }
-
 
 quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMessage::NetMessage *message)
 {
@@ -172,5 +168,4 @@ cProxyNetPeer* cProxyPrivate::searchConnection(QString ip, quint16 port)
     return lnetClient;
 }
 
-}
-}
+}}

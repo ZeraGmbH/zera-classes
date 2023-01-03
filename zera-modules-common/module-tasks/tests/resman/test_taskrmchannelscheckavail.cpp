@@ -1,6 +1,8 @@
 #include "test_taskrmchannelscheckavail.h"
 #include "taskrmchannelscheckavail.h"
 #include "rminitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskrmchannelscheckavail)
@@ -10,7 +12,7 @@ static const char* defaultResponse = "m0;m1;m2";
 void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString(defaultResponse).split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
@@ -25,7 +27,7 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("m0;m1").split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
@@ -40,7 +42,7 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
 {
     RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, defaultResponse));
+    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("foo").split(";");
     TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,

@@ -1,6 +1,8 @@
 #include "test_taskchannelgetalias.h"
 #include "taskchannelgetalias.h"
 #include "pcbinitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgetalias)
@@ -28,7 +30,7 @@ void test_taskchannelgetalias::checkScpiSend()
 void test_taskchannelgetalias::returnsAliasProperly()
 {
     PcbInitForTest pcb;
-    pcb.getProxyClient()->setAnswers(RmTestAnswerList() << RmTestAnswer(ack, QString(defaultResponse)));
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString(defaultResponse)));
     QString channelAlias;
     TaskCompositePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
                                                         channelName,

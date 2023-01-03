@@ -1,6 +1,8 @@
 #include "test_taskchannelregisternotifier.h"
 #include "taskchannelregisternotifier.h"
 #include "pcbinitfortest.h"
+#include "tasktesthelper.h"
+#include "scpifullcmdcheckerfortest.h"
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelregisternotifier)
