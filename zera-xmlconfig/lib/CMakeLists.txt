@@ -21,7 +21,7 @@ target_link_libraries(zera-xmlconfig
 
 target_include_directories(zera-xmlconfig
     PUBLIC
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-xmlconfig>
+    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/zera-xmlconfig>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
@@ -32,7 +32,7 @@ set_target_properties(zera-xmlconfig PROPERTIES SOVERSION ${PROJECT_VERSION_MAJO
 generate_export_header(zera-xmlconfig)
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/zera-xmlconfig_export.h
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-xmlconfig
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/zera-xmlconfig
     )
 
 export(TARGETS zera-xmlconfig FILE ZeraClassesTargets.cmake)
@@ -43,6 +43,6 @@ install(TARGETS zera-xmlconfig
 
 install(
     FILES ${HEADER}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-xmlconfig
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/zera-xmlconfig
     )
 
