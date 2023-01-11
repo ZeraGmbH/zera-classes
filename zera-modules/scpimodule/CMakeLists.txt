@@ -1,9 +1,11 @@
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/delegates/*.cpp
     )
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/delegates/*.h
     )
 
 file(GLOB RESOURCES 
@@ -42,8 +44,8 @@ target_link_libraries(scpimodule
 
 target_include_directories(scpimodule
     PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/delegates
     )
 
 install(TARGETS scpimodule
