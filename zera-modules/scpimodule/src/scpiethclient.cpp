@@ -20,6 +20,7 @@ cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIMod
 cSCPIEthClient::~cSCPIEthClient()
 {
     m_pSocket->abort();
+    delete m_pSocket;
 }
 
 
