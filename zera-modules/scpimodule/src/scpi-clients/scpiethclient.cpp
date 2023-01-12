@@ -1,38 +1,28 @@
-#include "scpiinterface.h"
-#include "ieee488-2.h"
 #include "scpiethclient.h"
-#include <QTcpSocket>
 #include <QHostAddress>
 
-namespace SCPIMODULE
+namespace SCPIMODULE {
 
-{
-
-cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface)
-    :m_pSocket(socket), cSCPIClient(module, configdata, iface)
+cSCPIEthClient::cSCPIEthClient(QTcpSocket *socket, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface) :
+    cSCPIClient(module, configdata, iface),
+    m_pSocket(socket)
 {
     m_peerAddress = getPeerAddress();
     qInfo("Incoming SCPI socket from %s", qPrintable(m_peerAddress));
-    // so now we can start our connection
     connect(m_pSocket, &QTcpSocket::readyRead, this, &cSCPIEthClient::cmdInput);
-    connect(m_pSocket, &QTcpSocket::disconnected, this, &cSCPIEthClient::deleteLater);
+    connect(m_pSocket, &QTcpSocket::disconnected, this, &cSCPIEthClient::onDisconnect);
 }
-
 
 cSCPIEthClient::~cSCPIEthClient()
 {
-    qInfo("SCPI socket %s closed", qPrintable(m_peerAddress));
     m_pSocket->abort();
     delete m_pSocket;
+    qInfo("SCPI socket %s deleted", qPrintable(m_peerAddress));
 }
-
 
 void cSCPIEthClient::receiveAnswer(QString answ)
 {
-    QString answer;
-    QByteArray ba;
-    answer = answ +"\n";
-    ba = answer.toLatin1();
+    QByteArray ba = answ.toLatin1() + "\n";
     m_pSocket->write(ba);
 }
 
@@ -42,19 +32,19 @@ QString cSCPIEthClient::getPeerAddress()
     return addr.toString();
 }
 
-
 void cSCPIEthClient::cmdInput()
 {
-
-    QString m_sInput;
-
-    while (m_pSocket->canReadLine())
-    {
-        m_sInput = m_pSocket->readLine();
+    while (m_pSocket->canReadLine()) {
+        QString m_sInput = m_pSocket->readLine();
         m_sInputFifo.append(m_sInput);
     }
-
     testCmd();
+}
+
+void cSCPIEthClient::onDisconnect()
+{
+    qInfo("SCPI socket %s disconnected", qPrintable(m_peerAddress));
+    deleteLater();
 }
 
 }
