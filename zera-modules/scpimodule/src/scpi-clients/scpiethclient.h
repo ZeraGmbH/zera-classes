@@ -1,37 +1,29 @@
 #ifndef SCPIETHCLIENT
 #define SCPIETHCLIENT
 
-#include <QObject>
-
 #include "scpiclient.h"
+#include "scpiinterface.h"
+#include "scpimodule.h"
+#include "scpimoduleconfigdata.h"
+#include <QObject>
+#include <QTcpSocket>
 
-class QTcpSocket;
-
-namespace SCPIMODULE
-{
-
-class cSCPIInterface;
-class cSCPIModuleConfigData;
-class  cSCPIModule;
+namespace SCPIMODULE {
 
 class cSCPIEthClient: public cSCPIClient
 {
     Q_OBJECT
-
 public:
     cSCPIEthClient(QTcpSocket* socket,  cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIEthClient();
-
-public slots:
-    virtual void receiveAnswer(QString answ);
-
+private slots:
+    void receiveAnswer(QString answ) override;
+    void cmdInput() override;
+    void onDisconnect();
 private:
     QString getPeerAddress();
     QString m_peerAddress;
     QTcpSocket* m_pSocket;
-
-private slots:
-    virtual void cmdInput();
 };
 
 }
