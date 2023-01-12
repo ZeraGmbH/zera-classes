@@ -868,7 +868,7 @@ void cSpm1ModuleMeasProgram::resourceManagerConnect()
 
 void cSpm1ModuleMeasProgram::sendRMIdent()
 {
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Sem1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
+    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("Spm1Module%1").arg(m_pModule->getModuleNr()))] = sendrmident;
 }
 
 
