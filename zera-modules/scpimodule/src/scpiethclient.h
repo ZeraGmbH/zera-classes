@@ -26,6 +26,8 @@ public slots:
     virtual void receiveAnswer(QString answ);
 
 private:
+    QString getPeerAddress();
+    QString m_peerAddress;
     QTcpSocket* m_pSocket;
 
 private slots:
