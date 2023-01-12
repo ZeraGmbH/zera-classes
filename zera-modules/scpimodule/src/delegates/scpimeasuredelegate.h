@@ -21,8 +21,6 @@ class cSCPIMeasureDelegate: public cSCPIDelegate
 public:
     cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject);
     cSCPIMeasureDelegate(const cSCPIMeasureDelegate& delegate, QHash<cSCPIMeasure*, cSCPIMeasure*>& scpiMeasureTranslationHash);
-    ;
-    virtual ~cSCPIMeasureDelegate();
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
     virtual bool executeClient(cSCPIClient *client);
     void addscpimeasureObject(cSCPIMeasure* measureobject);
@@ -41,9 +39,6 @@ private:
     QString m_sAnswer;
     cSCPIClient *m_pClient;
     QList<cSCPIMeasure*> m_scpimeasureObjectList;
-
-
-
 };
 
 }

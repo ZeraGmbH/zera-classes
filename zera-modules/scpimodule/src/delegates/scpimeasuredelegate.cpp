@@ -31,20 +31,15 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate & delegate
             m_scpimeasureObjectList.append(scpiMeasureTranslationHash[scpiModuleMeasure]);
         else
         {
+            // Until not fixed properly: scpiMeasureTranslationHash is in cSCPIClient and
+            // that makes it the owner of the cSCPIMeasure-object generated here
+            // => no delete in here but in ~cSCPIClient
             cSCPIMeasure* scpiMeasure = new cSCPIMeasure(*scpiModuleMeasure);
             scpiMeasureTranslationHash[scpiModuleMeasure] = scpiMeasure;
             m_scpimeasureObjectList.append(scpiMeasure);
         }
     }
 }
-
-
-cSCPIMeasureDelegate::~cSCPIMeasureDelegate()
-{
-    for  (int i = 0; i < m_scpimeasureObjectList.count(); i++)
-        delete m_scpimeasureObjectList.at(i);
-}
-
 
 bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
