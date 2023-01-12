@@ -92,6 +92,8 @@ cSCPIClient::~cSCPIClient()
     for (int i = 0; i < keylist.count(); i++)
         delete m_SCPIMeasureTranslationHash[keylist.at(i)];
 
+    for(auto measDelegate : qAsConst(m_SCPIMeasureDelegateHash))
+        delete measDelegate;
 }
 
 
