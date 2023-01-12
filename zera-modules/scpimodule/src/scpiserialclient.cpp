@@ -13,6 +13,7 @@ namespace SCPIMODULE
 cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, cSCPIModuleConfigData &configdata, cSCPIInterface *iface)
     :m_pSerialPort(serial), cSCPIClient(module, configdata, iface)
 {
+    qInfo("Serial SCPI connection established");
     // so now we can start our connection
     connect(m_pSerialPort, &QSerialPort::readyRead, this, &cSCPISerialClient::cmdInput);
 }
@@ -20,6 +21,7 @@ cSCPISerialClient::cSCPISerialClient(QSerialPort* serial, cSCPIModule *module, c
 
 cSCPISerialClient::~cSCPISerialClient()
 {
+    qInfo("Serial SCPI connection removed");
 }
 
 
