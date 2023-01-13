@@ -34,21 +34,18 @@ namespace SCPIMODULE
 
 constexpr int serialPollTimerPeriod = 1000;
 
-cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
-    : m_pModule(module), m_ConfigData(configData)
+cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData) :
+    m_pModule(module),
+    m_ConfigData(configData)
 {
     m_bSerialScpiActive = false;
     m_bActive = false;
 
     m_pSCPIInterface = new cSCPIInterface(m_ConfigData.m_sDeviceName); // our scpi interface with cmd interpreter
-
     m_pModuleInterface = new cModuleInterface(m_pModule, m_pSCPIInterface); // the modules interface
     m_pInterfaceInterface = new cInterfaceInterface(m_pModule, m_pSCPIInterface); // the interfaces interface
     m_pStatusInterface = new cStatusInterface(m_pModule, m_pSCPIInterface); // the scpi status interface
     m_pIEEE488Interface = new cIEEE4882Interface(m_pModule, m_pSCPIInterface); // the ieee448-2 interface
-
-    m_pSerialPort = nullptr;
-    m_pSerialClient = nullptr;
 
     m_pTcpServer = new QTcpServer();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
@@ -70,14 +67,12 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     connect(&m_deactivationDoneState, &QState::entered, this, &cSCPIServer::deactivationDone);
 }
 
-
 cSCPIServer::~cSCPIServer()
 {
     delete m_pSCPIInterface;
     delete m_pTcpServer;
     deleteSerialPort();
 }
-
 
 void cSCPIServer::generateInterface()
 {
@@ -90,14 +85,12 @@ void cSCPIServer::generateInterface()
     connect(m_pVeinParamSerialOn, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::newSerialOn);
     m_pModule->veinModuleParameterHash[key] = m_pVeinParamSerialOn; // auto delete / meta-data / scpi
 
-
     m_pVeinSerialScpiDevFileName = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                     QString("ACT_SerialScpiDeviceFile"),
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->veinModuleActvalueList.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
 }
-
 
 cModuleInterface *cSCPIServer::getModuleInterface()
 {
@@ -155,27 +148,28 @@ void cSCPIServer::addSCPIClient()
 {
     QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
     cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
-    connect(client,& cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
     m_SCPIClientList.append(client);
-    if (m_SCPIClientList.count() == 1) {
+    int activeClients = m_SCPIClientList.count();
+    qInfo("Created client / Active clients: %i", activeClients);
+    connect(client,& cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
+    if (activeClients == 1)
         client->setAuthorisation(true);
-    }
 }
-
 
 void cSCPIServer::deleteSCPIClient(QObject *obj)
 {
-    m_SCPIClientList.removeAll(static_cast<cSCPIClient*>(obj));
-    if (m_SCPIClientList.count() > 0) {
-        m_SCPIClientList.at(0)->setAuthorisation(true);
+    cSCPIEthClient* client = static_cast<cSCPIEthClient*>(obj);
+    if(client) {
+        m_SCPIClientList.removeAll(client);
+        qInfo("SCPI client destroyed / Active clients: %i", m_SCPIClientList.count());
+        if(m_SCPIClientList.count() > 0)
+            m_SCPIClientList.at(0)->setAuthorisation(true);
     }
 }
-
 
 void cSCPIServer::TCPError(QAbstractSocket::SocketError)
 {
 }
-
 
 void cSCPIServer::setupTCPServer()
 {
@@ -184,30 +178,22 @@ void cSCPIServer::setupTCPServer()
     noError = noError && m_pInterfaceInterface->setupInterface();
     noError = noError && m_pStatusInterface->setupInterface();
     noError = noError && m_pIEEE488Interface->setupInterface();
-
-    if (!noError) {
+    if (!noError)
         emit errMsg((tr(interfacejsonErrMsg)));
-    }
 
     noError = noError && m_pTcpServer->listen(QHostAddress(QHostAddress::AnyIPv4), m_ConfigData.m_InterfaceSocket.m_nPort);
-
-    if(!noError) {
+    if(!noError)
         emit errMsg((tr(interfaceETHErrMsg)));
-    }
 
     if (m_ConfigData.m_SerialDevice.m_nOn == 1) {
         connect(&m_SerialTestTimer, &QTimer::timeout, this, &cSCPIServer::testSerial);
         m_SerialTestTimer.start(serialPollTimerPeriod);
     }
-
-    if (noError) {
+    if (noError)
         emit activationContinue();
-    }
-    else {
+    else
         emit activationError();
-    }
 }
-
 
 void cSCPIServer::activationDone()
 {
@@ -215,20 +201,16 @@ void cSCPIServer::activationDone()
     emit activated();
 }
 
-
 void cSCPIServer::shutdownTCPServer()
 {
-    if (m_bSerialScpiActive) {
+    if (m_bSerialScpiActive)
         destroySerialScpi();
-    }
-    for(auto client : m_SCPIClientList) {
+    for(auto client : qAsConst(m_SCPIClientList))
         delete client;
-    }
     m_SCPIClientList.clear();
     m_pTcpServer->close();
     emit deactivationContinue();
 }
-
 
 void cSCPIServer::deactivationDone()
 {
@@ -236,18 +218,15 @@ void cSCPIServer::deactivationDone()
     emit deactivated();
 }
 
-
 void cSCPIServer::testSerial()
 {
     if (m_bActive) {
         QFile deviceFile;
         deviceFile.setFileName(m_ConfigData.m_SerialDevice.m_sDevice);
-        if (deviceFile.exists()) {
+        if (deviceFile.exists())
             createSerialScpi();
-        }
-        else {
+        else
             destroySerialScpi();
-        }
     }
 }
 
@@ -256,15 +235,13 @@ void cSCPIServer::newSerialOn(QVariant serialOn)
     bool on = serialOn.toBool();
     if(on) {
         createSerialScpi();
-        if(!m_SerialTestTimer.isActive()) {
+        if(!m_SerialTestTimer.isActive())
             m_SerialTestTimer.start(serialPollTimerPeriod);
-        }
     }
     else {
         destroySerialScpi();
-        if(m_SerialTestTimer.isActive()) {
+        if(m_SerialTestTimer.isActive())
             m_SerialTestTimer.stop();
-        }
     }
     m_ConfigData.m_SerialDevice.m_nOn = on;
     emit m_pModule->parameterChanged();

@@ -56,8 +56,8 @@ private:
     QFinalState m_deactivationDoneState;
 
     // optionally we support a serial device
-    QSerialPort* m_pSerialPort;
-    cSCPISerialClient *m_pSerialClient;
+    QSerialPort* m_pSerialPort = nullptr;
+    cSCPISerialClient *m_pSerialClient = nullptr;
     QTimer m_SerialTestTimer;
     bool m_bSerialScpiActive;
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
