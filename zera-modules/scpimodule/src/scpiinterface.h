@@ -10,7 +10,7 @@ class cSCPI;
 namespace SCPIMODULE
 {
 
-class cSCPIDelegate;
+class ScpiBaseDelegate;
 class cSCPIClient;
 
 
@@ -24,7 +24,7 @@ public:
     virtual ~cSCPIInterface();
 
     cSCPI* getSCPICmdInterface();
-    void addSCPICommand(cSCPIDelegate* delegate);
+    void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
 
 

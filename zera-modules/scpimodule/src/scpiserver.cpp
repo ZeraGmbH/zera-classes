@@ -116,9 +116,8 @@ void cSCPIServer::createSerialScpi()
             }
             m_bSerialScpiActive = true;
         }
-        else {
+        else
             deleteSerialPort();
-        }
     }
     m_pVeinParamSerialOn->setValue(m_bSerialScpiActive);
 }

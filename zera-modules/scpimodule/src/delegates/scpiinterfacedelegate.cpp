@@ -1,17 +1,12 @@
 #include "scpiinterfacedelegate.h"
-#include "scpiclient.h"
 
+namespace SCPIMODULE {
 
-namespace SCPIMODULE
+cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type,  quint16 cmdCode) :
+    ScpiBaseDelegate(cmdParent, cmd, type),
+    m_nCmdCode(cmdCode)
 {
-
-
-cSCPIInterfaceDelegate::cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type,  quint16 cmdCode)
-    :cSCPIDelegate(cmdParent, cmd, type), m_nCmdCode(cmdCode)
-{
-
 }
-
 
 bool cSCPIInterfaceDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {

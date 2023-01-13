@@ -1,30 +1,22 @@
 #ifndef SCPIPARAMETERDELEGATE_H
 #define SCPIPARAMETERDELEGATE_H
 
-#include <QString>
+#include "scpibasedelegate.h"
+#include "scpimodule.h"
+#include "scpicmdinfo.h"
+#include "scpiclientinfo.h"
 
-#include "scpidelegate.h"
+namespace SCPIMODULE {
 
-namespace SCPIMODULE
-{
-
-class cSCPIModule;
-class cSCPICmdInfo;
-class cSCPIClientInfo;
-
-class cSCPIParameterDelegate: public cSCPIDelegate
+class cSCPIParameterDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
-
 public:
     cSCPIParameterDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
     virtual ~cSCPIParameterDelegate();
-
-    virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
-
+    bool executeSCPI(cSCPIClient *client, QString& sInput) override;
 signals:
     void clientinfoSignal(QString, cSCPIClientInfo*);
-
 private:
     cSCPIModule* m_pModule;
     cSCPICmdInfo* m_pSCPICmdInfo;
