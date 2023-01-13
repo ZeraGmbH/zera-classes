@@ -9,9 +9,6 @@
 #include "socket.h"
 #include <vfmoduleerrorcomponent.h>
 
-namespace ADJUSTMENTMODULE
-{
-
 class AdjustmentModuleActivator : public QObject
 {
     Q_OBJECT
@@ -49,5 +46,4 @@ private:
     AdjustmentModuleCommonPtr m_commonObjects;
 };
 
-}
 #endif // ADJUSTMENTMODULEACTIVATOR_H

@@ -10,9 +10,6 @@
 #include <errormessages.h>
 #include <math.h>
 
-namespace ADJUSTMENTMODULE
-{
-
 cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy*, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module),
@@ -32,8 +29,6 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
         if(ok)
             m_pPARAdjustOffset->setValue(m_receivedPar);
     });
-
-
 
     m_cmdFinishCallbacks[getauthorizationstatus] = [&](quint8 reply, QVariant answer) {
         if (reply == ack)
@@ -788,6 +783,4 @@ void cAdjustmentModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 re
 cAdjustIterators::cAdjustIterators()
 {
     m_nAdjustGainIt = m_nAdjustPhaseIt = 0;
-}
-
 }

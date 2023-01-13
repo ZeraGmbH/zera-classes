@@ -4,9 +4,6 @@
 #include "adjustmentmodulemeasprogram.h"
 #include "adjustvalidator.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 cAdjustValidator3d::cAdjustValidator3d(cAdjustmentModuleMeasProgram *measprogram)
     :m_pMeasprogram(measprogram)
 {
@@ -176,8 +173,4 @@ void cAdjustValidatorFine::exportMetaData(QJsonObject &jsObj)
 
     QJsonArray jsonArr = {"not subject"};
     jsObj.insert("Data", jsonArr);
-}
-
-
-
 }

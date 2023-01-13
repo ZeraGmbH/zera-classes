@@ -3,8 +3,6 @@
 
 #include <basemeasmodule.h>
 
-namespace ADJUSTMENTMODULE
-{
 #define BaseModuleName "AdjustmentModule"
 #define BaseSCPIModuleName "ADJ"
 
@@ -49,7 +47,5 @@ private slots:
 private:
     qint32 m_nActivationIt;
 };
-
-}
 
 #endif // ADJUSTMENTMODULE_H

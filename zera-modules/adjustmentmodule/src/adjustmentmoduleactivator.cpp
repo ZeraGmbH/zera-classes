@@ -13,9 +13,6 @@
 #include "taskimmediatelambda.h"
 #include "errormessages.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChannels,
                                                      AdjustmentModuleCommonPtr activationData) :
     m_configuredChannels(configuredChannels),
@@ -146,4 +143,3 @@ void AdjustmentModuleActivator::fillChannelAliasHash()
        m_commonObjects->m_channelAliasHash[entry.second->m_sAlias] = entry.first;
 }
 
-}

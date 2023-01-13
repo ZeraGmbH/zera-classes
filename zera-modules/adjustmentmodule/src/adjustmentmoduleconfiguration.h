@@ -8,9 +8,6 @@
 
 #include "basemoduleconfiguration.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 enum moduleconfigstate
 {
     setDebugLevel,
@@ -69,7 +66,5 @@ private slots:
 private:
     cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData;  // configuration
 };
-
-}
 
 #endif // ADJUSTMENTMODULCONFIGURATION_H

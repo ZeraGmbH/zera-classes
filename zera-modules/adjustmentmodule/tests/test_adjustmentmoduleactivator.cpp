@@ -10,7 +10,6 @@ QTEST_MAIN(test_adjustmentmoduleactivator);
 
 void test_adjustmentmoduleactivator::instantiate()
 {
-    using namespace ADJUSTMENTMODULE;
     AdjustmentModuleCommonPtr activationData = std::make_shared<AdjustmentModuleCommon>();
 
     /*std::shared_ptr<cAdjustmentModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();
