@@ -35,9 +35,6 @@ class VfModuleComponent;
 class VfModuleParameter;
 
 
-namespace ADJUSTMENTMODULE
-{
-
 enum adjustmentmoduleCmds
 {
     adjustcomputation,
@@ -207,5 +204,4 @@ private slots:
 
 };
 
-}
 #endif // ADJUSTMENTMODULEMEASPROGRAM_H

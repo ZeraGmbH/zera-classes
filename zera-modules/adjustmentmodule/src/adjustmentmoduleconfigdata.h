@@ -7,9 +7,6 @@
 
 #include "socket.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 struct adjInfoType
 {
     bool m_bAvail;
@@ -44,5 +41,4 @@ public:
     cSocket m_PCBSocket;
 };
 
-}
 #endif // ADJUSTMENTMODULECONFIGDATA_H

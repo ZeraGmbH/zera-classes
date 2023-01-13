@@ -9,9 +9,6 @@
 #include "doublevalidator.h"
 #include "intvalidator.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 class adjValidatorDatad
 {
 public:
@@ -93,6 +90,5 @@ public:
     virtual void exportMetaData(QJsonObject& jsObj);
 };
 
-}
 #endif // ADJUSTVALIDATOR
 

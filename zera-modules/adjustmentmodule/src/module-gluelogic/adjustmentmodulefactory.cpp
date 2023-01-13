@@ -1,9 +1,6 @@
 #include "adjustmentmodulefactory.h"
 #include "adjustmentmodule.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 ZeraModules::VirtualModule* AdjustmentModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
     ZeraModules::VirtualModule *module = new cAdjustmentModule(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
@@ -30,6 +27,3 @@ QString AdjustmentModuleFactory::getFactoryName() const
 {
     return QString(BaseModuleName).toLower();
 }
-
-}
-

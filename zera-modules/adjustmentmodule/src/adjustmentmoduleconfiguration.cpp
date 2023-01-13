@@ -6,9 +6,6 @@
 #include "adjustmentmoduleconfigdata.h"
 #include "socket.h"
 
-namespace ADJUSTMENTMODULE
-{
-
 cAdjustmentModuleConfiguration::cAdjustmentModuleConfiguration()
 {
     m_pAdjustmentModulConfigData = 0;
@@ -275,7 +272,5 @@ void cAdjustmentModuleConfiguration::completeConfiguration(bool ok)
 {
     m_bConfigured = (ok && !m_bConfigError);
     emit configXMLDone();
-}
-
 }
 

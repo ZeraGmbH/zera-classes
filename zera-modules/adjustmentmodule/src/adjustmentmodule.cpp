@@ -4,9 +4,6 @@
 #include "adjustmentmodulemeasprogram.h"
 #include <errormessages.h>
 
-namespace ADJUSTMENTMODULE
-{
-
 cAdjustmentModule::cAdjustmentModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
     :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()), parent)
 {
@@ -158,6 +155,4 @@ void cAdjustmentModule::deactivationFinished()
 void cAdjustmentModule::adjustmentModuleReconfigure()
 {
     emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }
