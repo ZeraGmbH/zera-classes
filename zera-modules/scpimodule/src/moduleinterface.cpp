@@ -189,7 +189,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
     else
     {
         bool ok;
-        cSCPIDelegate* delegate;
+        ScpiBaseDelegate* delegate;
 
         QString cmdComplete;
         cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
@@ -232,7 +232,7 @@ void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, qui
     setXmlComponentInfo(delegate, veinComponentInfo);
 }
 
-void cModuleInterface::setXmlComponentInfo(cSCPIDelegate *delegate, const QJsonObject &componentInfo)
+void cModuleInterface::setXmlComponentInfo(ScpiBaseDelegate *delegate, const QJsonObject &componentInfo)
 {
     QString desc = componentInfo["Description"].toString();
     if(!desc.isEmpty())
@@ -240,7 +240,7 @@ void cModuleInterface::setXmlComponentInfo(cSCPIDelegate *delegate, const QJsonO
     setXmlComponentValidatorInfo(delegate, componentInfo);
 }
 
-void cModuleInterface::setXmlComponentValidatorInfo(cSCPIDelegate *delegate, const QJsonObject &componentInfo)
+void cModuleInterface::setXmlComponentValidatorInfo(ScpiBaseDelegate *delegate, const QJsonObject &componentInfo)
 {
     QJsonObject validator = componentInfo["Validation"].toObject();
     QString validatorType = validator["Type"].toString();

@@ -6,7 +6,7 @@
 
 #include "scpiinterface.h"
 #include "scpiclient.h"
-#include "scpidelegate.h"
+#include "scpibasedelegate.h"
 
 
 namespace SCPIMODULE
@@ -31,7 +31,7 @@ cSCPI* cSCPIInterface::getSCPICmdInterface()
 }
 
 
-void cSCPIInterface::addSCPICommand(cSCPIDelegate *delegate)
+void cSCPIInterface::addSCPICommand(ScpiBaseDelegate *delegate)
 {
     delegate->setCommand(m_pSCPICmdInterface);
 }
@@ -42,7 +42,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
     cSCPIObject* scpiObject;
     if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0)
     {
-        cSCPIDelegate* scpiDelegate = static_cast<cSCPIDelegate*>(scpiObject);
+        ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
         return scpiDelegate->executeSCPI(client, cmd);
     }
 

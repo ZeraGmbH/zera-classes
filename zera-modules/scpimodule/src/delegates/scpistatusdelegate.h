@@ -1,34 +1,24 @@
 #ifndef SCPISTATUSDELEGATE_H
 #define SCPISTATUSDELEGATE_H
 
-#include <QObject>
-#include <QString>
+#include "scpibasedelegate.h"
+#include "scpiclient.h"
 
-#include "scpidelegate.h"
+namespace SCPIMODULE {
 
-namespace SCPIMODULE
-{
-
-class cSCPIClient;
-
-class cSCPIStatusDelegate: public cSCPIDelegate
+class cSCPIStatusDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
-
 public:
     cSCPIStatusDelegate(QString cmdParent, QString cmd, quint8 type, quint8 cmdCode, quint8 statindex);
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
-
 signals:
     void signalExecuteSCPI(cSCPIClient* client, int cmdCode, int statIndex, const QString &sInput);
-
 private:
     quint8 m_nCmdCode;
     quint8 m_nStatusIndex;
 };
 
 }
-
-
 
 #endif // SCPISTATUSDELEGATE_H

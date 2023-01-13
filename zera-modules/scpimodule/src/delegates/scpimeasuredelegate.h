@@ -1,23 +1,15 @@
 #ifndef SCPIMEASUREDELEGATE_H
 #define SCPIMEASUREDELEGATE_H
 
-#include <QObject>
+#include "scpibasedelegate.h"
+#include "scpimeasure.h"
 #include <QList>
 
-#include "scpidelegate.h"
+namespace SCPIMODULE {
 
-class QString;
-class cSCPI;
-
-namespace SCPIMODULE
-{
-
-class cSCPIMeasure;
-
-class cSCPIMeasureDelegate: public cSCPIDelegate
+class cSCPIMeasureDelegate: public ScpiBaseDelegate
 {
    Q_OBJECT
-
 public:
     cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject);
     cSCPIMeasureDelegate(const cSCPIMeasureDelegate& delegate, QHash<cSCPIMeasure*, cSCPIMeasure*>& scpiMeasureTranslationHash);

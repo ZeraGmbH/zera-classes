@@ -1,27 +1,20 @@
 #ifndef SIGNALCONNECTIONDELEGATE_H
 #define SIGNALCONNECTIONDELEGATE_H
 
-#include <QObject>
+#include "scpistatus.h"
 #include <QVariant>
-#include <QString>
 
-namespace SCPIMODULE
-{
-
-class cSCPIStatus;
+namespace SCPIMODULE {
 
 class cSignalConnectionDelegate: public QObject
 {
     Q_OBJECT
-
 public:
     cSignalConnectionDelegate(cSCPIStatus* scpiStatus, quint8 bitnr, int entityid, QString cname);
     int EntityId();
     QString ComponentName();
-
 public slots:
     void setStatus(QVariant signal);
-
 private:
     cSCPIStatus* m_pSCPIStatus;
     quint8 m_nBitNr;

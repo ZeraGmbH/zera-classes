@@ -1,36 +1,28 @@
-#include <scpi.h>
-#include <scpicommand.h>
-
-#include "scpiinterface.h"
 #include "scpimeasuredelegate.h"
 #include "scpimeasurecollector.h"
 #include "moduleinterface.h"
 #include "scpimeasure.h"
 #include "scpiclient.h"
 
+namespace SCPIMODULE {
 
-namespace SCPIMODULE
-{
-
-cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject)
-    :cSCPIDelegate(cmdParent, cmd, type), m_nMeasCode(measCode)
+cSCPIMeasureDelegate::cSCPIMeasureDelegate(QString cmdParent, QString cmd, quint8 type, quint8 measCode, cSCPIMeasure* scpimeasureobject) :
+    ScpiBaseDelegate(cmdParent, cmd, type),
+    m_nMeasCode(measCode),
+    m_nPending(0)
 {
     m_scpimeasureObjectList.append(scpimeasureobject);
-    m_nPending = 0;
 }
-
 
 cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate & delegate, QHash<cSCPIMeasure *, cSCPIMeasure *> &scpiMeasureTranslationHash)
 {
     m_nMeasCode = delegate.m_nMeasCode;
     m_nPending = 0;
-    for (int i = 0; i < delegate.m_scpimeasureObjectList.count(); i++)
-    {
+    for (int i = 0; i < delegate.m_scpimeasureObjectList.count(); i++) {
         cSCPIMeasure* scpiModuleMeasure = delegate.m_scpimeasureObjectList.at(i);
         if (scpiMeasureTranslationHash.contains(scpiModuleMeasure))
             m_scpimeasureObjectList.append(scpiMeasureTranslationHash[scpiModuleMeasure]);
-        else
-        {
+        else {
             // Until not fixed properly: scpiMeasureTranslationHash is in cSCPIClient and
             // that makes it the owner of the cSCPIMeasure-object generated here
             // => no delete in here but in ~cSCPIClient
@@ -43,33 +35,24 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate & delegate
 
 bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
-    quint8 scpiCmdType;
     cSCPICommand cmd = sInput;
-
-    scpiCmdType = getType();
-
+    quint8 scpiCmdType = getType();
     if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||
-         (cmd.isCommand(0) && ((scpiCmdType & SCPI::isCmd) > 0)) )
-    {
+         (cmd.isCommand(0) && ((scpiCmdType & SCPI::isCmd) > 0)) ) {
         // allowed query or command
         return client->m_SCPIMeasureDelegateHash[this]->executeClient(client);
     }
-    else
-    {
+    else {
         QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
         emit signalStatus(SCPI::nak);
         disconnect(myConn);
     }
-
     return true;
 }
-
 
 bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
 {
     bool reentryPossible;
-
-    // we test weether reentry is possible
     switch (m_nMeasCode)
     {
     case SCPIModelType::init:
@@ -79,16 +62,11 @@ bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
     default:
         reentryPossible = false;
     }
-
     m_pClient = client;
-
-    if (m_nPending == 0 || reentryPossible) // not yet running or reentry
-    {
+    if (m_nPending == 0 || reentryPossible) { // not yet running or reentry
         m_nPending = m_scpimeasureObjectList.count();
         m_sAnswer = "";
-
-        for (int i = 0; i < m_scpimeasureObjectList.count(); i++)
-        {
+        for (int i = 0; i < m_scpimeasureObjectList.count(); i++) {
             cSCPIMeasure* measure = m_scpimeasureObjectList.at(i);
             switch (m_nMeasCode)
             {
@@ -108,40 +86,33 @@ bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
                 connect(measure, &cSCPIMeasure::sigFetchDone, this, &cSCPIMeasureDelegate::receiveAnswer);
                 break;
             }
-
             measure->execute(m_nMeasCode);
         }
     }
-    else
-    {
+    else {
         QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
         emit signalStatus(SCPI::nak);
         disconnect(myConn);
     }
-
     return true;
 }
-
 
 void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
 {
     m_scpimeasureObjectList.append(measureobject);
 }
 
-
 void cSCPIMeasureDelegate::receiveDone()
 {
     cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
     m_nPending--;
-    if (m_nPending == 0)
-    {
+    if (m_nPending == 0) {
         QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, m_pClient, &cSCPIClient::receiveStatus);
         emit signalStatus(SCPI::ack);
         disconnect(myConn);
     }
 }
-
 
 void cSCPIMeasureDelegate::receiveAnswer(QString s)
 {
@@ -149,8 +120,7 @@ void cSCPIMeasureDelegate::receiveAnswer(QString s)
     disconnect(measure,0,this,0);
     m_sAnswer += QString("%1;").arg(s);
     m_nPending--;
-    if (m_nPending == 0)
-    {
+    if (m_nPending == 0) {
         QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalAnswer, m_pClient, &cSCPIClient::receiveAnswer);
         emit signalAnswer(m_sAnswer);
         disconnect(myConn);

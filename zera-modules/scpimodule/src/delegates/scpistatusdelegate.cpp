@@ -1,19 +1,17 @@
 #include "scpistatusdelegate.h"
 
-namespace SCPIMODULE
-{
+namespace SCPIMODULE {
 
-cSCPIStatusDelegate::cSCPIStatusDelegate(QString cmdParent, QString cmd, quint8 type, quint8 cmdCode, quint8 statindex)
-    :cSCPIDelegate(cmdParent, cmd, type), m_nCmdCode(cmdCode), m_nStatusIndex(statindex)
+cSCPIStatusDelegate::cSCPIStatusDelegate(QString cmdParent, QString cmd, quint8 type, quint8 cmdCode, quint8 statindex) :
+    ScpiBaseDelegate(cmdParent, cmd, type),
+    m_nCmdCode(cmdCode), m_nStatusIndex(statindex)
 {
 }
-
 
 bool cSCPIStatusDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
     emit signalExecuteSCPI(client, m_nCmdCode, m_nStatusIndex, sInput);
     return true;
 }
-
 
 }

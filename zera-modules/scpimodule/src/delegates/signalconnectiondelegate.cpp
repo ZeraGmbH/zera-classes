@@ -1,28 +1,24 @@
-#include "scpistatus.h"
 #include "signalconnectiondelegate.h"
 
+namespace SCPIMODULE {
 
-namespace SCPIMODULE
-{
-
-
-cSignalConnectionDelegate::cSignalConnectionDelegate(cSCPIStatus *scpiStatus, quint8 bitnr, int entityid, QString cname)
-    :m_pSCPIStatus(scpiStatus), m_nBitNr(bitnr), m_nEntityId(entityid), m_sComponentName(cname)
+cSignalConnectionDelegate::cSignalConnectionDelegate(cSCPIStatus *scpiStatus, quint8 bitnr, int entityid, QString cname) :
+    m_pSCPIStatus(scpiStatus),
+    m_nBitNr(bitnr),
+    m_nEntityId(entityid),
+    m_sComponentName(cname)
 {
 }
-
 
 int cSignalConnectionDelegate::EntityId()
 {
    return m_nEntityId;
 }
 
-
 QString cSignalConnectionDelegate::ComponentName()
 {
     return m_sComponentName;
 }
-
 
 void cSignalConnectionDelegate::setStatus(QVariant signal)
 {
@@ -32,7 +28,5 @@ void cSignalConnectionDelegate::setStatus(QVariant signal)
         m_pSCPIStatus->SetConditionBit(m_nBitNr, 0);
 
 }
-
-
 
 }
