@@ -133,6 +133,8 @@ void cSCPIClient::addSCPIClientInfo(QString key, cSCPIClientInfo *info)
 void cSCPIClient::removeSCPIClientInfo(QString key)
 {
     scpiClientInfoHash.remove(key);
+    for(auto clientInfo : qAsConst(scpiClientInfoHash))
+        delete clientInfo;
     execCmd();
 }
 
