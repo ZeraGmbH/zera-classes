@@ -15,7 +15,6 @@
 #include <QHash>
 #include <QStateMachine>
 #include <QState>
-#include <QTimer>
 #include <QFinalState>
 
 namespace Zera {
@@ -51,7 +50,6 @@ enum adjustmentmoduleCmds
     setpcbadjustmentdata,
     getclampadjustmentdata,
     setclampadjustmentdata,
-    getauthorizationstatus,
     sendtransparentcmd,
 };
 
@@ -77,7 +75,6 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
 public:
     cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     void generateInterface() override; // here we export our interface (entities)
-    bool isAuthorized();
 
 signals:
     void computationContinue();
@@ -118,7 +115,6 @@ private:
 
     int m_AdjustEntity;
     QString m_AdjustComponent;
-    bool m_bAuthorized;
     QVariant m_receivedPar;
 
     AdjustmentModuleCommonPtr m_commonObjects;
@@ -163,9 +159,6 @@ private:
     QState m_adjustphaseGetCorrState;
     QState m_adjustphaseSetNodeState;
     QFinalState m_adjustphaseFinishState;
-
-    // timer for cyclic eeprom access enable (authorization) query
-    QTimer m_AuthTimer;
 private slots:
     void onActivationReady();
     void onDeactivationReady();

@@ -18,7 +18,6 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
 {
     openRmConnection();
     openPcbConnection();
-    m_bAuthorized = true; // per default we are authorized
 
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
     connect(&m_activator, &AdjustmentModuleActivator::sigDeactivationReady, this, &cAdjustmentModuleMeasProgram::onDeactivationReady);
@@ -29,13 +28,6 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
         if(ok)
             m_pPARAdjustOffset->setValue(m_receivedPar);
     });
-
-    m_cmdFinishCallbacks[getauthorizationstatus] = [&](quint8 reply, QVariant answer) {
-        if (reply == ack)
-            m_bAuthorized = (answer.toInt() > 0);
-        else
-            emit errMsg(readauthorizationErrMSG);
-    };
 
     m_computationStartState.addTransition(this, &cAdjustmentModuleMeasProgram::computationContinue, &m_computationFinishState);
     m_computationMachine.addState(&m_computationStartState);
@@ -185,17 +177,12 @@ void cAdjustmentModuleMeasProgram::onActivationReady()
             this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
     setInterfaceValidation();
 
-    connect(&m_AuthTimer, &QTimer::timeout, this , [&]() {
-        m_MsgNrCmdList[m_commonObjects->m_pcbInterface->getAuthorizationStatus()] = getauthorizationstatus;
-    });
-    m_AuthTimer.start(5000);
     m_bActive = true;
     emit activated();
 }
 
 void cAdjustmentModuleMeasProgram::onDeactivationReady()
 {
-    m_AuthTimer.stop();
     m_bActive = false;
     emit deactivated();
 }
@@ -432,11 +419,6 @@ void cAdjustmentModuleMeasProgram::generateInterface()
     m_pPARAdjustClampData->setSCPIInfo(scpiInfo);
     connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueChanged, this, &cAdjustmentModuleMeasProgram::writeCLAMPAdjustmentData);
     connect(m_pPARAdjustClampData, &VfModuleParameter::sigValueQuery, this, &cAdjustmentModuleMeasProgram::readCLAMPAdjustmentData);
-}
-
-bool cAdjustmentModuleMeasProgram::isAuthorized()
-{
-    return m_bAuthorized;
 }
 
 void cAdjustmentModuleMeasProgram::computationStartCommand(QVariant var)
