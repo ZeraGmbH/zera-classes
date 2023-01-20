@@ -330,17 +330,6 @@ quint32 cPCBInterfacePrivate::adjustStorageClamp()
 }
 
 
-quint32 cPCBInterfacePrivate::adjustInit(QString chnName, QString rngName)
-{
-    QString cmd;
-    quint32 msgnr;
-
-    msgnr = sendCommand(cmd = QString("SENS:%1:%2:corr:init;").arg(chnName, rngName));
-    m_MsgNrCmdList[msgnr] = PCB::adjustinit;
-    return msgnr;
-}
-
-
 quint32 cPCBInterfacePrivate::setAdjustGainStatus(QString chnName, QString rngName, int stat)
 {
     QString cmd, par;

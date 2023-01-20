@@ -219,13 +219,6 @@ quint32 cPCBInterface::adjustStorageClamp()
 }
 
 
-quint32 cPCBInterface::adjustInit(QString chnName, QString rngName)
-{
-    Q_D(cPCBInterface);
-    return d->adjustInit(chnName, rngName);
-}
-
-
 quint32 cPCBInterface::setAdjustGainStatus(QString chnName, QString rngName, int stat)
 {
     Q_D(cPCBInterface);
