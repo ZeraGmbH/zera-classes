@@ -1,5 +1,7 @@
 #include "timerrunnerfortest.h"
 #include "periodictimertest.h"
+#include "periodictimerqt.h"
+#include "realdelaytimerhelpers.h"
 #include "test_periodictimerqt.h"
 #include <QTest>
 
@@ -27,6 +29,19 @@ void test_periodictimerqt::inspectTimerByRunner(ZeraTimerTemplate *timer)
     });
 }
 
+void test_periodictimerqt::oneInterval()
+{
+    PeriodicTimerQt timer(DEFAULT_EXPIRE);
+    inspectTimerByDelay(&timer);
+    timer.setHighAccuracy(true);
+
+    timer.start();
+    QTest::qWait(DEFAULT_EXPIRE + DEFAULT_PERIODIC_EXTRA_WAIT);
+
+    QCOMPARE(m_expireTimes.size(), 1);
+    QVERIFY(RealDelayTimerHelpers::isExpireTimeWithinLimits(m_expireTimes.at(0), DEFAULT_EXPIRE)); // fuzzy
+}
+
 void test_periodictimerqt::oneIntervalTest()
 {
     PeriodicTimerTest timer(DEFAULT_EXPIRE);
@@ -37,6 +52,21 @@ void test_periodictimerqt::oneIntervalTest()
 
     QCOMPARE(m_expireTimes.size(), 1);
     QCOMPARE(m_expireTimes.at(0), DEFAULT_EXPIRE); // on point
+}
+
+void test_periodictimerqt::threeInterval()
+{
+    PeriodicTimerQt timer(DEFAULT_EXPIRE);
+    inspectTimerByDelay(&timer);
+    timer.setHighAccuracy(true);
+
+    timer.start();
+    QTest::qWait(DEFAULT_EXPIRE*3 + DEFAULT_PERIODIC_EXTRA_WAIT);
+
+    QCOMPARE(m_expireTimes.size(), 3);
+    QVERIFY(RealDelayTimerHelpers::isExpireTimeWithinLimits(m_expireTimes.at(0), DEFAULT_EXPIRE)); // fuzzy
+    QVERIFY(RealDelayTimerHelpers::isExpireTimeWithinLimits(m_expireTimes.at(1), DEFAULT_EXPIRE*2));
+    QVERIFY(RealDelayTimerHelpers::isExpireTimeWithinLimits(m_expireTimes.at(2), DEFAULT_EXPIRE*3));
 }
 
 void test_periodictimerqt::threeIntervalTest()

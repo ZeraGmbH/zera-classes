@@ -12,7 +12,10 @@ class test_periodictimerqt : public QObject
 private slots:
     void init();
 
+    void oneInterval();
     void oneIntervalTest();
+
+    void threeInterval();
     void threeIntervalTest();
 
 private:
