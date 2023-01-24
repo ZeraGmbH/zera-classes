@@ -1,7 +1,8 @@
 #ifndef TEST_PERIODICTIMERQT_H
 #define TEST_PERIODICTIMERQT_H
 
-#include "zeratimertemplate.h"
+#include "periodictimertest.h"
+#include "periodictimerqt.h"
 #include <QElapsedTimer>
 #include <QList>
 #include <memory>
@@ -19,8 +20,8 @@ private slots:
     void threeIntervalTest();
 
 private:
-    void inspectTimerByDelay(ZeraTimerTemplate* timer);
-    void inspectTimerByRunner(ZeraTimerTemplate *timer);
+    void inspectTimerByDelay(PeriodicTimerQt *timer);
+    void inspectTimerByRunner(PeriodicTimerTest *timer);
     QList<int> m_expireTimes;
     std::unique_ptr<QElapsedTimer> m_elapsedTimer;
 };
