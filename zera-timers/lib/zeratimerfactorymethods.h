@@ -11,8 +11,10 @@ class ZeraTimerFactoryMethods
 {
 public:
     static ZeraTimerTemplatePtr createSingleShot(int timeout);
+    static ZeraTimerTemplatePtr createPeriodic(int timeout);
 protected:
     static std::function<ZeraTimerTemplatePtr(int)> m_singleShotCreateFunction;
+    static std::function<ZeraTimerTemplatePtr(int)> m_periodicCreateFunction;
 };
 
 #endif // ZERATIMERFACTORYMETHODS_H
