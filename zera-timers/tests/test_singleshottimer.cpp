@@ -1,5 +1,4 @@
 #include "test_singleshottimer.h"
-#include "singleshottimerqt.h"
 #include "timertestdefaults.h"
 #include "realdelaytimerhelpers.h"
 #include <QTest>
@@ -14,7 +13,7 @@ void test_singleshottimer::init()
     TimerRunnerForTest::reset();
 }
 
-void test_singleshottimer::inspectTimerByDelay(ZeraTimerTemplate *timer)
+void test_singleshottimer::inspectTimerByDelay(SingleShotTimerQt *timer)
 {
     m_elapsedTimer->start();
     connect(timer, &SingleShotTimerQt::sigExpired, [&]{
@@ -168,9 +167,9 @@ void test_singleshottimer::nestedStart()
 void test_singleshottimer::nestedStartTest()
 {
     SingleShotTimerTest timer1(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer1);
+    inspectTimerByRunner(&timer1);
     SingleShotTimerTest timer2(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer2);
+    inspectTimerByRunner(&timer2);
     connect(&timer1, &ZeraTimerTemplate::sigExpired, [&]{
         timer2.start();
     });
@@ -210,13 +209,13 @@ void test_singleshottimer::nestedStartQueued()
 void test_singleshottimer::nestedStartQueuedTest()
 {
     SingleShotTimerTest timer1(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer1);
+    inspectTimerByRunner(&timer1);
     EventLoopWrapper evLoop1;
     connect(&evLoop1, &EventLoopWrapper::sigReceiveEventLoop, [&]{
         timer1.start();
     });
     SingleShotTimerTest timer2(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer2);
+    inspectTimerByRunner(&timer2);
     EventLoopWrapper evLoop2;
     connect(&evLoop2, &EventLoopWrapper::sigReceiveEventLoop, [&]{
         timer2.start();

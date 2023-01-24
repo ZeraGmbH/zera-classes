@@ -1,6 +1,4 @@
 #include "timerrunnerfortest.h"
-#include "periodictimertest.h"
-#include "periodictimerqt.h"
 #include "realdelaytimerhelpers.h"
 #include "test_periodictimerqt.h"
 #include <QTest>
@@ -14,7 +12,7 @@ void test_periodictimerqt::init()
     TimerRunnerForTest::reset();
 }
 
-void test_periodictimerqt::inspectTimerByDelay(ZeraTimerTemplate *timer)
+void test_periodictimerqt::inspectTimerByDelay(PeriodicTimerQt *timer)
 {
     m_elapsedTimer->start();
     connect(timer, &ZeraTimerTemplate::sigExpired, [&]{
@@ -22,7 +20,7 @@ void test_periodictimerqt::inspectTimerByDelay(ZeraTimerTemplate *timer)
     });
 }
 
-void test_periodictimerqt::inspectTimerByRunner(ZeraTimerTemplate *timer)
+void test_periodictimerqt::inspectTimerByRunner(PeriodicTimerTest *timer)
 {
     connect(timer, &ZeraTimerTemplate::sigExpired, [&]{
         m_expireTimes.append(TimerRunnerForTest::getInstance()->getCurrentTimeMs());

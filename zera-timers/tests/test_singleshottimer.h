@@ -1,8 +1,8 @@
 #ifndef TEST_SINGLESHOTTIMER_H
 #define TEST_SINGLESHOTTIMER_H
 
-#include "zeratimertemplate.h"
 #include "timerrunnerfortest.h"
+#include "singleshottimerqt.h"
 #include "singleshottimertest.h"
 #include <QObject>
 #include <QElapsedTimer>
@@ -43,7 +43,7 @@ private slots:
     void infiniteExpireTest();
 
 private:
-    void inspectTimerByDelay(ZeraTimerTemplate* timer);
+    void inspectTimerByDelay(SingleShotTimerQt *timer);
     void inspectTimerByRunner(SingleShotTimerTest *timer);
     int m_expireCount;
     int m_expireTime;
