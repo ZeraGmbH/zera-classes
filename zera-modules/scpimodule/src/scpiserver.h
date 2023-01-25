@@ -8,6 +8,7 @@
 #include "statusinterface.h"
 #include "ieee4882interface.h"
 #include "scpiserialclient.h"
+#include "tcpserverlimitedconn.h"
 #include <vfmoduleparameter.h>
 #include <vfmoduleactvalue.h>
 #include <QTimer>
@@ -38,7 +39,7 @@ private:
 
     cSCPIModule* m_pModule;
     cSCPIModuleConfigData& m_ConfigData;
-    QTcpServer* m_pTcpServer;
+    TcpServerLimitedConn* m_pTcpServer;
     cSCPIInterface* m_pSCPIInterface;
     QList<cSCPIClient*> m_SCPIClientList;
 
