@@ -82,11 +82,11 @@ bool TimerRunnerForTest::processExpiredTimers(const ExpireMap &map)
         const ExpireEntries &expireMap = iter.value();
         for(auto timerIter=expireMap.cbegin(); timerIter!=expireMap.cend(); timerIter++) {
             TTimerEntry entry = timerIter.value();
-            if(!entry.singleShot) {
-                // TODO once periodic timers are implemented
-            }
+            TimerForTestInterface *currentTimer = timerIter.key();
+            if(!entry.singleShot)
+                addTimer(currentTimer, entry.expireMs, entry.singleShot);
             timerFired = true;
-            timerIter.key()->fireExpired();
+            currentTimer->fireExpired();
             QCoreApplication::processEvents();
         }
     }

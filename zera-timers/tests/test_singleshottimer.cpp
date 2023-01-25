@@ -1,21 +1,9 @@
 #include "test_singleshottimer.h"
-#include "singleshottimerqt.h"
 #include "timertestdefaults.h"
+#include "realdelaytimerhelpers.h"
 #include <QTest>
 
 QTEST_MAIN(test_singleshottimer)
-
-static bool isExpireTimeWithinLimits(int measuredTime, int expectedTime)
-{
-    int minAllowed = expectedTime;
-    int maxAllowed = expectedTime * 1.5;
-    bool ok = measuredTime>=minAllowed && measuredTime<=maxAllowed;
-    if(!ok) {
-        qWarning("Measured: %i / Expected: %i", measuredTime, expectedTime);
-        qWarning("Min allowed: %i / Max allowed: %i", minAllowed, maxAllowed);
-    }
-    return ok;
-}
 
 void test_singleshottimer::init()
 {
@@ -25,7 +13,7 @@ void test_singleshottimer::init()
     TimerRunnerForTest::reset();
 }
 
-void test_singleshottimer::inspectTimerByDelay(ZeraTimerTemplate *timer)
+void test_singleshottimer::inspectTimerByDelay(SingleShotTimerQt *timer)
 {
     m_elapsedTimer->start();
     connect(timer, &SingleShotTimerQt::sigExpired, [&]{
@@ -52,7 +40,7 @@ void test_singleshottimer::signalOnExpireTiming()
     QTest::qWait(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(m_expireCount, 1);
-    QVERIFY(isExpireTimeWithinLimits(m_expireTime, DEFAULT_EXPIRE)); // fuzzy
+    QVERIFY(RealDelayTimerHelpers::isExpireTimeWithinLimits(m_expireTime, DEFAULT_EXPIRE)); // fuzzy
 }
 
 void test_singleshottimer::signalOnExpireTimingTest()
@@ -79,7 +67,7 @@ void test_singleshottimer::restartTiming()
     QTest::qWait(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(m_expireCount, 1);
-    QVERIFY(isExpireTimeWithinLimits(m_expireTime, DEFAULT_EXPIRE*1.5)); // fuzzy
+    QVERIFY(RealDelayTimerHelpers::isExpireTimeWithinLimits(m_expireTime, DEFAULT_EXPIRE*1.5)); // fuzzy
 }
 
 void test_singleshottimer::restartTimingTest()
@@ -179,9 +167,9 @@ void test_singleshottimer::nestedStart()
 void test_singleshottimer::nestedStartTest()
 {
     SingleShotTimerTest timer1(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer1);
+    inspectTimerByRunner(&timer1);
     SingleShotTimerTest timer2(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer2);
+    inspectTimerByRunner(&timer2);
     connect(&timer1, &ZeraTimerTemplate::sigExpired, [&]{
         timer2.start();
     });
@@ -221,13 +209,13 @@ void test_singleshottimer::nestedStartQueued()
 void test_singleshottimer::nestedStartQueuedTest()
 {
     SingleShotTimerTest timer1(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer1);
+    inspectTimerByRunner(&timer1);
     EventLoopWrapper evLoop1;
     connect(&evLoop1, &EventLoopWrapper::sigReceiveEventLoop, [&]{
         timer1.start();
     });
     SingleShotTimerTest timer2(DEFAULT_EXPIRE/2);
-    inspectTimerByDelay(&timer2);
+    inspectTimerByRunner(&timer2);
     EventLoopWrapper evLoop2;
     connect(&evLoop2, &EventLoopWrapper::sigReceiveEventLoop, [&]{
         timer2.start();
