@@ -47,9 +47,7 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_pStatusInterface = new cStatusInterface(m_pModule, m_pSCPIInterface); // the scpi status interface
     m_pIEEE488Interface = new cIEEE4882Interface(m_pModule, m_pSCPIInterface); // the ieee448-2 interface
 
-    m_pTcpServer = new TcpServerLimitedConn();
-    m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
-    m_pTcpServer->setClientList(&m_SCPIClientList);
+    m_pTcpServer = new TcpServerLimitedConn(m_ConfigData, m_SCPIClientList);
     connect(m_pTcpServer, &QTcpServer::newConnection, this, &cSCPIServer::addSCPIClient);
     connect(m_pTcpServer, &QTcpServer::acceptError, this, &cSCPIServer::TCPError);
 

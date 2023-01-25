@@ -3,23 +3,24 @@
 
 namespace SCPIMODULE
 {
-TcpServerLimitedConn::TcpServerLimitedConn(QObject *parent)
-    : QTcpServer{parent}
+TcpServerLimitedConn::TcpServerLimitedConn(cSCPIModuleConfigData &configData, QList<cSCPIClient *> &scpiClientList) :
+    m_configData(configData), m_SCPIClientList(scpiClientList)
 {
 }
 
 void TcpServerLimitedConn::incomingConnection(qintptr socketDescriptor)
 {
-    qInfo("new function out");
-    if(m_SCPIClientList->count() < 5) {
-        QTcpSocket *socket = new QTcpSocket(this);
-        socket->setSocketDescriptor(socketDescriptor);
+    QTcpSocket *socket = new QTcpSocket(this);
+    socket->setSocketDescriptor(socketDescriptor);
+
+    if(m_SCPIClientList.count() < m_configData.m_nClients) {
+        qInfo("Add pending connection, %i.", m_SCPIClientList.count());
         addPendingConnection(socket);
-        qInfo("new function in, %i",m_SCPIClientList->count());
-        }
-}
-void TcpServerLimitedConn::setClientList(QList<cSCPIClient *> *SCPIClientList)
-{
-    m_SCPIClientList = SCPIClientList;
+    }
+    else
+    {
+        qInfo("Close incoming connection. List of active connections is full (%i elements).", m_SCPIClientList.count());
+        socket->close();
+    }
 }
 }
