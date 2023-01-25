@@ -47,8 +47,9 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
     m_pStatusInterface = new cStatusInterface(m_pModule, m_pSCPIInterface); // the scpi status interface
     m_pIEEE488Interface = new cIEEE4882Interface(m_pModule, m_pSCPIInterface); // the ieee448-2 interface
 
-    m_pTcpServer = new QTcpServer();
+    m_pTcpServer = new TcpServerLimitedConn();
     m_pTcpServer->setMaxPendingConnections(m_ConfigData.m_nClients);
+    m_pTcpServer->setClientList(&m_SCPIClientList);
     connect(m_pTcpServer, &QTcpServer::newConnection, this, &cSCPIServer::addSCPIClient);
     connect(m_pTcpServer, &QTcpServer::acceptError, this, &cSCPIServer::TCPError);
 
@@ -145,14 +146,16 @@ void cSCPIServer::deleteSerialPort()
 
 void cSCPIServer::addSCPIClient()
 {
-    QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
-    cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
-    m_SCPIClientList.append(client);
-    int activeClients = m_SCPIClientList.count();
-    qInfo("Created client / Active clients: %i", activeClients);
-    connect(client,& cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
-    if (activeClients == 1)
-        client->setAuthorisation(true);
+    if(m_pTcpServer->hasPendingConnections()) {
+        QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
+        cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
+        m_SCPIClientList.append(client);
+        int activeClients = m_SCPIClientList.count();
+        qInfo("Created client / Active clients: %i", activeClients);
+        connect(client,& cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
+        if (activeClients == 1)
+            client->setAuthorisation(true);
+     }
 }
 
 void cSCPIServer::deleteSCPIClient(QObject *obj)
