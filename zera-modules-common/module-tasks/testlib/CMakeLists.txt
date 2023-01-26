@@ -19,9 +19,9 @@ target_link_libraries(module-tasks-testlib
     Qt5::Test
     module-tasks
     zera-proxy
-    zera-tasks-base
-    zera-timers-testlib
-    tasks-base-testlib
+    Zera::zera-tasks-base
+    Zera::zera-timers-testlib
+    Zera::tasks-base-testlib
     Zera::SCPI
     Zera::scpi-testlib
     )
