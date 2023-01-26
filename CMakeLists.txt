@@ -39,8 +39,8 @@ function(SETUP_QTESTS)
         target_link_libraries(${_testname}
             PUBLIC
             Qt5::Test
-            tasks-base-testlib
-            zera-timers-testlib
+            Zera::tasks-base-testlib
+            Zera::zera-timers-testlib
             zera-proxy-testlib
             service-interfaces-testlib
             module-tasks-testlib
@@ -66,6 +66,7 @@ if(ZC_BUILD_MODULES)
     find_package(xiqnet REQUIRED)
     find_package(SCPI REQUIRED)
     find_package(serialportasyncblock REQUIRED)
+    find_package(ZenuxCore REQUIRED)
 
     pkg_check_modules(XERCES xerces-c REQUIRED)
     set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
@@ -75,8 +76,6 @@ if(ZC_BUILD_MODULES)
     add_subdirectory(zera-modules)
     add_subdirectory(zera-proxy)
     add_subdirectory(zera-modules-common)
-    add_subdirectory(zera-tasks-base)
-    add_subdirectory(zera-timers)
     add_subdirectory(zera-xmlconfig)
 
 endif(ZC_BUILD_MODULES)
