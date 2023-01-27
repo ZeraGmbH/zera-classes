@@ -8,7 +8,7 @@ class TaskServerTransactionTemplateTest : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::RMInterfacePtr server, QString &receivedAnswer);
+    static TaskTemplatePtr create(Zera::Server::RMInterfacePtr server, QString &receivedAnswer);
     TaskServerTransactionTemplateTest(Zera::Server::RMInterfacePtr server, QString &receivedAnswer);
 
 private:

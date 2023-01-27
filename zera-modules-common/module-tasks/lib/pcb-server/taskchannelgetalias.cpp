@@ -1,12 +1,12 @@
 #include "taskchannelgetalias.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 
-TaskCompositePtr TaskChannelGetAlias::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetAlias::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                              QString channelName,
                                              QString &valueReceived,
                                              int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskChannelGetAlias>(
                                                  pcbInterface,
                                                  channelName,

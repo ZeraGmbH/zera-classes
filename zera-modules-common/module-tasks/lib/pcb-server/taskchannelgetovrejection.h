@@ -8,7 +8,7 @@ class TaskChannelGetOvRejection : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
                                    QString channelSysName, QString rangeName,
                                    double &valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});

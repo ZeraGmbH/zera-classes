@@ -20,7 +20,7 @@ void test_taskservertransactiontemplate::actionOnAck()
 {
     m_proxyClient->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QString received;
-    TaskCompositePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
+    TaskTemplatePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(received, defaultResponse);
@@ -30,7 +30,7 @@ void test_taskservertransactiontemplate::noActionOnNack()
 {
     m_proxyClient->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, defaultResponse));
     QString received;
-    TaskCompositePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
+    TaskTemplatePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(received, "");
@@ -40,7 +40,7 @@ void test_taskservertransactiontemplate::okSignalOnAck()
 {
     m_proxyClient->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QString received;
-    TaskCompositePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
+    TaskTemplatePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -52,7 +52,7 @@ void test_taskservertransactiontemplate::errSignalOnNack()
 {
     m_proxyClient->setAnswers(ServerTestAnswerList() << ServerTestAnswer(nack, defaultResponse));
     QString received;
-    TaskCompositePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
+    TaskTemplatePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -64,7 +64,7 @@ void test_taskservertransactiontemplate::noReceiveOnOther()
 {
     m_proxyClient->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse, ServerTestAnswer::MSG_ID_OTHER));
     QString received;
-    TaskCompositePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
+    TaskTemplatePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -76,7 +76,7 @@ void test_taskservertransactiontemplate::errReceiveOnTcpError()
 {
     m_proxyClient->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse, ServerTestAnswer::TCP_ERROR));
     QString received;
-    TaskCompositePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
+    TaskTemplatePtr task = TaskServerTransactionTemplateTest::create(m_rmInterface, received);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();

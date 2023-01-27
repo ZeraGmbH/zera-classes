@@ -4,7 +4,7 @@
 #include "taskchannelgeturvalue.h"
 #include "errormessages.h"
 
-TaskCompositePtr TaskOffset::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskOffset::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                     QString channelSysName, QString rangeName,
                                     double actualValue, double targetValue,
                                     int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler)

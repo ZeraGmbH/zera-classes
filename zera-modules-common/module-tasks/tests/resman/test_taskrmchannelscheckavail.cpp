@@ -14,7 +14,7 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString(defaultResponse).split(";");
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
                                                              EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -29,7 +29,7 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("m0;m1").split(";");
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
                                                              EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -44,7 +44,7 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("foo").split(";");
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              expectedChannels,
                                                              EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -58,7 +58,7 @@ void test_taskrmchannelscheckavail::timeoutAndErrFunc()
 {
     RmInitForTest rm;
     int localErrorCount = 0;
-    TaskCompositePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
                                                              QStringList(),
                                                              DEFAULT_EXPIRE,
                                                              [&]{

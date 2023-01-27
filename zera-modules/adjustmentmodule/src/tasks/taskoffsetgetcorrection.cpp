@@ -1,13 +1,13 @@
 #include "taskoffsetgetcorrection.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 #include <reply.h>
 
-TaskCompositePtr TaskOffsetGetCorrection::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskOffsetGetCorrection::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName, double ourActualValue,
                                                  double &correctionValue,
                                                  int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskOffsetGetCorrection>(
                                                  pcbInterface,
                                                  channelSysName, rangeName, ourActualValue,

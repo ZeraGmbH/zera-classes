@@ -1,6 +1,6 @@
 #include "taskservertransactiontemplatetest.h"
 
-TaskCompositePtr TaskServerTransactionTemplateTest::create(Zera::Server::RMInterfacePtr server, QString &receivedAnswer)
+TaskTemplatePtr TaskServerTransactionTemplateTest::create(Zera::Server::RMInterfacePtr server, QString &receivedAnswer)
 {
     return std::make_unique<TaskServerTransactionTemplateTest>(server, receivedAnswer);
 }

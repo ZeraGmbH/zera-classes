@@ -15,7 +15,7 @@ void test_taskchannelgetrejection::checkScpiSend()
 {
     PcbInitForTest pcb;
     double rejection;
-    TaskCompositePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
                                                             channelSysName, rangeName,
                                                             rejection,
                                                             EXPIRE_INFINITE);
@@ -33,7 +33,7 @@ void test_taskchannelgetrejection::returnsRejectionProperly()
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultRejection)));
     double rejection = 0.0;
-    TaskCompositePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
                                                             channelSysName, rangeName,
                                                             rejection,
                                                             EXPIRE_INFINITE);
@@ -47,7 +47,7 @@ void test_taskchannelgetrejection::timeoutAndErrFunc()
     PcbInitForTest pcb;
     int localErrorCount = 0;
     double rejection = 0.0;
-    TaskCompositePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetRejection::create(pcb.getPcbInterface(),
                                                             channelSysName, rangeName,
                                                             rejection,
                                                             DEFAULT_EXPIRE,

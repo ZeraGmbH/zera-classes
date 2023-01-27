@@ -10,7 +10,7 @@
 #include "taskchannelregisternotifier.h"
 #include "taskchannelgetrangelist.h"
 #include "taskunregisternotifier.h"
-#include "taskimmediatelambda.h"
+#include "tasklambdarunner.h"
 #include "errormessages.h"
 
 AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChannels,
@@ -18,9 +18,9 @@ AdjustmentModuleActivator::AdjustmentModuleActivator(QStringList configuredChann
     m_configuredChannels(configuredChannels),
     m_commonObjects(activationData)
 {
-    connect(&m_activationTasks,   &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onActivateContinue);
-    connect(&m_deactivationTasks, &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onDeactivateContinue);
-    connect(&m_reloadRangesTasks, &TaskComposite::sigFinish, this, &AdjustmentModuleActivator::onReloadRanges);
+    connect(&m_activationTasks,   &TaskTemplate::sigFinish, this, &AdjustmentModuleActivator::onActivateContinue);
+    connect(&m_deactivationTasks, &TaskTemplate::sigFinish, this, &AdjustmentModuleActivator::onDeactivateContinue);
+    connect(&m_reloadRangesTasks, &TaskTemplate::sigFinish, this, &AdjustmentModuleActivator::onReloadRanges);
 }
 
 void AdjustmentModuleActivator::activate()
@@ -86,18 +86,18 @@ void AdjustmentModuleActivator::addStaticActivationTasks()
 
 void AdjustmentModuleActivator::addDynChannelActivationTasks()
 {
-    m_activationTasks.addSub(TaskImmediateLambda::create([&](){
+    m_activationTasks.addSub(TaskLambdaRunner::create([&](){
         m_activationTasks.addSub(getChannelsReadTasks());
         m_activationTasks.addSub(getChannelsRegisterNotifyTasks());
         return true;
     }));
 }
 
-TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
+TaskTemplatePtr AdjustmentModuleActivator::getChannelsReadTasks()
 {
-    TaskContainerPtr channelTasks = TaskParallel::create();
+    TaskContainerInterfacePtr channelTasks = TaskContainerParallel::create();
     for(const auto &channelName : qAsConst(m_configuredChannels)) {
-        TaskContainerPtr perChannelTasks = TaskSequence::create();
+        TaskContainerInterfacePtr perChannelTasks = TaskContainerSequence::create();
         perChannelTasks->addSub(TaskChannelGetAlias::create(
                                     m_commonObjects->m_pcbInterface,
                                     channelName,
@@ -113,9 +113,9 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsReadTasks()
     return channelTasks;
 }
 
-TaskCompositePtr AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
+TaskTemplatePtr AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
 {
-    TaskContainerPtr tasks = TaskParallel::create();
+    TaskContainerInterfacePtr tasks = TaskContainerParallel::create();
     for(const auto &channelName : qAsConst(m_configuredChannels))
         tasks->addSub(TaskChannelRegisterNotifier::create(
                           m_commonObjects->m_pcbInterface,
@@ -124,7 +124,7 @@ TaskCompositePtr AdjustmentModuleActivator::getChannelsRegisterNotifyTasks()
     return tasks;
 }
 
-TaskCompositePtr AdjustmentModuleActivator::getDeactivationTasks()
+TaskTemplatePtr AdjustmentModuleActivator::getDeactivationTasks()
 {
     return TaskUnregisterNotifier::create(
                 m_commonObjects->m_pcbInterface,

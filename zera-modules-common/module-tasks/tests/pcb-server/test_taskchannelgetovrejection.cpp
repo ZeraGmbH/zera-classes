@@ -15,7 +15,7 @@ void test_taskchannelgetovrejection::checkScpiSend()
 {
     PcbInitForTest pcb;
     double ovRejection;
-    TaskCompositePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
                                                               channelSysName, rangeName,
                                                               ovRejection,
                                                               EXPIRE_INFINITE);
@@ -33,7 +33,7 @@ void test_taskchannelgetovrejection::returnsOvrRejectionProperly()
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultOvRejection)));
     double ovRejection = 0.0;
-    TaskCompositePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
                                                               channelSysName, rangeName,
                                                               ovRejection,
                                                               EXPIRE_INFINITE);
@@ -47,7 +47,7 @@ void test_taskchannelgetovrejection::timeoutAndErrFunc()
     PcbInitForTest pcb;
     int localErrorCount = 0;
     double ovRejection = 0.0;
-    TaskCompositePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
                                                               channelSysName, rangeName,
                                                               ovRejection,
                                                               DEFAULT_EXPIRE,

@@ -13,7 +13,7 @@ void test_taskchannelregisternotifier::checkScpiSend()
 {
     PcbInitForTest pcb;
     double urValue;
-    TaskCompositePtr task = TaskChannelRegisterNotifier::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelRegisterNotifier::create(pcb.getPcbInterface(),
                                                                 channelSysName,
                                                                 EXPIRE_INFINITE);
     task->start();
@@ -30,7 +30,7 @@ void test_taskchannelregisternotifier::timeoutAndErrFunc()
     PcbInitForTest pcb;
     int localErrorCount = 0;
     double urValue;
-    TaskCompositePtr task = TaskChannelRegisterNotifier::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelRegisterNotifier::create(pcb.getPcbInterface(),
                                                                 channelSysName,
                                                                 DEFAULT_EXPIRE,
                                                                 [&]{

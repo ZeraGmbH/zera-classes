@@ -1,10 +1,10 @@
 #ifndef TASKSETOFFSETNODE_H
 #define TASKSETOFFSETNODE_H
 
-#include "taskcomposit.h"
+#include "tasktemplate.h"
 #include <pcbinterface.h>
 
-class TaskOffsetSetNode : public TaskComposite
+class TaskOffsetSetNode : public TaskTemplate
 {
     Q_OBJECT
 public:
@@ -14,7 +14,7 @@ public:
         double m_rejection;
         double m_rejectionValue;
     };
-    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
                                    QString channelSysName, QString rangeName,
                                    double actualValue, double targetValue, RangeVals &rngVals,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});

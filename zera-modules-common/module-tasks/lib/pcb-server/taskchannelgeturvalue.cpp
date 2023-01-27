@@ -1,12 +1,12 @@
 #include "taskchannelgeturvalue.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 
-TaskCompositePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                QString channelSysName, QString rangeName,
                                                double &valueReceived,
                                                int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskChannelGetUrValue>(
                                                  pcbInterface,
                                                  channelSysName, rangeName,

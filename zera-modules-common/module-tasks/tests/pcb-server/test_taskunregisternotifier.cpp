@@ -11,7 +11,7 @@ void test_taskunregisternotifier::checkScpiSend()
 {
     PcbInitForTest pcb;
     double urValue;
-    TaskCompositePtr task = TaskUnregisterNotifier::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskUnregisterNotifier::create(pcb.getPcbInterface(),
                                                            EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
@@ -27,7 +27,7 @@ void test_taskunregisternotifier::timeoutAndErrFunc()
 {
     PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskCompositePtr task = TaskUnregisterNotifier::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskUnregisterNotifier::create(pcb.getPcbInterface(),
                                                            DEFAULT_EXPIRE,
                                                            [&]{
         localErrorCount++;

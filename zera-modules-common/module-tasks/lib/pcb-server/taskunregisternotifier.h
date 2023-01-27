@@ -8,7 +8,7 @@ class TaskUnregisterNotifier : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface);
 private:

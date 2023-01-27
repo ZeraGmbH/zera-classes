@@ -1,15 +1,15 @@
 #include "taskrmchannelsgetavail.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 
 QStringList TaskRmChannelsGetAvail::m_defaultSenseResourcesIgnored = QStringList() << "mmode";
 
-TaskCompositePtr TaskRmChannelsGetAvail::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskTemplatePtr TaskRmChannelsGetAvail::create(Zera::Server::RMInterfacePtr rmInterface,
                                                 int timeout,
                                                 QStringList &channelSysNameList,
                                                 std::function<void ()> additionalErrorHandler,
                                                 QStringList senseResourcesIgnored)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskRmChannelsGetAvail>(
                                                  rmInterface,
                                                  channelSysNameList,

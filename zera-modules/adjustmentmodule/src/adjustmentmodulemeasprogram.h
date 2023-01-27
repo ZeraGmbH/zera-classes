@@ -9,7 +9,7 @@
 #include "measchannelinfo.h"
 #include "measmodeinfo.h"
 #include "foutinfo.h"
-#include "tasksequence.h"
+#include "taskcontainersequence.h"
 #include <QObject>
 #include <QList>
 #include <QHash>
@@ -152,7 +152,7 @@ private:
     QState m_adjustamplitudeSetNodeState;
     QFinalState m_adjustamplitudeFinishState;
 
-    TaskParallel m_offsetTasks;
+    TaskContainerParallel m_offsetTasks;
 
     // statemachine for phase adjustment
     QStateMachine m_adjustPhaseMachine;
