@@ -1,12 +1,12 @@
 #ifndef TASKSERVERTRANSACTIONTEMPLATE_H
 #define TASKSERVERTRANSACTIONTEMPLATE_H
 
-#include "taskcomposit.h"
+#include "tasktemplate.h"
 #include "abstractserverInterface.h"
 #include <QAbstractSocket>
 #include <memory>
 
-class TaskServerTransactionTemplate : public TaskComposite
+class TaskServerTransactionTemplate : public TaskTemplate
 {
     Q_OBJECT
 public:

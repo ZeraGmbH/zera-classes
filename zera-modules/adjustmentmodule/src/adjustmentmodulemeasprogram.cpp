@@ -24,7 +24,7 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     connect(&m_activator, &AdjustmentModuleActivator::sigRangesReloaded, this, &cAdjustmentModuleMeasProgram::onNewRanges);
     connect(&m_activator, &AdjustmentModuleActivator::errMsg, this, &cAdjustmentModuleMeasProgram::errMsg);
 
-    connect(&m_offsetTasks, &TaskComposite::sigFinish, [&](bool ok) {
+    connect(&m_offsetTasks, &TaskTemplate::sigFinish, [&](bool ok) {
         if(ok)
             m_pPARAdjustOffset->setValue(m_receivedPar);
     });

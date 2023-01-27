@@ -1,14 +1,14 @@
 #include "taskoffsetsetnode.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 #include <reply.h>
 #include <math.h>
 
-TaskCompositePtr TaskOffsetSetNode::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskOffsetSetNode::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                            QString channelSysName, QString rangeName,
                                            double actualValue, double targetValue, RangeVals &rngVals,
                                            int timeout, std::function<void()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskOffsetSetNode>(
                                                  pcbInterface,
                                                  channelSysName, rangeName,

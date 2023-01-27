@@ -4,8 +4,8 @@
 #include "adjustmentmodulecommon.h"
 #include <rminterface.h>
 #include <pcbinterface.h>
-#include "tasksequence.h"
-#include "taskparallel.h"
+#include "taskcontainersequence.h"
+#include "taskcontainerparallel.h"
 #include "socket.h"
 #include <vfmoduleerrorcomponent.h>
 
@@ -31,17 +31,17 @@ private slots:
 private:
     void addStaticActivationTasks();
     void addDynChannelActivationTasks();
-    TaskCompositePtr getChannelsReadTasks();
-    TaskCompositePtr getChannelsRegisterNotifyTasks();
-    TaskCompositePtr getDeactivationTasks();
+    TaskTemplatePtr getChannelsReadTasks();
+    TaskTemplatePtr getChannelsRegisterNotifyTasks();
+    TaskTemplatePtr getDeactivationTasks();
     void initChannelInfoHash();
     void fillChannelAliasHash();
 
     QStringList m_configuredChannels;
 
-    TaskSequence m_activationTasks;
-    TaskSequence m_deactivationTasks;
-    TaskSequence m_reloadRangesTasks;
+    TaskContainerSequence m_activationTasks;
+    TaskContainerSequence m_deactivationTasks;
+    TaskContainerSequence m_reloadRangesTasks;
 
     AdjustmentModuleCommonPtr m_commonObjects;
 };

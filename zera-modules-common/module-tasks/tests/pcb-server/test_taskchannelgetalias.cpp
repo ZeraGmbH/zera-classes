@@ -14,7 +14,7 @@ void test_taskchannelgetalias::checkScpiSend()
 {
     PcbInitForTest pcb;
     QString channelAlias;
-    TaskCompositePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
                                                         channelName,
                                                         channelAlias,
                                                         EXPIRE_INFINITE);
@@ -32,7 +32,7 @@ void test_taskchannelgetalias::returnsAliasProperly()
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString(defaultResponse)));
     QString channelAlias;
-    TaskCompositePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
                                                         channelName,
                                                         channelAlias,
                                                         EXPIRE_INFINITE);
@@ -46,7 +46,7 @@ void test_taskchannelgetalias::timeoutAndErrFunc()
     PcbInitForTest pcb;
     int localErrorCount = 0;
     QString channelAlias;
-    TaskCompositePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
                                                         channelName,
                                                         channelAlias,
                                                         DEFAULT_EXPIRE,

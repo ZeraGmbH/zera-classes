@@ -8,7 +8,7 @@ class TaskChannelGetAlias : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
+    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
                                    QString& valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskChannelGetAlias(Zera::Server::PcbInterfacePtr pcbInterface,

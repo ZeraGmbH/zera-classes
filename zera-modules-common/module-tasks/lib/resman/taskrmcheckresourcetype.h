@@ -8,7 +8,7 @@ class TaskRmCheckResourceType : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::RMInterfacePtr rmInterface,
+    static TaskTemplatePtr create(Zera::Server::RMInterfacePtr rmInterface,
                                    int timeout,
                                    std::function<void()> additionalErrorHandler = []{},
                                    QString checkResourceType = "SENSE");

@@ -14,7 +14,7 @@ void test_taskchannelgetrangelist::checkScpiSend()
 {
     PcbInitForTest pcb;
     QStringList rangeList;
-    TaskCompositePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
                                                             channelSysName,
                                                             rangeList,
                                                             EXPIRE_INFINITE);
@@ -32,7 +32,7 @@ void test_taskchannelgetrangelist::returnsRangeListProperly()
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList rangeList;
-    TaskCompositePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
                                                             channelSysName,
                                                             rangeList,
                                                             EXPIRE_INFINITE);
@@ -47,7 +47,7 @@ void test_taskchannelgetrangelist::timeoutAndErrFunc()
     PcbInitForTest pcb;
     int localErrorCount = 0;
     QStringList rangeList;
-    TaskCompositePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetRangeList::create(pcb.getPcbInterface(),
                                                             channelSysName,
                                                             rangeList,
                                                             DEFAULT_EXPIRE,

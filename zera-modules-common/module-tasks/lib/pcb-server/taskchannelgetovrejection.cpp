@@ -1,12 +1,12 @@
 #include "taskchannelgetovrejection.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 
-TaskCompositePtr TaskChannelGetOvRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetOvRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                    QString channelSysName, QString rangeName,
                                                    double &valueReceived,
                                                    int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskChannelGetOvRejection>(
                                                  pcbInterface,
                                                  channelSysName, rangeName,

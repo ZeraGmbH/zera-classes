@@ -9,7 +9,7 @@ class TaskRmChannelsGetAvail : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::RMInterfacePtr rmInterface,
+    static TaskTemplatePtr create(Zera::Server::RMInterfacePtr rmInterface,
                                    int timeout,
                                    QStringList &channelSysNameList,
                                    std::function<void()> additionalErrorHandler = []{},

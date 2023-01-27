@@ -15,7 +15,7 @@ void test_taskchannelgeturvalue::checkScpiSend()
 {
     PcbInitForTest pcb;
     double urValue;
-    TaskCompositePtr task = TaskChannelGetUrValue::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetUrValue::create(pcb.getPcbInterface(),
                                                           channelSysName, rangeName,
                                                           urValue,
                                                           EXPIRE_INFINITE);
@@ -33,7 +33,7 @@ void test_taskchannelgeturvalue::returnsUrValueProperly()
     PcbInitForTest pcb;
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultUrValue)));
     double urValue = 0.0;
-    TaskCompositePtr task = TaskChannelGetUrValue::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetUrValue::create(pcb.getPcbInterface(),
                                                           channelSysName, rangeName,
                                                           urValue,
                                                           EXPIRE_INFINITE);
@@ -47,7 +47,7 @@ void test_taskchannelgeturvalue::timeoutAndErrFunc()
     PcbInitForTest pcb;
     int localErrorCount = 0;
     double urValue = 0.0;
-    TaskCompositePtr task = TaskChannelGetUrValue::create(pcb.getPcbInterface(),
+    TaskTemplatePtr task = TaskChannelGetUrValue::create(pcb.getPcbInterface(),
                                                           channelSysName, rangeName,
                                                           urValue,
                                                           DEFAULT_EXPIRE,

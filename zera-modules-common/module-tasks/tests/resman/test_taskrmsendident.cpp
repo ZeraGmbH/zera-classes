@@ -12,7 +12,7 @@ static const char* testIdent = "foo";
 void test_taskrmsendident::checkSend()
 {
     RmInitForTest rm;
-    TaskCompositePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
                                                     testIdent,
                                                     EXPIRE_INFINITE);
     task->start();
@@ -28,7 +28,7 @@ void test_taskrmsendident::timeoutAndErrFunc()
     RmInitForTest rm;
     int localErrorCount = 0;
     QStringList channelList;
-    TaskCompositePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
                                                     testIdent,
                                                     DEFAULT_EXPIRE,
                                                     [&]{

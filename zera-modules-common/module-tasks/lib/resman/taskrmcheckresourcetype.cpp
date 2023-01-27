@@ -1,11 +1,11 @@
 #include "taskrmcheckresourcetype.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 
-TaskCompositePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskTemplatePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface,
                                                  int timeout, std::function<void ()> additionalErrorHandler,
                                                  QString checkResourceType)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskRmCheckResourceType>(
                                                  rmInterface, checkResourceType),
                                              additionalErrorHandler);

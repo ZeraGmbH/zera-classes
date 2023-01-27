@@ -1,14 +1,14 @@
 #ifndef TASKSERVERCONNECTIONSTART_H
 #define TASKSERVERCONNECTIONSTART_H
 
-#include "taskcomposit.h"
+#include "tasktemplate.h"
 #include "proxyclient.h"
 
-class TaskServerConnectionStart : public TaskComposite
+class TaskServerConnectionStart : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Proxy::ProxyClientPtr client, int timeout);
+    static TaskTemplatePtr create(Zera::Proxy::ProxyClientPtr client, int timeout);
     TaskServerConnectionStart(Zera::Proxy::ProxyClientPtr client);
     void start() override;
 private slots:

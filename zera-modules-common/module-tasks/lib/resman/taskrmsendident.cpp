@@ -1,11 +1,11 @@
 #include "taskrmsendident.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 
-TaskCompositePtr TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskTemplatePtr TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface,
                                          QString ident,
                                          int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskRmSendIdent>(
                                                  rmInterface,
                                                  ident),

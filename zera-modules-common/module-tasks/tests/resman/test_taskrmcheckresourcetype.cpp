@@ -10,7 +10,7 @@ QTEST_MAIN(test_taskrmcheckresourcetype)
 void test_taskrmcheckresourcetype::checkScpiSend()
 {
     RmInitForTest rm;
-    TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
     QStringList scpiSent = rm.getProxyClient()->getReceivedCommands();
@@ -23,7 +23,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceLowerCase()
 {
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "sense:foo"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -35,7 +35,7 @@ void test_taskrmcheckresourcetype::okOnMatchingResourceUpperCase()
 {
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "SENSE:FOO"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -47,7 +47,7 @@ void test_taskrmcheckresourcetype::errorOnNoResources()
 {
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, ""));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -59,7 +59,7 @@ void test_taskrmcheckresourcetype::errorOnMissingResource()
 {
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "foo:bar"));
-    TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
+    TaskTemplatePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -71,7 +71,7 @@ void test_taskrmcheckresourcetype::timeoutAndErrFunc()
 {
     RmInitForTest rm;
     int localErrorCount = 0;
-    TaskCompositePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), DEFAULT_EXPIRE,
+    TaskTemplatePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), DEFAULT_EXPIRE,
                                                            [&]{
         localErrorCount++;
     });

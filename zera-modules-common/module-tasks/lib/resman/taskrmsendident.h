@@ -8,7 +8,7 @@ class TaskRmSendIdent : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::RMInterfacePtr rmInterface,
+    static TaskTemplatePtr create(Zera::Server::RMInterfacePtr rmInterface,
                                    QString ident,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
     TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface, QString ident);

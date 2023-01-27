@@ -1,16 +1,16 @@
 #ifndef TASKOFFSET_H
 #define TASKOFFSET_H
 
-#include <tasksequence.h>
+#include <taskcontainersequence.h>
 #include "taskoffsetsetnode.h"
 #include <pcbinterface.h>
 #include <functional>
 
-class TaskOffset : public TaskSequence
+class TaskOffset : public TaskContainerSequence
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
                                    QString channelSysName, QString rangeName, double actualValue, double targetValue,
                                    int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler);
     TaskOffset(Zera::Server::PcbInterfacePtr pcbInterface,

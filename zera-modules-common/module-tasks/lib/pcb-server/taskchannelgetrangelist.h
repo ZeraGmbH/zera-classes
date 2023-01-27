@@ -8,7 +8,7 @@ class TaskChannelGetRangeList : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
                                    QString channelName,
                                    QStringList &targetRangeList,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});

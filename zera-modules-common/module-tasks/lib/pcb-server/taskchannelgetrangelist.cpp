@@ -1,13 +1,13 @@
 #include "taskchannelgetrangelist.h"
-#include "tasktimeoutdecorator.h"
+#include "taskdecoratortimeout.h"
 #include <reply.h>
 
-TaskCompositePtr TaskChannelGetRangeList::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetRangeList::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                                QString channelName,
                                                QStringList &targetRangeList,
                                                int timeout, std::function<void ()> additionalErrorHandler)
 {
-    return TaskTimeoutDecorator::wrapTimeout(timeout,
+    return TaskDecoratorTimeout::wrapTimeout(timeout,
                                              std::make_unique<TaskChannelGetRangeList>(
                                                  pcbInterface,
                                                  channelName,

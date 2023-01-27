@@ -13,7 +13,7 @@ void test_taskrmchannelsgetavail::checkScpiSend()
 {
     RmInitForTest rm;
     QStringList channelList;
-    TaskCompositePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
                                                            EXPIRE_INFINITE,
                                                            channelList);
     task->start();
@@ -29,7 +29,7 @@ void test_taskrmchannelsgetavail::getThreeChannels()
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList channelList;
-    TaskCompositePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
                                                            EXPIRE_INFINITE,
                                                            channelList);
     task->start();
@@ -43,7 +43,7 @@ void test_taskrmchannelsgetavail::getThreeChannelsIgnoreMMode()
     RmInitForTest rm;
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, "m0;m1;m2;MMODE"));
     QStringList channelList;
-    TaskCompositePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
                                                            EXPIRE_INFINITE,
                                                            channelList);
     task->start();
@@ -57,7 +57,7 @@ void test_taskrmchannelsgetavail::timeoutAndErrFunc()
     RmInitForTest rm;
     int localErrorCount = 0;
     QStringList channelList;
-    TaskCompositePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskRmChannelsGetAvail::create(rm.getRmInterface(),
                                                            DEFAULT_EXPIRE,
                                                            channelList,
                                                            [&]{

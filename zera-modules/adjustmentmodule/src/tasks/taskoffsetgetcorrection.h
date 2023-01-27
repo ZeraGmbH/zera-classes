@@ -1,14 +1,14 @@
 #ifndef TASKOFFSETGETCORRECTION_H
 #define TASKOFFSETGETCORRECTION_H
 
-#include "taskcomposit.h"
+#include "tasktemplate.h"
 #include <pcbinterface.h>
 
-class TaskOffsetGetCorrection : public TaskComposite
+class TaskOffsetGetCorrection : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static TaskCompositePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
+    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface,
                                    QString channelSysName, QString rangeName, double ourActualValue,
                                    double &correctionValue,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
