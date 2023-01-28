@@ -1,8 +1,9 @@
 #include "test_taskrmsendident.h"
 #include "taskrmsendident.h"
 #include "rminitfortest.h"
-#include "tasktesthelper.h"
 #include "scpifullcmdcheckerfortest.h"
+#include <timemachinefortest.h>
+#include <tasktesthelper.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskrmsendident)
@@ -13,8 +14,8 @@ void test_taskrmsendident::checkSend()
 {
     RmInitForTest rm;
     TaskTemplatePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
-                                                    testIdent,
-                                                    EXPIRE_INFINITE);
+                                                   testIdent,
+                                                   EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(rm.getProxyClient()->getReceivedCommands().count(), 0);
@@ -29,14 +30,14 @@ void test_taskrmsendident::timeoutAndErrFunc()
     int localErrorCount = 0;
     QStringList channelList;
     TaskTemplatePtr task = TaskRmSendIdent::create(rm.getRmInterface(),
-                                                    testIdent,
-                                                    DEFAULT_EXPIRE,
-                                                    [&]{
-        localErrorCount++;
-    });
+                                                   testIdent,
+                                                   DEFAULT_EXPIRE,
+                                                   [&]{
+                                                       localErrorCount++;
+                                                   });
     TaskTestHelper helper(task.get());
     task->start();
-    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(localErrorCount, 1);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);

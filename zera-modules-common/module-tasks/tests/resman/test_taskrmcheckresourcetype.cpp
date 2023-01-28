@@ -1,8 +1,9 @@
 #include "test_taskrmcheckresourcetype.h"
 #include "taskrmcheckresourcetype.h"
 #include "rminitfortest.h"
-#include "tasktesthelper.h"
 #include "scpifullcmdcheckerfortest.h"
+#include <timemachinefortest.h>
+#include <tasktesthelper.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskrmcheckresourcetype)
@@ -73,11 +74,11 @@ void test_taskrmcheckresourcetype::timeoutAndErrFunc()
     int localErrorCount = 0;
     TaskTemplatePtr task = TaskRmCheckResourceType::create(rm.getRmInterface(), DEFAULT_EXPIRE,
                                                            [&]{
-        localErrorCount++;
-    });
+                                                               localErrorCount++;
+                                                           });
     TaskTestHelper helper(task.get());
     task->start();
-    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(localErrorCount, 1);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);

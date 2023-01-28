@@ -1,8 +1,9 @@
 #include "test_taskservertransactiontemplate.h"
 #include "taskservertransactiontemplatetest.h"
 #include "taskfortest.h"
-#include "tasktesthelper.h"
 #include "servertestanswers.h"
+#include <timemachinefortest.h>
+#include <tasktesthelper.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskservertransactiontemplate)

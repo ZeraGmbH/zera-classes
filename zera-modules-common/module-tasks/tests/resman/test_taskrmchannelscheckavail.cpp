@@ -1,8 +1,9 @@
 #include "test_taskrmchannelscheckavail.h"
 #include "taskrmchannelscheckavail.h"
 #include "rminitfortest.h"
-#include "tasktesthelper.h"
 #include "scpifullcmdcheckerfortest.h"
+#include <timemachinefortest.h>
+#include <tasktesthelper.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskrmchannelscheckavail)
@@ -15,8 +16,8 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString(defaultResponse).split(";");
     TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
-                                                             expectedChannels,
-                                                             EXPIRE_INFINITE);
+                                                            expectedChannels,
+                                                            EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -30,8 +31,8 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("m0;m1").split(";");
     TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
-                                                             expectedChannels,
-                                                             EXPIRE_INFINITE);
+                                                            expectedChannels,
+                                                            EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -45,8 +46,8 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
     rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("foo").split(";");
     TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
-                                                             expectedChannels,
-                                                             EXPIRE_INFINITE);
+                                                            expectedChannels,
+                                                            EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
     task->start();
     QCoreApplication::processEvents();
@@ -59,14 +60,14 @@ void test_taskrmchannelscheckavail::timeoutAndErrFunc()
     RmInitForTest rm;
     int localErrorCount = 0;
     TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
-                                                             QStringList(),
-                                                             DEFAULT_EXPIRE,
-                                                             [&]{
-        localErrorCount++;
-    });
+                                                            QStringList(),
+                                                            DEFAULT_EXPIRE,
+                                                            [&]{
+                                                                localErrorCount++;
+                                                            });
     TaskTestHelper helper(task.get());
     task->start();
-    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(localErrorCount, 1);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
