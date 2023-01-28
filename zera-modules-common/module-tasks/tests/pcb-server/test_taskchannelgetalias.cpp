@@ -1,8 +1,9 @@
 #include "test_taskchannelgetalias.h"
 #include "taskchannelgetalias.h"
 #include "pcbinitfortest.h"
-#include "tasktesthelper.h"
 #include "scpifullcmdcheckerfortest.h"
+#include <timemachinefortest.h>
+#include <tasktesthelper.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgetalias)
@@ -15,9 +16,9 @@ void test_taskchannelgetalias::checkScpiSend()
     PcbInitForTest pcb;
     QString channelAlias;
     TaskTemplatePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
-                                                        channelName,
-                                                        channelAlias,
-                                                        EXPIRE_INFINITE);
+                                                       channelName,
+                                                       channelAlias,
+                                                       EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
@@ -33,9 +34,9 @@ void test_taskchannelgetalias::returnsAliasProperly()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString(defaultResponse)));
     QString channelAlias;
     TaskTemplatePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
-                                                        channelName,
-                                                        channelAlias,
-                                                        EXPIRE_INFINITE);
+                                                       channelName,
+                                                       channelAlias,
+                                                       EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(channelAlias, defaultResponse);
@@ -47,15 +48,15 @@ void test_taskchannelgetalias::timeoutAndErrFunc()
     int localErrorCount = 0;
     QString channelAlias;
     TaskTemplatePtr task = TaskChannelGetAlias::create(pcb.getPcbInterface(),
-                                                        channelName,
-                                                        channelAlias,
-                                                        DEFAULT_EXPIRE,
-                                                        [&]{
-        localErrorCount++;
-    });
+                                                       channelName,
+                                                       channelAlias,
+                                                       DEFAULT_EXPIRE,
+                                                       [&]{
+                                                           localErrorCount++;
+                                                       });
     TaskTestHelper helper(task.get());
     task->start();
-    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(localErrorCount, 1);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);

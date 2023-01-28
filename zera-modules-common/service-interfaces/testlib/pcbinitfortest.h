@@ -4,8 +4,7 @@
 #include "proxyclientfortest.h"
 #include "servertestanswers.h"
 #include <pcbinterface.h>
-#include <timerrunnerfortest.h>
-#include <zeratimerfactorymethodstest.h>
+#include <timerfactoryqtfortest.h>
 
 class PcbInitForTest
 {

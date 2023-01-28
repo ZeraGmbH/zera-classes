@@ -4,8 +4,7 @@
 #include "proxyclientfortest.h"
 #include "servertestanswers.h"
 #include <rminterface.h>
-#include <timerrunnerfortest.h>
-#include <zeratimerfactorymethodstest.h>
+#include <timerfactoryqtfortest.h>
 
 class RmInitForTest
 {

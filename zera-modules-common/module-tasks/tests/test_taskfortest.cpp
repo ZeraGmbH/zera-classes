@@ -1,7 +1,7 @@
 #include "test_taskfortest.h"
 #include "taskfortest.h"
-#include "tasktesthelper.h"
-#include <timerrunnerfortest.h>
+#include <tasktesthelper.h>
+#include <timemachinefortest.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskfortest)
@@ -9,7 +9,7 @@ QTEST_MAIN(test_taskfortest)
 void test_taskfortest::init()
 {
     TaskForTest::resetCounters();
-    TimerRunnerForTest::reset();
+    TimeMachineForTest::reset();
 }
 
 void test_taskfortest::onePassImmediate()
@@ -40,7 +40,7 @@ void test_taskfortest::onePassDelayed()
     TaskTestHelper helper(&task);
 
     task.start();
-    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(helper.okCount(), 1);
     QCOMPARE(helper.errCount(), 0);
@@ -53,7 +53,7 @@ void test_taskfortest::oneErrDelayed()
     TaskTestHelper helper(&task);
 
     task.start();
-    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
 
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);

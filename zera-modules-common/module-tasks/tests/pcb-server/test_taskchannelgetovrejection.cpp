@@ -1,8 +1,9 @@
 #include "test_taskchannelgetovrejection.h"
 #include "taskchannelgetovrejection.h"
 #include "pcbinitfortest.h"
-#include "tasktesthelper.h"
 #include "scpifullcmdcheckerfortest.h"
+#include <timemachinefortest.h>
+#include <tasktesthelper.h>
 #include <QTest>
 
 QTEST_MAIN(test_taskchannelgetovrejection)
@@ -16,9 +17,9 @@ void test_taskchannelgetovrejection::checkScpiSend()
     PcbInitForTest pcb;
     double ovRejection;
     TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
-                                                              channelSysName, rangeName,
-                                                              ovRejection,
-                                                              EXPIRE_INFINITE);
+                                                             channelSysName, rangeName,
+                                                             ovRejection,
+                                                             EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
@@ -34,9 +35,9 @@ void test_taskchannelgetovrejection::returnsOvrRejectionProperly()
     pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, QString("%1").arg(defaultOvRejection)));
     double ovRejection = 0.0;
     TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
-                                                              channelSysName, rangeName,
-                                                              ovRejection,
-                                                              EXPIRE_INFINITE);
+                                                             channelSysName, rangeName,
+                                                             ovRejection,
+                                                             EXPIRE_INFINITE);
     task->start();
     QCoreApplication::processEvents();
     QCOMPARE(ovRejection, defaultOvRejection);
@@ -48,15 +49,15 @@ void test_taskchannelgetovrejection::timeoutAndErrFunc()
     int localErrorCount = 0;
     double ovRejection = 0.0;
     TaskTemplatePtr task = TaskChannelGetOvRejection::create(pcb.getPcbInterface(),
-                                                              channelSysName, rangeName,
-                                                              ovRejection,
-                                                              DEFAULT_EXPIRE,
-                                                              [&]{
-        localErrorCount++;
-    });
+                                                             channelSysName, rangeName,
+                                                             ovRejection,
+                                                             DEFAULT_EXPIRE,
+                                                             [&]{
+                                                                 localErrorCount++;
+                                                             });
     TaskTestHelper helper(task.get());
     task->start();
-    TimerRunnerForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
+    TimeMachineForTest::getInstance()->processTimers(DEFAULT_EXPIRE_WAIT);
     QCOMPARE(localErrorCount, 1);
     QCOMPARE(helper.okCount(), 0);
     QCOMPARE(helper.errCount(), 1);
