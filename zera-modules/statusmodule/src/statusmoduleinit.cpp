@@ -62,15 +62,15 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     connect(&m_dspserverReadDSPProgramState, &QState::entered, this, &cStatusModuleInit::dspserverReadDSPProgramVersion);
     connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
-    m_deactivationMachine.addState(&m_pcbserverUnregisterClampCatalogNotifierState);
+    m_deactivationMachine.addState(&m_pcbserverUnregisterNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     if(!m_ConfigData.m_bDemo) {
-        m_deactivationMachine.setInitialState(&m_pcbserverUnregisterClampCatalogNotifierState);
+        m_deactivationMachine.setInitialState(&m_pcbserverUnregisterNotifiersState);
     } else {
         m_deactivationMachine.setInitialState(&m_deactivationDoneState);
     }
 
-    connect(&m_pcbserverUnregisterClampCatalogNotifierState, &QState::entered, this, &cStatusModuleInit::unregisterClampCatalogNotifier);
+    connect(&m_pcbserverUnregisterNotifiersState, &QState::entered, this, &cStatusModuleInit::unregisterNotifiers);
     connect(&m_deactivationDoneState, &QState::entered, this, &cStatusModuleInit::deactivationDone);
 
     // Adjustment re-read on clamp add / remove
@@ -80,7 +80,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_pcbserverReReadAdjStatusState.addTransition(this, &cStatusModuleInit::activationError, &m_pcbserverReReadDoneState);
     m_pcbserverReReadAdjChksumState.addTransition(this, &cStatusModuleInit::activationError, &m_pcbserverReReadDoneState);
 
-    m_pcbserverUnregisterClampCatalogNotifierState.addTransition(this, &cStatusModuleInit::deactivationContinue, &m_deactivationDoneState);
+    m_pcbserverUnregisterNotifiersState.addTransition(this, &cStatusModuleInit::deactivationContinue, &m_deactivationDoneState);
 
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjStatusState);
     m_stateMachineAdjustmentReRead.addState(&m_pcbserverReReadAdjChksumState);
@@ -218,7 +218,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
-            case STATUSMODINIT::registernotifier:
+            case STATUSMODINIT::registerClampCatalogNotifier:
                 // we continue in any case - e.g COM5003 does not support clamps
                 // just spit out a warning to journal
                 if (reply != ack) {
@@ -226,9 +226,9 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 emit activationContinue();
                 break;
-            case STATUSMODINIT::unregisternotifiers:
+            case STATUSMODINIT::unregisterNotifiers:
                 if (reply != ack) {
-                    qWarning("Unregister notification for clamps catalog failed - are clamps supported?");
+                    qWarning("Unregister notification failed");
                 }
                 emit deactivationContinue();
                 break;
@@ -506,14 +506,14 @@ void cStatusModuleInit::pcbserverReadAdjChksum()
 
 void cStatusModuleInit::registerClampCatalogNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), 1)] = STATUSMODINIT::registernotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), 1)] = STATUSMODINIT::registerClampCatalogNotifier;
 }
 
-void cStatusModuleInit::unregisterClampCatalogNotifier()
+void cStatusModuleInit::unregisterNotifiers()
 {
     // we are handler of first state:
     m_bActive = false;
-    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = STATUSMODINIT::unregisternotifiers;
+    m_MsgNrCmdList[m_pPCBInterface->unregisterNotifiers()] = STATUSMODINIT::unregisterNotifiers;
 }
 
 void cStatusModuleInit::dspserverConnect()
