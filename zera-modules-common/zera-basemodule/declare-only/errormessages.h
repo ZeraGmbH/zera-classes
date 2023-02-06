@@ -39,6 +39,7 @@
 #define readmuxchannelErrMsg "PCB muxchannel read failed"
 #define readrefconstantErrMsg "PCB reference constant read failed"
 #define readadjstatusErrMsg "PCB adjustment status read failed"
+#define readschnubbelstatusErrMsg "PCB authorization status read failed"
 #define readadjchksumErrMsg "PCB adjustment chksum read failed"
 #define readPCBServerVersionErrMsg "PCB server version read failed"
 #define readPCBCtrlVersionErrMSG "PCB Controler version read failed"

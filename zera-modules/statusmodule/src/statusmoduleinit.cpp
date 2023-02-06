@@ -226,7 +226,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 break;
             case STATUSMODINIT::schnubbelNotifierID:
-                qWarning("Schnubbel status changed !");
+                getSchnubbelStatus();
                 break;
         }
     }
@@ -387,6 +387,20 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationError();
                 }
                 break;
+
+             case STATUSMODINIT::readPCBServerSchnubbelStatus:
+                if (reply == ack)
+                {
+                    m_sSchnubbelStatus = answer.toString();
+                    m_pSchnubbelStatus->setValue(QVariant(m_sSchnubbelStatus));
+                    emit activationContinue();
+                }
+                else
+                {
+                    emit errMsg((tr(readschnubbelstatusErrMsg)));
+                    emit activationError();
+                }
+                break;
             }
         }
     }
@@ -448,6 +462,11 @@ void cStatusModuleInit::setupDemoOperation()
 {
     m_sSerialNumber = QStringLiteral("123456789");
     m_sAdjStatus = "0";
+}
+
+void cStatusModuleInit::getSchnubbelStatus()
+{
+    m_MsgNrCmdList[m_pPCBInterface->getAuthorizationStatus()] = STATUSMODINIT::readPCBServerSchnubbelStatus;
 }
 
 void cStatusModuleInit::setInterfaceComponents()
