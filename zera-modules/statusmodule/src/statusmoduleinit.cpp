@@ -25,7 +25,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_pcbserverRegisterClampCatalogNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_dspserverConnectionState);
     // m_dspserverConnectionState.addTransition is done in dspserverConnection
     m_dspserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_dspserverReadDSPProgramState);
-    m_dspserverReadDSPProgramState.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
+    m_dspserverReadDSPProgramState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterSchnubbelStatusNotifierState);
+    m_pcbserverRegisterSchnubbelStatusNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -40,6 +41,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     m_activationMachine.addState(&m_dspserverConnectionState);
     m_activationMachine.addState(&m_dspserverReadVersionState);
     m_activationMachine.addState(&m_dspserverReadDSPProgramState);
+    m_activationMachine.addState(&m_pcbserverRegisterSchnubbelStatusNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
     if(!m_ConfigData.m_bDemo) {
         m_activationMachine.setInitialState(&m_resourceManagerConnectState);
@@ -60,6 +62,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy*
     connect(&m_dspserverConnectionState, &QState::entered, this, &cStatusModuleInit::dspserverConnect);
     connect(&m_dspserverReadVersionState, &QState::entered, this, &cStatusModuleInit::dspserverReadVersion);
     connect(&m_dspserverReadDSPProgramState, &QState::entered, this, &cStatusModuleInit::dspserverReadDSPProgramVersion);
+    connect(&m_pcbserverRegisterSchnubbelStatusNotifierState, &QState::entered, this, &cStatusModuleInit::registerSchnubbelStatusNotifier);
     connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterNotifiersState);
@@ -199,6 +202,14 @@ void cStatusModuleInit::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pAdjustmentChksum;
     m_pAdjustmentChksum->setSCPIInfo(new cSCPIInfo("STATUS", "ADJCHKSUM", "2", key, "0", ""));
+
+    m_pSchnubbelStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("INF_Schnubbel"),
+                                               QString("Schnubbel inserted or not"),
+                                               QVariant(0));
+
+    m_pModule->veinModuleParameterHash[key] = m_pSchnubbelStatus;
+    m_pSchnubbelStatus->setSCPIInfo(new cSCPIInfo("STATUS", "AUTHORIZATION", "2", key, "0", ""));
 }
 
 
@@ -223,6 +234,14 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 // just spit out a warning to journal
                 if (reply != ack) {
                     qWarning("Register notification for clamps catalog failed - are clamps supported?");
+                }
+                emit activationContinue();
+                break;
+            case STATUSMODINIT::registerSchnubbelStatusNotifier:
+                // we continue in any case
+                // just spit out a warning to journal
+                if (reply != ack) {
+                    qWarning("Register notification for Schnubbel status failed");
                 }
                 emit activationContinue();
                 break;
@@ -536,6 +555,11 @@ void cStatusModuleInit::dspserverReadVersion()
 void cStatusModuleInit::dspserverReadDSPProgramVersion()
 {
     m_MsgNrCmdList[m_pDSPInterface->readDeviceVersion()] = STATUSMODINIT::readDSPServerDSPProgramVersion;
+}
+
+void cStatusModuleInit::registerSchnubbelStatusNotifier()
+{
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("STATUS:AUTHORIZATION?"), 1)] = STATUSMODINIT::registerSchnubbelStatusNotifier;
 }
 
 
