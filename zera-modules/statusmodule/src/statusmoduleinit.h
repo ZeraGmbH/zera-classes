@@ -33,6 +33,12 @@ enum statusmoduleinitCmds
     registerSchnubbelStatusNotifier
 };
 
+enum NOTIFIER_IDS
+{
+    clampNotifierID = 1,
+    schnubbelNotifierID
+};
+
 }
 
 class cStatusModule;
@@ -98,6 +104,7 @@ private:
     QString m_sAdjChksum;
     QString m_sDeviceType;
     QString m_sCPUInfo;
+    QString m_sSchnubbelStatus;
 
     VfModuleParameter *m_pPCBServerVersion;
     VfModuleParameter *m_pCtrlVersion;

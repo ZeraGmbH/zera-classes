@@ -217,9 +217,17 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 {
     if (msgnr == 0) // 0 was reserved for async. messages
     {
-        // clamp catalog changed: start adjustment state re-read
-        if(m_bActive && !m_stateMachineAdjustmentReRead.isRunning()) {
-            m_stateMachineAdjustmentReRead.start();
+        int notifierID = answer.toString().split(':').last().toInt();
+        switch (notifierID) {
+            case STATUSMODINIT::clampNotifierID:
+                // clamp catalog changed: start adjustment state re-read
+                if(m_bActive && !m_stateMachineAdjustmentReRead.isRunning()) {
+                    m_stateMachineAdjustmentReRead.start();
+                }
+                break;
+            case STATUSMODINIT::schnubbelNotifierID:
+                qWarning("Schnubbel status changed !");
+                break;
         }
     }
     else
@@ -525,7 +533,7 @@ void cStatusModuleInit::pcbserverReadAdjChksum()
 
 void cStatusModuleInit::registerClampCatalogNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), 1)] = STATUSMODINIT::registerClampCatalogNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:CLAMP:CHANNEL:CATALOG?"), STATUSMODINIT::clampNotifierID)] = STATUSMODINIT::registerClampCatalogNotifier;
 }
 
 void cStatusModuleInit::unregisterNotifiers()
@@ -559,7 +567,7 @@ void cStatusModuleInit::dspserverReadDSPProgramVersion()
 
 void cStatusModuleInit::registerSchnubbelStatusNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("STATUS:AUTHORIZATION?"), 1)] = STATUSMODINIT::registerSchnubbelStatusNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("STATUS:AUTHORIZATION?"), STATUSMODINIT::schnubbelNotifierID)] = STATUSMODINIT::registerSchnubbelStatusNotifier;
 }
 
 
