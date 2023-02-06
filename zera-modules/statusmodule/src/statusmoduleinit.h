@@ -30,7 +30,8 @@ enum statusmoduleinitCmds
     readDSPServerVersion,
     readDSPServerDSPProgramVersion,
     writePCBServerSerialNumber,
-    registerSchnubbelStatusNotifier
+    registerSchnubbelStatusNotifier,
+    readPCBServerSchnubbelStatus
 };
 
 enum NOTIFIER_IDS
@@ -123,6 +124,7 @@ private:
     QString findDeviceType();
     QString findCpuInfo();
     void setupDemoOperation();
+    void getSchnubbelStatus();
 
     QVariant wantedSerialNr;
 
