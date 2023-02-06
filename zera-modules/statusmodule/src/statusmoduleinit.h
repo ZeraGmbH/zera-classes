@@ -29,7 +29,8 @@ enum statusmoduleinitCmds
     unregisterNotifiers,
     readDSPServerVersion,
     readDSPServerDSPProgramVersion,
-    writePCBServerSerialNumber
+    writePCBServerSerialNumber,
+    registerSchnubbelStatusNotifier
 };
 
 }
@@ -73,6 +74,7 @@ private:
     QState m_dspserverConnectionState;
     QState m_dspserverReadVersionState;
     QState m_dspserverReadDSPProgramState;
+    QState m_pcbserverRegisterSchnubbelStatusNotifierState;
     QFinalState m_activationDoneState; // here we still read the release version
 
     // statemachine for adjustment-status // -checksum re-read
@@ -108,6 +110,7 @@ private:
     VfModuleParameter *m_pCPUInfo;
     VfModuleParameter *m_pAdjustmentStatus;
     VfModuleParameter *m_pAdjustmentChksum;
+    VfModuleParameter *m_pSchnubbelStatus;
 
     QString findReleaseNr();
     QString findDeviceType();
@@ -132,6 +135,7 @@ private slots:
     void dspserverConnect();
     void dspserverReadVersion();
     void dspserverReadDSPProgramVersion();
+    void registerSchnubbelStatusNotifier();
 
     void activationDone();
     void deactivationDone();
