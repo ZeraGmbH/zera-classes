@@ -82,6 +82,7 @@ private:
     QState m_dspserverReadVersionState;
     QState m_dspserverReadDSPProgramState;
     QState m_pcbserverRegisterSchnubbelStatusNotifierState;
+    QState m_pcbserverReadInitialSchnubbelStatus;
     QFinalState m_activationDoneState; // here we still read the release version
 
     // statemachine for adjustment-status // -checksum re-read
@@ -124,7 +125,6 @@ private:
     QString findDeviceType();
     QString findCpuInfo();
     void setupDemoOperation();
-    void getSchnubbelStatus();
 
     QVariant wantedSerialNr;
 
@@ -145,6 +145,7 @@ private slots:
     void dspserverReadVersion();
     void dspserverReadDSPProgramVersion();
     void registerSchnubbelStatusNotifier();
+    void getSchnubbelStatus();
 
     void activationDone();
     void deactivationDone();
