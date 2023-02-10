@@ -2,6 +2,7 @@
 #define SCPICLIENTINFO
 
 #include <QString>
+#include <memory>
 
 namespace SCPIMODULE
 {
@@ -24,6 +25,9 @@ private:
     int m_nEntityId;
     int m_nParCmdType;
 };
+
+typedef std::shared_ptr<cSCPIClientInfo> SCPIClientInfoPtr;
+
 
 }
 

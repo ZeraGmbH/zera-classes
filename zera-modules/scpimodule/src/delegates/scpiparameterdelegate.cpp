@@ -49,11 +49,11 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         event->setPeerId(client->getClientId());
 
         // we memorize : for component (componentname) the client to set something
-        cSCPIClientInfo *clientinfo;
+        SCPIClientInfoPtr clientinfo;
         if (bQuery)
-            clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
+            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parQuery);
         else
-            clientinfo = new cSCPIClientInfo(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
+            clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
 

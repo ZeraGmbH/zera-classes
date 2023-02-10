@@ -16,7 +16,7 @@ public:
     virtual ~cSCPIParameterDelegate();
     bool executeSCPI(cSCPIClient *client, QString& sInput) override;
 signals:
-    void clientinfoSignal(QString, cSCPIClientInfo*);
+    void clientinfoSignal(QString, SCPIMODULE::SCPIClientInfoPtr);
 private:
     cSCPIModule* m_pModule;
     cSCPICmdInfo* m_pSCPICmdInfo;
