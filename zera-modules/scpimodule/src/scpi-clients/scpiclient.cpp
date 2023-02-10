@@ -111,7 +111,7 @@ cSCPIStatus *cSCPIClient::getSCPIStatus(quint8 index)
 
 quint8 cSCPIClient::operationComplete()
 {
-    if (scpiClientInfoHash.isEmpty())
+    if (m_scpiClientInfoHash.isEmpty())
         return 1;
     else
         return 0;
@@ -126,14 +126,14 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
 
 void cSCPIClient::addSCPIClientInfo(QString key, cSCPIClientInfo *info)
 {
-    scpiClientInfoHash.insert(key, info);
+    m_scpiClientInfoHash.insert(key, info);
 }
 
 
 void cSCPIClient::removeSCPIClientInfo(QString key)
 {
-    scpiClientInfoHash.remove(key);
-    for(auto clientInfo : qAsConst(scpiClientInfoHash))
+    m_scpiClientInfoHash.remove(key);
+    for(auto clientInfo : qAsConst(m_scpiClientInfoHash))
         delete clientInfo;
     execCmd();
 }
@@ -212,7 +212,7 @@ void cSCPIClient::execCmd()
             emit m_pIEEE4882->AddEventError(CommandError);
 
         // we leave here if there is any parameter settings pending
-        if (scpiClientInfoHash.count() > 0)
+        if (m_scpiClientInfoHash.count() > 0)
             break;
     }
 

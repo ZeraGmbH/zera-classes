@@ -41,7 +41,7 @@ public slots:
 protected:
     cSCPIInterface* m_pSCPIInterface;
     cIEEE4882* m_pIEEE4882;
-    QHash<QString, cSCPIClientInfo*> scpiClientInfoHash;
+    QHash<QString, cSCPIClientInfo*> m_scpiClientInfoHash;
 
     QString m_sInputFifo;
     QString activeCmd;
