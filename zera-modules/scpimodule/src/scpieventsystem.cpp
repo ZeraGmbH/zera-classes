@@ -61,13 +61,10 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
             // then it looks for parameter values
             if (m_pModule->scpiParameterCmdInfoHash.contains(cName))
             {
-                QList<cSCPIClientInfo*> clientinfolist;
-                clientinfolist = m_pModule->scpiParameterCmdInfoHash.values(cName);
-
+                QList<SCPIClientInfoPtr> clientinfolist = m_pModule->scpiParameterCmdInfoHash.values(cName);
                 for (int i = 0; i < clientinfolist.count(); i++)
                 {
-                    cSCPIClientInfo* clientinfo;
-                    clientinfo = clientinfolist.at(i);
+                    SCPIClientInfoPtr clientinfo = clientinfolist.at(i);
 
                     QUuid clientId;
                     clientId = commandEvent->peerId();
@@ -141,13 +138,10 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
                 // error notifications are sent for invalid parameters
                 if (m_pModule->scpiParameterCmdInfoHash.contains(cName))
                 {
-                    QList<cSCPIClientInfo*> clientinfolist;
-                    clientinfolist = m_pModule->scpiParameterCmdInfoHash.values();
-
+                    QList<SCPIClientInfoPtr> clientinfolist = m_pModule->scpiParameterCmdInfoHash.values();
                     for (int i = 0; i < clientinfolist.count(); i++)
                     {
-                        cSCPIClientInfo* clientinfo;
-                        clientinfo = clientinfolist.at(i);
+                        SCPIClientInfoPtr clientinfo = clientinfolist.at(i);
                         if (clientinfo->entityId() == entityId)
                         {
                             commandEvent->accept();  // we caused the error event due to wrong parameter

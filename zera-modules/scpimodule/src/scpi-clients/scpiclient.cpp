@@ -124,7 +124,7 @@ cIEEE4882 *cSCPIClient::getIEEE4882()
 }
 
 
-void cSCPIClient::addSCPIClientInfo(QString key, cSCPIClientInfo *info)
+void cSCPIClient::addSCPIClientInfo(QString key, SCPIClientInfoPtr info)
 {
     m_scpiClientInfoHash.insert(key, info);
 }
@@ -133,8 +133,6 @@ void cSCPIClient::addSCPIClientInfo(QString key, cSCPIClientInfo *info)
 void cSCPIClient::removeSCPIClientInfo(QString key)
 {
     m_scpiClientInfoHash.remove(key);
-    for(auto clientInfo : qAsConst(m_scpiClientInfoHash))
-        delete clientInfo;
     execCmd();
 }
 
