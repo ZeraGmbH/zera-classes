@@ -56,10 +56,7 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
             clientinfo = std::make_shared<cSCPIClientInfo>(client, m_pSCPICmdInfo->entityId, SCPIMODULE::parcmd);
 
         m_pModule->scpiParameterCmdInfoHash.insert(m_pSCPICmdInfo->componentName, clientinfo);
-
-        QMetaObject::Connection myConn = connect(this, &cSCPIParameterDelegate::clientinfoSignal, client, &cSCPIClient::addSCPIClientInfo);
-        emit clientinfoSignal(m_pSCPICmdInfo->componentName, clientinfo);
-        disconnect(myConn);
+        client->addSCPIClientInfo(m_pSCPICmdInfo->componentName, clientinfo);
 
         m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }
