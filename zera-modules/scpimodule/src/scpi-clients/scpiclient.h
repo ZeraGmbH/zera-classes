@@ -29,12 +29,12 @@ public:
     quint8 operationComplete();
     cIEEE4882* getIEEE4882();
     QUuid getClientId();
+    void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegate*> m_SCPIMeasureDelegateHash;
 public slots:
     void receiveStatus(quint8 stat);
     virtual void receiveAnswer(QString answ) = 0;
-    void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
     void removeSCPIClientInfo(QString key);
 
 protected:
