@@ -8,7 +8,6 @@
 
 namespace Zera { namespace Proxy
 {
-class cProxyClient;
 class cProxyPrivate;
 
 class ZERA_PROXY_EXPORT cProxy: public QObject
