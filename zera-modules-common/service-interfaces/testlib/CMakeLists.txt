@@ -19,6 +19,6 @@ target_include_directories(service-interfaces-testlib
 target_link_libraries(service-interfaces-testlib
     PUBLIC
     service-interfaces
-    zera-proxy-testlib
+    Zera::zera-timers-testlib
 )
 
