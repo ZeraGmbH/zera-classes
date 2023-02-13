@@ -7,8 +7,8 @@
 namespace POWER3MODULE
 {
 
-cPower3Module::cPower3Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower3ModuleConfiguration()), parent)
+cPower3Module::cPower3Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower3ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of harmonic power values from configured input values");

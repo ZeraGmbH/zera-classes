@@ -3,6 +3,7 @@
 #include "rangemeaschannel.h"
 #include <errormessages.h>
 #include <reply.h>
+#include <proxy.h>
 #include <regexvalidator.h>
 #include <intvalidator.h>
 #include <boolvalidator.h>
@@ -11,8 +12,13 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, Zera::Proxy::cProxy* proxy, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo)
-    :m_bDemo(demo), m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dsprmsocket), m_GroupList(groupList), m_ChannelNameList(chnlist), m_ConfPar(confpar)
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo) :
+    m_bDemo(demo),
+    m_pModule(module),
+    m_pDSPSocket(dsprmsocket),
+    m_GroupList(groupList),
+    m_ChannelNameList(chnlist),
+    m_ConfPar(confpar)
 {
     m_brangeSet = false;
     m_nWaitAfterRanging = 0;
@@ -594,11 +600,11 @@ void cRangeObsermatic::dspserverConnect()
         m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
     }
 
-    m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_readGainCorrState);
     connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -695,7 +701,7 @@ void cRangeObsermatic::readGainCorrDone()
 void cRangeObsermatic::deactivationInit()
 {
     m_bActive = false;
-    m_pProxy->releaseConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0); // we disconnect from our dsp interface
     m_pDSPInterFace->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
     emit deactivationContinue();

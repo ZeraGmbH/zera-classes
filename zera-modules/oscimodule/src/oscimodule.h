@@ -13,10 +13,6 @@ namespace Zera {
 namespace Server {
  class cDSPInterface;
 }
-
-namespace Proxy {
- class cProxyClient;
-}
 }
 
 
@@ -35,7 +31,7 @@ class cOsciModule : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cOsciModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

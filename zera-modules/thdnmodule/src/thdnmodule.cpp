@@ -4,7 +4,6 @@
 #include "thdnmodulemeasprogram.h"
 #include "thdnmoduleobservation.h"
 #include "errormessages.h"
-#include <proxy.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -17,8 +16,8 @@
 namespace THDNMODULE
 {
 
-cThdnModule::cThdnModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cThdnModuleConfiguration()), parent)
+cThdnModule::cThdnModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cThdnModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures thdn values for configured channels");
@@ -77,14 +76,14 @@ void cThdnModule::setupModule()
     pConfData = qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     // and module observation in case we have to react to naming changes
-    m_pThdnModuleObservation = new cThdnModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pThdnModuleObservation = new cThdnModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pThdnModuleObservation);
     connect(m_pThdnModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pThdnModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

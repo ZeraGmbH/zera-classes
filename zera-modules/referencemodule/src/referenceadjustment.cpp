@@ -4,14 +4,15 @@
 #include "referencemeaschannel.h"
 #include <errormessages.h>
 #include <reply.h>
+#include <proxy.h>
 #include <math.h>
 #include <QSignalTransition>
 
 namespace REFERENCEMODULE
 {
 
-cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, Zera::Proxy::cProxy* proxy, cReferenceModuleConfigData* confData)
-    :m_pModule(module), m_pProxy(proxy), m_pConfigData(confData)
+cReferenceAdjustment::cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData)
+    :m_pModule(module), m_pConfigData(confData)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -88,12 +89,12 @@ void cReferenceAdjustment::generateInterface()
 void cReferenceAdjustment::pcbserverConnect()
 {
     cSocket sock = m_pConfigData->m_PCBServerSocket;
-    m_pPCBClient = m_pProxy->getConnection(sock.m_sIP, sock.m_nPort);
+    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
     m_pcbserverConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_set0VRangeState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -111,11 +112,11 @@ void cReferenceAdjustment::dspserverConnect()
 {
     // we set up our dsp server connection
     cSocket sock = m_pConfigData->m_DSPServerSocket;
-    m_pDspClient = m_pProxy->getConnection(sock.m_sIP, sock.m_nPort);
+    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_activationDoneState);
     connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -202,8 +203,8 @@ void cReferenceAdjustment::referenceAdjustDone()
 void cReferenceAdjustment::deactivationInit()
 {
     m_bActive = false;
-    m_pProxy->releaseConnection(m_pDspClient);
-    m_pProxy->releaseConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
     m_pDSPInterFace->deleteMemHandle(m_pGainCorrectionDSP);
     m_pDSPInterFace->deleteMemHandle(m_pOffset2CorrectionDSP);
     emit deactivationContinue();

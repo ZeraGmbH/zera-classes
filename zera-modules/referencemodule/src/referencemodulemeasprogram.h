@@ -29,7 +29,7 @@ class cReferenceModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cReferenceModuleMeasProgram(cReferenceModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cReferenceModuleMeasProgram(cReferenceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cReferenceModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:

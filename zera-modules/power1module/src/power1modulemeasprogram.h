@@ -83,7 +83,7 @@ class cPower1ModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cPower1ModuleMeasProgram(cPower1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cPower1ModuleMeasProgram(cPower1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cPower1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:

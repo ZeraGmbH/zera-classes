@@ -18,9 +18,6 @@
 #include <QFinalState>
 
 namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
 namespace  Server {
     class cRMInterface;
     class cPCBInterface;
@@ -73,7 +70,7 @@ class cAdjustmentModuleMeasProgram: public cBaseMeasWorkProgram
     Q_OBJECT
 
 public:
-    cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     void generateInterface() override; // here we export our interface (entities)
 
 signals:

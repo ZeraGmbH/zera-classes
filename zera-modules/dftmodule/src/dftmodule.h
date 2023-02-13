@@ -14,9 +14,6 @@ namespace Server {
  class cDSPInterface;
 }
 
-namespace Proxy {
- class cProxyClient;
-}
 }
 
 
@@ -35,7 +32,7 @@ class cDftModule : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cDftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cDftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

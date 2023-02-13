@@ -3,7 +3,6 @@
 #include "fftmoduleconfigdata.h"
 #include "fftmodulemeasprogram.h"
 #include "fftmoduleobservation.h"
-#include <proxy.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -16,8 +15,8 @@
 namespace FFTMODULE
 {
 
-cFftModule::cFftModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cFftModuleConfiguration()), parent)
+cFftModule::cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cFftModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of fft values for configured channels");
@@ -76,14 +75,14 @@ void cFftModule::setupModule()
     pConfData = qobject_cast<cFftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cFftModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cFftModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::activated, this, &cFftModule::activationContinue);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::deactivated, this, &cFftModule::deactivationContinue);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // and module observation in case we have to react to naming changes
-    m_pFftModuleObservation = new cFftModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pFftModuleObservation = new cFftModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pFftModuleObservation);
     connect(m_pFftModuleObservation, &cFftModuleObservation::activated, this, &cFftModule::activationContinue);
     connect(m_pFftModuleObservation, &cFftModuleObservation::deactivated, this, &cFftModule::deactivationContinue);

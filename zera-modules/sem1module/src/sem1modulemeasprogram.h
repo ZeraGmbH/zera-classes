@@ -6,7 +6,6 @@
 #include <secinputinfo.h>
 #include <ecalcinfo.h>
 #include <clientactivecomponent.h>
-#include <proxy.h>
 #include <memory>
 
 namespace SEM1MODULE
@@ -61,7 +60,7 @@ class cSem1ModuleMeasProgram: public cBaseMeasProgram
     Q_OBJECT
 
 public:
-    cSem1ModuleMeasProgram(cSem1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cSem1ModuleMeasProgram(cSem1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSem1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 

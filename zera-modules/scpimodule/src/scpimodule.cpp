@@ -5,7 +5,6 @@
 #include "vfmodulecomponent.h"
 #include "vfmoduleerrorcomponent.h"
 #include "scpieventsystem.h"
-#include <proxy.h>
 #include <vfmodulemetadata.h>
 #include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>
@@ -19,12 +18,11 @@
 #include <QJsonValue>
 
 
-
 namespace SCPIMODULE
 {
 
-cSCPIModule::cSCPIModule(quint8 modnr, Zera::Proxy::cProxy *proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()), parent)
+cSCPIModule::cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent) :
+    cBaseModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");

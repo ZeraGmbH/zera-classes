@@ -1,14 +1,15 @@
 #include "rangemeaschannel.h"
 #include <errormessages.h>
 #include <reply.h>
+#include <proxy.h>
 #include <QRegExp>
 #include <math.h>
 
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo)
-    :cBaseMeasChannel(proxy, rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1)
+cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo)
+    :cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1)
 {
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
@@ -967,14 +968,14 @@ void cRangeMeasChannel::rmConnect()
     if(!m_bDemo) {
         // we instantiate a working resource manager interface first
         // so first we try to get a connection to resource manager over proxy
-        m_rmClient = m_pProxy->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+        m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
         m_rmConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
         // and then we set connection resource manager interface's connection
         m_rmInterface.setClientSmart(m_rmClient); //
         // todo insert timer for timeout
 
         connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
-        m_pProxy->startConnectionSmart(m_rmClient);
+        Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
         // resource manager liste sense abfragen
         // bin ich da drin ?
         // nein -> fehler activierung
@@ -1031,12 +1032,12 @@ void cRangeMeasChannel::claimResource()
 
 void cRangeMeasChannel::pcbConnection()
 {
-    m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
+    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
     m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_readDspChannelState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -1106,7 +1107,7 @@ void cRangeMeasChannel::deactivationResetNotifiers()
 void cRangeMeasChannel::deactivationDone()
 {
     if(!m_bDemo) {
-        m_pProxy->releaseConnection(m_pPCBClient);
+        Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
         // and disconnect for our servers afterwards
         disconnect(&m_rmInterface, 0, this, 0);
         disconnect(m_pPCBInterface, 0, this, 0);

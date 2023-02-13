@@ -18,7 +18,7 @@ class cSampleModule : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cSampleModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     cPllMeasChannel* getPllMeasChannel(QString name);
 

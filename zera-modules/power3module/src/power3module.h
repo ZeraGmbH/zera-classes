@@ -16,7 +16,7 @@ class cPower3Module : public cBaseMeasModule
 {
     Q_OBJECT
 public:
-    cPower3Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cPower3Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 protected:
     cPower3ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

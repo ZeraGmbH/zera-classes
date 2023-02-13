@@ -4,13 +4,14 @@
 #include "adjustmentmoduleconfiguration.h"
 #include "taskoffset.h"
 #include <reply.h>
+#include <proxy.h>
 #include <intvalidator.h>
 #include <useratan.h>
 #include <rminterface.h>
 #include <errormessages.h>
 #include <math.h>
 
-cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, Zera::Proxy::cProxy*, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),
     m_pModule(module),
     m_commonObjects(std::make_shared<AdjustmentModuleCommon>()),

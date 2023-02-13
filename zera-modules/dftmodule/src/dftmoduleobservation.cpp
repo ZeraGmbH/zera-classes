@@ -3,12 +3,14 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <pcbinterface.h>
+#include <proxy.h>
 
 namespace DFTMODULE
 {
 
-cDftModuleObservation::cDftModuleObservation(cDftModule* module, Zera::Proxy::cProxy *proxy, cSocket *pcbsocket)
-    :m_pDftmodule(module), m_pProxy(proxy), m_pPCBServerSocket(pcbsocket)
+cDftModuleObservation::cDftModuleObservation(cDftModule* module, cSocket *pcbsocket) :
+    m_pDftmodule(module),
+    m_pPCBServerSocket(pcbsocket)
 {
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
@@ -95,12 +97,13 @@ void cDftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
 void cDftModuleObservation::pcbConnect()
 {
-    m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
+    Zera::Proxy::cProxy* proxy = Zera::Proxy::cProxy::getInstance();
+    m_pPCBClient = proxy->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
     m_pcbConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cDftModuleObservation::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pPCBClient);
+    proxy->startConnection(m_pPCBClient);
 }
 
 
@@ -125,7 +128,7 @@ void cDftModuleObservation::resetNotifier()
 
 void cDftModuleObservation::deactivationDone()
 {
-    m_pProxy->releaseConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
     disconnect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cDftModuleObservation::catchInterfaceAnswer);
     emit deactivated();
 }

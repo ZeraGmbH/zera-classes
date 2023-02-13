@@ -17,7 +17,7 @@ class cSpm1Module : public cBaseMeasModule
 {
     Q_OBJECT
 public:
-    cSpm1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 protected:
     cSpm1ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse

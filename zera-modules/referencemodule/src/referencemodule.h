@@ -20,7 +20,7 @@ class cReferenceModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
-    cReferenceModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 protected:

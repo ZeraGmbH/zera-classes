@@ -13,10 +13,6 @@ namespace Zera {
 namespace Server {
  class cDSPInterface;
 }
-
-namespace Proxy {
- class cProxyClient;
-}
 }
 
 namespace THDNMODULE
@@ -34,7 +30,7 @@ class cThdnModule : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cThdnModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cThdnModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

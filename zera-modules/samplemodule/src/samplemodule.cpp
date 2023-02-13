@@ -13,8 +13,8 @@
 namespace SAMPLEMODULE
 {
 
-cSampleModule::cSampleModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()), parent)
+cSampleModule::cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
+    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSampleModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for pll range setting\n, pll channel selection and automatic");
@@ -88,7 +88,7 @@ void cSampleModule::setupModule()
     // first we build a list of our pll meas channels, that hold informations for other activists
     for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++)
     {
-        cPllMeasChannel* pllchn = new cPllMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
+        cPllMeasChannel* pllchn = new cPllMeasChannel(&(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i), i+1);
         m_pllMeasChannelList.append(pllchn);
@@ -99,7 +99,7 @@ void cSampleModule::setupModule()
     }
 
     // next we instantiate an object of sample channel so we can switch sample frequency ranges
-    cSampleChannel* schn = new cSampleChannel(this, m_pProxy, *pConfData, 1);
+    cSampleChannel* schn = new cSampleChannel(this, *pConfData, 1);
 
     m_sampleChannelList.append(schn); // we hold a list although we only have 1
     m_ModuleActivistList.append(schn);
@@ -108,20 +108,20 @@ void cSampleModule::setupModule()
     connect(schn, &cSampleChannel::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // we need some program that does the pll handling (observation, automatic, setting)
-    m_pPllObsermatic = new cPllObsermatic(this, m_pProxy, *pConfData);
+    m_pPllObsermatic = new cPllObsermatic(this, *pConfData);
     m_ModuleActivistList.append(m_pPllObsermatic);
     connect(m_pPllObsermatic, &cPllObsermatic::activated, this, &cSampleModule::activationContinue);
     connect(m_pPllObsermatic, &cPllObsermatic::deactivated, this, &cSampleModule::deactivationContinue);
     connect(m_pPllObsermatic, &cPllObsermatic::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cSampleModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::activated, this, &cSampleModule::activationContinue);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::deactivated, this, &cSampleModule::deactivationContinue);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
     //
-    m_pSampleModuleObservation = new cSampleModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pSampleModuleObservation = new cSampleModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pSampleModuleObservation);
     connect(m_pSampleModuleObservation, &cSampleModuleObservation::activated, this, &cSampleModule::activationContinue);
     connect(m_pSampleModuleObservation, &cSampleModuleObservation::deactivated, this, &cSampleModule::deactivationContinue);

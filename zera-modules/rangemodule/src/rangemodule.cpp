@@ -15,8 +15,8 @@
 namespace RANGEMODULE
 {
 
-cRangeModule::cRangeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()), parent)
+cRangeModule::cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
+    :cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRangeModuleConfiguration()), parent)
 {
     m_bDemo = false;
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
@@ -73,7 +73,7 @@ void cRangeModule::setupModule()
         QString channel;
 
         channel = pConfData->m_senseChannelList.at(i);
-        cRangeMeasChannel* pchn = new cRangeMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
+        cRangeMeasChannel* pchn = new cRangeMeasChannel(&(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1,
@@ -88,7 +88,6 @@ void cRangeModule::setupModule()
     // we need some program that does the range handling (observation, automatic, setting and grouping)
     // it will also do the scaling job
     m_pRangeObsermatic = new cRangeObsermatic(this,
-                                              m_pProxy,
                                               &(pConfData->m_DSPServerSocket),
                                               pConfData->m_GroupList,
                                               pConfData->m_senseChannelList,
@@ -110,7 +109,7 @@ void cRangeModule::setupModule()
 
     if(!m_bDemo) {
         // we also need some program for adjustment
-        m_pAdjustment = new cAdjustManagement(this, m_pProxy, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
+        m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
         m_ModuleActivistList.append(m_pAdjustment);
         connect(m_pAdjustment, &cAdjustManagement::activated, this, &cRangeModule::activationContinue);
         connect(m_pAdjustment, &cAdjustManagement::deactivated, this, &cRangeModule::deactivationContinue);
@@ -118,14 +117,14 @@ void cRangeModule::setupModule()
     }
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pProxy, m_pConfiguration, m_bDemo);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration, m_bDemo);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     if(!m_bDemo) {
-        m_pRangeModuleObservation = new cRangeModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+        m_pRangeModuleObservation = new cRangeModuleObservation(this, &(pConfData->m_PCBServerSocket));
         m_ModuleActivistList.append(m_pRangeModuleObservation);
         connect(m_pRangeModuleObservation, &cRangeModuleObservation::activated, this, &cRangeModule::activationContinue);
         connect(m_pRangeModuleObservation, &cRangeModuleObservation::deactivated, this, &cRangeModule::deactivationContinue);

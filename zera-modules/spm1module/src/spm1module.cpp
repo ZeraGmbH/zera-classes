@@ -2,7 +2,6 @@
 #include "spm1moduleconfiguration.h"
 #include "spm1moduleconfigdata.h"
 #include "spm1modulemeasprogram.h"
-#include <proxy.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -10,8 +9,8 @@
 namespace SPM1MODULE
 {
 
-cSpm1Module::cSpm1Module(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSpm1ModuleConfiguration()), parent)
+cSpm1Module::cSpm1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSpm1ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module povides a configurable error calculator");
@@ -66,7 +65,7 @@ void cSpm1Module::setupModule()
     cBaseMeasModule::setupModule();
 
     // we only have this activist
-    m_pMeasProgram = new cSpm1ModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cSpm1ModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cSpm1ModuleMeasProgram::activated, this, &cSpm1Module::activationContinue);
     connect(m_pMeasProgram, &cSpm1ModuleMeasProgram::deactivated, this, &cSpm1Module::deactivationContinue);

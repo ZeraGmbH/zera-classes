@@ -3,7 +3,6 @@
 
 #include <moduleactivist.h>
 #include <socket.h>
-#include <proxy.h>
 #include <pcbinterface.h>
 #include <QFinalState>
 
@@ -22,7 +21,7 @@ class cPower2ModuleObservation: public cModuleActivist
     Q_OBJECT
 
 public:
-    cPower2ModuleObservation(cPower2Module* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
+    cPower2ModuleObservation(cPower2Module* module, cSocket* pcbsocket);
     virtual ~cPower2ModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -31,7 +30,6 @@ signals:
 
 protected:
     cPower2Module* m_pPower2module;
-    Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pPCBServerSocket;
 
     Zera::Server::cPCBInterface* m_pPCBInterface;

@@ -12,8 +12,8 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModule::cReferenceModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()), parent)
+cReferenceModule::cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures reference actual values for configured channels");
@@ -91,7 +91,7 @@ void cReferenceModule::setupModule()
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
-        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(m_pProxy, &(pConfData->m_RMSocket),
+        cReferenceMeasChannel* pchn = new cReferenceMeasChannel(&(pConfData->m_RMSocket),
                                                                 &(pConfData->m_PCBServerSocket),
                                                                 pConfData->m_referenceChannelList.at(i), i+1);
         m_ReferenceMeasChannelList.append(pchn);
@@ -102,7 +102,7 @@ void cReferenceModule::setupModule()
     }
 
     // then we need some program for adjustment
-    m_pReferenceAdjustment = new cReferenceAdjustment(this, m_pProxy, pConfData);
+    m_pReferenceAdjustment = new cReferenceAdjustment(this, pConfData);
     //m_ModuleActivistList.append(m_pReferenceAdjustment);
     // we don't actvate this per our activation loop
     // instead adjustment is activated after all other activists
@@ -121,13 +121,13 @@ void cReferenceModule::setupModule()
     }
 
     // at last we need some program that does the measuring job on dsp
-    m_pMeasProgram = new cReferenceModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cReferenceModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
     //
-    m_pReferenceModuleObservation = new cReferenceModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pReferenceModuleObservation = new cReferenceModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pReferenceModuleObservation);
     connect(m_pReferenceModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pReferenceModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

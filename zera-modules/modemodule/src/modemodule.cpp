@@ -2,7 +2,6 @@
 #include "modemoduleconfiguration.h"
 #include "modemoduleconfigdata.h"
 #include "modemoduleinit.h"
-#include <proxy.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -10,8 +9,8 @@
 namespace MODEMODULE
 {
 
-cModeModule::cModeModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cModeModuleConfiguration()), parent)
+cModeModule::cModeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cModeModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for setting measuring mode and resetting dsp adjustment data");
@@ -69,7 +68,7 @@ void cModeModule::setupModule()
     pConfData = qobject_cast<cModeModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we only have to initialize the pcb's measuring mode
-    m_pModeModuleInit = new cModeModuleInit(this, m_pProxy, *pConfData);
+    m_pModeModuleInit = new cModeModuleInit(this, *pConfData);
     m_ModuleActivistList.append(m_pModeModuleInit);
     connect(m_pModeModuleInit, &cModeModuleInit::activated, this, &cModeModule::activationContinue);
     connect(m_pModeModuleInit, &cModeModuleInit::deactivated, this, &cModeModule::deactivationContinue);

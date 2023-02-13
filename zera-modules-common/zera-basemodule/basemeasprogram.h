@@ -5,7 +5,6 @@
 #include "basemodule.h"
 #include "socket.h"
 #include "moduleactivist.h"
-#include <proxy.h>
 #include <pcbinterface.h>
 #include <rminterface.h>
 
@@ -13,7 +12,7 @@ class cBaseMeasProgram: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cBaseMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cBaseMeasProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
 signals:
     void actualValues(QVector<float>*);
 public slots:
@@ -21,7 +20,6 @@ public slots:
     virtual void stop() = 0; // in interface are not updated when stop
 
 protected:
-    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
     Zera::Server::cRMInterface m_rmInterface;
     Zera::Proxy::ProxyClientPtr m_rmClient;

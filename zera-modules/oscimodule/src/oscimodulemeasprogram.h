@@ -43,7 +43,7 @@ class cOsciModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cOsciModuleMeasProgram(cOsciModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cOsciModuleMeasProgram(cOsciModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cOsciModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 

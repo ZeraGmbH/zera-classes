@@ -1,7 +1,6 @@
 #ifndef REFERENCEMEASCHANNEL_H
 #define REFERENCEMEASCHANNEL_H
 
-#include <proxy.h>
 #include <rangeinfo.h>
 #include <QHash>
 #include <QStringList>
@@ -47,7 +46,7 @@ class cReferenceMeasChannel:public cBaseMeasChannel
     Q_OBJECT
 
 public:
-    cReferenceMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     ~cReferenceMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
 

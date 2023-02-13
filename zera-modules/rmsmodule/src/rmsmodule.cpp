@@ -6,8 +6,8 @@
 namespace RMSMODULE
 {
 
-cRmsModule::cRmsModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()), parent)
+cRmsModule::cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures true rms values for configured channels");
@@ -66,14 +66,14 @@ void cRmsModule::setupModule()
     pConfData = qobject_cast<cRmsModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRmsModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cRmsModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     // and module observation in case we have to react to naming changes
-    m_pRmsModuleObservation = new cRmsModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pRmsModuleObservation = new cRmsModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pRmsModuleObservation);
     connect(m_pRmsModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pRmsModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

@@ -3,7 +3,6 @@
 
 #include "statusmoduleconfigdata.h"
 #include <moduleactivist.h>
-#include <proxy.h>
 #include <vfmoduleparameter.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
@@ -48,14 +47,13 @@ class cStatusModuleInit: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cStatusModuleInit(cStatusModule* module, Zera::Proxy::cProxy* proxy, cStatusModuleConfigData& configData);
+    cStatusModuleInit(cStatusModule* module, cStatusModuleConfigData& configData);
     virtual ~cStatusModuleInit();
     virtual void generateInterface(); // here we export our interface (entities)
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cStatusModule* m_pModule; // the module we live in
-    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cStatusModuleConfigData& m_ConfigData;
 
     QHash<quint32, int> m_MsgNrCmdList;

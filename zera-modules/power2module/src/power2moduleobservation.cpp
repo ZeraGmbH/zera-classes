@@ -2,12 +2,14 @@
 #include "power2module.h"
 #include <errormessages.h>
 #include <reply.h>
+#include <proxy.h>
 
 namespace POWER2MODULE
 {
 
-cPower2ModuleObservation::cPower2ModuleObservation(cPower2Module* module, Zera::Proxy::cProxy *proxy, cSocket *pcbsocket)
-    :m_pPower2module(module), m_pProxy(proxy), m_pPCBServerSocket(pcbsocket)
+cPower2ModuleObservation::cPower2ModuleObservation(cPower2Module* module, cSocket *pcbsocket) :
+    m_pPower2module(module),
+    m_pPCBServerSocket(pcbsocket)
 {
     m_pPCBInterface = new Zera::Server::cPCBInterface();
 
@@ -36,7 +38,7 @@ cPower2ModuleObservation::cPower2ModuleObservation(cPower2Module* module, Zera::
 
 cPower2ModuleObservation::~cPower2ModuleObservation()
 {
-    m_pProxy->releaseConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
     delete m_pPCBInterface;
 }
 
@@ -95,12 +97,12 @@ void cPower2ModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 
 void cPower2ModuleObservation::pcbConnect()
 {
-    m_pPCBClient = m_pProxy->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
+    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
     m_pcbConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -125,7 +127,7 @@ void cPower2ModuleObservation::resetNotifier()
 
 void cPower2ModuleObservation::deactivationDone()
 {
-    m_pProxy->releaseConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
     disconnect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     emit deactivated();
 }

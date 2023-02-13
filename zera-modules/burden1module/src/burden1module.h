@@ -14,7 +14,7 @@ class cBurden1Module : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cBurden1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cBurden1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

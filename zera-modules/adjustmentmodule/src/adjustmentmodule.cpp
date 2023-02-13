@@ -4,8 +4,8 @@
 #include "adjustmentmodulemeasprogram.h"
 #include <errormessages.h>
 
-cAdjustmentModule::cAdjustmentModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()), parent)
+cAdjustmentModule::cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cAdjustmentModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module supports commands for adjustment for a configured number of measuring channels");
@@ -62,7 +62,7 @@ void cAdjustmentModule::setupModule()
     cBaseMeasModule::setupModule();
 
     // we need some program that does the job
-    m_pMeasProgram = new cAdjustmentModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cAdjustmentModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cAdjustmentModuleMeasProgram::activated, this, &cAdjustmentModule::activationContinue);
     connect(m_pMeasProgram, &cAdjustmentModuleMeasProgram::deactivated, this, &cAdjustmentModule::deactivationContinue);

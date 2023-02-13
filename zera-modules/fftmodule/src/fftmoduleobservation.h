@@ -3,7 +3,6 @@
 
 #include <moduleactivist.h>
 #include <socket.h>
-#include <proxy.h>
 #include <pcbinterface.h>
 #include <QFinalState>
 
@@ -21,14 +20,13 @@ class cFftModuleObservation: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cFftModuleObservation(cFftModule* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
+    cFftModuleObservation(cFftModule* module, cSocket* pcbsocket);
     virtual ~cFftModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
 signals:
     void moduleReconfigure(); // we emit a signal for module reconfiguration when we recognize significant changes
 protected:
     cFftModule* m_pFftmodule;
-    Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pPCBServerSocket;
     Zera::Server::cPCBInterface* m_pPCBInterface;
 protected slots:

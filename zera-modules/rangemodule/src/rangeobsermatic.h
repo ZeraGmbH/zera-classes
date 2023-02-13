@@ -6,7 +6,6 @@
 #include <moduleactivist.h>
 #include <vfmoduleparameter.h>
 #include <socket.h>
-#include <proxy.h>
 #include <stringvalidator.h>
 #include <dspinterface.h>
 #include <QTimer>
@@ -42,7 +41,7 @@ class cRangeObsermatic: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cRangeObsermatic(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
+    cRangeObsermatic(cRangeModule* module, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     VfModuleComponent *m_pRangingSignal;
@@ -54,7 +53,6 @@ public slots:
 private:
     bool m_bDemo;
     cRangeModule *m_pModule;
-    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cSocket *m_pDSPSocket;
     QList<QStringList> m_GroupList;
     QStringList m_ChannelNameList; // the system names of our channels

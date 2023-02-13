@@ -3,7 +3,6 @@
 
 #include <pcbinterface.h>
 #include <rminterface.h>
-#include "proxy.h"
 #include <QHash>
 #include <unordered_map>
 #include <memory>

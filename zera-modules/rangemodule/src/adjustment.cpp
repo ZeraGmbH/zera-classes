@@ -3,6 +3,7 @@
 #include "rangemeaschannel.h"
 #include <errormessages.h>
 #include <reply.h>
+#include <proxy.h>
 #include <vfmodulecomponent.h>
 #include <rminterface.h>
 #include <dspinterface.h>
@@ -11,8 +12,8 @@
 namespace RANGEMODULE 
 {
 
-cAdjustManagement::cAdjustManagement(cRangeModule *module,  Zera::Proxy::cProxy* proxy, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval)
-    :m_pModule(module), m_pProxy(proxy), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
+cAdjustManagement::cAdjustManagement(cRangeModule *module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval)
+    :m_pModule(module), m_pDSPSocket(dspsocket), m_pPCBSocket(pcbsocket), m_ChannelNameList(chnlist), m_subdcChannelNameList(subdclist), m_fAdjInterval(interval)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
     m_pPCBInterface = new Zera::Server::cPCBInterface();
@@ -126,22 +127,22 @@ void cAdjustManagement::pcbserverConnect()
         connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
 
     // we set up our pcb server connection
-    m_pPCBClient = m_pProxy->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
+    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
     m_pPCBInterface->setClient(m_pPCBClient);
     m_pcbserverConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_dspserverConnectState);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
 void cAdjustManagement::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_pDspClient = m_pProxy->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_readGainCorrState);
     connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -203,7 +204,7 @@ void cAdjustManagement::activationDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
-    m_pProxy->releaseConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
     for (int i = 0; i < m_ChannelList.count(); i++)

@@ -8,8 +8,8 @@
 namespace DFTMODULE
 {
 
-cDftModule::cDftModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cDftModuleConfiguration()), parent)
+cDftModule::cDftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cDftModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured order dft values for configured channels");
@@ -68,14 +68,14 @@ void cDftModule::setupModule()
     pConfData = qobject_cast<cDftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cDftModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cDftModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::activated, this, &cDftModule::activationContinue);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::deactivated, this, &cDftModule::deactivationContinue);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // and module observation in case we have to react to naming changes
-    m_pDftModuleObservation = new cDftModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pDftModuleObservation = new cDftModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pDftModuleObservation);
     connect(m_pDftModuleObservation, &cDftModuleObservation::activated, this, &cDftModule::activationContinue);
     connect(m_pDftModuleObservation, &cDftModuleObservation::deactivated, this, &cDftModule::deactivationContinue);

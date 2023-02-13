@@ -11,12 +11,6 @@
 #include <QFinalState>
 
 
-namespace Zera {
-namespace Proxy {
-    class cProxy;
-}
-}
-
 class cDspMeasData;
 class QStateMachine;
 class QState;
@@ -67,7 +61,7 @@ class cThdnModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cThdnModuleMeasProgram(cThdnModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cThdnModuleMeasProgram(cThdnModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cThdnModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 

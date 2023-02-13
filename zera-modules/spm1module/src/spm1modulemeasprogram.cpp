@@ -6,14 +6,15 @@
 #include <intvalidator.h>
 #include <stringvalidator.h>
 #include <reply.h>
+#include <proxy.h>
 #include <unithelper.h>
 #include <math.h>
 
 namespace SPM1MODULE
 {
 
-cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
-    :cBaseMeasProgram(proxy, pConfiguration), m_pModule(module)
+cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseMeasProgram(pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface
     m_pSECInterface = new Zera::Server::cSECInterface();
@@ -186,9 +187,9 @@ cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
         delete siInfo;
     }
     delete m_pSECInterface;
-    m_pProxy->releaseConnection(m_pSECClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;
-    m_pProxy->releaseConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
 }
 
 void cSpm1ModuleMeasProgram::start()
@@ -856,13 +857,13 @@ void cSpm1ModuleMeasProgram::handleSECInterrupt()
 void cSpm1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_rmClient = m_pProxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnectionSmart(m_rmClient);
+    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -971,13 +972,13 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
 void cSpm1ModuleMeasProgram::ecalcServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pSECClient = m_pProxy->getConnection(getConfData()->m_SECServerSocket.m_sIP, getConfData()->m_SECServerSocket.m_nPort);
+    m_pSECClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_SECServerSocket.m_sIP, getConfData()->m_SECServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
     m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::Proxy::cProxyClient::connected, &m_fetchECalcUnitsState);
     connect(m_pSECInterface, &Zera::Server::cSECInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pSECClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pSECClient);
 }
 
 
@@ -990,13 +991,13 @@ void cSpm1ModuleMeasProgram::fetchECalcUnits()
 void cSpm1ModuleMeasProgram::pcbServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pPCBClient = m_pProxy->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
+    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pPCBInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_readREFInputsState);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    m_pProxy->startConnection(m_pPCBClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 

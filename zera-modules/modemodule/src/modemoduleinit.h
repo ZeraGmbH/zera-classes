@@ -10,11 +10,6 @@
 
 namespace Zera
 {
-namespace Proxy
-{
-    class cProxy;
-    class cProxyClient;
-}
 namespace  Server {
     class cRMInterface;
     class cPCBInterface;
@@ -64,7 +59,7 @@ class cModeModuleInit: public cModuleActivist
     Q_OBJECT
 
 public:
-    cModeModuleInit(cModeModule* module, Zera::Proxy::cProxy* proxy, cModeModuleConfigData& configData);
+    cModeModuleInit(cModeModule* module, cModeModuleConfigData& configData);
     virtual ~cModeModuleInit();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -73,7 +68,6 @@ protected slots:
 
 private:
     cModeModule* m_pModule; // the module we live in
-    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cModeModuleConfigData& m_ConfigData;
 
     QHash<quint32, int> m_MsgNrCmdList;

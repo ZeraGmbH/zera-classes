@@ -3,7 +3,6 @@
 
 #include <moduleactivist.h>
 #include <socket.h>
-#include <proxy.h>
 #include <pcbinterface.h>
 #include <QFinalState>
 
@@ -23,7 +22,7 @@ class cRangeModuleObservation: public cModuleActivist
     Q_OBJECT
 
 public:
-    cRangeModuleObservation(cRangeModule* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
+    cRangeModuleObservation(cRangeModule* module, cSocket* pcbsocket);
     virtual ~cRangeModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -32,7 +31,6 @@ signals:
 
 protected:
     cRangeModule* m_pRangemodule;
-    Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pPCBServerSocket;
 
     Zera::Server::cPCBInterface* m_pPCBInterface;
