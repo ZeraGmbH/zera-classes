@@ -46,8 +46,8 @@ target_link_libraries(adjustmentmodule-static
 
 add_library(adjustmentmodule MODULE
     ${RESOURCES}
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-gluelogic/adjustmentmodulefactory.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-gluelogic/adjustmentmodulefactory.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-factory/adjustmentmodulefactory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-factory/adjustmentmodulefactory.h
     )
 
 target_link_libraries(adjustmentmodule
