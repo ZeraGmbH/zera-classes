@@ -1,26 +1,10 @@
 #ifndef REFERENCEMODULEFACTORY_H
 #define REFERENCEMODULEFACTORY_H
 
-#include <QObject>
-#include <QList>
-#include <QtPlugin>
 #include <abstractmodulefactory.h>
 #include <virtualmodule.h>
-
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxy;
-}
-}
-
-namespace VeinEvent
-{
-    class StorageSystem;
-}
-
+#include <QList>
+#include <QtPlugin>
 
 namespace REFERENCEMODULE
 {
@@ -33,13 +17,13 @@ class ReferenceModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     ReferenceModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
-    void destroyModule(ZeraModules::VirtualModule *module); //override;
-    QList<ZeraModules::VirtualModule *> listModules() const; //override;
-    QString getFactoryName() const; //override;
+    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr) override;
+    void destroyModule(ZeraModules::VirtualModule *module) override;
+    QList<ZeraModules::VirtualModule *> listModules() const override;
+    QString getFactoryName() const override;
 
 private:
-  QList<ZeraModules::VirtualModule*> m_ModuleList; // our list of modules
+    QList<ZeraModules::VirtualModule*> m_ModuleList; // our list of modules
 };
 
 }

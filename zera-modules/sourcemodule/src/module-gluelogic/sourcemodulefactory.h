@@ -1,20 +1,10 @@
 #ifndef SOURCEMODULEFACTORY_H
 #define SOURCEMODULEFACTORY_H
 
-#include <QObject>
-#include <QList>
-#include <QtPlugin>
 #include <abstractmodulefactory.h>
 #include <virtualmodule.h>
-
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxy;
-}
-}
+#include <QList>
+#include <QtPlugin>
 
 class SourceModuleFactory : public QObject, public MeasurementModuleFactory
 {
@@ -24,7 +14,7 @@ class SourceModuleFactory : public QObject, public MeasurementModuleFactory
   
 public:
     SourceModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0) override;
+    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QList<ZeraModules::VirtualModule *> listModules() const override;;
     QString getFactoryName() const override;

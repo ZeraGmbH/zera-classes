@@ -4,9 +4,9 @@
 namespace EFFICIENCY1MODULE
 {
 
-ZeraModules::VirtualModule* Efficiency1ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
+ZeraModules::VirtualModule* Efficiency1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
-    ZeraModules::VirtualModule *module = new cEfficiency1Module(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
+    ZeraModules::VirtualModule *module = new cEfficiency1Module(m_ModuleList.count()+1, Zera::Proxy::cProxy::getInstance(), entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }

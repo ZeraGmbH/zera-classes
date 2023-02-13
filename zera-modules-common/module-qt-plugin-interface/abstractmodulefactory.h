@@ -6,14 +6,6 @@
 
 #include <QList>
 
-namespace Zera
-{
-  namespace Proxy
-  {
-    class cProxy;
-  }
-}
-
 namespace VeinEvent
 {
   class StorageSystem;
@@ -24,7 +16,7 @@ class MeasurementModuleFactory
 {
 public:
   virtual ~MeasurementModuleFactory() {}
-  virtual ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0)=0;
+  virtual ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent=nullptr) = 0;
 
   virtual void destroyModule(ZeraModules::VirtualModule *module)=0;
   virtual QList<ZeraModules::VirtualModule*> listModules() const =0;
