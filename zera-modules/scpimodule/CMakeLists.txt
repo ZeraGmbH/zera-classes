@@ -29,14 +29,20 @@ add_custom_target(scpimodule-configs ALL
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     )
 
-add_library(scpimodule MODULE
+add_library(scpimodule-static STATIC
     ${SOURCES}
     ${HEADER}
-    ${RESOURCES}
     )
 
-target_link_libraries(scpimodule 
-    PRIVATE
+target_include_directories(scpimodule-static
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/delegates>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/scpi-clients>
+    )
+
+target_link_libraries(scpimodule-static
+    PUBLIC
     Qt5::SerialPort
     zera-basemodule
     Zera::SCPI
@@ -44,11 +50,23 @@ target_link_libraries(scpimodule
     "-Wl,--no-undefined"
     )
 
+add_library(scpimodule MODULE
+    ${RESOURCES}
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-factory/scpimodulefactory.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/module-factory/scpimodulefactory.h
+    )
+
+target_link_libraries(scpimodule
+    PRIVATE
+    scpimodule-static
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
+    )
+
 target_include_directories(scpimodule
-    PUBLIC
+    PRIVATE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/delegates
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/scpi-clients
     )
 
 install(TARGETS scpimodule
