@@ -16,7 +16,7 @@ class ElectronicBurdenModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
-    ElectronicBurdenModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
+    ElectronicBurdenModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

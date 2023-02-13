@@ -13,10 +13,6 @@ namespace Zera {
 namespace Server {
  class cDSPInterface;
 }
-
-namespace Proxy {
- class cProxyClient;
-}
 }
 
 namespace FFTMODULE
@@ -34,7 +30,7 @@ class cFftModule : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cFftModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

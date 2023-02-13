@@ -6,7 +6,7 @@ namespace SCPIMODULE
 
 ZeraModules::VirtualModule *SCPIModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, QObject *qObjParent)
 {
-    ZeraModules::VirtualModule *module = new cSCPIModule(m_ModuleList.count()+1, Zera::Proxy::cProxy::getInstance(), entityId, storagesystem, qObjParent);
+    ZeraModules::VirtualModule *module = new cSCPIModule(m_ModuleList.count()+1, entityId, storagesystem, qObjParent);
     m_ModuleList.append(module);
     return module;
 }

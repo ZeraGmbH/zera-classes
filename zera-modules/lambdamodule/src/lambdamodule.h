@@ -14,7 +14,7 @@ class cLambdaModule : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cLambdaModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cLambdaModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

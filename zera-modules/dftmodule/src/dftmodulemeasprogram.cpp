@@ -5,6 +5,7 @@
 #include <errormessages.h>
 #include <movingwindowfilter.h>
 #include <reply.h>
+#include <proxy.h>
 #include <scpiinfo.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
@@ -15,8 +16,9 @@
 namespace DFTMODULE
 {
 
-cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
-    :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
+
+cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
@@ -721,13 +723,13 @@ void cDftModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = m_pProxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
     // todo insert timer for timeout and/or connect error conditions.....
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
-    m_pProxy->startConnectionSmart(m_rmClient);
+    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -782,7 +784,7 @@ void cDftModuleMeasProgram::pcbserverConnect()
         QString key = channelInfoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
         cSocket sock = mi.pcbServersocket;
-        Zera::Proxy::cProxyClient* pcbClient = m_pProxy->getConnection(sock.m_sIP, sock.m_nPort);
+        Zera::Proxy::cProxyClient* pcbClient = Zera::Proxy::cProxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
         m_pcbClientList.append(pcbClient);
         Zera::Server::cPCBInterface* pcbIFace = new Zera::Server::cPCBInterface();
         m_pcbIFaceList.append(pcbIFace);
@@ -791,7 +793,7 @@ void cDftModuleMeasProgram::pcbserverConnect()
         m_measChannelInfoHash[key] = mi;
         connect(pcbClient, &Zera::Proxy::cProxyClient::connected, this, &cDftModuleMeasProgram::monitorConnection); // here we wait until all connections are established
         connect(pcbIFace, &Zera::Server::cPCBInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
-        m_pProxy->startConnection(pcbClient);
+        Zera::Proxy::cProxy::getInstance()->startConnection(pcbClient);
     }
 }
 
@@ -842,11 +844,11 @@ void cDftModuleMeasProgram::readDspChannelDone()
 
 void cDftModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = m_pProxy->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_claimPGRMemState);
     connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
-    m_pProxy->startConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -909,7 +911,7 @@ void cDftModuleMeasProgram::deactivateDSP()
 
 void cDftModuleMeasProgram::freePGRMem()
 {
-    m_pProxy->releaseConnection(m_pDspClient); // no async. messages anymore
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient); // no async. messages anymore
     deleteDspVarList(); // so we can destroy our actual var list
     deleteDspCmdList(); // and command list
 
@@ -929,7 +931,7 @@ void cDftModuleMeasProgram::deactivateDSPdone()
     {
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
-            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
             delete m_pcbIFaceList.at(i); // our signals are also gone
         }
         m_pcbIFaceList.clear();

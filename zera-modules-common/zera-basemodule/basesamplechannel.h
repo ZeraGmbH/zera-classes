@@ -2,7 +2,6 @@
 #define BASESAMPLECHANNEL_H
 
 #include "moduleactivist.h"
-#include <proxy.h>
 #include <pcbinterface.h>
 #include <rminterface.h>
 
@@ -11,12 +10,11 @@ class cBaseSampleChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseSampleChannel(Zera::Proxy::cProxy* proxy, QString name, quint8 chnnr);
+    cBaseSampleChannel(QString name, quint8 chnnr);
     virtual ~cBaseSampleChannel(){}
     QString getName();
     QString getAlias();
 protected:
-    Zera::Proxy::cProxy* m_pProxy;
     QString m_sName; // the channel's system name
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 

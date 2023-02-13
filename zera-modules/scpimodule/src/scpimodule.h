@@ -16,9 +16,6 @@ namespace Server {
  class cDSPInterface;
 }
 
-namespace Proxy {
- class cProxy;
-}
 }
 
 namespace VeinEvent
@@ -44,7 +41,7 @@ class cSCPIModule : public cBaseModule
     Q_OBJECT
 
 public:
-    cSCPIModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
+    cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     cSCPIServer* getSCPIServer();
 

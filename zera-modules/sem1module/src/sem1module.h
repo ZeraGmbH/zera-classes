@@ -17,7 +17,7 @@ class cSem1Module : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cSem1Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cSem1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 protected:
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration

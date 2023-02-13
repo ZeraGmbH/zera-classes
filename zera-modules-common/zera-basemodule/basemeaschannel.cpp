@@ -1,7 +1,6 @@
 #include "basemeaschannel.h"
 
-cBaseMeasChannel::cBaseMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr) :
-    m_pProxy(proxy),
+cBaseMeasChannel::cBaseMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr) :
     m_pRMSocket(rmsocket),
     m_pPCBServerSocket(pcbsocket),
     m_sName(name),

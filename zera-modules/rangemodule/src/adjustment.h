@@ -34,7 +34,7 @@ class cAdjustManagement: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cAdjustManagement(cRangeModule* module, Zera::Proxy::cProxy* proxy, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval);
+    cAdjustManagement(cRangeModule* module, cSocket* dspsocket, cSocket* pcbsocket, QStringList chnlist, QStringList subdclist, double interval);
     virtual ~cAdjustManagement();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
@@ -44,7 +44,6 @@ signals:
     void finishStateMachine();
 private:
     cRangeModule* m_pModule; // the module we live in
-    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cSocket* m_pDSPSocket;
     cSocket* m_pPCBSocket;
     QStringList m_ChannelNameList; // the list of channels (names) we work on

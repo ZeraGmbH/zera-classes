@@ -8,8 +8,8 @@
 namespace OSCIMODULE
 {
 
-cOsciModule::cOsciModule(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cOsciModuleConfiguration()), parent)
+cOsciModule::cOsciModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cOsciModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures oscillograms for configured channels");
@@ -68,14 +68,14 @@ void cOsciModule::setupModule()
     pConfData = qobject_cast<cOsciModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cOsciModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cOsciModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::activated, this, &cOsciModule::activationContinue);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::deactivated, this, &cOsciModule::deactivationContinue);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     // and module observation in case we have to react to naming changes
-    m_pOsciModuleObservation = new cOsciModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pOsciModuleObservation = new cOsciModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pOsciModuleObservation);
     connect(m_pOsciModuleObservation, &cOsciModuleObservation::activated, this, &cOsciModule::activationContinue);
     connect(m_pOsciModuleObservation, &cOsciModuleObservation::deactivated, this, &cOsciModule::deactivationContinue);

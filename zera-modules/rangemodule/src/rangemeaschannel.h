@@ -48,7 +48,7 @@ class cRangeMeasChannel:public cBaseMeasChannel
 {
     Q_OBJECT
 public:
-    cRangeMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo);
+    cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo);
     ~cRangeMeasChannel();
     virtual void generateInterface(); // here we export our interface (entities)
 

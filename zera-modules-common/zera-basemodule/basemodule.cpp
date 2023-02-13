@@ -14,8 +14,12 @@
 #include <QJsonDocument>
 #include <QFile>
 
-cBaseModule::cBaseModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject* parent)
-    :ZeraModules::VirtualModule(parent), m_nEntityId(entityId), m_pStorageSystem(storagesystem), m_pProxy(proxy), m_pConfiguration(modcfg), m_nModuleNr(modnr)
+cBaseModule::cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject* parent) :
+    ZeraModules::VirtualModule(parent),
+    m_nEntityId(entityId),
+    m_pStorageSystem(storagesystem),
+    m_pConfiguration(modcfg),
+    m_nModuleNr(modnr)
 {
     QString s;
     setParent(parent);

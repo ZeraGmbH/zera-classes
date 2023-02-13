@@ -2,7 +2,6 @@
 #define REFERENCEMODULEOBSERVATION_H
 
 #include <moduleactivist.h>
-#include <proxy.h>
 #include <socket.h>
 #include <pcbinterface.h>
 #include <QFinalState>
@@ -21,14 +20,13 @@ class cReferenceModuleObservation: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cReferenceModuleObservation(cReferenceModule* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
+    cReferenceModuleObservation(cReferenceModule* module, cSocket* pcbsocket);
     virtual ~cReferenceModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
 signals:
     void moduleReconfigure(); // we emit a signal for module reconfiguration when we recognize significant changes
 protected:
     cReferenceModule* m_pReferencemodule;
-    Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pPCBServerSocket;
     Zera::Server::cPCBInterface* m_pPCBInterface;
 protected slots:

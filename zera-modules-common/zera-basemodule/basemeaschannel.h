@@ -3,7 +3,6 @@
 
 #include "moduleactivist.h"
 #include "socket.h"
-#include <proxy.h>
 #include <rminterface.h>
 #include <pcbinterface.h>
 
@@ -12,7 +11,7 @@ class cBaseMeasChannel: public cModuleActivist
     Q_OBJECT
 
 public:
-    cBaseMeasChannel(Zera::Proxy::cProxy* proxy, cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
+    cBaseMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr);
     virtual ~cBaseMeasChannel(){}
 
     quint8 getDSPChannelNr();
@@ -22,7 +21,6 @@ public:
     QString getUnit();
 
 protected:
-    Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pRMSocket; // the sockets we can connect to
     cSocket* m_pPCBServerSocket;
     QString m_sName; // the channel's system name

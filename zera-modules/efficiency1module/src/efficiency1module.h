@@ -14,7 +14,7 @@ class cEfficiency1Module : public cBaseMeasModule
 Q_OBJECT
 
 public:
-    cEfficiency1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = 0);
+    cEfficiency1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

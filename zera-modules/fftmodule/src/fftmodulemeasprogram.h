@@ -46,7 +46,7 @@ class cFftModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cFftModuleMeasProgram(cFftModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cFftModuleMeasProgram(cFftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cFftModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:

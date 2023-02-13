@@ -44,7 +44,7 @@ class cRmsModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cRmsModuleMeasProgram(cRmsModule* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cRmsModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 

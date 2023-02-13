@@ -8,12 +8,9 @@
 
 #include "moduleactivist.h"
 #include "socket.h"
+#include <proxyclient.h>
 
 namespace Zera {
-namespace Proxy {
-    class cProxy;
-    class cProxyClient;
-}
 namespace  Server {
     class cRMInterface;
     class cPCBInterface;
@@ -35,7 +32,7 @@ class cThdnModuleObservation: public cModuleActivist
     Q_OBJECT
 
 public:
-    cThdnModuleObservation(cThdnModule* module, Zera::Proxy::cProxy* proxy,cSocket* pcbsocket);
+    cThdnModuleObservation(cThdnModule* module, cSocket* pcbsocket);
     virtual ~cThdnModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -44,7 +41,6 @@ signals:
 
 protected:
     cThdnModule* m_pThdnmodule;
-    Zera::Proxy::cProxy* m_pProxy;
     cSocket* m_pPCBServerSocket;
 
     Zera::Server::cPCBInterface* m_pPCBInterface;

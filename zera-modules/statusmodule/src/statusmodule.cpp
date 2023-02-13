@@ -6,8 +6,8 @@
 namespace STATUSMODULE
 {
 
-cStatusModule::cStatusModule(quint8 modnr, Zera::Proxy::cProxy *proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cStatusModuleConfiguration()), parent)
+cStatusModule::cStatusModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cStatusModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module is responsible for reading and providing system Status information");
@@ -65,7 +65,7 @@ void cStatusModule::setupModule()
     pConfData = qobject_cast<cStatusModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we only have to read some status information from pcb- and dspserver
-    m_pStatusModuleInit = new cStatusModuleInit(this, m_pProxy, *pConfData);
+    m_pStatusModuleInit = new cStatusModuleInit(this, *pConfData);
     m_ModuleActivistList.append(m_pStatusModuleInit);
     connect(m_pStatusModuleInit, &cStatusModuleInit::activated, this, &cStatusModule::activationContinue);
     connect(m_pStatusModuleInit, &cStatusModuleInit::deactivated, this, &cStatusModule::deactivationContinue);

@@ -8,7 +8,7 @@ class cBaseDspMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cBaseDspMeasProgram(Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cBaseDspMeasProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseDspMeasProgram() { }
 protected:
     virtual void setDspVarList() = 0; // dsp related stuff

@@ -8,8 +8,8 @@
 namespace POWER2MODULE
 {
 
-cPower2Module::cPower2Module(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxi, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower2ModuleConfiguration()), parent)
+cPower2Module::cPower2Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cPower2ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures +/- power with configured measuring and integration modes");
@@ -69,14 +69,14 @@ void cPower2Module::setupModule()
     pConfData = qobject_cast<cPower2ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // we need some program that does the measuring on dsp
-    m_pMeasProgram = new cPower2ModuleMeasProgram(this, m_pProxy, m_pConfiguration);
+    m_pMeasProgram = new cPower2ModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     // and module observation in case we have to react to naming changes
-    m_pPower2ModuleObservation = new cPower2ModuleObservation(this, m_pProxy, &(pConfData->m_PCBServerSocket));
+    m_pPower2ModuleObservation = new cPower2ModuleObservation(this, &(pConfData->m_PCBServerSocket));
     m_ModuleActivistList.append(m_pPower2ModuleObservation);
     connect(m_pPower2ModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pPower2ModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));

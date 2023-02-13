@@ -1,8 +1,8 @@
 #include "basesamplechannel.h"
 #include "basemeasmodule.h"
 
-cBaseSampleChannel::cBaseSampleChannel(Zera::Proxy::cProxy* proxy, QString name, quint8 chnnr)
-    :m_pProxy(proxy), m_sName(name), m_nChannelNr(chnnr)
+cBaseSampleChannel::cBaseSampleChannel(QString name, quint8 chnnr) :
+    m_sName(name), m_nChannelNr(chnnr)
 {
     m_sUnit = "";
 }

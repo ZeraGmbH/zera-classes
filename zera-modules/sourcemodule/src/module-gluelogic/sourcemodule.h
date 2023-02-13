@@ -13,7 +13,7 @@ class SourceModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
-    SourceModule(quint8 modnr, Zera::Proxy::cProxy* proxi, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = 0);
+    SourceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     VfModuleRpc *getRpcEventSystem() const;
 

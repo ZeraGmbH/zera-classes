@@ -59,7 +59,7 @@ class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
 public:
-    cSec1ModuleMeasProgram(cSec1Module* module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
+    cSec1ModuleMeasProgram(cSec1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSec1ModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:

@@ -11,7 +11,6 @@
 #include "samplemoduleconfigdata.h"
 #include "pllmeaschannel.h"
 #include <moduleactivist.h>
-#include <proxy.h>
 #include <vfmoduleparameter.h>
 
 namespace SAMPLEMODULE
@@ -27,7 +26,7 @@ class cPllObsermatic: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& confData);
+    cPllObsermatic(cSampleModule* module, cSampleModuleConfigData& confData);
     virtual ~cPllObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
@@ -35,7 +34,6 @@ public slots:
     void catchChannelReply(quint32 msgnr);
 private:
     cSampleModule *m_pModule;
-    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cSampleModuleConfigData& m_ConfPar;
     QString m_sActPllChannel;
     QString m_sNewPllChannel;

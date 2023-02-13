@@ -4,7 +4,6 @@
 #include "referencemoduleconfigdata.h"
 #include "referencemeaschannel.h"
 #include <moduleactivist.h>
-#include <proxy.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
 
@@ -28,7 +27,7 @@ class cReferenceAdjustment: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cReferenceAdjustment(cReferenceModule* module, Zera::Proxy::cProxy* proxy, cReferenceModuleConfigData* confData);
+    cReferenceAdjustment(cReferenceModule* module, cReferenceModuleConfigData* confData);
     virtual ~cReferenceAdjustment();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
@@ -38,7 +37,6 @@ signals:
     void repeatStateMachine();
 private:
     cReferenceModule* m_pModule; // the module we live in
-    Zera::Proxy::cProxy* m_pProxy; // the proxy where we can get our connections
     cReferenceModuleConfigData* m_pConfigData;
     Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
     Zera::Proxy::cProxyClient *m_pDspClient;

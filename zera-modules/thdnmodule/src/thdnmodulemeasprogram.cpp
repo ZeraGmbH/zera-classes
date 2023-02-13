@@ -26,8 +26,8 @@
 namespace THDNMODULE
 {
 
-cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, Zera::Proxy::cProxy* proxy, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
-    :cBaseDspMeasProgram(proxy, pConfiguration), m_pModule(module)
+cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
+    :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
     m_pDSPInterFace = new Zera::Server::cDSPInterface();
 
@@ -130,11 +130,11 @@ cThdnModuleMeasProgram::~cThdnModuleMeasProgram()
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
             delete m_pcbIFaceList.at(i);
-            m_pProxy->releaseConnection(m_pcbClientList.at(i));
+            Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
         }
 
     delete m_pDSPInterFace;
-    m_pProxy->releaseConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient);
 }
 
 
@@ -632,12 +632,12 @@ void cThdnModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = m_pProxy->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     m_resourceManagerConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
     connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnectionSmart(m_rmClient);
+    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -692,7 +692,7 @@ void cThdnModuleMeasProgram::pcbserverConnect()
         QString key = channelInfoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
         cSocket sock = mi.pcbServersocket;
-        Zera::Proxy::cProxyClient* pcbClient = m_pProxy->getConnection(sock.m_sIP, sock.m_nPort);
+        Zera::Proxy::cProxyClient* pcbClient = Zera::Proxy::cProxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
         m_pcbClientList.append(pcbClient);
         Zera::Server::cPCBInterface* pcbIFace = new Zera::Server::cPCBInterface();
         m_pcbIFaceList.append(pcbIFace);
@@ -701,7 +701,7 @@ void cThdnModuleMeasProgram::pcbserverConnect()
         m_measChannelInfoHash[key] = mi;
         connect(pcbClient, SIGNAL(connected()), this, SLOT(monitorConnection())); // here we wait until all connections are established
         connect(pcbIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-        m_pProxy->startConnection(pcbClient);
+        Zera::Proxy::cProxy::getInstance()->startConnection(pcbClient);
     }
 }
 
@@ -750,11 +750,11 @@ void cThdnModuleMeasProgram::readDspChannelDone()
 
 void cThdnModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = m_pProxy->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
     connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    m_pProxy->startConnection(m_pDspClient);
+    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
 }
 
 

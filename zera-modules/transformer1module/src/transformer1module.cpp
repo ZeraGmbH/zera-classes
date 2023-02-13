@@ -3,7 +3,6 @@
 #include "transformer1moduleconfigdata.h"
 #include "transformer1modulemeasprogram.h"
 #include "errormessages.h"
-#include <proxy.h>
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -11,8 +10,8 @@
 namespace TRANSFORMER1MODULE
 {
 
-cTransformer1Module::cTransformer1Module(quint8 modnr, Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
-    :cBaseMeasModule(modnr, proxy, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()), parent)
+cTransformer1Module::cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cTransformer1ModuleConfiguration()), parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number transformer errors from configured input dft values");

@@ -11,8 +11,8 @@
 namespace SAMPLEMODULE
 {
 
-cPllObsermatic::cPllObsermatic(cSampleModule* module, Zera::Proxy::cProxy* proxy, cSampleModuleConfigData& confData)
-    :m_pModule(module), m_pProxy(proxy), m_ConfPar(confData)
+cPllObsermatic::cPllObsermatic(cSampleModule* module, cSampleModuleConfigData& confData) :
+    m_pModule(module), m_ConfPar(confData)
 {
     m_getPllMeasChannelsState.addTransition(this, &cPllObsermatic::activationContinue, &m_activationDoneState);
     m_activationMachine.addState(&m_getPllMeasChannelsState);
