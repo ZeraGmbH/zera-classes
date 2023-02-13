@@ -2,14 +2,10 @@
 #define PROXYCLIENT_H
 
 #include "zera-proxy_export.h"
+#include <netmessages.pb.h>
 #include <QObject>
 #include <QAbstractSocket>
 #include <memory>
-
-namespace ProtobufMessage
-{
-    class NetMessage;
-}
 
 namespace Zera { namespace Proxy {
 
