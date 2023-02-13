@@ -1,20 +1,10 @@
 #ifndef ELECTRONICBURDENMODULEFACTORY_H
 #define ELECTRONICBURDENMODULEFACTORY_H
 
-#include <QObject>
-#include <QList>
-#include <QtPlugin>
 #include <abstractmodulefactory.h>
 #include <virtualmodule.h>
-
-
-namespace Zera
-{
-namespace Proxy
-{
-    class cProxy;
-}
-}
+#include <QList>
+#include <QtPlugin>
 
 namespace ELECTRONICBURDENMODULE
 {
@@ -27,7 +17,7 @@ class ElectronicBurdenModuleFactory : public QObject, public MeasurementModuleFa
   
 public:
     ElectronicBurdenModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = 0) override;
+    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = nullptr) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QList<ZeraModules::VirtualModule *> listModules() const override;;
     QString getFactoryName() const override;

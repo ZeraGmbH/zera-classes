@@ -4,9 +4,9 @@
 namespace POWER3MODULE
 {
 
-ZeraModules::VirtualModule* Power3ModuleFactory::createModule(Zera::Proxy::cProxy* proxy, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
+ZeraModules::VirtualModule* Power3ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
 {
-    ZeraModules::VirtualModule *module = new cPower3Module(m_ModuleList.count()+1, proxy, entityId, storagesystem, parent);
+    ZeraModules::VirtualModule *module = new cPower3Module(m_ModuleList.count()+1, Zera::Proxy::cProxy::getInstance(), entityId, storagesystem, parent);
     m_ModuleList.append(module);
     return module;
 }
