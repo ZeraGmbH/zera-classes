@@ -15,18 +15,18 @@ cPCBInterfacePrivate::cPCBInterfacePrivate(cPCBInterface *iface)
 }
 
 
-void cPCBInterfacePrivate::setClient(Proxy::ProxyClient *client)
+void cPCBInterfacePrivate::setClient(Zera::ProxyClient *client)
 {
     if (m_pClient) { // we avoid multiple connections
         disconnect(m_pClient, nullptr, this, nullptr);
     }
 
     m_pClient = client;
-    connect(m_pClient, &Proxy::ProxyClient::answerAvailable, this, &cPCBInterfacePrivate::receiveAnswer);
-    connect(m_pClient, &Proxy::ProxyClient::tcpError, this, &cPCBInterfacePrivate::receiveError);
+    connect(m_pClient, &Zera::ProxyClient::answerAvailable, this, &cPCBInterfacePrivate::receiveAnswer);
+    connect(m_pClient, &Zera::ProxyClient::tcpError, this, &cPCBInterfacePrivate::receiveError);
 }
 
-void cPCBInterfacePrivate::setClientSmart(Proxy::ProxyClientPtr client)
+void cPCBInterfacePrivate::setClientSmart(Zera::ProxyClientPtr client)
 {
     m_clientSmart = client;
     setClient(client.get());

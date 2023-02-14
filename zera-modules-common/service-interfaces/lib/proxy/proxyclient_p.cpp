@@ -4,7 +4,7 @@
 #include "proxy_p.h"
 #include <netmessages.pb.h>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 ProxyClientPrivate::ProxyClientPrivate(ProxyPrivate* proxy) : m_pProxy(proxy)
 {
@@ -41,4 +41,4 @@ quint32 ProxyClientPrivate::transmitCommand(ProtobufMessage::NetMessage *message
     return m_pProxy->transmitCommand(this, message);
 }
 
-}}
+}

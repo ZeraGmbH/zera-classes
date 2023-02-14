@@ -1,24 +1,12 @@
 #ifndef POWER2MODULE_H
 #define POWER2MODULE_H
 
-#include <QObject>
+#include "basemeasmodule.h"
+#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
-
-#include "basemeasmodule.h"
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-namespace Proxy {
- class cProxyClient;
-}
-}
-
 
 namespace POWER2MODULE
 {
@@ -32,8 +20,7 @@ class cPower2ModuleObservation;
 
 class cPower2Module : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cPower2Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;

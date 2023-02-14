@@ -8,13 +8,13 @@ class TaskServerConnectionStart : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::Proxy::ProxyClientPtr client, int timeout);
-    TaskServerConnectionStart(Zera::Proxy::ProxyClientPtr client);
+    static TaskTemplatePtr create(Zera::ProxyClientPtr client, int timeout);
+    TaskServerConnectionStart(Zera::ProxyClientPtr client);
     void start() override;
 private slots:
     void onConnected();
 private:
-    Zera::Proxy::ProxyClientPtr m_client;
+    Zera::ProxyClientPtr m_client;
 };
 
 #endif // TASKSERVERCONNECTIONSTART_H

@@ -43,7 +43,7 @@ private:
     QFinalState m_deactivationDoneState;
 
     QHash<quint32, int> m_MsgNrCmdList;
-    Zera::Proxy::ProxyClient* m_pPCBClient;
+    Zera::ProxyClient* m_pPCBClient;
 
 private slots:
     void pcbConnect();

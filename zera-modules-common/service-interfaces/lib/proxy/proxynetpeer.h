@@ -3,7 +3,7 @@
 
 #include <xiqnetpeer.h>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 class ProxyNetPeer: public XiQNetPeer
 {
@@ -16,5 +16,5 @@ private:
     bool m_bStarted;
 };
 
-}}
+}
 #endif // PROXYNETPEER_H

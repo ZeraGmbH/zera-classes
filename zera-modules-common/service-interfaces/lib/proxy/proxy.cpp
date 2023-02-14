@@ -1,7 +1,7 @@
 #include "proxy.h"
 #include "proxy_p.h"
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 Proxy* Proxy::getInstance()
 {
@@ -43,7 +43,7 @@ bool Proxy::releaseConnection(ProxyClient *client)
 }
 
 Proxy::Proxy(QObject *parent):
-    d_ptr(new Zera::Proxy::ProxyPrivate(this))
+    d_ptr(new Zera::ProxyPrivate(this))
 {
     setParent(parent);
 }
@@ -53,4 +53,4 @@ Proxy::~Proxy()
     delete d_ptr;
 }
 
-}}
+}

@@ -1,7 +1,7 @@
 #include "proxyclientfortest.h"
 #include <reply.h>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 std::shared_ptr<ProxyClientForTest> ProxyClientForTest::create()
 {
@@ -120,4 +120,4 @@ void ProxyClientForTest::setReply(ProtobufMessage::NetMessage::NetReply *answerR
     }
 }
 
-}}
+}

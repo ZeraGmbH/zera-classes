@@ -4,7 +4,7 @@
 #include "proxynetpeer.h"
 #include <QByteArray>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 struct ProxyConnection
 {
@@ -16,6 +16,6 @@ struct ProxyConnection
     ProxyNetPeer *m_pNetClient;
 };
 
-}}
+}
 
 #endif // PROXYCONNECTION_H

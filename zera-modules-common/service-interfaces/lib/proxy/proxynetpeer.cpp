@@ -1,6 +1,6 @@
 #include "proxynetpeer.h"
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 ProxyNetPeer::ProxyNetPeer(QObject *qObjParent)
     :XiQNetPeer(qObjParent)
@@ -19,4 +19,4 @@ bool ProxyNetPeer::isStarted()
     return m_bStarted;
 }
 
-}}
+}

@@ -2,13 +2,12 @@
 #define PROXY_P_H
 
 #include "proxy.h"
-#include <netmessages.pb.h>
 #include <xiqnetpeer.h>
 #include <xiqnetwrapper.h>
 #include <QHash>
 #include <QString>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 class Proxy;
 class ProxyClient;
@@ -47,8 +46,6 @@ private:
     Q_DECLARE_PUBLIC(Proxy)
 };
 
-} }
-
-
+}
 
 #endif // PROXY_P_H

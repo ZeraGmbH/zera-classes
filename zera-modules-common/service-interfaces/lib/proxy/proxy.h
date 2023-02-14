@@ -3,14 +3,12 @@
 
 #include "service-interfaces_export.h"
 #include "proxyclient.h"
-#include <QObject>
 #include <functional>
 
-namespace Zera { namespace Proxy
-{
+namespace Zera {
 class ProxyPrivate;
 
-class SERVICE_INTERFACES_EXPORT Proxy: public QObject
+class SERVICE_INTERFACES_EXPORT Proxy : public QObject
 {
     Q_OBJECT
 public:
@@ -29,6 +27,6 @@ private:
     Q_DECLARE_PRIVATE(Proxy)
 };
 
-}}
+}
 
 #endif // PROXY_H

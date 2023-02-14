@@ -127,22 +127,22 @@ void cAdjustManagement::pcbserverConnect()
         connect(m_ChannelList.at(i), &cRangeMeasChannel::cmdDone, this, &cAdjustManagement::catchChannelReply);
 
     // we set up our pcb server connection
-    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBSocket->m_sIP, m_pPCBSocket->m_nPort);
     m_pPCBInterface->setClient(m_pPCBClient);
-    m_pcbserverConnectState.addTransition(m_pPCBClient, &Zera::Proxy::ProxyClient::connected, &m_dspserverConnectState);
+    m_pcbserverConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_dspserverConnectState);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
 void cAdjustManagement::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_pDspClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_pDspClient = Zera::Proxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::ProxyClient::connected, &m_readGainCorrState);
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_readGainCorrState);
     connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cAdjustManagement::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -204,7 +204,7 @@ void cAdjustManagement::activationDone()
 void cAdjustManagement::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0);
 
     for (int i = 0; i < m_ChannelList.count(); i++)

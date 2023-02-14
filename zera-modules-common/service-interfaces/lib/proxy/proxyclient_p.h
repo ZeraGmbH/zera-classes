@@ -1,10 +1,9 @@
 #ifndef PROXYCLIENT_P_H
 #define PROXYCLIENT_P_H
 
-#include <QObject>
 #include <proxyclient.h>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 class ProxyPrivate;
 
@@ -24,5 +23,5 @@ protected:
     ProxyPrivate *m_pProxy;
 };
 
-}}
+}
 #endif // PROXYCLIENT_P_H

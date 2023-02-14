@@ -6,7 +6,7 @@
 #include <proxy.h>
 #include <netmessages.pb.h>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 class ProxyClientForTest : public ProxyClient
 {
@@ -37,6 +37,6 @@ private:
 
 typedef std::shared_ptr<ProxyClientForTest> ProxyClientForTestPtr;
 
-}}
+}
 
 #endif // PROXYCLIENTFORTEST_H

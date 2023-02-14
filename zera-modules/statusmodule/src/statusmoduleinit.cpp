@@ -492,13 +492,13 @@ void cStatusModuleInit::setInterfaceComponents()
 void cStatusModuleInit::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::ProxyClient::connected, &m_IdentifyState);
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -510,12 +510,12 @@ void cStatusModuleInit::sendRMIdent()
 
 void cStatusModuleInit::pcbserverConnect()
 {
-    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
-    m_pcbserverConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::ProxyClient::connected, &m_pcbserverReadVersionState);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
+    m_pcbserverConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_pcbserverReadVersionState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -569,11 +569,11 @@ void cStatusModuleInit::unregisterNotifiers()
 void cStatusModuleInit::dspserverConnect()
 {
     // we set up our dsp server connection
-    m_pDSPClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
+    m_pDSPClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_DSPServerSocket.m_sIP, m_ConfigData.m_DSPServerSocket.m_nPort);
     m_pDSPInterface->setClient(m_pDSPClient);
-    m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::Proxy::ProxyClient::connected, &m_dspserverReadVersionState);
+    m_dspserverConnectionState.addTransition(m_pDSPClient, &Zera::ProxyClient::connected, &m_dspserverReadVersionState);
     connect(m_pDSPInterface, &Zera::Server::cDSPInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pDSPClient);
+    Zera::Proxy::getInstance()->startConnection(m_pDSPClient);
 }
 
 
@@ -615,8 +615,8 @@ void cStatusModuleInit::activationDone()
 
 void cStatusModuleInit::deactivationDone()
 {
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pDSPClient);
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pDSPClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     // and disconnect from our servers afterwards
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterface, 0, this, 0);

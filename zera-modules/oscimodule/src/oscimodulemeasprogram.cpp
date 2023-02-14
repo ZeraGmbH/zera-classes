@@ -628,12 +628,12 @@ void cOsciModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::ProxyClient::connected, &m_IdentifyState);
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -688,16 +688,16 @@ void cOsciModuleMeasProgram::pcbserverConnect()
         QString key = channelInfoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
         cSocket sock = mi.pcbServersocket;
-        Zera::Proxy::ProxyClient* pcbClient = Zera::Proxy::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
+        Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
         m_pcbClientList.append(pcbClient);
         Zera::Server::cPCBInterface* pcbIFace = new Zera::Server::cPCBInterface();
         m_pcbIFaceList.append(pcbIFace);
         pcbIFace->setClient(pcbClient);
         mi.pcbIFace = pcbIFace;
         m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, &Zera::Proxy::ProxyClient::connected, this, &cOsciModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+        connect(pcbClient, &Zera::ProxyClient::connected, this, &cOsciModuleMeasProgram::monitorConnection); // here we wait until all connections are established
         connect(pcbIFace, &Zera::Server::cPCBInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
-        Zera::Proxy::Proxy::getInstance()->startConnection(pcbClient);
+        Zera::Proxy::getInstance()->startConnection(pcbClient);
     }
 }
 
@@ -746,11 +746,11 @@ void cOsciModuleMeasProgram::readDspChannelDone()
 
 void cOsciModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = Zera::Proxy::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_pDspClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::ProxyClient::connected, &m_claimPGRMemState);
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_claimPGRMemState);
     connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cOsciModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -808,7 +808,7 @@ void cOsciModuleMeasProgram::deactivateDSP()
 
 void cOsciModuleMeasProgram::freePGRMem()
 {
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient);
     deleteDspVarList();
     deleteDspCmdList();
 
@@ -828,7 +828,7 @@ void cOsciModuleMeasProgram::deactivateDSPdone()
     {
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
-            Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
+            Zera::Proxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
             delete m_pcbIFaceList.at(i);
         }
         m_pcbIFaceList.clear();

@@ -16,14 +16,14 @@ cRMInterfacePrivate::cRMInterfacePrivate(cRMInterface *iface)
 }
 
 
-void cRMInterfacePrivate::setClient(Proxy::ProxyClient *client)
+void cRMInterfacePrivate::setClient(Zera::ProxyClient *client)
 {
     m_pClient = client;
-    connect(m_pClient, &Proxy::ProxyClient::answerAvailable, this, &cRMInterfacePrivate::receiveAnswer);
-    connect(m_pClient, &Zera::Proxy::ProxyClient::tcpError, this, &cRMInterfacePrivate::receiveError);
+    connect(m_pClient, &Zera::ProxyClient::answerAvailable, this, &cRMInterfacePrivate::receiveAnswer);
+    connect(m_pClient, &Zera::ProxyClient::tcpError, this, &cRMInterfacePrivate::receiveError);
 }
 
-void cRMInterfacePrivate::setClientSmart(Proxy::ProxyClientPtr client)
+void cRMInterfacePrivate::setClientSmart(Zera::ProxyClientPtr client)
 {
     m_clientSmart = client;
     setClient(client.get());

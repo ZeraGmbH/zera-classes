@@ -22,12 +22,12 @@ public slots:
 protected:
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
     Zera::Server::cRMInterface m_rmInterface;
-    Zera::Proxy::ProxyClientPtr m_rmClient;
+    Zera::ProxyClientPtr m_rmClient;
     // we hold an interface for every channel because it could be possible that our measuring
     // channels are spread over several pcb's
     QList<Zera::Server::cPCBInterface*> m_pcbIFaceList; // our interface(s) to pcb
     // so we must also keep a list of pcb client's we can
-    QList<Zera::Proxy::ProxyClient*> m_pcbClientList; // our clients for pcb interfaces
+    QList<Zera::ProxyClient*> m_pcbClientList; // our clients for pcb interfaces
 
     QVector<float> m_ModuleActualValues; // a modules actual values
     QHash<quint32, int> m_MsgNrCmdList;
