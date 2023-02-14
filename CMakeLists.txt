@@ -73,7 +73,6 @@ if(ZC_BUILD_MODULES)
 
     add_subdirectory(zera-math)
     add_subdirectory(zera-modules)
-    add_subdirectory(zera-proxy)
     add_subdirectory(zera-modules-common)
     add_subdirectory(zera-xmlconfig)
 
