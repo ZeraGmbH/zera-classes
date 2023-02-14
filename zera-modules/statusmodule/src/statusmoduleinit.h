@@ -62,12 +62,8 @@ private:
     Zera::ProxyClient *m_pPCBClient;
     Zera::cDSPInterface *m_pDSPInterface;
     Zera::ProxyClient *m_pDSPClient;
-    Zera::cRMInterface m_rmInterface;
-    Zera::ProxyClientPtr m_rmClient;
 
     // statemachine for activating gets the following states
-    QState m_resourceManagerConnectState;
-    QState m_IdentifyState;
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
     QState m_pcbserverReadVersionState;
     QState m_pcbserverReadCtrlVersionState;
@@ -128,8 +124,6 @@ private:
 
 private slots:
     void setInterfaceComponents();
-    void resourceManagerConnect();
-    void sendRMIdent();
     void pcbserverConnect();
     void pcbserverReadVersion();
     void pcbserverReadCtrlVersion();
