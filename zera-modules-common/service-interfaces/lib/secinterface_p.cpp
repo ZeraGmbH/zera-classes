@@ -16,13 +16,13 @@ cSECInterfacePrivate::cSECInterfacePrivate(cSECInterface *iface)
 }
 
 
-void cSECInterfacePrivate::setClient(Proxy::cProxyClient *client)
+void cSECInterfacePrivate::setClient(Proxy::ProxyClient *client)
 {
     if (m_pClient) // we avoid multiple connections
         disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
-    connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cSECInterfacePrivate::receiveAnswer);
-    connect(m_pClient, &Zera::Proxy::cProxyClient::tcpError, this, &cSECInterfacePrivate::receiveError);
+    connect(m_pClient, &Proxy::ProxyClient::answerAvailable, this, &cSECInterfacePrivate::receiveAnswer);
+    connect(m_pClient, &Zera::Proxy::ProxyClient::tcpError, this, &cSECInterfacePrivate::receiveError);
 }
 
 

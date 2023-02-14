@@ -25,7 +25,7 @@ class SERVICE_INTERFACES_EXPORT cDSPInterface: public QObject
 public:
     cDSPInterface();
     virtual ~cDSPInterface();
-    void setClient(Zera::Proxy::cProxyClient *client);
+    void setClient(Zera::Proxy::ProxyClient *client);
     virtual quint32 bootDsp();
     virtual quint32 resetDsp();
     virtual quint32 setDSPBootPath(QString path);

@@ -677,13 +677,13 @@ void cFftModuleMeasProgram::resourceManagerConnect()
 
     // we have to instantiate a working resource manager interface
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    m_rmClient = Zera::Proxy::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::ProxyClient::connected, &m_IdentifyState);
     // todo insert timer for timeout and/or connect error conditions.....
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -738,16 +738,16 @@ void cFftModuleMeasProgram::pcbserverConnect()
         QString key = channelInfoReadList.at(i);
         cMeasChannelInfo mi = m_measChannelInfoHash.take(key);
         cSocket sock = mi.pcbServersocket;
-        Zera::Proxy::cProxyClient* pcbClient = Zera::Proxy::cProxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
+        Zera::Proxy::ProxyClient* pcbClient = Zera::Proxy::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
         m_pcbClientList.append(pcbClient);
         Zera::Server::cPCBInterface* pcbIFace = new Zera::Server::cPCBInterface();
         m_pcbIFaceList.append(pcbIFace);
         pcbIFace->setClient(pcbClient);
         mi.pcbIFace = pcbIFace;
         m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, &Zera::Proxy::cProxyClient::connected, this, &cFftModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+        connect(pcbClient, &Zera::Proxy::ProxyClient::connected, this, &cFftModuleMeasProgram::monitorConnection); // here we wait until all connections are established
         connect(pcbIFace, &Zera::Server::cPCBInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
-        Zera::Proxy::cProxy::getInstance()->startConnection(pcbClient);
+        Zera::Proxy::Proxy::getInstance()->startConnection(pcbClient);
     }
 }
 
@@ -798,11 +798,11 @@ void cFftModuleMeasProgram::readDspChannelDone()
 
 void cFftModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_pDspClient = Zera::Proxy::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_claimPGRMemState);
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::ProxyClient::connected, &m_claimPGRMemState);
     connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cFftModuleMeasProgram::catchInterfaceAnswer);
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -862,7 +862,7 @@ void cFftModuleMeasProgram::deactivateDSP()
 
 void cFftModuleMeasProgram::freePGRMem()
 {
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pDspClient);
     deleteDspVarList();
     deleteDspCmdList();
 
@@ -882,7 +882,7 @@ void cFftModuleMeasProgram::deactivateDSPdone()
     {
         for (int i = 0; i < m_pcbIFaceList.count(); i++)
         {
-            Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
+            Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pcbClientList.at(i));
             delete m_pcbIFaceList.at(i);
         }
         m_pcbClientList.clear();

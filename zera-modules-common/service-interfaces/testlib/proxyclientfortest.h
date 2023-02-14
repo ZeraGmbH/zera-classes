@@ -8,7 +8,7 @@
 
 namespace Zera { namespace Proxy {
 
-class ProxyClientForTest : public cProxyClient
+class ProxyClientForTest : public ProxyClient
 {
     Q_OBJECT
 public:

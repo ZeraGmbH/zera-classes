@@ -111,7 +111,7 @@ private:
     cRangeInfo ri;
 
     Zera::Proxy::ProxyClientPtr m_rmClient;
-    Zera::Proxy::cProxyClient* m_pPCBClient;
+    Zera::Proxy::ProxyClient* m_pPCBClient;
 
 private slots:
     void rmConnect();

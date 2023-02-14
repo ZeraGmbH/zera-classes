@@ -97,9 +97,9 @@ void cDftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
 void cDftModuleObservation::pcbConnect()
 {
-    Zera::Proxy::cProxy* proxy = Zera::Proxy::cProxy::getInstance();
+    Zera::Proxy::Proxy* proxy = Zera::Proxy::Proxy::getInstance();
     m_pPCBClient = proxy->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
-    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_setNotifierState);
+    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::Proxy::ProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cDftModuleObservation::catchInterfaceAnswer);
@@ -128,7 +128,7 @@ void cDftModuleObservation::resetNotifier()
 
 void cDftModuleObservation::deactivationDone()
 {
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     disconnect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cDftModuleObservation::catchInterfaceAnswer);
     emit deactivated();
 }

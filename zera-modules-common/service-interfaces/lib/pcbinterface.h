@@ -18,7 +18,7 @@ class SERVICE_INTERFACES_EXPORT cPCBInterface: public AbstractServerInterface
 public:
     cPCBInterface();
     virtual ~cPCBInterface();
-    void setClient(Zera::Proxy::cProxyClient *client);
+    void setClient(Zera::Proxy::ProxyClient *client);
     void setClientSmart(Zera::Proxy::ProxyClientPtr client);
     // all commands to sense interface
     virtual quint32 getDSPChannel(QString chnName); // int

@@ -37,7 +37,7 @@ cSampleModuleObservation::cSampleModuleObservation(cSampleModule* module, cSocke
 
 cSampleModuleObservation::~cSampleModuleObservation()
 {
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     delete m_pPCBInterface;
 }
 
@@ -96,12 +96,12 @@ void cSampleModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 
 void cSampleModuleObservation::pcbConnect()
 {
-    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
-    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_setNotifierState);
+    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
+    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::Proxy::ProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSampleModuleObservation::catchInterfaceAnswer);
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 

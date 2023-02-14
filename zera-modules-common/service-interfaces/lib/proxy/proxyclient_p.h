@@ -6,14 +6,14 @@
 
 namespace Zera { namespace Proxy {
 
-class cProxyPrivate;
+class ProxyPrivate;
 
-class cProxyClientPrivate: public cProxyClient
+class ProxyClientPrivate: public ProxyClient
 {
     Q_OBJECT
 public:
-    cProxyClientPrivate(cProxyPrivate* proxy);
-    virtual ~cProxyClientPrivate();
+    ProxyClientPrivate(ProxyPrivate* proxy);
+    virtual ~ProxyClientPrivate();
     void transmitAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message);
     void transmitError(QAbstractSocket::SocketError errorCode);
     void transmitDisConnection();
@@ -21,7 +21,7 @@ public slots:
     void transmitConnection();
 protected:
     virtual quint32 transmitCommand(ProtobufMessage::NetMessage *message);
-    cProxyPrivate *m_pProxy;
+    ProxyPrivate *m_pProxy;
 };
 
 }}

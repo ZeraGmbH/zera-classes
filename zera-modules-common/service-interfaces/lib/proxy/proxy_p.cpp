@@ -9,38 +9,38 @@
 
 namespace Zera { namespace Proxy {
 
-cProxy* cProxyPrivate::singletonInstance=0;
+Proxy* ProxyPrivate::singletonInstance=0;
 
-cProxyPrivate::cProxyPrivate(cProxy *parent):
+ProxyPrivate::ProxyPrivate(Proxy *parent):
     q_ptr(parent)
 {
     m_nMessageNumber = 0;
 }
 
-cProxyClient* cProxyPrivate::getConnection(QString ipadress, quint16 port)
+ProxyClient* ProxyPrivate::getConnection(QString ipadress, quint16 port)
 {
     QUuid uuid = QUuid::createUuid(); // we use a per client uuid
     QByteArray binUUid = uuid.toRfc4122();
 
-    cProxyNetPeer *proxyPeer = getProxyNetPeer(ipadress, port);
-    cProxyClientPrivate *proxyclient = new cProxyClientPrivate(this);
-    cProxyConnection *connection = new cProxyConnection(ipadress, port, binUUid, proxyPeer);
+    ProxyNetPeer *proxyPeer = getProxyNetPeer(ipadress, port);
+    ProxyClientPrivate *proxyclient = new ProxyClientPrivate(this);
+    ProxyConnection *connection = new ProxyConnection(ipadress, port, binUUid, proxyPeer);
     m_ConnectionHash[proxyclient] = connection;
     m_ClientHash[binUUid] = proxyclient;
 
     return proxyclient;
 }
 
-ProxyClientPtr cProxyPrivate::getConnectionSmart(QString ipadress, quint16 port)
+ProxyClientPtr ProxyPrivate::getConnectionSmart(QString ipadress, quint16 port)
 {
-    cProxyClient* client = getConnection(ipadress, port);
+    ProxyClient* client = getConnection(ipadress, port);
     return ProxyClientPtr(client);
 }
 
-void cProxyPrivate::startConnection(cProxyClientPrivate *client)
+void ProxyPrivate::startConnection(ProxyClientPrivate *client)
 {
-    cProxyConnection *connection = m_ConnectionHash[client];
-    cProxyNetPeer *peer = connection->m_pNetClient;
+    ProxyConnection *connection = m_ConnectionHash[client];
+    ProxyNetPeer *peer = connection->m_pNetClient;
     if(peer->isStarted()) {
         if(peer->isConnected())
             client->transmitConnection();
@@ -49,10 +49,10 @@ void cProxyPrivate::startConnection(cProxyClientPrivate *client)
         peer->startProxyConnection(connection->m_sIP, connection->m_nPort);
 }
 
-bool cProxyPrivate::releaseConnection(cProxyClientPrivate *client)
+bool ProxyPrivate::releaseConnection(ProxyClientPrivate *client)
 {
     if(m_ConnectionHash.contains(client)) {
-        cProxyConnection *connection = m_ConnectionHash.take(client);
+        ProxyConnection *connection = m_ConnectionHash.take(client);
         QByteArray binUUid = m_ClientHash.key(client);
         m_ClientHash.remove(binUUid);
 
@@ -67,7 +67,7 @@ bool cProxyPrivate::releaseConnection(cProxyClientPrivate *client)
     return false;
 }
 
-quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMessage::NetMessage *message)
+quint32 ProxyPrivate::transmitCommand(ProxyClientPrivate* client, ProtobufMessage::NetMessage *message)
 {
     QByteArray ba = m_ConnectionHash[client]->m_binUUID;
     message->set_clientid(ba.data(), ba.size()); // we put the client's id into message
@@ -82,7 +82,7 @@ quint32 cProxyPrivate::transmitCommand(cProxyClientPrivate* client, ProtobufMess
     return nr;
 }
 
-void cProxyPrivate::receiveMessage(std::shared_ptr<google::protobuf::Message> message)
+void ProxyPrivate::receiveMessage(std::shared_ptr<google::protobuf::Message> message)
 {
     std::shared_ptr<ProtobufMessage::NetMessage> netMessage = std::static_pointer_cast<ProtobufMessage::NetMessage>(message);
     if(netMessage->has_clientid()) {
@@ -97,69 +97,69 @@ void cProxyPrivate::receiveMessage(std::shared_ptr<google::protobuf::Message> me
         qWarning() << "No ClientID";
 }
 
-void cProxyPrivate::receiveTcpError(QAbstractSocket::SocketError errorCode)
+void ProxyPrivate::receiveTcpError(QAbstractSocket::SocketError errorCode)
 {
-    cProxyNetPeer* netClient = qobject_cast<cProxyNetPeer*>(QObject::sender());
-    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
+    ProxyNetPeer* netClient = qobject_cast<ProxyNetPeer*>(QObject::sender());
+    QHashIterator<ProxyClientPrivate*, ProxyConnection*> it(m_ConnectionHash);
     while(it.hasNext()) {
         it.next();
-        cProxyConnection *pC = it.value();
+        ProxyConnection *pC = it.value();
         if(pC->m_pNetClient == netClient) { // we found a client that was connected to netclient
-            cProxyClientPrivate* client = it.key();
+            ProxyClientPrivate* client = it.key();
             client->transmitError(errorCode); // so this client will forward error
         }
     }
 }
 
-void cProxyPrivate::registerConnection()
+void ProxyPrivate::registerConnection()
 {
-    cProxyNetPeer* netClient = qobject_cast<cProxyNetPeer*>(QObject::sender());
-    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
+    ProxyNetPeer* netClient = qobject_cast<ProxyNetPeer*>(QObject::sender());
+    QHashIterator<ProxyClientPrivate*, ProxyConnection*> it(m_ConnectionHash);
     while(it.hasNext()) {
         it.next();
-        cProxyConnection *pC = it.value();
+        ProxyConnection *pC = it.value();
         if(pC->m_pNetClient == netClient) { // we found a client that tried to connected to netclient
-            cProxyClientPrivate* client = it.key();
+            ProxyClientPrivate* client = it.key();
             client->transmitConnection();
         }
     }
 }
 
-void cProxyPrivate::registerDisConnection()
+void ProxyPrivate::registerDisConnection()
 {
-    cProxyNetPeer* netClient = qobject_cast<cProxyNetPeer*>(QObject::sender());
-    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
+    ProxyNetPeer* netClient = qobject_cast<ProxyNetPeer*>(QObject::sender());
+    QHashIterator<ProxyClientPrivate*, ProxyConnection*> it(m_ConnectionHash);
     while(it.hasNext()) {
         it.next();
-        cProxyConnection *pC = it.value();
+        ProxyConnection *pC = it.value();
         if(pC->m_pNetClient == netClient) { // we found a client that tried to connected to netclient
-            cProxyClientPrivate* client = it.key();
+            ProxyClientPrivate* client = it.key();
             client->transmitDisConnection(); // so this client will be forwarded connection
         }
     }
 }
 
-cProxyNetPeer *cProxyPrivate::getProxyNetPeer(QString ipadress, quint16 port)
+ProxyNetPeer *ProxyPrivate::getProxyNetPeer(QString ipadress, quint16 port)
 {
-    cProxyNetPeer* netClient = searchConnection(ipadress, port);
+    ProxyNetPeer* netClient = searchConnection(ipadress, port);
     if(!netClient)  {// look for existing connection
-        netClient = new cProxyNetPeer(this);
+        netClient = new ProxyNetPeer(this);
         netClient->setWrapper(&protobufWrapper);
-        connect(netClient, &cProxyNetPeer::sigMessageReceived, this, &cProxyPrivate::receiveMessage);
-        connect(netClient, &cProxyNetPeer::sigSocketError, this, &cProxyPrivate::receiveTcpError);
-        connect(netClient, &cProxyNetPeer::sigConnectionEstablished, this, &cProxyPrivate::registerConnection);
-        connect(netClient, &cProxyNetPeer::sigConnectionClosed, this, &cProxyPrivate::registerDisConnection);
+        connect(netClient, &ProxyNetPeer::sigMessageReceived, this, &ProxyPrivate::receiveMessage);
+        connect(netClient, &ProxyNetPeer::sigSocketError, this, &ProxyPrivate::receiveTcpError);
+        connect(netClient, &ProxyNetPeer::sigConnectionEstablished, this, &ProxyPrivate::registerConnection);
+        connect(netClient, &ProxyNetPeer::sigConnectionClosed, this, &ProxyPrivate::registerDisConnection);
     }
     return netClient;
 }
 
-cProxyNetPeer* cProxyPrivate::searchConnection(QString ip, quint16 port)
+ProxyNetPeer* ProxyPrivate::searchConnection(QString ip, quint16 port)
 {
-    cProxyNetPeer* lnetClient = nullptr;
-    QHashIterator<cProxyClientPrivate*, cProxyConnection*> it(m_ConnectionHash);
+    ProxyNetPeer* lnetClient = nullptr;
+    QHashIterator<ProxyClientPrivate*, ProxyConnection*> it(m_ConnectionHash);
     while(it.hasNext()) {
         it.next();
-        cProxyConnection *pC = it.value();
+        ProxyConnection *pC = it.value();
         if( pC->m_sIP == ip && pC->m_nPort == port) {
              lnetClient = pC->m_pNetClient;
              break;

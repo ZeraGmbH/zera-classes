@@ -6,37 +6,37 @@
 
 namespace Zera { namespace Proxy {
 
-cProxyClientPrivate::cProxyClientPrivate(cProxyPrivate* proxy) : m_pProxy(proxy)
+ProxyClientPrivate::ProxyClientPrivate(ProxyPrivate* proxy) : m_pProxy(proxy)
 {
     setParent(proxy);
 }
 
-cProxyClientPrivate::~cProxyClientPrivate()
+ProxyClientPrivate::~ProxyClientPrivate()
 {
-    cProxy::getInstance()->releaseConnection(this);
+    Proxy::getInstance()->releaseConnection(this);
 }
 
-void cProxyClientPrivate::transmitAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
+void ProxyClientPrivate::transmitAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message)
 {
     emit answerAvailable(message);
 }
 
-void cProxyClientPrivate::transmitError(QAbstractSocket::SocketError errorCode)
+void ProxyClientPrivate::transmitError(QAbstractSocket::SocketError errorCode)
 {
     emit tcpError(errorCode);
 }
 
-void cProxyClientPrivate::transmitConnection()
+void ProxyClientPrivate::transmitConnection()
 {
     emit connected();
 }
 
-void cProxyClientPrivate::transmitDisConnection()
+void ProxyClientPrivate::transmitDisConnection()
 {
     emit disconnected();
 }
 
-quint32 cProxyClientPrivate::transmitCommand(ProtobufMessage::NetMessage *message)
+quint32 ProxyClientPrivate::transmitCommand(ProtobufMessage::NetMessage *message)
 {
     return m_pProxy->transmitCommand(this, message);
 }

@@ -47,7 +47,7 @@ protected:
     QVariant returnBool(QString message);
 
     QHash<quint32, int> m_MsgNrCmdList;
-    Zera::Proxy::cProxyClient *m_pClient;
+    Zera::Proxy::ProxyClient *m_pClient;
 protected slots:
     virtual void receiveAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message) = 0;
     virtual void receiveError(QAbstractSocket::SocketError errorCode) = 0;

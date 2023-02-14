@@ -96,12 +96,12 @@ void cRmsModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
 void cRmsModuleObservation::pcbConnect()
 {
-    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
+    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
     m_pcbConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -126,7 +126,7 @@ void cRmsModuleObservation::resetNotifier()
 
 void cRmsModuleObservation::deactivationDone()
 {
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     disconnect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     emit deactivated();
 }
