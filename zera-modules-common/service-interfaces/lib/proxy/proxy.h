@@ -1,7 +1,7 @@
 #ifndef PROXY_H
 #define PROXY_H
 
-#include "zera-proxy_export.h"
+#include "service-interfaces_export.h"
 #include "proxyclient.h"
 #include <QObject>
 #include <functional>
@@ -10,7 +10,7 @@ namespace Zera { namespace Proxy
 {
 class cProxyPrivate;
 
-class ZERA_PROXY_EXPORT cProxy: public QObject
+class SERVICE_INTERFACES_EXPORT cProxy: public QObject
 {
     Q_OBJECT
 public:

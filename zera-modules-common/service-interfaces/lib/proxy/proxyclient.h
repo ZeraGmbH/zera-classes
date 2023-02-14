@@ -1,7 +1,7 @@
 #ifndef PROXYCLIENT_H
 #define PROXYCLIENT_H
 
-#include "zera-proxy_export.h"
+#include "service-interfaces_export.h"
 #include <netmessages.pb.h>
 #include <QObject>
 #include <QAbstractSocket>
@@ -11,7 +11,7 @@ namespace Zera { namespace Proxy {
 
 class cProxyClientPrivate;
 
-class ZERA_PROXY_EXPORT cProxyClient : public QObject
+class SERVICE_INTERFACES_EXPORT cProxyClient : public QObject
 {
     Q_OBJECT
 public:

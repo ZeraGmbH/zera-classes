@@ -1,9 +1,11 @@
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/proxy/*.cpp
     )
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/proxy/*.h
     )
 
 add_library(service-interfaces SHARED
@@ -13,7 +15,8 @@ add_library(service-interfaces SHARED
 
 target_link_libraries(service-interfaces
     PUBLIC
-    zera-proxy
+    Qt5::Network
+    VeinMeta::xiqnet
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -21,8 +24,9 @@ target_link_libraries(service-interfaces
 target_include_directories(service-interfaces
     PUBLIC
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/service-interfaces>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/proxy>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     )
 
 set_target_properties(service-interfaces PROPERTIES VERSION ${PROJECT_VERSION})
