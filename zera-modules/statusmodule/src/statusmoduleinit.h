@@ -6,7 +6,6 @@
 #include <vfmoduleparameter.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
-#include <rminterface.h>
 #include <QFinalState>
 
 namespace STATUSMODULE
@@ -17,7 +16,6 @@ namespace STATUSMODINIT
 
 enum statusmoduleinitCmds
 {
-    sendrmident,
     readPCBServerVersion,
     readPCBServerCtrlVersion,
     readPCBServerFPGAVersion,
