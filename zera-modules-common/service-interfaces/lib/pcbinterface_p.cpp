@@ -1,7 +1,7 @@
-#include <netmessages.pb.h>
-
 #include "pcbinterface_p.h"
 #include "pcbinterface.h"
+#include "variantconverter.h"
+#include <netmessages.pb.h>
 
 namespace Zera {
 
@@ -772,7 +772,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getdspchannelsource:
         case PCB::getadjustmentstatus:
         case PCB::getauthorizationstatus:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnInt(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnInt(decodedAnswer.msgBody));
             break;
 
         case PCB::getalias:
@@ -796,12 +796,12 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getpcberrorstatus:
         case PCB::getpowtypesource:
         case PCB::transparentcommand:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnString(decodedAnswer.msgBody));
             break;
 
         case PCB::getrangelist:
         case PCB::getrangelistsample:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnStringList(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnStringList(decodedAnswer.msgBody));
             break;
 
         case PCB::geturvalue:
@@ -814,11 +814,11 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getphasecorrection:
         case PCB::getformfactorsource:
         case PCB::getconstantsource:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnDouble(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnDouble(decodedAnswer.msgBody));
             break;
 
         case PCB::isavail:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnBool(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnBool(decodedAnswer.msgBody));
             break;
 
         case PCB::setoffsetnode:
@@ -844,7 +844,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::setadjustpcbxml:
         case PCB::setadjustclampxml:
         case PCB::setserialnumber:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnString(decodedAnswer.msgBody));
             break;
         }
     } // hmm ... we have to look what to do otherwise

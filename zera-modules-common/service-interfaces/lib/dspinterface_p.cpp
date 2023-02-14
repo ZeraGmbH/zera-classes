@@ -1,7 +1,7 @@
-#include <netmessages.pb.h>
-
 #include "dspinterface_p.h"
 #include "dspinterface.h"
+#include "variantconverter.h"
+#include <netmessages.pb.h>
 
 namespace Zera {
 
@@ -461,19 +461,19 @@ void cDSPInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case setgaincorrection:
         case setphasecorrection:
         case setoffsetcorrection:
-            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, VariantConverter::returnString(lmsg));
             break;
         case readdeviceversion:
         case readserverversion:
         case dspinterrupt:
-            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, VariantConverter::returnString(lmsg));
             break;
         case dataacquisition:
         case dspmemoryread: {
             cDspMeasData* actMemGroup = m_MsgNrMeasData.take(lmsgnr);
             DSPDATA::dType actMemType = m_MsgNrMemType.take(lmsgnr);
             setVarData(actMemGroup, lmsg, actMemType);
-            emit q->serverAnswer(lmsgnr, 0, returnString(lmsg));
+            emit q->serverAnswer(lmsgnr, 0, VariantConverter::returnString(lmsg));
             break;
         }
 

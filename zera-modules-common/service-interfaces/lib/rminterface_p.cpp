@@ -1,7 +1,7 @@
-#include <netmessages.pb.h>
-
 #include "rminterface_p.h"
 #include "rminterface.h"
+#include "variantconverter.h"
+#include <netmessages.pb.h>
 
 namespace Zera {
 
@@ -141,12 +141,12 @@ void cRMInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMess
         case removeresource:
         case setresource:
         case freeresource:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnString(decodedAnswer.msgBody));
             break;
         case getresourcetypes:
         case getresources:
         case getresourceinfo:
-            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, returnString(decodedAnswer.msgBody));
+            emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnString(decodedAnswer.msgBody));
             break;
         }
     }
