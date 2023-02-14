@@ -2,7 +2,7 @@
 #include "taskdecoratortimeout.h"
 #include <reply.h>
 
-TaskTemplatePtr TaskChannelGetRangeList::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetRangeList::create(Zera::PcbInterfacePtr pcbInterface,
                                                QString channelName,
                                                QStringList &targetRangeList,
                                                int timeout, std::function<void ()> additionalErrorHandler)
@@ -15,7 +15,7 @@ TaskTemplatePtr TaskChannelGetRangeList::create(Zera::Server::PcbInterfacePtr pc
                                              additionalErrorHandler);
 }
 
-TaskChannelGetRangeList::TaskChannelGetRangeList(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskChannelGetRangeList::TaskChannelGetRangeList(Zera::PcbInterfacePtr pcbInterface,
                                              QString channelName,
                                              QStringList &targetRangeList) :
     TaskServerTransactionTemplate(pcbInterface),

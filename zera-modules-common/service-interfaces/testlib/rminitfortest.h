@@ -10,10 +10,10 @@ class RmInitForTest
 {
 public:
     RmInitForTest();
-    Zera::Server::RMInterfacePtr getRmInterface();
+    Zera::RMInterfacePtr getRmInterface();
     Zera::ProxyClientForTestPtr getProxyClient();
 private:
-    Zera::Server::RMInterfacePtr m_rmInterface;
+    Zera::RMInterfacePtr m_rmInterface;
     Zera::ProxyClientForTestPtr m_proxyClient;
 };
 

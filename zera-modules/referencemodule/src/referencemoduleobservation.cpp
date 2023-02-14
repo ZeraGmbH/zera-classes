@@ -11,7 +11,7 @@ cReferenceModuleObservation::cReferenceModuleObservation(cReferenceModule* modul
     m_pReferencemodule(module),
     m_pPCBServerSocket(pcbsocket)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" rferencemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection

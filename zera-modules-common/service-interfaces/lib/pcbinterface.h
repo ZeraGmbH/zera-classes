@@ -5,10 +5,8 @@
 #include "abstractserverInterface.h"
 #include <proxyclient.h>
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
+
 class cPCBInterfacePrivate;
 
 class SERVICE_INTERFACES_EXPORT cPCBInterface: public AbstractServerInterface
@@ -111,6 +109,6 @@ private:
 
 typedef std::shared_ptr<cPCBInterface> PcbInterfacePtr;
 
-} }
+}
 
 #endif // PCBINTERFACE_H

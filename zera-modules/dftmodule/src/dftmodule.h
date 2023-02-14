@@ -1,24 +1,14 @@
 #ifndef DFTMODULE_H
 #define DFTMODULE_H
 
-#include <QObject>
+#include "basemeasmodule.h"
+#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 
-#include "basemeasmodule.h"
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-}
-
-
-namespace DFTMODULE
-{
+namespace DFTMODULE {
 
 class cDftModuleConfiguration;
 class cDftModuleMeasProgram;
@@ -29,8 +19,7 @@ class cDftModuleObservation;
 
 class cDftModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cDftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;

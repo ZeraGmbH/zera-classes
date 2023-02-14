@@ -17,7 +17,7 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
     m_pModule(module),
     m_ConfigData(configdata)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" sample channel
     // m_rmConnectState.addTransition is done in rmConnect
@@ -247,7 +247,7 @@ void cSampleChannel::rmConnect()
     m_rmInterface.setClientSmart(m_rmClient); //
     // todo insert timer for timeout
 
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -298,7 +298,7 @@ void cSampleChannel::pcbConnection()
     m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readChnAliasState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 

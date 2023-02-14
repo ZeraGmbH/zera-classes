@@ -1,7 +1,7 @@
 #include "taskchannelregisternotifier.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
+TaskTemplatePtr TaskChannelRegisterNotifier::create(Zera::PcbInterfacePtr pcbInterface, QString channelName,
                                                      int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
@@ -11,7 +11,7 @@ TaskTemplatePtr TaskChannelRegisterNotifier::create(Zera::Server::PcbInterfacePt
                                              additionalErrorHandler);
 }
 
-TaskChannelRegisterNotifier::TaskChannelRegisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskChannelRegisterNotifier::TaskChannelRegisterNotifier(Zera::PcbInterfacePtr pcbInterface,
                                                          QString channelName) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface),

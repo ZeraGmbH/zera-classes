@@ -14,7 +14,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module), m_bDemo(demo)
 {
     // we have to instantiate a working resource manager and dspserver interface
-    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pDSPInterFace = new Zera::cDSPInterface();
 
     m_bRanging = false;
     m_bIgnore = false;
@@ -446,7 +446,7 @@ void cRangeModuleMeasProgram::resourceManagerConnect()
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
@@ -463,7 +463,7 @@ void cRangeModuleMeasProgram::dspserverConnect()
     m_pDspClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_claimPGRMemState);
-    connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cRangeModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 

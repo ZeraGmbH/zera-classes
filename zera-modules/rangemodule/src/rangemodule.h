@@ -1,29 +1,16 @@
 #ifndef RANGEMODULE_H
 #define RANGEMODULE_H
 
-#include <QObject>
+#include "basemeasmodule.h"
+#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 
-#include <basemeasmodule.h>
-
-
-namespace Zera
-{
-    namespace Server
-    {
-        class cDSPInterface;
-    }
-}
-
-
-
 class VfModuleMetaData;
 
-namespace RANGEMODULE
-{
+namespace RANGEMODULE {
 
 class cRangeMeasChannel;
 class cRangeModuleConfiguration;
@@ -38,8 +25,7 @@ class cRangeModuleObservation;
 
 class cRangeModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;

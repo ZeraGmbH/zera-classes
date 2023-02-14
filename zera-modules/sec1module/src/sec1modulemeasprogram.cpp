@@ -23,8 +23,8 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface
-    m_pSECInterface = new Zera::Server::cSECInterface();
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pSECInterface = new Zera::cSECInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
@@ -982,7 +982,7 @@ void cSec1ModuleMeasProgram::resourceManagerConnect()
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
@@ -1130,7 +1130,7 @@ void cSec1ModuleMeasProgram::ecalcServerConnect()
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
     m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
-    connect(m_pSECInterface, &Zera::Server::cSECInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pSECInterface, &Zera::cSECInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pSECClient);
 }
@@ -1149,7 +1149,7 @@ void cSec1ModuleMeasProgram::pcbServerConnect()
     // and then we set ecalcalculator interface's connection
     m_pPCBInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }

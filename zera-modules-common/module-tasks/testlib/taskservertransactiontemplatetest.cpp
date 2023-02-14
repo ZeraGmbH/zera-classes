@@ -1,11 +1,11 @@
 #include "taskservertransactiontemplatetest.h"
 
-TaskTemplatePtr TaskServerTransactionTemplateTest::create(Zera::Server::RMInterfacePtr server, QString &receivedAnswer)
+TaskTemplatePtr TaskServerTransactionTemplateTest::create(Zera::RMInterfacePtr server, QString &receivedAnswer)
 {
     return std::make_unique<TaskServerTransactionTemplateTest>(server, receivedAnswer);
 }
 
-TaskServerTransactionTemplateTest::TaskServerTransactionTemplateTest(Zera::Server::RMInterfacePtr server, QString &receivedAnswer) :
+TaskServerTransactionTemplateTest::TaskServerTransactionTemplateTest(Zera::RMInterfacePtr server, QString &receivedAnswer) :
     TaskServerTransactionTemplate(server),
     m_rmserver(server),
     m_receivedAnswer(receivedAnswer)

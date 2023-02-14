@@ -14,7 +14,7 @@ cReferenceModuleMeasProgram::cReferenceModuleMeasProgram(cReferenceModule* modul
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and dspserver interface
-    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pDSPInterFace = new Zera::cDSPInterface();
 
     m_ChannelList = getConfData()->m_referenceChannelList;
 

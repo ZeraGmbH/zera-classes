@@ -9,10 +9,10 @@ class TaskRmChannelsCheckAvail : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::Server::RMInterfacePtr rmInterface,
+    static TaskTemplatePtr create(Zera::RMInterfacePtr rmInterface,
                                    QStringList expectedChannels,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskRmChannelsCheckAvail(Zera::Server::RMInterfacePtr rmInterface,
+    TaskRmChannelsCheckAvail(Zera::RMInterfacePtr rmInterface,
                              QStringList expectedChannels,
                              int timeout, std::function<void()> additionalErrorHandler = []{});
     void start() override;

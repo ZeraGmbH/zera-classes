@@ -12,7 +12,7 @@ static const char* defaultResponse = "m0;m1;m2";
 
 void test_taskservertransactiontemplate::init()
 {
-    m_rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
+    m_rmInterface =  std::make_shared<Zera::cRMInterface>();
     m_proxyClient = Zera::ProxyClientForTest::create();
     m_rmInterface->setClientSmart(m_proxyClient);
 }

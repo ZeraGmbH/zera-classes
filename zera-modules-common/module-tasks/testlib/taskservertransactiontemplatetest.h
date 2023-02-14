@@ -8,13 +8,13 @@ class TaskServerTransactionTemplateTest : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::Server::RMInterfacePtr server, QString &receivedAnswer);
-    TaskServerTransactionTemplateTest(Zera::Server::RMInterfacePtr server, QString &receivedAnswer);
+    static TaskTemplatePtr create(Zera::RMInterfacePtr server, QString &receivedAnswer);
+    TaskServerTransactionTemplateTest(Zera::RMInterfacePtr server, QString &receivedAnswer);
 
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
-    Zera::Server::RMInterfacePtr m_rmserver;
+    Zera::RMInterfacePtr m_rmserver;
     QString &m_receivedAnswer;
 };
 

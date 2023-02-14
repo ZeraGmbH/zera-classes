@@ -8,7 +8,7 @@ struct cECalcChannelInfo
 {
     QString name;
     cSocket secServersocket;
-    Zera::Server::cSECInterface* secIFace;
+    Zera::cSECInterface* secIFace;
 };
 
 #endif // ECALCINFO_H

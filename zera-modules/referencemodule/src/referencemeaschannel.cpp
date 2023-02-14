@@ -9,7 +9,7 @@ namespace REFERENCEMODULE
 cReferenceMeasChannel::cReferenceMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
     :cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" reference meas channel
     // m_rmConnectState.addTransition is done in rmConnect

@@ -1,7 +1,7 @@
 #include "taskrmchannelscheckavail.h"
 #include "taskrmchannelsgetavail.h"
 
-TaskTemplatePtr TaskRmChannelsCheckAvail::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskTemplatePtr TaskRmChannelsCheckAvail::create(Zera::RMInterfacePtr rmInterface,
                                                   QStringList expectedChannels,
                                                   int timeout, std::function<void ()> additionalErrorHandler)
 {
@@ -10,7 +10,7 @@ TaskTemplatePtr TaskRmChannelsCheckAvail::create(Zera::Server::RMInterfacePtr rm
                                                       timeout, additionalErrorHandler);
 }
 
-TaskRmChannelsCheckAvail::TaskRmChannelsCheckAvail(Zera::Server::RMInterfacePtr rmInterface,
+TaskRmChannelsCheckAvail::TaskRmChannelsCheckAvail(Zera::RMInterfacePtr rmInterface,
                                                    QStringList expectedChannels,
                                                    int timeout, std::function<void ()> additionalErrorHandler) :
     m_taskGetChannelList(TaskRmChannelsGetAvail::create(rmInterface,

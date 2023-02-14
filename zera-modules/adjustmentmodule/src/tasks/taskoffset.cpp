@@ -4,7 +4,7 @@
 #include "taskchannelgeturvalue.h"
 #include "errormessages.h"
 
-TaskTemplatePtr TaskOffset::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskOffset::create(Zera::PcbInterfacePtr pcbInterface,
                                     QString channelSysName, QString rangeName,
                                     double actualValue, double targetValue,
                                     int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler)
@@ -15,7 +15,7 @@ TaskTemplatePtr TaskOffset::create(Zera::Server::PcbInterfacePtr pcbInterface,
                                         perTransactionTimout, perTransactionErrorHandler);
 }
 
-TaskOffset::TaskOffset(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskOffset::TaskOffset(Zera::PcbInterfacePtr pcbInterface,
                        QString channelSysName, QString rangeName, double actualValue, double targetValue,
                        int perTransactionTimout, std::function<void (QString)> perTransactionErrorHandler) :
     m_perTransactionErrorHandler(perTransactionErrorHandler)

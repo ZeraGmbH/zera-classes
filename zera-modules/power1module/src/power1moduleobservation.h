@@ -28,7 +28,7 @@ signals:
 protected:
     cPower1Module* m_pPower1module;
     cSocket* m_pPCBServerSocket;
-    Zera::Server::cPCBInterface* m_pPCBInterface;
+    Zera::cPCBInterface* m_pPCBInterface;
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:   

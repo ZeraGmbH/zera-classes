@@ -57,7 +57,7 @@ private:
     QList<QStringList> m_GroupList;
     QStringList m_ChannelNameList; // the system names of our channels
     cObsermaticConfPar& m_ConfPar;
-    Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
+    Zera::cDSPInterface* m_pDSPInterFace; // our interface to dsp
     Zera::ProxyClient *m_pDspClient;
     QStringList m_ChannelAliasList; // the alias of our channels
     QList<cRangeMeasChannel*> m_RangeMeasChannelList;

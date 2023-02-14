@@ -17,8 +17,8 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     :cBaseMeasProgram(pConfiguration), m_pModule(module)
 {
     // we have to instantiate a working resource manager and secserver interface
-    m_pSECInterface = new Zera::Server::cSECInterface();
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pSECInterface = new Zera::cSECInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     m_IdentifyState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSpm1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
@@ -239,7 +239,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                               QVariant((quint32)10));
     m_pMeasTimePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MTIME").arg(modNr), "10", m_pMeasTimePar->getName(), "0", "sec"));
     m_pModule->veinModuleParameterHash[key] = m_pMeasTimePar; // for modules use
-    iValidator = new cIntValidator(1, Zera::Server::cSECInterface::maxSecCounterInitVal / 1000, 1); // counter in ms
+    iValidator = new cIntValidator(1, Zera::cSECInterface::maxSecCounterInitVal / 1000, 1); // counter in ms
     m_pMeasTimePar->setValidator(iValidator);
 
     m_pT0InputPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -861,7 +861,7 @@ void cSpm1ModuleMeasProgram::resourceManagerConnect()
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
@@ -976,7 +976,7 @@ void cSpm1ModuleMeasProgram::ecalcServerConnect()
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
     m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::ProxyClient::connected, &m_fetchECalcUnitsState);
-    connect(m_pSECInterface, &Zera::Server::cSECInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pSECInterface, &Zera::cSECInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pSECClient);
 }
@@ -995,7 +995,7 @@ void cSpm1ModuleMeasProgram::pcbServerConnect()
     // and then we set ecalcalculator interface's connection
     m_pPCBInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cSpm1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
@@ -1138,7 +1138,7 @@ void cSpm1ModuleMeasProgram::setSync2()
 void cSpm1ModuleMeasProgram::setMeaspulses()
 {
     if (m_pTargetedPar->getValue().toInt() == 0)
-        m_nTimerCountStart = Zera::Server::cSECInterface::maxSecCounterInitVal; // we simply set max. time -> approx. 50 days
+        m_nTimerCountStart = Zera::cSECInterface::maxSecCounterInitVal; // we simply set max. time -> approx. 50 days
     else
         m_nTimerCountStart = m_pMeasTimePar->getValue().toLongLong() * 1000;
 

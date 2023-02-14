@@ -41,10 +41,7 @@ namespace ECALCRESULT {
 }
 
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 class cSECInterfacePrivate;
 
 class SERVICE_INTERFACES_EXPORT cSECInterface: public QObject
@@ -79,7 +76,5 @@ private:
 };
 
 }
-}
-
 
 #endif // SECINTERFACE_H

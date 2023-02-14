@@ -8,10 +8,7 @@
 #include "rminterface.h"
 #include "dspmeasdata.h"
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 enum rmcommands
 {
@@ -31,7 +28,6 @@ class cRMInterface;
 class cRMInterfacePrivate: public cInterfacePrivate
 {
     Q_OBJECT
-
 public:
     cRMInterfacePrivate(cRMInterface* iface);
     void setClient(Zera::ProxyClient *client);
@@ -61,7 +57,5 @@ private:
 };
 
 }
-}
-
 
 #endif // RMINTERFACE_P_H

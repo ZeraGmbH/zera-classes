@@ -1,7 +1,7 @@
 #include "taskchannelgeturvalue.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetUrValue::create(Zera::PcbInterfacePtr pcbInterface,
                                                QString channelSysName, QString rangeName,
                                                double &valueReceived,
                                                int timeout, std::function<void ()> additionalErrorHandler)
@@ -14,7 +14,7 @@ TaskTemplatePtr TaskChannelGetUrValue::create(Zera::Server::PcbInterfacePtr pcbI
                                              additionalErrorHandler);
 }
 
-TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskChannelGetUrValue::TaskChannelGetUrValue(Zera::PcbInterfacePtr pcbInterface,
                                              QString channelSysName, QString rangeName,
                                              double &valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),

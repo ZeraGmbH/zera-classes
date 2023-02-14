@@ -5,9 +5,6 @@
 
 namespace Zera
 {
-namespace Server
-{
-
 
 cSECInterfacePrivate::cSECInterfacePrivate(cSECInterface *iface)
     :q_ptr(iface)
@@ -207,6 +204,3 @@ void cSECInterfacePrivate::receiveError(QAbstractSocket::SocketError errorCode)
 }
 
 }
-}
-
-

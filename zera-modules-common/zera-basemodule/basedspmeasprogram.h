@@ -18,7 +18,7 @@ protected:
     // the module creates a central dsp interface and forwards this
     // the reason behind this is, that dsp server generates a new "environment" for each
     // new client. but we want to access the same environment's value from all over the module.
-    Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
+    Zera::cDSPInterface* m_pDSPInterFace; // our interface to dsp
     Zera::ProxyClient *m_pDspClient;
     quint32 m_nDspMemUsed;
 

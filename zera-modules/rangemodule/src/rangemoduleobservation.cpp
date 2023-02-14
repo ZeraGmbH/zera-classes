@@ -10,7 +10,7 @@ namespace RANGEMODULE
 cRangeModuleObservation::cRangeModuleObservation(cRangeModule* module, cSocket *pcbsocket)
     :m_pRangemodule(module), m_pPCBServerSocket(pcbsocket)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" rangemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection
@@ -94,7 +94,7 @@ void cRangeModuleObservation::pcbConnect()
     m_pcbConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cRangeModuleObservation::catchInterfaceAnswer);
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cRangeModuleObservation::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
@@ -121,7 +121,7 @@ void cRangeModuleObservation::resetNotifier()
 void cRangeModuleObservation::deactivationDone()
 {
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
-    disconnect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cRangeModuleObservation::catchInterfaceAnswer);
+    disconnect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cRangeModuleObservation::catchInterfaceAnswer);
     emit deactivated();
 }
 

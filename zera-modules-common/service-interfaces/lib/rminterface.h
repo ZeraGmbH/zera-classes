@@ -6,7 +6,7 @@
 #include <proxyclient.h>
 #include <memory>
 
-namespace Zera { namespace Server {
+namespace Zera {
 
 class cRMInterfacePrivate;
 
@@ -33,6 +33,6 @@ private:
 
 typedef std::shared_ptr<cRMInterface> RMInterfacePtr;
 
-} }
+}
 
 #endif // RMINTERFACE_H

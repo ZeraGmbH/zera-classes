@@ -18,9 +18,9 @@ public:
 
 struct AdjustmentModuleCommon
 {
-    Zera::Server::PcbInterfacePtr m_pcbInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientPtr m_pcbClient;
-    Zera::Server::RMInterfacePtr m_rmInterface;
+    Zera::RMInterfacePtr m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
 
     std::unordered_map<QString/* m0,m1..*/, std::unique_ptr<AdjustChannelInfo>> m_adjustChannelInfoHash;

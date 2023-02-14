@@ -12,7 +12,7 @@ namespace THDNMODULE
 cThdnModuleObservation::cThdnModuleObservation(cThdnModule* module, cSocket *pcbsocket)
     :m_pThdnmodule(module), m_pPCBServerSocket(pcbsocket)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" rangemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection

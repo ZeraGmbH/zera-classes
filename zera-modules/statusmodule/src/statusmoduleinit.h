@@ -58,11 +58,11 @@ private:
 
     QHash<quint32, int> m_MsgNrCmdList;
 
-    Zera::Server::cPCBInterface *m_pPCBInterface;
+    Zera::cPCBInterface *m_pPCBInterface;
     Zera::ProxyClient *m_pPCBClient;
-    Zera::Server::cDSPInterface *m_pDSPInterface;
+    Zera::cDSPInterface *m_pDSPInterface;
     Zera::ProxyClient *m_pDSPClient;
-    Zera::Server::cRMInterface m_rmInterface;
+    Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
 
     // statemachine for activating gets the following states

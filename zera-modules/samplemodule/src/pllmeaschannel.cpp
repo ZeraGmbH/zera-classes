@@ -9,7 +9,7 @@ namespace SAMPLEMODULE
 cPllMeasChannel::cPllMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr)
     :cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" pll meas channel
     // m_rmConnectState.addTransition is done in rmConnect
@@ -395,7 +395,7 @@ void cPllMeasChannel::rmConnect()
     m_rmInterface.setClientSmart(m_rmClient); //
     // todo insert timer for timeout
 
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
@@ -443,7 +443,7 @@ void cPllMeasChannel::pcbConnection()
     m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readDspChannelState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cPllMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 

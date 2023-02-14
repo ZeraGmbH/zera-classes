@@ -1,7 +1,7 @@
 #include "taskchannelgetrejection.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskChannelGetRejection::create(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName,
                                                  double &valueReceived,
                                                  int timeout, std::function<void ()> additionalErrorHandler)
@@ -14,7 +14,7 @@ TaskTemplatePtr TaskChannelGetRejection::create(Zera::Server::PcbInterfacePtr pc
                                              additionalErrorHandler);
 }
 
-TaskChannelGetRejection::TaskChannelGetRejection(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskChannelGetRejection::TaskChannelGetRejection(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName,
                                                  double &valueReceived) :
     TaskServerTransactionTemplate(pcbInterface),

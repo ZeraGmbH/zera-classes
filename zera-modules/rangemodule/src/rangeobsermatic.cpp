@@ -27,7 +27,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, Q
 
     //  we set 0.0 as default value for all peak values in case that these values are needed before actual values really arrived
 
-    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pDSPInterFace = new Zera::cDSPInterface();
 
     m_readGainCorrState.addTransition(this, &cRangeObsermatic::activationContinue, &m_readGainCorrDoneState);
     m_activationMachine.addState(&m_dspserverConnectState);
@@ -603,7 +603,7 @@ void cRangeObsermatic::dspserverConnect()
     m_pDspClient = Zera::Proxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_readGainCorrState);
-    connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
+    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 

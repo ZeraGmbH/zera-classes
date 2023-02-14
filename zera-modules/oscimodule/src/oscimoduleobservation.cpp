@@ -11,7 +11,7 @@ namespace OSCIMODULE
 cOsciModuleObservation::cOsciModuleObservation(cOsciModule* module, cSocket *pcbsocket)
     :m_pOscimodule(module), m_pPCBServerSocket(pcbsocket)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" rangemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection
@@ -100,7 +100,7 @@ void cOsciModuleObservation::pcbConnect()
     m_pcbConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cOsciModuleObservation::catchInterfaceAnswer);
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cOsciModuleObservation::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
@@ -127,7 +127,7 @@ void cOsciModuleObservation::resetNotifier()
 void cOsciModuleObservation::deactivationDone()
 {
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
-    disconnect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cOsciModuleObservation::catchInterfaceAnswer);
+    disconnect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cOsciModuleObservation::catchInterfaceAnswer);
     emit deactivated();
 }
 

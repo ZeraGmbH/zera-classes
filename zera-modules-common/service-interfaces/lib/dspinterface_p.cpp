@@ -3,10 +3,7 @@
 #include "dspinterface_p.h"
 #include "dspinterface.h"
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 cDSPInterfacePrivate::cDSPInterfacePrivate(cDSPInterface *iface)
     :q_ptr(iface)
@@ -491,5 +488,4 @@ void cDSPInterfacePrivate::receiveError(QAbstractSocket::SocketError errorCode)
     emit q->tcpError(errorCode);
 }
 
-}
 }

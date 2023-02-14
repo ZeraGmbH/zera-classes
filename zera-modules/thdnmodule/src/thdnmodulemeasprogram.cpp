@@ -29,7 +29,7 @@ namespace THDNMODULE
 cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pDSPInterFace = new Zera::cDSPInterface();
 
     m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceState);
@@ -694,7 +694,7 @@ void cThdnModuleMeasProgram::pcbserverConnect()
         cSocket sock = mi.pcbServersocket;
         Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
         m_pcbClientList.append(pcbClient);
-        Zera::Server::cPCBInterface* pcbIFace = new Zera::Server::cPCBInterface();
+        Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
         m_pcbIFaceList.append(pcbIFace);
         pcbIFace->setClient(pcbClient);
         mi.pcbIFace = pcbIFace;

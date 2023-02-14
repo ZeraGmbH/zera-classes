@@ -5,11 +5,7 @@
 
 #include "interface_p.h"
 
-namespace Zera
-{
-namespace Server
-{
-namespace PCB{
+namespace Zera { namespace PCB {
 enum pcbcommands
 {
     getdspchannel,
@@ -189,7 +185,6 @@ private:
     Zera::ProxyClientPtr m_clientSmart;
 };
 
-}
 }
 
 #endif // PCBINTERFACE_P_H

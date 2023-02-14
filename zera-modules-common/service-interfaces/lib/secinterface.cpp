@@ -1,11 +1,7 @@
 #include "secinterface.h"
 #include "secinterface_p.h"
 
-
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 cSECInterface::cSECInterface() :
     d_ptr(new cSECInterfacePrivate(this))
@@ -108,7 +104,4 @@ quint32 cSECInterface::unregisterNotifiers()
     return d->unregisterNotifiers();
 }
 
-
 }
-}
-

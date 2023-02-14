@@ -1,23 +1,14 @@
 #ifndef OSCIMODULE_H
 #define OSCIMODULE_H
 
-#include <QObject>
+#include "basemeasmodule.h"
+#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 
-#include "basemeasmodule.h"
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-}
-
-
-namespace OSCIMODULE
-{
+namespace OSCIMODULE {
 
 class cOsciModuleConfiguration;
 class cOsciModuleMeasProgram;

@@ -13,7 +13,7 @@ struct cMeasChannelInfo
     QString alias;
     QString unit;
     cSocket pcbServersocket;
-    Zera::Server::cPCBInterface* pcbIFace;
+    Zera::cPCBInterface* pcbIFace;
 };
 
 #endif // MEASCHANNELINFO_H

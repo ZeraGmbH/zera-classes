@@ -11,7 +11,7 @@ cRmsModuleObservation::cRmsModuleObservation(cRmsModule* module, cSocket *pcbsoc
     m_pRmsmodule(module),
     m_pPCBServerSocket(pcbsocket)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" rangemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection

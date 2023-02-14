@@ -11,7 +11,7 @@ namespace RANGEMODULE
 cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo)
     :cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" meas channel
     // m_rmConnectState.addTransition is done in rmConnect
@@ -974,7 +974,7 @@ void cRangeMeasChannel::rmConnect()
         m_rmInterface.setClientSmart(m_rmClient); //
         // todo insert timer for timeout
 
-        connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
+        connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
         Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
         // resource manager liste sense abfragen
         // bin ich da drin ?
@@ -1036,7 +1036,7 @@ void cRangeMeasChannel::pcbConnection()
     m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readDspChannelState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
+    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 

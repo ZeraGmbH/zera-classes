@@ -10,10 +10,10 @@ class PcbInitForTest
 {
 public:
     PcbInitForTest();
-    Zera::Server::PcbInterfacePtr getPcbInterface();
+    Zera::PcbInterfacePtr getPcbInterface();
     Zera::ProxyClientForTestPtr getProxyClient();
 private:
-    Zera::Server::PcbInterfacePtr m_pcbInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
     Zera::ProxyClientForTestPtr m_proxyClient;
 };
 

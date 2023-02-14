@@ -1,12 +1,7 @@
-
 #include "dspinterface.h"
 #include "dspinterface_p.h"
 
-namespace Zera
-{
-namespace Server
-{
-
+namespace Zera {
 
 cDSPInterface::cDSPInterface() :
     d_ptr(new cDSPInterfacePrivate(this))
@@ -263,6 +258,4 @@ quint32 cDSPInterface::readServerVersion()
     return d->readServerVersion();
 }
 
-
-}
 }
