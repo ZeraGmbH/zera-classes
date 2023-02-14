@@ -6,9 +6,7 @@ namespace Zera {
 Proxy* Proxy::getInstance()
 {
     if(ProxyPrivate::singletonInstance == 0)
-    {
-        ProxyPrivate::singletonInstance=new Proxy;
-    }
+        ProxyPrivate::singletonInstance = new Proxy;
     return ProxyPrivate::singletonInstance;
 }
 
