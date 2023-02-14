@@ -43,46 +43,6 @@ quint32 cInterfacePrivate::sendCommand(QString cmd, QString par)
 }
 
 
-QVariant cInterfacePrivate::returnInt(QString message)
-{
-    bool ok;
-    qint32 n;
-
-    n = message.toInt(&ok);
-    return QVariant(n);
-}
-
-
-QVariant cInterfacePrivate::returnString(QString message)
-{
-    return QVariant(message);
-}
-
-
-QVariant cInterfacePrivate::returnStringList(QString message)
-{
-    QString sep = ";";
-    return QVariant(message.split(sep));
-}
-
-
-QVariant cInterfacePrivate::returnDouble(QString message)
-{
-    bool ok;
-    double d;
-
-    d = message.toDouble(&ok);
-    return QVariant(d);
-}
-
-
-QVariant cInterfacePrivate::returnBool(QString message)
-{
-    bool ok, avail;
-
-    avail = (message.toInt(&ok) == 1);
-    return QVariant(avail);
-}
 
 }
 

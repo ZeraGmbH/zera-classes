@@ -37,12 +37,6 @@ protected:
     quint32 sendCommand(QString cmd);
     quint32 sendCommand(QString cmd, QString par);
 
-    QVariant returnInt(QString message);
-    QVariant returnString( QString message);
-    QVariant returnStringList(QString message);
-    QVariant returnDouble(QString message);
-    QVariant returnBool(QString message);
-
     QHash<quint32, int> m_MsgNrCmdList;
     Zera::ProxyClient *m_pClient;
 protected slots:

@@ -1,7 +1,7 @@
-#include <netmessages.pb.h>
-
 #include "secinterface_p.h"
 #include "secinterface.h"
+#include "variantconverter.h"
+#include <netmessages.pb.h>
 
 namespace Zera
 {
@@ -190,7 +190,7 @@ void cSECInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case SEC::regnotifier:
         case SEC::unregnotifier:
         case SEC::intacknowledge:
-            emit q->serverAnswer(lmsgnr, lreply, returnString(lmsg));
+            emit q->serverAnswer(lmsgnr, lreply, VariantConverter::returnString(lmsg));
             break;
         }
     }
