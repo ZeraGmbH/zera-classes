@@ -259,16 +259,6 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit deactivationContinue();
                 break;
 
-            case STATUSMODINIT::sendrmident:
-                if (reply == ack) // we only continue if resource manager acknowledges
-                    emit activationContinue();
-                else
-                {
-                    emit errMsg((tr(rmidentErrMSG)));
-                    emit activationError();
-                }
-                break;
-
             case STATUSMODINIT::readPCBServerVersion:
                 if (reply == ack)
                 {
