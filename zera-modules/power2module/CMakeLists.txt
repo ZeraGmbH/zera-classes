@@ -3,7 +3,7 @@ file(GLOB SOURCES
     )
 
 file(GLOB HEADER
-     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+     ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
     )
 
 file(GLOB RESOURCES 
