@@ -15,15 +15,15 @@ cPCBInterfacePrivate::cPCBInterfacePrivate(cPCBInterface *iface)
 }
 
 
-void cPCBInterfacePrivate::setClient(Proxy::cProxyClient *client)
+void cPCBInterfacePrivate::setClient(Proxy::ProxyClient *client)
 {
     if (m_pClient) { // we avoid multiple connections
         disconnect(m_pClient, nullptr, this, nullptr);
     }
 
     m_pClient = client;
-    connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cPCBInterfacePrivate::receiveAnswer);
-    connect(m_pClient, &Proxy::cProxyClient::tcpError, this, &cPCBInterfacePrivate::receiveError);
+    connect(m_pClient, &Proxy::ProxyClient::answerAvailable, this, &cPCBInterfacePrivate::receiveAnswer);
+    connect(m_pClient, &Proxy::ProxyClient::tcpError, this, &cPCBInterfacePrivate::receiveError);
 }
 
 void cPCBInterfacePrivate::setClientSmart(Proxy::ProxyClientPtr client)

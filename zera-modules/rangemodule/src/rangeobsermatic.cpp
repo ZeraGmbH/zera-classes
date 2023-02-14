@@ -600,11 +600,11 @@ void cRangeObsermatic::dspserverConnect()
         m_ChannelAliasList.replace(i, m_RangeMeasChannelList.at(i)->getAlias());
     }
 
-    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
+    m_pDspClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pDSPSocket->m_sIP, m_pDSPSocket->m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::cProxyClient::connected, &m_readGainCorrState);
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::Proxy::ProxyClient::connected, &m_readGainCorrState);
     connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cRangeObsermatic::catchInterfaceAnswer);
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -701,7 +701,7 @@ void cRangeObsermatic::readGainCorrDone()
 void cRangeObsermatic::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pDspClient);
     disconnect(m_pDSPInterFace, 0, this, 0); // we disconnect from our dsp interface
     m_pDSPInterFace->deleteMemHandle(m_pGainCorrection2DSP); // and free our memory handle
     emit deactivationContinue();

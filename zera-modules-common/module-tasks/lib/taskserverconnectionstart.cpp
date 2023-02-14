@@ -14,9 +14,9 @@ TaskServerConnectionStart::TaskServerConnectionStart(Zera::Proxy::ProxyClientPtr
 
 void TaskServerConnectionStart::start()
 {
-    connect(m_client.get(), &Zera::Proxy::cProxyClient::connected,
+    connect(m_client.get(), &Zera::Proxy::ProxyClient::connected,
             this, &TaskServerConnectionStart::onConnected);
-    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_client);
+    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_client);
 }
 
 void TaskServerConnectionStart::onConnected()

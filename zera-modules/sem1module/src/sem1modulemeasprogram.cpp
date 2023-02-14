@@ -189,9 +189,9 @@ cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
         delete siInfo;
     }
     delete m_pSECInterface;
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pSECClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
 }
 
 
@@ -869,13 +869,13 @@ void cSem1ModuleMeasProgram::handleSECInterrupt()
 void cSem1ModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
-    resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::cProxyClient::connected, &m_IdentifyState);
+    resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -984,13 +984,13 @@ void cSem1ModuleMeasProgram::testSemInputs()
 void cSem1ModuleMeasProgram::ecalcServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pSECClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_SECServerSocket.m_sIP, getConfData()->m_SECServerSocket.m_nPort);
+    m_pSECClient = Zera::Proxy::Proxy::getInstance()->getConnection(getConfData()->m_SECServerSocket.m_sIP, getConfData()->m_SECServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pSECInterface->setClient(m_pSECClient); //
-    m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::Proxy::cProxyClient::connected, &m_fetchECalcUnitsState);
+    m_ecalcServerConnectState.addTransition(m_pSECClient, &Zera::Proxy::ProxyClient::connected, &m_fetchECalcUnitsState);
     connect(m_pSECInterface, &Zera::Server::cSECInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pSECClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pSECClient);
 }
 
 
@@ -1003,13 +1003,13 @@ void cSem1ModuleMeasProgram::fetchECalcUnits()
 void cSem1ModuleMeasProgram::pcbServerConnect()
 {
     // we try to get a connection to ecalc server over proxy
-    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
+    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
     m_pPCBInterface->setClient(m_pPCBClient); //
-    m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::Proxy::cProxyClient::connected, &m_readREFInputsState);
+    m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::Proxy::ProxyClient::connected, &m_readREFInputsState);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 

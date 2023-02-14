@@ -8,25 +8,25 @@
 
 namespace Zera { namespace Proxy
 {
-class cProxyPrivate;
+class ProxyPrivate;
 
-class SERVICE_INTERFACES_EXPORT cProxy: public QObject
+class SERVICE_INTERFACES_EXPORT Proxy: public QObject
 {
     Q_OBJECT
 public:
-    static cProxy* getInstance();
-    cProxyClient* getConnection(QString ipadress, quint16 port);
+    static Proxy* getInstance();
+    ProxyClient* getConnection(QString ipadress, quint16 port);
     ProxyClientPtr getConnectionSmart(QString ipadress, quint16 port);
-    void startConnection(cProxyClient *client);
+    void startConnection(ProxyClient *client);
     void startConnectionSmart(ProxyClientPtr client);
-    bool releaseConnection(cProxyClient* client);
+    bool releaseConnection(ProxyClient* client);
 protected:
-    explicit cProxy(QObject* parent = 0);
-    ~cProxy();
-    cProxyPrivate *d_ptr;
+    explicit Proxy(QObject* parent = 0);
+    ~Proxy();
+    ProxyPrivate *d_ptr;
 private:
-    Q_DISABLE_COPY(cProxy)
-    Q_DECLARE_PRIVATE(cProxy)
+    Q_DISABLE_COPY(Proxy)
+    Q_DECLARE_PRIVATE(Proxy)
 };
 
 }}

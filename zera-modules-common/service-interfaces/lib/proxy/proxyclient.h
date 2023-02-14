@@ -9,9 +9,9 @@
 
 namespace Zera { namespace Proxy {
 
-class cProxyClientPrivate;
+class ProxyClientPrivate;
 
-class SERVICE_INTERFACES_EXPORT cProxyClient : public QObject
+class SERVICE_INTERFACES_EXPORT ProxyClient : public QObject
 {
     Q_OBJECT
 public:
@@ -29,7 +29,7 @@ signals:
     void connected();
 };
 
-typedef std::shared_ptr<cProxyClient> ProxyClientPtr;
+typedef std::shared_ptr<ProxyClient> ProxyClientPtr;
 
 }}
 

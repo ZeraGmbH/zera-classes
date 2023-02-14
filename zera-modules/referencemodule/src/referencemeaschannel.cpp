@@ -404,14 +404,14 @@ void cReferenceMeasChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    m_rmClient = Zera::Proxy::Proxy::getInstance()->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
     m_rmConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     // todo insert timer for timeout
 
     connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_rmClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
     // nein -> fehler activierung
@@ -454,12 +454,12 @@ void cReferenceMeasChannel::readResourceInfo()
 
 void cReferenceMeasChannel::pcbConnection()
 {
-    m_pPCBClient = Zera::Proxy::cProxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
+    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_nPort);
     m_pcbConnectionState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_readDspChannelState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -529,7 +529,7 @@ void cReferenceMeasChannel::activationDone()
 
 void cReferenceMeasChannel::deactivationInit()
 {
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     emit deactivationContinue();
 }
 

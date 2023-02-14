@@ -53,7 +53,7 @@ class SERVICE_INTERFACES_EXPORT cSECInterface: public QObject
 public:
     cSECInterface();
     virtual ~cSECInterface();
-    void setClient(Zera::Proxy::cProxyClient *client);
+    void setClient(Zera::Proxy::ProxyClient *client);
     virtual quint32 setECalcUnit(int n); // we want n eclac units, answer is the names of them
     virtual quint32 freeECalcUnits(); // free all the units the client had set
     virtual quint32 writeRegister(QString chnname, quint8 reg, quint32 value); // transp. register access

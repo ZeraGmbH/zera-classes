@@ -128,8 +128,8 @@ private:
     QFinalState m_setEMResultState;
 
     Zera::Proxy::ProxyClientPtr m_rmClient;
-    Zera::Proxy::cProxyClient* m_pSECClient;
-    Zera::Proxy::cProxyClient* m_pPCBClient;
+    Zera::Proxy::ProxyClient* m_pSECClient;
+    Zera::Proxy::ProxyClient* m_pPCBClient;
 
     QStringList m_ResourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated

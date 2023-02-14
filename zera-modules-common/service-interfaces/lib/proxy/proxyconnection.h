@@ -6,14 +6,14 @@
 
 namespace Zera { namespace Proxy {
 
-struct cProxyConnection
+struct ProxyConnection
 {
-    cProxyConnection(QString ip, quint16 port, QByteArray uuid, cProxyNetPeer* client)
+    ProxyConnection(QString ip, quint16 port, QByteArray uuid, ProxyNetPeer* client)
         :m_sIP(ip), m_nPort(port), m_binUUID(uuid), m_pNetClient(client){}
     QString m_sIP;
     quint16 m_nPort;
     QByteArray m_binUUID;
-    cProxyNetPeer *m_pNetClient;
+    ProxyNetPeer *m_pNetClient;
 };
 
 }}

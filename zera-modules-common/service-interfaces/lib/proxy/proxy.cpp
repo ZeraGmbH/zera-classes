@@ -3,52 +3,52 @@
 
 namespace Zera { namespace Proxy {
 
-cProxy* cProxy::getInstance()
+Proxy* Proxy::getInstance()
 {
-    if(cProxyPrivate::singletonInstance == 0)
+    if(ProxyPrivate::singletonInstance == 0)
     {
-        cProxyPrivate::singletonInstance=new cProxy;
+        ProxyPrivate::singletonInstance=new Proxy;
     }
-    return cProxyPrivate::singletonInstance;
+    return ProxyPrivate::singletonInstance;
 }
 
-cProxyClient* cProxy::getConnection(QString ipadress, quint16 port)
+ProxyClient* Proxy::getConnection(QString ipadress, quint16 port)
 {
-    Q_D(cProxy);
+    Q_D(Proxy);
     return d->getConnection(ipadress, port);
 }
 
-ProxyClientPtr cProxy::getConnectionSmart(QString ipadress, quint16 port)
+ProxyClientPtr Proxy::getConnectionSmart(QString ipadress, quint16 port)
 {
-    Q_D(cProxy);
+    Q_D(Proxy);
     return d->getConnectionSmart(ipadress, port);
 }
 
-void cProxy::startConnection(cProxyClient *client)
+void Proxy::startConnection(ProxyClient *client)
 {
-    Q_D(cProxy);
-    d->startConnection((cProxyClientPrivate*)client);
+    Q_D(Proxy);
+    d->startConnection((ProxyClientPrivate*)client);
 }
 
-void cProxy::startConnectionSmart(ProxyClientPtr client)
+void Proxy::startConnectionSmart(ProxyClientPtr client)
 {
-    Q_D(cProxy);
-    d->startConnection((cProxyClientPrivate*)(client.get()));
+    Q_D(Proxy);
+    d->startConnection((ProxyClientPrivate*)(client.get()));
 }
 
-bool cProxy::releaseConnection(cProxyClient *client)
+bool Proxy::releaseConnection(ProxyClient *client)
 {
-    Q_D(cProxy);
-    return d->releaseConnection((cProxyClientPrivate*) client);
+    Q_D(Proxy);
+    return d->releaseConnection((ProxyClientPrivate*) client);
 }
 
-cProxy::cProxy(QObject *parent):
-    d_ptr(new Zera::Proxy::cProxyPrivate(this))
+Proxy::Proxy(QObject *parent):
+    d_ptr(new Zera::Proxy::ProxyPrivate(this))
 {
     setParent(parent);
 }
 
-cProxy::~cProxy()
+Proxy::~Proxy()
 {
     delete d_ptr;
 }

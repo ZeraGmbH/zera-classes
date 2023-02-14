@@ -160,7 +160,7 @@ private:
     cRangeInfo m_CurrRangeInfo;
 
     Zera::Proxy::ProxyClientPtr m_rmClient;
-    Zera::Proxy::cProxyClient* m_pPCBClient;
+    Zera::Proxy::ProxyClient* m_pPCBClient;
 
     void setRangeListAlias();
     void setActionErrorcount(int Count);

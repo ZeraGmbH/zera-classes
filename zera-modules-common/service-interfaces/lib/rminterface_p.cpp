@@ -16,11 +16,11 @@ cRMInterfacePrivate::cRMInterfacePrivate(cRMInterface *iface)
 }
 
 
-void cRMInterfacePrivate::setClient(Proxy::cProxyClient *client)
+void cRMInterfacePrivate::setClient(Proxy::ProxyClient *client)
 {
     m_pClient = client;
-    connect(m_pClient, &Proxy::cProxyClient::answerAvailable, this, &cRMInterfacePrivate::receiveAnswer);
-    connect(m_pClient, &Zera::Proxy::cProxyClient::tcpError, this, &cRMInterfacePrivate::receiveError);
+    connect(m_pClient, &Proxy::ProxyClient::answerAvailable, this, &cRMInterfacePrivate::receiveAnswer);
+    connect(m_pClient, &Zera::Proxy::ProxyClient::tcpError, this, &cRMInterfacePrivate::receiveError);
 }
 
 void cRMInterfacePrivate::setClientSmart(Proxy::ProxyClientPtr client)

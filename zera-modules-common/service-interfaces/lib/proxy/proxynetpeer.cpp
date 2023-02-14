@@ -2,19 +2,19 @@
 
 namespace Zera { namespace Proxy {
 
-cProxyNetPeer::cProxyNetPeer(QObject *qObjParent)
+ProxyNetPeer::ProxyNetPeer(QObject *qObjParent)
     :XiQNetPeer(qObjParent)
 {
     m_bStarted = false;
 }
 
-void cProxyNetPeer::startProxyConnection(QString ipAddress, quint16 port)
+void ProxyNetPeer::startProxyConnection(QString ipAddress, quint16 port)
 {
     startConnection(ipAddress, port);
     m_bStarted = true;
 }
 
-bool cProxyNetPeer::isStarted()
+bool ProxyNetPeer::isStarted()
 {
     return m_bStarted;
 }

@@ -309,13 +309,13 @@ cReferenceModuleConfigData *cReferenceModuleMeasProgram::getConfData()
 void cReferenceModuleMeasProgram::resourceManagerConnect()
 {
     // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::cProxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
+    m_rmClient = Zera::Proxy::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     resourceManagerConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
     connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::cProxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
 
@@ -327,11 +327,11 @@ void cReferenceModuleMeasProgram::sendRMIdent()
 
 void cReferenceModuleMeasProgram::dspserverConnect()
 {
-    m_pDspClient = Zera::Proxy::cProxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
+    m_pDspClient = Zera::Proxy::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
     connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    Zera::Proxy::cProxy::getInstance()->startConnection(m_pDspClient);
+    Zera::Proxy::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 
 void cReferenceModuleMeasProgram::claimPGRMem()
@@ -384,7 +384,7 @@ void cReferenceModuleMeasProgram::deactivateDSP()
 
 void cReferenceModuleMeasProgram::freePGRMem()
 {
-    Zera::Proxy::cProxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pDspClient);
     deleteDspVarList();
     deleteDspCmdList();
 

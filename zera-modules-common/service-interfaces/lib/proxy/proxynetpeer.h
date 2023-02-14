@@ -5,11 +5,11 @@
 
 namespace Zera { namespace Proxy {
 
-class cProxyNetPeer: public XiQNetPeer
+class ProxyNetPeer: public XiQNetPeer
 {
     Q_OBJECT
 public:
-    cProxyNetPeer(QObject *qObjParent = 0);
+    ProxyNetPeer(QObject *qObjParent = 0);
     void startProxyConnection(QString ipAddress, quint16 port);
     bool isStarted();
 private:
