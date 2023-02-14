@@ -3,14 +3,14 @@
 
 PcbInitForTest::PcbInitForTest()
 {
-    m_pcbInterface =  std::make_shared<Zera::Server::cPCBInterface>();
+    m_pcbInterface =  std::make_shared<Zera::cPCBInterface>();
     m_proxyClient = Zera::ProxyClientForTest::create();
     m_pcbInterface->setClientSmart(m_proxyClient);
     TimeMachineForTest::reset();
     TimerFactoryQtForTest::enableTest();
 }
 
-Zera::Server::PcbInterfacePtr PcbInitForTest::getPcbInterface()
+Zera::PcbInterfacePtr PcbInitForTest::getPcbInterface()
 {
     return m_pcbInterface;
 }

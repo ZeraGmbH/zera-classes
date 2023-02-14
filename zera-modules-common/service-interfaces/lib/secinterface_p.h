@@ -8,12 +8,7 @@
 #include "interface_p.h"
 #include "secinterface.h"
 
-namespace Zera
-{
-namespace Server
-{
-
-namespace SEC{
+namespace Zera { namespace SEC {
 enum seccommands
 {
     setecalcunit,
@@ -36,7 +31,6 @@ class cSECInterface;
 class cSECInterfacePrivate: public cInterfacePrivate
 {
     Q_OBJECT
-
 public:
     cSECInterfacePrivate(cSECInterface* iface);
     virtual void setClient(Zera::ProxyClient *client);
@@ -65,8 +59,5 @@ private:
 };
 
 }
-}
-
-
 
 #endif // SECINTERFACE_P_H

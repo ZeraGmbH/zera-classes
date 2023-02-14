@@ -3,11 +3,7 @@
 #include "rminterface_p.h"
 #include "rminterface.h"
 
-namespace Zera
-{
-namespace Server
-{
-
+namespace Zera {
 
 cRMInterfacePrivate::cRMInterfacePrivate(cRMInterface *iface)
     :q_ptr(iface)
@@ -164,5 +160,3 @@ void cRMInterfacePrivate::receiveError(QAbstractSocket::SocketError errorCode)
 }
 
 }
-}
-

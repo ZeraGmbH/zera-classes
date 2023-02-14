@@ -3,10 +3,7 @@
 #include "pcbinterface_p.h"
 #include "pcbinterface.h"
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 cPCBInterfacePrivate::cPCBInterfacePrivate(cPCBInterface *iface)
     :q_ptr(iface)
@@ -860,8 +857,5 @@ void cPCBInterfacePrivate::receiveError(QAbstractSocket::SocketError errorCode)
     emit q->tcpError(errorCode);
 }
 
-
-} // namespace Server
-} // namespace Zera
-
+}
 

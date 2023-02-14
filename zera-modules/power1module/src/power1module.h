@@ -1,6 +1,9 @@
 #ifndef POWER1MODULE_H
 #define POWER1MODULE_H
 
+#include "basemeasmodule.h"
+#include "dspinterface.h"
+#include <vfeventsysteminputcomponents.h>
 #include <QObject>
 #include <QStateMachine>
 #include <QState>
@@ -8,18 +11,7 @@
 #include <QList>
 #include <memory> // std header for smart pointer
 
-#include "basemeasmodule.h"
-#include <vfeventsysteminputcomponents.h>
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-}
-
-
-namespace POWER1MODULE
-{
+namespace POWER1MODULE {
 
 class cPower1ModuleConfiguration;
 class cPower1ModuleMeasProgram;
@@ -30,7 +22,7 @@ class cPower1ModuleObservation;
 
 class cPower1Module : public cBaseMeasModule
 {
-Q_OBJECT
+    Q_OBJECT
 
 public:
     cPower1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);

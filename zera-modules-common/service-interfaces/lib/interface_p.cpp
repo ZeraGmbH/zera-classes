@@ -2,10 +2,7 @@
 
 #include "interface_p.h"
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 bool cInterfacePrivate::decodeProtobuffAnswer(std::shared_ptr<ProtobufMessage::NetMessage> message,
                                               TAnswerDecoded &decodedAnswer,
@@ -87,9 +84,5 @@ QVariant cInterfacePrivate::returnBool(QString message)
     return QVariant(avail);
 }
 
-
 }
-}
-
-
 

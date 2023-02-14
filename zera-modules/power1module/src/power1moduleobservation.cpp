@@ -11,7 +11,7 @@ cPower1ModuleObservation::cPower1ModuleObservation(cPower1Module* module, cSocke
     m_pPower1module(module),
     m_pPCBServerSocket(pcbsocket)
 {
-    m_pPCBInterface = new Zera::Server::cPCBInterface();
+    m_pPCBInterface = new Zera::cPCBInterface();
 
     // setting up statemachine for "activating" rangemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection

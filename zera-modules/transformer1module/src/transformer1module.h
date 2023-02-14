@@ -1,25 +1,14 @@
 #ifndef TRANSFORMER1MODULE_H
 #define TRANSFORMER1MODULE_H
 
-#include <QObject>
+#include "basemeasmodule.h"
+#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 
-#include "basemeasmodule.h"
-
-class cModuleError;
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-}
-
-
-namespace TRANSFORMER1MODULE
-{
+namespace TRANSFORMER1MODULE {
 
 class cTransformer1ModuleConfiguration;
 class cTransformer1ModuleMeasProgram;
@@ -30,8 +19,7 @@ class cTransformer1ModuleObservation;
 
 class cTransformer1Module : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
     cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
@@ -71,7 +59,6 @@ private slots:
     void deactivationFinished();
 
     void transformer1ModuleReconfigure();
-
 };
 
 }

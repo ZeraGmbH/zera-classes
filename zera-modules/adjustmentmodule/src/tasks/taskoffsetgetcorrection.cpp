@@ -2,7 +2,7 @@
 #include "taskdecoratortimeout.h"
 #include <reply.h>
 
-TaskTemplatePtr TaskOffsetGetCorrection::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskOffsetGetCorrection::create(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName, double ourActualValue,
                                                  double &correctionValue,
                                                  int timeout, std::function<void ()> additionalErrorHandler)
@@ -16,7 +16,7 @@ TaskTemplatePtr TaskOffsetGetCorrection::create(Zera::Server::PcbInterfacePtr pc
 
 }
 
-TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::PcbInterfacePtr pcbInterface,
                                                  QString channelSysName, QString rangeName, double ourActualValue,
                                                  double &correctionValue) :
     m_pcbInterface(pcbInterface),
@@ -27,7 +27,7 @@ TaskOffsetGetCorrection::TaskOffsetGetCorrection(Zera::Server::PcbInterfacePtr p
 
 void TaskOffsetGetCorrection::start()
 {
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &TaskOffsetGetCorrection::onServerAnswer);
     m_msgnr = m_pcbInterface->getAdjOffsetCorrection(m_channelSysName, m_rangeName, m_ourActualValue);
 }

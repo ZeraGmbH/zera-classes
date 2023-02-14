@@ -100,14 +100,14 @@ cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
 
 void cAdjustmentModuleMeasProgram::openRmConnection()
 {
-    m_commonObjects->m_rmInterface = std::make_shared<Zera::Server::cRMInterface>();
+    m_commonObjects->m_rmInterface = std::make_shared<Zera::cRMInterface>();
     m_commonObjects->m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     m_commonObjects->m_rmInterface->setClientSmart(m_commonObjects->m_rmClient);
 }
 
 void cAdjustmentModuleMeasProgram::openPcbConnection()
 {
-    m_commonObjects->m_pcbInterface = std::make_shared<Zera::Server::cPCBInterface>();
+    m_commonObjects->m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
     m_commonObjects->m_pcbClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_PCBSocket.m_sIP, getConfData()->m_PCBSocket.m_nPort);
     m_commonObjects->m_pcbInterface->setClientSmart(m_commonObjects->m_pcbClient);
 }
@@ -174,7 +174,7 @@ double cAdjustmentModuleMeasProgram::symAngle(double ang)
 
 void cAdjustmentModuleMeasProgram::onActivationReady()
 {
-    connect(m_commonObjects->m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+    connect(m_commonObjects->m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &cAdjustmentModuleMeasProgram::catchInterfaceAnswer);
     setInterfaceValidation();
 

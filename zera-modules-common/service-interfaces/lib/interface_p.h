@@ -8,10 +8,7 @@
 #include <QHash>
 #include <QVariant>
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 enum replies
 {
@@ -53,7 +50,6 @@ protected slots:
     virtual void receiveError(QAbstractSocket::SocketError errorCode) = 0;
 };
 
-}
 }
 
 #endif // INTERFACE_P_H

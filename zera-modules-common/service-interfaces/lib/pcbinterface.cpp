@@ -1,10 +1,7 @@
 #include "pcbinterface.h"
 #include "pcbinterface_p.h"
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 cPCBInterface::cPCBInterface() :
     d_ptr(new cPCBInterfacePrivate(this))
@@ -485,20 +482,4 @@ quint32 cPCBInterface::resourceAliasQuery(QString resourceType, QString resource
     return d->resourceAliasQuery(resourceType, resourceName);
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}
 }

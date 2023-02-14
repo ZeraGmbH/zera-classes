@@ -1,24 +1,17 @@
 #ifndef DFTMODULEOBSERVATION_H
 #define DFTMODULEOBSERVATION_H
 
+#include "moduleactivist.h"
+#include "socket.h"
+#include <rminterface.h>
+#include <pcbinterface.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QHash>
 
-#include "moduleactivist.h"
-#include "socket.h"
-#include <proxyclient.h>
+namespace DFTMODULE {
 
-namespace Zera {
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
-
-namespace DFTMODULE
-{
 enum dftmoduleobservationCmds
 {
     registernotifier,
@@ -43,7 +36,7 @@ protected:
     cDftModule* m_pDftmodule;
     cSocket* m_pPCBServerSocket;
 
-    Zera::Server::cPCBInterface* m_pPCBInterface;
+    Zera::cPCBInterface* m_pPCBInterface;
 
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

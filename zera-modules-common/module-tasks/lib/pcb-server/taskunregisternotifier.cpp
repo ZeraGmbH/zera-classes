@@ -2,7 +2,7 @@
 #include "taskdecoratortimeout.h"
 #include <reply.h>
 
-TaskTemplatePtr TaskUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskUnregisterNotifier::create(Zera::PcbInterfacePtr pcbInterface,
                                                 int timeout, std::function<void ()> additionalErrorHandler)
 {
     return TaskDecoratorTimeout::wrapTimeout(timeout,
@@ -10,7 +10,7 @@ TaskTemplatePtr TaskUnregisterNotifier::create(Zera::Server::PcbInterfacePtr pcb
                                              additionalErrorHandler);
 }
 
-TaskUnregisterNotifier::TaskUnregisterNotifier(Zera::Server::PcbInterfacePtr pcbInterface) :
+TaskUnregisterNotifier::TaskUnregisterNotifier(Zera::PcbInterfacePtr pcbInterface) :
     TaskServerTransactionTemplate(pcbInterface),
     m_pcbInterface(pcbInterface)
 {

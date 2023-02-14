@@ -1,7 +1,7 @@
 #include "taskrmcheckresourcetype.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskTemplatePtr TaskRmCheckResourceType::create(Zera::RMInterfacePtr rmInterface,
                                                  int timeout, std::function<void ()> additionalErrorHandler,
                                                  QString checkResourceType)
 {
@@ -11,7 +11,7 @@ TaskTemplatePtr TaskRmCheckResourceType::create(Zera::Server::RMInterfacePtr rmI
                                              additionalErrorHandler);
 }
 
-TaskRmCheckResourceType::TaskRmCheckResourceType(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType) :
+TaskRmCheckResourceType::TaskRmCheckResourceType(Zera::RMInterfacePtr rmInterface, QString checkResourceType) :
     TaskServerTransactionTemplate(rmInterface),
     m_rmInterface(rmInterface),
     m_checkResourceType(checkResourceType.toUpper())

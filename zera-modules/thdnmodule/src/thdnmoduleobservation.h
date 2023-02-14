@@ -1,24 +1,17 @@
 #ifndef THDNMODULEOBSERVATION_H
 #define THDNMODULEOBSERVATION_H
 
+#include "moduleactivist.h"
+#include "socket.h"
+#include <pcbinterface.h>
+#include <rminterface.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QHash>
 
-#include "moduleactivist.h"
-#include "socket.h"
-#include <proxyclient.h>
+namespace THDNMODULE {
 
-namespace Zera {
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-}
-}
-
-namespace THDNMODULE
-{
 enum thdnmoduleobservationCmds
 {
     registernotifier,
@@ -43,7 +36,7 @@ protected:
     cThdnModule* m_pThdnmodule;
     cSocket* m_pPCBServerSocket;
 
-    Zera::Server::cPCBInterface* m_pPCBInterface;
+    Zera::cPCBInterface* m_pPCBInterface;
 
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);

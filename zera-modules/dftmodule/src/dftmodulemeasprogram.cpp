@@ -20,7 +20,7 @@ namespace DFTMODULE
 cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
-    m_pDSPInterFace = new Zera::Server::cDSPInterface();
+    m_pDSPInterFace = new Zera::cDSPInterface();
 
     m_IdentifyState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceTypesState);
     m_readResourceTypesState.addTransition(this, &cDftModuleMeasProgram::activationContinue, &m_readResourceState);
@@ -728,7 +728,7 @@ void cDftModuleMeasProgram::resourceManagerConnect()
     // todo insert timer for timeout and/or connect error conditions.....
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
-    connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
@@ -786,13 +786,13 @@ void cDftModuleMeasProgram::pcbserverConnect()
         cSocket sock = mi.pcbServersocket;
         Zera::ProxyClient* pcbClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
         m_pcbClientList.append(pcbClient);
-        Zera::Server::cPCBInterface* pcbIFace = new Zera::Server::cPCBInterface();
+        Zera::cPCBInterface* pcbIFace = new Zera::cPCBInterface();
         m_pcbIFaceList.append(pcbIFace);
         pcbIFace->setClient(pcbClient);
         mi.pcbIFace = pcbIFace;
         m_measChannelInfoHash[key] = mi;
         connect(pcbClient, &Zera::ProxyClient::connected, this, &cDftModuleMeasProgram::monitorConnection); // here we wait until all connections are established
-        connect(pcbIFace, &Zera::Server::cPCBInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
+        connect(pcbIFace, &Zera::cPCBInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
         Zera::Proxy::getInstance()->startConnection(pcbClient);
     }
 }
@@ -847,7 +847,7 @@ void cDftModuleMeasProgram::dspserverConnect()
     m_pDspClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_claimPGRMemState);
-    connect(m_pDSPInterFace, &Zera::Server::cDSPInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cDftModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 

@@ -2,7 +2,8 @@
 #define SCPIMODULE_H
 
 #include "scpiclientinfo.h"
-#include <basemodule.h>
+#include "basemodule.h"
+#include "dspinterface.h"
 #include "vfeventsytemmoduleparam.h"
 #include <QStateMachine>
 #include <QState>
@@ -10,22 +11,13 @@
 #include <QHash>
 #include <QMultiHash>
 
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-
-}
-
 namespace VeinEvent
 {
     class EventSystem;
     class StorageSystem;
 }
 
-namespace SCPIMODULE
-{
+namespace SCPIMODULE {
 
 #define BaseModuleName "SCPIModule"
 #define BaseSCPIModuleName "SCP"
@@ -39,7 +31,6 @@ class cSCPIEventSystem;
 class cSCPIModule : public cBaseModule
 {
     Q_OBJECT
-
 public:
     cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;

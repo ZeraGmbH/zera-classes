@@ -1,24 +1,14 @@
 #ifndef MODEMODULE_H
 #define MODEMODULE_H
 
-#include <QObject>
+#include "basemeasmodule.h"
+#include "dspinterface.h"
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 #include <QList>
 
-#include "basemeasmodule.h"
-
-
-namespace Zera {
-namespace Server {
- class cDSPInterface;
-}
-}
-
-namespace MODEMODULE
-{
-
+namespace MODEMODULE {
 
 #define BaseModuleName "ModeModule"
 #define BaseSCPIModuleName "MOD"

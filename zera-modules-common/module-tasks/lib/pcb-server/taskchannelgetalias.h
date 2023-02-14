@@ -8,16 +8,16 @@ class TaskChannelGetAlias : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::Server::PcbInterfacePtr pcbInterface, QString channelName,
+    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface, QString channelName,
                                    QString& valueReceived,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskChannelGetAlias(Zera::Server::PcbInterfacePtr pcbInterface,
+    TaskChannelGetAlias(Zera::PcbInterfacePtr pcbInterface,
                          QString channelName,
                          QString& valueReceived);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
-    Zera::Server::PcbInterfacePtr m_pcbInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;
     QString& m_valueReceived;
     quint32 m_msgnr;

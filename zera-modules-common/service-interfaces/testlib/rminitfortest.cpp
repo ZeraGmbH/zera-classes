@@ -3,14 +3,14 @@
 
 RmInitForTest::RmInitForTest()
 {
-    m_rmInterface =  std::make_shared<Zera::Server::cRMInterface>();
+    m_rmInterface =  std::make_shared<Zera::cRMInterface>();
     m_proxyClient = Zera::ProxyClientForTest::create();
     m_rmInterface->setClientSmart(m_proxyClient);
     TimeMachineForTest::reset();
     TimerFactoryQtForTest::enableTest();
 }
 
-Zera::Server::RMInterfacePtr RmInitForTest::getRmInterface()
+Zera::RMInterfacePtr RmInitForTest::getRmInterface()
 {
     return m_rmInterface;
 }

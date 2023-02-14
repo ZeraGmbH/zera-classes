@@ -3,7 +3,7 @@
 #include <reply.h>
 #include <math.h>
 
-TaskTemplatePtr TaskOffsetSetNode::create(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskTemplatePtr TaskOffsetSetNode::create(Zera::PcbInterfacePtr pcbInterface,
                                            QString channelSysName, QString rangeName,
                                            double actualValue, double targetValue, RangeVals &rngVals,
                                            int timeout, std::function<void()> additionalErrorHandler)
@@ -16,7 +16,7 @@ TaskTemplatePtr TaskOffsetSetNode::create(Zera::Server::PcbInterfacePtr pcbInter
                                              additionalErrorHandler);
 }
 
-TaskOffsetSetNode::TaskOffsetSetNode(Zera::Server::PcbInterfacePtr pcbInterface,
+TaskOffsetSetNode::TaskOffsetSetNode(Zera::PcbInterfacePtr pcbInterface,
                                      QString channelSysName, QString rangeName,
                                      double actualValue, double targetValue, RangeVals &rngVals) :
     m_pcbInterface(pcbInterface),
@@ -35,7 +35,7 @@ void TaskOffsetSetNode::start()
     }
     double Corr = (m_targetValue - rawActual) * m_rngVals.m_rejection / m_rngVals.m_rejectionValue;
 
-    connect(m_pcbInterface.get(), &Zera::Server::cPCBInterface::serverAnswer,
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer,
             this, &TaskOffsetSetNode::onServerAnswer);
     m_msgnr = m_pcbInterface->setOffsetNode(m_channelSysName, m_rangeName, 0, Corr, m_targetValue);
 }

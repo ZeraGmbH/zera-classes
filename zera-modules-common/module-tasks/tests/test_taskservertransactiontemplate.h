@@ -16,7 +16,7 @@ private slots:
     void noReceiveOnOther();
     void errReceiveOnTcpError();
 private:
-    Zera::Server::RMInterfacePtr m_rmInterface;
+    Zera::RMInterfacePtr m_rmInterface;
     Zera::ProxyClientForTestPtr m_proxyClient;
 };
 

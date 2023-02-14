@@ -19,7 +19,7 @@ struct cFoutInfo
     double formFactor;
     cSocket dspServersocket; // in case that different dsp's drive frequency outputs (future purpose)
     cSocket pcbServersocket;
-    Zera::Server::cPCBInterface* pcbIFace;
+    Zera::cPCBInterface* pcbIFace;
 };
 
 #endif // FOUTINFO_H

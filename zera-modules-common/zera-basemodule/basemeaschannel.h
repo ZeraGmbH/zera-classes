@@ -26,8 +26,8 @@ protected:
     QString m_sName; // the channel's system name
     quint8 m_nChannelNr; // the number of our channel for naming purpose
 
-    Zera::Server::cRMInterface m_rmInterface;
-    Zera::Server::cPCBInterface* m_pPCBInterface;
+    Zera::cRMInterface m_rmInterface;
+    Zera::cPCBInterface* m_pPCBInterface;
 
     // the things we have to query from our pcb server
     quint8 m_nDspChannel; // the dsp's channel where samples come in

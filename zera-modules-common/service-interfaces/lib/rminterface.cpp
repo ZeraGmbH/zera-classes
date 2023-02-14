@@ -1,11 +1,7 @@
 #include "rminterface.h"
 #include "rminterface_p.h"
 
-
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 cRMInterface::cRMInterface() :
     d_ptr(new cRMInterfacePrivate(this))
@@ -80,5 +76,4 @@ quint32 cRMInterface::freeResource(QString type, QString name)
     return d->freeResource(type, name);
 }
 
-}
 }

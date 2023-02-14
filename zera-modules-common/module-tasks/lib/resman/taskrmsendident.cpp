@@ -1,7 +1,7 @@
 #include "taskrmsendident.h"
 #include "taskdecoratortimeout.h"
 
-TaskTemplatePtr TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface,
+TaskTemplatePtr TaskRmSendIdent::create(Zera::RMInterfacePtr rmInterface,
                                          QString ident,
                                          int timeout, std::function<void ()> additionalErrorHandler)
 {
@@ -12,7 +12,7 @@ TaskTemplatePtr TaskRmSendIdent::create(Zera::Server::RMInterfacePtr rmInterface
                                              additionalErrorHandler);
 }
 
-TaskRmSendIdent::TaskRmSendIdent(Zera::Server::RMInterfacePtr rmInterface,
+TaskRmSendIdent::TaskRmSendIdent(Zera::RMInterfacePtr rmInterface,
                                  QString ident) :
     TaskServerTransactionTemplate(rmInterface),
     m_rmInterface(rmInterface),

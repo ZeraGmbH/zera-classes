@@ -8,20 +8,14 @@
 #include <QAbstractSocket>
 #include <QVariant>
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 typedef quint32 tRouting[16];
-
 class cDSPInterfacePrivate;
-
 
 class SERVICE_INTERFACES_EXPORT cDSPInterface: public QObject
 {
     Q_OBJECT
-
 public:
     cDSPInterface();
     virtual ~cDSPInterface();
@@ -71,7 +65,5 @@ private:
 };
 
 }
-}
-
 
 #endif // DSPINTERFACE_H

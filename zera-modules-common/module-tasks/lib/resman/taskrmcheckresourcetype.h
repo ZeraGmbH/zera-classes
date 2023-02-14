@@ -8,15 +8,15 @@ class TaskRmCheckResourceType : public TaskServerTransactionTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::Server::RMInterfacePtr rmInterface,
+    static TaskTemplatePtr create(Zera::RMInterfacePtr rmInterface,
                                    int timeout,
                                    std::function<void()> additionalErrorHandler = []{},
                                    QString checkResourceType = "SENSE");
-    TaskRmCheckResourceType(Zera::Server::RMInterfacePtr rmInterface, QString checkResourceType);
+    TaskRmCheckResourceType(Zera::RMInterfacePtr rmInterface, QString checkResourceType);
 private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
-    Zera::Server::RMInterfacePtr m_rmInterface;
+    Zera::RMInterfacePtr m_rmInterface;
     QString m_checkResourceType;
 };
 

@@ -8,10 +8,7 @@
 #include "interface_p.h"
 #include "dspinterface.h"
 
-namespace Zera
-{
-namespace Server
-{
+namespace Zera {
 
 enum dspcommands
 {
@@ -103,7 +100,5 @@ private:
 };
 
 }
-}
-
 
 #endif // DSPINTERFACE_P_H

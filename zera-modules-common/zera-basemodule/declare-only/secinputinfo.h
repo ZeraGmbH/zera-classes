@@ -10,7 +10,7 @@ struct cSecInputInfo
     QString alias; // the input's alias
     QString resource; // the resource from which this input is served
     cSocket pcbServersocket; // which pcbserver provides this input
-    Zera::Server::cPCBInterface* pcbIFace; // our interface to this server
+    Zera::cPCBInterface* pcbIFace; // our interface to this server
 };
 
 #endif // SECINPUTINFO_H

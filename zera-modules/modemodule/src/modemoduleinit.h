@@ -3,31 +3,16 @@
 
 #include "moduleactivist.h"
 #include <rminterface.h>
+#include <dspinterface.h>
+#include <pcbinterface.h>
 #include <QList>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
 
-namespace Zera
-{
-namespace  Server {
-    class cRMInterface;
-    class cPCBInterface;
-    class cDSPInterface;
-}
-}
+namespace MODEMODULE {
 
-
-class QStateMachine;
-class QState;
-class QFinalState;
-class cDspMeasData;
-
-namespace MODEMODULE
-{
-
-namespace MODEMODINIT
-{
+namespace MODEMODINIT {
 
 enum modemoduleinitCmds
 {
@@ -72,11 +57,11 @@ private:
 
     QHash<quint32, int> m_MsgNrCmdList;
 
-    Zera::Server::cPCBInterface *m_pPCBInterface;
+    Zera::cPCBInterface *m_pPCBInterface;
     Zera::ProxyClient *m_pPCBClient;
-    Zera::Server::cDSPInterface *m_pDSPInterface;
+    Zera::cDSPInterface *m_pDSPInterface;
     Zera::ProxyClient *m_pDSPClient;
-    Zera::Server::cRMInterface m_rmInterface;
+    Zera::cRMInterface m_rmInterface;
     Zera::ProxyClientPtr m_rmClient;
 
     QString m_sDescription;
