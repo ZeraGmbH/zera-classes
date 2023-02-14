@@ -10,16 +10,6 @@
 
 namespace Zera {
 
-enum replies
-{
-    ack,
-    nack,
-    error,
-    debug,
-    ident
-};
-
-
 class cInterfacePrivate: public QObject
 {
     Q_OBJECT
