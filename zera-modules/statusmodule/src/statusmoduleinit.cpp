@@ -15,7 +15,6 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_pPCBInterface = new Zera::cPCBInterface();
     m_pDSPInterface = new Zera::cDSPInterface();
 
-    m_IdentifyState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverConnectionState);
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
     m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
     m_pcbserverReadCtrlVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadFPGAVersionState);
@@ -30,8 +29,6 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_pcbserverRegisterSchnubbelStatusNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialSchnubbelStatus);
     m_pcbserverReadInitialSchnubbelStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
 
-    m_activationMachine.addState(&m_resourceManagerConnectState);
-    m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_pcbserverReadVersionState);
     m_activationMachine.addState(&m_pcbserverReadCtrlVersionState);
@@ -47,13 +44,11 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_activationMachine.addState(&m_pcbserverReadInitialSchnubbelStatus);
     m_activationMachine.addState(&m_activationDoneState);
     if(!m_ConfigData.m_bDemo) {
-        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+        m_activationMachine.setInitialState(&m_pcbserverConnectionState);
     } else {
         m_activationMachine.setInitialState(&m_activationDoneState);
     }
 
-    connect(&m_resourceManagerConnectState, &QState::entered, this, &cStatusModuleInit::resourceManagerConnect);
-    connect(&m_IdentifyState, &QState::entered, this, &cStatusModuleInit::sendRMIdent);
     connect(&m_pcbserverConnectionState, &QState::entered, this, &cStatusModuleInit::pcbserverConnect);
     connect(&m_pcbserverReadVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadVersion);
     connect(&m_pcbserverReadCtrlVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadCtrlVersion);
@@ -489,25 +484,6 @@ void cStatusModuleInit::setInterfaceComponents()
 }
 
 
-void cStatusModuleInit::resourceManagerConnect()
-{
-    // first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
-    // and then we set connection resource manager interface's connection
-    m_rmInterface.setClientSmart(m_rmClient); //
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cStatusModuleInit::catchInterfaceAnswer);
-    // todo insert timer for timeout and/or connect error conditions
-    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-}
-
-
-void cStatusModuleInit::sendRMIdent()
-{
-    m_MsgNrCmdList[m_rmInterface.rmIdent(QString("VersionModuleInit%1").arg(m_pModule->getModuleNr()))] = STATUSMODINIT::sendrmident;
-}
-
-
 void cStatusModuleInit::pcbserverConnect()
 {
     m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
@@ -618,7 +594,6 @@ void cStatusModuleInit::deactivationDone()
     Zera::Proxy::getInstance()->releaseConnection(m_pDSPClient);
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     // and disconnect from our servers afterwards
-    disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pDSPInterface, 0, this, 0);
     disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
