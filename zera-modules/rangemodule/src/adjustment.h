@@ -51,8 +51,8 @@ private:
     double m_fAdjInterval;
     Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
     Zera::Server::cPCBInterface* m_pPCBInterface;
-    Zera::Proxy::ProxyClient *m_pPCBClient;
-    Zera::Proxy::ProxyClient *m_pDspClient;
+    Zera::ProxyClient *m_pPCBClient;
+    Zera::ProxyClient *m_pDspClient;
     QList<cRangeMeasChannel*> m_ChannelList; // here the real channel list
     QList<cRangeMeasChannel*> m_subDCChannelList;
     // Those are the actual values without preSacling

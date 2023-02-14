@@ -16,7 +16,7 @@ class SERVICE_INTERFACES_EXPORT cRMInterface: public AbstractServerInterface
 public:
     cRMInterface();
     virtual ~cRMInterface();
-    void setClientSmart(Zera::Proxy::ProxyClientPtr client);
+    void setClientSmart(Zera::ProxyClientPtr client);
     virtual quint32 rmIdent(QString name);
     virtual quint32 addResource(QString type, QString name, int n, QString description, quint16 port);
     virtual quint32 removeResource(QString type, QString name);

@@ -71,8 +71,8 @@ private:
 
     qint32 m_RangeQueryIt;
 
-    Zera::Proxy::ProxyClientPtr m_rmClient;
-    Zera::Proxy::ProxyClient* m_pPCBClient;
+    Zera::ProxyClientPtr m_rmClient;
+    Zera::ProxyClient* m_pPCBClient;
 
 private slots:
     void rmConnect();

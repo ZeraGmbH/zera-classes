@@ -38,7 +38,7 @@ cPower2ModuleObservation::cPower2ModuleObservation(cPower2Module* module, cSocke
 
 cPower2ModuleObservation::~cPower2ModuleObservation()
 {
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     delete m_pPCBInterface;
 }
 
@@ -97,12 +97,12 @@ void cPower2ModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 
 void cPower2ModuleObservation::pcbConnect()
 {
-    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
     m_pcbConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -127,7 +127,7 @@ void cPower2ModuleObservation::resetNotifier()
 
 void cPower2ModuleObservation::deactivationDone()
 {
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     disconnect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
     emit deactivated();
 }

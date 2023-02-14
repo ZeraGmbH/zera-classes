@@ -17,7 +17,7 @@ private slots:
     void errReceiveOnTcpError();
 private:
     Zera::Server::RMInterfacePtr m_rmInterface;
-    Zera::Proxy::ProxyClientForTestPtr m_proxyClient;
+    Zera::ProxyClientForTestPtr m_proxyClient;
 };
 
 #endif // TEST_TASKSERVERTRANSACTIONTEMPLATE_H

@@ -17,13 +17,13 @@ cPCBInterface::~cPCBInterface()
 }
 
 
-void cPCBInterface::setClient(Proxy::ProxyClient *client)
+void cPCBInterface::setClient(Zera::ProxyClient *client)
 {
     Q_D(cPCBInterface);
     return d->setClient(client);
 }
 
-void cPCBInterface::setClientSmart(Proxy::ProxyClientPtr client)
+void cPCBInterface::setClientSmart(Zera::ProxyClientPtr client)
 {
     Q_D(cPCBInterface);
     return d->setClientSmart(client);

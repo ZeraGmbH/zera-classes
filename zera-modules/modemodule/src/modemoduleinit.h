@@ -73,11 +73,11 @@ private:
     QHash<quint32, int> m_MsgNrCmdList;
 
     Zera::Server::cPCBInterface *m_pPCBInterface;
-    Zera::Proxy::ProxyClient *m_pPCBClient;
+    Zera::ProxyClient *m_pPCBClient;
     Zera::Server::cDSPInterface *m_pDSPInterface;
-    Zera::Proxy::ProxyClient *m_pDSPClient;
+    Zera::ProxyClient *m_pDSPClient;
     Zera::Server::cRMInterface m_rmInterface;
-    Zera::Proxy::ProxyClientPtr m_rmClient;
+    Zera::ProxyClientPtr m_rmClient;
 
     QString m_sDescription;
     quint16 m_nPort; // the port adress of pcb server

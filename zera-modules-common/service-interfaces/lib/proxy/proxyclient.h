@@ -3,11 +3,10 @@
 
 #include "service-interfaces_export.h"
 #include <netmessages.pb.h>
-#include <QObject>
 #include <QAbstractSocket>
 #include <memory>
 
-namespace Zera { namespace Proxy {
+namespace Zera {
 
 class ProxyClientPrivate;
 
@@ -31,6 +30,6 @@ signals:
 
 typedef std::shared_ptr<ProxyClient> ProxyClientPtr;
 
-}}
+}
 
 #endif // PROXYCLIENT_H

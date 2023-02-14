@@ -121,9 +121,9 @@ private:
     QState m_calcResultAndResetIntState;
     QFinalState m_FinalState;
 
-    Zera::Proxy::ProxyClientPtr m_rmClient;
-    Zera::Proxy::ProxyClient* m_pSECClient;
-    Zera::Proxy::ProxyClient* m_pPCBClient;
+    Zera::ProxyClientPtr m_rmClient;
+    Zera::ProxyClient* m_pSECClient;
+    Zera::ProxyClient* m_pPCBClient;
 
     QStringList m_ResourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated

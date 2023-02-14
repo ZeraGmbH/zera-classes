@@ -89,12 +89,12 @@ void cReferenceAdjustment::generateInterface()
 void cReferenceAdjustment::pcbserverConnect()
 {
     cSocket sock = m_pConfigData->m_PCBServerSocket;
-    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
     m_pcbserverConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_set0VRangeState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -112,11 +112,11 @@ void cReferenceAdjustment::dspserverConnect()
 {
     // we set up our dsp server connection
     cSocket sock = m_pConfigData->m_DSPServerSocket;
-    m_pDspClient = Zera::Proxy::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
+    m_pDspClient = Zera::Proxy::getInstance()->getConnection(sock.m_sIP, sock.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_activationDoneState);
     connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 
 
@@ -203,8 +203,8 @@ void cReferenceAdjustment::referenceAdjustDone()
 void cReferenceAdjustment::deactivationInit()
 {
     m_bActive = false;
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pDspClient);
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pDspClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     m_pDSPInterFace->deleteMemHandle(m_pGainCorrectionDSP);
     m_pDSPInterFace->deleteMemHandle(m_pOffset2CorrectionDSP);
     emit deactivationContinue();

@@ -15,13 +15,13 @@ cDSPInterfacePrivate::cDSPInterfacePrivate(cDSPInterface *iface)
 }
 
 
-void cDSPInterfacePrivate::setClient(Proxy::ProxyClient *client)
+void cDSPInterfacePrivate::setClient(Zera::ProxyClient *client)
 {
     if (m_pClient) // we avoid multiple connections
         disconnect(m_pClient, 0, this, 0);
     m_pClient = client;
-    connect(m_pClient, &Proxy::ProxyClient::answerAvailable, this, &cDSPInterfacePrivate::receiveAnswer);
-    connect(m_pClient, &Proxy::ProxyClient::tcpError, this, &cDSPInterfacePrivate::receiveError);
+    connect(m_pClient, &Zera::ProxyClient::answerAvailable, this, &cDSPInterfacePrivate::receiveAnswer);
+    connect(m_pClient, &Zera::ProxyClient::tcpError, this, &cDSPInterfacePrivate::receiveError);
 }
 
 

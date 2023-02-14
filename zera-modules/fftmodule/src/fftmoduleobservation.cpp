@@ -96,12 +96,12 @@ void cFftModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QV
 
 void cFftModuleObservation::pcbConnect()
 {
-    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
-    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::Proxy::ProxyClient::connected, &m_setNotifierState);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
+    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cFftModuleObservation::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 
@@ -126,7 +126,7 @@ void cFftModuleObservation::resetNotifier()
 
 void cFftModuleObservation::deactivationDone()
 {
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     disconnect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cFftModuleObservation::catchInterfaceAnswer);
     emit deactivated();
 }

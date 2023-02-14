@@ -18,7 +18,7 @@ cSECInterface::~cSECInterface()
 }
 
 
-void cSECInterface::setClient(Proxy::ProxyClient *client)
+void cSECInterface::setClient(Zera::ProxyClient *client)
 {
     Q_D(cSECInterface);
     return d->setClient(client);

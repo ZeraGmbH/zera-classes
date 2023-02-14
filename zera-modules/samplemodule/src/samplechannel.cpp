@@ -66,7 +66,7 @@ cSampleChannel::cSampleChannel(cSampleModule* module, cSampleModuleConfigData& c
 
 cSampleChannel::~cSampleChannel()
 {
-    Zera::Proxy::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
     delete m_pPCBInterface;
 }
 
@@ -241,14 +241,14 @@ void cSampleChannel::rmConnect()
 {
     // we instantiate a working resource manager interface first
     // so first we try to get a connection to resource manager over proxy
-    m_rmClient = Zera::Proxy::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
-    m_rmConnectState.addTransition(m_rmClient.get(), &Zera::Proxy::ProxyClient::connected, &m_IdentifyState);
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_ConfigData.m_RMSocket.m_sIP, m_ConfigData.m_RMSocket.m_nPort);
+    m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     // and then we set connection resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient); //
     // todo insert timer for timeout
 
     connect(&m_rmInterface, &Zera::Server::cRMInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnectionSmart(m_rmClient);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
     // resource manager liste sense abfragen
     // bin ich da drin ?
     // nein -> fehler activierung
@@ -294,12 +294,12 @@ void cSampleChannel::claimResource()
 
 void cSampleChannel::pcbConnection()
 {
-    m_pPCBClient = Zera::Proxy::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
-    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::Proxy::ProxyClient::connected, &m_readChnAliasState);
+    m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_ConfigData.m_PCBServerSocket.m_sIP, m_ConfigData.m_PCBServerSocket.m_nPort);
+    m_pcbConnectionState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readChnAliasState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
     connect(m_pPCBInterface, &Zera::Server::cPCBInterface::serverAnswer, this, &cSampleChannel::catchInterfaceAnswer);
-    Zera::Proxy::Proxy::getInstance()->startConnection(m_pPCBClient);
+    Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
 

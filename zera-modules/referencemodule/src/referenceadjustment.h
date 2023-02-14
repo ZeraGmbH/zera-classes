@@ -39,9 +39,9 @@ private:
     cReferenceModule* m_pModule; // the module we live in
     cReferenceModuleConfigData* m_pConfigData;
     Zera::Server::cDSPInterface* m_pDSPInterFace; // our interface to dsp
-    Zera::Proxy::ProxyClient *m_pDspClient;
+    Zera::ProxyClient *m_pDspClient;
     Zera::Server::cPCBInterface *m_pPCBInterface;
-    Zera::Proxy::ProxyClient *m_pPCBClient;
+    Zera::ProxyClient *m_pPCBClient;
     QList<cReferenceMeasChannel*> m_ChannelList;
     QVector<float> m_ActualValues;
     quint32 m_nIgnoreCount;

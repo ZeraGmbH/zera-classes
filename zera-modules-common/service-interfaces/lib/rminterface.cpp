@@ -18,7 +18,7 @@ cRMInterface::~cRMInterface()
 }
 
 
-void cRMInterface::setClientSmart(Proxy::ProxyClientPtr client)
+void cRMInterface::setClientSmart(Zera::ProxyClientPtr client)
 {
     Q_D(cRMInterface);
     return d->setClientSmart(client);
