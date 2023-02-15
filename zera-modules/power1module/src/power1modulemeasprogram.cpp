@@ -2,6 +2,7 @@
 #include "power1module.h"
 #include "power1moduleconfigdata.h"
 #include "power1moduleconfiguration.h"
+#include "phasevalidatorstringgenerator.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -358,18 +359,27 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "P", "W", actPower, mqref);
 
     // our parameters we deal with
+    cStringValidator *sValidator;
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasuringMode"),
                                                          QString("Measuring mode"),
                                                          QVariant(getConfData()->m_sMeasuringMode.m_sValue));
-
     m_pMeasuringmodeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODE", "10", "PAR_MeasuringMode", "0", ""));
-
-    cStringValidator *sValidator;
     sValidator = new cStringValidator(getConfData()->m_sMeasmodeList);
     m_pMeasuringmodeParameter->setValidator(sValidator);
-
     m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
+
+    QStringList defaultPhase;
+    for(int phase=0; phase<MeasPhaseCount; phase++)
+        defaultPhase.append("1");
+    m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                         key = QString("PAR_XMModePhaseSelect"),
+                                                         QString("X-Wire measure mode phase select"),
+                                                         QVariant(defaultPhase.join(",")));
+    m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","XMMSELECT", "10", "PAR_XMModePhaseSelect", "0", ""));
+    sValidator = new cStringValidator(PhaseValidatorStringGenerator::generate(MeasPhaseCount));
+    m_pMModePhaseSelectParameter->setValidator(sValidator);
+    m_pModule->veinModuleParameterHash[key] = m_pMModePhaseSelectParameter; // for modules use
 
     QVariant val;
     QString s, unit;
