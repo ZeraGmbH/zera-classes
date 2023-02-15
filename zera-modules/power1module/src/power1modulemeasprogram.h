@@ -217,6 +217,8 @@ private:
     bool is2WireMode();
     void dspSetParametersForMMode(int tipar);
 
+    void handleDspMModeParamChange();
+
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
 
