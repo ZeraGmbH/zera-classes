@@ -2036,20 +2036,17 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     m_pMeasureSignal->setValue(QVariant(1));
 
     if (getConfData()->m_sIntegrationMode == "time")
-        connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationtime(QVariant)));
+        connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationtime);
     else
-        connect(m_pIntegrationParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newIntegrationPeriod(QVariant)));
+        connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationPeriod);
 
-    connect(m_pMeasuringmodeParameter, SIGNAL(sigValueChanged(QVariant)), this, SLOT(newMeasMode(QVariant)));
+    connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newMeasMode);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
         m_readUrValueMachine.start();
 
     emit activated();
-
-
-
 }
 
 
