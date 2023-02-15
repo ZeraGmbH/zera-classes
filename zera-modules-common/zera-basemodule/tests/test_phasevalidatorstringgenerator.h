@@ -10,6 +10,7 @@ private slots:
     void zeroPhases();
     void onePhase();
     void twoPhases();
+    void numPhasesEqualMax();
     void morePhasesThanMax();
 };
 

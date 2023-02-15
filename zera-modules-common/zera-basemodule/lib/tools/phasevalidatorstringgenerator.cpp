@@ -4,7 +4,7 @@
 QStringList PhaseValidatorStringGenerator::generate(int phaseCount, int maxPhaseCount)
 {
     QStringList ret;
-    if(phaseCount < maxPhaseCount) {
+    if(phaseCount <= maxPhaseCount) {
         for(int cases=0; cases<pow(2, phaseCount); cases++) {
             QStringList singleCaseList;
             for(int phase=0; phase<phaseCount; phase++)
