@@ -34,6 +34,7 @@ enum moduleconfigstate
 
 
     setMeasuringMode,
+    setXMeasModePhases,
     setMeasureIntervalTime,
     setMeasureIntervalPeriod,
 

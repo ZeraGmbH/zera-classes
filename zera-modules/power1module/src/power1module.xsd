@@ -292,6 +292,7 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="measuringmode" type="measuringmodeType"/>
+                            <xs:element name="mmxphases" type="xs:string" minOccurs="0" maxOccurs="1"/>
                             <xs:element name="interval" type="measureintervalType"/>
                         </xs:sequence>
                     </xs:complexType>
