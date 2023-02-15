@@ -13,6 +13,10 @@
 namespace POWER1MODULE
 {
 
+constexpr int MeasPhaseCount = 3;
+constexpr int SumValueCount = 1;
+
+
 cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
@@ -261,7 +265,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     QString key;
     VfModuleActvalue *pActvalue;
 
-    for (int i = 0; i < 4; i++) // we have fixed number of power values (4)
+    for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
     {
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PQS%1").arg(i+1),
@@ -271,7 +275,7 @@ void cPower1ModuleMeasProgram::generateInterface()
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
-    m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(4));
+    m_pPQSCountInfo = new VfModuleMetaData(QString("PQSCount"), QVariant(MeasPhaseCount+SumValueCount));
     m_pModule->veinModuleMetaDataList.append(m_pPQSCountInfo);
     m_pNomFrequencyInfo =  new VfModuleMetaData(QString("NominalFrequency"), QVariant(getConfData()->m_nNominalFrequency));
     m_pModule->veinModuleMetaDataList.append(m_pNomFrequencyInfo);
@@ -424,11 +428,11 @@ void cPower1ModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL1", m_nSRate, DSPDATA::vDspTemp)); // we need 2 signals for our computations
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL2", m_nSRate, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("VALPQS", 4, DSPDATA::vDspTemp)); // here x1, x2, x3 , xs will land
+    m_pTmpDataDsp->addVarItem(new cDspVar("VALPQS", MeasPhaseCount+SumValueCount, DSPDATA::vDspTemp)); // here x1, x2, x3 , xs will land
     m_pTmpDataDsp->addVarItem( new cDspVar("TEMP1", 2, DSPDATA::vDspTemp)); // we need 2 temp. vars also for complex
     m_pTmpDataDsp->addVarItem( new cDspVar("TEMP2", 2, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("FAK", 1, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2*4,DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem(new cDspVar("FILTER", 2*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
@@ -529,7 +533,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             break;
 
         case mXlw:
-            for(int phase=0; phase<3; phase++) {
+            for(int phase=0; phase<MeasPhaseCount; phase++) {
                 QString strChains =  IntToHexStringConvert::convert(0x0121 + phase);
                 m_pDSPInterFace->addCycListItem( s = QString("ACTIVATECHAIN(1,%1)").arg(strChains));
                 m_pDSPInterFace->addCycListItem( s = QString("TESTVCSKIPEQ(MMODE,%1)").arg(mmode));
@@ -982,11 +986,10 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     }
 
-    // we have to compute sum of our power systems
+    // we have to compute sum of our power systems (use loop + MeasPhaseCount ???)
     m_pDSPInterFace->addCycListItem( s = "ADDVVV(VALPQS,VALPQS+1,VALPQS+3)");
     m_pDSPInterFace->addCycListItem( s = "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)");
-
-    // and filter all our values
+    // and filter all our values (MeasPhaseCount ???)
     m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(4,VALPQS,FILTER)")); // we add results to filter
 
 
@@ -1620,11 +1623,11 @@ cPower1ModuleConfigData *cPower1ModuleMeasProgram::getConfData()
 
 void cPower1ModuleMeasProgram::setActualValuesNames()
 {
-    QString powIndicator = "123S";
+    QString powIndicator = "123S"; // (MeasPhaseCount ???)
 
     cMeasModeInfo mminfo = m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue];
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
     {
         m_ActValueList.at(i)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
         m_ActValueList.at(i)->setUnit(mminfo.getUnitName());
@@ -1635,8 +1638,7 @@ void cPower1ModuleMeasProgram::setActualValuesNames()
 void cPower1ModuleMeasProgram::setSCPIMeasInfo()
 {
     cSCPIInfo* pSCPIInfo;
-
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
     {
         pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
         m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
@@ -1656,7 +1658,7 @@ void cPower1ModuleMeasProgram::setFoutMetaInfo()
 bool cPower1ModuleMeasProgram::is2WireMode()
 {
     int mm = m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode();
-    return ((mm == m2lw) || (mm == m2lb) || (mm == m2ls) || (mm == m2lsg));
+    return ((mm == m2lw) || (mm == m2lb) || (mm == m2ls) || (mm == m2lsg)); // XLW???
 }
 
 
@@ -2202,7 +2204,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
         if (is2WireMode())
             cfak = 1.0;
         else
-            cfak = 3.0;
+            cfak = 3.0; // MeasPhaseCount???
 
         for (int i = 0; i< getConfData()->m_nFreqOutputCount; i++)
         {
