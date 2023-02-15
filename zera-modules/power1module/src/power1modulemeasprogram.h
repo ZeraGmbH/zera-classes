@@ -287,6 +287,7 @@ private slots:
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);
     void newMeasMode(QVariant mm);
+    void newPhaseList(QVariant phaseList);
 
     void updatePreScaling(QVariant p_newValue);
 };

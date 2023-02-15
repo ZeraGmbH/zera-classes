@@ -2032,15 +2032,14 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
-
     m_pMeasureSignal->setValue(QVariant(1));
 
     if (getConfData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationtime);
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationPeriod);
-
     connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newMeasMode);
+    connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
@@ -2374,6 +2373,12 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
     setActualValuesNames();
     setFrequencyScales();
     setFoutConstants();
+
+    emit m_pModule->parameterChanged();
+}
+
+void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
+{
 
     emit m_pModule->parameterChanged();
 }
