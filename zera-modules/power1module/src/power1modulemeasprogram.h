@@ -114,6 +114,7 @@ private:
     VfModuleMetaData* m_pNomFrequencyInfo; // the modules nominal frequency
     VfModuleParameter* m_pIntegrationParameter;
     VfModuleParameter* m_pMeasuringmodeParameter;
+    VfModuleParameter* m_pMModePhaseSelectParameter;
     VfModuleParameter* m_pConstantParameter;
     VfModuleComponent* m_pMeasureSignal;
 
