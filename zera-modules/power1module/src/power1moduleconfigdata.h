@@ -71,6 +71,7 @@ public:
     QList<freqoutconfiguration> m_FreqOutputConfList; // a list of configuration values for each frequency output
 
     stringParameter m_sMeasuringMode;
+    stringParameter m_sXMeasModePhases;
     doubleParameter m_fMeasIntervalTime; // measuring interval 0.1 .. 100.0 sec.
     intParameter m_nMeasIntervalPeriod; // measuring periods 1 .. 10000
     double m_fmovingwindowInterval;
