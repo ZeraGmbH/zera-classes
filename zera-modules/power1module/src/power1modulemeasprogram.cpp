@@ -2314,7 +2314,7 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
         }
 }
 
-void cPower1ModuleMeasProgram::dspSetParametersForMMode(int tipar)
+void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
             .arg(tipar)
@@ -2323,44 +2323,60 @@ void cPower1ModuleMeasProgram::dspSetParametersForMMode(int tipar)
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
 
-void POWER1MODULE::cPower1ModuleMeasProgram::handleDspMModeParamChange()
+void POWER1MODULE::cPower1ModuleMeasProgram::handleMModeParamChange()
 {
     if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
-            dspSetParametersForMMode(getConfData()->m_fmovingwindowInterval*1000);
+            dspSetParamsTiMMode(getConfData()->m_fmovingwindowInterval*1000);
         else
-            dspSetParametersForMMode(getConfData()->m_fMeasIntervalTime.m_fValue*1000);
+            dspSetParamsTiMMode(getConfData()->m_fMeasIntervalTime.m_fValue*1000);
     }
     else
-        dspSetParametersForMMode(getConfData()->m_nMeasIntervalPeriod.m_nValue);
+        dspSetParamsTiMMode(getConfData()->m_nMeasIntervalPeriod.m_nValue);
+    emit m_pModule->parameterChanged();
+}
+
+void POWER1MODULE::cPower1ModuleMeasProgram::handleMovingWindowIntTimeChange()
+{
+    m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
+    emit m_pModule->parameterChanged();
+}
+
+void POWER1MODULE::cPower1ModuleMeasProgram::updatesForMModeChange()
+{
     setActualValuesNames();
     setFrequencyScales();
     setFoutConstants();
-    emit m_pModule->parameterChanged();
 }
 
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
     getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
-    handleDspMModeParamChange();
+    if (getConfData()->m_bmovingWindow)
+        handleMovingWindowIntTimeChange();
+    else
+        handleMModeParamChange(); // is this ever reached?
 }
 
 void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
+    // there is no moving window for period
     getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
-    handleDspMModeParamChange();
+    handleMModeParamChange();
 }
 
 void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 {
     getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
-    handleDspMModeParamChange();
+    handleMModeParamChange();
+    updatesForMModeChange();
 }
 
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 {
-
+    // TODO
     emit m_pModule->parameterChanged();
+    updatesForMModeChange();
 }
 
 void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
