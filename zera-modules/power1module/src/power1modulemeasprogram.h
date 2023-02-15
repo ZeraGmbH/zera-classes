@@ -215,7 +215,7 @@ private:
     void setSCPIMeasInfo();
     void setFoutMetaInfo();
     bool is2WireMode();
-    void setDspParameter(QString tipar);
+    void dspSetParametersForMMode(QString tipar);
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

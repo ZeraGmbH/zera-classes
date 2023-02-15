@@ -2314,66 +2314,49 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
         }
 }
 
-void cPower1ModuleMeasProgram::setDspParameter(QString tipar)
+void cPower1ModuleMeasProgram::dspSetParametersForMMode(QString tipar)
 {
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                    .arg(tipar)
-                                                    .arg(0)
-                                                    .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode()), DSPDATA::dInt);
-
+    QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
+            .arg(tipar)
+            .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode());
+    m_pDSPInterFace->setVarData(m_pParameterDSP, strVarData, DSPDATA::dInt);
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
 
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
 {
-    bool ok;
-    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble(&ok);
-    if (getConfData()->m_sIntegrationMode == "time")
-    {
+    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
+    if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
             m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
-        {
-            setDspParameter(QString::number(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
-            m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-        }
+            dspSetParametersForMMode(QString::number(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
     }
-
     emit m_pModule->parameterChanged();
 }
 
 void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
-    bool ok;
-    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt(&ok);
+    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
     if (getConfData()->m_sIntegrationMode == "period")
-    {
-        setDspParameter(QString::number(getConfData()->m_nMeasIntervalPeriod.m_nValue));
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-    }
-
+        dspSetParametersForMMode(QString::number(getConfData()->m_nMeasIntervalPeriod.m_nValue));
     emit m_pModule->parameterChanged();
 }
-
 
 void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 {
     getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
-
-    if (getConfData()->m_sIntegrationMode == "time")
-    {
+    if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
-            setDspParameter(QString::number(getConfData()->m_fmovingwindowInterval*1000));
+            dspSetParametersForMMode(QString::number(getConfData()->m_fmovingwindowInterval*1000));
         else
-            setDspParameter(QString::number(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
+            dspSetParametersForMMode(QString::number(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
     }
     else
-        setDspParameter(QString::number(getConfData()->m_nMeasIntervalPeriod.m_nValue));
-
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+        dspSetParametersForMMode(QString::number(getConfData()->m_nMeasIntervalPeriod.m_nValue));
     setActualValuesNames();
     setFrequencyScales();
     setFoutConstants();
-
     emit m_pModule->parameterChanged();
 }
 
@@ -2391,8 +2374,4 @@ void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 }
 
 }
-
-
-
-
 
