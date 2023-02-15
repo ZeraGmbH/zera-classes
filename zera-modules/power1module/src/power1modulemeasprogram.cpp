@@ -8,6 +8,7 @@
 #include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
+#include <inttohexstringconvert.h>
 
 namespace POWER1MODULE
 {
@@ -349,6 +350,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_MeasuringModeInfoHash["2LB"] = cMeasModeInfo(tr("2LB"), "Q", "Var", reactPower, m2lb);
     m_MeasuringModeInfoHash["2LS"] = cMeasModeInfo(tr("2LS"), "S", "VA", appPower, m2ls);
     m_MeasuringModeInfoHash["2LSg"] = cMeasModeInfo(tr("2LSg"), "S", "VA", appPower, m2lsg);
+    m_MeasuringModeInfoHash["XLW"] = cMeasModeInfo(tr("XLW"), "P", "W", actPower, mXlw);
     m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "P", "W", actPower, mqref);
 
     // our parameters we deal with
@@ -524,6 +526,21 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
 
             m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0110)"); // ende prozessnr., hauptkette 1 subkette 1
+            break;
+
+        case mXlw:
+            for(int phase=0; phase<3; phase++) {
+                QString strChains =  IntToHexStringConvert::convert(0x0121 + phase);
+                m_pDSPInterFace->addCycListItem( s = QString("ACTIVATECHAIN(1,%1)").arg(strChains));
+                m_pDSPInterFace->addCycListItem( s = QString("TESTVCSKIPEQ(MMODE,%1)").arg(mmode));
+                m_pDSPInterFace->addCycListItem( s = QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
+                m_pDSPInterFace->addCycListItem( s = QString("STARTCHAIN(0,1,%1)").arg(strChains)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+                sl = getConfData()->m_sMeasSystemList.at(phase).split(',');
+                m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
+                m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
+                m_pDSPInterFace->addCycListItem( s = QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(phase));
+                m_pDSPInterFace->addCycListItem( s = QString("STOPCHAIN(1,%1)").arg(strChains)); // ende prozessnr., hauptkette 1 subkette 1
+            }
             break;
 
         case m4lb:
@@ -947,10 +964,10 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
         case mqref:
         {
-            m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0121)");
+            m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0124)");
             m_pDSPInterFace->addCycListItem( s = QString("TESTVCSKIPEQ(MMODE,%1)").arg(mmode));
-            m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0121)");
-            m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0121)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+            m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0124)");
+            m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0124)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
             // we simply set all our actual values to nominal power
 
@@ -958,7 +975,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_pDSPInterFace->addCycListItem( s = "COPYVAL(NOMPOWER,VALPQS+1)");
             m_pDSPInterFace->addCycListItem( s = "COPYVAL(NOMPOWER,VALPQS+2)");
 
-            m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0121)"); // ende prozessnr., hauptkette 1 subkette 1
+            m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0124)"); // ende prozessnr., hauptkette 1 subkette 1
             break;
         }
         }

@@ -72,6 +72,7 @@ enum measmode
     m2lb,
     m2ls,
     m2lsg,
+    mXlw,
     mqref
 };
 
