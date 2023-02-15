@@ -2323,29 +2323,8 @@ void cPower1ModuleMeasProgram::dspSetParametersForMMode(int tipar)
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
 
-void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
+void POWER1MODULE::cPower1ModuleMeasProgram::handleDspMModeParamChange()
 {
-    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
-    if (getConfData()->m_sIntegrationMode == "time") {
-        if (getConfData()->m_bmovingWindow)
-            m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
-        else
-            dspSetParametersForMMode(getConfData()->m_fMeasIntervalTime.m_fValue*1000);
-    }
-    emit m_pModule->parameterChanged();
-}
-
-void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
-{
-    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
-    if (getConfData()->m_sIntegrationMode == "period")
-        dspSetParametersForMMode(getConfData()->m_nMeasIntervalPeriod.m_nValue);
-    emit m_pModule->parameterChanged();
-}
-
-void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
-{
-    getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
     if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
             dspSetParametersForMMode(getConfData()->m_fmovingwindowInterval*1000);
@@ -2358,6 +2337,24 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
     setFrequencyScales();
     setFoutConstants();
     emit m_pModule->parameterChanged();
+}
+
+void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
+{
+    getConfData()->m_fMeasIntervalTime.m_fValue = ti.toDouble();
+    handleDspMModeParamChange();
+}
+
+void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
+{
+    getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
+    handleDspMModeParamChange();
+}
+
+void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
+{
+    getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
+    handleDspMModeParamChange();
 }
 
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
