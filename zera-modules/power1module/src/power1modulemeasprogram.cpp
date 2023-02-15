@@ -2314,7 +2314,7 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
         }
 }
 
-void cPower1ModuleMeasProgram::dspSetParametersForMMode(QString tipar)
+void cPower1ModuleMeasProgram::dspSetParametersForMMode(int tipar)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
             .arg(tipar)
@@ -2330,7 +2330,7 @@ void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
         if (getConfData()->m_bmovingWindow)
             m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
         else
-            dspSetParametersForMMode(QString::number(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
+            dspSetParametersForMMode(getConfData()->m_fMeasIntervalTime.m_fValue*1000);
     }
     emit m_pModule->parameterChanged();
 }
@@ -2339,7 +2339,7 @@ void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 {
     getConfData()->m_nMeasIntervalPeriod.m_nValue = period.toInt();
     if (getConfData()->m_sIntegrationMode == "period")
-        dspSetParametersForMMode(QString::number(getConfData()->m_nMeasIntervalPeriod.m_nValue));
+        dspSetParametersForMMode(getConfData()->m_nMeasIntervalPeriod.m_nValue);
     emit m_pModule->parameterChanged();
 }
 
@@ -2348,12 +2348,12 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
     getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
     if (getConfData()->m_sIntegrationMode == "time") {
         if (getConfData()->m_bmovingWindow)
-            dspSetParametersForMMode(QString::number(getConfData()->m_fmovingwindowInterval*1000));
+            dspSetParametersForMMode(getConfData()->m_fmovingwindowInterval*1000);
         else
-            dspSetParametersForMMode(QString::number(getConfData()->m_fMeasIntervalTime.m_fValue*1000));
+            dspSetParametersForMMode(getConfData()->m_fMeasIntervalTime.m_fValue*1000);
     }
     else
-        dspSetParametersForMMode(QString::number(getConfData()->m_nMeasIntervalPeriod.m_nValue));
+        dspSetParametersForMMode(getConfData()->m_nMeasIntervalPeriod.m_nValue);
     setActualValuesNames();
     setFrequencyScales();
     setFoutConstants();
