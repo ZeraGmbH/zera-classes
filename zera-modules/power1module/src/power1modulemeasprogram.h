@@ -216,6 +216,8 @@ private:
     void setFoutMetaInfo();
     bool is2WireMode();
 
+    QString getInitialPhaseOnOffVeinVal();
+    QString dspGetPhaseVarStr(int phase, QString separator);
     void dspSetParamsTiMMode(int tipar);
     void handleMModeParamChange();
     void handleMovingWindowIntTimeChange();
