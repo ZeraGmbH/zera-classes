@@ -19,7 +19,7 @@
         </connectivity>
         <measure>
             <modes>
-                <n>10</n>
+                <n>11</n>
                 <m1>4LW</m1>
                 <m2>3LW</m2>
                 <m3>2LW</m3>
@@ -30,6 +30,7 @@
                 <m8>4LSg</m8>
                 <m9>2LS</m9>
                 <m10>2LSg</m10>
+                <m11>XLW</m11>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
