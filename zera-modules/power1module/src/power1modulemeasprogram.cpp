@@ -260,7 +260,6 @@ void cPower1ModuleMeasProgram::stop()
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
 }
 
-
 void cPower1ModuleMeasProgram::generateInterface()
 {
     QString key;
@@ -369,13 +368,10 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_pMeasuringmodeParameter->setValidator(sValidator);
     m_pModule->veinModuleParameterHash[key] = m_pMeasuringmodeParameter; // for modules use
 
-    QStringList defaultPhase;
-    for(int phase=0; phase<MeasPhaseCount; phase++)
-        defaultPhase.append("1");
     m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_XMModePhaseSelect"),
                                                          QString("X-Wire measure mode phase select"),
-                                                         QVariant(defaultPhase.join(",")));
+                                                         getInitialPhaseOnOffVeinVal());
     m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","XMMSELECT", "10", "PAR_XMModePhaseSelect", "0", ""));
     sValidator = new cStringValidator(PhaseValidatorStringGenerator::generate(MeasPhaseCount));
     m_pMModePhaseSelectParameter->setValidator(sValidator);
@@ -451,6 +447,8 @@ void cPower1ModuleMeasProgram::setDspVarList()
     // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
     m_pParameterDSP->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt));
     m_pParameterDSP->addVarItem( new cDspVar("MMODE",1, DSPDATA::vDspParam, DSPDATA::dInt));
+    // for meas modes with phase wise enable disable
+    m_pParameterDSP->addVarItem(new cDspVar("XMMODEPHASE", MeasPhaseCount, DSPDATA::vDspParam, DSPDATA::dInt));
 
     // a handle for filtered actual values
     m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
@@ -487,6 +485,8 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode())); // initial measuring mode
+        for(int phase=0; phase<MeasPhaseCount; phase++)
+            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(FAK,0.5)"));
 
         if (getConfData()->m_sIntegrationMode == "time")
@@ -2314,11 +2314,38 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
         }
 }
 
+QString POWER1MODULE::cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
+{
+    QString phaseOnOff = getConfData()->m_sXMeasModePhases.m_sValue;
+    if(phaseOnOff.isEmpty()) {
+        QStringList defaultPhase;
+        for(int phase=0; phase<MeasPhaseCount; phase++)
+            defaultPhase.append("1");
+        phaseOnOff = defaultPhase.join(",");
+        getConfData()->m_sXMeasModePhases.m_sValue = phaseOnOff;
+    }
+    return phaseOnOff;
+}
+
+QString POWER1MODULE::cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QString separator)
+{
+    QString strVarData;
+    if(phase<MeasPhaseCount) {
+        QStringList phaseOnOffList = getConfData()->m_sXMeasModePhases.m_sValue.split(",");
+        strVarData = QString("XMMODEPHASE+%1%2%3").arg(phase).arg(separator, phaseOnOffList[phase]);
+    }
+    return strVarData;
+}
+
 void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
             .arg(tipar)
             .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode());
+    QStringList phaseOnOffList;
+    for(int phase=0; phase<MeasPhaseCount; phase++)
+        phaseOnOffList += dspGetPhaseVarStr(phase, ":");
+    strVarData += ";" + phaseOnOffList.join(";");
     m_pDSPInterFace->setVarData(m_pParameterDSP, strVarData, DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
@@ -2374,7 +2401,7 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 {
-    // TODO
+    getConfData()->m_sXMeasModePhases.m_sValue = phaseList.toString();
     emit m_pModule->parameterChanged();
     updatesForMModeChange();
 }
