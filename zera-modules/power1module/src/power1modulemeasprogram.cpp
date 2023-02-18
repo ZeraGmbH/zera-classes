@@ -3,6 +3,7 @@
 #include "power1moduleconfigdata.h"
 #include "power1moduleconfiguration.h"
 #include "phasevalidatorstringgenerator.h"
+#include <measmodecatalog.h>
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -342,21 +343,6 @@ void cPower1ModuleMeasProgram::generateInterface()
         }
     }
 
-    // a list with all possible measuring modes
-    m_MeasuringModeInfoHash["4LW"] = cMeasModeInfo(tr("4LW"), "P", "W", actPower, m4lw);
-    m_MeasuringModeInfoHash["4LB"] = cMeasModeInfo(tr("4LB"), "Q", "Var", reactPower, m4lb);
-    m_MeasuringModeInfoHash["4LBK"] = cMeasModeInfo(tr("4LBK"), "Q", "Var", reactPower, m4lbk);
-    m_MeasuringModeInfoHash["4LS"] = cMeasModeInfo(tr("4LS"), "S", "VA", appPower, m4ls);
-    m_MeasuringModeInfoHash["4LSg"] = cMeasModeInfo(tr("4LSg"), "S", "W", appPower, m4lsg);
-    m_MeasuringModeInfoHash["3LW"] = cMeasModeInfo(tr("3LW"), "P", "W", actPower, m3lw);
-    m_MeasuringModeInfoHash["3LB"] = cMeasModeInfo(tr("3LB"), "Q", "Var", reactPower, m3lb);
-    m_MeasuringModeInfoHash["2LW"] = cMeasModeInfo(tr("2LW"), "P", "W", actPower, m2lw);
-    m_MeasuringModeInfoHash["2LB"] = cMeasModeInfo(tr("2LB"), "Q", "Var", reactPower, m2lb);
-    m_MeasuringModeInfoHash["2LS"] = cMeasModeInfo(tr("2LS"), "S", "VA", appPower, m2ls);
-    m_MeasuringModeInfoHash["2LSg"] = cMeasModeInfo(tr("2LSg"), "S", "VA", appPower, m2lsg);
-    m_MeasuringModeInfoHash["XLW"] = cMeasModeInfo(tr("XLW"), "P", "W", actPower, mXlw);
-    m_MeasuringModeInfoHash["QREF"] = cMeasModeInfo(tr("QREF"), "P", "W", actPower, mqref);
-
     // our parameters we deal with
     cStringValidator *sValidator;
     m_pMeasuringmodeParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -487,7 +473,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode())); // initial measuring mode
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode())); // initial measuring mode
         for(int phase=0; phase<MeasPhaseCount; phase++)
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(FAK,0.5)"));
@@ -515,7 +501,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++)
     {
         QStringList sl;
-        int mmode = m_MeasuringModeInfoHash[getConfData()->m_sMeasmodeList.at(i)].getCode();
+        int mmode = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i)).getCode();
         switch (mmode)
         {
         case m4lw:
@@ -1651,7 +1637,7 @@ void cPower1ModuleMeasProgram::setActualValuesNames()
 {
     QString powIndicator = "123S"; // (MeasPhaseCount ???)
 
-    cMeasModeInfo mminfo = m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue];
+    cMeasModeInfo mminfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
 
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
     {
@@ -1683,7 +1669,7 @@ void cPower1ModuleMeasProgram::setFoutMetaInfo()
 
 bool cPower1ModuleMeasProgram::is2WireMode()
 {
-    int mm = m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode();
+    int mm = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
     return ((mm == m2lw) || (mm == m2lb) || (mm == m2ls) || (mm == m2lsg)); // XLW???
 }
 
@@ -2323,7 +2309,7 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
                 powtype = "";
             }
 
-            powtype += m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getActvalName();
+            powtype += MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getActvalName();
 
             cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
             m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
@@ -2356,8 +2342,8 @@ QString POWER1MODULE::cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QSt
 void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
-            .arg(tipar)
-            .arg(m_MeasuringModeInfoHash[getConfData()->m_sMeasuringMode.m_sValue].getCode());
+                             .arg(tipar)
+                             .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode());
     QStringList phaseOnOffList;
     for(int phase=0; phase<MeasPhaseCount; phase++)
         phaseOnOffList += dspGetPhaseVarStr(phase, ":");

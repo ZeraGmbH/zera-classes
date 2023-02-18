@@ -85,7 +85,6 @@ private:
     cPower1ModuleConfigData* getConfData();
 
     cPower1Module* m_pModule;
-    QHash<QString,cMeasModeInfo> m_MeasuringModeInfoHash; // a list of all measuring modes we know with additional info
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
