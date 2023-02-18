@@ -203,6 +203,19 @@ private:
     void handleMModeParamChange();
     void handleMovingWindowIntTimeChange();
     void updatesForMModeChange();
+    void mmodeAdd4LW();
+    void mmodeAdd4LB();
+    void mmodeAdd4LBK();
+    void mmodeAdd4LS();
+    void mmodeAdd4LSg();
+    void mmodeAdd3LW();
+    void mmodeAdd3LB();
+    void mmodeAdd2LW();
+    void mmodeAdd2LB();
+    void mmodeAdd2LS();
+    void mmodeAdd2LSg();
+    void mmodeAddXLW();
+    void mmodeAddMQREF();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
