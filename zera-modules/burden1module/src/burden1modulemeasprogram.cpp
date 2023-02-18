@@ -2,7 +2,6 @@
 #include "burden1modulemeasprogram.h"
 #include "burden1measdelegate.h"
 #include "burden1moduleconfiguration.h"
-#include "measmodeinfo.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <doublevalidator.h>

@@ -3,7 +3,6 @@
 #include "efficiency1measdelegate.h"
 #include "efficiency1moduleconfiguration.h"
 #include <errormessages.h>
-#include <measmodeinfo.h>
 #include <reply.h>
 
 namespace EFFICIENCY1MODULE

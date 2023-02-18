@@ -14,7 +14,6 @@
 
 #include "errormessages.h"
 #include <reply.h>
-#include "measmodeinfo.h"
 #include "transformer1module.h"
 #include "transformer1modulemeasprogram.h"
 #include "transformer1measdelegate.h"

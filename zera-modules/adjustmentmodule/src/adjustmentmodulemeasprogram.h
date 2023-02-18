@@ -7,7 +7,6 @@
 #include <rminterface.h>
 #include "basemeasworkprogram.h"
 #include "measchannelinfo.h"
-#include "measmodeinfo.h"
 #include "foutinfo.h"
 #include "taskcontainersequence.h"
 #include <QObject>

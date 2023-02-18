@@ -4,7 +4,6 @@
 #include "power1moduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
-#include <measmodeinfo.h>
 #include <foutinfo.h>
 #include <vfmodulecomponentinput.h>
 #include <movingwindowfilter.h>
