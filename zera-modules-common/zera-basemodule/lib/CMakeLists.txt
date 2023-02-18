@@ -1,11 +1,13 @@
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/power-modules/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/*.cpp
     )
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/declare-only/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/power-modules/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/tools/*.h
     )
 
@@ -30,6 +32,7 @@ target_include_directories(zera-basemodule
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/declare-only>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/power-modules>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tools>
     )
 
