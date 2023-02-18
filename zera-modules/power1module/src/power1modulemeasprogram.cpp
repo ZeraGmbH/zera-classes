@@ -119,50 +119,50 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
-    connect(&m_resourceManagerConnectState, SIGNAL(entered()), SLOT(resourceManagerConnect()));
-    connect(&m_IdentifyState, SIGNAL(entered()), SLOT(sendRMIdent()));
-    connect(&m_readResourceTypesState, SIGNAL(entered()), SLOT(readResourceTypes()));
-    connect(&m_readResourceSenseState, SIGNAL(entered()), SLOT(readResourceSense()));
-    connect(&m_readResourceSenseInfosState, SIGNAL(entered()), SLOT(readResourceSenseInfos()));
-    connect(&m_readResourceSenseInfoState, SIGNAL(entered()), SLOT(readResourceSenseInfo()));
-    connect(&m_readResourceSenseInfoDoneState, SIGNAL(entered()), SLOT(readResourceSenseInfoDone()));
+    connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resourceManagerConnect);
+    connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::sendRMIdent);
+    connect(&m_readResourceTypesState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceTypes);
+    connect(&m_readResourceSenseState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSense);
+    connect(&m_readResourceSenseInfosState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSenseInfos);
+    connect(&m_readResourceSenseInfoState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSenseInfo);
+    connect(&m_readResourceSenseInfoDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSenseInfoDone);
 
-    connect(&m_readResourceSourceState, SIGNAL(entered()), SLOT(readResourceSource()));
-    connect(&m_readResourceSourceInfosState, SIGNAL(entered()), SLOT(readResourceSourceInfos()));
-    connect(&m_readResourceSourceInfoState, SIGNAL(entered()), SLOT(readResourceSourceInfo()));
-    connect(&m_readResourceSourceInfoDoneState, SIGNAL(entered()), SLOT(readResourceSourceInfoDone()));
+    connect(&m_readResourceSourceState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSource);
+    connect(&m_readResourceSourceInfosState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSourceInfos);
+    connect(&m_readResourceSourceInfoState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSourceInfo);
+    connect(&m_readResourceSourceInfoDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readResourceSourceInfoDone);
 
-    connect(&m_dspserverConnectState, SIGNAL(entered()), SLOT(dspserverConnect()));
-    connect(&m_claimResourcesSourceState, SIGNAL(entered()), SLOT(claimResourcesSource()));
-    connect(&m_claimResourceSourceState, SIGNAL(entered()), SLOT(claimResourceSource()));
-    connect(&m_claimResourceSourceDoneState, SIGNAL(entered()), SLOT(claimResourceSourceDone()));
+    connect(&m_dspserverConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::dspserverConnect);
+    connect(&m_claimResourcesSourceState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimResourcesSource);
+    connect(&m_claimResourceSourceState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimResourceSource);
+    connect(&m_claimResourceSourceDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimResourceSourceDone);
 
-    connect(&m_pcbserverConnectState4measChannels, SIGNAL(entered()), SLOT(pcbserverConnect4measChannels()));
-    connect(&m_pcbserverConnectState4freqChannels, SIGNAL(entered()), SLOT(pcbserverConnect4freqChannels()));
-    connect(&m_readSampleRateState, SIGNAL(entered()), SLOT(readSampleRate()));
+    connect(&m_pcbserverConnectState4measChannels, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::pcbserverConnect4measChannels);
+    connect(&m_pcbserverConnectState4freqChannels, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::pcbserverConnect4freqChannels);
+    connect(&m_readSampleRateState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSampleRate);
 
-    connect(&m_readSenseChannelInformationState, SIGNAL(entered()), SLOT(readSenseChannelInformation()));
-    connect(&m_readSenseChannelAliasState, SIGNAL(entered()), SLOT(readSenseChannelAlias()));
-    connect(&m_readSenseChannelUnitState, SIGNAL(entered()), SLOT(readSenseChannelUnit()));
-    connect(&m_readSenseDspChannelState, SIGNAL(entered()), SLOT(readSenseDspChannel()));
-    connect(&m_readSenseChannelInformationDoneState, SIGNAL(entered()), SLOT(readSenseChannelInformationDone()));
+    connect(&m_readSenseChannelInformationState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSenseChannelInformation);
+    connect(&m_readSenseChannelAliasState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSenseChannelAlias);
+    connect(&m_readSenseChannelUnitState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSenseChannelUnit);
+    connect(&m_readSenseDspChannelState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSenseDspChannel);
+    connect(&m_readSenseChannelInformationDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSenseChannelInformationDone);
 
-    connect(&m_readSourceChannelInformationState, SIGNAL(entered()), SLOT(readSourceChannelInformation()));
-    connect(&m_readSourceChannelAliasState, SIGNAL(entered()), SLOT(readSourceChannelAlias()));
-    connect(&m_readSourceDspChannelState, SIGNAL(entered()), SLOT(readSourceDspChannel()));
-    connect(&m_readSourceFormFactorState, SIGNAL(entered()), SLOT(readSourceFormFactor()));
-    connect(&m_readSourceChannelInformationDoneState, SIGNAL(entered()), SLOT(readSourceChannelInformationDone()));
+    connect(&m_readSourceChannelInformationState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSourceChannelInformation);
+    connect(&m_readSourceChannelAliasState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSourceChannelAlias);
+    connect(&m_readSourceDspChannelState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSourceDspChannel);
+    connect(&m_readSourceFormFactorState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSourceFormFactor);
+    connect(&m_readSourceChannelInformationDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readSourceChannelInformationDone);
 
-    connect(&m_setSenseChannelRangeNotifiersState, SIGNAL(entered()), SLOT(setSenseChannelRangeNotifiers()));
-    connect(&m_setSenseChannelRangeNotifierState, SIGNAL(entered()), SLOT(setSenseChannelRangeNotifier()));
-    connect(&m_setSenseChannelRangeNotifierDoneState, SIGNAL(entered()), SLOT(setSenseChannelRangeNotifierDone()));
+    connect(&m_setSenseChannelRangeNotifiersState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setSenseChannelRangeNotifiers);
+    connect(&m_setSenseChannelRangeNotifierState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setSenseChannelRangeNotifier);
+    connect(&m_setSenseChannelRangeNotifierDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setSenseChannelRangeNotifierDone);
 
-    connect(&m_claimPGRMemState, SIGNAL(entered()), SLOT(claimPGRMem()));
-    connect(&m_claimUSERMemState, SIGNAL(entered()), SLOT(claimUSERMem()));
-    connect(&m_var2DSPState, SIGNAL(entered()), SLOT(varList2DSP()));
-    connect(&m_cmd2DSPState, SIGNAL(entered()), SLOT(cmdList2DSP()));
-    connect(&m_activateDSPState, SIGNAL(entered()), SLOT(activateDSP()));
-    connect(&m_loadDSPDoneState, SIGNAL(entered()), SLOT(activateDSPdone()));
+    connect(&m_claimPGRMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimPGRMem);
+    connect(&m_claimUSERMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::claimUSERMem);
+    connect(&m_var2DSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::varList2DSP);
+    connect(&m_cmd2DSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::cmdList2DSP);
+    connect(&m_activateDSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::activateDSP);
+    connect(&m_loadDSPDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
     m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
@@ -195,26 +195,26 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
-    connect(&m_deactivateDSPState, SIGNAL(entered()), SLOT(deactivateDSP()));
-    connect(&m_freePGRMemState, SIGNAL(entered()), SLOT(freePGRMem()));
-    connect(&m_freeUSERMemState, SIGNAL(entered()), SLOT(freeUSERMem()));
+    connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::deactivateDSP);
+    connect(&m_freePGRMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freePGRMem);
+    connect(&m_freeUSERMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeUSERMem);
 
-    connect(&m_freeFreqOutputsState, SIGNAL(entered()), SLOT(freeFreqOutputs()));
-    connect(&m_freeFreqOutputState, SIGNAL(entered()), SLOT(freeFreqOutput()));
-    connect(&m_freeFreqOutputDoneState, SIGNAL(entered()), SLOT(freeFreqOutputDone()));
-    connect(&m_resetNotifiersState, SIGNAL(entered()), SLOT(resetNotifiers()));
-    connect(&m_resetNotifierState, SIGNAL(entered()), SLOT(resetNotifier()));
-    connect(&m_resetNotifierDoneState, SIGNAL(entered()), SLOT(resetNotifierDone()));
+    connect(&m_freeFreqOutputsState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeFreqOutputs);
+    connect(&m_freeFreqOutputState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeFreqOutput);
+    connect(&m_freeFreqOutputDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freeFreqOutputDone);
+    connect(&m_resetNotifiersState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resetNotifiers);
+    connect(&m_resetNotifierState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resetNotifier);
+    connect(&m_resetNotifierDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resetNotifierDone);
 
-    connect(&m_unloadDSPDoneState, SIGNAL(entered()), SLOT(deactivateDSPdone()));
+    connect(&m_unloadDSPDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::deactivateDSPdone);
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, SIGNAL(dataAquisitionContinue()), &m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
-    connect(&m_dataAcquisitionState, SIGNAL(entered()), SLOT(dataAcquisitionDSP()));
-    connect(&m_dataAcquisitionDoneState, SIGNAL(entered()), SLOT(dataReadDSP()));
+    connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::dataAcquisitionDSP);
+    connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::dataReadDSP);
 
     // setting up statemachine for reading urvalues from channels that changed its range
     m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueDoneState);
@@ -229,10 +229,10 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_readUrValueMachine.setInitialState(&m_readUrvalueState);
 
-    connect(&m_readUrvalueState, SIGNAL(entered()), SLOT(readUrvalue()));
-    connect(&m_readUrvalueDoneState, SIGNAL(entered()), SLOT(readUrvalueDone()));
-    connect(&m_setFrequencyScalesState, SIGNAL(entered()), SLOT(setFrequencyScales()));
-    connect(&m_setFoutConstantState, SIGNAL(entered()), SLOT(setFoutConstants()));
+    connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalue);
+    connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
+    connect(&m_setFrequencyScalesState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setFrequencyScales);
+    connect(&m_setFoutConstantState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setFoutConstants);
 }
 
 
@@ -1736,7 +1736,7 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
     m_resourceManagerConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
-    connect(&m_rmInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
 
@@ -1854,8 +1854,8 @@ void cPower1ModuleMeasProgram::pcbserverConnect4measChannels()
         pcbIFace->setClient(pcbClient);
         mi.pcbIFace = pcbIFace;
         m_measChannelInfoHash[key] = mi;
-        connect(pcbClient, SIGNAL(connected()), this, SLOT(monitorConnection())); // here we wait until all connections are established
-        connect(pcbIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+        connect(pcbClient, &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+        connect(pcbIFace, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
         Zera::Proxy::getInstance()->startConnection(pcbClient);
     }
 }
@@ -1880,8 +1880,8 @@ void cPower1ModuleMeasProgram::pcbserverConnect4freqChannels()
             fi.pcbIFace = pcbIFace;
             fi.name = key;
             m_FoutInfoHash[key] = fi;
-            connect(pcbClient, SIGNAL(connected()), this, SLOT(monitorConnection())); // here we wait until all connections are established
-            connect(pcbIFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+            connect(pcbClient, &Zera::ProxyClient::connected, this, &cPower1ModuleMeasProgram::monitorConnection); // here we wait until all connections are established
+            connect(pcbIFace, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
             Zera::Proxy::getInstance()->startConnection(pcbClient);
         }
     }
@@ -2004,7 +2004,7 @@ void cPower1ModuleMeasProgram::dspserverConnect()
     m_pDspClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
     m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
-    connect(m_pDSPInterFace, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cPower1ModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
 
