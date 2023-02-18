@@ -59,23 +59,6 @@ enum power1moduleCmds
     setqrefnominalpower
 };
 
-enum measmode
-{
-    m4lw,
-    m4lb,
-    m4lbk,
-    m4ls,
-    m4lsg,
-    m3lw,
-    m3lb,
-    m2lw,
-    m2lb,
-    m2ls,
-    m2lsg,
-    mXlw,
-    mqref
-};
-
 #define irqNr 5
 
 class cPower1Module;
