@@ -76,6 +76,10 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cPower2ModuleConfigData* getConfData();
+    void setActualValuesNames();
+    bool is2WireMode();
+    quint8 cmpActualValIndex(freqoutconfiguration frconf);
+    void mmodeAdd4LW();
 
     cPower2Module* m_pModule;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
@@ -179,10 +183,6 @@ private:
     QFinalState m_setFoutConstantState;
 
     cMovingwindowFilter m_movingwindowFilter;
-
-    void setActualValuesNames();
-    bool is2WireMode();
-    quint8 cmpActualValIndex(freqoutconfiguration frconf);
 
 private slots:
     void setSCPIMeasInfo();
