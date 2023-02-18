@@ -4,7 +4,6 @@
 #include "burden1moduleconfigdata.h"
 #include "burden1measdelegate.h"
 #include "measchannelinfo.h"
-#include "measmodeinfo.h"
 #include "foutinfo.h"
 #include <basemeasworkprogram.h>
 #include <vfmoduleparameter.h>

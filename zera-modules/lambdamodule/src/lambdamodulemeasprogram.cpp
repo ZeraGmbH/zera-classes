@@ -4,7 +4,6 @@
 #include "lambdamoduleconfiguration.h"
 #include <errormessages.h>
 #include <reply.h>
-#include <measmodeinfo.h>
 
 namespace LAMBDAMODULE
 {

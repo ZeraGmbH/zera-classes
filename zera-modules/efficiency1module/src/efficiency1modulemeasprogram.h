@@ -11,7 +11,6 @@
 #include "efficiency1moduleconfigdata.h"
 #include "basemeasworkprogram.h"
 #include "measchannelinfo.h"
-#include "measmodeinfo.h"
 #include "foutinfo.h"
 
 
