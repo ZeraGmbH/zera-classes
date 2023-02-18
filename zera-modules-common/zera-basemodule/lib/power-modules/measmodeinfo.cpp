@@ -5,28 +5,28 @@ cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname,
 {
 }
 
-QString cMeasModeInfo::getName()
+QString cMeasModeInfo::getName() const
 {
     return m_sName;
 }
 
-QString cMeasModeInfo::getActvalName()
+QString cMeasModeInfo::getActvalName() const
 {
     return m_sActvalName;
 }
 
-QString cMeasModeInfo::getUnitName()
+QString cMeasModeInfo::getUnitName() const
 {
     return m_sUnitName;
 }
 
-quint8 cMeasModeInfo::getPowerMode()
+quint8 cMeasModeInfo::getPowerMode() const
 {
     return m_nPowerMode;
 
 }
 
-quint8 cMeasModeInfo::getCode()
+quint8 cMeasModeInfo::getCode () const
 {
     return m_nCode;
 }
