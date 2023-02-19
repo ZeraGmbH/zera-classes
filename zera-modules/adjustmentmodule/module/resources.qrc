@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/adjustmentmodule.xsd</file>
+        <file>adjustmentmodule.xsd</file>
     </qresource>
 </RCC>
