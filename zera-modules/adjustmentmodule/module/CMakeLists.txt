@@ -1,7 +1,4 @@
-file(GLOB RESOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
-    )
-
+# configs
 file(GLOB CONFIG_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.xml
 )
@@ -15,6 +12,16 @@ add_custom_target(adjustmentmodule-configs ALL
     DEPENDS ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     SOURCES ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
+    )
+
+install(
+    FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
+    DESTINATION ${SET_ZC_CONFIG_PATH}
+    )
+
+# module
+file(GLOB RESOURCES
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 
 add_library(adjustmentmodule MODULE
@@ -40,9 +47,3 @@ install(TARGETS adjustmentmodule
     EXPORT adjustmentmoduleExport
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-modules
     )
-
-install(
-    FILES ${CONFIG_FILES} ${CONFIG_VALIDATOR}
-    DESTINATION ${SET_ZC_CONFIG_PATH}
-    )
-
