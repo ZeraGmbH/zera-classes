@@ -1,13 +1,3 @@
-file(GLOB SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/*.cpp
-    )
-
-file(GLOB HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/tasks/*.h
-    )
-
 file(GLOB RESOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
@@ -26,23 +16,6 @@ add_custom_target(adjustmentmodule-configs ALL
     SOURCES ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     )
-
-add_library(adjustmentmodule-static STATIC
-    ${SOURCES}
-    ${HEADER}
-)
-
-target_include_directories(adjustmentmodule-static
-    PUBLIC
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/tasks>
-    )
-
-target_link_libraries(adjustmentmodule-static
-    zera-basemodule
-    zera-math
-    module-tasks
-)
 
 add_library(adjustmentmodule MODULE
     ${RESOURCES}
@@ -74,4 +47,5 @@ install(
     )
 
 add_subdirectory(tests)
+add_subdirectory(lib)
 
