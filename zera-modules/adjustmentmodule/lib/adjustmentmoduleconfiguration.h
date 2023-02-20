@@ -43,7 +43,7 @@ enum moduleconfigstate
 
 class cAdjustmentModuleConfigData;
 
-const QString defaultXSDFile = "://src/adjustmentmodule.xsd";
+const QString defaultXSDFile = "://adjustmentmodule.xsd";
 
 // moduleconfiguration holds configuration data as well as parameter
 
@@ -54,7 +54,6 @@ public:
     cAdjustmentModuleConfiguration();
     ~cAdjustmentModuleConfiguration();
     virtual void setConfiguration(QByteArray xmlString) override;
-    void setConfig(QByteArray xmlString, QString xsdFilename);
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cAdjustmentModuleConfigData* getConfigurationData();
 
@@ -64,6 +63,7 @@ protected slots:
 private slots:
     void completeConfiguration(bool ok);
 private:
+    void setConfig(QByteArray xmlString, QString xsdFilename);
     cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData;  // configuration
 };
 

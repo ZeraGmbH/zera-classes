@@ -1,12 +1,22 @@
-find_package(VfStorageHash REQUIRED)
-set(SET_MODMAN_CONFIG_PATH  "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
-add_definitions(-DMODMAN_CONFIG_PATH="${SET_MODMAN_CONFIG_PATH}")
+# we need source files - install runs after tests
+add_definitions(-DCONFIG_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../configs")
 
-SETUP_QTESTS(
+function(SETUP_QTESTS_MODULE)
+    SETUP_QTESTS(${ARGN})
+    foreach(_testname ${ARGN})
+        target_sources(${_testname}
+            PRIVATE
+            ${XML_SCHEMA_RESOURCE}
+        )
+        target_link_libraries(${_testname}
+            PRIVATE
+            adjustmentmodule-static
+        )
+    endforeach()
+endfunction()
+
+SETUP_QTESTS_MODULE(
+    test_config_load
     test_adjustmentmoduleactivator
 )
 
-target_link_libraries(test_adjustmentmoduleactivator
-    PUBLIC
-    adjustmentmodule-static
-)
