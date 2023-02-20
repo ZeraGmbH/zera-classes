@@ -8,6 +8,7 @@
 
 namespace SCPIMODULE
 {
+static const char *defaultXSDFile = "://scpimodule.xsd";
 
 cSCPIModuleConfiguration::cSCPIModuleConfiguration()
 {
@@ -16,14 +17,17 @@ cSCPIModuleConfiguration::cSCPIModuleConfiguration()
     connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cSCPIModuleConfiguration::completeConfiguration);
 }
 
-
 cSCPIModuleConfiguration::~cSCPIModuleConfiguration()
 {
     if (m_pSCPIModulConfigData) delete m_pSCPIModulConfigData;
 }
 
-
 void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
+{
+    validateAndSetConfig(xmlString, defaultXSDFile);
+}
+
+void cSCPIModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -51,7 +55,7 @@ void cSCPIModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operation:n"] = setOperationStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operationmeasure:n"] = setOperationMeasureStatusBitCount;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
+    if (m_pXMLReader->loadSchema(xsdFilename))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     else
         m_bConfigError = true;
@@ -70,7 +74,6 @@ cSCPIModuleConfigData *cSCPIModuleConfiguration::getConfigurationData()
 {
     return m_pSCPIModulConfigData;
 }
-
 
 void cSCPIModuleConfiguration::configXMLInfo(QString key)
 {
