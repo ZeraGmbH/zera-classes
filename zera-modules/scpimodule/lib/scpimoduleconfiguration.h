@@ -41,14 +41,9 @@ enum moduleconfigstate
     setOperationMeasureBit1Component = 144, // max. 16 bits
 };
 
-
-
 class cSCPIModuleConfigData;
 
-const QString defaultXSDFile = "://src/scpimodule.xsd";
-
 // scpimoduleconfiguration holds configuration data
-
 class cSCPIModuleConfiguration: public cBaseModuleConfiguration
 {
     Q_OBJECT
@@ -58,12 +53,11 @@ public:
     virtual void setConfiguration(QByteArray xmlString);
     virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
     cSCPIModuleConfigData* getConfigurationData();
-
 protected slots:
     virtual void configXMLInfo(QString key);
     virtual void completeConfiguration(bool ok);
-
 private:
+    void validateAndSetConfig(QByteArray xmlString, QString xsdFilename);
     cSCPIModuleConfigData *m_pSCPIModulConfigData;  // configuration
 };
 
