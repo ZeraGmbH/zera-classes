@@ -24,10 +24,10 @@ cAdjustmentModuleConfiguration::~cAdjustmentModuleConfiguration()
 
 void cAdjustmentModuleConfiguration::setConfiguration(QByteArray xmlString)
 {
-    setConfig(xmlString, defaultXSDFile);
+    validateAndSetConfig(xmlString, defaultXSDFile);
 }
 
-void cAdjustmentModuleConfiguration::setConfig(QByteArray xmlString, QString xsdFilename)
+void cAdjustmentModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
 {
     m_bConfigured = m_bConfigError = false;
 

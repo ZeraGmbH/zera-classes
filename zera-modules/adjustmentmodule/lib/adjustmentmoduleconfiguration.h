@@ -51,14 +51,12 @@ public:
     virtual void setConfiguration(QByteArray xmlString) override;
     virtual QByteArray exportConfiguration() override; // exports conf. and parameters to xml
     cAdjustmentModuleConfigData* getConfigurationData();
-
 protected slots:
     virtual void configXMLInfo(QString key) override;
-
 private slots:
     void completeConfiguration(bool ok);
 private:
-    void setConfig(QByteArray xmlString, QString xsdFilename);
+    void validateAndSetConfig(QByteArray xmlString, QString xsdFilename);
     cAdjustmentModuleConfigData *m_pAdjustmentModulConfigData;  // configuration
 };
 
