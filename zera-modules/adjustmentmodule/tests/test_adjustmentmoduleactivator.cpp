@@ -21,7 +21,7 @@ void test_adjustmentmoduleactivator::instantiate()
     xmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
 
     QByteArray xmlConfigData = xmlFile.readAll();
-    pConfiguration->setConfig(xmlConfigData, xsdpath);
+    pConfiguration->validateAndSetConfig(xmlConfigData, xsdpath);
 
     VeinStorage::VeinHash storagesystem; */
     cSocket rmSocket;

@@ -1,18 +1,18 @@
-#include "test_config_load.h"
+#include "test_adj_config_load.h"
 #include "adjustmentmoduleconfiguration.h"
 #include <memory>
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_config_load);
+QTEST_MAIN(test_adj_config_load);
 
-void test_config_load::fileFound()
+void test_adj_config_load::fileFound()
 {
     QFile tmpXmlConfigFile(QStringLiteral(CONFIG_PATH) + "/" + "com5003-adjustmentmodule.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 
-void test_config_load::fileLoaded()
+void test_adj_config_load::fileLoaded()
 {
     QFile tmpXmlConfigFile(QStringLiteral(CONFIG_PATH) + "/" + "com5003-adjustmentmodule.xml");
     QVERIFY(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
