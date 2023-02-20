@@ -39,14 +39,9 @@ enum moduleconfigstate
     setnext = setChn1OffsInfoComponent + 32
 };
 
-
-
 class cAdjustmentModuleConfigData;
 
-const QString defaultXSDFile = "://adjustmentmodule.xsd";
-
 // moduleconfiguration holds configuration data as well as parameter
-
 class cAdjustmentModuleConfiguration: public cBaseModuleConfiguration
 {
     Q_OBJECT

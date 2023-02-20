@@ -6,6 +6,8 @@
 #include "adjustmentmoduleconfigdata.h"
 #include "socket.h"
 
+static const char* defaultXSDFile = "://adjustmentmodule.xsd";
+
 cAdjustmentModuleConfiguration::cAdjustmentModuleConfiguration()
 {
     m_pAdjustmentModulConfigData = 0;
