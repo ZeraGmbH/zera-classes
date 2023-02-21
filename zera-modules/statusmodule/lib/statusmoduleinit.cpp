@@ -27,7 +27,9 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_dspserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_dspserverReadDSPProgramState);
     m_dspserverReadDSPProgramState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterSchnubbelStatusNotifierState);
     m_pcbserverRegisterSchnubbelStatusNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialSchnubbelStatus);
-    m_pcbserverReadInitialSchnubbelStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
+    m_pcbserverReadInitialSchnubbelStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterAccumulatorStatusNotifierState);
+    m_pcbserverRegisterAccumulatorStatusNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialAccumulatorStatus);
+    m_pcbserverReadInitialAccumulatorStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_pcbserverReadVersionState);
@@ -42,6 +44,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_activationMachine.addState(&m_dspserverReadDSPProgramState);
     m_activationMachine.addState(&m_pcbserverRegisterSchnubbelStatusNotifierState);
     m_activationMachine.addState(&m_pcbserverReadInitialSchnubbelStatus);
+    m_activationMachine.addState(&m_pcbserverRegisterAccumulatorStatusNotifierState);
+    m_activationMachine.addState(&m_pcbserverReadInitialAccumulatorStatus);
     m_activationMachine.addState(&m_activationDoneState);
     if(!m_ConfigData.m_bDemo) {
         m_activationMachine.setInitialState(&m_pcbserverConnectionState);
@@ -62,6 +66,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_dspserverReadDSPProgramState, &QState::entered, this, &cStatusModuleInit::dspserverReadDSPProgramVersion);
     connect(&m_pcbserverRegisterSchnubbelStatusNotifierState, &QState::entered, this, &cStatusModuleInit::registerSchnubbelStatusNotifier);
     connect(&m_pcbserverReadInitialSchnubbelStatus, &QState::entered, this, &cStatusModuleInit::getSchnubbelStatus);
+    connect(&m_pcbserverRegisterAccumulatorStatusNotifierState, &QState::entered, this, &cStatusModuleInit::registerAccumulatorStatusNotifier);
+    connect(&m_pcbserverReadInitialAccumulatorStatus, &QState::entered, this, &cStatusModuleInit::getAccumulatorStatus);
     connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterNotifiersState);
@@ -209,6 +215,14 @@ void cStatusModuleInit::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pSchnubbelStatus;
     m_pSchnubbelStatus->setSCPIInfo(new cSCPIInfo("STATUS", "AUTHORIZATION", "2", key, "0", ""));
+
+    m_pAccumulatorStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("INF_Accumulator"),
+                                               QString("Accumulator status"),
+                                               QVariant(QString("")));
+
+    m_pModule->veinModuleParameterHash[key] = m_pAccumulatorStatus;
+    m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("SYSTEM", "ACCUMULATOR:STATUS", "2", key, "0", ""));
 }
 
 
@@ -245,10 +259,14 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 emit activationContinue();
                 break;
             case STATUSMODINIT::registerSchnubbelStatusNotifier:
-                // we continue in any case
-                // just spit out a warning to journal
                 if (reply != ack) {
                     qWarning("Register notification for Schnubbel status failed");
+                }
+                emit activationContinue();
+                break;
+            case STATUSMODINIT::registerAccumulatorStatusNotifier:
+                if (reply != ack) {
+                    qWarning("Register notification for accumulator status failed");
                 }
                 emit activationContinue();
                 break;
@@ -390,6 +408,8 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationError();
                 }
                 break;
+             case STATUSMODINIT::readPCBServerAccumulatorStatus:
+                break;
             }
         }
     }
@@ -456,6 +476,11 @@ void cStatusModuleInit::setupDemoOperation()
 void cStatusModuleInit::getSchnubbelStatus()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAuthorizationStatus()] = STATUSMODINIT::readPCBServerSchnubbelStatus;
+}
+
+void cStatusModuleInit::getAccumulatorStatus()
+{
+    m_MsgNrCmdList[m_pPCBInterface->getAccumulatorStatus()] = STATUSMODINIT::readPCBServerAccumulatorStatus;
 }
 
 void cStatusModuleInit::setInterfaceComponents()
@@ -557,6 +582,11 @@ void cStatusModuleInit::dspserverReadDSPProgramVersion()
 void cStatusModuleInit::registerSchnubbelStatusNotifier()
 {
     m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("STATUS:AUTHORIZATION?"), STATUSMODINIT::schnubbelNotifierID)] = STATUSMODINIT::registerSchnubbelStatusNotifier;
+}
+
+void cStatusModuleInit::registerAccumulatorStatusNotifier()
+{
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:STATUS?"), STATUSMODINIT::accumulatorNotifierID)] = STATUSMODINIT::registerAccumulatorStatusNotifier;
 }
 
 
