@@ -642,6 +642,16 @@ quint32 cPCBInterfacePrivate::setClampAdjustmentData(QString xmlclamp)
     return msgnr;
 }
 
+quint32 cPCBInterfacePrivate::getAccumulatorStatus()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ACC:STAT?"));
+    m_MsgNrCmdList[msgnr] = PCB::getaccumulatorstatus;
+    return msgnr;
+}
+
 
 quint32 cPCBInterfacePrivate::transparentCommand(QString cmd)
 {

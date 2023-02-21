@@ -99,6 +99,9 @@ public:
     virtual quint32 getClampAdjustmentData();
     virtual quint32 setClampAdjustmentData(QString xmlclamp);
 
+    // all commands to accumulator interface
+    virtual quint32 getAccumulatorStatus(); // int
+
     // sending a transparent command
     virtual quint32 transparentCommand(QString cmd);
 
