@@ -356,6 +356,12 @@ quint32 cPCBInterface::setClampAdjustmentData(QString xmlclamp)
     return d->setClampAdjustmentData(xmlclamp);
 }
 
+quint32 cPCBInterface::getAccumulatorStatus()
+{
+    Q_D(cPCBInterface);
+    return d->getAccumulatorStatus();
+}
+
 
 quint32 cPCBInterface::transparentCommand(QString cmd)
 {
