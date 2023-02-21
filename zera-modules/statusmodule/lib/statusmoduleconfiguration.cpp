@@ -8,6 +8,7 @@
 
 namespace STATUSMODULE
 {
+static const char* defaultXSDFile = "://statusmodule.xsd";
 
 cStatusModuleConfiguration::cStatusModuleConfiguration()
 {
@@ -22,8 +23,12 @@ cStatusModuleConfiguration::~cStatusModuleConfiguration()
     if (m_pStatusModulConfigData) delete m_pStatusModulConfigData;
 }
 
-
 void cStatusModuleConfiguration::setConfiguration(QByteArray xmlString)
+{
+    validateAndSetConfig(xmlString, defaultXSDFile);
+}
+
+void STATUSMODULE::cStatusModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -44,12 +49,11 @@ void cStatusModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
+    if (m_pXMLReader->loadSchema(xsdFilename))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     else
         m_bConfigError = true;
 }
-
 
 QByteArray cStatusModuleConfiguration::exportConfiguration()
 {
@@ -57,12 +61,10 @@ QByteArray cStatusModuleConfiguration::exportConfiguration()
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
-
 cStatusModuleConfigData *cStatusModuleConfiguration::getConfigurationData()
 {
     return m_pStatusModulConfigData;
 }
-
 
 void cStatusModuleConfiguration::configXMLInfo(QString key)
 {

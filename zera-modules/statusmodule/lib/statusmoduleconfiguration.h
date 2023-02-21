@@ -24,14 +24,9 @@ enum moduleconfigstate
     setMeasStatus
 };
 
-
-
 class cStatusModuleConfigData;
 
-const QString defaultXSDFile = "://src/statusmodule.xsd";
-
 // Statusmoduleconfiguration holds configuration data as well as parameter
-
 class cStatusModuleConfiguration: public cBaseModuleConfiguration
 {
     Q_OBJECT
@@ -41,12 +36,11 @@ public:
     virtual void setConfiguration(QByteArray xmlString);
     virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
     cStatusModuleConfigData* getConfigurationData();
-
 protected slots:
     virtual void configXMLInfo(QString key);
     virtual void completeConfiguration(bool ok);
-
 private:
+    void validateAndSetConfig(QByteArray xmlString, QString xsdFilename);
     cStatusModuleConfigData *m_pStatusModulConfigData;  // configuration
 };
 
