@@ -782,6 +782,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getdspchannelsource:
         case PCB::getadjustmentstatus:
         case PCB::getauthorizationstatus:
+        case PCB::getaccumulatorstatus:
             emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnInt(decodedAnswer.msgBody));
             break;
 
