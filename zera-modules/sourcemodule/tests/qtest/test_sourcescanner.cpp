@@ -5,7 +5,7 @@
 #include "source-scanner/sourcescanneriodemo.h"
 #include "source-scanner/sourcescanneriozeraserial.h"
 
-QTEST_MAIN(test_sourcescanner);
+QTEST_MAIN(test_sourcescanner)
 
 void test_sourcescanner::init()
 {

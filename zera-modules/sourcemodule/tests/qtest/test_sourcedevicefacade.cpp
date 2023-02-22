@@ -12,7 +12,7 @@
 
 #include <QString>
 
-QTEST_MAIN(test_sourcedevicefacade);
+QTEST_MAIN(test_sourcedevicefacade)
 
 void test_sourcedevicefacade::init()
 {

@@ -6,7 +6,7 @@
 #include <QByteArray>
 #include <QTest>
 
-QTEST_MAIN(test_adjustmentmoduleactivator);
+QTEST_MAIN(test_adjustmentmoduleactivator)
 
 void test_adjustmentmoduleactivator::instantiate()
 {

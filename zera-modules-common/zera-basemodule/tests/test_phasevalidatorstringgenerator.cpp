@@ -2,7 +2,7 @@
 #include "phasevalidatorstringgenerator.h"
 #include <QTest>
 
-QTEST_MAIN(test_phasevalidatorstringgenerator);
+QTEST_MAIN(test_phasevalidatorstringgenerator)
 
 void test_phasevalidatorstringgenerator::zeroPhases()
 {

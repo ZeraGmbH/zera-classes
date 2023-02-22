@@ -2,7 +2,7 @@
 #include "test_globals.h"
 #include "source-device/sourcedevicemanager.h"
 
-QTEST_MAIN(test_sourcedevicemanager);
+QTEST_MAIN(test_sourcedevicemanager)
 
 FinishEntry::FinishEntry(int slotNo, QUuid uuid, QString errMsg)
 {

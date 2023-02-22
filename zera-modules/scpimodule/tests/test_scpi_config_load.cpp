@@ -4,7 +4,7 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_scpi_config_load);
+QTEST_MAIN(test_scpi_config_load)
 
 void test_scpi_config_load::fileFound()
 {
