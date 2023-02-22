@@ -8,7 +8,7 @@
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include <zera-json-params-state.h>
 
-QTEST_MAIN(test_sourcestatecontroller);
+QTEST_MAIN(test_sourcestatecontroller)
 
 void test_sourcestatecontroller::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {

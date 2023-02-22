@@ -2,7 +2,7 @@
 #include "inttohexstringconvert.h"
 #include <QTest>
 
-QTEST_MAIN(test_inttohexstringconvert);
+QTEST_MAIN(test_inttohexstringconvert)
 
 void test_inttohexstringconvert::digitCount4()
 {

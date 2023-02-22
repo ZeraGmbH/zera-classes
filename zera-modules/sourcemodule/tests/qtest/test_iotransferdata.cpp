@@ -3,7 +3,7 @@
 #include "io-queue/ioqueueentry.h"
 #include "iodevicebase.h"
 
-QTEST_MAIN(test_iotransferdata);
+QTEST_MAIN(test_iotransferdata)
 
 void test_iotransferdata::init()
 {

@@ -4,7 +4,7 @@
 #include "source-device/sourceswitchjson.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
-QTEST_MAIN(test_sourceswitchjson);
+QTEST_MAIN(test_sourceswitchjson)
 
 void test_sourceswitchjson::init()
 {

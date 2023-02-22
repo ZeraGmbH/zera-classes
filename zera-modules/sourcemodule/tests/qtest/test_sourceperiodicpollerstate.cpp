@@ -2,7 +2,7 @@
 #include "test_globals.h"
 #include "source-device/sourceperiodicpollerstate.h"
 
-QTEST_MAIN(test_sourceperiodicpollerstate);
+QTEST_MAIN(test_sourceperiodicpollerstate)
 
 void test_sourceperiodicpollerstate::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
 {

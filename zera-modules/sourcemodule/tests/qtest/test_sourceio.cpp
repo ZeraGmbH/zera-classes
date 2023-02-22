@@ -5,7 +5,7 @@
 #include "json/jsonstructureloader.h"
 #include <zera-json-params-state.h>
 
-QTEST_MAIN(test_sourceio);
+QTEST_MAIN(test_sourceio)
 
 void test_sourceio::init()
 {
