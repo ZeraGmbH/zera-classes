@@ -409,6 +409,17 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 break;
              case STATUSMODINIT::readPCBServerAccumulatorStatus:
+                if (reply == ack)
+                {
+                    m_sAccumulatorStatus = answer.toString();
+                    m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
+                    emit activationContinue();
+                }
+                else
+                {
+                    emit errMsg((tr(readaccumulatorstatusErrMsg)));
+                    emit activationError();
+                }
                 break;
             }
         }
