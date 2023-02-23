@@ -4,13 +4,13 @@
 
 namespace POWER1MODULE
 {
-const QString defaultXSDFile = "://power1module.xsd";
+static const char* defaultXSDFile = "://power1module.xsd";
 
 cPower1ModuleConfiguration::cPower1ModuleConfiguration()
 {
     m_pPower1ModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cPower1ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cPower1ModuleConfiguration::completeConfiguration);
 }
 
 cPower1ModuleConfiguration::~cPower1ModuleConfiguration()
