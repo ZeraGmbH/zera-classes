@@ -10,8 +10,8 @@ static const char* defaultXSDFile = "://power2module.xsd";
 cPower2ModuleConfiguration::cPower2ModuleConfiguration()
 {
     m_pPower2ModulConfigData = 0;
-    connect(m_pXMLReader, SIGNAL(valueChanged(const QString&)), this, SLOT(configXMLInfo(const QString&)));
-    connect(m_pXMLReader, SIGNAL(finishedParsingXML(bool)), this, SLOT(completeConfiguration(bool)));
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::valueChanged, this, &cPower2ModuleConfiguration::configXMLInfo);
+    connect(m_pXMLReader, &Zera::XMLConfig::cReader::finishedParsingXML, this, &cPower2ModuleConfiguration::completeConfiguration);
 }
 
 cPower2ModuleConfiguration::~cPower2ModuleConfiguration()
