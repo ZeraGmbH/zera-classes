@@ -15,24 +15,24 @@ cPower1ModuleObservation::cPower1ModuleObservation(cPower1Module* module, cSocke
 
     // setting up statemachine for "activating" rangemoduleobservation
     // m_pcbConnectionState.addTransition is done in pcbConnection
-    m_setNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_activationDoneState);
+    m_setNotifierState.addTransition(this, &cPower1ModuleObservation::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbConnectState);
     m_activationMachine.addState(&m_setNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
     m_activationMachine.setInitialState(&m_pcbConnectState);
 
-    connect(&m_pcbConnectState, SIGNAL(entered()), SLOT(pcbConnect()));
-    connect(&m_setNotifierState, SIGNAL(entered()), SLOT(setNotifier()));
-    connect(&m_activationDoneState, SIGNAL(entered()), SLOT(activationDone()));
+    connect(&m_pcbConnectState, &QAbstractState::entered, this, &cPower1ModuleObservation::pcbConnect);
+    connect(&m_setNotifierState, &QAbstractState::entered, this, &cPower1ModuleObservation::setNotifier);
+    connect(&m_activationDoneState, &QAbstractState::entered, this, &cPower1ModuleObservation::activationDone);
 
-    m_resetNotifierState.addTransition(this, SIGNAL(deactivationContinue()), &m_deactivationDoneState);
+    m_resetNotifierState.addTransition(this, &cPower1ModuleObservation::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_resetNotifierState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
     m_deactivationMachine.setInitialState((&m_resetNotifierState));
 
-    connect(&m_resetNotifierState, SIGNAL(entered()), SLOT(resetNotifier()));
-    connect(&m_deactivationDoneState, SIGNAL(entered()), SLOT(deactivationDone()));
+    connect(&m_resetNotifierState, &QAbstractState::entered, this, &cPower1ModuleObservation::resetNotifier);
+    connect(&m_deactivationDoneState, &QAbstractState::entered, this, &cPower1ModuleObservation::deactivationDone);
 }
 
 
@@ -98,10 +98,10 @@ void cPower1ModuleObservation::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
 void cPower1ModuleObservation::pcbConnect()
 {
     m_pPCBClient = Zera::Proxy::getInstance()->getConnection(m_pPCBServerSocket->m_sIP, m_pPCBServerSocket->m_nPort);
-    m_pcbConnectState.addTransition(m_pPCBClient, SIGNAL(connected()), &m_setNotifierState);
+    m_pcbConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_setNotifierState);
 
     m_pPCBInterface->setClient(m_pPCBClient);
-    connect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    connect(m_pPCBInterface, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleObservation::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
 
@@ -128,7 +128,7 @@ void cPower1ModuleObservation::resetNotifier()
 void cPower1ModuleObservation::deactivationDone()
 {
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
-    disconnect(m_pPCBInterface, SIGNAL(serverAnswer(quint32, quint8, QVariant)), this, SLOT(catchInterfaceAnswer(quint32, quint8, QVariant)));
+    disconnect(m_pPCBInterface, &AbstractServerInterface::serverAnswer, this, &cPower1ModuleObservation::catchInterfaceAnswer);
     emit deactivated();
 }
 
