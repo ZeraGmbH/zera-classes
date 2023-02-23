@@ -4,6 +4,7 @@
 
 namespace POWER1MODULE
 {
+const QString defaultXSDFile = "://power1module.xsd";
 
 cPower1ModuleConfiguration::cPower1ModuleConfiguration()
 {
@@ -17,7 +18,7 @@ cPower1ModuleConfiguration::~cPower1ModuleConfiguration()
     if (m_pPower1ModulConfigData) delete m_pPower1ModulConfigData;
 }
 
-void cPower1ModuleConfiguration::setConfiguration(QByteArray xmlString)
+void POWER1MODULE::cPower1ModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
 {
     m_bConfigured = m_bConfigError = false;
 
@@ -62,10 +63,15 @@ void cPower1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
 
 
-    if (m_pXMLReader->loadSchema(defaultXSDFile))
+    if (m_pXMLReader->loadSchema(xsdFilename))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
     else
         m_bConfigError = true;
+}
+
+void cPower1ModuleConfiguration::setConfiguration(QByteArray xmlString)
+{
+    validateAndSetConfig(xmlString, defaultXSDFile);
 }
 
 QByteArray cPower1ModuleConfiguration::exportConfiguration()

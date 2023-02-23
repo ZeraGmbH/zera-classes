@@ -83,14 +83,9 @@ enum moduleconfigstate
     setfreqout4IScaleComponent
 };
 
-
-
 class cPower1ModuleConfigData;
 
-const QString defaultXSDFile = "://src/power1module.xsd";
-
 // moduleconfiguration holds configuration data as well as parameter
-
 class cPower1ModuleConfiguration: public cBaseModuleConfiguration
 {
     Q_OBJECT
@@ -100,12 +95,11 @@ public:
     virtual void setConfiguration(QByteArray xmlString);
     virtual QByteArray exportConfiguration(); // exports conf. and parameters to xml
     cPower1ModuleConfigData* getConfigurationData();
-
 protected slots:
     virtual void configXMLInfo(QString key);
     virtual void completeConfiguration(bool ok);
-
 private:
+    void validateAndSetConfig(QByteArray xmlString, QString xsdFilename);
     cPower1ModuleConfigData *m_pPower1ModulConfigData;  // configuration
 };
 
