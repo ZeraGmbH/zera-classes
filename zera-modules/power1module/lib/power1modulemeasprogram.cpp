@@ -915,7 +915,7 @@ void POWER1MODULE::cPower1ModuleMeasProgram::mmodeAdd2LSg()
     m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
     m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
     m_pDSPInterFace->addCycListItem( s = "ROTATE(MEASSIGNAL2,270.0)");
-    m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // Q
+    m_pDSPInterFace->addCycListItem( s = "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
     m_pDSPInterFace->addCycListItem( s = QString("ADDVVG(TEMP1,TEMP2,VALPQS+%1)").arg(m_nPMSIndex));
 
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0120)");
