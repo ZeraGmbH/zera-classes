@@ -9,8 +9,8 @@ cSCPIMeasureCollector::cSCPIMeasureCollector(cSCPIClient *client, quint32 nr)
     :m_pClient(client), m_nmeasureObjects(nr), m_nmeasureObjectsInit(nr)
 {
     m_nStatus = 0;
-    myStatusConnection = connect(this, SIGNAL(signalStatus(quint8)), m_pClient, SLOT(receiveStatus(quint8)));
-    myAnswerConnection = connect(this, SIGNAL(signalAnswer(QString)), m_pClient, SLOT(receiveAnswer(QString)));
+    myStatusConnection = connect(this, &cSCPIMeasureCollector::signalStatus, m_pClient, &cSCPIClient::receiveStatus);
+    myAnswerConnection = connect(this, &cSCPIMeasureCollector::signalAnswer, m_pClient, &cSCPIClient::receiveAnswer);
 }
 
 
