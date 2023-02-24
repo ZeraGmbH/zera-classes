@@ -130,7 +130,7 @@
                             <xs:simpleType>
                                 <xs:restriction base="xs:integer">
                                     <xs:minInclusive value="1"/>
-                                    <xs:maxInclusive value="11"/>
+                                    <xs:maxInclusive value="15"/>
                                 </xs:restriction>
                             </xs:simpleType>
                         </xs:element>
@@ -145,6 +145,10 @@
                         <xs:element name="m9" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="m10" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="m11" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="m12" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="m13" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="m14" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="m15" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
