@@ -974,7 +974,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode())); // initial measuring mode
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(MeasModeCatalog::getInfoSafe(getConfData()->m_sMeasuringMode.m_sValue)->getCode())); // initial measuring mode
         for(int phase=0; phase<MeasPhaseCount; phase++)
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(FAK,0.5)"));
@@ -1001,7 +1001,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++)
     {
         QStringList sl;
-        int mmode = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i)).getCode();
+        int mmode = MeasModeCatalog::getInfoSafe(getConfData()->m_sMeasmodeList.at(i))->getCode();
         switch (mmode)
         {
         case m4lw:
@@ -1685,13 +1685,10 @@ cPower1ModuleConfigData *cPower1ModuleMeasProgram::getConfData()
 void cPower1ModuleMeasProgram::setActualValuesNames()
 {
     QString powIndicator = "123S"; // (MeasPhaseCount ???)
-
-    cMeasModeInfo mminfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
-
-    for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
-    {
-        m_ActValueList.at(i)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
-        m_ActValueList.at(i)->setUnit(mminfo.getUnitName());
+    const cMeasModeInfo *mminfo = MeasModeCatalog::getInfoSafe(getConfData()->m_sMeasuringMode.m_sValue);
+    for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
+        m_ActValueList.at(i)->setChannelName(QString("%1%2").arg(mminfo->getActvalName()).arg(powIndicator[i]));
+        m_ActValueList.at(i)->setUnit(mminfo->getUnitName());
     }
 }
 
@@ -1718,7 +1715,7 @@ void cPower1ModuleMeasProgram::setFoutMetaInfo()
 
 bool cPower1ModuleMeasProgram::is2WireMode()
 {
-    int mm = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
+    int mm = MeasModeCatalog::getInfoSafe(getConfData()->m_sMeasuringMode.m_sValue)->getCode();
     return ((mm == m2lw) || (mm == m2lb) || (mm == m2ls) || (mm == m2lsg)); // XLW???
 }
 
@@ -2358,7 +2355,7 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
                 powtype = "";
             }
 
-            powtype += MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getActvalName();
+            powtype += MeasModeCatalog::getInfoSafe(getConfData()->m_sMeasuringMode.m_sValue)->getActvalName();
 
             cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
             m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
@@ -2392,7 +2389,7 @@ void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
                              .arg(tipar)
-                             .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode());
+                             .arg(MeasModeCatalog::getInfoSafe(getConfData()->m_sMeasuringMode.m_sValue)->getCode());
     QStringList phaseOnOffList;
     for(int phase=0; phase<MeasPhaseCount; phase++)
         phaseOnOffList += dspGetPhaseVarStr(phase, ":");

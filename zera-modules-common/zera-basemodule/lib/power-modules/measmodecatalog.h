@@ -7,7 +7,8 @@
 class MeasModeCatalog
 {
 public:
-    static const cMeasModeInfo& getInfo(QString name);
+    static const cMeasModeInfo *getInfoSafe(QString name);
+    static const cMeasModeInfo *getInfo(QString name);
 private:
     static QHash<QString,cMeasModeInfo> m_modeInfoHash;
 };
