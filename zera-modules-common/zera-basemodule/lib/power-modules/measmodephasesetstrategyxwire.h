@@ -7,6 +7,7 @@ class MeasModePhaseSetStrategyXWire : public MeasModePhaseSetStrategy
 {
 public:
     MeasModePhaseSetStrategyXWire(MModePhaseMask phaseMask);
+    bool canChangePhaseMask() override { return true; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
     bool tryChangePhase(int phase)  override;
     MModePhaseMask getCurrPhaseMask()  override;

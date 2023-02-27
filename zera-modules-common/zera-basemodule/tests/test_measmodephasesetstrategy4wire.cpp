@@ -4,6 +4,12 @@
 
 QTEST_MAIN(test_measmodephasesetstrategy4wire)
 
+void test_measmodephasesetstrategy4wire::canChangeMask()
+{
+    MeasModePhaseSetStrategy4Wire measStrat;
+    QVERIFY(!measStrat.canChangePhaseMask());
+}
+
 void test_measmodephasesetstrategy4wire::phaseChangeDeny()
 {
     MeasModePhaseSetStrategy4Wire measStrat;

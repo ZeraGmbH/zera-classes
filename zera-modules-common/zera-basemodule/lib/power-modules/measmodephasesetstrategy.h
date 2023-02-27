@@ -10,6 +10,7 @@ class MeasModePhaseSetStrategy
 {
 public:
     virtual ~MeasModePhaseSetStrategy() = default;
+    virtual bool canChangePhaseMask() = 0;
     virtual bool tryChangeMask(MModePhaseMask phaseMask) = 0;
     virtual bool tryChangePhase(int phase) = 0;
     virtual MModePhaseMask getCurrPhaseMask() = 0;
