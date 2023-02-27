@@ -3,6 +3,9 @@
 
 #include <QString>
 
+constexpr int MeasPhaseCount = 3;
+constexpr int SumValueCount = 1;
+
 enum measmodes
 {
     m4lw,

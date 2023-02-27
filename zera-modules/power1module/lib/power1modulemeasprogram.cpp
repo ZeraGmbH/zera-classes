@@ -15,10 +15,6 @@
 namespace POWER1MODULE
 {
 
-constexpr int MeasPhaseCount = 3;
-constexpr int SumValueCount = 1;
-
-
 cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
     :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
 {
