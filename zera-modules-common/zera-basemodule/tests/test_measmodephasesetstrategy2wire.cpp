@@ -4,6 +4,12 @@
 
 QTEST_MAIN(test_measmodephasesetstrategy2wire)
 
+void test_measmodephasesetstrategy2wire::canChangeMask()
+{
+    MeasModePhaseSetStrategy2Wire measStrat(MModePhaseMask("100"));
+    QVERIFY(measStrat.canChangePhaseMask());
+}
+
 void test_measmodephasesetstrategy2wire::phaseInitial()
 {
     MeasModePhaseSetStrategy2Wire measStrat1(MModePhaseMask("100"));

@@ -7,6 +7,7 @@ class test_measmodephasesetstrategy2wire : public QObject
 {
     Q_OBJECT
 private slots:
+    void canChangeMask();
     void phaseInitial();
     void phaseChangeValid();
     void phaseChangeInvalid();

@@ -6,6 +6,7 @@
 class MeasModePhaseSetStrategy3Wire : public MeasModePhaseSetStrategy
 {
 public:
+    bool canChangePhaseMask() override { return false; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
     bool tryChangePhase(int phase)  override;
     MModePhaseMask getCurrPhaseMask()  override;
