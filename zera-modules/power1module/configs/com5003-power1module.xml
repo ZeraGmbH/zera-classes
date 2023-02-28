@@ -22,11 +22,10 @@
         </connectivity>
         <measure>
             <modes>
-                <n>4</n>
+                <n>3</n>
                 <m1>4LW</m1>
                 <m2>3LW</m2>
                 <m3>2LW</m3>
-                <m4>XLW</m4>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
