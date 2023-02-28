@@ -1,12 +1,12 @@
-#ifndef MEASMODEPHASESETSTRATEGYXWIRE_H
-#define MEASMODEPHASESETSTRATEGYXWIRE_H
+#ifndef MEASMODEPHASESETSTRATEGYPHASESVAR_H
+#define MEASMODEPHASESETSTRATEGYPHASESVAR_H
 
 #include "measmodephasesetstrategy.h"
 
-class MeasModePhaseSetStrategyXWire : public MeasModePhaseSetStrategy
+class MeasModePhaseSetStrategyPhasesVar : public MeasModePhaseSetStrategy
 {
 public:
-    MeasModePhaseSetStrategyXWire(MModePhaseMask phaseMask);
+    MeasModePhaseSetStrategyPhasesVar(MModePhaseMask phaseMask);
     bool canChangePhaseMask() override { return true; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
     bool tryChangePhase(int phase)  override;
@@ -15,4 +15,4 @@ private:
     MModePhaseMask m_phaseMask;
 };
 
-#endif // MEASMODEPHASESETSTRATEGYXWIRE_H
+#endif // MEASMODEPHASESETSTRATEGYPHASESVAR_H

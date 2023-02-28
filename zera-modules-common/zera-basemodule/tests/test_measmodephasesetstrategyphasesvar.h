@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class test_measmodephasesetstrategyxwire : public QObject
+class test_measmodephasesetstrategyphasesvar : public QObject
 {
     Q_OBJECT
 private slots:

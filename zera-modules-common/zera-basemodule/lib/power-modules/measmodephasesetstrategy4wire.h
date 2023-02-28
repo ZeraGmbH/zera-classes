@@ -1,12 +1,12 @@
 #ifndef MEASMODEPHASESETSTRATEGY4WIRE_H
 #define MEASMODEPHASESETSTRATEGY4WIRE_H
 
-#include "measmodephasesetstrategyfixedphases.h"
+#include "measmodephasesetstrategyphasesfixed.h"
 
-class MeasModePhaseSetStrategy4Wire : public MeasModePhaseSetStrategyFixedPhases
+class MeasModePhaseSetStrategy4Wire : public MeasModePhaseSetStrategyPhasesFixed
 {
 public:
-    MeasModePhaseSetStrategy4Wire() : MeasModePhaseSetStrategyFixedPhases(MModePhaseMask("111")) {}
+    MeasModePhaseSetStrategy4Wire() : MeasModePhaseSetStrategyPhasesFixed(MModePhaseMask("111")) {}
 };
 
 #endif // MEASMODEPHASESETSTRATEGY4WIRE_H

@@ -1,12 +1,12 @@
-#ifndef MEASMODEPHASESETSTRATEGYFIXEDPHASES_H
-#define MEASMODEPHASESETSTRATEGYFIXEDPHASES_H
+#ifndef MEASMODEPHASESETSTRATEGYPHASESFIXED_H
+#define MEASMODEPHASESETSTRATEGYPHASESFIXED_H
 
 #include "measmodephasesetstrategy.h"
 
-class MeasModePhaseSetStrategyFixedPhases : public MeasModePhaseSetStrategy
+class MeasModePhaseSetStrategyPhasesFixed : public MeasModePhaseSetStrategy
 {
 public:
-    MeasModePhaseSetStrategyFixedPhases(MModePhaseMask phaseMask);
+    MeasModePhaseSetStrategyPhasesFixed(MModePhaseMask phaseMask);
     bool canChangePhaseMask() override { return false; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
     bool tryChangePhase(int phase)  override;
@@ -15,4 +15,4 @@ private:
     MModePhaseMask m_phaseMask;
 };
 
-#endif // MEASMODEPHASESETSTRATEGYFIXEDPHASES_H
+#endif // MEASMODEPHASESETSTRATEGYPHASESFIXED_H
