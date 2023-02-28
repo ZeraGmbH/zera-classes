@@ -15,7 +15,8 @@ public:
     void tryChangeMask(MModePhaseMask phaseMask);
     MModePhaseMask getCurrentMask();
 signals:
-    void sigMaskTransactionFinished();
+    void sigMaskChanged();
+    void sigMaskChangeFailed();
 private:
     const cMeasModeInfo *m_measModeStaticInfo = nullptr;
     measmodes m_dspMode;

@@ -7,9 +7,11 @@ class test_measmode : public QObject
 {
     Q_OBJECT
 private slots:
+    void init();
     void gettersReportProperCtorParams();
     void validPhaseChangeSignal();
     void invalidPhaseChangeSignal();
+    void invalidModeName();
 };
 
 #endif // TEST_MEASMODE_H

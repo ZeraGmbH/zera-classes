@@ -20,8 +20,10 @@ measmodes MeasMode::getDspMode()
 
 void MeasMode::tryChangeMask(MModePhaseMask phaseMask)
 {
-    m_measModePhaseSetter->tryChangeMask(phaseMask);
-    emit sigMaskTransactionFinished();
+    if(m_measModePhaseSetter->tryChangeMask(phaseMask))
+        emit sigMaskChanged();
+    else
+        emit sigMaskChangeFailed();
 }
 
 MModePhaseMask MeasMode::getCurrentMask()
