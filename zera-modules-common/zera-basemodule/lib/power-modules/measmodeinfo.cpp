@@ -1,8 +1,17 @@
 #include "measmodeinfo.h"
 
-cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname, int powmode, int code)
-    :m_sName(name), m_sActvalName(actvalname), m_sUnitName(unitname), m_nPowerMode(powmode), m_nCode(code)
+cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname, int powmode, int code) :
+    m_sName(name),
+    m_sActvalName(actvalname),
+    m_sUnitName(unitname),
+    m_nPowerMode(powmode),
+    m_nCode(code)
 {
+}
+
+bool cMeasModeInfo::isValid()
+{
+    return !m_sName.isEmpty();
 }
 
 QString cMeasModeInfo::getName() const
