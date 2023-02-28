@@ -1,13 +1,11 @@
 #include "measmodecatalog.h"
 
 QHash<QString,cMeasModeInfo> MeasModeCatalog::m_modeInfoHash;
-std::function<const cMeasModeInfo *(QString mode)> MeasModeCatalog::m_warningHandler = [](QString name) {
+std::function<void(QString mode)> MeasModeCatalog::m_warningHandler = [](QString name) {
     qWarning("Unknown measurement mode %s", qPrintable(name));
-    return nullptr;
 };
 
-
-const cMeasModeInfo *MeasModeCatalog::getInfo(QString name)
+cMeasModeInfo MeasModeCatalog::getInfo(QString name)
 {
     if(m_modeInfoHash.isEmpty()) {
         m_modeInfoHash["4LW"] = cMeasModeInfo("4LW", "P", "W", actPower, m4lw);
@@ -25,15 +23,8 @@ const cMeasModeInfo *MeasModeCatalog::getInfo(QString name)
         m_modeInfoHash["QREF"] = cMeasModeInfo("QREF", "P", "W", actPower, mqref);
     }
     if(!m_modeInfoHash.contains(name)) {
-        return m_warningHandler(name);
+        m_warningHandler(name);
+        return cMeasModeInfo();
     }
-    return &m_modeInfoHash[name];
-}
-
-const cMeasModeInfo *MeasModeCatalog::getInfoSafe(QString name)
-{
-    const cMeasModeInfo *info = getInfo(name);
-    if(!info)
-        info = getInfo("4LW");
-    return info;
+    return m_modeInfoHash[name];
 }

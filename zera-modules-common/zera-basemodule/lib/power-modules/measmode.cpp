@@ -3,14 +3,14 @@
 
 MeasMode::MeasMode(QString modeName, measmodes dspMode, std::unique_ptr<MeasModePhaseSetStrategy> measModePhaseSetter)
 {
-    m_measModeStaticInfo = MeasModeCatalog::getInfo(modeName);
+    m_measModeInfo = MeasModeCatalog::getInfo(modeName);
     m_dspMode = dspMode;
     m_measModePhaseSetter = std::move(measModePhaseSetter);
 }
 
-const cMeasModeInfo *MeasMode::getInfo()
+cMeasModeInfo MeasMode::getInfo() const
 {
-    return m_measModeStaticInfo;
+    return m_measModeInfo;
 }
 
 measmodes MeasMode::getDspMode()
