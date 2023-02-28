@@ -652,6 +652,15 @@ quint32 cPCBInterfacePrivate::getAccumulatorStatus()
     return msgnr;
 }
 
+quint32 cPCBInterfacePrivate::getAccumulatorSoc()
+{
+    QString cmd;
+    quint32 msgnr;
+
+    msgnr = sendCommand(cmd = QString("SYST:ACC:SOC?"));
+    m_MsgNrCmdList[msgnr] = PCB::getaccumulatorsoc;
+    return msgnr;
+}
 
 quint32 cPCBInterfacePrivate::transparentCommand(QString cmd)
 {
@@ -783,6 +792,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
         case PCB::getadjustmentstatus:
         case PCB::getauthorizationstatus:
         case PCB::getaccumulatorstatus:
+        case PCB::getaccumulatorsoc:
             emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnInt(decodedAnswer.msgBody));
             break;
 
