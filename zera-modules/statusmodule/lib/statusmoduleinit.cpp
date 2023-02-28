@@ -29,7 +29,9 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_pcbserverRegisterSchnubbelStatusNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialSchnubbelStatus);
     m_pcbserverReadInitialSchnubbelStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterAccumulatorStatusNotifierState);
     m_pcbserverRegisterAccumulatorStatusNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialAccumulatorStatus);
-    m_pcbserverReadInitialAccumulatorStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
+    m_pcbserverReadInitialAccumulatorStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterAccumulatorSocNotifierState);
+    m_pcbserverRegisterAccumulatorSocNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialAccumulatorSoc);
+    m_pcbserverReadInitialAccumulatorSoc.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_pcbserverReadVersionState);
@@ -46,6 +48,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_activationMachine.addState(&m_pcbserverReadInitialSchnubbelStatus);
     m_activationMachine.addState(&m_pcbserverRegisterAccumulatorStatusNotifierState);
     m_activationMachine.addState(&m_pcbserverReadInitialAccumulatorStatus);
+    m_activationMachine.addState(&m_pcbserverRegisterAccumulatorSocNotifierState);
+    m_activationMachine.addState(&m_pcbserverReadInitialAccumulatorSoc);
     m_activationMachine.addState(&m_activationDoneState);
     if(!m_ConfigData.m_bDemo) {
         m_activationMachine.setInitialState(&m_pcbserverConnectionState);
@@ -68,6 +72,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverReadInitialSchnubbelStatus, &QState::entered, this, &cStatusModuleInit::getSchnubbelStatus);
     connect(&m_pcbserverRegisterAccumulatorStatusNotifierState, &QState::entered, this, &cStatusModuleInit::registerAccumulatorStatusNotifier);
     connect(&m_pcbserverReadInitialAccumulatorStatus, &QState::entered, this, &cStatusModuleInit::getAccumulatorStatus);
+    connect(&m_pcbserverRegisterAccumulatorSocNotifierState, &QState::entered, this, &cStatusModuleInit::registerAccumulatorSocNotifier);
+    connect(&m_pcbserverReadInitialAccumulatorSoc, &QState::entered, this, &cStatusModuleInit::getAccumulatorSoc);
     connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterNotifiersState);
@@ -217,12 +223,20 @@ void cStatusModuleInit::generateInterface()
     m_pSchnubbelStatus->setSCPIInfo(new cSCPIInfo("STATUS", "AUTHORIZATION", "2", key, "0", ""));
 
     m_pAccumulatorStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                               key = QString("INF_Accumulator"),
+                                               key = QString("INF_AccumulatorStatus"),
                                                QString("Accumulator status"),
                                                QVariant(QString("")));
 
     m_pModule->veinModuleParameterHash[key] = m_pAccumulatorStatus;
     m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("SYSTEM", "ACCUMULATOR:STATUS", "2", key, "0", ""));
+
+    m_pAccumulatorSoc = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                               key = QString("INF_AccumulatorSoc"),
+                                               QString("Accumulator state of charge"),
+                                               QVariant(QString("")));
+
+    m_pModule->veinModuleParameterHash[key] = m_pAccumulatorSoc;
+    m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("SYSTEM", "ACCUMULATOR:SOC", "2", key, "0", ""));
 }
 
 
@@ -241,8 +255,11 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::schnubbelNotifierID:
                 getSchnubbelStatus();
                 break;
-            case STATUSMODINIT::accumulatorNotifierID:
+            case STATUSMODINIT::accumulatorStatusNotifierID:
                 getAccumulatorStatus();
+                break;
+            case STATUSMODINIT::accumulatorSocNotifierID:
+                getAccumulatorSoc();
                 break;
             }
     }
@@ -270,6 +287,12 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::registerAccumulatorStatusNotifier:
                 if (reply != ack) {
                     qWarning("Register notification for accumulator status failed");
+                }
+                emit activationContinue();
+                break;
+            case STATUSMODINIT::registerAccumulatorSocNotifier:
+                if (reply != ack) {
+                    qWarning("Register notification for accumulator soc failed");
                 }
                 emit activationContinue();
                 break;
@@ -411,19 +434,32 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationError();
                 }
                 break;
-             case STATUSMODINIT::readPCBServerAccumulatorStatus:
-                if (reply == ack)
-                {
-                    m_sAccumulatorStatus = answer.toString();
-                    m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
-                    emit activationContinue();
-                }
-                else
-                {
-                    emit errMsg((tr(readaccumulatorstatusErrMsg)));
-                    emit activationError();
-                }
-                break;
+            case STATUSMODINIT::readPCBServerAccumulatorStatus:
+               if (reply == ack)
+               {
+                   m_sAccumulatorStatus = answer.toString();
+                   m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
+                   emit activationContinue();
+               }
+               else
+               {
+                   emit errMsg((tr(readaccumulatorstatusErrMsg)));
+                   emit activationError();
+               }
+               break;
+            case STATUSMODINIT::readPCBServerAccumulatorSoc:
+               if (reply == ack)
+               {
+                   m_sAccumulatorSoc = answer.toString();
+                   m_pAccumulatorSoc->setValue(QVariant(m_sAccumulatorSoc));
+                   emit activationContinue();
+               }
+               else
+               {
+                   emit errMsg((tr(readaccumulatorsocErrMsg)));
+                   emit activationError();
+               }
+               break;
             }
         }
     }
@@ -495,6 +531,11 @@ void cStatusModuleInit::getSchnubbelStatus()
 void cStatusModuleInit::getAccumulatorStatus()
 {
     m_MsgNrCmdList[m_pPCBInterface->getAccumulatorStatus()] = STATUSMODINIT::readPCBServerAccumulatorStatus;
+}
+
+void cStatusModuleInit::getAccumulatorSoc()
+{
+    m_MsgNrCmdList[m_pPCBInterface->getAccumulatorSoc()] = STATUSMODINIT::readPCBServerAccumulatorSoc;
 }
 
 void cStatusModuleInit::setInterfaceComponents()
@@ -600,7 +641,12 @@ void cStatusModuleInit::registerSchnubbelStatusNotifier()
 
 void cStatusModuleInit::registerAccumulatorStatusNotifier()
 {
-    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:STATUS?"), STATUSMODINIT::accumulatorNotifierID)] = STATUSMODINIT::registerAccumulatorStatusNotifier;
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:STATUS?"), STATUSMODINIT::accumulatorStatusNotifierID)] = STATUSMODINIT::registerAccumulatorStatusNotifier;
+}
+
+void cStatusModuleInit::registerAccumulatorSocNotifier()
+{
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:SOC?"), STATUSMODINIT::accumulatorSocNotifierID)] = STATUSMODINIT::registerAccumulatorSocNotifier;
 }
 
 

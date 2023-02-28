@@ -362,6 +362,12 @@ quint32 cPCBInterface::getAccumulatorStatus()
     return d->getAccumulatorStatus();
 }
 
+quint32 cPCBInterface::getAccumulatorSoc()
+{
+    Q_D(cPCBInterface);
+    return d->getAccumulatorSoc();
+}
+
 
 quint32 cPCBInterface::transparentCommand(QString cmd)
 {

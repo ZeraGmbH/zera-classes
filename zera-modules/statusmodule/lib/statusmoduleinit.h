@@ -31,13 +31,16 @@ enum statusmoduleinitCmds
     readPCBServerSchnubbelStatus,
     registerAccumulatorStatusNotifier,
     readPCBServerAccumulatorStatus,
+    registerAccumulatorSocNotifier,
+    readPCBServerAccumulatorSoc
 };
 
 enum NOTIFIER_IDS
 {
     clampNotifierID = 1,
     schnubbelNotifierID,
-    accumulatorNotifierID
+    accumulatorStatusNotifierID,
+    accumulatorSocNotifierID
 };
 
 }
@@ -80,6 +83,8 @@ private:
     QState m_pcbserverReadInitialSchnubbelStatus;
     QState m_pcbserverRegisterAccumulatorStatusNotifierState;
     QState m_pcbserverReadInitialAccumulatorStatus;
+    QState m_pcbserverRegisterAccumulatorSocNotifierState;
+    QState m_pcbserverReadInitialAccumulatorSoc;
     QFinalState m_activationDoneState; // here we still read the release version
 
     // statemachine for adjustment-status // -checksum re-read
@@ -105,6 +110,7 @@ private:
     QString m_sCPUInfo;
     QString m_sSchnubbelStatus;
     QString m_sAccumulatorStatus;
+    QString m_sAccumulatorSoc;
 
     VfModuleParameter *m_pPCBServerVersion;
     VfModuleParameter *m_pCtrlVersion;
@@ -119,6 +125,7 @@ private:
     VfModuleParameter *m_pAdjustmentChksum;
     VfModuleParameter *m_pSchnubbelStatus;
     VfModuleParameter *m_pAccumulatorStatus;
+    VfModuleParameter *m_pAccumulatorSoc;
 
     QString findReleaseNr();
     QString findDeviceType();
@@ -143,8 +150,10 @@ private slots:
     void dspserverReadDSPProgramVersion();
     void registerSchnubbelStatusNotifier();
     void registerAccumulatorStatusNotifier();
+    void registerAccumulatorSocNotifier();
     void getSchnubbelStatus();
     void getAccumulatorStatus();
+    void getAccumulatorSoc();
 
     void activationDone();
     void deactivationDone();
