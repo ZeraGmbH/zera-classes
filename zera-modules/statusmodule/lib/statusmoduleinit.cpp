@@ -241,7 +241,10 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::schnubbelNotifierID:
                 getSchnubbelStatus();
                 break;
-        }
+            case STATUSMODINIT::accumulatorNotifierID:
+                getAccumulatorStatus();
+                break;
+            }
     }
     else
     {
