@@ -1,15 +1,12 @@
 #ifndef MEASMODEPHASESETSTRATEGY4WIRE_H
 #define MEASMODEPHASESETSTRATEGY4WIRE_H
 
-#include "measmodephasesetstrategy.h"
+#include "measmodephasesetstrategyfixedphases.h"
 
-class MeasModePhaseSetStrategy4Wire : public MeasModePhaseSetStrategy
+class MeasModePhaseSetStrategy4Wire : public MeasModePhaseSetStrategyFixedPhases
 {
 public:
-    bool canChangePhaseMask() override { return false; }
-    bool tryChangeMask(MModePhaseMask phaseMask) override;
-    bool tryChangePhase(int phase)  override;
-    MModePhaseMask getCurrPhaseMask()  override;
+    MeasModePhaseSetStrategy4Wire() : MeasModePhaseSetStrategyFixedPhases(MModePhaseMask("111")) {}
 };
 
 #endif // MEASMODEPHASESETSTRATEGY4WIRE_H
