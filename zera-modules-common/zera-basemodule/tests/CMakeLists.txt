@@ -7,4 +7,5 @@ SETUP_QTESTS(
     test_measmodephasesetstrategyxwire
     test_measmodephasesetstrategyfixedphases
     test_measmode
+    test_measmodeselector
 )
