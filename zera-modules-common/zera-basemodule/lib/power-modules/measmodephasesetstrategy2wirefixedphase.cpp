@@ -1,27 +1,13 @@
 #include "measmodephasesetstrategy2wirefixedphase.h"
 
-MeasModePhaseSetStrategy2WireFixedPhase::MeasModePhaseSetStrategy2WireFixedPhase(int phase)
+MeasModePhaseSetStrategy2WireFixedPhase::MeasModePhaseSetStrategy2WireFixedPhase(int phase) :
+    MeasModePhaseSetStrategyFixedPhases(maskFromPhase(phase))
 {
-    m_phaseMask = MModePhaseMask("100");
+}
+
+MModePhaseMask MeasModePhaseSetStrategy2WireFixedPhase::maskFromPhase(int phase)
+{
     if(phase<0 || phase>=MeasPhaseCount)
-        return;
-    m_phaseMask = (1<<(MeasPhaseCount-phase-1));
+        return 0;
+    return (1<<(MeasPhaseCount-phase-1));
 }
-
-bool MeasModePhaseSetStrategy2WireFixedPhase::tryChangeMask(MModePhaseMask phaseMask)
-{
-    Q_UNUSED(phaseMask)
-    return false;
-}
-
-bool MeasModePhaseSetStrategy2WireFixedPhase::tryChangePhase(int phase)
-{
-    Q_UNUSED(phase)
-    return false;
-}
-
-MModePhaseMask MeasModePhaseSetStrategy2WireFixedPhase::getCurrPhaseMask()
-{
-    return m_phaseMask;
-}
-

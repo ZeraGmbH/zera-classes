@@ -1,18 +1,15 @@
 #ifndef MEASMODEPHASESETSTRATEGY2WIREFIXEDPHASE_H
 #define MEASMODEPHASESETSTRATEGY2WIREFIXEDPHASE_H
 
-#include "measmodephasesetstrategy.h"
+#include "measmodephasesetstrategyfixedphases.h"
 
-class MeasModePhaseSetStrategy2WireFixedPhase : public MeasModePhaseSetStrategy
+// This is just temporay and can go once we support variable phases on 2-wire
+class MeasModePhaseSetStrategy2WireFixedPhase : public MeasModePhaseSetStrategyFixedPhases
 {
 public:
     MeasModePhaseSetStrategy2WireFixedPhase(int phase);
-    bool canChangePhaseMask() override { return false; }
-    bool tryChangeMask(MModePhaseMask phaseMask) override;
-    bool tryChangePhase(int phase)  override;
-    MModePhaseMask getCurrPhaseMask()  override;
-private:
-    MModePhaseMask m_phaseMask;
+protected:
+    MModePhaseMask maskFromPhase(int phase);
 };
 
 #endif // MEASMODEPHASESETSTRATEGY2WIREFIXEDPHASE_H
