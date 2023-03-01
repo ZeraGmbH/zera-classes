@@ -23,29 +23,21 @@ enum measmodes
     mqref
 };
 
-enum powermodes
-{
-    actPower, reactPower, appPower
-};
-
 class cMeasModeInfo
 {
 public:
     cMeasModeInfo(){}
-    cMeasModeInfo(QString name, QString actvalname, QString unitname,int powmode, int code);
+    cMeasModeInfo(QString name, QString actvalname, QString unitname, measmodes code);
     bool isValid();
     QString getName() const;
     QString getActvalName() const;
     QString getUnitName() const;
-    quint8 getPowerMode() const;
-    quint8 getCode() const;
-
+    measmodes getCode() const;
 private:
     QString m_sName;
     QString m_sActvalName;
     QString m_sUnitName;
-    quint8 m_nPowerMode; // actPower, reactPower, appPower
-    quint8 m_nCode;
+    measmodes m_nCode;
 };
 
 #endif // MEASMODEINFO_H
