@@ -39,4 +39,3 @@ quint8 cMeasModeInfo::getCode () const
 {
     return m_nCode;
 }
-

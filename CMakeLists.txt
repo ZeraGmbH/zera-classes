@@ -44,7 +44,7 @@ function(SETUP_QTESTS)
             service-interfaces-testlib
             module-tasks-testlib
             source-module-testhelpers
-            zera-basemodule-testlib
+            zera-meas-mode-management-testlib
             VeinMeta::VfStorageHash
             )
     endforeach()
