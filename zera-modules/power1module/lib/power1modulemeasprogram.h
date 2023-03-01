@@ -83,7 +83,6 @@ protected slots:
 
 private:
     cPower1ModuleConfigData* getConfData();
-    void dspCmdInitVars(measmodes dspInitialMode);
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
@@ -212,6 +211,7 @@ private:
         int voltageChannel;
         int currentChannel;
     };
+    QStringList dspCmdInitVars(int dspSelectCode);
     QStringList mmodeAdd4LW(int dspSelectCode);
     QStringList mmodeAdd4LB(int dspSelectCode);
     QStringList mmodeAdd4LBK(int dspSelectCode);
