@@ -86,6 +86,7 @@ private:
     void dspCmdInitVars(measmodes dspInitialMode);
 
     cPower1Module* m_pModule;
+    MeasModeSelector m_measModeSelector;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
@@ -205,19 +206,25 @@ private:
     void handleMModeParamChange();
     void handleMovingWindowIntTimeChange();
     void updatesForMModeChange();
-    void mmodeAdd4LW();
-    void mmodeAdd4LB();
-    void mmodeAdd4LBK();
-    void mmodeAdd4LS();
-    void mmodeAdd4LSg();
-    void mmodeAdd3LW();
-    void mmodeAdd3LB();
-    void mmodeAdd2LW();
-    void mmodeAdd2LB();
-    void mmodeAdd2LS();
-    void mmodeAdd2LSg();
-    void mmodeAddXLW();
-    void mmodeAddMQREF();
+
+    struct MeasSystemChannels
+    {
+        int voltageChannel;
+        int currentChannel;
+    };
+    QStringList mmodeAdd4LW(int dspSelectCode);
+    QStringList mmodeAdd4LB(int dspSelectCode);
+    QStringList mmodeAdd4LBK(int dspSelectCode);
+    QStringList mmodeAdd4LS(int dspSelectCode);
+    QStringList mmodeAdd4LSg(int dspSelectCode);
+    QStringList mmodeAdd3LW(int dspSelectCode);
+    QStringList mmodeAdd3LB(int dspSelectCode);
+    QStringList mmodeAdd2LW(int dspSelectCode);
+    QStringList mmodeAdd2LB(int dspSelectCode);
+    QStringList mmodeAdd2LS(int dspSelectCode);
+    QStringList mmodeAdd2LSg(int dspSelectCode);
+    QStringList mmodeAddXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList mmodeAddMQREF();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
