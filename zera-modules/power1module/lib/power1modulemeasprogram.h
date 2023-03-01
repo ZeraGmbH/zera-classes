@@ -4,6 +4,7 @@
 #include "power1moduleconfigdata.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
+#include <measmodeselector.h>
 #include <foutinfo.h>
 #include <vfmodulecomponentinput.h>
 #include <movingwindowfilter.h>
@@ -82,6 +83,7 @@ protected slots:
 
 private:
     cPower1ModuleConfigData* getConfData();
+    void dspCmdInitVars(measmodes dspInitialMode);
 
     cPower1Module* m_pModule;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;

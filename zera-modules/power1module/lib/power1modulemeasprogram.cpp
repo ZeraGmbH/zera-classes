@@ -965,16 +965,14 @@ void POWER1MODULE::cPower1ModuleMeasProgram::mmodeAddMQREF()
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0127)");
 }
 
-void cPower1ModuleMeasProgram::setDspCmdList()
+void cPower1ModuleMeasProgram::dspCmdInitVars(measmodes dspInitialMode)
 {
     QString s;
-    QStringList sl1, sl2, sl3;
-
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode())); // initial measuring mode
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(dspInitialMode));
         for(int phase=0; phase<MeasPhaseCount; phase++)
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(FAK,0.5)"));
@@ -996,12 +994,16 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+}
 
+void cPower1ModuleMeasProgram::setDspCmdList()
+{
+    measmodes dspModeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
+    dspCmdInitVars(dspModeFromConfig);
     // we set up all our lists for wanted measuring modes, this gets much more performance
-    for (int i = 0; i < getConfData()->m_nMeasModeCount; i++)
-    {
-        QStringList sl;
-        int mmode = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i)).getCode();
+    for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
+        cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
+        measmodes mmode = mInfo.getCode();
         switch (mmode)
         {
         case m4lw:
@@ -1044,9 +1046,9 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             mmodeAddMQREF();
             break;
         }
-
     }
 
+    QString s;
     // we have to compute sum of our power systems (use loop + MeasPhaseCount ???)
     m_pDSPInterFace->addCycListItem( s = "ADDVVV(VALPQS,VALPQS+1,VALPQS+3)");
     m_pDSPInterFace->addCycListItem( s = "ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)");
