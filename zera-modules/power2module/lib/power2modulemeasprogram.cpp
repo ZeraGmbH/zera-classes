@@ -438,15 +438,14 @@ void POWER2MODULE::cPower2ModuleMeasProgram::mmodeAdd4LW()
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0110)");
 }
 
-void cPower2ModuleMeasProgram::setDspCmdList()
+void POWER2MODULE::cPower2ModuleMeasProgram::dspCmdInitVars(measmodes dspInitialMode)
 {
     QString s;
-
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*12+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode())); // initial measuring mode
+        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(dspInitialMode));
 
         if (getConfData()->m_sIntegrationMode == "time")
         {
@@ -465,20 +464,28 @@ void cPower2ModuleMeasProgram::setDspCmdList()
 
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+}
+
+void cPower2ModuleMeasProgram::setDspCmdList()
+{
+    measmodes dspModeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
+    dspCmdInitVars(dspModeFromConfig);
 
     // we have a loop here in spite of we have only 1 measuring mode possible ....maybe we get more
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++)
     {
-        QStringList sl;
-        int mmode = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i)).getCode();
+        measmodes mmode = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i)).getCode();
         switch (mmode)
         {
         case m4lw:
             mmodeAdd4LW();
             break;
+        default:
+            break;
         }
     }
 
+    QString s;
     // we have to compute sum of our power systems
     m_pDSPInterFace->addCycListItem( s = "ADDVVV(VALPOWER,VALPOWER+3,VALPOWER+9)");
     m_pDSPInterFace->addCycListItem( s = "ADDVVV(VALPOWER+6,VALPOWER+9,VALPOWER+9)"); // PS+ = (P1+) +(P2+) + (P3+)

@@ -5,6 +5,7 @@
 #include "power2moduleconfigdata.h"
 #include "measchannelinfo.h"
 #include "foutinfo.h"
+#include <measmodeselector.h>
 #include <basedspmeasprogram.h>
 #include <movingwindowfilter.h>
 
@@ -76,6 +77,7 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cPower2ModuleConfigData* getConfData();
+    void dspCmdInitVars(measmodes dspInitialMode);
     void setActualValuesNames();
     bool is2WireMode();
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
