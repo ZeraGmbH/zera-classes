@@ -18,5 +18,6 @@ target_include_directories(power1module-static
 
 target_link_libraries(power1module-static
     zera-basemodule
+    zera-meas-mode-management
 )
 
