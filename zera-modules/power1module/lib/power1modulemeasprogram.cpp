@@ -963,14 +963,14 @@ QStringList cPower1ModuleMeasProgram::mmodeAddMQREF(int dspSelectCode)
     return dspCmdList;
 }
 
-QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspSelectCode)
+QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
     dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
-    dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspSelectCode));
+    dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
     for(int phase=0; phase<MeasPhaseCount; phase++)
         dspCmdList.append(QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
     dspCmdList.append(QString("SETVAL(FAK,0.5)"));
@@ -980,7 +980,6 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspSelectCode)
             dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
         else
             dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
-
         dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
     }
     else
@@ -995,7 +994,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     measmodes dspSelectCodeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
 
-    // we set up all our lists for wanted measuring modes, this gets much more performance
     QList<MeasSystemChannels> measChannelPairList;
     for(const auto& measChannelPair : qAsConst(getConfData()->m_sMeasSystemList)) {
         QStringList channelPairSplit = measChannelPair.split(',');
@@ -1005,6 +1003,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         measChannelPairList.append(measChannels);
     }
 
+    // we set up all our lists for wanted measuring modes, this gets much more performance
     QStringList dspMModesCommandList;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));

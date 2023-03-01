@@ -211,7 +211,7 @@ private:
         int voltageChannel;
         int currentChannel;
     };
-    QStringList dspCmdInitVars(int dspSelectCode);
+    QStringList dspCmdInitVars(int dspInitialSelectCode);
     QStringList mmodeAdd4LW(int dspSelectCode);
     QStringList mmodeAdd4LB(int dspSelectCode);
     QStringList mmodeAdd4LBK(int dspSelectCode);
