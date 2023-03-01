@@ -946,12 +946,11 @@ QStringList cPower1ModuleMeasProgram::mmodeAddXLW(int dspSelectCode, QList<MeasS
     return cmdList;
 }
 
-QStringList cPower1ModuleMeasProgram::mmodeAddMQREF()
+QStringList cPower1ModuleMeasProgram::mmodeAddMQREF(int dspSelectCode)
 {
     QStringList dspCmdList;
-    int dspMMode = mqref;
     dspCmdList.append("ACTIVATECHAIN(1,0x0127)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspMMode));
+    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
     dspCmdList.append("DEACTIVATECHAIN(1,0x0127)");
     dspCmdList.append("STARTCHAIN(0,1,0x0127)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
@@ -1049,7 +1048,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             dspMModesCommandList.append(mmodeAddXLW(dspSelectCode, measChannelPairList));
             break;
         case mqref:
-            dspMModesCommandList.append(mmodeAddMQREF());
+            dspMModesCommandList.append(mmodeAddMQREF(dspSelectCode));
             break;
         }
     }

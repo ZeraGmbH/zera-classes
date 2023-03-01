@@ -224,7 +224,7 @@ private:
     QStringList mmodeAdd2LS(int dspSelectCode);
     QStringList mmodeAdd2LSg(int dspSelectCode);
     QStringList mmodeAddXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAddMQREF();
+    QStringList mmodeAddMQREF(int dspSelectCode);
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
