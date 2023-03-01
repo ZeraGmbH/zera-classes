@@ -1,10 +1,9 @@
 #include "measmodeinfo.h"
 
-cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname, int powmode, int code) :
+cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname, measmodes code) :
     m_sName(name),
     m_sActvalName(actvalname),
     m_sUnitName(unitname),
-    m_nPowerMode(powmode),
     m_nCode(code)
 {
 }
@@ -29,13 +28,7 @@ QString cMeasModeInfo::getUnitName() const
     return m_sUnitName;
 }
 
-quint8 cMeasModeInfo::getPowerMode() const
-{
-    return m_nPowerMode;
-
-}
-
-quint8 cMeasModeInfo::getCode () const
+measmodes cMeasModeInfo::getCode() const
 {
     return m_nCode;
 }
