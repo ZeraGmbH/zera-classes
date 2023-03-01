@@ -81,7 +81,7 @@ private:
     void setActualValuesNames();
     bool is2WireMode();
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
-    void mmodeAdd4LW();
+    QStringList mmodeAdd4LW(int dspSelectCode);
 
     cPower2Module* m_pModule;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
