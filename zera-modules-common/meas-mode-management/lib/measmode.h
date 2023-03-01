@@ -9,9 +9,9 @@ class MeasMode : public QObject
 {
     Q_OBJECT
 public:
-    MeasMode(QString modeName, measmodes dspMode, std::unique_ptr<MeasModePhaseSetStrategy> measModePhaseSetter);
+    MeasMode(QString modeName, int dspSelectCode, std::unique_ptr<MeasModePhaseSetStrategy> measModePhaseSetter);
     cMeasModeInfo getInfo() const;
-    measmodes getDspMode();
+    int getDspSelectCode();
     void tryChangeMask(MModePhaseMask phaseMask);
     MModePhaseMask getCurrentMask();
 signals:
@@ -19,7 +19,7 @@ signals:
     void sigMaskChangeFailed();
 private:
     cMeasModeInfo m_measModeInfo;
-    measmodes m_dspMode;
+    int m_dspSelectCode;
     std::unique_ptr<MeasModePhaseSetStrategy> m_measModePhaseSetter;
 };
 
