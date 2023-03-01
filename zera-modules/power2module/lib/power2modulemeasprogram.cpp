@@ -398,6 +398,27 @@ void cPower2ModuleMeasProgram::deleteDspVarList()
     m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
 }
 
+QStringList POWER2MODULE::cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
+{
+    QStringList dspCmdList;
+    dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
+    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
+    dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*12+1) ); // clear the whole filter incl. count
+    dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
+    if (getConfData()->m_sIntegrationMode == "time") {
+        if (getConfData()->m_bmovingWindow)
+            dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+        else
+            dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
+        dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
+    }
+    else
+        dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
+    dspCmdList.append("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    dspCmdList.append("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    return dspCmdList;
+}
 
 QStringList POWER2MODULE::cPower2ModuleMeasProgram::mmodeAdd4LW(int dspSelectCode)
 {
@@ -438,38 +459,10 @@ QStringList POWER2MODULE::cPower2ModuleMeasProgram::mmodeAdd4LW(int dspSelectCod
     return dspCmdList;
 }
 
-void POWER2MODULE::cPower2ModuleMeasProgram::dspCmdInitVars(measmodes dspInitialMode)
-{
-    QString s;
-    m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*12+1) ); // clear the whole filter incl. count
-        m_pDSPInterFace->addCycListItem( s = QString("SETVAL(MMODE,%1)").arg(dspInitialMode));
-
-        if (getConfData()->m_sIntegrationMode == "time")
-        {
-
-            if (getConfData()->m_bmovingWindow)
-                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
-            else
-                m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
-
-            m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // einmal ti start setzen
-        }
-        else
-        {
-            m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
-        }
-
-        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-    m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-}
-
 void cPower2ModuleMeasProgram::setDspCmdList()
 {
-    measmodes dspModeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
-    dspCmdInitVars(dspModeFromConfig);
+    int dspSelectCodeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
+    QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
 
     // we have a loop here in spite of we have only 1 measuring mode possible ....maybe we get more
     QStringList dspMModesCommandList;
@@ -485,7 +478,6 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         }
     }
 
-    QString s;
     // we have to compute sum of our power systems
     dspMModesCommandList.append("ADDVVV(VALPOWER,VALPOWER+3,VALPOWER+9)");
     dspMModesCommandList.append("ADDVVV(VALPOWER+6,VALPOWER+9,VALPOWER+9)"); // PS+ = (P1+) +(P2+) + (P3+)
@@ -494,10 +486,15 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     dspMModesCommandList.append("ADDVVV(VALPOWER+9,VALPOWER+10,VALPOWER+11)"); // PS = (PS+) + (PS-)
     // and filter all our values
     dspMModesCommandList.append(QString("AVERAGE1(12,VALPOWER,FILTER)")); // we add results to filter
+
+    // sequence here is important
+    for(const auto &cmd : dspInitVarsList)
+        m_pDSPInterFace->addCycListItem(cmd);
     for(const auto &cmd : dspMModesCommandList)
         m_pDSPInterFace->addCycListItem(cmd);
 
     // so... let's now set our frequency outputs if he have some
+    QString s;
     if (getConfData()->m_sFreqActualizationMode == "signalperiod")
     {
         if (getConfData()->m_nFreqOutputCount > 0)

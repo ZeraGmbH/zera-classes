@@ -77,11 +77,11 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cPower2ModuleConfigData* getConfData();
-    void dspCmdInitVars(measmodes dspInitialMode);
+    QStringList dspCmdInitVars(int dspInitialSelectCode);
+    QStringList mmodeAdd4LW(int dspSelectCode);
     void setActualValuesNames();
     bool is2WireMode();
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
-    QStringList mmodeAdd4LW(int dspSelectCode);
 
     cPower2Module* m_pModule;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
