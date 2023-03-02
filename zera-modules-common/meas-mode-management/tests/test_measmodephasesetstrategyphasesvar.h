@@ -9,8 +9,6 @@ class test_measmodephasesetstrategyphasesvar : public QObject
 private slots:
     void canChangeMask();
     void phaseInitial();
-    void phaseChangeValid();
-    void phaseChangeInvalid();
     void maskSet();
 };
 

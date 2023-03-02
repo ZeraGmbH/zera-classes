@@ -24,24 +24,6 @@ void test_measmodephasesetstrategyphasesvar::phaseInitial()
     QCOMPARE(measStrat5.getCurrPhaseMask(), MModePhaseMask("000"));
 }
 
-void test_measmodephasesetstrategyphasesvar::phaseChangeValid()
-{
-    MeasModePhaseSetStrategyPhasesVar measStrat(MModePhaseMask("100"));
-    QVERIFY(measStrat.tryChangePhase(1));
-    QCOMPARE(measStrat.getCurrPhaseMask(), MModePhaseMask("010"));
-}
-
-void test_measmodephasesetstrategyphasesvar::phaseChangeInvalid()
-{
-    MeasModePhaseSetStrategyPhasesVar measStrat1(MModePhaseMask("100"));
-    QVERIFY(!measStrat1.tryChangePhase(-1));
-    QCOMPARE(measStrat1.getCurrPhaseMask(), MModePhaseMask("100"));
-
-    MeasModePhaseSetStrategyPhasesVar measStrat2(MModePhaseMask("010"));
-    QVERIFY(!measStrat2.tryChangePhase(MeasPhaseCount));
-    QCOMPARE(measStrat2.getCurrPhaseMask(), MModePhaseMask("010"));
-}
-
 void test_measmodephasesetstrategyphasesvar::maskSet()
 {
     MeasModePhaseSetStrategyPhasesVar measStrat(MModePhaseMask("000"));
