@@ -995,9 +995,6 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 
 void cPower1ModuleMeasProgram::setDspCmdList()
 {
-    measmodes dspSelectCodeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
-    QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
-
     QList<MeasSystemChannels> measChannelPairList;
     for(const auto& measChannelPair : qAsConst(getConfData()->m_sMeasSystemList)) {
         QStringList channelPairSplit = measChannelPair.split(',');
@@ -1072,6 +1069,10 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     dspMModesCommandList.append("ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)");
     // and filter all our values (MeasPhaseCount ???)
     dspMModesCommandList.append(QString("AVERAGE1(4,VALPQS,FILTER)")); // we add results to filter
+
+    m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
+    int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
+    QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
 
     // sequence here is important
     for(const auto &cmd : dspInitVarsList)
@@ -2116,7 +2117,6 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
     connect(&m_measModeSelector, &MeasModeSelector::sigModeChanged,
             this, &cPower1ModuleMeasProgram::onModeSelectSucceeded);
-    m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
@@ -2471,10 +2471,7 @@ void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 
 void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 {
-    getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
-    m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
-    handleMModeParamChange();
-    updatesForMModeChange();
+    m_measModeSelector.tryChangeMode(mm.toString());
 }
 
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
@@ -2493,7 +2490,10 @@ void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 
 void cPower1ModuleMeasProgram::onModeSelectSucceeded()
 {
-
+    QString newMeasMode = m_measModeSelector.getCurrMode()->getInfo().getName();
+    getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
+    handleMModeParamChange();
+    updatesForMModeChange();
 }
 
 }
