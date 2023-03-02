@@ -3,6 +3,10 @@
 #include "power1moduleconfigdata.h"
 #include "power1moduleconfiguration.h"
 #include "phasevalidatorstringgenerator.h"
+#include "measmodephasesetstrategy4wire.h"
+#include "measmodephasesetstrategyphasesfixed.h"
+#include "measmodephasesetstrategyphasesvar.h"
+#include "measmodephasesetstrategy2wirefixedphase.h"
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -1012,39 +1016,51 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         {
         case m4lw:
             dspMModesCommandList.append(mmodeAdd4LW(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lb:
             dspMModesCommandList.append(mmodeAdd4LB(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lbk:
             dspMModesCommandList.append(mmodeAdd4LBK(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4ls:
             dspMModesCommandList.append(mmodeAdd4LS(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lsg:
             dspMModesCommandList.append(mmodeAdd4LSg(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m3lw:
             dspMModesCommandList.append(mmodeAdd3LW(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"))));
             break;
         case m3lb:
             dspMModesCommandList.append(mmodeAdd3LB(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"))));
             break;
         case m2lw:
             dspMModesCommandList.append(mmodeAdd2LW(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
             break;
         case m2lb:
             dspMModesCommandList.append(mmodeAdd2LB(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
             break;
         case m2ls:
             dspMModesCommandList.append(mmodeAdd2LS(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
             break;
         case m2lsg:
             dspMModesCommandList.append(mmodeAdd2LSg(dspSelectCode));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
             break;
         case mXlw:
             dspMModesCommandList.append(mmodeAddXLW(dspSelectCode, measChannelPairList));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(), dspSelectCode, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("111"))));
             break;
         case mqref:
             dspMModesCommandList.append(mmodeAddMQREF(dspSelectCode));
@@ -2098,6 +2114,9 @@ void cPower1ModuleMeasProgram::activateDSPdone()
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationPeriod);
     connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newMeasMode);
     connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
+    connect(&m_measModeSelector, &MeasModeSelector::sigModeChanged,
+            this, &cPower1ModuleMeasProgram::onModeSelectSucceeded);
+    m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
@@ -2453,6 +2472,7 @@ void cPower1ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 {
     getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
+    m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     handleMModeParamChange();
     updatesForMModeChange();
 }
@@ -2469,6 +2489,11 @@ void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
     Q_UNUSED(p_newValue);
     setFoutConstants();
     setFrequencyScales();
+}
+
+void cPower1ModuleMeasProgram::onModeSelectSucceeded()
+{
+
 }
 
 }
