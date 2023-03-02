@@ -10,14 +10,6 @@ bool MeasModePhaseSetStrategy2Wire::tryChangeMask(MModePhaseMask phaseMask)
     return tryChangeMaskPriv(phaseMask);
 }
 
-bool MeasModePhaseSetStrategy2Wire::tryChangePhase(int phase)
-{
-    if(phase<0 || phase>=MeasPhaseCount)
-        return false;
-    m_phaseMask = (1<<(MeasPhaseCount-phase-1));
-    return true;
-}
-
 MModePhaseMask MeasModePhaseSetStrategy2Wire::getCurrPhaseMask()
 {
     return m_phaseMask;

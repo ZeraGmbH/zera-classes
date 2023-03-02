@@ -11,12 +11,6 @@ bool MeasModePhaseSetStrategyPhasesFixed::tryChangeMask(MModePhaseMask phaseMask
     return false;
 }
 
-bool MeasModePhaseSetStrategyPhasesFixed::tryChangePhase(int phase)
-{
-    Q_UNUSED(phase)
-    return false;
-}
-
 MModePhaseMask MeasModePhaseSetStrategyPhasesFixed::getCurrPhaseMask()
 {
     return m_phaseMask;

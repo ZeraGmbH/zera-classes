@@ -10,14 +10,6 @@ void test_measmodephasesetstrategyphasesfixed::canChangeMask()
     QVERIFY(!measStrat.canChangePhaseMask());
 }
 
-void test_measmodephasesetstrategyphasesfixed::phaseChangeDeny()
-{
-    MeasModePhaseSetStrategyPhasesFixed measStrat(MModePhaseMask("111"));
-    QVERIFY(!measStrat.tryChangePhase(0));
-    QVERIFY(!measStrat.tryChangePhase(1));
-    QVERIFY(!measStrat.tryChangePhase(2));
-}
-
 void test_measmodephasesetstrategyphasesfixed::maskChangeDeny()
 {
     MeasModePhaseSetStrategyPhasesFixed measStrat(MModePhaseMask("111"));

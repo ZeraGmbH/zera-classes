@@ -9,7 +9,6 @@ public:
     MeasModePhaseSetStrategy2Wire(MModePhaseMask phaseMask);
     bool canChangePhaseMask() override { return true; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
-    bool tryChangePhase(int phase)  override;
     MModePhaseMask getCurrPhaseMask()  override;
 private:
     bool tryChangeMaskPriv(MModePhaseMask phaseMask);
