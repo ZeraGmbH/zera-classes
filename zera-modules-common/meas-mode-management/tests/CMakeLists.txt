@@ -6,4 +6,5 @@ SETUP_QTESTS(
     test_measmodephasesetstrategyphasesfixed
     test_measmode
     test_measmodeselector
+    test_phasevalidatorstringgenerator
 )
