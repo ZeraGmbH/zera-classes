@@ -2,6 +2,7 @@
 #include "measmode.h"
 #include "measmodephasesetstrategyphasesfixed.h"
 #include "measmodephasesetstrategyphasesvar.h"
+#include "measmodephasesetstrategy2wire.h"
 #include "measmodecatalogfortest.h"
 #include <QSignalSpy>
 #include <QTest>
@@ -86,4 +87,22 @@ void test_measmode::tooLongMaskNotAccepted()
     QCOMPARE(mode.getCurrentMask(), "101");
     QCOMPARE(spyChanged.count(), 0);
     QCOMPARE(spyFailed.count(), 1);
+}
+
+void test_measmode::onePhaseMeasSystem()
+{
+    MeasMode mode("2LW", m2lw, 1, std::make_unique<MeasModePhaseSetStrategy2Wire>(MModePhaseMask("1")));
+    QCOMPARE(mode.getCurrentMask(), "1");
+}
+
+void test_measmode::twoPhaseMeasSystem()
+{
+    MeasMode mode("2LW", m2lw, 2, std::make_unique<MeasModePhaseSetStrategy2Wire>(MModePhaseMask("01")));
+    QCOMPARE(mode.getCurrentMask(), "01");
+    QSignalSpy spyChanged(&mode, &MeasMode::sigMaskChanged);
+    QSignalSpy spyFailed(&mode, &MeasMode::sigMaskChangeFailed);
+    mode.tryChangeMask("10");
+    QCOMPARE(mode.getCurrentMask(), "10");
+    QCOMPARE(spyChanged.count(), 1);
+    QCOMPARE(spyFailed.count(), 0);
 }

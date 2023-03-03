@@ -16,6 +16,8 @@ private slots:
     void invalidForMeasSystemTooSmall();
     void invalidCannotChangePhases();
     void tooLongMaskNotAccepted();
+    void onePhaseMeasSystem();
+    void twoPhaseMeasSystem();
 };
 
 #endif // TEST_MEASMODE_H
