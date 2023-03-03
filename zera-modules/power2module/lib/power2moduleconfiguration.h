@@ -13,7 +13,6 @@ namespace POWER2MODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setRMIp,
     setRMPort,
     setPCBServerIp,
