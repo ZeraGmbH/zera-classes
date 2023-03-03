@@ -21,10 +21,10 @@ void test_phasevalidatorstringgenerator::twoPhases()
 {
     QStringList phaseValidList = PhaseValidatorStringGenerator::generate(2);
     QCOMPARE(phaseValidList.size(), 4);
-    QVERIFY(phaseValidList.contains("0,0"));
-    QVERIFY(phaseValidList.contains("0,1"));
-    QVERIFY(phaseValidList.contains("1,0"));
-    QVERIFY(phaseValidList.contains("1,1"));
+    QVERIFY(phaseValidList.contains("00"));
+    QVERIFY(phaseValidList.contains("01"));
+    QVERIFY(phaseValidList.contains("10"));
+    QVERIFY(phaseValidList.contains("11"));
 }
 
 void test_phasevalidatorstringgenerator::numPhasesEqualMax()
