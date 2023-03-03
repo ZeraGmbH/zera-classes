@@ -1690,7 +1690,7 @@ void cPower2ModuleMeasProgram::setFrequencyScales()
 
         if (is2WireMode()) // in case we are in 2 wire mode we take umax imax from driving system
         {
-            sl = getConfData()->m_sMeasSystemList.at(m_nPMSIndex).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(m_idx2WireMeasSystem).split(',');
             m_umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
             m_imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
         }

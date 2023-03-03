@@ -2,6 +2,7 @@
 #define POWERMODULEMEASPROGRAM_H
 
 #include "power1moduleconfigdata.h"
+#include "power1dspgenerator.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
@@ -83,9 +84,11 @@ protected slots:
 
 private:
     cPower1ModuleConfigData* getConfData();
+    void set2WireVariables();
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
+    Power1DspGenerator m_dspGenerator;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
@@ -108,7 +111,7 @@ private:
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
-    qint32 m_nPMSIndex;
+    qint32 m_idx2WireMeasSystem;
     quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
     double m_umax, m_imax;
@@ -206,11 +209,6 @@ private:
     void handleMovingWindowIntTimeChange();
     void updatesForMModeChange();
 
-    struct MeasSystemChannels
-    {
-        int voltageChannel;
-        int currentChannel;
-    };
     QStringList dspCmdInitVars(int dspInitialSelectCode);
     QStringList mmodeAdd4LW(int dspSelectCode);
     QStringList mmodeAdd4LB(int dspSelectCode);
@@ -219,12 +217,6 @@ private:
     QStringList mmodeAdd4LSg(int dspSelectCode);
     QStringList mmodeAdd3LW(int dspSelectCode);
     QStringList mmodeAdd3LB(int dspSelectCode);
-    QStringList mmodeAdd2LW(int dspSelectCode);
-    QStringList mmodeAdd2LB(int dspSelectCode);
-    QStringList mmodeAdd2LS(int dspSelectCode);
-    QStringList mmodeAdd2LSg(int dspSelectCode);
-    QStringList mmodeAddXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAddMQREF(int dspSelectCode);
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

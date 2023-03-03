@@ -774,199 +774,6 @@ QStringList cPower1ModuleMeasProgram::mmodeAdd3LB(int dspSelectCode)
     return dspCmdList;
 }
 
-QStringList cPower1ModuleMeasProgram::mmodeAdd2LW(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append( "ACTIVATECHAIN(1,0x0117)");
-    dspCmdList.append( QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append( "DEACTIVATECHAIN(1,0x0117)");
-    dspCmdList.append( "STARTCHAIN(0,1,0x0117)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    m_nPMSIndex = 0;
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-    if (getConfData()->m_sM2WSystem == "pms2") {
-        sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-        m_nPMSIndex = 1;
-    }
-    if (getConfData()->m_sM2WSystem == "pms3") {
-        sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-        m_nPMSIndex = 2;
-    }
-
-    // first we set all our actual values to 0
-    dspCmdList.append( "SETVAL(VALPQS,0.0)");
-    dspCmdList.append( "SETVAL(VALPQS+1,0.0)");
-    dspCmdList.append( "SETVAL(VALPQS+2,0.0)");
-
-    // and then we compute the 2 wire power values for the selected system
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append( QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(m_nPMSIndex));
-
-    dspCmdList.append( "STOPCHAIN(1,0x0117)");
-    return dspCmdList;
-}
-
-QStringList cPower1ModuleMeasProgram::mmodeAdd2LB(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append( "ACTIVATECHAIN(1,0x0118)");
-    dspCmdList.append( QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append( "DEACTIVATECHAIN(1,0x0118)");
-    dspCmdList.append( "STARTCHAIN(0,1,0x0118)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    m_nPMSIndex = 0;
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-    if (getConfData()->m_sM2WSystem == "pms2") {
-        sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-        m_nPMSIndex = 1;
-    }
-    if (getConfData()->m_sM2WSystem == "pms3") {
-        sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-        m_nPMSIndex = 2;
-    }
-
-    // first we set all our actual values to 0
-    dspCmdList.append( "SETVAL(VALPQS,0.0)");
-    dspCmdList.append( "SETVAL(VALPQS+1,0.0)");
-    dspCmdList.append( "SETVAL(VALPQS+2,0.0)");
-
-    // and then we compute the 2 wire power values for the selected system
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-
-    dspCmdList.append( QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append( QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append( QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(m_nPMSIndex));
-    dspCmdList.append( QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
-    dspCmdList.append( QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(m_nPMSIndex).arg(m_nPMSIndex));
-    dspCmdList.append( QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(m_nPMSIndex).arg(m_nPMSIndex));
-
-    //dspCmdList.append( "ROTATE(MEASSIGNAL2,270.0)");
-    //dspCmdList.append( QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(m_nPMSIndex));
-
-    dspCmdList.append( "STOPCHAIN(1,0x0118)");
-    return dspCmdList;
-}
-
-QStringList cPower1ModuleMeasProgram::mmodeAdd2LS(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0119)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0119)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0119)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    m_nPMSIndex = 0;
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-    if (getConfData()->m_sM2WSystem == "pms2") {
-        sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-        m_nPMSIndex = 1;
-    }
-    if (getConfData()->m_sM2WSystem == "pms3") {
-        sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-        m_nPMSIndex = 2;
-    }
-
-    // first we set all our actual values to 0
-    dspCmdList.append("SETVAL(VALPQS,0.0)");
-    dspCmdList.append("SETVAL(VALPQS+1,0.0)");
-    dspCmdList.append("SETVAL(VALPQS+2,0.0)");
-
-    // and then we compute the 2 wire power values for the selected system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append("RMS(MEASSIGNAL1,TEMP1)");
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append("RMS(MEASSIGNAL1,TEMP2)");
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+%1)").arg(m_nPMSIndex));
-
-    dspCmdList.append("STOPCHAIN(1,0x0119)");
-    return dspCmdList;
-}
-
-QStringList cPower1ModuleMeasProgram::mmodeAdd2LSg(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0120)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0120)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0120)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    m_nPMSIndex = 0;
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
-    if (getConfData()->m_sM2WSystem == "pms2") {
-        sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-        m_nPMSIndex = 1;
-    }
-    if (getConfData()->m_sM2WSystem == "pms3") {
-        sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-        m_nPMSIndex = 2;
-    }
-
-    // first we set all our actual values to 0
-    dspCmdList.append("SETVAL(VALPQS,0.0)");
-    dspCmdList.append("SETVAL(VALPQS+1,0.0)");
-    dspCmdList.append("SETVAL(VALPQS+2,0.0)");
-
-    // and then we compute the 2 wire power values for the selected system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-    dspCmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
-    dspCmdList.append(QString("ADDVVG(TEMP1,TEMP2,VALPQS+%1)").arg(m_nPMSIndex));
-
-    dspCmdList.append("STOPCHAIN(1,0x0120)");
-    return dspCmdList;
-}
-
-QStringList cPower1ModuleMeasProgram::mmodeAddXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
-{
-    QStringList cmdList;
-    for(int phase=0; phase<measChannelPairList.count(); phase++) {
-        // reset power valuse
-        QString strChains =  IntToHexStringConvert::convert(0x0121 + phase);
-        cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(strChains));
-        cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
-        cmdList.append(QString("TESTVCSKIPEQ(XMMODEPHASE%1,0)").arg(phase));
-        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
-        cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(strChains)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        cmdList.append(QString("SETVAL(VALPQS+%1,0.0)").arg(phase));
-        cmdList.append(QString("STOPCHAIN(1,%1)").arg(strChains)); // ende prozessnr., hauptkette 1 subkette 1
-        // calc power values
-        strChains =  IntToHexStringConvert::convert(0x0121 + phase<measChannelPairList.count() + phase);
-        cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(strChains));
-        cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
-        cmdList.append(QString("TESTVCSKIPEQ(XMMODEPHASE%1,1)").arg(phase));
-        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
-        cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(strChains)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
-        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[phase].currentChannel));
-        cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(phase));
-        cmdList.append(QString("STOPCHAIN(1,%1)").arg(strChains)); // ende prozessnr., hauptkette 1 subkette 1
-    }
-    return cmdList;
-}
-
-QStringList cPower1ModuleMeasProgram::mmodeAddMQREF(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0127)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0127)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0127)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    // we simply set all our actual values to nominal power
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS)");
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+1)");
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+2)");
-
-    dspCmdList.append("STOPCHAIN(1,0x0127)");
-    return dspCmdList;
-}
-
 QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
@@ -1007,6 +814,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     // we set up all our lists for wanted measuring modes, this gets much more performance
     QStringList dspMModesCommandList;
     int measSytemCount = getConfData()->getMeasSystemCount();
+    set2WireVariables();
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
         int dspSelectCode = mInfo.getCode();
@@ -1062,42 +870,42 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                   std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3)));
             break;
         case m2lw:
-            dspMModesCommandList.append(mmodeAdd2LW(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAdd2LW(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
+                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case m2lb:
-            dspMModesCommandList.append(mmodeAdd2LB(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAdd2LB(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
+                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case m2ls:
-            dspMModesCommandList.append(mmodeAdd2LS(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAdd2LS(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
+                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case m2lsg:
-            dspMModesCommandList.append(mmodeAdd2LSg(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAdd2LSg(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_nPMSIndex)));
+                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case mXlw:
-            dspMModesCommandList.append(mmodeAddXLW(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAddXLW(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("111"), measSytemCount)));
             break;
         case mqref:
-            dspMModesCommandList.append(mmodeAddMQREF(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAddMQREF(dspSelectCode));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
@@ -1749,6 +1557,20 @@ cPower1ModuleConfigData *cPower1ModuleMeasProgram::getConfData()
     return qobject_cast<cPower1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
+void cPower1ModuleMeasProgram::set2WireVariables()
+{
+    m_idx2WireMeasSystem = 0;
+    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
+    if (getConfData()->m_sM2WSystem == "pms2") {
+        sl = getConfData()->m_sMeasSystemList.at(1).split(',');
+        m_idx2WireMeasSystem = 1;
+    }
+    if (getConfData()->m_sM2WSystem == "pms3") {
+        sl = getConfData()->m_sMeasSystemList.at(2).split(',');
+        m_idx2WireMeasSystem = 2;
+    }
+}
+
 
 void cPower1ModuleMeasProgram::setActualValuesNames()
 {
@@ -2307,7 +2129,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
 
         if (is2WireMode()) // in case we are in 2 wire mode we take umax imax from driving system
         {
-            sl = getConfData()->m_sMeasSystemList.at(m_nPMSIndex).split(',');
+            sl = getConfData()->m_sMeasSystemList.at(m_idx2WireMeasSystem).split(',');
             m_umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
             m_imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
         }
