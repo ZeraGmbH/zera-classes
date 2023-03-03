@@ -1240,7 +1240,7 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case setchannelrangenotifier:
                 if (reply == ack) // we only continue pcb server acknowledges
                 {
-                    m_NotifierInfoHash[notifierNr] = infoRead;
+                    m_NotifierInfoHash[m_notifierNr] = infoRead;
                     emit activationContinue();
                 }
                 else
@@ -2033,7 +2033,7 @@ void cPower1ModuleMeasProgram::readSourceChannelInformationDone()
 
 void cPower1ModuleMeasProgram::setSenseChannelRangeNotifiers()
 {
-    notifierNr = irqNr;
+    m_notifierNr = irqNr;
     infoReadList = m_measChannelInfoHash.keys(); // we have to set notifier for each channel we are working on
     emit activationContinue();
 }
@@ -2042,9 +2042,9 @@ void cPower1ModuleMeasProgram::setSenseChannelRangeNotifiers()
 void cPower1ModuleMeasProgram::setSenseChannelRangeNotifier()
 {
     infoRead = infoReadList.takeFirst();
-    notifierNr++;
+    m_notifierNr++;
     // we will get irq+1 .. irq+6 for notification if ranges change
-    m_MsgNrCmdList[ m_measChannelInfoHash[infoRead].pcbIFace->registerNotifier(QString("sens:%1:rang?").arg(infoRead), notifierNr)] = setchannelrangenotifier;
+    m_MsgNrCmdList[ m_measChannelInfoHash[infoRead].pcbIFace->registerNotifier(QString("sens:%1:rang?").arg(infoRead), m_notifierNr)] = setchannelrangenotifier;
 
 }
 
@@ -2259,7 +2259,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
 {
     double d;
     QStringList sl;
-    umax = imax = 0.0;
+    m_umax = m_imax = 0.0;
 
     if (getConfData()->m_nFreqOutputCount > 0) // we only do something here if we really have a frequency output
     {
@@ -2267,18 +2267,18 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
         if (is2WireMode()) // in case we are in 2 wire mode we take umax imax from driving system
         {
             sl = getConfData()->m_sMeasSystemList.at(m_nPMSIndex).split(',');
-            umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
-            imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
+            m_umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
+            m_imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
         }
         else // we have to consider all channels
             for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++)
             {
 
                 sl = getConfData()->m_sMeasSystemList.at(i).split(',');
-                if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > umax)
-                    umax = d;
-                if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > imax)
-                    imax = d;
+                if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > m_umax)
+                    m_umax = d;
+                if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > m_imax)
+                    m_imax = d;
             }
 
         QString datalist = "FREQSCALE:";
@@ -2293,7 +2293,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
         {
             double frScale;
             cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
-            frScale = fi.formFactor * getConfData()->m_nNominalFrequency / (cfak * umax * imax);
+            frScale = fi.formFactor * getConfData()->m_nNominalFrequency / (cfak * m_umax * m_imax);
 
             if(m_pScalingInputs.length() > i){
                 if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
@@ -2313,7 +2313,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = setfrequencyscales;
 
         double pmax;
-        pmax = umax * imax;
+        pmax = m_umax * m_imax;
 
         datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
         m_pDSPInterFace->setVarData(m_pNomPower, datalist);
@@ -2335,7 +2335,7 @@ void cPower1ModuleMeasProgram::setFoutConstants()
     else
         cfak = 3.0;
 
-    constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * umax * imax); // imp./kwh
+    constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * m_umax * m_imax); // imp./kwh
 
 
     if (getConfData()->m_nFreqOutputCount > 0)
