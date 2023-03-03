@@ -54,6 +54,7 @@ class cPower1ModuleConfigData
 {
 public:
     cPower1ModuleConfigData(){}
+    int getMeasSystemCount() const { return m_sMeasSystemList.count(); }
 
     quint8 m_nDebugLevel;
     cSocket m_RMSocket; // the sockets we can connect to
