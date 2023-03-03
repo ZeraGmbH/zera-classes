@@ -110,8 +110,8 @@ private:
 
     qint32 m_nPMSIndex;
     quint32 m_nSRate; // number of samples / signal period
-    quint8 notifierNr;
-    double umax, imax;
+    quint8 m_notifierNr;
+    double m_umax, m_imax;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
