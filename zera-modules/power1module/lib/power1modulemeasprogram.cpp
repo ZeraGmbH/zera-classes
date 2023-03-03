@@ -355,7 +355,7 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_XMModePhaseSelect"),
-                                                         QString("X-Wire measure mode phase select"),
+                                                         QString("Phase select mask for modes supporting phase selection - e.g 100 for L1 only"),
                                                          getInitialPhaseOnOffVeinVal());
     m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","XMMSELECT", "10", "PAR_XMModePhaseSelect", "0", ""));
     sValidator = new cStringValidator(PhaseValidatorStringGenerator::generate(MeasPhaseCount));
@@ -2436,10 +2436,10 @@ QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
 {
     QString phaseOnOff = getConfData()->m_sXMeasModePhases.m_sValue;
     if(phaseOnOff.isEmpty()) {
-        QStringList defaultPhase;
+        QString defaultPhaseMask;
         for(int phase=0; phase<MeasPhaseCount; phase++)
-            defaultPhase.append("1");
-        phaseOnOff = defaultPhase.join(",");
+            defaultPhaseMask.append("1");
+        phaseOnOff = defaultPhaseMask;
         getConfData()->m_sXMeasModePhases.m_sValue = phaseOnOff;
     }
     return phaseOnOff;
