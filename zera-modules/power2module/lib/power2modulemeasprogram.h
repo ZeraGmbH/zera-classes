@@ -101,7 +101,7 @@ private:
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
-    qint32 m_nPMSIndex;
+    qint32 m_idx2WireMeasSystem;
     quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
     double m_umax, m_imax;
