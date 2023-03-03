@@ -1,7 +1,7 @@
 #include "measmodephasesetstrategy2wirefixedphase.h"
 
 MeasModePhaseSetStrategy2WireFixedPhase::MeasModePhaseSetStrategy2WireFixedPhase(int phase) :
-    MeasModePhaseSetStrategyPhasesFixed(maskFromPhase(phase))
+    MeasModePhaseSetStrategyPhasesFixed(maskFromPhase(phase), 1)
 {
 }
 

@@ -15,3 +15,9 @@ void test_measmodephasesetstrategy2wirefixedphase::phaseInitial()
     MeasModePhaseSetStrategy2WireFixedPhase measStrat4(-1);
     QCOMPARE(measStrat4.getCurrPhaseMask(), MModePhaseMask("000"));
 }
+
+void test_measmodephasesetstrategy2wirefixedphase::measSysCount()
+{
+    MeasModePhaseSetStrategy2WireFixedPhase measStrat(0);
+    QCOMPARE(measStrat.getActiveMeasSysCount(), 1);
+}

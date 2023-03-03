@@ -1,19 +1,19 @@
 #ifndef MEASMODEPHASESETSTRATEGY2WIRE_H
 #define MEASMODEPHASESETSTRATEGY2WIRE_H
 
-#include "measmodephasesetstrategy.h"
+#include "measmodephasesetstrategyphasesvar.h"
 
-class MeasModePhaseSetStrategy2Wire : public MeasModePhaseSetStrategy
+class MeasModePhaseSetStrategy2Wire : public MeasModePhaseSetStrategyPhasesVar
 {
 public:
-    MeasModePhaseSetStrategy2Wire(MModePhaseMask phaseMask);
-    bool canChangePhaseMask() override { return true; }
-    bool tryChangeMask(MModePhaseMask phaseMask) override;
-    MModePhaseMask getCurrPhaseMask()  override;
-private:
-    bool tryChangeMaskPriv(MModePhaseMask phaseMask);
-    bool tryChangePhaseTwoSetForOverlappedChange(MModePhaseMask phaseMask);
-    MModePhaseMask m_phaseMask;
+    MeasModePhaseSetStrategy2Wire(MModePhaseMask phaseMask) : MeasModePhaseSetStrategyPhasesVar(phaseMask, 1) {}
+    bool tryChangeMask(MModePhaseMask phaseMask) override
+    {
+        if(phaseMask.count() == 0)
+            return false;
+        return MeasModePhaseSetStrategyPhasesVar::tryChangeMask(phaseMask);
+    }
+
 };
 
 #endif // MEASMODEPHASESETSTRATEGY2WIRE_H

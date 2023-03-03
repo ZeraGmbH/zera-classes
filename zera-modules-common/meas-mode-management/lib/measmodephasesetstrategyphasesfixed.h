@@ -6,7 +6,7 @@
 class MeasModePhaseSetStrategyPhasesFixed : public MeasModePhaseSetStrategy
 {
 public:
-    MeasModePhaseSetStrategyPhasesFixed(MModePhaseMask phaseMask);
+    MeasModePhaseSetStrategyPhasesFixed(MModePhaseMask phaseMask, int activeMeasSysCount);
     bool canChangePhaseMask() override { return false; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
     MModePhaseMask getCurrPhaseMask()  override;

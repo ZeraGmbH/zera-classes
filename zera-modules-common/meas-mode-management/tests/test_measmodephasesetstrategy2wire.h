@@ -11,9 +11,9 @@ private slots:
     void phaseInitial();
     void maskCannotResetAll();
     void maskSetOne();
+    void maskDenyTwo();
     void maskDenyThree();
-    void maskDenyTwoBothCurrentlyNotSet();
-    void maskAcceptTwoOneCurrentlySet();
+    void measSysCount();
 };
 
 #endif // TEST_MEASMODEPHASESETSTRATEGY2WIRE_H
