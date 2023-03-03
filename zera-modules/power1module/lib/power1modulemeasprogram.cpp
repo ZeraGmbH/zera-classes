@@ -1006,7 +1006,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
     QStringList dspMModesCommandList;
-    int measSytemCount = getConfData()->m_sMeasSystemList.count();
+    int measSytemCount = getConfData()->getMeasSystemCount();
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
         int dspSelectCode = mInfo.getCode();
@@ -1804,7 +1804,7 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++)
+    for (int i = 0; i < getConfData()->getMeasSystemCount(); i++)
     {
         QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
         for (int j = 0; j < sl.count(); j++)
@@ -2312,7 +2312,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
             m_imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
         }
         else // we have to consider all channels
-            for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++)
+            for (int i = 0; i < getConfData()->getMeasSystemCount(); i++)
             {
 
                 sl = getConfData()->m_sMeasSystemList.at(i).split(',');
