@@ -1,9 +1,11 @@
 file(GLOB SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/phase-set-strategies/*.cpp
     )
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/phase-set-strategies/*.h
     )
 
 add_library(zera-meas-mode-management SHARED
@@ -23,6 +25,7 @@ target_include_directories(zera-meas-mode-management
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/meas-mode-management>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/phase-set-strategies>
     )
 
 set_target_properties(zera-meas-mode-management PROPERTIES VERSION ${PROJECT_VERSION})
