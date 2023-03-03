@@ -10,8 +10,12 @@ private slots:
     void init();
     void gettersReportProperCtorParams();
     void validPhaseChangeSignal();
-    void invalidPhaseChangeSignal();
+    void fixedStrategyCannotChangePhase();
     void invalidModeName();
+    void invalidForMeasSystemTooLarge();
+    void invalidForMeasSystemTooSmall();
+    void invalidCannotChangePhases();
+    void tooLongMaskNotAccepted();
 };
 
 #endif // TEST_MEASMODE_H

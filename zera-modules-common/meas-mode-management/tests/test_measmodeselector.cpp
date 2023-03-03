@@ -21,22 +21,22 @@ void test_measmodeselector::initNoCurrentMode()
 void test_measmodeselector::invalidNotAdded()
 {
     MeasModeSelector sel;
-    bool added = sel.addMode(std::make_shared<MeasMode>("foo", m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"))));
+    bool added = sel.addMode(std::make_shared<MeasMode>("foo", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3)));
     QVERIFY(!added);
 }
 
 void test_measmodeselector::doubleNotAdded()
 {
     MeasModeSelector sel;
-    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"))));
-    bool added = sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"))));
+    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3)));
+    bool added = sel.addMode(std::make_shared<MeasMode>("4LW", 3, m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3)));
     QVERIFY(!added);
 }
 
 void test_measmodeselector::addAndSelectValidMode()
 {
     MeasModeSelector sel;
-    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"))));
+    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3)));
 
     QSignalSpy spyChanged(&sel, &MeasModeSelector::sigModeChanged);
     QSignalSpy spyFailed(&sel, &MeasModeSelector::sigModeChangeFailed);
@@ -49,7 +49,7 @@ void test_measmodeselector::addAndSelectValidMode()
 void test_measmodeselector::addValidSelectInvalidMode()
 {
     MeasModeSelector sel;
-    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"))));
+    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3)));
 
     QSignalSpy spyChanged(&sel, &MeasModeSelector::sigModeChanged);
     QSignalSpy spyFailed(&sel, &MeasModeSelector::sigModeChangeFailed);
@@ -61,8 +61,8 @@ void test_measmodeselector::addValidSelectInvalidMode()
 void test_measmodeselector::addTwoAndSelectThem()
 {
     MeasModeSelector sel;
-    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"))));
-    sel.addMode(std::make_shared<MeasMode>("3LW", m4lw, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"))));
+    sel.addMode(std::make_shared<MeasMode>("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3)));
+    sel.addMode(std::make_shared<MeasMode>("3LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3)));
     QSignalSpy spyChanged(&sel, &MeasModeSelector::sigModeChanged);
     QSignalSpy spyFailed(&sel, &MeasModeSelector::sigModeChangeFailed);
 

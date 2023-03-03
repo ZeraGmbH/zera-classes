@@ -1,6 +1,7 @@
 #include "measmodephasesetstrategyphasesfixed.h"
 
-MeasModePhaseSetStrategyPhasesFixed::MeasModePhaseSetStrategyPhasesFixed(MModePhaseMask phaseMask) :
+MeasModePhaseSetStrategyPhasesFixed::MeasModePhaseSetStrategyPhasesFixed(MModePhaseMask phaseMask, int activeMeasSysCount) :
+    MeasModePhaseSetStrategy(activeMeasSysCount),
     m_phaseMask(phaseMask)
 {
 }

@@ -2,7 +2,7 @@
 
 bool MeasModeSelector::addMode(std::shared_ptr<MeasMode> mode)
 {
-    if(mode->getInfo().isValid()) {
+    if(mode->isValid()) {
         QString name = mode->getInfo().getName();
         if(!m_modes.contains(name)) {
             m_modes[name] = mode;

@@ -9,3 +9,9 @@ void test_measmodephasesetstrategy4wire::maskInitialValue()
     MeasModePhaseSetStrategy4Wire measStrat;
     QCOMPARE(measStrat.getCurrPhaseMask(), MModePhaseMask("111"));
 }
+
+void test_measmodephasesetstrategy4wire::measSysCount()
+{
+    MeasModePhaseSetStrategy4Wire measStrat;
+    QCOMPARE(measStrat.getActiveMeasSysCount(), 3);
+}
