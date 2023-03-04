@@ -18,9 +18,40 @@ QStringList Power1DspGenerator::mmodeAdd4LS(int dspSelectCode)
 
 }
 
-QStringList Power1DspGenerator::mmodeAdd4LSg(int dspSelectCode)
+QStringList Power1DspGenerator::mmodeAdd4LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
 {
+    QStringList dspCmdList;
+    dspCmdList.append("ACTIVATECHAIN(1,0x0114)");
+    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
+    dspCmdList.append("DEACTIVATECHAIN(1,0x0114)");
+    dspCmdList.append("STARTCHAIN(0,1,0x0114)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
+    // our first measuring system
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[0].voltageChannel));
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
+    dspCmdList.append("ROTATE(MEASSIGNAL2,270.0)");
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
+    dspCmdList.append("ADDVVG(TEMP1,TEMP2,VALPQS)"); // geometrical sum is our actual value
+
+    // our second measuring system
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[1].voltageChannel));
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[1].currentChannel));
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
+    dspCmdList.append("ROTATE(MEASSIGNAL2,270.0)");
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
+    dspCmdList.append("ADDVVG(TEMP1,TEMP2,VALPQS+1)"); // geometrical sum is our actual value
+
+    // our third measuring system
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[2].voltageChannel));
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
+    dspCmdList.append("ROTATE(MEASSIGNAL2,270.0)");
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
+    dspCmdList.append("ADDVVG(TEMP1,TEMP2,VALPQS+2)"); // geometrical sum is our actual value
+
+    dspCmdList.append("STOPCHAIN(1,0x0114)");
+    return dspCmdList;
 }
 
 QStringList Power1DspGenerator::mmodeAdd3LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
