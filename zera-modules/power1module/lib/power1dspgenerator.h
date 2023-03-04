@@ -18,7 +18,7 @@ public:
     QStringList mmodeAdd4LS(int dspSelectCode);
     QStringList mmodeAdd4LSg(int dspSelectCode);
     QStringList mmodeAdd3LW(int dspSelectCode);
-    QStringList mmodeAdd3LB(int dspSelectCode);
+    QStringList mmodeAdd3LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
     QStringList mmodeAdd2LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
     QStringList mmodeAdd2LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
     QStringList mmodeAdd2LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
