@@ -651,45 +651,6 @@ QStringList cPower1ModuleMeasProgram::mmodeAdd4LS(int dspSelectCode)
     return dspCmdList;
 }
 
-QStringList cPower1ModuleMeasProgram::mmodeAdd4LSg(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append( "ACTIVATECHAIN(1,0x0114)");
-    dspCmdList.append( QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append( "DEACTIVATECHAIN(1,0x0114)");
-    dspCmdList.append( "STARTCHAIN(0,1,0x0114)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(',');
-    // our first measuring system
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append( "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-    dspCmdList.append( "ROTATE(MEASSIGNAL2,270.0)");
-    dspCmdList.append( "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
-    dspCmdList.append( "ADDVVG(TEMP1,TEMP2,VALPQS)"); // geometrical sum is our actual value
-
-    sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-    // our second measuring system
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append( "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-    dspCmdList.append( "ROTATE(MEASSIGNAL2,270.0)");
-    dspCmdList.append( "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
-    dspCmdList.append( "ADDVVG(TEMP1,TEMP2,VALPQS+1)"); // geometrical sum is our actual value
-
-    sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-    // our third measuring system
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append( QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append( "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP1)"); // P
-    dspCmdList.append( "ROTATE(MEASSIGNAL2,270.0)");
-    dspCmdList.append( "MULCCV(MEASSIGNAL1,MEASSIGNAL2,TEMP2)"); // Q
-    dspCmdList.append( "ADDVVG(TEMP1,TEMP2,VALPQS+2)"); // geometrical sum is our actual value
-
-    dspCmdList.append( "STOPCHAIN(1,0x0114)");
-    return dspCmdList;
-}
-
 QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
@@ -765,7 +726,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lsg:
-            dspMModesCommandList.append(mmodeAdd4LSg(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAdd4LSg(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
