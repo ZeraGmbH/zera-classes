@@ -14,7 +14,7 @@ class Power1DspGenerator
 public:
     QStringList mmodeAdd4LW(int dspSelectCode);
     QStringList mmodeAdd4LB(int dspSelectCode);
-    QStringList mmodeAdd4LBK(int dspSelectCode);
+    QStringList mmodeAdd4LBK(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
     QStringList mmodeAdd4LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
     QStringList mmodeAdd4LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
     QStringList mmodeAdd3LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);

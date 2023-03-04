@@ -551,70 +551,6 @@ QStringList cPower1ModuleMeasProgram::mmodeAdd4LB(int dspSelectCode)
     return dspCmdList;
 }
 
-QStringList cPower1ModuleMeasProgram::mmodeAdd4LBK(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0112)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0112)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0112)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    // we need the information of all our system at the same time
-    QStringList sl1 = getConfData()->m_sMeasSystemList.at(0).split(',');
-    QStringList sl2 = getConfData()->m_sMeasSystemList.at(1).split(',');
-    QStringList sl3 = getConfData()->m_sMeasSystemList.at(2).split(',');
-
-    // our first measuring system
-    dspCmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
-                                            .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr)
-                                            .arg(m_measChannelInfoHash.value(sl3.at(0)).dspChannelNr));
-    dspCmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl1.at(1)).dspChannelNr));
-
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS)"));
-    dspCmdList.append(QString("MULVVV(TEMP2+1,TEMP1+1,TEMP1)"));
-    dspCmdList.append(QString("ADDVVV(TEMP1,VALPQS,VALPQS)"));
-    dspCmdList.append(QString("MULVVV(FAK,VALPQS,VALPQS)"));
-
-    //dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
-
-    // our second measuring system
-    dspCmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
-                                            .arg(m_measChannelInfoHash.value(sl3.at(0)).dspChannelNr)
-                                            .arg(m_measChannelInfoHash.value(sl1.at(0)).dspChannelNr));
-    dspCmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl2.at(1)).dspChannelNr));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+1)"));
-    dspCmdList.append(QString("MULVVV(TEMP2+1,TEMP1+1,TEMP1)"));
-    dspCmdList.append(QString("ADDVVV(TEMP1,VALPQS+1,VALPQS+1)"));
-    dspCmdList.append(QString("MULVVV(FAK,VALPQS+1,VALPQS+1)"));
-
-    //dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
-
-    // our third measuring system
-    dspCmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
-                                            .arg(m_measChannelInfoHash.value(sl1.at(0)).dspChannelNr)
-                                            .arg(m_measChannelInfoHash.value(sl2.at(0)).dspChannelNr));
-    dspCmdList.append("MULCV(MEASSIGNAL1,0.57735027)"); // we correct 1/sqrt(3)
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl3.at(1)).dspChannelNr));
-
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+2)"));
-    dspCmdList.append(QString("MULVVV(TEMP2+1,TEMP1+1,TEMP1)"));
-    dspCmdList.append(QString("ADDVVV(TEMP1,VALPQS+2,VALPQS+2)"));
-    dspCmdList.append(QString("MULVVV(FAK,VALPQS+2,VALPQS+2)"));
-
-    //dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
-
-    dspCmdList.append("STOPCHAIN(1,0x0112)");
-    return dspCmdList;
-}
-
 QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
@@ -676,7 +612,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lbk:
-            dspMModesCommandList.append(mmodeAdd4LBK(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAdd4LBK(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
