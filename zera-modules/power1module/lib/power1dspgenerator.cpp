@@ -1,8 +1,31 @@
 #include "power1dspgenerator.h"
 #include "inttohexstringconvert.h"
 
-QStringList Power1DspGenerator::mmodeAdd4LW(int dspSelectCode)
+QStringList Power1DspGenerator::mmodeAdd4LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
 {
+    QStringList dspCmdList;
+    dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
+    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
+    dspCmdList.append("DEACTIVATECHAIN(1,0x0110)");
+    dspCmdList.append("STARTCHAIN(0,1,0x0110)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+
+    // our first measuring system
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[0].voltageChannel));
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
+
+    // our second measuring system
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[1].voltageChannel));
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[1].currentChannel));
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
+
+    // our third measuring system
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[2].voltageChannel));
+    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
+    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
+
+    dspCmdList.append("STOPCHAIN(1,0x0110)");
+    return dspCmdList;
 }
 
 QStringList Power1DspGenerator::mmodeAdd4LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)

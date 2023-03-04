@@ -210,7 +210,6 @@ private:
     void updatesForMModeChange();
 
     QStringList dspCmdInitVars(int dspInitialSelectCode);
-    QStringList mmodeAdd4LW(int dspSelectCode);
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

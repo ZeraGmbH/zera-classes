@@ -463,36 +463,6 @@ void cPower1ModuleMeasProgram::deleteDspVarList()
 }
 
 
-QStringList cPower1ModuleMeasProgram::mmodeAdd4LW(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0110)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0110)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(',');
-    // our first measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
-
-    sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-    // our second measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
-
-    sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-    // our third measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr));
-    dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
-
-    dspCmdList.append("STOPCHAIN(1,0x0110)");
-    return dspCmdList;
-}
-
 QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
@@ -540,7 +510,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         switch(dspSelectCode)
         {
         case m4lw:
-            dspMModesCommandList.append(mmodeAdd4LW(dspSelectCode));
+            dspMModesCommandList.append(m_dspGenerator.mmodeAdd4LW(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
