@@ -215,7 +215,6 @@ private:
     QStringList mmodeAdd4LBK(int dspSelectCode);
     QStringList mmodeAdd4LS(int dspSelectCode);
     QStringList mmodeAdd4LSg(int dspSelectCode);
-    QStringList mmodeAdd3LW(int dspSelectCode);
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
