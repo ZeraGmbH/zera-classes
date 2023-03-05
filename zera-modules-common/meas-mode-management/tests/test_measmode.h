@@ -18,6 +18,7 @@ private slots:
     void tooLongMaskNotAccepted();
     void onePhaseMeasSystem();
     void twoPhaseMeasSystem();
+    void phaseGetter();
 };
 
 #endif // TEST_MEASMODE_H
