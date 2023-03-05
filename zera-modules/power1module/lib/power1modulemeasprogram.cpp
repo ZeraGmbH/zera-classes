@@ -1953,9 +1953,10 @@ QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
 QString cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QString separator)
 {
     QString strVarData;
+    cPower1ModuleConfigData *confData = getConfData();
     if(phase<MeasPhaseCount) {
-        QStringList phaseOnOffList = getConfData()->m_sXMeasModePhases.m_sValue.split(",");
-        strVarData = QString("XMMODEPHASE%1%2%3").arg(phase).arg(separator, phaseOnOffList[phase]);
+        QString phaseOnOff = confData->m_sXMeasModePhases.m_sValue;
+        strVarData = QString("XMMODEPHASE%1%2%3").arg(phase).arg(separator, phaseOnOff.mid(phase,1));
     }
     return strVarData;
 }
