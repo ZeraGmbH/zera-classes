@@ -2,7 +2,6 @@
 #define POWERMODULEMEASPROGRAM_H
 
 #include "power1moduleconfigdata.h"
-#include "power1dspgenerator.h"
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
@@ -88,7 +87,6 @@ private:
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
-    Power1DspGenerator m_dspGenerator;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
