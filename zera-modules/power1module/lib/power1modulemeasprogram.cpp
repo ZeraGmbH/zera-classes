@@ -472,7 +472,7 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
     dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
-    for(int phase=0; phase<MeasPhaseCount; phase++)
+    for(int phase=0; phase<getConfData()->getMeasSystemCount(); phase++)
         dspCmdList.append(QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
     dspCmdList.append(QString("SETVAL(FAK,0.5)"));
 
@@ -1939,13 +1939,14 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
 
 QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
 {
-    QString phaseOnOff = getConfData()->m_sXMeasModePhases.m_sValue;
+    cPower1ModuleConfigData *confData = getConfData();
+    QString phaseOnOff = confData->m_sXMeasModePhases.m_sValue;
     if(phaseOnOff.isEmpty()) {
         QString defaultPhaseMask;
-        for(int phase=0; phase<MeasPhaseCount; phase++)
+        for(int phase=0; phase<confData->getMeasSystemCount(); phase++)
             defaultPhaseMask.append("1");
         phaseOnOff = defaultPhaseMask;
-        getConfData()->m_sXMeasModePhases.m_sValue = phaseOnOff;
+        confData->m_sXMeasModePhases.m_sValue = phaseOnOff;
     }
     return phaseOnOff;
 }
@@ -1954,7 +1955,7 @@ QString cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QString separator
 {
     QString strVarData;
     cPower1ModuleConfigData *confData = getConfData();
-    if(phase<MeasPhaseCount) {
+    if(phase<confData->getMeasSystemCount()) {
         QString phaseOnOff = confData->m_sXMeasModePhases.m_sValue;
         strVarData = QString("XMMODEPHASE%1%2%3").arg(phase).arg(separator, phaseOnOff.mid(phase,1));
     }
@@ -1964,7 +1965,8 @@ QString cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QString separator
 QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
 {
     QStringList phaseOnOffList;
-    for(int phase=0; phase<MeasPhaseCount; phase++)
+    cPower1ModuleConfigData *confData = getConfData();
+    for(int phase=0; phase<confData->getMeasSystemCount(); phase++)
         phaseOnOffList += dspGetPhaseVarStr(phase, ":");
     return phaseOnOffList.join(";");
 }
