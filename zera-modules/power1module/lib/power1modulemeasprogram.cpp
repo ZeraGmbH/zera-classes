@@ -1962,15 +1962,22 @@ QString cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QString separator
     return strVarData;
 }
 
+QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
+{
+    QStringList phaseOnOffList;
+    for(int phase=0; phase<MeasPhaseCount; phase++)
+        phaseOnOffList += dspGetPhaseVarStr(phase, ":");
+    return phaseOnOffList.join(";");
+}
+
 void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
                              .arg(tipar)
                              .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode());
-    QStringList phaseOnOffList;
-    for(int phase=0; phase<MeasPhaseCount; phase++)
-        phaseOnOffList += dspGetPhaseVarStr(phase, ":");
-    strVarData += ";" + phaseOnOffList.join(";");
+    QString phaseVarSet = dspGetSetPhasesVar();
+    if(!phaseVarSet.isEmpty())
+        strVarData += ";" + phaseVarSet;
     m_pDSPInterFace->setVarData(m_pParameterDSP, strVarData, DSPDATA::dInt);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
 }
