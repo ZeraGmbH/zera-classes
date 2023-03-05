@@ -433,3 +433,14 @@ QStringList Power1DspGenerator::mmodeAddMQREF(int dspSelectCode)
     dspCmdList.append("STOPCHAIN(1,0x0127)");
     return dspCmdList;
 }
+
+QStringList Power1DspGenerator::getCmdsSumAndAverage()
+{
+    QStringList dspCmdList;
+    // we have to compute sum of our power systems
+    dspCmdList.append("ADDVVV(VALPQS,VALPQS+1,VALPQS+3)");
+    dspCmdList.append("ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)");
+    // and filter all our values (MeasPhaseCount ???)
+    dspCmdList.append(QString("AVERAGE1(4,VALPQS,FILTER)")); // we add results to filter
+    return dspCmdList;
+}

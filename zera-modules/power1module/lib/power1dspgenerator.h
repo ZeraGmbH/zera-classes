@@ -20,6 +20,7 @@ public:
     QStringList mmodeAdd2LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
     QStringList mmodeAddXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
     QStringList mmodeAddMQREF(int dspSelectCode);
+    QStringList getCmdsSumAndAverage();
 };
 
 #endif // POWER1DSPGENERATOR_H

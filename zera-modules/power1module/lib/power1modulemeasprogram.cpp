@@ -600,11 +600,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             break;
         }
     }
-    // we have to compute sum of our power systems
-    dspMModesCommandList.append("ADDVVV(VALPQS,VALPQS+1,VALPQS+3)");
-    dspMModesCommandList.append("ADDVVV(VALPQS+2,VALPQS+3,VALPQS+3)");
-    // and filter all our values (MeasPhaseCount ???)
-    dspMModesCommandList.append(QString("AVERAGE1(4,VALPQS,FILTER)")); // we add results to filter
+    dspMModesCommandList.append(dspGenerator.getCmdsSumAndAverage());
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
