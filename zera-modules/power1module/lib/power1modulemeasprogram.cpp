@@ -508,91 +508,91 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         switch(dspSelectCode)
         {
         case m4lw:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd4LW(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode4LW(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lb:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd4LB(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode4LB(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lbk:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd4LBK(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode4LBK(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4ls:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd4LS(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode4LS(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m4lsg:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd4LSg(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode4LSg(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         case m3lw:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd3LW(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode3LW(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3)));
             break;
         case m3lb:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd3LB(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode3LB(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3)));
             break;
         case m2lw:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd2LW(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode2LW(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case m2lb:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd2LB(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode2LB(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case m2ls:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd2LS(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode2LS(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case m2lsg:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd2LSg(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode2LSg(dspSelectCode, measChannelPairList, m_idx2WireMeasSystem));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem)));
             break;
         case mXlw:
-            dspMModesCommandList.append(dspGenerator.mmodeAddXLW(dspSelectCode, measChannelPairList));
+            dspMModesCommandList.append(dspGenerator.getCmdsMModeXLW(dspSelectCode, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("111"), measSytemCount)));
             break;
         case mqref:
-            dspMModesCommandList.append(dspGenerator.mmodeAddMQREF(dspSelectCode));
+            dspMModesCommandList.append(dspGenerator.getCmdsMModeMQREF(dspSelectCode));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,

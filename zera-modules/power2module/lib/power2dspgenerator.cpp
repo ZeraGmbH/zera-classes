@@ -1,6 +1,6 @@
 #include "power2dspgenerator.h"
 
-QStringList Power2DspGenerator::mmodeAdd4LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, quint32 sampleCountPerSignalPeriod)
+QStringList Power2DspGenerator::getCmdsMMode4LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, quint32 sampleCountPerSignalPeriod)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0110)");

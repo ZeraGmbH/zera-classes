@@ -7,19 +7,19 @@
 class Power1DspGenerator
 {
 public:
-    QStringList mmodeAdd4LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAdd4LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAdd4LBK(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAdd4LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAdd4LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAdd3LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAdd3LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAdd2LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
-    QStringList mmodeAdd2LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
-    QStringList mmodeAdd2LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
-    QStringList mmodeAdd2LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
-    QStringList mmodeAddXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
-    QStringList mmodeAddMQREF(int dspSelectCode);
+    QStringList getCmdsMMode4LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMMode4LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMMode4LBK(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMMode4LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMMode4LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMMode3LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMMode3LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMMode2LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
+    QStringList getCmdsMMode2LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
+    QStringList getCmdsMMode2LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
+    QStringList getCmdsMMode2LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem);
+    QStringList getCmdsMModeXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList);
+    QStringList getCmdsMModeMQREF(int dspSelectCode);
     QStringList getCmdsSumAndAverage();
 };
 
