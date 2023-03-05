@@ -436,7 +436,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         switch (dspSelectCode)
         {
         case m4lw:
-            dspMModesCommandList.append(dspGenerator.mmodeAdd4LW(dspSelectCode, measChannelPairList, m_nSRate));
+            dspMModesCommandList.append(dspGenerator.getCmdsMMode4LW(dspSelectCode, measChannelPairList, m_nSRate));
             break;
         default:
             break;
