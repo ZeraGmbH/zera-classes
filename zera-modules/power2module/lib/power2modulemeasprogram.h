@@ -81,6 +81,10 @@ private:
     QStringList mmodeAdd4LW(int dspSelectCode);
     void setActualValuesNames();
     bool is2WireMode();
+    void dspSetParamsTiMMode(int tipar);
+    void handleMovingWindowIntTimeChange();
+    void handleMModeParamChange();
+    double calcTiTime();
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
 
     cPower2Module* m_pModule;
