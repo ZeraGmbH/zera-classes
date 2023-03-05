@@ -1290,14 +1290,10 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     m_FoutInfoHash.clear();
     cFoutInfo fi;
     fi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
-    if (getConfData()->m_nFreqOutputCount > 0)
-    {
-        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
-        {
-            QString name = getConfData()->m_FreqOutputConfList.at(i).m_sName;
-            if (!m_FoutInfoHash.contains(name))
-                m_FoutInfoHash[name] = fi; //
-        }
+    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
+        QString name = getConfData()->m_FreqOutputConfList.at(i).m_sName;
+        if (!m_FoutInfoHash.contains(name))
+            m_FoutInfoHash[name] = fi; //
     }
 
     m_NotifierInfoHash.clear();
