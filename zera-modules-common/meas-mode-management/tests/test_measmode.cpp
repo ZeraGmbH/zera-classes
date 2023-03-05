@@ -106,3 +106,19 @@ void test_measmode::twoPhaseMeasSystem()
     QCOMPARE(spyChanged.count(), 1);
     QCOMPARE(spyFailed.count(), 0);
 }
+
+void test_measmode::phaseGetter()
+{
+    MeasMode mode1("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("110"), 3));
+    QCOMPARE(mode1.isPhaseActive(0), true);
+    QCOMPARE(mode1.isPhaseActive(1), true);
+    QCOMPARE(mode1.isPhaseActive(2), false);
+    MeasMode mode2("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3));
+    QCOMPARE(mode2.isPhaseActive(0), true);
+    QCOMPARE(mode2.isPhaseActive(1), false);
+    QCOMPARE(mode2.isPhaseActive(2), true);
+
+    MeasMode mode3("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3));
+    QCOMPARE(mode3.isPhaseActive(-1), false);
+    QCOMPARE(mode3.isPhaseActive(4), false);
+}
