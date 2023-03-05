@@ -398,7 +398,7 @@ void cPower2ModuleMeasProgram::deleteDspVarList()
     m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
 }
 
-QStringList POWER2MODULE::cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
+QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
     dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
@@ -416,7 +416,7 @@ QStringList POWER2MODULE::cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitia
     return dspCmdList;
 }
 
-QStringList POWER2MODULE::cPower2ModuleMeasProgram::mmodeAdd4LW(int dspSelectCode)
+QStringList cPower2ModuleMeasProgram::mmodeAdd4LW(int dspSelectCode)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
