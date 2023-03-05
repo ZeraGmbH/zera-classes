@@ -52,8 +52,8 @@ public:
 
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes
-    QStringList m_sMeasSystemList; // our measuring systems "m0,m1" ....
-    int m_measSystemCount = 0;
+    QStringList m_sMeasSystemList; // our measuring systems "m0,m1" ALWAYS 3 ENTRIES!!!
+    int m_measSystemCount = 0; // count of measSysstem
     QString m_sIntegrationMode; // we integrate over time or periods
     quint32 m_nNominalFrequency; // our nominal frequency output for full range power
     QString m_sFreqActualizationMode; // signalperiod or integrationtime
