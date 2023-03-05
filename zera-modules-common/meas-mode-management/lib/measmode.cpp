@@ -56,8 +56,10 @@ QString MeasMode::getCurrentMask()
 
 bool MeasMode::isPhaseActive(int phase)
 {
-    if(phase >= 0 && phase<m_measSysCount)
-        return m_measModePhaseSetter->getCurrPhaseMask()[m_measSysCount-phase-1];
+    if(phase >= 0 && phase<m_measSysCount) {
+        MModePhaseMask mask = m_measModePhaseSetter->getCurrPhaseMask();
+        return mask[m_measSysCount-phase-1];
+    }
     return false;
 }
 
