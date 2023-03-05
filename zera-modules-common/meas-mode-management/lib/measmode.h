@@ -14,6 +14,7 @@ public:
     int getDspSelectCode();
     void tryChangeMask(QString mask);
     QString getCurrentMask();
+    int getActiveMeasSysCount();
     bool isValid();
 signals:
     void sigMaskChanged();
