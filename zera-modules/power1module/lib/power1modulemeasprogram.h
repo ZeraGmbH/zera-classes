@@ -198,7 +198,6 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setFoutMetaInfo();
-    bool is2WireMode();
 
     QString getInitialPhaseOnOffVeinVal();
     QString dspGetPhaseVarStr(int phase, QString separator);
