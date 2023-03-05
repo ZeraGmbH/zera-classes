@@ -406,15 +406,19 @@ QStringList POWER2MODULE::cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitia
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*12+1) ); // clear the whole filter incl. count
     dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
-    if (getConfData()->m_sIntegrationMode == "time") {
+    double integrationTime;
+    bool intergrationModeTime = getConfData()->m_sIntegrationMode == "time";
+    if (intergrationModeTime) {
         if (getConfData()->m_bmovingWindow)
-            dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
+            integrationTime = getConfData()->m_fmovingwindowInterval*1000.0;
         else
-            dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000.0)); // initial ti time
-        dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
+            integrationTime= getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
     }
     else
-        dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)); // initial ti time
+        integrationTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
+    dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
+    if(intergrationModeTime)
+        dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
     dspCmdList.append("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     dspCmdList.append("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
     return dspCmdList;
