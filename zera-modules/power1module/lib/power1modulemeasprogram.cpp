@@ -475,16 +475,8 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
         dspCmdList.append(QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
     dspCmdList.append(QString("SETVAL(FAK,0.5)"));
 
-    double integrationTime;
+    double integrationTime = calcTiTime();
     bool intergrationModeTime = getConfData()->m_sIntegrationMode == "time";
-    if (intergrationModeTime) {
-        if (getConfData()->m_bmovingWindow)
-            integrationTime = getConfData()->m_fmovingwindowInterval*1000.0;
-        else
-            integrationTime =  getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
-    }
-    else
-        integrationTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
     dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
     if(intergrationModeTime)
         dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
@@ -1985,14 +1977,7 @@ void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
 
 void cPower1ModuleMeasProgram::handleMModeParamChange()
 {
-    if (getConfData()->m_sIntegrationMode == "time") {
-        if (getConfData()->m_bmovingWindow)
-            dspSetParamsTiMMode(getConfData()->m_fmovingwindowInterval*1000);
-        else
-            dspSetParamsTiMMode(getConfData()->m_fMeasIntervalTime.m_fValue*1000);
-    }
-    else
-        dspSetParamsTiMMode(getConfData()->m_nMeasIntervalPeriod.m_nValue);
+    dspSetParamsTiMMode(calcTiTime());
     emit m_pModule->parameterChanged();
 }
 
@@ -2007,6 +1992,20 @@ void cPower1ModuleMeasProgram::updatesForMModeChange()
     setActualValuesNames();
     setFrequencyScales();
     setFoutConstants();
+}
+
+double cPower1ModuleMeasProgram::calcTiTime()
+{
+    double tiTime;
+    if (getConfData()->m_sIntegrationMode == "time") {
+        if (getConfData()->m_bmovingWindow)
+            tiTime = getConfData()->m_fmovingwindowInterval*1000.0;
+        else
+            tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
+    }
+    else
+        tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
+    return tiTime;
 }
 
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
