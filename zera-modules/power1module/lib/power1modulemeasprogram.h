@@ -208,6 +208,7 @@ private:
     void handleMModeParamChange();
     void handleMovingWindowIntTimeChange();
     void updatesForMModeChange();
+    double calcTiTime();
 
     QStringList dspCmdInitVars(int dspInitialSelectCode);
 
