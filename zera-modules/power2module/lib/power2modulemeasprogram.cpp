@@ -1,6 +1,7 @@
 #include "power2modulemeasprogram.h"
 #include "power2module.h"
 #include "power2moduleconfiguration.h"
+#include "power2dspgenerator.h"
 #include <measmodecatalog.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
@@ -416,58 +417,29 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
     return dspCmdList;
 }
 
-QStringList cPower2ModuleMeasProgram::mmodeAdd4LW(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0110)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0110)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(',');
-    // our first measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr) );
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr) );
-    dspCmdList.append(QString("MULCCC(MEASSIGNAL1,MEASSIGNAL2,MEASSIGNAL1)"));
-    dspCmdList.append(QString("INTEGRALPOS(%1,MEASSIGNAL1,VALPOWER)").arg(m_nSRate));
-    dspCmdList.append(QString("INTEGRALNEG(%1,MEASSIGNAL1,VALPOWER+1)").arg(m_nSRate));
-    dspCmdList.append(QString("INTEGRAL(%1,MEASSIGNAL1,VALPOWER+2)").arg(m_nSRate));
-
-    sl = getConfData()->m_sMeasSystemList.at(1).split(',');
-    // our second measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr) );
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr) );
-    dspCmdList.append(QString("MULCCC(MEASSIGNAL1,MEASSIGNAL2,MEASSIGNAL1)"));
-    dspCmdList.append(QString("INTEGRALPOS(%1,MEASSIGNAL1,VALPOWER+3)").arg(m_nSRate));
-    dspCmdList.append(QString("INTEGRALNEG(%1,MEASSIGNAL1,VALPOWER+4)").arg(m_nSRate));
-    dspCmdList.append(QString("INTEGRAL(%1,MEASSIGNAL1,VALPOWER+5)").arg(m_nSRate));
-
-    sl = getConfData()->m_sMeasSystemList.at(2).split(',');
-    // our third measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(m_measChannelInfoHash.value(sl.at(0)).dspChannelNr) );
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(m_measChannelInfoHash.value(sl.at(1)).dspChannelNr) );
-    dspCmdList.append(QString("MULCCC(MEASSIGNAL1,MEASSIGNAL2,MEASSIGNAL1)"));
-    dspCmdList.append(QString("INTEGRALPOS(%1,MEASSIGNAL1,VALPOWER+6)").arg(m_nSRate));
-    dspCmdList.append(QString("INTEGRALNEG(%1,MEASSIGNAL1,VALPOWER+7)").arg(m_nSRate));
-    dspCmdList.append(QString("INTEGRAL(%1,MEASSIGNAL1,VALPOWER+8)").arg(m_nSRate));
-
-    dspCmdList.append("STOPCHAIN(1,0x0110)");
-    return dspCmdList;
-}
-
 void cPower2ModuleMeasProgram::setDspCmdList()
 {
+    QList<MeasSystemChannels> measChannelPairList;
+    for(const auto& measChannelPair : qAsConst(getConfData()->m_sMeasSystemList)) {
+        QStringList channelPairSplit = measChannelPair.split(',');
+        MeasSystemChannels measChannels;
+        measChannels.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
+        measChannels.currentChannel = m_measChannelInfoHash.value(channelPairSplit.at(1)).dspChannelNr;
+        measChannelPairList.append(measChannels);
+    }
+
     int dspSelectCodeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
 
     // we have a loop here in spite of we have only 1 measuring mode possible ....maybe we get more
     QStringList dspMModesCommandList;
+    Power2DspGenerator dspGenerator;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         int dspSelectCode = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i)).getCode();
         switch (dspSelectCode)
         {
         case m4lw:
-            dspMModesCommandList.append(mmodeAdd4LW(dspSelectCode));
+            dspMModesCommandList.append(dspGenerator.mmodeAdd4LW(dspSelectCode, measChannelPairList, m_nSRate));
             break;
         default:
             break;

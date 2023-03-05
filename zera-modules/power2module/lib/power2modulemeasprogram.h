@@ -78,7 +78,6 @@ protected slots:
 private:
     cPower2ModuleConfigData* getConfData();
     QStringList dspCmdInitVars(int dspInitialSelectCode);
-    QStringList mmodeAdd4LW(int dspSelectCode);
     void setActualValuesNames();
     bool is2WireMode();
     void dspSetParamsTiMMode(int tipar);
