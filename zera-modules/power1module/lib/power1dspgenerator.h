@@ -1,13 +1,8 @@
 #ifndef POWER1DSPGENERATOR_H
 #define POWER1DSPGENERATOR_H
 
+#include "meassytemchannels.h"
 #include <QStringList>
-
-struct MeasSystemChannels
-{
-    int voltageChannel;
-    int currentChannel;
-};
 
 class Power1DspGenerator
 {
