@@ -8,6 +8,7 @@ class Power2DspGenerator
 {
 public:
     QStringList mmodeAdd4LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, quint32 sampleCountPerSignalPeriod);
+    QStringList getCmdsSumAndAverage();
 };
 
 #endif // POWER2DSPGENERATOR_H
