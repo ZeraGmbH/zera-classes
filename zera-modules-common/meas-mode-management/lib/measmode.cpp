@@ -54,6 +54,11 @@ QString MeasMode::getCurrentMask()
     return mask;
 }
 
+int MeasMode::getActiveMeasSysCount()
+{
+    return m_measModePhaseSetter->getActiveMeasSysCount();
+}
+
 bool MeasMode::isValid()
 {
     return m_bValid && m_measModeInfo.isValid();
