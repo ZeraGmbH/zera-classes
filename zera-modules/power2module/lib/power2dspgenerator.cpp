@@ -35,3 +35,17 @@ QStringList Power2DspGenerator::mmodeAdd4LW(int dspSelectCode, QList<MeasSystemC
     dspCmdList.append("STOPCHAIN(1,0x0110)");
     return dspCmdList;
 }
+
+QStringList Power2DspGenerator::getCmdsSumAndAverage()
+{
+    QStringList dspCmdList;
+    // we have to compute sum of our power systems
+    dspCmdList.append("ADDVVV(VALPOWER,VALPOWER+3,VALPOWER+9)");
+    dspCmdList.append("ADDVVV(VALPOWER+6,VALPOWER+9,VALPOWER+9)"); // PS+ = (P1+) +(P2+) + (P3+)
+    dspCmdList.append("ADDVVV(VALPOWER+1,VALPOWER+4,VALPOWER+10)");
+    dspCmdList.append("ADDVVV(VALPOWER+7,VALPOWER+10,VALPOWER+10)"); // PS- = (P1-) +(P2-) + (P3-)
+    dspCmdList.append("ADDVVV(VALPOWER+9,VALPOWER+10,VALPOWER+11)"); // PS = (PS+) + (PS-)
+    // and filter all our values
+    dspCmdList.append(QString("AVERAGE1(12,VALPOWER,FILTER)")); // we add results to filter
+    return dspCmdList;
+}

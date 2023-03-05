@@ -428,9 +428,6 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         measChannelPairList.append(measChannels);
     }
 
-    int dspSelectCodeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
-    QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
-
     // we have a loop here in spite of we have only 1 measuring mode possible ....maybe we get more
     QStringList dspMModesCommandList;
     Power2DspGenerator dspGenerator;
@@ -446,14 +443,10 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         }
     }
 
-    // we have to compute sum of our power systems
-    dspMModesCommandList.append("ADDVVV(VALPOWER,VALPOWER+3,VALPOWER+9)");
-    dspMModesCommandList.append("ADDVVV(VALPOWER+6,VALPOWER+9,VALPOWER+9)"); // PS+ = (P1+) +(P2+) + (P3+)
-    dspMModesCommandList.append("ADDVVV(VALPOWER+1,VALPOWER+4,VALPOWER+10)");
-    dspMModesCommandList.append("ADDVVV(VALPOWER+7,VALPOWER+10,VALPOWER+10)"); // PS- = (P1-) +(P2-) + (P3-)
-    dspMModesCommandList.append("ADDVVV(VALPOWER+9,VALPOWER+10,VALPOWER+11)"); // PS = (PS+) + (PS-)
-    // and filter all our values
-    dspMModesCommandList.append(QString("AVERAGE1(12,VALPOWER,FILTER)")); // we add results to filter
+    dspMModesCommandList.append(dspGenerator.getCmdsSumAndAverage());
+
+    int dspSelectCodeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
+    QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
 
     // sequence here is important
     for(const auto &cmd : dspInitVarsList)
