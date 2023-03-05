@@ -359,7 +359,7 @@ void cPower1ModuleMeasProgram::generateInterface()
                                                          QString("Phase select mask for modes supporting phase selection - e.g 100 for L1 only"),
                                                          getInitialPhaseOnOffVeinVal());
     m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","XMMSELECT", "10", "PAR_XMModePhaseSelect", "0", ""));
-    sValidator = new cStringValidator(PhaseValidatorStringGenerator::generate(getConfData()->getMeasSystemCount()));
+    sValidator = new cStringValidator(PhaseValidatorStringGenerator::generate(getConfData()->m_measSystemCount));
     m_pMModePhaseSelectParameter->setValidator(sValidator);
     m_pModule->veinModuleParameterHash[key] = m_pMModePhaseSelectParameter; // for modules use
 
@@ -472,7 +472,7 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
     dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
-    for(int phase=0; phase<getConfData()->getMeasSystemCount(); phase++)
+    for(int phase=0; phase<getConfData()->m_measSystemCount; phase++)
         dspCmdList.append(QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
     dspCmdList.append(QString("SETVAL(FAK,0.5)"));
 
@@ -489,7 +489,9 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 void cPower1ModuleMeasProgram::setDspCmdList()
 {
     QList<MeasSystemChannels> measChannelPairList;
-    for(const auto& measChannelPair : qAsConst(getConfData()->m_sMeasSystemList)) {
+    cPower1ModuleConfigData *confdata = getConfData();
+    for(int sys=0; sys<confdata->m_measSystemCount; sys++) {
+        QString measChannelPair = confdata->m_sMeasSystemList[sys];
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannels measChannels;
         measChannels.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
@@ -499,7 +501,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
     QStringList dspMModesCommandList;
-    int measSytemCount = getConfData()->getMeasSystemCount();
+    int measSytemCount = getConfData()->m_measSystemCount;
     set2WireVariables();
     Power1DspGenerator dspGenerator;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
@@ -1309,7 +1311,7 @@ void cPower1ModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < getConfData()->getMeasSystemCount(); i++)
+    for (int i = 0; i < getConfData()->m_measSystemCount; i++)
     {
         QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
         for (int j = 0; j < sl.count(); j++)
@@ -1817,7 +1819,7 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
             m_imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
         }
         else // we have to consider all channels
-            for (int i = 0; i < getConfData()->getMeasSystemCount(); i++)
+            for (int i = 0; i < getConfData()->m_measSystemCount; i++)
             {
 
                 sl = getConfData()->m_sMeasSystemList.at(i).split(',');
@@ -1943,7 +1945,7 @@ QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
     QString phaseOnOff = confData->m_sXMeasModePhases.m_sValue;
     if(phaseOnOff.isEmpty()) {
         QString defaultPhaseMask;
-        for(int phase=0; phase<confData->getMeasSystemCount(); phase++)
+        for(int phase=0; phase<confData->m_measSystemCount; phase++)
             defaultPhaseMask.append("1");
         phaseOnOff = defaultPhaseMask;
         confData->m_sXMeasModePhases.m_sValue = phaseOnOff;
@@ -1955,7 +1957,7 @@ QString cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QString separator
 {
     QString strVarData;
     cPower1ModuleConfigData *confData = getConfData();
-    if(phase<confData->getMeasSystemCount()) {
+    if(phase<confData->m_measSystemCount) {
         QString phaseOnOff = confData->m_sXMeasModePhases.m_sValue;
         strVarData = QString("XMMODEPHASE%1%2%3").arg(phase).arg(separator, phaseOnOff.mid(phase,1));
     }
@@ -1966,7 +1968,7 @@ QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
 {
     QStringList phaseOnOffList;
     cPower1ModuleConfigData *confData = getConfData();
-    for(int phase=0; phase<confData->getMeasSystemCount(); phase++)
+    for(int phase=0; phase<confData->m_measSystemCount; phase++)
         phaseOnOffList += dspGetPhaseVarStr(phase, ":");
     return phaseOnOffList.join(";");
 }

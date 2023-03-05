@@ -420,7 +420,9 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 void cPower2ModuleMeasProgram::setDspCmdList()
 {
     QList<MeasSystemChannels> measChannelPairList;
-    for(const auto& measChannelPair : qAsConst(getConfData()->m_sMeasSystemList)) {
+    cPower2ModuleConfigData *confdata = getConfData();
+    for(int sys=0; sys<confdata->m_measSystemCount; sys++) {
+        QString measChannelPair = confdata->m_sMeasSystemList[sys];
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannels measChannels;
         measChannels.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
@@ -1164,7 +1166,7 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < getConfData()->getMeasSystemCount(); i++)
+    for (int i = 0; i < getConfData()->m_measSystemCount; i++)
     {
         QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
         for (int j = 0; j < sl.count(); j++)
@@ -1669,7 +1671,7 @@ void cPower2ModuleMeasProgram::setFrequencyScales()
             m_imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
         }
         else // we have to consider all channels
-            for (int i = 0; i < getConfData()->getMeasSystemCount(); i++)
+            for (int i = 0; i < getConfData()->m_measSystemCount; i++)
             {
 
                 sl = getConfData()->m_sMeasSystemList.at(i).split(',');
