@@ -45,7 +45,6 @@ class cPower2ModuleConfigData
 {
 public:
     cPower2ModuleConfigData(){}
-    int getMeasSystemCount() const { return m_sMeasSystemList.count(); }
 
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
@@ -54,6 +53,7 @@ public:
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes
     QStringList m_sMeasSystemList; // our measuring systems "m0,m1" ....
+    int m_measSystemCount = 0;
     QString m_sIntegrationMode; // we integrate over time or periods
     quint32 m_nNominalFrequency; // our nominal frequency output for full range power
     QString m_sFreqActualizationMode; // signalperiod or integrationtime
