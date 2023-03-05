@@ -287,59 +287,55 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     QList<VfModuleComponentInput*> inputList;
 
-    if (getConfData()->m_nFreqOutputCount > 0)
-    {
-        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
-        {
-            // Note: Although components are 'PAR_' they are not changable currently
-            pFoutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                              key = QString("PAR_FOUTConstant%1").arg(i),
-                                                              QString("Frequency output constant"),
-                                                              QVariant(0));
-            pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutParameter->getName(), "0", ""));
+    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
+        // Note: Although components are 'PAR_' they are not changable currently
+        pFoutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                          key = QString("PAR_FOUTConstant%1").arg(i),
+                                                          QString("Frequency output constant"),
+                                                          QVariant(0));
+        pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1CONSTANT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
-            m_FoutConstParameterList.append(pFoutParameter);
-            m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
+        m_FoutConstParameterList.append(pFoutParameter);
+        m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
 
-            QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sPlug;
-            pFoutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                              key = QString("PAR_FOUT%1").arg(i),
-                                                              QString("Frequency output plug"),
-                                                              QVariant(foutName));
-            pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1OUT").arg(i), "2", pFoutParameter->getName(), "0", ""));
+        QString foutName =  getConfData()->m_FreqOutputConfList.at(i).m_sPlug;
+        pFoutParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                          key = QString("PAR_FOUT%1").arg(i),
+                                                          QString("Frequency output plug"),
+                                                          QVariant(foutName));
+        pFoutParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION",QString("M%1OUT").arg(i), "2", pFoutParameter->getName(), "0", ""));
 
-            m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
+        m_pModule->veinModuleParameterHash[key] = pFoutParameter; // for modules use
 
-            // This code seems to identify fout channels using the list positions.
-            // If no scaling Information is provided we will add null pointers to keep the positions correct
-            VfModuleComponentInput* pUScaleInput=nullptr;
-            VfModuleComponentInput* pIScaleInput=nullptr;
-            if(getConfData()->m_FreqOutputConfList.length() > i){
-                int entityId=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
-                QString componentName=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
-                if(entityId != -1 && componentName != ""){
-                    pUScaleInput= new VfModuleComponentInput(entityId,componentName);
-                    pUScaleInput->setValue(1);
-                    inputList.append(pUScaleInput);
-                }
-                entityId=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
-                componentName=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
-
-                if(entityId != -1 && componentName != ""){
-                    pIScaleInput= new VfModuleComponentInput(entityId,componentName);
-                    pIScaleInput->setValue(1);
-                    inputList.append(pIScaleInput);
-                }
+        // This code seems to identify fout channels using the list positions.
+        // If no scaling Information is provided we will add null pointers to keep the positions correct
+        VfModuleComponentInput* pUScaleInput=nullptr;
+        VfModuleComponentInput* pIScaleInput=nullptr;
+        if(getConfData()->m_FreqOutputConfList.length() > i){
+            int entityId=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_entityId;
+            QString componentName=getConfData()->m_FreqOutputConfList.at(i).m_uscale.m_componentName;
+            if(entityId != -1 && componentName != ""){
+                pUScaleInput= new VfModuleComponentInput(entityId,componentName);
+                pUScaleInput->setValue(1);
+                inputList.append(pUScaleInput);
             }
-            QPair<VfModuleComponentInput*,VfModuleComponentInput*> tmpScalePair(pUScaleInput,pIScaleInput);
-            m_pScalingInputs.append(tmpScalePair);
+            entityId=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_entityId;
+            componentName=getConfData()->m_FreqOutputConfList.at(i).m_iscale.m_componentName;
+
+            if(entityId != -1 && componentName != ""){
+                pIScaleInput= new VfModuleComponentInput(entityId,componentName);
+                pIScaleInput->setValue(1);
+                inputList.append(pIScaleInput);
+            }
         }
-        m_pModule->getPEventSystem()->setInputList(inputList);
-        for(QPair<VfModuleComponentInput*,VfModuleComponentInput*> ele : m_pScalingInputs){
-            if(ele.first != nullptr && ele.second != nullptr){
-                connect(ele.first,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
-                connect(ele.second,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
-            }
+        QPair<VfModuleComponentInput*,VfModuleComponentInput*> tmpScalePair(pUScaleInput,pIScaleInput);
+        m_pScalingInputs.append(tmpScalePair);
+    }
+    m_pModule->getPEventSystem()->setInputList(inputList);
+    for(QPair<VfModuleComponentInput*,VfModuleComponentInput*> ele : m_pScalingInputs){
+        if(ele.first != nullptr && ele.second != nullptr){
+            connect(ele.first,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
+            connect(ele.second,&VfModuleComponentInput::sigValueChanged,this,&cPower1ModuleMeasProgram::updatePreScaling);
         }
     }
 
