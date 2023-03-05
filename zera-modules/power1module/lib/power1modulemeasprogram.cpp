@@ -2010,7 +2010,7 @@ double cPower1ModuleMeasProgram::calcTiTime()
         else
             tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
     }
-    else
+    else // period (just if/else for now)
         tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
     return tiTime;
 }
