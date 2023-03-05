@@ -9,9 +9,6 @@ public:
     MeasModePhaseSetStrategyPhasesFixed(MModePhaseMask phaseMask, int activeMeasSysCount);
     bool canChangePhaseMask() override { return false; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
-    MModePhaseMask getCurrPhaseMask()  override;
-private:
-    MModePhaseMask m_phaseMask;
 };
 
 #endif // MEASMODEPHASESETSTRATEGYPHASESFIXED_H

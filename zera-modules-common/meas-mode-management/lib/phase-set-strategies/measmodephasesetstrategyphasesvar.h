@@ -9,9 +9,6 @@ public:
     MeasModePhaseSetStrategyPhasesVar(MModePhaseMask phaseMask, int activeMeasSysCount);
     bool canChangePhaseMask() override { return true; }
     bool tryChangeMask(MModePhaseMask phaseMask) override;
-    MModePhaseMask getCurrPhaseMask()  override;
-private:
-    MModePhaseMask m_phaseMask;
 };
 
 #endif // MEASMODEPHASESETSTRATEGYPHASESVAR_H
