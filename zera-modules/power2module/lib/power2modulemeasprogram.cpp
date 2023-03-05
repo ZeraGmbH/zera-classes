@@ -1816,6 +1816,13 @@ void cPower2ModuleMeasProgram::handleMModeParamChange()
     emit m_pModule->parameterChanged();
 }
 
+void cPower2ModuleMeasProgram::updatesForMModeChange()
+{
+    setActualValuesNames();
+    setFrequencyScales();
+    setFoutConstants();
+}
+
 void cPower2ModuleMeasProgram::handleMovingWindowIntTimeChange()
 {
     m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasIntervalTime.m_fValue);
@@ -1841,37 +1848,8 @@ void cPower2ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 void cPower2ModuleMeasProgram::newMeasMode(QVariant mm)
 {
     getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
-
-    if (getConfData()->m_sIntegrationMode == "time")
-    {
-        if (getConfData()->m_bmovingWindow)
-            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                             .arg(getConfData()->m_fmovingwindowInterval*1000)
-                                                             .arg(0)
-                                                             .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode()), DSPDATA::dInt);
-        else
-            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                             .arg(getConfData()->m_fMeasIntervalTime.m_fValue*1000)
-                                                             .arg(0)
-                                                             .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode()), DSPDATA::dInt);
-    }
-    else
-        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;MMODE:%3")
-                                                         .arg(getConfData()->m_nMeasIntervalPeriod.m_nValue)
-                                                         .arg(0)
-                                                         .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode()), DSPDATA::dInt);
-
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-    setActualValuesNames();
-    setFrequencyScales();
-    setFoutConstants();
-
-    emit m_pModule->parameterChanged();
+    handleMModeParamChange();
+    updatesForMModeChange();
 }
 
 }
-
-
-
-
-
