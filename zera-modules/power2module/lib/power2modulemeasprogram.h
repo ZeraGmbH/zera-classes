@@ -84,6 +84,7 @@ private:
     void dspSetParamsTiMMode(int tipar);
     void handleMovingWindowIntTimeChange();
     void handleMModeParamChange();
+    void updatesForMModeChange();
     double calcTiTime();
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
 
