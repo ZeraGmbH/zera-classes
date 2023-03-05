@@ -612,23 +612,18 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     // so... let's now set our frequency outputs if he have some
     QString s;
-    if (getConfData()->m_sFreqActualizationMode == "signalperiod")
-    {
-        if (getConfData()->m_nFreqOutputCount > 0)
-        {
-            for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++)
-            {
-                // which actualvalue do we take as source (offset)
-                quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
-                QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
-                // here we set abs, plus or minus and which frequency output has to be set
-                quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
-                // frequenzausgang berechnen lassen
-                m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQS+%2,FREQSCALE+%3)")
-                                                 .arg(freqpar)
-                                                 .arg(actvalueIndex)
-                                                 .arg(i));
-            }
+    if (getConfData()->m_sFreqActualizationMode == "signalperiod") {
+        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
+            // which actualvalue do we take as source (offset)
+            quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
+            QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
+            // here we set abs, plus or minus and which frequency output has to be set
+            quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
+            // frequenzausgang berechnen lassen
+            m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQS+%2,FREQSCALE+%3)")
+                                             .arg(freqpar)
+                                             .arg(actvalueIndex)
+                                             .arg(i));
         }
     }
 
