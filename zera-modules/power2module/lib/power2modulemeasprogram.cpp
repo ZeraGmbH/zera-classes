@@ -17,54 +17,54 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
 {
     m_pDSPInterFace = new Zera::cDSPInterface();
 
-    m_IdentifyState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceTypesState);
-    m_readResourceTypesState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSenseState);
+    m_IdentifyState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceTypesState);
+    m_readResourceTypesState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSenseState);
 
-    m_readResourceSenseState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSenseInfosState);
-    m_readResourceSenseInfosState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSenseInfoState);
-    m_readResourceSenseInfoState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSenseInfoDoneState);
-    m_readResourceSenseInfoDoneState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceState);
-    m_readResourceSenseInfoDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceSenseInfoState);
+    m_readResourceSenseState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSenseInfosState);
+    m_readResourceSenseInfosState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSenseInfoState);
+    m_readResourceSenseInfoState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSenseInfoDoneState);
+    m_readResourceSenseInfoDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSourceState);
+    m_readResourceSenseInfoDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readResourceSenseInfoState);
 
-    m_readResourceSourceState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceInfosState);
-    m_readResourceSourceState.addTransition(this, SIGNAL(activationSkip()), &m_pcbserverConnectState4measChannels);
-    m_readResourceSourceInfosState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceInfoState);
-    m_readResourceSourceInfoState.addTransition(this, SIGNAL(activationContinue()), &m_readResourceSourceInfoDoneState);
-    m_readResourceSourceInfoDoneState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourcesSourceState);
-    m_readResourceSourceInfoDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readResourceSourceInfoState);
+    m_readResourceSourceState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSourceInfosState);
+    m_readResourceSourceState.addTransition(this, &cPower2ModuleMeasProgram::activationSkip, &m_pcbserverConnectState4measChannels);
+    m_readResourceSourceInfosState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSourceInfoState);
+    m_readResourceSourceInfoState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readResourceSourceInfoDoneState);
+    m_readResourceSourceInfoDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_claimResourcesSourceState);
+    m_readResourceSourceInfoDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readResourceSourceInfoState);
 
-    m_claimResourcesSourceState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceSourceState);
-    m_claimResourceSourceState.addTransition(this, SIGNAL(activationContinue()), &m_claimResourceSourceDoneState);
-    m_claimResourceSourceDoneState.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectState4measChannels);
-    m_claimResourceSourceDoneState.addTransition(this, SIGNAL(activationLoop()), &m_claimResourceSourceState);
-    m_pcbserverConnectState4measChannels.addTransition(this, SIGNAL(activationContinue()), &m_pcbserverConnectState4freqChannels);
-    m_pcbserverConnectState4freqChannels.addTransition(this, SIGNAL(activationContinue()), &m_readSampleRateState);
-    m_readSampleRateState.addTransition(this, SIGNAL(activationContinue()), &m_readSenseChannelInformationState);
-    m_readSenseChannelInformationState.addTransition(this, SIGNAL(activationContinue()), &m_readSenseChannelAliasState);
-    m_readSenseChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSenseChannelUnitState);
-    m_readSenseChannelUnitState.addTransition(this, SIGNAL(activationContinue()), &m_readSenseDspChannelState);
-    m_readSenseDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readSenseChannelInformationDoneState);
-    m_readSenseChannelInformationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceChannelInformationState);
-    m_readSenseChannelInformationDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readSenseChannelAliasState);
+    m_claimResourcesSourceState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_claimResourceSourceState);
+    m_claimResourceSourceState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_claimResourceSourceDoneState);
+    m_claimResourceSourceDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_pcbserverConnectState4measChannels);
+    m_claimResourceSourceDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_claimResourceSourceState);
+    m_pcbserverConnectState4measChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_pcbserverConnectState4freqChannels);
+    m_pcbserverConnectState4freqChannels.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSampleRateState);
+    m_readSampleRateState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationState);
+    m_readSenseChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelAliasState);
+    m_readSenseChannelAliasState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelUnitState);
+    m_readSenseChannelUnitState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseDspChannelState);
+    m_readSenseDspChannelState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSenseChannelInformationDoneState);
+    m_readSenseChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelInformationState);
+    m_readSenseChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readSenseChannelAliasState);
 
-    m_readSourceChannelInformationState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceChannelAliasState);
-    m_readSourceChannelInformationState.addTransition(this, SIGNAL(activationSkip()), &m_dspserverConnectState);
-    m_readSourceChannelAliasState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceDspChannelState);
-    m_readSourceDspChannelState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceFormFactorState);
-    m_readSourceFormFactorState.addTransition(this, SIGNAL(activationContinue()), &m_readSourceChannelInformationDoneState);
-    m_readSourceChannelInformationDoneState.addTransition(this, SIGNAL(activationContinue()), &m_setSenseChannelRangeNotifiersState);
-    m_readSourceChannelInformationDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readSourceChannelAliasState);
+    m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelAliasState);
+    m_readSourceChannelInformationState.addTransition(this, &cPower2ModuleMeasProgram::activationSkip, &m_dspserverConnectState);
+    m_readSourceChannelAliasState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceDspChannelState);
+    m_readSourceDspChannelState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceFormFactorState);
+    m_readSourceFormFactorState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readSourceChannelInformationDoneState);
+    m_readSourceChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setSenseChannelRangeNotifiersState);
+    m_readSourceChannelInformationDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readSourceChannelAliasState);
 
-    m_setSenseChannelRangeNotifiersState.addTransition(this, SIGNAL(activationContinue()), &m_setSenseChannelRangeNotifierState);
-    m_setSenseChannelRangeNotifierState.addTransition(this, SIGNAL(activationContinue()), &m_setSenseChannelRangeNotifierDoneState);
-    m_setSenseChannelRangeNotifierDoneState.addTransition(this, SIGNAL(activationContinue()), &m_dspserverConnectState);
-    m_setSenseChannelRangeNotifierDoneState.addTransition(this, SIGNAL(activationLoop()), &m_setSenseChannelRangeNotifierState);
+    m_setSenseChannelRangeNotifiersState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setSenseChannelRangeNotifierState);
+    m_setSenseChannelRangeNotifierState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setSenseChannelRangeNotifierDoneState);
+    m_setSenseChannelRangeNotifierDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_dspserverConnectState);
+    m_setSenseChannelRangeNotifierDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_setSenseChannelRangeNotifierState);
 
-    m_claimPGRMemState.addTransition(this, SIGNAL(activationContinue()), &m_claimUSERMemState);
-    m_claimUSERMemState.addTransition(this, SIGNAL(activationContinue()), &m_var2DSPState);
-    m_var2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_cmd2DSPState);
-    m_cmd2DSPState.addTransition(this, SIGNAL(activationContinue()), &m_activateDSPState);
-    m_activateDSPState.addTransition(this, SIGNAL(activationContinue()), &m_loadDSPDoneState);
+    m_claimPGRMemState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_claimUSERMemState);
+    m_claimUSERMemState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_var2DSPState);
+    m_var2DSPState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_cmd2DSPState);
+    m_cmd2DSPState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_activateDSPState);
+    m_activateDSPState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_loadDSPDoneState);
 
     m_activationMachine.addState(&m_resourceManagerConnectState);
     m_activationMachine.addState(&m_IdentifyState);
@@ -159,19 +159,19 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     connect(&m_loadDSPDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::activateDSPdone);
 
     // setting up statemachine for unloading dsp and setting resources free
-    m_deactivateDSPState.addTransition(this, SIGNAL(deactivationContinue()), &m_freePGRMemState);
-    m_freePGRMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeUSERMemState);
-    m_freeUSERMemState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeFreqOutputsState);
+    m_deactivateDSPState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freePGRMemState);
+    m_freePGRMemState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freeUSERMemState);
+    m_freeUSERMemState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freeFreqOutputsState);
 
-    m_freeFreqOutputsState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeFreqOutputState);
-    m_freeFreqOutputsState.addTransition(this, SIGNAL(deactivationSkip()), &m_resetNotifiersState);
-    m_freeFreqOutputState.addTransition(this, SIGNAL(deactivationContinue()), &m_freeFreqOutputDoneState);
-    m_freeFreqOutputDoneState.addTransition(this, SIGNAL(deactivationContinue()), &m_resetNotifiersState);
-    m_freeFreqOutputDoneState.addTransition(this, SIGNAL(deactivationLoop()), &m_freeFreqOutputState);
-    m_resetNotifiersState.addTransition(this, SIGNAL(deactivationContinue()), &m_resetNotifierState);
-    m_resetNotifierState.addTransition(this, SIGNAL(deactivationContinue()), &m_resetNotifierDoneState);
-    m_resetNotifierDoneState.addTransition(this, SIGNAL(deactivationContinue()), &m_unloadDSPDoneState);
-    m_resetNotifierDoneState.addTransition(this, SIGNAL(deactivationLoop()), &m_resetNotifierState);
+    m_freeFreqOutputsState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freeFreqOutputState);
+    m_freeFreqOutputsState.addTransition(this, &cPower2ModuleMeasProgram::deactivationSkip, &m_resetNotifiersState);
+    m_freeFreqOutputState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_freeFreqOutputDoneState);
+    m_freeFreqOutputDoneState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_resetNotifiersState);
+    m_freeFreqOutputDoneState.addTransition(this, &cPower2ModuleMeasProgram::deactivationLoop, &m_freeFreqOutputState);
+    m_resetNotifiersState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_resetNotifierState);
+    m_resetNotifierState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_resetNotifierDoneState);
+    m_resetNotifierDoneState.addTransition(this, &cPower2ModuleMeasProgram::deactivationContinue, &m_unloadDSPDoneState);
+    m_resetNotifierDoneState.addTransition(this, &cPower2ModuleMeasProgram::deactivationLoop, &m_resetNotifierState);
 
     m_deactivationMachine.addState(&m_deactivateDSPState);
     m_deactivationMachine.addState(&m_freePGRMemState);
@@ -203,7 +203,7 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     connect(&m_unloadDSPDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::deactivateDSPdone);
 
     // setting up statemachine for data acquisition
-    m_dataAcquisitionState.addTransition(this, SIGNAL(dataAquisitionContinue()), &m_dataAcquisitionDoneState);
+    m_dataAcquisitionState.addTransition(this, &cPower2ModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionState);
     m_dataAcquisitionMachine.addState(&m_dataAcquisitionDoneState);
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
@@ -211,10 +211,10 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::dataReadDSP);
 
     // setting up statemachine for reading urvalues from channels that changed its range
-    m_readUrvalueState.addTransition(this, SIGNAL(activationContinue()), &m_readUrvalueDoneState);
-    m_readUrvalueDoneState.addTransition(this, SIGNAL(activationContinue()), &m_setFrequencyScalesState);
-    m_readUrvalueDoneState.addTransition(this, SIGNAL(activationLoop()), &m_readUrvalueState);
-    m_setFrequencyScalesState.addTransition(this, SIGNAL(activationContinue()), &m_setFoutConstantState);
+    m_readUrvalueState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_readUrvalueDoneState);
+    m_readUrvalueDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setFrequencyScalesState);
+    m_readUrvalueDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readUrvalueState);
+    m_setFrequencyScalesState.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setFoutConstantState);
 
     m_readUrValueMachine.addState(&m_readUrvalueState);
     m_readUrValueMachine.addState(&m_readUrvalueDoneState);
@@ -1225,7 +1225,7 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
     m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
     // and then we set resource manager interface's connection
     m_rmInterface.setClientSmart(m_rmClient);
-    m_resourceManagerConnectState.addTransition(m_rmClient.get(), SIGNAL(connected()), &m_IdentifyState);
+    m_resourceManagerConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
     connect(&m_rmInterface, &AbstractServerInterface::serverAnswer, this, &cPower2ModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
 }
@@ -1493,7 +1493,7 @@ void cPower2ModuleMeasProgram::dspserverConnect()
 {
     m_pDspClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_DSPServerSocket.m_sIP, getConfData()->m_DSPServerSocket.m_nPort);
     m_pDSPInterFace->setClient(m_pDspClient);
-    m_dspserverConnectState.addTransition(m_pDspClient, SIGNAL(connected()), &m_claimPGRMemState);
+    m_dspserverConnectState.addTransition(m_pDspClient, &Zera::ProxyClient::connected, &m_claimPGRMemState);
     connect(m_pDSPInterFace, &Zera::cDSPInterface::serverAnswer, this, &cPower2ModuleMeasProgram::catchInterfaceAnswer);
     Zera::Proxy::getInstance()->startConnection(m_pDspClient);
 }
