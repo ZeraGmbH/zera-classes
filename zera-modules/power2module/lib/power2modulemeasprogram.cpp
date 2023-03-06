@@ -435,14 +435,13 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     QStringList dspMModesCommandList;
     int measSytemCount = getConfData()->m_measSystemCount;
     set2WireVariables();
-    Power2DspGenerator dspGenerator;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
         int dspSelectCode = mInfo.getCode();
         switch (dspSelectCode)
         {
         case m4lw:
-            dspMModesCommandList.append(dspGenerator.getCmdsMMode4LW(dspSelectCode, measChannelPairList, m_nSRate));
+            dspMModesCommandList.append(Power2DspGenerator::getCmdsMMode4LW(dspSelectCode, measChannelPairList, m_nSRate));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
@@ -453,7 +452,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         }
     }
 
-    dspMModesCommandList.append(dspGenerator.getCmdsSumAndAverage());
+    dspMModesCommandList.append(Power2DspGenerator::getCmdsSumAndAverage());
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
