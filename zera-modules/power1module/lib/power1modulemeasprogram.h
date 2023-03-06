@@ -84,6 +84,20 @@ protected slots:
 private:
     cPower1ModuleConfigData* getConfData();
     void set2WireVariables();
+    void setActualValuesNames();
+    void setSCPIMeasInfo();
+    void setFoutMetaInfo();
+
+    QString getInitialPhaseOnOffVeinVal();
+    QString dspGetPhaseVarStr(int phase, QString separator);
+    void dspSetParamsTiMMode(int tipar);
+    QString dspGetSetPhasesVar();
+    void handleMModeParamChange();
+    void handleMovingWindowIntTimeChange();
+    void updatesForMModeChange();
+    double calcTiTime();
+
+    QStringList dspCmdInitVars(int dspInitialSelectCode);
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
@@ -194,21 +208,6 @@ private:
     QFinalState m_setFoutConstantState;
 
     cMovingwindowFilter m_movingwindowFilter;
-
-    void setActualValuesNames();
-    void setSCPIMeasInfo();
-    void setFoutMetaInfo();
-
-    QString getInitialPhaseOnOffVeinVal();
-    QString dspGetPhaseVarStr(int phase, QString separator);
-    void dspSetParamsTiMMode(int tipar);
-    QString dspGetSetPhasesVar();
-    void handleMModeParamChange();
-    void handleMovingWindowIntTimeChange();
-    void updatesForMModeChange();
-    double calcTiTime();
-
-    QStringList dspCmdInitVars(int dspInitialSelectCode);
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
