@@ -80,7 +80,6 @@ private:
     void set2WireVariables();
     QStringList dspCmdInitVars(int dspInitialSelectCode);
     void setActualValuesNames();
-    bool is2WireMode();
     void dspSetParamsTiMMode(int tipar);
     void handleMovingWindowIntTimeChange();
     void handleMModeParamChange();
@@ -263,6 +262,8 @@ private slots:
     void newIntegrationtime(QVariant ti);
     void newIntegrationPeriod(QVariant period);
     void newMeasMode(QVariant mm);
+
+    void onModeSelectSucceeded();
 };
 
 }
