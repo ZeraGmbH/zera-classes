@@ -28,7 +28,6 @@
                 <pms1>m0,m3</pms1>
                 <pms2>m1,m4</pms2>
                 <pms3>m2,m5</pms3>
-                <pms2w>pms1</pms2w>
             </system>
             <integrationmode>time</integrationmode>
             <movingwindow>
