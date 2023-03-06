@@ -455,7 +455,8 @@ void cPower2ModuleMeasProgram::setDspCmdList()
 
     dspMModesCommandList.append(dspGenerator.getCmdsSumAndAverage());
 
-    int dspSelectCodeFromConfig = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
+    m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
+    int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
 
     // sequence here is important
@@ -1118,13 +1119,6 @@ void cPower2ModuleMeasProgram::setActualValuesNames()
     }
 }
 
-
-bool cPower2ModuleMeasProgram::is2WireMode()
-{
-    int mm = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode();
-    return ((mm == m2lw) || (mm == m2lb) || (mm == m2ls) || (mm == m2lsg));
-}
-
 double cPower2ModuleMeasProgram::calcTiTime()
 {
     double tiTime;
@@ -1528,15 +1522,16 @@ void cPower2ModuleMeasProgram::activateDSPdone()
 
     setActualValuesNames();
     setSCPIMeasInfo();
-
     m_pMeasureSignal->setValue(QVariant(1));
+
     if (getConfData()->m_sIntegrationMode == "time")
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newIntegrationtime);
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newIntegrationPeriod);
-
     connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this , &cPower2ModuleMeasProgram::newMeasMode);
-
+    //connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newPhaseList);
+    connect(&m_measModeSelector, &MeasModeSelector::sigModeChanged,
+            this, &cPower2ModuleMeasProgram::onModeSelectSucceeded);
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
         m_readUrValueMachine.start();
@@ -1680,39 +1675,31 @@ void cPower2ModuleMeasProgram::setFrequencyScales()
     QStringList sl;
     m_umax = m_imax = 0.0;
 
-    if (getConfData()->m_nFreqOutputCount > 0) // we only do something here if we really have a frequency output
-    {
-
-        if (is2WireMode()) // in case we are in 2 wire mode we take umax imax from driving system
-        {
-            sl = getConfData()->m_sMeasSystemList.at(m_idx2WireMeasSystem).split(',');
-            m_umax = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
-            m_imax = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
-        }
-        else // we have to consider all channels
-            for (int i = 0; i < getConfData()->m_measSystemCount; i++)
-            {
-
+    if (getConfData()->m_nFreqOutputCount > 0) { // we only do something here if we really have a frequency output
+        std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+        for (int i = 0; i < getConfData()->m_measSystemCount; i++) {
+            if(mode->isPhaseActive(i)) {
                 sl = getConfData()->m_sMeasSystemList.at(i).split(',');
                 if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > m_umax)
                     m_umax = d;
                 if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > m_imax)
                     m_imax = d;
             }
+        }
 
+        double cfak = mode->getActiveMeasSysCount();
         QString datalist = "FREQSCALE:";
-
-        double cfak;
-        if (is2WireMode())
-            cfak = 1.0;
-        else
-            cfak = 3.0;
-
-        for (int i = 0; i< getConfData()->m_nFreqOutputCount; i++)
-        {
+        for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
             double frScale;
             cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
             frScale = fi.formFactor * getConfData()->m_nNominalFrequency / (cfak * m_umax * m_imax);
+
+            /*if(m_pScalingInputs.length() > i){
+                if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
+                    double scale=m_pScalingInputs.at(i).first->value().toDouble()*m_pScalingInputs.at(i).second->value().toDouble();
+                    frScale=frScale*scale;
+                }
+            }*/
             datalist += QString("%1,").arg(frScale, 0, 'g', 7);
         }
 
@@ -1730,26 +1717,22 @@ void cPower2ModuleMeasProgram::setFrequencyScales()
 
 void cPower2ModuleMeasProgram::setFoutConstants()
 {
-    double constant;
-    double cfak;
+    double cfak = m_measModeSelector.getCurrMode()->getActiveMeasSysCount();
+    double constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * m_umax * m_imax); // imp./kwh
 
-    if (is2WireMode())
-        cfak = 1.0;
-    else
-        cfak = 3.0;
-
-    constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * m_umax * m_imax); // imp./kwh
-
-    QList<QString> keylist = m_FoutInfoHash.keys();
-
-    if (keylist.count() > 0)
-        for (int i = 0; i < keylist.count(); i++)
-        {
-            cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
-            m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
-
-        }
-
+    for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
+        // calculate prescaling factor for Fout
+        /*if(m_pScalingInputs.length() > i){
+            if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
+                double scale = m_pScalingInputs.at(i).first->value().toDouble() * m_pScalingInputs.at(i).second->value().toDouble();
+                constant = constant*scale;
+            }
+        }*/
+        QString key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
+        cFoutInfo fi = m_FoutInfoHash[key];
+        m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
+        //m_FoutConstParameterList.at(i)->setValue(constant);
+    }
     setFoutPowerModes();
 }
 
@@ -1833,7 +1816,13 @@ void cPower2ModuleMeasProgram::newIntegrationPeriod(QVariant period)
 
 void cPower2ModuleMeasProgram::newMeasMode(QVariant mm)
 {
-    getConfData()->m_sMeasuringMode.m_sValue = mm.toString();
+    m_measModeSelector.tryChangeMode(mm.toString());
+}
+
+void cPower2ModuleMeasProgram::onModeSelectSucceeded()
+{
+    QString newMeasMode = m_measModeSelector.getCurrMode()->getInfo().getName();
+    getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     handleMModeParamChange();
     updatesForMModeChange();
 }
