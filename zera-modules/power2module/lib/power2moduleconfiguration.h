@@ -23,6 +23,7 @@ enum moduleconfigstate
     setMeasSystem1,
     setMeasSystem2,
     setMeasSystem3,
+    set2WMeasSystem,
     setIntegrationMode,
     setMovingwindowBool,
     setMovingwindowTime,
