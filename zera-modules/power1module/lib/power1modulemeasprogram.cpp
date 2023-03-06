@@ -1218,17 +1218,13 @@ cPower1ModuleConfigData *cPower1ModuleMeasProgram::getConfData()
 void cPower1ModuleMeasProgram::set2WireVariables()
 {
     m_idx2WireMeasSystem = 0;
-    QStringList sl = getConfData()->m_sMeasSystemList.at(0).split(','); // our default system for 2 wire mode
     if (getConfData()->m_sM2WSystem == "pms2") {
-        sl = getConfData()->m_sMeasSystemList.at(1).split(',');
         m_idx2WireMeasSystem = 1;
     }
     if (getConfData()->m_sM2WSystem == "pms3") {
-        sl = getConfData()->m_sMeasSystemList.at(2).split(',');
         m_idx2WireMeasSystem = 2;
     }
 }
-
 
 void cPower1ModuleMeasProgram::setActualValuesNames()
 {
