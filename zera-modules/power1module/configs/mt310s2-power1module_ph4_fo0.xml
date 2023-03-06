@@ -24,7 +24,6 @@
             </modes>
             <system>
                 <pms1>m6,m7</pms1>
-                <pms2w>pms1</pms2w>
             </system>
             <integrationmode>time</integrationmode>
             <movingwindow>
