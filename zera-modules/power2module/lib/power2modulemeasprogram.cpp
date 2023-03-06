@@ -2,6 +2,7 @@
 #include "power2module.h"
 #include "power2moduleconfiguration.h"
 #include "power2dspgenerator.h"
+#include "measmodephasesetstrategy4wire.h"
 #include <measmodecatalog.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
@@ -432,13 +433,20 @@ void cPower2ModuleMeasProgram::setDspCmdList()
 
     // we have a loop here in spite of we have only 1 measuring mode possible ....maybe we get more
     QStringList dspMModesCommandList;
+    int measSytemCount = getConfData()->m_measSystemCount;
+    set2WireVariables();
     Power2DspGenerator dspGenerator;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
-        int dspSelectCode = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i)).getCode();
+        cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
+        int dspSelectCode = mInfo.getCode();
         switch (dspSelectCode)
         {
         case m4lw:
             dspMModesCommandList.append(dspGenerator.getCmdsMMode4LW(dspSelectCode, measChannelPairList, m_nSRate));
+            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
+                                                                  dspSelectCode,
+                                                                  measSytemCount,
+                                                                  std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
         default:
             break;
@@ -1081,6 +1089,17 @@ cPower2ModuleConfigData *cPower2ModuleMeasProgram::getConfData()
     return qobject_cast<cPower2ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
+
+void cPower2ModuleMeasProgram::set2WireVariables()
+{
+    m_idx2WireMeasSystem = 0;
+    if (getConfData()->m_sM2WSystem == "pms2") {
+        m_idx2WireMeasSystem = 1;
+    }
+    if (getConfData()->m_sM2WSystem == "pms3") {
+        m_idx2WireMeasSystem = 2;
+    }
+}
 
 void cPower2ModuleMeasProgram::setActualValuesNames()
 {

@@ -77,6 +77,7 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cPower2ModuleConfigData* getConfData();
+    void set2WireVariables();
     QStringList dspCmdInitVars(int dspInitialSelectCode);
     void setActualValuesNames();
     bool is2WireMode();
@@ -88,6 +89,7 @@ private:
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
 
     cPower2Module* m_pModule;
+    MeasModeSelector m_measModeSelector;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
