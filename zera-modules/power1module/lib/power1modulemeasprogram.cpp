@@ -497,12 +497,14 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         measChannelPairList.append(measChannel);
     }
 
-    // we set up all our lists for wanted measuring modes, this gets much more performance
-    QStringList dspMModesCommandList;
-    int measSytemCount = getConfData()->m_measSystemCount;
     set2WireVariables();
     Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
+
+    int measSytemCount = getConfData()->m_measSystemCount;
     MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount));
+
+    // we set up all our lists for wanted measuring modes, this gets much more performance
+    QStringList dspMModesCommandList;
     MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
@@ -518,6 +520,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                   measSytemCount,
                                                                   std::move(brokerReturn.phaseStrategy)));
             break;
+
         case m4lb:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode4LB(measModeId, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
