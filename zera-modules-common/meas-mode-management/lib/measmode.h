@@ -19,7 +19,7 @@ public:
     bool isValid() const;
 private:
     cMeasModeInfo m_measModeInfo;
-    int m_dspSelectCode;
+    int m_dspSelectCode = 0;
     MeasModePhaseSetStrategyPtr m_measModePhaseSetter;
     int m_measSysCount;
 };
