@@ -1,7 +1,7 @@
 #include "power1dspgenerator.h"
 #include "inttohexstringconvert.h"
 
-QStringList Power1DspGenerator::getCmdsMMode4LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMMode4LW(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
@@ -28,7 +28,7 @@ QStringList Power1DspGenerator::getCmdsMMode4LW(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode4LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMMode4LB(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0111)");
@@ -83,7 +83,7 @@ QStringList Power1DspGenerator::getCmdsMMode4LB(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode4LBK(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0112)");
@@ -142,7 +142,7 @@ QStringList Power1DspGenerator::getCmdsMMode4LBK(int dspSelectCode, QList<MeasSy
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode4LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMMode4LS(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0113)");
@@ -175,7 +175,7 @@ QStringList Power1DspGenerator::getCmdsMMode4LS(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode4LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMMode4LSg(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0114)");
@@ -211,7 +211,7 @@ QStringList Power1DspGenerator::getCmdsMMode4LSg(int dspSelectCode, QList<MeasSy
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode3LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMMode3LW(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0115)");
@@ -240,7 +240,7 @@ QStringList Power1DspGenerator::getCmdsMMode3LW(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode3LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMMode3LB(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0116)");
@@ -285,7 +285,7 @@ QStringList Power1DspGenerator::getCmdsMMode3LB(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode2LW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem)
+QStringList Power1DspGenerator::getCmdsMMode2LW(int dspSelectCode, MeasSystemChannels measChannelPairList, int idx2WireMeasSystem)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0117)");
@@ -307,7 +307,7 @@ QStringList Power1DspGenerator::getCmdsMMode2LW(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode2LB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem)
+QStringList Power1DspGenerator::getCmdsMMode2LB(int dspSelectCode, MeasSystemChannels measChannelPairList, int idx2WireMeasSystem)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0118)");
@@ -338,7 +338,7 @@ QStringList Power1DspGenerator::getCmdsMMode2LB(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode2LS(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem)
+QStringList Power1DspGenerator::getCmdsMMode2LS(int dspSelectCode, MeasSystemChannels measChannelPairList, int idx2WireMeasSystem)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0119)");
@@ -362,7 +362,7 @@ QStringList Power1DspGenerator::getCmdsMMode2LS(int dspSelectCode, QList<MeasSys
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMMode2LSg(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList, int idx2WireMeasSystem)
+QStringList Power1DspGenerator::getCmdsMMode2LSg(int dspSelectCode, MeasSystemChannels measChannelPairList, int idx2WireMeasSystem)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0120)");
@@ -387,7 +387,7 @@ QStringList Power1DspGenerator::getCmdsMMode2LSg(int dspSelectCode, QList<MeasSy
     return dspCmdList;
 }
 
-QStringList Power1DspGenerator::getCmdsMModeXLW(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+QStringList Power1DspGenerator::getCmdsMModeXLW(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList cmdList;
     for(int phase=0; phase<measChannelPairList.count(); phase++) {

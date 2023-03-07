@@ -420,15 +420,15 @@ QStringList cPower2ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 
 void cPower2ModuleMeasProgram::setDspCmdList()
 {
-    QList<MeasSystemChannels> measChannelPairList;
+    MeasSystemChannels measChannelPairList;
     cPower2ModuleConfigData *confdata = getConfData();
     for(int sys=0; sys<confdata->m_measSystemCount; sys++) {
         QString measChannelPair = confdata->m_sMeasSystemList[sys];
         QStringList channelPairSplit = measChannelPair.split(',');
-        MeasSystemChannels measChannels;
-        measChannels.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
-        measChannels.currentChannel = m_measChannelInfoHash.value(channelPairSplit.at(1)).dspChannelNr;
-        measChannelPairList.append(measChannels);
+        MeasSystemChannel measChannel;
+        measChannel.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
+        measChannel.currentChannel = m_measChannelInfoHash.value(channelPairSplit.at(1)).dspChannelNr;
+        measChannelPairList.append(measChannel);
     }
 
     // we have a loop here in spite of we have only 1 measuring mode possible ....maybe we get more
