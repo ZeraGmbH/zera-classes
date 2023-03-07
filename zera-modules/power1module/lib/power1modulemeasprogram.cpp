@@ -502,7 +502,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     int measSytemCount = getConfData()->m_measSystemCount;
     set2WireVariables();
     Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
-    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get());
+    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount));
     MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
@@ -515,7 +515,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   brokerReturn.dspSelectCode,
                                                                   measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy4Wire>()));
+                                                                  std::move(brokerReturn.phaseStrategy)));
             break;
         case m4lb:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode4LB(dspSelectCode, measChannelPairList));

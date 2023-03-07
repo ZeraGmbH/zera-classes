@@ -7,7 +7,7 @@
 class Power1DspModeFunctionCatalog
 {
 public:
-    static const ModeNameFunctionHash &get();
+    static const ModeNameFunctionHash &get(int measSytemCount);
 private:
     static ModeNameFunctionHash m_hash;
 };
