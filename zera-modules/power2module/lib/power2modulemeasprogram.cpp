@@ -437,13 +437,13 @@ void cPower2ModuleMeasProgram::setDspCmdList()
     set2WireVariables();
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
-        int dspSelectCode = mInfo.getCode();
-        switch (dspSelectCode)
+        measmodes measModeId = mInfo.getCode();
+        switch (measModeId)
         {
         case m4lw:
-            dspMModesCommandList.append(Power2DspCmdGenerator::getCmdsMMode4LW(dspSelectCode, measChannelPairList, m_nSRate));
+            dspMModesCommandList.append(Power2DspCmdGenerator::getCmdsMMode4LW(measModeId, measChannelPairList, m_nSRate));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  dspSelectCode,
+                                                                  measModeId,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
