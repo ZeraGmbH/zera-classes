@@ -219,6 +219,10 @@ void cDSPInterfacePrivate::addCycListItem(QString cmd)
     CycCmdList.push_back(cmd);
 }
 
+void cDSPInterfacePrivate::addCycListItems(const QStringList &cmds)
+{
+    CycCmdList.append(cmds);
+}
 
 void cDSPInterfacePrivate::addIntListItem(QString cmd)
 {

@@ -68,6 +68,7 @@ public:
     virtual quint32 resetMaximum(); // clear maximum memory
     virtual quint32 triggerIntHKSK(quint32); // trigger start hksk in intlist
     virtual void addCycListItem(QString cmd); // appends new command to cyclic list
+    virtual void addCycListItems(const QStringList &cmds); // appends new commands to cyclic list
     virtual void addIntListItem(QString cmd); // same for interrupt list
     virtual cDspMeasData* getMemHandle(QString name); // init a new memory group and return handle
     virtual void deleteMemHandle(cDspMeasData* memhandle);

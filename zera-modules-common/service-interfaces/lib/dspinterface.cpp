@@ -146,6 +146,12 @@ void cDSPInterface::addCycListItem(QString cmd)
     d->addCycListItem(cmd);
 }
 
+void cDSPInterface::addCycListItems(const QStringList &cmds)
+{
+    Q_D(cDSPInterface);
+    d->addCycListItems(cmds);
+}
+
 
 void cDSPInterface::addIntListItem(QString cmd)
 {
