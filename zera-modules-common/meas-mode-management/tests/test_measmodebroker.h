@@ -11,6 +11,7 @@ private slots:
     void getOneCheckSelectionInDspCmd();
     void getTwoCheckDspCmd();
     void getTwoModesWithSameDspCmdSecondCmdEmpty();
+    void getTwoModesWithSameCheckAllReturnsSet();
     void getTwoCheckDspSelectionSame();
     void singleCheckDspCmdIsValid();
     void getFooIsInvalid();

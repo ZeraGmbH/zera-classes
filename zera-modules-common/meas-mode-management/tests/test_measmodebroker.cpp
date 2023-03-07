@@ -97,6 +97,21 @@ void test_measmodebroker::getTwoModesWithSameDspCmdSecondCmdEmpty()
     QCOMPARE(expected2, ret.dspCmdList);
 }
 
+void test_measmodebroker::getTwoModesWithSameCheckAllReturnsSet()
+{
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    MeasModeBroker::BrokerReturn ret1 = broker.getMeasMode("A", MeasChannelSingleton::get());
+    QVERIFY(ret1.isValid());
+    QVERIFY(!ret1.dspCmdList.isEmpty());
+    QVERIFY(ret1.dspSelectCode != 0);
+    QVERIFY(ret1.phaseStrategy != nullptr);
+    MeasModeBroker::BrokerReturn ret2 = broker.getMeasMode("A1", MeasChannelSingleton::get());
+    QVERIFY(ret2.isValid());
+    QVERIFY(ret2.dspCmdList.isEmpty());
+    QVERIFY(ret2.dspSelectCode != 0);
+    QVERIFY(ret2.phaseStrategy != nullptr);
+}
+
 void test_measmodebroker::getTwoCheckDspSelectionSame()
 {
     MeasModeBroker broker(TestDspModeFunctionCatalog::get());

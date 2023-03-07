@@ -10,10 +10,10 @@ MeasModeBroker::BrokerReturn MeasModeBroker::getMeasMode(QString measModeName, M
     BrokerReturn ret;
     if(m_functionHash.contains(measModeName)) {
         DspMModeCreateStruct createStruct = m_functionHash[measModeName];
+        ret.phaseStrategy = createStruct.phaseStrategyGen();
         if(!m_assignedModes.contains(createStruct.id)) {
             ret.dspSelectCode = getNextSelectionCode();
             ret.dspCmdList = createStruct.func(ret.dspSelectCode, measChannelPairList);
-            ret.phaseStrategy = createStruct.phaseStrategyGen();
             m_assignedModes[createStruct.id] = ret.dspSelectCode;
         }
         else
