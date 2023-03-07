@@ -3,7 +3,6 @@
 #include "measmodephasesetstrategyphasesfixed.h"
 #include "measmodephasesetstrategyphasesvar.h"
 #include "measmodecatalogfortest.h"
-#include <QSignalSpy>
 #include <QTest>
 
 QTEST_MAIN(test_measmode)
@@ -29,23 +28,15 @@ void test_measmode::gettersReportProperCtorParams()
 void test_measmode::validPhaseChangeSignal()
 {
     MeasMode mode("XLW", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("110"), 3));
-    QSignalSpy spyChanged(&mode, &MeasMode::sigMaskChanged);
-    QSignalSpy spyFailed(&mode, &MeasMode::sigMaskChangeFailed);
-    mode.tryChangeMask("001");
+    QVERIFY(mode.tryChangeMask("001"));
     QCOMPARE(mode.getCurrentMask(), "001");
-    QCOMPARE(spyChanged.count(), 1);
-    QCOMPARE(spyFailed.count(), 0);
 }
 
 void test_measmode::fixedStrategyCannotChangePhase()
 {
     MeasMode mode("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3));
-    QSignalSpy spyChanged(&mode, &MeasMode::sigMaskChanged);
-    QSignalSpy spyFailed(&mode, &MeasMode::sigMaskChangeFailed);
-    mode.tryChangeMask("010");
+    QVERIFY(!mode.tryChangeMask("010"));
     QCOMPARE(mode.getCurrentMask(), "101");
-    QCOMPARE(spyChanged.count(), 0);
-    QCOMPARE(spyFailed.count(), 1);
 }
 
 void test_measmode::invalidModeName()
@@ -69,23 +60,15 @@ void test_measmode::invalidForMeasSystemTooSmall()
 void test_measmode::invalidCannotChangePhases()
 {
     MeasMode mode("foo", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("110"), 3));
-    QSignalSpy spyChanged(&mode, &MeasMode::sigMaskChanged);
-    QSignalSpy spyFailed(&mode, &MeasMode::sigMaskChangeFailed);
-    mode.tryChangeMask("001");
+    QVERIFY(!mode.tryChangeMask("001"));
     QCOMPARE(mode.getCurrentMask(), "110");
-    QCOMPARE(spyChanged.count(), 0);
-    QCOMPARE(spyFailed.count(), 1);
 }
 
 void test_measmode::tooLongMaskNotAccepted()
 {
     MeasMode mode("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3));
-    QSignalSpy spyChanged(&mode, &MeasMode::sigMaskChanged);
-    QSignalSpy spyFailed(&mode, &MeasMode::sigMaskChangeFailed);
-    mode.tryChangeMask("0101");
+    QVERIFY(!mode.tryChangeMask("0101"));
     QCOMPARE(mode.getCurrentMask(), "101");
-    QCOMPARE(spyChanged.count(), 0);
-    QCOMPARE(spyFailed.count(), 1);
 }
 
 void test_measmode::onePhaseMeasSystem()
@@ -98,12 +81,8 @@ void test_measmode::twoPhaseMeasSystem()
 {
     MeasMode mode("2LW", m2lw, 2, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("01"), 1));
     QCOMPARE(mode.getCurrentMask(), "01");
-    QSignalSpy spyChanged(&mode, &MeasMode::sigMaskChanged);
-    QSignalSpy spyFailed(&mode, &MeasMode::sigMaskChangeFailed);
-    mode.tryChangeMask("10");
+    QVERIFY(mode.tryChangeMask("10"));
     QCOMPARE(mode.getCurrentMask(), "10");
-    QCOMPARE(spyChanged.count(), 1);
-    QCOMPARE(spyFailed.count(), 0);
 }
 
 void test_measmode::phaseGetter()
@@ -116,7 +95,6 @@ void test_measmode::phaseGetter()
     QCOMPARE(mode2.isPhaseActive(0), true);
     QCOMPARE(mode2.isPhaseActive(1), false);
     QCOMPARE(mode2.isPhaseActive(2), true);
-
     MeasMode mode3("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), 3));
     QCOMPARE(mode3.isPhaseActive(-1), false);
     QCOMPARE(mode3.isPhaseActive(4), false);
