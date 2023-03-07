@@ -15,6 +15,7 @@ private slots:
     void singleCheckDspCmdIsValid();
     void getFooIsInvalid();
     void getTwoWithDiffDspSelection();
+    void getTwoCheckPhaseStartegies();
 };
 
 #endif // TEST_MEASMODEBROKER_H

@@ -2,6 +2,7 @@
 #define MEASMODEBROKER_H
 
 #include "measmodeinfo.h"
+#include "measmodephasesetstrategy.h"
 #include "meassytemchannels.h"
 #include <QStringList>
 #include <QHash>
@@ -9,13 +10,14 @@
 
 typedef std::function<QStringList(int /*dspSelCode */, MeasSystemChannels)> DspCreationFunc;
 
-struct DspCreateFuncWithId
+struct DspMModeCreateStruct
 {
     measmodes id;
     DspCreationFunc func;
+    std::function<MeasModePhaseSetStrategyPtr()> phaseStrategyGen;
 };
 
-typedef QHash<QString /*modeName*/, DspCreateFuncWithId> ModeNameFunctionHash;
+typedef QHash<QString /*modeName*/, DspMModeCreateStruct> ModeNameFunctionHash;
 
 class MeasModeBroker
 {
@@ -26,6 +28,7 @@ public:
         bool isValid() { return dspSelectCode != 0; }
         QStringList dspCmdList;
         int dspSelectCode = 0;
+        MeasModePhaseSetStrategyPtr phaseStrategy;
     };
     BrokerReturn getMeasMode(QString measModeName, MeasSystemChannels measChannelPairList);
 private:

@@ -9,14 +9,15 @@ MeasModeBroker::BrokerReturn MeasModeBroker::getMeasMode(QString measModeName, M
 {
     BrokerReturn ret;
     if(m_functionHash.contains(measModeName)) {
-        DspCreateFuncWithId funcIdPair = m_functionHash[measModeName];
-        if(!m_assignedModes.contains(funcIdPair.id)) {
+        DspMModeCreateStruct createStruct = m_functionHash[measModeName];
+        if(!m_assignedModes.contains(createStruct.id)) {
             ret.dspSelectCode = getNextSelectionCode();
-            ret.dspCmdList = funcIdPair.func(ret.dspSelectCode, measChannelPairList);
-            m_assignedModes[funcIdPair.id] = ret.dspSelectCode;
+            ret.dspCmdList = createStruct.func(ret.dspSelectCode, measChannelPairList);
+            ret.phaseStrategy = createStruct.phaseStrategyGen();
+            m_assignedModes[createStruct.id] = ret.dspSelectCode;
         }
         else
-            ret.dspSelectCode = m_assignedModes[funcIdPair.id];
+            ret.dspSelectCode = m_assignedModes[createStruct.id];
     }
     return ret;
 }
