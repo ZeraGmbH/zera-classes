@@ -3,12 +3,12 @@
 
 #include "measmodephasesetstrategy.h"
 #include <QObject>
-#include <memory>
 
 class MeasMode : public QObject
 {
     Q_OBJECT
 public:
+    MeasMode() = default;
     MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
     cMeasModeInfo getInfo() const;
     int getDspSelectCode();
@@ -22,7 +22,6 @@ private:
     int m_dspSelectCode;
     MeasModePhaseSetStrategyPtr m_measModePhaseSetter;
     int m_measSysCount;
-    bool m_bValid;
 };
 
 typedef std::shared_ptr<MeasMode> MeasModePtr;

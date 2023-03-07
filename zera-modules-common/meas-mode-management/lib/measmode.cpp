@@ -5,11 +5,8 @@ MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasMo
     m_measModeInfo(MeasModeCatalog::getInfo(modeName)),
     m_dspSelectCode(dspSelectCode),
     m_measModePhaseSetter(std::move(measModePhaseSetter)),
-    m_measSysCount(measSysCount),
-    m_bValid(true)
+    m_measSysCount(measSysCount)
 {
-    if(measSysCount < 1 || measSysCount > MeasPhaseCount)
-        m_bValid = false;
 }
 
 cMeasModeInfo MeasMode::getInfo() const
@@ -67,5 +64,7 @@ int MeasMode::getActiveMeasSysCount()
 
 bool MeasMode::isValid()
 {
-    return m_bValid && m_measModeInfo.isValid();
+    return m_measSysCount > 0 &&
+            m_measSysCount <= MeasPhaseCount &&
+            m_measModeInfo.isValid();
 }

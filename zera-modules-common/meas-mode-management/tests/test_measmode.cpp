@@ -25,7 +25,19 @@ void test_measmode::gettersReportProperCtorParams()
     QCOMPARE(mode2.getCurrentMask(), "110");
 }
 
-void test_measmode::validPhaseChangeSignal()
+void test_measmode::fooIsInvalid()
+{
+    MeasMode mode("foo", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("110"), 3));
+    QVERIFY(!mode.isValid());
+}
+
+void test_measmode::defaultCtorIsInvalid()
+{
+    MeasMode mode;
+    QVERIFY(!mode.isValid());
+}
+
+void test_measmode::validCanChangeMask()
 {
     MeasMode mode("XLW", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("110"), 3));
     QVERIFY(mode.tryChangeMask("001"));
@@ -37,12 +49,6 @@ void test_measmode::fixedStrategyCannotChangePhase()
     MeasMode mode("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3));
     QVERIFY(!mode.tryChangeMask("010"));
     QCOMPARE(mode.getCurrentMask(), "101");
-}
-
-void test_measmode::invalidModeName()
-{
-    MeasMode mode("foo", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3));
-    QCOMPARE(mode.isValid(), false);
 }
 
 void test_measmode::invalidForMeasSystemTooLarge()
@@ -66,8 +72,15 @@ void test_measmode::invalidCannotChangePhases()
 
 void test_measmode::tooLongMaskNotAccepted()
 {
-    MeasMode mode("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3));
+    MeasMode mode("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("101"), 3));
     QVERIFY(!mode.tryChangeMask("0101"));
+    QCOMPARE(mode.getCurrentMask(), "101");
+}
+
+void test_measmode::maskWithInvalidCharsNotAccepted()
+{
+    MeasMode mode("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("101"), 3));
+    QVERIFY(!mode.tryChangeMask("0X0"));
     QCOMPARE(mode.getCurrentMask(), "101");
 }
 
