@@ -10,7 +10,10 @@ class MeasModeSelector : public QObject
 public:
     bool addMode(std::shared_ptr<MeasMode> mode);
     void tryChangeMode(QString modeName);
-    std::shared_ptr<MeasMode> getCurrMode();
+    std::shared_ptr<MeasMode> getCurrMode() const;
+    bool canChangeMask(QString mask) const;
+    void tryChangeMask(QString mask);
+    QString getCurrentMask() const;
 signals:
     void sigTransactionOk();
     void sigTransactionFailed();
