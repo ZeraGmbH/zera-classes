@@ -1,7 +1,7 @@
 #include "measmode.h"
 #include "measmodecatalog.h"
 
-MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, std::unique_ptr<MeasModePhaseSetStrategy> measModePhaseSetter) :
+MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter) :
     m_measModeInfo(MeasModeCatalog::getInfo(modeName)),
     m_dspSelectCode(dspSelectCode),
     m_measModePhaseSetter(std::move(measModePhaseSetter)),
