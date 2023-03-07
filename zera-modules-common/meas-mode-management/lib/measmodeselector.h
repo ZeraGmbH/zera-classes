@@ -12,8 +12,8 @@ public:
     void tryChangeMode(QString modeName);
     std::shared_ptr<MeasMode> getCurrMode();
 signals:
-    void sigModeChanged();
-    void sigModeChangeFailed();
+    void sigTransactionOk();
+    void sigTransactionFailed();
 private:
     QHash<QString, std::shared_ptr<MeasMode>> m_modes;
     std::shared_ptr<MeasMode> m_currentMode;

@@ -15,12 +15,12 @@ void test_measmode::init()
 void test_measmode::gettersReportProperCtorParams()
 {
     MeasMode mode1("4LW", m4lw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3));
-    QCOMPARE(mode1.getInfo().getName(), "4LW");
+    QCOMPARE(mode1.getName(), "4LW");
     QCOMPARE(mode1.getDspSelectCode(), m4lw);
     QCOMPARE(mode1.getCurrentMask(), "101");
 
     MeasMode mode2("XLW", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("110"), 3));
-    QCOMPARE(mode2.getInfo().getName(), "XLW");
+    QCOMPARE(mode2.getName(), "XLW");
     QCOMPARE(mode2.getDspSelectCode(), mXlw);
     QCOMPARE(mode2.getCurrentMask(), "110");
 }

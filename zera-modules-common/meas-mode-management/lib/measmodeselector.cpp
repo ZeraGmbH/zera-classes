@@ -3,7 +3,7 @@
 bool MeasModeSelector::addMode(std::shared_ptr<MeasMode> mode)
 {
     if(mode->isValid()) {
-        QString name = mode->getInfo().getName();
+        QString name = mode->getName();
         if(!m_modes.contains(name)) {
             m_modes[name] = mode;
             return true;
@@ -16,10 +16,10 @@ void MeasModeSelector::tryChangeMode(QString modeName)
 {
     if(m_modes.contains(modeName)) {
         m_currentMode = m_modes[modeName];
-        emit sigModeChanged();
+        emit sigTransactionOk();
     }
     else
-        emit sigModeChangeFailed();
+        emit sigTransactionFailed();
 }
 
 std::shared_ptr<MeasMode> MeasModeSelector::getCurrMode()

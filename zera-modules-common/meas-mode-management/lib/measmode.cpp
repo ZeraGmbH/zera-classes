@@ -9,12 +9,12 @@ MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasMo
 {
 }
 
-cMeasModeInfo MeasMode::getInfo() const
+QString MeasMode::getName() const
 {
-    return m_measModeInfo;
+    return m_measModeInfo.getName();
 }
 
-int MeasMode::getDspSelectCode()
+int MeasMode::getDspSelectCode() const
 {
     return m_dspSelectCode;
 }
@@ -39,7 +39,7 @@ bool MeasMode::tryChangeMask(QString mask)
     return ok && m_measModePhaseSetter->tryChangeMask(binMask);
 }
 
-QString MeasMode::getCurrentMask()
+QString MeasMode::getCurrentMask() const
 {
     MModePhaseMask binMask = m_measModePhaseSetter->getCurrPhaseMask();
     QString mask;
@@ -48,7 +48,7 @@ QString MeasMode::getCurrentMask()
     return mask;
 }
 
-bool MeasMode::isPhaseActive(int phase)
+bool MeasMode::isPhaseActive(int phase) const
 {
     if(phase >= 0 && phase<m_measSysCount) {
         MModePhaseMask mask = m_measModePhaseSetter->getCurrPhaseMask();
@@ -57,12 +57,12 @@ bool MeasMode::isPhaseActive(int phase)
     return false;
 }
 
-int MeasMode::getActiveMeasSysCount()
+int MeasMode::getActiveMeasSysCount() const
 {
     return m_measModePhaseSetter->getActiveMeasSysCount();
 }
 
-bool MeasMode::isValid()
+bool MeasMode::isValid() const
 {
     return m_measSysCount > 0 &&
             m_measSysCount <= MeasPhaseCount &&
