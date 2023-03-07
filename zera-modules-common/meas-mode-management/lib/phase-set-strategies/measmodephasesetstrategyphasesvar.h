@@ -7,7 +7,8 @@ class MeasModePhaseSetStrategyPhasesVar : public MeasModePhaseSetStrategy
 {
 public:
     MeasModePhaseSetStrategyPhasesVar(MModePhaseMask phaseMask, int activeMeasSysCount);
-    bool canChangePhaseMask() override { return true; }
+    bool isVarMask() override { return true; }
+    bool canChangeMask(MModePhaseMask phaseMask) override;
     bool tryChangeMask(MModePhaseMask phaseMask) override;
 };
 

@@ -16,7 +16,8 @@ public:
         {};
     virtual ~MeasModePhaseSetStrategy() = default;
 
-    virtual bool canChangePhaseMask() = 0;
+    virtual bool isVarMask() = 0;
+    virtual bool canChangeMask(MModePhaseMask phaseMask) = 0;
     virtual bool tryChangeMask(MModePhaseMask phaseMask) = 0;
     virtual int getActiveMeasSysCount() const { return m_activeMeasSysCount; }
 
