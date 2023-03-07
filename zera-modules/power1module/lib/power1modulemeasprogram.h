@@ -90,7 +90,7 @@ private:
 
     QString getInitialPhaseOnOffVeinVal();
     QString dspGetPhaseVarStr(int phase, QString separator);
-    void dspSetParamsTiMMode(int tipar);
+    void dspSetParamsTiMModePhase(int tiTimeOrPeriods);
     QString dspGetSetPhasesVar();
     void handleMModeParamChange();
     void handleMovingWindowIntTimeChange();
