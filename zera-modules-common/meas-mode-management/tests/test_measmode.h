@@ -15,6 +15,7 @@ private slots:
     void fixedStrategyCannotChangePhase();
     void invalidForMeasSystemTooLarge();
     void invalidForMeasSystemTooSmall();
+    void invalidReturnsUnsetMask();
     void invalidCannotChangePhases();
     void tooLongMaskNotAccepted();
     void maskWithInvalidCharsNotAccepted();

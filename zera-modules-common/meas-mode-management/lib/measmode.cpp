@@ -41,16 +41,19 @@ bool MeasMode::tryChangeMask(QString mask)
 
 QString MeasMode::getCurrentMask() const
 {
-    MModePhaseMask binMask = m_measModePhaseSetter->getCurrPhaseMask();
-    QString mask;
-    for(int i=std::min(MeasPhaseCount, m_measSysCount)-1; i>=0; i--)
-        mask += binMask[i] ? "1" : "0";
-    return mask;
+    if(isValid()) {
+        QString mask;
+        MModePhaseMask binMask = m_measModePhaseSetter->getCurrPhaseMask();
+        for(int i=std::min(MeasPhaseCount, m_measSysCount)-1; i>=0; i--)
+            mask += binMask[i] ? "1" : "0";
+        return mask;
+    }
+    return "000";
 }
 
 bool MeasMode::isPhaseActive(int phase) const
 {
-    if(phase >= 0 && phase<m_measSysCount) {
+    if(isValid() && phase >= 0 && phase<m_measSysCount) {
         MModePhaseMask mask = m_measModePhaseSetter->getCurrPhaseMask();
         return mask[m_measSysCount-phase-1];
     }
@@ -59,7 +62,10 @@ bool MeasMode::isPhaseActive(int phase) const
 
 int MeasMode::getActiveMeasSysCount() const
 {
-    return m_measModePhaseSetter->getActiveMeasSysCount();
+    if(isValid())
+        return m_measModePhaseSetter->getActiveMeasSysCount();
+    else
+        return 0;
 }
 
 bool MeasMode::isValid() const

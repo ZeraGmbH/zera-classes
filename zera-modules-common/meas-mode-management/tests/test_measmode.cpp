@@ -63,11 +63,16 @@ void test_measmode::invalidForMeasSystemTooSmall()
     QCOMPARE(mode.isValid(), false);
 }
 
+void test_measmode::invalidReturnsUnsetMask()
+{
+    MeasMode mode("foo", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("110"), 3));
+    QCOMPARE(mode.getCurrentMask(), "000");
+}
+
 void test_measmode::invalidCannotChangePhases()
 {
     MeasMode mode("foo", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("110"), 3));
     QVERIFY(!mode.tryChangeMask("001"));
-    QCOMPARE(mode.getCurrentMask(), "110");
 }
 
 void test_measmode::tooLongMaskNotAccepted()
