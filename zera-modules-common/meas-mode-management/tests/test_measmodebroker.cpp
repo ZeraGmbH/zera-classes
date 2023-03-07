@@ -5,7 +5,7 @@
 class MeasChannelSingleton
 {
 public:
-    static const QList<MeasSystemChannels> get() {
+    static const MeasSystemChannels get() {
         return {{0,1}, {2,3}, {4,5}};
     }
 };
@@ -13,7 +13,7 @@ public:
 class DspCmdGeneratorForTest
 {
 public:
-    static QStringList getCmdsA(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+    static QStringList getCmdsA(int dspSelectCode, MeasSystemChannels measChannelPairList)
     {
         Q_UNUSED(measChannelPairList)
         QStringList ret;
@@ -21,7 +21,7 @@ public:
         ret.append("getCmdsA");
         return ret;
     }
-    static QStringList getCmdsB(int dspSelectCode, QList<MeasSystemChannels> measChannelPairList)
+    static QStringList getCmdsB(int dspSelectCode, MeasSystemChannels measChannelPairList)
     {
         Q_UNUSED(measChannelPairList)
         QStringList ret;

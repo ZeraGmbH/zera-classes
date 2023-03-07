@@ -484,15 +484,15 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 
 void cPower1ModuleMeasProgram::setDspCmdList()
 {
-    QList<MeasSystemChannels> measChannelPairList;
+    MeasSystemChannels measChannelPairList;
     cPower1ModuleConfigData *confdata = getConfData();
     for(int sys=0; sys<confdata->m_measSystemCount; sys++) {
         QString measChannelPair = confdata->m_sMeasSystemList[sys];
         QStringList channelPairSplit = measChannelPair.split(',');
-        MeasSystemChannels measChannels;
-        measChannels.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
-        measChannels.currentChannel = m_measChannelInfoHash.value(channelPairSplit.at(1)).dspChannelNr;
-        measChannelPairList.append(measChannels);
+        MeasSystemChannel measChannel;
+        measChannel.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
+        measChannel.currentChannel = m_measChannelInfoHash.value(channelPairSplit.at(1)).dspChannelNr;
+        measChannelPairList.append(measChannel);
     }
 
     // we set up all our lists for wanted measuring modes, this gets much more performance

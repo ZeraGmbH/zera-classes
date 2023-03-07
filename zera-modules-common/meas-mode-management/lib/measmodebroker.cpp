@@ -5,7 +5,7 @@ MeasModeBroker::MeasModeBroker(const ModeNameFunctionHash &functionHash) :
 {
 }
 
-MeasModeBroker::BrokerReturn MeasModeBroker::getMeasMode(QString measModeName, QList<MeasSystemChannels> measChannelPairList)
+MeasModeBroker::BrokerReturn MeasModeBroker::getMeasMode(QString measModeName, MeasSystemChannels measChannelPairList)
 {
     BrokerReturn ret;
     if(m_functionHash.contains(measModeName)) {

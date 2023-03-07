@@ -7,7 +7,7 @@
 #include <QHash>
 #include <functional>
 
-typedef std::function<QStringList(int /*dspSelCode */, QList<MeasSystemChannels>)> DspCreationFunc;
+typedef std::function<QStringList(int /*dspSelCode */, MeasSystemChannels)> DspCreationFunc;
 
 struct DspCreateFuncWithId
 {
@@ -27,7 +27,7 @@ public:
         QStringList dspCmdList;
         int dspSelectCode = 0;
     };
-    BrokerReturn getMeasMode(QString measModeName, QList<MeasSystemChannels> measChannelPairList);
+    BrokerReturn getMeasMode(QString measModeName, MeasSystemChannels measChannelPairList);
 private:
     int getNextSelectionCode();
     const ModeNameFunctionHash &m_functionHash;
