@@ -10,13 +10,13 @@ class MeasMode : public QObject
 public:
     MeasMode() = default;
     MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
-    cMeasModeInfo getInfo() const;
-    int getDspSelectCode();
+    QString getName() const;
+    int getDspSelectCode() const;
     bool tryChangeMask(QString mask);
-    QString getCurrentMask();
-    bool isPhaseActive(int phase);
-    int getActiveMeasSysCount();
-    bool isValid();
+    QString getCurrentMask() const;
+    bool isPhaseActive(int phase) const;
+    int getActiveMeasSysCount() const;
+    bool isValid() const;
 private:
     cMeasModeInfo m_measModeInfo;
     int m_dspSelectCode;

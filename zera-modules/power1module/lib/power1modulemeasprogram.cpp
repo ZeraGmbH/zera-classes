@@ -1554,7 +1554,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationPeriod);
     connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newMeasMode);
     connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
-    connect(&m_measModeSelector, &MeasModeSelector::sigModeChanged,
+    connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
             this, &cPower1ModuleMeasProgram::onModeSelectSucceeded);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
@@ -1915,7 +1915,7 @@ void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 
 void cPower1ModuleMeasProgram::onModeSelectSucceeded()
 {
-    QString newMeasMode = m_measModeSelector.getCurrMode()->getInfo().getName();
+    QString newMeasMode = m_measModeSelector.getCurrMode()->getName();
     getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     handleMModeParamChange();
     updatesForMModeChange();

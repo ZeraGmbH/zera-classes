@@ -1529,7 +1529,7 @@ void cPower2ModuleMeasProgram::activateDSPdone()
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newIntegrationPeriod);
     connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this , &cPower2ModuleMeasProgram::newMeasMode);
     //connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newPhaseList);
-    connect(&m_measModeSelector, &MeasModeSelector::sigModeChanged,
+    connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
             this, &cPower2ModuleMeasProgram::onModeSelectSucceeded);
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
@@ -1820,7 +1820,7 @@ void cPower2ModuleMeasProgram::newMeasMode(QVariant mm)
 
 void cPower2ModuleMeasProgram::onModeSelectSucceeded()
 {
-    QString newMeasMode = m_measModeSelector.getCurrMode()->getInfo().getName();
+    QString newMeasMode = m_measModeSelector.getCurrMode()->getName();
     getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     handleMModeParamChange();
     updatesForMModeChange();

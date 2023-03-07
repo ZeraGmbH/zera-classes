@@ -8,7 +8,7 @@ cMeasModeInfo::cMeasModeInfo(QString name, QString actvalname, QString unitname,
 {
 }
 
-bool cMeasModeInfo::isValid()
+bool cMeasModeInfo::isValid() const
 {
     return !m_sName.isEmpty();
 }
