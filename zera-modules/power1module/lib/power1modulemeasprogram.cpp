@@ -3,7 +3,9 @@
 #include "power1moduleconfigdata.h"
 #include "power1moduleconfiguration.h"
 #include "power1dspcmdgenerator.h"
+#include "power1dspmodefunctioncatalog.h"
 #include "phasevalidatorstringgenerator.h"
+#include "measmodebroker.h"
 #include "measmodephasesetstrategy4wire.h"
 #include "measmodephasesetstrategyphasesfixed.h"
 #include "measmodephasesetstrategyphasesvar.h"
@@ -499,15 +501,19 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     QStringList dspMModesCommandList;
     int measSytemCount = getConfData()->m_measSystemCount;
     set2WireVariables();
+    Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
+    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get());
+    MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
         int dspSelectCode = mInfo.getCode();
         switch(dspSelectCode)
         {
         case m4lw:
-            dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode4LW(dspSelectCode, measChannelPairList));
+            brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
+            dspMModesCommandList.append(brokerReturn.dspCmdList);
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  dspSelectCode,
+                                                                  brokerReturn.dspSelectCode,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
             break;
