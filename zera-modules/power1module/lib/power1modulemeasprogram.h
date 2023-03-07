@@ -282,7 +282,7 @@ private slots:
     void newPhaseList(QVariant phaseList);
 
     void updatePreScaling(QVariant p_newValue);
-    void onModeSelectSucceeded();
+    void onModeTransactionOk();
 };
 
 }
