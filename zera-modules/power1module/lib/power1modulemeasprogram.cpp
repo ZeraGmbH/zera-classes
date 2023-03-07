@@ -1827,10 +1827,10 @@ QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
     return phaseOnOffList.join(";");
 }
 
-void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
+void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
-                             .arg(tipar)
+                             .arg(tiTimeOrPeriods)
                              .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode());
     QString phaseVarSet = dspGetSetPhasesVar();
     if(!phaseVarSet.isEmpty())
@@ -1841,7 +1841,7 @@ void cPower1ModuleMeasProgram::dspSetParamsTiMMode(int tipar)
 
 void cPower1ModuleMeasProgram::handleMModeParamChange()
 {
-    dspSetParamsTiMMode(calcTiTime());
+    dspSetParamsTiMModePhase(calcTiTime());
     emit m_pModule->parameterChanged();
 }
 

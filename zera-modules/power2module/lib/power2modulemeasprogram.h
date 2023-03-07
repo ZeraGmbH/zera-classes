@@ -80,7 +80,7 @@ private:
     void set2WireVariables();
     QStringList dspCmdInitVars(int dspInitialSelectCode);
     void setActualValuesNames();
-    void dspSetParamsTiMMode(int tipar);
+    void dspSetParamsTiMModePhase(int tiTimeOrPeriods);
     void handleMovingWindowIntTimeChange();
     void handleMModeParamChange();
     void updatesForMModeChange();
