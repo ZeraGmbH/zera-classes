@@ -137,10 +137,10 @@ void test_measmodebroker::getTwoCheckPhaseStartegies()
     MeasModeBroker::BrokerReturn ret2 = broker.getMeasMode("B", MeasChannelSingleton::get());
 
     QVERIFY(ret1.isValid());
-    QVERIFY(ret1.phaseStrategy->canChangePhaseMask());
+    QVERIFY(ret1.phaseStrategy->isVarMask());
     QCOMPARE(ret1.phaseStrategy->getActiveMeasSysCount(), 1);
     QVERIFY(ret2.isValid());
-    QVERIFY(!ret2.phaseStrategy->canChangePhaseMask());
+    QVERIFY(!ret2.phaseStrategy->isVarMask());
     QCOMPARE(ret2.phaseStrategy->getActiveMeasSysCount(), 3);
 }
 

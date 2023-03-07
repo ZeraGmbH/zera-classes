@@ -7,7 +7,7 @@ QTEST_MAIN(test_measmodephasesetstrategyphasesfixed)
 void test_measmodephasesetstrategyphasesfixed::canChangeMask()
 {
     MeasModePhaseSetStrategyPhasesFixed measStrat(MModePhaseMask("111"), 3);
-    QVERIFY(!measStrat.canChangePhaseMask());
+    QVERIFY(!measStrat.isVarMask());
 }
 
 void test_measmodephasesetstrategyphasesfixed::maskChangeDeny()

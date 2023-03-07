@@ -19,23 +19,39 @@ int MeasMode::getDspSelectCode() const
     return m_dspSelectCode;
 }
 
-bool MeasMode::tryChangeMask(QString mask)
+bool MeasMode::calcBinMask(QString mask, MModePhaseMask &binMask)
 {
     bool ok = isValid() && mask.size() == m_measSysCount;
-    MModePhaseMask binMask;
     if(ok) {
+        MModePhaseMask tmpMask;
         for(int i=0; i<m_measSysCount; i++) {
             int strMaskEntry = m_measSysCount-i-1;
             if(mask[strMaskEntry] == '0')
-                binMask[i] = 0;
+                tmpMask[i] = 0;
             else if(mask[strMaskEntry] == '1')
-                binMask[i] = 1;
+                tmpMask[i] = 1;
             else {
                 ok = false;
                 break;
             }
         }
+        if(ok)
+            binMask = tmpMask;
     }
+    return ok;
+}
+
+bool MeasMode::canChangeMask(QString mask)
+{
+    MModePhaseMask binMask;
+    bool ok = calcBinMask(mask, binMask);
+    return ok && m_measModePhaseSetter->canChangeMask(binMask);
+}
+
+bool MeasMode::tryChangeMask(QString mask)
+{
+    MModePhaseMask binMask;
+    bool ok = calcBinMask(mask, binMask);
     return ok && m_measModePhaseSetter->tryChangeMask(binMask);
 }
 
