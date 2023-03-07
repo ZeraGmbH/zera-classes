@@ -1,10 +1,10 @@
-#ifndef POWER1DSPGENERATOR_H
-#define POWER1DSPGENERATOR_H
+#ifndef POWER1DSPCMDGENERATOR_H
+#define POWER1DSPCMDGENERATOR_H
 
 #include "meassytemchannels.h"
 #include <QStringList>
 
-class Power1DspGenerator
+class Power1DspCmdGenerator
 {
 public:
     static QStringList getCmdsMMode4LW(int dspSelectCode, MeasSystemChannels measChannelPairList);
@@ -23,4 +23,4 @@ public:
     static QStringList getCmdsSumAndAverage();
 };
 
-#endif // POWER1DSPGENERATOR_H
+#endif // POWER1DSPCMDGENERATOR_H
