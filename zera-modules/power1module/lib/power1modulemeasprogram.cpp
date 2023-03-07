@@ -510,6 +510,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         switch(measModeId)
         {
         case m4lw:
+        case mXlw:
             brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
             dspMModesCommandList.append(brokerReturn.dspCmdList);
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
@@ -586,14 +587,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                   measModeId,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem, measSytemCount)));
-            break;
-        case mXlw:
-            brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
-            dspMModesCommandList.append(brokerReturn.dspCmdList);
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  brokerReturn.dspSelectCode,
-                                                                  measSytemCount,
-                                                                  std::move(brokerReturn.phaseStrategy)));
             break;
         case mqref:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMModeMQREF(measModeId));
@@ -1803,13 +1796,12 @@ void cPower1ModuleMeasProgram::setFoutPowerModes()
 QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
 {
     cPower1ModuleConfigData *confData = getConfData();
-    QString phaseOnOff = confData->m_sXMeasModePhases.m_sValue;
+    QString phaseOnOff;
     if(phaseOnOff.isEmpty()) {
         QString defaultPhaseMask;
         for(int phase=0; phase<confData->m_measSystemCount; phase++)
             defaultPhaseMask.append("1");
         phaseOnOff = defaultPhaseMask;
-        confData->m_sXMeasModePhases.m_sValue = phaseOnOff;
     }
     return phaseOnOff;
 }
@@ -1817,19 +1809,17 @@ QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
 QString cPower1ModuleMeasProgram::dspGetPhaseVarStr(int phase, QString separator)
 {
     QString strVarData;
-    cPower1ModuleConfigData *confData = getConfData();
-    if(phase<confData->m_measSystemCount) {
-        QString phaseOnOff = confData->m_sXMeasModePhases.m_sValue;
-        strVarData = QString("XMMODEPHASE%1%2%3").arg(phase).arg(separator, phaseOnOff.mid(phase,1));
-    }
+    QString modeMask = m_measModeSelector.getCurrentMask();
+    if(phase < modeMask.size())
+        strVarData = QString("XMMODEPHASE%1%2%3").arg(phase).arg(separator, modeMask.mid(phase,1));
     return strVarData;
 }
 
 QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
 {
     QStringList phaseOnOffList;
-    cPower1ModuleConfigData *confData = getConfData();
-    for(int phase=0; phase<confData->m_measSystemCount; phase++)
+    QString modeMask = m_measModeSelector.getCurrentMask();
+    for(int phase=0; phase<modeMask.size(); phase++)
         phaseOnOffList += dspGetPhaseVarStr(phase, ":");
     return phaseOnOffList.join(";");
 }
@@ -1902,9 +1892,7 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
 
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 {
-    getConfData()->m_sXMeasModePhases.m_sValue = phaseList.toString();
-    handleMModeParamChange();
-    updatesForMModeChange();
+    m_measModeSelector.tryChangeMask(phaseList.toString());
 }
 
 void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
