@@ -3,6 +3,7 @@
 
 #include "measmodecatalog.h"
 #include <bitset>
+#include <memory>
 
 typedef std::bitset<MeasPhaseCount> MModePhaseMask;
 
@@ -24,5 +25,7 @@ protected:
     int m_activeMeasSysCount;
     MModePhaseMask m_phaseMask;
 };
+
+typedef std::unique_ptr<MeasModePhaseSetStrategy> MeasModePhaseSetStrategyPtr;
 
 #endif // MEASMODEPHASESETSTRATEGY_H
