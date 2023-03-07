@@ -12,10 +12,10 @@ void test_measmodeselector::init()
     MeasModeCatalogForTest::enableTest();
 }
 
-void test_measmodeselector::initNoCurrentMode()
+void test_measmodeselector::initCurrentModeInvalid()
 {
     MeasModeSelector sel;
-    QCOMPARE(sel.getCurrMode(), nullptr);
+    QVERIFY(!sel.getCurrMode()->isValid());
 }
 
 void test_measmodeselector::invalidNotAdded()

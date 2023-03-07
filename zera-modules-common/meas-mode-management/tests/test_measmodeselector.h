@@ -8,7 +8,7 @@ class test_measmodeselector : public QObject
     Q_OBJECT
 private slots:
     void init();
-    void initNoCurrentMode();
+    void initCurrentModeInvalid();
     void invalidNotAdded();
     void doubleNotAdded();
     void addAndSelectValidMode();
