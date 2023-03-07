@@ -24,5 +24,8 @@ void MeasModeSelector::tryChangeMode(QString modeName)
 
 std::shared_ptr<MeasMode> MeasModeSelector::getCurrMode()
 {
-    return m_currentMode;
+    if(m_currentMode)
+        return m_currentMode;
+    else
+        return std::make_shared<MeasMode>();
 }
