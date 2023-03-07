@@ -1,6 +1,7 @@
 #ifndef POWER1DSPCMDGENERATOR_H
 #define POWER1DSPCMDGENERATOR_H
 
+#include "power1moduleconfigdata.h"
 #include "meassytemchannels.h"
 #include <QStringList>
 
@@ -21,6 +22,9 @@ public:
     static QStringList getCmdsMModeXLW(int dspSelectCode, MeasSystemChannels measChannelPairList);
     static QStringList getCmdsMModeMQREF(int dspSelectCode);
     static QStringList getCmdsSumAndAverage();
+    static QStringList getCmdsFreqOutput(const POWER1MODULE::cPower1ModuleConfigData *configData,
+                                         const QHash<QString, cFoutInfo> foutInfoHash,
+                                         int irqNo);
 };
 
 #endif // POWER1DSPCMDGENERATOR_H

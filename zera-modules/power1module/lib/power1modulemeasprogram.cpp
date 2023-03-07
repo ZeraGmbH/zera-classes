@@ -601,85 +601,14 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
+
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
+    QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr);
 
     // sequence here is important
-    for(const auto &cmd : dspInitVarsList)
-        m_pDSPInterFace->addCycListItem(cmd);
-    for(const auto &cmd : dspMModesCommandList)
-        m_pDSPInterFace->addCycListItem(cmd);
-
-    // so... let's now set our frequency outputs if he have some
-    QString s;
-    if (getConfData()->m_sFreqActualizationMode == "signalperiod") {
-        for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
-            // which actualvalue do we take as source (offset)
-            quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
-            QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
-            // here we set abs, plus or minus and which frequency output has to be set
-            quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
-            // frequenzausgang berechnen lassen
-            m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQS+%2,FREQSCALE+%3)")
-                                             .arg(freqpar)
-                                             .arg(actvalueIndex)
-                                             .arg(i));
-        }
-    }
-
-    if (getConfData()->m_sIntegrationMode == "time") {
-        m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
-        m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
-
-        m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
-        m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(4,FILTER,VALPQSF)"));
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) );
-        m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-
-        if (getConfData()->m_sFreqActualizationMode == "integrationtime") {
-            for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
-                // which actualvalue do we take as source (offset)
-                quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
-                QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
-                // here we set abs, plus or minus and which frequency output has to be set
-                quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
-                // frequenzausgang berechnen lassen
-                m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQSCALE+%3)")
-                                                 .arg(freqpar)
-                                                 .arg(actvalueIndex)
-                                                 .arg(i));
-            }
-        }
-        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
-        m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
-    }
-
-    else { // otherwise it is period
-        m_pDSPInterFace->addCycListItem( s = "TESTVVSKIPLT(N,TIPAR)");
-        m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0103)");
-        m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0103)");
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(4,FILTER,VALPQSF)"));
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*4+1) );
-        m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
-
-        if (getConfData()->m_sFreqActualizationMode == "integrationtime")        {
-            for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
-                // which actualvalue do we take as source (offset)
-                quint8 actvalueIndex = getConfData()->m_FreqOutputConfList.at(i).m_nSource;
-                QString foutSystemName =  getConfData()->m_FreqOutputConfList.at(i).m_sName;
-                // here we set abs, plus or minus and which frequency output has to be set
-                quint16 freqpar = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode + (m_FoutInfoHash[foutSystemName].dspFoutChannel << 8);
-                // frequenzausgang berechnen lassen
-                m_pDSPInterFace->addCycListItem( s = QString("CMPCLK(%1,VALPQSF+%2,FREQSCALE+%3)")
-                                                 .arg(freqpar)
-                                                 .arg(actvalueIndex)
-                                                 .arg(i));
-            }
-        }
-        m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0103)");
-        m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0103)"); // end processnr., mainchain 1 subchain 2
-    }
-
+    m_pDSPInterFace->addCycListItems(dspInitVarsList);
+    m_pDSPInterFace->addCycListItems(dspMModesCommandList);
+    m_pDSPInterFace->addCycListItems(dspFreqCmds);
 }
 
 
