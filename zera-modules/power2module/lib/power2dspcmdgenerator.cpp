@@ -1,6 +1,6 @@
-#include "power2dspgenerator.h"
+#include "power2dspcmdgenerator.h"
 
-QStringList Power2DspGenerator::getCmdsMMode4LW(int dspSelectCode, MeasSystemChannels measChannelPairList, quint32 sampleCountPerSignalPeriod)
+QStringList Power2DspCmdGenerator::getCmdsMMode4LW(int dspSelectCode, MeasSystemChannels measChannelPairList, quint32 sampleCountPerSignalPeriod)
 {
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
@@ -36,7 +36,7 @@ QStringList Power2DspGenerator::getCmdsMMode4LW(int dspSelectCode, MeasSystemCha
     return dspCmdList;
 }
 
-QStringList Power2DspGenerator::getCmdsSumAndAverage()
+QStringList Power2DspCmdGenerator::getCmdsSumAndAverage()
 {
     QStringList dspCmdList;
     // we have to compute sum of our power systems

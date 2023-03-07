@@ -1,7 +1,7 @@
 #include "power2modulemeasprogram.h"
 #include "power2module.h"
 #include "power2moduleconfiguration.h"
-#include "power2dspgenerator.h"
+#include "power2dspcmdgenerator.h"
 #include "measmodephasesetstrategy4wire.h"
 #include <measmodecatalog.h>
 #include <stringvalidator.h>
@@ -441,7 +441,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         switch (dspSelectCode)
         {
         case m4lw:
-            dspMModesCommandList.append(Power2DspGenerator::getCmdsMMode4LW(dspSelectCode, measChannelPairList, m_nSRate));
+            dspMModesCommandList.append(Power2DspCmdGenerator::getCmdsMMode4LW(dspSelectCode, measChannelPairList, m_nSRate));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
                                                                   dspSelectCode,
                                                                   measSytemCount,
@@ -452,7 +452,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         }
     }
 
-    dspMModesCommandList.append(Power2DspGenerator::getCmdsSumAndAverage());
+    dspMModesCommandList.append(Power2DspCmdGenerator::getCmdsSumAndAverage());
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
