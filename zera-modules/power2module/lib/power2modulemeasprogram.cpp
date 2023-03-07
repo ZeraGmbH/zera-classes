@@ -1770,7 +1770,7 @@ void cPower2ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 {
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
                              .arg(tiTimeOrPeriods)
-                             .arg(MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getCode());
+                             .arg(m_measModeSelector.getCurrMode()->getDspSelectCode());
     /*QString phaseVarSet = dspGetSetPhasesVar();
     if(!phaseVarSet.isEmpty())
         strVarData += ";" + dspGetSetPhasesVar();*/
