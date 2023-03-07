@@ -1,5 +1,7 @@
 #include "test_measmodebroker.h"
 #include "measmodebroker.h"
+#include "measmodephasesetstrategyphasesfixed.h"
+#include "measmodephasesetstrategyphasesvar.h"
 #include <QTest>
 
 class MeasChannelSingleton
@@ -37,9 +39,12 @@ public:
     static const ModeNameFunctionHash &get()
     {
         if(m_hash.isEmpty()) {
-            m_hash["A"] = { mXlw, DspCmdGeneratorForTest::getCmdsA};
-            m_hash["A1"] = { mXlw, DspCmdGeneratorForTest::getCmdsA};
-            m_hash["B"] = { m3lw, DspCmdGeneratorForTest::getCmdsB};
+            m_hash["A"] = { mXlw, DspCmdGeneratorForTest::getCmdsA,
+                    []{ return std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("000"), 1);} };
+            m_hash["A1"] = { mXlw, DspCmdGeneratorForTest::getCmdsA,
+                    []{ return std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("000"), 1);} };
+            m_hash["B"] = { m3lw, DspCmdGeneratorForTest::getCmdsB,
+                    []{ return std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("000"), 3);} };
         }
         return m_hash;
     }
@@ -123,5 +128,19 @@ void test_measmodebroker::getTwoWithDiffDspSelection()
     QVERIFY(ret1.isValid());
     QVERIFY(ret2.isValid());
     QVERIFY(ret1.dspSelectCode != ret2.dspSelectCode);
+}
+
+void test_measmodebroker::getTwoCheckPhaseStartegies()
+{
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    MeasModeBroker::BrokerReturn ret1 = broker.getMeasMode("A", MeasChannelSingleton::get());
+    MeasModeBroker::BrokerReturn ret2 = broker.getMeasMode("B", MeasChannelSingleton::get());
+
+    QVERIFY(ret1.isValid());
+    QVERIFY(ret1.phaseStrategy->canChangePhaseMask());
+    QCOMPARE(ret1.phaseStrategy->getActiveMeasSysCount(), 1);
+    QVERIFY(ret2.isValid());
+    QVERIFY(!ret2.phaseStrategy->canChangePhaseMask());
+    QCOMPARE(ret2.phaseStrategy->getActiveMeasSysCount(), 3);
 }
 
