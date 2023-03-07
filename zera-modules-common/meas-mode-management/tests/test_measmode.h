@@ -8,14 +8,16 @@ class test_measmode : public QObject
     Q_OBJECT
 private slots:
     void init();
+    void fooIsInvalid();
+    void defaultCtorIsInvalid();
     void gettersReportProperCtorParams();
-    void validPhaseChangeSignal();
+    void validCanChangeMask();
     void fixedStrategyCannotChangePhase();
-    void invalidModeName();
     void invalidForMeasSystemTooLarge();
     void invalidForMeasSystemTooSmall();
     void invalidCannotChangePhases();
     void tooLongMaskNotAccepted();
+    void maskWithInvalidCharsNotAccepted();
     void onePhaseMeasSystem();
     void twoPhaseMeasSystem();
     void phaseGetter();
