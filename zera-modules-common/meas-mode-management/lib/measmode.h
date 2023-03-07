@@ -12,14 +12,11 @@ public:
     MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
     cMeasModeInfo getInfo() const;
     int getDspSelectCode();
-    void tryChangeMask(QString mask);
+    bool tryChangeMask(QString mask);
     QString getCurrentMask();
     bool isPhaseActive(int phase);
     int getActiveMeasSysCount();
     bool isValid();
-signals:
-    void sigMaskChanged();
-    void sigMaskChangeFailed();
 private:
     cMeasModeInfo m_measModeInfo;
     int m_dspSelectCode;

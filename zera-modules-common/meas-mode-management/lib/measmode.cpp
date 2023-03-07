@@ -22,7 +22,7 @@ int MeasMode::getDspSelectCode()
     return m_dspSelectCode;
 }
 
-void MeasMode::tryChangeMask(QString mask)
+bool MeasMode::tryChangeMask(QString mask)
 {
     bool ok = isValid() && mask.size() == m_measSysCount;
     MModePhaseMask binMask;
@@ -39,10 +39,7 @@ void MeasMode::tryChangeMask(QString mask)
             }
         }
     }
-    if(ok && m_measModePhaseSetter->tryChangeMask(binMask))
-        emit sigMaskChanged();
-    else
-        emit sigMaskChangeFailed();
+    return ok && m_measModePhaseSetter->tryChangeMask(binMask);
 }
 
 QString MeasMode::getCurrentMask()
