@@ -263,7 +263,7 @@ private slots:
     void newIntegrationPeriod(QVariant period);
     void newMeasMode(QVariant mm);
 
-    void onModeSelectSucceeded();
+    void onModeTransactionOk();
 };
 
 }
