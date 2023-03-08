@@ -54,7 +54,6 @@ enum power1moduleCmds
     freeresourcesource,
     unregisterrangenotifiers,
     readurvalue,
-    setfrequencyscales,
     setchannelrangenotifier,
     setqrefnominalpower
 };
@@ -206,8 +205,7 @@ private:
     QStateMachine m_readUrValueMachine;
     QState m_readUrvalueState;
     QState m_readUrvalueDoneState;
-    QState m_setFrequencyScalesState;
-    QFinalState m_setFoutConstantState;
+    QFinalState m_foutParamsToDsp;
 
     cMovingwindowFilter m_movingwindowFilter;
 
@@ -274,8 +272,7 @@ private slots:
 
     void readUrvalue();
     void readUrvalueDone();
-    void setFrequencyScales();
-    void setFoutConstants();
+    void foutParamsToDsp();
     void setFoutPowerModes();
 
     void newIntegrationtime(QVariant ti);
