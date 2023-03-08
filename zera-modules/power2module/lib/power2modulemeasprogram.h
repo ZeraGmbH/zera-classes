@@ -49,12 +49,10 @@ enum power2moduleCmds
     freeusermem,
     freeresourcesource,
     unregisterrangenotifiers,
-
     readurvalue,
-    setfrequencyscales,
-    setchannelrangenotifier
+    setchannelrangenotifier,
+    setqrefnominalpower
 };
-
 
 #define irqNr 7
 
@@ -117,6 +115,7 @@ private:
     cDspMeasData* m_pParameterDSP;
     cDspMeasData* m_pActualValuesDSP;
     cDspMeasData* m_pfreqScaleDSP;
+    cDspMeasData* m_pNomPower;
 
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;
@@ -188,7 +187,7 @@ private:
     QStateMachine m_readUrValueMachine;
     QState m_readUrvalueState;
     QState m_readUrvalueDoneState;
-    QState m_setFrequencyScalesState;
+    QState m_foutParamsToDsp;
     QFinalState m_setFoutConstantState;
 
     cMovingwindowFilter m_movingwindowFilter;
@@ -257,8 +256,7 @@ private slots:
 
     void readUrvalue();
     void readUrvalueDone();
-    void setFrequencyScales();
-    void setFoutConstants();
+    void foutParamsToDsp();
     void setFoutPowerModes();
 
     void newIntegrationtime(QVariant ti);
