@@ -90,10 +90,8 @@ cPower1ModuleConfigData *cPower1ModuleConfiguration::getConfigurationData()
 
 void cPower1ModuleConfiguration::addMeasSys(QString val)
 {
-    if(!val.isEmpty()) {
+    if(!val.isEmpty())
         m_pPower1ModulConfigData->m_sMeasSystemList.append(val);
-        m_pPower1ModulConfigData->m_measSystemCount++;
-    }
 }
 
 void cPower1ModuleConfiguration::configXMLInfo(QString key)
