@@ -221,21 +221,18 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     // setting up statemachine for reading urvalues from channels that changed its range
     m_readUrvalueState.addTransition(this, &cModuleActivist::activationContinue, &m_readUrvalueDoneState);
-    m_readUrvalueDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_setFrequencyScalesState);
+    m_readUrvalueDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_foutParamsToDsp);
     m_readUrvalueDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readUrvalueState);
-    m_setFrequencyScalesState.addTransition(this, &cModuleActivist::activationContinue, &m_setFoutConstantState);
 
     m_readUrValueMachine.addState(&m_readUrvalueState);
     m_readUrValueMachine.addState(&m_readUrvalueDoneState);
-    m_readUrValueMachine.addState(&m_setFrequencyScalesState);
-    m_readUrValueMachine.addState(&m_setFoutConstantState);
+    m_readUrValueMachine.addState(&m_foutParamsToDsp);
 
     m_readUrValueMachine.setInitialState(&m_readUrvalueState);
 
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
-    connect(&m_setFrequencyScalesState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setFrequencyScales);
-    connect(&m_setFoutConstantState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::setFoutConstants);
+    connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
 }
 
 
@@ -267,9 +264,7 @@ void cPower1ModuleMeasProgram::generateInterface()
 {
     QString key;
     VfModuleActvalue *pActvalue;
-
-    for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
-    {
+    for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PQS%1").arg(i+1),
                                             QString("Actual power value"),
@@ -363,18 +358,13 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     QVariant val;
     QString s, unit;
-    bool btime;
-
-    btime = (getConfData()->m_sIntegrationMode == "time");
-
-    if (btime)
-    {
+    bool btime = (getConfData()->m_sIntegrationMode == "time");
+    if (btime) {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
         s = QString("Integration time");
         unit = QString("sec");
     }
-    else
-    {
+    else {
         val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);
         s = QString("Integration period");
         unit = QString("period");
@@ -439,7 +429,7 @@ void cPower1ModuleMeasProgram::setDspVarList()
 
     // a handle for filtered actual values
     m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALPQSF", 4, DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("VALPQSF", MeasPhaseCount+SumValueCount, DSPDATA::vDspResult));
 
     // and one for the frequency output scale values, we need 1 value for each configured output
     m_pfreqScaleDSP = m_pDSPInterFace->getMemHandle("FrequencyScale");
@@ -461,14 +451,13 @@ void cPower1ModuleMeasProgram::deleteDspVarList()
     m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
 }
 
-
 QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
     dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*4+1) ); // clear the whole filter incl. count
+    dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
     dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
     for(int phase=0; phase<getConfData()->m_sMeasSystemList.count(); phase++)
         dspCmdList.append(QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
@@ -701,16 +690,6 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
                 }
                 break;
             }
-
-            case setfrequencyscales:
-                if (reply == ack) // we ignore ack
-                    emit activationContinue();
-                else
-                {
-                    emit errMsg((tr(writedspmemoryErrMsg)));
-                    emit executionError();
-                }
-                break;
 
             case setqrefnominalpower:
                 if (reply != ack) // we ignore ack
@@ -1696,12 +1675,12 @@ void POWER1MODULE::cPower1ModuleMeasProgram::calcMaxRangeValues(std::shared_ptr<
     }
 }
 
-void cPower1ModuleMeasProgram::setFrequencyScales()
+void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
-    if (getConfData()->m_nFreqOutputCount > 0) { // we only do something here if we really have a frequency output
-        std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-        calcMaxRangeValues(mode);
-        double cfak = mode->getActiveMeasSysCount();
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    calcMaxRangeValues(mode);
+    double cfak = mode->getActiveMeasSysCount();
+    if (getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
         for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
             double frScale;
@@ -1719,21 +1698,9 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
         datalist.resize(datalist.size()-1);
         datalist += ";";
         m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = setfrequencyscales;
-
-        double pmax = m_umax * m_imax;
-        datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
-        m_pDSPInterFace->setVarData(m_pNomPower, datalist);
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
-
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
     }
-    else // otherwise we have to continue "manually"
-        emit activationContinue();
-}
-
-void cPower1ModuleMeasProgram::setFoutConstants()
-{
-    double cfak = m_measModeSelector.getCurrMode()->getActiveMeasSysCount();
+    setFoutPowerModes();
     double constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * m_umax * m_imax); // imp./kwh
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
@@ -1748,38 +1715,34 @@ void cPower1ModuleMeasProgram::setFoutConstants()
         m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
         m_FoutConstParameterList.at(i)->setValue(constant);
     }
-    setFoutPowerModes();
-}
 
+    double pmax = m_umax * m_imax; // MQREF
+    QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
+    m_pDSPInterFace->setVarData(m_pNomPower, datalist);
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
+}
 
 void cPower1ModuleMeasProgram::setFoutPowerModes()
 {
     QList<QString> keylist = m_FoutInfoHash.keys();
-
-    if (keylist.count() > 0)
-        for (int i = 0; i < keylist.count(); i++)
+    for (int i = 0; i < keylist.count(); i++) {
+        QString powtype;
+        int foutmode = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode;
+        switch (foutmode)
         {
-            QString powtype;
-            int foutmode;
-
-            foutmode = getConfData()->m_FreqOutputConfList.at(i).m_nFoutMode;
-            switch (foutmode)
-            {
-            case posPower:
-                powtype = "+";
-                break;
-            case negPower:
-                powtype = "-";
-                break;
-            default:
-                powtype = "";
-            }
-
-            powtype += MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getActvalName();
-
-            cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
-            m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
+        case posPower:
+            powtype = "+";
+            break;
+        case negPower:
+            powtype = "-";
+            break;
+        default:
+            powtype = "";
         }
+        powtype += MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue).getActvalName();
+        cFoutInfo fi = m_FoutInfoHash[keylist.at(i)];
+        m_MsgNrCmdList[fi.pcbIFace->setPowTypeSource(fi.name, powtype)] = writeparameter;
+    }
 }
 
 QString cPower1ModuleMeasProgram::getInitialPhaseOnOffVeinVal()
@@ -1840,8 +1803,7 @@ void cPower1ModuleMeasProgram::handleMovingWindowIntTimeChange()
 void cPower1ModuleMeasProgram::updatesForMModeChange()
 {
     setActualValuesNames();
-    setFrequencyScales();
-    setFoutConstants();
+    foutParamsToDsp();
 }
 
 double cPower1ModuleMeasProgram::calcTiTime()
@@ -1887,8 +1849,7 @@ void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 {
     Q_UNUSED(p_newValue);
-    setFoutConstants();
-    setFrequencyScales();
+    foutParamsToDsp();
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
