@@ -85,6 +85,7 @@ private:
     void handleMModeParamChange();
     void updatesForMModeChange();
     double calcTiTime();
+    void calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
     quint8 cmpActualValIndex(freqoutconfiguration frconf);
 
     cPower2Module* m_pModule;
@@ -109,7 +110,8 @@ private:
     qint32 m_idx2WireMeasSystem;
     quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
-    double m_umax, m_imax;
+    double m_umax = 0.0;
+    double m_imax = 0.0;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
