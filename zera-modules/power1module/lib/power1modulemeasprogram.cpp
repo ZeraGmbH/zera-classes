@@ -512,6 +512,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         switch(measModeId)
         {
         case m4lw:
+        case m3lw:
         case mXlw:
             brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
             dspMModesCommandList.append(brokerReturn.dspCmdList);
@@ -548,13 +549,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                   measModeId,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategy4Wire>()));
-            break;
-        case m3lw:
-            dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode3LW(measModeId, measChannelPairList));
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  measModeId,
-                                                                  measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3)));
             break;
         case m3lb:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode3LB(measModeId, measChannelPairList));
