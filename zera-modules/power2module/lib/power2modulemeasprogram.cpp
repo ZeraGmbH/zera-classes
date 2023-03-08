@@ -422,8 +422,7 @@ void cPower2ModuleMeasProgram::setDspCmdList()
 {
     MeasSystemChannels measChannelPairList;
     cPower2ModuleConfigData *confdata = getConfData();
-    for(int sys=0; sys<confdata->m_measSystemCount; sys++) {
-        QString measChannelPair = confdata->m_sMeasSystemList[sys];
+    for(auto &measChannelPair : confdata->m_sMeasSystemList) {
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannel measChannel;
         measChannel.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
@@ -431,10 +430,15 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         measChannelPairList.append(measChannel);
     }
 
-    // we have a loop here in spite of we have only 1 measuring mode possible ....maybe we get more
-    QStringList dspMModesCommandList;
-    int measSytemCount = getConfData()->m_measSystemCount;
     set2WireVariables();
+    Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
+
+    int measSytemCount = confdata->m_sMeasSystemList.count();
+    //MeasModeBroker measBroker(Power2DspModeFunctionCatalog::get(measSytemCount));
+
+    // we set up all our lists for wanted measuring modes, this gets much more performance
+    QStringList dspMModesCommandList;
+    //MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
         measmodes measModeId = mInfo.getCode();
@@ -1178,11 +1182,9 @@ void cPower2ModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < getConfData()->m_measSystemCount; i++)
-    {
-        QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
-        for (int j = 0; j < sl.count(); j++)
-        {
+    for(auto &measSystem : getConfData()->m_sMeasSystemList) {
+        QStringList sl = measSystem.split(',');
+        for (int j = 0; j < sl.count(); j++) {
             QString s = sl.at(j);
             if (!m_measChannelInfoHash.contains(s)) // did we find a new measuring channel ?
                 m_measChannelInfoHash[s] = mi; // then lets add it
@@ -1676,7 +1678,7 @@ void cPower2ModuleMeasProgram::setFrequencyScales()
 
     if (getConfData()->m_nFreqOutputCount > 0) { // we only do something here if we really have a frequency output
         std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-        for (int i = 0; i < getConfData()->m_measSystemCount; i++) {
+        for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++) {
             if(mode->isPhaseActive(i)) {
                 sl = getConfData()->m_sMeasSystemList.at(i).split(',');
                 if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > m_umax)
