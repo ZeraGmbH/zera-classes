@@ -1701,7 +1701,6 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
     if (getConfData()->m_nFreqOutputCount > 0) { // we only do something here if we really have a frequency output
         std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
         calcMaxRangeValues(mode);
-
         double cfak = mode->getActiveMeasSysCount();
         QString datalist = "FREQSCALE:";
         for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
@@ -1717,16 +1716,12 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
             }
             datalist += QString("%1,").arg(frScale, 0, 'g', 7);
         }
-
         datalist.resize(datalist.size()-1);
         datalist += ";";
-
         m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = setfrequencyscales;
 
-        double pmax;
-        pmax = m_umax * m_imax;
-
+        double pmax = m_umax * m_imax;
         datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
         m_pDSPInterFace->setVarData(m_pNomPower, datalist);
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
@@ -1736,12 +1731,10 @@ void cPower1ModuleMeasProgram::setFrequencyScales()
         emit activationContinue();
 }
 
-
 void cPower1ModuleMeasProgram::setFoutConstants()
 {
     double cfak = m_measModeSelector.getCurrMode()->getActiveMeasSysCount();
     double constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * m_umax * m_imax); // imp./kwh
-
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
         if(m_pScalingInputs.length() > i){
