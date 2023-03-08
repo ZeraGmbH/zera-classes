@@ -72,6 +72,7 @@ protected slots:
     virtual void completeConfiguration(bool ok);
 private:
     void validateAndSetConfig(QByteArray xmlString, QString xsdFilename);
+    void addMeasSys(QString val);
     cPower2ModuleConfigData *m_pPower2ModulConfigData;  // configuration
 };
 

@@ -8,7 +8,7 @@ class test_pow2_config_load : public QObject
     Q_OBJECT
 private slots:
     void fileFound();
-    void fileLoaded();
+    void allFilesLoaded();
 };
 
 #endif // TEST_POW2_CONFIG_LOAD_H
