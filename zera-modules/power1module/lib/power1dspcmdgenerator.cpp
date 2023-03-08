@@ -402,7 +402,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLW(int dspSelectCode, MeasSystem
         cmdList.append(QString("SETVAL(VALPQS+%1,0.0)").arg(phase));
         cmdList.append(QString("STOPCHAIN(1,%1)").arg(strChains)); // ende prozessnr., hauptkette 1 subkette 1
         // calc power values
-        strChains =  IntToHexStringConvert::convert(0x0121 + phase<measChannelPairList.count() + phase);
+        strChains =  IntToHexStringConvert::convert(0x0121 + measChannelPairList.count() + phase);
         cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(strChains));
         cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
         cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
