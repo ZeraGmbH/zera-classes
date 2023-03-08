@@ -26,9 +26,6 @@ void POWER1MODULE::cPower1ModuleConfiguration::validateAndSetConfig(QByteArray x
         delete m_pPower1ModulConfigData;
     m_pPower1ModulConfigData = new cPower1ModuleConfigData();
 
-    for (int i = 0; i < 3; i++) // we prepare a list so later we are independent of order of incoming config
-        m_pPower1ModulConfigData->m_sMeasSystemList.append("");
-
     m_ConfigXMLMap.clear(); // in case of new configuration we completely set up
 
     // so now we can set up
@@ -91,12 +88,19 @@ cPower1ModuleConfigData *cPower1ModuleConfiguration::getConfigurationData()
     return m_pPower1ModulConfigData;
 }
 
+void cPower1ModuleConfiguration::addMeasSys(QString val)
+{
+    if(!val.isEmpty()) {
+        m_pPower1ModulConfigData->m_sMeasSystemList.append(val);
+        m_pPower1ModulConfigData->m_measSystemCount++;
+    }
+}
+
 void cPower1ModuleConfiguration::configXMLInfo(QString key)
 {
     if (m_ConfigXMLMap.contains(key)) {
         bool ok = true;
         int cmd = m_ConfigXMLMap[key];
-        QString val;
         switch (cmd)
         {
         case setRMIp:
@@ -124,25 +128,16 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
                 m_ConfigXMLMap[QString("pow1modconfpar:configuration:measure:modes:m%1").arg(i+1)] = setMeasMode1+i;
             break;
         case setMeasSystem1:
-            val = m_pXMLReader->getValue(key);
-            if(!val.isEmpty()) {
-                m_pPower1ModulConfigData->m_sMeasSystemList.replace(0, val);
-                m_pPower1ModulConfigData->m_measSystemCount++;
-            }
+            Q_ASSERT(m_pPower1ModulConfigData->m_sMeasSystemList.count() == 0);
+            addMeasSys(m_pXMLReader->getValue(key));
             break;
         case setMeasSystem2:
-            val = m_pXMLReader->getValue(key);
-            if(!val.isEmpty()) {
-                m_pPower1ModulConfigData->m_sMeasSystemList.replace(1, val);
-                m_pPower1ModulConfigData->m_measSystemCount++;
-            }
+            Q_ASSERT(m_pPower1ModulConfigData->m_sMeasSystemList.count() == 1);
+            addMeasSys(m_pXMLReader->getValue(key));
             break;
         case setMeasSystem3:
-            val = m_pXMLReader->getValue(key);
-            if(!val.isEmpty()) {
-                m_pPower1ModulConfigData->m_sMeasSystemList.replace(2, val);
-                m_pPower1ModulConfigData->m_measSystemCount++;
-            }
+            Q_ASSERT(m_pPower1ModulConfigData->m_sMeasSystemList.count() == 2);
+            addMeasSys(m_pXMLReader->getValue(key));
             break;
         case set2WMeasSystem:
             m_pPower1ModulConfigData->m_sM2WSystem = m_pXMLReader->getValue(key);

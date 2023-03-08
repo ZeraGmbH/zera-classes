@@ -12,13 +12,15 @@ void test_pow1_config_load::fileFound()
     QVERIFY(tmpXmlConfigFile.exists());
 }
 
-void test_pow1_config_load::fileLoaded()
+void test_pow1_config_load::allFilesLoaded()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_PATH) + "/" + "com5003-power1module.xml");
-    QVERIFY(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
-    std::unique_ptr<POWER1MODULE::cPower1ModuleConfiguration> conf = std::make_unique<POWER1MODULE::cPower1ModuleConfiguration>();
-
-    QSignalSpy spy(conf.get(), &cBaseModuleConfiguration::configXMLDone);
-    conf->setConfiguration(tmpXmlConfigFile.readAll());
-    QCOMPARE(spy.count(), 1);
+    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_PATH)).entryInfoList(QStringList() << "*.xml");
+    for(const auto &fileInfo : fileList) {
+        QFile configFile(fileInfo.absoluteFilePath());
+        qInfo("Load %s...", qPrintable(configFile.fileName()));
+        QVERIFY(configFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
+        POWER1MODULE::cPower1ModuleConfiguration conf;
+        conf.setConfiguration(configFile.readAll());
+        QVERIFY(conf.isConfigured());
+    }
 }
