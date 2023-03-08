@@ -1669,24 +1669,26 @@ void cPower2ModuleMeasProgram::readUrvalueDone()
         emit activationLoop();
 }
 
+void POWER2MODULE::cPower2ModuleMeasProgram::calcMaxRangeValues(std::shared_ptr<MeasMode> mode)
+{
+    m_umax = m_imax = 0.0;
+    for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++) {
+        if(mode->isPhaseActive(i)) {
+            QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
+            double d;
+            if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > m_umax)
+                m_umax = d;
+            if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > m_imax)
+                m_imax = d;
+        }
+    }
+}
 
 void cPower2ModuleMeasProgram::setFrequencyScales()
 {
-    double d;
-    QStringList sl;
-    m_umax = m_imax = 0.0;
-
     if (getConfData()->m_nFreqOutputCount > 0) { // we only do something here if we really have a frequency output
         std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-        for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++) {
-            if(mode->isPhaseActive(i)) {
-                sl = getConfData()->m_sMeasSystemList.at(i).split(',');
-                if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > m_umax)
-                    m_umax = d;
-                if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > m_imax)
-                    m_imax = d;
-            }
-        }
+        calcMaxRangeValues(mode);
 
         double cfak = mode->getActiveMeasSysCount();
         QString datalist = "FREQSCALE:";
