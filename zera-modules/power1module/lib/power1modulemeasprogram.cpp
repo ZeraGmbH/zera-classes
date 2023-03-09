@@ -353,7 +353,7 @@ void cPower1ModuleMeasProgram::generateInterface()
                                                          key = QString("PAR_MeasModePhaseSelect"),
                                                          QString("Phase select mask for modes supporting phase selection - e.g 100 for L1 only"),
                                                          getInitialPhaseOnOffVeinVal());
-    m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","XMMSELECT", "10", "PAR_MeasModePhaseSelect", "0", ""));
+    m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODEPHASESELECT", "10", "PAR_MeasModePhaseSelect", "0", ""));
     m_MModePhaseSelectValidator = new cStringValidator("");
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->veinModuleParameterHash[key] = m_pMModePhaseSelectParameter; // for modules use
