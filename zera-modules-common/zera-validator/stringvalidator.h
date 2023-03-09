@@ -9,10 +9,10 @@ class cStringValidator: public ValidatorInterface
 public:
     cStringValidator(QString possibilities); // all possible strings with ';' delimiter
     cStringValidator(QStringList possibilities); // same but as qstringlist
-    virtual bool isValidParam(QVariant &newValue);
-    virtual void exportMetaData(QJsonObject& jsObj);
-    virtual void setValidator(QString possibilities);
-    virtual void setValidator(QStringList possibilities);
+    bool isValidParam(QVariant &newValue) override;
+    void exportMetaData(QJsonObject& jsObj) override;
+    void setValidator(QString possibilities);
+    void setValidator(QStringList possibilities);
 private:
     QStringList m_sPossibilitiesList;
 };

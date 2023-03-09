@@ -6,8 +6,8 @@
 class cBoolValidator: public ValidatorInterface
 {
 public:
-    virtual bool isValidParam(QVariant& newValue) override;
-    virtual void exportMetaData(QJsonObject& jsObj) override;
+    bool isValidParam(QVariant& newValue) override;
+    void exportMetaData(QJsonObject& jsObj) override;
 };
 
 #endif // BOOLVALIDATOR_H
