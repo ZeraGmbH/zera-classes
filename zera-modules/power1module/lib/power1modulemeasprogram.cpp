@@ -1863,8 +1863,11 @@ void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
 {
-    QString newMeasMode = m_measModeSelector.getCurrMode()->getName();
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    QString newMeasMode = mode->getName();
     getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
+    QString newPhaseMask = mode->getCurrentMask();
+    m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     handleMModeParamChange();
     updatesForMModeChange();
 }
