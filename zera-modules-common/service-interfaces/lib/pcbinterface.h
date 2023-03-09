@@ -19,6 +19,7 @@ public:
     void setClient(Zera::ProxyClient *client);
     void setClientSmart(Zera::ProxyClientPtr client);
     // all commands to sense interface
+    virtual quint32 getChannelList(); // qstringlist
     virtual quint32 getDSPChannel(QString chnName); // int
     virtual quint32 getStatus(QString chnName); // int
     virtual quint32 resetStatus(QString chnName); // reply (ack, nak..)
