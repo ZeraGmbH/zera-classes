@@ -8,6 +8,7 @@
 namespace Zera { namespace PCB {
 enum pcbcommands
 {
+    getchannellist,
     getdspchannel,
     getstatus,
     resetstatus,
@@ -93,6 +94,7 @@ public:
     cPCBInterfacePrivate(cPCBInterface* iface);
     virtual void setClient(Zera::ProxyClient *client);
     virtual void setClientSmart(Zera::ProxyClientPtr client);
+    virtual quint32 getChannelList(); // qstringlist
     virtual quint32 getDSPChannel(QString chnName); // int
     virtual quint32 getStatus(QString chnName); // int
     virtual quint32 resetStatus(QString chnName); // reply (ack, nak..)

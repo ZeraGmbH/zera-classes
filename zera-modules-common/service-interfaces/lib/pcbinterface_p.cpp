@@ -29,6 +29,13 @@ void cPCBInterfacePrivate::setClientSmart(Zera::ProxyClientPtr client)
     setClient(client.get());
 }
 
+quint32 cPCBInterfacePrivate::getChannelList()
+{
+    quint32 msgnr = sendCommand(QString("SENSE:CHANNEL:CAT?"));
+    m_MsgNrCmdList[msgnr] = PCB::getchannellist;
+    return msgnr;
+}
+
 
 quint32 cPCBInterfacePrivate::getDSPChannel(QString chnName)
 {
@@ -820,6 +827,7 @@ void cPCBInterfacePrivate::receiveAnswer(std::shared_ptr<ProtobufMessage::NetMes
             emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnString(decodedAnswer.msgBody));
             break;
 
+        case PCB::getchannellist:
         case PCB::getrangelist:
         case PCB::getrangelistsample:
             emit q->serverAnswer(decodedAnswer.msgNr, decodedAnswer.reply, VariantConverter::returnStringList(decodedAnswer.msgBody));
