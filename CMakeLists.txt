@@ -74,6 +74,7 @@ if(ZC_BUILD_MODULES)
     add_subdirectory(zera-math)
     add_subdirectory(zera-modules)
     add_subdirectory(zera-modules-common)
+    add_subdirectory(zera-modules-shared-data)
     add_subdirectory(zera-xmlconfig)
 
 endif(ZC_BUILD_MODULES)
