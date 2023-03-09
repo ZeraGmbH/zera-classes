@@ -13,7 +13,6 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
-#include <stringvalidator.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
 #include <inttohexstringconvert.h>
@@ -22,8 +21,9 @@
 namespace POWER1MODULE
 {
 
-cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration)
-    :cBaseDspMeasProgram(pConfiguration), m_pModule(module)
+cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
+    cBaseDspMeasProgram(pConfiguration),
+    m_pModule(module)
 {
     m_pDSPInterFace = new Zera::cDSPInterface();
 
@@ -353,8 +353,8 @@ void cPower1ModuleMeasProgram::generateInterface()
                                                          QString("Phase select mask for modes supporting phase selection - e.g 100 for L1 only"),
                                                          getInitialPhaseOnOffVeinVal());
     m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","XMMSELECT", "10", "PAR_XMModePhaseSelect", "0", ""));
-    sValidator = new cStringValidator(PhaseValidatorStringGenerator::generate(getConfData()->m_sMeasSystemList.count()));
-    m_pMModePhaseSelectParameter->setValidator(sValidator);
+    m_MModePhaseSelectValidator = new cStringValidator("");
+    m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->veinModuleParameterHash[key] = m_pMModePhaseSelectParameter; // for modules use
 
     QVariant val;
@@ -586,8 +586,10 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage());
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
-    int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    setPhaseMaskValidator(mode);
 
+    int dspSelectCodeFromConfig = mode->getDspSelectCode();
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
     QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr);
 
@@ -1861,6 +1863,17 @@ void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
     foutParamsToDsp();
 }
 
+void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> mode)
+{
+    QStringList allPhaseMasks = PhaseValidatorStringGenerator::generate(getConfData()->m_sMeasSystemList.count());
+    QStringList allowedPhaseMasks;
+    for(auto &mask : allPhaseMasks)
+        if(mode->canChangeMask(mask))
+            allowedPhaseMasks.append(mask);
+    m_MModePhaseSelectValidator->setValidator(allowedPhaseMasks);
+    m_pModule->exportMetaData();
+}
+
 void cPower1ModuleMeasProgram::onModeTransactionOk()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -1868,6 +1881,7 @@ void cPower1ModuleMeasProgram::onModeTransactionOk()
     getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     QString newPhaseMask = mode->getCurrentMask();
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
+    setPhaseMaskValidator(mode);
     handleMModeParamChange();
     updatesForMModeChange();
 }
