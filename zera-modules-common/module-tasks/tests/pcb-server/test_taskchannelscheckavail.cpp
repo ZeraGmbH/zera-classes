@@ -1,6 +1,6 @@
-#include "test_taskrmchannelscheckavail.h"
-#include "taskrmchannelscheckavail.h"
-#include "rminitfortest.h"
+#include "test_taskchannelscheckavail.h"
+#include "taskchannelscheckavail.h"
+#include "pcbinitfortest.h"
 #include "scpifullcmdcheckerfortest.h"
 #include <timemachinefortest.h>
 #include <tasktesthelper.h>
@@ -12,10 +12,10 @@ static const char* defaultResponse = "m0;m1;m2";
 
 void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 {
-    RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
+    PcbInitForTest pcb;
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString(defaultResponse).split(";");
-    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskChannelsCheckAvail::create(pcb.getPcbInterface(),
                                                             expectedChannels,
                                                             EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -27,10 +27,10 @@ void test_taskrmchannelscheckavail::okOnExpectedEqualGet()
 
 void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 {
-    RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
+    PcbInitForTest pcb;
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("m0;m1").split(";");
-    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskChannelsCheckAvail::create(pcb.getPcbInterface(),
                                                             expectedChannels,
                                                             EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -42,10 +42,10 @@ void test_taskrmchannelscheckavail::okOnExpectedPartOfGet()
 
 void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
 {
-    RmInitForTest rm;
-    rm.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
+    PcbInitForTest pcb;
+    pcb.getProxyClient()->setAnswers(ServerTestAnswerList() << ServerTestAnswer(ack, defaultResponse));
     QStringList expectedChannels = QString("foo").split(";");
-    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskChannelsCheckAvail::create(pcb.getPcbInterface(),
                                                             expectedChannels,
                                                             EXPIRE_INFINITE);
     TaskTestHelper helper(task.get());
@@ -57,9 +57,9 @@ void test_taskrmchannelscheckavail::errOnExpectedNotPartOfGet()
 
 void test_taskrmchannelscheckavail::timeoutAndErrFunc()
 {
-    RmInitForTest rm;
+    PcbInitForTest pcb;
     int localErrorCount = 0;
-    TaskTemplatePtr task = TaskRmChannelsCheckAvail::create(rm.getRmInterface(),
+    TaskTemplatePtr task = TaskChannelsCheckAvail::create(pcb.getPcbInterface(),
                                                             QStringList(),
                                                             DEFAULT_EXPIRE,
                                                             [&]{

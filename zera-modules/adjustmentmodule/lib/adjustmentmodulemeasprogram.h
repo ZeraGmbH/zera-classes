@@ -89,7 +89,6 @@ public slots:
 
 private:
     cAdjustmentModuleConfigData* getConfData();
-    void openRmConnection();
     void openPcbConnection();
     bool checkExternalVeinComponents();
     void setInterfaceValidation();

@@ -1,4 +1,5 @@
 SETUP_QTESTS(
+    test_taskchannelscheckavail
     test_taskchannelgetalias
     test_taskchannelgetovrejection
     test_taskchannelgetrangelist
