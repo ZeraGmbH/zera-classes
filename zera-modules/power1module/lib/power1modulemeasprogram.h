@@ -2,6 +2,7 @@
 #define POWERMODULEMEASPROGRAM_H
 
 #include "power1moduleconfigdata.h"
+#include <stringvalidator.h>
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
@@ -95,6 +96,7 @@ private:
     void handleMovingWindowIntTimeChange();
     void updatesForMModeChange();
     double calcTiTime();
+    void setPhaseMaskValidator(std::shared_ptr<MeasMode> mode);
     struct RangeMaxVals
     {
         double maxU = 0.0;
@@ -117,6 +119,7 @@ private:
     VfModuleParameter* m_pIntegrationParameter;
     VfModuleParameter* m_pMeasuringmodeParameter;
     VfModuleParameter* m_pMModePhaseSelectParameter;
+    cStringValidator * m_MModePhaseSelectValidator;
     VfModuleParameter* m_pConstantParameter;
     VfModuleComponent* m_pMeasureSignal;
 
