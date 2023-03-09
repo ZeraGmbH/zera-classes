@@ -8,9 +8,9 @@ class cRegExValidator: public ValidatorInterface
 public:
     cRegExValidator(QString regex);
     cRegExValidator(const cRegExValidator& ref);
-    virtual bool isValidParam(QVariant& newValue) override;
-    virtual void exportMetaData(QJsonObject& jsObj) override;
-    virtual void setValidator(QString regex);
+    bool isValidParam(QVariant& newValue) override;
+    void exportMetaData(QJsonObject& jsObj) override;
+    void setValidator(QString regex);
 private:
     QString m_sRegEx;
 };
