@@ -1658,32 +1658,35 @@ void cPower2ModuleMeasProgram::readUrvalueDone()
         emit activationLoop();
 }
 
-void POWER2MODULE::cPower2ModuleMeasProgram::calcMaxRangeValues(std::shared_ptr<MeasMode> mode)
+cPower2ModuleMeasProgram::RangeMaxVals cPower2ModuleMeasProgram::calcMaxRangeValues(std::shared_ptr<MeasMode> mode)
 {
-    m_umax = m_imax = 0.0;
+    RangeMaxVals maxVals;
     for (int i = 0; i < getConfData()->m_sMeasSystemList.count(); i++) {
         if(mode->isPhaseActive(i)) {
             QStringList sl = getConfData()->m_sMeasSystemList.at(i).split(',');
-            double d;
-            if ((d = m_measChannelInfoHash[sl.at(0)].m_fUrValue) > m_umax)
-                m_umax = d;
-            if ((d = m_measChannelInfoHash[sl.at(1)].m_fUrValue) > m_imax)
-                m_imax = d;
+            double rangeFullVal = m_measChannelInfoHash[sl.at(0)].m_fUrValue;
+            if (rangeFullVal > maxVals.maxU)
+                maxVals.maxU = rangeFullVal;
+            rangeFullVal = m_measChannelInfoHash[sl.at(1)].m_fUrValue;
+            if (rangeFullVal > maxVals.maxI)
+                maxVals.maxI = rangeFullVal;
         }
     }
+    return maxVals;
 }
 
 void cPower2ModuleMeasProgram::foutParamsToDsp()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    calcMaxRangeValues(mode);
+    RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
+    double constantImPerWs = getConfData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
     if (getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
         for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
             double frScale;
             cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
-            frScale = fi.formFactor * getConfData()->m_nNominalFrequency / (cfak * m_umax * m_imax);
+            frScale = fi.formFactor * constantImPerWs;
 
             /*if(m_pScalingInputs.length() > i){
                 if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
@@ -1699,7 +1702,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
     }
     setFoutPowerModes();
-    double constant = getConfData()->m_nNominalFrequency * 3600.0 * 1000.0 / (cfak * m_umax * m_imax); // imp./kwh
+    double constant = 3600.0 * 1000.0 * constantImPerWs; // imp./kwh
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
         /*if(m_pScalingInputs.length() > i){
@@ -1714,7 +1717,7 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
         //m_FoutConstParameterList.at(i)->setValue(constant);
     }
 
-    double pmax = m_umax * m_imax; // MQREF
+    double pmax = maxVals.maxU * maxVals.maxI; // MQREF
     QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
     m_pDSPInterFace->setVarData(m_pNomPower, datalist);
     m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;

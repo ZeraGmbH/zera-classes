@@ -95,8 +95,12 @@ private:
     void handleMovingWindowIntTimeChange();
     void updatesForMModeChange();
     double calcTiTime();
-    void calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
-
+    struct RangeMaxVals
+    {
+        double maxU = 0.0;
+        double maxI = 0.0;
+    };
+    RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
     QStringList dspCmdInitVars(int dspInitialSelectCode);
 
     cPower1Module* m_pModule;
@@ -126,8 +130,6 @@ private:
     qint32 m_idx2WireMeasSystem;
     quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
-    double m_umax = 0.0;
-    double m_imax = 0.0;
 
     cDspMeasData* m_pTmpDataDsp;
     cDspMeasData* m_pParameterDSP;
