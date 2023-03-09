@@ -19,7 +19,6 @@ private:
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;
     QStringList &m_targetRangeList;
-    quint32 m_msgnr;
 };
 
 #endif // TASKCHANNELREADRANGES_H

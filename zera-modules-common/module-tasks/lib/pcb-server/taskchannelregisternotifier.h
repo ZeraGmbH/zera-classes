@@ -17,7 +17,6 @@ private:
     bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;
-    quint32 m_msgnr;
 };
 
 #endif // TASKCHANNELREGISTERNOTIFIER_H

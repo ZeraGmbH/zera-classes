@@ -15,7 +15,6 @@ private:
     quint32 sendToServer() override;
     bool handleCheckedServerAnswer(QVariant answer) override;
     Zera::PcbInterfacePtr m_pcbInterface;
-    quint32 m_msgnr;
 };
 
 #endif // TASKUNREGISTERNOTIFIER_H

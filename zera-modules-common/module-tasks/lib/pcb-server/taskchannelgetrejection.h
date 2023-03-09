@@ -22,7 +22,6 @@ private:
     QString m_channelSysName;
     QString m_rangeName;
     double &m_valueReceived;
-    quint32 m_msgnr;
 };
 
 #endif // TASKCHANNELGETREJECTION_H

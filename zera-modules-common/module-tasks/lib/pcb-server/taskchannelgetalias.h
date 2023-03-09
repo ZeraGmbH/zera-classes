@@ -20,7 +20,6 @@ private:
     Zera::PcbInterfacePtr m_pcbInterface;
     QString m_channelName;
     QString& m_valueReceived;
-    quint32 m_msgnr;
 };
 
 #endif // TASKCHANNELGETALIAS_H
