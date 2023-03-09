@@ -10,6 +10,7 @@
 #include <reply.h>
 #include <proxy.h>
 #include <errormessages.h>
+#include <math.h>
 
 namespace POWER2MODULE
 {
@@ -1680,13 +1681,14 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
-    double constantImPerWs = getConfData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
-    if (getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
+    double constantImpulsePerWs = getConfData()->m_nNominalFrequency / (cfak * maxVals.maxU * maxVals.maxI);
+    bool isValidConstant = !isinf(constantImpulsePerWs);
+    if (isValidConstant && getConfData()->m_nFreqOutputCount > 0) { // dsp-interface will crash for missing parts...
         QString datalist = "FREQSCALE:";
         for (int i = 0; i<getConfData()->m_nFreqOutputCount; i++) {
             double frScale;
             cFoutInfo fi = m_FoutInfoHash[getConfData()->m_FreqOutputConfList.at(i).m_sName];
-            frScale = fi.formFactor * constantImPerWs;
+            frScale = fi.formFactor * constantImpulsePerWs;
 
             /*if(m_pScalingInputs.length() > i){
                 if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
@@ -1702,19 +1704,23 @@ void cPower2ModuleMeasProgram::foutParamsToDsp()
         m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
     }
     setFoutPowerModes();
-    double constant = 3600.0 * 1000.0 * constantImPerWs; // imp./kwh
+    double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
     for (int i = 0; i < getConfData()->m_nFreqOutputCount; i++) {
         // calculate prescaling factor for Fout
         /*if(m_pScalingInputs.length() > i){
             if(m_pScalingInputs.at(i).first != nullptr && m_pScalingInputs.at(i).second != nullptr){
                 double scale = m_pScalingInputs.at(i).first->value().toDouble() * m_pScalingInputs.at(i).second->value().toDouble();
-                constant = constant*scale;
+                constantImpulsePerKwh = constantImpulsePerKwh * scale;
             }
         }*/
         QString key = getConfData()->m_FreqOutputConfList.at(i).m_sName;
         cFoutInfo fi = m_FoutInfoHash[key];
-        m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constant)] = writeparameter;
-        //m_FoutConstParameterList.at(i)->setValue(constant);
+        if(isValidConstant) {
+            m_MsgNrCmdList[fi.pcbIFace->setConstantSource(fi.name, constantImpulsePerKwh)] = writeparameter;
+            //m_FoutConstParameterList.at(i)->setValue(constantImpulsePerKwh);
+        }
+        /*else
+            m_FoutConstParameterList.at(i)->setValue(0.0);*/
     }
 
     double pmax = maxVals.maxU * maxVals.maxI; // MQREF
