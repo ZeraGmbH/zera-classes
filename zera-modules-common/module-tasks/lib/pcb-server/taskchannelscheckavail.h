@@ -2,17 +2,17 @@
 #define TASKRMCHANNELSCHECKAVAIL_H
 
 #include "tasktemplate.h"
-#include <rminterface.h>
+#include <pcbinterface.h>
 #include <QStringList>
 
-class TaskRmChannelsCheckAvail : public TaskTemplate
+class TaskChannelsCheckAvail : public TaskTemplate
 {
     Q_OBJECT
 public:
-    static TaskTemplatePtr create(Zera::RMInterfacePtr rmInterface,
+    static TaskTemplatePtr create(Zera::PcbInterfacePtr pcbInterface,
                                    QStringList expectedChannels,
                                    int timeout, std::function<void()> additionalErrorHandler = []{});
-    TaskRmChannelsCheckAvail(Zera::RMInterfacePtr rmInterface,
+    TaskChannelsCheckAvail(Zera::PcbInterfacePtr pcbInterface,
                              QStringList expectedChannels,
                              int timeout, std::function<void()> additionalErrorHandler = []{});
     void start() override;

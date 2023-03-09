@@ -3,9 +3,7 @@
 #include "adjustmentmodulemeasprogram.h"
 #include "adjustmentmoduleconfiguration.h"
 #include "taskserverconnectionstart.h"
-#include "taskrmsendident.h"
-#include "taskrmcheckresourcetype.h"
-#include "taskrmchannelscheckavail.h"
+#include "taskchannelscheckavail.h"
 #include "taskchannelgetalias.h"
 #include "taskchannelregisternotifier.h"
 #include "taskchannelgetrangelist.h"
@@ -66,22 +64,12 @@ void AdjustmentModuleActivator::onReloadRanges(bool ok)
 void AdjustmentModuleActivator::addStaticActivationTasks()
 {
     m_activationTasks.addSub(TaskServerConnectionStart::create(
-                                 m_commonObjects->m_rmClient,
-                                 CONNECTION_TIMEOUT));
-    m_activationTasks.addSub(TaskRmSendIdent::create(
-                                 m_commonObjects->m_rmInterface,
-                                 "Adjustment",
-                                 TRANSACTION_TIMEOUT, [&]{ emit errMsg(rmidentErrMSG); }));
-    m_activationTasks.addSub(TaskRmCheckResourceType::create(
-                                 m_commonObjects->m_rmInterface,
-                                 TRANSACTION_TIMEOUT, [&]{ emit errMsg(resourcetypeErrMsg); }));
-    m_activationTasks.addSub(TaskRmChannelsCheckAvail::create(
-                                 m_commonObjects->m_rmInterface,
-                                 m_configuredChannels,
-                                 TRANSACTION_TIMEOUT,[&]{ emit errMsg(resourceErrMsg); }));
-    m_activationTasks.addSub(TaskServerConnectionStart::create(
                                  m_commonObjects->m_pcbClient,
                                  CONNECTION_TIMEOUT));
+    m_activationTasks.addSub(TaskChannelsCheckAvail::create(
+                                 m_commonObjects->m_pcbInterface,
+                                 m_configuredChannels,
+                                 TRANSACTION_TIMEOUT,[&]{ emit errMsg(resourceErrMsg); }));
 }
 
 void AdjustmentModuleActivator::addDynChannelActivationTasks()

@@ -17,7 +17,6 @@ cAdjustmentModuleMeasProgram::cAdjustmentModuleMeasProgram(cAdjustmentModule* mo
     m_commonObjects(std::make_shared<AdjustmentModuleCommon>()),
     m_activator(getConfData()->m_AdjChannelList, m_commonObjects)
 {
-    openRmConnection();
     openPcbConnection();
 
     connect(&m_activator, &AdjustmentModuleActivator::sigActivationReady, this, &cAdjustmentModuleMeasProgram::onActivationReady);
@@ -96,13 +95,6 @@ void cAdjustmentModuleMeasProgram::deactivate()
 cAdjustmentModuleConfigData *cAdjustmentModuleMeasProgram::getConfData()
 {
     return qobject_cast<cAdjustmentModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-}
-
-void cAdjustmentModuleMeasProgram::openRmConnection()
-{
-    m_commonObjects->m_rmInterface = std::make_shared<Zera::cRMInterface>();
-    m_commonObjects->m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(getConfData()->m_RMSocket.m_sIP, getConfData()->m_RMSocket.m_nPort);
-    m_commonObjects->m_rmInterface->setClientSmart(m_commonObjects->m_rmClient);
 }
 
 void cAdjustmentModuleMeasProgram::openPcbConnection()
