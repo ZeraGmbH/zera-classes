@@ -1,5 +1,6 @@
 #include "measmode.h"
 #include "measmodecatalog.h"
+#include "measmodemaskstringconverter.h"
 
 MeasMode::MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter) :
     m_measModeInfo(MeasModeCatalog::getInfo(modeName)),
@@ -21,23 +22,10 @@ int MeasMode::getDspSelectCode() const
 
 bool MeasMode::calcBinMask(QString mask, MModePhaseMask &binMask)
 {
-    bool ok = isValid() && mask.size() == m_measSysCount;
-    if(ok) {
-        MModePhaseMask tmpMask;
-        for(int i=0; i<m_measSysCount; i++) {
-            int strMaskEntry = m_measSysCount-i-1;
-            if(mask[strMaskEntry] == '0')
-                tmpMask[i] = 0;
-            else if(mask[strMaskEntry] == '1')
-                tmpMask[i] = 1;
-            else {
-                ok = false;
-                break;
-            }
-        }
-        if(ok)
-            binMask = tmpMask;
-    }
+    MModePhaseMask tmpMask;
+    bool ok = isValid() && MeasModeMaskStringConverter::calcBinMask(mask, m_measSysCount, tmpMask);
+    if(ok)
+        binMask = tmpMask;
     return ok;
 }
 
@@ -57,13 +45,8 @@ bool MeasMode::tryChangeMask(QString mask)
 
 QString MeasMode::getCurrentMask() const
 {
-    if(isValid()) {
-        QString mask;
-        MModePhaseMask binMask = m_measModePhaseSetter->getCurrPhaseMask();
-        for(int i=std::min(MeasPhaseCount, m_measSysCount)-1; i>=0; i--)
-            mask += binMask[i] ? "1" : "0";
-        return mask;
-    }
+    if(isValid())
+        return MeasModeMaskStringConverter::calcStringMask(m_measModePhaseSetter->getCurrPhaseMask(), m_measSysCount);
     return "000";
 }
 
