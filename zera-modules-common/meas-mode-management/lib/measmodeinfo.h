@@ -21,6 +21,7 @@ enum measmodes
     m2lsg,
     mXlw,
     mXlb,
+    mXls,
     mqref
 };
 

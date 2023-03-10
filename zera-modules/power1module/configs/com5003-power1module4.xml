@@ -21,7 +21,7 @@
         </connectivity>
         <measure>
             <modes>
-                <n>13</n>
+                <n>14</n>
                 <m1>4LW</m1>
                 <m2>3LW</m2>
                 <m3>2LW</m3>
@@ -35,6 +35,7 @@
                 <m11>2LSg</m11>
                 <m12>XLW</m12>
                 <m13>XLB</m13>
+                <m14>XLS</m14>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
