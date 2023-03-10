@@ -50,6 +50,9 @@
     </configuration>
     <parameter>
         <measuringmode>QREF</measuringmode>
+        <modePhases>
+            <n>0</n>
+        </modePhases>
         <interval>
             <time>1</time>
             <period>200</period>

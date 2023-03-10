@@ -121,7 +121,7 @@
                             <xs:simpleType>
                                 <xs:restriction base="xs:integer">
                                     <xs:minInclusive value="1"/>
-                                    <xs:maxInclusive value="15"/>
+                                    <xs:maxInclusive value="16"/>
                                 </xs:restriction>
                             </xs:simpleType>
                         </xs:element>
@@ -140,6 +140,7 @@
                         <xs:element name="m13" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="m14" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="m15" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
+                        <xs:element name="m16" type="measuringmodeType" minOccurs="0" maxOccurs="1"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -270,6 +271,34 @@
         </xs:sequence>
     </xs:complexType>
 
+    <xs:complexType name="modePhaseType">
+        <xs:sequence>
+            <xs:element name="n" minOccurs="1" maxOccurs="1">
+                <xs:simpleType>
+                    <xs:restriction base="xs:integer">
+                        <xs:minInclusive value="0"/>
+                        <xs:maxInclusive value="16"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:element>
+            <xs:element name="m1" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m2" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m3" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m4" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m5" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m6" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m7" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m8" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m9" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m10" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m11" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m12" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m13" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m14" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m15" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="m16" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
 
     <xs:element name="pow1modconfpar">
         <xs:complexType>
@@ -287,6 +316,7 @@
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="measuringmode" type="measuringmodeType"/>
+                            <xs:element name="modePhases" type="modePhaseType"/>
                             <xs:element name="interval" type="measureintervalType"/>
                         </xs:sequence>
                     </xs:complexType>

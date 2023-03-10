@@ -33,12 +33,14 @@ enum moduleconfigstate
 
 
     setMeasuringMode,
+    setModePhaseCount,
     setMeasureIntervalTime,
     setMeasureIntervalPeriod,
 
     setMeasMode1 = 32, // we leave some place for additional cmds
+    setMeasModePhases1 = setMeasMode1 + 32,
 
-    setfreqout1Name = setMeasMode1 + 32, // 32 measuring modes should be enough
+    setfreqout1Name = setMeasModePhases1 + 32, // 32 measuring modes should be enough
     setfreqout2Name,
     setfreqout3Name,
     setfreqout4Name,

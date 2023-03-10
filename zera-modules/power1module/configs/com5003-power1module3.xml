@@ -55,6 +55,11 @@
     </configuration>
     <parameter>
         <measuringmode>4LS</measuringmode>
+        <modePhases>
+            <n>2</n>
+            <m1>2LS,001</m1>
+            <m2>2LSg,001</m2>
+        </modePhases>
         <interval>
             <time>1</time>
             <period>200</period>

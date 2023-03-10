@@ -58,6 +58,9 @@
     </configuration>
     <parameter>
         <measuringmode>4LW</measuringmode>
+        <modePhases>
+            <n>0</n>
+        </modePhases>
         <interval>
             <time>1</time>
             <period>200</period>
