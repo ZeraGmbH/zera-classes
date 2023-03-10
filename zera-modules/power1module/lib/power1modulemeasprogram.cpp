@@ -10,6 +10,7 @@
 #include "measmodephasesetstrategy4wire.h"
 #include "measmodephasesetstrategyphasesfixed.h"
 #include "measmodephasesetstrategyphasesvar.h"
+#include "measmodephasesetstrategy2wire.h"
 #include "measmodephasesetstrategy2wirefixedphase.h"
 #include <errormessages.h>
 #include <reply.h>
@@ -504,6 +505,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         {
         case m4lw:
         case m3lw:
+        case m2lw:
         case mXlw: {
             brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
             dspMModesCommandList.append(brokerReturn.dspCmdList);
@@ -549,13 +551,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                   measModeId,
                                                                   measSytemCount,
                                                                   std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("101"), 3)));
-            break;
-        case m2lw:
-            dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode2LW(measModeId, measChannelPairList, m_idx2WireMeasSystem));
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  measModeId,
-                                                                  measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem, measSytemCount)));
             break;
         case m2lb:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode2LB(measModeId, measChannelPairList, m_idx2WireMeasSystem));
