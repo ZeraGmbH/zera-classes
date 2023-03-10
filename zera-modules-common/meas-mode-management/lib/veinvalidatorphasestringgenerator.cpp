@@ -1,7 +1,7 @@
-#include "phasevalidatorstringgenerator.h"
+#include "veinvalidatorphasestringgenerator.h"
 #include <math.h>
 
-QStringList PhaseValidatorStringGenerator::generate(int phaseCount, int maxPhaseCount)
+QStringList VeinValidatorPhaseStringGenerator::generate(int phaseCount, int maxPhaseCount)
 {
     QStringList ret;
     if(phaseCount <= maxPhaseCount) {

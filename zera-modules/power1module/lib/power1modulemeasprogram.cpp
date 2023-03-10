@@ -4,7 +4,7 @@
 #include "power1moduleconfiguration.h"
 #include "power1dspcmdgenerator.h"
 #include "power1dspmodefunctioncatalog.h"
-#include "phasevalidatorstringgenerator.h"
+#include "veinvalidatorphasestringgenerator.h"
 #include "measmodebroker.h"
 #include "measmodephasesetstrategy4wire.h"
 #include "measmodephasesetstrategyphasesfixed.h"
@@ -1866,7 +1866,7 @@ void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 
 void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> mode)
 {
-    QStringList allPhaseMasks = PhaseValidatorStringGenerator::generate(getConfData()->m_sMeasSystemList.count());
+    QStringList allPhaseMasks = VeinValidatorPhaseStringGenerator::generate(getConfData()->m_sMeasSystemList.count());
     QStringList allowedPhaseMasks;
     for(auto &mask : allPhaseMasks)
         if(mode->canChangeMask(mask))
