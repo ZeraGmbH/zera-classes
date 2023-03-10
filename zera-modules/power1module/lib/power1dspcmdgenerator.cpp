@@ -1,6 +1,23 @@
 #include "power1dspcmdgenerator.h"
 #include "inttohexstringconvert.h"
 
+QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode)
+{
+    QStringList dspCmdList;
+    dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
+    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
+    dspCmdList.append("DEACTIVATECHAIN(1,0x0110)");
+    dspCmdList.append("STARTCHAIN(0,1,0x0110)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+
+    // we simply set all our actual values to nominal power
+    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS)");
+    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+1)");
+    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+2)");
+
+    dspCmdList.append("STOPCHAIN(1,0x0110)");
+    return dspCmdList;
+}
+
 QStringList Power1DspCmdGenerator::getCmdsMMode4LB(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
@@ -366,23 +383,6 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLW(int dspSelectCode, MeasSystem
         cmdList.append(QString("STOPCHAIN(1,%1)").arg(strChains)); // ende prozessnr., hauptkette 1 subkette 1
     }
     return cmdList;
-}
-
-QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0127)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0127)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0127)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    // we simply set all our actual values to nominal power
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS)");
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+1)");
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+2)");
-
-    dspCmdList.append("STOPCHAIN(1,0x0127)");
-    return dspCmdList;
 }
 
 QStringList Power1DspCmdGenerator::getCmdsSumAndAverage()
