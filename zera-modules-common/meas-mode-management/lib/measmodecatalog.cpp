@@ -20,6 +20,7 @@ cMeasModeInfo MeasModeCatalog::getInfo(QString name)
         m_modeInfoHash["2LS"] = cMeasModeInfo("2LS", "S", "VA", m2ls);
         m_modeInfoHash["2LSg"] = cMeasModeInfo("2LSg", "S", "VA", m2lsg);
         m_modeInfoHash["XLW"] = cMeasModeInfo("XLW", "P", "W", mXlw);
+        m_modeInfoHash["XLB"] = cMeasModeInfo("XLB", "Q", "Var", mXlb);
         m_modeInfoHash["QREF"] = cMeasModeInfo("QREF", "P", "W", mqref);
     }
     if(!m_modeInfoHash.contains(name)) {
