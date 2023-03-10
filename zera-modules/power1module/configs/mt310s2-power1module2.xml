@@ -19,10 +19,11 @@
         </connectivity>
         <measure>
             <modes>
-                <n>3</n>
+                <n>4</n>
                 <m1>4LB</m1>
                 <m2>3LB</m2>
                 <m3>2LB</m3>
+                <m4>XLB</m4>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>

@@ -19,6 +19,9 @@ const ModeNameFunctionHash &Power1DspModeFunctionCatalog::get(int measSytemCount
                 []{ return std::make_unique<MeasModePhaseSetStrategy2Wire>();} };
         m_hash["XLW"] = { mXlw, Power1DspCmdGenerator::getCmdsMModeXLW,
                 [measSytemCount] {return std::make_unique<MeasModePhaseSetStrategyXWire>(MModePhaseMask("111"), measSytemCount);}};
+
+        m_hash["XLB"] = { mXlb, Power1DspCmdGenerator::getCmdsMModeXLB,
+                [measSytemCount] {return std::make_unique<MeasModePhaseSetStrategyXWire>(MModePhaseMask("111"), measSytemCount);}};
     }
     return m_hash;
 }
