@@ -6,6 +6,7 @@
 #include "power1dspmodefunctioncatalog.h"
 #include "veinvalidatorphasestringgenerator.h"
 #include "measmodebroker.h"
+#include "measmodephasepersistency.h"
 #include "measmodephasesetstrategy4wire.h"
 #include "measmodephasesetstrategyphasesfixed.h"
 #include "measmodephasesetstrategyphasesvar.h"
@@ -503,14 +504,16 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         {
         case m4lw:
         case m3lw:
-        case mXlw:
+        case mXlw: {
             brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
             dspMModesCommandList.append(brokerReturn.dspCmdList);
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  brokerReturn.dspSelectCode,
-                                                                  measSytemCount,
-                                                                  std::move(brokerReturn.phaseStrategy)));
-            break;
+            std::shared_ptr<MeasMode> mode = std::make_shared<MeasMode>(mInfo.getName(),
+                                                                        brokerReturn.dspSelectCode,
+                                                                        measSytemCount,
+                                                                        std::move(brokerReturn.phaseStrategy));
+            MeasModePhasePersistency::setMeasModePhaseFromConfig(mode, getConfData()->m_measmodePhaseList);
+            m_measModeSelector.addMode(mode);
+            break; }
 
         case m4lb:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode4LB(measModeId, measChannelPairList));
