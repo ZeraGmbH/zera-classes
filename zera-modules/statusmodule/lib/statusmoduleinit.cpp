@@ -443,6 +443,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                }
                else
                {
+                   m_sAccumulatorStatus = "0";
                    emit errMsg((tr(readaccumulatorstatusErrMsg)));
                    emit activationError();
                }
