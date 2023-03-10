@@ -59,6 +59,11 @@ bool MeasMode::isPhaseActive(int phase) const
     return false;
 }
 
+int MeasMode::getMeasSysCount() const
+{
+    return m_measSysCount;
+}
+
 int MeasMode::getActiveMeasSysCount() const
 {
     if(isValid())

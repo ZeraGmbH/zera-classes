@@ -16,6 +16,7 @@ public:
     bool tryChangeMask(QString mask);
     QString getCurrentMask() const;
     bool isPhaseActive(int phase) const;
+    int getMeasSysCount() const;
     int getActiveMeasSysCount() const;
     bool isValid() const;
 
