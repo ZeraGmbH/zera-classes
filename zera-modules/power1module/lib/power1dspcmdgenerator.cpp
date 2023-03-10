@@ -426,6 +426,41 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLB(int dspSelectCode, MeasSystem
     return cmdList;
 }
 
+QStringList Power1DspCmdGenerator::getCmdsMModeXLS(int dspSelectCode, MeasSystemChannels measChannelPairList)
+{
+    QStringList cmdList;
+    for(int phase=0; phase<measChannelPairList.count(); phase++) {
+        // reset power valuse
+        QString strChains =  IntToHexStringConvert::convert(0x0130 + phase);
+        cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(strChains));
+        cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
+        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
+        cmdList.append(QString("TESTVCSKIPEQ(XMMODEPHASE%1,0)").arg(phase));
+        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
+        cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(strChains)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+        cmdList.append(QString("SETVAL(VALPQS+%1,0.0)").arg(phase));
+        cmdList.append(QString("STOPCHAIN(1,%1)").arg(strChains)); // ende prozessnr., hauptkette 1 subkette 1
+        // calc power values
+        strChains =  IntToHexStringConvert::convert(0x0130 + measChannelPairList.count() + phase);
+        cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(strChains));
+        cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
+        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
+        cmdList.append(QString("TESTVCSKIPEQ(XMMODEPHASE%1,1)").arg(phase));
+        cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(strChains));
+        cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(strChains)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
+        cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[phase].currentChannel));
+
+        cmdList.append("RMS(MEASSIGNAL1,TEMP1)");
+        cmdList.append("RMS(MEASSIGNAL2,TEMP2)");
+        cmdList.append(QString("MULVVV(TEMP1,TEMP2,VALPQS+%1)").arg(phase));
+
+        cmdList.append(QString("STOPCHAIN(1,%1)").arg(strChains)); // ende prozessnr., hauptkette 1 subkette 1
+    }
+    return cmdList;
+}
+
+
 QStringList Power1DspCmdGenerator::getCmdsSumAndAverage()
 {
     QStringList dspCmdList;
