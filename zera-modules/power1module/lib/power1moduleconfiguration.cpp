@@ -53,7 +53,6 @@ void POWER1MODULE::cPower1ModuleConfiguration::validateAndSetConfig(QByteArray x
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:output:n"] = setFrequencyOutputCount;
 
     m_ConfigXMLMap["pow1modconfpar:parameter:measuringmode"] = setMeasuringMode;
-    m_ConfigXMLMap["pow1modconfpar:parameter:mmxphases"] = setXMeasModePhases;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:time"] = setMeasureIntervalTime;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
 
@@ -175,10 +174,6 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         case setMeasuringMode:
             m_pPower1ModulConfigData->m_sMeasuringMode.m_sKey = key;
             m_pPower1ModulConfigData->m_sMeasuringMode.m_sValue = m_pXMLReader->getValue(key);
-            break;
-        case setXMeasModePhases:
-            m_pPower1ModulConfigData->m_sXMeasModePhases.m_sKey = key;
-            m_pPower1ModulConfigData->m_sXMeasModePhases.m_sValue = m_pXMLReader->getValue(key);
             break;
         case setMeasureIntervalTime:
             m_pPower1ModulConfigData->m_fMeasIntervalTime.m_sKey = key;
