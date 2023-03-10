@@ -61,6 +61,8 @@ public:
 
     quint8 m_nMeasModeCount; // how many measurement modes do we support
     QStringList m_sMeasmodeList; // a list of our measurement modes
+    int m_measmodePhaseCount;
+    QStringList m_measmodePhaseList; // a list comma separated measurement mode / phase e.g XLW,001
     QStringList m_sMeasSystemList; // our measuring systems "m0,m1"
     QString m_sM2WSystem; // the system on which 2wire measuring mode shall work on
     QString m_sIntegrationMode; // we integrate over time or periods

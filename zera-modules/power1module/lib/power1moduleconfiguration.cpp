@@ -53,6 +53,7 @@ void POWER1MODULE::cPower1ModuleConfiguration::validateAndSetConfig(QByteArray x
     m_ConfigXMLMap["pow1modconfpar:configuration:frequencyoutput:output:n"] = setFrequencyOutputCount;
 
     m_ConfigXMLMap["pow1modconfpar:parameter:measuringmode"] = setMeasuringMode;
+    m_ConfigXMLMap["pow1modconfpar:parameter:modePhases:n"] = setModePhaseCount;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:time"] = setMeasureIntervalTime;
     m_ConfigXMLMap["pow1modconfpar:parameter:interval:period"] = setMeasureIntervalPeriod;
 
@@ -175,6 +176,11 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
             m_pPower1ModulConfigData->m_sMeasuringMode.m_sKey = key;
             m_pPower1ModulConfigData->m_sMeasuringMode.m_sValue = m_pXMLReader->getValue(key);
             break;
+        case setModePhaseCount:
+            m_pPower1ModulConfigData->m_measmodePhaseCount = m_pXMLReader->getValue(key).toInt();
+            for (int i = 0; i < m_pPower1ModulConfigData->m_measmodePhaseCount; i++)
+                m_ConfigXMLMap[QString("pow1modconfpar:parameter:modePhases:m%1").arg(i+1)] = setMeasModePhases1+i;
+            break;
         case setMeasureIntervalTime:
             m_pPower1ModulConfigData->m_fMeasIntervalTime.m_sKey = key;
             m_pPower1ModulConfigData->m_fMeasIntervalTime.m_fValue = m_pXMLReader->getValue(key).toDouble(&ok);
@@ -187,10 +193,13 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         default:
             // here we decode the dyn. generated cmd's
             if ((cmd >= setMeasMode1) && (cmd < setMeasMode1 + 32)) {
-                cmd -= setMeasMode1;
                 // it is command for setting measuring mode
                 QString measMode = m_pXMLReader->getValue(key);
                 m_pPower1ModulConfigData->m_sMeasmodeList.append(measMode); // for configuration of our engine
+            }
+            else if ((cmd >= setMeasModePhases1) && (cmd < setMeasModePhases1 + 32)) {
+                QString measModePhase = m_pXMLReader->getValue(key);
+                m_pPower1ModulConfigData->m_measmodePhaseList.append(measModePhase);
             }
             else if ((cmd >= setfreqout1Name) && (cmd < setfreqout1Name + 8)) {
                 cmd -= setfreqout1Name;
