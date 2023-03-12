@@ -510,7 +510,9 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
         case mXlb:
 
-        case mXls: {
+        case mXls:
+
+        case mXlsg: {
             brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
             dspMModesCommandList.append(brokerReturn.dspCmdList);
             std::shared_ptr<MeasMode> mode = std::make_shared<MeasMode>(mInfo.getName(),
