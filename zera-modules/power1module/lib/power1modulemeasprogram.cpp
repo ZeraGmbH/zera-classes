@@ -592,7 +592,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    setPhaseMaskValidator(mode);
+    updatePhaseMaskVeinComponents(mode);
 
     int dspSelectCodeFromConfig = mode->getDspSelectCode();
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
@@ -1822,18 +1822,15 @@ void cPower1ModuleMeasProgram::updatesForMModeChange()
     foutParamsToDsp();
 }
 
-double cPower1ModuleMeasProgram::calcTiTime()
+void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 {
-    double tiTime;
-    if (getConfData()->m_sIntegrationMode == "time") {
-        if (getConfData()->m_bmovingWindow)
-            tiTime = getConfData()->m_fmovingwindowInterval*1000.0;
-        else
-            tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
-    }
-    else // period (just if/else for now)
-        tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
-    return tiTime;
+    m_measModeSelector.tryChangeMask(phaseList.toString());
+}
+
+void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
+{
+    Q_UNUSED(p_newValue);
+    foutParamsToDsp();
 }
 
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
@@ -1857,15 +1854,18 @@ void cPower1ModuleMeasProgram::newMeasMode(QVariant mm)
     m_measModeSelector.tryChangeMode(mm.toString());
 }
 
-void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
+double cPower1ModuleMeasProgram::calcTiTime()
 {
-    m_measModeSelector.tryChangeMask(phaseList.toString());
-}
-
-void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
-{
-    Q_UNUSED(p_newValue);
-    foutParamsToDsp();
+    double tiTime;
+    if (getConfData()->m_sIntegrationMode == "time") {
+        if (getConfData()->m_bmovingWindow)
+            tiTime = getConfData()->m_fmovingwindowInterval*1000.0;
+        else
+            tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
+    }
+    else // period (just if/else for now)
+        tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
+    return tiTime;
 }
 
 void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> mode)
@@ -1879,14 +1879,19 @@ void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
     m_pModule->exportMetaData();
 }
 
-void cPower1ModuleMeasProgram::onModeTransactionOk()
+void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
-    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    QString newMeasMode = mode->getName();
-    getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     QString newPhaseMask = mode->getCurrentMask();
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     setPhaseMaskValidator(mode);
+}
+
+void cPower1ModuleMeasProgram::onModeTransactionOk()
+{
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    updatePhaseMaskVeinComponents(mode);
+    QString newMeasMode = mode->getName();
+    getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     handleMModeParamChange();
     updatesForMModeChange();
 }

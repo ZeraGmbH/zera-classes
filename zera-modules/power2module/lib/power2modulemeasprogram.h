@@ -83,6 +83,8 @@ private:
     void handleMModeParamChange();
     void updatesForMModeChange();
     double calcTiTime();
+    void setPhaseMaskValidator(std::shared_ptr<MeasMode> mode);
+    void updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode);
     struct RangeMaxVals
     {
         double maxU = 0.0;
