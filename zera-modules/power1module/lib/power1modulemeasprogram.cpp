@@ -360,6 +360,20 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->veinModuleParameterHash[key] = m_pMModePhaseSelectParameter; // for modules use
 
+    m_MModeCanChangePhaseMask = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                     QString("ACT_CanChangePhaseMask"),
+                                     QString("Boolean indicator that current measurement mode can change phase mask"),
+                                     QVariant(false) );
+    m_ActValueList.append(m_MModeCanChangePhaseMask); // we add the component for our measurement
+    m_pModule->veinModuleActvalueList.append(m_MModeCanChangePhaseMask); // and for the modules interface
+
+    m_MModeMaxMeasSysCount = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                     QString("ACT_MaxMeasSysCount"),
+                                                     QString("Number of max measurement systems for current measurement mode"),
+                                                     QVariant(3) );
+    m_ActValueList.append(m_MModeMaxMeasSysCount); // we add the component for our measurement
+    m_pModule->veinModuleActvalueList.append(m_MModeMaxMeasSysCount); // and for the modules interface
+
     QVariant val;
     QString s, unit;
     bool btime = (getConfData()->m_sIntegrationMode == "time");
@@ -1882,8 +1896,10 @@ void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
     QString newPhaseMask = mode->getCurrentMask();
-    m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     setPhaseMaskValidator(mode);
+    m_pMModePhaseSelectParameter->setValue(newPhaseMask);
+    m_MModeCanChangePhaseMask->setValue(mode->hasVarMask());
+    m_MModeMaxMeasSysCount->setValue(mode->getMaxMeasSysCount());
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
