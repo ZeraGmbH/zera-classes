@@ -9,6 +9,7 @@ class test_measmodephasesetstrategy2wirefixedphase : public QObject
 private slots:
     void phaseInitial();
     void measSysCount();
+    void maxMeasSysCount();
 };
 
 #endif // TEST_MEASMODEPHASESETSTRATEGY2WIRE_H

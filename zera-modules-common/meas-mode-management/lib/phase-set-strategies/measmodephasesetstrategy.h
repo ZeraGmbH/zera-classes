@@ -11,7 +11,7 @@ class MeasModePhaseSetStrategy
 {
 public:
     MeasModePhaseSetStrategy(int activeMeasSysCount, MModePhaseMask phaseMask) :
-        m_activeMeasSysCount(activeMeasSysCount),
+        m_measSysCount(activeMeasSysCount),
         m_phaseMask(phaseMask)
         {};
     virtual ~MeasModePhaseSetStrategy() = default;
@@ -19,11 +19,12 @@ public:
     virtual bool isVarMask() = 0;
     virtual bool canChangeMask(MModePhaseMask phaseMask) = 0;
     virtual bool tryChangeMask(MModePhaseMask phaseMask) = 0;
-    virtual int getActiveMeasSysCount() const { return m_activeMeasSysCount; }
+    virtual int getActiveMeasSysCount() const { return m_measSysCount; }
+    virtual int getMaxMeasSysCount() const { return m_measSysCount; }
 
     MModePhaseMask getCurrPhaseMask() const { return m_phaseMask; }
 protected:
-    int m_activeMeasSysCount;
+    int m_measSysCount;
     MModePhaseMask m_phaseMask;
 };
 

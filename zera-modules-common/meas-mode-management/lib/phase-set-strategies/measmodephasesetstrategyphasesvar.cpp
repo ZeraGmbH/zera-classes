@@ -7,7 +7,7 @@ MeasModePhaseSetStrategyPhasesVar::MeasModePhaseSetStrategyPhasesVar(MModePhaseM
 
 bool MeasModePhaseSetStrategyPhasesVar::canChangeMask(MModePhaseMask phaseMask)
 {
-    if(int(phaseMask.count()) > m_activeMeasSysCount)
+    if(int(phaseMask.count()) > getMaxMeasSysCount())
         return false;
     return true;
 }

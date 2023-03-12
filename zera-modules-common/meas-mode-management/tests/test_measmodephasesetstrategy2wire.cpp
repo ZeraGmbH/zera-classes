@@ -15,3 +15,9 @@ void test_measmodephasesetstrategy2wire::measSysCount()
     MeasModePhaseSetStrategy2Wire measStrat;
     QCOMPARE(measStrat.getActiveMeasSysCount(), 1);
 }
+
+void test_measmodephasesetstrategy2wire::maxMeasSysCount()
+{
+    MeasModePhaseSetStrategy2Wire measStrat;
+    QCOMPARE(measStrat.getMaxMeasSysCount(), 1);
+}
