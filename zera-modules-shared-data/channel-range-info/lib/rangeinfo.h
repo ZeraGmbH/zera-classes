@@ -12,6 +12,7 @@ public:
     double getUrValue() const;
     double getRejection() const;
     double getOvrRejection() const;
+    bool supportsDC() const;
 };
 
 #endif // RANGEINFO_H
