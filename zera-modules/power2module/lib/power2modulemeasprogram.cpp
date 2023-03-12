@@ -3,6 +3,7 @@
 #include "power2moduleconfiguration.h"
 #include "power2dspcmdgenerator.h"
 #include "measmodephasesetstrategy4wire.h"
+#include "veinvalidatorphasestringgenerator.h"
 #include <measmodecatalog.h>
 #include <stringvalidator.h>
 #include <doublevalidator.h>
@@ -447,18 +448,18 @@ void cPower2ModuleMeasProgram::setDspCmdList()
             break;
         }
     }
-
     dspMModesCommandList.append(Power2DspCmdGenerator::getCmdsSumAndAverage());
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
-    int dspSelectCodeFromConfig = m_measModeSelector.getCurrMode()->getDspSelectCode();
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    updatePhaseMaskVeinComponents(mode);
+
+    int dspSelectCodeFromConfig = mode->getDspSelectCode();
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
 
     // sequence here is important
-    for(const auto &cmd : dspInitVarsList)
-        m_pDSPInterFace->addCycListItem(cmd);
-    for(const auto &cmd : dspMModesCommandList)
-        m_pDSPInterFace->addCycListItem(cmd);
+    m_pDSPInterFace->addCycListItems(dspInitVarsList);
+    m_pDSPInterFace->addCycListItems(dspMModesCommandList);
 
     // so... let's now set our frequency outputs if he have some
     QString s;
@@ -1110,20 +1111,6 @@ void cPower2ModuleMeasProgram::setActualValuesNames()
         m_ActValueList.at(i*3+2)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
         m_ActValueList.at(i*3+2)->setUnit(mminfo.getUnitName());
     }
-}
-
-double cPower2ModuleMeasProgram::calcTiTime()
-{
-    double tiTime;
-    if (getConfData()->m_sIntegrationMode == "time") {
-        if (getConfData()->m_bmovingWindow)
-            tiTime = getConfData()->m_fmovingwindowInterval*1000.0;
-        else
-            tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
-    }
-    else // period (just if/else for now)
-        tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
-    return tiTime;
 }
 
 quint8 cPower2ModuleMeasProgram::cmpActualValIndex(freqoutconfiguration frconf)
@@ -1803,13 +1790,44 @@ void cPower2ModuleMeasProgram::newMeasMode(QVariant mm)
     m_measModeSelector.tryChangeMode(mm.toString());
 }
 
+double cPower2ModuleMeasProgram::calcTiTime()
+{
+    double tiTime;
+    if (getConfData()->m_sIntegrationMode == "time") {
+        if (getConfData()->m_bmovingWindow)
+            tiTime = getConfData()->m_fmovingwindowInterval*1000.0;
+        else
+            tiTime = getConfData()->m_fMeasIntervalTime.m_fValue*1000.0;
+    }
+    else // period (just if/else for now)
+        tiTime = getConfData()->m_nMeasIntervalPeriod.m_nValue;
+    return tiTime;
+}
+
+void cPower2ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> mode)
+{
+    QStringList allPhaseMasks = VeinValidatorPhaseStringGenerator::generate(getConfData()->m_sMeasSystemList.count());
+    QStringList allowedPhaseMasks;
+    for(auto &mask : allPhaseMasks)
+        if(mode->canChangeMask(mask))
+            allowedPhaseMasks.append(mask);
+    //m_MModePhaseSelectValidator->setValidator(allowedPhaseMasks);
+    m_pModule->exportMetaData();
+}
+
+void cPower2ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
+{
+    QString newPhaseMask = mode->getCurrentMask();
+    //m_pMModePhaseSelectParameter->setValue(newPhaseMask);
+    setPhaseMaskValidator(mode);
+}
+
 void cPower2ModuleMeasProgram::onModeTransactionOk()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    updatePhaseMaskVeinComponents(mode);
     QString newMeasMode = mode->getName();
     getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
-    QString newPhaseMask = mode->getCurrentMask();
-    //m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     handleMModeParamChange();
     updatesForMModeChange();
 }
