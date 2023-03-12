@@ -12,7 +12,8 @@ public:
     MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
     QString getName() const;
     int getDspSelectCode() const;
-    bool canChangeMask(QString mask);
+    bool hasVarMask() const;
+    bool canChangeMask(QString mask) const;
     bool tryChangeMask(QString mask);
     QString getCurrentMask() const;
     bool isPhaseActive(int phase) const;
@@ -22,7 +23,7 @@ public:
     bool isValid() const;
 
 private:
-    bool calcBinMask(QString mask, MModePhaseMask &binMask);
+    bool calcBinMask(QString mask, MModePhaseMask &binMask) const;
     cMeasModeInfo m_measModeInfo;
     int m_dspSelectCode = 0;
     MeasModePhaseSetStrategyPtr m_measModePhaseSetter;

@@ -20,7 +20,14 @@ int MeasMode::getDspSelectCode() const
     return m_dspSelectCode;
 }
 
-bool MeasMode::calcBinMask(QString mask, MModePhaseMask &binMask)
+bool MeasMode::hasVarMask() const
+{
+    if(isValid())
+        return m_measModePhaseSetter->isVarMask();
+    return false;
+}
+
+bool MeasMode::calcBinMask(QString mask, MModePhaseMask &binMask) const
 {
     MModePhaseMask tmpMask;
     bool ok = isValid() && MeasModeMaskStringConverter::calcBinMask(mask, m_measSysCount, tmpMask);
@@ -29,7 +36,7 @@ bool MeasMode::calcBinMask(QString mask, MModePhaseMask &binMask)
     return ok;
 }
 
-bool MeasMode::canChangeMask(QString mask)
+bool MeasMode::canChangeMask(QString mask) const
 {
     MModePhaseMask binMask;
     bool ok = calcBinMask(mask, binMask);
@@ -68,16 +75,14 @@ int MeasMode::getActiveMeasSysCount() const
 {
     if(isValid())
         return m_measModePhaseSetter->getActiveMeasSysCount();
-    else
-        return 0;
+    return 0;
 }
 
 int MeasMode::getMaxMeasSysCount() const
 {
     if(isValid())
         return m_measModePhaseSetter->getMaxMeasSysCount();
-    else
-        return 0;
+    return 0;
 }
 
 bool MeasMode::isValid() const
