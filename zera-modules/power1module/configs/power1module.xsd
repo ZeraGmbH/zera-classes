@@ -76,6 +76,7 @@
         <xs:enumeration value="XLW"/>
         <xs:enumeration value="XLB"/>
         <xs:enumeration value="XLS"/>
+        <xs:enumeration value="XLSg"/>
         <xs:enumeration value="QREF"/>
       </xs:restriction>
     </xs:simpleType>
