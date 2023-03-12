@@ -72,6 +72,14 @@ int MeasMode::getActiveMeasSysCount() const
         return 0;
 }
 
+int MeasMode::getMaxMeasSysCount() const
+{
+    if(isValid())
+        return m_measModePhaseSetter->getMaxMeasSysCount();
+    else
+        return 0;
+}
+
 bool MeasMode::isValid() const
 {
     return m_measSysCount > 0 &&

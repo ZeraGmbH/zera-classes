@@ -29,3 +29,9 @@ void test_measmodephasesetstrategy2wirefixedphase::measSysCount()
     MeasModePhaseSetStrategy2WireFixedPhase measStrat2(0, 1);
     QCOMPARE(measStrat2.getActiveMeasSysCount(), 1);
 }
+
+void test_measmodephasesetstrategy2wirefixedphase::maxMeasSysCount()
+{
+    MeasModePhaseSetStrategy2WireFixedPhase measStrat2(0, 1);
+    QCOMPARE(measStrat2.getMaxMeasSysCount(), 1);
+}

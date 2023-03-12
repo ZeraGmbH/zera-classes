@@ -9,6 +9,7 @@ class test_measmodephasesetstrategy4wire : public QObject
 private slots:
     void maskInitialValue();
     void measSysCount();
+    void maxMeasSysCount();
 };
 
 #endif // TEST_MEASMODEPHASESETSTRATEGY4WIRE_H

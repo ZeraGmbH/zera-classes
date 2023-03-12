@@ -9,6 +9,7 @@ class test_measmodephasesetstrategyxwire : public QObject
 private slots:
     void activePhasesAfterInit();
     void activePhasesAfterChange();
+    void maxMeasSysCount();
 };
 
 #endif // TEST_MEASMODEPHASESETSTRATEGYXWIRE_H

@@ -2,6 +2,7 @@
 #include "measmode.h"
 #include "measmodephasesetstrategyphasesfixed.h"
 #include "measmodephasesetstrategyphasesvar.h"
+#include "measmodephasesetstrategyxwire.h"
 #include "measmodecatalogfortest.h"
 #include <QTest>
 
@@ -18,11 +19,23 @@ void test_measmode::gettersReportProperCtorParams()
     QCOMPARE(mode1.getName(), "4LW");
     QCOMPARE(mode1.getDspSelectCode(), m4lw);
     QCOMPARE(mode1.getCurrentMask(), "101");
+    QCOMPARE(mode1.getActiveMeasSysCount(), 3);
+    QCOMPARE(mode1.getMaxMeasSysCount(), 3);
 
-    MeasMode mode2("XLW", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyPhasesVar>(MModePhaseMask("110"), 3));
+    // X-Wires can have different active/max pahesases
+    MeasMode mode2("XLW", mXlw, 3, std::make_unique<MeasModePhaseSetStrategyXWire>(MModePhaseMask("101"), 3));
     QCOMPARE(mode2.getName(), "XLW");
     QCOMPARE(mode2.getDspSelectCode(), mXlw);
-    QCOMPARE(mode2.getCurrentMask(), "110");
+    QCOMPARE(mode2.getCurrentMask(), "101");
+    QCOMPARE(mode2.getActiveMeasSysCount(), 2);
+    QCOMPARE(mode2.getMaxMeasSysCount(), 3);
+
+    MeasMode mode3("XLB", mXlb, 2, std::make_unique<MeasModePhaseSetStrategyXWire>(MModePhaseMask("10"), 2));
+    QCOMPARE(mode3.getName(), "XLB");
+    QCOMPARE(mode3.getDspSelectCode(), mXlb);
+    QCOMPARE(mode3.getCurrentMask(), "10");
+    QCOMPARE(mode3.getActiveMeasSysCount(), 1);
+    QCOMPARE(mode3.getMaxMeasSysCount(), 2);
 }
 
 void test_measmode::fooIsInvalid()

@@ -26,6 +26,15 @@ void test_measmodephasesetstrategyxwire::activePhasesAfterInit()
 void test_measmodephasesetstrategyxwire::activePhasesAfterChange()
 {
     MeasModePhaseSetStrategyXWire strat(MModePhaseMask("111"), 3);
+    QCOMPARE(strat.getActiveMeasSysCount(), 3);
     QVERIFY(strat.tryChangeMask(MModePhaseMask("011")));
     QCOMPARE(strat.getActiveMeasSysCount(), 2);
+}
+
+void test_measmodephasesetstrategyxwire::maxMeasSysCount()
+{
+    MeasModePhaseSetStrategyXWire strat(MModePhaseMask("111"), 3);
+    QCOMPARE(strat.getMaxMeasSysCount(), 3);
+    QVERIFY(strat.tryChangeMask(MModePhaseMask("011")));
+    QCOMPARE(strat.getMaxMeasSysCount(), 3);
 }

@@ -18,6 +18,7 @@ public:
     bool isPhaseActive(int phase) const;
     int getMeasSysCount() const;
     int getActiveMeasSysCount() const;
+    int getMaxMeasSysCount() const;
     bool isValid() const;
 
 private:
