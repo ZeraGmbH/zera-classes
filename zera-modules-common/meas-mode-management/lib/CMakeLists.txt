@@ -15,7 +15,7 @@ add_library(zera-meas-mode-management SHARED
 
 target_link_libraries(zera-meas-mode-management
     PUBLIC
-    Qt5::Core
+    zera-dsp-helper
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
