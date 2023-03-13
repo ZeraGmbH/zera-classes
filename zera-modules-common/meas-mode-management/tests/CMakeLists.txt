@@ -6,6 +6,7 @@ SETUP_QTESTS(
     test_measmodephasesetstrategy4wire
     test_measmodephasesetstrategyxwire
     test_measmode
+    test_measmodecatalog
     test_measmodeselector
     test_measmodebroker
     test_measmodephasepersistency

@@ -26,6 +26,9 @@ enum measmodes
     mqref
 };
 
+constexpr int MeasModeFirst = m4lw;
+constexpr int MeasModeCount = mqref+1;
+
 class cMeasModeInfo
 {
 public:
