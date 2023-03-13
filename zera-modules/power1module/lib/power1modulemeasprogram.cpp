@@ -517,6 +517,8 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         measmodes measModeId = mInfo.getCode();
         switch(measModeId)
         {
+        case m4lbk: // uncommon first
+
         case m4lw:
         case m3lw:
         case m2lw:
@@ -542,13 +544,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_measModeSelector.addMode(mode);
             break; }
 
-        case m4lbk:
-            dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode4LBK(measModeId, measChannelPairList));
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  measModeId,
-                                                                  measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy4Wire>()));
-            break;
         case m4lsg:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode4LSg(measModeId, measChannelPairList));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
