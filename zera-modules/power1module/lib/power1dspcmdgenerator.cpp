@@ -18,61 +18,6 @@ QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode)
     return dspCmdList;
 }
 
-QStringList Power1DspCmdGenerator::getCmdsMMode4LB(int dspSelectCode, MeasSystemChannels measChannelPairList)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0111)");
-    // dspCmdList.append("BREAK(0)"); // breakpoint wenn /taster
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0111)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0111)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    // our first measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[0].voltageChannel));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[0].currentChannel));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS)"));
-    dspCmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
-    dspCmdList.append(QString("SUBVVV(TEMP1,VALPQS,VALPQS)"));
-    dspCmdList.append(QString("MULVVV(FAK,VALPQS,VALPQS)"));
-
-    // instead her all harmonics
-    //dspCmdList.append(QString("ROTATE(MEASSIGNAL2,270.0)"));
-    //dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS)");
-
-    // our second measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[1].voltageChannel));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[1].currentChannel));
-
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+1)"));
-    dspCmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
-    dspCmdList.append(QString("SUBVVV(TEMP1,VALPQS+1,VALPQS+1)"));
-    dspCmdList.append(QString("MULVVV(FAK,VALPQS+1,VALPQS+1)"));
-
-    //dspCmdList.append(QString("ROTATE(MEASSIGNAL2,270.0)"));
-    //dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+1)");
-
-    // our third measuring system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[2].voltageChannel));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
-
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+2)"));
-    dspCmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
-    dspCmdList.append(QString("SUBVVV(TEMP1,VALPQS+2,VALPQS+2)"));
-    dspCmdList.append(QString("MULVVV(FAK,VALPQS+2,VALPQS+2)"));
-
-    //dspCmdList.append(QString("ROTATE(MEASSIGNAL2,270.0)"));
-    //dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
-
-    dspCmdList.append("STOPCHAIN(1,0x0111)");
-    return dspCmdList;
-}
-
 QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
     QStringList dspCmdList;
@@ -272,37 +217,6 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LB(int dspSelectCode, MeasSystem
     //dspCmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
 
     dspCmdList.append("STOPCHAIN(1,0x0116)");
-    return dspCmdList;
-}
-
-QStringList Power1DspCmdGenerator::getCmdsMMode2LB(int dspSelectCode, MeasSystemChannels measChannelPairList, int idx2WireMeasSystem)
-{
-    QStringList dspCmdList;
-    dspCmdList.append("ACTIVATECHAIN(1,0x0118)");
-    dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0118)");
-    dspCmdList.append("STARTCHAIN(0,1,0x0118)"); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-
-    // first we set all our actual values to 0
-    dspCmdList.append("SETVAL(VALPQS,0.0)");
-    dspCmdList.append("SETVAL(VALPQS+1,0.0)");
-    dspCmdList.append("SETVAL(VALPQS+2,0.0)");
-
-    // and then we compute the 2 wire power values for the selected system
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[idx2WireMeasSystem].voltageChannel));
-    dspCmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[idx2WireMeasSystem].currentChannel));
-
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL1,TEMP1)"));
-    dspCmdList.append(QString("DFT(1,MEASSIGNAL2,TEMP2)"));
-    dspCmdList.append(QString("MULVVV(TEMP1,TEMP2+1,VALPQS+%1)").arg(idx2WireMeasSystem));
-    dspCmdList.append(QString("MULVVV(TEMP2,TEMP1+1,TEMP1)"));
-    dspCmdList.append(QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(idx2WireMeasSystem).arg(idx2WireMeasSystem));
-    dspCmdList.append(QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(idx2WireMeasSystem).arg(idx2WireMeasSystem));
-
-    //dspCmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-    //dspCmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(m_idx2WireMeasSystem));
-
-    dspCmdList.append("STOPCHAIN(1,0x0118)");
     return dspCmdList;
 }
 
