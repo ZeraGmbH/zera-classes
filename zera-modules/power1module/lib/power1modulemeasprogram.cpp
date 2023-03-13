@@ -472,7 +472,7 @@ void cPower1ModuleMeasProgram::deleteDspVarList()
 QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
-    QString chainId = m_dspChainGen.getNextChainId();
+    QString chainId = m_dspChainGen.getNextChainIdStr();
     dspCmdList.append(QString("STARTCHAIN(1,1,%1)").arg(chainId)); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal

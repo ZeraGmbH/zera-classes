@@ -8,7 +8,8 @@ class DspChainIdGen
 {
 public:
     DspChainIdGen(quint8 mainChain = 1);
-    QString getNextChainId();
+    quint16 getNextChainId();
+    QString getNextChainIdStr();
 private:
     quint8 m_mainChain;
     quint8 m_subChain = 1;
