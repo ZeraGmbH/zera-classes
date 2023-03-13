@@ -1,3 +1,4 @@
+add_subdirectory(dsp-helpers)
 add_subdirectory(meas-mode-management)
 add_subdirectory(module-qt-plugin-interface)
 add_subdirectory(module-tasks)

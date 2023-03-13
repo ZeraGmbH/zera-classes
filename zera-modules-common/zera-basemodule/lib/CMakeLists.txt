@@ -1,12 +1,10 @@
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/*.cpp
     )
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/declare-only/*.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/tools/*.h
     )
 
 add_library(zera-basemodule SHARED
@@ -30,7 +28,6 @@ target_include_directories(zera-basemodule
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/declare-only>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/tools>
     )
 
 set_target_properties(zera-basemodule PROPERTIES VERSION ${PROJECT_VERSION})
