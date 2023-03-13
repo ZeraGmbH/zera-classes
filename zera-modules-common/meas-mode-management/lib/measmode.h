@@ -2,11 +2,9 @@
 #define MEASMODE_H
 
 #include "measmodephasesetstrategy.h"
-#include <QObject>
 
-class MeasMode : public QObject
+class MeasMode
 {
-    Q_OBJECT
 public:
     MeasMode() = default;
     MeasMode(QString modeName, int dspSelectCode, int measSysCount, MeasModePhaseSetStrategyPtr measModePhaseSetter);
