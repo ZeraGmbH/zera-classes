@@ -1,7 +1,8 @@
 #include "measmodebroker.h"
 
-MeasModeBroker::MeasModeBroker(const ModeNameFunctionHash &functionHash) :
-    m_functionHash(functionHash)
+MeasModeBroker::MeasModeBroker(const ModeNameFunctionHash &functionHash, DspChainIdGen &dspChainGen) :
+    m_functionHash(functionHash),
+    m_dspChainGen(dspChainGen)
 {
 }
 
@@ -13,7 +14,7 @@ MeasModeBroker::BrokerReturn MeasModeBroker::getMeasMode(QString measModeName, M
         ret.phaseStrategy = createStruct.phaseStrategyGen();
         if(!m_assignedModes.contains(createStruct.id)) {
             ret.dspSelectCode = getNextSelectionCode();
-            ret.dspCmdList = createStruct.func(ret.dspSelectCode, measChannelPairList);
+            ret.dspCmdList = createStruct.func(ret.dspSelectCode, measChannelPairList, m_dspChainGen);
             m_assignedModes[createStruct.id] = ret.dspSelectCode;
         }
         else
