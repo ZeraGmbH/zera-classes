@@ -2,6 +2,7 @@
 #define MEASMODESELECTOR_H
 
 #include "measmode.h"
+#include <QObject>
 #include "QHash"
 
 class MeasModeSelector : public QObject
