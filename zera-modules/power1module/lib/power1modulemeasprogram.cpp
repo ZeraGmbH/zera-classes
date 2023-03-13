@@ -472,7 +472,8 @@ void cPower1ModuleMeasProgram::deleteDspVarList()
 QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
 {
     QStringList dspCmdList;
-    dspCmdList.append("STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+    QString chainId = m_dspChainGen.getNextChainId();
+    dspCmdList.append(QString("STARTCHAIN(1,1,%1)").arg(chainId)); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
     dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
@@ -486,8 +487,8 @@ QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
     dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
     if(intergrationModeTime)
         dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
-    dspCmdList.append("DEACTIVATECHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
-    dspCmdList.append("STOPCHAIN(1,0x0101)"); // ende prozessnr., hauptkette 1 subkette 1
+    dspCmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(chainId)); // ende prozessnr., hauptkette 1 subkette 1
+    dspCmdList.append(QString("STOPCHAIN(1,%1)").arg(chainId)); // ende prozessnr., hauptkette 1 subkette 1
     return dspCmdList;
 }
 
@@ -507,10 +508,10 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
 
     int measSytemCount = confdata->m_sMeasSystemList.count();
-    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount));
+    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), m_dspChainGen);
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
-    QStringList dspMModesCommandList;
+    QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(m_dspChainGen);
     MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
@@ -549,7 +550,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
         }
     }
-    dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage());
+    dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage(m_dspChainGen));
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -557,7 +558,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     int dspSelectCodeFromConfig = mode->getDspSelectCode();
     QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
-    QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr);
+    QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr, m_dspChainGen);
 
     // sequence here is important
     m_pDSPInterFace->addCycListItems(dspInitVarsList);

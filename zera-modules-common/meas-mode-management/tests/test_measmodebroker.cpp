@@ -15,16 +15,18 @@ public:
 class DspCmdGeneratorForTest
 {
 public:
-    static QStringList getCmdsA(int dspSelectCode, MeasSystemChannels measChannelPairList)
+    static QStringList getCmdsA(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen)
     {
+        Q_UNUSED(idGen)
         Q_UNUSED(measChannelPairList)
         QStringList ret;
         ret.append(QString("%1").arg(dspSelectCode));
         ret.append("getCmdsA");
         return ret;
     }
-    static QStringList getCmdsB(int dspSelectCode, MeasSystemChannels measChannelPairList)
+    static QStringList getCmdsB(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen)
     {
+        Q_UNUSED(idGen)
         Q_UNUSED(measChannelPairList)
         QStringList ret;
         ret.append(QString("%1").arg(dspSelectCode));
@@ -58,38 +60,42 @@ QTEST_MAIN(test_measmodebroker)
 
 void test_measmodebroker::getOneCheckDspCmd()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret = broker.getMeasMode("A", MeasChannelSingleton::get());
-    QStringList expected = DspCmdGeneratorForTest::getCmdsA(ret.dspSelectCode, MeasChannelSingleton::get());
+    QStringList expected = DspCmdGeneratorForTest::getCmdsA(ret.dspSelectCode, MeasChannelSingleton::get(), dummyIdGen);
     QCOMPARE(expected, ret.dspCmdList);
 }
 
 void test_measmodebroker::getOneCheckSelectionInDspCmd()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret = broker.getMeasMode("A", MeasChannelSingleton::get());
-    QStringList expected = DspCmdGeneratorForTest::getCmdsA(ret.dspSelectCode+1, MeasChannelSingleton::get());
+    QStringList expected = DspCmdGeneratorForTest::getCmdsA(ret.dspSelectCode+1, MeasChannelSingleton::get(), dummyIdGen);
     QVERIFY(expected != ret.dspCmdList);
 }
 
 void test_measmodebroker::getTwoCheckDspCmd()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret1 = broker.getMeasMode("A", MeasChannelSingleton::get());
-    QStringList expected1 = DspCmdGeneratorForTest::getCmdsA(ret1.dspSelectCode, MeasChannelSingleton::get());
+    QStringList expected1 = DspCmdGeneratorForTest::getCmdsA(ret1.dspSelectCode, MeasChannelSingleton::get(), dummyIdGen);
     QCOMPARE(expected1, ret1.dspCmdList);
 
     MeasModeBroker::BrokerReturn ret2 = broker.getMeasMode("B", MeasChannelSingleton::get());
-    QStringList expected2 = DspCmdGeneratorForTest::getCmdsB(ret2.dspSelectCode, MeasChannelSingleton::get());
+    QStringList expected2 = DspCmdGeneratorForTest::getCmdsB(ret2.dspSelectCode, MeasChannelSingleton::get(), dummyIdGen);
     QCOMPARE(expected2, ret2.dspCmdList);
 }
 
 void test_measmodebroker::getTwoModesWithSameDspCmdSecondCmdEmpty()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret;
     ret = broker.getMeasMode("A", MeasChannelSingleton::get());
-    QStringList expected1 = DspCmdGeneratorForTest::getCmdsA(ret.dspSelectCode, MeasChannelSingleton::get());
+    QStringList expected1 = DspCmdGeneratorForTest::getCmdsA(ret.dspSelectCode, MeasChannelSingleton::get(), dummyIdGen);
     QCOMPARE(expected1, ret.dspCmdList);
 
     ret = broker.getMeasMode("A1", MeasChannelSingleton::get());
@@ -99,7 +105,8 @@ void test_measmodebroker::getTwoModesWithSameDspCmdSecondCmdEmpty()
 
 void test_measmodebroker::getTwoModesWithSameCheckAllReturnsSet()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret1 = broker.getMeasMode("A", MeasChannelSingleton::get());
     QVERIFY(ret1.isValid());
     QVERIFY(!ret1.dspCmdList.isEmpty());
@@ -114,7 +121,8 @@ void test_measmodebroker::getTwoModesWithSameCheckAllReturnsSet()
 
 void test_measmodebroker::getTwoCheckDspSelectionSame()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret1 = broker.getMeasMode("A", MeasChannelSingleton::get());
     MeasModeBroker::BrokerReturn ret2 = broker.getMeasMode("A1", MeasChannelSingleton::get());
     QVERIFY(ret1.isValid());
@@ -123,21 +131,24 @@ void test_measmodebroker::getTwoCheckDspSelectionSame()
 
 void test_measmodebroker::singleCheckDspCmdIsValid()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret = broker.getMeasMode("A", MeasChannelSingleton::get());
     QVERIFY(ret.isValid());
 }
 
 void test_measmodebroker::getFooIsInvalid()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret = broker.getMeasMode("FOO", MeasChannelSingleton::get());
     QVERIFY(!ret.isValid());
 }
 
 void test_measmodebroker::getTwoWithDiffDspSelection()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret1 = broker.getMeasMode("A", MeasChannelSingleton::get());
     MeasModeBroker::BrokerReturn ret2 = broker.getMeasMode("B", MeasChannelSingleton::get());
     QVERIFY(ret1.isValid());
@@ -147,7 +158,8 @@ void test_measmodebroker::getTwoWithDiffDspSelection()
 
 void test_measmodebroker::getTwoCheckPhaseStartegies()
 {
-    MeasModeBroker broker(TestDspModeFunctionCatalog::get());
+    DspChainIdGen dummyIdGen;
+    MeasModeBroker broker(TestDspModeFunctionCatalog::get(), dummyIdGen);
     MeasModeBroker::BrokerReturn ret1 = broker.getMeasMode("A", MeasChannelSingleton::get());
     MeasModeBroker::BrokerReturn ret2 = broker.getMeasMode("B", MeasChannelSingleton::get());
 

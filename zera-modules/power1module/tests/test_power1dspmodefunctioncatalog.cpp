@@ -11,7 +11,8 @@ void test_power1dspmodefunctioncatalog::allAvailableModesHandledByCatalog()
     // Power1-module supports all measurement modes so all must be in catalog
     // Once modes for other modules are invented, we need to re-think
     MeasSystemChannels measChannelPairList(MeasPhaseCount);
-    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(MeasPhaseCount));
+    DspChainIdGen dspDummyChainGen;
+    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(MeasPhaseCount), dspDummyChainGen);
     for(int modeId=MeasModeFirst; modeId<MeasModeCount; modeId++) {
         cMeasModeInfo info = MeasModeCatalog::getInfo(measmodes(modeId));
         MeasModeBroker::BrokerReturn brokerReturn = measBroker.getMeasMode(info.getName(), measChannelPairList);

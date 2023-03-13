@@ -6,6 +6,7 @@
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
+#include <dspchainidgen.h>
 #include <foutinfo.h>
 #include <vfmodulecomponentinput.h>
 #include <movingwindowfilter.h>
@@ -111,6 +112,7 @@ private:
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, cFoutInfo> m_FoutInfoHash; // a list with frequency output information for each channel
     QHash<int, QString> m_NotifierInfoHash; // a list with channel information for each notifier
+    DspChainIdGen m_dspChainGen;
 
     QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
     QList<VfModuleParameter*> m_FoutConstParameterList; // a list of foutconstant parameter
