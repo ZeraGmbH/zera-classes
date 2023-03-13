@@ -17,6 +17,7 @@ public:
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
     cSocket m_DSPServerSocket;
+    bool m_accumulator;
 };
 
 }

@@ -21,7 +21,8 @@ enum moduleconfigstate
     setPCBServerPort,
     setDSPServerIp,
     setDSPServerPort,
-    setMeasStatus
+    setMeasStatus,
+    setAccumulator
 };
 
 class cStatusModuleConfigData;

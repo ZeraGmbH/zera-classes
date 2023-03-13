@@ -19,5 +19,6 @@
                 </dspserver>
             </ethernet>
         </connectivity>
+        <accumulator>1</accumulator>
     </configuration>
 </statusmodconfpar>

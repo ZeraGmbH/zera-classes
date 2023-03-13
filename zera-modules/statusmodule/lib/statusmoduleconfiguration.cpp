@@ -48,6 +48,7 @@ void STATUSMODULE::cStatusModuleConfiguration::validateAndSetConfig(QByteArray x
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:pcbserver:port"] = setPCBServerPort;
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:dspserver:ip"] = setDSPServerIp;
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:dspserver:port"] = setDSPServerPort;
+    m_ConfigXMLMap["statusmodconfpar:configuration:accumulator"] = setAccumulator;
 
     if (m_pXMLReader->loadSchema(xsdFilename))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -99,6 +100,9 @@ void cStatusModuleConfiguration::configXMLInfo(QString key)
             break;
         case setDSPServerPort:
             m_pStatusModulConfigData->m_DSPServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
+        case setAccumulator:
+            m_pStatusModulConfigData->m_accumulator = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         }
 
