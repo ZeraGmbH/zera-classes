@@ -10,10 +10,8 @@ class Power1DspCmdGenerator
 public:
     static QStringList getCmdsMModeMQREF(int dspSelectCode);
     static QStringList getCmdsMMode4LBK(int dspSelectCode, MeasSystemChannels measChannelPairList);
-    static QStringList getCmdsMMode4LSg(int dspSelectCode, MeasSystemChannels measChannelPairList);
     static QStringList getCmdsMMode3LW(int dspSelectCode, MeasSystemChannels measChannelPairList);
     static QStringList getCmdsMMode3LB(int dspSelectCode, MeasSystemChannels measChannelPairList);
-    static QStringList getCmdsMMode2LSg(int dspSelectCode, MeasSystemChannels measChannelPairList, int idx2WireMeasSystem);
     static QStringList getCmdsMModeXLW(int dspSelectCode, MeasSystemChannels measChannelPairList);
     static QStringList getCmdsMModeXLB(int dspSelectCode, MeasSystemChannels measChannelPairList);
     static QStringList getCmdsMModeXLS(int dspSelectCode, MeasSystemChannels measChannelPairList);
