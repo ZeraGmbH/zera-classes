@@ -4,7 +4,7 @@
 
 QStringList Power1DspCmdGenerator::getCmdsInitOutputVars(DspChainIdGen &idGen)
 {
-    QString dspChainId = idGen.getNextChainId();
+    QString dspChainId = idGen.getNextChainIdStr();
     QStringList cmdList;
     cmdList.append(QString("STARTCHAIN(1,1,%1)").arg(dspChainId)); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     for(int phase=0; phase<MeasPhaseCount; phase++)
@@ -16,7 +16,7 @@ QStringList Power1DspCmdGenerator::getCmdsInitOutputVars(DspChainIdGen &idGen)
 QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
 {
     Q_UNUSED(measChannelPairList)
-    QString dspChainId = idGen.getNextChainId();
+    QString dspChainId = idGen.getNextChainIdStr();
     QStringList dspCmdList;
     dspCmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
     dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
@@ -34,7 +34,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode, MeasSyst
 
 QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
 {
-    QString dspChainId = idGen.getNextChainId();
+    QString dspChainId = idGen.getNextChainIdStr();
     QStringList dspCmdList;
     dspCmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
     dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
@@ -95,7 +95,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
 
 QStringList Power1DspCmdGenerator::getCmdsMMode3LW(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
 {
-    QString dspChainId = idGen.getNextChainId();
+    QString dspChainId = idGen.getNextChainIdStr();
     QStringList dspCmdList;
     dspCmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
     dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
@@ -125,7 +125,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LW(int dspSelectCode, MeasSystem
 
 QStringList Power1DspCmdGenerator::getCmdsMMode3LB(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
 {
-    QString dspChainId = idGen.getNextChainId();
+    QString dspChainId = idGen.getNextChainIdStr();
     QStringList dspCmdList;
     dspCmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
     dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
@@ -173,7 +173,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLW(int dspSelectCode, MeasSystem
 {
     QStringList cmdList;
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
-        QString dspChainId = idGen.getNextChainId();
+        QString dspChainId = idGen.getNextChainIdStr();
         cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
         cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
         cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(dspChainId));
@@ -194,7 +194,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLB(int dspSelectCode, MeasSystem
 {
     QStringList cmdList;
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
-        QString dspChainId = idGen.getNextChainId();
+        QString dspChainId = idGen.getNextChainIdStr();
         cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
         cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
         cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(dspChainId));
@@ -222,7 +222,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLS(int dspSelectCode, MeasSystem
 {
     QStringList cmdList;
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
-        QString dspChainId = idGen.getNextChainId();
+        QString dspChainId = idGen.getNextChainIdStr();
         cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
         cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
         cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(dspChainId));
@@ -245,7 +245,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLSg(int dspSelectCode, MeasSyste
 {
     QStringList cmdList;
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
-        QString dspChainId = idGen.getNextChainId();
+        QString dspChainId = idGen.getNextChainIdStr();
         cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
         cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
         cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(dspChainId));
@@ -300,7 +300,7 @@ QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1
     }
 
     if (configData->m_sIntegrationMode == "time") {
-        QString dspChainId = idGen.getNextChainId();
+        QString dspChainId = idGen.getNextChainIdStr();
         dspCmdList.append("TESTTIMESKIPNEX(TISTART,TIPAR)");
         dspCmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
 
@@ -329,7 +329,7 @@ QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1
     }
 
     else { // otherwise it is period
-        QString dspChainId = idGen.getNextChainId();
+        QString dspChainId = idGen.getNextChainIdStr();
         dspCmdList.append("TESTVVSKIPLT(N,TIPAR)");
         dspCmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
         dspCmdList.append(QString("STARTCHAIN(0,1,%1)").arg(dspChainId));

@@ -6,9 +6,14 @@ DspChainIdGen::DspChainIdGen(quint8 mainChain) :
 {
 }
 
-QString DspChainIdGen::getNextChainId()
+quint16 DspChainIdGen::getNextChainId()
 {
     quint32 value = (m_mainChain<<8) + m_subChain;
     m_subChain++;
-    return IntToHexStringConvert::convert(value);
+    return value;
+}
+
+QString DspChainIdGen::getNextChainIdStr()
+{
+    return IntToHexStringConvert::convert(getNextChainId());
 }
