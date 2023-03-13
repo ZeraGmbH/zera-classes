@@ -533,6 +533,8 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         case m4ls:
         case m2ls:
 
+        case m2lsg:
+        case m4lsg:
         case mXlsg: {
             brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
             dspMModesCommandList.append(brokerReturn.dspCmdList);
@@ -544,20 +546,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_measModeSelector.addMode(mode);
             break; }
 
-        case m4lsg:
-            dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode4LSg(measModeId, measChannelPairList));
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  measModeId,
-                                                                  measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy4Wire>()));
-            break;
-        case m2lsg:
-            dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMMode2LSg(measModeId, measChannelPairList, m_idx2WireMeasSystem));
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  measModeId,
-                                                                  measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategy2WireFixedPhase>(m_idx2WireMeasSystem, measSytemCount)));
-            break;
         case mqref:
             dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMModeMQREF(measModeId));
             m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
