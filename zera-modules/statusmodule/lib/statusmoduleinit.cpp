@@ -438,6 +438,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::readPCBServerAccumulatorStatus:
                 if (!m_ConfigData.m_accumulator) {
                    m_sAccumulatorStatus = "0";
+                   m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
                    emit activationContinue();
                 }
                 else {
