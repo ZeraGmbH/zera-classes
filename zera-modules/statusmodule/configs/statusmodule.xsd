@@ -76,6 +76,7 @@
                         <xs:sequence>
                             <xs:element name="demo" type="yesnotype"/>
                             <xs:element name="connectivity" type="connectivitytype"/>
+                            <xs:element name="accumulator" type="yesnotype"/>
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>

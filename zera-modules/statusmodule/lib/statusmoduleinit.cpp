@@ -286,13 +286,13 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 break;
             case STATUSMODINIT::registerAccumulatorStatusNotifier:
                 if (reply != ack) {
-                    qWarning("Register notification for accumulator status failed");
+                    qWarning("Register notification for accumulator status failed - is accumulator supported?");
                 }
                 emit activationContinue();
                 break;
             case STATUSMODINIT::registerAccumulatorSocNotifier:
                 if (reply != ack) {
-                    qWarning("Register notification for accumulator soc failed");
+                    qWarning("Register notification for accumulator soc failed - is accumulator supported?");
                 }
                 emit activationContinue();
                 break;
@@ -421,7 +421,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 break;
 
-             case STATUSMODINIT::readPCBServerSchnubbelStatus:
+            case STATUSMODINIT::readPCBServerSchnubbelStatus:
                 if (reply == ack)
                 {
                     m_sSchnubbelStatus = answer.toString();
@@ -434,33 +434,45 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                     emit activationError();
                 }
                 break;
+
             case STATUSMODINIT::readPCBServerAccumulatorStatus:
-               if (reply == ack)
-               {
-                   m_sAccumulatorStatus = answer.toString();
-                   m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
-                   emit activationContinue();
-               }
-               else
-               {
+                if (!m_ConfigData.m_accumulator) {
                    m_sAccumulatorStatus = "0";
-                   emit errMsg((tr(readaccumulatorstatusErrMsg)));
-                   emit activationError();
-               }
-               break;
-            case STATUSMODINIT::readPCBServerAccumulatorSoc:
-               if (reply == ack)
-               {
-                   m_sAccumulatorSoc = answer.toString();
-                   m_pAccumulatorSoc->setValue(QVariant(m_sAccumulatorSoc));
                    emit activationContinue();
-               }
-               else
-               {
-                   emit errMsg((tr(readaccumulatorsocErrMsg)));
-                   emit activationError();
-               }
-               break;
+                }
+                else {
+                   if (reply == ack)
+                    {
+                      m_sAccumulatorStatus = answer.toString();
+                      m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
+                      emit activationContinue();
+                    }
+                    else
+                    {
+                       emit errMsg((tr(readaccumulatorstatusErrMsg)));
+                       emit activationError();
+                   }
+                }
+                break;
+
+            case STATUSMODINIT::readPCBServerAccumulatorSoc:
+                if (!m_ConfigData.m_accumulator) {
+                   emit activationContinue();
+                }
+                else {
+                    if (reply == ack)
+                    {
+                       m_sAccumulatorSoc = answer.toString();
+                       m_pAccumulatorSoc->setValue(QVariant(m_sAccumulatorSoc));
+                       emit activationContinue();
+                    }
+                    else
+                    {
+                       emit errMsg((tr(readaccumulatorsocErrMsg)));
+                       emit activationError();
+                    }
+                }
+                break;
             }
         }
     }
