@@ -11,6 +11,10 @@ ModeNameFunctionHash Power1DspModeFunctionCatalog::m_hash;
 const ModeNameFunctionHash &Power1DspModeFunctionCatalog::get(int measSytemCount)
 {
     if(m_hash.isEmpty()) {
+        // uncommon first
+        m_hash["4LBK"] = { m4lbk, Power1DspCmdGenerator::getCmdsMMode4LBK,
+                []{ return std::make_unique<MeasModePhaseSetStrategy4Wire>();} };
+
         m_hash["4LW"] = { mXlw, Power1DspCmdGenerator::getCmdsMModeXLW,
                 []{ return std::make_unique<MeasModePhaseSetStrategy4Wire>();} };
         m_hash["3LW"] = { m3lw, Power1DspCmdGenerator::getCmdsMMode3LW,
