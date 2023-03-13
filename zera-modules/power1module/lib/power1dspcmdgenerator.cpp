@@ -1,8 +1,9 @@
 #include "power1dspcmdgenerator.h"
 #include "inttohexstringconvert.h"
 
-QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode)
+QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode, MeasSystemChannels measChannelPairList)
 {
+    Q_UNUSED(measChannelPairList)
     QStringList dspCmdList;
     dspCmdList.append("ACTIVATECHAIN(1,0x0110)");
     dspCmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));

@@ -518,6 +518,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         switch(measModeId)
         {
         case m4lbk: // uncommon first
+        case mqref:
 
         case m4lw:
         case m3lw:
@@ -546,13 +547,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
             m_measModeSelector.addMode(mode);
             break; }
 
-        case mqref:
-            dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsMModeMQREF(measModeId));
-            m_measModeSelector.addMode(std::make_shared<MeasMode>(mInfo.getName(),
-                                                                  measModeId,
-                                                                  measSytemCount,
-                                                                  std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), measSytemCount)));
-            break;
         }
     }
     dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage());

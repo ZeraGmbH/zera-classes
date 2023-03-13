@@ -12,6 +12,8 @@ const ModeNameFunctionHash &Power1DspModeFunctionCatalog::get(int measSytemCount
 {
     if(m_hash.isEmpty()) {
         // uncommon first
+        m_hash["QREF"] = { mqref, Power1DspCmdGenerator::getCmdsMModeMQREF,
+                         [measSytemCount] {return std::make_unique<MeasModePhaseSetStrategyPhasesFixed>(MModePhaseMask("111"), measSytemCount);}};
         m_hash["4LBK"] = { m4lbk, Power1DspCmdGenerator::getCmdsMMode4LBK,
                 []{ return std::make_unique<MeasModePhaseSetStrategy4Wire>();} };
 
