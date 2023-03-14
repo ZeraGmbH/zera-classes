@@ -26,7 +26,7 @@ public:
     MeasModeBroker(const ModeNameFunctionHash functionHash, DspChainIdGen& dspChainGen);
     struct BrokerReturn
     {
-        bool isValid() { return dspSelectCode != 0; }
+        bool isValid() { return dspSelectCode != 0; } // remember: dspCmdList can be empty on modes using x-modes
         QStringList dspCmdList;
         int dspSelectCode = 0;
         MeasModePhaseSetStrategyPtr phaseStrategy;
