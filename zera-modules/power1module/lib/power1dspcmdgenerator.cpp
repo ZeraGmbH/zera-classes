@@ -17,9 +17,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode, MeasSyst
     quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
     cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-
     cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
-
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // we simply set all our actual values to nominal power
@@ -35,9 +33,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
     quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
     cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-
     cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
-
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
@@ -94,12 +90,11 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
 
 QStringList Power1DspCmdGenerator::getCmdsMMode3LW(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
 {
-    QString dspChainId = idGen.getNextChainIdStr();
+    quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
-    cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
-    cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(dspChainId));
-    cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(dspChainId)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+    cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
+    cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
+    cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
     cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
@@ -118,18 +113,17 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LW(int dspSelectCode, MeasSystem
     cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL2)").arg(measChannelPairList[2].currentChannel));
     cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
 
-    cmdList.append(QString("STOPCHAIN(1,%1)").arg(dspChainId));
+    cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
 }
 
 QStringList Power1DspCmdGenerator::getCmdsMMode3LB(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
 {
-    QString dspChainId = idGen.getNextChainIdStr();
+    quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
-    cmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
-    cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
-    cmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(dspChainId));
-    cmdList.append(QString("STARTCHAIN(0,1,%1)").arg(dspChainId)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
+    cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
+    cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
+    cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
     cmdList.append(QString("COPYDIFF(CH%1,CH%2,MEASSIGNAL1)")
@@ -164,7 +158,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LB(int dspSelectCode, MeasSystem
     //cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
     //cmdList.append("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+2)");
 
-    cmdList.append(QString("STOPCHAIN(1,%1)").arg(dspChainId));
+    cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     return cmdList;
 }
 
