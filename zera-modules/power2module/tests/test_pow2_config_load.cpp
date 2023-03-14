@@ -1,4 +1,5 @@
 #include "test_pow2_config_load.h"
+#include "power2moduleconfigdata.h"
 #include "power2moduleconfiguration.h"
 #include <memory>
 #include <QSignalSpy>
@@ -23,5 +24,45 @@ void test_pow2_config_load::allFilesLoaded()
         POWER2MODULE::cPower2ModuleConfiguration conf;
         conf.setConfiguration(configFile.readAll());
         QVERIFY(conf.isConfigured());
+    }
+}
+
+
+// from here on basic loading / validation worka so we can load once only
+struct PowConfig
+{
+    QString filename;
+    std::shared_ptr<POWER2MODULE::cPower2ModuleConfiguration> config;
+};
+
+class ConfFileLoader
+{
+public:
+    static QVector<PowConfig> &get() {
+        if(m_confFiles.isEmpty()) {
+            QFileInfoList fileList = QDir(QStringLiteral(CONFIG_PATH)).entryInfoList(QStringList() << "*.xml");
+            m_confFiles.resize(fileList.count());
+            for(int i=0; i<fileList.count(); i++) {
+                QString filename = fileList[i].fileName();
+                m_confFiles[i].filename = filename;
+                m_confFiles[i].config = std::make_shared<POWER2MODULE::cPower2ModuleConfiguration>();
+                QFile configFile(fileList[i].absoluteFilePath());
+                configFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly);
+                m_confFiles[i].config->setConfiguration(configFile.readAll());
+            }
+        }
+        return m_confFiles;
+    }
+private:
+    static QVector<PowConfig> m_confFiles;
+};
+
+QVector<PowConfig> ConfFileLoader::m_confFiles;
+
+void test_pow2_config_load::modeListCountSameAsArraySize()
+{
+    for(const auto &config : qAsConst(ConfFileLoader::get())) {
+        qInfo("Check %s...", qPrintable(config.filename));
+        QCOMPARE(config.config->getConfigurationData()->m_sMeasmodeList.size(), config.config->getConfigurationData()->m_nMeasModeCount);
     }
 }
