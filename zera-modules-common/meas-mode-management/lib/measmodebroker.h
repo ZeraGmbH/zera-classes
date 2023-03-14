@@ -13,9 +13,9 @@ typedef std::function<QStringList(int /*dspSelCode */, MeasSystemChannels, DspCh
 
 struct DspMModeCreateStruct
 {
-    measmodes id;
-    DspCreationFunc func;
-    std::function<MeasModePhaseSetStrategyPtr()> phaseStrategyGen;
+    measmodes measModeId;
+    DspCreationFunc dspCmdFunctionGenFuncPointer;
+    std::function<MeasModePhaseSetStrategyPtr()> phaseStrategyGenFuncPointer;
 };
 
 typedef QHash<QString /*modeName*/, DspMModeCreateStruct> ModeNameFunctionHash;
