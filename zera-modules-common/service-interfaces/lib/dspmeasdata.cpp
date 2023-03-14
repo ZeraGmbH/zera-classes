@@ -4,8 +4,8 @@
 
 
 cDspMeasData::cDspMeasData(QString name)
-    :m_sname(name)
 {
+    Q_UNUSED(name)
 }
 
 
@@ -129,11 +129,6 @@ QString& cDspMeasData::VarList(int section, bool withType)
     return sReturn; // eine liste aller variablen namen und deren länge
 }
 
-
-QString& cDspMeasData::name()
-{
-    return m_sname;
-}
 
 QString& cDspMeasData::writeCommand()
 {

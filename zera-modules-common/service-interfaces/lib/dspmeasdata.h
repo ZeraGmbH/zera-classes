@@ -19,7 +19,6 @@ public:
     quint32 getSize(QString name); // number of elements of var name in this container
     quint32 getumemSize();
     QString& VarList(int section, bool withType = false); // liste mit allen variablen mit längenangaben, optional mit data type
-    QString& name();
     QString& writeCommand();
     QVector<float>& getData();
 
@@ -27,7 +26,6 @@ public:
 private:
     QList<cDspVar*> DspVarList;
     QVector<float> vector;
-    QString m_sname;
     QString sReturn;
 };
 
