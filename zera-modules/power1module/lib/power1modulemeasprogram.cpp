@@ -492,40 +492,14 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
-        measmodes measModeId = mInfo.getCode();
-        switch(measModeId)
-        {
-        case m4lbk: // uncommon first
-        case mqref:
-
-        case m4lw:
-        case m3lw:
-        case m2lw:
-        case mXlw:
-
-        case m4lb:
-        case m3lb:
-        case m2lb:
-        case mXlb:
-
-        case mXls:
-        case m4ls:
-        case m2ls:
-
-        case m2lsg:
-        case m4lsg:
-        case mXlsg: {
-            brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
-            dspMModesCommandList.append(brokerReturn.dspCmdList);
-            std::shared_ptr<MeasMode> mode = std::make_shared<MeasMode>(mInfo.getName(),
-                                                                        brokerReturn.dspSelectCode,
-                                                                        measSytemCount,
-                                                                        std::move(brokerReturn.phaseStrategy));
-            MeasModePhasePersistency::setMeasModePhaseFromConfig(mode, getConfData()->m_measmodePhaseList);
-            m_measModeSelector.addMode(mode);
-            break; }
-
-        }
+        brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
+        dspMModesCommandList.append(brokerReturn.dspCmdList);
+        std::shared_ptr<MeasMode> mode = std::make_shared<MeasMode>(mInfo.getName(),
+                                                                    brokerReturn.dspSelectCode,
+                                                                    measSytemCount,
+                                                                    std::move(brokerReturn.phaseStrategy));
+        MeasModePhasePersistency::setMeasModePhaseFromConfig(mode, getConfData()->m_measmodePhaseList);
+        m_measModeSelector.addMode(mode);
     }
     dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage(m_dspChainGen));
 
