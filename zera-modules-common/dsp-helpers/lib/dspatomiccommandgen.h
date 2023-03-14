@@ -6,7 +6,7 @@
 class DspAtomicCommandGen
 {
 public:
-    static QString getCmdStartChainActive(quint16 dspChainId);
+    static QString getStartChainActive(quint16 dspChainId);
     static QString getStartChainInactive(quint16 dspChainId);
     static QString getStopChain(quint16 dspChainId);
     static QString getActivateChain(quint16 dspChainId);
