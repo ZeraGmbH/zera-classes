@@ -75,7 +75,6 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cPower2ModuleConfigData* getConfData();
-    void set2WireVariables();
     QStringList dspCmdInitVars(int dspInitialSelectCode);
     void setActualValuesNames();
     void dspSetParamsTiMModePhase(int tiTimeOrPeriods);
@@ -112,7 +111,6 @@ private:
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
-    qint32 m_idx2WireMeasSystem;
     quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
 

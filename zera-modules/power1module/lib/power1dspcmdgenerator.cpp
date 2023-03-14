@@ -228,7 +228,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLB(int dspSelectCode, MeasSystem
         cmdList.append(QString("SUBVVV(TEMP1,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase));
         cmdList.append(QString("MULVVV(FAK,VALPQS+%1,VALPQS+%2)").arg(phase).arg(phase));
         //cmdList.append("ROTATE(MEASSIGNAL2,270.0)");
-        //cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(m_idx2WireMeasSystem));
+        //cmdList.append(QString("MULCCV(MEASSIGNAL1,MEASSIGNAL2,VALPQS+%1)").arg(phase));
 
         cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
     }

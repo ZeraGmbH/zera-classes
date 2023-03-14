@@ -133,7 +133,6 @@
                         <xs:element name="pms1" type="xs:string" minOccurs="1" maxOccurs="1"/>
                         <xs:element name="pms2" type="xs:string" minOccurs="0" maxOccurs="1"/>
                         <xs:element name="pms3" type="xs:string" minOccurs="0" maxOccurs="1"/>
-                        <xs:element name="pms2w" type="pmsType" minOccurs="0" maxOccurs="1"/>
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>

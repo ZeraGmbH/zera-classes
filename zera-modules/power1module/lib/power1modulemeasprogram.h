@@ -84,7 +84,6 @@ protected slots:
 
 private:
     cPower1ModuleConfigData* getConfData();
-    void set2WireVariables();
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setFoutMetaInfo();
@@ -134,7 +133,6 @@ private:
     QList<QString> readUrvalueList; // a list with system channel names we need urvalue from
     QString readUrvalueInfo;
 
-    qint32 m_idx2WireMeasSystem;
     quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
 

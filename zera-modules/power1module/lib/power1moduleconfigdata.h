@@ -64,7 +64,6 @@ public:
     int m_measmodePhaseCount;
     QStringList m_measmodePhaseList; // a list comma separated measurement mode / phase e.g XLW,001
     QStringList m_sMeasSystemList; // our measuring systems "m0,m1"
-    QString m_sM2WSystem; // the system on which 2wire measuring mode shall work on
     QString m_sIntegrationMode; // we integrate over time or periods
     quint32 m_nNominalFrequency; // our nominal frequency output for full range power
     QString m_sFreqActualizationMode; // signalperiod or integrationtime

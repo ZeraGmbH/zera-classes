@@ -42,7 +42,6 @@ void POWER1MODULE::cPower1ModuleConfiguration::validateAndSetConfig(QByteArray x
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:system:pms1"] = setMeasSystem1;
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:system:pms2"] = setMeasSystem2;
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:system:pms3"] = setMeasSystem3;
-    m_ConfigXMLMap["pow1modconfpar:configuration:measure:system:pms2w"] = set2WMeasSystem;
 
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:integrationmode"] = setIntegrationMode;
     m_ConfigXMLMap["pow1modconfpar:configuration:measure:movingwindow:on"] = setMovingwindowBool;
@@ -136,9 +135,6 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         case setMeasSystem3:
             Q_ASSERT(m_pPower1ModulConfigData->m_sMeasSystemList.count() == 2);
             addMeasSys(m_pXMLReader->getValue(key));
-            break;
-        case set2WMeasSystem:
-            m_pPower1ModulConfigData->m_sM2WSystem = m_pXMLReader->getValue(key);
             break;
         case setIntegrationMode:
             m_pPower1ModulConfigData->m_sIntegrationMode = m_pXMLReader->getValue(key);
