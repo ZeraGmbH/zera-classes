@@ -556,8 +556,15 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     updatePhaseMaskVeinComponents(mode);
 
-    int dspSelectCodeFromConfig = mode->getDspSelectCode();
-    QStringList dspInitVarsList = dspCmdInitVars(dspSelectCodeFromConfig);
+    DspChainIdGen chaingenFreeze = m_dspChainGen;
+    QStringList dspInitVarsList = dspCmdInitVars(mode->getDspSelectCode());
+    QStringList dspInitVarsListNew = Power1DspCmdGenerator::dspCmdInitVars(mode,
+                                                                           m_nSRate,
+                                                                           calcTiTime(),
+                                                                           getConfData()->m_sIntegrationMode == "time",
+                                                                           chaingenFreeze);
+    Q_ASSERT(dspInitVarsList == dspInitVarsListNew);
+
     QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr, m_dspChainGen);
 
     // sequence here is important
