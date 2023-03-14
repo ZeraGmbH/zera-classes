@@ -4,12 +4,10 @@
 
 QStringList Power1DspCmdGenerator::getCmdsInitOutputVars(DspChainIdGen &idGen)
 {
-    QString dspChainId = idGen.getNextChainIdStr();
+    Q_UNUSED(idGen)
     QStringList cmdList;
-    cmdList.append(QString("STARTCHAIN(1,1,%1)").arg(dspChainId)); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
     for(int phase=0; phase<MeasPhaseCount; phase++)
         cmdList.append(QString("SETVAL(VALPQS+%1,0.0)").arg(phase));
-    cmdList.append(QString("STOPCHAIN(1,%1)").arg(dspChainId)); // ende prozessnr., hauptkette 1 subkette 1
     return cmdList;
 }
 
