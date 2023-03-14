@@ -13,7 +13,6 @@ QStringList Power1DspCmdGenerator::getCmdsInitOutputVars(DspChainIdGen &idGen)
 
 QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen &idGen)
 {
-    Q_UNUSED(measChannelPairList)
     QString dspChainId = idGen.getNextChainIdStr();
     QStringList dspCmdList;
     dspCmdList.append(QString("ACTIVATECHAIN(1,%1)").arg(dspChainId));
@@ -22,9 +21,8 @@ QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode, MeasSyst
     dspCmdList.append(QString("STARTCHAIN(0,1,%1)").arg(dspChainId)); // inaktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
 
     // we simply set all our actual values to nominal power
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS)");
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+1)");
-    dspCmdList.append("COPYVAL(NOMPOWER,VALPQS+2)");
+    for(int phase=0; phase<measChannelPairList.count(); phase++)
+        dspCmdList.append(QString("COPYVAL(NOMPOWER,VALPQS+%1)").arg(phase));
 
     dspCmdList.append(QString("STOPCHAIN(1,%1)").arg(dspChainId));
     return dspCmdList;
