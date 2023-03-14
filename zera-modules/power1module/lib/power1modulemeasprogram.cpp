@@ -481,38 +481,35 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         measChannelPairList.append(measChannel);
     }
 
-    Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
-
     DspChainIdGen dspChainGen;
     int measSytemCount = confdata->m_sMeasSystemList.count();
     MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), dspChainGen);
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
     QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(dspChainGen);
-    MeasModeBroker::BrokerReturn brokerReturn;
-    for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
-        cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
-        brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
+    for (int i = 0; i < confdata->m_nMeasModeCount; i++) {
+        cMeasModeInfo mInfo = MeasModeCatalog::getInfo(confdata->m_sMeasmodeList.at(i));
+        MeasModeBroker::BrokerReturn brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
         dspMModesCommandList.append(brokerReturn.dspCmdList);
         std::shared_ptr<MeasMode> mode = std::make_shared<MeasMode>(mInfo.getName(),
                                                                     brokerReturn.dspSelectCode,
                                                                     measSytemCount,
                                                                     std::move(brokerReturn.phaseStrategy));
-        MeasModePhasePersistency::setMeasModePhaseFromConfig(mode, getConfData()->m_measmodePhaseList);
+        MeasModePhasePersistency::setMeasModePhaseFromConfig(mode, confdata->m_measmodePhaseList);
         m_measModeSelector.addMode(mode);
     }
     dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage(dspChainGen));
 
-    m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
+    m_measModeSelector.tryChangeMode(confdata->m_sMeasuringMode.m_sValue);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     updatePhaseMaskVeinComponents(mode);
 
     QStringList dspInitVarsList = Power1DspCmdGenerator::getCmdsInitVars(mode,
                                                                          m_nSRate,
                                                                          calcTiTime(),
-                                                                         getConfData()->m_sIntegrationMode == "time",
+                                                                         confdata->m_sIntegrationMode == "time",
                                                                          dspChainGen);
-    QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr, dspChainGen);
+    QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(confdata, m_FoutInfoHash, irqNr, dspChainGen);
 
     // sequence here is important
     m_pDSPInterFace->addCycListItems(dspInitVarsList);
@@ -1290,7 +1287,6 @@ void cPower1ModuleMeasProgram::readSenseChannelUnit()
 {
     m_MsgNrCmdList[m_measChannelInfoHash[infoRead].pcbIFace->getUnit(infoRead)] = readsensechannelunit;
 }
-
 
 void cPower1ModuleMeasProgram::readSenseDspChannel()
 {
