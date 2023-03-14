@@ -9,6 +9,7 @@ class test_pow2_config_load : public QObject
 private slots:
     void fileFound();
     void allFilesLoaded();
+    void modeListCountSameAsArraySize();
 };
 
 #endif // TEST_POW2_CONFIG_LOAD_H
