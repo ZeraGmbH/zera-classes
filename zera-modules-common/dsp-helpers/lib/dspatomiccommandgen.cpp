@@ -1,7 +1,7 @@
 #include "dspatomiccommandgen.h"
 #include "inttohexstringconvert.h"
 
-QString DspAtomicCommandGen::getCmdStartChainActive(quint16 dspChainId)
+QString DspAtomicCommandGen::getStartChainActive(quint16 dspChainId)
 {
     return QString("STARTCHAIN(1,1,%1)").arg(IntToHexStringConvert::convert(dspChainId)); // aktiv, prozessnr. (dummy),hauptkette 1 subkette X
 }

@@ -6,7 +6,7 @@ QTEST_MAIN(test_dspatomiccommandgen)
 
 void test_dspatomiccommandgen::startChain()
 {
-    auto cmdActive = DspAtomicCommandGen::getCmdStartChainActive(0x0101);
+    auto cmdActive = DspAtomicCommandGen::getStartChainActive(0x0101);
     QCOMPARE(cmdActive, "STARTCHAIN(1,1,0x0101)");
     auto cmdInactive = DspAtomicCommandGen::getStartChainInactive(0x0101);
     QCOMPARE(cmdInactive, "STARTCHAIN(0,1,0x0101)");
