@@ -423,7 +423,6 @@ void cPower2ModuleMeasProgram::setDspCmdList()
         measChannelPairList.append(measChannel);
     }
 
-    set2WireVariables();
     Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
 
     int measSytemCount = confdata->m_sMeasSystemList.count();
@@ -1084,18 +1083,6 @@ cPower2ModuleConfigData *cPower2ModuleMeasProgram::getConfData()
     return qobject_cast<cPower2ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
-void cPower2ModuleMeasProgram::set2WireVariables()
-{
-    m_idx2WireMeasSystem = 0;
-    if (getConfData()->m_sM2WSystem == "pms2") {
-        m_idx2WireMeasSystem = 1;
-    }
-    if (getConfData()->m_sM2WSystem == "pms3") {
-        m_idx2WireMeasSystem = 2;
-    }
-}
-
 void cPower2ModuleMeasProgram::setActualValuesNames()
 {
     QString powIndicator = "123S";
@@ -1112,7 +1099,6 @@ void cPower2ModuleMeasProgram::setActualValuesNames()
         m_ActValueList.at(i*3+2)->setUnit(mminfo.getUnitName());
     }
 }
-
 quint8 cPower2ModuleMeasProgram::cmpActualValIndex(freqoutconfiguration frconf)
 {
     quint8 actvalueIndex = frconf.m_nSource * 3;
