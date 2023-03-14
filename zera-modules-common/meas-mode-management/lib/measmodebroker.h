@@ -23,7 +23,7 @@ typedef QHash<QString /*modeName*/, DspMModeCreateStruct> ModeNameFunctionHash;
 class MeasModeBroker
 {
 public:
-    MeasModeBroker(const ModeNameFunctionHash &functionHash, DspChainIdGen& dspChainGen);
+    MeasModeBroker(const ModeNameFunctionHash functionHash, DspChainIdGen& dspChainGen);
     struct BrokerReturn
     {
         bool isValid() { return dspSelectCode != 0; }
@@ -34,7 +34,7 @@ public:
     BrokerReturn getMeasMode(QString measModeName, MeasSystemChannels measChannelPairList);
 private:
     int getNextSelectionCode();
-    const ModeNameFunctionHash &m_functionHash;
+    const ModeNameFunctionHash m_functionHash;
     int m_nextSelectionCode = 32; // For now avoid collisions with enum measmodes
     QHash<measmodes, int /*selCode*/> m_assignedModes;
     DspChainIdGen& m_dspChainGen;

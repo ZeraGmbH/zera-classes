@@ -1,6 +1,6 @@
 #include "measmodebroker.h"
 
-MeasModeBroker::MeasModeBroker(const ModeNameFunctionHash &functionHash, DspChainIdGen &dspChainGen) :
+MeasModeBroker::MeasModeBroker(const ModeNameFunctionHash functionHash, DspChainIdGen &dspChainGen) :
     m_functionHash(functionHash),
     m_dspChainGen(dspChainGen)
 {
