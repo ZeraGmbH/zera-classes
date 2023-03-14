@@ -15,9 +15,9 @@ public:
     bool tryChangeMask(QString mask);
     QString getCurrentMask() const;
     bool isPhaseActive(int phase) const;
-    int getMeasSysCount() const;
-    int getActiveMeasSysCount() const;
-    int getMaxMeasSysCount() const;
+    int getMeasSysCount() const;            // from config
+    int getActiveMeasSysCount() const;      // can vary e.g on x-modes
+    int getMaxMeasSysCount() const;         // e.g 2-wire cannot have more than one system
     bool isValid() const;
 
 private:
