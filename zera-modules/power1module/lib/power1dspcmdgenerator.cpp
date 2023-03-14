@@ -4,7 +4,7 @@
 #include "measmode.h"
 #include "measmodeinfo.h"
 
-QStringList Power1DspCmdGenerator::dspCmdInitVars(std::shared_ptr<MeasMode> initialMMode, int samplesPerPeroid, double integrationTime, bool startTiTime, DspChainIdGen &idGen)
+QStringList Power1DspCmdGenerator::getCmdsInitVars(std::shared_ptr<MeasMode> initialMMode, int samplesPerPeroid, double integrationTime, bool startTiTime, DspChainIdGen &idGen)
 {
     QStringList cmdList;
     quint16 chainId = idGen.getNextChainId();

@@ -10,7 +10,7 @@
 class Power1DspCmdGenerator
 {
 public:
-    static QStringList dspCmdInitVars(std::shared_ptr<MeasMode> initialMMode, int samplesPerPeroid, double integrationTime, bool startTiTime, DspChainIdGen &idGen);
+    static QStringList getCmdsInitVars(std::shared_ptr<MeasMode> initialMMode, int samplesPerPeroid, double integrationTime, bool startTiTime, DspChainIdGen &idGen);
     static QStringList getCmdsInitOutputVars(DspChainIdGen& idGen);
     static QStringList getCmdsMModeMQREF(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
     static QStringList getCmdsMMode4LBK(int dspSelectCode, MeasSystemChannels measChannelPairList, DspChainIdGen& idGen);
