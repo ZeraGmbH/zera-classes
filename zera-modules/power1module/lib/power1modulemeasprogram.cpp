@@ -483,11 +483,12 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     Q_ASSERT(getConfData()->m_nMeasModeCount == getConfData()->m_sMeasmodeList.count());
 
+    DspChainIdGen dspChainGen;
     int measSytemCount = confdata->m_sMeasSystemList.count();
-    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), m_dspChainGen);
+    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), dspChainGen);
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
-    QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(m_dspChainGen);
+    QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(dspChainGen);
     MeasModeBroker::BrokerReturn brokerReturn;
     for (int i = 0; i < getConfData()->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasmodeList.at(i));
@@ -500,7 +501,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         MeasModePhasePersistency::setMeasModePhaseFromConfig(mode, getConfData()->m_measmodePhaseList);
         m_measModeSelector.addMode(mode);
     }
-    dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage(m_dspChainGen));
+    dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage(dspChainGen));
 
     m_measModeSelector.tryChangeMode(getConfData()->m_sMeasuringMode.m_sValue);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -510,8 +511,8 @@ void cPower1ModuleMeasProgram::setDspCmdList()
                                                                          m_nSRate,
                                                                          calcTiTime(),
                                                                          getConfData()->m_sIntegrationMode == "time",
-                                                                         m_dspChainGen);
-    QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr, m_dspChainGen);
+                                                                         dspChainGen);
+    QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr, dspChainGen);
 
     // sequence here is important
     m_pDSPInterFace->addCycListItems(dspInitVarsList);
