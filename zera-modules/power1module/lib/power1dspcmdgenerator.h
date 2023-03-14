@@ -22,6 +22,9 @@ public:
     static QStringList getCmdsFreqOutput(const POWER1MODULE::cPower1ModuleConfigData *configData,
                                          const QHash<QString, cFoutInfo> foutInfoHash,
                                          int irqNo, DspChainIdGen& idGen);
+private:
+    static QStringList getSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId);
+    static QStringList getSkipOnPhaseNotSelected(int phase, quint16 chainId);
 };
 
 #endif // POWER1DSPCMDGENERATOR_H
