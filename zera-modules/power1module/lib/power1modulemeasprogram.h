@@ -105,7 +105,6 @@ private:
         double maxI = 0.0;
     };
     RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
-    QStringList dspCmdInitVars(int dspInitialSelectCode);
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;

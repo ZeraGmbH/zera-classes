@@ -469,29 +469,6 @@ void cPower1ModuleMeasProgram::deleteDspVarList()
     m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
 }
 
-QStringList cPower1ModuleMeasProgram::dspCmdInitVars(int dspInitialSelectCode)
-{
-    QStringList dspCmdList;
-    QString chainId = m_dspChainGen.getNextChainIdStr();
-    dspCmdList.append(QString("STARTCHAIN(1,1,%1)").arg(chainId)); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(m_nSRate) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(m_nSRate) ); // clear meassignal
-    dspCmdList.append(QString("CLEARN(%1,FILTER)").arg(2*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
-    dspCmdList.append(QString("SETVAL(MMODE,%1)").arg(dspInitialSelectCode));
-    for(int phase=0; phase<getConfData()->m_sMeasSystemList.count(); phase++)
-        dspCmdList.append(QString("SETVAL(%1)").arg(dspGetPhaseVarStr(phase, ","))); // initial phases
-    dspCmdList.append(QString("SETVAL(FAK,0.5)"));
-
-    double integrationTime = calcTiTime();
-    bool intergrationModeTime = getConfData()->m_sIntegrationMode == "time";
-    dspCmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
-    if(intergrationModeTime)
-        dspCmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
-    dspCmdList.append(QString("DEACTIVATECHAIN(1,%1)").arg(chainId)); // ende prozessnr., hauptkette 1 subkette 1
-    dspCmdList.append(QString("STOPCHAIN(1,%1)").arg(chainId)); // ende prozessnr., hauptkette 1 subkette 1
-    return dspCmdList;
-}
-
 void cPower1ModuleMeasProgram::setDspCmdList()
 {
     MeasSystemChannels measChannelPairList;
@@ -556,15 +533,11 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     updatePhaseMaskVeinComponents(mode);
 
-    DspChainIdGen chaingenFreeze = m_dspChainGen;
-    QStringList dspInitVarsList = dspCmdInitVars(mode->getDspSelectCode());
-    QStringList dspInitVarsListNew = Power1DspCmdGenerator::dspCmdInitVars(mode,
-                                                                           m_nSRate,
-                                                                           calcTiTime(),
-                                                                           getConfData()->m_sIntegrationMode == "time",
-                                                                           chaingenFreeze);
-    Q_ASSERT(dspInitVarsList == dspInitVarsListNew);
-
+    QStringList dspInitVarsList = Power1DspCmdGenerator::dspCmdInitVars(mode,
+                                                                        m_nSRate,
+                                                                        calcTiTime(),
+                                                                        getConfData()->m_sIntegrationMode == "time",
+                                                                        m_dspChainGen);
     QStringList dspFreqCmds = Power1DspCmdGenerator::getCmdsFreqOutput(getConfData(), m_FoutInfoHash, irqNr, m_dspChainGen);
 
     // sequence here is important
@@ -573,12 +546,10 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItems(dspFreqCmds);
 }
 
-
 void cPower1ModuleMeasProgram::deleteDspCmdList()
 {
     m_pDSPInterFace->clearCmdList();
 }
-
 
 void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
@@ -1868,4 +1839,3 @@ void cPower1ModuleMeasProgram::onModeTransactionOk()
 }
 
 }
-
