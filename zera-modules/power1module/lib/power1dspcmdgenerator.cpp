@@ -1,7 +1,33 @@
 #include "power1dspcmdgenerator.h"
 #include "inttohexstringconvert.h"
 #include "dspatomiccommandgen.h"
+#include "measmode.h"
 #include "measmodeinfo.h"
+
+QStringList Power1DspCmdGenerator::dspCmdInitVars(std::shared_ptr<MeasMode> initialMMode, int samplesPerPeroid, double integrationTime, bool startTiTime, DspChainIdGen &idGen)
+{
+    QStringList cmdList;
+    quint16 chainId = idGen.getNextChainId();
+    cmdList.append(DspAtomicCommandGen::getStartChainActive(chainId));
+    cmdList.append(QString("CLEARN(%1,MEASSIGNAL1)").arg(samplesPerPeroid) ); // clear meassignal
+    cmdList.append(QString("CLEARN(%1,MEASSIGNAL2)").arg(samplesPerPeroid) ); // clear meassignal
+    cmdList.append(QString("CLEARN(%1,FILTER)").arg(2*(MeasPhaseCount+SumValueCount)+1) ); // clear the whole filter incl. count
+    cmdList.append(QString("SETVAL(MMODE,%1)").arg(initialMMode->getDspSelectCode()));
+
+    QString modeMask = initialMMode->getCurrentMask();
+    for(int phase=0; phase<modeMask.size(); phase++) {
+        QString phaseStr = QString("XMMODEPHASE%1,%3").arg(phase).arg(modeMask.mid(phase,1));
+        cmdList.append(QString("SETVAL(%1)").arg(phaseStr)); // initial phases
+    }
+    cmdList.append(QString("SETVAL(FAK,0.5)"));
+
+    cmdList.append(QString("SETVAL(TIPAR,%1)").arg(integrationTime)); // initial ti time
+    if(startTiTime)
+        cmdList.append("GETSTIME(TISTART)"); // einmal ti start setzen
+    cmdList.append(DspAtomicCommandGen::getDeactivateChain(chainId));
+    cmdList.append(DspAtomicCommandGen::getStopChain(chainId));
+    return cmdList;
+}
 
 QStringList Power1DspCmdGenerator::getCmdsInitOutputVars(DspChainIdGen &idGen)
 {
