@@ -49,7 +49,7 @@ enum moduleconfigstate
 
 class cSec1ModuleConfigData;
 
-const QString defaultXSDFile = "://src/sec1module.xsd";
+const QString defaultXSDFile = "://sec1module.xsd";
 
 // sec1moduleconfiguration holds configuration data as well as parameter
 
