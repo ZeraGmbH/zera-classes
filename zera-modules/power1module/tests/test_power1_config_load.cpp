@@ -1,4 +1,4 @@
-#include "test_pow1_config_load.h"
+#include "test_power1_config_load.h"
 #include "power1moduleconfiguration.h"
 #include "power1dspmodefunctioncatalog.h"
 #include "measmode.h"
@@ -10,15 +10,15 @@
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_pow1_config_load)
+QTEST_MAIN(test_power1_config_load)
 
-void test_pow1_config_load::fileFound()
+void test_power1_config_load::fileFound()
 {
     QFile tmpXmlConfigFile(QStringLiteral(CONFIG_PATH) + "/" + "com5003-power1module.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 
-void test_pow1_config_load::allFilesLoaded()
+void test_power1_config_load::allFilesLoaded()
 {
     // Note: Some checks are done within cPower1ModuleConfiguration and failures fire Q_ASSERT
     QFileInfoList fileList = QDir(QStringLiteral(CONFIG_PATH)).entryInfoList(QStringList() << "*.xml");
@@ -64,7 +64,7 @@ private:
 
 QVector<PowConfig> ConfFileLoader::m_confFiles;
 
-void test_pow1_config_load::modeListCountSameAsArraySize()
+void test_power1_config_load::modeListCountSameAsArraySize()
 {
     for(const auto &config : qAsConst(ConfFileLoader::get())) {
         qInfo("Check %s...", qPrintable(config.filename));
@@ -72,7 +72,7 @@ void test_pow1_config_load::modeListCountSameAsArraySize()
     }
 }
 
-void test_pow1_config_load::modePhaseListCountSameAsArraySize()
+void test_power1_config_load::modePhaseListCountSameAsArraySize()
 {
     for(const auto &config : qAsConst(ConfFileLoader::get())) {
         qInfo("Check %s...", qPrintable(config.filename));
@@ -80,7 +80,7 @@ void test_pow1_config_load::modePhaseListCountSameAsArraySize()
     }
 }
 
-void test_pow1_config_load::modePhaseListPlausis()
+void test_power1_config_load::modePhaseListPlausis()
 {
     for(const auto &config : qAsConst(ConfFileLoader::get())) {
         qInfo("Check %s...", qPrintable(config.filename));
@@ -95,7 +95,7 @@ void test_pow1_config_load::modePhaseListPlausis()
     }
 }
 
-void test_pow1_config_load::measSystemsValid()
+void test_power1_config_load::measSystemsValid()
 {
     for(const auto &config : qAsConst(ConfFileLoader::get())) {
         qInfo("Check %s...", qPrintable(config.filename));
@@ -111,7 +111,7 @@ void test_pow1_config_load::measSystemsValid()
     }
 }
 
-void test_pow1_config_load::allModesProperlyLoadedFromConfig()
+void test_power1_config_load::allModesProperlyLoadedFromConfig()
 {
     for(const auto &config : qAsConst(ConfFileLoader::get())) {
         qInfo("Check %s...", qPrintable(config.filename));

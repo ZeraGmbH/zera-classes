@@ -1,19 +1,19 @@
-#include "test_pow2_config_load.h"
+#include "test_power2_config_load.h"
 #include "power2moduleconfigdata.h"
 #include "power2moduleconfiguration.h"
 #include <memory>
 #include <QSignalSpy>
 #include <QTest>
 
-QTEST_MAIN(test_pow2_config_load)
+QTEST_MAIN(test_power2_config_load)
 
-void test_pow2_config_load::fileFound()
+void test_power2_config_load::fileFound()
 {
     QFile tmpXmlConfigFile(QStringLiteral(CONFIG_PATH) + "/" + "com5003-power2moduleCED.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 
-void test_pow2_config_load::allFilesLoaded()
+void test_power2_config_load::allFilesLoaded()
 {
     // Note: Some checks are done within cPower2ModuleConfiguration and failures fire Q_ASSERT
     QFileInfoList fileList = QDir(QStringLiteral(CONFIG_PATH)).entryInfoList(QStringList() << "*.xml");
@@ -59,7 +59,7 @@ private:
 
 QVector<PowConfig> ConfFileLoader::m_confFiles;
 
-void test_pow2_config_load::modeListCountSameAsArraySize()
+void test_power2_config_load::modeListCountSameAsArraySize()
 {
     for(const auto &config : qAsConst(ConfFileLoader::get())) {
         qInfo("Check %s...", qPrintable(config.filename));

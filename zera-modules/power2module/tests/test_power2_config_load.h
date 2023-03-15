@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class test_pow2_config_load : public QObject
+class test_power2_config_load : public QObject
 {
     Q_OBJECT
 private slots:
