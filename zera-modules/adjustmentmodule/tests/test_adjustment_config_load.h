@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class test_adj_config_load : public QObject
+class test_adjustment_config_load : public QObject
 {
     Q_OBJECT
 private slots:
