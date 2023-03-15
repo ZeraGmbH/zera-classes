@@ -1,5 +1,9 @@
 file(GLOB XML_CONFIGS
     ${CMAKE_CURRENT_SOURCE_DIR}/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/ced/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/emob/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/lem_dc/*.xml
+    ${CMAKE_CURRENT_SOURCE_DIR}/ref/*.xml
 )
 
 file(GLOB XML_SCHEMA
