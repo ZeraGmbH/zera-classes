@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/sec1module.xsd</file>
+        <file>sec1module.xsd</file>
     </qresource>
 </RCC>
