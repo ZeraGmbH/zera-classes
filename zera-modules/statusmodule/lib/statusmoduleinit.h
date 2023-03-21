@@ -108,9 +108,6 @@ private:
     QString m_sAdjChksum;
     QString m_sDeviceType;
     QString m_sCPUInfo;
-    QString m_sSchnubbelStatus;
-    QString m_sAccumulatorStatus;
-    QString m_sAccumulatorSoc;
 
     VfModuleParameter *m_pPCBServerVersion;
     VfModuleParameter *m_pCtrlVersion;
