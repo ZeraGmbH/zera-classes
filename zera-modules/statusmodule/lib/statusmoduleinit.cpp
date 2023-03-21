@@ -217,7 +217,7 @@ void cStatusModuleInit::generateInterface()
     m_pSchnubbelStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("INF_Schnubbel"),
                                                QString("Schnubbel inserted or not"),
-                                               QVariant(QString("")));
+                                               QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pSchnubbelStatus;
     m_pSchnubbelStatus->setSCPIInfo(new cSCPIInfo("STATUS", "AUTHORIZATION", "2", key, "0", ""));
@@ -225,7 +225,7 @@ void cStatusModuleInit::generateInterface()
     m_pAccumulatorStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("INF_AccumulatorStatus"),
                                                QString("Accumulator status"),
-                                               QVariant(QString("")));
+                                               QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pAccumulatorStatus;
     m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("SYSTEM", "ACCUMULATOR:STATUS", "2", key, "0", ""));
@@ -233,7 +233,7 @@ void cStatusModuleInit::generateInterface()
     m_pAccumulatorSoc = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("INF_AccumulatorSoc"),
                                                QString("Accumulator state of charge"),
-                                               QVariant(QString("")));
+                                               QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pAccumulatorSoc;
     m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("SYSTEM", "ACCUMULATOR:SOC", "2", key, "0", ""));
@@ -424,8 +424,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::readPCBServerSchnubbelStatus:
                 if (reply == ack)
                 {
-                    m_sSchnubbelStatus = answer.toString();
-                    m_pSchnubbelStatus->setValue(QVariant(m_sSchnubbelStatus));
+                    m_pSchnubbelStatus->setValue(QVariant(answer.toInt()));
                     emit activationContinue();
                 }
                 else
@@ -437,15 +436,13 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
 
             case STATUSMODINIT::readPCBServerAccumulatorStatus:
                 if (!m_ConfigData.m_accumulator) {
-                   m_sAccumulatorStatus = "0";
-                   m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
+                   m_pAccumulatorStatus->setValue(QVariant(0));
                    emit activationContinue();
                 }
                 else {
                    if (reply == ack)
                     {
-                      m_sAccumulatorStatus = answer.toString();
-                      m_pAccumulatorStatus->setValue(QVariant(m_sAccumulatorStatus));
+                      m_pAccumulatorStatus->setValue(QVariant(answer.toInt()));
                       emit activationContinue();
                     }
                     else
@@ -463,8 +460,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else {
                     if (reply == ack)
                     {
-                       m_sAccumulatorSoc = answer.toString();
-                       m_pAccumulatorSoc->setValue(QVariant(m_sAccumulatorSoc));
+                       m_pAccumulatorSoc->setValue(QVariant(answer.toInt()));
                        emit activationContinue();
                     }
                     else
