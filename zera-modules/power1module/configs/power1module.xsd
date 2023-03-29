@@ -73,10 +73,6 @@
         <xs:enumeration value="2LB"/>
         <xs:enumeration value="2LS"/>
         <xs:enumeration value="2LSg"/>
-        <xs:enumeration value="XLW"/>
-        <xs:enumeration value="XLB"/>
-        <xs:enumeration value="XLS"/>
-        <xs:enumeration value="XLSg"/>
         <xs:enumeration value="QREF"/>
       </xs:restriction>
     </xs:simpleType>

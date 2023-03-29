@@ -21,12 +21,11 @@
         </connectivity>
         <measure>
             <modes>
-                <n>5</n>
+                <n>4</n>
                 <m1>4LB</m1>
                 <m2>4LBK</m2>
                 <m3>3LB</m3>
                 <m4>2LB</m4>
-                <m5>XLB</m5>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
