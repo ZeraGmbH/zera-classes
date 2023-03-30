@@ -6,6 +6,7 @@
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <measmodeselector.h>
+#include <meassytemchannels.h>
 #include <foutinfo.h>
 #include <vfmodulecomponentinput.h>
 #include <movingwindowfilter.h>
@@ -88,6 +89,7 @@ private:
     void setFoutMetaInfo();
 
     QString getInitialPhaseOnOffVeinVal();
+    MeasSystemChannels getMeasChannelUIPairs();
     QString dspGetPhaseVarStr(int phase, QString separator);
     void dspSetParamsTiMModePhase(int tiTimeOrPeriods);
     QString dspGetSetPhasesVar();
