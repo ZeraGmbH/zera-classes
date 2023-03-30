@@ -3,6 +3,7 @@
 
 #include <QtGlobal>
 
+// Create unique ids for DSP chains automatically
 // no overflow handling yet
 class DspChainIdGen
 {

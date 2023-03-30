@@ -469,27 +469,33 @@ void cPower1ModuleMeasProgram::deleteDspVarList()
     m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
 }
 
-void cPower1ModuleMeasProgram::setDspCmdList()
+MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
 {
-    MeasSystemChannels measChannelPairList;
-    cPower1ModuleConfigData *confdata = getConfData();
-    for(auto &measChannelPair : confdata->m_sMeasSystemList) {
+    MeasSystemChannels measChannelUIPairList;
+    for(auto &measChannelPair : getConfData()->m_sMeasSystemList) {
         QStringList channelPairSplit = measChannelPair.split(',');
         MeasSystemChannel measChannel;
         measChannel.voltageChannel = m_measChannelInfoHash.value(channelPairSplit.at(0)).dspChannelNr;
         measChannel.currentChannel = m_measChannelInfoHash.value(channelPairSplit.at(1)).dspChannelNr;
-        measChannelPairList.append(measChannel);
+        measChannelUIPairList.append(measChannel);
     }
+    return measChannelUIPairList;
+}
 
-    DspChainIdGen dspChainGen;
+void cPower1ModuleMeasProgram::setDspCmdList()
+{
+    MeasSystemChannels measChannelUIPairList = getMeasChannelUIPairs();
+
+    cPower1ModuleConfigData *confdata = getConfData();
     int measSytemCount = confdata->m_sMeasSystemList.count();
+    DspChainIdGen dspChainGen;
     MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), dspChainGen);
 
     // we set up all our lists for wanted measuring modes, this gets much more performance
     QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(dspChainGen);
     for (int i = 0; i < confdata->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(confdata->m_sMeasmodeList.at(i));
-        MeasModeBroker::BrokerReturn brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelPairList);
+        MeasModeBroker::BrokerReturn brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelUIPairList);
         dspMModesCommandList.append(brokerReturn.dspCmdList);
         std::shared_ptr<MeasMode> mode = std::make_shared<MeasMode>(mInfo.getName(),
                                                                     brokerReturn.dspSelectCode,
