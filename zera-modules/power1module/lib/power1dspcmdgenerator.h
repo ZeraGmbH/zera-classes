@@ -25,8 +25,8 @@ public:
                                          const QHash<QString, cFoutInfo> foutInfoHash,
                                          int irqNo, DspChainIdGen& idGen);
 private:
-    static QStringList getSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId);
-    static QStringList getSkipOnPhaseNotSelected(int phase, quint16 chainId);
+    static QStringList getCmdsSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId);
+    static QStringList getCmdsSkipOnPhaseNotSelected(int phase, quint16 chainId);
 };
 
 #endif // POWER1DSPCMDGENERATOR_H

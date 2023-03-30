@@ -43,7 +43,7 @@ QStringList Power1DspCmdGenerator::getCmdsMModeMQREF(int dspSelectCode, MeasSyst
     quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
     cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-    cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
+    cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // we simply set all our actual values to nominal power
@@ -59,7 +59,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode4LBK(int dspSelectCode, MeasSyste
     quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
     cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-    cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
+    cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
@@ -119,7 +119,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LW(int dspSelectCode, MeasSystem
     quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
     cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-    cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
+    cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
@@ -148,7 +148,7 @@ QStringList Power1DspCmdGenerator::getCmdsMMode3LB(int dspSelectCode, MeasSystem
     quint16 chainId = idGen.getNextChainId();
     QStringList cmdList;
     cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-    cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
+    cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
     cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
     // our first measuring system
@@ -194,8 +194,8 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLW(int dspSelectCode, MeasSystem
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
         quint16 chainId = idGen.getNextChainId();
         cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-        cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
-        cmdList.append(getSkipOnPhaseNotSelected(phase, chainId));
+        cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
+        cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
         cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
@@ -214,8 +214,8 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLB(int dspSelectCode, MeasSystem
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
         quint16 chainId = idGen.getNextChainId();
         cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-        cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
-        cmdList.append(getSkipOnPhaseNotSelected(phase, chainId));
+        cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
+        cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
         cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
@@ -241,8 +241,8 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLS(int dspSelectCode, MeasSystem
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
         quint16 chainId = idGen.getNextChainId();
         cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-        cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
-        cmdList.append(getSkipOnPhaseNotSelected(phase, chainId));
+        cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
+        cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
         cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
@@ -263,8 +263,8 @@ QStringList Power1DspCmdGenerator::getCmdsMModeXLSg(int dspSelectCode, MeasSyste
     for(int phase=0; phase<measChannelPairList.count(); phase++) {
         quint16 chainId = idGen.getNextChainId();
         cmdList.append(DspAtomicCommandGen::getActivateChain(chainId));
-        cmdList.append(getSkipOnMModeNotSelected(dspSelectCode, chainId));
-        cmdList.append(getSkipOnPhaseNotSelected(phase, chainId));
+        cmdList.append(getCmdsSkipOnMModeNotSelected(dspSelectCode, chainId));
+        cmdList.append(getCmdsSkipOnPhaseNotSelected(phase, chainId));
         cmdList.append(DspAtomicCommandGen::getStartChainInactive(chainId));
 
         cmdList.append(QString("COPYDATA(CH%1,0,MEASSIGNAL1)").arg(measChannelPairList[phase].voltageChannel));
@@ -372,7 +372,7 @@ QStringList Power1DspCmdGenerator::getCmdsFreqOutput(const POWER1MODULE::cPower1
     return cmdList;
 }
 
-QStringList Power1DspCmdGenerator::getSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId)
+QStringList Power1DspCmdGenerator::getCmdsSkipOnMModeNotSelected(int dspSelectCode, quint16 chainId)
 {
     QStringList cmdList;
     cmdList.append(QString("TESTVCSKIPEQ(MMODE,%1)").arg(dspSelectCode));
@@ -380,7 +380,7 @@ QStringList Power1DspCmdGenerator::getSkipOnMModeNotSelected(int dspSelectCode, 
     return cmdList;
 }
 
-QStringList Power1DspCmdGenerator::getSkipOnPhaseNotSelected(int phase, quint16 chainId)
+QStringList Power1DspCmdGenerator::getCmdsSkipOnPhaseNotSelected(int phase, quint16 chainId)
 {
     QStringList cmdList;
     cmdList.append(QString("TESTVCSKIPEQ(XMMODEPHASE%1,1)").arg(phase));
