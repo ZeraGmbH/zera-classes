@@ -38,7 +38,7 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
 SourceScannerIoZeraSerial::SourceScannerIoZeraSerial()
 {
     IoQueueGroupListPtr scanIoGroupList;
-    scanIoGroupList.append(getCleanupUnfinishedGroup());
+    scanIoGroupList.append(getCleanupUnfinishedIoCmdGroup());
     scanIoGroupList.append(getDeviceScanGroup());
     m_scanIoGroupList = scanIoGroupList;
 }
@@ -52,14 +52,14 @@ SourceProperties SourceScannerIoZeraSerial::evalResponses(IoQueueGroup::Ptr tran
 {
     SourceProperties sourceProperties;
     int iogroupIdx = IoQueueGroupListFind::findGroupIdx(m_scanIoGroupList, transferGroup->getGroupId());
-    if(iogroupIdx > 0) { // 1st is unfinished cleanup group - see getCleanupUnfinishedGroup
+    if(iogroupIdx > 0) { // 1st is unfinished cleanup group - see getCleanupUnfinishedIoCmdGroup
         IoQueueGroup::Ptr groupFound = m_scanIoGroupList[iogroupIdx];
         sourceProperties = evalResponsesForTransactionGroup(groupFound);
     }
     return sourceProperties;
 }
 
-IoQueueGroup::Ptr SourceScannerIoZeraSerial::getCleanupUnfinishedGroup()
+IoQueueGroup::Ptr SourceScannerIoZeraSerial::getCleanupUnfinishedIoCmdGroup()
 {
     IoQueueGroup::Ptr ioTermGroup = IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
     tIoTransferList ioTermList;
