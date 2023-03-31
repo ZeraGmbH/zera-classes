@@ -11,7 +11,7 @@ public:
     virtual SourceProperties evalResponses(IoQueueGroup::Ptr transferGroup) override;
 
 private:
-    IoQueueGroup::Ptr getCleanupUnfinishedGroup();
+    IoQueueGroup::Ptr getCleanupUnfinishedIoCmdGroup();
     IoQueueGroup::Ptr getDeviceScanGroup();
     QByteArray extractVersionFromResponse(IoTransferDataSingle::Ptr ioData);
     QByteArray extractNameFromResponse(IoTransferDataSingle::Ptr ioData, QByteArray version, QByteArray cmdSend);
