@@ -118,10 +118,15 @@ target_link_libraries(sourcemodule-static
 target_include_directories(sourcemodule-static
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/io-device>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/io-queue>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/json>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/message-texts>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/source-device>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/source-protocols>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/source-scanner>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/transaction-ids>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src/vein>
     )
 
 file(GLOB MODULE_SOURCES

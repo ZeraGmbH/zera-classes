@@ -3,8 +3,8 @@
 
 #include "basemeasworkprogram.h"
 #include "sourcemoduleconfiguration.h"
-#include "vein/sourceveininterface.h"
-#include "source-device/sourcedevicemanager.h"
+#include "sourceveininterface.h"
+#include "sourcedevicemanager.h"
 #include <vf-cpp-rpc.h>
 #include <QUuid>
 

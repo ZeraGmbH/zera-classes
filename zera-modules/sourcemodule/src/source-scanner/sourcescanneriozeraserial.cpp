@@ -37,13 +37,13 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
 
 SourceScannerIoZeraSerial::SourceScannerIoZeraSerial()
 {
-    IoQueueEntryList scanIoGroupList;
+    IoQueueGroupListPtr scanIoGroupList;
     scanIoGroupList.append(getCleanupUnfinishedGroup());
     scanIoGroupList.append(getDeviceScanGroup());
     m_scanIoGroupList = scanIoGroupList;
 }
 
-IoQueueEntryList SourceScannerIoZeraSerial::getIoQueueEntriesForScan()
+IoQueueGroupListPtr SourceScannerIoZeraSerial::getIoQueueGroupsForScan()
 {
     return m_scanIoGroupList;
 }
@@ -51,17 +51,17 @@ IoQueueEntryList SourceScannerIoZeraSerial::getIoQueueEntriesForScan()
 SourceProperties SourceScannerIoZeraSerial::evalResponses(int ioGroupId)
 {
     SourceProperties sourceProperties;
-    int iogroupIdx = IoQueueEntryListFind::findGroupIdx(m_scanIoGroupList, ioGroupId);
+    int iogroupIdx = IoQueueGroupListFind::findGroupIdx(m_scanIoGroupList, ioGroupId);
     if(iogroupIdx > 0) { // 1st is unfinished cleanup group - see getCleanupUnfinishedGroup
-        IoQueueEntry::Ptr groupFound = m_scanIoGroupList[iogroupIdx];
+        IoQueueGroup::Ptr groupFound = m_scanIoGroupList[iogroupIdx];
         sourceProperties = evalResponsesForTransactionGroup(groupFound);
     }
     return sourceProperties;
 }
 
-IoQueueEntry::Ptr SourceScannerIoZeraSerial::getCleanupUnfinishedGroup()
+IoQueueGroup::Ptr SourceScannerIoZeraSerial::getCleanupUnfinishedGroup()
 {
-    IoQueueEntry::Ptr ioTermGroup = IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
+    IoQueueGroup::Ptr ioTermGroup = IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
     tIoTransferList ioTermList;
     IoTransferDataSingle::Ptr ioTermSingle = IoTransferDataSingle::Ptr::create("\r", "", "");
     ioTermList.append(ioTermSingle);
@@ -69,9 +69,9 @@ IoQueueEntry::Ptr SourceScannerIoZeraSerial::getCleanupUnfinishedGroup()
     return ioTermGroup;
 }
 
-IoQueueEntry::Ptr SourceScannerIoZeraSerial::getDeviceScanGroup()
+IoQueueGroup::Ptr SourceScannerIoZeraSerial::getDeviceScanGroup()
 {
-    IoQueueEntry::Ptr ioScanOutInGroup = IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
+    IoQueueGroup::Ptr ioScanOutInGroup = IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
     tIoTransferList scanList;
     for(auto entry : qAsConst(deviceScanListSerial)) {
         QList<QByteArray> expectedLeadList;
@@ -134,10 +134,10 @@ SourceProperties SourceScannerIoZeraSerial::extractProperties(IoTransferDataSing
     return sourceProperties;
 }
 
-SourceProperties SourceScannerIoZeraSerial::evalResponsesForTransactionGroup(IoQueueEntry::Ptr group)
+SourceProperties SourceScannerIoZeraSerial::evalResponsesForTransactionGroup(IoQueueGroup::Ptr group)
 {
     SourceProperties properties;
-    // Do not use IoQueueEntry::passedAll - remember we stop on first passed
+    // Do not use IoQueueGroup::passedAll - remember we stop on first passed
     for(int ioIdxInScanGroup=0; ioIdxInScanGroup<group->getTransferCount(); ++ioIdxInScanGroup) {
         IoTransferDataSingle::Ptr singleIo = group->getTransfer(ioIdxInScanGroup);
         if(singleIo->getPassIdxInExpectedLead() >= 0) {

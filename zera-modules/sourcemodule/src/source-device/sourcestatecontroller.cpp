@@ -38,7 +38,7 @@ void SourceStateController::onStateQueryTransationStarted(int dataGroupId)
     m_PendingStateQueryIds.setPending(dataGroupId);
 }
 
-void SourceStateController::onResponseReceived(const IoQueueEntry::Ptr transferGroup)
+void SourceStateController::onResponseReceived(const IoQueueGroup::Ptr transferGroup)
 {
     int groupId = transferGroup->getGroupId();
     if(m_pendingSwitchIds.isPendingAndRemoveIf(groupId)) {
@@ -68,7 +68,7 @@ void SourceStateController::setPollingOnStateChange()
     }
 }
 
-void SourceStateController::handleSwitchResponse(const IoQueueEntry::Ptr transferGroup)
+void SourceStateController::handleSwitchResponse(const IoQueueGroup::Ptr transferGroup)
 {
     if(isNewError(transferGroup)) {
         setState(States::ERROR_SWITCH);
@@ -84,7 +84,7 @@ void SourceStateController::handleSwitchResponse(const IoQueueEntry::Ptr transfe
     }
 }
 
-void SourceStateController::handleStateResponse(const IoQueueEntry::Ptr transferGroup)
+void SourceStateController::handleStateResponse(const IoQueueGroup::Ptr transferGroup)
 {
     if(m_pollCountBeforeIdleOrError > 0) {
         m_pollCountBeforeIdleOrError--;
@@ -104,7 +104,7 @@ void SourceStateController::handleStateResponse(const IoQueueEntry::Ptr transfer
     }
 }
 
-bool SourceStateController::isNewError(const IoQueueEntry::Ptr transferGroup)
+bool SourceStateController::isNewError(const IoQueueGroup::Ptr transferGroup)
 {
     return !transferGroup->passedAll() && !isErrorState();
 }

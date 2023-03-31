@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "source-protocols/sourcezerastatequeryevaluator.h"
+#include "sourcezerastatequeryevaluator.h"
 
 TEST(TEST_QUERY_ZERA, STATE_QUERY_EMPTY) {
     IIoQueryContentEvaluator::Ptr evalStateQuery = IIoQueryContentEvaluator::Ptr(new SourceZeraStateQueryEvaluator);

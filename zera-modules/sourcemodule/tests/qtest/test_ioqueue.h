@@ -2,13 +2,13 @@
 #define IOQUEUETEST_H
 
 #include <QObject>
-#include "io-queue/ioqueue.h"
+#include "ioqueue.h"
 
 class test_ioqueue : public QObject
 {
     Q_OBJECT
 public slots:
-    void onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup);
+    void onIoQueueGroupFinished(IoQueueGroup::Ptr workGroup);
 private slots:
     void init();
 
@@ -41,12 +41,12 @@ private slots:
     void twoFirstInvalidSecondOkSingleIo();
 
 private:
-    static IoQueueEntry::Ptr generateSwitchCommands(bool on);
-    static IoQueueEntry::Ptr generateStatusPollCommands();
+    static IoQueueGroup::Ptr generateSwitchCommands(bool on);
+    static IoQueueGroup::Ptr generateStatusPollCommands();
     void evalNotificationCount(int passedGroupsExpected,
                                int passExpected, int failExpected, int unknownExpected);
 
-    IoQueueEntryList m_listIoGroupsReceived;
+    IoQueueGroupListPtr m_listIoGroupsReceived;
 };
 
 #endif // IOQUEUETEST_H

@@ -7,7 +7,7 @@ SourceIoErrorInjection::SourceIoErrorInjection(Ptr sourceUnderTest) :
             this, &ISourceIo::sigResponseReceived);
 }
 
-int SourceIoErrorInjection::startTransaction(IoQueueEntry::Ptr transferGroup)
+int SourceIoErrorInjection::startTransaction(IoQueueGroup::Ptr transferGroup)
 {
     if(m_simulErrorGroupIdx >= 0) {
         IoTransferDataSingle::Ptr ioData = transferGroup->getTransfer(m_simulErrorGroupIdx);

@@ -5,7 +5,7 @@
 #include <QString>
 #include <QUuid>
 #include "sourcedevicefacade.h"
-#include "source-scanner/sourcescanner.h"
+#include "sourcescanner.h"
 
 class SourceDeviceManager : public QObject
 {

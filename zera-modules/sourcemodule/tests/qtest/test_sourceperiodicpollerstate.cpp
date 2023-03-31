@@ -1,10 +1,10 @@
 #include "test_sourceperiodicpollerstate.h"
 #include "test_globals.h"
-#include "source-device/sourceperiodicpollerstate.h"
+#include "sourceperiodicpollerstate.h"
 
 QTEST_MAIN(test_sourceperiodicpollerstate)
 
-void test_sourceperiodicpollerstate::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
+void test_sourceperiodicpollerstate::onIoQueueGroupFinished(IoQueueGroup::Ptr workGroup)
 {
     m_listIoGroupsReceived.append(workGroup);
 }

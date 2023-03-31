@@ -1,11 +1,11 @@
 #include "test_sourcedevicefacade.h"
 #include "test_globals.h"
 #include "veincomponentsetnotifier-forunittest.h"
-#include "source-device/sourcedevicefacade.h"
-#include "vein/sourceveininterface.h"
+#include "sourcedevicefacade.h"
+#include "sourceveininterface.h"
 #include "iodevicefactory.h"
-#include "json/jsonstructureloader.h"
-#include "json/persistentjsonstate.h"
+#include "jsonstructureloader.h"
+#include "persistentjsonstate.h"
 #include <vfmoduleparameter.h>
 #include <vfmoduleactvalue.h>
 #include <jsonparamvalidator.h>

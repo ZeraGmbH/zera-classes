@@ -1,5 +1,5 @@
 #include "sourceio.h"
-#include "json/jsonstructureloader.h"
+#include "jsonstructureloader.h"
 
 SourceIo::SourceIo(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties) :
     m_ioDevice(ioDevice),
@@ -12,7 +12,7 @@ SourceIo::SourceIo(IoDeviceBase::Ptr ioDevice, SourceProperties sourceProperties
             this, &SourceIo::onIoGroupFinished);
 }
 
-int SourceIo::startTransaction(IoQueueEntry::Ptr transferGroup)
+int SourceIo::startTransaction(IoQueueGroup::Ptr transferGroup)
 {
     m_ioQueue.enqueueTransferGroup(transferGroup);
     return transferGroup->getGroupId();
@@ -28,7 +28,7 @@ SourceProperties SourceIo::getProperties() const
     return m_sourceProperties;
 }
 
-void SourceIo::onIoGroupFinished(IoQueueEntry::Ptr transferGroup)
+void SourceIo::onIoGroupFinished(IoQueueGroup::Ptr transferGroup)
 {
     emit sigResponseReceived(transferGroup);
 }

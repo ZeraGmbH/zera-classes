@@ -23,7 +23,7 @@ SourceScanner::SourceScanner(IoDeviceBase::Ptr ioDevice, ISourceScannerStrategy:
 void SourceScanner::startScan()
 {
     if(m_ioDevice->isOpen()) {
-        m_ioQueueList = m_ioStrategy->getIoQueueEntriesForScan();
+        m_ioQueueList = m_ioStrategy->getIoQueueGroupsForScan();
         for(auto queueEntry : m_ioQueueList) {
             m_pendingQueueEntries.setPending(m_ioQueue.enqueueTransferGroup(queueEntry));
         }
@@ -40,7 +40,7 @@ void SourceScanner::finishScan()
     m_safePoinerOnThis = nullptr;
 }
 
-void SourceScanner::onTransferGroupFinished(IoQueueEntry::Ptr transferGroup)
+void SourceScanner::onTransferGroupFinished(IoQueueGroup::Ptr transferGroup)
 {
     m_SourcePropertiesFound = m_ioStrategy->evalResponses(transferGroup->getGroupId());
     bool scanComplete = false;

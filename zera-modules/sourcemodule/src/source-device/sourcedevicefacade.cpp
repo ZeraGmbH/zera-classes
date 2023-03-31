@@ -1,6 +1,6 @@
 #include "sourcedevicefacade.h"
-#include "json/jsonstructureloader.h"
-#include "message-texts/messagetexts.h"
+#include "jsonstructureloader.h"
+#include "messagetexts.h"
 #include <vfmoduleactvalue.h>
 #include <vfmoduleparameter.h>
 #include <jsonparamvalidator.h>

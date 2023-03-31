@@ -1,16 +1,16 @@
 #include "test_sourcestatecontroller.h"
 #include "test_globals.h"
-#include "source-device/sourcestatecontroller.h"
-#include "source-device/sourceswitchjson.h"
+#include "sourcestatecontroller.h"
+#include "sourceswitchjson.h"
 #include "iodevicedemo.h"
-#include "json/jsonstructureloader.h"
+#include "jsonstructureloader.h"
 
 #include "sourcedeviceerrorinjection-forunittest.h"
 #include <zera-json-params-state.h>
 
 QTEST_MAIN(test_sourcestatecontroller)
 
-void test_sourcestatecontroller::onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup)
+void test_sourcestatecontroller::onIoQueueGroupFinished(IoQueueGroup::Ptr workGroup)
 {
     m_listIoGroupsReceived.append(workGroup);
 }

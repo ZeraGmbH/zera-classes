@@ -1,6 +1,6 @@
 #include "test_iotransferdata.h"
 #include "test_globals.h"
-#include "io-queue/ioqueueentry.h"
+#include "ioqueuegroup.h"
 #include "iodevicebase.h"
 
 QTEST_MAIN(test_iotransferdata)
@@ -180,9 +180,9 @@ void test_iotransferdata::singleCheckInjectMultipleExpected()
 
 void test_iotransferdata::groupIdsCreated()
 {
-    IoQueueEntry workGroup1(IoQueueErrorBehaviors::STOP_ON_ERROR);
-    IoQueueEntry workGroup2(IoQueueErrorBehaviors::STOP_ON_ERROR);
-    IoQueueEntry workGroup3(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup workGroup1(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup workGroup2(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup workGroup3(IoQueueErrorBehaviors::STOP_ON_ERROR);
 
     QVERIFY(workGroup1.getGroupId() != workGroup2.getGroupId());
     QVERIFY(workGroup2.getGroupId() != workGroup3.getGroupId());
@@ -191,8 +191,8 @@ void test_iotransferdata::groupIdsCreated()
 
 void test_iotransferdata::groupPassedAllFail()
 {
-    IoQueueEntry::Ptr workTransferGroup =
-            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup::Ptr workTransferGroup =
+            IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));

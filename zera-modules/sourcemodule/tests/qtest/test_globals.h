@@ -4,7 +4,7 @@
 #include <QtTest>
 #include "iodevicebase.h"
 #include "iodevicedemo.h"
-#include "source-device/sourceproperties.h"
+#include "sourceproperties.h"
 
 #undef QTEST_MAIN
 #define QTEST_MAIN(TestObject) \

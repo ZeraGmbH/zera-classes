@@ -23,7 +23,7 @@ void IoQueue::setMaxPendingGroups(int maxGroups)
     m_maxPendingGroups = maxGroups;
 }
 
-int IoQueue::enqueueTransferGroup(IoQueueEntry::Ptr transferGroup)
+int IoQueue::enqueueTransferGroup(IoQueueGroup::Ptr transferGroup)
 {
     if(!canEnqueue(transferGroup)) {
         finishGroup(transferGroup);
@@ -75,7 +75,7 @@ void IoQueue::tryStartNextIo()
 IoTransferDataSingle::Ptr IoQueue::getNextIoTransfer()
 {
     IoTransferDataSingle::Ptr nextIo;
-    IoQueueEntry::Ptr currGroup = getCurrentGroup();
+    IoQueueGroup::Ptr currGroup = getCurrentGroup();
     if(currGroup) {
         if(m_nextPosInCurrGroup < currGroup->getTransferCount()) {
             nextIo = currGroup->getTransfer(m_nextPosInCurrGroup);
@@ -111,7 +111,7 @@ void IoQueue::finishCurrentGroup()
     finishGroup(m_pendingGroups.takeFirst());
 }
 
-void IoQueue::finishGroup(IoQueueEntry::Ptr transferGroupToFinish)
+void IoQueue::finishGroup(IoQueueGroup::Ptr transferGroupToFinish)
 {
     emit sigTransferGroupFinishedQueued(transferGroupToFinish);
 }
@@ -126,7 +126,7 @@ void IoQueue::abortAllGroups()
 bool IoQueue::checkCurrentResponsePassed()
 {
     bool pass = false;
-    IoQueueEntry::Ptr currGroup = getCurrentGroup();
+    IoQueueGroup::Ptr currGroup = getCurrentGroup();
     if(currGroup) {
         IoTransferDataSingle::Ptr currentIo = currGroup->getTransfer(m_nextPosInCurrGroup-1);
         pass = currentIo->didIoPass();
@@ -134,7 +134,7 @@ bool IoQueue::checkCurrentResponsePassed()
     return pass;
 }
 
-bool IoQueue::canEnqueue(IoQueueEntry::Ptr transferGroup)
+bool IoQueue::canEnqueue(IoQueueGroup::Ptr transferGroup)
 {
     bool canEnqueue =
             m_ioDevice && m_ioDevice->isOpen() &&
@@ -146,7 +146,7 @@ bool IoQueue::canEnqueue(IoQueueEntry::Ptr transferGroup)
 bool IoQueue::canContinueCurrentGroup()
 {
     bool pass = checkCurrentResponsePassed();
-    IoQueueEntry::Ptr currGroup = getCurrentGroup();
+    IoQueueGroup::Ptr currGroup = getCurrentGroup();
     bool canContinue = false;
     if(currGroup) {
         if(!pass && currGroup->getErrorBehavior() == IoQueueErrorBehaviors::STOP_ON_FIRST_OK) {
@@ -162,9 +162,9 @@ bool IoQueue::canContinueCurrentGroup()
     return canContinue;
 }
 
-IoQueueEntry::Ptr IoQueue::getCurrentGroup()
+IoQueueGroup::Ptr IoQueue::getCurrentGroup()
 {
-    IoQueueEntry::Ptr current;
+    IoQueueGroup::Ptr current;
     if(!m_pendingGroups.isEmpty()) {
         current = m_pendingGroups.first();
     }

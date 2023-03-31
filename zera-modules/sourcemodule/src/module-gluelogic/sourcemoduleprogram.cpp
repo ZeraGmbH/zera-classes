@@ -6,8 +6,8 @@
 #include "basedspmeasprogram.h"
 #include "sourcemoduleprogram.h"
 #include "sourcemodule.h"
-#include "source-device/sourcedevicemanager.h"
-#include "source-device/sourcedevicefacade.h"
+#include "sourcedevicemanager.h"
+#include "sourcedevicefacade.h"
 
 SourceModuleProgram::SourceModuleProgram(SourceModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseMeasWorkProgram(pConfiguration),

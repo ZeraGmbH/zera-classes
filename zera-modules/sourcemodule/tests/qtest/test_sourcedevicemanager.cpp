@@ -1,6 +1,6 @@
 #include "test_sourcedevicemanager.h"
 #include "test_globals.h"
-#include "source-device/sourcedevicemanager.h"
+#include "sourcedevicemanager.h"
 
 QTEST_MAIN(test_sourcedevicemanager)
 

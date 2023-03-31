@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <QFile>
-#include "source-device/supportedsources.h"
-#include "json/jsonfilenames.h"
+#include "supportedsources.h"
+#include "jsonfilenames.h"
 
 TEST(TEST_JSON_FILENAMES, TYPE_FILENAMES_COMPLETE) {
     for(int type=0; type<SOURCE_TYPE_COUNT; type++) {
