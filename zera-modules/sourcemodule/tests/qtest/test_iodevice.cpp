@@ -2,6 +2,8 @@
 #include "test_globals.h"
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
+#include <timerfactoryqtfortest.h>
+#include <timemachinefortest.h>
 
 QTEST_MAIN(test_iodevice)
 
@@ -12,6 +14,7 @@ void test_iodevice::init()
     m_errorsReceived = 0;
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "");
     m_listReceivedData.clear();
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_iodevice::generateBrokenIoDeviceForOutOfLimitType()
@@ -132,7 +135,7 @@ void test_iodevice::demoOpenDelayWait()
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
     QCOMPARE(m_ioFinishReceiveCount, 0); // check for queued
     QCOMPARE(m_errorsReceived, 0);
-    QTest::qWait(100);
+    TimeMachineForTest::getInstance()->processTimers(100);
     QCOMPARE(m_ioFinishReceiveCount, 1);
     QCOMPARE(m_errorsReceived, 0);
 }
@@ -165,15 +168,15 @@ void test_iodevice::demoResponseListDelay()
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30); // one I/O at a time
+    TimeMachineForTest::getInstance()->processTimers(30); // one I/O at a time
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "1");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "2");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
 
     QCOMPARE(m_ioFinishReceiveCount, 3);
     QCOMPARE(m_listReceivedData[0], "0\r");
@@ -188,11 +191,11 @@ void test_iodevice::demoResponseListErrorInjection()
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
     m_ioDataForSingleUse->getDemoResponder()->activateErrorResponse();
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30); // one I/O at a time
+    TimeMachineForTest::getInstance()->processTimers(30); // one I/O at a time
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "1");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
 
     QCOMPARE(m_ioFinishReceiveCount, 2);
     QCOMPARE(m_listReceivedData[0], IoTransferDemoResponder::getDefaultErrorResponse());
@@ -207,16 +210,16 @@ void test_iodevice::demoResponseAlwaysError()
     demoIO->setAllTransfersError(true);
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "0");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30); // one I/O at a time
+    TimeMachineForTest::getInstance()->processTimers(30); // one I/O at a time
 
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "1");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
 
     demoIO->setAllTransfersError(false);
     m_ioDataForSingleUse = IoTransferDataSingle::Ptr::create("", "2");
     ioDevice->sendAndReceive(m_ioDataForSingleUse);
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
 
     QCOMPARE(m_ioFinishReceiveCount, 3);
     QCOMPARE(m_listReceivedData[0], IoTransferDemoResponder::getDefaultErrorResponse());
@@ -270,7 +273,7 @@ void test_iodevice::baseCannotClose()
         countDiconnectReceived++;
     });
     ioDevice->close();
-    QTest::qWait(1);
+    TimeMachineForTest::getInstance()->processTimers(1);
     QCOMPARE(countDiconnectReceived, 0);
 }
 
@@ -283,7 +286,7 @@ void test_iodevice::demoCanClose()
         countDiconnectReceived++;
     });
     ioDevice->close();
-    QTest::qWait(1);
+    TimeMachineForTest::getInstance()->processTimers(1);
     QCOMPARE(countDiconnectReceived, 1);
 }
 
