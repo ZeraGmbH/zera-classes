@@ -7,9 +7,9 @@
 #include "sourcetransactionstartnotifier.h"
 #include "sourcestatecontroller.h"
 #include "sourceswitchjson.h"
-#include "json/jsondevicestatusapi.h"
-#include "json/persistentjsonstate.h"
-#include "vein/sourceveininterface.h"
+#include "jsondevicestatusapi.h"
+#include "persistentjsonstate.h"
+#include "sourceveininterface.h"
 
 #include <QObject>
 #include <QUuid>

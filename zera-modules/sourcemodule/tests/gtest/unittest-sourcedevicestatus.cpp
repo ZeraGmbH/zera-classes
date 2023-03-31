@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include <QJsonArray>
 #include <QStringList>
-#include "json/jsondevicestatusapi.h"
+#include "jsondevicestatusapi.h"
 
 static const QString keyBusy = "busy";
 static const QString keyErrors = "errors";

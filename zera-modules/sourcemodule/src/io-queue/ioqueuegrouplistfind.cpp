@@ -1,6 +1,6 @@
-#include "ioqueueentrylist.h"
+#include "ioqueuegrouplistfind.h"
 
-int IoQueueEntryListFind::findGroupIdx(const IoQueueEntryList &list, int ioGroupId)
+int IoQueueGroupListFind::findGroupIdx(const IoQueueGroupListPtr &list, int ioGroupId)
 {
     int idxFound = -1;
     for(int idx=0; idx<list.count(); ++idx) {
@@ -12,9 +12,9 @@ int IoQueueEntryListFind::findGroupIdx(const IoQueueEntryList &list, int ioGroup
     return idxFound;
 }
 
-IoQueueEntry::Ptr IoQueueEntryListFind::findGroup(const IoQueueEntryList &list, int ioGroupId)
+IoQueueGroup::Ptr IoQueueGroupListFind::findGroup(const IoQueueGroupListPtr &list, int ioGroupId)
 {
-    IoQueueEntry::Ptr groupFond;
+    IoQueueGroup::Ptr groupFond;
     int idxFound = findGroupIdx(list, ioGroupId);
     if(idxFound >= 0) {
         groupFond = list[idxFound];

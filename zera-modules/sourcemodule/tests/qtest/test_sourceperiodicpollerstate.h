@@ -8,7 +8,7 @@ class test_sourceperiodicpollerstate : public QObject
 {
     Q_OBJECT
 public slots:
-    void onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup);
+    void onIoQueueGroupFinished(IoQueueGroup::Ptr workGroup);
 private slots:
     void init();
 
@@ -23,7 +23,7 @@ private slots:
 private:
     ISourceIo::Ptr m_sourceIo;
     IoDeviceBase::Ptr m_ioDevice;
-    IoQueueEntryList m_listIoGroupsReceived;
+    IoQueueGroupListPtr m_listIoGroupsReceived;
     SourceTransactionStartNotifier::Ptr m_transactionNotifier;
 };
 

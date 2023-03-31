@@ -7,7 +7,7 @@ class test_sourcestatecontroller : public QObject
 {
     Q_OBJECT
 public slots:
-    void onIoQueueGroupFinished(IoQueueEntry::Ptr workGroup);
+    void onIoQueueGroupFinished(IoQueueGroup::Ptr workGroup);
 
 private slots:
     void init();
@@ -38,5 +38,5 @@ private:
     ISourceIo::Ptr m_sourceIo;
     ISourceIo::Ptr m_sourceIoWithError;
     IoDeviceBase::Ptr m_ioDevice;
-    IoQueueEntryList m_listIoGroupsReceived;
+    IoQueueGroupListPtr m_listIoGroupsReceived;
 };

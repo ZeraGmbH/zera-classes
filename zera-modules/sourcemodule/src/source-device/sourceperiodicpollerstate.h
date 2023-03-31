@@ -22,7 +22,7 @@ public:
 private slots:
     void onPollTimer();
     void onStateQueryTransationStarted(int dataGroupId);
-    void onResponseReceived(const IoQueueEntry::Ptr transferGroup);
+    void onResponseReceived(const IoQueueGroup::Ptr transferGroup);
 private:
     SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
     ISourceIo::Ptr m_sourceIo;

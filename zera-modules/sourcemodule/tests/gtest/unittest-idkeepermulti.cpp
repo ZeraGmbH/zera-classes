@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "transaction-ids/idkeeper.h"
+#include "idkeeper.h"
 
 TEST(TEST_ID_KEEPER_MULTI, INITIAL_NOT_PENDING) {
     IdKeeperMulti keeper;

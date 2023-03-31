@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "source-protocols/sourceactions.h"
+#include "sourceactions.h"
 
 // SourceActionTypes::isValidType
 TEST(TEST_SOURCEACTIONS, VALID_TYPE_DETECT) {

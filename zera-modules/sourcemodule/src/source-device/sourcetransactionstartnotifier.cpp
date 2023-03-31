@@ -10,7 +10,7 @@ ISourceIo::Ptr SourceTransactionStartNotifier::getSourceIo()
     return m_sourceIo;
 }
 
-void SourceTransactionStartNotifier::startTransactionWithNotify(IoQueueEntry::Ptr transferGroup)
+void SourceTransactionStartNotifier::startTransactionWithNotify(IoQueueGroup::Ptr transferGroup)
 {
     m_sourceIo->startTransaction(transferGroup);
     emit sigTransationStarted(transferGroup->getGroupId());

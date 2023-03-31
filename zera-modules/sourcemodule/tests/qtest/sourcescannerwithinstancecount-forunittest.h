@@ -1,7 +1,7 @@
 #ifndef SOURCESCANNERWITHINSTANCECOUNT_H
 #define SOURCESCANNERWITHINSTANCECOUNT_H
 
-#include "source-scanner/sourcescanner.h"
+#include "sourcescanner.h"
 
 class SourceScannerWithInstanceCount : public SourceScanner
 {

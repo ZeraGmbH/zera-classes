@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 #include <zera-json-params-state.h>
-#include "source-device/supportedsources.h"
-#include "json/jsonstructapi.h"
-#include "json/jsonparamapi.h"
-#include "json/jsonstructureloader.h"
+#include "supportedsources.h"
+#include "jsonstructapi.h"
+#include "jsonparamapi.h"
+#include "jsonstructureloader.h"
 
 static void echoStructureName(int type)
 {

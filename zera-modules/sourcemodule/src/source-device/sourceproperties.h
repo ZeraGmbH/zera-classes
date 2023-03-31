@@ -2,7 +2,7 @@
 #define SOURCEPROPERTIES_H
 
 #include "supportedsources.h"
-#include "source-protocols/sourceprotocols.h"
+#include "sourceprotocols.h"
 #include <QString>
 
 class SourceProperties

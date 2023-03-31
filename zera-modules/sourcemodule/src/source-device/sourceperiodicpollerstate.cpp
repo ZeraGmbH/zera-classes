@@ -42,7 +42,7 @@ bool SourceStatePeriodicPoller::tryStartPollNow()
 {
     bool bStarted = false;
     if(!m_PendingStateQueryIds.hasPending()) {
-        IoQueueEntry::Ptr transferGroup = m_sourceIo->getIoGroupGenerator().generateStatusPollGroup();
+        IoQueueGroup::Ptr transferGroup = m_sourceIo->getIoGroupGenerator().generateStatusPollGroup();
         m_sourceNotificationStateQuery->startTransactionWithNotify(transferGroup);
         bStarted = true;
     }
@@ -64,7 +64,7 @@ void SourceStatePeriodicPoller::onStateQueryTransationStarted(int dataGroupId)
     m_PendingStateQueryIds.setPending(dataGroupId);
 }
 
-void SourceStatePeriodicPoller::onResponseReceived(const IoQueueEntry::Ptr transferGroup)
+void SourceStatePeriodicPoller::onResponseReceived(const IoQueueGroup::Ptr transferGroup)
 {
     m_PendingStateQueryIds.isPendingAndRemoveIf(transferGroup->getGroupId());
 }

@@ -3,7 +3,7 @@
 
 #include <QList>
 #include <QJsonObject>
-#include "json/jsonparamapi.h"
+#include "jsonparamapi.h"
 
 class SourceActionTypes
 {

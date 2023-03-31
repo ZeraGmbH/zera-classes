@@ -1,8 +1,8 @@
 #include "test_sourceio.h"
 #include "test_globals.h"
 #include "iodevicefactory.h"
-#include "source-device/sourceio.h"
-#include "json/jsonstructureloader.h"
+#include "sourceio.h"
+#include "jsonstructureloader.h"
 #include <zera-json-params-state.h>
 
 QTEST_MAIN(test_sourceio)
@@ -43,15 +43,15 @@ void test_sourceio::signalResponses()
         countResponseReceived++;
     });
 
-    IoQueueEntry::Ptr workTransferGroup1 =
-            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup::Ptr workTransferGroup1 =
+            IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     sourceIo.startTransaction(workTransferGroup1);
 
-    IoQueueEntry::Ptr workTransferGroup2 =
-            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup::Ptr workTransferGroup2 =
+            IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
@@ -71,16 +71,16 @@ void test_sourceio::signalResponsesOnOneError()
         countResponseReceived++;
     });
 
-    IoQueueEntry::Ptr workTransferGroup1 =
-            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup::Ptr workTransferGroup1 =
+            IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->getTransfer(0)->getDemoResponder()->activateErrorResponse();
     sourceIo.startTransaction(workTransferGroup1);
 
-    IoQueueEntry::Ptr workTransferGroup2 =
-            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup::Ptr workTransferGroup2 =
+            IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);
@@ -100,16 +100,16 @@ void test_sourceio::signalResponsesOnTwoErrors()
         countResponseReceived++;
     });
 
-    IoQueueEntry::Ptr workTransferGroup1 =
-            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup::Ptr workTransferGroup1 =
+            IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList1;
     transList1.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup1->appendTransferList(transList1);
     workTransferGroup1->getTransfer(0)->getDemoResponder()->activateErrorResponse();
     sourceIo.startTransaction(workTransferGroup1);
 
-    IoQueueEntry::Ptr workTransferGroup2 =
-            IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
+    IoQueueGroup::Ptr workTransferGroup2 =
+            IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_ERROR);
     tIoTransferList transList2;
     transList2.append(IoTransferDataSingle::Ptr::create("", ""));
     workTransferGroup2->appendTransferList(transList2);

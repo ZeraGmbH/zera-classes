@@ -2,8 +2,8 @@
 #include "test_globals.h"
 #include "iodevicefactory.h"
 #include "sourcescannerwithinstancecount-forunittest.h"
-#include "source-scanner/sourcescanneriodemo.h"
-#include "source-scanner/sourcescanneriozeraserial.h"
+#include "sourcescanneriodemo.h"
+#include "sourcescanneriozeraserial.h"
 
 QTEST_MAIN(test_sourcescanner)
 
@@ -195,8 +195,8 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
-    IoQueueEntryList list = ioStrategy->getIoQueueEntriesForScan();
-    for(IoQueueEntry::Ptr entry : qAsConst(list)) {
+    IoQueueGroupListPtr list = ioStrategy->getIoQueueGroupsForScan();
+    for(IoQueueGroup::Ptr entry : qAsConst(list)) {
         for(int idx = 0; idx<entry->getTransferCount(); ++idx) {
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
         }
@@ -220,8 +220,8 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
     ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoZeraSerial);
     SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
 
-    IoQueueEntryList list = ioStrategy->getIoQueueEntriesForScan();
-    for(IoQueueEntry::Ptr entry : qAsConst(list)) {
+    IoQueueGroupListPtr list = ioStrategy->getIoQueueGroupsForScan();
+    for(IoQueueGroup::Ptr entry : qAsConst(list)) {
         for(int idx = 0; idx<entry->getTransferCount(); ++idx) {
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
         }

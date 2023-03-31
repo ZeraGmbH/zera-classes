@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "source-protocols/iogroupgenerator.h"
+#include "iogroupgenerator.h"
 
 // double -> send string conversion
 TEST(TEST_PACKET_GENERATIOR, VALUE_CONVERSION) {
@@ -35,7 +35,7 @@ TEST(TEST_PACKET_GENERATIOR, TIMEOUT_SET) {
     JsonParamApi params;
     params.setOn(true);
     tSourceActionTypeList actionList = SourceActionGenerator::generateSwitchActions(params);
-    IoQueueEntry::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
+    IoQueueGroup::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
     for(int idx=0; idx<transferGroup->getTransferCount(); idx++) {
         EXPECT_GE(transferGroup->getTransfer(idx)->getResponseTimeout(), 0);
     }
@@ -57,7 +57,7 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_OFF_PACKET_SPECIFICS) {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;
     params.setOn(false);
-    IoQueueEntry::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
+    IoQueueGroup::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
     EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueErrorBehaviors::STOP_ON_ERROR);
 }
 
@@ -65,13 +65,13 @@ TEST(TEST_PACKET_GENERATIOR, SWITCH_ON_PACKET_SPECIFICS) {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
     JsonParamApi params;
     params.setOn(true);
-    IoQueueEntry::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
+    IoQueueGroup::Ptr transferGroup = ioGroupGenerator.generateOnOffGroup(params);
     EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueErrorBehaviors::STOP_ON_ERROR);
 }
 
 TEST(TEST_PACKET_GENERATIOR, POLL_PACKET_SPECIFICS) {
     IoGroupGenerator ioGroupGenerator = IoGroupGenerator(QJsonObject());
-    IoQueueEntry::Ptr transferGroup = ioGroupGenerator.generateStatusPollGroup();
+    IoQueueGroup::Ptr transferGroup = ioGroupGenerator.generateStatusPollGroup();
     EXPECT_EQ(transferGroup->getErrorBehavior(), IoQueueErrorBehaviors::CONTINUE_ON_ERROR);
 }
 

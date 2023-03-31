@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "transaction-ids/idgenerator.h"
+#include "idgenerator.h"
 
 TEST(TEST_ID_KEEPER_SINGLE, INCREMENT) {
     IoIdGenerator generator;

@@ -3,7 +3,7 @@
 
 #include "sourceio.h"
 #include "sourcetransactionstartnotifier.h"
-#include "json/persistentjsonstate.h"
+#include "persistentjsonstate.h"
 #include <QObject>
 
 class SourceSwitchJson : public QObject
@@ -20,9 +20,9 @@ signals:
 
 private slots:
     void onSwitchTransactionStarted(int dataGroupId);
-    void onResponseReceived(const IoQueueEntry::Ptr transferGroup);
+    void onResponseReceived(const IoQueueGroup::Ptr transferGroup);
 private:
-    void handleSwitchResponse(const IoQueueEntry::Ptr transferGroup);
+    void handleSwitchResponse(const IoQueueGroup::Ptr transferGroup);
     ISourceIo::Ptr m_sourceIo;
     SourceTransactionStartNotifier::Ptr m_sourceNotificationSwitch;
     IdKeeperMulti m_pendingSwitchIds;

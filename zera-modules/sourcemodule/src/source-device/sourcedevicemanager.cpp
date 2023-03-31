@@ -1,8 +1,8 @@
 #include "sourcedevicemanager.h"
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
-#include "source-scanner/sourcescanneriodemo.h"
-#include "source-scanner/sourcescanneriozeraserial.h"
+#include "sourcescanneriodemo.h"
+#include "sourcescanneriozeraserial.h"
 #include <random>
 
 // DEMO helper

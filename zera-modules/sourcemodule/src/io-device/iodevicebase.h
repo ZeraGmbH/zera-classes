@@ -3,8 +3,8 @@
 
 #include "iodevicetypes.h"
 #include "iotransferdatasingle.h"
-#include "transaction-ids/idgenerator.h"
-#include "transaction-ids/idkeeper.h"
+#include "idgenerator.h"
+#include "idkeeper.h"
 
 #include <QObject>
 

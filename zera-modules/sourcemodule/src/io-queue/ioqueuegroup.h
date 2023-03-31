@@ -3,16 +3,16 @@
 
 #include "ioqueuebehaviors.h"
 #include "iotransferdatasingle.h"
-#include "transaction-ids/idgenerator.h"
+#include "idgenerator.h"
 #include <QSharedPointer>
 
 typedef QList<IoTransferDataSingle::Ptr> tIoTransferList;
 
-class IoQueueEntry
+class IoQueueGroup
 {
 public:
-    typedef QSharedPointer<IoQueueEntry> Ptr;
-    IoQueueEntry(IoQueueErrorBehaviors errorBehavior);
+    typedef QSharedPointer<IoQueueGroup> Ptr;
+    IoQueueGroup(IoQueueErrorBehaviors errorBehavior);
     void appendTransferList(tIoTransferList transferList);
     bool passedAll() const;
     int getGroupId() const;
@@ -27,6 +27,6 @@ private:
     int m_groupId = 0;
 };
 
-Q_DECLARE_METATYPE(IoQueueEntry::Ptr)
+Q_DECLARE_METATYPE(IoQueueGroup::Ptr)
 
 #endif // IOQUEUEGROUP_H

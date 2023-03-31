@@ -1,7 +1,7 @@
 #include "test_sourceswitchjson.h"
 #include "test_globals.h"
-#include "source-device/sourceio.h"
-#include "source-device/sourceswitchjson.h"
+#include "sourceio.h"
+#include "sourceswitchjson.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
 
 QTEST_MAIN(test_sourceswitchjson)

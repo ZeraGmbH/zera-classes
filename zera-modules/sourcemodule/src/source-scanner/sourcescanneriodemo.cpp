@@ -1,17 +1,17 @@
 #include "sourcescanneriodemo.h"
-#include "json/jsonstructapi.h"
-#include "json/jsonstructureloader.h"
+#include "jsonstructapi.h"
+#include "jsonstructureloader.h"
 
 SourceScannerIoDemo::SourceScannerIoDemo()
 {
-    IoQueueEntry::Ptr queueEntry = IoQueueEntry::Ptr::create(IoQueueErrorBehaviors::STOP_ON_FIRST_OK);
+    IoQueueGroup::Ptr queueEntry = IoQueueGroup::Ptr::create(IoQueueErrorBehaviors::STOP_ON_FIRST_OK);
     QList<IoTransferDataSingle::Ptr> transferList;
     transferList.append(IoTransferDataSingle::Ptr::create("", ""));
     queueEntry->appendTransferList(transferList);
     m_scanIoGroupList.append(queueEntry);
 }
 
-IoQueueEntryList SourceScannerIoDemo::getIoQueueEntriesForScan()
+IoQueueGroupListPtr SourceScannerIoDemo::getIoQueueGroupsForScan()
 {
     return m_scanIoGroupList;
 }
@@ -19,7 +19,7 @@ IoQueueEntryList SourceScannerIoDemo::getIoQueueEntriesForScan()
 SourceProperties SourceScannerIoDemo::evalResponses(int ioGroupId)
 {
     SourceProperties props;
-    IoQueueEntry::Ptr entry = IoQueueEntryListFind::findGroup(m_scanIoGroupList, ioGroupId);
+    IoQueueGroup::Ptr entry = IoQueueGroupListFind::findGroup(m_scanIoGroupList, ioGroupId);
     if(entry && entry->passedAll()) {
         SupportedSourceTypes sourceType = getNextSourceType();
         JsonStructApi structureApi = JsonStructApi(JsonStructureLoader::loadJsonDefaultStructure(sourceType));

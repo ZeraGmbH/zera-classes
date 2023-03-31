@@ -12,7 +12,7 @@ public:
     typedef QSharedPointer<SourceTransactionStartNotifier> Ptr;
     SourceTransactionStartNotifier(ISourceIo::Ptr sourceIo);
     ISourceIo::Ptr getSourceIo();
-    void startTransactionWithNotify(IoQueueEntry::Ptr transferGroup);
+    void startTransactionWithNotify(IoQueueGroup::Ptr transferGroup);
 signals:
     void sigTransationStarted(int dataGroupId);
 

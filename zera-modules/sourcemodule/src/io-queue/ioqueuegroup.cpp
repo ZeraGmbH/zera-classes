@@ -1,19 +1,19 @@
-#include "ioqueueentry.h"
+#include "ioqueuegroup.h"
 
-IoIdGenerator IoQueueEntry::m_idGenerator;
+IoIdGenerator IoQueueGroup::m_idGenerator;
 
-IoQueueEntry::IoQueueEntry(IoQueueErrorBehaviors errorBehavior) :
+IoQueueGroup::IoQueueGroup(IoQueueErrorBehaviors errorBehavior) :
     m_errorBehavior(errorBehavior),
     m_groupId(m_idGenerator.nextID())
 {
 }
 
-void IoQueueEntry::appendTransferList(tIoTransferList transferList)
+void IoQueueGroup::appendTransferList(tIoTransferList transferList)
 {
     m_ioTransferList.append(transferList);
 }
 
-bool IoQueueEntry::passedAll() const
+bool IoQueueGroup::passedAll() const
 {
     bool pass = true;
     for(const auto &io : m_ioTransferList) {
@@ -25,22 +25,22 @@ bool IoQueueEntry::passedAll() const
     return pass;
 }
 
-int IoQueueEntry::getGroupId() const
+int IoQueueGroup::getGroupId() const
 {
     return m_groupId;
 }
 
-IoQueueErrorBehaviors IoQueueEntry::getErrorBehavior() const
+IoQueueErrorBehaviors IoQueueGroup::getErrorBehavior() const
 {
     return m_errorBehavior;
 }
 
-int IoQueueEntry::getTransferCount()
+int IoQueueGroup::getTransferCount()
 {
     return m_ioTransferList.count();
 }
 
-IoTransferDataSingle::Ptr IoQueueEntry::getTransfer(int idx)
+IoTransferDataSingle::Ptr IoQueueGroup::getTransfer(int idx)
 {
     IoTransferDataSingle::Ptr transfer = nullptr;
     if(idx >= 0 && idx < m_ioTransferList.count()) {

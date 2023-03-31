@@ -7,13 +7,13 @@ class SourceScannerIoDemo : public ISourceScannerStrategy
 {
 public:
     SourceScannerIoDemo();
-    virtual IoQueueEntryList getIoQueueEntriesForScan() override;
+    virtual IoQueueGroupListPtr getIoQueueGroupsForScan() override;
     virtual SourceProperties evalResponses(int ioGroupId) override;
 
 private:
     static SupportedSourceTypes getNextSourceType();
 
-    IoQueueEntryList m_scanIoGroupList;
+    IoQueueGroupListPtr m_scanIoGroupList;
 };
 
 #endif // SOURCESCANNERACTIONDEMO_H
