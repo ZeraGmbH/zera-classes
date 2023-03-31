@@ -52,7 +52,7 @@ static SourceProperties findSources(NameVersion dev)
             }
         }
         // evaluate responses
-        SourceProperties sourceFoundQuestionMark = scannerIo.evalResponses(group->getGroupId());
+        SourceProperties sourceFoundQuestionMark = scannerIo.evalResponses(group);
         if(sourceFoundQuestionMark.wasSet()) {
             if(sourceFound.wasSet()) {
                 // found more than one -> make invalid again
@@ -107,7 +107,7 @@ TEST(SCANNER_IO_DEMO, CREATES_ONE_QUEUE_ENTRY_WITH_ONE_IO) {
 TEST(SCANNER_IO_DEMO, GENERATES_INVALID_ON_NO_IO) {
     SourceScannerIoDemo scannerIo;
     IoQueueGroupListPtr queueList = scannerIo.getIoQueueGroupsForScan();
-    SourceProperties props = scannerIo.evalResponses(queueList[0]->getGroupId());
+    SourceProperties props = scannerIo.evalResponses(queueList[0]);
     EXPECT_FALSE(props.wasSet());
 }
 
@@ -122,7 +122,7 @@ TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {
     for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
         IoQueueGroupListPtr queueList = scannerIo.getIoQueueGroupsForScan();
         queueList[0]->getTransfer(0)->setDataReceived(QByteArray("\r")); // valid response
-        SourceProperties props = scannerIo.evalResponses(queueList[0]->getGroupId());
+        SourceProperties props = scannerIo.evalResponses(queueList[0]);
         setTypes.remove(props.getType());
     }
     EXPECT_TRUE(setTypes.isEmpty());
@@ -133,7 +133,7 @@ TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {
     for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
         IoQueueGroupListPtr queueList = scannerIo.getIoQueueGroupsForScan();
         queueList[0]->getTransfer(0)->setDataReceived(QByteArray("\r"));
-        SourceProperties props = scannerIo.evalResponses(queueList[0]->getGroupId());
+        SourceProperties props = scannerIo.evalResponses(queueList[0]);
         setTypes.remove(props.getType());
     }
     EXPECT_TRUE(setTypes.isEmpty());
