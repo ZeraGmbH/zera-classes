@@ -8,7 +8,7 @@ class SourceScannerIoDemo : public ISourceScannerStrategy
 public:
     SourceScannerIoDemo();
     virtual IoQueueGroupListPtr getIoQueueGroupsForScan() override;
-    virtual SourceProperties evalResponses(int ioGroupId) override;
+    virtual SourceProperties evalResponses(IoQueueGroup::Ptr transferGroup) override;
 
 private:
     static SupportedSourceTypes getNextSourceType();

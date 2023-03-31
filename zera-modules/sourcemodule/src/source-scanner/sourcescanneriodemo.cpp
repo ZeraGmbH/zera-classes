@@ -16,10 +16,10 @@ IoQueueGroupListPtr SourceScannerIoDemo::getIoQueueGroupsForScan()
     return m_scanIoGroupList;
 }
 
-SourceProperties SourceScannerIoDemo::evalResponses(int ioGroupId)
+SourceProperties SourceScannerIoDemo::evalResponses(IoQueueGroup::Ptr transferGroup)
 {
     SourceProperties props;
-    IoQueueGroup::Ptr entry = IoQueueGroupListFind::findGroup(m_scanIoGroupList, ioGroupId);
+    IoQueueGroup::Ptr entry = IoQueueGroupListFind::findGroup(m_scanIoGroupList, transferGroup->getGroupId());
     if(entry && entry->passedAll()) {
         SupportedSourceTypes sourceType = getNextSourceType();
         JsonStructApi structureApi = JsonStructApi(JsonStructureLoader::loadJsonDefaultStructure(sourceType));

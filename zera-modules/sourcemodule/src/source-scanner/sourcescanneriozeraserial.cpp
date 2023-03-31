@@ -48,10 +48,10 @@ IoQueueGroupListPtr SourceScannerIoZeraSerial::getIoQueueGroupsForScan()
     return m_scanIoGroupList;
 }
 
-SourceProperties SourceScannerIoZeraSerial::evalResponses(int ioGroupId)
+SourceProperties SourceScannerIoZeraSerial::evalResponses(IoQueueGroup::Ptr transferGroup)
 {
     SourceProperties sourceProperties;
-    int iogroupIdx = IoQueueGroupListFind::findGroupIdx(m_scanIoGroupList, ioGroupId);
+    int iogroupIdx = IoQueueGroupListFind::findGroupIdx(m_scanIoGroupList, transferGroup->getGroupId());
     if(iogroupIdx > 0) { // 1st is unfinished cleanup group - see getCleanupUnfinishedGroup
         IoQueueGroup::Ptr groupFound = m_scanIoGroupList[iogroupIdx];
         sourceProperties = evalResponsesForTransactionGroup(groupFound);

@@ -8,7 +8,7 @@ class SourceScannerIoZeraSerial : public ISourceScannerStrategy
 public:
     SourceScannerIoZeraSerial();
     virtual IoQueueGroupListPtr getIoQueueGroupsForScan() override;
-    virtual SourceProperties evalResponses(int ioGroupId) override;
+    virtual SourceProperties evalResponses(IoQueueGroup::Ptr transferGroup) override;
 
 private:
     IoQueueGroup::Ptr getCleanupUnfinishedGroup();
