@@ -2,9 +2,10 @@
 #define IOINTERFACEDEMO_H
 
 #include "iodevicebase.h"
-#include <QTimer>
+#include <timersingleshotqt.h>
 #include <QList>
 #include <QByteArray>
+#include <memory>
 
 static constexpr int demoIoDefaultTimeout = 1000;
 
@@ -33,7 +34,7 @@ private:
     int m_responseDelayMs = 0;
     int m_responseDelayMsTimeoutSimul = demoIoDefaultTimeout;
     bool m_delayFollowsTimeout = false;
-    QTimer m_responseDelayTimer;
+    TimerTemplateQtPtr m_responseDelayTimer;
     bool m_allTransfersError = false;
 };
 

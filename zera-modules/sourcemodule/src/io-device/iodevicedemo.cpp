@@ -1,11 +1,9 @@
 #include "iodevicedemo.h"
+#include <timerfactoryqt.h>
 
 IoDeviceDemo::IoDeviceDemo(IoDeviceTypes type) :
     IoDeviceBase(type)
 {
-    m_responseDelayTimer.setSingleShot(true);
-    connect(&m_responseDelayTimer, &QTimer::timeout,
-            this, &IoDeviceDemo::onResponseDelayTimer);
 }
 
 void IoDeviceDemo::onResponseDelayTimer()
@@ -50,7 +48,10 @@ int IoDeviceDemo::sendAndReceive(IoTransferDataSingle::Ptr ioTransferData)
         sendResponse(!m_bOpen);
     }
     else {
-        m_responseDelayTimer.start(responseDelayMs);
+        m_responseDelayTimer = TimerFactoryQt::createSingleShot(responseDelayMs);
+        connect(m_responseDelayTimer.get(), &TimerTemplateQt::sigExpired,
+                this, &IoDeviceDemo::onResponseDelayTimer);
+        m_responseDelayTimer->start();
     }
     return m_currIoId.getPending();
 }

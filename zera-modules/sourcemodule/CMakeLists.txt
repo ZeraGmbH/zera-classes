@@ -101,6 +101,7 @@ set(COMMON_LIBS
     ${XERCES_LIBRARIES}
     zera-basemodule
     serialportasyncblock
+    Zera::zera-timers
     )
 
 add_library(sourcemodule-static STATIC

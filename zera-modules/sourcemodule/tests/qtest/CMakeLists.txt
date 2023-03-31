@@ -14,6 +14,7 @@ target_link_libraries(source-module-testhelpers
     Qt5::Test
     sourcemodule-static
     VeinMeta::VfStorageHash
+    Zera::zera-timers-testlib
     )
 
 target_include_directories(source-module-testhelpers
