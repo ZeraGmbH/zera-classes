@@ -1,16 +1,16 @@
 #include "sourcescanner.h"
 
-SourceScanner::Ptr SourceScanner::create(IoDeviceBase::Ptr ioDevice, ISourceScannerStrategy::Ptr ioStrategy, QUuid uuid)
+SourceScanner::Ptr SourceScanner::create(IoDeviceBase::Ptr ioDevice, SourceScannerTemplate::Ptr ioStrategy, QUuid uuid)
 {
     // SourceScanner::Ptr::create does not work because of
     // SourceScanner::SourceScanner is protected for SourceScanner::Ptr
-    SourceScanner::Ptr scanner = SourceScanner::Ptr(new SourceScanner(ioDevice, ioStrategy, uuid));
+    SourceScanner::Ptr scanner = SourceScanner::Ptr(new SourceScanner(ioDevice, std::move(ioStrategy), uuid));
     scanner->m_safePoinerOnThis = scanner;
     return scanner;
 }
 
-SourceScanner::SourceScanner(IoDeviceBase::Ptr ioDevice, ISourceScannerStrategy::Ptr ioStrategy, QUuid uuid) :
-    m_ioStrategy(ioStrategy),
+SourceScanner::SourceScanner(IoDeviceBase::Ptr ioDevice, SourceScannerTemplate::Ptr ioStrategy, QUuid uuid) :
+    m_ioStrategy(std::move(ioStrategy)),
     m_ioDevice(ioDevice),
     m_uuid(uuid)
 {
@@ -22,15 +22,10 @@ SourceScanner::SourceScanner(IoDeviceBase::Ptr ioDevice, ISourceScannerStrategy:
 
 void SourceScanner::startScan()
 {
-    if(m_ioDevice->isOpen()) {
-        m_ioQueueList = m_ioStrategy->getIoQueueGroupsForScan();
-        for(auto queueEntry : m_ioQueueList) {
-            m_pendingQueueEntries.setPending(m_ioQueue.enqueueTransferGroup(queueEntry));
-        }
-    }
-    else {
+    if(m_ioDevice->isOpen())
+        startNextScan();
+    else
         finishScan();
-    }
 }
 
 void SourceScanner::finishScan()
@@ -42,18 +37,21 @@ void SourceScanner::finishScan()
 
 void SourceScanner::onTransferGroupFinished(IoQueueGroup::Ptr transferGroup)
 {
-    m_SourcePropertiesFound = m_ioStrategy->evalResponses(transferGroup);
-    bool scanComplete = false;
-    if(m_SourcePropertiesFound.wasSet()) {
-        scanComplete = true;
-    }
-    else {
-        m_pendingQueueEntries.isPendingAndRemoveIf(transferGroup->getGroupId());
-        scanComplete = !m_pendingQueueEntries.hasPending();
-    }
-    if(scanComplete) {
+    Q_UNUSED(transferGroup)
+    m_SourcePropertiesFound = m_ioStrategy->findSourceFromResponse();
+    if(m_SourcePropertiesFound.wasSet())
         finishScan();
-    }
+    else
+        startNextScan();
+}
+
+void SourceScanner::startNextScan()
+{
+    IoQueueGroup::Ptr nextQueueGroup = m_ioStrategy->getNextQueueGroupForScan();
+    if(nextQueueGroup)
+        m_ioQueue.enqueueTransferGroup(nextQueueGroup);
+    else
+        finishScan();
 }
 
 SourceProperties SourceScanner::getSourcePropertiesFound() const

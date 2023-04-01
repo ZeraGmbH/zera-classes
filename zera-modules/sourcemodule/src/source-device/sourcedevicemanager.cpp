@@ -32,19 +32,17 @@ void SourceDeviceManager::startSourceScan(const IoDeviceTypes ioDeviceType, cons
     if(ioDevice) {
         started = ioDevice->open(deviceInfo);
         if(started) {
-            ISourceScannerStrategy::Ptr scannerStrategy;
+            SourceScannerTemplate::Ptr scannerStrategy;
             if(ioDeviceType == IoDeviceTypes::DEMO) {
                 IoDeviceDemo* demoIO = static_cast<IoDeviceDemo*>(ioDevice.get());
                 demoIO->setResponseDelay(true, 0);
-                if(deviceInfo.contains("broken", Qt::CaseInsensitive)) {
+                if(deviceInfo.contains("broken", Qt::CaseInsensitive))
                     demoIO->setAllTransfersError(true);
-                }
-                scannerStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
+                scannerStrategy = std::make_unique<SourceScannerIoDemo>();
             }
-            else {
-                scannerStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoZeraSerial);
-            }
-            SourceScanner::Ptr sourceScanner = SourceScanner::create(ioDevice, scannerStrategy, uuid);
+            else
+                scannerStrategy = std::make_unique<SourceScannerIoZeraSerial>();
+            SourceScanner::Ptr sourceScanner = SourceScanner::create(ioDevice, std::move(scannerStrategy), uuid);
             connect(sourceScanner.get(), &SourceScanner::sigScanFinished,
                     this, &SourceDeviceManager::onScanFinished,
                     Qt::QueuedConnection);

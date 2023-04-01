@@ -1,11 +1,5 @@
 #include "ioqueue.h"
 
-IoQueue::IoQueue(QObject *parent) : QObject(parent)
-{
-    connect(this, &IoQueue::sigTransferGroupFinishedQueued,
-            this, &IoQueue::sigTransferGroupFinished, Qt::QueuedConnection);
-}
-
 void IoQueue::setIoDevice(IoDeviceBase::Ptr ioDevice)
 {
     if(m_ioDevice){
@@ -23,7 +17,7 @@ void IoQueue::setMaxPendingGroups(int maxGroups)
     m_maxPendingGroups = maxGroups;
 }
 
-int IoQueue::enqueueTransferGroup(IoQueueGroup::Ptr transferGroup)
+void IoQueue::enqueueTransferGroup(IoQueueGroup::Ptr transferGroup)
 {
     if(!canEnqueue(transferGroup)) {
         finishGroup(transferGroup);
@@ -32,7 +26,6 @@ int IoQueue::enqueueTransferGroup(IoQueueGroup::Ptr transferGroup)
         m_pendingGroups.append(transferGroup);
         tryStartNextIo();
     }
-    return transferGroup ? transferGroup->getGroupId() : 0;
 }
 
 bool IoQueue::isIoBusy() const
@@ -113,7 +106,7 @@ void IoQueue::finishCurrentGroup()
 
 void IoQueue::finishGroup(IoQueueGroup::Ptr transferGroupToFinish)
 {
-    emit sigTransferGroupFinishedQueued(transferGroupToFinish);
+    emit sigTransferGroupFinished(transferGroupToFinish);
 }
 
 void IoQueue::abortAllGroups()

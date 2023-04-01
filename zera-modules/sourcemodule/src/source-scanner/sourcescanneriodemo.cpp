@@ -11,16 +11,10 @@ SourceScannerIoDemo::SourceScannerIoDemo()
     m_scanIoGroupList.append(queueEntry);
 }
 
-IoQueueGroupListPtr SourceScannerIoDemo::getIoQueueGroupsForScan()
-{
-    return m_scanIoGroupList;
-}
-
-SourceProperties SourceScannerIoDemo::evalResponses(IoQueueGroup::Ptr transferGroup)
+SourceProperties SourceScannerIoDemo::evalResponses(IoQueueGroup::Ptr ioGroup)
 {
     SourceProperties props;
-    IoQueueGroup::Ptr entry = IoQueueGroupListFind::findGroup(m_scanIoGroupList, transferGroup->getGroupId());
-    if(entry && entry->passedAll()) {
+    if(ioGroup && ioGroup->passedAll()) {
         SupportedSourceTypes sourceType = getNextSourceType();
         JsonStructApi structureApi = JsonStructApi(JsonStructureLoader::loadJsonDefaultStructure(sourceType));
         props = SourceProperties(sourceType,
