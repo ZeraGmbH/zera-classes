@@ -22,8 +22,7 @@ void test_sourcescanner::onScanFinishedForCheckInstanceCount(SourceScanner::Ptr 
 void test_sourcescanner::scannerDiesOnNoConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     scanner->startScan();
     scanner = nullptr;
@@ -36,8 +35,7 @@ void test_sourcescanner::scannerDiesOnNoConnection()
 void test_sourcescanner::scannerSurvivesUntilSlotDirectConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     connect(scanner.get(), &SourceScanner::sigScanFinished,
             this, &test_sourcescanner::onScanFinishedForCheckInstanceCount,
@@ -53,8 +51,7 @@ void test_sourcescanner::scannerSurvivesUntilSlotDirectConnection()
 void test_sourcescanner::scannerSurvivesUntilSlotQueuedConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     connect(scanner.get(), &SourceScanner::sigScanFinished,
             this, &test_sourcescanner::onScanFinishedForCheckInstanceCount,
@@ -70,8 +67,7 @@ void test_sourcescanner::scannerSurvivesUntilSlotQueuedConnection()
 void test_sourcescanner::scannerSurvivesUntilSlotLambdaConnection()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScannerWithInstanceCount::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     int scanFinish = 0;
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] {
@@ -94,10 +90,8 @@ void test_sourcescanner::scannerSurvivesUntilSlotLambdaConnection()
 void test_sourcescanner::uuidPassedIdentical()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-
     QUuid uuid = QUuid::createUuid();
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy, uuid);
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::make_unique<SourceScannerIoDemo>(), uuid);
 
     QUuid uuidReceived;
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
@@ -112,8 +106,7 @@ void test_sourcescanner::uuidPassedIdentical()
 void test_sourcescanner::ioDevicePassedIdentical()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     IoDeviceBase::Ptr ioDeviceReceived;
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
@@ -128,8 +121,7 @@ void test_sourcescanner::ioDevicePassedIdentical()
 void test_sourcescanner::scannerReportsInvalidSourceAfterCreation()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     QCOMPARE(scanner->getSourcePropertiesFound().wasSet(), false);
 }
@@ -137,8 +129,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterCreation()
 void test_sourcescanner::scannerReportsValidSourceAfterDemoIo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     SourceProperties props;
     QCOMPARE(props.wasSet(), false);
@@ -155,8 +146,7 @@ void test_sourcescanner::scannerReportsValidSourceAfterDemoIo()
 void test_sourcescanner::scannerReportsValidSourceAfterZeraIo()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoZeraSerial);
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::make_unique<SourceScannerIoZeraSerial>());
 
     SourceProperties props;
     QCOMPARE(props.wasSet(), false);
@@ -174,8 +164,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
 {
     IoDeviceBase::Ptr ioDevice = IoDeviceFactory::createIoDevice(IoDeviceTypes::BROKEN);
     ioDevice->open(QString());
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::make_unique<SourceScannerIoDemo>());
 
     SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
     QCOMPARE(props.wasSet(), true);
@@ -188,23 +177,31 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
     QTest::qWait(shortQtEventTimeout);
     QCOMPARE(props.wasSet(), false);
 }
+
+class SourceScannerIoDemoForTest : public SourceScannerIoDemo
+{
+public:
+    IoQueueGroupListPtr getQueueGroupList()
+    {
+        return m_scanIoGroupList;
+    }
+};
 
 void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoDemo);
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
+    std::unique_ptr<SourceScannerIoDemoForTest> ioStrategy = std::make_unique<SourceScannerIoDemoForTest>();
 
-    IoQueueGroupListPtr list = ioStrategy->getIoQueueGroupsForScan();
-    for(IoQueueGroup::Ptr entry : qAsConst(list)) {
-        for(int idx = 0; idx<entry->getTransferCount(); ++idx) {
+    IoQueueGroupListPtr queueGroupList = ioStrategy->getQueueGroupList();
+    for(auto entry : queueGroupList) {
+        for(int idx = 0; idx<entry->getTransferCount(); ++idx)
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
-        }
     }
 
     SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
     QCOMPARE(props.wasSet(), true);
 
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::move(ioStrategy));
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
         props = scanner->getSourcePropertiesFound();
     });
@@ -214,22 +211,30 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
     QCOMPARE(props.wasSet(), false);
 }
 
+class SourceScannerIoZeraSerialForTest : public SourceScannerIoZeraSerial
+{
+public:
+    IoQueueGroupListPtr getQueueGroupList()
+    {
+        return m_scanIoGroupList;
+    }
+};
+
 void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
 {
     IoDeviceBase::Ptr ioDevice = createOpenDemoIoDevice();
-    ISourceScannerStrategy::Ptr ioStrategy = ISourceScannerStrategy::Ptr(new SourceScannerIoZeraSerial);
-    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, ioStrategy);
+    std::unique_ptr<SourceScannerIoZeraSerialForTest> ioStrategy = std::make_unique<SourceScannerIoZeraSerialForTest>();
 
-    IoQueueGroupListPtr list = ioStrategy->getIoQueueGroupsForScan();
-    for(IoQueueGroup::Ptr entry : qAsConst(list)) {
-        for(int idx = 0; idx<entry->getTransferCount(); ++idx) {
+    IoQueueGroupListPtr queueGroupList = ioStrategy->getQueueGroupList();
+    for(auto entry : queueGroupList) {
+        for(int idx = 0; idx<entry->getTransferCount(); ++idx)
             entry->getTransfer(idx)->getDemoResponder()->activateErrorResponse();
-        }
     }
 
     SourceProperties props(SOURCE_MT_COMMON, "", "", SourceProtocols::ZERA_SERIAL);
     QCOMPARE(props.wasSet(), true);
 
+    SourceScanner::Ptr scanner = SourceScanner::create(ioDevice, std::move(ioStrategy));
     connect(scanner.get(), &SourceScanner::sigScanFinished, [&] (SourceScanner::Ptr scanner){
         props = scanner->getSourcePropertiesFound();
     });

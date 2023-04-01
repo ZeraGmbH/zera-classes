@@ -35,27 +35,19 @@ static QList<deviceDetectInfo> deviceScanListSerial = QList<deviceDetectInfo>()
        ;
 
 
-SourceScannerIoZeraSerial::SourceScannerIoZeraSerial()
+SourceScannerIoZeraSerial::SourceScannerIoZeraSerial() :
+    m_doNotEvaluateCleanupIO(true)
 {
-    IoQueueGroupListPtr scanIoGroupList;
-    scanIoGroupList.append(getCleanupUnfinishedIoCmdGroup());
-    scanIoGroupList.append(getDeviceScanGroup());
-    m_scanIoGroupList = scanIoGroupList;
+    m_scanIoGroupList.append(getCleanupUnfinishedIoCmdGroup());
+    m_scanIoGroupList.append(getDeviceScanGroup());
 }
 
-IoQueueGroupListPtr SourceScannerIoZeraSerial::getIoQueueGroupsForScan()
-{
-    return m_scanIoGroupList;
-}
-
-SourceProperties SourceScannerIoZeraSerial::evalResponses(IoQueueGroup::Ptr transferGroup)
+SourceProperties SourceScannerIoZeraSerial::evalResponses(IoQueueGroup::Ptr ioGroup)
 {
     SourceProperties sourceProperties;
-    int iogroupIdx = IoQueueGroupListFind::findGroupIdx(m_scanIoGroupList, transferGroup->getGroupId());
-    if(iogroupIdx > 0) { // 1st is unfinished cleanup group - see getCleanupUnfinishedIoCmdGroup
-        IoQueueGroup::Ptr groupFound = m_scanIoGroupList[iogroupIdx];
-        sourceProperties = evalResponsesForTransactionGroup(groupFound);
-    }
+    if(ioGroup && !m_doNotEvaluateCleanupIO)
+        sourceProperties = evalResponsesForTransactionGroup(ioGroup);
+    m_doNotEvaluateCleanupIO = false;
     return sourceProperties;
 }
 
@@ -75,9 +67,8 @@ IoQueueGroup::Ptr SourceScannerIoZeraSerial::getDeviceScanGroup()
     tIoTransferList scanList;
     for(auto entry : qAsConst(deviceScanListSerial)) {
         QList<QByteArray> expectedLeadList;
-        for(auto detectInfoPair : entry.responseTypePairs) {
+        for(const auto &detectInfoPair : qAsConst(entry.responseTypePairs))
             expectedLeadList.append(detectInfoPair.expectedResponse);
-        }
         IoTransferDataSingle::Ptr ioScanSingle = IoTransferDataSingle::Ptr::create(entry.queryStr, expectedLeadList, "\r");
         scanList.append(ioScanSingle);
     }

@@ -13,10 +13,9 @@ class IoQueue : public QObject
 {
     Q_OBJECT
 public:
-    explicit IoQueue(QObject *parent = nullptr);
     void setIoDevice(IoDeviceBase::Ptr ioDevice);
     void setMaxPendingGroups(int maxGroups);
-    int enqueueTransferGroup(IoQueueGroup::Ptr transferGroup);
+    void enqueueTransferGroup(IoQueueGroup::Ptr transferGroup);
     bool isIoBusy() const;
 signals:
     void sigTransferGroupFinished(IoQueueGroup::Ptr transferGroup);
@@ -24,8 +23,6 @@ signals:
 private slots:
     void onIoFinished(int ioID, bool ioDeviceError);
     void onIoDisconnected();
-signals:
-    void sigTransferGroupFinishedQueued(IoQueueGroup::Ptr transferGroup);
 private:
     IoQueueGroup::Ptr getCurrentGroup();
     IoTransferDataSingle::Ptr getNextIoTransfer();

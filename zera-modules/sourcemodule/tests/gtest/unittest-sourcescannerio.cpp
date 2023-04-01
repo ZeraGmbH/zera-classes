@@ -6,13 +6,14 @@
 
 TEST(SCANNER_IO_ZERA, LIST_NOT_EMPTY) {
     SourceScannerIoZeraSerial scannerIo;
-    EXPECT_GT(scannerIo.getIoQueueGroupsForScan().size(), 0);
+    EXPECT_NE(scannerIo.getNextQueueGroupForScan(), nullptr);
 }
 
 TEST(SCANNER_IO_ZERA, LIST_ENTRIES_NOT_EMPTY) {
     SourceScannerIoZeraSerial scannerIo;
-    for(auto entry : scannerIo.getIoQueueGroupsForScan()) {
+    while(auto entry = scannerIo.getNextQueueGroupForScan()) {
         EXPECT_GT(entry->getTransferCount(), 0);
+        scannerIo.findSourceFromResponse();
     }
 }
 
@@ -39,28 +40,23 @@ static SourceProperties findSources(NameVersion dev)
     // docs too...
     QByteArray devResponse = dev.devIoName + " " + dev.devVersion + "\r";
     SourceScannerIoZeraSerial scannerIo;
-    IoQueueGroupListPtr transferGroupList = scannerIo.getIoQueueGroupsForScan();
-
     SourceProperties sourceFound;
-    for(auto group : transferGroupList) {
+    while(auto group = scannerIo.getNextQueueGroupForScan()) {
         for(int idx=0; idx<group->getTransferCount(); ++idx) {
             IoTransferDataSingle::Ptr singleTransfer = group->getTransfer(idx);
             singleTransfer->setDataReceived(devResponse); // simulate response
             // act same as IoQueue with IoQueueErrorBehaviors::STOP_ON_FIRST_OK
-            if(singleTransfer->didIoPass()) {
+            if(singleTransfer->didIoPass())
                 break;
-            }
         }
         // evaluate responses
-        SourceProperties sourceFoundQuestionMark = scannerIo.evalResponses(group);
+        SourceProperties sourceFoundQuestionMark = scannerIo.findSourceFromResponse();
         if(sourceFoundQuestionMark.wasSet()) {
-            if(sourceFound.wasSet()) {
+            if(sourceFound.wasSet())
                 // found more than one -> make invalid again
                 sourceFound = SourceProperties();
-            }
-            else {
+            else
                 sourceFound = sourceFoundQuestionMark;
-            }
         }
     }
     return sourceFound;
@@ -99,41 +95,30 @@ TEST(SCANNER_IO_ZERA, NO_FIND_ON_UNKNOWN_RESPONSE_LEAD) {
 
 TEST(SCANNER_IO_DEMO, CREATES_ONE_QUEUE_ENTRY_WITH_ONE_IO) {
     SourceScannerIoDemo scannerIo;
-    IoQueueGroupListPtr queueList = scannerIo.getIoQueueGroupsForScan();
-    EXPECT_EQ(queueList.size(), 1);
-    EXPECT_EQ(queueList[0]->getTransferCount(), 1);
+    IoQueueGroup::Ptr queueGroup = scannerIo.getNextQueueGroupForScan();
+    EXPECT_NE(queueGroup, nullptr);
+    EXPECT_EQ(queueGroup->getTransferCount(), 1);
+    scannerIo.findSourceFromResponse();
+    queueGroup = scannerIo.getNextQueueGroupForScan();
+    EXPECT_EQ(queueGroup, nullptr);
 }
 
 TEST(SCANNER_IO_DEMO, GENERATES_INVALID_ON_NO_IO) {
     SourceScannerIoDemo scannerIo;
-    IoQueueGroupListPtr queueList = scannerIo.getIoQueueGroupsForScan();
-    SourceProperties props = scannerIo.evalResponses(queueList[0]);
+    scannerIo.getNextQueueGroupForScan();
+    SourceProperties props = scannerIo.findSourceFromResponse();
     EXPECT_FALSE(props.wasSet());
 }
 
 TEST(SCANNER_IO_DEMO, GENERATES_ALL_SOURCE_TYPES) {
-    SourceScannerIoDemo scannerIo;
-
     QSet<SupportedSourceTypes> setTypes;
-
-    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
+    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx)
         setTypes.insert(SupportedSourceTypes(idx));
-    }
     for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
-        IoQueueGroupListPtr queueList = scannerIo.getIoQueueGroupsForScan();
-        queueList[0]->getTransfer(0)->setDataReceived(QByteArray("\r")); // valid response
-        SourceProperties props = scannerIo.evalResponses(queueList[0]);
-        setTypes.remove(props.getType());
-    }
-    EXPECT_TRUE(setTypes.isEmpty());
-
-    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
-        setTypes.insert(SupportedSourceTypes(idx));
-    }
-    for(int idx=0; idx<SOURCE_TYPE_COUNT; ++idx) {
-        IoQueueGroupListPtr queueList = scannerIo.getIoQueueGroupsForScan();
-        queueList[0]->getTransfer(0)->setDataReceived(QByteArray("\r"));
-        SourceProperties props = scannerIo.evalResponses(queueList[0]);
+        SourceScannerIoDemo scannerIo;
+        IoQueueGroup::Ptr queusGroup = scannerIo.getNextQueueGroupForScan();
+        queusGroup->getTransfer(0)->setDataReceived(QByteArray("\r")); // valid response
+        SourceProperties props = scannerIo.findSourceFromResponse();
         setTypes.remove(props.getType());
     }
     EXPECT_TRUE(setTypes.isEmpty());

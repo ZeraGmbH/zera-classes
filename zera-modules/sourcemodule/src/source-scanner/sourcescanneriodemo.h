@@ -1,19 +1,15 @@
 #ifndef SOURCESCANNERACTIONDEMO_H
 #define SOURCESCANNERACTIONDEMO_H
 
-#include "sourcescannerstrategy.h"
+#include "sourcescannertemplate.h"
 
-class SourceScannerIoDemo : public ISourceScannerStrategy
+class SourceScannerIoDemo : public SourceScannerTemplate
 {
 public:
     SourceScannerIoDemo();
-    virtual IoQueueGroupListPtr getIoQueueGroupsForScan() override;
-    virtual SourceProperties evalResponses(IoQueueGroup::Ptr transferGroup) override;
-
 private:
+    virtual SourceProperties evalResponses(IoQueueGroup::Ptr ioGroup) override;
     static SupportedSourceTypes getNextSourceType();
-
-    IoQueueGroupListPtr m_scanIoGroupList;
 };
 
 #endif // SOURCESCANNERACTIONDEMO_H
