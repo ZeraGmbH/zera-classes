@@ -6,6 +6,8 @@
 #include "iodevicefactory.h"
 #include "jsonstructureloader.h"
 #include "persistentjsonstate.h"
+#include "timerfactoryqtfortest.h"
+#include "timemachinefortest.h"
 #include <vfmoduleparameter.h>
 #include <vfmoduleactvalue.h>
 #include <jsonparamvalidator.h>
@@ -16,6 +18,7 @@ QTEST_MAIN(test_sourcedevicefacade)
 
 void test_sourcedevicefacade::init()
 {
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_sourcedevicefacade::checkDeviceInfo()
@@ -181,7 +184,7 @@ void test_sourcedevicefacade::checkVeinSwitchTwoStateChanges()
     paramApi.setOn(true);
     sourceFacade.switchLoad(paramApi.getParams());
 
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
     QCOMPARE(statesReceived.count(), 3);
     QCOMPARE(statesReceived[0]["busy"], false);
     QCOMPARE(statesReceived[1]["busy"], true);
@@ -214,7 +217,7 @@ void test_sourcedevicefacade::checkVeinSwitchChangesLoad()
     QJsonObject jsonLoadParamsOn = paramApi.getParams();
     sourceFacade.switchLoad(jsonLoadParamsOn);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     PersistentJsonState persistentState((DefaultTestSourceProperties()));
     JsonParamApi paramApiDefault = persistentState.loadJsonState();
     QJsonObject jsonLoadParamsDefault = paramApiDefault.getParams();
@@ -260,7 +263,7 @@ void test_sourcedevicefacade::checkVeinSwitchError()
     QJsonObject jsonLoadParamsOn = paramApi.getParams();
     sourceFacade.switchLoad(jsonLoadParamsOn);
 
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     PersistentJsonState persistentState((DefaultTestSourceProperties()));
     JsonParamApi paramApiDefault = persistentState.loadJsonState();
     QJsonObject jsonLoadParamsDefault = paramApiDefault.getParams();
@@ -307,7 +310,7 @@ void test_sourcedevicefacade::checkVeinStateError()
     sourceFacade.setVeinInterface(&vein.veinInterface);
     sourceFacade.setStatusPollTime(0);
 
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     PersistentJsonState persistentState((DefaultTestSourceProperties()));
     JsonParamApi paramApiDefault = persistentState.loadJsonState();
     QJsonObject jsonLoadParamsDefault = paramApiDefault.getParams();
