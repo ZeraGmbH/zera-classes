@@ -1,6 +1,8 @@
 #include "test_sourcedevicemanager.h"
 #include "test_globals.h"
 #include "sourcedevicemanager.h"
+#include "timerfactoryqtfortest.h"
+#include "timemachinefortest.h"
 
 QTEST_MAIN(test_sourcedevicemanager)
 
@@ -25,6 +27,7 @@ void test_sourcedevicemanager::init()
 {
     m_listSourcesAdded.clear();
     m_socketsRemoved.clear();
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_sourcedevicemanager::initSlotCount()
@@ -46,7 +49,7 @@ void test_sourcedevicemanager::removeSlotsOnEmpty()
         slotNoReceived = slotNo;
     });
     devMan.closeSource(0, QUuid());
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(slotRemoveReceived, 1);
     QCOMPARE(slotNoReceived, -1);
 }
@@ -58,7 +61,7 @@ void test_sourcedevicemanager::removeSlotInvalidBelow()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     int slotNoReceived = 0;
     int slotRemoveReceived = 0;
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
@@ -67,7 +70,7 @@ void test_sourcedevicemanager::removeSlotInvalidBelow()
         slotNoReceived = slotNo;
     });
     devMan.closeSource(-1, QUuid());
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(slotRemoveReceived, 1);
     QCOMPARE(slotNoReceived, -1);
 }
@@ -79,7 +82,7 @@ void test_sourcedevicemanager::removeSlotInvalidAbove()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     int slotNoReceived = 0;
     int slotRemoveReceived = 0;
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
@@ -88,7 +91,7 @@ void test_sourcedevicemanager::removeSlotInvalidAbove()
         slotNoReceived = slotNo;
     });
     devMan.closeSource(slotCount, QUuid());
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(slotRemoveReceived, 1);
     QCOMPARE(slotNoReceived, -1);
 }
@@ -100,7 +103,7 @@ void test_sourcedevicemanager::removeTooManySlots()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     int validSlotNoReceived = 0;
     int invalidSlotNoReceived = 0;
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
@@ -116,7 +119,7 @@ void test_sourcedevicemanager::removeTooManySlots()
         devMan.closeSource(i, QUuid());
         devMan.closeSource(i, QUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(validSlotNoReceived, slotCount);
     QCOMPARE(invalidSlotNoReceived, slotCount);
 }
@@ -128,7 +131,7 @@ void test_sourcedevicemanager::removeDevInfoUnknown()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QUuid uuid = QUuid::createUuid();
     int slotReceived = 0;
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
@@ -136,7 +139,7 @@ void test_sourcedevicemanager::removeDevInfoUnknown()
         slotReceived = slotNo;
     });
     devMan.closeSource(QString("Foo"), uuid);
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(slotReceived, -1);
 }
 
@@ -148,7 +151,7 @@ void test_sourcedevicemanager::removeDevInfoUuidIdentical()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int slotNo, QUuid uuidParam) {
         uuidsReceived[slotNo] = uuidParam;
     });
@@ -157,7 +160,7 @@ void test_sourcedevicemanager::removeDevInfoUuidIdentical()
         uuidsSet[i] = QUuid::createUuid();
         devMan.closeSource(i, uuidsSet[i]);
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(uuidsSet[0], uuidsReceived[0]);
     QCOMPARE(uuidsSet[1], uuidsReceived[1]);
     QCOMPARE(uuidsSet[2], uuidsReceived[2]);
@@ -173,7 +176,7 @@ void test_sourcedevicemanager::noSingleSignalRemoveAllOnEmpty()
         singleRemoveCount++;
     });
     devMan.closeAll();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(singleRemoveCount, 0);
 }
 
@@ -184,14 +187,14 @@ void test_sourcedevicemanager::noSingleSignalRemoveAllOnSlots()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
 
     int singleRemoveCount = 0;
     connect(&devMan, &SourceDeviceManager::sigSlotRemoved, [&](int, QUuid) {
         singleRemoveCount++;
     });
     devMan.closeAll();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(singleRemoveCount, slotCount);
 }
 
@@ -205,7 +208,7 @@ void test_sourcedevicemanager::removeAllSignalOnEmpty()
         allRemoveCount++;
     });
     devMan.closeAll();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(allRemoveCount, 1);
 }
 
@@ -216,14 +219,14 @@ void test_sourcedevicemanager::removeAllSignalOnSlots()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
 
     int allRemoveCount = 0;
     connect(&devMan, &SourceDeviceManager::sigAllSlotsRemoved, [&]() {
         allRemoveCount++;
     });
     devMan.closeAll();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(allRemoveCount, 1);
 }
 
@@ -231,7 +234,7 @@ void test_sourcedevicemanager::demoScanOne()
 {
     SourceDeviceManager devMan(1);
     devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     checkSlotCount(devMan, 1, 1, 1);
 }
 
@@ -244,7 +247,7 @@ void test_sourcedevicemanager::demoScanTooMany()
     }
     devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     checkSlotCount(devMan, slotCount, slotCount, slotCount);
 }
 
@@ -255,7 +258,7 @@ void test_sourcedevicemanager::demoScanAll()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     checkSlotCount(devMan, slotCount, slotCount, slotCount);
 }
 
@@ -266,11 +269,11 @@ void test_sourcedevicemanager::demoScanAllAndRemove()
     for(int i=0; i<slotCount; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     for(int i=0; i<slotCount; i++) {
         devMan.closeSource(i, QUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     checkSlotCount(devMan, slotCount, 0, 0);
 }
 
@@ -307,7 +310,7 @@ void test_sourcedevicemanager::demoScanNoDevFoundOnBroken()
             this, &test_sourcedevicemanager::onSourceScanFinished);
     devMan.startSourceScan(IoDeviceTypes::BROKEN, "", QUuid::createUuid());
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(m_listSourcesAdded.count(), 1);
     QCOMPARE(m_listSourcesAdded[0].slotNo, -1);
 }
@@ -319,7 +322,7 @@ void test_sourcedevicemanager::demoScanNoDevFoundOnDemo()
             this, &test_sourcedevicemanager::onSourceScanFinished);
     devMan.startSourceScan(IoDeviceTypes::DEMO, "broken", QUuid::createUuid());
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(m_listSourcesAdded.count(), 1);
     QCOMPARE(m_listSourcesAdded[0].slotNo, -1);
 }
@@ -342,7 +345,7 @@ void test_sourcedevicemanager::checkAddRemoveNotifications(int total, int add, i
     for(int i=0; i<add; i++) {
         devMan.startSourceScan(IoDeviceTypes::DEMO, "Demo", QUuid::createUuid());
     }
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(m_listSourcesAdded.count(), add);
     QCOMPARE(m_socketsRemoved.count(), 0);
     for(int i=0; i<remove; i++) {
@@ -350,7 +353,7 @@ void test_sourcedevicemanager::checkAddRemoveNotifications(int total, int add, i
     }
     QCOMPARE(m_listSourcesAdded.count(), add);
     QCOMPARE(m_socketsRemoved.count(), 0);
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(m_listSourcesAdded.count(), add);
     QCOMPARE(m_socketsRemoved.count(), remove);
 }
