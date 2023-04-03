@@ -3,12 +3,15 @@
 #include "iodevicefactory.h"
 #include "sourceio.h"
 #include "jsonstructureloader.h"
+#include "timerfactoryqtfortest.h"
+#include "timemachinefortest.h"
 #include <zera-json-params-state.h>
 
 QTEST_MAIN(test_sourceio)
 
 void test_sourceio::init()
 {
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_sourceio::gettersOK()
@@ -57,7 +60,7 @@ void test_sourceio::signalResponses()
     workTransferGroup2->appendTransferList(transList2);
     sourceIo.startTransaction(workTransferGroup2);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
 }
 
@@ -86,7 +89,7 @@ void test_sourceio::signalResponsesOnOneError()
     workTransferGroup2->appendTransferList(transList2);
     sourceIo.startTransaction(workTransferGroup2);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
 }
 
@@ -116,6 +119,6 @@ void test_sourceio::signalResponsesOnTwoErrors()
     workTransferGroup1->getTransfer(0)->getDemoResponder()->activateErrorResponse();
     sourceIo.startTransaction(workTransferGroup2);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(countResponseReceived, 2);
 }
