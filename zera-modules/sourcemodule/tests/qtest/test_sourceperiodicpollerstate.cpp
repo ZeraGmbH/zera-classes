@@ -2,6 +2,8 @@
 #include "sourcestateperiodicpollerfortest.h"
 #include "test_globals.h"
 #include "sourceperiodicpollerstate.h"
+#include "timerfactoryqtfortest.h"
+#include "timemachinefortest.h"
 
 QTEST_MAIN(test_sourceperiodicpollerstate)
 
@@ -12,6 +14,7 @@ void test_sourceperiodicpollerstate::onIoQueueGroupFinished(IoQueueGroup::Ptr wo
 
 void test_sourceperiodicpollerstate::init()
 {
+    TimerFactoryQtForTest::enableTest();
     m_sourceIo = nullptr;
     m_ioDevice = nullptr;
     m_transactionNotifier = nullptr;
@@ -64,14 +67,14 @@ void test_sourceperiodicpollerstate::pollImmediateFail()
 void test_sourceperiodicpollerstate::pollAutoStartNotification()
 {
     SourceStatePeriodicPollerForTest poller(m_transactionNotifier, 1);
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
     QVERIFY(m_listIoGroupsReceived.count() > 0);
 }
 
 void test_sourceperiodicpollerstate::pollStopNotification()
 {
     SourceStatePeriodicPollerForTest poller(m_transactionNotifier, 1);
-    QTest::qWait(30);
+    TimeMachineForTest::getInstance()->processTimers(30);
     m_listIoGroupsReceived.clear();
     poller.stopPeriodicPoll();
     QCOMPARE(m_listIoGroupsReceived.count(), 0);
@@ -83,6 +86,6 @@ void test_sourceperiodicpollerstate::pollChangeTimeNotification()
     QCoreApplication::processEvents();
     QCOMPARE(m_listIoGroupsReceived.count(), 0);
     poller.setPollTime(10);
-    QTest::qWait(20);
-    QCOMPARE(m_listIoGroupsReceived.count(), 1);
+    TimeMachineForTest::getInstance()->processTimers(20);
+    QCOMPARE(m_listIoGroupsReceived.count(), 2);
 }
