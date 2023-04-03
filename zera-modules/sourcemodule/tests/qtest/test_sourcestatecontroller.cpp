@@ -5,8 +5,9 @@
 #include "iodevicedemo.h"
 #include "jsonstructureloader.h"
 #include "sourcestateperiodicpollerfortest.h"
-
 #include "sourcedeviceerrorinjection-forunittest.h"
+#include "timerfactoryqtfortest.h"
+#include "timemachinefortest.h"
 #include <zera-json-params-state.h>
 
 QTEST_MAIN(test_sourcestatecontroller)
@@ -18,6 +19,7 @@ void test_sourcestatecontroller::onIoQueueGroupFinished(IoQueueGroup::Ptr workGr
 
 void test_sourcestatecontroller::init()
 {
+    TimerFactoryQtForTest::enableTest();
     m_sourceIo = nullptr;
     m_sourceIoWithError = nullptr;
     m_ioDevice = nullptr;
@@ -45,7 +47,7 @@ void test_sourcestatecontroller::statePollAutoStart()
         statePollSignalCount++;
     });
 
-    QTest::qWait(2*shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(2*shortQtEventTimeout);
     QVERIFY(statePollSignalCount > 0);
     QVERIFY(poller->isPeriodicPollActive());
 }
@@ -64,9 +66,9 @@ void test_sourcestatecontroller::statePollChangeTime()
         statePollSignalCount++;
     });
 
-    QTest::qWait(shortQtEventTimeout/2);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout/2);
     QCOMPARE(statePollSignalCount, 0);
-    QTest::qWait(2*shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(2*shortQtEventTimeout);
     QCOMPARE(statePollSignalCount, 1);
 }
 
@@ -86,7 +88,7 @@ void test_sourcestatecontroller::stateInitialIdle()
         statePollSignalCount++;
     });
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(statePollSignalCount, 1);
     QCOMPARE(stateReceived, SourceStateController::States::IDLE);
 }
@@ -101,7 +103,7 @@ void test_sourcestatecontroller::switchOnCausesBusyOnOffState()
     SourceStateController stateWatcher(notifyWrapperSwitch, notifyWrapperState, poller);
     poller->setPollTime(0);
     SourceSwitchJson switcher(m_sourceIo, notifyWrapperSwitch);
-    QTest::qWait(shortQtEventTimeout); // ignore initial idle
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout); // ignore initial idle
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -112,7 +114,7 @@ void test_sourcestatecontroller::switchOnCausesBusyOnOffState()
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
@@ -128,7 +130,7 @@ void test_sourcestatecontroller::switchOnOffCausesBusyTwoOnOffState()
     SourceStateController stateWatcher(notifyWrapperSwitch, notifyWrapperState, poller);
     poller->setPollTime(0);
     SourceSwitchJson switcher(m_sourceIo, notifyWrapperSwitch);
-    QTest::qWait(shortQtEventTimeout); // ignore initial idle
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout); // ignore initial idle
 
     QList<SourceStateController::States> statesReceived;
     connect(&stateWatcher, &SourceStateController::sigStateChanged, [&] (SourceStateController::States state) {
@@ -138,13 +140,13 @@ void test_sourcestatecontroller::switchOnOffCausesBusyTwoOnOffState()
     JsonParamApi jsonParam = switcher.getCurrLoadState();
     jsonParam.setOn(true);
     switcher.switchState(jsonParam);
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
 
     switcher.switchOff();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 4);
     QCOMPARE(statesReceived[2], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[3], SourceStateController::States::IDLE);
@@ -174,7 +176,7 @@ void test_sourcestatecontroller::sequencePollSwitchErrorOnSwitch()
     setDemoResonseErrorIdx(0);
     switcher.switchState(jsonParam);
 
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
@@ -203,7 +205,7 @@ void test_sourcestatecontroller::sequencePollSwitchErrorOnPoll()
     setDemoResonseErrorIdx(-1);
     switcher.switchState(jsonParam);
 
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_POLL);
@@ -232,7 +234,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnSwitch()
     setDemoResonseErrorIdx(-1);
     QVERIFY(poller->tryStartPollNow());
 
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
@@ -262,7 +264,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnPoll()
     setDemoResonseErrorIdx(0);
     poller->setPollTime(1);
 
-    QTest::qWait(100);
+    TimeMachineForTest::getInstance()->processTimers(100);
     QCOMPARE(statesReceived.count(), 3);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::IDLE);
@@ -293,7 +295,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnPostPoll()
     setDemoResonseErrorIdx(0);
     poller->setPollTime(1);
 
-    QTest::qWait(100);
+    TimeMachineForTest::getInstance()->processTimers(100);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
@@ -321,7 +323,7 @@ void test_sourcestatecontroller::sequencePollSwitchErrorOnBoth()
     QVERIFY(poller->tryStartPollNow());
     switcher.switchState(jsonParam);
 
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_POLL);
@@ -349,7 +351,7 @@ void test_sourcestatecontroller::sequenceSwitchPollErrorOnBoth()
     switcher.switchState(jsonParam);
     QVERIFY(poller->tryStartPollNow());
 
-    QTest::qWait(50);
+    TimeMachineForTest::getInstance()->processTimers(50);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[0], SourceStateController::States::SWITCH_BUSY);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
@@ -377,7 +379,7 @@ void test_sourcestatecontroller::pollStopsAfterSwitchError()
     switcher.switchState(jsonParam);
     poller->setPollTime(0);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 2);
     QCOMPARE(statesReceived[1], SourceStateController::States::ERROR_SWITCH);
 
@@ -402,7 +404,7 @@ void test_sourcestatecontroller::pollStopsAfterPollError()
     setDemoResonseErrorIdx(0);
     poller->setPollTime(0);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 1);
     QCOMPARE(statesReceived[0], SourceStateController::States::ERROR_POLL);
 
@@ -427,7 +429,7 @@ void test_sourcestatecontroller::pollStopsAfterErrorAndRestartsAfterSuccessfulSw
     setDemoResonseErrorIdx(0);
     poller->setPollTime(0);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(statesReceived.count(), 1);
     QCOMPARE(statesReceived[0], SourceStateController::States::ERROR_POLL);
 
