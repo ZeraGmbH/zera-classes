@@ -4,12 +4,15 @@
 #include "sourcescannerwithinstancecount-forunittest.h"
 #include "sourcescanneriodemo.h"
 #include "sourcescanneriozeraserial.h"
+#include "timerfactoryqtfortest.h"
+#include "timemachinefortest.h"
 
 QTEST_MAIN(test_sourcescanner)
 
 void test_sourcescanner::init()
 {
     m_scanFinishCount = 0;
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_sourcescanner::onScanFinishedForCheckInstanceCount(SourceScanner::Ptr scanner)
@@ -28,7 +31,7 @@ void test_sourcescanner::scannerDiesOnNoConnection()
     scanner = nullptr;
 
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 1);
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
 
@@ -43,7 +46,7 @@ void test_sourcescanner::scannerSurvivesUntilSlotDirectConnection()
     scanner->startScan();
     scanner = nullptr;
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(m_scanFinishCount, 1);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
@@ -59,7 +62,7 @@ void test_sourcescanner::scannerSurvivesUntilSlotQueuedConnection()
     scanner->startScan();
     scanner = nullptr;
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(m_scanFinishCount, 1);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
@@ -77,7 +80,7 @@ void test_sourcescanner::scannerSurvivesUntilSlotLambdaConnection()
     scanner->startScan();
     scanner = nullptr;
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(scanFinish, 1);
     QCOMPARE(SourceScannerWithInstanceCount::getInstanceCount(), 0);
 }
@@ -99,7 +102,7 @@ void test_sourcescanner::uuidPassedIdentical()
     });
 
     scanner->startScan();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(uuid, uuidReceived);
 }
 
@@ -114,7 +117,7 @@ void test_sourcescanner::ioDevicePassedIdentical()
     });
 
     scanner->startScan();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(ioDevice.get(), ioDeviceReceived.get());
 }
 
@@ -139,7 +142,7 @@ void test_sourcescanner::scannerReportsValidSourceAfterDemoIo()
     });
 
     scanner->startScan();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(props.wasSet(), true);
 }
 
@@ -156,7 +159,7 @@ void test_sourcescanner::scannerReportsValidSourceAfterZeraIo()
     });
 
     scanner->startScan();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(props.wasSet(), true);
 }
 
@@ -174,7 +177,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterBrokenIo()
     });
 
     scanner->startScan();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(props.wasSet(), false);
 }
 
@@ -207,7 +210,7 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterDemoIoResponseError()
     });
 
     scanner->startScan();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(props.wasSet(), false);
 }
 
@@ -240,6 +243,6 @@ void test_sourcescanner::scannerReportsInvalidSourceAfterZeraIoResponseError()
     });
 
     scanner->startScan();
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(props.wasSet(), false);
 }
