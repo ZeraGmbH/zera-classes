@@ -3,11 +3,14 @@
 #include "sourceio.h"
 #include "sourceswitchjson.h"
 #include "sourcedeviceerrorinjection-forunittest.h"
+#include "timerfactoryqtfortest.h"
+#include "timemachinefortest.h"
 
 QTEST_MAIN(test_sourceswitchjson)
 
 void test_sourceswitchjson::init()
 {
+    TimerFactoryQtForTest::enableTest();
 }
 
 void test_sourceswitchjson::signalSwitch()
@@ -26,7 +29,7 @@ void test_sourceswitchjson::signalSwitch()
     });
 
     switcher.switchState(paramState);
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
 }
 
@@ -48,7 +51,7 @@ void test_sourceswitchjson::signalSwitchAfterError()
     });
 
     switcher.switchState(paramState);
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
 }
 
@@ -68,7 +71,7 @@ void test_sourceswitchjson::twoSignalsSwitchSameTwice()
 
     switcher.switchState(paramState);
     switcher.switchState(paramState);
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 2);
 }
 
@@ -93,7 +96,7 @@ void test_sourceswitchjson::currentAndRequestedParamOnError()
     });
     switcher.switchState(paramStateForError);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
     QVERIFY(paramStateForError.getParams() == switcher.getRequestedLoadState().getParams());
     QVERIFY(paramState.getParams() == switcher.getCurrLoadState().getParams());
@@ -117,7 +120,7 @@ void test_sourceswitchjson::changeParamOnSuccess()
     });
     switcher.switchState(paramStateForError);
 
-    QTest::qWait(shortQtEventTimeout);
+    TimeMachineForTest::getInstance()->processTimers(shortQtEventTimeout);
     QCOMPARE(paramChangeCount, 1);
     QVERIFY(paramState.getParams() != switcher.getCurrLoadState().getParams());
 }
