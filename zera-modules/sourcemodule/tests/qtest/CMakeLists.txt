@@ -7,6 +7,8 @@ add_library(source-module-testhelpers STATIC
     sourcescannerwithinstancecount-forunittest.cpp
     veincomponentsetnotifier-forunittest.h
     veincomponentsetnotifier-forunittest.cpp
+    sourcestateperiodicpollerfortest.cpp
+    sourcestateperiodicpollerfortest.h
     )
 
 target_link_libraries(source-module-testhelpers

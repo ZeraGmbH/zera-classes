@@ -2,8 +2,8 @@
 #define SOURCESTATEPERIDICPOLLER_H
 
 #include "sourcetransactionstartnotifier.h"
+#include <timertemplateqt.h>
 #include <QObject>
-#include <QTimer>
 #include <QSharedPointer>
 
 class SourceStatePeriodicPoller : public QObject
@@ -17,16 +17,16 @@ public:
     void startPeriodicPoll();
     void stopPeriodicPoll();
     bool tryStartPollNow();
-    int isPeriodicPollActive() const;
 
 private slots:
     void onPollTimer();
     void onStateQueryTransationStarted(int dataGroupId);
     void onResponseReceived(const IoQueueGroup::Ptr transferGroup);
+protected:
+    TimerTemplateQtPtr m_pollTimer;
 private:
     SourceTransactionStartNotifier::Ptr m_sourceNotificationStateQuery;
     ISourceIo::Ptr m_sourceIo;
-    QTimer m_pollTimer;
     IdKeeperMulti m_PendingStateQueryIds;
 };
 
