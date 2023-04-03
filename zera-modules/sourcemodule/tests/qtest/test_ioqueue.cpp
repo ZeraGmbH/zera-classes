@@ -3,6 +3,7 @@
 #include "iodevicefactory.h"
 #include "iodevicedemo.h"
 #include "iogroupgenerator.h"
+#include "timerfactoryqt.h"
 
 QTEST_MAIN(test_ioqueue)
 
@@ -114,12 +115,11 @@ void test_ioqueue::disconnectWhileWorking()
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &test_ioqueue::onIoQueueGroupFinished);
     demoIoDevice->setResponseDelay(false, 500);
 
-    QTimer timer;
-    timer.setSingleShot(true);
-    connect(&timer, &QTimer::timeout, [&]() {
+    TimerTemplateQtPtr timer = TimerFactoryQt::createSingleShot(10);
+    connect(timer.get(), &TimerTemplateQt::sigExpired, timer.get(), [&]() {
         demoIoDevice->close();
     });
-    timer.start(10);
+    timer->start();
     IoQueueGroup::Ptr workGroup = generateSwitchCommands(false);
     queue.enqueueTransferGroup(workGroup);
     QTest::qWait(50);
@@ -138,12 +138,11 @@ void test_ioqueue::disconnectWhileWorkingMultipleNotifications()
     connect(&queue, &IoQueue::sigTransferGroupFinished, this, &test_ioqueue::onIoQueueGroupFinished);
     demoIoDevice->setResponseDelay(false, 500);
 
-    QTimer timer;
-    timer.setSingleShot(true);
-    connect(&timer, &QTimer::timeout, [&]() {
+    TimerTemplateQtPtr timer = TimerFactoryQt::createSingleShot(10);
+    connect(timer.get(), &TimerTemplateQt::sigExpired, timer.get(), [&]() {
         demoIoDevice->close();
     });
-    timer.start(10);
+    timer->start();
     IoQueueGroup::Ptr workGroup1 = generateSwitchCommands(true);
     IoQueueGroup::Ptr workGroup2 = generateSwitchCommands(false);
     queue.enqueueTransferGroup(workGroup1);
