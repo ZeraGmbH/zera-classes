@@ -5,7 +5,6 @@
 #include "sourcetransactionstartnotifier.h"
 #include "sourceperiodicpollerstate.h"
 #include <QObject>
-#include <QTimer>
 
 /*
  * Observe source to generate state change notification
