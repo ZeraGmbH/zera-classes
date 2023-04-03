@@ -1,13 +1,12 @@
 #include "sourceperiodicpollerstate.h"
+#include <timerfactoryqt.h>
 
 SourceStatePeriodicPoller::SourceStatePeriodicPoller(SourceTransactionStartNotifier::Ptr sourceIoWithNotificationQuery, int pollTime) :
+    m_pollTimer(TimerFactoryQt::createPeriodic(pollTime)),
     m_sourceNotificationStateQuery(sourceIoWithNotificationQuery),
     m_sourceIo(m_sourceNotificationStateQuery->getSourceIo())
-
 {
-    m_pollTimer.setSingleShot(false);
-    m_pollTimer.setInterval(pollTime);
-    connect(&m_pollTimer, &QTimer::timeout,
+    connect(m_pollTimer.get(), &TimerTemplateQt::sigExpired,
             this, &SourceStatePeriodicPoller::onPollTimer);
     connect(m_sourceNotificationStateQuery.get(), &SourceTransactionStartNotifier::sigTransationStarted,
             this, &SourceStatePeriodicPoller::onStateQueryTransationStarted);
@@ -18,24 +17,20 @@ SourceStatePeriodicPoller::SourceStatePeriodicPoller(SourceTransactionStartNotif
 
 void SourceStatePeriodicPoller::setPollTime(int ms)
 {
-    bool active = m_pollTimer.isActive();
-    if(active) {
-        stopPeriodicPoll();
-    }
-    m_pollTimer.setInterval(ms);
-    if(active) {
-        startPeriodicPoll();
-    }
+    m_pollTimer = TimerFactoryQt::createPeriodic(ms);
+    connect(m_pollTimer.get(), &TimerTemplateQt::sigExpired,
+            this, &SourceStatePeriodicPoller::onPollTimer);
+    m_pollTimer->start();
 }
 
 void SourceStatePeriodicPoller::startPeriodicPoll()
 {
-    m_pollTimer.start();
+    m_pollTimer->start();
 }
 
 void SourceStatePeriodicPoller::stopPeriodicPoll()
 {
-    m_pollTimer.stop();
+    m_pollTimer->stop();
 }
 
 bool SourceStatePeriodicPoller::tryStartPollNow()
@@ -47,11 +42,6 @@ bool SourceStatePeriodicPoller::tryStartPollNow()
         bStarted = true;
     }
     return bStarted;
-}
-
-int SourceStatePeriodicPoller::isPeriodicPollActive() const
-{
-    return m_pollTimer.isActive();
 }
 
 void SourceStatePeriodicPoller::onPollTimer()
