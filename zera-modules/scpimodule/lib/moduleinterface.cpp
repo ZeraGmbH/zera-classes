@@ -165,7 +165,7 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
     {
         // in case of measure model we have to add several commands for each value
 
-        cSCPIMeasure* measureObject = new cSCPIMeasure(m_pModule, scpiCmdInfo);
+        cSCPIMeasure* measureObject = new cSCPIMeasure(&m_pModule->scpiMeasureHash, scpiCmdInfo);
 
         addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, SCPIModelType::measure, measureObject);
         addSCPIMeasureCommand(QString(""), QString("CONFIGURE"), SCPI::isNode | SCPI::isCmd, SCPIModelType::configure, measureObject);
