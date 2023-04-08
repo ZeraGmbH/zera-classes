@@ -4,6 +4,7 @@
 #include <proxy.h>
 #include <errormessages.h>
 #include <regexvalidator.h>
+#include <sysinfo.h>
 #include <QFile>
 
 namespace STATUSMODULE
@@ -480,7 +481,7 @@ QString cStatusModuleInit::findReleaseNr()
 {
     QString releaseNr;
 
-    releaseNr = m_pModule->getReleaseNr(ReleaseInfoFilePath);
+    releaseNr = SysInfo::getReleaseNr(ReleaseInfoFilePath);
     if (releaseNr == "")
         emit errMsg(releaseNumberErrMsg);
 
