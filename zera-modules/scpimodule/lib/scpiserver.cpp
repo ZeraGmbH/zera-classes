@@ -68,6 +68,12 @@ cSCPIServer::cSCPIServer(cSCPIModule *module, cSCPIModuleConfigData &configData)
 
 cSCPIServer::~cSCPIServer()
 {
+    // Commented are not deleted - but this requires deep investigations
+    // we had our double-delete fiasco and things are ugly connected in here...
+    /*delete m_pIEEE488Interface;
+    delete m_pStatusInterface;
+    delete m_pInterfaceInterface;
+    delete m_pModuleInterface;*/
     delete m_pSCPIInterface;
     delete m_pTcpServer;
     deleteSerialPort();
