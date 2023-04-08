@@ -11,11 +11,14 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             scpimodule-static
+            statusmodule-static
+            zera-modules-testlib
         )
     endforeach()
 endfunction()
 
 SETUP_QTESTS_MODULE(
     test_scpi_config_load
+    test_scpi_cmds_in_session
 )
 
