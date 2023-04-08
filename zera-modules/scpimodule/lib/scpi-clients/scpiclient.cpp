@@ -19,11 +19,8 @@
 #include "scpimeasuredelegate.h"
 #include "scpimeasure.h"
 
-
 namespace SCPIMODULE
 {
-
-
 cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface) :
     m_pSCPIInterface(iface),
     m_pModule(module),
@@ -69,68 +66,53 @@ cSCPIClient::cSCPIClient(cSCPIModule* module, cSCPIModuleConfigData &configdata,
     setSignalConnections(scpiOperMeasStatus, m_ConfigData.m_OperationMeasureStatDescriptorList);
 
     generateSCPIMeasureSystem();
-
 }
-
 
 cSCPIClient::~cSCPIClient()
 {
-    for (int i = 0; i < mysConnectDelegateList.count(); i++)
-    {
-        cSignalConnectionDelegate* sCD;
-        sCD = mysConnectDelegateList.at(i);
+    for (int i = 0; i < mysConnectDelegateList.count(); i++) {
+        cSignalConnectionDelegate* sCD = mysConnectDelegateList.at(i);
         m_pModule->sConnectDelegateList.removeAll(sCD);
         delete sCD;
     }
-
     for (int i = 0; i < m_SCPIStatusList.count(); i++)
         delete m_SCPIStatusList.at(i);
-
     delete m_pIEEE4882;
 
     QList<cSCPIMeasure*> keylist;
     keylist = m_SCPIMeasureTranslationHash.keys();
-
     for (int i = 0; i < keylist.count(); i++)
         delete m_SCPIMeasureTranslationHash[keylist.at(i)];
-
     for(auto measDelegate : qAsConst(m_SCPIMeasureDelegateHash))
         delete measDelegate;
 }
-
 
 void cSCPIClient::setAuthorisation(bool auth)
 {
     m_bAuthorisation = auth;
 }
 
-
 cSCPIStatus *cSCPIClient::getSCPIStatus(quint8 index)
 {
     return m_SCPIStatusList.at(index);
 }
 
-
 quint8 cSCPIClient::operationComplete()
 {
     if (m_scpiClientInfoHash.isEmpty())
         return 1;
-    else
-        return 0;
+    return 0;
 }
-
 
 cIEEE4882 *cSCPIClient::getIEEE4882()
 {
     return m_pIEEE4882;
 }
 
-
 void cSCPIClient::addSCPIClientInfo(QString key, SCPIClientInfoPtr info)
 {
     m_scpiClientInfoHash.insert(key, info);
 }
-
 
 void cSCPIClient::removeSCPIClientInfo(QString key)
 {
@@ -138,17 +120,14 @@ void cSCPIClient::removeSCPIClientInfo(QString key)
     execCmd();
 }
 
-
 void cSCPIClient::testCmd()
 {
-    while (cmdAvail())
-    {
+    while (cmdAvail()) {
         // if we have complete commands
         takeCmd(); // we fetch 1 of them
         execCmd(); // and execute it
     }
 }
-
 
 bool cSCPIClient::cmdAvail()
 {
@@ -156,74 +135,52 @@ bool cSCPIClient::cmdAvail()
         return true;
     if (m_sInputFifo.contains("\r"))
         return true;
-
     return false;
 }
 
-
 void cSCPIClient::takeCmd()
 {
-    QChar firstChar;
-    int index;
-
     if (m_sInputFifo.contains('\n'))
         endChar = '\n';
     else
         endChar = '\r';
-
-    index = m_sInputFifo.indexOf(endChar);
+    int index = m_sInputFifo.indexOf(endChar);
     activeCmd = m_sInputFifo.left(index);
     activeCmd.remove('\n'); // we don't know which was the first
     activeCmd.remove('\r');
-
     m_sInputFifo.remove(0, index+1);
-
-    if (m_sInputFifo.length() > 0)
-    {
-        firstChar = m_sInputFifo.at(0); // maybe there is still 1 end char
+    if (m_sInputFifo.length() > 0) {
+        QChar firstChar = m_sInputFifo.at(0); // maybe there is still 1 end char
         if ((firstChar == '\n') or (firstChar == '\r'))
             m_sInputFifo.remove(0,1);
     }
 }
 
-
 void cSCPIClient::execCmd()
 {
-    QStringList cmdList;
-    QString cmd;
-
-    while (true)
-    {
-        cmdList = activeCmd.split('|');
-
-        cmd = cmdList.at(0);
+    while (true) {
+        QStringList cmdList = activeCmd.split('|');
+        QString cmd = cmdList.at(0);
         activeCmd.remove(0, cmd.length());
-        if (activeCmd.length() > 0)
-        {
+        if (activeCmd.length() > 0) {
             if (activeCmd.at(0) == '|')
                activeCmd.remove(0,1);
         }
-
         // we will leave if there is no command anymore
         if (cmd.length() == 0)
             break;
-
         if (!m_pSCPIInterface->executeCmd(this, cmd))
             emit m_pIEEE4882->AddEventError(CommandError);
-
         // we leave here if there is any parameter settings pending
         if (m_scpiClientInfoHash.count() > 0)
             break;
     }
-
 }
-
 
 QUuid cSCPIClient::getClientId()
 {
     return mClientId;
 }
-
 
 void cSCPIClient::receiveStatus(quint8 stat)
 {
@@ -246,63 +203,38 @@ void cSCPIClient::receiveStatus(quint8 stat)
     }
 }
 
-
 void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList)
 {
     int n;
-
-    if ((n = dList.count()) > 0)
-    {
+    if ((n = dList.count()) > 0) {
 
         QList<int> entityIdList;
         entityIdList = m_pModule->m_pStorageSystem->getEntityList();
         int entityIdCount = entityIdList.count();
-
         // we iterate over all statusbitdescriptors
-        for (int i = 0; i < n; i++)
-        {
-            bool moduleFound;
-            cStatusBitDescriptor des;
-
-            moduleFound = false;
-            des = dList.at(i); // the searched status bit descriptor
-
-            if (entityIdCount  > 0)
-            {
+        for (int i = 0; i < n; i++) {
+            bool moduleFound = false;
+            cStatusBitDescriptor des = dList.at(i); // the searched status bit descriptor
+            if (entityIdCount  > 0) {
                 int entityID;
                 // we parse over all moduleinterface components
-                for (int j = 0; j < entityIdCount; j++)
-                {
+                for (int j = 0; j < entityIdCount; j++) {
                     entityID = entityIdList.at(j);
-                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface")))
-                    {
-                        QJsonDocument jsonDoc;
-                        QJsonObject jsonObj;
-                        QString scpiModuleName;
-
-                        jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
-
-                        if ( !jsonDoc.isNull() && jsonDoc.isObject() )
-                        {
-                            jsonObj = jsonDoc.object();
-
+                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
+                        QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
+                        if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
+                            QJsonObject jsonObj = jsonDoc.object();
                             jsonObj = jsonObj["SCPIInfo"].toObject();
-
-                            scpiModuleName = jsonObj["Name"].toString();
-
-                            if (scpiModuleName == des.m_sSCPIModuleName)
-                            {
+                            QString scpiModuleName = jsonObj["Name"].toString();
+                            if (scpiModuleName == des.m_sSCPIModuleName) {
                                 moduleFound = true;
                                 break;
                             }
                         }
                     }
                 }
-
-                if (moduleFound)
-                {
-                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, des.m_sComponentName))
-                    {
+                if (moduleFound) {
+                    if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, des.m_sComponentName)) {
                         // if we found the searched component, we generate a signal connection delegate
                         // we need an eventsystem to look for notifications with these components
                         // that lets the signal connection delegate  do his job
@@ -319,27 +251,18 @@ void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBit
     }
 }
 
-
 void cSCPIClient::generateSCPIMeasureSystem()
 {
     // here we generate cSCPIMeasureDelegate objects including cSCPIMeasure objects for the new
     // client so that they can work independantly when querying measuring values
     // we ask the moduleinterface for the "base" cSCPIMeasureDelegate hash, that is once built up
     // on module instanciation and that are connected to the scpi interface
-
-    QHash<QString, cSCPIMeasureDelegate *> *pSCPIMeasDelegateHash;
-    QList<QString> keylist;
-    cSCPIMeasureDelegate* measDelegate;
-
-    pSCPIMeasDelegateHash = m_pModule->getSCPIServer()->getModuleInterface()->getSCPIMeasDelegateHash();
-    keylist = pSCPIMeasDelegateHash->keys();
-
-    for (int i = 0; i < keylist.count(); i++)
-    {
-        measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
+    QHash<QString, cSCPIMeasureDelegate *> *pSCPIMeasDelegateHash = m_pModule->getSCPIServer()->getModuleInterface()->getSCPIMeasDelegateHash();
+    QList<QString> keylist = pSCPIMeasDelegateHash->keys();
+    for (int i = 0; i < keylist.count(); i++) {
+        cSCPIMeasureDelegate* measDelegate = (*pSCPIMeasDelegateHash)[keylist.at(i)];
         m_SCPIMeasureDelegateHash[measDelegate] = new cSCPIMeasureDelegate(*measDelegate, m_SCPIMeasureTranslationHash);
     }
-
 }
 
 }
