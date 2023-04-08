@@ -31,8 +31,9 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(char*)"No error"},
                                             {-500,(char*)"Power on"} };
 
 
-cIEEE4882::cIEEE4882(cSCPIModule *module, cSCPIClient *client, QString ident, quint16 errorqueuelen)
-    :m_pModule(module), m_pClient(client), m_nQueueLen(errorqueuelen)
+cIEEE4882::cIEEE4882(cSCPIClient *client, QString ident, quint16 errorqueuelen) :
+    m_pClient(client),
+    m_nQueueLen(errorqueuelen)
 {
     m_nSTB = m_nSRE = m_nESR = m_nESE = 0;
     setIdentification(ident);

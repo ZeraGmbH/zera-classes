@@ -101,7 +101,7 @@ class cIEEE4882: public QObject
     Q_OBJECT
 
 public:
-    cIEEE4882(cSCPIModule* module, cSCPIClient* client, QString ident, quint16 errorqueuelen);
+    cIEEE4882(cSCPIClient* client, QString ident, quint16 errorqueuelen);
 
     void executeCmd(cSCPIClient* client, int cmdCode, const QString &sInput);
 
@@ -117,7 +117,6 @@ public slots:
     void setStatusByte(quint8 stb, quint8); // we accept 16bit unless stb is 8 bit, but scpi status system uses 16 bit
 
 private:
-    cSCPIModule* m_pModule;
     cSCPIClient* m_pClient;
     QString m_sIdentification;
     quint16 m_nQueueLen; // max. entries in m_ErrEventQueue
