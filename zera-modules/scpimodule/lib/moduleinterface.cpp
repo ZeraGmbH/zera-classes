@@ -28,23 +28,14 @@ cModuleInterface::cModuleInterface(cSCPIModule* module, cSCPIInterface *iface)
 {
 }
 
-
 cModuleInterface::~cModuleInterface()
 {
-    int n;
-
-    n = m_scpiDelegateList.count();
-    if (n > 0)
-        for (int i = 0; i < n; i++ )
-            delete m_scpiDelegateList.at(i);
-
-    QList<cSCPIMeasureDelegate*> mdList = m_scpiMeasureDelegateHash.values();
-    n = mdList.count();
-    if (n > 0)
-        for (int i = 0; i < n; i++ )
-            delete mdList.at(i);
+    while(!m_scpiDelegateList.isEmpty())
+        delete m_scpiDelegateList.takeLast();
+    for(const auto &delegate : qAsConst(m_scpiMeasureDelegateHash))
+        delete delegate;
+    m_scpiMeasureDelegateHash.clear();
 }
-
 
 bool cModuleInterface::setupInterface()
 {
