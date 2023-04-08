@@ -3,7 +3,7 @@
 #include "ieee488-2.h"
 #include "scpiclient.h"
 #include "scpimodule.h"
-
+#include <sysinfo.h>
 
 namespace SCPIMODULE
 {
@@ -240,7 +240,7 @@ void cIEEE4882::setIdentification(QString ident)
         model = QStringLiteral("unknown");
     }
 
-    QString releaseNr = m_pModule->getReleaseNr(ReleaseInfoFilePath);
+    QString releaseNr = SysInfo::getReleaseNr(ReleaseInfoFilePath);
     if(releaseNr.isEmpty() && splitIdent.size() >= 3) { // fallback to xml-config
         releaseNr = splitIdent[2].simplified();
     }
@@ -248,7 +248,7 @@ void cIEEE4882::setIdentification(QString ident)
         releaseNr = QStringLiteral("unknown");
     }
 
-    QString serialNr = m_pModule->getSerialNr(SerialNoInfoFilePath);
+    QString serialNr = SysInfo::getSerialNr(SerialNoInfoFilePath);
     if(serialNr.isEmpty()) { // was zera-setup2 completed??
         serialNr = QStringLiteral("unknown");
     }
