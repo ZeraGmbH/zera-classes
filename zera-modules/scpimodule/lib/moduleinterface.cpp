@@ -39,25 +39,12 @@ cModuleInterface::~cModuleInterface()
 
 bool cModuleInterface::setupInterface()
 {
-    QList<int> entityIdList;
-    int n;
-    bool noError;
-
-    noError = true;
-
-    entityIdList = m_pModule->m_pStorageSystem->getEntityList();
-    n = entityIdList.count();
-
-    for (int i = 0; i < n; i++)
-    {
-        int entityID;
-        entityID = entityIdList.at(i);
+    bool ok = true;
+    QList<int> entityIdList = m_pModule->m_pStorageSystem->getEntityList();
+    for(auto entityID : entityIdList) {
         // we parse over all moduleinterface components
-        if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface")))
-        {
-            QJsonDocument jsonDoc;
-            jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
-
+        if (m_pModule->m_pStorageSystem->hasStoredValue(entityID, QString("INF_ModuleInterface"))) {
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(m_pModule->m_pStorageSystem->getStoredValue(entityID, QString("INF_ModuleInterface")).toByteArray());
             if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
                 const QJsonObject jsonObj = jsonDoc.object();
                 const QJsonObject jsonScpiInfo = jsonObj["SCPIInfo"].toObject();
@@ -65,15 +52,11 @@ bool cModuleInterface::setupInterface()
                 QString scpiModuleName = jsonScpiInfo["Name"].toString();
 
                 QJsonArray jsonScpiCmdArr = jsonScpiInfo["Cmd"].toArray();
-                QJsonArray jsonCmdArr;
                 for (int j = 0; j < jsonScpiCmdArr.count(); j++) {
-                    cSCPICmdInfo *scpiCmdInfo;
-
-                    jsonCmdArr = jsonScpiCmdArr[j].toArray();
-                    scpiCmdInfo = new cSCPICmdInfo();
-
+                    cSCPICmdInfo *scpiCmdInfo = new cSCPICmdInfo();
                     scpiCmdInfo->scpiModuleName = scpiModuleName;
                     scpiCmdInfo->entityId = entityID;
+                    QJsonArray jsonCmdArr = jsonScpiCmdArr[j].toArray();
                     scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
                     scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
                     scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
@@ -86,76 +69,41 @@ bool cModuleInterface::setupInterface()
                 }
             }
             else
-                noError = false;
+                ok = false;
         }
     }
-
-    return noError;
+    return ok;
 }
-
 
 void cModuleInterface::actualizeInterface(QVariant modInterface)
 {
-    QJsonDocument jsonDoc;
-    jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
-
-    if ( !jsonDoc.isNull() && jsonDoc.isObject() )
-    {
-        QString scpiModuleName;
-        QJsonObject jsonObj;
-        QJsonArray jsonArr, jsonCmdArr;
-
-        jsonObj = jsonDoc.object();
-
+    QJsonDocument jsonDoc = QJsonDocument::fromJson(modInterface.toByteArray());
+    if ( !jsonDoc.isNull() && jsonDoc.isObject() ) {
+        QJsonObject jsonObj = jsonDoc.object();
         jsonObj = jsonObj["SCPIInfo"].toObject();
-        scpiModuleName = jsonObj["Name"].toString();
-
-        jsonArr = jsonObj["Cmd"].toArray();
-
+        QString scpiModuleName = jsonObj["Name"].toString();
+        QJsonArray jsonArr = jsonObj["Cmd"].toArray();
         // we iterate over all cmds
-        for (int j = 0; j < jsonArr.count(); j++)
-        {
-            jsonCmdArr = jsonArr[j].toArray();
-
-            if (jsonCmdArr[4].toString() != "0")
-            { // so it is a property delegate
-
-                //cSCPICmdInfo *scpiCmdInfo;
+        for (int j = 0; j < jsonArr.count(); j++) {
+            QJsonArray jsonCmdArr = jsonArr[j].toArray();
+            if (jsonCmdArr[4].toString() != "0") { // so it is a property delegate
                 QString cmdComplete;
                 cmdComplete = QString("%1:%2:%3").arg(jsonCmdArr[0].toString(), scpiModuleName, jsonCmdArr[1].toString());
                 m_scpiPropertyDelegateHash[cmdComplete]->setOutput(modInterface);
-                /*
-                scpiCmdInfo = new cSCPICmdInfo();
-                scpiCmdInfo->scpiModuleName = scpiModuleName;
-                scpiCmdInfo->entityId = entityID;
-                scpiCmdInfo->scpiModel = jsonCmdArr[0].toString();
-                scpiCmdInfo->scpiCommand = jsonCmdArr[1].toString();
-                scpiCmdInfo->scpiCommandType = jsonCmdArr[2].toString();
-                scpiCmdInfo->componentName = jsonCmdArr[3].toString();
-                scpiCmdInfo->refType = jsonCmdArr[4].toString();
-                scpiCmdInfo->unit = jsonCmdArr[5].toString();
-                cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel).arg(scpiCmdInfo->scpiModuleName).arg(scpiCmdInfo->scpiCommand);
-                m_scpiPropertyDelegateHash[cmdComplete]->setOutput(scpiCmdInfo);
-                */
-             }
+            }
         }
     }
 }
-
 
 QHash<QString, cSCPIMeasureDelegate *> *cModuleInterface::getSCPIMeasDelegateHash()
 {
     return &m_scpiMeasureDelegateHash;
 }
 
-
 void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 {
-    if (scpiCmdInfo->scpiModel == "MEASURE")
-
-    {
+    if (scpiCmdInfo->scpiModel == "MEASURE") {
         // in case of measure model we have to add several commands for each value
-
         cSCPIMeasure* measureObject = new cSCPIMeasure(&m_pModule->scpiMeasureHash, scpiCmdInfo);
 
         addSCPIMeasureCommand(QString(""), QString("MEASURE"), SCPI::isNode | SCPI::isQuery, SCPIModelType::measure, measureObject);
@@ -177,27 +125,20 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
         addSCPIMeasureCommand(QString("FETCH:%2").arg(scpiCmdInfo->scpiModuleName), scpiCmdInfo->scpiCommand, SCPI::isQuery, SCPIModelType::fetch, measureObject, scpiCmdInfo->veinComponentInfo);
 
     }
-    else
-    {
-        bool ok;
-        ScpiBaseDelegate* delegate;
-
-        QString cmdComplete;
-        cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
+    else {
+        QString cmdComplete = QString("%1:%2:%3").arg(scpiCmdInfo->scpiModel, scpiCmdInfo->scpiModuleName, scpiCmdInfo->scpiCommand);
         QStringList nodeNames = cmdComplete.split(':');
         QString cmdNode = nodeNames.takeLast();
         QString cmdParent = nodeNames.join(':');
-
+        ScpiBaseDelegate* delegate;
         if (scpiCmdInfo->refType == "0") {
-            delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
+            delegate = new cSCPIParameterDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
             setXmlComponentInfo(delegate, scpiCmdInfo->veinComponentInfo);
         }
-        else
-        {
-            delegate = new cSCPIPropertyDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(&ok), m_pModule, scpiCmdInfo);
+        else {
+            delegate = new cSCPIPropertyDelegate(cmdParent, cmdNode, scpiCmdInfo->scpiCommandType.toInt(), m_pModule, scpiCmdInfo);
             m_scpiPropertyDelegateHash[cmdComplete] = static_cast<cSCPIPropertyDelegate*>(delegate); // for easier access if we need to change answers of this delegate
         }
-
         m_scpiDelegateList.append(delegate); // for clean up .....
         m_pSCPIInterface->addSCPICommand(delegate);
     }
@@ -206,16 +147,13 @@ void cModuleInterface::addSCPICommand(cSCPICmdInfo *scpiCmdInfo)
 
 void cModuleInterface::addSCPIMeasureCommand(QString cmdparent, QString cmd, quint8 cmdType, quint8 measCode, cSCPIMeasure *measureObject, QJsonObject veinComponentInfo)
 {
-    cSCPIMeasureDelegate* delegate;
     QString cmdcomplete = QString("%1:%2").arg(cmdparent, cmd);
-
-    if (m_scpiMeasureDelegateHash.contains(cmdcomplete))
-    {
+    cSCPIMeasureDelegate* delegate;
+    if (m_scpiMeasureDelegateHash.contains(cmdcomplete)) {
         delegate = m_scpiMeasureDelegateHash.value(cmdcomplete);
         delegate->addscpimeasureObject(measureObject);
     }
-    else
-    {
+    else {
         delegate = new cSCPIMeasureDelegate(cmdparent, cmd, cmdType , measCode, measureObject);
         m_scpiMeasureDelegateHash[cmdcomplete] = delegate;
         m_pSCPIInterface->addSCPICommand(delegate);
@@ -243,9 +181,8 @@ void cModuleInterface::setXmlComponentValidatorInfo(ScpiBaseDelegate *delegate, 
             for(const auto &entry : qAsConst(validatorEntryArray)) {
                 validStrings.append(entry.toString());
             }
-            if(!validStrings.isEmpty()) {
+            if(!validStrings.isEmpty())
                 delegate->setXmlAttribute("ValidPar", validStrings.join(","));
-            }
         }
         else if(validatorType == "INTEGER" || validatorType == "DOUBLE") {
             delegate->setXmlAttribute("DataType", validatorType);
