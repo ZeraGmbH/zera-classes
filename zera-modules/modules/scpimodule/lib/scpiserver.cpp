@@ -102,6 +102,13 @@ cModuleInterface *cSCPIServer::getModuleInterface()
     return m_pModuleInterface;
 }
 
+void cSCPIServer::appendClient(cSCPIClient* client)
+{
+    m_SCPIClientList.append(client);
+    if (m_SCPIClientList.count() == 1)
+        client->setAuthorisation(true);
+}
+
 void cSCPIServer::createSerialScpi()
 {
     if (!m_bSerialScpiActive) {
@@ -115,10 +122,7 @@ void cSCPIServer::createSerialScpi()
             m_pSerialPort->setFlowControl(QSerialPort::NoFlowControl);
 
             m_pSerialClient = new cSCPISerialClient(m_pSerialPort, m_pModule, m_ConfigData, m_pSCPIInterface);
-            m_SCPIClientList.append(m_pSerialClient);
-            if (m_SCPIClientList.count() == 1) {
-                m_pSerialClient->setAuthorisation(true);
-            }
+            appendClient(m_pSerialClient);
             m_bSerialScpiActive = true;
         }
         else
@@ -153,12 +157,9 @@ void cSCPIServer::addSCPIClient()
     if(m_pTcpServer->hasPendingConnections()) {
         QTcpSocket* socket = m_pTcpServer->nextPendingConnection();
         cSCPIEthClient* client = new cSCPIEthClient(socket, m_pModule, m_ConfigData, m_pSCPIInterface); // each client our interface;
-        m_SCPIClientList.append(client);
-        int activeClients = m_SCPIClientList.count();
-        qInfo("Created client / Active clients: %i", activeClients);
-        connect(client,& cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
-        if (activeClients == 1)
-            client->setAuthorisation(true);
+        appendClient(client);
+        qInfo("Created client / Active clients: %i", m_SCPIClientList.count());
+        connect(client, &cSCPIEthClient::destroyed, this, &cSCPIServer::deleteSCPIClient);
      }
 }
 
