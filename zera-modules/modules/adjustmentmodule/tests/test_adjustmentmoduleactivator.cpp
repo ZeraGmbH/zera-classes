@@ -14,7 +14,7 @@ void test_adjustmentmoduleactivator::instantiate()
 
     /*std::shared_ptr<cAdjustmentModuleConfiguration> pConfiguration = std::make_shared<cAdjustmentModuleConfiguration>();
 
-    QString configPath = QString(CONFIG_PATH);
+    QString configPath = QString(CONFIG_SOURCE_PATH);
     QString xsdpath = configPath+ "/adjustmentmodule.xsd";
 
     QFile xmlFile(configPath + "/mt310s2-adjustmentmodule.xml");

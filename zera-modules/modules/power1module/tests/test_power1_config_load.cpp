@@ -14,14 +14,14 @@ QTEST_MAIN(test_power1_config_load)
 
 void test_power1_config_load::fileFound()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_PATH) + "/" + "com5003-power1module.xml");
+    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCE_PATH) + "/" + "com5003-power1module.xml");
     QVERIFY(tmpXmlConfigFile.exists());
 }
 
 void test_power1_config_load::allFilesLoaded()
 {
     // Note: Some checks are done within cPower1ModuleConfiguration and failures fire Q_ASSERT
-    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_PATH)).entryInfoList(QStringList() << "*.xml");
+    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCE_PATH)).entryInfoList(QStringList() << "*.xml");
     for(const auto &fileInfo : fileList) {
         QFile configFile(fileInfo.absoluteFilePath());
         qInfo("Load %s...", qPrintable(configFile.fileName()));
@@ -45,7 +45,7 @@ class ConfFileLoader
 public:
     static QVector<PowConfig> &get() {
         if(m_confFiles.isEmpty()) {
-            QFileInfoList fileList = QDir(QStringLiteral(CONFIG_PATH)).entryInfoList(QStringList() << "*.xml");
+            QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCE_PATH)).entryInfoList(QStringList() << "*.xml");
             m_confFiles.resize(fileList.count());
             for(int i=0; i<fileList.count(); i++) {
                 QString filename = fileList[i].fileName();
