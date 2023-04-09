@@ -12,13 +12,15 @@ void test_scpi_config_load::fileFound()
     QVERIFY(tmpXmlConfigFile.exists());
 }
 
-void test_scpi_config_load::fileLoaded()
+void test_scpi_config_load::allFilesLoaded()
 {
-    QFile tmpXmlConfigFile(QStringLiteral(CONFIG_SOURCE_PATH) + "/" + "com5003-scpimodule.xml");
-    QVERIFY(tmpXmlConfigFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
-    std::unique_ptr<SCPIMODULE::cSCPIModuleConfiguration> conf = std::make_unique<SCPIMODULE::cSCPIModuleConfiguration>();
-
-    QSignalSpy spy(conf.get(), &cBaseModuleConfiguration::configXMLDone);
-    conf->setConfiguration(tmpXmlConfigFile.readAll());
-    QCOMPARE(spy.count(), 1);
+    QFileInfoList fileList = QDir(QStringLiteral(CONFIG_SOURCE_PATH)).entryInfoList(QStringList() << "*.xml");
+    for(const auto &fileInfo : fileList) {
+        QFile configFile(fileInfo.absoluteFilePath());
+        qInfo("Load %s...", qPrintable(configFile.fileName()));
+        QVERIFY(configFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
+        SCPIMODULE::cSCPIModuleConfiguration conf;
+        conf.setConfiguration(configFile.readAll());
+        QVERIFY(conf.isConfigured());
+    }
 }

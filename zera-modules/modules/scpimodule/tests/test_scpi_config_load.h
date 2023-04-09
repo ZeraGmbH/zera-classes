@@ -8,7 +8,7 @@ class test_scpi_config_load : public QObject
     Q_OBJECT
 private slots:
     void fileFound();
-    void fileLoaded();
+    void allFilesLoaded();
 };
 
 #endif // TEST_SCPI_CONFIG_LOAD_H
