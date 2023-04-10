@@ -30,7 +30,7 @@ QList<ZeraModules::VirtualModule *> ElectronicBurdenModuleFactory::listModules()
 
 QString ElectronicBurdenModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(ElectronicBurdenModule::BaseModuleName).toLower();
 }
 
 }

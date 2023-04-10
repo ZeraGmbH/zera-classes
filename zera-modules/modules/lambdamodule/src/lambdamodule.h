@@ -6,14 +6,13 @@
 
 namespace LAMBDAMODULE
 {
-#define BaseModuleName "LambdaModule"
-#define BaseSCPIModuleName "LAM"
-
 class cLambdaModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "LambdaModule";
+    static constexpr const char* BaseSCPIModuleName = "LAM";
+
     cLambdaModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

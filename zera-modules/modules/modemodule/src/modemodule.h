@@ -10,18 +10,16 @@
 
 namespace MODEMODULE {
 
-#define BaseModuleName "ModeModule"
-#define BaseSCPIModuleName "MOD"
-
 class cModeModuleConfiguration;
 class cModeModuleInit;
 
-
 class cModeModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "ModeModule";
+    static constexpr const char* BaseSCPIModuleName = "MOD";
+
     cModeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

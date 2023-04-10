@@ -6,17 +6,16 @@
 
 namespace SEM1MODULE
 {
-#define BaseModuleName "SEM1Module"
-#define BaseSCPIModuleName "EM01"
-
-// shortcut of scpi module name is only first 4 characters
-// so we will provide energy measurement type EM01 .. EM99
-// and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
 class cSem1Module : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "SEM1Module";
+    // shortcut of scpi module name is only first 4 characters
+    // so we will provide energy measurement type EM01 .. EM99
+    // and each energy measurement  will have an additional scpi parent with its number 0001 .. 9999
+    static constexpr const char* BaseSCPIModuleName = "EM01";
+
     cSem1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 protected:

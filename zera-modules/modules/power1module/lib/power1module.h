@@ -17,14 +17,13 @@ class cPower1ModuleConfiguration;
 class cPower1ModuleMeasProgram;
 class cPower1ModuleObservation;
 
-#define BaseModuleName "POWER1Module"
-#define BaseSCPIModuleName "POW"
-
 class cPower1Module : public cBaseMeasModule
 {
     Q_OBJECT
-
 public:
+    static constexpr const char* BaseModuleName = "POWER1Module";
+    static constexpr const char* BaseSCPIModuleName = "POW";
+
     cPower1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

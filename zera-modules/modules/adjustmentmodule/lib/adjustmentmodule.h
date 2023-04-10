@@ -3,15 +3,14 @@
 
 #include <basemeasmodule.h>
 
-#define BaseModuleName "AdjustmentModule"
-#define BaseSCPIModuleName "ADJ"
-
 class cAdjustmentModuleMeasProgram;
 
 class cAdjustmentModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "AdjustmentModule";
+    static constexpr const char* BaseSCPIModuleName = "ADJ";
     cAdjustmentModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 protected:

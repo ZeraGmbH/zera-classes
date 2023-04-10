@@ -28,7 +28,7 @@ QList<ZeraModules::VirtualModule *> SampleModuleFactory::listModules() const
 
 QString SampleModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cSampleModule::BaseModuleName).toLower();
 }
 
 }

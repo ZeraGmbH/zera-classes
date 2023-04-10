@@ -14,13 +14,13 @@ class cThdnModuleConfiguration;
 class cThdnModuleMeasProgram;
 class cThdnModuleObservation;
 
-#define BaseModuleName "THDNModule"
-#define BaseSCPIModuleName "THD"
-
 class cThdnModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "THDNModule";
+    static constexpr const char* BaseSCPIModuleName = "THD";
+
     cThdnModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

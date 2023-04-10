@@ -29,7 +29,7 @@ QList<ZeraModules::VirtualModule *> DftModuleFactory::listModules() const
 
 QString DftModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cDftModule::BaseModuleName).toLower();
 }
 
 }

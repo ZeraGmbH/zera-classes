@@ -14,14 +14,13 @@ class cOsciModuleConfiguration;
 class cOsciModuleMeasProgram;
 class cOsciModuleObservation;
 
-#define BaseModuleName "OSCIModule"
-#define BaseSCPIModuleName "OSC"
-
 class cOsciModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "OSCIModule";
+    static constexpr const char* BaseSCPIModuleName = "OSC";
+
     cOsciModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

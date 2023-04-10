@@ -14,13 +14,13 @@ class cTransformer1ModuleConfiguration;
 class cTransformer1ModuleMeasProgram;
 class cTransformer1ModuleObservation;
 
-#define BaseModuleName "Transformer1Module"
-#define BaseSCPIModuleName "TR1"
-
 class cTransformer1Module : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "Transformer1Module";
+    static constexpr const char* BaseSCPIModuleName = "TR1";
+
     cTransformer1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

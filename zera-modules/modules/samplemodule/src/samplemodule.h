@@ -10,14 +10,13 @@
 
 namespace SAMPLEMODULE
 {
-#define BaseModuleName "SampleModule"
-#define BaseSCPIModuleName "SAM"
-
 class cSampleModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "SampleModule";
+    static constexpr const char* BaseSCPIModuleName = "SAM";
+
     cSampleModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     cPllMeasChannel* getPllMeasChannel(QString name);

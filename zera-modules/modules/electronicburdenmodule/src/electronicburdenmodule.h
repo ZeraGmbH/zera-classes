@@ -6,9 +6,6 @@
 
 namespace ELECTRONICBURDENMODULE
 {
-#define BaseModuleName "ElBurdenModule"
-#define BaseSCPIModuleName "EBU"
-
 class ElectronicBurdenModuleConfiguration;
 class ElectronicBurdenModuleProgram;
 
@@ -16,6 +13,9 @@ class ElectronicBurdenModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "ElBurdenModule";
+    static constexpr const char* BaseSCPIModuleName = "EBU";
+
     ElectronicBurdenModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

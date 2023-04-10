@@ -7,17 +7,16 @@ namespace SEC1MODULE
 {
 class cSec1ModuleMeasProgram;
 
-#define BaseModuleName "SEC1Module"
-#define BaseSCPIModuleName "EC01"
-
-// shortcut of scpi module name is only first 4 characters
-// so we will provide ecalculator type EC01 .. EC99
-// and each ec will have an additional scpi parent with its number 0001 .. 9999
-
 class cSec1Module : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "SEC1Module";
+    // shortcut of scpi module name is only first 4 characters
+    // so we will provide ecalculator type EC01 .. EC99
+    // and each ec will have an additional scpi parent with its number 0001 .. 9999
+    static constexpr const char* BaseSCPIModuleName = "EC01";
+
     cSec1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 protected:
