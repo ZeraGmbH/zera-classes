@@ -11,6 +11,7 @@ function(SETUP_QTESTS_MODULE)
         target_link_libraries(${_testname}
             PRIVATE
             scpimodule-static
+            scpimodule-testlib
             statusmodule-static
             zera-modules-testlib
         )

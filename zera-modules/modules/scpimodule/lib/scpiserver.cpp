@@ -109,6 +109,11 @@ void cSCPIServer::appendClient(cSCPIClient* client)
         client->setAuthorisation(true);
 }
 
+cSCPIInterface *cSCPIServer::getScpiInterface() const
+{
+    return m_pSCPIInterface;
+}
+
 void cSCPIServer::createSerialScpi()
 {
     if (!m_bSerialScpiActive) {
