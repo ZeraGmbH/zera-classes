@@ -1,6 +1,3 @@
-# we need source files - install runs after tests
-add_definitions(-DCONFIG_SOURCE_PATH="${CMAKE_CURRENT_SOURCE_DIR}/../configs")
-
 function(SETUP_QTESTS_MODULE)
     SETUP_QTESTS(${ARGN})
     foreach(_testname ${ARGN})
