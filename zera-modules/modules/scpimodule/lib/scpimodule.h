@@ -33,7 +33,7 @@ class cSCPIModule : public cBaseModule
     Q_OBJECT
 public:
     cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
-    virtual QByteArray getConfiguration() const;
+    QByteArray getConfiguration() const override;
     cSCPIServer* getSCPIServer();
 
     QMultiHash<QString, SCPIClientInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
@@ -46,21 +46,21 @@ public:
 protected:
     cSCPIServer *m_pSCPIServer; // our server for the world
 
-    virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
-    virtual void setupModule(); // after xml configuration we can setup and export our module
-    virtual void startMeas(); // we make the measuring program start here
-    virtual void stopMeas();
+    virtual void doConfiguration(QByteArray xmlConfigData) override; // here we have to do our configuration
+    virtual void setupModule() override; // after xml configuration we can setup and export our module
+    virtual void startMeas() override; // we make the measuring program start here
+    virtual void stopMeas() override;
 
 protected slots:
-    virtual void activationStart();
-    virtual void activationExec();
-    virtual void activationDone();
-    virtual void activationFinished();
+    virtual void activationStart() override;
+    virtual void activationExec() override;
+    virtual void activationDone() override;
+    virtual void activationFinished() override;
 
-    virtual void deactivationStart();
-    virtual void deactivationExec();
-    virtual void deactivationDone();
-    virtual void deactivationFinished();
+    virtual void deactivationStart() override;
+    virtual void deactivationExec() override;
+    virtual void deactivationDone() override;
+    virtual void deactivationFinished() override;
 
 private:
     qint32 m_nActivationIt;
