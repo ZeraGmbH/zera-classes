@@ -14,11 +14,10 @@ public:
     ModuleManagerForTest();
     void addModule(cBaseModule* module, QString configFileFullPath);
     VeinStorage::VeinHash* getStorageSystem();
-signals:
+    static void feedEventLoop();
 
 private:
     void addSystem(VeinEvent::EventSystem* subsystem);
-    void feedEventLoop();
 
     VeinEvent::EventHandler m_eventHandler;
     VeinStorage::VeinHash m_storageSystem;

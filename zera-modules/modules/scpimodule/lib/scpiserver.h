@@ -31,6 +31,7 @@ public:
     virtual void generateInterface() override; // here we export our interface (entities)
     cModuleInterface* getModuleInterface();
     void appendClient(cSCPIClient *client);
+    cSCPIInterface* getScpiInterface() const;
 private:
     void createSerialScpi();
     void destroySerialScpi();
