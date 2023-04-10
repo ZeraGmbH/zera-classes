@@ -13,7 +13,7 @@ void test_scpi_cmds_in_session::initialSession()
     ModuleManagerForTest modman;
 
     SCPIMODULE::cSCPIModule scpiModule(1, 9999, modman.getStorageSystem());
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCE_PATH) + "/" + "demo-scpimodule.xml");
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
     VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
@@ -26,7 +26,7 @@ void test_scpi_cmds_in_session::initialTestClient()
 {
     ModuleManagerForTest modman;
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
-    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCE_PATH) + "/" + "demo-scpimodule.xml");
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);

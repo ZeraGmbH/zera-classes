@@ -1,3 +1,11 @@
+# pass source paths to configs for tests
+add_definitions(-DCONFIG_SOURCES_ADJUSTMENTMODULE="${CMAKE_CURRENT_SOURCE_DIR}/adjustmentmodule/configs")
+add_definitions(-DCONFIG_SOURCES_POWER1MODULE="${CMAKE_CURRENT_SOURCE_DIR}/power1module/configs")
+add_definitions(-DCONFIG_SOURCES_POWER2MODULE="${CMAKE_CURRENT_SOURCE_DIR}/power2module/configs")
+add_definitions(-DCONFIG_SOURCES_SCPIMODULE="${CMAKE_CURRENT_SOURCE_DIR}/scpimodule/configs")
+add_definitions(-DCONFIG_SOURCES_SEC1MODULE="${CMAKE_CURRENT_SOURCE_DIR}/sec1module/configs")
+add_definitions(-DCONFIG_SOURCES_STATUSMODULE="${CMAKE_CURRENT_SOURCE_DIR}/statusmodule/configs")
+
 add_subdirectory(adjustmentmodule)
 add_subdirectory(burden1module)
 add_subdirectory(dftmodule)
