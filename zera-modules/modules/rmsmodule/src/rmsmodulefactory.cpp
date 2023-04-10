@@ -31,7 +31,7 @@ QList<ZeraModules::VirtualModule *> RmsModuleFactory::listModules() const
 
 QString RmsModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cRmsModule::BaseModuleName).toLower();
 }
 
 }

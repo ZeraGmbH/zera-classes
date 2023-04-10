@@ -19,14 +19,12 @@ class cAdjustManagement;
 class cRangeObsermatic;
 class cRangeModuleObservation;
 
-
-#define BaseModuleName "RangeModule"
-#define BaseSCPIModuleName "RNG"
-
 class cRangeModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "RangeModule";
+    static constexpr const char* BaseSCPIModuleName = "RNG";
     cRangeModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback

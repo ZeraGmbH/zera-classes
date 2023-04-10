@@ -28,7 +28,7 @@ QList<ZeraModules::VirtualModule *> OsciModuleFactory::listModules() const
 
 QString OsciModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cOsciModule::BaseModuleName).toLower();
 }
 
 }

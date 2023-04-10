@@ -8,14 +8,13 @@
 
 namespace RMSMODULE
 {
-#define BaseModuleName "RMSModule"
-#define BaseSCPIModuleName "RMS"
-
 class cRmsModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "RMSModule";
+    static constexpr const char* BaseSCPIModuleName = "RMS";
+
     cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

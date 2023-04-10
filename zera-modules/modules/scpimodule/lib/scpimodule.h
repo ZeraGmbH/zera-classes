@@ -19,9 +19,6 @@ namespace VeinEvent
 
 namespace SCPIMODULE {
 
-#define BaseModuleName "SCPIModule"
-#define BaseSCPIModuleName "SCP"
-
 class cSCPIServer;
 class cSignalConnectionDelegate;
 class cSCPIMeasure;
@@ -32,6 +29,9 @@ class cSCPIModule : public cBaseModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "SCPIModule";
+    static constexpr const char* BaseSCPIModuleName = "SCP";
+
     cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     QByteArray getConfiguration() const override;
     cSCPIServer* getSCPIServer();

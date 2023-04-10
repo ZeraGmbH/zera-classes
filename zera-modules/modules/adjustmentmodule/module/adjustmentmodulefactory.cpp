@@ -25,5 +25,5 @@ QList<ZeraModules::VirtualModule *> AdjustmentModuleFactory::listModules() const
 
 QString AdjustmentModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cAdjustmentModule::BaseModuleName).toLower();
 }

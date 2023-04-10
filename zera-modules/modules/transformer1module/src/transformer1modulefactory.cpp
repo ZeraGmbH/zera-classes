@@ -28,7 +28,7 @@ QList<ZeraModules::VirtualModule *> Transformer1ModuleFactory::listModules() con
 
 QString Transformer1ModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cTransformer1Module::BaseModuleName).toLower();
 }
 
 }

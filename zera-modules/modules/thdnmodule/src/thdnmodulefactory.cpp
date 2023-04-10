@@ -28,7 +28,7 @@ QList<ZeraModules::VirtualModule *> ThdnModuleFactory::listModules() const
 
 QString ThdnModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cThdnModule::BaseModuleName).toLower();
 }
 
 }

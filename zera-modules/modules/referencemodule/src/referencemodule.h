@@ -13,13 +13,13 @@
 
 namespace REFERENCEMODULE
 {
-#define BaseModuleName "REFERENCEModule"
-#define BaseSCPIModuleName "REF"
-
 class cReferenceModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "REFERENCEModule";
+    static constexpr const char* BaseSCPIModuleName = "REF";
+
     cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback

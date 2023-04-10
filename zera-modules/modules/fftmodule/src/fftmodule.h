@@ -14,13 +14,13 @@ class cFftModuleConfiguration;
 class cFftModuleMeasProgram;
 class cFftModuleObservation;
 
-#define BaseModuleName "FFTModule"
-#define BaseSCPIModuleName "FFT"
-
 class cFftModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "FFTModule";
+    static constexpr const char* BaseSCPIModuleName = "FFT";
+
     cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

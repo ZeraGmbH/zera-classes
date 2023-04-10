@@ -30,7 +30,7 @@ QList<ZeraModules::VirtualModule *> StatusModuleFactory::listModules() const
 
 QString StatusModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cStatusModule::BaseModuleName).toLower();
 }
 
 }

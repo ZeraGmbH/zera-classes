@@ -6,14 +6,13 @@
 
 namespace BURDEN1MODULE
 {
-#define BaseModuleName "Burden1Module"
-#define BaseSCPIModuleName "BD1"
-
 class cBurden1Module : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "Burden1Module";
+    static constexpr const char* BaseSCPIModuleName = "BD1";
+
     cBurden1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

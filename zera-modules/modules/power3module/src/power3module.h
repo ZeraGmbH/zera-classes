@@ -9,13 +9,13 @@ class cModuleError;
 
 namespace POWER3MODULE
 {
-#define BaseModuleName "Power3Module"
-#define BaseSCPIModuleName "PW3"
-
 class cPower3Module : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "Power3Module";
+    static constexpr const char* BaseSCPIModuleName = "PW3";
+
     cPower3Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 protected:

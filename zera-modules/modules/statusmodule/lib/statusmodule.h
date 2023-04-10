@@ -10,15 +10,15 @@
 
 namespace STATUSMODULE
 {
-#define BaseModuleName "StatusModule"
-#define BaseSCPIModuleName "DEV"
 #define ReleaseInfoFilePath "/opt/zera/conf/CHANGELOG"
 
 class cStatusModule : public cBaseMeasModule
 {
-Q_OBJECT
-
+    Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "StatusModule";
+    static constexpr const char* BaseSCPIModuleName = "DEV";
+
     cStatusModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 

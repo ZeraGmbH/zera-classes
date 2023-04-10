@@ -6,13 +6,13 @@
 #include <basemeasmodule.h>
 #include <vfmodulerpc.h>
 
-#define BaseModuleName "SourceModule"
-#define BaseSCPIModuleName "SRC"
-
 class SourceModule : public cBaseMeasModule
 {
     Q_OBJECT
 public:
+    static constexpr const char* BaseModuleName = "SourceModule";
+    static constexpr const char* BaseSCPIModuleName = "SRC";
+
     SourceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     VfModuleRpc *getRpcEventSystem() const;

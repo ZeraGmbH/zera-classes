@@ -28,7 +28,7 @@ QList<ZeraModules::VirtualModule *> Efficiency1ModuleFactory::listModules() cons
 
 QString Efficiency1ModuleFactory::getFactoryName() const
 {
-    return QString(BaseModuleName).toLower();
+    return QString(cEfficiency1Module::BaseModuleName).toLower();
 }
 
 }
