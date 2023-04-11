@@ -1,7 +1,5 @@
 #include "test_scpi_config_load.h"
 #include "scpimoduleconfiguration.h"
-#include <memory>
-#include <QSignalSpy>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_config_load)
