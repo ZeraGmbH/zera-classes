@@ -9,6 +9,13 @@
 
 QTEST_MAIN(test_scpi_cmds_in_session)
 
+static int getEntityCount(ModuleManagerForTest *modman)
+{
+    VeinStorage::VeinHash* storageHash = modman->getStorageSystem();
+    QList<int> entityList = storageHash->getEntityList();
+    return entityList.count();
+}
+
 void test_scpi_cmds_in_session::initialSession()
 {   // First test on ModuleManagerForTest to know it works as expected
     ModuleManagerForTest modman;
@@ -16,9 +23,9 @@ void test_scpi_cmds_in_session::initialSession()
     SCPIMODULE::cSCPIModule scpiModule(1, 9999, modman.getStorageSystem());
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
+    QCOMPARE(getEntityCount(&modman), 1);
     VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
-    QCOMPARE(entityList.count(), 1);
     QList<QString> componentList = storageHash->getEntityComponents(entityList[0]);
     QCOMPARE(componentList.count(), 4); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile
 }
@@ -28,6 +35,7 @@ void test_scpi_cmds_in_session::initialTestClient()
     ModuleManagerForTest modman;
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    QCOMPARE(getEntityCount(&modman), 1);
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
@@ -55,10 +63,7 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
-
-    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
-    QList<int> entityList = storageHash->getEntityList();
-    QCOMPARE(entityList.count(), 2);
+    QCOMPARE(getEntityCount(&modman), 2);
 
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
