@@ -3,7 +3,8 @@ function(SETUP_QTESTS_MODULE)
     foreach(_testname ${ARGN})
         target_sources(${_testname}
             PRIVATE
-            ${XML_SCHEMA_RESOURCE}
+            ${XML_SCHEMA_RESOURCE_SCPIMODULE}
+            ${XML_SCHEMA_RESOURCE_STATUSMODULE}
         )
         target_link_libraries(${_testname}
             PRIVATE
