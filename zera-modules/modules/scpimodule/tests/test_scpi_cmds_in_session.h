@@ -10,6 +10,7 @@ private slots:
     void initialSession();
     void initialTestClient();
     void initialScpiCommandsOnOtherModules();
+    void multiReadDoubleDeleteCrasher();
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H

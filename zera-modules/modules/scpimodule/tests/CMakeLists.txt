@@ -5,12 +5,14 @@ function(SETUP_QTESTS_MODULE)
             PRIVATE
             ${XML_SCHEMA_RESOURCE_SCPIMODULE}
             ${XML_SCHEMA_RESOURCE_STATUSMODULE}
+            ${XML_SCHEMA_RESOURCE_RANGEMODULE}
         )
         target_link_libraries(${_testname}
             PRIVATE
             scpimodule-static
-            scpimodule-testlib
             statusmodule-static
+            rangemodule-static
+            scpimodule-testlib
             zera-modules-testlib
         )
     endforeach()
