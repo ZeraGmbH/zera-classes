@@ -42,7 +42,7 @@ enum moduleconfigstate
 
 class cRangeModuleConfigData;
 
-const QString defaultXSDFile = "://src/rangemodule.xsd";
+const QString defaultXSDFile = "://rangemodule.xsd";
 
 // rangemoduleconfiguration holds configuration data as well as parameter
 
