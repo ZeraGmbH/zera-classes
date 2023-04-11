@@ -5,6 +5,7 @@
 #include <scpitestclient.h>
 #include <scpiserver.h>
 #include <statusmodule.h>
+#include <rangemodule.h>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_cmds_in_session)
@@ -90,4 +91,38 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
     QCOMPARE(responses[2], "+0");
     QCOMPARE(responses[3], "123456789");
     QCOMPARE(responses[4], "+0");
+}
+
+void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
+{
+    // * double delete fixed by 3766814ec0fae75ad7f18c7f71c34a767675e6e4.
+    // * tested by reverting fix -> crashed
+    ModuleManagerForTest modman;
+    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem());
+    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem());
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    QCOMPARE(getEntityCount(&modman), 3);
+
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    // multi read to cause double delete crasher
+    client.sendScpiCmds("CONFIGURATION:RNG1:RNGAUTO?");
+    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING?");
+    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
+    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE?");
+    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE?");
+    ModuleManagerForTest::feedEventLoop();
+    QCOMPARE(responses.count(), 5);
+    QCOMPARE(responses[0], "0");
+    QCOMPARE(responses[1], "1");
 }
