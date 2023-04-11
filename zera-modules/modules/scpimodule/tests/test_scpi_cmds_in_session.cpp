@@ -106,7 +106,6 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 3);
 
-
     SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
     scpiModule.getSCPIServer()->appendClient(&client);
 
@@ -126,3 +125,59 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     QCOMPARE(responses[0], "0");
     QCOMPARE(responses[1], "1");
 }
+
+/*void test_scpi_cmds_in_session::workWithRangemodule()
+{
+    ModuleManagerForTest modman;
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem());
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    QCOMPARE(getEntityCount(&modman), 2);
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    // check initial state
+    client.sendScpiCmds("CONFIGURATION:RNG1:RNGAUTO?");
+    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING?");
+    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
+    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE?");
+    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE?");
+    ModuleManagerForTest::feedEventLoop();
+    QCOMPARE(responses.count(), 5);
+    QCOMPARE(responses[0], "0"); // rngauto
+    QCOMPARE(responses[1], "1"); // grouping
+    QCOMPARE(responses[2], "480V");
+    QCOMPARE(responses[3], "480V");
+    QCOMPARE(responses[4], "480V");
+
+    // change some
+    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING 0;");
+    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE 240V;");
+    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE 60V;");
+    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE 120V;");
+    ModuleManagerForTest::feedEventLoop();
+
+    // check changes
+    responses.clear();
+    client.sendScpiCmds("CONFIGURATION:RNG1:RNGAUTO?");
+    client.sendScpiCmds("CONFIGURATION:RNG1:GROUPING?");
+    client.sendScpiCmds("SENSE:RNG1:UL1:RANGE?");
+    client.sendScpiCmds("SENSE:RNG1:UL2:RANGE?");
+    client.sendScpiCmds("SENSE:RNG1:UL3:RANGE?");
+    ModuleManagerForTest::feedEventLoop(); // pitfall see initialScpiCommandsOnOtherModules on details
+    client.sendScpiCmds("*STB?");
+    QCOMPARE(responses.count(), 6);
+    QCOMPARE(responses[5], "+0");
+    QCOMPARE(responses[0], "0"); // rngauto
+    QCOMPARE(responses[1], "0"); // grouping
+    QCOMPARE(responses[2], "240V");
+    QCOMPARE(responses[3], "120V");
+    QCOMPARE(responses[4], "60V");
+}*/
