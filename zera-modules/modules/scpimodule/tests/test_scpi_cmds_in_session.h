@@ -9,6 +9,7 @@ class test_scpi_cmds_in_session : public QObject
 private slots:
     void initialSession();
     void initialTestClient();
+    void initialScpiCommandsOnOtherModules();
 };
 
 #endif // TEST_SCPI_CMDS_IN_SESSION_H
