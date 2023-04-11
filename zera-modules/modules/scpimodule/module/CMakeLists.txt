@@ -1,5 +1,5 @@
 add_library(scpimodule MODULE
-    ${XML_SCHEMA_RESOURCE}
+    ${XML_SCHEMA_RESOURCE_SCPIMODULE}
     ${CMAKE_CURRENT_SOURCE_DIR}/scpimodulefactory.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/scpimodulefactory.h
     )
