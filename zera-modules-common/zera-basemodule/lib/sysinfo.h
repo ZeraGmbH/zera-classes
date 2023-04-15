@@ -6,7 +6,7 @@
 class SysInfo
 {
 public:
-    static QString getSerialNr(QString path);
+    static QString getSerialNr();
     static QString getReleaseNr();
 };
 

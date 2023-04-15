@@ -5,9 +5,6 @@
 #include <QString>
 #include <QVector>
 
-
-#define SerialNoInfoFilePath "/opt/zera/conf/serialnumber"
-
 namespace SCPIMODULE
 {
 

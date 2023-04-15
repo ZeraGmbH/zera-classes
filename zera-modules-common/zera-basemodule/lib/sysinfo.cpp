@@ -2,12 +2,13 @@
 #include <QFile>
 #include <QTextStream>
 
-QString SysInfo::getSerialNr(QString path)
+QString SysInfo::getSerialNr()
 {
     // This is an alternate solution to StatusModule/PAR_SerialNr because
     // statusmodule serves writing of serial number either. Optional writing
     // done by zera-setup2 and in case of success a file
-    // /opt/zera/conf/serialnumber (see SerialNoInfoFilePath) is created
+    // /opt/zera/conf/serialnumber is created
+    QString path = "/opt/zera/conf/serialnumber";
     QString serialNo = "";
     QFile file(path);
     if (file.open(QIODevice::ReadOnly)) {
