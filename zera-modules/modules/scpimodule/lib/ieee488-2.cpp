@@ -249,7 +249,7 @@ void cIEEE4882::setIdentification(QString ident)
         releaseNr = QStringLiteral("unknown");
     }
 
-    QString serialNr = SysInfo::getSerialNr(SerialNoInfoFilePath);
+    QString serialNr = SysInfo::getSerialNr();
     if(serialNr.isEmpty()) { // was zera-setup2 completed??
         serialNr = QStringLiteral("unknown");
     }
