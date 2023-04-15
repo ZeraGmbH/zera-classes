@@ -18,8 +18,9 @@ QString SysInfo::getSerialNr(QString path)
     return serialNo;
 }
 
-QString SysInfo::getReleaseNr(QString path)
+QString SysInfo::getReleaseNr()
 {
+    QString path = "/opt/zera/conf/CHANGELOG";
     bool releaseNrFound = false;
     QString releaseNr = "";
     QFile file(path);

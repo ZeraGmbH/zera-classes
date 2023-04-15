@@ -6,7 +6,6 @@
 #include <QVector>
 
 
-#define ReleaseInfoFilePath  "/opt/zera/conf/CHANGELOG"
 #define SerialNoInfoFilePath "/opt/zera/conf/serialnumber"
 
 namespace SCPIMODULE

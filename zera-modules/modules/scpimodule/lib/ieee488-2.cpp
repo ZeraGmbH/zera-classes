@@ -241,7 +241,7 @@ void cIEEE4882::setIdentification(QString ident)
         model = QStringLiteral("unknown");
     }
 
-    QString releaseNr = SysInfo::getReleaseNr(ReleaseInfoFilePath);
+    QString releaseNr = SysInfo::getReleaseNr();
     if(releaseNr.isEmpty() && splitIdent.size() >= 3) { // fallback to xml-config
         releaseNr = splitIdent[2].simplified();
     }
