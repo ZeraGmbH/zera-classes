@@ -481,7 +481,7 @@ QString cStatusModuleInit::findReleaseNr()
 {
     QString releaseNr;
 
-    releaseNr = SysInfo::getReleaseNr(ReleaseInfoFilePath);
+    releaseNr = SysInfo::getReleaseNr();
     if (releaseNr == "")
         emit errMsg(releaseNumberErrMsg);
 

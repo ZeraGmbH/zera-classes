@@ -10,7 +10,6 @@
 
 namespace STATUSMODULE
 {
-#define ReleaseInfoFilePath "/opt/zera/conf/CHANGELOG"
 
 class cStatusModule : public cBaseMeasModule
 {
