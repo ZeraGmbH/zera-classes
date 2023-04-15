@@ -9,6 +9,7 @@ class test_scpi_cmds_in_session : public QObject
 private slots:
     void initialSession();
     void initialTestClient();
+    void minScpiDevIface();
     void initialScpiCommandsOnOtherModules();
     void multiReadDoubleDeleteCrasher();
     //void workWithRangemodule();

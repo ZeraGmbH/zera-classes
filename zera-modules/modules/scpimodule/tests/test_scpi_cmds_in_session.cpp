@@ -6,6 +6,7 @@
 #include <scpiserver.h>
 #include <statusmodule.h>
 #include <rangemodule.h>
+#include <xmldocumentcompare.h>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_cmds_in_session)
@@ -52,6 +53,29 @@ void test_scpi_cmds_in_session::initialTestClient()
     QCOMPARE(responses.count(), 2);
     QCOMPARE(responses[0], "+0");
     QCOMPARE(responses[1], "+0");
+}
+
+void test_scpi_cmds_in_session::minScpiDevIface()
+{
+    ModuleManagerForTest modman;
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    QCOMPARE(getEntityCount(&modman), 1);
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    client.sendScpiCmds("dev:iface?");
+    QCOMPARE(responses.count(), 1);
+    QFile ifaceBaseXmlFile("://dev-iface-basic.xml");
+    QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
+    XmlDocumentCompare compare;
+    QVERIFY(compare.compareXml(responses[0], ifaceBaseXmlFile.readAll(), true));
 }
 
 void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()

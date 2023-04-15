@@ -6,6 +6,7 @@ function(SETUP_QTESTS_MODULE)
             ${XML_SCHEMA_RESOURCE_SCPIMODULE}
             ${XML_SCHEMA_RESOURCE_STATUSMODULE}
             ${XML_SCHEMA_RESOURCE_RANGEMODULE}
+            test-data.qrc
         )
         target_link_libraries(${_testname}
             PRIVATE
@@ -14,6 +15,7 @@ function(SETUP_QTESTS_MODULE)
             rangemodule-static
             scpimodule-testlib
             zera-modules-testlib
+            Zera::xml-compare-testlib
         )
     endforeach()
 endfunction()
