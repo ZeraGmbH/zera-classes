@@ -16,7 +16,7 @@ ScpiBaseDelegate::ScpiBaseDelegate(QString cmdParent, QString cmd, quint8 type) 
 
 void ScpiBaseDelegate::setCommand(cSCPI *scpiCmdInterface)
 {
-    scpiCmdInterface->insertScpiCmd(m_sCmdParent.split(":"), this);
+    scpiCmdInterface->insertScpiCmd(m_sCmdParent.split(":", Qt::SkipEmptyParts), this);
 }
 
 }
