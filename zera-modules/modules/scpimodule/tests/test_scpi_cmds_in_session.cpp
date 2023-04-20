@@ -7,6 +7,7 @@
 #include <statusmodule.h>
 #include <rangemodule.h>
 #include <xmldocumentcompare.h>
+#include <vector>
 #include <QTest>
 
 QTEST_MAIN(test_scpi_cmds_in_session)
@@ -202,6 +203,40 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
     client.sendScpiCmds("dev:iface?");
     VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
     QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
+    XmlDocumentCompare compare;
+    QVERIFY(compare.compareXml(xmlDevIface.toString(), responses[0], true));
+}
+
+void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml()
+{
+    ModuleManagerForTest modman;
+    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem());
+    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+
+    std::vector<std::unique_ptr<RANGEMODULE::cRangeModule>> ptrList;
+    for(int i=1; i<=10; i++) {
+        ptrList.push_back(std::make_unique<RANGEMODULE::cRangeModule>(i, 1019+i, modman.getStorageSystem()));
+        modman.addModule(ptrList.back().get(), QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+    }
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+
+    ModuleManagerForTest::feedEventLoop(); // for setup SCPI from vein
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    client.sendScpiCmds("dev:iface?");
+    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
+    QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
+    // testing this on target / vf-debugger cutted string of len 67395 characters
+    QVERIFY(xmlDevIface.toString().size() >= 67395);
+    qInfo("%i", xmlDevIface.toString().size());
     XmlDocumentCompare compare;
     QVERIFY(compare.compareXml(xmlDevIface.toString(), responses[0], true));
 }

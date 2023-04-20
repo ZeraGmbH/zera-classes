@@ -14,6 +14,7 @@ private slots:
     void multiReadDoubleDeleteCrasher();
     void devIfaceVeinComponent();
     void devIfaceVeinComponentMultipleEntities();
+    void devIfaceVeinComponentMultipleEntitiesForLongXml();
     //void workWithRangemodule();
 };
 
