@@ -95,6 +95,12 @@ void cSCPIServer::generateInterface()
                                                     QString("Device file name for serial SCPI"),
                                                     QVariant(m_ConfigData.m_SerialDevice.m_sDevice) );
     m_pModule->veinModuleActvalueList.append(m_pVeinSerialScpiDevFileName); // auto delete / meta-data / scpi
+
+    m_veinDevIface = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                     QString("ACT_DEV_IFACE"),
+                                                     QString("SCPI interface description for current session"),
+                                                     QVariant("") );
+    m_pModule->veinModuleActvalueList.append(m_veinDevIface); // auto delete / meta-data / scpi
 }
 
 cModuleInterface *cSCPIServer::getModuleInterface()
@@ -209,6 +215,10 @@ void cSCPIServer::setupTCPServer()
 
 void cSCPIServer::activationDone()
 {
+    cSCPI* scpiTree = m_pSCPIInterface->getSCPICmdInterface();
+    QString xml;
+    scpiTree->exportSCPIModelXML(xml);
+    m_veinDevIface->setValue(xml);
     m_bActive = true;
     emit activated();
 }

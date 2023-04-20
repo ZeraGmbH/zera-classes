@@ -29,7 +29,7 @@ void test_scpi_cmds_in_session::initialSession()
     VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QList<QString> componentList = storageHash->getEntityComponents(entityList[0]);
-    QCOMPARE(componentList.count(), 4); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile
+    QCOMPARE(componentList.count(), 5); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / ACT_DEV_IFACE
 }
 
 void test_scpi_cmds_in_session::initialTestClient()
@@ -148,6 +148,62 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     QCOMPARE(responses.count(), 5);
     QCOMPARE(responses[0], "0");
     QCOMPARE(responses[1], "1");
+}
+
+void test_scpi_cmds_in_session::devIfaceVeinComponent()
+{
+    ModuleManagerForTest modman;
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    QCOMPARE(getEntityCount(&modman), 1);
+
+    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
+    QList<int> entityList = storageHash->getEntityList();
+    QList<QString> componentList = storageHash->getEntityComponents(entityList[0]);
+    QVERIFY(componentList.contains("ACT_DEV_IFACE"));
+
+    ModuleManagerForTest::feedEventLoop(); // for setup SCPI from vein
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    client.sendScpiCmds("dev:iface?");
+    QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
+    XmlDocumentCompare compare;
+    QVERIFY(compare.compareXml(xmlDevIface.toString(), responses[0], true));
+}
+
+void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
+{
+    ModuleManagerForTest modman;
+    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem());
+    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem());
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+    QCOMPARE(getEntityCount(&modman), 3);
+
+    ModuleManagerForTest::feedEventLoop(); // for setup SCPI from vein
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    client.sendScpiCmds("dev:iface?");
+    VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
+    QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
+    XmlDocumentCompare compare;
+    QVERIFY(compare.compareXml(xmlDevIface.toString(), responses[0], true));
 }
 
 /*void test_scpi_cmds_in_session::workWithRangemodule()

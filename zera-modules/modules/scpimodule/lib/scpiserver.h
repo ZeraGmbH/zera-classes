@@ -63,6 +63,7 @@ private:
     bool m_bSerialScpiActive;
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
     VfModuleActvalue* m_pVeinSerialScpiDevFileName = nullptr;
+    VfModuleActvalue* m_veinDevIface = nullptr;
 
 private slots:
     void addSCPIClient();
