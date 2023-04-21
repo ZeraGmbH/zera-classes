@@ -203,13 +203,6 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     QString modNr = QString("%1").arg(m_pModule->getModuleNr(),4,10,QChar('0'));
 
-    m_pModePar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                          key = QString("PAR_Mode"),
-                                          QString("Mode"),
-                                          QVariant(s = "Unknown"));
-    m_pModePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MODE").arg(modNr), "10", m_pModePar->getName(), "0", ""));
-    m_pModule->veinModuleParameterHash[key] = m_pModePar; // for modules use
-
     m_pDutInputPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_DutInput"),
                                               QString("DUT input"),
@@ -784,8 +777,6 @@ cSec1ModuleConfigData *cSec1ModuleMeasProgram::getConfData()
 
 void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pModePar->setValue(QVariant(getConfData()->m_sMode.m_sPar));
-
     cmpDependencies(); // dependant on mode we calculate parameters by ourself
 
     m_pDutInputPar->setValue(QVariant(mDUTSecInputInfoHash[getConfData()->m_sDutInput.m_sPar]->alias));
@@ -804,10 +795,7 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 
 void cSec1ModuleMeasProgram::setValidators()
 {
-    cStringValidator *sValidator = new cStringValidator(QStringList(getConfData()->m_ModeList));
-    m_pModePar->setValidator(sValidator);
-
-    sValidator = new cStringValidator(m_DUTAliasList);
+    cStringValidator *sValidator = new cStringValidator(m_DUTAliasList);
     m_pDutInputPar->setValidator(sValidator);
 
     sValidator = new cStringValidator(m_REFAliasList);
@@ -1254,7 +1242,6 @@ void cSec1ModuleMeasProgram::activationDone()
     connect(&m_WaitMultiTimer, &QTimer::timeout, this, &cSec1ModuleMeasProgram::startNext);
 
     connect(m_pStartStopPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newStartStop);
-    connect(m_pModePar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newMode);
     connect(m_pDutConstantPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstant);
     connect(m_pDutConstantUScaleNum, &VfModuleParameter::sigValueChanged,[this](QVariant val){
         this->newDutConstantScale(val,m_pDutConstantUScaleDenom->getName());
@@ -1324,7 +1311,6 @@ void cSec1ModuleMeasProgram::deactivationDone()
     disconnect(m_pPCBInterface, 0, this, 0);
 
     disconnect(m_pStartStopPar, 0, this, 0);
-    disconnect(m_pModePar, 0, this, 0);
     disconnect(m_pDutConstantPar, 0, this, 0);
     disconnect(m_pRefConstantPar, 0, this, 0);
     disconnect(m_pDutInputPar, 0, this, 0);
@@ -1582,18 +1568,6 @@ void cSec1ModuleMeasProgram::newStartStop(QVariant startstop)
     else {
         stopMeasurement(true);
     }
-}
-
-
-void cSec1ModuleMeasProgram::newMode(QVariant mode)
-{
-    getConfData()->m_sMode.m_sPar = mode.toString();
-    setInterfaceComponents();
-    m_pEnergyAct->setValue(0.0);
-    m_pEnergyFinalAct->setValue(0.0);
-    m_pResultAct->setValue(0.0);
-
-    emit m_pModule->parameterChanged();
 }
 
 
