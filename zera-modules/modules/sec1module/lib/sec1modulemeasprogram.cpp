@@ -340,7 +340,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pContinuousPar->setValidator(iValidator);
     m_pMeasCountPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MeasCount"),
-                                           QString("Number of measurements"),
+                                           QString("Multiple measurements: Number of measurements"),
                                            QVariant((int)1));
     m_pMeasCountPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MCOUNT").arg(modNr), "10", m_pMeasCountPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pMeasCountPar; // for modules use
