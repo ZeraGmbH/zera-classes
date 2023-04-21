@@ -349,7 +349,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pMeasWait = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MeasWait"),
-                                           QString("Number seconds to wait on multiple measurements between measurements"),
+                                           QString("Multiple measurements: Seconds to wait between measurements"),
                                            QVariant((int)0));
     m_pMeasWait->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MWAIT").arg(modNr), "10", m_pMeasWait->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pMeasWait; // for modules use
