@@ -142,7 +142,6 @@ private:
     cECalcChannelInfo m_MasterEcalculator;
     cECalcChannelInfo m_SlaveEcalculator;
 
-    VfModuleParameter* m_pModePar;
     VfModuleParameter* m_pDutInputPar;
     VfModuleParameter* m_pRefInputPar;
     VfModuleParameter* m_pRefConstantPar;
@@ -277,7 +276,6 @@ private slots:
 
     // vein change handlers
     void newStartStop(QVariant startstop);
-    void newMode(QVariant mode);
     void newDutConstant(QVariant dutconst);
     /**
      * @brief newDutConstantScale
