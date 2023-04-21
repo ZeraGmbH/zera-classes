@@ -347,8 +347,6 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                            key = QString("PAR_ClientActiveNotify"),
                                            QString("By changing this component, a client asks us for max actualize performance"),
                                            QVariant((quint32)0));
-    // unfortunately we cannot live without SCPI and validator here...
-    m_pClientNotifierPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:ACTIVEPING").arg(modNr), "10", m_pClientNotifierPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pClientNotifierPar; // for modules use
     iValidator = new cIntValidator(0, std::numeric_limits<quint32>::max(), 1);
     m_pClientNotifierPar->setValidator(iValidator);
