@@ -217,7 +217,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pSchnubbelStatus = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("INF_Schnubbel"),
-                                               QString("Schnubbel inserted or not"),
+                                               QString("Adjustment values write permission"),
                                                QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pSchnubbelStatus;
