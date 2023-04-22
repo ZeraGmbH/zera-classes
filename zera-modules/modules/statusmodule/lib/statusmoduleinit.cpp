@@ -130,7 +130,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pCtrlVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("INF_CTRLVersion"),
-                                              QString("Controler version"),
+                                              QString("Controller version"),
                                               QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pCtrlVersion;
