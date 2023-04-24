@@ -295,7 +295,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pMRatePar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_MRate"),
-                                           QString("Measuring rate"),
+                                           QString("Pulses to measure"),
                                            QVariant((double)0.0));
     m_pMRatePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MRATE").arg(modNr), "10", m_pMRatePar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pMRatePar; // for modules use
