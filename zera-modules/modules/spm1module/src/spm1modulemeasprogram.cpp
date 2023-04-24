@@ -320,7 +320,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
 
     m_pUpperLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Uplimit"),
-                                                QString("Upper error limit"),
+                                                QString("Error limit: upper"),
                                                 QVariant((double)10.0));
     m_pUpperLimitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:UPLIMIT").arg(modNr), "10", m_pUpperLimitPar->getName(), "0", "%"));
     m_pModule->veinModuleParameterHash[key] = m_pUpperLimitPar; // for modules use
@@ -329,7 +329,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
 
     m_pLowerLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Lolimit"),
-                                                QString("Lower error limit"),
+                                                QString("Error limit: lower"),
                                                 QVariant((double)-10.0));
     m_pLowerLimitPar->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:LOLIMIT").arg(modNr), "10", m_pLowerLimitPar->getName(), "0", "%"));
     m_pModule->veinModuleParameterHash[key] = m_pLowerLimitPar; // for modules use
