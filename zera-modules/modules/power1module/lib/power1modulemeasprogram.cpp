@@ -268,9 +268,14 @@ void cPower1ModuleMeasProgram::generateInterface()
     QString key;
     VfModuleActvalue *pActvalue;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
+        QString strDescription;
+        if(i<MeasPhaseCount)
+            strDescription = QString("Actual power value phase %1").arg(i+1);
+        else
+            strDescription = QString("Actual power value sum all phases");
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PQS%1").arg(i+1),
-                                            QString("Actual power value"),
+                                            strDescription,
                                             QVariant(0.0) );
         m_ActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
