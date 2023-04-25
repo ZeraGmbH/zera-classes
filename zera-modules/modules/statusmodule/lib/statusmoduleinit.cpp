@@ -159,7 +159,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pDSPServerVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_DSPServerVersion"),
-                                                   QString("DCP-server version"),
+                                                   QString("DSP-server version"),
                                                    QVariant(QString("") ));
 
     m_pModule->veinModuleParameterHash[key] = m_pDSPServerVersion;
