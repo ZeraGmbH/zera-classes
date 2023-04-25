@@ -229,7 +229,7 @@ void cStatusModuleInit::generateInterface()
                                                QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pAccumulatorStatus;
-    m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("SYSTEM", "ACCUMULATOR:STATUS", "2", key, "0", ""));
+    m_pAccumulatorStatus->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSTATUS", "2", key, "0", ""));
 
     m_pAccumulatorSoc = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                key = QString("INF_AccumulatorSoc"),
@@ -237,7 +237,7 @@ void cStatusModuleInit::generateInterface()
                                                QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pAccumulatorSoc;
-    m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("SYSTEM", "ACCUMULATOR:SOC", "2", key, "0", ""));
+    m_pAccumulatorSoc->setSCPIInfo(new cSCPIInfo("STATUS", "ACCUSOC", "2", key, "0", ""));
 }
 
 
