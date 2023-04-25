@@ -156,7 +156,7 @@ void cDftModuleMeasProgram::generateInterface()
         {
             pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPN%1").arg(n+1),
-                                                QString("DFT actual value phase/neutral"),
+                                                QString("Actual value phase/neutral"),
                                                 QVariant(0.0) );
             m_ActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
@@ -169,7 +169,7 @@ void cDftModuleMeasProgram::generateInterface()
         {
             pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 QString("ACT_DFTPP%1").arg(p+1),
-                                                QString("DFT actual value phase/phase"),
+                                                QString("Actual value phase/phase"),
                                                 QVariant(0.0) );
             m_ActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
