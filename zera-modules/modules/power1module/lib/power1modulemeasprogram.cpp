@@ -358,7 +358,7 @@ void cPower1ModuleMeasProgram::generateInterface()
 
     m_pMModePhaseSelectParameter = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_MeasModePhaseSelect"),
-                                                         QString("Phase select mask for modes supporting phase selection - e.g 100 for L1 only"),
+                                                         QString("Active phases selection mask"),
                                                          getInitialPhaseOnOffVeinVal());
     m_pMModePhaseSelectParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","MMODEPHASESELECT", "10", "PAR_MeasModePhaseSelect", "0", ""));
     m_MModePhaseSelectValidator = new cStringValidator("");
