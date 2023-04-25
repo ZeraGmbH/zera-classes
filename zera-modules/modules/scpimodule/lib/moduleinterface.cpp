@@ -184,6 +184,10 @@ void cModuleInterface::setXmlComponentValidatorInfo(ScpiBaseDelegate *delegate, 
             if(!validStrings.isEmpty())
                 delegate->setXmlAttribute("ValidPar", validStrings.join(","));
         }
+        else if(validatorType == "BOOL") {
+            delegate->setXmlAttribute("Min", QString("0"));
+            delegate->setXmlAttribute("Max", QString("1"));
+        }
         else if(validatorType == "INTEGER" || validatorType == "DOUBLE") {
             delegate->setXmlAttribute("DataType", validatorType);
             QJsonArray validatorEntryArray = getValidatorEntries(validator);
