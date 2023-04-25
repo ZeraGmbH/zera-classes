@@ -209,7 +209,7 @@ void cStatusModuleInit::generateInterface()
 
     m_pAdjustmentChksum = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    key = QString("INF_AdjChksum"),
-                                                   QString("Device adjustment data checksum"),
+                                                   QString("Adjustment data checksum device"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash[key] = m_pAdjustmentChksum;
