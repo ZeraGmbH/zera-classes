@@ -277,9 +277,9 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pDutTypeMeasurePoint = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutTypeMeasurePoint"),
-                                                 QString("Scale the dut constant in case tranformers are used (I fraction denominator)"),
+                                                 QString("Scale the dut constant in case tranformers are used (Measurement point selection)"),
                                                  QVariant("CsIsUs"));
-    m_pDutTypeMeasurePoint->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTISCALEDENOM").arg(modNr), "10", key, "0", ""));
+    m_pDutTypeMeasurePoint->setSCPIInfo(new cSCPIInfo("CONFIGURATION", QString("%1:DUTCONSTANTMEASUREPOINT").arg(modNr), "10", key, "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutTypeMeasurePoint; // for modules use
     //Match x or x/sqrt(3)
     m_pDutTypeMeasurePoint->setValidator(new cStringValidator({"CpIpUp","CpIsUs","CsIpUp","CsIsUs"}));
