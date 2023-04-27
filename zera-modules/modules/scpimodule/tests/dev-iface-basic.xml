@@ -28,15 +28,15 @@
     </MEASURE>
    </OPERATION>
   </STATUS>
-  <OPC ScpiPath="*OPC" Type="Model,Query,Command"/>
-  <ESE ScpiPath="*ESE" Type="Model,Query,Command+Par"/>
-  <SRE ScpiPath="*SRE" Type="Model,Query,Command+Par"/>
-  <CLS ScpiPath="*CLS" Type="Model,Command"/>
-  <RST ScpiPath="*RST" Type="Model,Command"/>
-  <IDN ScpiPath="*IDN" Type="Model,Query"/>
-  <ESR ScpiPath="*ESR" Type="Model,Query"/>
-  <STB ScpiPath="*STB" Type="Model,Query"/>
-  <TST ScpiPath="*TST" Type="Model,Query"/>
+  <MULOPC ScpiPath="*OPC" Type="Model,Query,Command"/>
+  <MULESE ScpiPath="*ESE" Type="Model,Query,Command+Par"/>
+  <MULSRE ScpiPath="*SRE" Type="Model,Query,Command+Par"/>
+  <MULCLS ScpiPath="*CLS" Type="Model,Command"/>
+  <MULRST ScpiPath="*RST" Type="Model,Command"/>
+  <MULIDN ScpiPath="*IDN" Type="Model,Query"/>
+  <MULESR ScpiPath="*ESR" Type="Model,Query"/>
+  <MULSTB ScpiPath="*STB" Type="Model,Query"/>
+  <MULTST ScpiPath="*TST" Type="Model,Query"/>
   <SYSTEM Type="Model,Node">
    <ERROR ScpiPath="SYSTEM:ERROR" Type="Node,Query">
     <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Type="Query"/>

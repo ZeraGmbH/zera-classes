@@ -76,6 +76,7 @@ void test_scpi_cmds_in_session::minScpiDevIface()
     QFile ifaceBaseXmlFile("://dev-iface-basic.xml");
     QVERIFY(ifaceBaseXmlFile.open(QIODevice::Unbuffered | QIODevice::ReadOnly));
     XmlDocumentCompare compare;
+    qInfo("%s", qPrintable(responses[0]));
     QVERIFY(compare.compareXml(responses[0], ifaceBaseXmlFile.readAll(), true));
 }
 
