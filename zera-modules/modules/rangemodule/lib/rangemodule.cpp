@@ -257,10 +257,10 @@ void cRangeModule::deactivationFinished()
 void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const values)
 {
     /* values:
-     * 0-maxChannel-1: Peak values
-     * maxChannel-2*maxchannel-1: RMS values
-     * 2*maxchannel: frequency
-     * 2*maxchannel+1-3*maxchannel: Peak Values with DC
+     * 0              upto maxChannel-1:   Peak values
+     * maxChannel     upto 2*maxchannel-1: RMS values
+     * 2*maxchannel   upto 2*maxchannel:   frequency
+     * 2*maxchannel+1 upto 3*maxchannel:   Peak Values with DC
      */
 
     int expectedChannelCount=m_rangeMeasChannelList.length();

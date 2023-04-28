@@ -104,6 +104,8 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void restartDspWachdog();
+    bool demoChannelIsVoltage(int channel);
+    QVector<float> demoChannelRms();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
