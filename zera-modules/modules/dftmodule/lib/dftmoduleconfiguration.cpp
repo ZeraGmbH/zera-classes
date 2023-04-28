@@ -8,6 +8,8 @@
 
 namespace DFTMODULE
 {
+static const char* defaultXSDFile = "://dftmodule.xsd";
+
 
 cDftModuleConfiguration::cDftModuleConfiguration()
 {
