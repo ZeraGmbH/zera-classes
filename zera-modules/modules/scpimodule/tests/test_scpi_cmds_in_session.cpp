@@ -175,9 +175,11 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
     });
 
     client.sendScpiCmds("dev:iface?");
-    QVariant xmlDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE");
+    QString actDevIface = storageHash->getStoredValue(9999, "ACT_DEV_IFACE").toString();
+    if(actDevIface.isEmpty()) // we have to make module resilient to this situation
+        qFatal("ACT_DEV_IFACE empty - local modulemanager running???");
     XmlDocumentCompare compare;
-    QVERIFY(compare.compareXml(xmlDevIface.toString(), responses[0], true));
+    QVERIFY(compare.compareXml(actDevIface, responses[0], true));
 }
 
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
