@@ -305,7 +305,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pTargetPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("PAR_Target"),
-                                            QString("Target value"),
+                                            QString("REF pulses for 0% error - set automatically"),
                                             QVariant((double)0.0));
     m_pTargetPar->setSCPIInfo(new cSCPIInfo("CALCULATE",QString("%1:TARGET").arg(modNr), "10", m_pTargetPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pTargetPar; // for modules use
@@ -371,7 +371,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pStatusAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Status"),
-                                            QString("Status information"),
+                                            QString("State: 0:Idle 1:First pulse wait 2:Started 4:Ready 8:Aborted"),
                                             QVariant((int)0) );
     m_pModule->veinModuleParameterHash[key] =  m_pStatusAct; // for modules use
     m_pStatusAct->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:STATUS").arg(modNr), "2", m_pStatusAct->getName(), "0", ""));
