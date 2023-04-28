@@ -562,30 +562,63 @@ void cRangeModuleMeasProgram::dataReadDSP()
     }
 }
 
-void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
+
+bool cRangeModuleMeasProgram::demoChannelIsVoltage(int channel)
 {
-    QVector<float> actualValues;
+    bool isVoltage;
+    // a bit of a hack: We expect MT310s2 channel order
+    switch(channel) {
+    case 0:
+    case 1:
+    case 2:
+    case 6:
+        isVoltage = true;
+        break;
+    default:
+        isVoltage = false;
+        break;
+    }
+    return isVoltage;
+}
+
+QVector<float> cRangeModuleMeasProgram::demoChannelRms()
+{
+    double voltageBase = 230.0;
+    double currentBase= 10.0;
+    QVector<float> randomChannelRMS;
+    randomChannelRMS.resize(m_ActValueList.count());
     for (int channel=0; channel<m_ActValueList.count(); ++channel) {
-        // a bit of a hack: We expect MT310s2 channel order
-        bool isVoltage;
-        switch(channel) {
-        case 0:
-        case 1:
-        case 2:
-        case 6:
-            isVoltage = true;
-            break;
-        default:
-            isVoltage = false;
-            break;
-        }
-        // To make range-automatic testable, we set fixed values
-        double baseAmplitude = isVoltage ? 230.0*sqrt2 : 10.0*sqrt2;
+        bool isVoltage = demoChannelIsVoltage(channel);
+        double baseRMS = isVoltage ? voltageBase : currentBase;
         double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
         double randOffset = 0.02 * randPlusMinusOne;
-        double randAmplitude = (1+randOffset) * baseAmplitude;
-        m_ActValueList.at(channel)->setValue(QVariant(randAmplitude));
-        actualValues.append(randAmplitude);
+        double randRMS = (1+randOffset) * baseRMS;
+        randomChannelRMS[channel] = randRMS;
+    }
+    return randomChannelRMS;
+}
+
+void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
+{
+    QVector<float> randomChannelRMS = demoChannelRms();
+    // values - see cRangeModule::setPeakRmsAndFrequencyValues:
+    QVector<float> actualValues;
+    // peak
+    for (int channel=0; channel<m_ActValueList.count(); ++channel) {
+        double randPeak = randomChannelRMS[channel]*sqrt2;
+        m_ActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
+        actualValues.append(randPeak);
+    }
+    // RMS
+    for (int channel=0; channel<m_ActValueList.count(); ++channel)
+        actualValues.append(randomChannelRMS[channel]);
+    // frequency
+    actualValues.append(50.0);
+    // peak DC (no DC for now)
+    for (int channel=0; channel<m_ActValueList.count(); ++channel) {
+        double randPeak = randomChannelRMS[channel]*sqrt2;
+        m_ActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
+        actualValues.append(randPeak);
     }
     emit sigDemoActualValues(&actualValues);
 }
