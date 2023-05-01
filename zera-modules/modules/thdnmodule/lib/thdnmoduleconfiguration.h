@@ -33,8 +33,6 @@ enum moduleconfigstate
 
 class cThdnModuleConfigData;
 
-const QString defaultXSDFile = "://src/thdnmodule.xsd";
-
 // rangemoduleconfiguration holds configuration data as well as parameter
 
 class cThdnModuleConfiguration: public cBaseModuleConfiguration

@@ -8,6 +8,7 @@
 
 namespace THDNMODULE
 {
+static const char* defaultXSDFile = "://thdnmodule.xsd";
 
 cThdnModuleConfiguration::cThdnModuleConfiguration()
 {

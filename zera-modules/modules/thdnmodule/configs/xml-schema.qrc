@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/thdnmodule.xsd</file>
+        <file>thdnmodule.xsd</file>
     </qresource>
 </RCC>
