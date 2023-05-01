@@ -2,7 +2,6 @@
 #include "power1moduleconfiguration.h"
 #include "power1moduleconfigdata.h"
 #include "power1modulemeasprogram.h"
-#include "power1moduleobservation.h"
 #include <errormessages.h>
 
 namespace POWER1MODULE
@@ -67,22 +66,12 @@ void cPower1Module::setupModule()
     emit addEventSystem(m_inputComponentEventSystem);// Add Eventsystem for input components as raw pointer
     cBaseMeasModule::setupModule();
 
-    cPower1ModuleConfigData* pConfData;
-    pConfData = qobject_cast<cPower1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cPower1ModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cModuleActivist::activated, this, &cBaseModule::activationContinue);
     connect(m_pMeasProgram, &cModuleActivist::deactivated, this, &cBaseModule::deactivationContinue);
     connect(m_pMeasProgram, &cModuleActivist::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-
-    // and module observation in case we have to react to naming changes
-    m_pPower1ModuleObservation = new cPower1ModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pPower1ModuleObservation);
-    connect(m_pPower1ModuleObservation, &cModuleActivist::activated, this, &cBaseModule::activationContinue);
-    connect(m_pPower1ModuleObservation, &cModuleActivist::deactivated, this, &cBaseModule::deactivationContinue);
-    connect(m_pPower1ModuleObservation, &cModuleActivist::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -127,9 +116,6 @@ void cPower1Module::activationDone()
 
 void cPower1Module::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pPower1ModuleObservation, &cPower1ModuleObservation::moduleReconfigure, this, &cPower1Module::power1ModuleReconfigure);
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
     // now we still have to export the json interface information
@@ -141,9 +127,6 @@ void cPower1Module::activationFinished()
 
 void cPower1Module::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pPower1ModuleObservation, &cPower1ModuleObservation::moduleReconfigure, this, &cPower1Module::power1ModuleReconfigure);
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
