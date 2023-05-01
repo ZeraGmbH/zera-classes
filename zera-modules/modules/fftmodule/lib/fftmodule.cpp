@@ -2,7 +2,6 @@
 #include "fftmoduleconfiguration.h"
 #include "fftmoduleconfigdata.h"
 #include "fftmodulemeasprogram.h"
-#include "fftmoduleobservation.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
 #include <vfmodulemetadata.h>
@@ -71,22 +70,12 @@ void cFftModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
 
-    cFftModuleConfigData* pConfData;
-    pConfData = qobject_cast<cFftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cFftModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::activated, this, &cFftModule::activationContinue);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::deactivated, this, &cFftModule::deactivationContinue);
     connect(m_pMeasProgram, &cFftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-
-    // and module observation in case we have to react to naming changes
-    m_pFftModuleObservation = new cFftModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pFftModuleObservation);
-    connect(m_pFftModuleObservation, &cFftModuleObservation::activated, this, &cFftModule::activationContinue);
-    connect(m_pFftModuleObservation, &cFftModuleObservation::deactivated, this, &cFftModule::deactivationContinue);
-    connect(m_pFftModuleObservation, &cFftModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -131,9 +120,6 @@ void cFftModule::activationDone()
 
 void cFftModule::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pFftModuleObservation, &cFftModuleObservation::moduleReconfigure, this, &cFftModule::fftModuleReconfigure);
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
     // now we still have to export the json interface information
@@ -145,9 +131,6 @@ void cFftModule::activationFinished()
 
 void cFftModule::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pFftModuleObservation, &cFftModuleObservation::moduleReconfigure, this, &cFftModule::fftModuleReconfigure);
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
