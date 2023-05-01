@@ -8,6 +8,7 @@
 
 namespace LAMBDAMODULE
 {
+static const char* defaultXSDFile = "://lambdamodule.xsd";
 
 cLambdaModuleConfiguration::cLambdaModuleConfiguration()
 {
