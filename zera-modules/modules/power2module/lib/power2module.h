@@ -13,7 +13,6 @@ namespace POWER2MODULE
 
 class cPower2ModuleConfiguration;
 class cPower2ModuleMeasProgram;
-class cPower2ModuleObservation;
 
 class cPower2Module : public cBaseMeasModule
 {
@@ -26,7 +25,6 @@ public:
     virtual QByteArray getConfiguration() const;
 
 protected:
-    cPower2ModuleObservation *m_pPower2ModuleObservation;
     cPower2ModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
