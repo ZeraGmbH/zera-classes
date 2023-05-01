@@ -8,6 +8,7 @@
 
 namespace FFTMODULE
 {
+static const char* defaultXSDFile = "://fftmodule.xsd";
 
 cFftModuleConfiguration::cFftModuleConfiguration()
 {
