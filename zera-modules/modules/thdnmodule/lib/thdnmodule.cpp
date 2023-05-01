@@ -2,7 +2,6 @@
 #include "thdnmoduleconfiguration.h"
 #include "thdnmoduleconfigdata.h"
 #include "thdnmodulemeasprogram.h"
-#include "thdnmoduleobservation.h"
 #include "errormessages.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
@@ -72,22 +71,12 @@ void cThdnModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
 
-    cThdnModuleConfigData* pConfData;
-    pConfData = qobject_cast<cThdnModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cThdnModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
-
-    // and module observation in case we have to react to naming changes
-    m_pThdnModuleObservation = new cThdnModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pThdnModuleObservation);
-    connect(m_pThdnModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pThdnModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pThdnModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -132,9 +121,6 @@ void cThdnModule::activationDone()
 
 void cThdnModule::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pThdnModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(thdnModuleReconfigure()));
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
     // now we still have to export the json interface information
 
@@ -146,9 +132,6 @@ void cThdnModule::activationFinished()
 
 void cThdnModule::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pThdnModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(thdnModuleReconfigure()));
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
