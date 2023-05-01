@@ -62,22 +62,12 @@ void cRmsModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
 
-    cRmsModuleConfigData* pConfData;
-    pConfData = qobject_cast<cRmsModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cRmsModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
-
-    // and module observation in case we have to react to naming changes
-    m_pRmsModuleObservation = new cRmsModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pRmsModuleObservation);
-    connect(m_pRmsModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pRmsModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pRmsModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -122,9 +112,6 @@ void cRmsModule::activationDone()
 
 void cRmsModule::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pRmsModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rmsModuleReconfigure()));
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
     // now we still have to export the json interface information
@@ -136,9 +123,6 @@ void cRmsModule::activationFinished()
 
 void cRmsModule::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pRmsModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(rmsModuleReconfigure()));
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
