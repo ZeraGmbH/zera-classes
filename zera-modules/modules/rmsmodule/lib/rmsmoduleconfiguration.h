@@ -34,8 +34,6 @@ enum moduleconfigstate
 
 class cRmsModuleConfigData;
 
-const QString defaultXSDFile = "://src/rmsmodule.xsd";
-
 // rangemoduleconfiguration holds configuration data as well as parameter
 
 class cRmsModuleConfiguration: public cBaseModuleConfiguration

@@ -8,6 +8,7 @@
 
 namespace RMSMODULE
 {
+static const char* defaultXSDFile = "://rmsmodule.xsd";
 
 cRmsModuleConfiguration::cRmsModuleConfiguration()
 {
