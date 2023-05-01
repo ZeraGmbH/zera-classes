@@ -942,7 +942,7 @@ void cRangeMeasChannel::setupDemoOperation()
         m_sUnit = "A";
         nominalRanges = QVector<double>() << 1000.0 << 100.0 << 10.0 << 1.0 << 0.1 << 0.01 << 0.001;
     }
-    for(auto rangeVal : nominalRanges) {
+    for(auto rangeVal : qAsConst(nominalRanges)) {
         cRangeInfo rangeInfo;
         QString unitPrefix;
         double rangeValDisplay = rangeVal;
