@@ -34,8 +34,6 @@ enum moduleconfigstate
 
 class cFftModuleConfigData;
 
-const QString defaultXSDFile = "://src/fftmodule.xsd";
-
 // rangemoduleconfiguration holds configuration data as well as parameter
 
 class cFftModuleConfiguration: public cBaseModuleConfiguration
