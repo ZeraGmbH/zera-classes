@@ -7,8 +7,9 @@
 namespace RANGEMODULE
 {
 
-cRangeModuleObservation::cRangeModuleObservation(cRangeModule* module, cSocket *pcbsocket)
-    :m_pRangemodule(module), m_pPCBServerSocket(pcbsocket)
+cRangeModuleObservation::cRangeModuleObservation(cRangeModule* module, cSocket *pcbsocket, bool rangeDemo) :
+    m_pRangemodule(module),
+    m_pPCBServerSocket(pcbsocket)
 {
     m_pPCBInterface = new Zera::cPCBInterface();
 
@@ -19,7 +20,6 @@ cRangeModuleObservation::cRangeModuleObservation(cRangeModule* module, cSocket *
     m_activationMachine.addState(&m_pcbConnectState);
     m_activationMachine.addState(&m_setNotifierState);
     m_activationMachine.addState(&m_activationDoneState);
-    m_activationMachine.setInitialState(&m_pcbConnectState);
 
     connect(&m_pcbConnectState, &QState::entered, this, &cRangeModuleObservation::pcbConnect);
     connect(&m_setNotifierState, &QState::entered, this, &cRangeModuleObservation::setNotifier);
@@ -28,10 +28,18 @@ cRangeModuleObservation::cRangeModuleObservation(cRangeModule* module, cSocket *
     m_resetNotifierState.addTransition(this, &cRangeModuleObservation::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_resetNotifierState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    m_deactivationMachine.setInitialState((&m_resetNotifierState));
 
     connect(&m_resetNotifierState, &QState::entered, this, &cRangeModuleObservation::resetNotifier);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeModuleObservation::deactivationDone);
+
+    if(!rangeDemo) {
+        m_activationMachine.setInitialState(&m_pcbConnectState);
+        m_deactivationMachine.setInitialState((&m_resetNotifierState));
+    }
+    else {
+        m_activationMachine.setInitialState(&m_activationDoneState);
+        m_deactivationMachine.setInitialState((&m_deactivationDoneState));
+    }
 }
 
 

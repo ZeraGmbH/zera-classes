@@ -22,7 +22,7 @@ class cRangeModuleObservation: public cModuleActivist
     Q_OBJECT
 
 public:
-    cRangeModuleObservation(cRangeModule* module, cSocket* pcbsocket);
+    cRangeModuleObservation(cRangeModule* module, cSocket* pcbsocket, bool rangeDemo);
     virtual ~cRangeModuleObservation();
     virtual void generateInterface(); // here we export our interface (entities)
 
@@ -33,12 +33,12 @@ protected:
     cRangeModule* m_pRangemodule;
     cSocket* m_pPCBServerSocket;
 
-    Zera::cPCBInterface* m_pPCBInterface;
+    Zera::cPCBInterface* m_pPCBInterface = nullptr;
 
 protected slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 
-private:   
+private:
     // statemachine for activating a rangemoduleobservation
     QState m_pcbConnectState; // we try to get a connection to our pcb server
     QState m_setNotifierState; // we set our notifier here
