@@ -12,7 +12,6 @@ namespace DFTMODULE {
 
 class cDftModuleConfiguration;
 class cDftModuleMeasProgram;
-class cDftModuleObservation;
 
 class cDftModule : public cBaseMeasModule
 {
@@ -25,7 +24,6 @@ public:
     virtual QByteArray getConfiguration() const;
 
 protected:
-    cDftModuleObservation *m_pDftModuleObservation;
     cDftModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module

@@ -2,7 +2,6 @@
 #include "dftmoduleconfiguration.h"
 #include "dftmoduleconfigdata.h"
 #include "dftmodulemeasprogram.h"
-#include "dftmoduleobservation.h"
 #include <errormessages.h>
 
 namespace DFTMODULE
@@ -64,22 +63,12 @@ void cDftModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
 
-    cDftModuleConfigData* pConfData;
-    pConfData = qobject_cast<cDftModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cDftModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::activated, this, &cDftModule::activationContinue);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::deactivated, this, &cDftModule::deactivationContinue);
     connect(m_pMeasProgram, &cDftModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-
-    // and module observation in case we have to react to naming changes
-    m_pDftModuleObservation = new cDftModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pDftModuleObservation);
-    connect(m_pDftModuleObservation, &cDftModuleObservation::activated, this, &cDftModule::activationContinue);
-    connect(m_pDftModuleObservation, &cDftModuleObservation::deactivated, this, &cDftModule::deactivationContinue);
-    connect(m_pDftModuleObservation, &cDftModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -124,9 +113,6 @@ void cDftModule::activationDone()
 
 void cDftModule::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pDftModuleObservation, &cDftModuleObservation::moduleReconfigure, this, &cDftModule::dftModuleReconfigure);
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
     // now we still have to export the json interface information
@@ -138,9 +124,6 @@ void cDftModule::activationFinished()
 
 void cDftModule::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pDftModuleObservation, &cDftModuleObservation::moduleReconfigure, this, &cDftModule::dftModuleReconfigure);
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
