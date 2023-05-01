@@ -10,8 +10,10 @@
 namespace RANGEMODULE
 {
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool demo)
-    :cBaseDspMeasProgram(pConfiguration), m_pModule(module), m_bDemo(demo)
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool rangeDemo) :
+    cBaseDspMeasProgram(pConfiguration),
+    m_pModule(module),
+    m_rangeDemo(rangeDemo)
 {
     // we have to instantiate a working resource manager and dspserver interface
     m_pDSPInterFace = new Zera::cDSPInterface();
@@ -36,11 +38,6 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_activationMachine.addState(&m_cmd2DSPState);
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
-    if(!m_bDemo) {
-        m_activationMachine.setInitialState(&resourceManagerConnectState);
-    } else {
-        m_activationMachine.setInitialState(&m_loadDSPDoneState);
-    }
 
     connect(&resourceManagerConnectState, &QState::entered, this, &cRangeModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cRangeModuleMeasProgram::sendRMIdent);
@@ -60,16 +57,20 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     m_deactivationMachine.addState(&m_freePGRMemState);
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
-    if(!m_bDemo) {
-        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
-    } else {
-        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
-    }
 
     connect(&m_deactivateDSPState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cRangeModuleMeasProgram::freePGRMem);
     connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
+
+    if(!m_rangeDemo) {
+        m_activationMachine.setInitialState(&resourceManagerConnectState);
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    }
+    else {
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    }
 
     // setting up statemachine for data acquisition
     m_dataAcquisitionState.addTransition(this, &cRangeModuleMeasProgram::dataAquisitionContinue, &m_dataAcquisitionDoneState);
@@ -80,7 +81,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
     connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
-    if(m_bDemo) {
+    if(m_rangeDemo) {
         // Demo timer for dummy actual values
         m_demoPeriodicTimer.setSingleShot(false);
         connect(&m_demoPeriodicTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
@@ -98,17 +99,15 @@ void cRangeModuleMeasProgram::start()
 {
     disconnect(this, &cRangeModuleMeasProgram::actualValues, this, 0);
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
-    if(m_bDemo) {
-        m_demoPeriodicTimer.start(1000/*getConfData()->m_fMeasInterval*/);
-    }
+    if(m_rangeDemo)
+        m_demoPeriodicTimer.start(getConfData()->m_fMeasInterval * 1000);
 }
 
 
 void cRangeModuleMeasProgram::stop()
 {
-    if(m_bDemo) {
+    if(m_rangeDemo)
         m_demoPeriodicTimer.stop();
-    }
 }
 
 
@@ -507,9 +506,8 @@ void cRangeModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     m_pMeasureSignal->setValue(QVariant(1));
-    if(!m_bDemo) {
+    if(!m_rangeDemo)
         restartDspWachdog();
-    }
     emit activated();
 }
 
@@ -602,25 +600,25 @@ void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
 {
     QVector<float> randomChannelRMS = demoChannelRms();
     // values - see cRangeModule::setPeakRmsAndFrequencyValues:
-    QVector<float> actualValues;
+    m_ModuleActualValues.clear();
     // peak
     for (int channel=0; channel<m_ActValueList.count(); ++channel) {
         double randPeak = randomChannelRMS[channel]*sqrt2;
         m_ActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
-        actualValues.append(randPeak);
+        m_ModuleActualValues.append(randPeak);
     }
     // RMS
     for (int channel=0; channel<m_ActValueList.count(); ++channel)
-        actualValues.append(randomChannelRMS[channel]);
+        m_ModuleActualValues.append(randomChannelRMS[channel]);
     // frequency
-    actualValues.append(50.0);
+    m_ModuleActualValues.append(50.0);
     // peak DC (no DC for now)
     for (int channel=0; channel<m_ActValueList.count(); ++channel) {
         double randPeak = randomChannelRMS[channel]*sqrt2;
         m_ActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
-        actualValues.append(randPeak);
+        m_ModuleActualValues.append(randPeak);
     }
-    emit sigDemoActualValues(&actualValues);
+    emit actualValues(&m_ModuleActualValues);
 }
 
 void cRangeModuleMeasProgram::onDspWatchdogTimeout()

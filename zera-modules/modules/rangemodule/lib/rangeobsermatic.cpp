@@ -12,8 +12,8 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo) :
-    m_bDemo(demo),
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool rangeDemo) :
+    m_rangeDemo(rangeDemo),
     m_pModule(module),
     m_pDSPSocket(dsprmsocket),
     m_GroupList(groupList),
@@ -33,12 +33,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, Q
     m_activationMachine.addState(&m_dspserverConnectState);
     m_activationMachine.addState(&m_readGainCorrState);
     m_activationMachine.addState(&m_readGainCorrDoneState);
-    if(!m_bDemo) {
-        m_activationMachine.setInitialState(&m_dspserverConnectState);
-    }
-    else { // Demo: reach final immedately
-        m_activationMachine.setInitialState(&m_readGainCorrDoneState);
-    }
+
     connect(&m_dspserverConnectState, &QState::entered, this, &cRangeObsermatic::dspserverConnect);
     connect(&m_readGainCorrState, &QState::entered, this, &cRangeObsermatic::readGainCorr);
     connect(&m_readGainCorrDoneState, &QState::entered, this, &cRangeObsermatic::readGainCorrDone);
@@ -46,9 +41,11 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, Q
     m_deactivationInitState.addTransition(this, &cRangeObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_bDemo) {
+    if(!m_rangeDemo) {
+        m_activationMachine.setInitialState(&m_dspserverConnectState);
         m_deactivationMachine.setInitialState(&m_deactivationInitState);
     } else {
+        m_activationMachine.setInitialState(&m_readGainCorrDoneState);
         m_deactivationMachine.setInitialState(&m_deactivationDoneState);
     }
     connect(&m_deactivationInitState, &QState::entered, this, &cRangeObsermatic::deactivationInit);
@@ -445,7 +442,7 @@ void cRangeObsermatic::setRanges(bool force)
             }
             change = true;
 
-            if(!m_bDemo) {
+            if(!m_rangeDemo) {
                 // set range
                 m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
                 m_nRangeSetPending++;
@@ -460,7 +457,6 @@ void cRangeObsermatic::setRanges(bool force)
             else {
                 pmChn->setRange(s);
                 m_actChannelRangeList.replace(i, s);
-                m_DemoTimer.start(1000);
             }
 
             // we first set information of channels actual urvalue
@@ -470,10 +466,9 @@ void cRangeObsermatic::setRanges(bool force)
 
             // reset hard overload AFTER change of range.
             if (requiresOverloadReset(i) || m_groupOvlList.at(i) || force) {
-                if(!m_bDemo) {
-                    qInfo("Reset overload channel %i", i);
+                qInfo("Reset overload channel %i", i);
+                if(!m_rangeDemo)
                     m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
-                }
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
                 m_groupOvlList.replace(i, false);
@@ -495,7 +490,7 @@ void cRangeObsermatic::setRanges(bool force)
         }
     }
 
-    if(!m_bDemo) {
+    if(!m_rangeDemo) {
         if (change) {
             if (m_writeCorrectionDSPMachine.isRunning()) {
                 emit activationRepeat();
@@ -567,7 +562,6 @@ void cRangeObsermatic::setupDemoOperation()
         m_RangeParameterList.at(i)->setValue(QVariant(m_actChannelRangeList.at(i)));
         m_actChannelRangeNotifierList.replace(i, (m_actChannelRangeList.at(i)));
     }
-    connect(&m_DemoTimer, &QTimer::timeout, this, &cRangeObsermatic::demoTimerTimeout);
 }
 
 float cRangeObsermatic::getPreScale(int p_idx)
@@ -623,7 +617,7 @@ void cRangeObsermatic::readGainCorrDone()
     // our initial range set from configuration
     setRanges(true);
     // add bits not done due to missing server responses
-    if(m_bDemo) {
+    if(m_rangeDemo) {
         setupDemoOperation();
     }
 
@@ -907,23 +901,6 @@ void cRangeObsermatic::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVarian
         }
     }
 }
-
-void cRangeObsermatic::demoTimerTimeout()
-{
-    m_pRangingSignal->setValue(QVariant(0));
-
-    rangeAutomatic(); // let rangeautomatic do its job
-    groupHandling(); // and look for grouping channels if necessary
-    setRanges(); // set the new ranges now
-}
-
-void cRangeObsermatic::demoActValues(QVector<float> *actualValues)
-{
-    rangeAutomatic(); // let rangeautomatic do its job
-    groupHandling(); // and look for grouping channels if necessary
-    setRanges(); // set the new ranges now
-}
-
 
 void cRangeObsermatic::catchChannelReply(quint32 msgnr)
 {

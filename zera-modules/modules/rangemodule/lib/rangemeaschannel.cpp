@@ -8,8 +8,10 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo)
-    :cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr), m_bDemo(demo),m_preScaling(1)
+cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool rangeDemo) :
+    cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr),
+    m_rangeDemo(rangeDemo),
+    m_preScaling(1)
 {
     m_pPCBInterface = new Zera::cPCBInterface();
 
@@ -45,8 +47,6 @@ cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QStr
     m_activationMachine.addState(&m_setNotifierRangeCat);
     m_activationMachine.addState(&m_activationDoneState);
 
-    m_activationMachine.setInitialState(&m_rmConnectState);
-
     connect(&m_rmConnectState, &QState::entered, this, &cRangeMeasChannel::rmConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cRangeMeasChannel::sendRMIdent);
     connect(&m_readResourceTypesState, &QState::entered, this, &cRangeMeasChannel::readResourceTypes);
@@ -69,14 +69,19 @@ cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QStr
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationResetNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_bDemo) {
-        m_deactivationMachine.setInitialState(&m_deactivationInitState);
-    } else {
-        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
-    }
+
     connect(&m_deactivationInitState, &QState::entered, this, &cRangeMeasChannel::deactivationInit);
     connect(&m_deactivationResetNotifiersState, &QState::entered, this, &cRangeMeasChannel::deactivationResetNotifiers);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeMeasChannel::deactivationDone);
+
+    if(!m_rangeDemo) {
+        m_activationMachine.setInitialState(&m_rmConnectState);
+        m_deactivationMachine.setInitialState(&m_deactivationInitState);
+    } else {
+        setupDemoOperation();
+        m_activationMachine.setInitialState(&m_activationDoneState);
+        m_deactivationMachine.setInitialState(&m_deactivationDoneState);
+    }
 
     // setting up statemachine for querying the meas channels ranges and their properties
     m_readRangelistState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_readRngAliasState);
@@ -129,10 +134,9 @@ quint32 cRangeMeasChannel::setRange(QString range)
     m_sNewRange = range; // alias !!!!
     m_sActRange = range;
 
-    if(m_bDemo) {
-        return 0;
-    }
     if (m_bActive) {
+        if(m_rangeDemo)
+            return 0;
         quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;
         return msgnr;
@@ -965,38 +969,29 @@ void cRangeMeasChannel::setupDemoOperation()
 
 void cRangeMeasChannel::rmConnect()
 {
-    if(!m_bDemo) {
-        // we instantiate a working resource manager interface first
-        // so first we try to get a connection to resource manager over proxy
-        m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
-        m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
-        // and then we set connection resource manager interface's connection
-        m_rmInterface.setClientSmart(m_rmClient); //
-        // todo insert timer for timeout
+    // we instantiate a working resource manager interface first
+    // so first we try to get a connection to resource manager over proxy
+    m_rmClient = Zera::Proxy::getInstance()->getConnectionSmart(m_pRMSocket->m_sIP, m_pRMSocket->m_nPort);
+    m_rmConnectState.addTransition(m_rmClient.get(), &Zera::ProxyClient::connected, &m_IdentifyState);
+    // and then we set connection resource manager interface's connection
+    m_rmInterface.setClientSmart(m_rmClient); //
+    // todo insert timer for timeout
 
-        connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
-        Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
-        // resource manager liste sense abfragen
-        // bin ich da drin ?
-        // nein -> fehler activierung
-        // ja -> socket von rm besorgen
-        // resource bei rm belegen
-        // beim pcb proxy server interface beantragen
+    connect(&m_rmInterface, &Zera::cRMInterface::serverAnswer, this, &cRangeMeasChannel::catchInterfaceAnswer);
+    Zera::Proxy::getInstance()->startConnectionSmart(m_rmClient);
+    // resource manager liste sense abfragen
+    // bin ich da drin ?
+    // nein -> fehler activierung
+    // ja -> socket von rm besorgen
+    // resource bei rm belegen
+    // beim pcb proxy server interface beantragen
 
-        // quint8 m_nDspChannel; dsp kanal erfragen
-        // QString m_sAlias; kanal alias erfragen
-        // eine liste aller möglichen bereichen erfragen
-        // d.h. (avail = 1 und type =1
-        // und von diesen dann
-        // alias, urvalue, rejection und ovrejection abfragen
-    }
-    else {
-        // add bits not done due to missing server responses
-        setupDemoOperation();
-        // make state machine finish
-        m_rmConnectState.addTransition(this, &cRangeMeasChannel::activationContinue, &m_activationDoneState);
-        emit activationContinue();
-    }
+    // quint8 m_nDspChannel; dsp kanal erfragen
+    // QString m_sAlias; kanal alias erfragen
+    // eine liste aller möglichen bereichen erfragen
+    // d.h. (avail = 1 und type =1
+    // und von diesen dann
+    // alias, urvalue, rejection und ovrejection abfragen
 }
 
 
@@ -1106,12 +1101,10 @@ void cRangeMeasChannel::deactivationResetNotifiers()
 
 void cRangeMeasChannel::deactivationDone()
 {
-    if(!m_bDemo) {
-        Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
-        // and disconnect for our servers afterwards
-        disconnect(&m_rmInterface, 0, this, 0);
-        disconnect(m_pPCBInterface, 0, this, 0);
-    }
+    Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
+    // and disconnect for our servers afterwards
+    disconnect(&m_rmInterface, 0, this, 0);
+    disconnect(m_pPCBInterface, 0, this, 0);
     emit deactivated();
 }
 

@@ -41,7 +41,7 @@ class cRangeObsermatic: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cRangeObsermatic(cRangeModule* module, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
+    cRangeObsermatic(cRangeModule* module, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool rangeDemo);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     VfModuleComponent *m_pRangingSignal;
@@ -49,9 +49,8 @@ public slots:
     virtual void ActionHandler(QVector<float>* actualValues); // entry after received actual values
     void catchChannelReply(quint32 msgnr);
     void catchChannelNewRangeList();
-    void demoActValues(QVector<float> *actualValues);
 private:
-    bool m_bDemo;
+    bool m_rangeDemo;
     cRangeModule *m_pModule;
     cSocket *m_pDSPSocket;
     QList<QStringList> m_GroupList;
@@ -106,8 +105,6 @@ private:
     QState m_writeGainCorrRepeatState;
     QFinalState m_writeGainCorrDoneState;
 
-    QTimer m_DemoTimer;
-
     bool m_brangeSet; // we set this here after we selected a new range and enable resetting stored overloadcondition
 
     void rangeObservation();
@@ -149,7 +146,6 @@ private slots:
     void preScalingChanged(QVariant unused);
 
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant);
-    void demoTimerTimeout();
 };
 
 }

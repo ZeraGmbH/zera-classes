@@ -103,7 +103,7 @@ void cRangeModuleConfiguration::configXMLInfo(QString key)
         switch (cmd)
         {
         case setDemo:
-            m_pRangeModulConfigData->m_bDemo = m_pXMLReader->getValue(key).toInt(&ok);
+            m_pRangeModulConfigData->m_rangeDemo = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setDebugLevel:
             m_pRangeModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);

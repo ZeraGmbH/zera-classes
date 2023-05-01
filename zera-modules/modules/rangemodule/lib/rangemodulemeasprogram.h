@@ -36,12 +36,9 @@ class cRangeModuleMeasProgram: public cBaseDspMeasProgram
     Q_OBJECT
 
 public:
-    cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool demo);
+    cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool rangeDemo);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-
-signals:
-    void sigDemoActualValues(QVector<float> *actualValues);
 
 public slots:
     virtual void start(); // difference between start and stop is that actual values
@@ -61,7 +58,7 @@ private:
     cRangeModuleConfigData* getConfData();
 
     cRangeModule* m_pModule; // the module we live in
-    bool m_bDemo;
+    bool m_rangeDemo;
     bool m_bRanging;
     bool m_bIgnore;
     quint16 m_nSamples;
