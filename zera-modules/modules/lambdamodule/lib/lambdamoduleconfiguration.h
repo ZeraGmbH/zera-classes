@@ -26,8 +26,6 @@ enum moduleconfigstate
 
 class cLambdaModuleConfigData;
 
-const QString defaultXSDFile = "://src/lambdamodule.xsd";
-
 // moduleconfiguration holds configuration data as well as parameter
 
 class cLambdaModuleConfiguration: public cBaseModuleConfiguration
