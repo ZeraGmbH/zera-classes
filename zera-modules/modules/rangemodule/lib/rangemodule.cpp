@@ -3,7 +3,6 @@
 #include "rangemoduleconfigdata.h"
 #include "rangemeaschannel.h"
 #include "rangemodulemeasprogram.h"
-#include "rangemoduleobservation.h"
 #include "rangeobsermatic.h"
 #include "adjustment.h"
 #include <vfmodulecomponent.h>
@@ -122,12 +121,6 @@ void cRangeModule::setupModule()
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
-    m_pRangeModuleObservation = new cRangeModuleObservation(this, &(pConfData->m_PCBServerSocket), rangeDemo);
-    m_ModuleActivistList.append(m_pRangeModuleObservation);
-    connect(m_pRangeModuleObservation, &cRangeModuleObservation::activated, this, &cRangeModule::activationContinue);
-    connect(m_pRangeModuleObservation, &cRangeModuleObservation::deactivated, this, &cRangeModule::deactivationContinue);
-    connect(m_pRangeModuleObservation, &cRangeModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
 
@@ -182,11 +175,7 @@ void cRangeModule::activationFinished()
     // we connect a signal that range has changed to measurement for synchronizing purpose
     connect(m_pRangeObsermatic->m_pRangingSignal, &VfModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
 
-    // if we get informed we have to reconfigure
-    connect(m_pRangeModuleObservation, &cRangeModuleObservation::moduleReconfigure, this, &cRangeModule::rangeModuleReconfigure);
-
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
-    {
+    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++) {
         cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         connect(pchn, &cRangeMeasChannel::newRangeList, m_pRangeObsermatic, &cRangeObsermatic::catchChannelNewRangeList);
     }
@@ -208,15 +197,11 @@ void cRangeModule::deactivationStart()
     disconnect(m_pMeasProgram, &cRangeModuleMeasProgram::actualValues, m_pRangeObsermatic, &cRangeObsermatic::ActionHandler);
     disconnect(m_pRangeObsermatic->m_pRangingSignal, &VfModuleComponent::sigValueChanged, m_pMeasProgram, &cRangeModuleMeasProgram::syncRanging);
 
-    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++)
-    {
+    for (int i = 0; i < m_rangeMeasChannelList.count(); i ++) {
         cRangeMeasChannel* pchn = m_rangeMeasChannelList.at(i);
         disconnect(pchn, &cRangeMeasChannel::cmdDone, m_pRangeObsermatic, &cRangeObsermatic::catchChannelReply);
         disconnect(pchn, &cRangeMeasChannel::newRangeList, m_pRangeObsermatic, &cRangeObsermatic::catchChannelNewRangeList);
     }
-
-    // if we get informed we have to reconfigure
-    disconnect(m_pRangeModuleObservation, &cRangeModuleObservation::moduleReconfigure, this, &cRangeModule::rangeModuleReconfigure);
 
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();

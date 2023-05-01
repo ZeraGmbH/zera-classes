@@ -17,7 +17,6 @@ class cRangeModuleConfiguration;
 class cRangeModuleMeasProgram;
 class cAdjustManagement;
 class cRangeObsermatic;
-class cRangeModuleObservation;
 
 class cRangeModule : public cBaseMeasModule
 {
@@ -30,7 +29,6 @@ public:
     virtual cRangeMeasChannel* getMeasChannel(QString name); // also used for callback
 
 protected:
-    cRangeModuleObservation *m_pRangeModuleObservation = nullptr;
     cRangeModuleMeasProgram *m_pMeasProgram = nullptr; // our measuring program, lets say the working horse
     cAdjustManagement * m_pAdjustment = nullptr; // our justifying and normation program
     cRangeObsermatic *m_pRangeObsermatic = nullptr; // our range handling
