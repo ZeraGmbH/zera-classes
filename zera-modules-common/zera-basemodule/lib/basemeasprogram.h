@@ -18,6 +18,7 @@ signals:
 public slots:
     virtual void start() = 0; // difference between start and stop is that actual values
     virtual void stop() = 0; // in interface are not updated when stop
+    void monitorConnection();
 
 protected:
     std::shared_ptr<cBaseModuleConfiguration> m_pConfiguration;
@@ -32,9 +33,6 @@ protected:
     QVector<float> m_ModuleActualValues; // a modules actual values
     QHash<quint32, int> m_MsgNrCmdList;
     quint8 m_nConnectionCount;
-
-protected slots:
-    void monitorConnection();
 };
 
 
