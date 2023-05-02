@@ -4,7 +4,6 @@
 #include "samplechannel.h"
 #include "pllmeaschannel.h"
 #include "samplemodulemeasprogram.h"
-#include "samplemoduleobservation.h"
 #include "pllobsermatic.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
@@ -120,12 +119,6 @@ void cSampleModule::setupModule()
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::activated, this, &cSampleModule::activationContinue);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::deactivated, this, &cSampleModule::deactivationContinue);
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-    //
-    m_pSampleModuleObservation = new cSampleModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pSampleModuleObservation);
-    connect(m_pSampleModuleObservation, &cSampleModuleObservation::activated, this, &cSampleModule::activationContinue);
-    connect(m_pSampleModuleObservation, &cSampleModuleObservation::deactivated, this, &cSampleModule::deactivationContinue);
-    connect(m_pSampleModuleObservation, &cSampleModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -173,9 +166,6 @@ void cSampleModule::activationFinished()
     // we connect the measurement output to our pll obsermatic module
     connect(m_pMeasProgram, &cSampleModuleMeasProgram::actualValues, m_pPllObsermatic, &cPllObsermatic::ActionHandler);
 
-    // if we get informed we have to reconfigure
-    connect(m_pSampleModuleObservation, &cSampleModuleObservation::moduleReconfigure, this, &cSampleModule::sampleModuleReconfigure);
-
     // we have to connect all cmddone from our pll meas channel to pll obsermatic
     // this is also used for synchronizing purpose
     for (int i = 0; i < m_pllMeasChannelList.count(); i ++)
@@ -197,9 +187,6 @@ void cSampleModule::deactivationStart()
 {
     // we first disconnect all what we connected when activation took place
     disconnect(m_pMeasProgram, &cSampleModuleMeasProgram::actualValues, m_pPllObsermatic, &cPllObsermatic::ActionHandler);
-
-    // if we get informed we have to reconfigure
-    disconnect(m_pSampleModuleObservation, &cSampleModuleObservation::moduleReconfigure, this, &cSampleModule::sampleModuleReconfigure);
 
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
