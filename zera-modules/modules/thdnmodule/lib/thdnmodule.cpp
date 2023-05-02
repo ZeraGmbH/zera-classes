@@ -159,10 +159,4 @@ void cThdnModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cThdnModule::thdnModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

@@ -150,9 +150,3 @@ void cAdjustmentModule::deactivationFinished()
 {
     emit deactivationReady();
 }
-
-
-void cAdjustmentModule::adjustmentModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}

@@ -157,10 +157,4 @@ void cTransformer1Module::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cTransformer1Module::transformer1ModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

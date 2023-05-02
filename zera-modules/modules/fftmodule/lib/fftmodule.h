@@ -56,8 +56,6 @@ private slots:
     void deactivationDone();
     void deactivationFinished();
 
-    void fftModuleReconfigure();
-
 };
 
 }

@@ -154,10 +154,4 @@ void cBurden1Module::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cBurden1Module::Burden1ModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

@@ -151,10 +151,4 @@ void cOsciModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cOsciModule::osciModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

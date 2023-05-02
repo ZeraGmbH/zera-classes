@@ -150,10 +150,4 @@ void cRmsModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cRmsModule::rmsModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

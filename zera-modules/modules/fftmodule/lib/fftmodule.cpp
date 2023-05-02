@@ -158,10 +158,4 @@ void cFftModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cFftModule::fftModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }
