@@ -12,7 +12,6 @@ namespace OSCIMODULE {
 
 class cOsciModuleConfiguration;
 class cOsciModuleMeasProgram;
-class cOsciModuleObservation;
 
 class cOsciModule : public cBaseMeasModule
 {
@@ -25,7 +24,6 @@ public:
     virtual QByteArray getConfiguration() const;
 
 protected:
-    cOsciModuleObservation *m_pOsciModuleObservation;
     cOsciModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     virtual void doConfiguration(QByteArray xmlConfigData); // here we have to do our configuration
     virtual void setupModule(); // after xml configuration we can setup and export our module
