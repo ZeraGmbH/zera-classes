@@ -215,10 +215,4 @@ void cSampleModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cSampleModule::sampleModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }
