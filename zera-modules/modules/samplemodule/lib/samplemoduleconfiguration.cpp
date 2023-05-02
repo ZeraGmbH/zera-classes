@@ -8,6 +8,7 @@
 
 namespace SAMPLEMODULE
 {
+static const char* defaultXSDFile = "://samplemodule.xsd";
 
 cSampleModuleConfiguration::cSampleModuleConfiguration()
 {

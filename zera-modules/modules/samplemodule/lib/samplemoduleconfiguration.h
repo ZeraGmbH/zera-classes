@@ -35,8 +35,6 @@ enum moduleconfigstate
 
 class cSampleModuleConfigData;
 
-const QString defaultXSDFile = "://src/samplemodule.xsd";
-
 // samplemoduleconfiguration holds configuration data as well as parameter
 
 class cSampleModuleConfiguration: public cBaseModuleConfiguration
