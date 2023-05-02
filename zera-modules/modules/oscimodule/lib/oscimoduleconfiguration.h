@@ -32,8 +32,6 @@ enum moduleconfigstate
 
 class cOsciModuleConfigData;
 
-const QString defaultXSDFile = "://src/oscimodule.xsd";
-
 // rangemoduleconfiguration holds configuration data as well as parameter
 
 class cOsciModuleConfiguration: public cBaseModuleConfiguration

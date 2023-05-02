@@ -8,6 +8,7 @@
 
 namespace OSCIMODULE
 {
+static const char* defaultXSDFile = "://oscimodule.xsd";
 
 cOsciModuleConfiguration::cOsciModuleConfiguration()
 {
