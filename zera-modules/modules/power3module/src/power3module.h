@@ -49,8 +49,6 @@ private slots:
     void deactivationExec();
     void deactivationDone();
     void deactivationFinished();
-
-    void power3ModuleReconfigure();
 };
 
 }

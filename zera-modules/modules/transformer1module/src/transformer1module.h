@@ -57,8 +57,6 @@ private slots:
     void deactivationExec();
     void deactivationDone();
     void deactivationFinished();
-
-    void transformer1ModuleReconfigure();
 };
 
 }

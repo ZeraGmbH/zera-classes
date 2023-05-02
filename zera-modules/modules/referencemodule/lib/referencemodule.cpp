@@ -225,10 +225,4 @@ void cReferenceModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cReferenceModule::referenceModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

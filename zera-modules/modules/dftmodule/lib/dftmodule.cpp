@@ -151,10 +151,4 @@ void cDftModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cDftModule::dftModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

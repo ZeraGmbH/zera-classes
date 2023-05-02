@@ -254,10 +254,4 @@ void cRangeModule::setPeakRmsAndFrequencyValues(const QVector<float>* const valu
     }
 }
 
-
-void cRangeModule::rangeModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

@@ -56,8 +56,6 @@ private:
 
 private slots:
     void setPeakRmsAndFrequencyValues(const QVector<float>* const values);
-    void rangeModuleReconfigure();
-
 };
 
 }

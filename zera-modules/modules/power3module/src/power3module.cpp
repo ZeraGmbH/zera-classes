@@ -154,10 +154,4 @@ void cPower3Module::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cPower3Module::power3ModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

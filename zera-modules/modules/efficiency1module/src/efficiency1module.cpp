@@ -153,10 +153,4 @@ void cEfficiency1Module::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cEfficiency1Module::efficiency1ModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }

@@ -41,8 +41,6 @@ private slots:
     void deactivationExec();
     void deactivationDone();
     void deactivationFinished();
-
-    void adjustmentModuleReconfigure();
 private:
     qint32 m_nActivationIt;
 };

@@ -153,10 +153,4 @@ void cLambdaModule::deactivationFinished()
     emit deactivationReady();
 }
 
-
-void cLambdaModule::lambdaModuleReconfigure()
-{
-    emit sigConfiguration(); // we configure after our notifier has detected
-}
-
 }
