@@ -8,6 +8,7 @@
 
 namespace REFERENCEMODULE
 {
+static const char* defaultXSDFile = "://referencemodule.xsd";
 
 cReferenceModuleConfiguration::cReferenceModuleConfiguration()
 {
