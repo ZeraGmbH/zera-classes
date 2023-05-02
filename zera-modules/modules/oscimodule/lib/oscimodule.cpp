@@ -2,7 +2,6 @@
 #include "oscimoduleconfiguration.h"
 #include "oscimoduleconfigdata.h"
 #include "oscimodulemeasprogram.h"
-#include "oscimoduleobservation.h"
 #include <errormessages.h>
 
 namespace OSCIMODULE
@@ -64,22 +63,12 @@ void cOsciModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
 
-    cOsciModuleConfigData* pConfData;
-    pConfData = qobject_cast<cOsciModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
-
     // we need some program that does the measuring on dsp
     m_pMeasProgram = new cOsciModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::activated, this, &cOsciModule::activationContinue);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::deactivated, this, &cOsciModule::deactivationContinue);
     connect(m_pMeasProgram, &cOsciModuleMeasProgram::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
-
-    // and module observation in case we have to react to naming changes
-    m_pOsciModuleObservation = new cOsciModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pOsciModuleObservation);
-    connect(m_pOsciModuleObservation, &cOsciModuleObservation::activated, this, &cOsciModule::activationContinue);
-    connect(m_pOsciModuleObservation, &cOsciModuleObservation::deactivated, this, &cOsciModule::deactivationContinue);
-    connect(m_pOsciModuleObservation, &cOsciModuleObservation::errMsg, m_pModuleErrorComponent, &VfModuleErrorComponent::setValue);
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -124,9 +113,6 @@ void cOsciModule::activationDone()
 
 void cOsciModule::activationFinished()
 {
-    // if we get informed we have to reconfigure
-    connect(m_pOsciModuleObservation, &cOsciModuleObservation::moduleReconfigure, this, &cOsciModule::osciModuleReconfigure);
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
     // now we still have to export the json interface information
 
@@ -138,9 +124,6 @@ void cOsciModule::activationFinished()
 
 void cOsciModule::deactivationStart()
 {
-    // if we get informed we have to reconfigure
-    disconnect(m_pOsciModuleObservation, &cOsciModuleObservation::moduleReconfigure, this, &cOsciModule::osciModuleReconfigure);
-
     m_nActivationIt = 0; // we start with the first
     emit deactivationContinue();
 }
