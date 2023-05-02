@@ -1,7 +1,6 @@
 #ifndef SAMPLEMODULE_H
 #define SAMPLEMODULE_H
 
-#include "samplemoduleobservation.h"
 #include "samplemodulemeasprogram.h"
 #include "samplechannel.h"
 #include "pllmeaschannel.h"
@@ -22,7 +21,6 @@ public:
     cPllMeasChannel* getPllMeasChannel(QString name);
 
 protected:
-    cSampleModuleObservation *m_pSampleModuleObservation;
     cSampleModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cPllObsermatic *m_pPllObsermatic; // our pll handling
 
