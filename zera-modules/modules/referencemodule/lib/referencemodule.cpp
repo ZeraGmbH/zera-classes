@@ -3,7 +3,6 @@
 #include "referencemoduleconfigdata.h"
 #include "referencemeaschannel.h"
 #include "referencemodulemeasprogram.h"
-#include "referencemoduleobservation.h"
 #include "referenceadjustment.h"
 #include <vfmodulecomponent.h>
 #include <vfmoduleerrorcomponent.h>
@@ -84,8 +83,7 @@ void cReferenceModule::setupModule()
     emit addEventSystem(m_pModuleValidator);
     cBaseMeasModule::setupModule();
 
-    cReferenceModuleConfigData *pConfData;
-    pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
+    cReferenceModuleConfigData *pConfData = qobject_cast<cReferenceModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // setting of mode has been done by seperate mode module
     // first we build a list of our meas channels
@@ -126,12 +124,6 @@ void cReferenceModule::setupModule()
     connect(m_pMeasProgram, SIGNAL(activated()), SIGNAL(activationContinue()));
     connect(m_pMeasProgram, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
     connect(m_pMeasProgram, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
-    //
-    m_pReferenceModuleObservation = new cReferenceModuleObservation(this, &(pConfData->m_PCBServerSocket));
-    m_ModuleActivistList.append(m_pReferenceModuleObservation);
-    connect(m_pReferenceModuleObservation, SIGNAL(activated()), SIGNAL(activationContinue()));
-    connect(m_pReferenceModuleObservation, SIGNAL(deactivated()), this, SIGNAL(deactivationContinue()));
-    connect(m_pReferenceModuleObservation, SIGNAL(errMsg(QVariant)), m_pModuleErrorComponent, SLOT(setValue(QVariant)));
 
     for (int i = 0; i < m_ModuleActivistList.count(); i++)
         m_ModuleActivistList.at(i)->generateInterface();
@@ -186,11 +178,6 @@ void cReferenceModule::activationAdjustment()
 
 void cReferenceModule::activationFinished()
 {
-    // we connect the measurement output to our adjustment module
-    // connect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pReferenceAdjustment, SLOT(ActionHandler(QVector<float>*)));
-    // if we get informed we have to reconfigure
-    connect(m_pReferenceModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(referenceModuleReconfigure()));
-
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
 
     // now we still have to export the json interface information
@@ -204,7 +191,6 @@ void cReferenceModule::deactivationStart()
 {
     // we first disconnect all what we connected when activation took place
     disconnect(m_pMeasProgram, SIGNAL(actualValues(QVector<float>*)), m_pReferenceAdjustment, SLOT(ActionHandler(QVector<float>*)));
-    disconnect(m_pReferenceModuleObservation, SIGNAL(moduleReconfigure()), this, SLOT(referenceModuleReconfigure()));
 
     for (int i = 0; i < m_ReferenceMeasChannelList.count(); i ++)
     {

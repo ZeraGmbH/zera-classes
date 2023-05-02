@@ -2,7 +2,6 @@
 #define REFERENCEMODULE_H
 
 #include "referencemeaschannel.h"
-#include "referencemoduleobservation.h"
 #include "referencemodulemeasprogram.h"
 #include "referenceadjustment.h"
 #include <basemeasmodule.h>
@@ -24,7 +23,6 @@ public:
     virtual QByteArray getConfiguration() const;
     virtual cReferenceMeasChannel* getMeasChannel(QString name); // also used for callback
 protected:
-    cReferenceModuleObservation *m_pReferenceModuleObservation;
     cReferenceModuleMeasProgram *m_pMeasProgram; // our measuring program, lets say the working horse
     cReferenceAdjustment *m_pReferenceAdjustment; // our justifying and normation program
     QList<cReferenceMeasChannel*> m_ReferenceMeasChannelList; // our meas channels
