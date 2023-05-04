@@ -17,7 +17,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_pDSPInterface = new Zera::cDSPInterface();
 
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
-    m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
+    m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbReadVersionState);
+    m_pcbReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
     m_pcbserverReadCtrlVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadFPGAVersionState);
     m_pcbserverReadFPGAVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadSerialNrState);
     m_pcbserverReadSerialNrState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadAdjStatusState);
@@ -36,6 +37,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_pcbserverReadVersionState);
+    m_activationMachine.addState(&m_pcbReadVersionState);
     m_activationMachine.addState(&m_pcbserverReadCtrlVersionState);
     m_activationMachine.addState(&m_pcbserverReadFPGAVersionState);
     m_activationMachine.addState(&m_pcbserverReadSerialNrState);
@@ -60,6 +62,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
     connect(&m_pcbserverConnectionState, &QState::entered, this, &cStatusModuleInit::pcbserverConnect);
     connect(&m_pcbserverReadVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadVersion);
+    connect(&m_pcbReadVersionState, &QState::entered, this, &cStatusModuleInit::pcbReadVersion);
     connect(&m_pcbserverReadCtrlVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadCtrlVersion);
     connect(&m_pcbserverReadFPGAVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadFPGAVersion);
     connect(&m_pcbserverReadSerialNrState, &QState::entered, this, &cStatusModuleInit::pcbserverReadSerialNr);
@@ -126,6 +129,15 @@ void cStatusModuleInit::generateInterface()
 
     m_pModule->veinModuleParameterHash[key] = m_pPCBServerVersion; // for modules use
     m_pPCBServerVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCBSERVER", "2", key , "0", ""));
+
+
+    m_pPCBVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   key = QString("INF_PCBVersion"),
+                                                   QString("PCB version"),
+                                                   QVariant(QString("")) );
+
+    m_pModule->veinModuleParameterHash[key] = m_pPCBVersion;
+    m_pPCBVersion->setSCPIInfo(new cSCPIInfo("STATUS", "VERSION:PCB", "2", key , "0", ""));
 
 
     m_pCtrlVersion = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -313,6 +325,19 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 else
                 {
                     emit errMsg((tr(readPCBServerVersionErrMsg)));
+                    emit activationError();
+                }
+                break;
+
+            case STATUSMODINIT::readPCBVersion:
+                if (reply == ack)
+                {
+                    m_sPCBVersion = answer.toString();
+                    emit activationContinue();
+                }
+                else
+                {
+                    emit errMsg((tr(readPCBVersionErrMsg)));
                     emit activationError();
                 }
                 break;
@@ -552,6 +577,7 @@ void cStatusModuleInit::getAccumulatorSoc()
 void cStatusModuleInit::setInterfaceComponents()
 {
     m_pPCBServerVersion->setValue(QVariant(m_sPCBServerVersion));
+    m_pPCBVersion->setValue(QVariant(m_sPCBVersion));
     m_pCtrlVersion->setValue(QVariant(m_sCtrlVersion));
     m_pFPGAVersion->setValue(QVariant(m_sFPGAVersion));
     m_pSerialNumber->setValue(QVariant(m_sSerialNumber));
@@ -581,12 +607,15 @@ void cStatusModuleInit::pcbserverReadVersion()
     m_MsgNrCmdList[m_pPCBInterface->readServerVersion()] = STATUSMODINIT::readPCBServerVersion;
 }
 
+void cStatusModuleInit::pcbReadVersion()
+{
+    m_MsgNrCmdList[m_pPCBInterface->readPCBVersion()] = STATUSMODINIT::readPCBVersion;
+}
 
 void cStatusModuleInit::pcbserverReadCtrlVersion()
 {
     m_MsgNrCmdList[m_pPCBInterface->readCTRLVersion()] = STATUSMODINIT::readPCBServerCtrlVersion;
 }
-
 
 void cStatusModuleInit::pcbserverReadFPGAVersion()
 {

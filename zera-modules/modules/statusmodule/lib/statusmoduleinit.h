@@ -17,6 +17,7 @@ namespace STATUSMODINIT
 enum statusmoduleinitCmds
 {
     readPCBServerVersion,
+    readPCBVersion,
     readPCBServerCtrlVersion,
     readPCBServerFPGAVersion,
     readPCBServerSerialNumber,
@@ -70,6 +71,7 @@ private:
     // statemachine for activating gets the following states
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
     QState m_pcbserverReadVersionState;
+    QState m_pcbReadVersionState;
     QState m_pcbserverReadCtrlVersionState;
     QState m_pcbserverReadFPGAVersionState;
     QState m_pcbserverReadSerialNrState;
@@ -98,6 +100,7 @@ private:
     QFinalState m_deactivationDoneState;
 
     QString m_sPCBServerVersion;
+    QString m_sPCBVersion;
     QString m_sCtrlVersion;
     QString m_sFPGAVersion;
     QString m_sSerialNumber;
@@ -110,6 +113,7 @@ private:
     QString m_sCPUInfo;
 
     VfModuleParameter *m_pPCBServerVersion;
+    VfModuleParameter *m_pPCBVersion;
     VfModuleParameter *m_pCtrlVersion;
     VfModuleParameter *m_pFPGAVersion;
     VfModuleParameter *m_pSerialNumber;
@@ -135,6 +139,7 @@ private slots:
     void setInterfaceComponents();
     void pcbserverConnect();
     void pcbserverReadVersion();
+    void pcbReadVersion();
     void pcbserverReadCtrlVersion();
     void pcbserverReadFPGAVersion();
     void pcbserverReadSerialNr();
