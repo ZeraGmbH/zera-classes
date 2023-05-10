@@ -10,7 +10,7 @@ class cSCPIInterfaceDelegate: public ScpiBaseDelegate
 {
     Q_OBJECT
 public:
-    cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type, quint16 cmdCode);
+    cSCPIInterfaceDelegate(QString cmdParent, QString cmd, quint8 type, quint16 cmdCode, QString cmdDescription = QString());
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
 signals:
     void signalExecuteSCPI(cSCPIClient* client, int cmdCode, const QString &sInput);
