@@ -28,19 +28,19 @@
     </MEASURE>
    </OPERATION>
   </STATUS>
-  <MULOPC ScpiPath="*OPC" Type="Model,Query,Command"/>
-  <MULESE ScpiPath="*ESE" Type="Model,Query,Command+Par"/>
-  <MULSRE ScpiPath="*SRE" Type="Model,Query,Command+Par"/>
-  <MULCLS ScpiPath="*CLS" Type="Model,Command"/>
-  <MULRST ScpiPath="*RST" Type="Model,Command"/>
-  <MULIDN ScpiPath="*IDN" Type="Model,Query"/>
-  <MULESR ScpiPath="*ESR" Type="Model,Query"/>
-  <MULSTB ScpiPath="*STB" Type="Model,Query"/>
-  <MULTST ScpiPath="*TST" Type="Model,Query"/>
+  <MULOPC ScpiPath="*OPC" Description="OPeration Complete" Type="Model,Query,Command"/>
+  <MULESE ScpiPath="*ESE" Description="Event Status Enable" Type="Model,Query,Command+Par"/>
+  <MULSRE ScpiPath="*SRE" Description="Service Request Enable" Type="Model,Query,Command+Par"/>
+  <MULCLS ScpiPath="*CLS" Description="Clear Status" Type="Model,Command"/>
+  <MULRST ScpiPath="*RST" Description="Reset" Type="Model,Command"/>
+  <MULIDN ScpiPath="*IDN" Description="Identification query" Type="Model,Query"/>
+  <MULESR ScpiPath="*ESR" Description="Event Status Register" Type="Model,Query"/>
+  <MULSTB ScpiPath="*STB" Description="Status Byte query" Type="Model,Query"/>
+  <MULTST ScpiPath="*TST" Description="Self-Test query" Type="Model,Query"/>
   <SYSTEM Type="Model,Node">
-   <ERROR ScpiPath="SYSTEM:ERROR" Type="Node,Query">
-    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Type="Query"/>
-    <ALL ScpiPath="SYSTEM:ERROR:ALL" Type="Query"/>
+   <ERROR ScpiPath="SYSTEM:ERROR" Description="Queries one error of internal error list" Type="Node,Query">
+    <COUNT ScpiPath="SYSTEM:ERROR:COUNT" Description="Queries the number of error messages of internal error list" Type="Query"/>
+    <ALL ScpiPath="SYSTEM:ERROR:ALL" Description="Queries all error stored in internal error list" Type="Query"/>
    </ERROR>
   </SYSTEM>
  </MODELS>
