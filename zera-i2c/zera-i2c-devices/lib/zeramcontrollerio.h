@@ -6,24 +6,17 @@
  * [1] smb://s-zera-stor01/data/EntwHard/Libraries/Atmel%20AVR/Docs/CommunicationProtocols.doc
  */
 
-#include "zera-i2c-devices_export.h"
+#include "zeramcontrolleriotemplate.h"
 #include "protocol_zera_bootloader.h"
 #include "protocol_zera_hard.h"
 #include "zera_mcontroller_errorflags.h"
 #include <QString>
 #include <crcutils.h>
 #include <intelhexfileio.h>
-#include <memory>
 
-class ZERA_I2C_DEVICES_EXPORT ZeraMControllerIo
+class ZERA_I2C_DEVICES_EXPORT ZeraMControllerIo : public ZeraMControllerIoTemplate
 {
 public:
-    enum atmelRM
-    {
-        cmddone,
-        cmdfault,
-        cmdexecfault
-    };
     ZeraMControllerIo(QString devnode, quint8 adr, quint8 debuglevel);
     /**
      * @brief setMaxWriteMemRetry: Set maximum writes in case of auto-verify
@@ -34,7 +27,7 @@ public:
      * compatibility -> complete interface to control bootloader
      * can be implemented in base class
      */
-    atmelRM bootloaderStartProgram();
+    atmelRM bootloaderStartProgram() override;
     atmelRM bootloaderLoadFlash(cIntelHexFileIO& ihxFIO);
     atmelRM bootloaderLoadEEprom(cIntelHexFileIO& ihxFIO);
     atmelRM bootloaderVerifyFlash(cIntelHexFileIO& ihxFIO);
@@ -85,14 +78,9 @@ private:
     quint8* GenAdressPointerParameter(quint8 adresspointerSize, quint32 adr);
     atmelRM loadOrVerifyMemory(quint8 blCmd, cIntelHexFileIO& ihxFIO, bool verify);
 
-    QString m_sI2CDevNode;
-    quint8 m_nI2CAdr;
-    quint8 m_nDebugLevel;
     quint32 m_nLastErrorFlags;
     bool m_bBootCmd;
     quint8 maxBlockWriteTries;
 };
-
-typedef std::shared_ptr<ZeraMControllerIo> ZeraMcontrollerIoPtr;
 
 #endif // ZERA_MCONTROLLER_IO_H

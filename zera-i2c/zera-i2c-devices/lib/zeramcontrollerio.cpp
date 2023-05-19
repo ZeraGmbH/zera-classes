@@ -12,13 +12,11 @@
 #define DEBUG2 (m_nDebugLevel & 2) // log all i2c transfers
 //#define DEBUG3 (m_nDebugLevel & 4) // log all client connect/disconnects
 
-ZeraMControllerIo::ZeraMControllerIo(QString devnode, quint8 adr, quint8 debuglevel)
-    : m_sI2CDevNode(devnode),
-      m_nI2CAdr(adr),
-      m_nDebugLevel(debuglevel),
-      m_nLastErrorFlags(0),
-      m_bBootCmd(false),
-      maxBlockWriteTries(2)
+ZeraMControllerIo::ZeraMControllerIo(QString devnode, quint8 adr, quint8 debuglevel) :
+    ZeraMControllerIoTemplate(devnode, adr, debuglevel),
+    m_nLastErrorFlags(0),
+    m_bBootCmd(false),
+    maxBlockWriteTries(2)
 {
 }
 
