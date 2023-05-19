@@ -10,6 +10,7 @@ public:
     void simulateApplicationRunnung();
     void simulateBooloaderRunning();
     atmelRM bootloaderStartProgram() override;
+    atmelRM readVariableLenText(quint16 hwcmd, QString& answer) override;
 private:
     ZeraMControllerIoTemplate::atmelRM m_return = cmdfault;
 };

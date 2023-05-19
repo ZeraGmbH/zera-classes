@@ -32,13 +32,8 @@ public:
     atmelRM bootloaderLoadEEprom(cIntelHexFileIO& ihxFIO);
     atmelRM bootloaderVerifyFlash(cIntelHexFileIO& ihxFIO);
     atmelRM bootloaderVerifyEEprom(cIntelHexFileIO& ihxFIO);
-    /**
-     * @brief readVariableLenText: Function to read strings with variable length (name,version..) from controller
-     * @param hwcmd: [in] command id
-     * @param answer: [out] String read from controller
-     * @return done or error type information
-     */
-    atmelRM readVariableLenText(quint16 hwcmd, QString& answer);
+
+    atmelRM readVariableLenText(quint16 hwcmd, QString& answer) override;
     /**
      * @brief writeCommand: Write command and receive command response
      * @param hc: pointer to command struct
