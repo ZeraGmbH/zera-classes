@@ -608,22 +608,22 @@ static bool execBootloaderHexFileIO(ZeraMcontrollerBase* i2cController, CommandL
     bool bAllOK = true;
     i2cController->setMaxWriteMemRetry(cmdLineData->maxWriteBlockCount);
     if(!cmdLineData->flashHexDataWrite.isEmpty()) {
-        if(i2cController->loadFlash(cmdLineData->flashHexDataWrite) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderLoadFlash(cmdLineData->flashHexDataWrite) != ZeraMcontrollerBase::cmddone) {
             bAllOK = false;
         }
     }
     if(bAllOK && !cmdLineData->eepromHexDataWrite.isEmpty()) {
-        if(i2cController->loadEEprom(cmdLineData->eepromHexDataWrite) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderLoadEEprom(cmdLineData->eepromHexDataWrite) != ZeraMcontrollerBase::cmddone) {
             bAllOK = false;
         }
     }
     if(!cmdLineData->flashHexDataVerify.isEmpty()) {
-        if(i2cController->verifyFlash(cmdLineData->flashHexDataVerify) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderVerifyFlash(cmdLineData->flashHexDataVerify) != ZeraMcontrollerBase::cmddone) {
             bAllOK = false;
         }
     }
     if(bAllOK && !cmdLineData->eepromHexDataVerify.isEmpty()) {
-        if(i2cController->verifyEEprom(cmdLineData->eepromHexDataVerify) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderVerifyEEprom(cmdLineData->eepromHexDataVerify) != ZeraMcontrollerBase::cmddone) {
             bAllOK = false;
         }
     }

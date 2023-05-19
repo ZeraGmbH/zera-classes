@@ -27,14 +27,14 @@ void ZeraMcontrollerBase::setMaxWriteMemRetry(quint8 _maxBlockWriteTries)
     maxBlockWriteTries = _maxBlockWriteTries;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::startProgram()
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderStartProgram()
 {
     struct bl_cmd blStartProgramCMD(BL_CMD_START_PROGRAM, nullptr, 0);
     writeBootloaderCommand(&blStartProgramCMD);
     return m_nLastErrorFlags!=0 ? cmdexecfault : cmddone;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadFlash(cIntelHexFileIO &ihxFIO)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderLoadFlash(cIntelHexFileIO &ihxFIO)
 {
     ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO, false);
     if(result != cmddone) {
@@ -43,7 +43,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadFlash(cIntelHexFileIO &ihx
     return result;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ihxFIO)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderLoadEEprom(cIntelHexFileIO &ihxFIO)
 {
     ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO, false);
     if(result != cmddone) {
@@ -52,7 +52,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadEEprom(cIntelHexFileIO &ih
     return result;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::verifyFlash(cIntelHexFileIO &ihxFIO)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderVerifyFlash(cIntelHexFileIO &ihxFIO)
 {
     ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_FLASH_BLOCK, ihxFIO, true);
     if(result != cmddone) {
@@ -61,7 +61,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::verifyFlash(cIntelHexFileIO &i
     return result;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::verifyEEprom(cIntelHexFileIO &ihxFIO)
+ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderVerifyEEprom(cIntelHexFileIO &ihxFIO)
 {
     ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_EEPROM_BLOCK, ihxFIO, true);
     if(result != cmddone) {
