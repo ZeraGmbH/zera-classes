@@ -13,6 +13,7 @@
 #include <QString>
 #include <crcutils.h>
 #include <intelhexfileio.h>
+#include <memory>
 
 /**
  * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol
@@ -129,5 +130,6 @@ private:
     quint8 maxBlockWriteTries;
 };
 
+typedef std::shared_ptr<ZeraMcontrollerBase> ZeraMcontrollerBasePtr;
 
 #endif // ZERA_MCONTROLLER_BASE_H
