@@ -3,7 +3,7 @@
 #include <QFile>
 #include <QRegularExpression>
 #include <QTextStream>
-#include <zera_mcontroller_base.h>
+#include <zeramcontrollerio.h>
 #include <csignal>
 
 // Type of commands performed
@@ -515,11 +515,11 @@ static void outputReceivedData(quint8 *dataReceive, quint16 receivedDataLen, Com
 
 /**
  * @brief execBootloaderIO: Execute bootloader command (data taken from cmdIdBoot/paramData/cmdResponseLen)
- * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param i2cController: pointer to ZeraMControllerIo object
  * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
-static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
+static bool execBootloaderIO(ZeraMControllerIo* i2cController, CommandLineData *cmdLineData)
 {
     bl_cmd bcmd(
                 cmdLineData->cmdIdBoot,
@@ -546,11 +546,11 @@ static bool execBootloaderIO(ZeraMcontrollerBase* i2cController, CommandLineData
 
 /**
  * @brief execZeraHardIO: Execute hardware command (data taken from cmdIdHard/paramData/cmdResponseLen)
- * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param i2cController: pointer to ZeraMControllerIo object
  * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
-static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
+static bool execZeraHardIO(ZeraMControllerIo* i2cController, CommandLineData *cmdLineData)
 {
     hw_cmd hcmd(
                 cmdLineData->cmdIdHard,
@@ -578,11 +578,11 @@ static bool execZeraHardIO(ZeraMcontrollerBase* i2cController, CommandLineData *
 
 /**
  * @brief execReadData: Read data from previous command (for cmds with unknown length len taken from cmdResponseLen)
- * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param i2cController: pointer to ZeraMControllerIo object
  * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
-static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
+static bool execReadData(ZeraMControllerIo* i2cController, CommandLineData *cmdLineData)
 {
     quint8 *dataReceive = nullptr;
     quint16 totalReceiveLen = 0;
@@ -599,31 +599,31 @@ static bool execReadData(ZeraMcontrollerBase* i2cController, CommandLineData *cm
 
 /**
  * @brief execBootloaderHexFileIO: Write/Verify data in flashHexData/eepromHexData
- * @param i2cController: pointer to ZeraMcontrollerBase object
+ * @param i2cController: pointer to ZeraMControllerIo object
  * @param cmdLineData: pointer to CommandLineData object
  * @return true on success
  */
-static bool execBootloaderHexFileIO(ZeraMcontrollerBase* i2cController, CommandLineData *cmdLineData)
+static bool execBootloaderHexFileIO(ZeraMControllerIo* i2cController, CommandLineData *cmdLineData)
 {
     bool bAllOK = true;
     i2cController->setMaxWriteMemRetry(cmdLineData->maxWriteBlockCount);
     if(!cmdLineData->flashHexDataWrite.isEmpty()) {
-        if(i2cController->bootloaderLoadFlash(cmdLineData->flashHexDataWrite) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderLoadFlash(cmdLineData->flashHexDataWrite) != ZeraMControllerIo::cmddone) {
             bAllOK = false;
         }
     }
     if(bAllOK && !cmdLineData->eepromHexDataWrite.isEmpty()) {
-        if(i2cController->bootloaderLoadEEprom(cmdLineData->eepromHexDataWrite) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderLoadEEprom(cmdLineData->eepromHexDataWrite) != ZeraMControllerIo::cmddone) {
             bAllOK = false;
         }
     }
     if(!cmdLineData->flashHexDataVerify.isEmpty()) {
-        if(i2cController->bootloaderVerifyFlash(cmdLineData->flashHexDataVerify) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderVerifyFlash(cmdLineData->flashHexDataVerify) != ZeraMControllerIo::cmddone) {
             bAllOK = false;
         }
     }
     if(bAllOK && !cmdLineData->eepromHexDataVerify.isEmpty()) {
-        if(i2cController->bootloaderVerifyEEprom(cmdLineData->eepromHexDataVerify) != ZeraMcontrollerBase::cmddone) {
+        if(i2cController->bootloaderVerifyEEprom(cmdLineData->eepromHexDataVerify) != ZeraMControllerIo::cmddone) {
             bAllOK = false;
         }
     }
@@ -686,7 +686,7 @@ int main(int argc, char *argv[])
         signal(SIGTERM, signalHandler);
 
         // We output errors ALWAYS
-        ZeraMcontrollerBase i2cController(
+        ZeraMControllerIo i2cController(
                     cmdLineData->i2cDeviceName,
                     cmdLineData->i2cAddr,
                     cmdLineData->verboseOutput ? 3 : 1);

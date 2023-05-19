@@ -3,7 +3,7 @@
 #include <QString>
 #include <QHash>
 
-#include "zera_mcontroller_base.h"
+#include "zeramcontrollerio.h"
 #include "zera_mcontroller_errorflags.h"
 #include "i2cutils.h"
 
@@ -12,7 +12,7 @@
 #define DEBUG2 (m_nDebugLevel & 2) // log all i2c transfers
 //#define DEBUG3 (m_nDebugLevel & 4) // log all client connect/disconnects
 
-ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 debuglevel)
+ZeraMControllerIo::ZeraMControllerIo(QString devnode, quint8 adr, quint8 debuglevel)
     : m_sI2CDevNode(devnode),
       m_nI2CAdr(adr),
       m_nDebugLevel(debuglevel),
@@ -22,55 +22,55 @@ ZeraMcontrollerBase::ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 deb
 {
 }
 
-void ZeraMcontrollerBase::setMaxWriteMemRetry(quint8 _maxBlockWriteTries)
+void ZeraMControllerIo::setMaxWriteMemRetry(quint8 _maxBlockWriteTries)
 {
     maxBlockWriteTries = _maxBlockWriteTries;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderStartProgram()
+ZeraMControllerIo::atmelRM ZeraMControllerIo::bootloaderStartProgram()
 {
     struct bl_cmd blStartProgramCMD(BL_CMD_START_PROGRAM, nullptr, 0);
     writeBootloaderCommand(&blStartProgramCMD);
     return m_nLastErrorFlags!=0 ? cmdexecfault : cmddone;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderLoadFlash(cIntelHexFileIO &ihxFIO)
+ZeraMControllerIo::atmelRM ZeraMControllerIo::bootloaderLoadFlash(cIntelHexFileIO &ihxFIO)
 {
-    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO, false);
+    ZeraMControllerIo::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_FLASH_BLOCK, ihxFIO, false);
     if(result != cmddone) {
         m_nLastErrorFlags |= MASTER_ERR_FLAG_FLASH_WRITE;
     }
     return result;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderLoadEEprom(cIntelHexFileIO &ihxFIO)
+ZeraMControllerIo::atmelRM ZeraMControllerIo::bootloaderLoadEEprom(cIntelHexFileIO &ihxFIO)
 {
-    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO, false);
+    ZeraMControllerIo::atmelRM result = loadOrVerifyMemory(BL_CMD_WRITE_EEPROM_BLOCK, ihxFIO, false);
     if(result != cmddone) {
         m_nLastErrorFlags |= MASTER_ERR_FLAG_EERPOM_WRITE;
     }
     return result;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderVerifyFlash(cIntelHexFileIO &ihxFIO)
+ZeraMControllerIo::atmelRM ZeraMControllerIo::bootloaderVerifyFlash(cIntelHexFileIO &ihxFIO)
 {
-    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_FLASH_BLOCK, ihxFIO, true);
+    ZeraMControllerIo::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_FLASH_BLOCK, ihxFIO, true);
     if(result != cmddone) {
         m_nLastErrorFlags |= MASTER_ERR_FLAG_FLASH_VERIFY;
     }
     return result;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::bootloaderVerifyEEprom(cIntelHexFileIO &ihxFIO)
+ZeraMControllerIo::atmelRM ZeraMControllerIo::bootloaderVerifyEEprom(cIntelHexFileIO &ihxFIO)
 {
-    ZeraMcontrollerBase::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_EEPROM_BLOCK, ihxFIO, true);
+    ZeraMControllerIo::atmelRM result = loadOrVerifyMemory(BL_CMD_READ_EEPROM_BLOCK, ihxFIO, true);
     if(result != cmddone) {
         m_nLastErrorFlags |= MASTER_ERR_FLAG_EERPOM_VERIFY;
     }
     return result;
 }
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hwcmd, QString& answer)
+ZeraMControllerIo::atmelRM ZeraMControllerIo::readVariableLenText(quint16 hwcmd, QString& answer)
 {
     // Repsonse has variable length. So we need to get length first
     // and call readOutput below
@@ -89,7 +89,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::readVariableLenText(quint16 hw
     return m_nLastErrorFlags == 0 ? cmddone : cmdexecfault;
 }
 
-quint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint16 dataAndCrcLen)
+quint16 ZeraMControllerIo::writeCommand(hw_cmd * hc, quint8 *dataReceive, quint16 dataAndCrcLen)
 {
     quint16 dataReturnAndCrcLen = 0;
     quint8 inpBuf[5]; // the answer always has 5 bytes
@@ -190,7 +190,7 @@ quint16 ZeraMcontrollerBase::writeCommand(hw_cmd * hc, quint8 *dataReceive, quin
 }
 
 
-quint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive, quint16 dataAndCrcLen)
+quint16 ZeraMControllerIo::writeBootloaderCommand(bl_cmd* blc, quint8 *dataReceive, quint16 dataAndCrcLen)
 {
     quint16 dataReturnAndCrcLen = 0;
     quint8 inpBuf[5]; // command response's length is always 5
@@ -300,7 +300,7 @@ quint16 ZeraMcontrollerBase::writeBootloaderCommand(bl_cmd* blc, quint8 *dataRec
 }
 
 
-quint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
+quint16 ZeraMControllerIo::readOutput(quint8 *data, quint16 dataAndCrcLen)
 {
     quint16 dataReturnAndCrcLen = 0;
     m_nLastErrorFlags = 0;
@@ -308,12 +308,12 @@ quint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
     // implementor -> generate warning always
     if(!data) {
         m_nLastErrorFlags |= MASTER_ERR_FLAG_CODER_IS_AN_IDIOT;
-        syslog(LOG_WARNING, "ZeraMcontrollerBase::readOutput: No data set for return buffer");
+        syslog(LOG_WARNING, "ZeraMControllerIo::readOutput: No data set for return buffer");
         return dataReturnAndCrcLen;
     }
     if(dataAndCrcLen < 2) {
         m_nLastErrorFlags |= MASTER_ERR_FLAG_CODER_IS_AN_IDIOT;
-        syslog(LOG_WARNING, "ZeraMcontrollerBase::readOutput: Minimum buffer len is 2 (1 data + 1 crc): len %u",
+        syslog(LOG_WARNING, "ZeraMControllerIo::readOutput: Minimum buffer len is 2 (1 data + 1 crc): len %u",
                dataAndCrcLen);
         return dataReturnAndCrcLen;
     }
@@ -369,10 +369,10 @@ quint16 ZeraMcontrollerBase::readOutput(quint8 *data, quint16 dataAndCrcLen)
     return dataReturnAndCrcLen;
 }
 
-void ZeraMcontrollerBase::GenCommand(hw_cmd* hc)
+void ZeraMControllerIo::GenCommand(hw_cmd* hc)
 {
     if(!hc->par && hc->plen > 0) {
-        syslog(LOG_WARNING, "ZeraMcontrollerBase::GenCommand: No parameter data set but plen=%u", hc->plen);
+        syslog(LOG_WARNING, "ZeraMControllerIo::GenCommand: No parameter data set but plen=%u", hc->plen);
         hc->plen = 0;
     }
     quint16 len = 6 + hc->plen;
@@ -401,7 +401,7 @@ void ZeraMcontrollerBase::GenCommand(hw_cmd* hc)
 }
 
 
-void ZeraMcontrollerBase::GenBootloaderCommand(bl_cmd* blc)
+void ZeraMControllerIo::GenBootloaderCommand(bl_cmd* blc)
 {
     quint16 len = 4;
     if(blc->par)
@@ -428,7 +428,7 @@ void ZeraMcontrollerBase::GenBootloaderCommand(bl_cmd* blc)
 }
 
 
-quint8* ZeraMcontrollerBase::GenAdressPointerParameter(quint8 adresspointerSize, quint32 adr)
+quint8* ZeraMControllerIo::GenAdressPointerParameter(quint8 adresspointerSize, quint32 adr)
 {
     quint8* par = new quint8(adresspointerSize);
     quint8* pptr = par;
@@ -439,7 +439,7 @@ quint8* ZeraMcontrollerBase::GenAdressPointerParameter(quint8 adresspointerSize,
 }
 
 
-ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCmd, cIntelHexFileIO& ihxFIO, bool verify)
+ZeraMControllerIo::atmelRM ZeraMControllerIo::loadOrVerifyMemory(quint8 blCmd, cIntelHexFileIO& ihxFIO, bool verify)
 {
     // Just in case there is nothing to write we have nothing to do
     if(ihxFIO.isEmpty()) {
@@ -476,7 +476,7 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
             if(verify && !bootloaderSupportsRead) {
                 // It's not quite correct but this is the error we would get from µC
                 m_nLastErrorFlags |= BL_ERR_FLAG_CMD_INVALID;
-                syslog(LOG_WARNING, "ZeraMcontrollerBase::loadOrVerifyMemory: Bootloader does not support read commands -> cannot verify");
+                syslog(LOG_WARNING, "ZeraMControllerIo::loadOrVerifyMemory: Bootloader does not support read commands -> cannot verify");
                 return cmdexecfault; // TODO remove - not necessary: block loop won't start
             }
 
@@ -544,12 +544,12 @@ ZeraMcontrollerBase::atmelRM ZeraMcontrollerBase::loadOrVerifyMemory(quint8 blCm
 }
 
 
-quint32 ZeraMcontrollerBase::getLastErrorMask()
+quint32 ZeraMControllerIo::getLastErrorMask()
 {
     return m_nLastErrorFlags;
 }
 
-QString ZeraMcontrollerBase::getErrorMaskText()
+QString ZeraMControllerIo::getErrorMaskText()
 {
     return ZeraMcontrollerErrorFlags::getErrorMaskText(m_nLastErrorFlags, m_bBootCmd);
 }
