@@ -15,6 +15,7 @@ target_link_libraries(zera-i2c-devices
     PUBLIC
     zera-i2c
     zera-intel-hex
+    Zera::zera-timers
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

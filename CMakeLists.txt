@@ -11,6 +11,7 @@ set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT
 
 find_package(Qt5 COMPONENTS Core Network CONFIG REQUIRED)
 find_package(Qt5Test REQUIRED)
+find_package(ZenuxCore REQUIRED)
 find_package(GTest REQUIRED)
 
 include(FeatureSummary)
@@ -65,7 +66,6 @@ if(ZC_BUILD_MODULES)
     find_package(xiqnet REQUIRED)
     find_package(SCPI REQUIRED)
     find_package(serialportasyncblock REQUIRED)
-    find_package(ZenuxCore REQUIRED)
 
     pkg_check_modules(XERCES xerces-c REQUIRED)
     set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
