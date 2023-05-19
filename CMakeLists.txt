@@ -46,6 +46,7 @@ function(SETUP_QTESTS)
             module-tasks-testlib
             source-module-testhelpers
             zera-meas-mode-management-testlib
+            zera-i2c-devices-testlib
             VeinMeta::VfStorageHash
             )
     endforeach()
