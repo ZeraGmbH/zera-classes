@@ -19,3 +19,9 @@ ZeraMControllerIoTemplate::atmelRM ZeraMcontrollerIoForTest::bootloaderStartProg
 {
     return m_return;
 }
+
+ZeraMControllerIoTemplate::atmelRM ZeraMcontrollerIoForTest::readVariableLenText(quint16 hwcmd, QString &answer)
+{
+    answer = QString("%i").arg(hwcmd);
+    return cmddone;
+}

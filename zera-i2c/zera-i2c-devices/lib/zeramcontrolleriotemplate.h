@@ -16,6 +16,7 @@ public:
     };
     ZeraMControllerIoTemplate(QString devnode, quint8 adr, quint8 debuglevel);
     virtual atmelRM bootloaderStartProgram() = 0;
+    virtual atmelRM readVariableLenText(quint16 hwcmd, QString& answer) = 0;
 protected:
     QString m_sI2CDevNode;
     quint8 m_nI2CAdr;
