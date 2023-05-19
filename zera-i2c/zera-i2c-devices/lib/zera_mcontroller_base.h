@@ -15,27 +15,15 @@
 #include <intelhexfileio.h>
 #include <memory>
 
-/**
- * @brief ZeraMcontrollerBase implements basic functionality for hardware-/bootloader-protocol
- */
 class ZERA_I2C_DEVICES_EXPORT ZeraMcontrollerBase
 {
 public:
-    /**
-     * @brief Command response as handled in this scope
-     */
     enum atmelRM
     {
         cmddone,
         cmdfault,
         cmdexecfault
     };
-    /**
-     * @brief ZeraMcontrollerBase: constructor
-     * @param devnode: full path to i2c block-device
-     * @param adr: i2c addres of slave
-     * @param debuglevel: control verbosity of log output
-     */
     ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 debuglevel);
     /**
      * @brief setMaxWriteMemRetry: Set maximum writes in case of auto-verify
@@ -46,15 +34,11 @@ public:
      * compatibility -> complete interface to control bootloader
      * can be implemented in base class
      */
-    /**
-     * @brief startProgram: Bootloader command to start application
-     * @return
-     */
-    atmelRM startProgram();
-    atmelRM loadFlash(cIntelHexFileIO& ihxFIO);
-    atmelRM loadEEprom(cIntelHexFileIO& ihxFIO);
-    atmelRM verifyFlash(cIntelHexFileIO& ihxFIO);
-    atmelRM verifyEEprom(cIntelHexFileIO& ihxFIO);
+    atmelRM bootloaderStartProgram();
+    atmelRM bootloaderLoadFlash(cIntelHexFileIO& ihxFIO);
+    atmelRM bootloaderLoadEEprom(cIntelHexFileIO& ihxFIO);
+    atmelRM bootloaderVerifyFlash(cIntelHexFileIO& ihxFIO);
+    atmelRM bootloaderVerifyEEprom(cIntelHexFileIO& ihxFIO);
     /**
      * @brief readVariableLenText: Function to read strings with variable length (name,version..) from controller
      * @param hwcmd: [in] command id
@@ -96,30 +80,9 @@ public:
      */
     QString getErrorMaskText();
 private:
-    /**
-     * @brief GenCommand: Allocate & fill raw data to send in cmddata
-     * @param hc: pointer to command struct
-     */
     void GenCommand(hw_cmd* hc);
-    /**
-     * @brief GenBootloaderCommand: Allocate & fill raw data to send in cmddata
-     * @param blc: pointer to command struct
-     */
     void GenBootloaderCommand(bl_cmd* blc);
-    /**
-     * @brief GenAdressPointerParameter: Helper allocating and setting address pointer array used by loadMemory
-     * @param adresspointerSize: size of address in bytes
-     * @param adr: The addres to calculate array from
-     * @return: pointer to created array
-     */
     quint8* GenAdressPointerParameter(quint8 adresspointerSize, quint32 adr);
-    /**
-     * @brief loadMemory: Let bootloader write Intel hex/eep file to controller
-     * @param blWriteCmd: write cmd id: either BL_CMD_WRITE_FLASH_BLOCK or BL_CMD_WRITE_EEPROM_BLOCK
-     * @param blReadCmd: read cmd id: either BL_CMD_READ_FLASH_BLOCK or BL_CMD_READ_EEPROM_BLOCK
-     * @param ihxFIO: Intel hex file object
-     * @return done or error type information
-     */
     atmelRM loadOrVerifyMemory(quint8 blCmd, cIntelHexFileIO& ihxFIO, bool verify);
 
     QString m_sI2CDevNode;
