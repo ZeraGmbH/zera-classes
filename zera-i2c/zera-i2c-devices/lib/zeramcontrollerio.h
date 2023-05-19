@@ -1,5 +1,5 @@
-#ifndef ZERA_MCONTROLLER_BASE_H
-#define ZERA_MCONTROLLER_BASE_H
+#ifndef ZERA_MCONTROLLER_IO_H
+#define ZERA_MCONTROLLER_IO_H
 
 /**
  * ZERA hardware protocol definitions for µCs. For mor details see [1]
@@ -15,7 +15,7 @@
 #include <intelhexfileio.h>
 #include <memory>
 
-class ZERA_I2C_DEVICES_EXPORT ZeraMcontrollerBase
+class ZERA_I2C_DEVICES_EXPORT ZeraMControllerIo
 {
 public:
     enum atmelRM
@@ -24,7 +24,7 @@ public:
         cmdfault,
         cmdexecfault
     };
-    ZeraMcontrollerBase(QString devnode, quint8 adr, quint8 debuglevel);
+    ZeraMControllerIo(QString devnode, quint8 adr, quint8 debuglevel);
     /**
      * @brief setMaxWriteMemRetry: Set maximum writes in case of auto-verify
      * @param _maxBlockWriteTries: Max block writes in case of auto-verify errors (FWIW: 0 will run 256 times!!)
@@ -93,6 +93,6 @@ private:
     quint8 maxBlockWriteTries;
 };
 
-typedef std::shared_ptr<ZeraMcontrollerBase> ZeraMcontrollerBasePtr;
+typedef std::shared_ptr<ZeraMControllerIo> ZeraMcontrollerIoPtr;
 
-#endif // ZERA_MCONTROLLER_BASE_H
+#endif // ZERA_MCONTROLLER_IO_H
