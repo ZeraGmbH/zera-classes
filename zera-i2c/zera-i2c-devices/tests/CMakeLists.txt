@@ -42,4 +42,5 @@ endfunction()
 
 SETUP_I2C_QTESTS(
     test_booloaderstopper
+    test_bootloaderstopperfactoryfortest
 )
