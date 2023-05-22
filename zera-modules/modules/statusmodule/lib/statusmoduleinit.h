@@ -33,7 +33,8 @@ enum statusmoduleinitCmds
     registerAccumulatorStatusNotifier,
     readPCBServerAccumulatorStatus,
     registerAccumulatorSocNotifier,
-    readPCBServerAccumulatorSoc
+    readPCBServerAccumulatorSoc,
+    registerCtrlVersionChange
 };
 
 enum NOTIFIER_IDS
@@ -41,7 +42,8 @@ enum NOTIFIER_IDS
     clampNotifierID = 1,
     schnubbelNotifierID,
     accumulatorStatusNotifierID,
-    accumulatorSocNotifierID
+    accumulatorSocNotifierID,
+    ctrlVersionChangeID
 };
 
 }
@@ -87,6 +89,7 @@ private:
     QState m_pcbserverReadInitialAccumulatorStatus;
     QState m_pcbserverRegisterAccumulatorSocNotifierState;
     QState m_pcbserverReadInitialAccumulatorSoc;
+    QState m_pcbserverRegisterCtrlVersionChange;
     QFinalState m_activationDoneState; // here we still read the release version
 
     // statemachine for adjustment-status // -checksum re-read
@@ -153,6 +156,7 @@ private slots:
     void registerSchnubbelStatusNotifier();
     void registerAccumulatorStatusNotifier();
     void registerAccumulatorSocNotifier();
+    void registerCtrlVersionsChangedNotifier();
     void getSchnubbelStatus();
     void getAccumulatorStatus();
     void getAccumulatorSoc();

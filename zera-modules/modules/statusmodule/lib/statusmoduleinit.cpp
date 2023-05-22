@@ -33,7 +33,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_pcbserverRegisterAccumulatorStatusNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialAccumulatorStatus);
     m_pcbserverReadInitialAccumulatorStatus.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterAccumulatorSocNotifierState);
     m_pcbserverRegisterAccumulatorSocNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadInitialAccumulatorSoc);
-    m_pcbserverReadInitialAccumulatorSoc.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
+    m_pcbserverReadInitialAccumulatorSoc.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverRegisterCtrlVersionChange);
+    m_pcbserverRegisterCtrlVersionChange.addTransition(this, &cStatusModuleInit::activationContinue, &m_activationDoneState);
 
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_pcbserverReadVersionState);
@@ -53,6 +54,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_activationMachine.addState(&m_pcbserverReadInitialAccumulatorStatus);
     m_activationMachine.addState(&m_pcbserverRegisterAccumulatorSocNotifierState);
     m_activationMachine.addState(&m_pcbserverReadInitialAccumulatorSoc);
+    m_activationMachine.addState(&m_pcbserverRegisterCtrlVersionChange);
     m_activationMachine.addState(&m_activationDoneState);
     if(!m_ConfigData.m_bDemo) {
         m_activationMachine.setInitialState(&m_pcbserverConnectionState);
@@ -78,6 +80,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverReadInitialAccumulatorStatus, &QState::entered, this, &cStatusModuleInit::getAccumulatorStatus);
     connect(&m_pcbserverRegisterAccumulatorSocNotifierState, &QState::entered, this, &cStatusModuleInit::registerAccumulatorSocNotifier);
     connect(&m_pcbserverReadInitialAccumulatorSoc, &QState::entered, this, &cStatusModuleInit::getAccumulatorSoc);
+    connect(&m_pcbserverRegisterCtrlVersionChange, &QState::entered, this, &cStatusModuleInit::registerCtrlVersionsChangedNotifier);
     connect(&m_activationDoneState, &QState::entered, this, &cStatusModuleInit::activationDone);
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterNotifiersState);
@@ -274,6 +277,9 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::accumulatorSocNotifierID:
                 getAccumulatorSoc();
                 break;
+            case STATUSMODINIT::ctrlVersionChangeID:
+                pcbserverReadCtrlVersion();
+                break;
             }
     }
     else
@@ -306,6 +312,12 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::registerAccumulatorSocNotifier:
                 if (reply != ack) {
                     qWarning("Register notification for accumulator soc failed - is accumulator supported?");
+                }
+                emit activationContinue();
+                break;
+            case STATUSMODINIT::registerCtrlVersionChange:
+                if (reply != ack) {
+                    qWarning("Register notification for hotpluggable ctrl versions failed!");
                 }
                 emit activationContinue();
                 break;
@@ -689,6 +701,10 @@ void cStatusModuleInit::registerAccumulatorSocNotifier()
     m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:ACCUMULATOR:SOC?"), STATUSMODINIT::accumulatorSocNotifierID)] = STATUSMODINIT::registerAccumulatorSocNotifier;
 }
 
+void cStatusModuleInit::registerCtrlVersionsChangedNotifier()
+{
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:CTRL?"), STATUSMODINIT::ctrlVersionChangeID)] = STATUSMODINIT::registerCtrlVersionChange;
+}
 
 void cStatusModuleInit::activationDone()
 {
