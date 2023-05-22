@@ -1,11 +1,13 @@
 file(GLOB SOURCES 
     ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/muxer/*.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mcontroller/*.cpp
     )
 
 file(GLOB HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/*.h
     ${CMAKE_CURRENT_SOURCE_DIR}/muxer/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/mcontroller/*.h
     )
 
 add_library(zera-i2c-devices SHARED
@@ -27,6 +29,7 @@ target_include_directories(zera-i2c-devices
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-classes/i2c-devices>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/muxer>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/mcontroller>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
     )
 
