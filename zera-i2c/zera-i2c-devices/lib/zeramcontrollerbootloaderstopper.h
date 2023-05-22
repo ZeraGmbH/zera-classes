@@ -1,17 +1,16 @@
 #ifndef ZERAMCONTROLLERBOOTLOADERSTOPPER_H
 #define ZERAMCONTROLLERBOOTLOADERSTOPPER_H
 
+#include "zeramcontrollerbootloaderstopperinterface.h"
 #include "zeramcontrolleriotemplate.h"
 #include <timerfactoryqt.h>
 
-class ZERA_I2C_DEVICES_EXPORT ZeraMControllerBootloaderStopper : public QObject
+class ZERA_I2C_DEVICES_EXPORT ZeraMControllerBootloaderStopper : public ZeraMControllerBootloaderStopperInterface
 {
     Q_OBJECT
 public:
     ZeraMControllerBootloaderStopper(ZeraMcontrollerIoPtr i2cCtrl, int channelId);
-    void stopBootloader(int msWaitForApplicationStart = 1000);
-signals:
-    void sigAssumeBootloaderStopped(int channelId);
+    void stopBootloader(int msWaitForApplicationStart = 1000) override;
 private slots:
     void onAppStartWaitFinished();
 private:
