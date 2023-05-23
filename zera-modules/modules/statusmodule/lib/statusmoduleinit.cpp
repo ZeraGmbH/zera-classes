@@ -358,6 +358,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack)
                 {
                     m_sCtrlVersion = answer.toString();
+                    m_pCtrlVersion->setValue(m_sCtrlVersion);
                     emit activationContinue();
                 }
                 else
