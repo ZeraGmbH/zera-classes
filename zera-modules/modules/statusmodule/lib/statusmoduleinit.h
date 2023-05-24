@@ -34,7 +34,8 @@ enum statusmoduleinitCmds
     readPCBServerAccumulatorStatus,
     registerAccumulatorSocNotifier,
     readPCBServerAccumulatorSoc,
-    registerCtrlVersionChange
+    registerCtrlVersionChange,
+    registerPCBVersionChange
 };
 
 enum NOTIFIER_IDS
@@ -43,7 +44,8 @@ enum NOTIFIER_IDS
     schnubbelNotifierID,
     accumulatorStatusNotifierID,
     accumulatorSocNotifierID,
-    ctrlVersionChangeID
+    ctrlVersionChangeID,
+    pcbVersionChangeID
 };
 
 }
@@ -74,6 +76,7 @@ private:
     QState m_pcbserverConnectionState; // we try to get a connection to our pcb server
     QState m_pcbserverReadVersionState;
     QState m_pcbReadVersionState;
+    QState m_pcbRegisterReadVersionNotifierState;
     QState m_pcbserverReadCtrlVersionState;
     QState m_pcbserverReadFPGAVersionState;
     QState m_pcbserverReadSerialNrState;
@@ -157,6 +160,7 @@ private slots:
     void registerAccumulatorStatusNotifier();
     void registerAccumulatorSocNotifier();
     void registerCtrlVersionsChangedNotifier();
+    void registerPCBVersionNotifier();
     void getSchnubbelStatus();
     void getAccumulatorStatus();
     void getAccumulatorSoc();
