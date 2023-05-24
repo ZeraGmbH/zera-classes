@@ -18,7 +18,8 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
     // m_pcbserverConnectionState.addTransition is done in pcbserverConnection
     m_pcbserverReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbReadVersionState);
-    m_pcbReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
+    m_pcbReadVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbRegisterReadVersionNotifierState);
+    m_pcbRegisterReadVersionNotifierState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadCtrlVersionState);
     m_pcbserverReadCtrlVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadFPGAVersionState);
     m_pcbserverReadFPGAVersionState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadSerialNrState);
     m_pcbserverReadSerialNrState.addTransition(this, &cStatusModuleInit::activationContinue, &m_pcbserverReadAdjStatusState);
@@ -39,6 +40,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_activationMachine.addState(&m_pcbserverConnectionState);
     m_activationMachine.addState(&m_pcbserverReadVersionState);
     m_activationMachine.addState(&m_pcbReadVersionState);
+    m_activationMachine.addState(&m_pcbRegisterReadVersionNotifierState);
     m_activationMachine.addState(&m_pcbserverReadCtrlVersionState);
     m_activationMachine.addState(&m_pcbserverReadFPGAVersionState);
     m_activationMachine.addState(&m_pcbserverReadSerialNrState);
@@ -65,6 +67,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     connect(&m_pcbserverConnectionState, &QState::entered, this, &cStatusModuleInit::pcbserverConnect);
     connect(&m_pcbserverReadVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadVersion);
     connect(&m_pcbReadVersionState, &QState::entered, this, &cStatusModuleInit::pcbReadVersion);
+    connect(&m_pcbRegisterReadVersionNotifierState, &QState::entered, this, &cStatusModuleInit::registerPCBVersionNotifier);
     connect(&m_pcbserverReadCtrlVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadCtrlVersion);
     connect(&m_pcbserverReadFPGAVersionState, &QState::entered, this, &cStatusModuleInit::pcbserverReadFPGAVersion);
     connect(&m_pcbserverReadSerialNrState, &QState::entered, this, &cStatusModuleInit::pcbserverReadSerialNr);
@@ -280,6 +283,9 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
             case STATUSMODINIT::ctrlVersionChangeID:
                 pcbserverReadCtrlVersion();
                 break;
+            case STATUSMODINIT::pcbVersionChangeID:
+                pcbReadVersion();
+                break;
             }
     }
     else
@@ -321,6 +327,12 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 }
                 emit activationContinue();
                 break;
+            case STATUSMODINIT::registerPCBVersionChange:
+                if (reply != ack) {
+                    qWarning("Register notification for hotpluggable PCB versions failed!");
+                }
+                emit activationContinue();
+                break;
             case STATUSMODINIT::unregisterNotifiers:
                 if (reply != ack) {
                     qWarning("Unregister notification failed");
@@ -345,6 +357,7 @@ void cStatusModuleInit::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVaria
                 if (reply == ack)
                 {
                     m_sPCBVersion = answer.toString();
+                    m_pPCBVersion->setValue(m_sPCBVersion);
                     emit activationContinue();
                 }
                 else
@@ -705,6 +718,11 @@ void cStatusModuleInit::registerAccumulatorSocNotifier()
 void cStatusModuleInit::registerCtrlVersionsChangedNotifier()
 {
     m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:CTRL?"), STATUSMODINIT::ctrlVersionChangeID)] = STATUSMODINIT::registerCtrlVersionChange;
+}
+
+void cStatusModuleInit::registerPCBVersionNotifier()
+{
+    m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SYSTEM:VERSION:PCB?"), STATUSMODINIT::pcbVersionChangeID)] = STATUSMODINIT::registerPCBVersionChange;
 }
 
 void cStatusModuleInit::activationDone()
