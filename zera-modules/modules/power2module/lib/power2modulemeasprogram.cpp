@@ -1090,8 +1090,7 @@ void cPower2ModuleMeasProgram::setActualValuesNames()
 {
     QString powIndicator = "123S";
     const cMeasModeInfo mminfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
-    for (int i = 0; i < 4; i++)
-    {
+    for (int i = 0; i < 4; i++) {
         m_ActValueList.at(i*3)->setChannelName(QString("+%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
         m_ActValueList.at(i*3)->setUnit(mminfo.getUnitName());
 
@@ -1101,7 +1100,9 @@ void cPower2ModuleMeasProgram::setActualValuesNames()
         m_ActValueList.at(i*3+2)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
         m_ActValueList.at(i*3+2)->setUnit(mminfo.getUnitName());
     }
+    m_pModule->exportMetaData();
 }
+
 quint8 cPower2ModuleMeasProgram::cmpActualValIndex(freqoutconfiguration frconf)
 {
     quint8 actvalueIndex = frconf.m_nSource * 3;
