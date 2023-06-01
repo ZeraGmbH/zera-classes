@@ -1793,7 +1793,7 @@ void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<Mea
     QString newPhaseMask = mode->getCurrentMask();
     setPhaseMaskValidator(mode);
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
-    m_MModeCanChangePhaseMask->setValue(mode->hasVarMask());
+    m_MModeCanChangePhaseMask->setValue(mode->hasVarMask() && mode->getMeasSysCount()>1);
     m_MModeMaxMeasSysCount->setValue(mode->getMaxMeasSysCount());
 }
 
