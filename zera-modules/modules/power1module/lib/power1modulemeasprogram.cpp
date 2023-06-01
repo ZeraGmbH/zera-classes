@@ -1056,6 +1056,7 @@ void cPower1ModuleMeasProgram::setActualValuesNames()
         m_ActValueList.at(i)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
         m_ActValueList.at(i)->setUnit(mminfo.getUnitName());
     }
+    m_pModule->exportMetaData();
 }
 
 void cPower1ModuleMeasProgram::setSCPIMeasInfo()
