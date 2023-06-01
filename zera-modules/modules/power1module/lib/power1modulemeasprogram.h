@@ -122,6 +122,7 @@ private:
     VfModuleParameter* m_pMModePhaseSelectParameter;
     cStringValidator * m_MModePhaseSelectValidator;
     VfModuleActvalue *m_MModeCanChangePhaseMask;
+    VfModuleActvalue *m_MModePowerDisplayName;
     VfModuleActvalue *m_MModeMaxMeasSysCount;
     VfModuleParameter* m_pConstantParameter;
     VfModuleComponent* m_pMeasureSignal;
