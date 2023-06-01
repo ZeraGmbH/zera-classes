@@ -372,6 +372,13 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_ActValueList.append(m_MModeCanChangePhaseMask); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(m_MModeCanChangePhaseMask); // and for the modules interface
 
+    m_MModePowerDisplayName = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   QString("ACT_PowerDisplayName"),
+                                                   QString("Power display name (P/Q/S)"),
+                                                   QVariant("") );
+    m_ActValueList.append(m_MModePowerDisplayName);
+    m_pModule->veinModuleActvalueList.append(m_MModePowerDisplayName);
+
     m_MModeMaxMeasSysCount = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      QString("ACT_MaxMeasSysCount"),
                                                      QString("Number of max measurement systems for current measurement mode"),
