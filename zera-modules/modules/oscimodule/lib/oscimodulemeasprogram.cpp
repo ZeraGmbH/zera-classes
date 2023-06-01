@@ -556,19 +556,14 @@ cOsciModuleConfigData *cOsciModuleMeasProgram::getConfData()
 
 void cOsciModuleMeasProgram::setActualValuesNames()
 {
-    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
-    {
-        QString s;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
         QString s1,s2;
-        QString name;
-
         s1 = s2 = m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).alias;
         s1.remove(QRegExp("[1-9][0-9]?"));
         s2.remove(s1);
 
-        s = s1 + "%1" + QString(";%1;[%]").arg(s2);
-
-        name = s1 + s2;
+        QString s = s1 + "%1" + QString(";%1;[%]").arg(s2);
+        QString name = s1 + s2;
 
         m_ActValueList.at(i)->setChannelName(name);
         m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).unit);
