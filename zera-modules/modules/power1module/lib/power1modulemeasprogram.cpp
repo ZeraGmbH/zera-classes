@@ -1799,20 +1799,22 @@ void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode)
 {
     QString newPhaseMask = mode->getCurrentMask();
+    const cMeasModeInfo powerInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
     setPhaseMaskValidator(mode);
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
     m_MModeCanChangePhaseMask->setValue(mode->hasVarMask() && mode->getMeasSysCount()>1);
     m_MModeMaxMeasSysCount->setValue(mode->getMaxMeasSysCount());
+    m_MModePowerDisplayName->setValue(powerInfo.getActvalName());
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
 {
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    updatePhaseMaskVeinComponents(mode);
     QString newMeasMode = mode->getName();
     getConfData()->m_sMeasuringMode.m_sValue = newMeasMode;
     handleMModeParamChange();
     updatesForMModeChange();
+    updatePhaseMaskVeinComponents(mode);
 }
 
 }
