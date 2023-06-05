@@ -14,8 +14,7 @@ void test_bootloaderstopperfactoryfortest::init()
 
 void test_bootloaderstopperfactoryfortest::checkEmpty()
 {
-    QVector<bool> immediateSequence = QVector<bool>() << true << false;
-    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(immediateSequence);
+    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(QVector<bool>() << true << false);
 
     ZeraMControllerBootloaderStopperPtr stopper1 = ZeraMControllerBootloaderStopperFactory::createBootloaderStopper(nullptr, 42);
     QCOMPARE(ZeraMControllerBootloaderStopperFactoryForTest::checkEmpty(), false);
@@ -26,8 +25,7 @@ void test_bootloaderstopperfactoryfortest::checkEmpty()
 
 void test_bootloaderstopperfactoryfortest::oneImmediate()
 {
-    QVector<bool> immediateSequence = QVector<bool>() << true;
-    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(immediateSequence);
+    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(QVector<bool>() << true);
     ZeraMControllerBootloaderStopperPtr stopper = ZeraMControllerBootloaderStopperFactory::createBootloaderStopper(nullptr, 42);
 
     QSignalSpy spy(stopper.get(), &ZeraMControllerBootloaderStopperInterface::sigAssumeBootloaderStopped);
@@ -38,8 +36,7 @@ void test_bootloaderstopperfactoryfortest::oneImmediate()
 
 void test_bootloaderstopperfactoryfortest::oneDelayed()
 {
-    QVector<bool> immediateSequence = QVector<bool>() << false;
-    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(immediateSequence);
+    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(QVector<bool>() << false);
     ZeraMControllerBootloaderStopperPtr stopper = ZeraMControllerBootloaderStopperFactory::createBootloaderStopper(nullptr, 42);
 
     QSignalSpy spy(stopper.get(), &ZeraMControllerBootloaderStopperInterface::sigAssumeBootloaderStopped);
@@ -52,9 +49,7 @@ void test_bootloaderstopperfactoryfortest::oneDelayed()
 
 void test_bootloaderstopperfactoryfortest::oneDelayedOneImmediate()
 {
-    QVector<bool> immediateSequence = QVector<bool>() << false << true;
-    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(immediateSequence);
-
+    ZeraMControllerBootloaderStopperFactoryForTest::setBootoaderAssumeAppStartedImmediates(QVector<bool>() << false << true);
     ZeraMControllerBootloaderStopperPtr stopperDelayed = ZeraMControllerBootloaderStopperFactory::createBootloaderStopper(nullptr, 42);
     QSignalSpy spyDelayed(stopperDelayed.get(), &ZeraMControllerBootloaderStopperInterface::sigAssumeBootloaderStopped);
     stopperDelayed->stopBootloader(1000);
@@ -66,7 +61,6 @@ void test_bootloaderstopperfactoryfortest::oneDelayedOneImmediate()
     QSignalSpy spyImmediate(stopperImmediate.get(), &ZeraMControllerBootloaderStopperInterface::sigAssumeBootloaderStopped);
     stopperImmediate->stopBootloader(1000);
     QCOMPARE(spyImmediate.count(), 1);
-
     QCOMPARE(ZeraMControllerBootloaderStopperFactoryForTest::checkEmpty(), true);
 }
 
