@@ -45,7 +45,6 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:dutinput:n"] = setDutInputCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
-    m_ConfigXMLMap["sec1modconfpar:configuration:measure:modes:n"] = setModeCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:embedded"] = setEmbedded;
 
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutinput"] = setDutInputPar;
@@ -181,16 +180,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             }
             break;
         }
-        case setModeCount:
-        {
-            QString name;
-            m_pSec1ModulConfigData->m_nModeCount = m_pXMLReader->getValue(key).toInt(&ok);
-            for (int i = 0; i < m_pSec1ModulConfigData->m_nModeCount; i++) {
-                m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:modes:mod%1").arg(i+1)] = setMode1Name+i;
-                m_pSec1ModulConfigData->m_ModeList.append(name);
-            }
-            break;
-        }
         case setEmbedded:
             m_pSec1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
@@ -258,11 +247,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
                 cSec1ModuleConfigData::TRefInput refInput;
                 refInput.inputName = m_pXMLReader->getValue(key);
                 m_pSec1ModulConfigData->m_refInpList.replace(cmd, refInput);
-            }
-            else if ((cmd >= setMode1Name) && (cmd < setMode1Name + 32)) {
-                cmd -= setMode1Name;
-                name = m_pXMLReader->getValue(key);
-                m_pSec1ModulConfigData->m_ModeList.replace(cmd, name);
             }
             else if ((cmd >= setRefInput1Append) && (cmd < setRefInput1Append + 32)) {
                 cmd -= setRefInput1Append;

@@ -19,10 +19,6 @@
             </ethernet>
         </connectivity>
         <measure>
-            <modes>
-                <n>1</n>
-                <mod1>mrate</mod1>
-            </modes>
             <embedded>1</embedded>
             <dutinput>
                 <n>2</n>
