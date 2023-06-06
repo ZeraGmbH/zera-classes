@@ -22,7 +22,6 @@ enum moduleconfigstate
     setSECServerPort,
     setDutInputCount,
     setRefInputCount,
-    setModeCount,
     setEmbedded,
 
     setDutInputPar,
@@ -41,8 +40,7 @@ enum moduleconfigstate
 
     setDutInput1Name = 32,
     setRefInput1Name = 64,
-    setMode1Name = 96,
-    setRefInput1Append = 128
+    setRefInput1Append = 96
 };
 
 

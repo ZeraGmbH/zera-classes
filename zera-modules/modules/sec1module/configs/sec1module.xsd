@@ -132,16 +132,6 @@
     </xs:simpleType>
 
 
-    <xs:complexType name="modestype">
-        <xs:sequence>
-            <xs:element name="n" type="ntype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="mod1" type="modetype" minOccurs="1" maxOccurs="1"/>
-            <xs:element name="mod2" type="modetype" minOccurs="0" maxOccurs="1"/>
-            <xs:element name="mod3" type="modetype" minOccurs="0" maxOccurs="1"/>
-        </xs:sequence>
-    </xs:complexType>
-
-
     <xs:complexType name="dutinputtype">
         <xs:sequence>
             <xs:element name="n" type="ntype" minOccurs="1" maxOccurs="1"/>
@@ -230,7 +220,6 @@
 
     <xs:complexType name="configurationmeasuretype">
         <xs:sequence>
-            <xs:element name="modes" type="modestype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="embedded" type="yesnotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="dutinput" type="dutinputtype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="refinput" type="refinputtype" minOccurs="1" maxOccurs="1"/>

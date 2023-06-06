@@ -57,7 +57,6 @@ public:
     };
     QList<TRefInput> m_refInpList;
     QList<QString> m_dutInpList;
-    QList<QString> m_ModeList;
     bool m_bEmbedded;
     stringParameter m_sMode;
     doubleParameter m_fDutConstant;
