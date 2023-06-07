@@ -1800,9 +1800,10 @@ void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<Mea
 {
     QString newPhaseMask = mode->getCurrentMask();
     const cMeasModeInfo powerInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
+    bool disablePhase = (getConfData()->m_disablephaseselect == true);
     setPhaseMaskValidator(mode);
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
-    m_MModeCanChangePhaseMask->setValue(mode->hasVarMask() && mode->getMeasSysCount()>1);
+    m_MModeCanChangePhaseMask->setValue(mode->hasVarMask() && mode->getMeasSysCount()>1 && !disablePhase);
     m_MModeMaxMeasSysCount->setValue(mode->getMaxMeasSysCount());
     m_MModePowerDisplayName->setValue(powerInfo.getActvalName());
 }
