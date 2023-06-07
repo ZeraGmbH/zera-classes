@@ -11,7 +11,7 @@ void ZeraMControllerBootloaderStopper::stopBootloader(int msWaitForApplicationSt
     if(!m_bootloaderStopped && !m_appStartTimer) {
         ZeraMControllerIoTemplate::atmelRM result = m_i2cCtrl->bootloaderStartProgram();
         if(result == ZeraMControllerIoTemplate::cmddone) {
-            qInfo("Stopping bootloader succeeded - wait %ims for app startup...", msWaitForApplicationStart);
+            qInfo("Stopping bootloader succeeded - wait %fs for app startup...", float(msWaitForApplicationStart/1000));
             m_appStartTimer = TimerFactoryQt::createSingleShot(msWaitForApplicationStart);
             connect(m_appStartTimer.get(), &TimerTemplateQt::sigExpired,
                     this, &ZeraMControllerBootloaderStopper::onAppStartWaitFinished);
