@@ -152,6 +152,7 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="disablephaseselect" type="yesnotype" minOccurs="0" maxOccurs="1"/>
             <xs:element name="integrationmode" type="integrationmodeType" minOccurs="1" maxOccurs="1"/>
             <xs:element name="movingwindow" type="movingwindowtype"/>
         </xs:sequence>

@@ -30,6 +30,7 @@
             <system>
                 <pms1>m2,m5</pms1>
             </system>
+            <disablephaseselect>1</disablephaseselect>
             <integrationmode>time</integrationmode>
             <movingwindow>
                 <on>1</on>
