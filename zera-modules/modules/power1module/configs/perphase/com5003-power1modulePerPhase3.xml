@@ -56,8 +56,11 @@
     <parameter>
         <measuringmode>2LW</measuringmode>
         <modePhases>
-            <n>1</n>
+            <n>4</n>
             <m1>2LW,001</m1>
+            <m2>2LB,001</m2>
+            <m3>2LS,001</m3>
+            <m4>2LSg,001</m4>
         </modePhases>
         <interval>
             <time>1</time>
