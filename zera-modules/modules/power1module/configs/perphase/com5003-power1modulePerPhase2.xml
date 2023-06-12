@@ -21,11 +21,10 @@
         </connectivity>
         <measure>
             <modes>
-                <n>4</n>
+                <n>3</n>
                 <m1>2LW</m1>
                 <m2>2LB</m2>
                 <m3>2LS</m3>
-                <m4>2LSg</m4>
             </modes>
             <system>
                 <pms1>m0,m3</pms1>
@@ -56,11 +55,10 @@
     <parameter>
         <measuringmode>2LW</measuringmode>
         <modePhases>
-            <n>4</n>
+            <n>3</n>
             <m1>2LW,010</m1>
             <m2>2LB,010</m2>
             <m3>2LS,010</m3>
-            <m4>2LSg,010</m4>
         </modePhases>
         <interval>
             <time>1</time>
