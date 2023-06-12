@@ -99,6 +99,7 @@ private:
     double calcTiTime();
     void setPhaseMaskValidator(std::shared_ptr<MeasMode> mode);
     void updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode);
+    bool canChangePhaseMask(std::shared_ptr<MeasMode> mode);
     struct RangeMaxVals
     {
         double maxU = 0.0;

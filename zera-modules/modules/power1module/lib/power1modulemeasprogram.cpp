@@ -1789,9 +1789,13 @@ void cPower1ModuleMeasProgram::setPhaseMaskValidator(std::shared_ptr<MeasMode> m
 {
     QStringList allPhaseMasks = VeinValidatorPhaseStringGenerator::generate(getConfData()->m_sMeasSystemList.count());
     QStringList allowedPhaseMasks;
-    for(auto &mask : allPhaseMasks)
-        if(mode->canChangeMask(mask))
-            allowedPhaseMasks.append(mask);
+    if(canChangePhaseMask(mode)) {
+        for(auto &mask : allPhaseMasks)
+            if(mode->canChangeMask(mask))
+                allowedPhaseMasks.append(mask);
+    }
+    else
+        allowedPhaseMasks.append(mode->getCurrentMask());
     m_MModePhaseSelectValidator->setValidator(allowedPhaseMasks);
     m_pModule->exportMetaData();
 }
@@ -1800,12 +1804,17 @@ void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<Mea
 {
     QString newPhaseMask = mode->getCurrentMask();
     const cMeasModeInfo powerInfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
-    bool disablePhase = (getConfData()->m_disablephaseselect == true);
     setPhaseMaskValidator(mode);
     m_pMModePhaseSelectParameter->setValue(newPhaseMask);
-    m_MModeCanChangePhaseMask->setValue(mode->hasVarMask() && mode->getMeasSysCount()>1 && !disablePhase);
+    m_MModeCanChangePhaseMask->setValue(canChangePhaseMask(mode));
     m_MModeMaxMeasSysCount->setValue(mode->getMaxMeasSysCount());
     m_MModePowerDisplayName->setValue(powerInfo.getActvalName());
+}
+
+bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode)
+{
+    bool disablePhase = (getConfData()->m_disablephaseselect == true);
+    return mode->hasVarMask() && mode->getMeasSysCount()>1 && !disablePhase;
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
