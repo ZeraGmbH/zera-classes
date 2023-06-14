@@ -53,7 +53,7 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
         if (cmd.isQuery())
         {
             QString xml;
-            m_pSCPIInterface->getSCPICmdInterface()->exportSCPIModelXML(xml);
+            m_pSCPIInterface->exportSCPIModelXML(xml);
             emit signalAnswer(xml);
             //client->receiveAnswer(xml);
         }

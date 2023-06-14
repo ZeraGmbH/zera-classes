@@ -215,9 +215,8 @@ void cSCPIServer::setupTCPServer()
 
 void cSCPIServer::activationDone()
 {
-    cSCPI* scpiTree = m_pSCPIInterface->getSCPICmdInterface();
     QString xml;
-    scpiTree->exportSCPIModelXML(xml);
+    m_pSCPIInterface->exportSCPIModelXML(xml);
     m_veinDevIface->setValue(xml);
     m_bActive = true;
     emit activated();

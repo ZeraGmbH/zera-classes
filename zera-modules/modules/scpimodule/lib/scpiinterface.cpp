@@ -15,7 +15,7 @@ namespace SCPIMODULE
 cSCPIInterface::cSCPIInterface(QString name)
     :m_sName(name)
 {
-    m_pSCPICmdInterface = new cSCPI(m_sName);
+    m_pSCPICmdInterface = new cSCPI();
 }
 
 
@@ -24,12 +24,10 @@ cSCPIInterface::~cSCPIInterface()
     delete m_pSCPICmdInterface;
 }
 
-
-cSCPI* cSCPIInterface::getSCPICmdInterface()
+void cSCPIInterface::exportSCPIModelXML(QString &xml)
 {
-    return m_pSCPICmdInterface;
+    m_pSCPICmdInterface->exportSCPIModelXML(xml, QMap<QString, QString>{{"DEVICE", m_sName}});
 }
-
 
 void cSCPIInterface::addSCPICommand(ScpiBaseDelegate *delegate)
 {
