@@ -23,7 +23,7 @@ public:
     cSCPIInterface(QString name);
     virtual ~cSCPIInterface();
 
-    cSCPI* getSCPICmdInterface();
+    void exportSCPIModelXML(QString &xml);
     void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
 
