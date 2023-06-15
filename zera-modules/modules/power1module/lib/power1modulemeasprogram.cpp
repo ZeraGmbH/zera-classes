@@ -524,8 +524,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
 
     m_measModeSelector.tryChangeMode(confdata->m_sMeasuringMode.m_sValue);
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    updatePhaseMaskVeinComponents(mode);
-
     QStringList dspInitVarsList = Power1DspCmdGenerator::getCmdsInitVars(mode,
                                                                          m_nSRate,
                                                                          calcTiTime(),
