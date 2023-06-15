@@ -236,6 +236,9 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
+
+    connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
+            this, &cPower1ModuleMeasProgram::onModeTransactionOk);
 }
 
 
@@ -364,6 +367,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     m_MModePhaseSelectValidator = new cStringValidator("");
     m_pMModePhaseSelectParameter->setValidator(m_MModePhaseSelectValidator);
     m_pModule->veinModuleParameterHash[key] = m_pMModePhaseSelectParameter; // for modules use
+    connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
 
     m_MModeCanChangePhaseMask = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                      QString("ACT_CanChangePhaseMask"),
@@ -1445,9 +1449,6 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newIntegrationPeriod);
     connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newMeasMode);
-    connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower1ModuleMeasProgram::newPhaseList);
-    connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
-            this, &cPower1ModuleMeasProgram::onModeTransactionOk);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
