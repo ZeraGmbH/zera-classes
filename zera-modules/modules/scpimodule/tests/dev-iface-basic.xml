@@ -1,6 +1,7 @@
 <!DOCTYPE SCPIModel>
 <MODELLIST>
  <DEVICE>DEMO</DEVICE>
+ <RELEASE></RELEASE>
  <MODELS>
   <DEVICE Type="Model,Node">
    <IFACE ScpiPath="DEVICE:IFACE" Type="Query"/>

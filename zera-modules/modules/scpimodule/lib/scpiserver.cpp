@@ -27,7 +27,7 @@
 #include "ieee4882interface.h"
 #include "scpicmdinfo.h"
 #include "scpimoduleconfigdata.h"
-
+#include <sysinfo.h>
 
 namespace SCPIMODULE
 {
@@ -216,7 +216,8 @@ void cSCPIServer::setupTCPServer()
 void cSCPIServer::activationDone()
 {
     QString xml;
-    m_pSCPIInterface->exportSCPIModelXML(xml);
+    QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
+    m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
     m_veinDevIface->setValue(xml);
     m_bActive = true;
     emit activated();
