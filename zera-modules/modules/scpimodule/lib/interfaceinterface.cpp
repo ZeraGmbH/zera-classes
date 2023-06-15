@@ -6,6 +6,7 @@
 #include "scpiinfo.h"
 #include "scpimodule.h"
 #include "scpiinterfacedelegate.h"
+#include <sysinfo.h>
 
 namespace SCPIMODULE
 {
@@ -53,7 +54,8 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
         if (cmd.isQuery())
         {
             QString xml;
-            m_pSCPIInterface->exportSCPIModelXML(xml);
+            QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
+            m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
             emit signalAnswer(xml);
             //client->receiveAnswer(xml);
         }

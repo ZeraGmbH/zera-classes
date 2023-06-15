@@ -24,9 +24,10 @@ cSCPIInterface::~cSCPIInterface()
     delete m_pSCPICmdInterface;
 }
 
-void cSCPIInterface::exportSCPIModelXML(QString &xml)
+void cSCPIInterface::exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry)
 {
-    m_pSCPICmdInterface->exportSCPIModelXML(xml, QMap<QString, QString>{{"DEVICE", m_sName}});
+    modelListBaseEntry.insert(modelListBaseEntry.constBegin(), "DEVICE", m_sName);
+    m_pSCPICmdInterface->exportSCPIModelXML(xml, modelListBaseEntry);
 }
 
 void cSCPIInterface::addSCPICommand(ScpiBaseDelegate *delegate)
