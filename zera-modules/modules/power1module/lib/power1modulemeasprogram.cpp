@@ -1814,7 +1814,9 @@ void cPower1ModuleMeasProgram::updatePhaseMaskVeinComponents(std::shared_ptr<Mea
 bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode)
 {
     bool disablePhase = (getConfData()->m_disablephaseselect == true);
-    return mode->hasVarMask() && mode->getMeasSysCount()>1 && !disablePhase;
+    bool hasVarMask = mode->hasVarMask();
+    bool hasMultipleMeasSystems = mode->getMeasSysCount()>1;
+    return hasVarMask && hasMultipleMeasSystems && !disablePhase;
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
