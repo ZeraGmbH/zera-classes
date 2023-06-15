@@ -230,6 +230,9 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::foutParamsToDsp);
+
+    connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
+            this, &cPower2ModuleMeasProgram::onModeTransactionOk);
 }
 
 
@@ -1497,9 +1500,6 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     else
         connect(m_pIntegrationParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newIntegrationPeriod);
     connect(m_pMeasuringmodeParameter, &VfModuleComponent::sigValueChanged, this , &cPower2ModuleMeasProgram::newMeasMode);
-    //connect(m_pMModePhaseSelectParameter, &VfModuleComponent::sigValueChanged, this, &cPower2ModuleMeasProgram::newPhaseList);
-    connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
-            this, &cPower2ModuleMeasProgram::onModeTransactionOk);
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if (!m_readUrValueMachine.isRunning())
         m_readUrValueMachine.start();
