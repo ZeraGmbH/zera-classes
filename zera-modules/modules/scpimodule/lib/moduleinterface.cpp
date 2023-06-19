@@ -167,6 +167,9 @@ void cModuleInterface::setXmlComponentInfo(ScpiBaseDelegate *delegate, const QJs
     if(!desc.isEmpty())
         delegate->setXmlAttribute("Description", desc);
     setXmlComponentValidatorInfo(delegate, componentInfo);
+    QString unit = componentInfo["Unit"].toString();
+    if(!unit.isEmpty())
+        delegate->setXmlAttribute("Unit", unit);
 }
 
 void cModuleInterface::setXmlComponentValidatorInfo(ScpiBaseDelegate *delegate, const QJsonObject &componentInfo)
