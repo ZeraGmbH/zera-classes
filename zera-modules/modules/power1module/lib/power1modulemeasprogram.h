@@ -14,6 +14,7 @@
 #include <dspinterface.h>
 #include <pcbinterface.h>
 #include <QFinalState>
+#include <timersingleshotqt.h>
 
 namespace POWER1MODULE
 {
@@ -100,6 +101,7 @@ private:
     void setPhaseMaskValidator(std::shared_ptr<MeasMode> mode);
     void updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode);
     bool canChangePhaseMask(std::shared_ptr<MeasMode> mode);
+    void handleDemoActualValues();
     struct RangeMaxVals
     {
         double maxU = 0.0;
@@ -217,6 +219,7 @@ private:
     QFinalState m_foutParamsToDsp;
 
     cMovingwindowFilter m_movingwindowFilter;
+    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);

@@ -12,6 +12,7 @@
 #include "measmodephasesetstrategyphasesvar.h"
 #include "measmodephasesetstrategy2wire.h"
 #include "measmodephasesetstrategy2wirefixedphase.h"
+#include <timerfactoryqt.h>
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
@@ -123,7 +124,10 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    if(getConfData()->m_powerDemo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+     else
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::sendRMIdent);
@@ -199,7 +203,10 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(getConfData()->m_powerDemo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::freePGRMem);
@@ -236,6 +243,10 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
+    if(getConfData()->m_powerDemo){
+        m_demoPeriodicTimer =TimerFactoryQt::createSingleShot(1000);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower1ModuleMeasProgram::handleDemoActualValues);
+    }
 }
 
 
@@ -254,6 +265,8 @@ void cPower1ModuleMeasProgram::start()
     }
     else
         connect(this, &cPower1ModuleMeasProgram::actualValues, this, &cPower1ModuleMeasProgram::setInterfaceActualValues);
+    if(getConfData()->m_powerDemo)
+        m_demoPeriodicTimer->start();
 }
 
 
@@ -261,6 +274,8 @@ void cPower1ModuleMeasProgram::stop()
 {
     disconnect(this, &cPower1ModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
+    if(getConfData()->m_powerDemo)
+        m_demoPeriodicTimer->stop();
 }
 
 void cPower1ModuleMeasProgram::generateInterface()
@@ -1449,8 +1464,9 @@ void cPower1ModuleMeasProgram::activateDSPdone()
             this, &cPower1ModuleMeasProgram::onModeTransactionOk);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
-    if (!m_readUrValueMachine.isRunning())
-        m_readUrValueMachine.start();
+    if(!getConfData()->m_powerDemo)
+        if (!m_readUrValueMachine.isRunning())
+            m_readUrValueMachine.start();
 
     emit activated();
 }
@@ -1816,6 +1832,24 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
     bool hasVarMask = mode->hasVarMask();
     bool hasMultipleMeasSystems = mode->getMeasSysCount()>1;
     return hasVarMask && hasMultipleMeasSystems && !disablePhase;
+}
+
+void cPower1ModuleMeasProgram::handleDemoActualValues()
+{
+    QVector<float> valuesDemo;
+    valuesDemo.resize(m_ActValueList.count());
+    for(int i=0; i<valuesDemo.size(); i++) {
+        double power = (i+1)*15.2;
+        valuesDemo[i] = power ;
+        if(i==3){
+            valuesDemo[i] =valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
+        }
+    }
+    for(int i=0; i<m_ActValueList.count(); i++){
+        double actualValues = valuesDemo[i];
+        m_ModuleActualValues.append(actualValues);
+    }
+    emit actualValues(&m_ModuleActualValues);
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
