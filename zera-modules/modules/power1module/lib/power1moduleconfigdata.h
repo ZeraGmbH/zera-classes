@@ -76,6 +76,7 @@ public:
     intParameter m_nMeasIntervalPeriod; // measuring periods 1 .. 10000
     double m_fmovingwindowInterval;
     bool m_disablephaseselect;
+    bool m_powerDemo = false;
     bool m_bmovingWindow;
 };
 
