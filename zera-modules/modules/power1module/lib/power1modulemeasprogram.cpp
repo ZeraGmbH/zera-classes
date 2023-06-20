@@ -1837,19 +1837,36 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
 void cPower1ModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> valuesDemo;
-    valuesDemo.resize(m_ActValueList.count());
-    for(int i=0; i<valuesDemo.size(); i++) {
-        double power = (i+1)*15.2;
-        valuesDemo[i] = power ;
-        if(i==3){
-            valuesDemo[i] =valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
-        }
-    }
-    for(int i=0; i<m_ActValueList.count(); i++){
-        double actualValues = valuesDemo[i];
-        m_ModuleActualValues.append(actualValues);
-    }
-    emit actualValues(&m_ModuleActualValues);
+     valuesDemo.resize(m_ActValueList.count());
+     int current = 10;
+     int voltage = 480;
+     int coef = determineDemoCoeff();
+     valuesDemo[0] = voltage*current*cos(10.5)*coef;
+     valuesDemo[1] = voltage*current*sin(10.5)*coef;
+     valuesDemo[2] = voltage*current*coef;
+     valuesDemo[3] = valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
+//    for(int i=0; i<valuesDemo.size(); i++) {
+//        double power = (i+1)*15.2;
+//        valuesDemo[i] = power ;
+//        if(i==3){
+//            valuesDemo[i] =valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
+//        }
+//    }
+     for(int i=0; i<m_ActValueList.count(); i++){
+         double actualValues = valuesDemo[i];
+         m_ModuleActualValues.append(actualValues);
+     }
+     emit actualValues(&m_ModuleActualValues);
+}
+
+int cPower1ModuleMeasProgram::determineDemoCoeff()
+{
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    QString newMeasMode = mode->getName();
+    if(newMeasMode == "3LW")
+        return sqrt(3);
+    else
+        return 1;
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
@@ -1860,6 +1877,8 @@ void cPower1ModuleMeasProgram::onModeTransactionOk()
     handleMModeParamChange();
     updatesForMModeChange();
     updatePhaseMaskVeinComponents(mode);
+    if(getConfData()->m_powerDemo)
+        handleDemoActualValues();
 }
 
 }
