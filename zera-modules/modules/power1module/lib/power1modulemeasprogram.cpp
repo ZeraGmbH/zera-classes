@@ -5,7 +5,6 @@
 #include "power1dspcmdgenerator.h"
 #include "power1dspmodefunctioncatalog.h"
 #include "veinvalidatorphasestringgenerator.h"
-#include "measmodebroker.h"
 #include "measmodephasepersistency.h"
 #include "measmodephasesetstrategy4wire.h"
 #include "measmodephasesetstrategyphasesfixed.h"
@@ -509,17 +508,13 @@ MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
     return measChannelUIPairList;
 }
 
-void cPower1ModuleMeasProgram::setDspCmdList()
+QStringList POWER1MODULE::cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen dspChainGen)
 {
-    MeasSystemChannels measChannelUIPairList = getMeasChannelUIPairs();
-
+    QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(dspChainGen);
     cPower1ModuleConfigData *confdata = getConfData();
     int measSytemCount = confdata->m_sMeasSystemList.count();
-    DspChainIdGen dspChainGen;
     MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), dspChainGen);
-
-    // we set up all our lists for wanted measuring modes, this gets much more performance
-    QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(dspChainGen);
+    MeasSystemChannels measChannelUIPairList = getMeasChannelUIPairs();
     for (int i = 0; i < confdata->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(confdata->m_sMeasmodeList.at(i));
         MeasModeBroker::BrokerReturn brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelUIPairList);
@@ -532,8 +527,19 @@ void cPower1ModuleMeasProgram::setDspCmdList()
         m_measModeSelector.addMode(mode);
     }
     dspMModesCommandList.append(Power1DspCmdGenerator::getCmdsSumAndAverage(dspChainGen));
-
     m_measModeSelector.tryChangeMode(confdata->m_sMeasuringMode.m_sValue);
+
+    return dspMModesCommandList;
+}
+
+void cPower1ModuleMeasProgram::setDspCmdList()
+{
+    DspChainIdGen dspChainGen;
+    cPower1ModuleConfigData *confdata = getConfData();
+
+    // we set up all our lists for wanted measuring modes, this gets much more performance
+    QStringList dspMModesCommandList = setupMeasModes(dspChainGen);
+
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     QStringList dspInitVarsList = Power1DspCmdGenerator::getCmdsInitVars(mode,
                                                                          m_nSRate,

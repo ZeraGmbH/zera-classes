@@ -2,6 +2,7 @@
 #define POWERMODULEMEASPROGRAM_H
 
 #include "power1moduleconfigdata.h"
+#include "measmodebroker.h"
 #include <stringvalidator.h>
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
@@ -109,6 +110,7 @@ private:
         double maxI = 0.0;
     };
     RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
+    QStringList setupMeasModes(DspChainIdGen dspChainGen);
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;
