@@ -1432,7 +1432,8 @@ void cPower1ModuleMeasProgram::activateDSP()
 void cPower1ModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-
+    std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
+    updatePhaseMaskVeinComponents(mode);
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
