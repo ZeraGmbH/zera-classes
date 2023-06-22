@@ -8,9 +8,9 @@
 namespace RANGEMODULE
 {
 
-cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool rangeDemo) :
+cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QString name, quint8 chnnr, bool demo) :
     cBaseMeasChannel(rmsocket, pcbsocket, name, chnnr),
-    m_rangeDemo(rangeDemo),
+    m_demo(demo),
     m_preScaling(1)
 {
     m_pPCBInterface = new Zera::cPCBInterface();
@@ -74,7 +74,7 @@ cRangeMeasChannel::cRangeMeasChannel(cSocket* rmsocket, cSocket* pcbsocket, QStr
     connect(&m_deactivationResetNotifiersState, &QState::entered, this, &cRangeMeasChannel::deactivationResetNotifiers);
     connect(&m_deactivationDoneState, &QState::entered, this, &cRangeMeasChannel::deactivationDone);
 
-    if(!m_rangeDemo) {
+    if(!m_demo) {
         m_activationMachine.setInitialState(&m_rmConnectState);
         m_deactivationMachine.setInitialState(&m_deactivationInitState);
     } else {
@@ -135,7 +135,7 @@ quint32 cRangeMeasChannel::setRange(QString range)
     m_sActRange = range;
 
     if (m_bActive) {
-        if(m_rangeDemo)
+        if(m_demo)
             return 0;
         quint32 msgnr = m_pPCBInterface->setRange(m_sName, m_RangeInfoHash[range].name); // we set range per name not alias
         m_MsgNrCmdList[msgnr] = setmeaschannelrange;

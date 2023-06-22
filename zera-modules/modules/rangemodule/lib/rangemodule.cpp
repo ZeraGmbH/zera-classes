@@ -64,7 +64,7 @@ void cRangeModule::setupModule()
     veinModuleMetaDataList.append(m_pGroupCountInfo);
 
 
-    bool rangeDemo = pConfData->m_rangeDemo;
+    bool demo = pConfData->m_demo;
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
@@ -75,7 +75,7 @@ void cRangeModule::setupModule()
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_senseChannelList.at(i),
                                                         i+1,
-                                                        rangeDemo);
+                                                        demo);
         m_rangeMeasChannelList.append(pchn);
         m_ModuleActivistList.append(pchn);
         connect(pchn, &cRangeMeasChannel::activated, this, &cRangeModule::activationContinue);
@@ -90,7 +90,7 @@ void cRangeModule::setupModule()
                                               pConfData->m_GroupList,
                                               pConfData->m_senseChannelList,
                                               pConfData->m_ObsermaticConfPar,
-                                              rangeDemo);
+                                              demo);
     m_ModuleActivistList.append(m_pRangeObsermatic);
     connect(m_pRangeObsermatic, &cRangeObsermatic::activated, this, &cRangeModule::activationContinue);
     connect(m_pRangeObsermatic, &cRangeObsermatic::deactivated, this, &cRangeModule::deactivationContinue);
@@ -105,7 +105,7 @@ void cRangeModule::setupModule()
         connect(pchn, &cRangeMeasChannel::cmdDone, m_pRangeObsermatic, &cRangeObsermatic::catchChannelReply);
     }
 
-    if(!rangeDemo) {
+    if(!demo) {
         // we also need some program for adjustment
         m_pAdjustment = new cAdjustManagement(this, &(pConfData->m_DSPServerSocket), &pConfData->m_PCBServerSocket, pConfData->m_senseChannelList, pConfData->m_subdcChannelList, pConfData->m_fAdjInterval);
         m_ModuleActivistList.append(m_pAdjustment);
@@ -115,7 +115,7 @@ void cRangeModule::setupModule()
     }
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration, rangeDemo);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration, demo);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);

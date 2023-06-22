@@ -12,8 +12,8 @@
 namespace RANGEMODULE
 {
 
-cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool rangeDemo) :
-    m_rangeDemo(rangeDemo),
+cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo) :
+    m_demo(demo),
     m_pModule(module),
     m_pDSPSocket(dsprmsocket),
     m_GroupList(groupList),
@@ -41,7 +41,7 @@ cRangeObsermatic::cRangeObsermatic(cRangeModule *module, cSocket *dsprmsocket, Q
     m_deactivationInitState.addTransition(this, &cRangeObsermatic::deactivationContinue, &m_deactivationDoneState);
     m_deactivationMachine.addState(&m_deactivationInitState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_rangeDemo) {
+    if(!m_demo) {
         m_activationMachine.setInitialState(&m_dspserverConnectState);
         m_deactivationMachine.setInitialState(&m_deactivationInitState);
     } else {
@@ -442,7 +442,7 @@ void cRangeObsermatic::setRanges(bool force)
             }
             change = true;
 
-            if(!m_rangeDemo) {
+            if(!m_demo) {
                 // set range
                 m_MsgNrCmdList[pmChn->setRange(s)] = setrange + i; // we must know which channel has changed for deferred notification
                 m_nRangeSetPending++;
@@ -467,7 +467,7 @@ void cRangeObsermatic::setRanges(bool force)
             // reset hard overload AFTER change of range.
             if (requiresOverloadReset(i) || m_groupOvlList.at(i) || force) {
                 qInfo("Reset overload channel %i", i);
-                if(!m_rangeDemo)
+                if(!m_demo)
                     m_MsgNrCmdList[pmChn->resetStatus()] = resetstatus;
                 m_hardOvlList.replace(i, false);
                 m_maxOvlList.replace(i, false);
@@ -490,7 +490,7 @@ void cRangeObsermatic::setRanges(bool force)
         }
     }
 
-    if(!m_rangeDemo) {
+    if(!m_demo) {
         if (change) {
             if (m_writeCorrectionDSPMachine.isRunning()) {
                 emit activationRepeat();
@@ -617,7 +617,7 @@ void cRangeObsermatic::readGainCorrDone()
     // our initial range set from configuration
     setRanges(true);
     // add bits not done due to missing server responses
-    if(m_rangeDemo) {
+    if(m_demo) {
         setupDemoOperation();
     }
 
