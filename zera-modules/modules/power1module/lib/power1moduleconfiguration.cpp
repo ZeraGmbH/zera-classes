@@ -103,7 +103,7 @@ void cPower1ModuleConfiguration::configXMLInfo(QString key)
         switch (cmd)
         {
         case setDemo:
-            m_pPower1ModulConfigData->m_powerDemo = m_pXMLReader->getValue(key).toInt(&ok);;
+            m_pPower1ModulConfigData->m_demo = m_pXMLReader->getValue(key).toInt(&ok);;
             break;
         case setRMIp:
             m_pPower1ModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
