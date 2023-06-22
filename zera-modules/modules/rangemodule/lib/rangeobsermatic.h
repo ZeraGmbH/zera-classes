@@ -41,7 +41,7 @@ class cRangeObsermatic: public cModuleActivist
 {
     Q_OBJECT
 public:
-    cRangeObsermatic(cRangeModule* module, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool rangeDemo);
+    cRangeObsermatic(cRangeModule* module, cSocket* dspsocket, QList<QStringList> groupList, QStringList chnlist, cObsermaticConfPar& confpar, bool demo);
     virtual ~cRangeObsermatic();
     virtual void generateInterface(); // here we export our interface (entities)
     VfModuleComponent *m_pRangingSignal;
@@ -50,7 +50,7 @@ public slots:
     void catchChannelReply(quint32 msgnr);
     void catchChannelNewRangeList();
 private:
-    bool m_rangeDemo;
+    bool m_demo;
     cRangeModule *m_pModule;
     cSocket *m_pDSPSocket;
     QList<QStringList> m_GroupList;
