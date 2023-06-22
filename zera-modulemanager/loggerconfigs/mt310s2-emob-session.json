@@ -1,0 +1,152 @@
+{
+    "ZeraActualValues": [
+        {
+            "EntityId": 1040,
+            "Comment": "RMSModule: AC U/I",
+            "Components": [
+                "ACT_RMSPN1",
+                "ACT_RMSPN2",
+                "ACT_RMSPN3",
+                "ACT_RMSPN4",
+                "ACT_RMSPN5",
+                "ACT_RMSPN6"
+            ]
+        },
+        {
+            "EntityId": 1050,
+            "Comment": "DftModule AC U/I angles",
+            "Components": [
+                "ACT_DFTPN1",
+                "ACT_DFTPN2",
+                "ACT_DFTPN3",
+                "ACT_DFTPN4",
+                "ACT_DFTPN5",
+                "ACT_DFTPN6"
+            ]
+        },
+        {
+            "EntityId": 1060,
+            "Comment": "FFTModule DC U/I",
+            "Components": [
+                "ACT_DC7",
+                "ACT_DC8"
+            ]
+        },
+        {
+            "EntityId": 1070,
+            "Comment": "Power1ModuleAct AC P1-P3 PSUM",
+            "Components": [
+                "ACT_PQS1",
+                "ACT_PQS2",
+                "ACT_PQS3",
+                "ACT_PQS4"
+            ]
+        },
+        {
+            "EntityId": 1073,
+            "Comment": "Power1ModuleDC",
+            "Components": [
+                "ACT_PQS1"
+            ]
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule",
+            "Components": [
+                "PAR_Channel1Range",
+                "PAR_Channel2Range",
+                "PAR_Channel3Range",
+                "PAR_Channel4Range",
+                "PAR_Channel5Range",
+                "PAR_Channel6Range",
+                "PAR_Channel7Range",
+                "PAR_Channel8Range",
+                "PAR_ChannelGrouping",
+                "PAR_RangeAutomatic",
+                "PAR_Overload",
+                "INF_Adjusted",
+                "ACT_Frequency"
+            ]
+        },
+        {
+            "EntityId": 1140,
+            "Comment": "LambdaModule AC 1/2/3/SUM",
+            "Components": [
+                "ACT_Lambda1",
+                "ACT_Lambda2",
+                "ACT_Lambda3",
+                "ACT_Lambda4"
+            ]
+        }
+    ],
+    "ZeraHarmonics" : [
+        {
+            "EntityId": 1110,
+            "Comment": "THDNModule1"
+        },
+        {
+            "EntityId": 1111,
+            "Comment": "THDNModule2"
+        },
+        {
+            "EntityId": 1060,
+            "Comment": "FFTModule"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        }
+    ],
+    "ZeraCurves" : [
+        {
+            "EntityId": 1120,
+            "Comment": "OSCIModule"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        }
+    ],
+    "ZeraComparison": [
+        {
+            "EntityId": 1130,
+            "Comment": "SECModule"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        },
+        {
+            "EntityId": 1040,
+            "Comment": "RMSModule"
+        },
+        {
+            "EntityId": 1050,
+            "Comment": "DFTModule"
+        },
+        {
+            "EntityId": 1110,
+            "Comment": "THDNModule"
+        },
+        {
+            "EntityId": 1111,
+            "Comment": "THDNModule"
+        },
+        {
+            "EntityId": 1070,
+            "Comment": "Power1ModuleAct AC P1-P3 PSUM"
+        },
+        {
+            "EntityId": 1073,
+            "Comment": "PowerModule DC"
+        },
+        {
+            "EntityId": 1020,
+            "Comment": "RangeModule"
+        },
+        {
+            "EntityId": 1140,
+            "Comment": "LambdaModule"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "$defs": {
+        "arrentry": {
+            "type": "object",
+            "required": [ "name", "configFile", "id" ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "configFile": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                }
+            },
+            "additionalProperties": false
+        },
+        "entityarray": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/arrentry" },
+            "minItems": 1
+        }
+    },
+    "properties": {
+        "modules": { "$ref": "#/$defs/entityarray" }
+    },
+    "required": ["modules"],
+    "additionalProperties": false
+}
