@@ -1,0 +1,114 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "com5003-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "modemodule",
+        "configFile" : "com5003-modemoduleAC.xml",
+        "id": 1000
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "com5003-rangemodule.xml",
+        "id": 1020
+      },
+      {
+        "name" : "samplemodule",
+        "configFile" : "com5003-samplemodule.xml",
+        "id": 1030
+      },
+      {
+        "name" : "rmsmodule",
+        "configFile" : "com5003-rmsmodule.xml",
+        "id": 1040
+      },
+      {
+        "name" : "dftmodule",
+        "configFile" : "com5003-dftmodule.xml",
+        "id": 1050
+      },
+      {
+        "name" : "fftmodule",
+        "configFile" : "com5003-fftmodule.xml",
+        "id": 1060
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "com5003-power1modulePerPhase1.xml",
+        "id": 1070
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "com5003-power1modulePerPhase2.xml",
+        "id": 1071
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "com5003-power1modulePerPhase3.xml",
+        "id": 1072
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "com5003-power1modulePerPhaseAll.xml",
+        "id": 1073
+      },
+      {
+        "name" : "power3module",
+        "configFile" : "com5003-power3module.xml",
+        "id": 1100
+      },
+      {
+        "name" : "thdnmodule",
+        "configFile" : "com5003-thdnmodule.xml",
+        "id": 1110
+      },
+      {
+        "name" : "thdnmodule",
+        "configFile" : "com5003-thdnmodule2.xml",
+        "id": 1111
+      },
+      {
+        "name" : "oscimodule",
+        "configFile" : "com5003-oscimodule.xml",
+        "id": 1120
+      },
+      {
+        "name" : "sec1module",
+        "configFile" : "com5003-sec1module.xml",
+        "id": 1130
+      },
+      {
+        "name" : "sec1module",
+        "configFile" : "com5003-sec1module2.xml",
+        "id": 1131
+      },
+      {
+        "name" : "lambdamodule",
+        "configFile" : "com5003-lambdamodule.xml",
+        "id": 1140
+      },
+      {
+        "name" : "adjustmentmodule",
+        "configFile" : "com5003-adjustmentmodule.xml",
+        "id": 1190
+      },
+      {
+        "name" : "sem1module",
+        "configFile" : "com5003-sem1module.xml",
+        "id": 1200
+      },
+      {
+        "name" : "sourcemodule",
+        "configFile" : "demo-sourcemodule.xml",
+        "id": 1300
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "com5003-scpimodule.xml",
+        "id": 9999
+      }
+    ]
+}

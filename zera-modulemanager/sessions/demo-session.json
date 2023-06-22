@@ -1,0 +1,29 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "demo-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "demo-rangemodule.xml",
+        "id": 1020
+      },
+      {
+        "name" : "sourcemodule",
+        "configFile" : "demo-sourcemodule.xml",
+        "id": 1300
+      },
+      {
+        "name" : "elburdenmodule",
+        "configFile" : "demo-electronicburdenmodule.xml",
+        "id": 1400
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "demo-scpimodule.xml",
+        "id": 9999
+      }
+    ]
+}

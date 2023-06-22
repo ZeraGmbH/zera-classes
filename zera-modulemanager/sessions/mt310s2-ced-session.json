@@ -1,0 +1,94 @@
+{
+    "modules" : [
+      {
+        "name" : "statusmodule",
+        "configFile" : "mt310s2-statusmodule.xml",
+        "id": 1150
+      },
+      {
+        "name" : "modemodule",
+        "configFile" : "mt310s2-modemoduleAC.xml",
+        "id": 1000
+      },
+      {
+        "name" : "rangemodule",
+        "configFile" : "mt310s2-rangemodule.xml",
+        "id": 1020
+      },
+      {
+        "name" : "samplemodule",
+        "configFile" : "mt310s2-samplemodule.xml",
+        "id": 1030
+      },
+      {
+        "name" : "rmsmodule",
+        "configFile" : "mt310s2-rmsmoduleCED.xml",
+        "id": 1040
+      },
+      {
+        "name" : "dftmodule",
+        "configFile" : "mt310s2-dftmodule.xml",
+        "id": 1050
+      },
+      {
+        "name" : "fftmodule",
+        "configFile" : "mt310s2-fftmodule.xml",
+        "id": 1060
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "mt310s2-power1moduleCED.xml",
+        "id": 1070
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "mt310s2-power1module2CED.xml",
+        "id": 1071
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "mt310s2-power1module3CED.xml",
+        "id": 1072
+      },
+      {
+        "name" : "power2module",
+        "configFile" : "mt310s2-power2moduleCED.xml",
+        "id": 1090
+      },
+      {
+        "name" : "thdnmodule",
+        "configFile" : "mt310s2-thdnmodule.xml",
+        "id": 1110
+      },
+      {
+        "name" : "thdnmodule",
+        "configFile" : "mt310s2-thdnmodule2.xml",
+        "id": 1111
+      },
+      {
+        "name" : "oscimodule",
+        "configFile" : "mt310s2-oscimodule.xml",
+        "id": 1120
+      },
+      {
+        "name" : "sec1module",
+        "configFile" : "mt310s2-sec1module.xml",
+        "id": 1130
+      },
+      {
+        "name" : "lambdamodule",
+        "configFile" : "mt310s2-lambdamodule.xml",
+        "id": 1140
+      },
+      {
+        "name" : "sourcemodule",
+        "configFile" : "demo-sourcemodule.xml",
+        "id": 1300
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "mt310s2-scpimodule.xml",
+        "id": 9999
+      }
+    ]
+}

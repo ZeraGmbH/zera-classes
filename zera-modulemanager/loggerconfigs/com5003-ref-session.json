@@ -1,0 +1,24 @@
+{
+    "ZeraDCReference": [
+        {
+            "EntityId": 1050,
+            "Comment": "DFTModule",
+            "Components": [
+                "ACT_DFTPN1",
+                "ACT_DFTPN2",
+                "ACT_DFTPN3",
+                "ACT_DFTPN4",
+                "ACT_DFTPN5",
+                "ACT_DFTPN6",
+                "PAR_Interval",
+                "PAR_RefChannel"
+            ]
+        }
+    ],
+    "ZeraQuartzReference": [
+        {
+            "EntityId": 1130,
+            "Comment": "SECModule"
+        }
+    ]
+}

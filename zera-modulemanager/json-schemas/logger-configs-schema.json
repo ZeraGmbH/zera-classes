@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "$defs": {
+        "arrentry": {
+            "type": "object",
+            "required": [ "EntityId" ],
+            "properties": {
+                "EntityId": {
+                    "type": "integer"
+                },
+                "Comment": {
+                    "type": "string"
+                },
+                "Components": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "minItems": 1
+                }
+            },
+            "additionalProperties": false
+        },
+        "loggerarray": {
+            "type": "array",
+            "items": { "$ref": "#/$defs/arrentry" },
+            "minItems": 1
+        }
+    },
+    "anyOf": [
+        {"required": ["ZeraActualValues"]},
+        {"required": ["ZeraHarmonics"]},
+        {"required": ["ZeraCurves"]},
+        {"required": ["ZeraComparison"]},
+        {"required": ["ZeraBurden"]},
+        {"required": ["ZeraTransformer"]},
+        {"required": ["ZeraDCReference"]},
+        {"required": ["ZeraQuartzReference"]},
+        {"required": ["ZeraSourceControl"]}
+    ],
+    "properties": {
+        "ZeraActualValues": { "$ref": "#/$defs/loggerarray" },
+        "ZeraHarmonics": { "$ref": "#/$defs/loggerarray" },
+        "ZeraCurves": { "$ref": "#/$defs/loggerarray" },
+        "ZeraComparison": { "$ref": "#/$defs/loggerarray" },
+        "ZeraBurden": { "$ref": "#/$defs/loggerarray" },
+        "ZeraTransformer": { "$ref": "#/$defs/loggerarray" },
+        "ZeraDCReference": { "$ref": "#/$defs/loggerarray" },
+        "ZeraQuartzReference": { "$ref": "#/$defs/loggerarray" },
+        "ZeraSourceControl": { "$ref": "#/$defs/loggerarray" }
+    },
+    "additionalProperties": false
+}
