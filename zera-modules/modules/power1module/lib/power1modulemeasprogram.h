@@ -80,6 +80,7 @@ protected:
     virtual void setDspVarList(); // dsp related stuff
     virtual void deleteDspVarList();
     virtual void setDspCmdList();
+    void setDemoCmdList();
     virtual void deleteDspCmdList();
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
@@ -110,7 +111,7 @@ private:
         double maxI = 0.0;
     };
     RangeMaxVals calcMaxRangeValues(std::shared_ptr<MeasMode> mode);
-    QStringList setupMeasModes(DspChainIdGen dspChainGen);
+    QStringList setupMeasModes(DspChainIdGen &dspChainGen);
 
     cPower1Module* m_pModule;
     MeasModeSelector m_measModeSelector;

@@ -125,7 +125,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     if(getConfData()->m_demo)
         m_activationMachine.setInitialState(&m_loadDSPDoneState);
-     else
+    else
         m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::resourceManagerConnect);
@@ -245,6 +245,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     if(getConfData()->m_demo){
         m_demoPeriodicTimer = TimerFactoryQt::createSingleShot(1000);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower1ModuleMeasProgram::handleDemoActualValues);
+        m_demoPeriodicTimer->start();
     }
 }
 
@@ -508,13 +509,13 @@ MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
     return measChannelUIPairList;
 }
 
-QStringList POWER1MODULE::cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen dspChainGen)
+QStringList POWER1MODULE::cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen& dspChainGen)
 {
     QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(dspChainGen);
     cPower1ModuleConfigData *confdata = getConfData();
     int measSytemCount = confdata->m_sMeasSystemList.count();
-    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), dspChainGen);
     MeasSystemChannels measChannelUIPairList = getMeasChannelUIPairs();
+    MeasModeBroker measBroker(Power1DspModeFunctionCatalog::get(measSytemCount), dspChainGen);
     for (int i = 0; i < confdata->m_nMeasModeCount; i++) {
         cMeasModeInfo mInfo = MeasModeCatalog::getInfo(confdata->m_sMeasmodeList.at(i));
         MeasModeBroker::BrokerReturn brokerReturn = measBroker.getMeasMode(mInfo.getName(), measChannelUIPairList);
@@ -537,9 +538,7 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     DspChainIdGen dspChainGen;
     cPower1ModuleConfigData *confdata = getConfData();
 
-    // we set up all our lists for wanted measuring modes, this gets much more performance
     QStringList dspMModesCommandList = setupMeasModes(dspChainGen);
-
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     QStringList dspInitVarsList = Power1DspCmdGenerator::getCmdsInitVars(mode,
                                                                          m_nSRate,
@@ -552,6 +551,12 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItems(dspInitVarsList);
     m_pDSPInterFace->addCycListItems(dspMModesCommandList);
     m_pDSPInterFace->addCycListItems(dspFreqCmds);
+}
+
+void cPower1ModuleMeasProgram::setDemoCmdList()
+{
+    DspChainIdGen dspChainGen;
+    setupMeasModes(dspChainGen);
 }
 
 void cPower1ModuleMeasProgram::deleteDspCmdList()
@@ -1455,6 +1460,8 @@ void cPower1ModuleMeasProgram::activateDSPdone()
     m_bActive = true;
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     updatePhaseMaskVeinComponents(mode);
+    if(getConfData()->m_demo)
+        setDemoCmdList();
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
@@ -1744,7 +1751,8 @@ void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 
 void cPower1ModuleMeasProgram::handleMModeParamChange()
 {
-    dspSetParamsTiMModePhase(calcTiTime());
+    if(!getConfData()->m_demo)
+        dspSetParamsTiMModePhase(calcTiTime());
     emit m_pModule->parameterChanged();
 }
 
@@ -1757,7 +1765,8 @@ void cPower1ModuleMeasProgram::handleMovingWindowIntTimeChange()
 void cPower1ModuleMeasProgram::updatesForMModeChange()
 {
     setActualValuesNames();
-    foutParamsToDsp();
+    if(!getConfData()->m_demo)
+        foutParamsToDsp();
 }
 
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
@@ -1768,7 +1777,8 @@ void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 {
     Q_UNUSED(p_newValue);
-    foutParamsToDsp();
+    if(!getConfData()->m_demo)
+        foutParamsToDsp();
 }
 
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
@@ -1843,26 +1853,20 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
 void cPower1ModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> valuesDemo;
-     valuesDemo.resize(m_ActValueList.count());
-     int current = 10;
-     int voltage = 480;
-     int coef = determineDemoCoeff();
-     valuesDemo[0] = voltage*current*cos(10.5)*coef;
-     valuesDemo[1] = voltage*current*sin(10.5)*coef;
-     valuesDemo[2] = voltage*current*coef;
-     valuesDemo[3] = valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
-//    for(int i=0; i<valuesDemo.size(); i++) {
-//        double power = (i+1)*15.2;
-//        valuesDemo[i] = power ;
-//        if(i==3){
-//            valuesDemo[i] =valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
-//        }
-//    }
-     for(int i=0; i<m_ActValueList.count(); i++){
-         double actualValues = valuesDemo[i];
-         m_ModuleActualValues.append(actualValues);
-     }
-     emit actualValues(&m_ModuleActualValues);
+    valuesDemo.resize(m_ActValueList.count());
+    int current = 10;
+    int voltage = 480;
+    int coef = determineDemoCoeff();
+    valuesDemo[0] = voltage*current*cos(10.5)*coef;
+    valuesDemo[1] = voltage*current*sin(10.5)*coef;
+    valuesDemo[2] = voltage*current*coef;
+    valuesDemo[3] = valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
+
+    for(int i=0; i<m_ActValueList.count(); i++){
+        double actualValues = valuesDemo[i];
+        m_ModuleActualValues.append(actualValues);
+    }
+    emit actualValues(&m_ModuleActualValues);
 }
 
 int cPower1ModuleMeasProgram::determineDemoCoeff()
