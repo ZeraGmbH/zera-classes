@@ -4,6 +4,8 @@
 class IoIdGenerator
 {
 public:
+    IoIdGenerator() = default;
+    IoIdGenerator(const IoIdGenerator&) = delete;
     int nextID();
 private:
     int m_currentID = -1;
