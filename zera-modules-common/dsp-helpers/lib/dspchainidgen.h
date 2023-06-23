@@ -9,6 +9,7 @@ class DspChainIdGen
 {
 public:
     DspChainIdGen(quint8 mainChain = 1);
+    DspChainIdGen(const DspChainIdGen&) = delete;
     quint16 getNextChainId();
     QString getNextChainIdStr();
 private:
