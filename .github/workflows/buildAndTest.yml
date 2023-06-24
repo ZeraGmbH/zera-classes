@@ -12,7 +12,6 @@ jobs:
     strategy:
       matrix:
         compiler: [gcc, clang]
-        build_modules: [OFF, ON]
 
     container:
       image: schnitzeltony/fedora-qt5:32
@@ -42,8 +41,7 @@ jobs:
           cmake $GITHUB_WORKSPACE \
            -DCMAKE_PREFIX_PATH="$HOME/install/usr;/usr" \
            -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
-           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc" \
-           -DZC_BUILD_MODULES="${{ matrix.build_modules }}"
+           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc"
            make -j $(getconf _NPROCESSORS_ONLN)
       - name: unittest
         run: |
