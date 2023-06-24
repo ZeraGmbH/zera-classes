@@ -9,18 +9,32 @@ set(PROJECT_VERSION_MINOR "2")
 set(PROJECT_VERSION_PATCH "0")
 set(PROJECT_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}")
 
-find_package(Qt5 COMPONENTS Core Network CONFIG REQUIRED)
-find_package(Qt5Test REQUIRED)
-find_package(ZenuxCore REQUIRED)
-find_package(GTest REQUIRED)
-
 include(FeatureSummary)
 include(GNUInstallDirs)
 include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 include(FindPkgConfig)
 
-option(ZC_BUILD_MODULES "Build modules for modulemanager" ON)
+find_package(Qt5 COMPONENTS Core Network CONFIG REQUIRED)
+find_package(Qt5Test REQUIRED)
+find_package(ZenuxCore REQUIRED)
+find_package(ZeraMicroController REQUIRED)
+find_package(GTest REQUIRED)
+find_package(Qt5 COMPONENTS XmlPatterns CONFIG REQUIRED)
+find_package(VfEvent REQUIRED)
+find_package(VfHelpers REQUIRED)
+find_package(VfComponent REQUIRED)
+find_package(VfStorageHash REQUIRED)
+find_Package(VfCpp REQUIRED)
+find_package(zera-json-params REQUIRED)
+find_package(xiqnet REQUIRED)
+find_package(SCPI REQUIRED)
+find_package(serialportasyncblock REQUIRED)
+pkg_check_modules(XERCES xerces-c REQUIRED)
+
+set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
+add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
+
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 
 set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
@@ -42,43 +56,21 @@ function(SETUP_QTESTS)
             Qt5::Test
             Zera::tasks-base-testlib
             Zera::zera-timers-testlib
+            Zera::zera-i2c-devices-testlib
             service-interfaces-testlib
             module-tasks-testlib
             source-module-testhelpers
             zera-meas-mode-management-testlib
-            zera-i2c-devices-testlib
             VeinMeta::VfStorageHash
             )
     endforeach()
 endfunction()
 
-# TBD: Own repo to get rid of ZC_BUILD_MODULES
-add_subdirectory(zera-i2c)
-add_subdirectory(zera-intel-hex)
-
-if(ZC_BUILD_MODULES)
-    find_package(Qt5 COMPONENTS XmlPatterns CONFIG REQUIRED)
-    find_package(VfEvent REQUIRED)
-    find_package(VfHelpers REQUIRED)
-    find_package(VfComponent REQUIRED)
-    find_package(VfStorageHash REQUIRED)
-    find_Package(VfCpp REQUIRED)
-    find_package(zera-json-params REQUIRED)
-    find_package(xiqnet REQUIRED)
-    find_package(SCPI REQUIRED)
-    find_package(serialportasyncblock REQUIRED)
-
-    pkg_check_modules(XERCES xerces-c REQUIRED)
-    set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
-    add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
-
-    add_subdirectory(zera-math)
-    add_subdirectory(zera-modules)
-    add_subdirectory(zera-modules-common)
-    add_subdirectory(zera-modules-shared-data)
-    add_subdirectory(zera-xmlconfig)
-
-endif(ZC_BUILD_MODULES)
+add_subdirectory(zera-math)
+add_subdirectory(zera-modules)
+add_subdirectory(zera-modules-common)
+add_subdirectory(zera-modules-shared-data)
+add_subdirectory(zera-xmlconfig)
 
 write_basic_package_version_file(
     ZeraClassesConfigVersion.cmake
