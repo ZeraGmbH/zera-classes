@@ -53,7 +53,6 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 protected:
-    virtual void setDspCmdList();
     virtual void deleteDspCmdList();
 
 protected slots:
@@ -63,6 +62,7 @@ private:
     cDftModuleConfigData* getConfData();
     void setDspVarList();
     void deleteDspVarList();
+    void setDspCmdList();
 
     cDftModule* m_pModule;
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
