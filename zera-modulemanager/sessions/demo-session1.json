@@ -19,6 +19,26 @@
         "name" : "scpimodule",
         "configFile" : "demo-scpimodule.xml",
         "id": 9999
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "demo-power1module.xml",
+        "id": 1070
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "demo-power1module2.xml",
+        "id": 1071
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "demo-power1module3.xml",
+        "id": 1072
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "demo-power1module4.xml",
+        "id": 1073
       }
     ]
 }
