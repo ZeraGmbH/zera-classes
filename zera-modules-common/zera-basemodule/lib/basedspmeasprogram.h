@@ -11,7 +11,6 @@ public:
     cBaseDspMeasProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseDspMeasProgram() { }
 protected:
-    virtual void setDspVarList() = 0; // dsp related stuff
     virtual void deleteDspVarList() = 0;
     virtual void setDspCmdList() = 0;
     virtual void deleteDspCmdList() = 0;
