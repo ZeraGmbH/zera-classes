@@ -52,7 +52,6 @@ public slots:
     virtual void stop(); // in interface are not updated when stop
 
 protected:
-    virtual void setDspCmdList();
     virtual void deleteDspCmdList();
 
 protected slots:
@@ -62,6 +61,7 @@ private:
     cOsciModuleConfigData* getConfData();
     void setDspVarList();
     void deleteDspVarList();
+    void setDspCmdList();
 
     cOsciModule* m_pModule;
 
