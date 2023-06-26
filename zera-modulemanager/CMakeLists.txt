@@ -1,34 +1,3 @@
-cmake_minimum_required(VERSION 3.1)
-
-project(zera-modulemanager LANGUAGES CXX)
-
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-
-set(zeramodulemanager_VERSION_MAJOR "1")
-set(zeramodulemanager_VERSION_MINOR "2")
-set(zeramodulemanager_VERSION_PATCH "0")
-set(PROJECT_VERSION "${zeramodulemanager_VERSION_MAJOR}.${zeramodulemanager_VERSION_MINOR}.${zeramodulemanager_VERSION_PATCH}")
-
-include(FeatureSummary)
-include(GNUInstallDirs)
-
-find_package(Qt5 COMPONENTS Core Network Qml Concurrent Test CONFIG REQUIRED)
-find_package(VfEvent REQUIRED)
-find_package(VfComponent REQUIRED)
-find_package(VfStorageHash REQUIRED)
-find_package(VfTcp REQUIRED)
-find_package(VfNet2 REQUIRED)
-find_package(VfHelpers REQUIRED)
-find_package(VfScript REQUIRED)
-find_package(VfLogger REQUIRED)
-find_package(VfCryptoBridge REQUIRED)
-find_package(VfExport REQUIRED)
-find_package(VfFiles REQUIRED)
-find_Package(ZeraClasses REQUIRED)
-find_Package(VfCpp REQUIRED)
-find_package(zera-json-params REQUIRED)
-
 set(SET_MODMAN_SESSION_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/sessions/")
 set(SET_MODMAN_CONFIG_PATH  "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
 set(SET_MODMAN_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/zera-modules/")
@@ -53,31 +22,37 @@ foreach( d ${DirDefs} )
 endforeach()
 
 set(SOURCES
-    ${PROJECT_SOURCE_DIR}/src/modulemanager.cpp
-    ${PROJECT_SOURCE_DIR}/src/moduleeventhandler.cpp
-    ${PROJECT_SOURCE_DIR}/src/jsonsessionloader.cpp
-    ${PROJECT_SOURCE_DIR}/src/licensesystem.cpp
-    ${PROJECT_SOURCE_DIR}/src/customerdatasystem.cpp
-    ${PROJECT_SOURCE_DIR}/src/priorityarbitrationsystem.cpp
-    ${PROJECT_SOURCE_DIR}/src/zeradblogger.cpp
-    ${PROJECT_SOURCE_DIR}/src/modulemanagercontroller.cpp
-    ${PROJECT_SOURCE_DIR}/src/jsonloggercontentloader.cpp
-    ${PROJECT_SOURCE_DIR}/src/modulemanagerconfig.cpp
-    ${PROJECT_SOURCE_DIR}/src/diriteratorworker.cpp
-    ${PROJECT_SOURCE_DIR}/src/jsonloggercontentsessionloader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanager.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/moduleeventhandler.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonsessionloader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/licensesystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/customerdatasystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/priorityarbitrationsystem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/zeradblogger.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanagercontroller.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonloggercontentloader.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanagerconfig.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/diriteratorworker.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonloggercontentsessionloader.cpp
     )
 
 file(GLOB HEADER
-    ${PROJECT_SOURCE_DIR}/src/*.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h
     )
 
 file(GLOB RESOURCES 
-    ${PROJECT_SOURCE_DIR}/*.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
     )
 
 add_library(zera-modulemanager-lib STATIC
     ${SOURCES}
     ${HEADER}
+    )
+
+target_include_directories(zera-modulemanager-lib
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     )
 
 target_link_libraries(zera-modulemanager-lib
@@ -98,12 +73,12 @@ target_link_libraries(zera-modulemanager-lib
     VeinMeta::VfExport
     VeinMeta::VfFiles
     VeinMeta::VfCryptoBridge
-    Zera::module-qt-plugin-interface
+    module-qt-plugin-interface
     zera-json-params
     )
 
 add_executable(zera-modulemanager
-    ${PROJECT_SOURCE_DIR}/src/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
     ${RESOURCES}
     )
 
@@ -113,16 +88,16 @@ target_link_libraries(zera-modulemanager
 )
 
 file(GLOB SESSION_FILES
-    ${PROJECT_SOURCE_DIR}/sessions/*.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/sessions/*.json
 )
 
 set(CONFIG_FILES
-    ${PROJECT_SOURCE_DIR}/modulemanager_config.json
-    ${PROJECT_SOURCE_DIR}/modulemanager_config_dev.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/modulemanager_config.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/modulemanager_config_dev.json
 )
 
 file(GLOB LOGGER_CONFIG_FILES
-    ${PROJECT_SOURCE_DIR}/loggerconfigs/*session*.json
+    ${CMAKE_CURRENT_SOURCE_DIR}/loggerconfigs/*session*.json
 )
 # Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
 # Note 2: In case we make COMMAND in target below conditional on JSONLINT,
@@ -135,8 +110,8 @@ endif()
 
 find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
 
-set(LOGGER_CONFIGS_SCHEMA ${PROJECT_SOURCE_DIR}/json-schemas/logger-configs-schema.json)
-set(SESSION_SCHEMA ${PROJECT_SOURCE_DIR}/json-schemas/session-schema.json)
+set(LOGGER_CONFIGS_SCHEMA ${CMAKE_CURRENT_SOURCE_DIR}/json-schemas/logger-configs-schema.json)
+set(SESSION_SCHEMA ${CMAKE_CURRENT_SOURCE_DIR}/json-schemas/session-schema.json)
 
 # targets to see files in qt-creator and check for validity
 add_custom_target(json-schemas ALL
