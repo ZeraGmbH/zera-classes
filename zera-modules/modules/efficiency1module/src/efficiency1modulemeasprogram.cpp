@@ -71,7 +71,7 @@ void cEfficiency1ModuleMeasProgram::generateInterface()
     pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
     pActvalue->setSCPIInfo(pSCPIInfo);
 
-    m_ActValueList.append(pActvalue); // we add the component for our measurement
+    m_veinActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
     m_pEFFCountInfo = new VfModuleMetaData(QString("EFCCount"), QVariant(1));
@@ -115,7 +115,7 @@ void cEfficiency1ModuleMeasProgram::searchActualValues()
         cEfficiency1MeasDelegate* cEMD;
         VfModuleComponentInput *vmci;
 
-        cEMD = new cEfficiency1MeasDelegate(m_ActValueList.at(0), true);
+        cEMD = new cEfficiency1MeasDelegate(m_veinActValueList.at(0), true);
         connect(cEMD, &cEfficiency1MeasDelegate::measuring, this, &cEfficiency1ModuleMeasProgram::setMeasureSignal);
 
         m_Efficiency1MeasDelegateList.append(cEMD);

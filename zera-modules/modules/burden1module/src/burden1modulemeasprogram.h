@@ -75,7 +75,7 @@ private:
     cBurden1ModuleConfigData* getConfData();
 
     cBurden1Module* m_pModule;
-    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pBRSCountInfo; // the number of Burden system we are configured for
     VfModuleComponent* m_pMeasureSignal;
 

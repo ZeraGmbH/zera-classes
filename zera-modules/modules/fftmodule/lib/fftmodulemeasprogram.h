@@ -63,7 +63,7 @@ private:
     cFftModuleConfigData* getConfData();
 
     cFftModule* m_pModule;
-    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     QList<VfModuleActvalue*> m_DCValueList;
     VfModuleMetaData* m_pFFTCountInfo;
     VfModuleMetaData* m_pFFTOrderInfo;

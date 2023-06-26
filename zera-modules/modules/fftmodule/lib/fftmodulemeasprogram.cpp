@@ -144,7 +144,7 @@ void cFftModuleMeasProgram::generateInterface()
                                             QString("ACT_FFT%1").arg(i+1),
                                             QString("FFT actual values"),
                                             QVariant(0.0) );
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -207,8 +207,8 @@ void cFftModuleMeasProgram::setDspVarList()
     m_pTmpDataDsp->addVarItem( new cDspVar("FFTOUTPUT", 2 * m_nfftLen, DSPDATA::vDspTempGlobal));
     // meassignal will also still fit in global mem ... so we save memory
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", 2 * m_nSRate, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_ActValueList.count(), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2 * 2 * m_nfftLen * m_ActValueList.count(),DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FFTXOUTPUT", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER", 2 * 2 * m_nfftLen * m_veinActValueList.count(),DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("IPOLADR", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
     m_pTmpDataDsp->addVarItem( new cDspVar("DFTREF", 2, DSPDATA::vDspTemp));
@@ -223,10 +223,10 @@ void cFftModuleMeasProgram::setDspVarList()
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALXFFTF", 2 * m_nfftLen * m_ActValueList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("VALXFFTF", 2 * m_nfftLen * m_veinActValueList.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
-    m_FFTModuleActualValues.resize(m_ActValueList.count() * getConfData()->m_nFftOrder * 2);
+    m_FFTModuleActualValues.resize(m_veinActValueList.count() * getConfData()->m_nFftOrder * 2);
     m_nDspMemUsed = m_pTmpDataDsp->getumemSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
 }
 
@@ -245,7 +245,7 @@ void cFftModuleMeasProgram::setDspCmdList()
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(2*m_nSRate) ); // clear meassignal
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_ActValueList.count()+1) ); // clear the whole filter incl. count
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) ); // clear the whole filter incl. count
         if (getConfData()->m_bmovingWindow)
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
         else
@@ -279,15 +279,15 @@ void cFftModuleMeasProgram::setDspCmdList()
     }
 
     // and filter them
-    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,FFTXOUTPUT,FILTER)").arg(2 * m_nfftLen * m_ActValueList.count())); // we add results to filter
+    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,FFTXOUTPUT,FILTER)").arg(2 * m_nfftLen * m_veinActValueList.count())); // we add results to filter
 
     m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXFFTF)").arg(2 * m_nfftLen * m_ActValueList.count()));
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_ActValueList.count()+1) );
+        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXFFTF)").arg(2 * m_nfftLen * m_veinActValueList.count()));
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2 * 2 * m_nfftLen * m_veinActValueList.count()+1) );
         m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -596,8 +596,8 @@ void cFftModuleMeasProgram::setSCPIMeasInfo()
 
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
-        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
         pSCPIInfo = new cSCPIInfo("MEASURE", m_DCValueList.at(i)->getChannelName() + "_DC", "8", m_DCValueList.at(i)->getName(), "0", m_DCValueList.at(i)->getUnit());
         m_DCValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
@@ -630,8 +630,8 @@ void cFftModuleMeasProgram::setActualValuesNames()
             name = s1 + s2 + "-" + s3 +s4; // dito
         }
 
-        m_ActValueList.at(i)->setChannelName(name);
-        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
+        m_veinActValueList.at(i)->setChannelName(name);
+        m_veinActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
         m_DCValueList.at(i)->setChannelName(name);
         m_DCValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
     }
@@ -641,7 +641,7 @@ void cFftModuleMeasProgram::setActualValuesNames()
 void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) { // maybe we are deactivating !!!!
-        for (int channel = 0; channel < m_ActValueList.count(); channel++) {
+        for (int channel = 0; channel < m_veinActValueList.count(); channel++) {
             int maxOrder = getConfData()->m_nFftOrder;
             int offs = channel * maxOrder * 2;
             QList<double> fftList;
@@ -651,7 +651,7 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             }
             QVariant list;
             list = QVariant::fromValue<QList<double> >(fftList);
-            m_ActValueList.at(channel)->setValue(list);
+            m_veinActValueList.at(channel)->setValue(list);
             m_DCValueList.at(channel)->setValue(fftList[0]);
         }
     }
@@ -664,7 +664,7 @@ void cFftModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_veinActValueList.count(); i++)
     {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         for (int j = 0; j < sl.count(); j++)
@@ -913,7 +913,7 @@ void cFftModuleMeasProgram::dataReadDSP()
         int middle, offs, resultOffs;
         double scale;
 
-        nChannels = m_ActValueList.count();
+        nChannels = m_veinActValueList.count();
         nHarmonic = getConfData()->m_nFftOrder;
         resultOffs = nHarmonic << 1;
 

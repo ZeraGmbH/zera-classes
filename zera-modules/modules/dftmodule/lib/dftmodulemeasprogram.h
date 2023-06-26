@@ -65,7 +65,7 @@ private:
     cDftModuleConfigData* getConfData();
 
     cDftModule* m_pModule;
-    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleActvalue* m_pRFieldActualValue;
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QHash<QString, QString> m_ChannelSystemNameHash; // a hash for fast access to the system name with key = alias
