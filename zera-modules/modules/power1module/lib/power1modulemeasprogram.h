@@ -77,7 +77,6 @@ public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
 protected:
-    virtual void setDspVarList(); // dsp related stuff
     virtual void deleteDspVarList();
     virtual void setDspCmdList();
     void setDemoCmdList();
@@ -87,6 +86,7 @@ protected slots:
 
 private:
     cPower1ModuleConfigData* getConfData();
+    void setDspVarList();
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setFoutMetaInfo();

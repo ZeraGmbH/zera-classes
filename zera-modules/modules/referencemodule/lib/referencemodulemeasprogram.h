@@ -36,7 +36,6 @@ public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
 protected:
-    virtual void setDspVarList(); // dsp related stuff
     virtual void deleteDspVarList();
     virtual void setDspCmdList();
     virtual void deleteDspCmdList();
@@ -44,6 +43,7 @@ protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
 private:
     cReferenceModuleConfigData* getConfData();
+    void setDspVarList();
 
     cReferenceModule* m_pModule; // the module we live in
     quint16 m_nSamples;
