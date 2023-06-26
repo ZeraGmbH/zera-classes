@@ -11,16 +11,6 @@
         "id": 1020
       },
       {
-        "name" : "sourcemodule",
-        "configFile" : "demo-sourcemodule.xml",
-        "id": 1300
-      },
-      {
-        "name" : "scpimodule",
-        "configFile" : "demo-scpimodule.xml",
-        "id": 9999
-      },
-      {
         "name" : "power1module",
         "configFile" : "demo-power1module.xml",
         "id": 1070
@@ -39,6 +29,16 @@
         "name" : "power1module",
         "configFile" : "demo-power1module4.xml",
         "id": 1073
+      },
+      {
+        "name" : "sourcemodule",
+        "configFile" : "demo-sourcemodule.xml",
+        "id": 1300
+      },
+      {
+        "name" : "scpimodule",
+        "configFile" : "demo-scpimodule.xml",
+        "id": 9999
       }
     ]
 }
