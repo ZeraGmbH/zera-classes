@@ -65,7 +65,7 @@ private:
     cRmsModuleConfigData* getConfData();
 
     cRmsModule* m_pModule;
-    QList<VfModuleActvalue*> m_ActValueList; // the list of actual values we work on
+    QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     QHash<QString, cMeasChannelInfo> m_measChannelInfoHash;
     QList<QString> channelInfoReadList; // a list of all channel info we have to read
     QString channelInfoRead; // the actual channel info we are working on

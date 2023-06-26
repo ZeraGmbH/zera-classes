@@ -71,7 +71,7 @@ void cPower3ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -84,7 +84,7 @@ void cPower3ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -97,7 +97,7 @@ void cPower3ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
     }
@@ -132,11 +132,11 @@ void cPower3ModuleMeasProgram::searchActualValues()
 
             if (i == (getConfData()->m_nPowerSystemCount-1))
             {
-                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2),true);
+                cPMD = new cPower3MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2),true);
                 connect(cPMD, &cPower3MeasDelegate::measuring, this, &cPower3ModuleMeasProgram::setMeasureSignal);
             }
             else
-                cPMD = new cPower3MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2));
+                cPMD = new cPower3MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2));
 
             m_Power3MeasDelegateList.append(cPMD);
 

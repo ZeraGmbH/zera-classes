@@ -65,7 +65,7 @@ private:
     QStringList m_ChannelList; // the list of actual values we work on
 
     VfModuleComponent *m_pMeasureSignal;
-    QList<VfModuleActvalue*> m_ActValueList;
+    QList<VfModuleActvalue*> m_veinActValueList;
     QTimer m_dspWatchdogTimer;
 
     cDspMeasData* m_pTmpDataDsp;

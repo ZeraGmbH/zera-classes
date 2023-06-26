@@ -292,7 +292,7 @@ void cPower1ModuleMeasProgram::generateInterface()
                                             QString("ACT_PQS%1").arg(i+1),
                                             strDescription,
                                             QVariant(0.0) );
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
@@ -384,21 +384,21 @@ void cPower1ModuleMeasProgram::generateInterface()
                                      QString("ACT_CanChangePhaseMask"),
                                      QString("Boolean indicator that current measurement mode can change phase mask"),
                                      QVariant(false) );
-    m_ActValueList.append(m_MModeCanChangePhaseMask); // we add the component for our measurement
+    m_veinActValueList.append(m_MModeCanChangePhaseMask); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(m_MModeCanChangePhaseMask); // and for the modules interface
 
     m_MModePowerDisplayName = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    QString("ACT_PowerDisplayName"),
                                                    QString("Power display name (P/Q/S)"),
                                                    QVariant("") );
-    m_ActValueList.append(m_MModePowerDisplayName);
+    m_veinActValueList.append(m_MModePowerDisplayName);
     m_pModule->veinModuleActvalueList.append(m_MModePowerDisplayName);
 
     m_MModeMaxMeasSysCount = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                      QString("ACT_MaxMeasSysCount"),
                                                      QString("Number of max measurement systems for current measurement mode"),
                                                      QVariant(3) );
-    m_ActValueList.append(m_MModeMaxMeasSysCount); // we add the component for our measurement
+    m_veinActValueList.append(m_MModeMaxMeasSysCount); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(m_MModeMaxMeasSysCount); // and for the modules interface
 
     QVariant val;
@@ -1084,8 +1084,8 @@ void cPower1ModuleMeasProgram::setActualValuesNames()
     QString powIndicator = "123S"; // (MeasPhaseCount ???)
     const cMeasModeInfo mminfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++) {
-        m_ActValueList.at(i)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
-        m_ActValueList.at(i)->setUnit(mminfo.getUnitName());
+        m_veinActValueList.at(i)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
+        m_veinActValueList.at(i)->setUnit(mminfo.getUnitName());
     }
     m_pModule->exportMetaData();
 }
@@ -1095,8 +1095,8 @@ void cPower1ModuleMeasProgram::setSCPIMeasInfo()
     cSCPIInfo* pSCPIInfo;
     for (int i = 0; i < MeasPhaseCount+SumValueCount; i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
-        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
 
@@ -1114,7 +1114,7 @@ void cPower1ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVa
     if (m_bActive) // maybe we are deactivating !!!!
     {
         for (int i = 0; i < 4; i++)
-            m_ActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
+            m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
     }
 }
 
@@ -1853,7 +1853,7 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
 void cPower1ModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> valuesDemo;
-    valuesDemo.resize(m_ActValueList.count());
+    valuesDemo.resize(m_veinActValueList.count());
     int current = 10;
     int voltage = 480;
     int coef = determineDemoCoeff();
@@ -1862,7 +1862,7 @@ void cPower1ModuleMeasProgram::handleDemoActualValues()
     valuesDemo[2] = voltage*current*coef;
     valuesDemo[3] = valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
 
-    for(int i=0; i<m_ActValueList.count(); i++){
+    for(int i=0; i<m_veinActValueList.count(); i++){
         double actualValues = valuesDemo[i];
         m_ModuleActualValues.append(actualValues);
     }

@@ -140,7 +140,7 @@ void cOsciModuleMeasProgram::generateInterface()
                                             QString("ACT_OSCI%1").arg(i+1),
                                             QString("Measures samples"),
                                             QVariant(0.0) );
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
@@ -173,7 +173,7 @@ void cOsciModuleMeasProgram::setDspVarList()
 {
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_ActValueList.count() * m_nSRate, DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_veinActValueList.count() * m_nSRate, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem(new cDspVar("WORKSPACE", 2 * m_nSRate, DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("GAPCOUNT", 1, DSPDATA::vDspTemp, DSPDATA::dInt));
     m_pTmpDataDsp->addVarItem( new cDspVar("GAPPAR",1, DSPDATA::vDspTemp, DSPDATA::dInt));
@@ -187,7 +187,7 @@ void cOsciModuleMeasProgram::setDspVarList()
 
     // and one for actual values
     m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALXOSCI",m_ActValueList.count() * getConfData()->m_nInterpolation, DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("VALXOSCI",m_veinActValueList.count() * getConfData()->m_nInterpolation, DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
@@ -207,7 +207,7 @@ void cOsciModuleMeasProgram::setDspCmdList()
     QString s;
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_ActValueList.count() * m_nSRate) ); // clear meassignal
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_veinActValueList.count() * m_nSRate) ); // clear meassignal
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(GAPCOUNT,%1)").arg(getConfData()->m_nGap)); // we start with the first period
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(GAPPAR,%1)").arg(getConfData()->m_nGap+1)); // our value to reload gap
         m_pDSPInterFace->addCycListItem( s = QString("SETVAL(REFCHN,%1)").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
@@ -237,7 +237,7 @@ void cOsciModuleMeasProgram::setDspCmdList()
         m_pDSPInterFace->addCycListItem( s = QString("GENADR(WORKSPACE,DFTREF,IPOLADR)"));
 
         // now we do all necessary for each channel we work on
-        for (int i = 0; i < m_ActValueList.count(); i++)
+        for (int i = 0; i < m_veinActValueList.count(); i++)
         {
             m_pDSPInterFace->addCycListItem( s = QString("COPYMEM(%1,MEASSIGNAL+%2,WORKSPACE)").arg(m_nSRate).arg(i * m_nSRate));
             m_pDSPInterFace->addCycListItem( s = QString("COPYDATA(CH%1,0,WORKSPACE+%2)").arg(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).dspChannelNr)
@@ -565,8 +565,8 @@ void cOsciModuleMeasProgram::setActualValuesNames()
         QString s = s1 + "%1" + QString(";%1;[%]").arg(s2);
         QString name = s1 + s2;
 
-        m_ActValueList.at(i)->setChannelName(name);
-        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).unit);
+        m_veinActValueList.at(i)->setChannelName(name);
+        m_veinActValueList.at(i)->setUnit(m_measChannelInfoHash.value(getConfData()->m_valueChannelList.at(i)).unit);
     }
 }
 
@@ -577,8 +577,8 @@ void cOsciModuleMeasProgram::setSCPIMeasInfo()
 
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
-        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
 
@@ -587,7 +587,7 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
     if (m_bActive) // maybe we are deactivating !!!!
     {
 
-        for (int i = 0; i < m_ActValueList.count(); i++)
+        for (int i = 0; i < m_veinActValueList.count(); i++)
         {
             QList<double> osciList;
             int offs = i * getConfData()->m_nInterpolation;
@@ -597,7 +597,7 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 
             QVariant list;
             list = QVariant::fromValue<QList<double> >(osciList);
-            m_ActValueList.at(i)->setValue(list); // and set entities
+            m_veinActValueList.at(i)->setValue(list); // and set entities
         }
     }
 }
@@ -610,7 +610,7 @@ void cOsciModuleMeasProgram::resourceManagerConnect()
     m_measChannelInfoHash.clear(); // we build up a new channel info hash
     cMeasChannelInfo mi;
     mi.pcbServersocket = getConfData()->m_PCBServerSocket; // the default from configuration file
-    for (int i = 0; i < m_ActValueList.count(); i++)
+    for (int i = 0; i < m_veinActValueList.count(); i++)
     {
         QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
         for (int j = 0; j < sl.count(); j++)

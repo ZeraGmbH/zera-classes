@@ -88,7 +88,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -101,7 +101,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -114,7 +114,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -127,7 +127,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -140,7 +140,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -153,7 +153,7 @@ void cTransformer1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
@@ -266,13 +266,13 @@ void cTransformer1ModuleMeasProgram::searchActualValues()
 
             if (i == (getConfData()->m_nTransformerSystemCount-1))
             {
-                cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*6), m_ActValueList.at(i*6+1), m_ActValueList.at(i*6+2),
-                                                     m_ActValueList.at(i*6+3), m_ActValueList.at(i*6+4), m_ActValueList.at(i*6+5), true);
+                cTMD = new cTransformer1MeasDelegate(m_veinActValueList.at(i*6), m_veinActValueList.at(i*6+1), m_veinActValueList.at(i*6+2),
+                                                     m_veinActValueList.at(i*6+3), m_veinActValueList.at(i*6+4), m_veinActValueList.at(i*6+5), true);
                 connect(cTMD, &cTransformer1MeasDelegate::measuring, this, &cTransformer1ModuleMeasProgram::setMeasureSignal);
             }
             else
-                cTMD = new cTransformer1MeasDelegate(m_ActValueList.at(i*6), m_ActValueList.at(i*6+1), m_ActValueList.at(i*6+2),
-                                                     m_ActValueList.at(i*6+3), m_ActValueList.at(i*6+4), m_ActValueList.at(i*6+5));
+                cTMD = new cTransformer1MeasDelegate(m_veinActValueList.at(i*6), m_veinActValueList.at(i*6+1), m_veinActValueList.at(i*6+2),
+                                                     m_veinActValueList.at(i*6+3), m_veinActValueList.at(i*6+4), m_veinActValueList.at(i*6+5));
 
             m_Transformer1MeasDelegateList.append(cTMD);
 

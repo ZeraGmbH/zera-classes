@@ -158,7 +158,7 @@ void cDftModuleMeasProgram::generateInterface()
                                                 QString("ACT_DFTPN%1").arg(n+1),
                                                 QString("Actual value phase/neutral"),
                                                 QVariant(0.0) );
-            m_ActValueList.append(pActvalue); // we add the component for our measurement
+            m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
             n++;
@@ -171,7 +171,7 @@ void cDftModuleMeasProgram::generateInterface()
                                                 QString("ACT_DFTPP%1").arg(p+1),
                                                 QString("Actual value phase/phase"),
                                                 QVariant(0.0) );
-            m_ActValueList.append(pActvalue); // we add the component for our measurement
+            m_veinActValueList.append(pActvalue); // we add the component for our measurement
             m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
             p++;
@@ -230,8 +230,8 @@ void cDftModuleMeasProgram::setDspVarList()
     // we fetch a handle for sampled data and other temporary values
     m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
     m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL", m_nSRate, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("VALXDFT",2*m_ActValueList.count(), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*2*m_ActValueList.count(),DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("VALXDFT",2*m_veinActValueList.count(), DSPDATA::vDspTemp));
+    m_pTmpDataDsp->addVarItem( new cDspVar("FILTER",2*2*m_veinActValueList.count(),DSPDATA::vDspTemp));
     m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
 
     // a handle for parameter
@@ -242,7 +242,7 @@ void cDftModuleMeasProgram::setDspVarList()
 
     // and one for filtered actual values
     m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALXDFTF",2*m_ActValueList.count(), DSPDATA::vDspResult));
+    m_pActualValuesDSP->addVarItem( new cDspVar("VALXDFTF",2*m_veinActValueList.count(), DSPDATA::vDspResult));
 
     m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
     m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
@@ -263,7 +263,7 @@ void cDftModuleMeasProgram::setDspCmdList()
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(1,1,0x0101)"); // aktiv, prozessnr. (dummy),hauptkette 1 subkette 1 start
         m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,MEASSIGNAL)").arg(m_nSRate) ); // clear meassignal
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_ActValueList.count()+1) ); // clear the whole filter incl. count
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_veinActValueList.count()+1) ); // clear the whole filter incl. count
 
         if (getConfData()->m_bmovingWindow)
             m_pDSPInterFace->addCycListItem( s = QString("SETVAL(TIPAR,%1)").arg(getConfData()->m_fmovingwindowInterval*1000.0)); // initial ti time
@@ -288,15 +288,15 @@ void cDftModuleMeasProgram::setDspCmdList()
     }
 
     // and filter them
-    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,VALXDFT,FILTER)").arg(2*m_ActValueList.count())); // we add results to filter
+    m_pDSPInterFace->addCycListItem( s = QString("AVERAGE1(%1,VALXDFT,FILTER)").arg(2*m_veinActValueList.count())); // we add results to filter
 
     m_pDSPInterFace->addCycListItem( s = "TESTTIMESKIPNEX(TISTART,TIPAR)");
     m_pDSPInterFace->addCycListItem( s = "ACTIVATECHAIN(1,0x0102)");
 
     m_pDSPInterFace->addCycListItem( s = "STARTCHAIN(0,1,0x0102)");
         m_pDSPInterFace->addCycListItem( s = "GETSTIME(TISTART)"); // set new system time
-        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXDFTF)").arg(2*m_ActValueList.count()));
-        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_ActValueList.count()+1) );
+        m_pDSPInterFace->addCycListItem( s = QString("CMPAVERAGE1(%1,FILTER,VALXDFTF)").arg(2*m_veinActValueList.count()));
+        m_pDSPInterFace->addCycListItem( s = QString("CLEARN(%1,FILTER)").arg(2*2*m_veinActValueList.count()+1) );
         m_pDSPInterFace->addCycListItem( s = QString("DSPINTTRIGGER(0x0,0x%1)").arg(irqNr)); // send interrupt to module
         m_pDSPInterFace->addCycListItem( s = "DEACTIVATECHAIN(1,0x0102)");
     m_pDSPInterFace->addCycListItem( s = "STOPCHAIN(1,0x0102)"); // end processnr., mainchain 1 subchain 2
@@ -625,8 +625,8 @@ void cDftModuleMeasProgram::setActualValuesNames()
             name = s1 + s2 + "-" + s3 +s4; // dito
         }
 
-        m_ActValueList.at(i)->setChannelName(name);
-        m_ActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
+        m_veinActValueList.at(i)->setChannelName(name);
+        m_veinActValueList.at(i)->setUnit(m_measChannelInfoHash.value(sl.at(0)).unit);
     }
 }
 
@@ -637,8 +637,8 @@ void cDftModuleMeasProgram::setSCPIMeasInfo()
 
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
-        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 
     pSCPIInfo = pSCPIInfo = new cSCPIInfo("MEASURE", "RFIELD", "8", m_pRFieldActualValue->getName(), "0", "");
@@ -682,14 +682,14 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
 {
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        for (int i = 0; i < m_ActValueList.count(); i++)
+        for (int i = 0; i < m_veinActValueList.count(); i++)
         {
             QList<double> dftResult;
             dftResult.append(actualValues->at(2*i));
             dftResult.append(actualValues->at(2*i+1));
             QVariant list;
             list = QVariant::fromValue<QList<double> >(dftResult);
-            m_ActValueList.at(i)->setValue(list); // and set entities
+            m_veinActValueList.at(i)->setValue(list); // and set entities
         }
 
         // rfield computation
@@ -969,7 +969,7 @@ void cDftModuleMeasProgram::dataReadDSP()
             corr = 1.0;
 
         // as our dft produces math positive values, we correct them to technical positive values
-        for (int i = 0; i < m_ActValueList.count(); i++)
+        for (int i = 0; i < m_veinActValueList.count(); i++)
         {
             double im, re;
             im = m_ModuleActualValues[i*2+1] * -1.0;
@@ -985,7 +985,7 @@ void cDftModuleMeasProgram::dataReadDSP()
         if (getConfData()->m_nDftOrder == 0)
         {
             double re;
-            for (int i = 0; i < m_ActValueList.count(); i++)
+            for (int i = 0; i < m_veinActValueList.count(); i++)
             {
                 re = m_ModuleActualValues[i*2] * 0.5;
                 m_ModuleActualValues.replace(i*2, re);
@@ -994,10 +994,10 @@ void cDftModuleMeasProgram::dataReadDSP()
         else
         {
             // as our dft produces math positive values, we correct them to technical positive values (im * -1)
-            for (int i = 0; i < m_ActValueList.count(); i++)
+            for (int i = 0; i < m_veinActValueList.count(); i++)
             {
                 double im;
-                for (int i = 0; i < m_ActValueList.count(); i++)
+                for (int i = 0; i < m_veinActValueList.count(); i++)
                 {
                     im = m_ModuleActualValues[i*2+1] * -1.0;
                     m_ModuleActualValues.replace(i*2+1, im);

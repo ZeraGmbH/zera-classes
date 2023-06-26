@@ -76,7 +76,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -89,7 +89,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -102,7 +102,7 @@ void cBurden1ModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
@@ -200,11 +200,11 @@ void cBurden1ModuleMeasProgram::searchActualValues()
 
             if (i == (getConfData()->m_nBurdenSystemCount-1))
             {
-                cBMD = new cBurden1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2), getConfData()->m_Unit, true);
+                cBMD = new cBurden1MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2), getConfData()->m_Unit, true);
                 connect(cBMD, &cBurden1MeasDelegate::measuring, this, &cBurden1ModuleMeasProgram::setMeasureSignal);
             }
             else
-                cBMD = new cBurden1MeasDelegate(m_ActValueList.at(i*3), m_ActValueList.at(i*3+1), m_ActValueList.at(i*3+2), getConfData()->m_Unit);
+                cBMD = new cBurden1MeasDelegate(m_veinActValueList.at(i*3), m_veinActValueList.at(i*3+1), m_veinActValueList.at(i*3+2), getConfData()->m_Unit);
 
             m_Burden1MeasDelegateList.append(cBMD);
 

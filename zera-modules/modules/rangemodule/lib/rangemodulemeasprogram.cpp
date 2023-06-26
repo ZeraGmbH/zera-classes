@@ -128,7 +128,7 @@ void cRangeModuleMeasProgram::generateInterface()
                                             QString("ACT_Channel%1Peak").arg(i+1),
                                             QString("Actual peak value"),
                                             QVariant(0.0) );
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
@@ -140,7 +140,7 @@ void cRangeModuleMeasProgram::generateInterface()
     pActvalue->setUnit("Hz");
     pActvalue->setSCPIInfo(new cSCPIInfo("MEASURE","F", "8", "ACT_Frequency", "0", "Hz"));
 
-    m_ActValueList.append(pActvalue); // we add the component for our measurement
+    m_veinActValueList.append(pActvalue); // we add the component for our measurement
     m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
     m_pMeasureSignal = new VfModuleComponent(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -400,8 +400,8 @@ void cRangeModuleMeasProgram::setActualValuesNames()
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
         mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        m_ActValueList.at(i)->setChannelName(mchn->getAlias());
-        m_ActValueList.at(i)->setUnit(mchn->getUnit());
+        m_veinActValueList.at(i)->setChannelName(mchn->getAlias());
+        m_veinActValueList.at(i)->setUnit(mchn->getUnit());
     }
 }
 
@@ -414,8 +414,8 @@ void cRangeModuleMeasProgram::setSCPIMeasInfo()
     for (int i = 0; i < m_ChannelList.count(); i++)
     {
         mchn = m_pModule->getMeasChannel(m_ChannelList.at(i));
-        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
-        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        pSCPIInfo = new cSCPIInfo("MEASURE", mchn->getAlias(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
 
@@ -431,9 +431,9 @@ void cRangeModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVal
     int i;
     if (m_bActive) // maybe we are deactivating !!!!
     {
-        for (i = 0; i < m_ActValueList.count()-1; i++) // we set n peak values first
-            m_ActValueList.at(i)->setValue(QVariant((*actualValues)[i]));
-        m_ActValueList.at(i)->setValue(QVariant((*actualValues)[2*i]));
+        for (i = 0; i < m_veinActValueList.count()-1; i++) // we set n peak values first
+            m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i]));
+        m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[2*i]));
     }
 }
 
@@ -584,8 +584,8 @@ QVector<float> cRangeModuleMeasProgram::demoChannelRms()
     double voltageBase = 230.0;
     double currentBase= 10.0;
     QVector<float> randomChannelRMS;
-    randomChannelRMS.resize(m_ActValueList.count());
-    for (int channel=0; channel<m_ActValueList.count(); ++channel) {
+    randomChannelRMS.resize(m_veinActValueList.count());
+    for (int channel=0; channel<m_veinActValueList.count(); ++channel) {
         bool isVoltage = demoChannelIsVoltage(channel);
         double baseRMS = isVoltage ? voltageBase : currentBase;
         double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
@@ -602,20 +602,20 @@ void cRangeModuleMeasProgram::handleDemoPeriodicTimer()
     // values - see cRangeModule::setPeakRmsAndFrequencyValues:
     m_ModuleActualValues.clear();
     // peak
-    for (int channel=0; channel<m_ActValueList.count(); ++channel) {
+    for (int channel=0; channel<m_veinActValueList.count(); ++channel) {
         double randPeak = randomChannelRMS[channel]*sqrt2;
-        m_ActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
+        m_veinActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
         m_ModuleActualValues.append(randPeak);
     }
     // RMS
-    for (int channel=0; channel<m_ActValueList.count(); ++channel)
+    for (int channel=0; channel<m_veinActValueList.count(); ++channel)
         m_ModuleActualValues.append(randomChannelRMS[channel]);
     // frequency
     m_ModuleActualValues.append(50.0);
     // peak DC (no DC for now)
-    for (int channel=0; channel<m_ActValueList.count(); ++channel) {
+    for (int channel=0; channel<m_veinActValueList.count(); ++channel) {
         double randPeak = randomChannelRMS[channel]*sqrt2;
-        m_ActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
+        m_veinActValueList.at(channel)->setValue(QVariant(randPeak)); // this should go??
         m_ModuleActualValues.append(randPeak);
     }
     emit actualValues(&m_ModuleActualValues);

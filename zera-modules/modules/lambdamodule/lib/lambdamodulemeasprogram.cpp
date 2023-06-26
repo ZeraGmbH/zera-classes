@@ -65,7 +65,7 @@ void cLambdaModuleMeasProgram::generateInterface()
         pSCPIInfo = new cSCPIInfo("MEASURE", pActvalue->getChannelName(), "8", pActvalue->getName(), "0", pActvalue->getUnit());
         pActvalue->setSCPIInfo(pSCPIInfo);
 
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
     }
 
@@ -89,11 +89,11 @@ void cLambdaModuleMeasProgram::searchActualValues()
              (m_pModule->m_pStorageSystem->hasStoredValue(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputSEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputS)) ) {
             cLambdaMeasDelegate* cLMD;
             if (i == (getConfData()->m_nLambdaSystemCount-1)) {
-                cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i), true);
+                cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i), true);
                 connect(cLMD, &cLambdaMeasDelegate::measuring, this, &cLambdaModuleMeasProgram::setMeasureSignal);
             }
             else
-                cLMD = new cLambdaMeasDelegate(m_ActValueList.at(i));
+                cLMD = new cLambdaMeasDelegate(m_veinActValueList.at(i));
             m_LambdaMeasDelegateList.append(cLMD);
 
             VfModuleComponentInput *vmci = new VfModuleComponentInput(getConfData()->m_lambdaSystemConfigList.at(i).m_nInputPEntity, getConfData()->m_lambdaSystemConfigList.at(i).m_sInputP);

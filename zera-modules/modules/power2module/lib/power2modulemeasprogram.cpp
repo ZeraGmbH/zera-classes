@@ -267,14 +267,14 @@ void cPower2ModuleMeasProgram::generateInterface()
                                             QString("ACT_PP%1").arg(i+1),
                                             QString("Actual value positive power"),
                                             QVariant(0.0) );
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         pActvalue = new VfModuleActvalue(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             QString("ACT_PM%1").arg(i+1),
                                             QString("Actual value negative power"),
                                             QVariant(0.0) );
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
         QString strDescription;
@@ -286,7 +286,7 @@ void cPower2ModuleMeasProgram::generateInterface()
                                             QString("ACT_P%1").arg(i+1),
                                             strDescription,
                                             QVariant(0.0) );
-        m_ActValueList.append(pActvalue); // we add the component for our measurement
+        m_veinActValueList.append(pActvalue); // we add the component for our measurement
         m_pModule->veinModuleActvalueList.append(pActvalue); // and for the modules interface
 
     }
@@ -1089,14 +1089,14 @@ void cPower2ModuleMeasProgram::setActualValuesNames()
     QString powIndicator = "123S";
     const cMeasModeInfo mminfo = MeasModeCatalog::getInfo(getConfData()->m_sMeasuringMode.m_sValue);
     for (int i = 0; i < 4; i++) {
-        m_ActValueList.at(i*3)->setChannelName(QString("+%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
-        m_ActValueList.at(i*3)->setUnit(mminfo.getUnitName());
+        m_veinActValueList.at(i*3)->setChannelName(QString("+%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
+        m_veinActValueList.at(i*3)->setUnit(mminfo.getUnitName());
 
-        m_ActValueList.at(i*3+1)->setChannelName(QString("-%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
-        m_ActValueList.at(i*3+1)->setUnit(mminfo.getUnitName());
+        m_veinActValueList.at(i*3+1)->setChannelName(QString("-%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
+        m_veinActValueList.at(i*3+1)->setUnit(mminfo.getUnitName());
 
-        m_ActValueList.at(i*3+2)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
-        m_ActValueList.at(i*3+2)->setUnit(mminfo.getUnitName());
+        m_veinActValueList.at(i*3+2)->setChannelName(QString("%1%2").arg(mminfo.getActvalName()).arg(powIndicator[i]));
+        m_veinActValueList.at(i*3+2)->setUnit(mminfo.getUnitName());
     }
     m_pModule->exportMetaData();
 }
@@ -1126,8 +1126,8 @@ void cPower2ModuleMeasProgram::setSCPIMeasInfo()
 
     for (int i = 0; i < 12; i++)
     {
-        pSCPIInfo = new cSCPIInfo("MEASURE", m_ActValueList.at(i)->getChannelName(), "8", m_ActValueList.at(i)->getName(), "0", m_ActValueList.at(i)->getUnit());
-        m_ActValueList.at(i)->setSCPIInfo(pSCPIInfo);
+        pSCPIInfo = new cSCPIInfo("MEASURE", m_veinActValueList.at(i)->getChannelName(), "8", m_veinActValueList.at(i)->getName(), "0", m_veinActValueList.at(i)->getUnit());
+        m_veinActValueList.at(i)->setSCPIInfo(pSCPIInfo);
     }
 }
 
@@ -1136,7 +1136,7 @@ void cPower2ModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualVa
     if (m_bActive) // maybe we are deactivating !!!!
     {
         for (int i = 0; i < 12; i++)
-            m_ActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
+            m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i)));
     }
 }
 
