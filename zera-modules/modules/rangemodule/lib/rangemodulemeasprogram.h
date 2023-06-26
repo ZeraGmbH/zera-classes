@@ -46,7 +46,6 @@ public slots:
     virtual void syncRanging(QVariant sync); //
 
 protected:
-    virtual void deleteDspVarList();
     virtual void setDspCmdList();
     virtual void deleteDspCmdList();
 
@@ -55,7 +54,8 @@ protected slots:
 
 private:
     cRangeModuleConfigData* getConfData();
-    virtual void setDspVarList();
+    void setDspVarList();
+    void deleteDspVarList();
 
     cRangeModule* m_pModule; // the module we live in
     bool m_demo;

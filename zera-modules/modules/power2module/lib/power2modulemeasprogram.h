@@ -67,7 +67,6 @@ public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
 protected:
-    virtual void deleteDspVarList();
     virtual void setDspCmdList();
     virtual void deleteDspCmdList();
 protected slots:
@@ -75,9 +74,13 @@ protected slots:
 private:
     cPower2ModuleConfigData* getConfData();
     void setDspVarList();
+    void deleteDspVarList();
+
     QStringList dspCmdInitVars(int dspInitialSelectCode);
-    void setActualValuesNames();
     void dspSetParamsTiMModePhase(int tiTimeOrPeriods);
+
+    void setActualValuesNames();
+
     void handleMovingWindowIntTimeChange();
     void handleMModeParamChange();
     void updatesForMModeChange();
