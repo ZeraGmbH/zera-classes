@@ -34,28 +34,22 @@ class cRangeModule;
 class cRangeModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
     cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool demo);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
     virtual void syncRanging(QVariant sync); //
-
-protected:
-    virtual void deleteDspCmdList();
-
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cRangeModuleConfigData* getConfData();
     void setDspVarList();
     void deleteDspVarList();
     void setDspCmdList();
+    void deleteDspCmdList();
 
     cRangeModule* m_pModule; // the module we live in
     bool m_demo;

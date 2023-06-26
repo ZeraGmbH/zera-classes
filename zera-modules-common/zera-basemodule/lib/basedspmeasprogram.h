@@ -11,7 +11,6 @@ public:
     cBaseDspMeasProgram(std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cBaseDspMeasProgram() { }
 protected:
-    virtual void deleteDspCmdList() = 0;
     // the module creates a central dsp interface and forwards this
     // the reason behind this is, that dsp server generates a new "environment" for each
     // new client. but we want to access the same environment's value from all over the module.

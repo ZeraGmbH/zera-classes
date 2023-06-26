@@ -41,30 +41,23 @@ class cOsciModule;
 class cOsciModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
-
 public:
     cOsciModuleMeasProgram(cOsciModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cOsciModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
-
 public slots:
     virtual void start(); // difference between start and stop is that actual values
     virtual void stop(); // in interface are not updated when stop
-
-protected:
-    virtual void deleteDspCmdList();
-
 protected slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
 private:
     cOsciModuleConfigData* getConfData();
     void setDspVarList();
     void deleteDspVarList();
     void setDspCmdList();
+    void deleteDspCmdList();
 
     cOsciModule* m_pModule;
-
     QList<VfModuleActvalue*> m_veinActValueList; // the list of actual values we work on
     VfModuleMetaData* m_pOsciCountInfo;
     VfModuleComponent* m_pMeasureSignal;
