@@ -31,6 +31,11 @@
         "id": 1073
       },
       {
+        "name" : "lambdamodule",
+        "configFile" : "mt310s2-lambdamodule.xml",
+        "id": 1140
+      },
+      {
         "name" : "sourcemodule",
         "configFile" : "demo-sourcemodule.xml",
         "id": 1300
