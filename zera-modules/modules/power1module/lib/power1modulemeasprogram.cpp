@@ -449,51 +449,15 @@ void cPower1ModuleMeasProgram::generateInterface()
 
 void cPower1ModuleMeasProgram::setDspVarList()
 {
-    // we fetch a handle for sampled data and other temporary values
-    m_pTmpDataDsp = m_pDSPInterFace->getMemHandle("TmpData");
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL1", m_nSRate, DSPDATA::vDspTemp)); // we need 2 signals for our computations
-    m_pTmpDataDsp->addVarItem( new cDspVar("MEASSIGNAL2", m_nSRate, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem(new cDspVar("VALPQS", MeasPhaseCount+SumValueCount, DSPDATA::vDspTemp)); // here x1, x2, x3 , xs will land
-    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP1", 2, DSPDATA::vDspTemp)); // we need 2 temp. vars also for complex
-    m_pTmpDataDsp->addVarItem( new cDspVar("TEMP2", 2, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("FAK", 1, DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem(new cDspVar("FILTER", 2*(MeasPhaseCount+SumValueCount), DSPDATA::vDspTemp));
-    m_pTmpDataDsp->addVarItem( new cDspVar("N",1,DSPDATA::vDspTemp));
-
-    // a handle for parameter
-    m_pParameterDSP =  m_pDSPInterFace->getMemHandle("Parameter");
-    m_pParameterDSP->addVarItem( new cDspVar("TIPAR",1, DSPDATA::vDspParam, DSPDATA::dInt)); // integrationtime res = 1ms or period
-    // we use tistart as parameter, so we can finish actual measuring interval bei setting 0
-    m_pParameterDSP->addVarItem( new cDspVar("TISTART",1, DSPDATA::vDspParam, DSPDATA::dInt));
-    m_pParameterDSP->addVarItem( new cDspVar("MMODE",1, DSPDATA::vDspParam, DSPDATA::dInt));
-    // for meas modes with phase wise enable disable
-    for(int phase=0; phase<MeasPhaseCount; phase++) {
-        QString varName = QString("XMMODEPHASE%1").arg(phase);
-        m_pParameterDSP->addVarItem(new cDspVar(varName, 1, DSPDATA::vDspParam, DSPDATA::dInt));
-    }
-
-    // a handle for filtered actual values
-    m_pActualValuesDSP = m_pDSPInterFace->getMemHandle("ActualValues");
-    m_pActualValuesDSP->addVarItem( new cDspVar("VALPQSF", MeasPhaseCount+SumValueCount, DSPDATA::vDspResult));
-
-    // and one for the frequency output scale values, we need 1 value for each configured output
-    m_pfreqScaleDSP = m_pDSPInterFace->getMemHandle("FrequencyScale");
-    m_pfreqScaleDSP->addVarItem( new cDspVar("FREQSCALE", getConfData()->m_nFreqOutputCount, DSPDATA::vDspParam));
-
-    // and one for nominal power in case that measuring mode is qref
-    m_pNomPower = m_pDSPInterFace->getMemHandle("QRefScale");
-    m_pNomPower->addVarItem( new cDspVar("NOMPOWER", 1, DSPDATA::vDspParam));
-
-    m_ModuleActualValues.resize(m_pActualValuesDSP->getSize()); // we provide a vector for generated actual values
-    m_nDspMemUsed = m_pTmpDataDsp->getSize() + m_pParameterDSP->getSize() + m_pActualValuesDSP->getSize();
+    m_dspVars.setupVarList(m_pDSPInterFace, getConfData(), m_nSRate);
+    m_ModuleActualValues.resize(m_dspVars.getActualValues()->getSize()); // we provide a vector for generated actual values
+    m_nDspMemUsed = m_dspVars.getMemUsed();
 }
 
 
 void cPower1ModuleMeasProgram::deleteDspVarList()
 {
-    m_pDSPInterFace->deleteMemHandle(m_pTmpDataDsp);
-    m_pDSPInterFace->deleteMemHandle(m_pParameterDSP);
-    m_pDSPInterFace->deleteMemHandle(m_pActualValuesDSP);
+    m_dspVars.deleteVarList(m_pDSPInterFace);
 }
 
 MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
@@ -1583,7 +1547,7 @@ void cPower1ModuleMeasProgram::deactivateDSPdone()
 void cPower1ModuleMeasProgram::dataAcquisitionDSP()
 {
     m_pMeasureSignal->setValue(QVariant(0));
-    m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_pActualValuesDSP)] = dataaquistion; // we start our data aquisition now
+    m_MsgNrCmdList[m_pDSPInterFace->dataAcquisition(m_dspVars.getActualValues())] = dataaquistion; // we start our data aquisition now
 }
 
 
@@ -1591,7 +1555,7 @@ void cPower1ModuleMeasProgram::dataReadDSP()
 {
     if (m_bActive)
     {
-        m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues); // we fetch our actual values
+        m_pDSPInterFace->getData(m_dspVars.getActualValues(), m_ModuleActualValues); // we fetch our actual values
         emit actualValues(&m_ModuleActualValues); // and send them
         m_pMeasureSignal->setValue(QVariant(1)); // signal measuring
     }
@@ -1654,8 +1618,8 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
         }
         datalist.resize(datalist.size()-1);
         datalist += ";";
-        m_pDSPInterFace->setVarData(m_pfreqScaleDSP, datalist);
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pfreqScaleDSP)] = writeparameter;
+        m_pDSPInterFace->setVarData(m_dspVars.getFreqScale(), datalist);
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_dspVars.getFreqScale())] = writeparameter;
     }
     setFoutPowerModes();
     double constantImpulsePerKwh = 3600.0 * 1000.0 * constantImpulsePerWs; // imp./kwh
@@ -1679,8 +1643,8 @@ void cPower1ModuleMeasProgram::foutParamsToDsp()
 
     double pmax = maxVals.maxU * maxVals.maxI; // MQREF
     QString datalist = QString("NOMPOWER:%1;").arg(pmax, 0, 'g', 7);
-    m_pDSPInterFace->setVarData(m_pNomPower, datalist);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pNomPower)] = setqrefnominalpower;
+    m_pDSPInterFace->setVarData(m_dspVars.getNominalPower(), datalist);
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_dspVars.getNominalPower())] = setqrefnominalpower;
 }
 
 void cPower1ModuleMeasProgram::setFoutPowerModes()
@@ -1745,8 +1709,8 @@ void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
     QString phaseVarSet = dspGetSetPhasesVar();
     if(!phaseVarSet.isEmpty())
         strVarData += ";" + phaseVarSet;
-    m_pDSPInterFace->setVarData(m_pParameterDSP, strVarData, DSPDATA::dInt);
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    m_pDSPInterFace->setVarData(m_dspVars.getParameters(), strVarData, DSPDATA::dInt);
+    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_dspVars.getParameters())] = writeparameter;
 }
 
 void cPower1ModuleMeasProgram::handleMModeParamChange()
