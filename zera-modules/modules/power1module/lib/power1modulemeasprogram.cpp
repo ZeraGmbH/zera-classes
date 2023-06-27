@@ -242,10 +242,11 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
+
+    setDspVarList();
     if(getConfData()->m_demo){
-        m_demoPeriodicTimer = TimerFactoryQt::createSingleShot(1000);
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower1ModuleMeasProgram::handleDemoActualValues);
-        m_demoPeriodicTimer->start();
     }
 }
 
@@ -515,12 +516,6 @@ void cPower1ModuleMeasProgram::setDspCmdList()
     m_pDSPInterFace->addCycListItems(dspInitVarsList);
     m_pDSPInterFace->addCycListItems(dspMModesCommandList);
     m_pDSPInterFace->addCycListItems(dspFreqCmds);
-}
-
-void cPower1ModuleMeasProgram::setDemoCmdList()
-{
-    DspChainIdGen dspChainGen;
-    setupMeasModes(dspChainGen);
 }
 
 void cPower1ModuleMeasProgram::deleteDspCmdList()
@@ -1389,7 +1384,6 @@ void cPower1ModuleMeasProgram::dspserverConnect()
 
 void cPower1ModuleMeasProgram::claimPGRMem()
 {
-    setDspVarList(); // first we set the var list for our dsp
     setDspCmdList(); // and the cmd list he has to work on
     m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
@@ -1422,10 +1416,11 @@ void cPower1ModuleMeasProgram::activateDSP()
 void cPower1ModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
+    if(getConfData()->m_demo)
+        // in demo not reached by claimPGRMem() (TODO move to constructor?)
+        setDspCmdList();
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     updatePhaseMaskVeinComponents(mode);
-    if(getConfData()->m_demo)
-        setDemoCmdList();
     setActualValuesNames();
     setSCPIMeasInfo();
     setFoutMetaInfo();
@@ -1817,30 +1812,26 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
 void cPower1ModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> valuesDemo;
-    valuesDemo.resize(m_veinActValueList.count());
     int current = 10;
-    int voltage = 480;
-    int coef = determineDemoCoeff();
-    valuesDemo[0] = voltage*current*cos(10.5)*coef;
-    valuesDemo[1] = voltage*current*sin(10.5)*coef;
-    valuesDemo[2] = voltage*current*coef;
-    valuesDemo[3] = valuesDemo[0] + valuesDemo[1] + valuesDemo[2];
-
-    for(int i=0; i<m_veinActValueList.count(); i++){
-        double actualValues = valuesDemo[i];
-        m_ModuleActualValues.append(actualValues);
-    }
-    emit actualValues(&m_ModuleActualValues);
-}
-
-int cPower1ModuleMeasProgram::determineDemoCoeff()
-{
+    int voltage = 230;
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
-    QString newMeasMode = mode->getName();
-    if(newMeasMode == "3LW")
-        return sqrt(3);
-    else
-        return 1;
+    QString modeName = mode->getName();
+    bool is3Wire = modeName.startsWith('3');
+    QString phaseMask = mode->getCurrentMask();
+    for(int phase=0; phase<MeasPhaseCount; phase++) {
+        double val = 0.0;
+        if(phaseMask.count() > phase && phaseMask[phase] == '1') {
+            double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+            val = current*voltage + randPlusMinusOne;
+            if(is3Wire)
+                val *= 1.5;
+        }
+        valuesDemo.append(val);
+    }
+    valuesDemo.append(valuesDemo[0] + valuesDemo[1] + valuesDemo[2]);
+    Q_ASSERT(valuesDemo.size() == m_ModuleActualValues.size());
+    m_ModuleActualValues = valuesDemo;
+    emit actualValues(&m_ModuleActualValues);
 }
 
 void cPower1ModuleMeasProgram::onModeTransactionOk()
@@ -1851,8 +1842,6 @@ void cPower1ModuleMeasProgram::onModeTransactionOk()
     handleMModeParamChange();
     updatesForMModeChange();
     updatePhaseMaskVeinComponents(mode);
-    if(getConfData()->m_demo)
-        handleDemoActualValues();
 }
 
 }
