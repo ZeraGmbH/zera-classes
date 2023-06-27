@@ -73,15 +73,6 @@ add_custom_target(sourcemodule-configs ALL
     COMMAND xmllint --noout --schema ${CONFIG_VALIDATOR} ${CONFIG_FILES}
     )
 
-# Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
-# Note 2: In case we make COMMAND in target below conditional on JSONLINT,
-#         qt-creator does not display source-deviceinfo. That's what the
-#         'echo' dance is for
-find_program (JSONLINT NAMES jsonlint-php echo)
-if(${JSONLINT} MATCHES ".*echo.*")
-    message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
-endif()
-
 # check for valid devinfo / display in qt-creator
 add_custom_target(source-deviceinfo-dont-forget-qrc ALL
     SOURCES ${SOURCE_DEVINFO}

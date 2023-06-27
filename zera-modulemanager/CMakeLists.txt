@@ -81,16 +81,6 @@ set(CONFIG_FILES
 file(GLOB LOGGER_CONFIG_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/loggerconfigs/*session*.json
 )
-# Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
-# Note 2: In case we make COMMAND in target below conditional on JSONLINT,
-#         qt-creator does not display source-capabilities. That's what the
-#         'echo' dance is for
-find_program (JSONLINT NAMES jsonlint-php echo)
-if(${JSONLINT} MATCHES ".*echo.*")
-    message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
-endif()
-
-find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
 
 set(LOGGER_CONFIGS_SCHEMA ${CMAKE_CURRENT_SOURCE_DIR}/json-schemas/logger-configs-schema.json)
 set(SESSION_SCHEMA ${CMAKE_CURRENT_SOURCE_DIR}/json-schemas/session-schema.json)
