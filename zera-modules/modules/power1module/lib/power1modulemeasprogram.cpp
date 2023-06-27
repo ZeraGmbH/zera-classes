@@ -1591,6 +1591,8 @@ cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeVal
 
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
+    if(getConfData()->m_demo)
+        return;
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
     double cfak = mode->getActiveMeasSysCount();
@@ -1698,6 +1700,8 @@ QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
 
 void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 {
+    if(getConfData()->m_demo)
+        return;
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
                              .arg(tiTimeOrPeriods)
                              .arg(m_measModeSelector.getCurrMode()->getDspSelectCode());
@@ -1710,8 +1714,7 @@ void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 
 void cPower1ModuleMeasProgram::handleMModeParamChange()
 {
-    if(!getConfData()->m_demo)
-        dspSetParamsTiMModePhase(calcTiTime());
+    dspSetParamsTiMModePhase(calcTiTime());
     emit m_pModule->parameterChanged();
 }
 
@@ -1724,8 +1727,7 @@ void cPower1ModuleMeasProgram::handleMovingWindowIntTimeChange()
 void cPower1ModuleMeasProgram::updatesForMModeChange()
 {
     setActualValuesNames();
-    if(!getConfData()->m_demo)
-        foutParamsToDsp();
+    foutParamsToDsp();
 }
 
 void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
@@ -1736,8 +1738,7 @@ void cPower1ModuleMeasProgram::newPhaseList(QVariant phaseList)
 void cPower1ModuleMeasProgram::updatePreScaling(QVariant p_newValue)
 {
     Q_UNUSED(p_newValue);
-    if(!getConfData()->m_demo)
-        foutParamsToDsp();
+    foutParamsToDsp();
 }
 
 void cPower1ModuleMeasProgram::newIntegrationtime(QVariant ti)
