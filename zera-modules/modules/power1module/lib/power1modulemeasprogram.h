@@ -3,6 +3,7 @@
 
 #include "power1moduleconfigdata.h"
 #include "measmodebroker.h"
+#include "power1dspvargenerator.h"
 #include <stringvalidator.h>
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
@@ -144,11 +145,7 @@ private:
     quint32 m_nSRate; // number of samples / signal period
     quint8 m_notifierNr;
 
-    cDspMeasData* m_pTmpDataDsp;
-    cDspMeasData* m_pParameterDSP;
-    cDspMeasData* m_pActualValuesDSP;
-    cDspMeasData* m_pfreqScaleDSP;
-    cDspMeasData* m_pNomPower;
+    Power1DspVarGenerator m_dspVars;
 
     // statemachine for activating gets the following states
     QState m_resourceManagerConnectState;
