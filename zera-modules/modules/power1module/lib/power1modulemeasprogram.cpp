@@ -392,7 +392,7 @@ void cPower1ModuleMeasProgram::generateInterface()
     if (btime) {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
         s = QString("Integration time");
-        unit = QString("sec");
+        unit = QString("s");
     }
     else {
         val = QVariant(getConfData()->m_nMeasIntervalPeriod.m_nValue);

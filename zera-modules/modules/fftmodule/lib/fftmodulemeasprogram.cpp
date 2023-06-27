@@ -164,8 +164,8 @@ void cFftModuleMeasProgram::generateInterface()
                                                            key = QString("PAR_Interval"),
                                                            QString("Integration time"),
                                                            QVariant(getConfData()->m_fMeasInterval.m_fValue));
-    m_pIntegrationTimeParameter->setUnit("sec");
-    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "sec"));
+    m_pIntegrationTimeParameter->setUnit("s");
+    m_pIntegrationTimeParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "s"));
 
     m_pModule->veinModuleParameterHash[key] = m_pIntegrationTimeParameter; // for modules use
 
