@@ -186,7 +186,7 @@ void cRmsModuleMeasProgram::generateInterface()
     {
         val = QVariant(getConfData()->m_fMeasIntervalTime.m_fValue);
         s = QString("Integration time");
-        unit = QString("sec");
+        unit = QString("s");
     }
     else
     {
@@ -203,7 +203,7 @@ void cRmsModuleMeasProgram::generateInterface()
 
     if (btime)
     {
-        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "sec"));
+        m_pIntegrationParameter->setSCPIInfo(new cSCPIInfo("CONFIGURATION","TINTEGRATION", "10", "PAR_Interval", "0", "s"));
         cDoubleValidator *dValidator;
         dValidator = new cDoubleValidator(1.0, 100.0, 0.5);
         m_pIntegrationParameter->setValidator(dValidator);

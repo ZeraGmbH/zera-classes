@@ -237,7 +237,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                               key = QString("PAR_MeasTime"),
                                               QString("Measurement time"),
                                               QVariant((quint32)10));
-    m_pMeasTimePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MTIME").arg(modNr), "10", m_pMeasTimePar->getName(), "0", "sec"));
+    m_pMeasTimePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MTIME").arg(modNr), "10", m_pMeasTimePar->getName(), "0", "s"));
     m_pModule->veinModuleParameterHash[key] = m_pMeasTimePar; // for modules use
     iValidator = new cIntValidator(1, Zera::cSECInterface::maxSecCounterInitVal / 1000, 1); // counter in ms
     m_pMeasTimePar->setValidator(iValidator);
@@ -288,7 +288,7 @@ void cSpm1ModuleMeasProgram::generateInterface()
                                           QString("Measurement time information"),
                                           QVariant((double) 0.0));
     m_pModule->veinModuleParameterHash[key] = m_pTimeAct; // and for the modules interface
-    m_pTimeAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:TIME").arg(modNr), "2", m_pTimeAct->getName(), "0", "sec"));
+    m_pTimeAct->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:TIME").arg(modNr), "2", m_pTimeAct->getName(), "0", "s"));
 
     m_pEnergyAct = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_Energy"),

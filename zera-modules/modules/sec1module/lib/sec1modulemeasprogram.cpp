@@ -355,7 +355,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pMeasWait; // for modules use
     iValidator = new cIntValidator(0, std::numeric_limits<int>::max()/1000 /* ms */, 1);
     m_pMeasWait->setValidator(iValidator);
-    m_pMeasWait->setUnit("sec");
+    m_pMeasWait->setUnit("s");
 
     m_pClientNotifierPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                            key = QString("PAR_ClientActiveNotify"),
