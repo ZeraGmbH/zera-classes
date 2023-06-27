@@ -38,6 +38,16 @@ find_package(xiqnet REQUIRED)
 find_package(SCPI REQUIRED)
 find_package(serialportasyncblock REQUIRED)
 
+find_program (JSONSCHEMA NAMES jsonschema REQUIRED)
+# Note 1: In OE we do not (yet) have jsonlint-php so it must be optional
+# Note 2: In case we make COMMAND in target below conditional on JSONLINT,
+#         qt-creator does not display source-capabilities. That's what the
+#         'echo' dance is for
+find_program(JSONLINT NAMES jsonlint-php echo)
+if(${JSONLINT} MATCHES ".*echo.*")
+    message(WARNING "Program jsonlint-php not found. On Fedora install php-jsonlint")
+endif()
+
 pkg_check_modules(XERCES xerces-c REQUIRED)
 
 set(SET_ZC_CONFIG_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
