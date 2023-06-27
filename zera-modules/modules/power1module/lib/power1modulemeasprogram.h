@@ -83,7 +83,6 @@ private:
     cPower1ModuleConfigData* getConfData();
     void setDspVarList();
     void deleteDspVarList();
-    void setDemoCmdList();
     void setDspCmdList();
     void deleteDspCmdList();
 
@@ -105,7 +104,6 @@ private:
     void updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode);
     bool canChangePhaseMask(std::shared_ptr<MeasMode> mode);
     void handleDemoActualValues();
-    int determineDemoCoeff();
     struct RangeMaxVals
     {
         double maxU = 0.0;
