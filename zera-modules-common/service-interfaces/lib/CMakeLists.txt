@@ -16,7 +16,7 @@ add_library(service-interfaces SHARED
 target_link_libraries(service-interfaces
     PUBLIC
     Qt5::Network
-    VeinMeta::xiqnet
+    Zera::xiqnet
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
