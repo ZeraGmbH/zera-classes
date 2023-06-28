@@ -420,6 +420,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pUpperLimitPar; // for modules use
     dValidator = new cDoubleValidator(-100.0, 100.0, 1e-6);
     m_pUpperLimitPar->setValidator(dValidator);
+    m_pUpperLimitPar->setUnit("%");
 
     m_pLowerLimitPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                 key = QString("PAR_Lolimit"),
@@ -429,6 +430,7 @@ void cSec1ModuleMeasProgram::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pLowerLimitPar; // for modules use
     dValidator = new cDoubleValidator(-100.0, 100.0, 1e-6);
     m_pLowerLimitPar->setValidator(dValidator);
+    m_pLowerLimitPar->setUnit("%");
 
     m_pResultUnit = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_ResultUnit"),
