@@ -15,16 +15,11 @@ include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 include(FindPkgConfig)
 
-find_package(Qt5 COMPONENTS Core Network Qml Concurrent CONFIG REQUIRED)
-find_package(Qt5Test REQUIRED)
+find_package(Qt5 COMPONENTS Core Network Qml Concurrent XmlPatterns Test CONFIG REQUIRED)
+find_package(GTest REQUIRED)
 find_package(ZenuxCore REQUIRED)
 find_package(ZeraMicroController REQUIRED)
-find_package(GTest REQUIRED)
-find_package(Qt5 COMPONENTS XmlPatterns CONFIG REQUIRED)
-find_package(VfEvent REQUIRED)
-find_package(VfHelpers REQUIRED)
-find_package(VfComponent REQUIRED)
-find_package(VfStorageHash REQUIRED)
+find_package(VeinFramework REQUIRED)
 find_Package(VfCpp REQUIRED)
 find_package(VfTcp REQUIRED)
 find_package(VfNet2 REQUIRED)
@@ -97,7 +92,7 @@ function(SETUP_QTESTS)
             module-tasks-testlib
             source-module-testhelpers
             zera-meas-mode-management-testlib
-            VeinMeta::VfStorageHash
+            Zera::VfStorageHash
             )
     endforeach()
 endfunction()

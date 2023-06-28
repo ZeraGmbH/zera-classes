@@ -19,7 +19,7 @@ target_include_directories(zera-modules-testlib
 target_link_libraries(zera-modules-testlib
     PUBLIC
     zera-basemodule
-    VeinMeta::VfStorageHash
+    Zera::VfStorageHash
 )
 
 set_target_properties(zera-modules-testlib PROPERTIES VERSION ${PROJECT_VERSION})

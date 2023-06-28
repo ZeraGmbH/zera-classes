@@ -42,12 +42,12 @@ target_link_libraries(zera-modulemanager-lib
     Qt5::Core
     Qt5::Network
     Qt5::Concurrent
-    VeinMeta::VfEvent
-    VeinMeta::VfComponent
-    VeinMeta::VfStorageHash
+    Zera::VfEvent
+    Zera::VfComponent
+    Zera::VfStorageHash
+    Zera::VfHelpers
     VeinMeta::VfTcp
     VeinMeta::VfNet2
-    VeinMeta::VfHelpers
     VeinMeta::VfQml
     VeinMeta::VfScript
     VeinMeta::VfLogger
