@@ -14,8 +14,8 @@ add_library(vf-moduleinterface SHARED
 target_link_libraries(vf-moduleinterface
     PUBLIC
     zera-validator
-    VeinMeta::VfEvent
-    VeinMeta::VfComponent
+    Zera::VfEvent
+    Zera::VfComponent
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
