@@ -407,7 +407,7 @@ void cSec1ModuleMeasProgram::generateInterface()
 
     m_pRefFreqInput = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                             key = QString("ACT_RefFreqInput"),
-                                            QString("Reference frequency input to find our power module"),
+                                            QString("Reference frequency input to find power module"),
                                             QVariant(getConfData()->m_sRefInput.m_sPar));
     m_pModule->veinModuleParameterHash[key] = m_pRefFreqInput; // and for the modules interface
     m_pRefFreqInput->setSCPIInfo(new cSCPIInfo("CALCULATE",  QString("%1:REFFREQINPUT").arg(modNr), "2", m_pRefFreqInput->getName(), "0", ""));
