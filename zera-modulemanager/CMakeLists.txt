@@ -46,8 +46,8 @@ target_link_libraries(zera-modulemanager-lib
     Zera::VfComponent
     Zera::VfStorageHash
     Zera::VfHelpers
+    Zera::VfNet2
     VeinMeta::VfTcp
-    VeinMeta::VfNet2
     VeinMeta::VfQml
     VeinMeta::VfScript
     VeinMeta::VfLogger
