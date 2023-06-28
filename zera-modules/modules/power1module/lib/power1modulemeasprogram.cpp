@@ -243,8 +243,8 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
 
-    setDspVarList();
     if(getConfData()->m_demo){
+        setDspVarList();
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower1ModuleMeasProgram::handleDemoActualValues);
     }
@@ -1384,7 +1384,8 @@ void cPower1ModuleMeasProgram::dspserverConnect()
 
 void cPower1ModuleMeasProgram::claimPGRMem()
 {
-    setDspCmdList(); // and the cmd list he has to work on
+    setDspVarList(); // !!! sample rate must be fetched before (currently in state m_readSampleRateState)
+    setDspCmdList();
     m_MsgNrCmdList[m_rmInterface.setResource("DSP1", "PGRMEMC", m_pDSPInterFace->cmdListCount())] = claimpgrmem;
 }
 
