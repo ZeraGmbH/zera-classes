@@ -653,7 +653,6 @@ void cRangeObsermatic::readGainCorrDone()
         m_ChannelRangeValidatorHash[m_ChannelNameList.at(i)] = sValidator; // systemchannelname, stringvalidator
         // we also set the channels name alias and its unit
         m_RangeParameterList.at(i)->setChannelName(s1 = m_ChannelAliasList.at(i));
-        m_RangeParameterList.at(i)->setUnit(s2 = m_RangeMeasChannelList.at(i)->getUnit());
 
         scpiInfo = new cSCPIInfo("SENSE", QString("%1:RANGE").arg(m_ChannelAliasList.at(i)), "10", m_RangeParameterList.at(i)->getName(), "0", s2);
         m_RangeParameterList.at(i)->setSCPIInfo(scpiInfo);
