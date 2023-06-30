@@ -14,7 +14,7 @@ add_library(vf-cpp-module-wrappers SHARED
 target_link_libraries(vf-cpp-module-wrappers
     PUBLIC
     vf-moduleinterface
-    VeinMeta::VfCpp
+    Zera::VfCpp
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
