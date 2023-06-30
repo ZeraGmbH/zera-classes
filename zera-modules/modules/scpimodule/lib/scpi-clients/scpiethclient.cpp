@@ -22,7 +22,7 @@ cSCPIEthClient::~cSCPIEthClient()
 
 void cSCPIEthClient::receiveAnswer(QString answ)
 {
-    QByteArray ba = answ.toLatin1() + "\n";
+    QByteArray ba = answ.toUtf8() + "\n";
     m_pSocket->write(ba);
 }
 
