@@ -15,7 +15,7 @@ include(GenerateExportHeader)
 include(CMakePackageConfigHelpers)
 include(FindPkgConfig)
 
-find_package(Qt5 COMPONENTS Core Network Qml Concurrent XmlPatterns Test CONFIG REQUIRED)
+find_package(Qt5 COMPONENTS Core Network Qml Concurrent Test CONFIG REQUIRED)
 find_package(GTest REQUIRED)
 find_package(ZenuxCore REQUIRED)
 find_package(ZeraMicroController REQUIRED)
@@ -94,12 +94,10 @@ function(SETUP_QTESTS)
     endforeach()
 endfunction()
 
-add_subdirectory(zera-math)
 add_subdirectory(modulemanager)
 add_subdirectory(modules)
 add_subdirectory(modules-common)
 add_subdirectory(modules-shared-data)
-add_subdirectory(zera-xmlconfig)
 
 write_basic_package_version_file(
     ZeraClassesConfigVersion.cmake

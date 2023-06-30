@@ -21,7 +21,7 @@ target_include_directories(adjustmentmodule-static
 
 target_link_libraries(adjustmentmodule-static
     zera-basemodule
-    zera-math
+    Zera::zera-math
     module-tasks
 )
 

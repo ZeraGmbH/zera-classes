@@ -19,7 +19,7 @@ target_include_directories(rmsmodule-static
 target_link_libraries(rmsmodule-static
     PUBLIC
     zera-basemodule
-    zera-math
+    Zera::zera-math
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

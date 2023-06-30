@@ -19,7 +19,7 @@ target_include_directories(dftmodule-static
 target_link_libraries(dftmodule-static
     PUBLIC
     zera-basemodule
-    zera-math
+    Zera::zera-math
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

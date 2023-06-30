@@ -34,7 +34,7 @@ add_library(burden1module MODULE
 target_link_libraries(burden1module 
     PRIVATE
     zera-basemodule
-    zera-math
+    Zera::zera-math
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
