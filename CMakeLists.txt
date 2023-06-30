@@ -95,11 +95,11 @@ function(SETUP_QTESTS)
 endfunction()
 
 add_subdirectory(zera-math)
-add_subdirectory(zera-modules)
-add_subdirectory(zera-modules-common)
-add_subdirectory(zera-modules-shared-data)
+add_subdirectory(modulemanager)
+add_subdirectory(modules)
+add_subdirectory(modules-common)
+add_subdirectory(modules-shared-data)
 add_subdirectory(zera-xmlconfig)
-add_subdirectory(zera-modulemanager)
 
 write_basic_package_version_file(
     ZeraClassesConfigVersion.cmake
