@@ -11,7 +11,6 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/customerdatasystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/priorityarbitrationsystem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/zeradblogger.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanagercontroller.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonloggercontentloader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanagerconfig.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/diriteratorworker.cpp
@@ -50,6 +49,7 @@ target_link_libraries(zera-modulemanager-lib
     Zera::VfTcp
     Zera::VfQml
     Zera::VfCpp
+    Zera::ModmanBase
     VeinMeta::VfScript
     VeinMeta::VfLogger
     VeinMeta::VfExport
