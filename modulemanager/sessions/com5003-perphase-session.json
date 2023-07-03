@@ -56,6 +56,16 @@
         "id": 1073
       },
       {
+        "name" : "power1module",
+        "configFile" : "com5003-power1modulePerPhaseLambdaActive.xml",
+        "id": 1074
+      },
+      {
+        "name" : "power1module",
+        "configFile" : "com5003-power1modulePerPhaseLambdaApparent.xml",
+        "id": 1075
+      },
+      {
         "name" : "power3module",
         "configFile" : "com5003-power3module.xml",
         "id": 1100
@@ -87,7 +97,7 @@
       },
       {
         "name" : "lambdamodule",
-        "configFile" : "com5003-lambdamodule.xml",
+        "configFile" : "com5003-lambdamodule-perphase.xml",
         "id": 1140
       },
       {
