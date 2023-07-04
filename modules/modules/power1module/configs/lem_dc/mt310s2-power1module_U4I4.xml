@@ -19,9 +19,8 @@
         </connectivity>
         <measure>
             <modes>
-                <n>2</n>
+                <n>1</n>
                 <m1>2LW</m1>
-                <m2>QREF</m2>
             </modes>
             <system>
                 <pms1>m6,m7</pms1>
