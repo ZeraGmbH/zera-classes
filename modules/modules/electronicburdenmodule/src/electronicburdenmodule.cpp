@@ -5,8 +5,8 @@
 namespace ELECTRONICBURDENMODULE
 {
 
-ElectronicBurdenModule::ElectronicBurdenModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new ElectronicBurdenModuleConfiguration()), parent)
+ElectronicBurdenModule::ElectronicBurdenModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new ElectronicBurdenModuleConfiguration()), demo, parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("Module to control voltage and current burden");

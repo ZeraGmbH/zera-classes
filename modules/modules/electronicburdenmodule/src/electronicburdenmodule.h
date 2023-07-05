@@ -16,7 +16,7 @@ public:
     static constexpr const char* BaseModuleName = "ElBurdenModule";
     static constexpr const char* BaseSCPIModuleName = "EBU";
 
-    ElectronicBurdenModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
+    ElectronicBurdenModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:

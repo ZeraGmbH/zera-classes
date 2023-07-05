@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "SourceModule";
     static constexpr const char* BaseSCPIModuleName = "SRC";
 
-    SourceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject* parent = nullptr);
+    SourceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
     VfModuleRpc *getRpcEventSystem() const;
 

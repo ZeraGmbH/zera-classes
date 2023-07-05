@@ -14,8 +14,8 @@
 namespace FFTMODULE
 {
 
-cFftModule::cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cFftModuleConfiguration()), parent)
+cFftModule::cFftModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cFftModuleConfiguration()), demo, parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures configured number of fft values for configured channels");

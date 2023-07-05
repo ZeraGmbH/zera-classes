@@ -11,8 +11,8 @@
 namespace REFERENCEMODULE
 {
 
-cReferenceModule::cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()), parent)
+cReferenceModule::cReferenceModule(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cReferenceModuleConfiguration()), demo, parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures reference actual values for configured channels");

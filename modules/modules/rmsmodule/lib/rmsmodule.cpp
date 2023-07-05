@@ -6,8 +6,8 @@
 namespace RMSMODULE
 {
 
-cRmsModule::cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent) :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()), parent)
+cRmsModule::cRmsModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent) :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cRmsModuleConfiguration()), demo, parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module measures true rms values for configured channels");

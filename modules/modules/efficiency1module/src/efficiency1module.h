@@ -13,7 +13,7 @@ public:
     static constexpr const char* BaseModuleName = "Efficiency1Module";
     static constexpr const char* BaseSCPIModuleName = "EF1";
 
-    cEfficiency1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent = nullptr);
+    cEfficiency1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent = nullptr);
     virtual QByteArray getConfiguration() const;
 
 protected:
