@@ -50,11 +50,11 @@ target_link_libraries(zera-modulemanager-lib
     Zera::VfQml
     Zera::VfCpp
     Zera::ModmanBase
+    Zera::VfCryptoBridge
     VeinMeta::VfScript
     VeinMeta::VfLogger
     VeinMeta::VfExport
     VeinMeta::VfFiles
-    VeinMeta::VfCryptoBridge
     module-qt-plugin-interface
     zera-json-params
     )
