@@ -40,6 +40,7 @@
 #include <QJsonArray>
 
 #include <QRegExp>
+#include <QCommandLineParser>
 
 int main(int argc, char *argv[])
 {
@@ -118,6 +119,13 @@ int main(int argc, char *argv[])
 
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &a);
     JsonSessionLoader *sessionLoader = new JsonSessionLoader(&a);
+
+    QCommandLineParser parser;
+    QCommandLineOption demo("d");
+    parser.addOption(demo);
+    parser.process(a);
+    bool demoMode = parser.isSet(demo);
+    modMan->setDemo(demoMode);
 
     bool initQmlSystemOnce = false;
     QObject::connect(qmlSystem, &VeinApiQml::VeinQml::sigStateChanged, [&](VeinApiQml::VeinQml::ConnectionState t_state){
