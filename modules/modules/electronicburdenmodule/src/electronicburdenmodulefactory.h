@@ -17,7 +17,7 @@ class ElectronicBurdenModuleFactory : public QObject, public MeasurementModuleFa
   
 public:
     ElectronicBurdenModuleFactory(){}
-    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* qObjParent = nullptr) override;
+    ZeraModules::VirtualModule *createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* qObjParent = nullptr) override;
     void destroyModule(ZeraModules::VirtualModule *module) override;
     QList<ZeraModules::VirtualModule *> listModules() const override;;
     QString getFactoryName() const override;

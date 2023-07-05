@@ -145,6 +145,11 @@ void ModuleManager::setEventHandler(ModuleEventHandler *t_eventHandler)
     m_eventHandler = t_eventHandler;
 }
 
+void ModuleManager::setDemo(bool demo)
+{
+    m_demo = demo;
+}
+
 void ModuleManager::startModule(const QString & t_uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int t_moduleId)
 {
     // do not allow starting until all modules are shut down
@@ -157,7 +162,7 @@ void ModuleManager::startModule(const QString & t_uniqueModuleName, const QStrin
         if(tmpFactory && m_licenseSystem->isSystemLicensed(t_uniqueModuleName))
         {
             qDebug() << "Creating module:" << t_uniqueModuleName << "with id:" << t_moduleId << "with config file:" << t_xmlConfigPath;
-            VirtualModule *tmpModule = tmpFactory->createModule(t_moduleId, m_storage, this);
+            VirtualModule *tmpModule = tmpFactory->createModule(t_moduleId, m_storage, m_demo, this);
             if(tmpModule)
             {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);

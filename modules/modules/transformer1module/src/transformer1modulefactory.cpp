@@ -4,9 +4,9 @@
 namespace TRANSFORMER1MODULE
 {
 
-ZeraModules::VirtualModule* Transformer1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, QObject* parent)
+ZeraModules::VirtualModule* Transformer1ModuleFactory::createModule(int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject* parent)
 {
-    ZeraModules::VirtualModule *module = new cTransformer1Module(m_ModuleList.count()+1, entityId, storagesystem, parent);
+    ZeraModules::VirtualModule *module = new cTransformer1Module(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);
     m_ModuleList.append(module);
     return module;
 }
