@@ -30,7 +30,7 @@ class cBaseModule : public ZeraModules::VirtualModule
 Q_OBJECT
 
 public:
-    cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, QObject *parent = nullptr);
+    cBaseModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, std::shared_ptr<cBaseModuleConfiguration> modcfg, bool demo, QObject *parent = nullptr);
     virtual ~cBaseModule();
     virtual QList<const QState*> getActualStates() const; // in case parallel working states
     virtual void setConfiguration(QByteArray xmlConfigData);
@@ -108,6 +108,7 @@ protected:
     QString m_sModuleDescription;
     QString m_sSCPIModuleName;
     quint8 m_nModuleNr;
+    bool m_demo;
 
     VfModuleMetaData *m_pModuleName;
     VfModuleMetaData *m_pModuleDescription;

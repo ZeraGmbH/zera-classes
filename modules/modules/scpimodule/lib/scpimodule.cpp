@@ -21,8 +21,8 @@
 namespace SCPIMODULE
 {
 
-cSCPIModule::cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, QObject *parent) :
-    cBaseModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()), parent)
+cSCPIModule::cSCPIModule(quint8 modnr, int entityId, VeinEvent::StorageSystem* storagesystem, bool demo, QObject *parent) :
+    cBaseModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSCPIModuleConfiguration()), demo, parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module provides a scpi interface depending on the actual session running");

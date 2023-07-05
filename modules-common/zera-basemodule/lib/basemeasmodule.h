@@ -14,6 +14,7 @@ public:
                     int entityId,
                     VeinEvent::StorageSystem* storagesystem,
                     std::shared_ptr<cBaseModuleConfiguration> modcfg,
+                    bool demo,
                     QObject *parent = nullptr);
     VfEventSytemModuleParam* m_pModuleValidator;
 };

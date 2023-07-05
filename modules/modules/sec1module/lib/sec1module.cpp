@@ -8,8 +8,8 @@
 namespace SEC1MODULE
 {
 
-cSec1Module::cSec1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)  :
-    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSec1ModuleConfiguration()), parent)
+cSec1Module::cSec1Module(quint8 modnr, int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent)  :
+    cBaseMeasModule(modnr, entityId, storagesystem, std::shared_ptr<cBaseModuleConfiguration>(new cSec1ModuleConfiguration()), demo, parent)
 {
     m_sModuleName = QString("%1%2").arg(BaseModuleName).arg(modnr);
     m_sModuleDescription = QString("This module povides a configurable error calculator");

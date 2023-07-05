@@ -23,7 +23,7 @@ void test_scpi_cmds_in_session::initialSession()
 {   // First test on ModuleManagerForTest to know it works as expected
     ModuleManagerForTest modman;
 
-    SCPIMODULE::cSCPIModule scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::cSCPIModule scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
     QCOMPARE(getEntityCount(&modman), 1);
@@ -36,7 +36,7 @@ void test_scpi_cmds_in_session::initialSession()
 void test_scpi_cmds_in_session::initialTestClient()
 {
     ModuleManagerForTest modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 1);
 
@@ -59,7 +59,7 @@ void test_scpi_cmds_in_session::initialTestClient()
 void test_scpi_cmds_in_session::minScpiDevIface()
 {
     ModuleManagerForTest modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 1);
 
@@ -86,9 +86,9 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
     // !!! Pitfall: modules handled by scpimodule must be added first
     // Maybe a bit far fetched but: how about adding modulemanager in
     // zera-classes and use (demo) session files...
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem());
+    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), false);
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 2);
 
@@ -124,11 +124,11 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     // * double delete fixed by 3766814ec0fae75ad7f18c7f71c34a767675e6e4.
     // * tested by reverting fix -> crashed
     ModuleManagerForTest modman;
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem());
+    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), false);
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
-    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem());
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), false);
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 3);
 
@@ -155,7 +155,7 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
 void test_scpi_cmds_in_session::devIfaceVeinComponent()
 {
     ModuleManagerForTest modman;
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 1);
 
@@ -185,11 +185,11 @@ void test_scpi_cmds_in_session::devIfaceVeinComponent()
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 {
     ModuleManagerForTest modman;
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem());
+    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), false);
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
-    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem());
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), false);
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 3);
 
@@ -213,15 +213,15 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml()
 {
     ModuleManagerForTest modman;
-    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem());
+    STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), false);
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
 
     std::vector<std::unique_ptr<RANGEMODULE::cRangeModule>> ptrList;
     for(int i=1; i<=10; i++) {
-        ptrList.push_back(std::make_unique<RANGEMODULE::cRangeModule>(i, 1019+i, modman.getStorageSystem()));
+        ptrList.push_back(std::make_unique<RANGEMODULE::cRangeModule>(i, 1019+i, modman.getStorageSystem(), false));
         modman.addModule(ptrList.back().get(), QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
     }
-    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), false);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
 
     ModuleManagerForTest::feedEventLoop(); // for setup SCPI from vein
