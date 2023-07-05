@@ -6,8 +6,12 @@
 #include <ve_eventsystem.h>
 #include "vfmodulecomponent.h"
 
-VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval)
-    :m_nEntityId(entityId), m_pEventSystem(eventsystem), m_sName(name), m_sDescription(description), m_vValue(initval)
+VfModuleComponent::VfModuleComponent(int entityId, VeinEvent::EventSystem *eventsystem, QString name, QString description, QVariant initval) :
+    m_pEventSystem(eventsystem),
+    m_sName(name),
+    m_sDescription(description),
+    m_vValue(initval),
+    m_nEntityId(entityId)
 {
     sendNotification(VeinComponent::ComponentData::Command::CCMD_ADD);
 }
@@ -87,7 +91,7 @@ void VfModuleComponent::setError()
         id = mClientIdList.takeFirst();
     }
     cEvent->setPeerId(id);
-    m_pEventSystem->sigSendEvent(cEvent);
+    emit m_pEventSystem->sigSendEvent(cEvent);
 }
 
 void VfModuleComponent::sendNotification(VeinComponent::ComponentData::Command vcmd)
@@ -106,5 +110,5 @@ void VfModuleComponent::sendNotification(VeinComponent::ComponentData::Command v
         id = mClientIdList.takeFirst();
     }
     event->setPeerId(id);
-    m_pEventSystem->sigSendEvent(event);
+    emit m_pEventSystem->sigSendEvent(event);
 }

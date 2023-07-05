@@ -25,7 +25,7 @@ public slots:
     void setValue(QVariant value) override; // here we have to emit event for notification
     void setError(); // here we have to emit event for error notification
 protected:
-    int m_nEntityId;
+    void sendNotification(VeinComponent::ComponentData::Command vcmd);
     VeinEvent::EventSystem *m_pEventSystem;
     QString m_sName;
     QString m_sDescription;
@@ -33,9 +33,8 @@ protected:
     QString m_sChannelName;
     QString m_sChannelUnit;
     QList<QUuid> mClientIdList;
-
-protected:
-    void sendNotification(VeinComponent::ComponentData::Command vcmd);
+private:
+    int m_nEntityId;
 };
 
 #endif // VEINMODULECOMPONENT_H
