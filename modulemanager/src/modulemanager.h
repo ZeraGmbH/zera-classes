@@ -58,6 +58,7 @@ public:
      * @param t_eventHandler
      */
     void setEventHandler(ModuleEventHandler *t_eventHandler);
+    void setDemo(bool demo);
 
 signals:
     /**
@@ -143,6 +144,7 @@ private:
     QList<ModuleData *> m_moduleList;
     QQueue<ModuleData *> m_deferredStartList;
 
+    bool m_demo;
     VeinEvent::StorageSystem *m_storage=nullptr;
     ModuleEventHandler *m_eventHandler=nullptr;
     LicenseSystem *m_licenseSystem=nullptr;
