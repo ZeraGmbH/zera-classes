@@ -4,9 +4,9 @@
 namespace OSCIMODULE
 {
 
-ZeraModules::VirtualModule* OsciModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
+ZeraModules::VirtualModule* OsciModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cOsciModule(m_ModuleList.count()+1, entityId, storagesystem, parent);
+    ZeraModules::VirtualModule *module = new cOsciModule(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);
     m_ModuleList.append(module);
     return module;
 }

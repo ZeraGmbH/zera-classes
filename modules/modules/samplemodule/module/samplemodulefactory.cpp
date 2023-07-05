@@ -4,9 +4,9 @@
 namespace SAMPLEMODULE
 {
 
-ZeraModules::VirtualModule* SampleModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, QObject *parent)
+ZeraModules::VirtualModule* SampleModuleFactory::createModule(int entityId, VeinEvent::StorageSystem *storagesystem, bool demo, QObject *parent)
 {
-    ZeraModules::VirtualModule *module = new cSampleModule(m_ModuleList.count()+1, entityId, storagesystem, parent);
+    ZeraModules::VirtualModule *module = new cSampleModule(m_ModuleList.count()+1, entityId, storagesystem, demo, parent);
     m_ModuleList.append(module);
     return module;
 }
