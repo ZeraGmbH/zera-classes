@@ -10,10 +10,9 @@
 namespace RANGEMODULE
 {
 
-cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool demo) :
+cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration) :
     cBaseDspMeasProgram(pConfiguration),
-    m_pModule(module),
-    m_demo(demo)
+    m_pModule(module)
 {
     // we have to instantiate a working resource manager and dspserver interface
     m_pDSPInterFace = new Zera::cDSPInterface();
@@ -63,7 +62,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_freeUSERMemState, &QState::entered, this, &cRangeModuleMeasProgram::freeUSERMem);
     connect(&m_unloadDSPDoneState, &QState::entered, this, &cRangeModuleMeasProgram::deactivateDSPdone);
 
-    if(!m_demo) {
+    if(!m_pModule->m_demo) {
         m_activationMachine.setInitialState(&resourceManagerConnectState);
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
     }
@@ -81,7 +80,7 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cRangeModuleMeasProgram::dataReadDSP);
 
     connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
-    if(m_demo) {
+    if(m_pModule->m_demo) {
         // Demo timer for dummy actual values
         m_demoPeriodicTimer.setSingleShot(false);
         connect(&m_demoPeriodicTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
@@ -99,14 +98,14 @@ void cRangeModuleMeasProgram::start()
 {
     disconnect(this, &cRangeModuleMeasProgram::actualValues, this, 0);
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
-    if(m_demo)
+    if(m_pModule->m_demo)
         m_demoPeriodicTimer.start(getConfData()->m_fMeasInterval * 1000);
 }
 
 
 void cRangeModuleMeasProgram::stop()
 {
-    if(m_demo)
+    if(m_pModule->m_demo)
         m_demoPeriodicTimer.stop();
 }
 
@@ -506,7 +505,7 @@ void cRangeModuleMeasProgram::activateDSPdone()
     setActualValuesNames();
     setSCPIMeasInfo();
     m_pMeasureSignal->setValue(QVariant(1));
-    if(!m_demo)
+    if(!m_pModule->m_demo)
         restartDspWachdog();
     emit activated();
 }

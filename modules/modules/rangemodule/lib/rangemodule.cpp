@@ -64,7 +64,7 @@ void cRangeModule::setupModule()
     veinModuleMetaDataList.append(m_pGroupCountInfo);
 
 
-    bool demo = pConfData->m_demo;
+    bool demo = m_demo;
     // first we build a list of our meas channels
     for (int i = 0; i < pConfData->m_nChannelCount; i ++)
     {
@@ -115,7 +115,7 @@ void cRangeModule::setupModule()
     }
 
     // at last we need some program that does the measuring on dsp
-    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration, demo);
+    m_pMeasProgram = new cRangeModuleMeasProgram(this, m_pConfiguration);
     m_ModuleActivistList.append(m_pMeasProgram);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::activated, this, &cRangeModule::activationContinue);
     connect(m_pMeasProgram, &cRangeModuleMeasProgram::deactivated, this, &cRangeModule::deactivationContinue);

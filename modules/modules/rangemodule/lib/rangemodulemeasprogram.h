@@ -35,7 +35,7 @@ class cRangeModuleMeasProgram: public cBaseDspMeasProgram
 {
     Q_OBJECT
 public:
-    cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration, bool demo);
+    cRangeModuleMeasProgram(cRangeModule* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cRangeModuleMeasProgram();
     virtual void generateInterface(); // here we export our interface (entities)
 public slots:
@@ -52,7 +52,6 @@ private:
     void deleteDspCmdList();
 
     cRangeModule* m_pModule; // the module we live in
-    bool m_demo;
     bool m_bRanging;
     bool m_bIgnore;
     quint16 m_nSamples;

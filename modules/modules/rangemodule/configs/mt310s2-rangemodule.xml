@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <rangemodconfpar>
     <configuration>
-        <demo>0</demo>
         <connectivity>
             <debuglevel>0</debuglevel>
             <ethernet>

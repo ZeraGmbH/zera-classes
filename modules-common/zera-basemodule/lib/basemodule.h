@@ -45,6 +45,7 @@ public:
 
     int m_nEntityId;
     VeinEvent::StorageSystem* m_pStorageSystem;
+    bool m_demo;
 
     QList<VfModuleMetaData*> veinModuleMetaDataList; // only meta information
     QList<VfModuleComponent*> veinModuleComponentList; // for components that need no scpi interface
@@ -108,7 +109,6 @@ protected:
     QString m_sModuleDescription;
     QString m_sSCPIModuleName;
     quint8 m_nModuleNr;
-    bool m_demo;
 
     VfModuleMetaData *m_pModuleName;
     VfModuleMetaData *m_pModuleDescription;

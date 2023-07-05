@@ -2,7 +2,6 @@
 
 <rangemodconfpar xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <configuration>
-        <demo>0</demo>
         <connectivity>
             <debuglevel>0</debuglevel>
             <ethernet>
