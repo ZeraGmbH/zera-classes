@@ -54,6 +54,13 @@ void ModulemanagerConfig::setDefaultSession(QString session)
     }
 }
 
+bool ModulemanagerConfig::containsDeviceName(QString devName)
+{
+    if(m_jsonConfig.contains(devName))
+        return true;
+    return false;
+}
+
 const QString ModulemanagerConfig::getDevNameFromUBoot()
 {
     QString strDeviceName;
@@ -98,3 +105,4 @@ ModulemanagerConfig::ModulemanagerConfig()
         m_deviceName = m_jsonConfig["deviceName"].toString();
     }
 }
+

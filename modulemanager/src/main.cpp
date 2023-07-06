@@ -51,7 +51,17 @@ int main(int argc, char *argv[])
         qCritical() << "Error loading config file from path:" << MODMAN_CONFIG_FILE;
         return -ENOENT;
     }
-    const QString deviceName = mmConfig->getDeviceName();
+    QCommandLineParser parser;
+    QCommandLineOption demo("d", "Specify a value after -d", "value");
+    parser.addOption(demo);
+    parser.process(a);
+    const QString deviceName = parser.value(demo);
+    if (!mmConfig->containsDeviceName(deviceName)){
+        qCritical() <<"No device found under this name" << deviceName << "Check command line arguments";
+        return -ENODEV;
+    }
+
+    //const QString deviceName = mmConfig->getDeviceName();
     if(deviceName.isEmpty()) {
         qCritical() << "No device name found in kernel cmdline or default config!";
         return -ENODEV;
@@ -120,10 +130,6 @@ int main(int argc, char *argv[])
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList, &a);
     JsonSessionLoader *sessionLoader = new JsonSessionLoader(&a);
 
-    QCommandLineParser parser;
-    QCommandLineOption demo("d");
-    parser.addOption(demo);
-    parser.process(a);
     bool demoMode = parser.isSet(demo);
     modMan->setDemo(demoMode);
 

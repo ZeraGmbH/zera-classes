@@ -14,6 +14,7 @@ public:
     const QStringList getAvailableSessions();
     const QString getDefaultSession();
     void setDefaultSession(QString session);
+    bool containsDeviceName(QString devName);
 private:
     ModulemanagerConfig();
     const QString getDevNameFromUBoot();
