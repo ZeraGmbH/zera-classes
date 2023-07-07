@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
     parser.process(a);
     const QString deviceName = parser.value(demo);
     if (!mmConfig->containsDeviceName(deviceName)){
-        qCritical() <<"No device found under this name" << deviceName << "Check command line arguments";
-        return -ENODEV;
+        qInfo("No device found under this name. Is command line correct ?");
+        return a.exec();
     }
 
     //const QString deviceName = mmConfig->getDeviceName();
