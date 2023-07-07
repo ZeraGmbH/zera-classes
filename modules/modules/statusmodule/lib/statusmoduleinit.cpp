@@ -58,7 +58,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
     m_activationMachine.addState(&m_pcbserverReadInitialAccumulatorSoc);
     m_activationMachine.addState(&m_pcbserverRegisterCtrlVersionChange);
     m_activationMachine.addState(&m_activationDoneState);
-    if(!m_ConfigData.m_bDemo) {
+    if(!m_pModule->m_demo) {
         m_activationMachine.setInitialState(&m_pcbserverConnectionState);
     } else {
         m_activationMachine.setInitialState(&m_activationDoneState);
@@ -88,7 +88,7 @@ cStatusModuleInit::cStatusModuleInit(cStatusModule* module, cStatusModuleConfigD
 
     m_deactivationMachine.addState(&m_pcbserverUnregisterNotifiersState);
     m_deactivationMachine.addState(&m_deactivationDoneState);
-    if(!m_ConfigData.m_bDemo) {
+    if(!m_pModule->m_demo) {
         m_deactivationMachine.setInitialState(&m_pcbserverUnregisterNotifiersState);
     } else {
         m_deactivationMachine.setInitialState(&m_deactivationDoneState);
@@ -729,7 +729,7 @@ void cStatusModuleInit::registerPCBVersionNotifier()
 
 void cStatusModuleInit::activationDone()
 {
-    if(!m_ConfigData.m_bDemo) {
+    if(!m_pModule->m_demo) {
         m_sReleaseNumber = findReleaseNr();
         m_sDeviceType = findDeviceType();
         m_sCPUInfo = findCpuInfo();
@@ -738,7 +738,7 @@ void cStatusModuleInit::activationDone()
         setupDemoOperation();
     }
     setInterfaceComponents();
-    if(!m_ConfigData.m_bDemo) {
+    if(!m_pModule->m_demo) {
         connect(m_pSerialNumber, &VfModuleParameter::sigValueChanged, this, &cStatusModuleInit::newSerialNumber);
     }
     m_bActive = true;

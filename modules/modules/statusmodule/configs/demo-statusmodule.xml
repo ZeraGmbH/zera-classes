@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <statusmodconfpar>
     <configuration>
-        <demo>1</demo>
         <connectivity>
             <debuglevel>0</debuglevel>
             <ethernet>

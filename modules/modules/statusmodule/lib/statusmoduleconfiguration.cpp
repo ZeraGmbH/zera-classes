@@ -40,7 +40,6 @@ void STATUSMODULE::cStatusModuleConfiguration::validateAndSetConfig(QByteArray x
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["statusmodconfpar:configuration:demo"] = setDemo;
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["statusmodconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
@@ -77,9 +76,6 @@ void cStatusModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDemo:
-            m_pStatusModulConfigData->m_bDemo = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setDebugLevel:
             m_pStatusModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
             break;
