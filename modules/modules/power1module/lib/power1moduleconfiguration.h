@@ -13,7 +13,6 @@ namespace POWER1MODULE
 
 enum moduleconfigstate
 {
-    setDemo,
     setRMIp,
     setRMPort,
     setPCBServerIp,
