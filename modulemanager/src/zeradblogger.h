@@ -23,15 +23,8 @@ class ZeraDBLogger : public VeinLogger::DatabaseLogger
 public:
     ZeraDBLogger(VeinLogger::DataSource *t_dataSource, VeinLogger::DBFactory t_factoryFunction, QObject *t_parent=nullptr);
     ~ZeraDBLogger() override;
-signals:
-
-    // DatabaseLogger interface
-public slots:
-    bool processEvent(QEvent *t_event) override;
-
-private slots:
-
 private:
+    void processEvent(QEvent *t_event) override;
     ZeraDBLoggerPrivate *m_dPtr=nullptr;
     friend class ZeraDBLoggerPrivate;
 };

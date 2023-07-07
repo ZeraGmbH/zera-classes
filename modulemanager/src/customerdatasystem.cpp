@@ -92,9 +92,8 @@ CustomerDataSystem::CustomerDataSystem(QObject *t_parent) :
     connect(this, &CustomerDataSystem::sigDataValueChanged, this, &CustomerDataSystem::updateDataFile);
 }
 
-bool CustomerDataSystem::processEvent(QEvent *t_event)
+void CustomerDataSystem::processEvent(QEvent *t_event)
 {
-    bool retVal = false;
     if(t_event->type() == VeinEvent::CommandEvent::eventType()) {
         VeinEvent::CommandEvent *cEvent = nullptr;
         cEvent = static_cast<VeinEvent::CommandEvent *>(t_event);
@@ -124,7 +123,6 @@ bool CustomerDataSystem::processEvent(QEvent *t_event)
                             }
                             else { //unknown or empty file
                                 qWarning() << "Invalid customerdata file selected:" << fileName;
-                                retVal = true;
                                 VeinComponent::ErrorData *eData = new VeinComponent::ErrorData();
                                 eData->setEntityId(CustomerDataSystem::s_entityId);
                                 eData->setErrorDescription(QString("Customer data file does not exist: %1").arg(fileName));
@@ -147,7 +145,6 @@ bool CustomerDataSystem::processEvent(QEvent *t_event)
                     }
 
                     if(validated == true) {
-                        retVal = true;
                         VeinEvent::CommandEvent *newEvent = new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, new VeinComponent::ComponentData(*cData));
                         newEvent->setPeerId(cEvent->peerId());
                         newEvent->eventData()->setEventOrigin(VeinEvent::EventData::EventOrigin::EO_LOCAL); //the validated answer is authored from the system that runs the validator (aka. this system)
@@ -164,7 +161,6 @@ bool CustomerDataSystem::processEvent(QEvent *t_event)
                 Q_ASSERT(rpcData != nullptr);
                 if(rpcData->command() == VeinComponent::RemoteProcedureData::Command::RPCMD_CALL) {
                     if(m_remoteProcedures.contains(rpcData->procedureName())) {
-                        retVal = true;
                         const QUuid callId = rpcData->invokationData().value(VeinComponent::RemoteProcedureData::s_callIdString).toUuid();
                         Q_ASSERT(callId.isNull() == false);
                         Q_ASSERT(m_pendingRpcHash.contains(callId) == false);
@@ -173,7 +169,6 @@ bool CustomerDataSystem::processEvent(QEvent *t_event)
                         t_event->accept();
                     }
                     else { //unknown procedure
-                        retVal = true;
                         qWarning() << "No remote procedure with entityId:" << CustomerDataSystem::s_entityId << "name:" << rpcData->procedureName();
                         VF_ASSERT(false, QStringC(QString("No remote procedure with entityId: %1 name: %2").arg(CustomerDataSystem::s_entityId).arg(rpcData->procedureName())));
                         VeinComponent::ErrorData *eData = new VeinComponent::ErrorData();
@@ -193,7 +188,6 @@ bool CustomerDataSystem::processEvent(QEvent *t_event)
             } // end switch
         }
     }
-    return retVal;
 }
 
 void CustomerDataSystem::initializeEntity()

@@ -20,7 +20,7 @@ signals:
     void sigComponentChanged(QString componentName, QVariant newValue);
 private:
     void createEntity(int entityId);
-    bool processEvent(QEvent *t_event) override;
+    void processEvent(QEvent *t_event) override;
 
     VeinEvent::EventHandler m_eventHandler;
     VeinStorage::VeinHash m_storageHash;

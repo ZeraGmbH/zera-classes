@@ -50,8 +50,8 @@ ZeraDBLogger::~ZeraDBLogger()
     delete m_dPtr;
 }
 
-bool ZeraDBLogger::processEvent(QEvent *t_event)
+void ZeraDBLogger::processEvent(QEvent *t_event)
 {
-    return  VeinLogger::DatabaseLogger::processEvent(t_event);
+    VeinLogger::DatabaseLogger::processEvent(t_event);
 }
 

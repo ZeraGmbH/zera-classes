@@ -37,7 +37,8 @@ signals:
     void sigSerialNumberInitialized();
 
 private:
-    /**
+    void processEvent(QEvent *t_event) override;
+   /**
    * @brief loads the license data from ":/license_cert.pem"
    * @return
    */
@@ -93,9 +94,6 @@ private:
     static constexpr QLatin1String s_universalLicenseDescriptor = modman_util::to_latin1("universalLicense");
     static constexpr QLatin1String s_universalSerialDescriptor = modman_util::to_latin1("universalSerial");
 
-    // EventSystem interface
-public:
-    bool processEvent(QEvent *t_event) override;
 };
 
 #endif // LICENSESYSTEM_H

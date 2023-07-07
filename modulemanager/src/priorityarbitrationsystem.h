@@ -24,9 +24,9 @@ public slots:
 
     // EventSystem interface
 public:
-    bool processEvent(QEvent *t_event) override;
 
 private:
+    void processEvent(QEvent *t_event) override;
     void initECS();
     void rpcFinished(QUuid t_callId, const QString &t_procedureName, const QVariantMap &t_data);
 
