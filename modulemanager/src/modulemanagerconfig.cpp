@@ -7,11 +7,17 @@
 
 ModulemanagerConfig* ModulemanagerConfig::m_instance = nullptr;
 std::once_flag ModulemanagerConfig::m_onceflag;
+QString ModulemanagerConfig::m_demoDevice;
 
 ModulemanagerConfig *ModulemanagerConfig::getInstance()
 {
     std::call_once(m_onceflag, [&]() { m_instance = new ModulemanagerConfig(); });
     return m_instance;
+}
+
+void ModulemanagerConfig::setDemoDevice(QString demoDevice)
+{
+    m_demoDevice = demoDevice;
 }
 
 bool ModulemanagerConfig::isValid()
@@ -99,10 +105,14 @@ void ModulemanagerConfig::save()
 
 ModulemanagerConfig::ModulemanagerConfig()
 {
-    m_deviceName = getDevNameFromUBoot();
     m_jsonConfig = cJsonFileLoader::loadJsonFile(MODMAN_CONFIG_FILE);
-    if(m_deviceName.isEmpty() && isValid()) {
-        m_deviceName = m_jsonConfig["deviceName"].toString();
+    if(!m_demoDevice.isEmpty())
+        m_deviceName = m_demoDevice;
+    else {
+        m_deviceName = getDevNameFromUBoot();
+        if(m_deviceName.isEmpty() && isValid()) {
+            m_deviceName = m_jsonConfig["deviceName"].toString();
+        }
     }
 }
 

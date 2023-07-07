@@ -46,30 +46,31 @@ int main(int argc, char *argv[])
 {
     QCoreApplication a(argc, argv);
 
-    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
-    if(!mmConfig->isValid()) {
-        qCritical() << "Error loading config file from path:" << MODMAN_CONFIG_FILE;
-        return -ENOENT;
-    }
     QCommandLineParser parser;
     QCommandLineOption demo("d", "Specify a value after -d", "value");
     parser.addOption(demo);
     parser.process(a);
-    QString deviceName;
     if(parser.isSet(demo)) {
-        deviceName = parser.value(demo);
-        if(!mmConfig->containsDeviceName(deviceName)) {
-            fprintf(stderr, "No device found with name %s. Is command line correct ?\n", qPrintable(deviceName));
-            return -ENODEV;
-        }
+        QString demoDeviceName = parser.value(demo);
+        ModulemanagerConfig::setDemoDevice(demoDeviceName);
     }
-    else
-        deviceName = mmConfig->getDeviceName();
-
+    ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    if(!mmConfig->isValid()) {
+        fprintf(stderr, "Error loading config file from path: %s", MODMAN_CONFIG_FILE);
+        return -ENOENT;
+    }
+    QString deviceName = mmConfig->getDeviceName();
     if(deviceName.isEmpty()) {
-        fprintf(stderr, "No device name found in kernel cmdline or default config!");
+        fprintf(stderr, "No device name found in kernel cmdline / default config / demo param!");
         return -ENODEV;
     }
+    if(!mmConfig->containsDeviceName(deviceName)) {
+        fprintf(stderr, "No device found with name '%s'\n", qPrintable(deviceName));
+        fprintf(stderr, "* Is demo command line correct?\n");
+        fprintf(stderr, "* Did you select modulemanager_config_dev.json in CMake?\n");
+        return -ENODEV;
+    }
+
     qInfo() << "Loading session data for " << deviceName;
     const bool customerdataSystemEnabled = mmConfig->getCustomerDataEnabled();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
