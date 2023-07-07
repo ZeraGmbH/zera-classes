@@ -58,28 +58,28 @@ int main(int argc, char *argv[])
     QString deviceName;
     if(parser.isSet(demo)) {
         deviceName = parser.value(demo);
-        if(!mmConfig->containsDeviceName(deviceName)){
-            qInfo("No device found under this name. Is command line correct ?");
-            return a.exec();
+        if(!mmConfig->containsDeviceName(deviceName)) {
+            fprintf(stderr, "No device found with name %s. Is command line correct ?\n", qPrintable(deviceName));
+            return -ENODEV;
         }
     }
     else
         deviceName = mmConfig->getDeviceName();
 
     if(deviceName.isEmpty()) {
-        qCritical() << "No device name found in kernel cmdline or default config!";
+        fprintf(stderr, "No device name found in kernel cmdline or default config!");
         return -ENODEV;
     }
     qInfo() << "Loading session data for " << deviceName;
     const bool customerdataSystemEnabled = mmConfig->getCustomerDataEnabled();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
     if(availableSessionList.isEmpty()) {
-        qCritical() << "No sessions found for device" << deviceName;
+        fprintf(stderr, "No sessions found for device %s", qPrintable(deviceName));
         return -ENODEV;
     }
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     if(defaultSessionFile.isEmpty()) {
-        qCritical() << "No default session found for device" << deviceName;
+        fprintf(stderr, "No default session found for device %s", qPrintable(deviceName));
         return -ENODEV;
     }
 
