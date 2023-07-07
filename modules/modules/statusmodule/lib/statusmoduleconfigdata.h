@@ -12,7 +12,6 @@ class cStatusModuleConfigData
 {
 public:
     cStatusModuleConfigData(){}
-    bool m_bDemo;
     quint8 m_nDebugLevel;
     cSocket m_RMSocket; // the sockets we can connect to
     cSocket m_PCBServerSocket;
