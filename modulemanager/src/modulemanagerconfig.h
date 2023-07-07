@@ -8,6 +8,7 @@ class ModulemanagerConfig
 {
 public:
     static ModulemanagerConfig *getInstance();
+    static void setDemoDevice(QString demoDevice);
     bool isValid();
     const QString getDeviceName();
     bool getCustomerDataEnabled();
@@ -23,6 +24,7 @@ private:
     void save();
     static ModulemanagerConfig *m_instance;
     static std::once_flag m_onceflag;
+    static QString m_demoDevice;
     QJsonObject m_jsonConfig;
     QString m_deviceName;
 };
