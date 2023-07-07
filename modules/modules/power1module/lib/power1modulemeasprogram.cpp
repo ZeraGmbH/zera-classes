@@ -123,7 +123,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    if(getConfData()->m_demo)
+    if(m_pModule->m_demo)
         m_activationMachine.setInitialState(&m_loadDSPDoneState);
     else
         m_activationMachine.setInitialState(&m_resourceManagerConnectState);
@@ -202,7 +202,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
 
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    if(getConfData()->m_demo)
+    if(m_pModule->m_demo)
         m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
     else
         m_deactivationMachine.setInitialState(&m_deactivateDSPState);
@@ -243,7 +243,7 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
     connect(&m_foutParamsToDsp, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::foutParamsToDsp);
 
-    if(getConfData()->m_demo){
+    if(m_pModule->m_demo){
         setDspVarList();
         m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
         connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cPower1ModuleMeasProgram::handleDemoActualValues);
@@ -266,7 +266,7 @@ void cPower1ModuleMeasProgram::start()
     }
     else
         connect(this, &cPower1ModuleMeasProgram::actualValues, this, &cPower1ModuleMeasProgram::setInterfaceActualValues);
-    if(getConfData()->m_demo)
+    if(m_pModule->m_demo)
         m_demoPeriodicTimer->start();
 }
 
@@ -275,7 +275,7 @@ void cPower1ModuleMeasProgram::stop()
 {
     disconnect(this, &cPower1ModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
-    if(getConfData()->m_demo)
+    if(m_pModule->m_demo)
         m_demoPeriodicTimer->stop();
 }
 
@@ -1417,7 +1417,7 @@ void cPower1ModuleMeasProgram::activateDSP()
 void cPower1ModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
-    if(getConfData()->m_demo)
+    if(m_pModule->m_demo)
         // in demo not reached by claimPGRMem() (TODO move to constructor?)
         setDspCmdList();
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
@@ -1437,7 +1437,7 @@ void cPower1ModuleMeasProgram::activateDSPdone()
             this, &cPower1ModuleMeasProgram::onModeTransactionOk);
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
-    if(!getConfData()->m_demo)
+    if(!m_pModule->m_demo)
         if (!m_readUrValueMachine.isRunning())
             m_readUrValueMachine.start();
 
@@ -1592,7 +1592,7 @@ cPower1ModuleMeasProgram::RangeMaxVals cPower1ModuleMeasProgram::calcMaxRangeVal
 
 void cPower1ModuleMeasProgram::foutParamsToDsp()
 {
-    if(getConfData()->m_demo)
+    if(m_pModule->m_demo)
         return;
     std::shared_ptr<MeasMode> mode = m_measModeSelector.getCurrMode();
     RangeMaxVals maxVals = calcMaxRangeValues(mode);
@@ -1701,7 +1701,7 @@ QString cPower1ModuleMeasProgram::dspGetSetPhasesVar()
 
 void cPower1ModuleMeasProgram::dspSetParamsTiMModePhase(int tiTimeOrPeriods)
 {
-    if(getConfData()->m_demo)
+    if(m_pModule->m_demo)
         return;
     QString strVarData = QString("TIPAR:%1;TISTART:0;MMODE:%2")
                              .arg(tiTimeOrPeriods)

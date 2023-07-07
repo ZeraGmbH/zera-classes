@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
 <pow1modconfpar>
     <configuration>
-        <demo>1</demo>
         <connectivity>
             <ethernet>
                 <resourcemanager>
