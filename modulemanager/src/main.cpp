@@ -55,13 +55,17 @@ int main(int argc, char *argv[])
     QCommandLineOption demo("d", "Specify a value after -d", "value");
     parser.addOption(demo);
     parser.process(a);
-    const QString deviceName = parser.value(demo);
-    if (!mmConfig->containsDeviceName(deviceName)){
-        qInfo("No device found under this name. Is command line correct ?");
-        return a.exec();
+    QString deviceName;
+    if(parser.isSet(demo)) {
+        deviceName = parser.value(demo);
+        if(!mmConfig->containsDeviceName(deviceName)){
+            qInfo("No device found under this name. Is command line correct ?");
+            return a.exec();
+        }
     }
+    else
+        deviceName = mmConfig->getDeviceName();
 
-    //const QString deviceName = mmConfig->getDeviceName();
     if(deviceName.isEmpty()) {
         qCritical() << "No device name found in kernel cmdline or default config!";
         return -ENODEV;
