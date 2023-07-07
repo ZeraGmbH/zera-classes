@@ -31,7 +31,7 @@ void VeinComponentSetNotifier::createEntity(int entityId)
     emit sigSendEvent(new VeinEvent::CommandEvent(VeinEvent::CommandEvent::EventSubtype::NOTIFICATION, entityData));
 }
 
-bool VeinComponentSetNotifier::processEvent(QEvent *t_event)
+void VeinComponentSetNotifier::processEvent(QEvent *t_event)
 {
     if(t_event->type() == VeinEvent::CommandEvent::eventType()) {
         VeinEvent::CommandEvent *cmdEvent = static_cast<VeinEvent::CommandEvent *>(t_event);
@@ -54,6 +54,5 @@ bool VeinComponentSetNotifier::processEvent(QEvent *t_event)
             }
         }
     }
-    return false; // why is processEvent returning bool - it is ignored anyway?
 }
 

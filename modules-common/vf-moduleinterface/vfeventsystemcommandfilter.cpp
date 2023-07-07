@@ -5,15 +5,12 @@ VfEventSystemCommandFilter::VfEventSystemCommandFilter(VeinEvent::CommandEvent::
 {
 }
 
-bool VfEventSystemCommandFilter::processEvent(QEvent *event)
+void VfEventSystemCommandFilter::processEvent(QEvent *event)
 {
-    bool retVal = false;
     if(event->type() == VeinEvent::CommandEvent::eventType()) {
         VeinEvent::CommandEvent *commandEvent = static_cast<VeinEvent::CommandEvent *>(event);
         if(commandEvent && commandEvent->eventSubtype() == m_subtypeToFilter) {
-            retVal = true;
             processCommandEvent(commandEvent);
         }
     }
-    return retVal;
 }

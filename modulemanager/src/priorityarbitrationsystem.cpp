@@ -18,10 +18,8 @@ PriorityArbitrationSystem::PriorityArbitrationSystem(QObject *t_parent) :
     connect(this, &PriorityArbitrationSystem::sigAttached, this, &PriorityArbitrationSystem::initECS);
 }
 
-bool PriorityArbitrationSystem::processEvent(QEvent *t_event)
+void PriorityArbitrationSystem::processEvent(QEvent *t_event)
 {
-    bool retVal = false;
-
     if(t_event->type() == VeinEvent::CommandEvent::eventType())
     {
         VeinEvent::CommandEvent *cEvent = nullptr;
@@ -42,7 +40,6 @@ bool PriorityArbitrationSystem::processEvent(QEvent *t_event)
                             || cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_ADD
                             || cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_REMOVE)
                     {
-                        retVal = true;
                         cEvent->accept();
                     }
                     break;
@@ -55,7 +52,6 @@ bool PriorityArbitrationSystem::processEvent(QEvent *t_event)
                     if(cData->eventCommand() == VeinComponent::EntityData::Command::ECMD_ADD
                             || cData->eventCommand() == VeinComponent::EntityData::Command::ECMD_REMOVE)
                     {
-                        retVal = true;
                         cEvent->accept();
                     }
                     break;
@@ -68,7 +64,6 @@ bool PriorityArbitrationSystem::processEvent(QEvent *t_event)
                     if(rpcData->command() == VeinComponent::RemoteProcedureData::Command::RPCMD_CALL
                             && m_remoteProcedures.contains(rpcData->procedureName()))
                     {
-                        retVal = true;
                         const QUuid callId = rpcData->invokationData().value(VeinComponent::RemoteProcedureData::s_callIdString).toUuid();
                         Q_ASSERT(callId.isNull() == false);
                         Q_ASSERT(m_pendingRpcHash.contains(callId) == false);
@@ -79,7 +74,6 @@ bool PriorityArbitrationSystem::processEvent(QEvent *t_event)
                     else //unknown procedure
                     {
                         ///@todo refactor redundant entity id specific checks for invalid calls into separate interface
-                        retVal = true;
                         qWarning() << "No remote procedure with entityId:" << PriorityArbitrationSystem::s_entityId << "name:" << rpcData->procedureName();
                         VF_ASSERT(false, QStringC(QString("No remote procedure with entityId: %1 name: %2").arg(PriorityArbitrationSystem::s_entityId).arg(rpcData->procedureName())));
                         VeinComponent::ErrorData *eData = new VeinComponent::ErrorData();
@@ -137,7 +131,6 @@ bool PriorityArbitrationSystem::processEvent(QEvent *t_event)
                     if(m_priorityArbitrationMap.isEmpty() == false
                             && m_priorityArbitrationMap.first() != cEvent->peerId()) //arbitration is in place and the sender has not the highest priority
                     {
-                        retVal = true;
                         qWarning() << "Arbitration dropped event:" << cEvent << "from client:" << cEvent->peerId();
                         VeinComponent::ErrorData *errorData = new VeinComponent::ErrorData();
                         errorData->setOriginalData(cEvent->eventData());
@@ -155,8 +148,6 @@ bool PriorityArbitrationSystem::processEvent(QEvent *t_event)
             }
         }
     }
-
-    return retVal;
 }
 
 void PriorityArbitrationSystem::initECS()

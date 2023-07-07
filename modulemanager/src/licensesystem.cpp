@@ -220,9 +220,8 @@ bool LicenseSystem::isValidLicenseDeviceSerial(const QString t_deviceSerial) con
     return (t_deviceSerial == s_universalSerialDescriptor || t_deviceSerial == m_deviceSerial);
 }
 
-bool LicenseSystem::processEvent(QEvent *t_event)
+void LicenseSystem::processEvent(QEvent *t_event)
 {
-    bool retVal = false;
     if(t_event->type()==VeinEvent::CommandEvent::eventType())
     {
         VeinEvent::CommandEvent *cEvent = nullptr;
@@ -244,7 +243,6 @@ bool LicenseSystem::processEvent(QEvent *t_event)
             {
                 if(cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_ADD || cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_SET)
                 {
-                    retVal = true;
                     const QString newSerialNumber = cData->newValue().toString();
                     if((newSerialNumber.isEmpty() == false) && (m_deviceSerial != newSerialNumber))
                     {
@@ -255,7 +253,6 @@ bool LicenseSystem::processEvent(QEvent *t_event)
             }
         }
     }
-    return retVal;
 }
 
 //constexpr definition, see: https://stackoverflow.com/questions/8016780/undefined-reference-to-static-constexpr-char
