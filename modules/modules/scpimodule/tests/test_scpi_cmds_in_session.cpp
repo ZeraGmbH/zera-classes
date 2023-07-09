@@ -127,7 +127,7 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 3);
@@ -188,7 +188,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
     STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 3);
@@ -219,7 +219,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     std::vector<std::unique_ptr<RANGEMODULE::cRangeModule>> ptrList;
     for(int i=1; i<=10; i++) {
         ptrList.push_back(std::make_unique<RANGEMODULE::cRangeModule>(i, 1019+i, modman.getStorageSystem(), true));
-        modman.addModule(ptrList.back().get(), QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+        modman.addModule(ptrList.back().get(), QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
     }
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
@@ -248,7 +248,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
 {
     ModuleManagerForTest modman;
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem());
-    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "demo-rangemodule.xml");
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem());
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 2);
