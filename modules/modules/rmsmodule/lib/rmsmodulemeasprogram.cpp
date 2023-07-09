@@ -6,6 +6,7 @@
 #include <proxy.h>
 #include <doublevalidator.h>
 #include <intvalidator.h>
+#include <timerfactoryqt.h>
 
 namespace RMSMODULE
 {
@@ -58,7 +59,10 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    else
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::sendRMIdent);
@@ -91,7 +95,10 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::freePGRMem);
@@ -105,6 +112,11 @@ cRmsModuleMeasProgram::cRmsModuleMeasProgram(cRmsModule* module, std::shared_ptr
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cRmsModuleMeasProgram::dataReadDSP);
+
+    if(m_pModule->m_demo){
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cRmsModuleMeasProgram::handleDemoActualValues);
+    }
 }
 
 
@@ -123,6 +135,8 @@ void cRmsModuleMeasProgram::start()
     }
     else
         connect(this, &cBaseMeasProgram::actualValues, this, &cRmsModuleMeasProgram::setInterfaceActualValues);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->start();
 }
 
 
@@ -130,6 +144,8 @@ void cRmsModuleMeasProgram::stop()
 {
     disconnect(this, &cRmsModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowSqare::actualValues, 0, 0);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->stop();
 }
 
 
@@ -683,6 +699,11 @@ void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         for (int i = 0; i < m_veinActValueList.count(); i++)
             m_veinActValueList.at(i)->setValue(QVariant((*actualValues)[i])); // and set entities
     }
+}
+
+void cRmsModuleMeasProgram::handleDemoActualValues()
+{
+
 }
 
 

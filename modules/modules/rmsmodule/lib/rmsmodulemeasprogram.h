@@ -5,6 +5,7 @@
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <movingwindowsqare.h>
+#include <timerperiodicqt.h>
 #include <QFinalState>
 
 namespace RMSMODULE
@@ -114,9 +115,11 @@ private:
     void setSCPIMeasInfo();
 
     cMovingwindowSqare m_movingwindowFilter;
+    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
+    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();
