@@ -112,7 +112,7 @@
       },
       {
         "name" : "sourcemodule",
-        "configFile" : "demo-sourcemodule.xml",
+        "configFile" : "sourcemodule.xml",
         "id": 1300
       },
       {
