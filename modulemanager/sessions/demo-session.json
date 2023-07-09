@@ -7,7 +7,7 @@
       },
       {
         "name" : "rangemodule",
-        "configFile" : "demo-rangemodule.xml",
+        "configFile" : "mt310s2-rangemodule.xml",
         "id": 1020
       },
       {
