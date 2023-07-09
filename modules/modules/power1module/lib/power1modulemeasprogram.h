@@ -15,8 +15,8 @@
 #include <rminterface.h>
 #include <dspinterface.h>
 #include <pcbinterface.h>
+#include <timerperiodicqt.h>
 #include <QFinalState>
-#include <timersingleshotqt.h>
 
 namespace POWER1MODULE
 {
@@ -103,7 +103,6 @@ private:
     void setPhaseMaskValidator(std::shared_ptr<MeasMode> mode);
     void updatePhaseMaskVeinComponents(std::shared_ptr<MeasMode> mode);
     bool canChangePhaseMask(std::shared_ptr<MeasMode> mode);
-    void handleDemoActualValues();
     struct RangeMaxVals
     {
         double maxU = 0.0;
@@ -222,6 +221,7 @@ private:
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
+    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();
