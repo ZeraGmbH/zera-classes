@@ -87,7 +87,7 @@ void test_scpi_cmds_in_session::initialScpiCommandsOnOtherModules()
     // Maybe a bit far fetched but: how about adding modulemanager in
     // zera-classes and use (demo) session files...
     STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "statusmodule.xml");
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
     modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
     QCOMPARE(getEntityCount(&modman), 2);
@@ -125,7 +125,7 @@ void test_scpi_cmds_in_session::multiReadDoubleDeleteCrasher()
     // * tested by reverting fix -> crashed
     ModuleManagerForTest modman;
     STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "statusmodule.xml");
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
@@ -186,7 +186,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntities()
 {
     ModuleManagerForTest modman;
     STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "statusmodule.xml");
     RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
     modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
     SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
@@ -214,7 +214,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
 {
     ModuleManagerForTest modman;
     STATUSMODULE::cStatusModule statusModule(1, 1150, modman.getStorageSystem(), true);
-    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
+    modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "statusmodule.xml");
 
     std::vector<std::unique_ptr<RANGEMODULE::cRangeModule>> ptrList;
     for(int i=1; i<=10; i++) {
