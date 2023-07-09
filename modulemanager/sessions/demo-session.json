@@ -11,6 +11,11 @@
         "id": 1020
       },
       {
+        "name" : "dftmodule",
+        "configFile" : "mt310s2-dftmodule.xml",
+        "id": 1050
+      },
+      {
         "name" : "power1module",
         "configFile" : "demo-power1module.xml",
         "id": 1070

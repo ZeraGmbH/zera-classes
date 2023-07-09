@@ -6,6 +6,7 @@
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <movingwindowfilter.h>
+#include <timerperiodicqt.h>
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
@@ -121,9 +122,11 @@ private:
     void initRFieldMeasurement();
 
     cMovingwindowFilter m_movingwindowFilter;
+    TimerTemplateQtPtr m_demoPeriodicTimer;
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
+    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();
