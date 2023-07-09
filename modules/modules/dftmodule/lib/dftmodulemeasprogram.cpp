@@ -4,6 +4,7 @@
 #include "dftmoduleconfigdata.h"
 #include <errormessages.h>
 #include <movingwindowfilter.h>
+#include <timerfactoryqt.h>
 #include <reply.h>
 #include <proxy.h>
 #include <scpiinfo.h>
@@ -66,7 +67,10 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    else
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cDftModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cDftModuleMeasProgram::sendRMIdent);
@@ -99,7 +103,10 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QState::entered, this, &cDftModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cDftModuleMeasProgram::freePGRMem);
@@ -113,6 +120,11 @@ cDftModuleMeasProgram::cDftModuleMeasProgram(cDftModule* module, std::shared_ptr
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QState::entered, this, &cDftModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cDftModuleMeasProgram::dataReadDSP);
+
+    if(m_pModule->m_demo){
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cDftModuleMeasProgram::handleDemoActualValues);
+    }
 }
 
 
@@ -131,6 +143,8 @@ void cDftModuleMeasProgram::start()
     }
     else
         connect(this, &cDftModuleMeasProgram::actualValues, this, &cDftModuleMeasProgram::setInterfaceActualValues);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->start();
 }
 
 
@@ -138,6 +152,8 @@ void cDftModuleMeasProgram::stop()
 {
     disconnect(this, &cDftModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, 0, 0);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->stop();
 }
 
 
@@ -222,6 +238,9 @@ void cDftModuleMeasProgram::generateInterface()
                                                 QVariant(0));
 
     m_pModule->veinModuleComponentList.append(m_pMeasureSignal);
+
+    if(m_pModule->m_demo)
+        setDspVarList();
 }
 
 
@@ -701,6 +720,24 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
         else
             m_pRFieldActualValue->setValue("132");
     }
+}
+
+void cDftModuleMeasProgram::handleDemoActualValues()
+{
+    int current = 10;
+    int voltage = 230;
+    double angle = 30;
+    QVector<float> valuesDemo;
+    QStringList listEntitiyName;
+    for(const auto veinAct : qAsConst(m_veinActValueList)) {
+        QString name = veinAct->getName();
+        listEntitiyName.append(name);
+    }
+
+    valuesDemo.resize(m_ModuleActualValues.size());
+    //Q_ASSERT(valuesDemo.size() == m_ModuleActualValues.size());
+    m_ModuleActualValues = valuesDemo;
+    emit actualValues(&m_ModuleActualValues);
 }
 
 
