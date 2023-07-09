@@ -2,7 +2,7 @@
     "modules" : [
       {
         "name" : "statusmodule",
-        "configFile" : "statusmodule.xml",
+        "configFile" : "mt310s2-statusmodule.xml",
         "id": 1150
       },
       {
