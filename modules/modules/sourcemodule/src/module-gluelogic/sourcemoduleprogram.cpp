@@ -50,13 +50,15 @@ void SourceModuleProgram::generateInterface()
                                                     QVariant(0) );
     m_pModule->veinModuleActvalueList.append(m_pVeinCountAct); // auto delete / meta-data / scpi
 
-    m_pVeinDemoSourceCount = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                       key = QString("PAR_DemoSources"),
-                                                       QString("Number of demo sources"),
-                                                       QVariant(int(0)));
-    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
-    connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
-    m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
+    if(m_pModule->m_demo) {
+        m_pVeinDemoSourceCount = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                           key = QString("PAR_DemoSources"),
+                                                           QString("Number of demo sources"),
+                                                           QVariant(int(0)));
+        m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
+        connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
+        m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
+    }
 
     // RPCs
     m_sharedPtrRpcScanInterface = VfCpp::cVeinModuleRpc::Ptr(new VfCpp::cVeinModuleRpc(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
