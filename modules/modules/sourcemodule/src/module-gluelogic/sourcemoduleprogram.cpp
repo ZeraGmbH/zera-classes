@@ -141,9 +141,11 @@ configuration *SourceModuleProgram::getConfigXMLWrapper()
 
 void SourceModuleProgram::updateDemoCount()
 {
-    m_bDeafenDemoChange = true;
-    m_pVeinDemoSourceCount->setValue(m_pSourceDeviceManager->getDemoCount());
-    m_bDeafenDemoChange = false;
+    if(m_pModule->m_demo) {
+        m_bDeafenDemoChange = true;
+        m_pVeinDemoSourceCount->setValue(m_pSourceDeviceManager->getDemoCount());
+        m_bDeafenDemoChange = false;
+    }
 }
 
 void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QString errMsg)
