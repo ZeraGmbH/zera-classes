@@ -483,7 +483,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    siInfo->alias = answer.toString();
+                    m_refInputInfo->alias = answer.toString();
                     emit activationContinue();
                 }
                 else
@@ -939,21 +939,21 @@ void cSem1ModuleMeasProgram::testSemInputs()
     qint32 referenceInputCount = getConfData()->m_refInpList.count();
     // first we build up a list with properties for all configured Inputs
     for (int i = 0; i < referenceInputCount; i++) {
-        siInfo = new cSecInputInfo();
-        mREFSemInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = siInfo;
+        m_refInputInfo = new cSecInputInfo();
+        mREFSemInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = m_refInputInfo;
     }
 
-    QList<QString> InputNameList = mREFSemInputInfoHash.keys();
-    while (InputNameList.count() > 0) {
-        QString  name = InputNameList.takeFirst();
+    auto refInputNames = mREFSemInputInfoHash.keys();
+    for(const auto &refInputName : refInputNames) {
         for (int i = 0; i < m_ResourceTypeList.count(); i++) {
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-            if (resourcelist.contains(name)) {
+            if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
-                siInfo = mREFSemInputInfoHash.take(name);
-                siInfo->name = name;
-                siInfo->resource = m_ResourceTypeList.at(i);
-                mREFSemInputInfoHash[name] = siInfo;
+
+                m_refInputInfo = mREFSemInputInfoHash.take(refInputName);
+                m_refInputInfo->name = refInputName;
+                m_refInputInfo->resource = m_ResourceTypeList.at(i);
+                mREFSemInputInfoHash[refInputName] = m_refInputInfo;
                 break;
             }
         }
@@ -1009,20 +1009,20 @@ void cSem1ModuleMeasProgram::readREFInputs()
 void cSem1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    siInfo = mREFSemInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    siInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    siInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
-    //m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readrefInputalias;
+    m_refInputInfo = mREFSemInputInfoHash.take(m_sIt); // if set some info that could be useful later
+    m_refInputInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
+    m_refInputInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
+    //m_MsgNrCmdList[m_refInputInfo->pcbIFace->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readrefInputalias;
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
-    m_MsgNrCmdList[siInfo->pcbIFace->getPowTypeSource(m_sIt)] = readrefInputalias;
+    m_MsgNrCmdList[m_refInputInfo->pcbIFace->getPowTypeSource(m_sIt)] = readrefInputalias;
 
 }
 
 
 void cSem1ModuleMeasProgram::readREFInputDone()
 {
-    mREFSemInputInfoHash[siInfo->name] = siInfo;
+    mREFSemInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1056,8 +1056,8 @@ void cSem1ModuleMeasProgram::activationDone()
     for (int i = 0; i < nref; i++) {
         QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
         m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
-        siInfo = mREFSemInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
-        mREFSemInputSelectionHash[displayString] = siInfo;
+        m_refInputInfo = mREFSemInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
+        mREFSemInputSelectionHash[displayString] = m_refInputInfo;
     }
 
     connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSem1ModuleMeasProgram::Actualize);
