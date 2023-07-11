@@ -35,7 +35,7 @@ private:
 
     VfModuleActvalue* m_pVeinMaxCountAct;
     VfModuleActvalue* m_pVeinCountAct;
-    VfModuleParameter* m_pVeinDemoSourceCount;
+    VfModuleParameter* m_pVeinDemoSourceCount = nullptr;
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcScanInterface;
     VfCpp::cVeinModuleRpc::Ptr m_sharedPtrRpcRemoveInterface;
 
