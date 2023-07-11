@@ -1029,33 +1029,20 @@ void cSec1ModuleMeasProgram::readResource()
 
 void cSec1ModuleMeasProgram::testSecInputs()
 {
-    QList<QString> InputNameList;
-    qint32 nref;
-
-    nref = getConfData()->m_refInpList.count();
-
+    qint32 referenceInputCount = getConfData()->m_refInpList.count();
     // first we build up a list with properties for all configured Inputs
-    for (int i = 0; i < nref; i++)
-    {
-        // siInfo.muxchannel = getConfData()->m_refInpList.at(i).m_nMuxerCode;
+    for (int i = 0; i < referenceInputCount; i++) {
         siInfo = new cSecInputInfo();
         mREFSecInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = siInfo;
     }
 
-    InputNameList = mREFSecInputInfoHash.keys();
-
-    while (InputNameList.count() > 0)
-    {
-        QString name;
-        name = InputNameList.takeFirst();
-
-        for (int i = 0; i < m_ResourceTypeList.count(); i++)
-        {
-            QString resourcelist;
-            resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-            if (resourcelist.contains(name))
-            {
-                nref--;
+    QList<QString> InputNameList = mREFSecInputInfoHash.keys();
+    while (InputNameList.count() > 0) {
+        QString name = InputNameList.takeFirst();
+        for (int i = 0; i < m_ResourceTypeList.count(); i++) {
+            QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+            if (resourcelist.contains(name)) {
+                referenceInputCount--;
                 siInfo = mREFSecInputInfoHash.take(name);
                 siInfo->name = name;
                 siInfo->resource = m_ResourceTypeList.at(i);
@@ -1064,31 +1051,19 @@ void cSec1ModuleMeasProgram::testSecInputs()
             }
         }
     }
-
-    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
-    {
-        // siInfo.muxchannel = getConfData()->m_dutInpList.at(i).m_nMuxerCode;
+    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++) {
         siInfo = new cSecInputInfo();
         mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)] = siInfo;
     }
 
-    qint32 ndut;
-
-    ndut = mDUTSecInputInfoHash.count(); // we have n configured dut Inputs
+    qint32 dutInputCount = mDUTSecInputInfoHash.count(); // we have n configured dut Inputs
     InputNameList = mDUTSecInputInfoHash.keys();
-
-    while (InputNameList.count() > 0)
-    {
-        QString name;
-        name = InputNameList.takeFirst();
-
-        for (int i = 0; i < m_ResourceTypeList.count(); i++)
-        {
-            QString resourcelist;
-            resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-            if (resourcelist.contains(name))
-            {
-                ndut--;
+    while (InputNameList.count() > 0) {
+        QString name = InputNameList.takeFirst();
+        for (int i = 0; i < m_ResourceTypeList.count(); i++) {
+            QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+            if (resourcelist.contains(name)) {
+                dutInputCount--;
                 siInfo = mDUTSecInputInfoHash.take(name);
                 siInfo->name = name;
                 siInfo->resource = m_ResourceTypeList.at(i);
@@ -1098,16 +1073,12 @@ void cSec1ModuleMeasProgram::testSecInputs()
         }
     }
 
-    if ((nref == 0) && (ndut == 0)) // we found all our configured Inputs
-    {
+    if ((referenceInputCount == 0) && (dutInputCount == 0)) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
-    }
-    else
-    {
+    else {
         emit errMsg((tr(resourceErrMsg)));
         emit activationError();
     }
-
 }
 
 

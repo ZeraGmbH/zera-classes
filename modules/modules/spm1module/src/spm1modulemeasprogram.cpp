@@ -924,33 +924,20 @@ void cSpm1ModuleMeasProgram::readResource()
 
 void cSpm1ModuleMeasProgram::testSpmInputs()
 {
-    QList<QString> InputNameList;
-    qint32 nref;
-
-    nref = getConfData()->m_refInpList.count();
-
+    qint32 referenceInputCount = getConfData()->m_refInpList.count();
     // first we build up a list with properties for all configured Inputs
-    for (int i = 0; i < nref; i++)
-    {
-        // siInfo.muxchannel = getConfData()->m_refInpList.at(i).m_nMuxerCode;
+    for (int i = 0; i < referenceInputCount; i++) {
         siInfo = new cSecInputInfo();
         mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)] = siInfo;
     }
 
-    InputNameList = mREFSpmInputInfoHash.keys();
-
-    while (InputNameList.count() > 0)
-    {
-        QString name;
-        name = InputNameList.takeFirst();
-
-        for (int i = 0; i < m_ResourceTypeList.count(); i++)
-        {
-            QString resourcelist;
-            resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-            if (resourcelist.contains(name))
-            {
-                nref--;
+    QList<QString> InputNameList = mREFSpmInputInfoHash.keys();
+    while (InputNameList.count() > 0) {
+        QString  name = InputNameList.takeFirst();
+        for (int i = 0; i < m_ResourceTypeList.count(); i++) {
+            QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+            if (resourcelist.contains(name)) {
+                referenceInputCount--;
                 siInfo = mREFSpmInputInfoHash.take(name);
                 siInfo->name = name;
                 siInfo->resource = m_ResourceTypeList.at(i);
@@ -959,13 +946,9 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
             }
         }
     }
-
-    if (nref == 0) // we found all our configured Inputs
-    {
+    if (referenceInputCount == 0) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
-    }
-    else
-    {
+    else {
         emit errMsg((tr(resourceErrMsg)));
         emit activationError();
     }
