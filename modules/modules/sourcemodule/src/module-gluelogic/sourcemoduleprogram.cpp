@@ -141,7 +141,7 @@ configuration *SourceModuleProgram::getConfigXMLWrapper()
 
 void SourceModuleProgram::updateDemoCount()
 {
-    if(m_pModule->m_demo) {
+    if(m_pVeinDemoSourceCount) {
         m_bDeafenDemoChange = true;
         m_pVeinDemoSourceCount->setValue(m_pSourceDeviceManager->getDemoCount());
         m_bDeafenDemoChange = false;
