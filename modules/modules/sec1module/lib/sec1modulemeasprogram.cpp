@@ -1037,10 +1037,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
-                m_refInputInfo = mREFSecInputInfoHash.take(refInputName);
-                m_refInputInfo->name = refInputName;
-                m_refInputInfo->resource = m_ResourceTypeList.at(i);
-                mREFSecInputInfoHash[refInputName] = m_refInputInfo;
+                mREFSecInputInfoHash[refInputName]->name = refInputName;
+                mREFSecInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
                 break;
             }
         }
@@ -1056,10 +1054,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(dutInputName)) {
                 dutInputCount--;
-                m_refInputInfo = mDUTSecInputInfoHash.take(dutInputName);
-                m_refInputInfo->name = dutInputName;
-                m_refInputInfo->resource = m_ResourceTypeList.at(i);
-                mDUTSecInputInfoHash[dutInputName] = m_refInputInfo;
+                mDUTSecInputInfoHash[dutInputName]->name = dutInputName;
+                mDUTSecInputInfoHash[dutInputName]->resource = m_ResourceTypeList.at(i);
                 break;
             }
         }

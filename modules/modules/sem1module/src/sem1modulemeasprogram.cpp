@@ -945,11 +945,8 @@ void cSem1ModuleMeasProgram::testSemInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
-
-                m_refInputInfo = mREFSemInputInfoHash.take(refInputName);
-                m_refInputInfo->name = refInputName;
-                m_refInputInfo->resource = m_ResourceTypeList.at(i);
-                mREFSemInputInfoHash[refInputName] = m_refInputInfo;
+                mREFSemInputInfoHash[refInputName]->name = refInputName;
+                mREFSemInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
                 break;
             }
         }
@@ -1008,7 +1005,6 @@ void cSem1ModuleMeasProgram::readREFInputAlias()
     m_refInputInfo = mREFSemInputInfoHash.take(m_sIt); // if set some info that could be useful later
     m_refInputInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
     m_refInputInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
-    //m_MsgNrCmdList[m_refInputInfo->pcbIFace->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readrefInputalias;
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
     m_MsgNrCmdList[m_refInputInfo->pcbIFace->getPowTypeSource(m_sIt)] = readrefInputalias;

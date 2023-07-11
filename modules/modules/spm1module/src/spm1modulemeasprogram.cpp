@@ -931,10 +931,8 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
-                m_refInputInfo = mREFSpmInputInfoHash.take(refInputName);
-                m_refInputInfo->name = refInputName;
-                m_refInputInfo->resource = m_ResourceTypeList.at(i);
-                mREFSpmInputInfoHash[refInputName] = m_refInputInfo;
+                mREFSpmInputInfoHash[refInputName]->name = refInputName;
+                mREFSpmInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
                 break;
             }
         }
