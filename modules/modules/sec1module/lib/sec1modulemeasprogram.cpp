@@ -171,13 +171,13 @@ cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
     int n = getConfData()->m_refInpList.count();
     for (int i = 0; i < n; i++) {
         cSec1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
-        siInfo = mREFSecInputInfoHash.take(refInput.inputName); // change the hash for access via alias
-        delete siInfo;
+        m_refInputInfo = mREFSecInputInfoHash.take(refInput.inputName); // change the hash for access via alias
+        delete m_refInputInfo;
     }
     n = getConfData()->m_dutInpList.count();
     for (int i = 0; i < n; i++) {
-        siInfo = mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i)); // change the hash for access via alias
-        delete siInfo;
+        m_refInputInfo = mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i)); // change the hash for access via alias
+        delete m_refInputInfo;
     }
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
@@ -563,7 +563,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readrefInputalias:
             {
                 if (reply == ack) {
-                    siInfo->alias = answer.toString();
+                    m_refInputInfo->alias = answer.toString();
                     emit activationContinue();
                 }
                 else
@@ -574,7 +574,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readdutInputalias:
             {
                 if (reply == ack) {
-                    siInfo->alias = answer.toString();
+                    m_refInputInfo->alias = answer.toString();
                     emit activationContinue();
                 }
                 else
@@ -1032,42 +1032,41 @@ void cSec1ModuleMeasProgram::testSecInputs()
     qint32 referenceInputCount = getConfData()->m_refInpList.count();
     // first we build up a list with properties for all configured Inputs
     for (int i = 0; i < referenceInputCount; i++) {
-        siInfo = new cSecInputInfo();
-        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = siInfo;
+        m_refInputInfo = new cSecInputInfo();
+        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = m_refInputInfo;
     }
 
-    QList<QString> InputNameList = mREFSecInputInfoHash.keys();
-    while (InputNameList.count() > 0) {
-        QString name = InputNameList.takeFirst();
+    auto refInputNames = mREFSecInputInfoHash.keys();
+    for(const auto &refInputName : refInputNames) {
         for (int i = 0; i < m_ResourceTypeList.count(); i++) {
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-            if (resourcelist.contains(name)) {
+            if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
-                siInfo = mREFSecInputInfoHash.take(name);
-                siInfo->name = name;
-                siInfo->resource = m_ResourceTypeList.at(i);
-                mREFSecInputInfoHash[name] = siInfo;
+                m_refInputInfo = mREFSecInputInfoHash.take(refInputName);
+                m_refInputInfo->name = refInputName;
+                m_refInputInfo->resource = m_ResourceTypeList.at(i);
+                mREFSecInputInfoHash[refInputName] = m_refInputInfo;
                 break;
             }
         }
     }
+
     for (int i = 0; i < getConfData()->m_dutInpList.count(); i++) {
-        siInfo = new cSecInputInfo();
-        mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)] = siInfo;
+        m_refInputInfo = new cSecInputInfo();
+        mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)] = m_refInputInfo;
     }
 
-    qint32 dutInputCount = mDUTSecInputInfoHash.count(); // we have n configured dut Inputs
-    InputNameList = mDUTSecInputInfoHash.keys();
-    while (InputNameList.count() > 0) {
-        QString name = InputNameList.takeFirst();
+    qint32 dutInputCount = mDUTSecInputInfoHash.count();
+    auto dutInputNames = mDUTSecInputInfoHash.keys();
+    for(const auto &dutInputName : dutInputNames) {
         for (int i = 0; i < m_ResourceTypeList.count(); i++) {
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
-            if (resourcelist.contains(name)) {
+            if (resourcelist.contains(dutInputName)) {
                 dutInputCount--;
-                siInfo = mDUTSecInputInfoHash.take(name);
-                siInfo->name = name;
-                siInfo->resource = m_ResourceTypeList.at(i);
-                mDUTSecInputInfoHash[name] = siInfo;
+                m_refInputInfo = mDUTSecInputInfoHash.take(dutInputName);
+                m_refInputInfo->name = dutInputName;
+                m_refInputInfo->resource = m_ResourceTypeList.at(i);
+                mDUTSecInputInfoHash[dutInputName] = m_refInputInfo;
                 break;
             }
         }
@@ -1124,20 +1123,20 @@ void cSec1ModuleMeasProgram::readREFInputs()
 void cSec1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    siInfo = mREFSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    siInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    siInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
-    //m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readrefInputalias;
+    m_refInputInfo = mREFSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
+    m_refInputInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
+    m_refInputInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
+    //m_MsgNrCmdList[m_refInputInfo->pcbIFace->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readrefInputalias;
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
-    m_MsgNrCmdList[siInfo->pcbIFace->getPowTypeSource(m_sIt)] = readrefInputalias;
+    m_MsgNrCmdList[m_refInputInfo->pcbIFace->getPowTypeSource(m_sIt)] = readrefInputalias;
 
 }
 
 
 void cSec1ModuleMeasProgram::readREFInputDone()
 {
-    mREFSecInputInfoHash[siInfo->name] = siInfo;
+    mREFSecInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1155,16 +1154,16 @@ void cSec1ModuleMeasProgram::readDUTInputs()
 void cSec1ModuleMeasProgram::readDUTInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    siInfo = mDUTSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    siInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    siInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
-    m_MsgNrCmdList[siInfo->pcbIFace->resourceAliasQuery(siInfo->resource, m_sIt)] = readdutInputalias;
+    m_refInputInfo = mDUTSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
+    m_refInputInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
+    m_refInputInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
+    m_MsgNrCmdList[m_refInputInfo->pcbIFace->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readdutInputalias;
 }
 
 
 void cSec1ModuleMeasProgram::readDUTInputDone()
 {
-    mDUTSecInputInfoHash[siInfo->name] = siInfo;
+    mDUTSecInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1198,15 +1197,15 @@ void cSec1ModuleMeasProgram::activationDone()
     for (int i = 0; i < nref; i++) {
         QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
         m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
-        siInfo = mREFSecInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
-        mREFSecInputSelectionHash[displayString] = siInfo;
+        m_refInputInfo = mREFSecInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
+        mREFSecInputSelectionHash[displayString] = m_refInputInfo;
     }
 
     for (int i = 0; i < confData->m_dutInpList.count(); i++)
     {
         m_DUTAliasList.append(mDUTSecInputInfoHash[confData->m_dutInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        siInfo = mDUTSecInputInfoHash[confData->m_dutInpList.at(i)]; // change the hash for access via alias
-        mDUTSecInputSelectionHash[siInfo->alias] = siInfo;
+        m_refInputInfo = mDUTSecInputInfoHash[confData->m_dutInpList.at(i)]; // change the hash for access via alias
+        mDUTSecInputSelectionHash[m_refInputInfo->alias] = m_refInputInfo;
     }
 
     m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);

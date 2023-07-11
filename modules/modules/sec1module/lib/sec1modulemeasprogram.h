@@ -136,7 +136,7 @@ private:
     QStringList m_DUTAliasList;
     qint32 m_nIt;
     QList<QString> m_sItList; // for interation over x Input hash
-    cSecInputInfo* siInfo;
+    cSecInputInfo* m_refInputInfo;
     QString m_sIt;
 
     cECalcChannelInfo m_MasterEcalculator;

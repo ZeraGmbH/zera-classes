@@ -140,7 +140,7 @@ private:
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     qint32 m_nIt;
     QList<QString> m_sItList; // for interation over x Input hash
-    cSecInputInfo* siInfo;
+    cSecInputInfo* m_refInputInfo;
     QString m_sIt;
 
     cECalcChannelInfo m_MasterEcalculator;
