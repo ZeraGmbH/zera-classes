@@ -72,7 +72,7 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "mt310s2-sec1module_f1f0.xml",
+        "configFile" : "mt310s2-sec1module-emob.xml",
         "id": 1130
       },
       {
@@ -87,7 +87,7 @@
       },
       {
         "name" : "sem1module",
-        "configFile" : "mt310s2-sem1module_f1f0.xml",
+        "configFile" : "mt310s2-sem1module-emob.xml",
         "id": 1200
       },
       {
