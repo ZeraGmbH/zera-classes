@@ -168,17 +168,14 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
 
 cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
 {
-    int n = getConfData()->m_refInpList.count();
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < getConfData()->m_refInpList.count(); i++) {
         cSec1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
-        m_refInputInfo = mREFSecInputInfoHash.take(refInput.inputName); // change the hash for access via alias
-        delete m_refInputInfo;
+        delete mREFSecInputInfoHash.take(refInput.inputName);
     }
-    n = getConfData()->m_dutInpList.count();
-    for (int i = 0; i < n; i++) {
-        m_refInputInfo = mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i)); // change the hash for access via alias
-        delete m_refInputInfo;
-    }
+
+    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
+        delete mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i));
+
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;

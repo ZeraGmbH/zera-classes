@@ -182,11 +182,9 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
 
 cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
 {
-    int n = getConfData()->m_refInpList.count();
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < getConfData()->m_refInpList.count(); i++) {
         cSem1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
-        siInfo = mREFSemInputInfoHash.take(refInput.inputName); // change the hash for access via alias
-        delete siInfo;
+        delete mREFSemInputInfoHash.take(refInput.inputName); // change the hash for access via alias
     }
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);

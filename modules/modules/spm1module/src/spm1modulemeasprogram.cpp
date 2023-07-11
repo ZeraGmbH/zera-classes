@@ -180,12 +180,8 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
 
 cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
 {
-    int n = getConfData()->m_refInpList.count();
-    for (int i = 0; i < n; i++)
-    {
-        m_refInputInfo = mREFSpmInputInfoHash.take(getConfData()->m_refInpList.at(i));
-        delete m_refInputInfo;
-    }
+    for (int i = 0; i < getConfData()->m_refInpList.count(); i++)
+        delete mREFSpmInputInfoHash.take(getConfData()->m_refInpList.at(i));
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;
