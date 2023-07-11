@@ -936,10 +936,8 @@ void cSem1ModuleMeasProgram::testSemInputs()
 {
     qint32 referenceInputCount = getConfData()->m_refInpList.count();
     // first we build up a list with properties for all configured Inputs
-    for (int i = 0; i < referenceInputCount; i++) {
-        m_refInputInfo = new cSecInputInfo();
-        mREFSemInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = m_refInputInfo;
-    }
+    for (int i = 0; i < referenceInputCount; i++)
+        mREFSemInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = new cSecInputInfo();
 
     auto refInputNames = mREFSemInputInfoHash.keys();
     for(const auto &refInputName : refInputNames) {

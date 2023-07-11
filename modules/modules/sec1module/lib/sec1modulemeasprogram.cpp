@@ -1028,10 +1028,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
 {
     qint32 referenceInputCount = getConfData()->m_refInpList.count();
     // first we build up a list with properties for all configured Inputs
-    for (int i = 0; i < referenceInputCount; i++) {
-        m_refInputInfo = new cSecInputInfo();
-        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = m_refInputInfo;
-    }
+    for (int i = 0; i < referenceInputCount; i++)
+        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = new cSecInputInfo();
 
     auto refInputNames = mREFSecInputInfoHash.keys();
     for(const auto &refInputName : refInputNames) {
@@ -1048,10 +1046,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
         }
     }
 
-    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++) {
-        m_refInputInfo = new cSecInputInfo();
-        mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)] = m_refInputInfo;
-    }
+    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
+        mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)] = new cSecInputInfo();
 
     qint32 dutInputCount = mDUTSecInputInfoHash.count();
     auto dutInputNames = mDUTSecInputInfoHash.keys();
