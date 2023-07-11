@@ -922,10 +922,8 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
 {
     qint32 referenceInputCount = getConfData()->m_refInpList.count();
     // first we build up a list with properties for all configured Inputs
-    for (int i = 0; i < referenceInputCount; i++) {
-        m_refInputInfo = new cSecInputInfo();
-        mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)] = m_refInputInfo;
-    }
+    for (int i = 0; i < referenceInputCount; i++)
+        mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)] = new cSecInputInfo();
 
     auto refInputNames = mREFSpmInputInfoHash.keys();
     for(const auto &refInputName : refInputNames) {
