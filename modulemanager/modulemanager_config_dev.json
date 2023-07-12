@@ -2,7 +2,7 @@
   "deviceName" : "mt310s2",
   "mt310s2" : {
     "availableSessions" : ["mt310s2-meas-session.json", "mt310s2-dc-session.json", "mt310s2-emob-session.json", "mt310s2-ced-session.json"],
-    "defaultSession" : "mt310s2-emob-session.json",
+    "defaultSession" : "mt310s2-dc-session.json",
     "customerdataSystemEnabled" : true
   },
   "com5003" : {
