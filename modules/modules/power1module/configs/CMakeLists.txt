@@ -5,7 +5,6 @@ file(GLOB XML_CONFIGS
     ${CMAKE_CURRENT_SOURCE_DIR}/lem_dc/*.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/ref/*.xml
     ${CMAKE_CURRENT_SOURCE_DIR}/perphase/*.xml
-    ${CMAKE_CURRENT_SOURCE_DIR}/demo/*.xml
 )
 
 file(GLOB XML_SCHEMA
