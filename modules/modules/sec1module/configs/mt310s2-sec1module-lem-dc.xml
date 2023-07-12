@@ -32,6 +32,12 @@
                 <inp3>fo2</inp3>
                 <inp4>fo3</inp4>
             </refinput>
+            <refinput_appends>
+                <append1> 1</append1>
+                <append2> 2</append2>
+                <append3> 3</append3>
+                <append4> AUX</append4>
+            </refinput_appends>
         </measure>
     </configuration>
     <parameter>
