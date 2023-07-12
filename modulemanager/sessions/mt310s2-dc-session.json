@@ -72,7 +72,7 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "mt310s2-sec1module.xml",
+        "configFile" : "mt310s2-sec1module-lem-dc.xml",
         "id": 1130
       },
       {
