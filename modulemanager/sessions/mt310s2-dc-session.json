@@ -87,13 +87,8 @@
       },
       {
         "name" : "sem1module",
-        "configFile" : "mt310s2-sem1module.xml",
+        "configFile" : "mt310s2-sem1module-lem-dc.xml",
         "id": 1200
-      },
-      {
-        "name" : "spm1module",
-        "configFile" : "mt310s2-spm1module.xml",
-        "id": 1210
       },
       {
         "name" : "sourcemodule",
