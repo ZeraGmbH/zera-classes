@@ -1,9 +1,9 @@
 add_subdirectory(dsp-helpers)
 add_subdirectory(module-qt-plugin-interface)
 add_subdirectory(module-tasks)
+add_subdirectory(module-validators)
 add_subdirectory(service-interfaces)
 add_subdirectory(vf-cpp-module-wrappers)
-add_subdirectory(zera-validator)
 add_subdirectory(zera-basemodule)
 add_subdirectory(vf-moduleinterface)
 
