@@ -5,7 +5,6 @@
 #include <basemeasprogram.h>
 #include <clientactivecomponent.h>
 #include <secinputinfo.h>
-#include <ecalcinfo.h>
 #include <memory>
 #include <secinterface.h>
 
@@ -151,9 +150,9 @@ private:
     SecInputInfo* m_refInputInfo;
     QString m_sIt;
 
-    cECalcChannelInfo m_MasterEcalculator;
-    cECalcChannelInfo m_SlaveEcalculator;
-    cECalcChannelInfo m_Slave2Ecalculator;
+    QString m_masterErrCalcName;
+    QString m_slaveErrCalcName;
+    QString m_slave2ErrCalcName;
 
     VfModuleParameter* m_pRefInputPar;
     VfModuleParameter* m_pRefConstantPar;

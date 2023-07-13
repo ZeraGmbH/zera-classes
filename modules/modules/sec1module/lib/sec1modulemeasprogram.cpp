@@ -544,12 +544,8 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 QStringList sl;
                 sl = answer.toString().split(';');
                 if ((reply == ack) && (sl.length() >= 2)) {
-                    m_MasterEcalculator.name = sl.at(0);
-                    m_MasterEcalculator.secIFace = m_pSECInterface;
-                    m_MasterEcalculator.secServersocket = getConfData()->m_SECServerSocket;
-                    m_SlaveEcalculator.name = sl.at(1);
-                    m_SlaveEcalculator.secIFace = m_pSECInterface;
-                    m_SlaveEcalculator.secServersocket = getConfData()->m_SECServerSocket;
+                    m_masterErrCalcName = sl.at(0);
+                    m_slaveErrCalcName = sl.at(1);
                     emit activationContinue();
                 }
                 else
@@ -917,9 +913,9 @@ void cSec1ModuleMeasProgram::startNext()
     // Notes on re-start:
     // * We don't need the whole start state machine here
     // * There is too much magic in startMeasurement so we cannnot use it here either
-    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
+    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_nStatus = ECALCSTATUS::ARMED | ECALCSTATUS::READY;
-    m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
+    m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     startMeasurementDone();
 }
 
@@ -1166,7 +1162,7 @@ void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
 
 void cSec1ModuleMeasProgram::setsecINTNotifier()
 {
-    m_MsgNrCmdList[m_pSECInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_MasterEcalculator.name).arg(ECALCREG::INTREG))] = setsecintnotifier;
+    m_MsgNrCmdList[m_pSECInterface->registerNotifier(QString("ECAL:%1:R%2?").arg(m_masterErrCalcName).arg(ECALCREG::INTREG))] = setsecintnotifier;
 }
 
 
@@ -1278,7 +1274,7 @@ void cSec1ModuleMeasProgram::deactivationDone()
 
 void cSec1ModuleMeasProgram::setSync()
 {
-    m_MsgNrCmdList[m_pSECInterface->setSync(m_SlaveEcalculator.name, m_MasterEcalculator.name)] = setsync;
+    m_MsgNrCmdList[m_pSECInterface->setSync(m_slaveErrCalcName, m_masterErrCalcName)] = setsync;
 }
 
 
@@ -1288,41 +1284,41 @@ void cSec1ModuleMeasProgram::setMeaspulses()
         m_nDUTPulseCounterStart = 1;
     else
         m_nDUTPulseCounterStart = m_pMRatePar->getValue().toLongLong();
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::MTCNTin, m_nDUTPulseCounterStart)] = setmeaspulses;
 }
 
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_MasterEcalculator.name, mDUTSecInputSelectionHash[m_pDutInputPar->getValue().toString()]->name)] = setmastermux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, mDUTSecInputSelectionHash[m_pDutInputPar->getValue().toString()]->name)] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_SlaveEcalculator.name, mREFSecInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSecInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
 }
 
 
 void cSec1ModuleMeasProgram::setMasterMeasMode()
 {
     if (m_pContinuousPar->getValue().toInt() == 0 || m_pDutInputPar->getValue().toString().contains("HK"))
-        m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
+        m_MsgNrCmdList[m_pSECInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::SINGLEERRORMASTER)] = setmastermeasmode;
     else
-        m_MsgNrCmdList[m_pSECInterface->setCmdid(m_MasterEcalculator.name, ECALCCMDID::CONTERRORMASTER)] = setmastermeasmode;
+        m_MsgNrCmdList[m_pSECInterface->setCmdid(m_masterErrCalcName, ECALCCMDID::CONTERRORMASTER)] = setmastermeasmode;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMeasMode()
 {
-    m_MsgNrCmdList[m_pSECInterface->setCmdid(m_SlaveEcalculator.name, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
+    m_MsgNrCmdList[m_pSECInterface->setCmdid(m_slaveErrCalcName, ECALCCMDID::ERRORMEASSLAVE)] = setslavemeasmode;
 
 }
 
 
 void cSec1ModuleMeasProgram::enableInterrupt()
 {
-    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_MasterEcalculator.name, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
+    m_MsgNrCmdList[m_pSECInterface->writeRegister(m_masterErrCalcName, ECALCREG::INTMASK, ECALCINT::MTCount0)] = enableinterrupt;
 }
 
 
@@ -1336,7 +1332,7 @@ void cSec1ModuleMeasProgram::startMeasurement()
     m_pProgressAct->setValue(QVariant(m_fProgress));
     m_bMeasurementRunning = true;
     // All preparations done: do start
-    m_MsgNrCmdList[m_pSECInterface->start(m_MasterEcalculator.name)] = startmeasurement;
+    m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
 }
 
 
@@ -1349,19 +1345,19 @@ void cSec1ModuleMeasProgram::startMeasurementDone() // final state of m_startMea
 
 void cSec1ModuleMeasProgram::readIntRegister()
 {
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::INTREG)] = readintregister;
+    m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::INTREG)] = readintregister;
 }
 
 
 void cSec1ModuleMeasProgram::resetIntRegister()
 {
-    m_MsgNrCmdList[m_pSECInterface->intAck(m_MasterEcalculator.name, 0xF)] = resetintregister; // we reset all here
+    m_MsgNrCmdList[m_pSECInterface->intAck(m_masterErrCalcName, 0xF)] = resetintregister; // we reset all here
 }
 
 
 void cSec1ModuleMeasProgram::readMTCountact()
 {
-    m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTfin)] = readvicount;
+    m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTfin)] = readvicount;
 }
 
 
@@ -1699,9 +1695,9 @@ void cSec1ModuleMeasProgram::Actualize()
 {
     if(m_bMeasurementRunning) { // still running
         if((m_nStatus & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
-            m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::STATUS)] = actualizestatus;
-            m_MsgNrCmdList[m_pSECInterface->readRegister(m_MasterEcalculator.name, ECALCREG::MTCNTact)] = actualizeprogress;
-            m_MsgNrCmdList[m_pSECInterface->readRegister(m_SlaveEcalculator.name, ECALCREG::MTCNTact)] = actualizeenergy;
+            m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
+            m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
+            m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
         }
         else { // wait: actualize progress
             double waitTimeMs = m_pMeasWait->getValue().toInt() * 1000;
@@ -1728,7 +1724,7 @@ void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
         m_pStatusAct->setValue(QVariant(m_nStatus));
     }
     m_bMeasurementRunning = false;
-    m_MsgNrCmdList[m_pSECInterface->stop(m_MasterEcalculator.name)] = stopmeas;
+    m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer.stop();
     m_WaitMultiTimer.stop();
