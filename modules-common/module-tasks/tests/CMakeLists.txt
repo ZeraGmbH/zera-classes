@@ -4,4 +4,5 @@ SETUP_QTESTS(
 )
 
 add_subdirectory(pcb-server)
+add_subdirectory(resman)
 
