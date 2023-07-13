@@ -87,15 +87,23 @@ private:
     QState m_readResourceTypesState; // read all resource types ...at the moment we set a list of predefined resource types
     QState m_readResourcesState; // init to read all resource information for each type
     QState m_readResourceState; // read for 1 type
+
+    // setup MultiReferenceConstantContainer
     QState m_testSemInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
+    // end setup MultiReferenceConstantContainer
+
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 3 error calc units from sec server
     QState m_pcbServerConnectState; // connect to pcb server
+
+    // move to MultiReferenceConstantContainer
     QState m_readREFInputsState; // init to read all ref Input informations
     QState m_readREFInputAliasState; // read for 1 Input
     QState m_readREFInputDoneState;
     QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
     QState m_setsecINTNotifierState; // we get notified on sec interrupts
+    // end move to MultiReferenceConstantContainer
+
     QFinalState m_activationDoneState; // and then we have finished
 
     // statemachine for deactivating
