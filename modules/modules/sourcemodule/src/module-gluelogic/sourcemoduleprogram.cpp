@@ -100,16 +100,14 @@ void SourceModuleProgram::generateInterface()
 
         m_arrVeinIoInterfaces.append(sourceVeinInterface);
     }
-    if(m_pModule->m_demo) {
-        m_pVeinDemoSourceCount = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
-                                                       key = QString("PAR_DemoSources"),
-                                                       QString("Number of demo sources"),
-                                                       QVariant(int(0)));
-        m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
-        connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
-        m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
-        newDemoSourceCount(QVariant(maxSources));
-    }
+    m_pVeinDemoSourceCount = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                   key = QString("PAR_DemoSources"),
+                                                   QString("Number of demo sources"),
+                                                   QVariant(int(0)));
+    m_pVeinDemoSourceCount->setValidator(new cIntValidator(0, maxSources));
+    connect(m_pVeinDemoSourceCount, &VfModuleParameter::sigValueChanged, this, &SourceModuleProgram::newDemoSourceCount);
+    m_pModule->veinModuleParameterHash[key] = m_pVeinDemoSourceCount; // auto delete / meta-data / scpi
+    newDemoSourceCount(QVariant(m_pModule->m_demo ? maxSources : 0));
 }
 
 void SourceModuleProgram::startDestroy()
@@ -141,11 +139,9 @@ configuration *SourceModuleProgram::getConfigXMLWrapper()
 
 void SourceModuleProgram::updateDemoCount()
 {
-    if(m_pVeinDemoSourceCount) {
-        m_bDeafenDemoChange = true;
-        m_pVeinDemoSourceCount->setValue(m_pSourceDeviceManager->getDemoCount());
-        m_bDeafenDemoChange = false;
-    }
+    m_bDeafenDemoChange = true;
+    m_pVeinDemoSourceCount->setValue(m_pSourceDeviceManager->getDemoCount());
+    m_bDeafenDemoChange = false;
 }
 
 void SourceModuleProgram::onSourceScanFinished(int slotPosition, QUuid uuid, QString errMsg)
