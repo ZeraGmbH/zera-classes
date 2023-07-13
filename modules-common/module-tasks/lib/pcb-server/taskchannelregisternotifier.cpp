@@ -26,5 +26,6 @@ quint32 TaskChannelRegisterNotifier::sendToServer()
 
 bool TaskChannelRegisterNotifier::handleCheckedServerAnswer(QVariant answer)
 {
+    Q_UNUSED(answer)
     return true;
 }
