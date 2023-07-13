@@ -1027,25 +1027,19 @@ void cSec1ModuleMeasProgram::readResource()
 void cSec1ModuleMeasProgram::testSecInputs()
 {
     qint32 referenceInputCount = getConfData()->m_refInpList.count();
-    // first we build up a list with properties for all configured Inputs
-    for (int i = 0; i < referenceInputCount; i++)
-        mREFSecInputInfoHash[getConfData()->m_refInpList.at(i).inputName] = new cSecInputInfo();
-
     auto refInputNames = mREFSecInputInfoHash.keys();
     for(const auto &refInputName : refInputNames) {
         for (int i = 0; i < m_ResourceTypeList.count(); i++) {
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
+                mREFSecInputInfoHash[refInputName] = new cSecInputInfo();
                 mREFSecInputInfoHash[refInputName]->name = refInputName;
                 mREFSecInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
                 break;
             }
         }
     }
-
-    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
-        mDUTSecInputInfoHash[getConfData()->m_dutInpList.at(i)] = new cSecInputInfo();
 
     qint32 dutInputCount = mDUTSecInputInfoHash.count();
     auto dutInputNames = mDUTSecInputInfoHash.keys();
@@ -1054,6 +1048,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(dutInputName)) {
                 dutInputCount--;
+                mDUTSecInputInfoHash[dutInputName] = new cSecInputInfo();
                 mDUTSecInputInfoHash[dutInputName]->name = dutInputName;
                 mDUTSecInputInfoHash[dutInputName]->resource = m_ResourceTypeList.at(i);
                 break;
