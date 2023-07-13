@@ -1,11 +1,12 @@
 SETUP_QTESTS(
     test_taskchannelscheckavail
     test_taskchannelgetalias
+    test_taskchannelgetavail
     test_taskchannelgetovrejection
     test_taskchannelgetrangelist
     test_taskchannelgetrejection
     test_taskchannelgeturvalue
     test_taskchannelregisternotifier
+    test_taskregisternotifier
     test_taskunregisternotifier
-    test_taskchannelgetavail
     )
