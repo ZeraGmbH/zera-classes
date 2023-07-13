@@ -1,10 +1,10 @@
 #ifndef SEM1MODULEMEASPROGRAM_H
 #define SEM1MODULEMEASPROGRAM_H
 
+#include "secinterface.h"
 #include "sem1moduleconfigdata.h"
 #include <basemeasprogram.h>
 #include <secinputinfo.h>
-#include <ecalcinfo.h>
 #include <clientactivecomponent.h>
 #include <memory>
 
@@ -151,9 +151,9 @@ private:
     SecInputInfo* m_refInputInfo;
     QString m_sIt;
 
-    cECalcChannelInfo m_MasterEcalculator;
-    cECalcChannelInfo m_SlaveEcalculator;
-    cECalcChannelInfo m_Slave2Ecalculator;
+    QString m_masterErrCalcName;
+    QString m_slaveErrCalcName;
+    QString m_slave2ErrCalcName;
 
     VfModuleParameter* m_pRefInputPar;
     VfModuleParameter* m_pRefConstantPar;
