@@ -34,6 +34,7 @@ add_library(spm1module MODULE
 target_link_libraries(spm1module 
     PRIVATE
     zera-basemodule
+    sec-modules-common
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
@@ -41,7 +42,6 @@ target_link_libraries(spm1module
 target_include_directories(spm1module
     PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-    ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
 install(TARGETS spm1module

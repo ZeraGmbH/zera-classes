@@ -1033,7 +1033,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
-                mREFSecInputInfoHash[refInputName] = new cSecInputInfo();
+                mREFSecInputInfoHash[refInputName] = new SecInputInfo();
                 mREFSecInputInfoHash[refInputName]->name = refInputName;
                 mREFSecInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
                 break;
@@ -1048,7 +1048,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(dutInputName)) {
                 dutInputCount--;
-                mDUTSecInputInfoHash[dutInputName] = new cSecInputInfo();
+                mDUTSecInputInfoHash[dutInputName] = new SecInputInfo();
                 mDUTSecInputInfoHash[dutInputName]->name = dutInputName;
                 mDUTSecInputInfoHash[dutInputName]->resource = m_ResourceTypeList.at(i);
                 break;
@@ -1109,7 +1109,6 @@ void cSec1ModuleMeasProgram::readREFInputAlias()
     m_sIt = m_sItList.takeFirst();
     m_refInputInfo = mREFSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
     m_refInputInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    m_refInputInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
     //m_MsgNrCmdList[m_refInputInfo->pcbIFace->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readrefInputalias;
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
@@ -1140,7 +1139,6 @@ void cSec1ModuleMeasProgram::readDUTInputAlias()
     m_sIt = m_sItList.takeFirst();
     m_refInputInfo = mDUTSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
     m_refInputInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
-    m_refInputInfo->pcbServersocket = getConfData()->m_PCBServerSocket;
     m_MsgNrCmdList[m_refInputInfo->pcbIFace->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readdutInputalias;
 }
 

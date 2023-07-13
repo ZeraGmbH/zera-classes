@@ -36,6 +36,7 @@ add_library(sem1module MODULE
 target_link_libraries(sem1module 
     PRIVATE
     zera-basemodule
+    sec-modules-common
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
