@@ -921,16 +921,13 @@ void cSpm1ModuleMeasProgram::readResource()
 void cSpm1ModuleMeasProgram::testSpmInputs()
 {
     qint32 referenceInputCount = getConfData()->m_refInpList.count();
-    // first we build up a list with properties for all configured Inputs
-    for (int i = 0; i < referenceInputCount; i++)
-        mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)] = new cSecInputInfo();
-
     auto refInputNames = mREFSpmInputInfoHash.keys();
     for(const auto &refInputName : refInputNames) {
         for (int i = 0; i < m_ResourceTypeList.count(); i++) {
             QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
             if (resourcelist.contains(refInputName)) {
                 referenceInputCount--;
+                mREFSpmInputInfoHash[refInputName] = new cSecInputInfo();
                 mREFSpmInputInfoHash[refInputName]->name = refInputName;
                 mREFSpmInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
                 break;
