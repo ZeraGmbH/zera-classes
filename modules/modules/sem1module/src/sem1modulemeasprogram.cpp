@@ -374,7 +374,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
         int service = sintnr.toInt(&ok);
         switch (service)
         {
-        case irqPCBNotifier:
+        case irqPCBRefConstanChangeNotifier:
             // we must fetch the ref constant of the selected reference Input
             handleChangedREFConst();
             break;
@@ -1026,7 +1026,7 @@ void cSem1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
     if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
     {
-        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar), irqPCBNotifier)] = setpcbrefconstantnotifier;
+        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar), irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
         // todo also configure the query for setting this notifier .....very flexible
     }
     else
