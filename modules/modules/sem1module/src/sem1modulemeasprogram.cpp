@@ -1000,10 +1000,9 @@ void cSem1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
     m_refInputInfo = mREFSemInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    m_refInputInfo->pcbIFace = m_pPCBInterface; // in case that Inputs would be provided by several servers
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
-    m_MsgNrCmdList[m_refInputInfo->pcbIFace->getPowTypeSource(m_sIt)] = readrefInputalias;
+    m_MsgNrCmdList[m_pPCBInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
 
 }
 
