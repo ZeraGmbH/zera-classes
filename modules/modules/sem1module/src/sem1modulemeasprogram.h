@@ -50,7 +50,7 @@ enum sem1moduleCmds
 
 };
 
-#define irqPCBNotifier 16
+#define irqPCBRefConstanChangeNotifier 16
 
 
 class cSem1Module;

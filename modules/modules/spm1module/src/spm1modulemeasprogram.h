@@ -51,7 +51,7 @@ enum spm1moduleCmds
 
 };
 
-#define irqPCBNotifier 16
+#define irqPCBRefConstanChangeNotifier 16
 
 class cSpm1Module;
 

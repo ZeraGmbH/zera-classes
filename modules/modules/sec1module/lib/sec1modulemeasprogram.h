@@ -53,7 +53,7 @@ enum sec1moduleCmds
 
 };
 
-#define irqPCBNotifier 16
+#define irqPCBRefConstanChangeNotifier 16
 
 class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
