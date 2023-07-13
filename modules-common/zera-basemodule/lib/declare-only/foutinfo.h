@@ -17,7 +17,6 @@ struct cFoutInfo
     bool avail; // may be it is not available (future purpose)
     quint8 dspFoutChannel; // the dspchannel that is responsible for this output 0..3
     double formFactor;
-    cSocket dspServersocket; // in case that different dsp's drive frequency outputs (future purpose)
     cSocket pcbServersocket;
     Zera::cPCBInterface* pcbIFace;
 };
