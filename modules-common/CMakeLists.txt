@@ -1,4 +1,4 @@
-add_subdirectory(dsp-helpers)
+add_subdirectory(dsp-chain-gen-helpers)
 add_subdirectory(module-qt-plugin-interface)
 add_subdirectory(module-tasks)
 add_subdirectory(module-validators)
