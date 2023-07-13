@@ -95,6 +95,8 @@ endfunction()
 add_subdirectory(modulemanager)
 add_subdirectory(modules)
 add_subdirectory(modules-common)
+add_subdirectory(modules-common-power)
+add_subdirectory(modules-common-sec)
 add_subdirectory(modules-shared-data)
 
 write_basic_package_version_file(
