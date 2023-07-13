@@ -18,5 +18,8 @@ target_include_directories(sec1module-static
 
 target_link_libraries(sec1module-static
     zera-basemodule
+    sec-modules-common
+    # ask linker to help us finding unresolved symbols
+    "-Wl,--no-undefined"
 )
 
