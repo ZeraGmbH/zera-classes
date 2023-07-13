@@ -703,7 +703,21 @@ void cRmsModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
 
 void cRmsModuleMeasProgram::handleDemoActualValues()
 {
-
+    QVector<float> demoValues;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        QStringList sl = getConfData()->m_valueChannelList.at(i).split('-');
+        double val = 0;
+        double randPlusMinusOne = 2.0 * (double)rand() / RAND_MAX - 1.0;
+        if (sl.count() == 1) {
+            val = 10 * randPlusMinusOne;
+        }
+        else {
+            val = 20 * randPlusMinusOne;
+        }
+        demoValues.append(val);
+    }
+    m_ModuleActualValues = demoValues;
+    emit actualValues(&m_ModuleActualValues);
 }
 
 
