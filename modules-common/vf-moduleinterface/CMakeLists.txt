@@ -13,7 +13,7 @@ add_library(vf-moduleinterface SHARED
 
 target_link_libraries(vf-moduleinterface
     PUBLIC
-    zera-validator
+    module-validators
     Zera::VfEvent
     Zera::VfComponent
     # ask linker to help us finding unresolved symbols
