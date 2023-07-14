@@ -5,6 +5,7 @@
 #include "sem1moduleconfigdata.h"
 #include <basemeasprogram.h>
 #include <secinputinfo.h>
+#include "secmeasinputcontainer.h"
 #include <clientactivecomponent.h>
 #include <memory>
 
@@ -141,14 +142,12 @@ private:
 
     QStringList m_ResourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    QHash<QString,SecInputInfo*> mREFSemInputInfoHash; // we hold a list of all our Input properties
-    QHash<QString,SecInputInfo*> mREFSemInputSelectionHash; // systemname from configfile->alias, csecInputinfo
+    SecMeasInputContainer m_refInputContainer;
     QHash<QString, double> mEnergyUnitFactorHash; //
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     qint32 m_nIt;
     QList<QString> m_sItList; // for interation over x Input hash
-    SecInputInfo* m_refInputInfo;
     QString m_sIt;
 
     QString m_masterErrCalcName;
