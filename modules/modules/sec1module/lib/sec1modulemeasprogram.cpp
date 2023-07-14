@@ -1292,13 +1292,15 @@ void cSec1ModuleMeasProgram::setMeaspulses()
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, mDUTSecInputSelectionHash[m_pDutInputPar->getValue().toString()]->name)] = setmastermux;
+    QString dutInputName = getConfData()->m_sDutInput.m_sPar;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, dutInputName)] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSecInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
+    QString refInputName = getConfData()->m_sRefInput.m_sPar;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, refInputName)] = setslavemux;
 }
 
 
