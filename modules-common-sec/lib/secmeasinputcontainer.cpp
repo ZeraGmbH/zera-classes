@@ -45,13 +45,13 @@ QStringList SecMeasInputContainer::getInputNameList()
     return m_resourceHash.keys();
 }
 
-void SecMeasInputContainer::setCurrentRefIn(QString currentRefIn)
+void SecMeasInputContainer::setCurrentInput(QString currentRefIn)
 {
     Q_ASSERT(m_resourceHash.contains(currentRefIn));
     m_currentInput = currentRefIn;
 }
 
-QString SecMeasInputContainer::getCurrentRefIn() const
+QString SecMeasInputContainer::getCurrentInput() const
 {
     return m_currentInput;
 }
