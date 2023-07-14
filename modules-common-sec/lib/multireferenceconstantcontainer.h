@@ -1,18 +1,20 @@
 #ifndef MULTIREFERENCECONSTANTCONTAINER_H
 #define MULTIREFERENCECONSTANTCONTAINER_H
 
-#include <QObject>
+#include "secinputinfo.h"
+#include <QHash>
+#include <QVariant>
 
-class MultiReferenceConstantContainer : public QObject
+class MultiReferenceConstantContainer
 {
-    Q_OBJECT
 public:
     MultiReferenceConstantContainer();
-    void init(QStringList referenceInputNames);
-    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-
-signals:
-
+    ~MultiReferenceConstantContainer();
+    void addReferenceInput(QString refInputName, QString resource);
+    QHash<QString, SecInputInfo*> &getRevResources();
+    QString getPowerType(QString refInputName) const;
+private:
+    QHash<QString /* f0... */, SecInputInfo*> m_refInputInfoHash;
 };
 
 #endif // MULTIREFERENCECONSTANTCONTAINER_H
