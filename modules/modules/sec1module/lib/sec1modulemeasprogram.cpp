@@ -1022,37 +1022,39 @@ void cSec1ModuleMeasProgram::readResource()
 
 void cSec1ModuleMeasProgram::testSecInputs()
 {
-    qint32 referenceInputCount = getConfData()->m_refInpList.count();
-    auto refInputNames = mREFSecInputInfoHash.keys();
-    for(const auto &refInputName : refInputNames) {
-        for (int i = 0; i < m_ResourceTypeList.count(); i++) {
-            QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+    const auto refInpList = getConfData()->m_refInpList;
+    qint32 refInCountLeftToCheck = refInpList.count();
+    for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
+        QString refInputName = refInpList[refInputNo].inputName;
+        for (int resourceTypeNo = 0; resourceTypeNo < m_ResourceTypeList.count(); resourceTypeNo++) {
+            QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
-                referenceInputCount--;
+                refInCountLeftToCheck--;
                 mREFSecInputInfoHash[refInputName] = new SecInputInfo();
                 mREFSecInputInfoHash[refInputName]->name = refInputName;
-                mREFSecInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
+                mREFSecInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
     }
 
-    qint32 dutInputCount = mDUTSecInputInfoHash.count();
-    auto dutInputNames = mDUTSecInputInfoHash.keys();
-    for(const auto &dutInputName : dutInputNames) {
-        for (int i = 0; i < m_ResourceTypeList.count(); i++) {
-            QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+    const auto dutInplist = getConfData()->m_dutInpList;
+    qint32 dutInputCountLeftToCheck = dutInplist.count();
+    for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
+        QString dutInputName = dutInplist[dutInputNo];
+        for (int resourceTypeNo = 0; resourceTypeNo < m_ResourceTypeList.count(); resourceTypeNo++) {
+            QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(dutInputName)) {
-                dutInputCount--;
+                dutInputCountLeftToCheck--;
                 mDUTSecInputInfoHash[dutInputName] = new SecInputInfo();
                 mDUTSecInputInfoHash[dutInputName]->name = dutInputName;
-                mDUTSecInputInfoHash[dutInputName]->resource = m_ResourceTypeList.at(i);
+                mDUTSecInputInfoHash[dutInputName]->resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
     }
 
-    if ((referenceInputCount == 0) && (dutInputCount == 0)) // we found all our configured Inputs
+    if ((refInCountLeftToCheck == 0) && (dutInputCountLeftToCheck == 0)) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
     else {
         emit errMsg((tr(resourceErrMsg)));
