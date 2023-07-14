@@ -914,21 +914,23 @@ void cSpm1ModuleMeasProgram::readResource()
 
 void cSpm1ModuleMeasProgram::testSpmInputs()
 {
-    qint32 referenceInputCount = getConfData()->m_refInpList.count();
-    auto refInputNames = mREFSpmInputInfoHash.keys();
-    for(const auto &refInputName : refInputNames) {
-        for (int i = 0; i < m_ResourceTypeList.count(); i++) {
-            QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+    const auto refInpList = getConfData()->m_refInpList;
+    qint32 refInCountLeftToCheck = refInpList.count();
+    for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
+        QString refInputName = refInpList[refInputNo];
+        for (int resourceTypeNo = 0; resourceTypeNo < m_ResourceTypeList.count(); resourceTypeNo++) {
+            QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
-                referenceInputCount--;
+                refInCountLeftToCheck--;
                 mREFSpmInputInfoHash[refInputName] = new SecInputInfo();
                 mREFSpmInputInfoHash[refInputName]->name = refInputName;
-                mREFSpmInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
+                mREFSpmInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
     }
-    if (referenceInputCount == 0) // we found all our configured Inputs
+
+    if (refInCountLeftToCheck == 0) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
     else {
         emit errMsg((tr(resourceErrMsg)));

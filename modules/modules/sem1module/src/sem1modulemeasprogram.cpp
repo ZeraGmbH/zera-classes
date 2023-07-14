@@ -928,21 +928,23 @@ void cSem1ModuleMeasProgram::readResource()
 
 void cSem1ModuleMeasProgram::testSemInputs()
 {
-    qint32 referenceInputCount = getConfData()->m_refInpList.count();
-    auto refInputNames = mREFSemInputInfoHash.keys();
-    for(const auto &refInputName : refInputNames) {
-        for (int i = 0; i < m_ResourceTypeList.count(); i++) {
-            QString resourcelist = m_ResourceHash[m_ResourceTypeList.at(i)];
+    const auto refInpList = getConfData()->m_refInpList;
+    qint32 refInCountLeftToCheck = refInpList.count();
+    for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
+        QString refInputName = refInpList[refInputNo].inputName;
+        for (int resourceTypeNo = 0; resourceTypeNo < m_ResourceTypeList.count(); resourceTypeNo++) {
+            QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
-                referenceInputCount--;
+                refInCountLeftToCheck--;
                 mREFSemInputInfoHash[refInputName] = new SecInputInfo();
                 mREFSemInputInfoHash[refInputName]->name = refInputName;
-                mREFSemInputInfoHash[refInputName]->resource  = m_ResourceTypeList.at(i);
+                mREFSemInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
     }
-    if (referenceInputCount == 0) // we found all our configured Inputs
+
+    if (refInCountLeftToCheck == 0) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
     else {
         emit errMsg((tr(resourceErrMsg)));
