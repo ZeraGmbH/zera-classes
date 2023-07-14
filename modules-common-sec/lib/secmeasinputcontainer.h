@@ -8,12 +8,17 @@ class SecMeasInputContainer
 public:
     SecMeasInputContainer();
     void addReferenceInput(QString inputName, QString resource);
-    void setAlias(QString inputName, QString alias);
-    void setDisplayedString(QString inputName, QString displayName);
     QString getResource(QString inputName) const;
-    QString getAlias(QString inputName) const;
-    QString getInputNameFromDisplayedName(QString displayName) const;
     QStringList getInputNameList();
+
+    void setAlias(QString inputName, QString alias);
+    QString getAlias(QString inputName) const;
+
+    void setDisplayedString(QString inputName, QString displayName);
+    QString getInputNameFromDisplayedName(QString displayName) const;
+
+    void setNotificationId(QString inputName, int notificationId);
+    QString getInputNameFromNotificationId(int notificationId);
 
     void setCurrentInput(QString currentRefIn);
     QString getCurrentInput() const;
@@ -24,6 +29,7 @@ private:
     QHash<QString /* refInputName */, QString /* resource */> m_resourceHash;
     QHash<QString /* refInputName */, QString /* alias */> m_aliasHash;
     QHash<QString /* displayName */, QString /* refInputName */> m_displayHash;
+    QHash<int /* notId */, QString /* refInputName */> m_notificationIdHash;
     QString m_currentInput;
 };
 
