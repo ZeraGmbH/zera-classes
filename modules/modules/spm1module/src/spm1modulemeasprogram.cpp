@@ -1122,7 +1122,8 @@ void cSpm1ModuleMeasProgram::setMasterMux()
 
 void cSpm1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSpmInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
+    QString refInputName = getConfData()->m_sRefInput.m_sPar;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, refInputName)] = setslavemux;
 }
 
 
