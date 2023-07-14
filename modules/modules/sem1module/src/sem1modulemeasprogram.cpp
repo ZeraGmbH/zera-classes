@@ -182,6 +182,10 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
 
 cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
 {
+    for (int i = 0; i < getConfData()->m_refInpList.count(); i++) {
+        cSem1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
+        delete mREFSemInputInfoHash.take(refInput.inputName); // change the hash for access via alias
+    }
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;
@@ -471,7 +475,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_refInputInfo.alias = answer.toString();
+                    m_refInputInfo->alias = answer.toString();
                     emit activationContinue();
                 }
                 else
@@ -796,7 +800,7 @@ QStringList cSem1ModuleMeasProgram::getEnergyUnitValidator()
 
 QString cSem1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias;
+    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
     return cUnitHelper::getNewEnergyUnit(powerType, currentPowerUnit, 3600);
@@ -806,7 +810,7 @@ QString cSem1ModuleMeasProgram::getEnergyUnit()
 QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    QString powType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias;
+    QString powType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     if (powType.contains('P'))
         sl = getConfData()->m_ActiveUnitList;
     if (powType.contains('Q'))
@@ -819,7 +823,7 @@ QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 
 QString cSem1ModuleMeasProgram::getPowerUnit()
 {
-    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias;
+    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
@@ -827,7 +831,7 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
 
 QString cSem1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 {
-    QString displayString = mREFSemInputInfoHash[inputName].alias;
+    QString displayString = mREFSemInputInfoHash[inputName]->alias;
     QList<cSem1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
     for(const auto &entry : refInputList) {
         if(entry.inputName == inputName) {
@@ -932,8 +936,9 @@ void cSem1ModuleMeasProgram::testSemInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
                 refInCountLeftToCheck--;
-                mREFSemInputInfoHash[refInputName].name = refInputName;
-                mREFSemInputInfoHash[refInputName].resource = m_ResourceTypeList[resourceTypeNo];
+                mREFSemInputInfoHash[refInputName] = new SecInputInfo();
+                mREFSemInputInfoHash[refInputName]->name = refInputName;
+                mREFSemInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
@@ -1000,7 +1005,7 @@ void cSem1ModuleMeasProgram::readREFInputAlias()
 
 void cSem1ModuleMeasProgram::readREFInputDone()
 {
-    mREFSemInputInfoHash[m_refInputInfo.name] = m_refInputInfo;
+    mREFSemInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1129,7 +1134,7 @@ void cSem1ModuleMeasProgram::setMasterMux()
 
 void cSem1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSemInputSelectionHash[m_pRefInputPar->getValue().toString()].name)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSemInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
 }
 
 
@@ -1306,7 +1311,7 @@ void cSem1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSem1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refInputName = mREFSemInputSelectionHash[refinput.toString()].name;
+    QString refInputName = mREFSemInputSelectionHash[refinput.toString()]->name;
     getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
 
