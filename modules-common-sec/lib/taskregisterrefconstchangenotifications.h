@@ -1,26 +1,21 @@
 #ifndef TASKREGISTERREFCONSTCHANGENOTIFICATIONS_H
 #define TASKREGISTERREFCONSTCHANGENOTIFICATIONS_H
 
-#include <taskcontainersequence.h>
+#include <taskcontainerparallel.h>
 #include <pcbinterface.h>
 
-class TaskRegisterRefConstChangeNotifications : public QObject
+class TaskRegisterRefConstChangeNotifications : public TaskContainerParallel
 {
     Q_OBJECT
 public:
-    struct PowerRefInput
-    {
-        QString refInputName;
-        int refInputInterruptNotifyId;
-    };
-    void startRegistrationTasks(Zera::PcbInterfacePtr pcbInterface, QList<PowerRefInput> refInputs);
-signals:
-    void sigRegistrationOk();
-    void sigRegistrationFail();
-private slots:
-    void onRegistrationFinish(bool ok);
+    static std::unique_ptr<TaskRegisterRefConstChangeNotifications> create(Zera::PcbInterfacePtr pcbInterface,
+                                                                           QStringList refInputs,
+                                                                           int firstNotificationId,
+                                                                           std::function<void()> additionalErrorHandler = []{});
+    QList<int> getnotificationIds();
 private:
-    TaskContainerSequence m_registerTasks;
+    void addNotificationId(int id);
+    QList<int> m_notificationIds;
 };
 
 #endif // TASKREGISTERREFCONSTCHANGENOTIFICATIONS_H
