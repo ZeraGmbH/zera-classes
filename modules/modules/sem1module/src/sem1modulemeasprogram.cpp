@@ -182,10 +182,6 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
 
 cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
 {
-    for (int i = 0; i < getConfData()->m_refInpList.count(); i++) {
-        cSem1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
-        delete mREFSemInputInfoHash.take(refInput.inputName); // change the hash for access via alias
-    }
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
@@ -474,7 +470,7 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_refInputInfo->alias = answer.toString();
+                    m_refInputContainer.setAlias(m_refInputContainer.getCurrentInput(), answer.toString());
                     emit activationContinue();
                 }
                 else
@@ -799,9 +795,8 @@ QStringList cSem1ModuleMeasProgram::getEnergyUnitValidator()
 
 QString cSem1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
+    QString powerType = m_refInputContainer.getAlias(getConfData()->m_sRefInput.m_sPar);
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
-
     return cUnitHelper::getNewEnergyUnit(powerType, currentPowerUnit, 3600);
 }
 
@@ -809,7 +804,7 @@ QString cSem1ModuleMeasProgram::getEnergyUnit()
 QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    QString powType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
+    QString powType = m_refInputContainer.getAlias(getConfData()->m_sRefInput.m_sPar);
     if (powType.contains('P'))
         sl = getConfData()->m_ActiveUnitList;
     if (powType.contains('Q'))
@@ -822,15 +817,14 @@ QStringList cSem1ModuleMeasProgram::getPowerUnitValidator()
 
 QString cSem1ModuleMeasProgram::getPowerUnit()
 {
-    QString powerType = mREFSemInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
+    QString powerType = m_refInputContainer.getAlias(getConfData()->m_sRefInput.m_sPar);
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
-
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
 
 QString cSem1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 {
-    QString displayString = mREFSemInputInfoHash[inputName]->alias;
+    QString displayString = m_refInputContainer.getAlias(inputName);
     QList<cSem1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
     for(const auto &entry : refInputList) {
         if(entry.inputName == inputName) {
@@ -935,9 +929,7 @@ void cSem1ModuleMeasProgram::testSemInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
                 refInCountLeftToCheck--;
-                mREFSemInputInfoHash[refInputName] = new SecInputInfo();
-                mREFSemInputInfoHash[refInputName]->name = refInputName;
-                mREFSemInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
+                m_refInputContainer.addReferenceInput(refInputName, m_ResourceTypeList[resourceTypeNo]);
                 break;
             }
         }
@@ -986,7 +978,7 @@ void cSem1ModuleMeasProgram::pcbServerConnect()
 
 void cSem1ModuleMeasProgram::readREFInputs()
 {
-    m_sItList = mREFSemInputInfoHash.keys();
+    m_sItList = m_refInputContainer.getInputNameList();
     emit activationContinue();
 }
 
@@ -994,7 +986,7 @@ void cSem1ModuleMeasProgram::readREFInputs()
 void cSem1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    m_refInputInfo = mREFSemInputInfoHash.take(m_sIt); // if set some info that could be useful later
+    m_refInputContainer.setCurrentInput(m_sIt);
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
     m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
@@ -1004,7 +996,6 @@ void cSem1ModuleMeasProgram::readREFInputAlias()
 
 void cSem1ModuleMeasProgram::readREFInputDone()
 {
-    mREFSemInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1038,8 +1029,7 @@ void cSem1ModuleMeasProgram::activationDone()
     for (int i = 0; i < nref; i++) {
         QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
         m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
-        m_refInputInfo = mREFSemInputInfoHash[confData->m_refInpList.at(i).inputName]; // change the hash for access via alias
-        mREFSemInputSelectionHash[displayString] = m_refInputInfo;
+        m_refInputContainer.setDisplayedString(confData->m_refInpList.at(i).inputName, displayString);
     }
 
     connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSem1ModuleMeasProgram::Actualize);
@@ -1311,7 +1301,7 @@ void cSem1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSem1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refInputName = mREFSemInputSelectionHash[refinput.toString()]->name;
+    QString refInputName = m_refInputContainer.getInputNameFromDisplayedName(refinput.toString());
     getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
 
