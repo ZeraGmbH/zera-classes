@@ -24,7 +24,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
 {
     // we have to instantiate a working resource manager and secserver interface
     m_pSECInterface = new Zera::cSECInterface();
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
@@ -170,7 +170,6 @@ cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
 {
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
-    delete m_pPCBInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
 }
 
@@ -841,7 +840,7 @@ void cSec1ModuleMeasProgram::initDutConstantUnit()
 void cSec1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pcbInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
     stopMeasurement(true);
 }
 
@@ -1074,9 +1073,9 @@ void cSec1ModuleMeasProgram::pcbServerConnect()
     // we try to get a connection to ecalc server over proxy
     m_pPCBClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
-    m_pPCBInterface->setClient(m_pPCBClient); //
+    m_pcbInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSec1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
@@ -1095,7 +1094,7 @@ void cSec1ModuleMeasProgram::readREFInputAlias()
     m_refInputContainer.setCurrentInput(m_sIt);
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
-    m_MsgNrCmdList[m_pPCBInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
+    m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
 
 }
 
@@ -1120,7 +1119,7 @@ void cSec1ModuleMeasProgram::readDUTInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
     m_dutInputContainer.setCurrentInput(m_sIt);
-    m_MsgNrCmdList[m_pPCBInterface->resourceAliasQuery(m_dutInputContainer.getResource(m_sIt), m_sIt)] = readdutInputalias;
+    m_MsgNrCmdList[m_pcbInterface->resourceAliasQuery(m_dutInputContainer.getResource(m_sIt), m_sIt)] = readdutInputalias;
 }
 
 
@@ -1138,7 +1137,7 @@ void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
     if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
     {
         QString strScpi = QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar);
-        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(strScpi, irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
+        m_MsgNrCmdList[m_pcbInterface->registerNotifier(strScpi, irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
         // todo also configure the query for setting this notifier .....very flexible
     }
     else
@@ -1210,7 +1209,7 @@ void cSec1ModuleMeasProgram::activationDone()
     setValidators();
 
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(confData->m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pcbInterface->getConstantSource(confData->m_sRefInput.m_sPar)] = fetchrefconstant;
 
     m_bActive = true;
     emit activated();
@@ -1239,7 +1238,7 @@ void cSec1ModuleMeasProgram::deactivationDone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pSECInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pcbInterface.get(), 0, this, 0);
 
     disconnect(m_pStartStopPar, 0, this, 0);
     disconnect(m_pDutConstantPar, 0, this, 0);
