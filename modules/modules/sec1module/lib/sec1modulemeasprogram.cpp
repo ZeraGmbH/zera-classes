@@ -163,11 +163,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     connect(&m_readMTCountactState, &QState::entered, this, &cSec1ModuleMeasProgram::readMTCountact);
     connect(&m_calcResultAndResetIntState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResultAndResetInt);
     connect(&m_FinalState, &QState::entered, this, &cSec1ModuleMeasProgram::checkForRestart);
-
-    connect(&m_referenceConstantContainer, &MultiReferenceConstantContainer::sigSetupOk,
-            this, &cModuleActivist::activationContinue);
-    connect(&m_referenceConstantContainer, &MultiReferenceConstantContainer::sigSetupErr,
-            this, &cModuleActivist::activationError);
 }
 
 
@@ -474,8 +469,8 @@ void cSec1ModuleMeasProgram::generateInterface()
 
 void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    m_referenceConstantContainer.catchInterfaceAnswer(msgnr, reply, answer);
     bool ok;
+
     if (msgnr == 0) // 0 was reserved for async. messages
     {
         QString sintnr;
@@ -1059,10 +1054,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
         }
     }
 
-    if ((refInCountLeftToCheck == 0) && (dutInputCountLeftToCheck == 0)) { // we found all our configured Inputs
-        m_referenceConstantContainer.initRefResources(mREFSecInputInfoHash);
+    if ((refInCountLeftToCheck == 0) && (dutInputCountLeftToCheck == 0)) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
-    }
     else {
         emit errMsg((tr(resourceErrMsg)));
         emit activationError();
@@ -1105,7 +1098,7 @@ void cSec1ModuleMeasProgram::pcbServerConnect()
 void cSec1ModuleMeasProgram::readREFInputs()
 {
     m_sItList = mREFSecInputInfoHash.keys();
-    m_referenceConstantContainer.startSetupTasks(); // currently connected to activationContinue/activationError
+    emit activationContinue();
 }
 
 
