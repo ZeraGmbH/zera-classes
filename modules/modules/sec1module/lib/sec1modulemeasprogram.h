@@ -137,16 +137,16 @@ private:
     QStringList m_ResourceTypeList;
     MultiReferenceConstantContainer m_referenceConstantContainer;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    QHash<QString,SecInputInfo*> mREFSecInputInfoHash; // we hold a list of all our Input properties
-    QHash<QString,SecInputInfo*> mDUTSecInputInfoHash; // systemname from configfile->alias, csecInputinfo
-    QHash<QString,SecInputInfo*> mREFSecInputSelectionHash;
-    QHash<QString,SecInputInfo*> mDUTSecInputSelectionHash;
+    QHash<QString,SecInputInfo> mREFSecInputInfoHash; // we hold a list of all our Input properties
+    QHash<QString,SecInputInfo> mDUTSecInputInfoHash; // systemname from configfile->alias, csecInputinfo
+    QHash<QString,SecInputInfo> mREFSecInputSelectionHash;
+    QHash<QString,SecInputInfo> mDUTSecInputSelectionHash;
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     QStringList m_DUTAliasList;
     qint32 m_nIt;
     QList<QString> m_sItList; // for interation over x Input hash
-    SecInputInfo* m_refInputInfo;
+    SecInputInfo m_refInputInfo;
     QString m_sIt;
 
     QString m_masterErrCalcName;

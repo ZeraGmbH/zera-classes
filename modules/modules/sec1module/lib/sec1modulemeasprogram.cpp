@@ -173,14 +173,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
 
 cSec1ModuleMeasProgram::~cSec1ModuleMeasProgram()
 {
-    for (int i = 0; i < getConfData()->m_refInpList.count(); i++) {
-        cSec1ModuleConfigData::TRefInput refInput = getConfData()->m_refInpList.at(i);
-        delete mREFSecInputInfoHash.take(refInput.inputName);
-    }
-
-    for (int i = 0; i < getConfData()->m_dutInpList.count(); i++)
-        delete mDUTSecInputInfoHash.take(getConfData()->m_dutInpList.at(i));
-
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;
@@ -561,7 +553,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readrefInputalias:
             {
                 if (reply == ack) {
-                    m_refInputInfo->alias = answer.toString();
+                    m_refInputInfo.alias = answer.toString();
                     emit activationContinue();
                 }
                 else
@@ -572,7 +564,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readdutInputalias:
             {
                 if (reply == ack) {
-                    m_refInputInfo->alias = answer.toString();
+                    m_refInputInfo.alias = answer.toString();
                     emit activationContinue();
                 }
                 else
@@ -779,7 +771,7 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
     cmpDependencies(); // dependant on mode we calculate parameters by ourself
 
-    m_pDutInputPar->setValue(QVariant(mDUTSecInputInfoHash[getConfData()->m_sDutInput.m_sPar]->alias));
+    m_pDutInputPar->setValue(QVariant(mDUTSecInputInfoHash[getConfData()->m_sDutInput.m_sPar].alias));
     m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(getConfData()->m_sRefInput.m_sPar)));
     m_pDutConstantPar->setValue(QVariant(getConfData()->m_fDutConstant.m_fPar));
     m_pRefConstantPar->setValue(QVariant(getConfData()->m_fRefConstant.m_fPar));
@@ -814,7 +806,7 @@ void cSec1ModuleMeasProgram::setValidators()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    QString powType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
+    QString powType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias;
     if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
     if (powType.contains('Q'))
@@ -827,7 +819,7 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
+    QString powerType = mREFSecInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias;
 
     return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
@@ -950,7 +942,7 @@ double cSec1ModuleMeasProgram::getUnitFactor()
 
 QString cSec1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 {
-    QString displayString = mREFSecInputInfoHash[inputName]->alias;
+    QString displayString = mREFSecInputInfoHash[inputName].alias;
     QList<cSec1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
     for(const auto &entry : refInputList) {
         if(entry.inputName == inputName) {
@@ -1035,9 +1027,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
                 refInCountLeftToCheck--;
-                mREFSecInputInfoHash[refInputName] = new SecInputInfo();
-                mREFSecInputInfoHash[refInputName]->name = refInputName;
-                mREFSecInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
+                mREFSecInputInfoHash[refInputName].name = refInputName;
+                mREFSecInputInfoHash[refInputName].resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
@@ -1051,9 +1042,8 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(dutInputName)) {
                 dutInputCountLeftToCheck--;
-                mDUTSecInputInfoHash[dutInputName] = new SecInputInfo();
-                mDUTSecInputInfoHash[dutInputName]->name = dutInputName;
-                mDUTSecInputInfoHash[dutInputName]->resource = m_ResourceTypeList[resourceTypeNo];
+                mDUTSecInputInfoHash[dutInputName].name = dutInputName;
+                mDUTSecInputInfoHash[dutInputName].resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
@@ -1123,7 +1113,7 @@ void cSec1ModuleMeasProgram::readREFInputAlias()
 
 void cSec1ModuleMeasProgram::readREFInputDone()
 {
-    mREFSecInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
+    mREFSecInputInfoHash[m_refInputInfo.name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1142,13 +1132,13 @@ void cSec1ModuleMeasProgram::readDUTInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
     m_refInputInfo = mDUTSecInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    m_MsgNrCmdList[m_pPCBInterface->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readdutInputalias;
+    m_MsgNrCmdList[m_pPCBInterface->resourceAliasQuery(m_refInputInfo.resource, m_sIt)] = readdutInputalias;
 }
 
 
 void cSec1ModuleMeasProgram::readDUTInputDone()
 {
-    mDUTSecInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
+    mDUTSecInputInfoHash[m_refInputInfo.name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1189,9 +1179,9 @@ void cSec1ModuleMeasProgram::activationDone()
 
     for (int i = 0; i < confData->m_dutInpList.count(); i++)
     {
-        m_DUTAliasList.append(mDUTSecInputInfoHash[confData->m_dutInpList.at(i)]->alias); // build up a fixed sorted list of alias
+        m_DUTAliasList.append(mDUTSecInputInfoHash[confData->m_dutInpList.at(i)].alias); // build up a fixed sorted list of alias
         m_refInputInfo = mDUTSecInputInfoHash[confData->m_dutInpList.at(i)]; // change the hash for access via alias
-        mDUTSecInputSelectionHash[m_refInputInfo->alias] = m_refInputInfo;
+        mDUTSecInputSelectionHash[m_refInputInfo.alias] = m_refInputInfo;
     }
 
     m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
@@ -1299,13 +1289,13 @@ void cSec1ModuleMeasProgram::setMeaspulses()
 
 void cSec1ModuleMeasProgram::setMasterMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, mDUTSecInputSelectionHash[m_pDutInputPar->getValue().toString()]->name)] = setmastermux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_masterErrCalcName, mDUTSecInputSelectionHash[m_pDutInputPar->getValue().toString()].name)] = setmastermux;
 }
 
 
 void cSec1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSecInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSecInputSelectionHash[m_pRefInputPar->getValue().toString()].name)] = setslavemux;
 }
 
 
@@ -1616,7 +1606,7 @@ void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 {
-    getConfData()->m_sDutInput.m_sPar = mDUTSecInputSelectionHash[dutinput.toString()]->name;
+    getConfData()->m_sDutInput.m_sPar = mDUTSecInputSelectionHash[dutinput.toString()].name;
     setInterfaceComponents();
 
     emit m_pModule->parameterChanged();
@@ -1625,7 +1615,7 @@ void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 
 void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refInputName = mREFSecInputSelectionHash[refinput.toString()]->name;
+    QString refInputName = mREFSecInputSelectionHash[refinput.toString()].name;
     getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
 
