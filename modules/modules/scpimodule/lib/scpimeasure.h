@@ -26,7 +26,7 @@ class cSCPIMeasure: public QObject
     Q_OBJECT
 
 public:
-    cSCPIMeasure(QMultiHash<QString, cSCPIMeasure*> *scpiMeasureHash, cSCPICmdInfo *scpicmdinfo, QObject *t_parent=0);
+    cSCPIMeasure(QMultiMap<QString, cSCPIMeasure *> *scpiMeasureMap, cSCPICmdInfo *scpicmdinfo, QObject *t_parent=0);
     cSCPIMeasure(const cSCPIMeasure &obj, QObject *t_parent=0);
     virtual ~cSCPIMeasure();
 
@@ -49,7 +49,7 @@ signals:
     void sigFetchDone(QString);
 
 private:
-    QMultiHash<QString, cSCPIMeasure*> *m_scpiMeasureHash;
+    QMultiMap<QString, cSCPIMeasure*> *m_scpiMeasureMap;
     cSCPICmdInfo *m_pSCPICmdInfo;
 
     void initialize();
