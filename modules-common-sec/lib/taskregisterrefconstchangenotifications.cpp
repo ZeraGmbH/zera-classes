@@ -1,24 +1,31 @@
 #include "taskregisterrefconstchangenotifications.h"
 #include "taskregisternotifier.h"
 
-void TaskRegisterRefConstChangeNotifications::startRegistrationTasks(Zera::PcbInterfacePtr pcbInterface, QList<PowerRefInput> refInputs)
+std::unique_ptr<TaskRegisterRefConstChangeNotifications> TaskRegisterRefConstChangeNotifications::create(Zera::PcbInterfacePtr pcbInterface,
+                                                                                                         QStringList refInputs,
+                                                                                                         int firstNotificationId,
+                                                                                                         std::function<void ()> additionalErrorHandler)
 {
-    connect(&m_registerTasks, &TaskTemplate::sigFinish,
-            this, &TaskRegisterRefConstChangeNotifications::onRegistrationFinish);
+    std::unique_ptr<TaskRegisterRefConstChangeNotifications> task = std::make_unique<TaskRegisterRefConstChangeNotifications>();
+    int currentNotificationId = firstNotificationId;
     for(const auto &refInput : refInputs) {
-        m_registerTasks.addSub(TaskRegisterNotifier::create(
-                                   pcbInterface,
-                                   QString("SOURCE:%1:CONSTANT?").arg(refInput.refInputName),
-                                   refInput.refInputInterruptNotifyId,
-                                   REGISTER_TIMEOUT_MS));
+        task->addSub(TaskRegisterNotifier::create(pcbInterface,
+                                                  QString("SOURCE:%1:CONSTANT?").arg(refInput),
+                                                  currentNotificationId,
+                                                  TRANSACTION_TIMEOUT,
+                                                  additionalErrorHandler));
+        task->addNotificationId(currentNotificationId);
+        currentNotificationId++;
     }
-    m_registerTasks.start();
+    return task;
 }
 
-void TaskRegisterRefConstChangeNotifications::onRegistrationFinish(bool ok)
+QList<int> TaskRegisterRefConstChangeNotifications::getnotificationIds()
 {
-    if(ok)
-        emit sigRegistrationOk();
-    else
-        emit sigRegistrationFail();
+    return m_notificationIds;
+}
+
+void TaskRegisterRefConstChangeNotifications::addNotificationId(int id)
+{
+    m_notificationIds.append(id);
 }

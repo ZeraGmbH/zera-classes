@@ -4,8 +4,6 @@
 #include <taskservertransactiontemplate.h>
 #include <pcbinterface.h>
 
-constexpr static int REGISTER_TIMEOUT_MS = 3000;
-
 class TaskRegisterNotifier : public TaskServerTransactionTemplate
 {
     Q_OBJECT
