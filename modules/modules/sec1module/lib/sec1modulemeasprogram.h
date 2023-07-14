@@ -8,6 +8,7 @@
 #include "multipleresulthelper.h"
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
+#include "multireferenceconstantcontainer.h"
 #include <QDateTime>
 
 namespace SEC1MODULE
@@ -82,9 +83,7 @@ private:
     QState m_readResourcesState; // init to read all resource information for each type
     QState m_readResourceState; // read for 1 type
 
-    // setup MultiReferenceConstantContainer
     QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
-    // end setup MultiReferenceConstantContainer
 
     QState m_ecalcServerConnectState; // connect to ecalculator server
     QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
@@ -136,6 +135,7 @@ private:
     Zera::ProxyClient* m_pPCBClient;
 
     QStringList m_ResourceTypeList;
+    MultiReferenceConstantContainer m_referenceConstantContainer;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     QHash<QString,SecInputInfo*> mREFSecInputInfoHash; // we hold a list of all our Input properties
     QHash<QString,SecInputInfo*> mDUTSecInputInfoHash; // systemname from configfile->alias, csecInputinfo
