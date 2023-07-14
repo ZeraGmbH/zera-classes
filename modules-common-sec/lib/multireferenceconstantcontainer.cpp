@@ -4,7 +4,7 @@ MultiReferenceConstantContainer::MultiReferenceConstantContainer()
 {
 }
 
-void MultiReferenceConstantContainer::initRefResources(QHash<QString, SecInputInfo> refInputInfoHash)
+void MultiReferenceConstantContainer::initRefResources(QHash<QString, SecInputInfo *> refInputInfoHash)
 {
     m_refInputInfoHash = refInputInfoHash;
 }
