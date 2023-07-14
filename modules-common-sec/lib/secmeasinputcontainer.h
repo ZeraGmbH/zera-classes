@@ -15,8 +15,8 @@ public:
     QString getInputNameFromDisplayedName(QString displayName) const;
     QStringList getInputNameList();
 
-    void setCurrentRefIn(QString currentRefIn);
-    QString getCurrentRefIn() const;
+    void setCurrentInput(QString currentRefIn);
+    QString getCurrentInput() const;
 private:
     // input name: "f0" / "f1"... or DUT ec0
     // alias "P" / "Q"...
