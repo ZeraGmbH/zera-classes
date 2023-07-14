@@ -180,6 +180,8 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
 
 cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
 {
+    for (int i = 0; i < getConfData()->m_refInpList.count(); i++)
+        delete mREFSpmInputInfoHash.take(getConfData()->m_refInpList.at(i));
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
     delete m_pPCBInterface;
@@ -467,7 +469,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_refInputInfo.alias = answer.toString();
+                    m_refInputInfo->alias = answer.toString();
                     emit activationContinue();
                 }
                 else
@@ -742,7 +744,7 @@ cSpm1ModuleConfigData *cSpm1ModuleMeasProgram::getConfData()
 
 void cSpm1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pRefInputPar->setValue(QVariant(mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias));
+    m_pRefInputPar->setValue(QVariant(mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias));
     m_pTargetedPar->setValue(QVariant(getConfData()->m_bTargeted.m_nActive));
     m_pMeasTimePar->setValue(QVariant(getConfData()->m_nMeasTime.m_nPar));
     m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
@@ -805,7 +807,7 @@ QString cSpm1ModuleMeasProgram::getEnergyUnit()
 QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    QString powType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias;
+    QString powType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
 
     if (powType.contains('P'))
         sl = getConfData()->m_ActiveUnitList;
@@ -820,7 +822,7 @@ QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
 
 QString cSpm1ModuleMeasProgram::getPowerUnit()
 {
-    QString powerType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar].alias;
+    QString powerType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
 
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
@@ -920,8 +922,9 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
                 refInCountLeftToCheck--;
-                mREFSpmInputInfoHash[refInputName].name = refInputName;
-                mREFSpmInputInfoHash[refInputName].resource = m_ResourceTypeList[resourceTypeNo];
+                mREFSpmInputInfoHash[refInputName] = new SecInputInfo();
+                mREFSpmInputInfoHash[refInputName]->name = refInputName;
+                mREFSpmInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
                 break;
             }
         }
@@ -989,7 +992,7 @@ void cSpm1ModuleMeasProgram::readREFInputAlias()
 
 void cSpm1ModuleMeasProgram::readREFInputDone()
 {
-    mREFSpmInputInfoHash[m_refInputInfo.name] = m_refInputInfo;
+    mREFSpmInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1023,9 +1026,9 @@ void cSpm1ModuleMeasProgram::activationDone()
     if (nref > 0)
     for (int i = 0; i < nref; i++)
     {
-        m_REFAliasList.append(mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)].alias); // build up a fixed sorted list of alias
+        m_REFAliasList.append(mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
         m_refInputInfo = mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)]; // change the hash for access via alias
-        mREFSpmInputSelectionHash[m_refInputInfo.alias] = m_refInputInfo;
+        mREFSpmInputSelectionHash[m_refInputInfo->alias] = m_refInputInfo;
     }
 
     connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSpm1ModuleMeasProgram::Actualize);
@@ -1119,7 +1122,7 @@ void cSpm1ModuleMeasProgram::setMasterMux()
 
 void cSpm1ModuleMeasProgram::setSlaveMux()
 {
-    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSpmInputSelectionHash[m_pRefInputPar->getValue().toString()].name)] = setslavemux;
+    m_MsgNrCmdList[m_pSECInterface->setMux(m_slaveErrCalcName, mREFSpmInputSelectionHash[m_pRefInputPar->getValue().toString()]->name)] = setslavemux;
 }
 
 
@@ -1297,7 +1300,7 @@ void cSpm1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refInputName = mREFSpmInputSelectionHash[refinput.toString()].name;
+    QString refInputName = mREFSpmInputSelectionHash[refinput.toString()]->name;
     getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
 

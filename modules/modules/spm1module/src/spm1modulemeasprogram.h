@@ -140,14 +140,14 @@ private:
 
     QStringList m_ResourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    QHash<QString,SecInputInfo> mREFSpmInputInfoHash; // we hold a list of all our Input properties
-    QHash<QString,SecInputInfo> mREFSpmInputSelectionHash; // systemname from configfile->alias, csecInputinfo
+    QHash<QString,SecInputInfo*> mREFSpmInputInfoHash; // we hold a list of all our Input properties
+    QHash<QString,SecInputInfo*> mREFSpmInputSelectionHash; // systemname from configfile->alias, csecInputinfo
     QHash<QString, double> mPowerUnitFactorHash; //
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     qint32 m_nIt;
     QList<QString> m_sItList; // for interation over x Input hash
-    SecInputInfo m_refInputInfo;
+    SecInputInfo* m_refInputInfo;
     QString m_sIt;
 
     QString m_masterErrCalcName;
