@@ -19,7 +19,7 @@ cSem1ModuleMeasProgram::cSem1ModuleMeasProgram(cSem1Module* module, std::shared_
 {
     // we have to instantiate a working resource manager and secserver interface
     m_pSECInterface = new Zera::cSECInterface();
-    m_pPCBInterface = new Zera::cPCBInterface();
+    m_pcbInterface = std::make_shared<Zera::cPCBInterface>();
 
     m_IdentifyState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSem1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
@@ -188,7 +188,6 @@ cSem1ModuleMeasProgram::~cSem1ModuleMeasProgram()
     }
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
-    delete m_pPCBInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
 }
 
@@ -846,7 +845,7 @@ QString cSem1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 void cSem1ModuleMeasProgram::handleChangedREFConst()
 {
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pcbInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
     stopMeasuerment(true);
 }
 
@@ -977,9 +976,9 @@ void cSem1ModuleMeasProgram::pcbServerConnect()
     // we try to get a connection to ecalc server over proxy
     m_pPCBClient = Zera::Proxy::getInstance()->getConnection(getConfData()->m_PCBServerSocket.m_sIP, getConfData()->m_PCBServerSocket.m_nPort);
     // and then we set ecalcalculator interface's connection
-    m_pPCBInterface->setClient(m_pPCBClient); //
+    m_pcbInterface->setClient(m_pPCBClient); //
     m_pcbServerConnectState.addTransition(m_pPCBClient, &Zera::ProxyClient::connected, &m_readREFInputsState);
-    connect(m_pPCBInterface, &Zera::cPCBInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
+    connect(m_pcbInterface.get(), &Zera::cPCBInterface::serverAnswer, this, &cSem1ModuleMeasProgram::catchInterfaceAnswer);
     // todo insert timer for timeout and/or connect error conditions
     Zera::Proxy::getInstance()->startConnection(m_pPCBClient);
 }
@@ -998,7 +997,7 @@ void cSem1ModuleMeasProgram::readREFInputAlias()
     m_refInputInfo = mREFSemInputInfoHash.take(m_sIt); // if set some info that could be useful later
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
-    m_MsgNrCmdList[m_pPCBInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
+    m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
 
 }
 
@@ -1017,7 +1016,7 @@ void cSem1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
     if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
     {
-        m_MsgNrCmdList[m_pPCBInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar), irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
+        m_MsgNrCmdList[m_pcbInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar), irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
         // todo also configure the query for setting this notifier .....very flexible
     }
     else
@@ -1061,7 +1060,7 @@ void cSem1ModuleMeasProgram::activationDone()
     setUnits();
 
     // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pPCBInterface->getConstantSource(confData->m_sRefInput.m_sPar)] = fetchrefconstant;
+    m_MsgNrCmdList[m_pcbInterface->getConstantSource(confData->m_sRefInput.m_sPar)] = fetchrefconstant;
 
     m_bActive = true;
     emit activated();
@@ -1090,7 +1089,7 @@ void cSem1ModuleMeasProgram::deactivationDone()
 {
     disconnect(&m_rmInterface, 0, this, 0);
     disconnect(m_pSECInterface, 0, this, 0);
-    disconnect(m_pPCBInterface, 0, this, 0);
+    disconnect(m_pcbInterface.get(), 0, this, 0);
 
     disconnect(m_pStartStopPar, 0, this, 0);
     disconnect(m_pTargetedPar, 0, this, 0);

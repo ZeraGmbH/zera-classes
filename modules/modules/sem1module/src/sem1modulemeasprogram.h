@@ -77,7 +77,7 @@ private:
 
     cSem1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
-    Zera::cPCBInterface* m_pPCBInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
 
     // statemachine for activating gets the following states
     QState resourceManagerConnectState; // connect to resource manager
