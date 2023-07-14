@@ -4,6 +4,9 @@
 #include <QAbstractSocket>
 #include <QVariant>
 
+[[maybe_unused]] constexpr int CONNECTION_TIMEOUT = 25000;
+[[maybe_unused]] constexpr int TRANSACTION_TIMEOUT = 3000;
+
 class AbstractServerInterface : public QObject
 {
     Q_OBJECT
