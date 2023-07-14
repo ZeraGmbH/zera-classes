@@ -40,6 +40,18 @@ QString SecMeasInputContainer::getInputNameFromDisplayedName(QString displayName
     return m_displayHash[displayName];
 }
 
+void SecMeasInputContainer::setNotificationId(QString inputName, int notificationId)
+{
+    Q_ASSERT(!m_notificationIdHash.contains(notificationId));
+    m_notificationIdHash[notificationId] = inputName;
+}
+
+QString SecMeasInputContainer::getInputNameFromNotificationId(int notificationId)
+{
+    Q_ASSERT(m_notificationIdHash.contains(notificationId));
+    return m_notificationIdHash[notificationId];
+}
+
 QStringList SecMeasInputContainer::getInputNameList()
 {
     return m_resourceHash.keys();
