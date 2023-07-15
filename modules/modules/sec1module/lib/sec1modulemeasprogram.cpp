@@ -547,7 +547,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readrefInputalias:
             {
                 if (reply == ack) {
-                    m_refInputContainer.setAlias(m_refInputContainer.getCurrentInput(), answer.toString());
+                    m_refInputDictionary.setAlias(m_refInputDictionary.getCurrentInput(), answer.toString());
                     emit activationContinue();
                 }
                 else
@@ -558,7 +558,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readdutInputalias:
             {
                 if (reply == ack) {
-                    m_dutInputContainer.setAlias(m_dutInputContainer.getCurrentInput(), answer.toString());
+                    m_dutInputDictionary.setAlias(m_dutInputDictionary.getCurrentInput(), answer.toString());
                     emit activationContinue();
                 }
                 else
@@ -765,7 +765,7 @@ void cSec1ModuleMeasProgram::setInterfaceComponents()
 {
     cmpDependencies(); // dependant on mode we calculate parameters by ourself
 
-    m_pDutInputPar->setValue(QVariant(m_dutInputContainer.getAlias(getConfData()->m_sDutInput.m_sPar)));
+    m_pDutInputPar->setValue(QVariant(m_dutInputDictionary.getAlias(getConfData()->m_sDutInput.m_sPar)));
     m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(getConfData()->m_sRefInput.m_sPar)));
     m_pDutConstantPar->setValue(QVariant(getConfData()->m_fDutConstant.m_fPar));
     m_pRefConstantPar->setValue(QVariant(getConfData()->m_fRefConstant.m_fPar));
@@ -800,7 +800,7 @@ void cSec1ModuleMeasProgram::setValidators()
 QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 {
     QStringList sl;
-    QString powType = m_refInputContainer.getAlias(getConfData()->m_sRefInput.m_sPar);
+    QString powType = m_refInputDictionary.getAlias(getConfData()->m_sRefInput.m_sPar);
     if (powType.contains('P'))
         sl << QString("I/kWh") << QString("Wh/I");
     if (powType.contains('Q'))
@@ -813,7 +813,7 @@ QStringList cSec1ModuleMeasProgram::getDutConstUnitValidator()
 
 QString cSec1ModuleMeasProgram::getEnergyUnit()
 {
-    QString powerType = m_refInputContainer.getAlias(getConfData()->m_sRefInput.m_sPar);
+    QString powerType = m_refInputDictionary.getAlias(getConfData()->m_sRefInput.m_sPar);
     return cUnitHelper::getNewEnergyUnit(powerType, QString('k'), 3600);
 }
 
@@ -935,7 +935,7 @@ double cSec1ModuleMeasProgram::getUnitFactor()
 
 QString cSec1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 {
-    QString displayString = m_refInputContainer.getAlias(inputName);
+    QString displayString = m_refInputDictionary.getAlias(inputName);
     QList<cSec1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
     for(const auto &entry : refInputList) {
         if(entry.inputName == inputName) {
@@ -1020,7 +1020,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
                 refInCountLeftToCheck--;
-                m_refInputContainer.addReferenceInput(refInputName, m_ResourceTypeList[resourceTypeNo]);
+                m_refInputDictionary.addReferenceInput(refInputName, m_ResourceTypeList[resourceTypeNo]);
                 break;
             }
         }
@@ -1034,7 +1034,7 @@ void cSec1ModuleMeasProgram::testSecInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(dutInputName)) {
                 dutInputCountLeftToCheck--;
-                m_dutInputContainer.addReferenceInput(dutInputName, m_ResourceTypeList[resourceTypeNo]);
+                m_dutInputDictionary.addReferenceInput(dutInputName, m_ResourceTypeList[resourceTypeNo]);
                 break;
             }
         }
@@ -1083,7 +1083,7 @@ void cSec1ModuleMeasProgram::pcbServerConnect()
 
 void cSec1ModuleMeasProgram::readREFInputs()
 {
-    m_sItList = m_refInputContainer.getInputNameList();
+    m_sItList = m_refInputDictionary.getInputNameList();
     emit activationContinue();
 }
 
@@ -1091,7 +1091,7 @@ void cSec1ModuleMeasProgram::readREFInputs()
 void cSec1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    m_refInputContainer.setCurrentInput(m_sIt);
+    m_refInputDictionary.setCurrentInput(m_sIt);
 
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
     m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
@@ -1110,7 +1110,7 @@ void cSec1ModuleMeasProgram::readREFInputDone()
 
 void cSec1ModuleMeasProgram::readDUTInputs()
 {
-    m_sItList = m_dutInputContainer.getInputNameList();
+    m_sItList = m_dutInputDictionary.getInputNameList();
     emit activationContinue();
 }
 
@@ -1118,8 +1118,8 @@ void cSec1ModuleMeasProgram::readDUTInputs()
 void cSec1ModuleMeasProgram::readDUTInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    m_dutInputContainer.setCurrentInput(m_sIt);
-    m_MsgNrCmdList[m_pcbInterface->resourceAliasQuery(m_dutInputContainer.getResource(m_sIt), m_sIt)] = readdutInputalias;
+    m_dutInputDictionary.setCurrentInput(m_sIt);
+    m_MsgNrCmdList[m_pcbInterface->resourceAliasQuery(m_dutInputDictionary.getResource(m_sIt), m_sIt)] = readdutInputalias;
 }
 
 
@@ -1157,13 +1157,13 @@ void cSec1ModuleMeasProgram::activationDone()
     for (int i = 0; i < confData->m_refInpList.count(); i++) {
         QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
         m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
-        m_refInputContainer.setDisplayedString(confData->m_refInpList.at(i).inputName, displayString);
+        m_refInputDictionary.setDisplayedString(confData->m_refInpList.at(i).inputName, displayString);
     }
 
     for (int i = 0; i < confData->m_dutInpList.count(); i++) {
-        QString alias = m_dutInputContainer.getAlias(confData->m_dutInpList.at(i));
+        QString alias = m_dutInputDictionary.getAlias(confData->m_dutInpList.at(i));
         m_DUTAliasList.append(alias); // build up a fixed sorted list of alias
-        m_dutInputContainer.setDisplayedString(confData->m_dutInpList.at(i), alias);
+        m_dutInputDictionary.setDisplayedString(confData->m_dutInpList.at(i), alias);
     }
 
     m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
@@ -1590,7 +1590,7 @@ void cSec1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 {
-    QString dutInputName = m_dutInputContainer.getInputNameFromDisplayedName(dutinput.toString());
+    QString dutInputName = m_dutInputDictionary.getInputNameFromDisplayedName(dutinput.toString());
     getConfData()->m_sDutInput.m_sPar = dutInputName;
     setInterfaceComponents();
 
@@ -1600,7 +1600,7 @@ void cSec1ModuleMeasProgram::newDutInput(QVariant dutinput)
 
 void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refInputName = m_refInputContainer.getInputNameFromDisplayedName(refinput.toString());
+    QString refInputName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
     getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
 

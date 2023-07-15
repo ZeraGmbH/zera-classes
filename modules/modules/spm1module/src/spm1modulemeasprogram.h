@@ -57,22 +57,89 @@ class cSpm1Module;
 class cSpm1ModuleMeasProgram: public cBaseMeasProgram
 {
     Q_OBJECT
-
 public:
     cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSpm1ModuleMeasProgram();
-    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void generateInterface() override; // here we export our interface (entities)
 
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
+    void start() override; // difference between start and stop is that actual values
+    virtual void stop() override; // in interface are not updated when stop
 
-
-protected slots:
+private slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void resourceManagerConnect();
+    void sendRMIdent();
+    void testSEC1Resource();
+    void setECResource();
+    void readResourceTypes();
+    void readResources();
+    void readResource();
+    void testSpmInputs();
+    void ecalcServerConnect();
+    void fetchECalcUnits();
+    void pcbServerConnect();
+    void readREFInputs();
+    void readREFInputAlias();
+    void readREFInputDone();
+    void setpcbREFConstantNotifier();
+    void setsecINTNotifier();
+    void activationDone();
+
+    void stopECCalculator();
+    void freeECalculator();
+    void freeECResource();
+    void deactivationDone();
+
+    void setSync();
+    void setSync2();
+    void setMeaspulses();
+    void setMasterMux();
+    void setSlaveMux();
+    void setSlave2Mux();
+    void setMasterMeasMode();
+    void setSlaveMeasMode();
+    void setSlave2MeasMode();
+    void enableInterrupt();
+    void startMeasurement();
+    void startMeasurementDone();
+
+    void readIntRegister();
+    void resetIntRegister();
+    void readVICountact();
+    void readTCountact();
+    void setEMResult();
+    void setRating();
+
+    void newStartStop(QVariant startstop);
+    void newRefConstant(QVariant refconst);
+    void newRefInput(QVariant refinput);
+    void newTargeted(QVariant targeted);
+    void newMeasTime(QVariant meastime);
+    void newT0Input(QVariant t0input);
+    void newT1Input(QVariant t1input);
+    void newUnit(QVariant unit);
+    void newUpperLimit(QVariant limit);
+    void newLowerLimit(QVariant limit);
+
+    void Actualize();
+    void clientActivationChanged(bool bActive);
+    void stopMeasuerment(bool bAbort);
+    bool found(QList<QString>& list, QString searched);
 
 private:
     cSpm1ModuleConfigData* getConfData();
+    void setInterfaceComponents();
+    void setValidators();
+    void setUnits();
+
+    QStringList getEnergyUnitValidator();
+    QString getEnergyUnit();
+    QStringList getPowerUnitValidator();
+    QString getPowerUnit();
+
+    void handleChangedREFConst();
+    void handleSECInterrupt();
 
     cSpm1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
@@ -173,18 +240,6 @@ private:
     VfModuleParameter* m_pClientNotifierPar;
     ClientActiveComponent m_ClientActiveNotifier;
 
-    void setInterfaceComponents();
-    void setValidators();
-    void setUnits();
-
-    QStringList getEnergyUnitValidator();
-    QString getEnergyUnit();
-    QStringList getPowerUnitValidator();
-    QString getPowerUnit();
-
-    void handleChangedREFConst();
-    void handleSECInterrupt();
-
     // vars dealing with error measurement
     bool m_brunning;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
@@ -203,66 +258,6 @@ private:
     // Some decisions - we have enough of configration params around
     static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
     static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
-
-private slots:
-    void resourceManagerConnect();
-    void sendRMIdent();
-    void testSEC1Resource();
-    void setECResource();
-    void readResourceTypes();
-    void readResources();
-    void readResource();
-    void testSpmInputs();
-    void ecalcServerConnect();
-    void fetchECalcUnits();
-    void pcbServerConnect();
-    void readREFInputs();
-    void readREFInputAlias();
-    void readREFInputDone();
-    void setpcbREFConstantNotifier();
-    void setsecINTNotifier();
-    void activationDone();
-
-    void stopECCalculator();
-    void freeECalculator();
-    void freeECResource();
-    void deactivationDone();
-
-    void setSync();
-    void setSync2();
-    void setMeaspulses();
-    void setMasterMux();
-    void setSlaveMux();
-    void setSlave2Mux();
-    void setMasterMeasMode();
-    void setSlaveMeasMode();
-    void setSlave2MeasMode();
-    void enableInterrupt();
-    void startMeasurement();
-    void startMeasurementDone();
-
-    void readIntRegister();
-    void resetIntRegister();
-    void readVICountact();
-    void readTCountact();
-    void setEMResult();
-    void setRating();
-
-    void newStartStop(QVariant startstop);
-    void newRefConstant(QVariant refconst);
-    void newRefInput(QVariant refinput);
-    void newTargeted(QVariant targeted);
-    void newMeasTime(QVariant meastime);
-    void newT0Input(QVariant t0input);
-    void newT1Input(QVariant t1input);
-    void newUnit(QVariant unit);
-    void newUpperLimit(QVariant limit);
-    void newLowerLimit(QVariant limit);
-
-    void Actualize();
-    void clientActivationChanged(bool bActive);
-    void stopMeasuerment(bool bAbort);
-    bool found(QList<QString>& list, QString searched);
 };
 }
 
