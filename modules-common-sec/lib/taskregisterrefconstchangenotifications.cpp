@@ -2,30 +2,31 @@
 #include "taskregisternotifier.h"
 
 std::unique_ptr<TaskRegisterRefConstChangeNotifications> TaskRegisterRefConstChangeNotifications::create(Zera::PcbInterfacePtr pcbInterface,
-                                                                                                         QStringList refInputs,
+                                                                                                         QStringList inputNames,
                                                                                                          int firstNotificationId,
                                                                                                          std::function<void ()> additionalErrorHandler)
 {
     std::unique_ptr<TaskRegisterRefConstChangeNotifications> task = std::make_unique<TaskRegisterRefConstChangeNotifications>();
     int currentNotificationId = firstNotificationId;
-    for(const auto &refInput : refInputs) {
+    for(const auto &refInput : inputNames) {
         task->addSub(TaskRegisterNotifier::create(pcbInterface,
                                                   QString("SOURCE:%1:CONSTANT?").arg(refInput),
                                                   currentNotificationId,
                                                   TRANSACTION_TIMEOUT,
                                                   additionalErrorHandler));
-        task->addNotificationId(currentNotificationId);
+        task->addNotificationId(currentNotificationId, refInput);
         currentNotificationId++;
     }
     return task;
 }
 
-QList<int> TaskRegisterRefConstChangeNotifications::getnotificationIds()
+QMap<int, QString> TaskRegisterRefConstChangeNotifications::getnotificationIds() const
 {
     return m_notificationIds;
 }
 
-void TaskRegisterRefConstChangeNotifications::addNotificationId(int id)
+void TaskRegisterRefConstChangeNotifications::addNotificationId(int id, QString inputName)
 {
-    m_notificationIds.append(id);
+    Q_ASSERT(!m_notificationIds.contains(id));
+    m_notificationIds[id] = inputName;
 }

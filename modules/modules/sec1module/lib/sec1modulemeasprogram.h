@@ -6,7 +6,7 @@
 #include "secinputinfo.h"
 #include "clientactivecomponent.h"
 #include "multipleresulthelper.h"
-#include "secmeasinputcontainer.h"
+#include "secmeasinputdictionary.h"
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
 #include <QDateTime>
@@ -134,8 +134,8 @@ private:
 
     QStringList m_ResourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    SecMeasInputContainer m_refInputContainer;
-    SecMeasInputContainer m_dutInputContainer;
+    SecMeasInputDictionary m_refInputContainer;
+    SecMeasInputDictionary m_dutInputContainer;
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     QStringList m_DUTAliasList;
