@@ -9,13 +9,13 @@ class TaskRegisterRefConstChangeNotifications : public TaskContainerParallel
     Q_OBJECT
 public:
     static std::unique_ptr<TaskRegisterRefConstChangeNotifications> create(Zera::PcbInterfacePtr pcbInterface,
-                                                                           QStringList refInputs,
+                                                                           QStringList inputNames,
                                                                            int firstNotificationId,
                                                                            std::function<void()> additionalErrorHandler = []{});
-    QList<int> getnotificationIds();
+    QMap<int /* notifyId */, QString /* refInputName */> getnotificationIds() const;
 private:
-    void addNotificationId(int id);
-    QList<int> m_notificationIds;
+    void addNotificationId(int id, QString inputName);
+    QMap<int /* notifyId */, QString /* refInputName */> m_notificationIds;
 };
 
 #endif // TASKREGISTERREFCONSTCHANGENOTIFICATIONS_H

@@ -1,12 +1,12 @@
-#ifndef SECMEASINPUTCONTAINER_H
-#define SECMEASINPUTCONTAINER_H
+#ifndef SECMEASINPUTDICTIONARY_H
+#define SECMEASINPUTDICTIONARY_H
 
 #include <QHash>
+#include <QMap>
 
-class SecMeasInputContainer
+class SecMeasInputDictionary
 {
 public:
-    SecMeasInputContainer();
     void addReferenceInput(QString inputName, QString resource);
     QString getResource(QString inputName) const;
     QStringList getInputNameList();
@@ -29,8 +29,8 @@ private:
     QHash<QString /* refInputName */, QString /* resource */> m_resourceHash;
     QHash<QString /* refInputName */, QString /* alias */> m_aliasHash;
     QHash<QString /* displayName */, QString /* refInputName */> m_displayHash;
-    QHash<int /* notId */, QString /* refInputName */> m_notificationIdHash;
+    QMap<int /* notifyId */, QString /* refInputName */> m_notificationIdHash;
     QString m_currentInput;
 };
 
-#endif // SECMEASINPUTCONTAINER_H
+#endif // SECMEASINPUTDICTIONARY_H
