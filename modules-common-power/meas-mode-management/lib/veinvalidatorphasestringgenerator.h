@@ -3,6 +3,7 @@
 
 #include <QStringList>
 
+// Phase mask vein validator string helper - phase mask selection related
 class VeinValidatorPhaseStringGenerator
 {
 public:
