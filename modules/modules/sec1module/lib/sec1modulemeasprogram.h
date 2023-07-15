@@ -3,7 +3,6 @@
 
 #include "sec1module.h"
 #include "sec1moduleconfigdata.h"
-#include "secinputinfo.h"
 #include "clientactivecomponent.h"
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
@@ -61,179 +60,12 @@ class cSec1ModuleMeasProgram: public cBaseMeasProgram
 public:
     cSec1ModuleMeasProgram(cSec1Module* module, std::shared_ptr<cBaseModuleConfiguration> pConfiguration);
     virtual ~cSec1ModuleMeasProgram();
-    virtual void generateInterface(); // here we export our interface (entities)
+    virtual void generateInterface() override; // here we export our interface (entities)
 public slots:
-    virtual void start(); // difference between start and stop is that actual values
-    virtual void stop(); // in interface are not updated when stop
-protected slots:
-    virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
-private:
-    cSec1ModuleConfigData* getConfData();
-
-    cSec1Module* m_pModule; // the module we live in
-    Zera::cSECInterface* m_pSECInterface;
-    Zera::PcbInterfacePtr m_pcbInterface;
-
-    // statemachine for activating gets the following states
-    QState resourceManagerConnectState; // connect to resource manager
-    QState m_IdentifyState; // identify to resource manager
-    QState m_testSEC1ResourceState; // test for our configured error calculator units
-    QState m_setECResourceState; // here we try to set 2 ecalcunits at rm
-    QState m_readResourceTypesState; // read all resource types ...at the moment we set a list of predefined resource types
-    QState m_readResourcesState; // init to read all resource information for each type
-    QState m_readResourceState; // read for 1 type
-
-    QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
-
-    QState m_ecalcServerConnectState; // connect to ecalculator server
-    QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
-    QState m_pcbServerConnectState; // connect to pcb server
-
-    QState m_readREFInputsState; // init to read all ref Input informations
-    QState m_readREFInputAliasState; // read for 1 Input
-    QState m_readREFInputDoneState;
-
-    QState m_readDUTInputsState; // init to read all ref Input informations
-    QState m_readDUTInputAliasState; // read for 1 Input
-    QState m_readDUTInputDoneState;
-
-    QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
-    QState m_setsecINTNotifierState; // we get notified on sec interrupts
-
-
-    QFinalState m_activationDoneState; // and then we have finished
-
-    // statemachine for deactivating
-    QState m_stopECalculatorState; // we stop running measurement
-    QState m_freeECalculatorState; // we give back our ecalcunits to sec server
-    QState m_freeECResource; // and also give them back to the resource manager
-    QFinalState m_deactivationDoneState;
-
-    // statemachine for starting error measurement
-    QStateMachine m_startMeasurementMachine;
-    QState m_setsyncState; // our 2 ecalc units must be synchronized
-    QState m_setMeaspulsesState; // we set the desired measpulses
-    QState m_setMasterMuxState; // we set the Input selectors
-    QState m_setSlaveMuxState;
-    QState m_setMasterMeasModeState; // and the meas modes
-    QState m_setSlaveMeasModeState;
-    QState m_enableInterruptState;
-    QState m_startMeasurementState;
-    QFinalState m_startMeasurementDoneState; // here we start it
-
-    // statemachine for interrupthandling;
-    QStateMachine m_InterrupthandlingStateMachine;
-    QState m_readIntRegisterState;
-    QState m_readMTCountactState;
-    QState m_calcResultAndResetIntState;
-    QFinalState m_FinalState;
-
-    Zera::ProxyClientPtr m_rmClient;
-    Zera::ProxyClient* m_pSECClient;
-    Zera::ProxyClient* m_pPCBClient;
-
-    QStringList m_ResourceTypeList;
-    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
-    SecMeasInputDictionary m_refInputContainer;
-    SecMeasInputDictionary m_dutInputContainer;
-
-    QStringList m_REFAliasList; // we want to have an ordered list with Input alias
-    QStringList m_DUTAliasList;
-    qint32 m_nIt;
-    QList<QString> m_sItList; // for interation over x Input hash
-    QString m_sIt;
-
-    QString m_masterErrCalcName;
-    QString m_slaveErrCalcName;
-
-    VfModuleParameter* m_pDutInputPar;
-    VfModuleParameter* m_pRefInputPar;
-    VfModuleParameter* m_pRefConstantPar;
-    VfModuleParameter* m_pDutConstantPar;
-    VfModuleParameter* m_pDutConstantUScaleDenom;
-    VfModuleParameter* m_pDutConstantUScaleNum;
-    VfModuleParameter* m_pDutConstantIScaleDenom;
-    VfModuleParameter* m_pDutTypeMeasurePoint;
-    VfModuleParameter* m_pDutConstantIScaleNum;
-    VfModuleParameter* m_pDutConstantUnitPar;
-    VfModuleParameter* m_pMRatePar;
-    VfModuleParameter* m_pTargetPar;
-    VfModuleParameter* m_pEnergyPar;
-    VfModuleParameter* m_pStartStopPar;
-    VfModuleParameter* m_pStatusAct;
-    VfModuleParameter* m_pProgressAct;
-    VfModuleParameter* m_pEnergyAct;
-    VfModuleParameter* m_pEnergyFinalAct;
-    VfModuleParameter* m_pResultAct;
-    VfModuleParameter* m_pRefFreqInput;
-    VfModuleParameter* m_pContinuousPar;
-    VfModuleParameter* m_pUpperLimitPar;
-    VfModuleParameter* m_pLowerLimitPar;
-    VfModuleParameter* m_pResultUnit;
-    VfModuleParameter* m_pRatingAct;
-    VfModuleParameter* m_pMeasCountPar;
-    VfModuleParameter* m_pMeasWait;
-    VfModuleParameter* m_pMeasNumAct;
-    VfModuleParameter* m_pMulCountAct;
-    VfModuleParameter* m_pMulResultArray;
-
-    VfModuleParameter* m_pClientNotifierPar;
-    ClientActiveComponent m_ClientActiveNotifier;
-
-
-    cStringValidator *m_pDutConstanstUnitValidator;
-    QString m_sDutConstantUnit;
-    // memorising DUT Constant scaling factor in case DUT constant changes
-    double m_dutConstantScalingMem = 1;
-
-    // vars dealing with error measurement
-    bool m_bFirstMeas;
-    bool m_bMeasurementRunning = false;
-    QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
-    quint32 m_nStatus; // idle, started, running, finished
-    double m_fResult; // error value in %
-    ECALCRESULT::enResultTypes m_eRating;
-    quint32 m_nDUTPulseCounterStart;
-    quint32 m_nDUTPulseCounterActual;
-    quint32 m_nEnergyCounterFinal;
-    quint32 m_nEnergyCounterActual;
-    double m_fProgress; // progress value in %
-    double m_fEnergy;
-    quint32 m_nIntReg;
-
-    // Some decisions - we have enough of configration params around
-    static constexpr quint32 m_nMulMeasStoredMax = 400;
-    static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
-    static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
-
-    // Multiple measurements
-    qint32 m_nMeasurementsToGo;
-    quint32 m_nMeasurementNo;
-    QTimer m_WaitMultiTimer;
-    QDateTime m_WaitStartDateTime;
-
-    MultipleResultHelper m_multipleResultHelper;
-
-    // methods
-    void setInterfaceComponents();
-    void setValidators();
-
-    QStringList getDutConstUnitValidator();
-    QString getEnergyUnit();
-    void initDutConstantUnit(QStringList sl);
-    void initDutConstantUnit();
-
-    void handleChangedREFConst();
-    void handleSECInterrupt();
-    void cmpDependencies();
-    void stopMeasurement(bool bAbort);
-
-    const QString multiResultToJson();
-    void multiResultToVein();
-    double getUnitFactor();
-    QString getRefInputDisplayString(QString inputName);
-
+    void start() override; // difference between start and stop is that actual values
+    void stop() override; // in interface are not updated when stop
 private slots:
+    void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
     void resourceManagerConnect();
     void sendRMIdent();
     void testSEC1Resource();
@@ -281,21 +113,6 @@ private slots:
     // vein change handlers
     void newStartStop(QVariant startstop);
     void newDutConstant(QVariant dutconst);
-    /**
-     * @brief newDutConstantScale
-     *
-     * caluclates dut constatn scale factor from
-     * PAR_DutConstantUScaleNum
-     * PAR_DutConstantUScaleDenom
-     * PAR_DutConstantIScaleNum
-     * PAR_DutConstantIScaleDenom
-     *
-     * is also connected to m_pDutTypeMeasurePoint
-     *
-     * @param uINumDenomValue: new Num or denum value
-     * @param numDenomId: (0): is Numerator (1 or ...) is Denominator
-     * @param transType: Transformer type (U) Voltage (I) Current
-     */
     void newDutConstantScale(QVariant uINumDenomValue, const QString componentName);
     void newDutConstantUnit(QVariant dutconstunit);
     void newRefConstant(QVariant refconst);
@@ -312,6 +129,168 @@ private slots:
     void clientActivationChanged(bool bActive);
     bool found(QList<QString>& list, QString searched);
     bool found(QList<cSec1ModuleConfigData::TRefInput> &list, QString searched);
+
+private:
+    cSec1ModuleConfigData* getConfData();
+    void setInterfaceComponents();
+    void setValidators();
+
+    QStringList getDutConstUnitValidator();
+    QString getEnergyUnit();
+    void initDutConstantUnit(QStringList sl);
+    void initDutConstantUnit();
+
+    void handleChangedREFConst();
+    void handleSECInterrupt();
+    void cmpDependencies();
+    void stopMeasurement(bool bAbort);
+
+    const QString multiResultToJson();
+    void multiResultToVein();
+    double getUnitFactor();
+    QString getRefInputDisplayString(QString inputName);
+
+    cSec1Module* m_pModule; // the module we live in
+    Zera::cSECInterface* m_pSECInterface;
+    Zera::PcbInterfacePtr m_pcbInterface;
+
+    // statemachine for activating gets the following states
+    QState resourceManagerConnectState; // connect to resource manager
+    QState m_IdentifyState; // identify to resource manager
+    QState m_testSEC1ResourceState; // test for our configured error calculator units
+    QState m_setECResourceState; // here we try to set 2 ecalcunits at rm
+    QState m_readResourceTypesState; // read all resource types ...at the moment we set a list of predefined resource types
+    QState m_readResourcesState; // init to read all resource information for each type
+    QState m_readResourceState; // read for 1 type
+
+    QState m_testSecInputsState; // here we test if all our configured Inputs are present, we don't set them because we only get information from here
+
+    QState m_ecalcServerConnectState; // connect to ecalculator server
+    QState m_fetchECalcUnitsState; // we try to fetch 2 error calc units from sec server
+    QState m_pcbServerConnectState; // connect to pcb server
+
+    QState m_readREFInputsState; // init to read all ref Input informations
+    QState m_readREFInputAliasState; // read for 1 Input
+    QState m_readREFInputDoneState;
+
+    QState m_readDUTInputsState; // init to read all ref Input informations
+    QState m_readDUTInputAliasState; // read for 1 Input
+    QState m_readDUTInputDoneState;
+
+    QState m_setpcbREFConstantNotifierState; // we get notified on refconstant changes
+    QState m_setsecINTNotifierState; // we get notified on sec interrupts
+
+    QFinalState m_activationDoneState; // and then we have finished
+
+    // statemachine for deactivating
+    QState m_stopECalculatorState; // we stop running measurement
+    QState m_freeECalculatorState; // we give back our ecalcunits to sec server
+    QState m_freeECResource; // and also give them back to the resource manager
+    QFinalState m_deactivationDoneState;
+
+    // statemachine for starting error measurement
+    QStateMachine m_startMeasurementMachine;
+    QState m_setsyncState; // our 2 ecalc units must be synchronized
+    QState m_setMeaspulsesState; // we set the desired measpulses
+    QState m_setMasterMuxState; // we set the Input selectors
+    QState m_setSlaveMuxState;
+    QState m_setMasterMeasModeState; // and the meas modes
+    QState m_setSlaveMeasModeState;
+    QState m_enableInterruptState;
+    QState m_startMeasurementState;
+    QFinalState m_startMeasurementDoneState; // here we start it
+
+    // statemachine for interrupthandling;
+    QStateMachine m_InterrupthandlingStateMachine;
+    QState m_readIntRegisterState;
+    QState m_readMTCountactState;
+    QState m_calcResultAndResetIntState;
+    QFinalState m_FinalState;
+
+    Zera::ProxyClientPtr m_rmClient;
+    Zera::ProxyClient* m_pSECClient;
+    Zera::ProxyClient* m_pPCBClient;
+
+    QStringList m_ResourceTypeList;
+    QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
+    SecMeasInputDictionary m_refInputDictionary;
+    SecMeasInputDictionary m_dutInputDictionary;
+
+    QStringList m_REFAliasList; // we want to have an ordered list with Input alias
+    QStringList m_DUTAliasList;
+    qint32 m_nIt;
+    QList<QString> m_sItList; // for interation over x Input hash
+    QString m_sIt;
+
+    QString m_masterErrCalcName;
+    QString m_slaveErrCalcName;
+
+    VfModuleParameter* m_pDutInputPar;
+    VfModuleParameter* m_pRefInputPar;
+    VfModuleParameter* m_pRefConstantPar;
+    VfModuleParameter* m_pDutConstantPar;
+    VfModuleParameter* m_pDutConstantUScaleDenom;
+    VfModuleParameter* m_pDutConstantUScaleNum;
+    VfModuleParameter* m_pDutConstantIScaleDenom;
+    VfModuleParameter* m_pDutTypeMeasurePoint;
+    VfModuleParameter* m_pDutConstantIScaleNum;
+    VfModuleParameter* m_pDutConstantUnitPar;
+    VfModuleParameter* m_pMRatePar;
+    VfModuleParameter* m_pTargetPar;
+    VfModuleParameter* m_pEnergyPar;
+    VfModuleParameter* m_pStartStopPar;
+    VfModuleParameter* m_pStatusAct;
+    VfModuleParameter* m_pProgressAct;
+    VfModuleParameter* m_pEnergyAct;
+    VfModuleParameter* m_pEnergyFinalAct;
+    VfModuleParameter* m_pResultAct;
+    VfModuleParameter* m_pRefFreqInput;
+    VfModuleParameter* m_pContinuousPar;
+    VfModuleParameter* m_pUpperLimitPar;
+    VfModuleParameter* m_pLowerLimitPar;
+    VfModuleParameter* m_pResultUnit;
+    VfModuleParameter* m_pRatingAct;
+    VfModuleParameter* m_pMeasCountPar;
+    VfModuleParameter* m_pMeasWait;
+    VfModuleParameter* m_pMeasNumAct;
+    VfModuleParameter* m_pMulCountAct;
+    VfModuleParameter* m_pMulResultArray;
+
+    VfModuleParameter* m_pClientNotifierPar;
+    ClientActiveComponent m_ClientActiveNotifier;
+
+    cStringValidator *m_pDutConstanstUnitValidator;
+    QString m_sDutConstantUnit;
+    // memorising DUT Constant scaling factor in case DUT constant changes
+    double m_dutConstantScalingMem = 1;
+
+    // vars dealing with error measurement
+    bool m_bFirstMeas;
+    bool m_bMeasurementRunning = false;
+    QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
+    quint32 m_nStatus; // idle, started, running, finished
+    double m_fResult; // error value in %
+    ECALCRESULT::enResultTypes m_eRating;
+    quint32 m_nDUTPulseCounterStart;
+    quint32 m_nDUTPulseCounterActual;
+    quint32 m_nEnergyCounterFinal;
+    quint32 m_nEnergyCounterActual;
+    double m_fProgress; // progress value in %
+    double m_fEnergy;
+    quint32 m_nIntReg;
+
+    // Some decisions - we have enough of configration params around
+    static constexpr quint32 m_nMulMeasStoredMax = 400;
+    static constexpr quint32 m_nActualizeIntervallLowFreq = 1000;
+    static constexpr quint32 m_nActualizeIntervallHighFreq = 50;
+
+    // Multiple measurements
+    qint32 m_nMeasurementsToGo;
+    quint32 m_nMeasurementNo;
+    QTimer m_WaitMultiTimer;
+    QDateTime m_WaitStartDateTime;
+
+    MultipleResultHelper m_multipleResultHelper;
 };
 }
 
