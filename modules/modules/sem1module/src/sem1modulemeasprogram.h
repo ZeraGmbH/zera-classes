@@ -17,7 +17,6 @@ enum sem1moduleCmds
     sendrmident,
     testsec1resource,
     setecresource,
-    readresourcetypes,
     readresource,
     fetchecalcunits,
     readrefInputalias,

@@ -411,19 +411,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 break;
 
-            case readresourcetypes:
-                if (reply == ack)
-                {
-                    m_ResourceTypeList = answer.toString().split(';');
-                    emit activationContinue();
-                }
-                else
-                {
-                    emit errMsg((tr(resourcetypeErrMsg)));
-                    emit activationError();
-                }
-                break;
-
             case readresource:
             {
                 if (reply == ack)
@@ -875,9 +862,7 @@ void cSpm1ModuleMeasProgram::setECResource()
 
 void cSpm1ModuleMeasProgram::readResourceTypes()
 {
-    //m_MsgNrCmdList[m_rmInterface.getResourceTypes()] = readresourcetypes;
     // instead of taking all resourcetypes we take predefined types if we found them in our config
-
     if (found(getConfData()->m_refInpList, "fi"))
         m_ResourceTypeList.append("FRQINPUT");
     if (found(getConfData()->m_refInpList, "fo"))
