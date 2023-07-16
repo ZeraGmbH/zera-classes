@@ -180,8 +180,6 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
 
 cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
 {
-    for (int i = 0; i < getConfData()->m_refInpList.count(); i++)
-        delete mREFSpmInputInfoHash.take(getConfData()->m_refInpList.at(i));
     delete m_pSECInterface;
     Zera::Proxy::getInstance()->releaseConnection(m_pSECClient);
     Zera::Proxy::getInstance()->releaseConnection(m_pPCBClient);
@@ -468,7 +466,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_refInputInfo->alias = answer.toString();
+                    m_refInputDictionary.setAlias(m_refInputDictionary.getCurrentInput(), answer.toString());
                     emit activationContinue();
                 }
                 else
@@ -743,7 +741,7 @@ cSpm1ModuleConfigData *cSpm1ModuleMeasProgram::getConfData()
 
 void cSpm1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pRefInputPar->setValue(QVariant(mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias));
+    m_pRefInputPar->setValue(QVariant(m_refInputDictionary.getAlias(getConfData()->m_sRefInput.m_sPar)));
     m_pTargetedPar->setValue(QVariant(getConfData()->m_bTargeted.m_nActive));
     m_pMeasTimePar->setValue(QVariant(getConfData()->m_nMeasTime.m_nPar));
     m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
@@ -806,24 +804,21 @@ QString cSpm1ModuleMeasProgram::getEnergyUnit()
 QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
 {
     QStringList sl;
-    QString powType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
-
+    QString powType = m_refInputDictionary.getAlias(getConfData()->m_sRefInput.m_sPar);
     if (powType.contains('P'))
         sl = getConfData()->m_ActiveUnitList;
     if (powType.contains('Q'))
         sl = getConfData()->m_ReactiveUnitList;
     if (powType.contains('S'))
         sl = getConfData()->m_ApparentUnitList;
-
     return sl;
 }
 
 
 QString cSpm1ModuleMeasProgram::getPowerUnit()
 {
-    QString powerType = mREFSpmInputInfoHash[getConfData()->m_sRefInput.m_sPar]->alias;
+    QString powerType = m_refInputDictionary.getAlias(getConfData()->m_sRefInput.m_sPar);
     QString currentPowerUnit = m_pInputUnitPar->getValue().toString();
-
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
 
@@ -921,9 +916,7 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
                 refInCountLeftToCheck--;
-                mREFSpmInputInfoHash[refInputName] = new SecInputInfo();
-                mREFSpmInputInfoHash[refInputName]->name = refInputName;
-                mREFSpmInputInfoHash[refInputName]->resource = m_ResourceTypeList[resourceTypeNo];
+                m_refInputDictionary.addReferenceInput(refInputName, m_ResourceTypeList[resourceTypeNo]);
                 break;
             }
         }
@@ -972,7 +965,7 @@ void cSpm1ModuleMeasProgram::pcbServerConnect()
 
 void cSpm1ModuleMeasProgram::readREFInputs()
 {
-    m_sItList = mREFSpmInputInfoHash.keys();
+    m_sItList = m_refInputDictionary.getInputNameList();
     emit activationContinue();
 }
 
@@ -980,18 +973,14 @@ void cSpm1ModuleMeasProgram::readREFInputs()
 void cSpm1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    m_refInputInfo = mREFSpmInputInfoHash.take(m_sIt); // if set some info that could be useful later
-    //m_MsgNrCmdList[m_refInputInfo->pcbIFace->resourceAliasQuery(m_refInputInfo->resource, m_sIt)] = readrefInputalias;
-
+    m_refInputDictionary.setCurrentInput(m_sIt);
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
     m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
-
 }
 
 
 void cSpm1ModuleMeasProgram::readREFInputDone()
 {
-    mREFSpmInputInfoHash[m_refInputInfo->name] = m_refInputInfo;
     if (m_sItList.isEmpty())
         emit activationContinue();
     else
@@ -1023,11 +1012,10 @@ void cSpm1ModuleMeasProgram::activationDone()
 
     nref = getConfData()->m_refInpList.count();
     if (nref > 0)
-    for (int i = 0; i < nref; i++)
-    {
-        m_REFAliasList.append(mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)]->alias); // build up a fixed sorted list of alias
-        m_refInputInfo = mREFSpmInputInfoHash[getConfData()->m_refInpList.at(i)]; // change the hash for access via alias
-        mREFSpmInputSelectionHash[m_refInputInfo->alias] = m_refInputInfo;
+    for (int i = 0; i < nref; i++) {
+        QString alias = m_refInputDictionary.getAlias(getConfData()->m_refInpList.at(i));
+        m_REFAliasList.append(alias);
+        m_refInputDictionary.setDisplayedString(getConfData()->m_refInpList.at(i), alias);
     }
 
     connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSpm1ModuleMeasProgram::Actualize);
@@ -1300,7 +1288,7 @@ void cSpm1ModuleMeasProgram::newRefConstant(QVariant refconst)
 
 void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
-    QString refInputName = mREFSpmInputSelectionHash[refinput.toString()]->name;
+    QString refInputName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
     getConfData()->m_sRefInput.m_sPar = refInputName;
     setInterfaceComponents();
 
