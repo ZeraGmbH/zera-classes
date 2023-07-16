@@ -163,6 +163,9 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     connect(&m_readMTCountactState, &QState::entered, this, &cSec1ModuleMeasProgram::readMTCountact);
     connect(&m_calcResultAndResetIntState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResultAndResetInt);
     connect(&m_FinalState, &QState::entered, this, &cSec1ModuleMeasProgram::checkForRestart);
+
+    m_resourceTypeList.addTypesFromConfig(getConfData()->m_refInpList);
+    m_resourceTypeList.addTypesFromConfig(getConfData()->m_dutInpList);
 }
 
 
@@ -509,6 +512,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readresource:
             {
                 if (reply == ack) {
+                    Q_ASSERT(m_ResourceTypeList.at(m_nIt) == m_resourceTypeList.getResourceTypeList().at(m_nIt));
                     m_ResourceHash[m_ResourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
                     if (m_nIt < m_ResourceTypeList.count())
@@ -980,7 +984,7 @@ void cSec1ModuleMeasProgram::readResourceTypes()
         m_ResourceTypeList.append("SCHEAD");
     if (found(getConfData()->m_dutInpList, "hk") || found(getConfData()->m_refInpList, "hk"))
         m_ResourceTypeList.append("HKEY");
-
+    Q_ASSERT(m_ResourceTypeList == m_resourceTypeList.getResourceTypeList());
     emit activationContinue();
 }
 
@@ -994,6 +998,7 @@ void cSec1ModuleMeasProgram::readResources()
 
 void cSec1ModuleMeasProgram::readResource()
 {
+    Q_ASSERT(m_ResourceTypeList.at(m_nIt) == m_resourceTypeList.getResourceTypeList().at(m_nIt));
     QString resourcetype = m_ResourceTypeList.at(m_nIt);
     m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
 }

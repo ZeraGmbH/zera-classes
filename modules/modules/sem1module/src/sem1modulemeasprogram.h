@@ -2,6 +2,7 @@
 #define SEM1MODULEMEASPROGRAM_H
 
 #include "secinterface.h"
+#include "secresourcetypelist.h"
 #include "sem1moduleconfigdata.h"
 #include <basemeasprogram.h>
 #include "secmeasinputdictionary.h"
@@ -203,6 +204,7 @@ private:
     Zera::ProxyClient* m_pPCBClient;
 
     QStringList m_ResourceTypeList;
+    SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     QHash<QString, double> mEnergyUnitFactorHash;

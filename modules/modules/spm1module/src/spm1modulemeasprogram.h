@@ -1,6 +1,7 @@
 #ifndef SPM1MODULEMEASPROGRAM_H
 #define SPM1MODULEMEASPROGRAM_H
 
+#include "secresourcetypelist.h"
 #include "spm1moduleconfigdata.h"
 #include <basemeasprogram.h>
 #include <clientactivecomponent.h>
@@ -202,6 +203,7 @@ private:
     Zera::ProxyClient* m_pPCBClient;
 
     QStringList m_ResourceTypeList;
+    SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     QHash<QString, double> mPowerUnitFactorHash;

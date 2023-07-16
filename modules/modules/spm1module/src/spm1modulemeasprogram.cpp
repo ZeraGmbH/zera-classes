@@ -176,6 +176,7 @@ cSpm1ModuleMeasProgram::cSpm1ModuleMeasProgram(cSpm1Module* module, std::shared_
     mPowerUnitFactorHash["VA"] = 0.001;
 
     m_ActualizeTimer.setInterval(m_nActualizeIntervallLowFreq);
+    m_resourceTypeList.addTypesFromConfig(getConfData()->m_refInpList);
 }
 
 cSpm1ModuleMeasProgram::~cSpm1ModuleMeasProgram()
@@ -415,6 +416,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
+                    Q_ASSERT(m_ResourceTypeList.at(m_nIt) == m_resourceTypeList.getResourceTypeList().at(m_nIt));
                     m_ResourceHash[m_ResourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
                     if (m_nIt < m_ResourceTypeList.count())
@@ -872,7 +874,7 @@ void cSpm1ModuleMeasProgram::readResourceTypes()
         m_ResourceTypeList.append("SCHEAD");
     if (found(getConfData()->m_refInpList, "hk"))
         m_ResourceTypeList.append("HKEY");
-
+    Q_ASSERT(m_ResourceTypeList == m_resourceTypeList.getResourceTypeList());
     emit activationContinue();
 
 }

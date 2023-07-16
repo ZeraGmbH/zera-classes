@@ -6,6 +6,7 @@
 #include "clientactivecomponent.h"
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
+#include "secresourcetypelist.h"
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
 #include <QDateTime>
@@ -211,6 +212,7 @@ private:
     Zera::ProxyClient* m_pPCBClient;
 
     QStringList m_ResourceTypeList;
+    SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     SecMeasInputDictionary m_dutInputDictionary;
