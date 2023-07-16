@@ -28,8 +28,7 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
 
     m_IdentifyState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSEC1ResourceState);
     m_testSEC1ResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_setECResourceState); // test presence of sec1 resource
-    m_setECResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourceTypesState); // claim 2 ecalculator units
-    m_readResourceTypesState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourcesState); // read all resources types
+    m_setECResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourcesState); // claim 2 ecalculator units
     m_readResourcesState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_readResourceState); // init read resources
     m_readResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationLoop, &m_readResourceState); // read their resources into list
     m_readResourceState.addTransition(this, &cSec1ModuleMeasProgram::activationContinue, &m_testSecInputsState); // go on if done
@@ -57,7 +56,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     m_activationMachine.addState(&m_IdentifyState);
     m_activationMachine.addState(&m_testSEC1ResourceState);
     m_activationMachine.addState(&m_setECResourceState);
-    m_activationMachine.addState(&m_readResourceTypesState);
     m_activationMachine.addState(&m_readResourcesState);
     m_activationMachine.addState(&m_readResourceState);
     m_activationMachine.addState(&m_testSecInputsState);
@@ -80,7 +78,6 @@ cSec1ModuleMeasProgram::cSec1ModuleMeasProgram(cSec1Module* module, std::shared_
     connect(&m_IdentifyState, &QState::entered, this, &cSec1ModuleMeasProgram::sendRMIdent);
     connect(&m_testSEC1ResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::testSEC1Resource);
     connect(&m_setECResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::setECResource);
-    connect(&m_readResourceTypesState, &QState::entered, this, &cSec1ModuleMeasProgram::readResourceTypes);
     connect(&m_readResourcesState, &QState::entered, this, &cSec1ModuleMeasProgram::readResources);
     connect(&m_readResourceState, &QState::entered, this, &cSec1ModuleMeasProgram::readResource);
     connect(&m_testSecInputsState, &QState::entered, this, &cSec1ModuleMeasProgram::testSecInputs);
@@ -512,10 +509,10 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readresource:
             {
                 if (reply == ack) {
-                    Q_ASSERT(m_ResourceTypeList.at(m_nIt) == m_resourceTypeList.getResourceTypeList().at(m_nIt));
-                    m_ResourceHash[m_ResourceTypeList.at(m_nIt)] = answer.toString();
+                    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
+                    m_ResourceHash[resourceTypeList.at(m_nIt)] = answer.toString();
                     m_nIt++;
-                    if (m_nIt < m_ResourceTypeList.count())
+                    if (m_nIt < resourceTypeList.count())
                         emit activationLoop();
                     else
                         emit activationContinue();
@@ -971,35 +968,15 @@ void cSec1ModuleMeasProgram::setECResource()
     m_MsgNrCmdList[m_rmInterface.setResource("SEC1", "ECALCULATOR", 2)] = setecresource;
 }
 
-
-
-void cSec1ModuleMeasProgram::readResourceTypes()
-{
-    // instead of taking all resourcetypes we take predefined types if we found them in our config
-    if (found(getConfData()->m_dutInpList, "fi") || found(getConfData()->m_refInpList, "fi"))
-        m_ResourceTypeList.append("FRQINPUT");
-    if (found(getConfData()->m_dutInpList, "fo") || found(getConfData()->m_refInpList, "fo"))
-        m_ResourceTypeList.append("SOURCE");
-    if (found(getConfData()->m_dutInpList, "sh") || found(getConfData()->m_refInpList, "sh"))
-        m_ResourceTypeList.append("SCHEAD");
-    if (found(getConfData()->m_dutInpList, "hk") || found(getConfData()->m_refInpList, "hk"))
-        m_ResourceTypeList.append("HKEY");
-    Q_ASSERT(m_ResourceTypeList == m_resourceTypeList.getResourceTypeList());
-    emit activationContinue();
-}
-
-
 void cSec1ModuleMeasProgram::readResources()
 {
     m_nIt = 0; // we want to read all resources from resourcetypelist
     emit activationContinue();
 }
 
-
 void cSec1ModuleMeasProgram::readResource()
 {
-    Q_ASSERT(m_ResourceTypeList.at(m_nIt) == m_resourceTypeList.getResourceTypeList().at(m_nIt));
-    QString resourcetype = m_ResourceTypeList.at(m_nIt);
+    QString resourcetype = m_resourceTypeList.getResourceTypeList().at(m_nIt);
     m_MsgNrCmdList[m_rmInterface.getResources(resourcetype)] = readresource;
 }
 
@@ -1008,13 +985,14 @@ void cSec1ModuleMeasProgram::testSecInputs()
 {
     const auto refInpList = getConfData()->m_refInpList;
     qint32 refInCountLeftToCheck = refInpList.count();
+    QStringList resourceTypeList = m_resourceTypeList.getResourceTypeList();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
         QString refInputName = refInpList[refInputNo].inputName;
-        for (int resourceTypeNo = 0; resourceTypeNo < m_ResourceTypeList.count(); resourceTypeNo++) {
-            QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
+        for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
+            QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
                 refInCountLeftToCheck--;
-                m_refInputDictionary.addReferenceInput(refInputName, m_ResourceTypeList[resourceTypeNo]);
+                m_refInputDictionary.addReferenceInput(refInputName, resourceTypeList[resourceTypeNo]);
                 break;
             }
         }
@@ -1024,11 +1002,11 @@ void cSec1ModuleMeasProgram::testSecInputs()
     qint32 dutInputCountLeftToCheck = dutInplist.count();
     for (int dutInputNo = 0; dutInputNo < dutInplist.count(); dutInputNo++) {
         QString dutInputName = dutInplist[dutInputNo];
-        for (int resourceTypeNo = 0; resourceTypeNo < m_ResourceTypeList.count(); resourceTypeNo++) {
-            QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
+        for (int resourceTypeNo = 0; resourceTypeNo < resourceTypeList.count(); resourceTypeNo++) {
+            QString resourcelist = m_ResourceHash[resourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(dutInputName)) {
                 dutInputCountLeftToCheck--;
-                m_dutInputDictionary.addReferenceInput(dutInputName, m_ResourceTypeList[resourceTypeNo]);
+                m_dutInputDictionary.addReferenceInput(dutInputName, resourceTypeList[resourceTypeNo]);
                 break;
             }
         }

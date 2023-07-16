@@ -70,7 +70,6 @@ private slots:
     void sendRMIdent();
     void testSEC1Resource();
     void setECResource();
-    void readResourceTypes();
     void readResources();
     void readResource();
     void testSecInputs();
@@ -159,7 +158,6 @@ private:
     QState m_IdentifyState; // identify to resource manager
     QState m_testSEC1ResourceState; // test for our configured error calculator units
     QState m_setECResourceState; // here we try to set 2 ecalcunits at rm
-    QState m_readResourceTypesState; // read all resource types ...at the moment we set a list of predefined resource types
     QState m_readResourcesState; // init to read all resource information for each type
     QState m_readResourceState; // read for 1 type
 
@@ -211,7 +209,6 @@ private:
     Zera::ProxyClient* m_pSECClient;
     Zera::ProxyClient* m_pPCBClient;
 
-    QStringList m_ResourceTypeList;
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
