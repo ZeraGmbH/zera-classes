@@ -29,6 +29,7 @@ SET_MODULE_ENV(samplemodule)
 SET_MODULE_ENV(scpimodule)
 SET_MODULE_ENV(sec1module)
 SET_MODULE_ENV(sem1module)
+SET_MODULE_ENV(spm1module)
 SET_MODULE_ENV(statusmodule)
 SET_MODULE_ENV(thdnmodule)
 
