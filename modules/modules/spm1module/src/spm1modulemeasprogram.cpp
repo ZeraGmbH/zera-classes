@@ -725,29 +725,23 @@ cSpm1ModuleConfigData *cSpm1ModuleMeasProgram::getConfData()
     return qobject_cast<cSpm1ModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 }
 
-
 void cSpm1ModuleMeasProgram::setInterfaceComponents()
 {
-    m_pRefInputPar->setValue(QVariant(m_refInputDictionary.getAlias(getConfData()->m_sRefInput.m_sPar)));
+    m_pRefInputPar->setValue(QVariant(getRefInputDisplayString(getConfData()->m_sRefInput.m_sPar)));
     m_pTargetedPar->setValue(QVariant(getConfData()->m_bTargeted.m_nActive));
     m_pMeasTimePar->setValue(QVariant(getConfData()->m_nMeasTime.m_nPar));
     m_pUpperLimitPar->setValue(QVariant(getConfData()->m_fUpperLimit.m_fPar));
     m_pLowerLimitPar->setValue(QVariant(getConfData()->m_fLowerLimit.m_fPar));
 }
 
-
 void cSpm1ModuleMeasProgram::setValidators()
 {
     cStringValidator *sValidator;
-    QString s;
-
     sValidator = new cStringValidator(m_REFAliasList);
     m_pRefInputPar->setValidator(sValidator);
-
     sValidator = new cStringValidator(getPowerUnitValidator());
     m_pInputUnitPar->setValidator(sValidator);
 }
-
 
 void cSpm1ModuleMeasProgram::setUnits()
 {
@@ -770,7 +764,6 @@ void cSpm1ModuleMeasProgram::setUnits()
     m_pModule->exportMetaData();
 }
 
-
 QStringList cSpm1ModuleMeasProgram::getEnergyUnitValidator()
 {
     QStringList sl = getPowerUnitValidator();
@@ -779,14 +772,12 @@ QStringList cSpm1ModuleMeasProgram::getEnergyUnitValidator()
     return sl;
 }
 
-
 QString cSpm1ModuleMeasProgram::getEnergyUnit()
 {
     QString s = getPowerUnit();
     s.append("h");
     return s;
 }
-
 
 QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
 {
@@ -801,7 +792,6 @@ QStringList cSpm1ModuleMeasProgram::getPowerUnitValidator()
     return sl;
 }
 
-
 QString cSpm1ModuleMeasProgram::getPowerUnit()
 {
     QString powerType = m_refInputDictionary.getAlias(getConfData()->m_sRefInput.m_sPar);
@@ -809,6 +799,18 @@ QString cSpm1ModuleMeasProgram::getPowerUnit()
     return cUnitHelper::getNewPowerUnit(powerType, currentPowerUnit);
 }
 
+QString cSpm1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
+{
+    QString displayString = m_refInputDictionary.getAlias(inputName);
+    QList<TRefInput> refInputList = getConfData()->m_refInpList;
+    for(const auto &entry : refInputList) {
+        if(entry.inputName == inputName) {
+            displayString += entry.nameAppend;
+            break;
+        }
+    }
+    return displayString;
+}
 
 void cSpm1ModuleMeasProgram::handleChangedREFConst()
 {
@@ -816,7 +818,6 @@ void cSpm1ModuleMeasProgram::handleChangedREFConst()
     m_MsgNrCmdList[m_pcbInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
     stopMeasuerment(true);
 }
-
 
 void cSpm1ModuleMeasProgram::handleSECInterrupt()
 {
@@ -896,7 +897,7 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
     const auto refInpList = getConfData()->m_refInpList;
     qint32 refInCountLeftToCheck = refInpList.count();
     for (int refInputNo = 0; refInputNo < refInpList.count(); refInputNo++) {
-        QString refInputName = refInpList[refInputNo];
+        QString refInputName = refInpList[refInputNo].inputName;
         for (int resourceTypeNo = 0; resourceTypeNo < m_ResourceTypeList.count(); resourceTypeNo++) {
             QString resourcelist = m_ResourceHash[m_ResourceTypeList[resourceTypeNo]];
             if (resourcelist.contains(refInputName)) {
@@ -906,7 +907,6 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
             }
         }
     }
-
     if (refInCountLeftToCheck == 0) // we found all our configured Inputs
         emit activationContinue(); // so lets go on
     else {
@@ -914,7 +914,6 @@ void cSpm1ModuleMeasProgram::testSpmInputs()
         emit activationError();
     }
 }
-
 
 void cSpm1ModuleMeasProgram::ecalcServerConnect()
 {
@@ -992,14 +991,11 @@ void cSpm1ModuleMeasProgram::setsecINTNotifier()
 
 void cSpm1ModuleMeasProgram::activationDone()
 {
-    int nref;
-
-    nref = getConfData()->m_refInpList.count();
-    if (nref > 0)
-    for (int i = 0; i < nref; i++) {
-        QString alias = m_refInputDictionary.getAlias(getConfData()->m_refInpList.at(i));
-        m_REFAliasList.append(alias);
-        m_refInputDictionary.setDisplayedString(getConfData()->m_refInpList.at(i), alias);
+    cSpm1ModuleConfigData *confData = getConfData();
+    for (int i = 0; i < confData->m_refInpList.count(); i++) {
+        QString displayString = getRefInputDisplayString(confData->m_refInpList.at(i).inputName);
+        m_REFAliasList.append(displayString); // build up a fixed sorted list of alias
+        m_refInputDictionary.setDisplayedString(confData->m_refInpList.at(i).inputName, displayString);
     }
 
     connect(&m_ActualizeTimer, &QTimer::timeout, this, &cSpm1ModuleMeasProgram::Actualize);
@@ -1293,7 +1289,6 @@ void cSpm1ModuleMeasProgram::newTargeted(QVariant targeted)
     emit m_pModule->parameterChanged();
 }
 
-
 void cSpm1ModuleMeasProgram::newMeasTime(QVariant meastime)
 {
     getConfData()->m_nMeasTime.m_nPar = meastime.toInt();
@@ -1301,7 +1296,6 @@ void cSpm1ModuleMeasProgram::newMeasTime(QVariant meastime)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSpm1ModuleMeasProgram::newT0Input(QVariant t0input)
 {
@@ -1311,7 +1305,6 @@ void cSpm1ModuleMeasProgram::newT0Input(QVariant t0input)
     emit m_pModule->parameterChanged();
 }
 
-
 void cSpm1ModuleMeasProgram::newT1Input(QVariant t1input)
 {
     m_pT1InputPar->setValue(t1input);
@@ -1319,7 +1312,6 @@ void cSpm1ModuleMeasProgram::newT1Input(QVariant t1input)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSpm1ModuleMeasProgram::newUnit(QVariant unit)
 {
@@ -1329,7 +1321,6 @@ void cSpm1ModuleMeasProgram::newUnit(QVariant unit)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSpm1ModuleMeasProgram::newUpperLimit(QVariant limit)
 {
@@ -1341,7 +1332,6 @@ void cSpm1ModuleMeasProgram::newUpperLimit(QVariant limit)
     emit m_pModule->parameterChanged();
 }
 
-
 void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
 {
     bool ok;
@@ -1351,7 +1341,6 @@ void cSpm1ModuleMeasProgram::newLowerLimit(QVariant limit)
 
     emit m_pModule->parameterChanged();
 }
-
 
 void cSpm1ModuleMeasProgram::Actualize()
 {
@@ -1366,15 +1355,6 @@ void cSpm1ModuleMeasProgram::clientActivationChanged(bool bActive)
     m_ActualizeTimer.setInterval(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
 }
 
-
-bool cSpm1ModuleMeasProgram::found(QList<QString> &list, QString searched)
-{
-    for (int i = 0; i < list.count(); i++)
-        if (list.at(i).contains(searched))
-            return true;
-    return false;
-}
-
 void cSpm1ModuleMeasProgram::stopMeasuerment(bool bAbort)
 {
     if(bAbort) {
@@ -1386,19 +1366,13 @@ void cSpm1ModuleMeasProgram::stopMeasuerment(bool bAbort)
     m_ActualizeTimer.stop();
 }
 
+bool cSpm1ModuleMeasProgram::found(QList<TRefInput> &list, QString searched)
+{
+    for (int i = 0; i < list.count(); i++) {
+        if (list.at(i).inputName.contains(searched))
+            return true;
+    }
+    return false;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

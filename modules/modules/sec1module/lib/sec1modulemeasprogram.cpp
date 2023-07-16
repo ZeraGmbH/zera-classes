@@ -927,7 +927,7 @@ double cSec1ModuleMeasProgram::getUnitFactor()
 QString cSec1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 {
     QString displayString = m_refInputDictionary.getAlias(inputName);
-    QList<cSec1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
+    QList<TRefInput> refInputList = getConfData()->m_refInpList;
     for(const auto &entry : refInputList) {
         if(entry.inputName == inputName) {
             displayString += entry.nameAppend;
@@ -1709,7 +1709,7 @@ bool cSec1ModuleMeasProgram::found(QList<QString> &list, QString searched)
     return false;
 }
 
-bool cSec1ModuleMeasProgram::found(QList<cSec1ModuleConfigData::TRefInput> &list, QString searched)
+bool cSec1ModuleMeasProgram::found(QList<TRefInput> &list, QString searched)
 {
     for (int i = 0; i < list.count(); i++) {
         if (list.at(i).inputName.contains(searched))

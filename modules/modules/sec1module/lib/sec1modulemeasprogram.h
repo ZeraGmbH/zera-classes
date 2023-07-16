@@ -127,7 +127,7 @@ private slots:
     void startNext();
     void clientActivationChanged(bool bActive);
     bool found(QList<QString>& list, QString searched);
-    bool found(QList<cSec1ModuleConfigData::TRefInput> &list, QString searched);
+    bool found(QList<TRefInput> &list, QString searched);
 
 private:
     cSec1ModuleConfigData* getConfData();

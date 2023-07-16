@@ -1,10 +1,9 @@
 #ifndef SEM1MODULECONFIGDATA_H
 #define SEM1MODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
+#include "secconfigdatacommon.h"
 #include "socket.h"
+#include <QList>
 
 namespace SEM1MODULE
 {
@@ -44,11 +43,6 @@ class cSem1ModuleConfigData
 {
 public:
     cSem1ModuleConfigData(){}
-    struct TRefInput
-    {
-        QString inputName;
-        QString nameAppend;
-    };
     QList<TRefInput> m_refInpList;
     quint8 m_nRefInpCount;
     stringParameter m_sRefInput;

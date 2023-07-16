@@ -1,10 +1,9 @@
 #ifndef SPM1MODULECONFIGDATA_H
 #define SPM1MODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
 #include "socket.h"
+#include "secconfigdatacommon.h"
+#include <QList>
 
 namespace SPM1MODULE
 {
@@ -46,7 +45,7 @@ public:
     cSpm1ModuleConfigData(){}
     quint8 m_nRefInpCount;
     stringParameter m_sRefInput;
-    QList<QString> m_refInpList;
+    QList<TRefInput> m_refInpList;
     quint8 m_nActiveUnitCount;
     QList<QString> m_ActiveUnitList;
     quint8 m_nReactiveUnitCount;
