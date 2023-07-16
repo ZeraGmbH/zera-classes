@@ -42,9 +42,9 @@ enum moduleconfigstate
 
 class cSem1ModuleConfigData;
 
-const QString defaultXSDFile = "://src/sem1module.xsd";
+const QString defaultXSDFile = "://sem1module.xsd";
 
-// sec1moduleconfiguration holds configuration data as well as parameter
+// sem1moduleconfiguration holds configuration data as well as parameter
 
 class cSem1ModuleConfiguration: public cBaseModuleConfiguration
 {
