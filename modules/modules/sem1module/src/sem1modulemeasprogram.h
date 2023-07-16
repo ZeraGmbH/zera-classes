@@ -125,7 +125,7 @@ private slots:
     void Actualize();
     void clientActivationChanged(bool bActive);
     void stopMeasuerment(bool bAbort);
-    bool found(QList<cSem1ModuleConfigData::TRefInput> &list, QString searched);
+    bool found(QList<TRefInput> &list, QString searched);
 
 private:
     cSem1ModuleConfigData* getConfData();

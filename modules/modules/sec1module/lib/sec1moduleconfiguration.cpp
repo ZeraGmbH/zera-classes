@@ -156,26 +156,20 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             m_pSec1ModulConfigData->m_SECServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setDutInputCount:
-        {
-            QString name;
             m_pSec1ModulConfigData->m_nDutInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSec1ModulConfigData->m_nDutInpCount; i++) {
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:dutinput:inp%1").arg(i+1)] = setDutInput1Name+i;
-                m_pSec1ModulConfigData->m_dutInpList.append(name);
+                m_pSec1ModulConfigData->m_dutInpList.append(QString());
             }
             break;
-        }
         case setRefInputCount:
-        {
             m_pSec1ModulConfigData->m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSec1ModulConfigData->m_nRefInpCount; i++) {
-                cSec1ModuleConfigData::TRefInput refInput;
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput_appends:append%1").arg(i+1)] = setRefInput1Append+i;
-                m_pSec1ModulConfigData->m_refInpList.append(refInput);
+                m_pSec1ModulConfigData->m_refInpList.append(TRefInput());
             }
             break;
-        }
         case setEmbedded:
             m_pSec1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
@@ -231,22 +225,22 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
             m_pSec1ModulConfigData->m_sResultUnit.m_sKey = key;
             m_pSec1ModulConfigData->m_sResultUnit.m_sPar = m_pXMLReader->getValue(key);
             break;
+
         default:
-            QString name;
             if ((cmd >= setDutInput1Name) && (cmd < setDutInput1Name + 32)) {
                 cmd -= setDutInput1Name;
-                name = m_pXMLReader->getValue(key);
+                QString name = m_pXMLReader->getValue(key);
                 m_pSec1ModulConfigData->m_dutInpList.replace(cmd, name);
             }
             else if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32)) {
                 cmd -= setRefInput1Name;
-                cSec1ModuleConfigData::TRefInput refInput;
+                TRefInput refInput;
                 refInput.inputName = m_pXMLReader->getValue(key);
                 m_pSec1ModulConfigData->m_refInpList.replace(cmd, refInput);
             }
             else if ((cmd >= setRefInput1Append) && (cmd < setRefInput1Append + 32)) {
                 cmd -= setRefInput1Append;
-                cSec1ModuleConfigData::TRefInput refInput = m_pSec1ModulConfigData->m_refInpList[cmd];
+                TRefInput refInput = m_pSec1ModulConfigData->m_refInpList[cmd];
                 refInput.nameAppend = m_pXMLReader->getValue(key);
                 m_pSec1ModulConfigData->m_refInpList.replace(cmd, refInput);
             }

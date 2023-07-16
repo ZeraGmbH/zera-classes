@@ -1,10 +1,9 @@
 #ifndef SEC1MODULECONFIGDATA_H
 #define SEC1MODULECONFIGDATA_H
 
-#include <QString>
-#include <QList>
-
 #include "socket.h"
+#include "secconfigdatacommon.h"
+#include <QList>
 
 namespace SEC1MODULE
 {
@@ -49,11 +48,6 @@ public:
     quint8 m_nModeCount;
     stringParameter m_sRefInput;
     stringParameter m_sDutInput;
-    struct TRefInput
-    {
-        QString inputName;
-        QString nameAppend;
-    };
     QList<TRefInput> m_refInpList;
     QList<QString> m_dutInpList;
     bool m_bEmbedded;

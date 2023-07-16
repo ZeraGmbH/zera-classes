@@ -124,7 +124,7 @@ private slots:
     void Actualize();
     void clientActivationChanged(bool bActive);
     void stopMeasuerment(bool bAbort);
-    bool found(QList<QString>& list, QString searched);
+    bool found(QList<TRefInput> &list, QString searched);
 
 private:
     cSpm1ModuleConfigData* getConfData();
@@ -136,6 +136,7 @@ private:
     QString getEnergyUnit();
     QStringList getPowerUnitValidator();
     QString getPowerUnit();
+    QString getRefInputDisplayString(QString inputName);
 
     void handleChangedREFConst();
     void handleSECInterrupt();

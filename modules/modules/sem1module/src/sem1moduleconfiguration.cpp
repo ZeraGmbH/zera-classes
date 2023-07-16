@@ -121,52 +121,34 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
             m_pSem1ModulConfigData->m_SECServerSocket.m_nPort = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setRefInputCount:
-        {
             m_pSem1ModulConfigData->m_nRefInpCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSem1ModulConfigData->m_nRefInpCount; i++) {
-                cSem1ModuleConfigData::TRefInput refInput;
                 m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:refinput:inp%1").arg(i+1)] = setRefInput1Name+i;
                 m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:refinput_appends:append%1").arg(i+1)] = setRefInput1Append+i;
-                m_pSem1ModulConfigData->m_refInpList.append(refInput);
+                m_pSem1ModulConfigData->m_refInpList.append(TRefInput());
             }
             break;
-        }
         case setActiveUnitCount:
-        {
-            QString name;
             m_pSem1ModulConfigData->m_nActiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            if (m_pSem1ModulConfigData->m_nActiveUnitCount > 0)
-            for (int i = 0; i < m_pSem1ModulConfigData->m_nActiveUnitCount; i++)
-                {
-                    m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:activeunits:unit%1").arg(i+1)] = setActiveUnit1Name+i;
-                    m_pSem1ModulConfigData->m_ActiveUnitList.append(name);
-                }
+            for (int i = 0; i < m_pSem1ModulConfigData->m_nActiveUnitCount; i++) {
+                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:activeunits:unit%1").arg(i+1)] = setActiveUnit1Name+i;
+                m_pSem1ModulConfigData->m_ActiveUnitList.append(QString());
+            }
             break;
-        }
         case setReactiveUnitCount:
-        {
-            QString name;
             m_pSem1ModulConfigData->m_nReactiveUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            if (m_pSem1ModulConfigData->m_nReactiveUnitCount > 0)
-            for (int i = 0; i < m_pSem1ModulConfigData->m_nReactiveUnitCount; i++)
-                {
-                    m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:reactiveunits:unit%1").arg(i+1)] = setReactiveUnit1Name+i;
-                    m_pSem1ModulConfigData->m_ReactiveUnitList.append(name);
-                }
+            for (int i = 0; i < m_pSem1ModulConfigData->m_nReactiveUnitCount; i++) {
+                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:reactiveunits:unit%1").arg(i+1)] = setReactiveUnit1Name+i;
+                m_pSem1ModulConfigData->m_ReactiveUnitList.append(QString());
+            }
             break;
-        }
         case setApparentUnitCount:
-        {
-            QString name;
             m_pSem1ModulConfigData->m_nApparentUnitCount = m_pXMLReader->getValue(key).toInt(&ok);
-            if (m_pSem1ModulConfigData->m_nApparentUnitCount > 0)
-            for (int i = 0; i < m_pSem1ModulConfigData->m_nApparentUnitCount; i++)
-                {
-                    m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
-                    m_pSem1ModulConfigData->m_ApparentUnitList.append(name);
-                }
+            for (int i = 0; i < m_pSem1ModulConfigData->m_nApparentUnitCount; i++) {
+                m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
+                m_pSem1ModulConfigData->m_ApparentUnitList.append(QString());
+            }
             break;
-        }
         case setEmbedded:
             m_pSem1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
@@ -192,31 +174,30 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
             break;
 
         default:
-            QString name;
             if ((cmd >= setRefInput1Name) && (cmd < setRefInput1Name + 32)) {
                 cmd -= setRefInput1Name;
-                cSem1ModuleConfigData::TRefInput refInput;
+                TRefInput refInput;
                 refInput.inputName = m_pXMLReader->getValue(key);
                 m_pSem1ModulConfigData->m_refInpList.replace(cmd, refInput);
             }
             else if ((cmd >= setActiveUnit1Name) && (cmd < setActiveUnit1Name + 16)) {
                 cmd -= setActiveUnit1Name;
-                name = m_pXMLReader->getValue(key);
+                QString name = m_pXMLReader->getValue(key);
                 m_pSem1ModulConfigData->m_ActiveUnitList.replace(cmd, name);
             }
             else if ((cmd >= setReactiveUnit1Name) && (cmd < setReactiveUnit1Name + 16)) {
                 cmd -= setReactiveUnit1Name;
-                name = m_pXMLReader->getValue(key);
+                QString name = m_pXMLReader->getValue(key);
                 m_pSem1ModulConfigData->m_ReactiveUnitList.replace(cmd, name);
             }
             else if ((cmd >= setApparentUnit1Name) && (cmd < setApparentUnit1Name + 16)) {
                 cmd -= setApparentUnit1Name;
-                name = m_pXMLReader->getValue(key);
+                QString name = m_pXMLReader->getValue(key);
                 m_pSem1ModulConfigData->m_ApparentUnitList.replace(cmd, name);
             }
             else if ((cmd >= setRefInput1Append) && (cmd < setRefInput1Append + 32)) {
                 cmd -= setRefInput1Append;
-                cSem1ModuleConfigData::TRefInput refInput = m_pSem1ModulConfigData->m_refInpList[cmd];
+                TRefInput refInput = m_pSem1ModulConfigData->m_refInpList[cmd];
                 refInput.nameAppend = m_pXMLReader->getValue(key);
                 m_pSem1ModulConfigData->m_refInpList.replace(cmd, refInput);
             }

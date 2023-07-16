@@ -798,7 +798,7 @@ QString cSem1ModuleMeasProgram::getPowerUnit()
 QString cSem1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
 {
     QString displayString = m_refInputDictionary.getAlias(inputName);
-    QList<cSem1ModuleConfigData::TRefInput> refInputList = getConfData()->m_refInpList;
+    QList<TRefInput> refInputList = getConfData()->m_refInpList;
     for(const auto &entry : refInputList) {
         if(entry.inputName == inputName) {
             displayString += entry.nameAppend;
@@ -1293,7 +1293,7 @@ void cSem1ModuleMeasProgram::stopMeasuerment(bool bAbort)
     m_ActualizeTimer.stop();
 }
 
-bool cSem1ModuleMeasProgram::found(QList<cSem1ModuleConfigData::TRefInput> &list, QString searched)
+bool cSem1ModuleMeasProgram::found(QList<TRefInput> &list, QString searched)
 {
     for (int i = 0; i < list.count(); i++) {
         if (list.at(i).inputName.contains(searched))
