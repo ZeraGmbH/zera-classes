@@ -4,7 +4,6 @@
 #include "spm1moduleconfigdata.h"
 #include <basemeasprogram.h>
 #include <clientactivecomponent.h>
-#include <secinputinfo.h>
 #include "secmeasinputdictionary.h"
 #include <memory>
 #include <secinterface.h>

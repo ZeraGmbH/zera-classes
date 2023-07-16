@@ -4,7 +4,6 @@
 #include "secinterface.h"
 #include "sem1moduleconfigdata.h"
 #include <basemeasprogram.h>
-#include <secinputinfo.h>
 #include "secmeasinputdictionary.h"
 #include <clientactivecomponent.h>
 #include <memory>
