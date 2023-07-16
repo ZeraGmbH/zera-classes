@@ -1,6 +1,5 @@
 #include "test_sec1_config_load.h"
 #include "sec1moduleconfiguration.h"
-#include "sec1moduleconfigdata.h"
 #include <memory>
 #include <QSignalSpy>
 #include <QTest>

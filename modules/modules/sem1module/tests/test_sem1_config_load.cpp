@@ -1,6 +1,5 @@
 #include "test_sem1_config_load.h"
 #include "sem1moduleconfiguration.h"
-#include "sem1moduleconfigdata.h"
 #include <memory>
 #include <QSignalSpy>
 #include <QTest>
