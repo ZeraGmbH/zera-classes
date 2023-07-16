@@ -1,5 +1,5 @@
-#ifndef TEST_POW1_CONFIG_LOAD_H
-#define TEST_POW1_CONFIG_LOAD_H
+#ifndef TEST_SEC1_CONFIG_LOAD_H
+#define TEST_SEC1_CONFIG_LOAD_H
 
 #include <QObject>
 
@@ -11,4 +11,4 @@ private slots:
     void allFilesLoaded();
 };
 
-#endif // TEST_POW1_CONFIG_LOAD_H
+#endif // TEST_SEC1_CONFIG_LOAD_H
