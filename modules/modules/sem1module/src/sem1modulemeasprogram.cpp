@@ -415,19 +415,6 @@ void cSem1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 break;
 
-            case readresourcetypes:
-                if (reply == ack)
-                {
-                    m_ResourceTypeList = answer.toString().split(';');
-                    emit activationContinue();
-                }
-                else
-                {
-                    emit errMsg((tr(resourcetypeErrMsg)));
-                    emit activationError();
-                }
-                break;
-
             case readresource:
             {
                 if (reply == ack)
