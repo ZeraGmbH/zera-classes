@@ -1,5 +1,5 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/spm1module.xsd</file>
+        <file>spm1module.xsd</file>
     </qresource>
 </RCC>
