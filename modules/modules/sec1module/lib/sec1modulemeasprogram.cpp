@@ -547,7 +547,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readrefInputalias:
             {
                 if (reply == ack) {
-                    m_refInputDictionary.setAlias(m_refInputDictionary.getCurrentInput(), answer.toString());
+                    m_refInputDictionary.setAlias(m_sIt, answer.toString());
                     emit activationContinue();
                 }
                 else
@@ -558,7 +558,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readdutInputalias:
             {
                 if (reply == ack) {
-                    m_dutInputDictionary.setAlias(m_dutInputDictionary.getCurrentInput(), answer.toString());
+                    m_dutInputDictionary.setAlias(m_sIt, answer.toString());
                     emit activationContinue();
                 }
                 else
@@ -1091,8 +1091,6 @@ void cSec1ModuleMeasProgram::readREFInputs()
 void cSec1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    m_refInputDictionary.setCurrentInput(m_sIt);
-
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
     m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
 
@@ -1118,7 +1116,6 @@ void cSec1ModuleMeasProgram::readDUTInputs()
 void cSec1ModuleMeasProgram::readDUTInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    m_dutInputDictionary.setCurrentInput(m_sIt);
     m_MsgNrCmdList[m_pcbInterface->resourceAliasQuery(m_dutInputDictionary.getResource(m_sIt), m_sIt)] = readdutInputalias;
 }
 

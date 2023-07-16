@@ -52,14 +52,3 @@ QStringList SecMeasInputDictionary::getInputNameList()
 {
     return m_resourceHash.keys();
 }
-
-void SecMeasInputDictionary::setCurrentInput(QString currentRefIn)
-{
-    Q_ASSERT(m_resourceHash.contains(currentRefIn));
-    m_currentInput = currentRefIn;
-}
-
-QString SecMeasInputDictionary::getCurrentInput() const
-{
-    return m_currentInput;
-}
