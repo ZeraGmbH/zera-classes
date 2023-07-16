@@ -19,9 +19,6 @@ public:
 
     void setNotificationId(QString inputName, int notificationId);
     QString getInputNameFromNotificationId(int notificationId);
-
-    void setCurrentInput(QString currentRefIn);
-    QString getCurrentInput() const;
 private:
     // input name: "f0" / "f1"... or DUT ec0
     // alias "P" / "Q"...
@@ -30,7 +27,6 @@ private:
     QHash<QString /* refInputName */, QString /* alias */> m_aliasHash;
     QHash<QString /* displayName */, QString /* refInputName */> m_displayHash;
     QMap<int /* notifyId */, QString /* refInputName */> m_notificationIdHash;
-    QString m_currentInput;
 };
 
 #endif // SECMEASINPUTDICTIONARY_H

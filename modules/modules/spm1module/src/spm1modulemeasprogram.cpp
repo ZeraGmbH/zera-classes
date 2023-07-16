@@ -466,7 +466,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack)
                 {
-                    m_refInputDictionary.setAlias(m_refInputDictionary.getCurrentInput(), answer.toString());
+                    m_refInputDictionary.setAlias(m_sIt, answer.toString());
                     emit activationContinue();
                 }
                 else
@@ -973,7 +973,6 @@ void cSpm1ModuleMeasProgram::readREFInputs()
 void cSpm1ModuleMeasProgram::readREFInputAlias()
 {
     m_sIt = m_sItList.takeFirst();
-    m_refInputDictionary.setCurrentInput(m_sIt);
     // we will read the powertype of the reference frequency input and will use this as our alias ! for example P, +P ....
     m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
 }
