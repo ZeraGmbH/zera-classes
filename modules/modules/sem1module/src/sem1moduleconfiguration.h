@@ -13,7 +13,6 @@ namespace SEM1MODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setRMIp,
     setRMPort,
     setPCBServerIp,

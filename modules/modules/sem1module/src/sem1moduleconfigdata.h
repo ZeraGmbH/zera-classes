@@ -44,15 +44,14 @@ class cSem1ModuleConfigData
 {
 public:
     cSem1ModuleConfigData(){}
-    quint8 m_nDebugLevel;
-    quint8 m_nRefInpCount;
-    stringParameter m_sRefInput;
     struct TRefInput
     {
         QString inputName;
         QString nameAppend;
     };
     QList<TRefInput> m_refInpList;
+    quint8 m_nRefInpCount;
+    stringParameter m_sRefInput;
     quint8 m_nActiveUnitCount;
     QList<QString> m_ActiveUnitList;
     quint8 m_nReactiveUnitCount;

@@ -13,7 +13,6 @@ namespace SEC1MODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setRMIp,
     setRMPort,
     setPCBServerIp,

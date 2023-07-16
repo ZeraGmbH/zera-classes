@@ -13,7 +13,6 @@ namespace SPM1MODULE
 
 enum moduleconfigstate
 {
-    setDebugLevel,
     setRMIp,
     setRMPort,
     setPCBServerIp,
