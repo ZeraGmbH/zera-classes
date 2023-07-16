@@ -35,7 +35,6 @@ void cSpm1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     // so now we can set up
     // initializing hash table for xml configuration
 
-    m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:debuglevel"] = setDebugLevel;
     m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:resourcemanager:ip"] = setRMIp;
     m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:resourcemanager:port"] = setRMPort;
     m_ConfigXMLMap["spm1modconfpar:configuration:connectivity:ethernet:pcbserver:ip"] = setPCBServerIp;
@@ -103,9 +102,6 @@ void cSpm1ModuleConfiguration::configXMLInfo(QString key)
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
-        case setDebugLevel:
-            m_pSpm1ModulConfigData->m_nDebugLevel = m_pXMLReader->getValue(key).toInt(&ok);
-            break;
         case setRMIp:
             m_pSpm1ModulConfigData->m_RMSocket.m_sIP = m_pXMLReader->getValue(key);
             break;

@@ -44,7 +44,6 @@ class cSec1ModuleConfigData
 {
 public:
     cSec1ModuleConfigData(){}
-    quint8 m_nDebugLevel;
     quint8 m_nRefInpCount;
     quint8 m_nDutInpCount;
     quint8 m_nModeCount;

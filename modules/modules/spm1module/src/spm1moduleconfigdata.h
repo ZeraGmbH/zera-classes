@@ -44,7 +44,6 @@ class cSpm1ModuleConfigData
 {
 public:
     cSpm1ModuleConfigData(){}
-    quint8 m_nDebugLevel;
     quint8 m_nRefInpCount;
     stringParameter m_sRefInput;
     QList<QString> m_refInpList;
