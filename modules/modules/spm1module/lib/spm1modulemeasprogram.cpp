@@ -363,10 +363,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
         int service = sintnr.toInt(&ok);
         switch (service)
         {
-        case irqPCBRefConstanChangeNotifier:
-            // we must fetch the ref constant of the selected reference Input
-            handleChangedREFConst();
-            break;
         default:
             // we must fetch the measured impuls count, compute the error and set corresponding entity
             handleSECInterrupt();
@@ -622,16 +618,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 break;
 
-            case setpcbrefconstantnotifier:
-                if (reply == ack) // we only continue if pcb server acknowledges
-                    emit activationContinue();
-                else
-                {
-                    emit errMsg((tr(registerpcbnotifierErrMsg)));
-                    emit activationError();
-                }
-                break;
-
             case setsecintnotifier:
                 if (reply == ack) // we only continue if sec server acknowledges
                     emit activationContinue();
@@ -642,23 +628,6 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 }
                 break;
 
-
-            case fetchrefconstant:
-            {
-                if (reply == ack) // we only continue if sec server acknowledges
-                {
-                    double constant;
-                    constant = answer.toDouble(&ok);
-                    m_pRefConstantPar->setValue(QVariant(constant));
-                    newRefConstant(QVariant(constant));
-                }
-                else
-                {
-                    emit errMsg((tr(readrefconstantErrMsg)));
-                    emit executionError();
-                }
-                break;
-            }
 
             case readintregister:
                 if (reply == ack) // we only continue if sec server acknowledges
@@ -763,6 +732,21 @@ void cSpm1ModuleMeasProgram::setUnits()
     m_pModule->exportMetaData();
 }
 
+void cSpm1ModuleMeasProgram::actualizeRefConstant()
+{
+    double constant = m_refConstantObserver.getRefConstant(getConfData()->m_sRefInput.m_sPar);
+    m_pRefConstantPar->setValue(QVariant(constant));
+    newRefConstant(QVariant(constant));
+}
+
+void cSpm1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
+{
+    if(getConfData()->m_sRefInput.m_sPar == refInputName) {
+        stopMeasurement(true);
+        actualizeRefConstant();
+    }
+}
+
 QStringList cSpm1ModuleMeasProgram::getEnergyUnitValidator()
 {
     QStringList sl = getPowerUnitValidator();
@@ -811,13 +795,6 @@ QString cSpm1ModuleMeasProgram::getRefInputDisplayString(QString inputName)
     return displayString;
 }
 
-void cSpm1ModuleMeasProgram::handleChangedREFConst()
-{
-    // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pcbInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
-    stopMeasuerment(true);
-}
-
 void cSpm1ModuleMeasProgram::handleSECInterrupt()
 {
     if (!m_finalResultStateMachine.isRunning()) {
@@ -826,7 +803,6 @@ void cSpm1ModuleMeasProgram::handleSECInterrupt()
         m_ActualizeTimer.stop();
     }
 }
-
 
 void cSpm1ModuleMeasProgram::resourceManagerConnect()
 {
@@ -952,10 +928,18 @@ void cSpm1ModuleMeasProgram::readREFInputDone()
 
 void cSpm1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
-    {
-        m_MsgNrCmdList[m_pcbInterface->registerNotifier(QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar), irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
-        // todo also configure the query for setting this notifier .....very flexible
+    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) { // if we have some ref. Input and are embedded in meter we register for notification
+        connect(&m_refConstantObserver, &SecRefConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
+            if(ok) {
+                actualizeRefConstant();
+                connect(&m_refConstantObserver, &SecRefConstantObserver::sigRefConstantChanged,
+                        this, &cSpm1ModuleMeasProgram::onRefConstantChanged);
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(registerpcbnotifierErrMsg);
+        });
+        m_refConstantObserver.registerNofifications(m_pcbInterface, m_refInputDictionary.getInputNameList());
     }
     else
         emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on
@@ -994,16 +978,13 @@ void cSpm1ModuleMeasProgram::activationDone()
     setValidators();
     setUnits();
 
-    // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pcbInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
-
     m_bActive = true;
     emit activated();
 }
 
 void cSpm1ModuleMeasProgram::stopECCalculator()
 {
-    stopMeasuerment(true);
+    stopMeasurement(true);
 }
 
 
@@ -1221,7 +1202,7 @@ void cSpm1ModuleMeasProgram::newStartStop(QVariant startstop)
     else
     {
         if (getConfData()->m_bTargeted.m_nActive > 0) {
-            stopMeasuerment(true);
+            stopMeasurement(true);
         }
         else {
             m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
@@ -1249,6 +1230,7 @@ void cSpm1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
     QString refInputName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
     getConfData()->m_sRefInput.m_sPar = refInputName;
+    actualizeRefConstant();
     setInterfaceComponents();
 
     // if the reference input changes P <-> Q <-> S it is necessary to change energyunit and powerunit and their validators
@@ -1334,7 +1316,7 @@ void cSpm1ModuleMeasProgram::clientActivationChanged(bool bActive)
     m_ActualizeTimer.setInterval(bActive ? m_nActualizeIntervallHighFreq : m_nActualizeIntervallLowFreq);
 }
 
-void cSpm1ModuleMeasProgram::stopMeasuerment(bool bAbort)
+void cSpm1ModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     if(bAbort) {
         m_nStatus = ECALCSTATUS::ABORT;
