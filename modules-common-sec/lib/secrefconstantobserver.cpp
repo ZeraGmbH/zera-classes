@@ -12,7 +12,7 @@ void SecRefConstantObserver::registerNofifications(Zera::PcbInterfacePtr pcbInte
 {
     Q_ASSERT(!m_pcbInterface);
     m_pcbInterface = pcbInterface;
-    connectServerNotificationSlot();
+    connectPcbServerNotificationSlot();
     TaskContainerInterfacePtr initTaskSequence = TaskContainerSequence::create();
     initTaskSequence->addSub(createNotificationTasks(pcbInterface, refInputNameList, additionalErrorHandler));
     initTaskSequence->addSub(createRefConstantFetchTasks(refInputNameList, additionalErrorHandler));
@@ -30,35 +30,35 @@ double SecRefConstantObserver::getRefConstant(QString refChannnel)
     return constant;
 }
 
-void SecRefConstantObserver::onTaskFinish(bool ok, int taskId)
+void SecRefConstantObserver::onFinishKillTaskObject(bool ok, int taskId)
 {
     Q_UNUSED(ok)
     if(m_pendingTasks.find(taskId) != m_pendingTasks.end())
-        m_pendingTasks.erase(taskId); // here: just kill
+        m_pendingTasks.erase(taskId);
 }
 
-void SecRefConstantObserver::onSingleFetchTaskFinish(bool ok, int taskId)
+void SecRefConstantObserver::onSingleConstantFetchFinish(bool ok, int taskId)
 {
-    if(ok && m_pendingFetchTaskConstantNames.contains(taskId)) {
-        QString refInputName = m_pendingFetchTaskConstantNames.take(taskId);
+    if(ok && m_pendingSingleFetchTaskIds.contains(taskId)) {
+        QString refInputName = m_pendingSingleFetchTaskIds.take(taskId);
         emit sigRefConstantChanged(refInputName);
     }
 }
 
-void SecRefConstantObserver::onServerReceive(quint32 msgnr, quint8 reply, QVariant answer)
+void SecRefConstantObserver::onPcbServerReceive(quint32 msgnr, quint8 reply, QVariant answer)
 {
     Q_UNUSED(reply)
     if (msgnr == 0) { // 0 was reserved for async. messages
         QString strNotifyId = answer.toString().section(':', 1, 1);
         int notifyId = strNotifyId.toInt();
-        startSingleFetch(notifyId);
+        tryStartSingleConstantFetch(notifyId);
     }
 }
 
-void SecRefConstantObserver::connectServerNotificationSlot()
+void SecRefConstantObserver::connectPcbServerNotificationSlot()
 {
     connect(m_pcbInterface.get(), &AbstractServerInterface::serverAnswer,
-            this, &SecRefConstantObserver::onServerReceive);
+            this, &SecRefConstantObserver::onPcbServerReceive);
 }
 
 TaskTemplatePtr SecRefConstantObserver::createNotificationTasks(Zera::PcbInterfacePtr pcbInterface,
@@ -73,14 +73,14 @@ TaskTemplatePtr SecRefConstantObserver::createNotificationTasks(Zera::PcbInterfa
     return registerTasks;
 }
 
-void SecRefConstantObserver::startSingleFetch(int notifyId)
+void SecRefConstantObserver::tryStartSingleConstantFetch(int notifyId)
 {
     if(m_registerdNotifications.contains(notifyId)) {
         QString refInputName = m_registerdNotifications[notifyId];
         TaskTemplatePtr task = createSingleFetchTask(refInputName);
-        m_pendingFetchTaskConstantNames[task->getTaskId()] = refInputName;
+        m_pendingSingleFetchTaskIds[task->getTaskId()] = refInputName;
         connect(task.get(), &TaskTemplate::sigFinish,
-                this, &SecRefConstantObserver::onSingleFetchTaskFinish);
+                this, &SecRefConstantObserver::onSingleConstantFetchFinish);
         startTask(std::move(task));
     }
 }
@@ -100,13 +100,13 @@ TaskTemplatePtr SecRefConstantObserver::createRefConstantFetchTasks(QStringList 
 {
     TaskContainerInterfacePtr tasksInitialFetch = TaskContainerParallel::create();
     for(const auto &refInputName : qAsConst(refInputNameList)) {
-        initRefConstantVal(refInputName);
+        makeSureSharedPtrToRefConstIsCreated(refInputName);
         tasksInitialFetch->addSub(createSingleFetchTask(refInputName, additionalErrorHandler));
     }
     return tasksInitialFetch;
 }
 
-void SecRefConstantObserver::initRefConstantVal(QString refInputName)
+void SecRefConstantObserver::makeSureSharedPtrToRefConstIsCreated(QString refInputName)
 {
     if(!m_refConstants.contains(refInputName)) {
         std::shared_ptr<double> refConstant = std::make_shared<double>();
@@ -120,7 +120,7 @@ void SecRefConstantObserver::startTask(TaskTemplatePtr task)
     // keep alive until finished
     int taskId = task->getTaskId();
     connect(task.get(), &TaskTemplate::sigFinish,
-            this, &SecRefConstantObserver::onTaskFinish);
-    m_pendingTasks[taskId] = std::move(task);
-    m_pendingTasks[taskId]->start();
+            this, &SecRefConstantObserver::onFinishKillTaskObject);
+    m_pendingTaskIds[taskId] = std::move(task);
+    m_pendingTaskIds[taskId]->start();
 }
