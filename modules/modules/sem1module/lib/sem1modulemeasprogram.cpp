@@ -213,12 +213,10 @@ void cSem1ModuleMeasProgram::generateInterface()
 
     m_pRefConstantPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_RefConstant"),
-                                                 QString("Ref constant"),
+                                                 QString("Reference meter constant"),
                                                  QVariant((double)0.0));
     m_pRefConstantPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:REFCONSTANT").arg(modNr ), "2", m_pRefConstantPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pRefConstantPar; // for modules use
-    // the reference constant is derived automatically from selected reference input but will be forwarded for queries
-    // but so we don't need a validator
 
     m_pTargetedPar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                               key = QString("PAR_Targeted"),
