@@ -20,7 +20,7 @@ std::unique_ptr<TaskRegisterRefConstChangeNotifications> TaskRegisterRefConstCha
     return task;
 }
 
-QMap<int, QString> TaskRegisterRefConstChangeNotifications::getnotificationIds() const
+QMap<int, QString> TaskRegisterRefConstChangeNotifications::getNotificationIds() const
 {
     return m_notificationIds;
 }

@@ -12,10 +12,12 @@ public:
                                                                            QStringList inputNames,
                                                                            int firstNotificationId,
                                                                            std::function<void()> additionalErrorHandler = []{});
-    QMap<int /* notifyId */, QString /* refInputName */> getnotificationIds() const;
+    QMap<int /* notifyId */, QString /* refInputName */> getNotificationIds() const;
 private:
     void addNotificationId(int id, QString inputName);
     QMap<int /* notifyId */, QString /* refInputName */> m_notificationIds;
 };
+
+typedef std::unique_ptr<TaskRegisterRefConstChangeNotifications> TaskRegisterRefConstChangeNotificationsPtr;
 
 #endif // TASKREGISTERREFCONSTCHANGENOTIFICATIONS_H
