@@ -33,8 +33,7 @@ double SecRefConstantObserver::getRefConstant(QString refChannnel)
 void SecRefConstantObserver::onFinishKillTaskObject(bool ok, int taskId)
 {
     Q_UNUSED(ok)
-    if(m_pendingTasks.find(taskId) != m_pendingTasks.end())
-        m_pendingTasks.erase(taskId);
+    m_pendingTaskIds.erase(taskId);
 }
 
 void SecRefConstantObserver::onSingleConstantFetchFinish(bool ok, int taskId)
