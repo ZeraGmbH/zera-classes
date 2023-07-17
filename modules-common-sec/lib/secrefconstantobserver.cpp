@@ -39,10 +39,9 @@ void SecRefConstantObserver::onTaskFinish(bool ok, int taskId)
 
 void SecRefConstantObserver::onSingleFetchTaskFinish(bool ok, int taskId)
 {
-    if(m_pendingFetchTaskConstantNames.contains(taskId)) {
+    if(ok && m_pendingFetchTaskConstantNames.contains(taskId)) {
         QString refInputName = m_pendingFetchTaskConstantNames.take(taskId);
-        if(ok)
-            emit sigRefConstantChanged(refInputName);
+        emit sigRefConstantChanged(refInputName);
     }
 }
 
