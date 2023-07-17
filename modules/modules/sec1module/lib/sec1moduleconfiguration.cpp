@@ -44,7 +44,6 @@ void cSec1ModuleConfiguration::setConfiguration(QByteArray xmlString)
 
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:dutinput:n"] = setDutInputCount;
     m_ConfigXMLMap["sec1modconfpar:configuration:measure:refinput:n"] = setRefInputCount;
-    m_ConfigXMLMap["sec1modconfpar:configuration:measure:embedded"] = setEmbedded;
 
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:dutinput"] = setDutInputPar;
     m_ConfigXMLMap["sec1modconfpar:parameter:measure:refinput"] = setRefInputPar;
@@ -169,9 +168,6 @@ void cSec1ModuleConfiguration::configXMLInfo(QString key)
                 m_ConfigXMLMap[QString("sec1modconfpar:configuration:measure:refinput_appends:append%1").arg(i+1)] = setRefInput1Append+i;
                 m_pSec1ModulConfigData->m_refInpList.append(TRefInput());
             }
-            break;
-        case setEmbedded:
-            m_pSec1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setDutInputPar:
             m_pSec1ModulConfigData->m_sDutInput.m_sKey = key;

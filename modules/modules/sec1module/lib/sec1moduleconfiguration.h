@@ -21,7 +21,6 @@ enum moduleconfigstate
     setSECServerPort,
     setDutInputCount,
     setRefInputCount,
-    setEmbedded,
 
     setDutInputPar,
     setRefInputPar,

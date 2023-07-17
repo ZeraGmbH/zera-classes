@@ -18,7 +18,6 @@
             </ethernet>
         </connectivity>
         <measure>
-            <embedded>1</embedded>
             <dutinput>
                 <n>4</n>
                 <inp1>fi0</inp1>
