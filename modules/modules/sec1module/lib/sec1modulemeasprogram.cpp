@@ -1086,7 +1086,7 @@ void cSec1ModuleMeasProgram::readDUTInputDone()
 
 void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) { // if we have some ref. Input and are embedded in meter we register for notification
+    if (getConfData()->m_nRefInpCount > 0) {
         connect(&m_refConstantObserver, &SecRefConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
             if(ok) {
                 actualizeRefConstant();

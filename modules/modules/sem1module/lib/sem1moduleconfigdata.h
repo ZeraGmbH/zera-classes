@@ -52,7 +52,6 @@ public:
     QList<QString> m_ReactiveUnitList;
     quint8 m_nApparentUnitCount;
     QList<QString> m_ApparentUnitList;
-    bool m_bEmbedded;
     intParameter m_nMeasTime; // time in sec. from 0 to 7200
     boolParameter m_bTargeted;
     doubleParameter m_fUpperLimit;

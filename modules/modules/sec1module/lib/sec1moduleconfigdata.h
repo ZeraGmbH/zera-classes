@@ -50,7 +50,6 @@ public:
     stringParameter m_sDutInput;
     QList<TRefInput> m_refInpList;
     QList<QString> m_dutInpList;
-    bool m_bEmbedded;
     stringParameter m_sMode;
     doubleParameter m_fDutConstant;
     stringParameter m_sDutConstantUnit;

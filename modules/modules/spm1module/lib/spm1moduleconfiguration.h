@@ -23,7 +23,6 @@ enum moduleconfigstate
     setActiveUnitCount,
     setReactiveUnitCount,
     setApparentUnitCount,
-    setEmbedded,
 
     setRefInput,
     setTargeted,

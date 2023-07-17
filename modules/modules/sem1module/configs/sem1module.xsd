@@ -212,7 +212,6 @@
 
     <xs:complexType name="configurationmeasuretype">
         <xs:sequence>
-            <xs:element name="embedded" type="yesnotype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="refinput" type="refinputtype" minOccurs="1" maxOccurs="1"/>
             <xs:element name="refinput_appends" type="refinputtype_append" minOccurs="0" maxOccurs="1"/>
             <xs:element name="activeunits" type="unitstype"/>

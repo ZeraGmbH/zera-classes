@@ -18,7 +18,6 @@
             </ethernet>
         </connectivity>
         <measure>
-            <embedded>1</embedded>
             <refinput>
                 <n>2</n>
                 <inp1>fo1</inp1>

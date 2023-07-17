@@ -916,7 +916,6 @@ void cSpm1ModuleMeasProgram::readREFInputAlias()
     m_MsgNrCmdList[m_pcbInterface->getPowTypeSource(m_sIt)] = readrefInputalias;
 }
 
-
 void cSpm1ModuleMeasProgram::readREFInputDone()
 {
     if (m_sItList.isEmpty())
@@ -925,10 +924,9 @@ void cSpm1ModuleMeasProgram::readREFInputDone()
         emit activationLoop();
 }
 
-
 void cSpm1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) { // if we have some ref. Input and are embedded in meter we register for notification
+    if (getConfData()->m_nRefInpCount > 0) {
         connect(&m_refConstantObserver, &SecRefConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
             if(ok) {
                 actualizeRefConstant();
@@ -944,7 +942,6 @@ void cSpm1ModuleMeasProgram::setpcbREFConstantNotifier()
     else
         emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on
 }
-
 
 void cSpm1ModuleMeasProgram::setsecINTNotifier()
 {

@@ -46,7 +46,6 @@ void cSem1ModuleConfiguration::setConfiguration(QByteArray xmlString)
     m_ConfigXMLMap["sem1modconfpar:configuration:measure:activeunits:n"] = setActiveUnitCount;
     m_ConfigXMLMap["sem1modconfpar:configuration:measure:reactiveunits:n"] = setReactiveUnitCount;
     m_ConfigXMLMap["sem1modconfpar:configuration:measure:apparentunits:n"] = setApparentUnitCount;
-    m_ConfigXMLMap["sem1modconfpar:configuration:measure:embedded"] = setEmbedded;
 
     m_ConfigXMLMap["sem1modconfpar:parameter:measure:refinput"] = setRefInput;
     m_ConfigXMLMap["sem1modconfpar:parameter:measure:targeted"] = setTargeted;
@@ -148,9 +147,6 @@ void cSem1ModuleConfiguration::configXMLInfo(QString key)
                 m_ConfigXMLMap[QString("sem1modconfpar:configuration:measure:apparentunits:unit%1").arg(i+1)] = setApparentUnit1Name+i;
                 m_pSem1ModulConfigData->m_ApparentUnitList.append(QString());
             }
-            break;
-        case setEmbedded:
-            m_pSem1ModulConfigData->m_bEmbedded = (m_pXMLReader->getValue(key).toInt(&ok) == 1);
             break;
         case setRefInput:
             m_pSem1ModulConfigData->m_sRefInput.m_sKey = key;
