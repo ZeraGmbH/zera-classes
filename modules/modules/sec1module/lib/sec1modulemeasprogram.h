@@ -28,7 +28,6 @@ enum sec1moduleCmds
 
     freeecalcunits,
     freeecresource,
-    freeusermem,
 
     actualizeprogress,
     actualizestatus,

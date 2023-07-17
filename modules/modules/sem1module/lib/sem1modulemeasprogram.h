@@ -25,7 +25,6 @@ enum sem1moduleCmds
 
     freeecalcunits,
     freeecresource,
-    freeusermem,
 
     actualizestatus,
     actualizeenergy,
