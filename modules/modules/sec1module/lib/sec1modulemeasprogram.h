@@ -24,7 +24,6 @@ enum sec1moduleCmds
     fetchecalcunits,
     readrefInputalias,
     readdutInputalias,
-    setpcbrefconstantnotifier,
     setsecintnotifier,
 
     freeecalcunits,
@@ -45,15 +44,12 @@ enum sec1moduleCmds
     startmeasurement,
 
     stopmeas,
-    fetchrefconstant,
 
     readintregister,
     resetintregister,
     readvicount
 
 };
-
-#define irqPCBRefConstanChangeNotifier 16
 
 class cSec1ModuleMeasProgram: public cBaseMeasProgram
 {
@@ -67,6 +63,7 @@ public slots:
     void stop() override; // in interface are not updated when stop
 private slots:
     void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void onRefConstantChanged(QString refInputName);
     void resourceManagerConnect();
     void sendRMIdent();
     void testSEC1Resource();
@@ -140,7 +137,6 @@ private:
     void initDutConstantUnit(QStringList sl);
     void initDutConstantUnit();
 
-    void handleChangedREFConst();
     void handleSECInterrupt();
     void cmpDependencies();
     void stopMeasurement(bool bAbort);
@@ -149,6 +145,7 @@ private:
     void multiResultToVein();
     double getUnitFactor();
     QString getRefInputDisplayString(QString inputName);
+    void actualizeRefConstant();
 
     cSec1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;

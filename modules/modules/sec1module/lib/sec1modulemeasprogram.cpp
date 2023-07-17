@@ -469,10 +469,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
         int service = sintnr.toInt(&ok);
         switch (service)
         {
-        case irqPCBRefConstanChangeNotifier:
-            // we must fetch the ref constant of the selected reference Input
-            handleChangedREFConst();
-            break;
         default:
             // we must fetch the measured impuls count, compute the error and set corresponding entity
             handleSECInterrupt();
@@ -679,13 +675,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyExecutionError(stopmeasErrMsg);
                 break;
 
-            case setpcbrefconstantnotifier:
-                if (reply == ack) // we only continue if pcb server acknowledges
-                    emit activationContinue();
-                else
-                    notifyActivationError(registerpcbnotifierErrMsg);
-                break;
-
             case setsecintnotifier:
                 if (reply == ack) // we only continue if sec server acknowledges
                     emit activationContinue();
@@ -693,19 +682,6 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     notifyActivationError(registerpcbnotifierErrMsg);
                 break;
 
-
-            case fetchrefconstant:
-            {
-                if (reply == ack)  {// we only continue if sec server acknowledges
-                    double constant;
-                    constant = answer.toDouble(&ok);
-                    m_pRefConstantPar->setValue(QVariant(constant));
-                    newRefConstant(QVariant(constant));
-                }
-                else
-                    notifyExecutionError(readrefconstantErrMsg);
-                break;
-            }
 
             case readintregister:
                 if (reply == ack) // we only continue if sec server acknowledges
@@ -744,6 +720,21 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
 
             }
         }
+    }
+}
+
+void cSec1ModuleMeasProgram::actualizeRefConstant()
+{
+    double constant = m_refConstantObserver.getRefConstant(getConfData()->m_sRefInput.m_sPar);
+    m_pRefConstantPar->setValue(QVariant(constant));
+    newRefConstant(QVariant(constant));
+}
+
+void cSec1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
+{
+    if(getConfData()->m_sRefInput.m_sPar == refInputName) {
+        stopMeasurement(true);
+        actualizeRefConstant();
     }
 }
 
@@ -826,14 +817,6 @@ void cSec1ModuleMeasProgram::initDutConstantUnit(QStringList sl)
 void cSec1ModuleMeasProgram::initDutConstantUnit()
 {
     initDutConstantUnit(getDutConstUnitValidator());
-}
-
-
-void cSec1ModuleMeasProgram::handleChangedREFConst()
-{
-    // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pcbInterface->getConstantSource(getConfData()->m_sRefInput.m_sPar)] = fetchrefconstant;
-    stopMeasurement(true);
 }
 
 
@@ -1103,14 +1086,18 @@ void cSec1ModuleMeasProgram::readDUTInputDone()
 
 void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
 {
-    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) // if we have some ref. Input and are embedded in meter we register for notification
-    {
-        QString strScpi = QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar);
-        m_MsgNrCmdList[m_pcbInterface->registerNotifier(strScpi, irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
-
-        m_refConstantObserver.registerNofifications(m_pcbInterface, m_refInputDictionary.getInputNameList(), [this]() {
-            notifyActivationError(registerpcbnotifierErrMsg);
+    if ( (getConfData()->m_nRefInpCount > 0) && getConfData()->m_bEmbedded ) { // if we have some ref. Input and are embedded in meter we register for notification
+        connect(&m_refConstantObserver, &SecRefConstantObserver::sigRegistrationFinished, this, [this](bool ok) {
+            if(ok) {
+                actualizeRefConstant();
+                connect(&m_refConstantObserver, &SecRefConstantObserver::sigRefConstantChanged,
+                        this, &cSec1ModuleMeasProgram::onRefConstantChanged);
+                emit activationContinue();
+            }
+            else
+                notifyActivationError(registerpcbnotifierErrMsg);
         });
+        m_refConstantObserver.registerNofifications(m_pcbInterface, m_refInputDictionary.getInputNameList());
     }
     else
         emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on
@@ -1179,9 +1166,6 @@ void cSec1ModuleMeasProgram::activationDone()
     setInterfaceComponents(); // actualize interface components
 
     setValidators();
-
-    // we ask for the reference constant of the selected Input
-    m_MsgNrCmdList[m_pcbInterface->getConstantSource(confData->m_sRefInput.m_sPar)] = fetchrefconstant;
 
     m_bActive = true;
     emit activated();
@@ -1574,6 +1558,7 @@ void cSec1ModuleMeasProgram::newRefInput(QVariant refinput)
 {
     QString refInputName = m_refInputDictionary.getInputNameFromDisplayedName(refinput.toString());
     getConfData()->m_sRefInput.m_sPar = refInputName;
+    actualizeRefConstant();
     setInterfaceComponents();
 
     // if the reference input changes P <-> Q <-> S it is necessary to change dut constanst unit and its validator
