@@ -1107,7 +1107,10 @@ void cSec1ModuleMeasProgram::setpcbREFConstantNotifier()
     {
         QString strScpi = QString("SOURCE:%1:CONSTANT?").arg(getConfData()->m_sRefInput.m_sPar);
         m_MsgNrCmdList[m_pcbInterface->registerNotifier(strScpi, irqPCBRefConstanChangeNotifier)] = setpcbrefconstantnotifier;
-        // todo also configure the query for setting this notifier .....very flexible
+
+        m_refConstantObserver.registerNofifications(m_pcbInterface, m_refInputDictionary.getInputNameList(), [this]() {
+            notifyActivationError(registerpcbnotifierErrMsg);
+        });
     }
     else
         emit activationContinue(); // if no ref constant notifier (standalone error calc) we directly go on

@@ -7,6 +7,7 @@
 #include "multipleresulthelper.h"
 #include "secmeasinputdictionary.h"
 #include "secresourcetypelist.h"
+#include "secrefconstantobserver.h"
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
 #include <QDateTime>
@@ -213,6 +214,7 @@ private:
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
     SecMeasInputDictionary m_dutInputDictionary;
+    SecRefConstantObserver m_refConstantObserver;
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
     QStringList m_DUTAliasList;
