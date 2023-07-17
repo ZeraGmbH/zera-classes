@@ -1,12 +1,12 @@
 #ifndef SPM1MODULEMEASPROGRAM_H
 #define SPM1MODULEMEASPROGRAM_H
 
-#include "secresourcetypelist.h"
 #include "spm1moduleconfigdata.h"
+#include "secrefconstantobserver.h"
+#include "secresourcetypelist.h"
 #include <basemeasprogram.h>
 #include <clientactivecomponent.h>
 #include "secmeasinputdictionary.h"
-#include <memory>
 #include <secinterface.h>
 
 namespace SPM1MODULE
@@ -20,7 +20,6 @@ enum spm1moduleCmds
     readresource,
     fetchecalcunits,
     readrefInputalias,
-    setpcbrefconstantnotifier,
     setsecintnotifier,
 
     freeecalcunits,
@@ -41,7 +40,6 @@ enum spm1moduleCmds
     startmeasurement,
 
     stopmeas,
-    fetchrefconstant,
 
     readintregister,
     resetintregister,
@@ -49,8 +47,6 @@ enum spm1moduleCmds
     readtcount
 
 };
-
-#define irqPCBRefConstanChangeNotifier 16
 
 class cSpm1Module;
 
@@ -68,6 +64,7 @@ public slots:
 
 private slots:
     virtual void catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer);
+    void onRefConstantChanged(QString refInputName);
     void resourceManagerConnect();
     void sendRMIdent();
     void testSEC1Resource();
@@ -123,7 +120,7 @@ private slots:
 
     void Actualize();
     void clientActivationChanged(bool bActive);
-    void stopMeasuerment(bool bAbort);
+    void stopMeasurement(bool bAbort);
     bool found(QList<TRefInput> &list, QString searched);
 
 private:
@@ -137,8 +134,8 @@ private:
     QStringList getPowerUnitValidator();
     QString getPowerUnit();
     QString getRefInputDisplayString(QString inputName);
+    void actualizeRefConstant();
 
-    void handleChangedREFConst();
     void handleSECInterrupt();
 
     cSpm1Module* m_pModule; // the module we live in
@@ -203,6 +200,7 @@ private:
     SecResourceTypeList m_resourceTypeList;
     QHash<QString,QString> m_ResourceHash; // resourcetype, resourcelist ; seperated
     SecMeasInputDictionary m_refInputDictionary;
+    SecRefConstantObserver m_refConstantObserver;
     QHash<QString, double> mPowerUnitFactorHash;
 
     QStringList m_REFAliasList; // we want to have an ordered list with Input alias
