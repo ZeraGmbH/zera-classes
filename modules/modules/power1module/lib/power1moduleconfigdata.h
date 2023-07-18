@@ -75,7 +75,7 @@ public:
     doubleParameter m_fMeasIntervalTime; // measuring interval 0.1 .. 100.0 sec.
     intParameter m_nMeasIntervalPeriod; // measuring periods 1 .. 10000
     double m_fmovingwindowInterval;
-    bool m_disablephaseselect;
+    bool m_disablephaseselect = false;
     bool m_bmovingWindow;
 };
 
