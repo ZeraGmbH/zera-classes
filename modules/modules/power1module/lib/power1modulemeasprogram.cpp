@@ -233,11 +233,11 @@ cPower1ModuleMeasProgram::cPower1ModuleMeasProgram(cPower1Module* module, std::s
     m_readUrvalueDoneState.addTransition(this, &cModuleActivist::activationContinue, &m_foutParamsToDsp);
     m_readUrvalueDoneState.addTransition(this, &cModuleActivist::activationLoop, &m_readUrvalueState);
 
-    m_readUrValueMachine.addState(&m_readUrvalueState);
-    m_readUrValueMachine.addState(&m_readUrvalueDoneState);
-    m_readUrValueMachine.addState(&m_foutParamsToDsp);
+    m_readUpperRangeValueMachine.addState(&m_readUrvalueState);
+    m_readUpperRangeValueMachine.addState(&m_readUrvalueDoneState);
+    m_readUpperRangeValueMachine.addState(&m_foutParamsToDsp);
 
-    m_readUrValueMachine.setInitialState(&m_readUrvalueState);
+    m_readUpperRangeValueMachine.setInitialState(&m_readUrvalueState);
 
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower1ModuleMeasProgram::readUrvalueDone);
@@ -552,8 +552,8 @@ void cPower1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             QString s;
             s = m_NotifierInfoHash[service];
             readUrvalueList.append(s);
-            if (!m_readUrValueMachine.isRunning())
-                m_readUrValueMachine.start();
+            if (!m_readUpperRangeValueMachine.isRunning())
+                m_readUpperRangeValueMachine.start();
         }
 
             break;
@@ -1438,8 +1438,8 @@ void cPower1ModuleMeasProgram::activateDSPdone()
 
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
     if(!m_pModule->m_demo)
-        if (!m_readUrValueMachine.isRunning())
-            m_readUrValueMachine.start();
+        if (!m_readUpperRangeValueMachine.isRunning())
+            m_readUpperRangeValueMachine.start();
 
     emit activated();
 }
