@@ -189,7 +189,7 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
-    QStateMachine m_readUrValueMachine;
+    QStateMachine m_readUpperRangeValueMachine;
     QState m_readUrvalueState;
     QState m_readUrvalueDoneState;
     QState m_foutParamsToDsp;

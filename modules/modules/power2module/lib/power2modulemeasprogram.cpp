@@ -220,12 +220,12 @@ cPower2ModuleMeasProgram::cPower2ModuleMeasProgram(cPower2Module* module, std::s
     m_readUrvalueDoneState.addTransition(this, &cPower2ModuleMeasProgram::activationLoop, &m_readUrvalueState);
     m_foutParamsToDsp.addTransition(this, &cPower2ModuleMeasProgram::activationContinue, &m_setFoutConstantState);
 
-    m_readUrValueMachine.addState(&m_readUrvalueState);
-    m_readUrValueMachine.addState(&m_readUrvalueDoneState);
-    m_readUrValueMachine.addState(&m_foutParamsToDsp);
-    m_readUrValueMachine.addState(&m_setFoutConstantState);
+    m_readUpperRangeValueMachine.addState(&m_readUrvalueState);
+    m_readUpperRangeValueMachine.addState(&m_readUrvalueDoneState);
+    m_readUpperRangeValueMachine.addState(&m_foutParamsToDsp);
+    m_readUpperRangeValueMachine.addState(&m_setFoutConstantState);
 
-    m_readUrValueMachine.setInitialState(&m_readUrvalueState);
+    m_readUpperRangeValueMachine.setInitialState(&m_readUrvalueState);
 
     connect(&m_readUrvalueState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalue);
     connect(&m_readUrvalueDoneState, &QAbstractState::entered, this, &cPower2ModuleMeasProgram::readUrvalueDone);
@@ -598,8 +598,8 @@ void cPower2ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             QString s;
             s = m_NotifierInfoHash[service];
             readUrvalueList.append(s);
-            if (!m_readUrValueMachine.isRunning())
-                m_readUrValueMachine.start();
+            if (!m_readUpperRangeValueMachine.isRunning())
+                m_readUpperRangeValueMachine.start();
         }
 
             break;
@@ -1499,8 +1499,8 @@ void cPower2ModuleMeasProgram::activateDSPdone()
     connect(&m_measModeSelector, &MeasModeSelector::sigTransactionOk,
             this, &cPower2ModuleMeasProgram::onModeTransactionOk);
     readUrvalueList = m_measChannelInfoHash.keys(); // once we read all actual range urvalues
-    if (!m_readUrValueMachine.isRunning())
-        m_readUrValueMachine.start();
+    if (!m_readUpperRangeValueMachine.isRunning())
+        m_readUpperRangeValueMachine.start();
 
     emit activated();
 }
