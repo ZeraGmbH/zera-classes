@@ -474,7 +474,7 @@ MeasSystemChannels cPower1ModuleMeasProgram::getMeasChannelUIPairs()
     return measChannelUIPairList;
 }
 
-QStringList POWER1MODULE::cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen& dspChainGen)
+QStringList cPower1ModuleMeasProgram::setupMeasModes(DspChainIdGen& dspChainGen)
 {
     QStringList dspMModesCommandList = Power1DspCmdGenerator::getCmdsInitOutputVars(dspChainGen);
     cPower1ModuleConfigData *confdata = getConfData();
