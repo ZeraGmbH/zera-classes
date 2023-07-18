@@ -38,10 +38,15 @@ void SecRefConstantObserver::onFinishKillTaskObject(bool ok, int taskId)
 
 void SecRefConstantObserver::onSingleConstantFetchFinish(bool ok, int taskId)
 {
-    if(ok && m_pendingSingleFetchTaskIds.contains(taskId)) {
-        QString refInputName = m_pendingSingleFetchTaskIds.take(taskId);
-        emit sigRefConstantChanged(refInputName);
+    if(ok) {
+        if(m_pendingSingleFetchTaskIds.contains(taskId)) {
+            QString refInputName = m_pendingSingleFetchTaskIds.take(taskId);
+            emit sigRefConstantChanged(refInputName);
+        }
     }
+    else
+        // For now just warn. If an issue, another arror handler can be added
+        qWarning("SecRefConstantObserver::onSingleConstantFetchFinish reported an error!");
 }
 
 void SecRefConstantObserver::onPcbServerReceive(quint32 msgnr, quint8 reply, QVariant answer)
