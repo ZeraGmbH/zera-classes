@@ -18,7 +18,7 @@ cPower1ModuleConfiguration::~cPower1ModuleConfiguration()
     if (m_pPower1ModulConfigData) delete m_pPower1ModulConfigData;
 }
 
-void POWER1MODULE::cPower1ModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
+void cPower1ModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QString xsdFilename)
 {
     m_bConfigured = m_bConfigError = false;
 
