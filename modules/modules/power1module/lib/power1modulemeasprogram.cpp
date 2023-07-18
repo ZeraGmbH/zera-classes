@@ -1808,6 +1808,12 @@ bool cPower1ModuleMeasProgram::canChangePhaseMask(std::shared_ptr<MeasMode> mode
     bool disablePhase = (getConfData()->m_disablephaseselect == true);
     bool hasVarMask = mode->hasVarMask();
     bool hasMultipleMeasSystems = mode->getMeasSysCount()>1;
+    if(disablePhase)
+        qWarning("disablePhase set");
+    if(!hasVarMask)
+        qWarning("hasVarMask not set");
+    if(!hasMultipleMeasSystems)
+        qWarning("hasMultipleMeasSystems not set");
     return hasVarMask && hasMultipleMeasSystems && !disablePhase;
 }
 
