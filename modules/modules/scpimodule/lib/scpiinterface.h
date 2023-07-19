@@ -31,7 +31,7 @@ public:
     bool executeCmd(cSCPIClient* client, QString cmd);
 
 private:
-    void removeCommand();
+    void removeCommand(cSCPIClient* client);
     void waiForAnswer();
     bool checkAllCmds();
     QString m_sName;

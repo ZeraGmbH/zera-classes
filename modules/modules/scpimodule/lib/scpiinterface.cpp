@@ -75,8 +75,9 @@ bool cSCPIInterface::checkAllCmds()
     return false;
 }
 
-void cSCPIInterface::removeCommand()
+void cSCPIInterface::removeCommand(cSCPIClient *client)
 {
+    client->disconnect();
     m_scpiCmdInExec.clear();
     checkAllCmds();
 }

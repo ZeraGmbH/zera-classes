@@ -33,7 +33,7 @@ public:
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegate*> m_SCPIMeasureDelegateHash;
 signals:
-    void commandAnswered();
+    void commandAnswered(cSCPIClient* client);
 public slots:
     void receiveStatus(quint8 stat);
     virtual void receiveAnswer(QString answ) = 0;
