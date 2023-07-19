@@ -41,26 +41,8 @@ cSCPIMeasure::~cSCPIMeasure()
 
 void cSCPIMeasure::receiveMeasureValue(QVariant qvar)
 {
-    static QMap<QString, QVariant> answers;
-    QList<QString> scpiKeys = m_scpiMeasureMap->keys();
-
-    if(scpiKeys[0] == m_pSCPICmdInfo->componentName) {
-        m_scpiMeasureMap->remove(m_pSCPICmdInfo->componentName, this);
-        m_sAnswer = setAnswer(qvar);
-    }
-    else {
-        answers.insert(m_pSCPICmdInfo->componentName, qvar);
-        signalList.clear();
-    }
-    if(!answers.isEmpty()) {
-        QList<QString> answerKeys = answers.keys();
-        if(scpiKeys[0] == answerKeys[0]) {
-            signalList.append(measCont);
-            m_scpiMeasureMap->remove(m_pSCPICmdInfo->componentName, this);
-            answers.remove(m_pSCPICmdInfo->componentName);
-            m_sAnswer = setAnswer(qvar);
-        }
-    }
+    m_scpiMeasureMap->remove(m_pSCPICmdInfo->componentName, this);
+    m_sAnswer = setAnswer(qvar);
 
     // we emit all expected signals
     for (int i = 0; i < signalList.count(); i++)
@@ -83,9 +65,8 @@ void cSCPIMeasure::receiveMeasureValue(QVariant qvar)
             break;
         }
     }
-    if(!signalList.isEmpty())
-        signalList.clear();
 
+    signalList.clear();
 }
 
 
