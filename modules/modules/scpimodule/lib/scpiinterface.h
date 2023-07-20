@@ -4,18 +4,15 @@
 #include <QObject>
 #include <QString>
 #include <QList>
-#include <QMap>
 
 class cSCPI;
+
 namespace SCPIMODULE
 {
-class cSCPIClient;
-class ScpiBaseDelegate;
 
-struct cmdInfos {
-    QString cmd;
-    cSCPIClient* client;
-};
+class ScpiBaseDelegate;
+class cSCPIClient;
+
 
 class cSCPIInterface: public QObject
 {
@@ -30,14 +27,10 @@ public:
     void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
 
+
 private:
-    void removeCommand(cSCPIClient* client);
-    void waiForAnswer();
-    bool checkAllCmds();
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
-    QList<cmdInfos> m_scpiCmdInExec;
-    QList<cmdInfos> m_scpiCmdsWaiting;
 };
 
 }

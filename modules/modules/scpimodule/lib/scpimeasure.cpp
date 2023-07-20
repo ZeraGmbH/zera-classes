@@ -14,9 +14,9 @@
 namespace SCPIMODULE
 {
 
-cSCPIMeasure::cSCPIMeasure(QMultiMap<QString, cSCPIMeasure*> *scpiMeasureMap, cSCPICmdInfo *scpicmdinfo, QObject *t_parent) :
+cSCPIMeasure::cSCPIMeasure(QMultiHash<QString, cSCPIMeasure*> *scpiMeasureHash, cSCPICmdInfo *scpicmdinfo, QObject *t_parent) :
     QObject(t_parent),
-    m_scpiMeasureMap(scpiMeasureMap),
+    m_scpiMeasureHash(scpiMeasureHash),
     m_pSCPICmdInfo(scpicmdinfo)
 {
     initialize();
@@ -26,7 +26,7 @@ cSCPIMeasure::cSCPIMeasure(QMultiMap<QString, cSCPIMeasure*> *scpiMeasureMap, cS
 cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj, QObject *t_parent)
   : QObject(t_parent)
 {
-    m_scpiMeasureMap = obj.m_scpiMeasureMap;
+    m_scpiMeasureHash = obj.m_scpiMeasureHash;
     m_pSCPICmdInfo = new cSCPICmdInfo(*obj.m_pSCPICmdInfo);
     initialize();
 }
@@ -34,14 +34,14 @@ cSCPIMeasure::cSCPIMeasure(const cSCPIMeasure &obj, QObject *t_parent)
 
 cSCPIMeasure::~cSCPIMeasure()
 {
-    m_scpiMeasureMap->remove(m_pSCPICmdInfo->componentName, this);
+    m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentName, this);
     delete m_pSCPICmdInfo;
 }
 
 
 void cSCPIMeasure::receiveMeasureValue(QVariant qvar)
 {
-    m_scpiMeasureMap->remove(m_pSCPICmdInfo->componentName, this);
+    m_scpiMeasureHash->remove(m_pSCPICmdInfo->componentName, this);
     m_sAnswer = setAnswer(qvar);
 
     // we emit all expected signals
@@ -151,7 +151,7 @@ void cSCPIMeasure::measureInit()
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
     if (!m_bInitPending)
-        m_scpiMeasureMap->insert(m_pSCPICmdInfo->componentName, this);
+        m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentName, this);
 
     signalList.append(measCont); // measure statemachine waits for measure value
 }
@@ -198,7 +198,7 @@ void cSCPIMeasure::readInit()
     // the module's eventsystem will look for notifications on this and will
     // then call the receiveMeasureValue slot, so we synchronized on next measurement value
     if (!m_bInitPending)
-        m_scpiMeasureMap->insert(m_pSCPICmdInfo->componentName, this);
+        m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentName, this);
 
     signalList.append(readCont); // read statemachine waits for measure value
 }
@@ -223,7 +223,7 @@ void cSCPIMeasure::init()
     // then call the initDone slot, so we synchronized on next measurement value
 
     m_bInitPending = true;
-    m_scpiMeasureMap->insert(m_pSCPICmdInfo->componentName, this);
+    m_scpiMeasureHash->insert(m_pSCPICmdInfo->componentName, this);
 
     signalList.append(initCont); // init statemachine waits for measure value
 }

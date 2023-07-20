@@ -38,7 +38,7 @@ public:
 
     QMultiHash<QString, SCPIClientInfoPtr> scpiParameterCmdInfoHash; // a hash to memorize what was in progress for which client
     QList<cSignalConnectionDelegate*> sConnectDelegateList;
-    QMultiMap<QString, cSCPIMeasure*> scpiMeasureMap;
+    QMultiHash<QString, cSCPIMeasure*> scpiMeasureHash;
 
     cSCPIEventSystem* m_pSCPIEventSystem;
     VfEventSytemModuleParam* m_pModuleValidator;

@@ -96,7 +96,7 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
             }
 
             // then it looks for measurement values
-            QList<cSCPIMeasure*> scpiMeasureList = m_pModule->scpiMeasureMap.values(cName);
+            QList<cSCPIMeasure*> scpiMeasureList = m_pModule->scpiMeasureHash.values(cName);
             n = scpiMeasureList.count();
 
             if (n > 0)
