@@ -18,7 +18,10 @@ bool cIntValidator::isValidParam(QVariant &newValue)
 {
     bool ok;
     qint32 value = newValue.toInt(&ok);
-    return (ok && (value <= m_nMax) && (value >= m_nMin));
+    ok = ok && (value <= m_nMax) && (value >= m_nMin);
+    if(ok)
+        newValue = QVariant::fromValue<qint32>(value);
+    return ok;
 }
 
 void cIntValidator::exportMetaData(QJsonObject& jsObj)
