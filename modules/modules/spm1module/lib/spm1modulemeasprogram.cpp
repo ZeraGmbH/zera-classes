@@ -481,7 +481,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
+                    if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_nEnergyCounterActual = answer.toUInt(&ok);
                         m_fEnergy = 1.0 * m_nEnergyCounterActual / (m_pRefConstantPar->getValue().toDouble() * mPowerUnitFactorHash[m_pInputUnitPar->getValue().toString()]);
                         m_pEnergyAct->setValue(m_fEnergy); // in kWh
@@ -499,7 +499,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
+                    if((getStatus() & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         m_fTimeSecondsActual = double(answer.toUInt(&ok)) * 0.001;
                         m_fPower = m_fEnergy * 3600.0 / (m_fTimeSecondsActual); // in kW
                         m_pPowerAct->setValue(m_fPower);
@@ -517,10 +517,10 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack) {
                     // keep last values on (pending) abort / ignore post final responses
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
+                    quint32 status = getStatus();
+                    if((status & ECALCSTATUS::ABORT) == 0 && !m_finalResultStateMachine.isRunning()) {
                         // once ready we leave status ready (continous mode)
-                        m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
-                        m_pStatusAct->setValue(QVariant(m_nStatus));
+                        setStatus((status & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7));
                     }
                 }
                 else {
@@ -657,7 +657,7 @@ void cSpm1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                     // incorporate still running check as we learned from sec1
                     // see cSec1ModuleMeasProgram::catchInterfaceAnswer /
                     // case readvicount
-                    if((m_nStatus & ECALCSTATUS::ABORT) == 0) {
+                    if((getStatus() & ECALCSTATUS::ABORT) == 0) {
                         m_nEnergyCounterFinal = answer.toLongLong(&ok);
                     }
                     emit interruptContinue();
@@ -724,7 +724,7 @@ void cSpm1ModuleMeasProgram::setUnits()
     // In case measurement is running, values are updated properly on next
     // interrupt (tested with vf-debugger). For a measuremnt finished we have to
     // recalc results with new units
-    if(m_bActive && m_nStatus & ECALCSTATUS::READY) {
+    if(m_bActive && getStatus() & ECALCSTATUS::READY) {
         setEMResult();
     }
     m_pModule->exportMetaData();
@@ -735,6 +735,16 @@ void cSpm1ModuleMeasProgram::actualizeRefConstant()
     double constant = m_refConstantObserver.getRefConstant(getConfData()->m_sRefInput.m_sPar);
     m_pRefConstantPar->setValue(QVariant(constant));
     newRefConstant(QVariant(constant));
+}
+
+quint32 cSpm1ModuleMeasProgram::getStatus()
+{
+    return m_pStatusAct->getValue().toUInt();
+}
+
+void cSpm1ModuleMeasProgram::setStatus(quint32 status)
+{
+    m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
 }
 
 void cSpm1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
@@ -1085,7 +1095,7 @@ void cSpm1ModuleMeasProgram::enableInterrupt()
 void cSpm1ModuleMeasProgram::startMeasurement()
 {
     m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
-    m_nStatus = ECALCSTATUS::ARMED;
+    setStatus(ECALCSTATUS::ARMED);
 }
 
 
@@ -1126,8 +1136,7 @@ void cSpm1ModuleMeasProgram::readTCountact()
         m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     }
     m_pStartStopPar->setValue(QVariant(0)); // restart enable
-    m_nStatus = ECALCSTATUS::READY;
-    m_pStatusAct->setValue(QVariant(m_nStatus));
+    setStatus(ECALCSTATUS::READY);
 }
 
 
@@ -1165,7 +1174,7 @@ void cSpm1ModuleMeasProgram::setEMResult()
 
 void cSpm1ModuleMeasProgram::setRating()
 {
-    if (m_nStatus & ECALCSTATUS::READY)
+    if (getStatus() & ECALCSTATUS::READY)
     {
         if ( (m_fResult >= getConfData()->m_fLowerLimit.m_fPar) && (m_fResult <= getConfData()->m_fUpperLimit.m_fPar))
             m_eRating = ECALCRESULT::RESULT_PASSED;
@@ -1313,10 +1322,8 @@ void cSpm1ModuleMeasProgram::clientActivationChanged(bool bActive)
 
 void cSpm1ModuleMeasProgram::stopMeasurement(bool bAbort)
 {
-    if(bAbort) {
-        m_nStatus = ECALCSTATUS::ABORT;
-        m_pStatusAct->setValue(QVariant(m_nStatus));
-    }
+    if(bAbort)
+        setStatus(ECALCSTATUS::ABORT);
     m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
     m_ActualizeTimer.stop();

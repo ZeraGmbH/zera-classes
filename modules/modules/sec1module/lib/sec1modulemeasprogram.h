@@ -145,6 +145,8 @@ private:
     double getUnitFactor();
     QString getRefInputDisplayString(QString inputName);
     void actualizeRefConstant();
+    quint32 getStatus();
+    void setStatus(quint32 status);
 
     cSec1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
@@ -264,7 +266,6 @@ private:
     bool m_bFirstMeas;
     bool m_bMeasurementRunning = false;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
-    quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
     ECALCRESULT::enResultTypes m_eRating;
     quint32 m_nDUTPulseCounterStart;

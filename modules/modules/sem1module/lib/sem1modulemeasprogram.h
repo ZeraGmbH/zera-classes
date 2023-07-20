@@ -135,6 +135,8 @@ private:
     QString getPowerUnit();
     QString getRefInputDisplayString(QString inputName);
     void actualizeRefConstant();
+    quint32 getStatus();
+    void setStatus(quint32 status);
 
     void handleSECInterrupt();
 
@@ -238,7 +240,6 @@ private:
     // vars dealing with error measurement
     bool m_brunning;
     QTimer m_ActualizeTimer; // after timed out we actualize progressvalue
-    quint32 m_nStatus; // idle, started, running, finished
     double m_fResult; // error value in %
     ECALCRESULT::enResultTypes m_eRating;
     quint32 m_nTimerCountStart; // master / time counts down
