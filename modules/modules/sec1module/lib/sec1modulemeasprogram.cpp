@@ -570,7 +570,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack) {
                     // Still running and not waiting for next?
-                    if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
+                    if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
                         m_nDUTPulseCounterActual = answer.toUInt(&ok);
                         m_fProgress = ((1.0 * m_nDUTPulseCounterStart - 1.0 * m_nDUTPulseCounterActual)/ m_nDUTPulseCounterStart)*100.0;
                         if (m_fProgress > 100.0) {
@@ -591,7 +591,7 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             {
                 if (reply == ack) {
                     // Still running and not waiting for next?
-                    if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
+                    if(m_bMeasurementRunning && (getStatus() & ECALCSTATUS::WAIT) == 0) {
                         m_nEnergyCounterActual = answer.toUInt(&ok);
                         m_fEnergy = m_nEnergyCounterActual / getConfData()->m_fRefConstant.m_fPar;
                         m_pEnergyAct->setValue(m_fEnergy);
@@ -612,10 +612,10 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
                 if (reply == ack)
                 {
                     // Still running and not waiting for next?
-                    if(m_bMeasurementRunning && (m_nStatus & ECALCSTATUS::WAIT) == 0) {
+                    quint32 status = getStatus();
+                    if(m_bMeasurementRunning && (status & ECALCSTATUS::WAIT) == 0) {
                         // once ready we leave status ready (continous mode)
-                        m_nStatus = (m_nStatus & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7);
-                        m_pStatusAct->setValue(QVariant(m_nStatus));
+                        setStatus((status & ECALCSTATUS::READY) | (answer.toUInt(&ok) & 7));
                     }
                 }
                 else
@@ -726,6 +726,16 @@ void cSec1ModuleMeasProgram::actualizeRefConstant()
     double constant = m_refConstantObserver.getRefConstant(getConfData()->m_sRefInput.m_sPar);
     m_pRefConstantPar->setValue(QVariant(constant));
     newRefConstant(QVariant(constant));
+}
+
+quint32 cSec1ModuleMeasProgram::getStatus()
+{
+    return m_pStatusAct->getValue().toUInt();
+}
+
+void cSec1ModuleMeasProgram::setStatus(quint32 status)
+{
+    m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
 }
 
 void cSec1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
@@ -877,7 +887,7 @@ void cSec1ModuleMeasProgram::startNext()
     // * We don't need the whole start state machine here
     // * There is too much magic in startMeasurement so we cannnot use it here either
     m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
-    m_nStatus = ECALCSTATUS::ARMED | ECALCSTATUS::READY;
+    setStatus(ECALCSTATUS::ARMED | ECALCSTATUS::READY);
     m_MsgNrCmdList[m_pSECInterface->start(m_masterErrCalcName)] = startmeasurement;
     startMeasurementDone();
 }
@@ -1261,7 +1271,7 @@ void cSec1ModuleMeasProgram::enableInterrupt()
 
 void cSec1ModuleMeasProgram::startMeasurement()
 {
-    m_nStatus = ECALCSTATUS::ARMED;
+    setStatus(ECALCSTATUS::ARMED);
     m_fEnergy = 0.0;
     m_pEnergyAct->setValue(m_fEnergy);
     m_pEnergyFinalAct->setValue(m_fEnergy);
@@ -1337,14 +1347,10 @@ void cSec1ModuleMeasProgram::setECResultAndResetInt()
         m_bFirstMeas = false;
 
         if (m_pContinuousPar->getValue().toInt() == 0)
-        {
-            m_nStatus = ECALCSTATUS::READY;
-        }
-        else {
-            m_nStatus = ECALCSTATUS::READY + ECALCSTATUS::STARTED;
-        }
+            setStatus(ECALCSTATUS::READY);
+        else
+            setStatus(ECALCSTATUS::READY + ECALCSTATUS::STARTED);
         m_fProgress = 100.0;
-        m_pStatusAct->setValue(QVariant(m_nStatus));
         m_pProgressAct->setValue(QVariant(m_fProgress));
 
         ++m_nMeasurementNo;
@@ -1406,8 +1412,7 @@ void cSec1ModuleMeasProgram::checkForRestart()
         }
         // and zzz...
         else {
-            m_nStatus =  ECALCSTATUS::READY | ECALCSTATUS::WAIT;
-            m_pStatusAct->setValue(QVariant(m_nStatus));
+            setStatus(ECALCSTATUS::READY | ECALCSTATUS::WAIT);
             m_WaitStartDateTime = QDateTime::currentDateTime();
             m_WaitMultiTimer.start(waitTimeMs);
         }
@@ -1416,7 +1421,7 @@ void cSec1ModuleMeasProgram::checkForRestart()
 
 void cSec1ModuleMeasProgram::setRating()
 {
-    if (m_nStatus & ECALCSTATUS::READY)
+    if (getStatus() & ECALCSTATUS::READY)
     {
         if ( (m_fResult >= getConfData()->m_fLowerLimit.m_fPar) && (m_fResult <= getConfData()->m_fUpperLimit.m_fPar))
             m_eRating = ECALCRESULT::RESULT_PASSED;
@@ -1524,10 +1529,8 @@ void cSec1ModuleMeasProgram::newDutConstantUnit(QVariant dutconstunit)
         // continuous measurement keeps last result on abort
         flagsForRecalc |= ECALCSTATUS::ABORT;
     }
-    if(m_bActive && (m_nStatus & flagsForRecalc)) {
+    if(m_bActive && (getStatus() & flagsForRecalc))
         setECResult();
-    }
-
     emit m_pModule->parameterChanged();
 }
 
@@ -1633,7 +1636,7 @@ void cSec1ModuleMeasProgram::newLowerLimit(QVariant limit)
 void cSec1ModuleMeasProgram::Actualize()
 {
     if(m_bMeasurementRunning) { // still running
-        if((m_nStatus & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
+        if((getStatus() & ECALCSTATUS::WAIT) == 0) { // measurement: next poll
             m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::STATUS)] = actualizestatus;
             m_MsgNrCmdList[m_pSECInterface->readRegister(m_masterErrCalcName, ECALCREG::MTCNTact)] = actualizeprogress;
             m_MsgNrCmdList[m_pSECInterface->readRegister(m_slaveErrCalcName, ECALCREG::MTCNTact)] = actualizeenergy;
@@ -1658,10 +1661,8 @@ void cSec1ModuleMeasProgram::stopMeasurement(bool bAbort)
 {
     // Do not post-abort a measurement finished properly e.g by changing
     // ranges...
-    if(bAbort && m_bMeasurementRunning) {
-        m_nStatus = ECALCSTATUS::ABORT;
-        m_pStatusAct->setValue(QVariant(m_nStatus));
-    }
+    if(bAbort && m_bMeasurementRunning)
+        setStatus(ECALCSTATUS::ABORT);
     m_bMeasurementRunning = false;
     m_MsgNrCmdList[m_pSECInterface->stop(m_masterErrCalcName)] = stopmeas;
     m_pStartStopPar->setValue(QVariant(0));
