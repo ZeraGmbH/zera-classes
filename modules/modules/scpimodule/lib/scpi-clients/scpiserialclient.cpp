@@ -35,7 +35,6 @@ void cSCPISerialClient::receiveAnswer(QString answ)
 
     ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
-    emit commandAnswered(this);
 }
 
 

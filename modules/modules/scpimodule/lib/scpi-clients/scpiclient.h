@@ -32,8 +32,6 @@ public:
     void addSCPIClientInfo(QString key, SCPIMODULE::SCPIClientInfoPtr info);
 
     QHash<cSCPIMeasureDelegate*, cSCPIMeasureDelegate*> m_SCPIMeasureDelegateHash;
-signals:
-    void commandAnswered(cSCPIClient* client);
 public slots:
     void receiveStatus(quint8 stat);
     virtual void receiveAnswer(QString answ) = 0;
