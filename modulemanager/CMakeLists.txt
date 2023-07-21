@@ -44,7 +44,6 @@ target_link_libraries(zera-modulemanager-lib
     Zera::VfEvent
     Zera::VfComponent
     Zera::VfStorageHash
-    Zera::VfHelpers
     Zera::VfNet2
     Zera::VfTcp
     Zera::VfQml
