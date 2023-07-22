@@ -87,8 +87,7 @@ bool ModuleManager::loadModules()
     bool retVal = false;
     QDir moduleDir(MODMAN_MODULE_PATH);
     qDebug() << "Loading modules";
-    foreach (QObject *staticModule, QPluginLoader::staticInstances())
-    {
+    foreach (QObject *staticModule, QPluginLoader::staticInstances()) {
         qDebug()<<staticModule;//doNothing();
     }
 
@@ -97,16 +96,14 @@ bool ModuleManager::loadModules()
         QPluginLoader loader(moduleDir.absoluteFilePath(fileName));
         MeasurementModuleFactory *module = qobject_cast<MeasurementModuleFactory *>(loader.instance());
         qDebug() << "Analyzing:" << loader.fileName() << "\nfile is a library?" << QLibrary::isLibrary(moduleDir.absoluteFilePath(fileName)) << "loaded:" << loader.isLoaded();
-        if (module)
-        {
+        if (module) {
             retVal=true;
             m_factoryTable.insert(module->getFactoryName(), module);
         }
         else
-        {
             qDebug() << "Error string:\n" << loader.errorString();
-        }
     }
+    qInfo("All modules loaded after %llims", m_timerAllModulesLoaded.elapsed());
     return retVal;
 }
 
@@ -231,6 +228,7 @@ void ModuleManager::stopModules()
 
 void ModuleManager::changeSessionFile(const QString &t_newSessionPath)
 {
+    m_timerAllModulesLoaded.start();
     if(m_sessionPath != t_newSessionPath)
     {
         const QString finalSessionPath = QString("%1%2").arg(MODMAN_SESSION_PATH).arg(t_newSessionPath);
@@ -314,7 +312,7 @@ void ModuleManager::onModuleStartNext()
     else {
         ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
         mmConfig->setDefaultSession(m_sessionPath);
-        qInfo("All modules loaded after %llims", m_timerAllModulesLoaded.elapsed());
+        qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
         emit sigModulesLoaded(m_sessionPath, m_sessionsAvailable);
     }
 }
