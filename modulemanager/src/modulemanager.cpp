@@ -206,51 +206,43 @@ void ModuleManager::startModule(const QString & t_uniqueModuleName, const QStrin
     }
 }
 
-void ModuleManager::stopModules()
+void ModuleManager::destroyModules()
 {
-    if(m_moduleList.isEmpty() == false)
-    {
+    if(!m_moduleList.isEmpty()) {
         m_moduleStartLock = true;
-
-        for(int i = m_moduleList.length()-1; i>=0; i--)
-        {
-            VirtualModule *toStop = m_moduleList.at(i)->m_reference;
+        QElapsedTimer destroyTimer;
+        destroyTimer.start();
+        for(int i = m_moduleList.length()-1; i>=0; i--) { // seems we don't want to destroy _SYSTEM...
+            VirtualModule *toDestroy = m_moduleList.at(i)->m_reference;
             QString tmpModuleName = m_moduleList.at(i)->m_uniqueName;
-            //toStop->stopModule();
-            if(m_factoryTable.contains(tmpModuleName))
-            {
+            if(m_factoryTable.contains(tmpModuleName)) {
                 qInfo() << "Destroying module:" << tmpModuleName;
-                m_factoryTable.value(tmpModuleName)->destroyModule(toStop);
+                m_factoryTable.value(tmpModuleName)->destroyModule(toDestroy);
             }
         }
+        qInfo("All modules destroyed within %llims", destroyTimer.elapsed());
+        m_timerAllModulesLoaded.start();
     }
 }
 
 void ModuleManager::changeSessionFile(const QString &t_newSessionPath)
 {
-    m_timerAllModulesLoaded.start();
-    if(m_sessionPath != t_newSessionPath)
-    {
+    if(m_sessionPath != t_newSessionPath) {
         const QString finalSessionPath = QString("%1%2").arg(MODMAN_SESSION_PATH).arg(t_newSessionPath);
-        if(QFile::exists(finalSessionPath))
-        {
-            if(m_moduleStartLock == false) // do not mess up the state machines
-            {
+        if(QFile::exists(finalSessionPath)) {
+            if(m_moduleStartLock == false) { // do not mess up the state machines
                 m_sessionPath = t_newSessionPath;
                 m_eventHandler->clearSystems();
-                stopModules();
+                destroyModules();
                 emit sigSessionSwitched(finalSessionPath);
             }
-            else
-            {
+            else {
                 qWarning() << "Cannot switch sessions while session change already is in progress";
                 Q_ASSERT(false);
             }
         }
         else
-        {
             qWarning() << "Session file not found:" << finalSessionPath << "Search path:" << MODMAN_SESSION_PATH;
-        }
     }
 }
 
