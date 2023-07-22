@@ -87,7 +87,7 @@ public slots:
      * @brief  calls the factory to delete the modules via MeasurementModuleFactory::destroyModule()
      * @warning do not confuse this with setModulesPaused()
      */
-    void stopModules();
+    void destroyModules();
     /**
      * @brief emits sigSessionSwitched when session switching isn't already in progress
      * @param t_newSessionPath the path is appended to the MODMAN_SESSION_PATH
@@ -96,7 +96,6 @@ public slots:
 
     /**
      * @brief pauses the value component event emittion of the modules
-     * @warning do not confuse this with stopModules(), the called VirtualModule::stopModule() function only pauses the module!
      * @param t_paused
      */
     void setModulesPaused(bool t_paused);
