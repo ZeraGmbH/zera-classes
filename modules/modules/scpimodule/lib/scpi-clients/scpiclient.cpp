@@ -201,6 +201,7 @@ void cSCPIClient::receiveStatus(quint8 stat)
         m_pIEEE4882->AddEventError(CommandError);
         break;
     }
+    emit commandAnswered(this);
 }
 
 void cSCPIClient::setSignalConnections(cSCPIStatus* scpiStatus, QList<cStatusBitDescriptor> &dList)
