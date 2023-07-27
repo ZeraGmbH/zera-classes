@@ -16,6 +16,7 @@ target_link_libraries(vf-moduleinterface
     module-validators
     Zera::VfEvent
     Zera::VfComponent
+    Zera::ModmanBase
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )
