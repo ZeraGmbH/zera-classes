@@ -6,6 +6,7 @@
 #include <QString>
 #include <QList>
 #include <QQueue>
+#include <timerfactoryqt.h>
 
 class cSCPI;
 
@@ -37,11 +38,12 @@ public:
 private:
     static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
     void removeCommand(cSCPIClient *client);
-    void waiForAnswer();
     bool checkAllCmds();
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
     QQueue<cmdInfos> m_scpiCmdInExec;
+    TimerTemplateQtPtr m_expCmd;
+    void waitForBlockingCmd(cSCPIClient *client);
 };
 }
 

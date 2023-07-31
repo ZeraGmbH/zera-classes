@@ -27,6 +27,7 @@ target_link_libraries(scpimodule-static
     Qt5::SerialPort
     zera-basemodule
     Zera::SCPI
+    Zera::zera-timers
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

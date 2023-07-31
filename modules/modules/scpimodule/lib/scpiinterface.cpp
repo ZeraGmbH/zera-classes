@@ -34,7 +34,12 @@ void cSCPIInterface::addSCPICommand(ScpiBaseDelegate *delegate)
     delegate->setCommand(m_pSCPICmdInterface);
 }
 
-
+void cSCPIInterface::waitForBlockingCmd(cSCPIClient *client)
+{
+    m_expCmd = TimerFactoryQt::createSingleShot(5000);
+    connect(m_expCmd.get(), &TimerTemplateQt::sigExpired, this, [this, client]{cSCPIInterface::removeCommand(client);});
+    m_expCmd->start();
+}
 
 bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 {
@@ -48,6 +53,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
         m_scpiCmdInExec.enqueue(cmdInfo);
         if(m_scpiCmdInExec.count() == 1) { // Before the list was empty so wen need to trigger the execution machinery
             connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
+            waitForBlockingCmd(client);
             return scpiDelegate->executeSCPI(client, cmd);
         }
     }
@@ -101,6 +107,7 @@ ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)
 void cSCPIInterface::removeCommand(cSCPIClient *client)
 {
     client->disconnect(this);
+    m_expCmd->disconnect(this);
     m_scpiCmdInExec.dequeue();
     checkAllCmds();
 }
@@ -115,6 +122,7 @@ bool cSCPIInterface::checkAllCmds()
          if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
              ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
              connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
+             waitForBlockingCmd(client);
              return scpiDelegate->executeSCPI(client, cmd);
          }
      }
