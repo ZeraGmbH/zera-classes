@@ -45,7 +45,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
     if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0)
     {
         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
-        m_scpiCmdInExec.append(cmdInfo);
+        m_scpiCmdInExec.enqueue(cmdInfo);
         if(m_scpiCmdInExec.count() == 1) { // Before the list was empty so wen need to trigger the execution machinery
             connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
             return scpiDelegate->executeSCPI(client, cmd);
@@ -57,8 +57,7 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 void cSCPIInterface::removeCommand(cSCPIClient *client)
 {
     client->disconnect(this);
-    //m_scpiCmdInExec.clear();
-    m_scpiCmdInExec.removeAt(0);
+    m_scpiCmdInExec.dequeue();
     checkAllCmds();
 }
 
@@ -66,7 +65,7 @@ bool cSCPIInterface::checkAllCmds()
 {
     if(!m_scpiCmdInExec.isEmpty()) {
          cSCPIObject* scpiObject;
-         cmdInfos cmdInfo = m_scpiCmdInExec[0];
+         cmdInfos cmdInfo = m_scpiCmdInExec.head();
          cSCPIClient *client = cmdInfo.client;
          QString cmd = cmdInfo.cmd;
          if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {

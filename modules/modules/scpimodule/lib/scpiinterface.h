@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QString>
 #include <QList>
+#include <QQueue>
 
 class cSCPI;
 
@@ -38,7 +39,7 @@ private:
     bool checkAllCmds();
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
-    QList<cmdInfos> m_scpiCmdInExec;
+    QQueue<cmdInfos> m_scpiCmdInExec;
 };
 }
 
