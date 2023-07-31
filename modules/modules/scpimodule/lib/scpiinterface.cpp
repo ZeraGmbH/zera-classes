@@ -1,4 +1,3 @@
-
 #include <scpi.h>
 #include <scpiobject.h>
 #include <scpicommand.h>
@@ -36,6 +35,7 @@ void cSCPIInterface::addSCPICommand(ScpiBaseDelegate *delegate)
 }
 
 
+
 bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 {
     cSCPIObject* scpiObject;
@@ -45,17 +45,13 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
     if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0)
     {
         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
-        if(m_scpiCmdInExec.isEmpty()) {
-            m_scpiCmdInExec.append(cmdInfo);
+        m_scpiCmdInExec.append(cmdInfo);
+        if(m_scpiCmdInExec.count() == 1) { // Before the list was empty so wen need to trigger the execution machinery
             connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
             return scpiDelegate->executeSCPI(client, cmd);
         }
-        else {
-            m_scpiCmdsWaiting.append(cmdInfo);
-            return true;
-        }
     }
-    return false; // maybe that it is a common command}
+    return false; // maybe that it is a common command
 }
 
 void cSCPIInterface::checkAmbiguousShortNames()
@@ -105,22 +101,22 @@ ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)
 void cSCPIInterface::removeCommand(cSCPIClient *client)
 {
     client->disconnect(this);
-    m_scpiCmdInExec.clear();
+    //m_scpiCmdInExec.clear();
+    m_scpiCmdInExec.removeAt(0);
     checkAllCmds();
 }
 
 bool cSCPIInterface::checkAllCmds()
 {
-    if(!m_scpiCmdsWaiting.isEmpty()) {
+    if(!m_scpiCmdInExec.isEmpty()) {
          cSCPIObject* scpiObject;
-         cmdInfos cmdInfo = m_scpiCmdsWaiting.takeFirst();
-         cSCPIClient *clients = cmdInfo.client;
-         QString cmds = cmdInfo.cmd;
-         m_scpiCmdInExec.append(cmdInfo);
-         if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmds)) != 0) {
+         cmdInfos cmdInfo = m_scpiCmdInExec[0];
+         cSCPIClient *client = cmdInfo.client;
+         QString cmd = cmdInfo.cmd;
+         if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
              ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
-             connect(clients, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
-             return scpiDelegate->executeSCPI(clients, cmds);
+             connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
+             return scpiDelegate->executeSCPI(client, cmd);
          }
      }
      return false;
