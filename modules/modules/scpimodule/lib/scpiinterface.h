@@ -39,8 +39,6 @@ private:
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
     QList<cmdInfos> m_scpiCmdInExec;
-    QList<cmdInfos> m_scpiCmdsWaiting;
-
 };
 }
 

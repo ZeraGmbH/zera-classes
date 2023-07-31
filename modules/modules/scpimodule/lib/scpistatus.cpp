@@ -97,11 +97,12 @@ void cSCPIStatus::setCondition(quint16 condition)
     posTransition = ((changedCondition & m_nCondition) != 0);
     m_nEvent = (changedCondition & ((m_nPTransition & m_nCondition) | (m_nNTransition & (~m_nCondition))));
     if ( (m_nEvent & m_nEnable) > 0 )
+    {
         if (posTransition)
             emit event(m_n2Throw, 1);
         else
             emit event(m_n2Throw, 0);
-
+    }
 }
 
 
