@@ -42,11 +42,8 @@ bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         // allowed query or command
         return client->m_SCPIMeasureDelegateHash[this]->executeClient(client);
     }
-    else {
-        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
-        emit signalStatus(SCPI::nak);
-        disconnect(myConn);
-    }
+    else
+        client->receiveStatus(SCPI::nak);
     return true;
 }
 
@@ -89,11 +86,8 @@ bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
             measure->execute(m_nMeasCode);
         }
     }
-    else {
-        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
-        emit signalStatus(SCPI::nak);
-        disconnect(myConn);
-    }
+    else
+        client->receiveStatus(SCPI::nak);
     return true;
 }
 
@@ -107,11 +101,8 @@ void cSCPIMeasureDelegate::receiveDone()
     cSCPIMeasure* measure = qobject_cast<cSCPIMeasure*>(QObject::sender());
     disconnect(measure,0,this,0);
     m_nPending--;
-    if (m_nPending == 0) {
-        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalStatus, m_pClient, &cSCPIClient::receiveStatus);
-        emit signalStatus(SCPI::ack);
-        disconnect(myConn);
-    }
+    if (m_nPending == 0)
+        m_pClient->receiveStatus(SCPI::ack);
 }
 
 void cSCPIMeasureDelegate::receiveAnswer(QString s)

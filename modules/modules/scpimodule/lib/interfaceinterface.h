@@ -31,9 +31,6 @@ public:
 
     virtual bool setupInterface();
 
-signals:
-    void signalStatus(quint8);
-
 private:
     QList<cSCPIInterfaceDelegate*> m_scpiInterfaceDelegateList; // our delegatelist for parameter cmd's ... needed to clean up
 
