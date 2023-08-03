@@ -60,11 +60,8 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 
         m_pModule->m_pSCPIEventSystem->sigSendEvent(event);
     }
-    else {
-        QMetaObject::Connection myConn = connect(this, &cSCPIParameterDelegate::signalStatus, client, &cSCPIClient::receiveStatus);
-        emit signalStatus(SCPI::nak);
-        disconnect(myConn);
-    }
+    else
+        client->receiveStatus(SCPI::nak);
     return true;
 }
 

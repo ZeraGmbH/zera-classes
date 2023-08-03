@@ -20,8 +20,7 @@ public:
     void setCommand(cSCPI *scpiCmdInterface);
     bool executeSCPI(const QString&, QString&) override { return true; } // cSCPIObject requires
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput) = 0;
-signals:
-    void signalStatus(quint8);
+
 protected:
     QString m_sCmdParent;
 };
