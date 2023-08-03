@@ -38,7 +38,6 @@ public:
 signals:
     void event(quint8, quint8); // status object can send an event with 16bit mask
     void eventError(int);
-    void signalAnswer(QString);
 
 public slots:
     void setCondition(quint16 condition); // we can set our condition reg.

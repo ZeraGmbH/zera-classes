@@ -85,9 +85,8 @@ void cSCPIEventSystem::processCommandEvent(VeinEvent::CommandEvent *commandEvent
                             else
                             {
                                 QString answer = static_cast<VeinComponent::ComponentData*> (commandEvent->eventData())->newValue().toString();
-                                myConn = connect(this, &cSCPIEventSystem::SignalAnswer, clientinfo->getClient(), &cSCPIClient::receiveAnswer);
-                                emit SignalAnswer(answer);
-                                disconnect(myConn);
+                                //cSCPIClient* client = clientinfo->getClient();
+                                clientinfo->getClient()->receiveAnswer(answer);
                             }
                             break;
                         }

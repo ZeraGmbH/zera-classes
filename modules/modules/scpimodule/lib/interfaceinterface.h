@@ -33,8 +33,6 @@ public:
 
 signals:
     void signalStatus(quint8);
-    void signalAnswer(QString);
-
 
 private:
     QList<cSCPIInterfaceDelegate*> m_scpiInterfaceDelegateList; // our delegatelist for parameter cmd's ... needed to clean up

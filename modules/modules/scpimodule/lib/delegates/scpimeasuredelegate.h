@@ -19,7 +19,6 @@ public:
 
 signals:
     void signalStatus(quint8);
-    void signalAnswer(QString);
 
 private slots:
     void receiveDone();
