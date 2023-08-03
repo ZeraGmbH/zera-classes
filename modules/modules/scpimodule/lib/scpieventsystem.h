@@ -21,7 +21,6 @@ public:
     cSCPIEventSystem(cSCPIModule* module);
 signals:
     void status(quint8);
-    void SignalAnswer(QString);
     void clientinfoSignal(QString);
 
 private:

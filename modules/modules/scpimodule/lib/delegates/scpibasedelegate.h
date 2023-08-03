@@ -22,7 +22,6 @@ public:
     virtual bool executeSCPI(cSCPIClient *client, QString& sInput) = 0;
 signals:
     void signalStatus(quint8);
-    void signalAnswer(QString);
 protected:
     QString m_sCmdParent;
 };
