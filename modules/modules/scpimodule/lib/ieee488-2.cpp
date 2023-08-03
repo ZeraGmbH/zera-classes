@@ -48,7 +48,6 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
     QString sError;
     bool ok;
 
-    QMetaObject::Connection myConn = connect(this, &cIEEE4882::signalAnswer, client, &cSCPIClient::receiveAnswer);
 
     switch (cmdCode)
     {
@@ -61,8 +60,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         }
         else
             if (cmd.isQuery())
-                emit signalAnswer(RegOutput(client->operationComplete()));
-                //client->receiveAnswer(RegOutput(1));
+                client->receiveAnswer(RegOutput(client->operationComplete()));
             else
                 AddEventError(CommandError);
         break;
@@ -78,8 +76,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         }
         else
             if (cmd.isQuery())
-                emit signalAnswer(RegOutput(m_nESE));
-                //client->receiveAnswer(RegOutput(m_nESE));
+                client->receiveAnswer(RegOutput(m_nESE));
             else
                 AddEventError(CommandError);
         break;
@@ -96,8 +93,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         }
         else
             if (cmd.isQuery())
-                emit signalAnswer(RegOutput(m_nSRE));
-                //client->receiveAnswer(RegOutput(m_nSRE));
+                client->receiveAnswer(RegOutput(m_nSRE));
             else
                 AddEventError(CommandError);
         break;
@@ -128,48 +124,42 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
 
     case identification:
         if (cmd.isQuery())
-            emit signalAnswer(m_sIdentification);
-            //client->receiveAnswer(m_sIdentification);
+            client->receiveAnswer(m_sIdentification);
         else
             AddEventError(CommandError);
         break;
 
     case eventstatusregister:
         if (cmd.isQuery())
-            emit signalAnswer(RegOutput(m_nESR));
-            //client->receiveAnswer(RegOutput(m_nESR));
+            client->receiveAnswer(RegOutput(m_nESR));
         else
             AddEventError(CommandError);
         break;
 
     case statusbyte:
         if (cmd.isQuery())
-            emit signalAnswer(RegOutput(m_nSTB));
-            //client->receiveAnswer(RegOutput(m_nSTB));
+            client->receiveAnswer(RegOutput(m_nSTB));
         else
             AddEventError(CommandError);
         break;
 
     case selftest:
         if (cmd.isQuery())
-            emit signalAnswer(QString("1"));
-            //client->receiveAnswer(QString("1")); // for the moment test is passed
+            client->receiveAnswer(QString("1")); // for the moment test is passed
         else
             AddEventError(CommandError);
         break;
 
     case read1error:
         if (cmd.isQuery())
-            emit signalAnswer(mGetScpiError());
-            //client->receiveAnswer(mGetScpiError());
+            client->receiveAnswer(mGetScpiError());
         else
             AddEventError(CommandError);
         break;
 
     case readerrorcount:
         if (cmd.isQuery())
-            emit signalAnswer(QString("%1").arg(m_ErrEventQueue.count()));
-            //client->receiveAnswer(QString("%1").arg(m_ErrEventQueue.count()));
+            client->receiveAnswer(QString("%1").arg(m_ErrEventQueue.count()));
         else
             AddEventError(CommandError);
         break;
@@ -179,17 +169,14 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         {
             anzError = m_ErrEventQueue.count();
             if (anzError == 0)
-                emit signalAnswer(mGetScpiError());
-                //client->receiveAnswer(mGetScpiError());
+                client->receiveAnswer(mGetScpiError());
             else
             {
                 sError = mGetScpiError();
                 if (anzError > 1)
                     for (i = 1; i < anzError; i++)
                         sError = sError + ";" + mGetScpiError();
-
-                emit signalAnswer(sError);
-                //client->receiveAnswer(sError);
+                client->receiveAnswer(sError);
             }
         }
         else
@@ -198,7 +185,6 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         break;
     }
 
-    disconnect(myConn);
 }
 
 
@@ -327,12 +313,7 @@ void cIEEE4882::SetSTB(quint8 b)
     {
         m_nSTB |= (1 << STBrqs); // we set the request service bit in stb
         if (((m_nSTB & m_nSRE) & (1 << STBrqs)) != 0)
-        {
-            QMetaObject::Connection myConn = connect(this, &cIEEE4882::signalAnswer, m_pClient, &cSCPIClient::receiveAnswer);
-            emit signalAnswer("SRQ");
-            disconnect(myConn);
-            //m_pClient->receiveAnswer("SRQ");
-        }
+            m_pClient->receiveAnswer("SRQ");
     }
 }
 

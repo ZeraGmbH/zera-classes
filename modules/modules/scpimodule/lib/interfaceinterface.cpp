@@ -45,8 +45,6 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
 {
     cSCPICommand cmd = sInput;
 
-    QMetaObject::Connection myConn = connect(this, &cInterfaceInterface::signalAnswer, client, &cSCPIClient::receiveAnswer);
-
     switch (cmdCode)
     {
     case deviceinterfacecmd:
@@ -56,18 +54,15 @@ void cInterfaceInterface::executeCmd(cSCPIClient *client, int cmdCode, const QSt
             QString xml;
             QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
             m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
-            emit signalAnswer(xml);
-            //client->receiveAnswer(xml);
+            client->receiveAnswer(xml);
         }
         else
-            emit signalStatus(SCPI::nak);
-            //client->receiveStatus(SCPI::nak);
+            client->receiveStatus(SCPI::nak);
         break;
     }
 
     }
 
-    disconnect(myConn);
 }
 
 }

@@ -22,7 +22,6 @@ public slots:
 
 signals:
     void signalStatus(quint8);
-    void signalAnswer(QString);
 
 private:
     cSCPIClient* m_pClient;

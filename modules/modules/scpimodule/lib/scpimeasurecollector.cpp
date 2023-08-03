@@ -10,7 +10,6 @@ cSCPIMeasureCollector::cSCPIMeasureCollector(cSCPIClient *client, quint32 nr)
 {
     m_nStatus = 0;
     myStatusConnection = connect(this, &cSCPIMeasureCollector::signalStatus, m_pClient, &cSCPIClient::receiveStatus);
-    myAnswerConnection = connect(this, &cSCPIMeasureCollector::signalAnswer, m_pClient, &cSCPIClient::receiveAnswer);
 }
 
 
@@ -22,7 +21,6 @@ void cSCPIMeasureCollector::receiveStatus(quint8 stat)
     {
         emit signalStatus(m_nStatus);
         disconnect(myStatusConnection);
-        disconnect(myAnswerConnection);
         //m_pClient->receiveStatus(m_nStatus);
         deleteLater();
     }
@@ -36,10 +34,8 @@ void cSCPIMeasureCollector::receiveAnswer(QString s)
     m_nmeasureObjects--;
     if (m_nmeasureObjects == 0)
     {
-        emit signalAnswer(m_sAnswer);
+        m_pClient->receiveAnswer(m_sAnswer);
         disconnect(myStatusConnection);
-        disconnect(myAnswerConnection);
-        //m_pClient->receiveAnswer(m_sAnswer);
         deleteLater();
     }
 }

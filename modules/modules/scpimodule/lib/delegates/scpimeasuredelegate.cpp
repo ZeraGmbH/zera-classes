@@ -120,11 +120,8 @@ void cSCPIMeasureDelegate::receiveAnswer(QString s)
     disconnect(measure,0,this,0);
     m_sAnswer += QString("%1;").arg(s);
     m_nPending--;
-    if (m_nPending == 0) {
-        QMetaObject::Connection myConn = connect(this, &cSCPIMeasureDelegate::signalAnswer, m_pClient, &cSCPIClient::receiveAnswer);
-        emit signalAnswer(m_sAnswer);
-        disconnect(myConn);
-    }
+    if (m_nPending == 0)
+        m_pClient->receiveAnswer(m_sAnswer);
 }
 
 }

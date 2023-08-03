@@ -106,8 +106,6 @@ signals:
     void setOperationCondition(quint16);
     void setOperationMeasureCondition(quint16);
 
-    void signalAnswer(QString);
-
 public slots:
     void AddEventError(int error); // if any error occurs from scpi commands we report them here
     void setStatusByte(quint8 stb, quint8); // we accept 16bit unless stb is 8 bit, but scpi status system uses 16 bit
