@@ -17,9 +17,6 @@ public:
     virtual bool executeClient(cSCPIClient *client);
     void addscpimeasureObject(cSCPIMeasure* measureobject);
 
-signals:
-    void signalStatus(quint8);
-
 private slots:
     void receiveDone();
     void receiveAnswer(QString s);
