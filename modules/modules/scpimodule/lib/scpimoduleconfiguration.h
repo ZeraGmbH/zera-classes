@@ -23,6 +23,7 @@ enum moduleconfigstate
     setSerialDevice,
     setDeviceName,
     setDeviceIdentification,
+    setScpiQueue,
 
     setQuestionableStatusBitCount,
     setOperationStatusBitCount,

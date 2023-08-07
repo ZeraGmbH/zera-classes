@@ -146,6 +146,7 @@
                 <xs:element name="configuration">
                     <xs:complexType>
                         <xs:sequence>
+                            <xs:element name="scpiqueue" type="yesnotype"/>
                             <xs:element name="connectivity" type="connectivitytype"/>
                         </xs:sequence>
                     </xs:complexType>

@@ -54,6 +54,7 @@ void cSCPIModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStrin
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:questionable:n"] = setQuestionableStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operation:n"] = setOperationStatusBitCount;
     m_ConfigXMLMap["scpimodconfpar:configuration:connectivity:status:operationmeasure:n"] = setOperationMeasureStatusBitCount;
+    m_ConfigXMLMap["scpimodconfpar:configuration:scpiqueue"] = setScpiQueue;
 
     if (m_pXMLReader->loadSchema(xsdFilename))
         m_pXMLReader->loadXMLFromString(QString::fromUtf8(xmlString.data(), xmlString.size()));
@@ -117,6 +118,9 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
         case setDeviceIdentification:
             m_pSCPIModulConfigData->m_sDeviceIdentification = m_pXMLReader->getValue(key);
             break;
+        case setScpiQueue:
+            m_pSCPIModulConfigData->m_enableScpiQueue = m_pXMLReader->getValue(key).toInt(&ok);
+            break;
         case setQuestionableStatusBitCount:
             m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);
             for (int i = 0; i < m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount; i++)
@@ -147,7 +151,6 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
                  m_pSCPIModulConfigData->m_OperationMeasureStatDescriptorList.append(sBDescriptor);  // we add empty descriptors to our list
             }
             break;
-
         default:
             if ((cmd >=setQuestionableBit1Bit) && (cmd <= (setQuestionableBit1Bit+15)))
             {
