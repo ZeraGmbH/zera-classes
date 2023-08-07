@@ -30,7 +30,7 @@ void test_scpi_cmds_in_session::initialSession()
     VeinStorage::VeinHash* storageHash = modman.getStorageSystem();
     QList<int> entityList = storageHash->getEntityList();
     QList<QString> componentList = storageHash->getEntityComponents(entityList[0]);
-    QCOMPARE(componentList.count(), 5); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / ACT_DEV_IFACE
+    QCOMPARE(componentList.count(), 6); // EntitiyName / Metadata / PAR_SerialScpiActive / ACT_SerialScpiDeviceFile / ACT_DEV_IFACE / PAR_OptionalScpiQueue
 }
 
 void test_scpi_cmds_in_session::initialTestClient()

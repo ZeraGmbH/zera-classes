@@ -64,6 +64,7 @@ private:
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
     VfModuleActvalue* m_pVeinSerialScpiDevFileName = nullptr;
     VfModuleActvalue* m_veinDevIface = nullptr;
+    VfModuleParameter* m_optionalScpiQueue = nullptr;
 
 private slots:
     void addSCPIClient();
@@ -78,6 +79,7 @@ private slots:
 
     // vein change handlers
     void newSerialOn(QVariant serialOn);
+    void controlScpiQueue(QVariant scpiQueue);
 };
 
 }

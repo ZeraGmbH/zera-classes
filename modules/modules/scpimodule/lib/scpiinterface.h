@@ -32,7 +32,7 @@ public:
     void exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry);
     void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
-
+    bool m_enableScpiQueue;
 
 private:
     void removeCommand(cSCPIClient *client);

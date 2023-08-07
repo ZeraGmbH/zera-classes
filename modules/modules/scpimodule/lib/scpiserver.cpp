@@ -101,6 +101,13 @@ void cSCPIServer::generateInterface()
                                                      QString("SCPI interface description for current session"),
                                                      QVariant("") );
     m_pModule->veinModuleActvalueList.append(m_veinDevIface); // auto delete / meta-data / scpi
+
+    m_optionalScpiQueue = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                                         key = QString("PAR_OptionalScpiQueue"),
+                                                         QString("Enable/disable order for combined SCPI commands"),
+                                                         QVariant(m_ConfigData.m_enableScpiQueue));
+    m_optionalScpiQueue->setValidator(new cBoolValidator());
+    m_pModule->veinModuleParameterHash[key] = m_optionalScpiQueue;
 }
 
 cModuleInterface *cSCPIServer::getModuleInterface()
@@ -220,6 +227,8 @@ void cSCPIServer::activationDone()
     m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
     m_veinDevIface->setValue(xml);
     m_bActive = true;
+    connect(m_optionalScpiQueue, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::controlScpiQueue);
+    controlScpiQueue(QVariant(m_ConfigData.m_enableScpiQueue));
     emit activated();
 }
 
@@ -269,4 +278,9 @@ void cSCPIServer::newSerialOn(QVariant serialOn)
     emit m_pModule->parameterChanged();
 }
 
+void cSCPIServer::controlScpiQueue(QVariant scpiQueue)
+{
+    if (m_pSCPIInterface->m_enableScpiQueue != scpiQueue)
+        m_pSCPIInterface->m_enableScpiQueue = scpiQueue.toBool();
+}
 }
