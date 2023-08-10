@@ -103,8 +103,8 @@ void cSCPIServer::generateInterface()
 
     m_optionalScpiQueue = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                          key = QString("PAR_OptionalScpiQueue"),
-                                                         QString("Enable/disable order for combined SCPI commands"),
-                                                         QVariant(m_ConfigData.m_enableScpiQueue));
+                                                         QString("Enable/disable order for SCPI commands"),
+                                                         QVariant(m_ConfigData.m_enableScpiQueue.m_nActive));
     m_optionalScpiQueue->setValidator(new cBoolValidator());
     m_pModule->veinModuleParameterHash[key] = m_optionalScpiQueue;
 }
@@ -227,9 +227,10 @@ void cSCPIServer::activationDone()
     QString xml;
     m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
     m_veinDevIface->setValue(xml);
+    m_optionalScpiQueue->setValue(m_ConfigData.m_enableScpiQueue.m_nActive);
     m_bActive = true;
     connect(m_optionalScpiQueue, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::controlScpiQueue);
-    controlScpiQueue(QVariant(m_ConfigData.m_enableScpiQueue));
+    controlScpiQueue(QVariant(m_ConfigData.m_enableScpiQueue.m_nActive));
     emit activated();
 }
 
@@ -281,7 +282,12 @@ void cSCPIServer::newSerialOn(QVariant serialOn)
 
 void cSCPIServer::controlScpiQueue(QVariant scpiQueue)
 {
+    bool ok;
+    m_ConfigData.m_enableScpiQueue.m_nActive = scpiQueue.toInt(&ok);
+
     if (m_pSCPIInterface->m_enableScpiQueue != scpiQueue)
         m_pSCPIInterface->m_enableScpiQueue = scpiQueue.toBool();
+
+    emit m_pModule->parameterChanged();
 }
 }
