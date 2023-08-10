@@ -65,8 +65,13 @@ void cSCPIModuleConfiguration::validateAndSetConfig(QByteArray xmlString, QStrin
 
 QByteArray cSCPIModuleConfiguration::exportConfiguration()
 {
+    boolParameter* bPar;
+    bPar = &m_pSCPIModulConfigData->m_enableScpiQueue;
+    m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
+
     m_pXMLReader->setValue("scpimodconfpar:configuration:connectivity:serialdevice:on",
                            QString("%1").arg(m_pSCPIModulConfigData->m_SerialDevice.m_nOn));
+
     return m_pXMLReader->getXMLConfig().toUtf8();
 }
 
@@ -119,7 +124,8 @@ void cSCPIModuleConfiguration::configXMLInfo(QString key)
             m_pSCPIModulConfigData->m_sDeviceIdentification = m_pXMLReader->getValue(key);
             break;
         case setScpiQueue:
-            m_pSCPIModulConfigData->m_enableScpiQueue = m_pXMLReader->getValue(key).toInt(&ok);
+            m_pSCPIModulConfigData->m_enableScpiQueue.m_sKey = key;
+            m_pSCPIModulConfigData->m_enableScpiQueue.m_nActive = m_pXMLReader->getValue(key).toInt(&ok);
             break;
         case setQuestionableStatusBitCount:
             m_pSCPIModulConfigData->m_nQuestonionableStatusBitCount = m_pXMLReader->getValue(key).toInt(&ok);

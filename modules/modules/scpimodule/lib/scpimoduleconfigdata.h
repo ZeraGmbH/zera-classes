@@ -12,6 +12,11 @@
 namespace SCPIMODULE
 {
 
+struct boolParameter
+{
+    QString m_sKey;
+    quint8 m_nActive; // active or not 1,0
+};
 
 struct serialDevice
 {
@@ -38,7 +43,7 @@ public:
     QList<cStatusBitDescriptor> m_OperationStatDescriptorList;
     QList<cStatusBitDescriptor> m_OperationMeasureStatDescriptorList;
     serialDevice m_SerialDevice;
-    bool m_enableScpiQueue;
+    boolParameter m_enableScpiQueue;
 };
 
 }
