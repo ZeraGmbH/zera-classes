@@ -276,7 +276,7 @@ void cSec1ModuleMeasProgram::generateInterface()
                                                      key = QString("PAR_DUTConstUnit"),
                                                      QString("DUT constant unit"),
                                                      QVariant(s = "Unknown"));
-    m_pDutConstantUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DCUNIT").arg(modNr), "10", m_pDutConstantUnitPar->getName(), "0", ""));
+    m_pDutConstantUnitPar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:DUTUNIT").arg(modNr), "10", m_pDutConstantUnitPar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pDutConstantUnitPar; // for modules use
 
     m_pMRatePar = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
