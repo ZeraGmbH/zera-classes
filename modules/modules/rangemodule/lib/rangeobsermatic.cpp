@@ -214,7 +214,7 @@ void cRangeObsermatic::generateInterface()
 
     m_pParOverloadOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                    QString("PAR_Overload"),
-                                                   QString("Overload (reset=0)"),
+                                                   QString("Overload"),
                                                    QVariant(0));
 
     m_pModule->veinModuleParameterHash["PAR_Overload"] = m_pParOverloadOnOff; // for modules use
