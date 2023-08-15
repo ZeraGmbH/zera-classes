@@ -52,16 +52,18 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
         if(m_enableScpiQueue) {
             m_scpiCmdInExec.enqueue(cmdInfo);
-            if(m_scpiCmdInExec.count() == 1) { // Before the list was empty so wen need to trigger the execution machinery
+            if(m_scpiCmdInExec.count() == 1) { // The list was empty before, so we need to trigger the execution machinery
                 connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
                 waitForBlockingCmd(client);
-                return scpiDelegate->executeSCPI(client, cmd);
+                scpiDelegate->executeSCPI(client, cmd);
             }
         }
         else
-            return scpiDelegate->executeSCPI(client, cmd);
+            scpiDelegate->executeSCPI(client, cmd);
+
+        return true;
     }
-    return false; // maybe that it is a common command
+    return false;
 }
 
 void cSCPIInterface::removeCommand(cSCPIClient *client)
