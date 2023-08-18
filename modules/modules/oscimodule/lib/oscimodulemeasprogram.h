@@ -5,6 +5,7 @@
 #include <basedspmeasprogram.h>
 #include <measchannelinfo.h>
 #include <QFinalState>
+#include <timerperiodicqt.h>
 
 namespace OSCIMODULE
 {
@@ -107,11 +108,14 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
+    TimerTemplateQtPtr m_demoPeriodicTimer;
+
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
+    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();
