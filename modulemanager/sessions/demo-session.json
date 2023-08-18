@@ -41,6 +41,11 @@
         "id": 1073
       },
       {
+        "name" : "oscimodule",
+        "configFile" : "mt310s2-oscimodule.xml",
+        "id": 1120
+      },
+      {
         "name" : "lambdamodule",
         "configFile" : "mt310s2-lambdamodule.xml",
         "id": 1140
