@@ -598,6 +598,57 @@ void cOsciModuleMeasProgram::setSCPIMeasInfo()
     }
 }
 
+void cOsciModuleMeasProgram::setupDemoOperation()
+{
+    m_measChannelInfoHash.clear();
+    cMeasChannelInfo mi;
+    for (int i = 0; i < m_veinActValueList.count(); i++)
+    {
+        QString channelName = getConfData()->m_valueChannelList.at(i);
+        if (!m_measChannelInfoHash.contains(channelName))
+            m_measChannelInfoHash[channelName] = mi;
+    }
+    QList<QString> channelInfoList = m_measChannelInfoHash.keys();
+    foreach (QString channelInfo, channelInfoList) {
+        mi = m_measChannelInfoHash.take(channelInfo);
+        if (channelInfo == "m0") {
+            mi.alias = "UL1";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m1") {
+            mi.alias = "UL2";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m2") {
+            mi.alias = "UL3";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m3") {
+            mi.alias = "IL1";
+            mi.unit = "A";
+        }
+        else if (channelInfo == "m4") {
+            mi.alias = "IL2";
+            mi.unit = "A";
+        }
+        else if (channelInfo == "m5") {
+            mi.alias = "IL3";
+            mi.unit = "A";
+        }
+        else if (channelInfo == "m6") {
+            mi.alias = "UAUX";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m7") {
+            mi.alias = "IAUX";
+            mi.unit = "A";
+        }
+        else {
+        }
+        m_measChannelInfoHash[channelInfo] = mi;
+    }
+}
+
 void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) // maybe we are deactivating !!!!
@@ -811,6 +862,9 @@ void cOsciModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
+    if(m_pModule->m_demo){
+        setupDemoOperation();
+    }
     setActualValuesNames();
     setSCPIMeasInfo();
 

@@ -113,6 +113,8 @@ private:
     void setActualValuesNames();
     void setSCPIMeasInfo();
 
+    void setupDemoOperation();
+
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
     void handleDemoActualValues();
