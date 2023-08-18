@@ -6,6 +6,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
+#include <timerfactoryqt.h>
 
 namespace OSCIMODULE
 {
@@ -111,6 +112,11 @@ cOsciModuleMeasProgram::cOsciModuleMeasProgram(cOsciModule* module, std::shared_
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QState::entered, this, &cOsciModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cOsciModuleMeasProgram::dataReadDSP);
+
+    if(m_pModule->m_demo){
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cOsciModuleMeasProgram::handleDemoActualValues);
+    }
 }
 
 
@@ -123,12 +129,16 @@ cOsciModuleMeasProgram::~cOsciModuleMeasProgram()
 void cOsciModuleMeasProgram::start()
 {
     connect(this, &cOsciModuleMeasProgram::actualValues, this, &cOsciModuleMeasProgram::setInterfaceActualValues);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->start();
 }
 
 
 void cOsciModuleMeasProgram::stop()
 {
     disconnect(this, &cOsciModuleMeasProgram::actualValues, this, 0);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->stop();
 }
 
 
@@ -606,6 +616,16 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
             m_veinActValueList.at(i)->setValue(list); // and set entities
         }
     }
+}
+
+void cOsciModuleMeasProgram::handleDemoActualValues()
+{
+    QVector<float> demoValues;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count() * getConfData()->m_nInterpolation; i++) {
+        demoValues.append(230);
+    }
+    m_ModuleActualValues = demoValues;
+    emit actualValues(&m_ModuleActualValues);
 }
 
 
