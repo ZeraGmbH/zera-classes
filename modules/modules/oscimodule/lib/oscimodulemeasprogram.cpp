@@ -7,6 +7,7 @@
 #include <reply.h>
 #include <proxy.h>
 #include <timerfactoryqt.h>
+#include <cmath>
 
 namespace OSCIMODULE
 {
@@ -649,6 +650,15 @@ void cOsciModuleMeasProgram::setupDemoOperation()
     }
 }
 
+QVector<float> cOsciModuleMeasProgram::generateSineCurve(int sampleCount, int amplitude, float phase)
+{
+    QVector<float> samples;
+    for(int i = 0; i < sampleCount; i++) {
+        samples.append(amplitude * sin((2 * M_PI * i / sampleCount) + phase));
+    }
+    return samples;
+}
+
 void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
     if (m_bActive) // maybe we are deactivating !!!!
@@ -672,8 +682,19 @@ void cOsciModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 void cOsciModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> demoValues;
-    for (int i = 0; i < getConfData()->m_valueChannelList.count() * getConfData()->m_nInterpolation; i++) {
-        demoValues.append(230);
+    float phase = 0.0;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+        if(m_veinActValueList.at(i)->getChannelName().contains("2")) //UL2,IL2
+            phase = M_PI/2;
+        else if(m_veinActValueList.at(i)->getChannelName().contains("3")) //UL3,IL3
+            phase = -M_PI/2;
+        else
+            phase = 0.0;
+
+        if(m_veinActValueList.at(i)->getUnit() == "A")
+            demoValues.append(generateSineCurve(getConfData()->m_nInterpolation, 10, phase));
+        else
+            demoValues.append(generateSineCurve(getConfData()->m_nInterpolation, 230, phase));
     }
     m_ModuleActualValues = demoValues;
     emit actualValues(&m_ModuleActualValues);
