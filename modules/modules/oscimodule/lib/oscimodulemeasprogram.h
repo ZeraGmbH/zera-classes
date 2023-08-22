@@ -114,6 +114,7 @@ private:
     void setSCPIMeasInfo();
 
     void setupDemoOperation();
+    QVector<float> generateSineCurve(int sampleCount, int amplitude, float phase);
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
