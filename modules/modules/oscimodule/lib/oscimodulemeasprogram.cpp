@@ -603,7 +603,7 @@ void cOsciModuleMeasProgram::setupDemoOperation()
 {
     m_measChannelInfoHash.clear();
     cMeasChannelInfo mi;
-    for (int i = 0; i < m_veinActValueList.count(); i++)
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
     {
         QString channelName = getConfData()->m_valueChannelList.at(i);
         if (!m_measChannelInfoHash.contains(channelName))
