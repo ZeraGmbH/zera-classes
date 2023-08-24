@@ -74,7 +74,10 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    else
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::sendRMIdent);
@@ -107,7 +110,10 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::freePGRMem);
@@ -602,6 +608,50 @@ void cThdnModuleMeasProgram::setSCPIMeasInfo()
     }
 }
 
+void cThdnModuleMeasProgram::setupDemoOperation()
+{
+    m_measChannelInfoHash.clear();
+    cMeasChannelInfo mi;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
+    {
+        QString channelName = getConfData()->m_valueChannelList.at(i);
+        if (!m_measChannelInfoHash.contains(channelName))
+            m_measChannelInfoHash[channelName] = mi;
+    }
+    QList<QString> channelInfoList = m_measChannelInfoHash.keys();
+    foreach (QString channelInfo, channelInfoList) {
+        mi = m_measChannelInfoHash.take(channelInfo);
+        if (channelInfo == "m0") {
+            mi.alias = "UL1";
+        }
+        else if (channelInfo == "m1") {
+            mi.alias = "UL2";
+        }
+        else if (channelInfo == "m2") {
+            mi.alias = "UL3";
+        }
+        else if (channelInfo == "m3") {
+            mi.alias = "IL1";
+        }
+        else if (channelInfo == "m4") {
+            mi.alias = "IL2";
+        }
+        else if (channelInfo == "m5") {
+            mi.alias = "IL3";
+        }
+        else if (channelInfo == "m6") {
+            mi.alias = "UAUX";
+        }
+        else if (channelInfo == "m7") {
+            mi.alias = "IAUX";
+        }
+        else {
+        }
+        mi.unit = "%";
+        m_measChannelInfoHash[channelInfo] = mi;
+    }
+}
+
 
 void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
@@ -793,6 +843,9 @@ void cThdnModuleMeasProgram::activateDSP()
 void cThdnModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
+
+    if(m_pModule->m_demo)
+        setupDemoOperation();
 
     setActualValuesNames();
     setSCPIMeasInfo();
