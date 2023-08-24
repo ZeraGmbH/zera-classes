@@ -9,6 +9,7 @@
 #include <QStateMachine>
 #include <QState>
 #include <QFinalState>
+#include <timerperiodicqt.h>
 
 
 class cDspMeasData;
@@ -125,6 +126,8 @@ private:
     QState m_dataAcquisitionState;
     QFinalState m_dataAcquisitionDoneState;
 
+    TimerTemplateQtPtr m_demoPeriodicTimer;
+
     void setActualValuesNames();
     void setSCPIMeasInfo();
     void setupDemoOperation();
@@ -133,6 +136,7 @@ private:
 
 private slots:
     void setInterfaceActualValues(QVector<float> *actualValues);
+    void handleDemoActualValues();
 
     void resourceManagerConnect();
     void sendRMIdent();

@@ -22,6 +22,7 @@
 #include <QStateMachine>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <timerfactoryqt.h>
 
 namespace THDNMODULE
 {
@@ -127,6 +128,11 @@ cThdnModuleMeasProgram::cThdnModuleMeasProgram(cThdnModule *module, std::shared_
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QAbstractState::entered, this, &cThdnModuleMeasProgram::dataReadDSP);
+
+    if(m_pModule->m_demo){
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cThdnModuleMeasProgram::handleDemoActualValues);
+    }
 }
 
 
@@ -154,13 +160,17 @@ void cThdnModuleMeasProgram::start()
     }
     else
         connect(this, &cBaseMeasProgram::actualValues, this, &cThdnModuleMeasProgram::setInterfaceActualValues);
-    }
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->start();
+}
 
 
 void cThdnModuleMeasProgram::stop()
 {
     disconnect(this, &cThdnModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, 0, 0);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->stop();
 }
 
 
@@ -660,6 +670,17 @@ void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
         for (int i = 0; i < m_veinActValueList.count(); i++)
             m_veinActValueList.at(i)->setValue(QVariant((double)actualValues->at(i))); // and set entities
     }
+}
+
+void cThdnModuleMeasProgram::handleDemoActualValues()
+{
+    QVector<float> demoValues;
+    float phase = 0.0;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+       demoValues.append(3.3);
+    }
+    m_ModuleActualValues = demoValues;
+    emit actualValues(&m_ModuleActualValues);
 }
 
 
