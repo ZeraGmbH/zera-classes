@@ -21,6 +21,11 @@
         "id": 1050
       },
       {
+        "name" : "fftmodule",
+        "configFile" : "mt310s2-fftmodule.xml",
+        "id": 1060
+      },
+      {
         "name" : "power1module",
         "configFile" : "mt310s2-power1module.xml",
         "id": 1070
