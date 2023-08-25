@@ -20,6 +20,7 @@ target_link_libraries(fftmodule-static
     PUBLIC
     zera-basemodule
     Zera::zera-math
+    Zera::zera-timers
     # ask linker to help us finding unresolved symbols
     "-Wl,--no-undefined"
     )

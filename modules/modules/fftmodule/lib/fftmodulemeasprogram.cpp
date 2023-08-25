@@ -6,6 +6,7 @@
 #include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <math.h>
+#include <timerfactoryqt.h>
 
 namespace FFTMODULE
 {
@@ -112,6 +113,11 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_dataAcquisitionMachine.setInitialState(&m_dataAcquisitionState);
     connect(&m_dataAcquisitionState, &QState::entered, this, &cFftModuleMeasProgram::dataAcquisitionDSP);
     connect(&m_dataAcquisitionDoneState, &QState::entered, this, &cFftModuleMeasProgram::dataReadDSP);
+
+    if(m_pModule->m_demo){
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired,this, &cFftModuleMeasProgram::handleDemoActualValues);
+    }
 }
 
 
@@ -130,6 +136,8 @@ void cFftModuleMeasProgram::start()
     }
     else
         connect(this, &cFftModuleMeasProgram::actualValues, this, &cFftModuleMeasProgram::setInterfaceActualValues);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->start();
 }
 
 
@@ -137,6 +145,8 @@ void cFftModuleMeasProgram::stop()
 {
     disconnect(this, &cFftModuleMeasProgram::actualValues, 0, 0);
     disconnect(&m_movingwindowFilter, &cMovingwindowFilter::actualValues, this, 0);
+    if(m_pModule->m_demo)
+        m_demoPeriodicTimer->stop();
 }
 
 
@@ -712,6 +722,26 @@ void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
             m_DCValueList.at(channel)->setValue(fftList[0]);
         }
     }
+}
+
+void cFftModuleMeasProgram::handleDemoActualValues()
+{
+    int totalHarmonics = getConfData()->m_nFftOrder;
+    int totalChannels = m_veinActValueList.count();
+    QVector<float> demoValues(totalChannels * totalHarmonics * 2, 0.0);
+
+    for (int i = 0; i < totalChannels; i++) {
+        int channelOffset = i * totalHarmonics * 2;
+        demoValues.insert(channelOffset, 0.5); //DC component, real part
+        if(m_veinActValueList.at(i)->getUnit() == "A")
+            demoValues.insert(channelOffset + 2, 10); //fundamental frequency component, real part
+        else {
+            demoValues.insert(channelOffset + 2, 230); //fundamental frequency component, real part
+        }
+    }
+
+    m_ModuleActualValues = demoValues;
+    emit actualValues(&m_ModuleActualValues);
 }
 
 
