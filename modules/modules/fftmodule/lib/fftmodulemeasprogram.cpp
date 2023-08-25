@@ -59,7 +59,10 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_activationMachine.addState(&m_activateDSPState);
     m_activationMachine.addState(&m_loadDSPDoneState);
 
-    m_activationMachine.setInitialState(&m_resourceManagerConnectState);
+    if(m_pModule->m_demo)
+        m_activationMachine.setInitialState(&m_loadDSPDoneState);
+    else
+        m_activationMachine.setInitialState(&m_resourceManagerConnectState);
 
     connect(&m_resourceManagerConnectState, &QState::entered, this, &cFftModuleMeasProgram::resourceManagerConnect);
     connect(&m_IdentifyState, &QState::entered, this, &cFftModuleMeasProgram::sendRMIdent);
@@ -92,7 +95,10 @@ cFftModuleMeasProgram::cFftModuleMeasProgram(cFftModule* module, std::shared_ptr
     m_deactivationMachine.addState(&m_freeUSERMemState);
     m_deactivationMachine.addState(&m_unloadDSPDoneState);
 
-    m_deactivationMachine.setInitialState(&m_deactivateDSPState);
+    if(m_pModule->m_demo)
+        m_deactivationMachine.setInitialState(&m_unloadDSPDoneState);
+    else
+        m_deactivationMachine.setInitialState(&m_deactivateDSPState);
 
     connect(&m_deactivateDSPState, &QState::entered, this, &cFftModuleMeasProgram::deactivateDSP);
     connect(&m_freePGRMemState, &QState::entered, this, &cFftModuleMeasProgram::freePGRMem);
@@ -637,6 +643,57 @@ void cFftModuleMeasProgram::setActualValuesNames()
     }
 }
 
+void cFftModuleMeasProgram::setupDemoOperation()
+{
+    m_measChannelInfoHash.clear();
+    cMeasChannelInfo mi;
+    for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
+    {
+        QString channelName = getConfData()->m_valueChannelList.at(i);
+        if (!m_measChannelInfoHash.contains(channelName))
+            m_measChannelInfoHash[channelName] = mi;
+    }
+    QList<QString> channelInfoList = m_measChannelInfoHash.keys();
+    foreach (QString channelInfo, channelInfoList) {
+        mi = m_measChannelInfoHash.take(channelInfo);
+        if (channelInfo == "m0") {
+            mi.alias = "UL1";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m1") {
+            mi.alias = "UL2";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m2") {
+            mi.alias = "UL3";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m3") {
+            mi.alias = "IL1";
+            mi.unit = "A";
+        }
+        else if (channelInfo == "m4") {
+            mi.alias = "IL2";
+            mi.unit = "A";
+        }
+        else if (channelInfo == "m5") {
+            mi.alias = "IL3";
+            mi.unit = "A";
+        }
+        else if (channelInfo == "m6") {
+            mi.alias = "UAUX";
+            mi.unit = "V";
+        }
+        else if (channelInfo == "m7") {
+            mi.alias = "IAUX";
+            mi.unit = "A";
+        }
+        else {
+        }
+        m_measChannelInfoHash[channelInfo] = mi;
+    }
+}
+
 
 void cFftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValues)
 {
@@ -843,6 +900,9 @@ void cFftModuleMeasProgram::activateDSPdone()
 {
     m_bActive = true;
 
+    if(m_pModule->m_demo)
+        setupDemoOperation();
+
     setActualValuesNames();
     setSCPIMeasInfo();
 
@@ -959,9 +1019,11 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
         m_movingwindowFilter.setIntegrationtime(getConfData()->m_fMeasInterval.m_fValue);
     else
     {
-        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
+        if(!m_pModule->m_demo) {
+            m_pDSPInterFace->setVarData(m_pParameterDSP, QString("TIPAR:%1;TISTART:%2;").arg(getConfData()->m_fMeasInterval.m_fValue*1000)
                                                                                 .arg(0), DSPDATA::dInt);
-        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+            m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+        }
     }
 
     emit m_pModule->parameterChanged();
@@ -971,9 +1033,10 @@ void cFftModuleMeasProgram::newIntegrationtime(QVariant ti)
 void cFftModuleMeasProgram::newRefChannel(QVariant chn)
 {
     getConfData()->m_RefChannel.m_sPar = chn.toString();
-    m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
-    m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
-
+    if(!m_pModule->m_demo) {
+        m_pDSPInterFace->setVarData(m_pParameterDSP, QString("REFCHN:%1;").arg(m_measChannelInfoHash.value(getConfData()->m_RefChannel.m_sPar).dspChannelNr));
+        m_MsgNrCmdList[m_pDSPInterFace->dspMemoryWrite(m_pParameterDSP)] = writeparameter;
+    }
     emit m_pModule->parameterChanged();
 }
 }

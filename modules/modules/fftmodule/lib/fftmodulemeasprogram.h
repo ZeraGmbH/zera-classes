@@ -117,6 +117,7 @@ private:
 
     void setSCPIMeasInfo();
     void setActualValuesNames();
+    void setupDemoOperation();
 
     cMovingwindowFilter m_movingwindowFilter;
     QVector<float> m_FFTModuleActualValues;
