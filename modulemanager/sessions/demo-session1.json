@@ -46,6 +46,11 @@
         "id": 1073
       },
       {
+        "name" : "power3module",
+        "configFile" : "mt310s2-power3module.xml",
+        "id": 1100
+      },
+      {
         "name" : "thdnmodule",
         "configFile" : "mt310s2-thdnmodule.xml",
         "id": 1110
