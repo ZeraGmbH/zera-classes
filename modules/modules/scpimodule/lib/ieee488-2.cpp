@@ -40,6 +40,12 @@ cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint1
 }
 
 
+void cIEEE4882::AddEventErrorWithRspse(int error)
+{
+    AddEventError(error);
+    emit m_pClient->commandAnswered(m_pClient);
+}
+
 void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInput)
 {
     cSCPICommand cmd = sInput;
@@ -57,28 +63,31 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             // for the moment we only reset opcstate, means we only support sequential commands
             m_nOPCState = OCAS;
             SetnoOperFlag(true); // wir setzen ocas, setzen das nooperpending flag => setzen opc im sesr
+            emit m_pClient->commandAnswered(m_pClient);
         }
         else
             if (cmd.isQuery())
                 client->receiveAnswer(RegOutput(client->operationComplete()));
             else
-                AddEventError(CommandError);
+                AddEventErrorWithRspse(CommandError);
         break;
 
     case eventstatusenable:
         if (cmd.isCommand(1))
         {
             par = cmd.getParam(0).toInt(&ok);
-            if (ok)
+            if (ok) {
                 SetESE(par);
+                emit m_pClient->commandAnswered(m_pClient);
+            }
             else
-                AddEventError(NumericDataError);
+                AddEventErrorWithRspse(NumericDataError);
         }
         else
             if (cmd.isQuery())
                 client->receiveAnswer(RegOutput(m_nESE));
             else
-                AddEventError(CommandError);
+                AddEventErrorWithRspse(CommandError);
         break;
 
     case servicerequestenable:
@@ -86,82 +95,86 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         {
 
             par = cmd.getParam(0).toInt(&ok);
-            if (ok)
+            if (ok) {
                 SetSRE(par);
+                emit m_pClient->commandAnswered(m_pClient);
+            }
             else
-                AddEventError(NumericDataError);
+                AddEventErrorWithRspse(NumericDataError);
         }
         else
             if (cmd.isQuery())
                 client->receiveAnswer(RegOutput(m_nSRE));
             else
-                AddEventError(CommandError);
+                AddEventErrorWithRspse(CommandError);
         break;
 
     case clearstatus:
         if (cmd.isCommand(0))
         {
             ClearStatus();
+            emit m_pClient->commandAnswered(m_pClient);
         }
         else
             if (cmd.isQuery())
-                AddEventError(QueryError);
+                AddEventErrorWithRspse(QueryError);
             else
-                AddEventError(CommandError);
+                AddEventErrorWithRspse(CommandError);
         break;
 
     case reset:
         if (cmd.isCommand(0))
         {
             ResetDevice();
+            emit m_pClient->commandAnswered(m_pClient);
         }
         else
             if (cmd.isQuery())
-                AddEventError(QueryError);
+                AddEventErrorWithRspse(QueryError);
             else
-                AddEventError(CommandError);
+                AddEventErrorWithRspse(CommandError);
         break;
 
     case identification:
         if (cmd.isQuery())
             client->receiveAnswer(m_sIdentification);
         else
-            AddEventError(CommandError);
+            AddEventErrorWithRspse(CommandError);
         break;
 
     case eventstatusregister:
         if (cmd.isQuery())
             client->receiveAnswer(RegOutput(m_nESR));
         else
-            AddEventError(CommandError);
+            AddEventErrorWithRspse(CommandError);
         break;
 
     case statusbyte:
         if (cmd.isQuery())
             client->receiveAnswer(RegOutput(m_nSTB));
         else
-            AddEventError(CommandError);
+            AddEventErrorWithRspse(CommandError);
         break;
 
     case selftest:
         if (cmd.isQuery())
             client->receiveAnswer(QString("1")); // for the moment test is passed
         else
-            AddEventError(CommandError);
+            AddEventErrorWithRspse(CommandError);
         break;
 
     case read1error:
         if (cmd.isQuery())
             client->receiveAnswer(mGetScpiError());
         else
-            AddEventError(CommandError);
+            AddEventErrorWithRspse(CommandError);
         break;
 
     case readerrorcount:
         if (cmd.isQuery())
             client->receiveAnswer(QString("%1").arg(m_ErrEventQueue.count()));
         else
-            AddEventError(CommandError);
+            AddEventErrorWithRspse(CommandError);
         break;
 
     case readallerrors:
@@ -180,7 +193,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             }
         }
         else
-            AddEventError(CommandError);
+            AddEventErrorWithRspse(CommandError);
 
         break;
     }
@@ -290,7 +303,7 @@ void cIEEE4882::SetSTB(quint8 b)
     {
         m_nSTB |= (1 << STBrqs); // we set the request service bit in stb
         if (((m_nSTB & m_nSRE) & (1 << STBrqs)) != 0)
-            m_pClient->receiveAnswer("SRQ");
+            m_pClient->receiveAnswer("SRQ", false);
     }
 }
 

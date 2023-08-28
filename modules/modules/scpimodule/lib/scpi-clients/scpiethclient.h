@@ -17,7 +17,7 @@ public:
     cSCPIEthClient(QTcpSocket* socket,  cSCPIModule *module, cSCPIModuleConfigData& configdata, cSCPIInterface* iface);
     virtual ~cSCPIEthClient();
 private slots:
-    void receiveAnswer(QString answ) override;
+    void receiveAnswer(QString answ, bool ok = true) override;
     void cmdInput() override;
     void onDisconnect();
 private:

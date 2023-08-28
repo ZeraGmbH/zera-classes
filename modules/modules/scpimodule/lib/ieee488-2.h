@@ -140,6 +140,7 @@ private:
     opcStates m_nOPCQState;
 
     bool m_bnoOperationPendingFlag; // use dedicated function for setting/resetting
+    void AddEventErrorWithRspse(int error);
 };
 
 }
