@@ -26,7 +26,7 @@ cSCPISerialClient::~cSCPISerialClient()
 }
 
 
-void cSCPISerialClient::receiveAnswer(QString answ)
+void cSCPISerialClient::receiveAnswer(QString answ, bool ok)
 {
     QString answer;
     QByteArray ba;
@@ -35,7 +35,8 @@ void cSCPISerialClient::receiveAnswer(QString answ)
 
     ba = answer.toLatin1();
     m_pSerialPort->write(ba.data(), ba.size());
-    emit commandAnswered(this);
+    if(ok)
+        emit commandAnswered(this);
 }
 
 

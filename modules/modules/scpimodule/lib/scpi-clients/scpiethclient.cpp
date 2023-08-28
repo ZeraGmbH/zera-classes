@@ -20,11 +20,12 @@ cSCPIEthClient::~cSCPIEthClient()
     qInfo("SCPI socket %s deleted", qPrintable(m_peerAddress));
 }
 
-void cSCPIEthClient::receiveAnswer(QString answ)
+void cSCPIEthClient::receiveAnswer(QString answ, bool ok)
 {
     QByteArray ba = answ.toUtf8() + "\n";
     m_pSocket->write(ba);
-    emit commandAnswered(this);
+    if(ok)
+        emit commandAnswered(this);
 }
 
 QString cSCPIEthClient::getPeerAddress()

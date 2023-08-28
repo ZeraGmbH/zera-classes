@@ -14,7 +14,7 @@ public:
 signals:
     void sigScpiAnswer(QString answ);
 public slots:
-    void receiveAnswer(QString answ) override;
+    void receiveAnswer(QString answ, bool ok = true) override;
 private slots:
     void cmdInput() override;
 };

@@ -19,10 +19,11 @@ void ScpiTestClient::sendScpiCmds(QString cmds)
     testCmd();
 }
 
-void ScpiTestClient::receiveAnswer(QString answ)
+void ScpiTestClient::receiveAnswer(QString answ, bool ok)
 {
     emit sigScpiAnswer(answ);
-    emit commandAnswered(this);
+    if(ok)
+        emit commandAnswered(this);
 }
 
 void ScpiTestClient::cmdInput()

@@ -38,7 +38,7 @@ signals:
 
 public slots:
     void receiveStatus(quint8 stat);
-    virtual void receiveAnswer(QString answ) = 0;
+    virtual void receiveAnswer(QString answ, bool ok = true) = 0;
     void removeSCPIClientInfo(QString key);
 
 protected:
