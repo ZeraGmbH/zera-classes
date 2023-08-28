@@ -18,7 +18,8 @@ void test_taskunregisternotifier::checkScpiSend()
     QStringList scpiSent = pcb.getProxyClient()->getReceivedCommands();
     QCOMPARE(scpiSent.count(), 1);
     QString scpiExpectedPath = QString("SERVER:UNREGISTER");
-    ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isCmd, 0);
+    // TODO (checked) server side does not expect params!!!
+    ScpiFullCmdCheckerForTest scpiChecker(scpiExpectedPath, SCPI::isCmdwP, 1);
     QVERIFY(scpiChecker.matches(scpiSent[0]));
 }
 
