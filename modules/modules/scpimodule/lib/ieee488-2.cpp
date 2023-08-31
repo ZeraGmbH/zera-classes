@@ -40,7 +40,7 @@ cIEEE4882::cIEEE4882(cSCPIClient *client, QString ident, quint16 errorqueuelen) 
 }
 
 
-void cIEEE4882::AddEventErrorWithRspse(int error)
+void cIEEE4882::AddEventErrorWithResponse(int error)
 {
     AddEventError(error);
     emit m_pClient->commandAnswered(m_pClient);
@@ -69,7 +69,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             if (cmd.isQuery())
                 client->receiveAnswer(RegOutput(client->operationComplete()));
             else
-                AddEventErrorWithRspse(CommandError);
+                AddEventErrorWithResponse(CommandError);
         break;
 
     case eventstatusenable:
@@ -81,13 +81,13 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
                 emit m_pClient->commandAnswered(m_pClient);
             }
             else
-                AddEventErrorWithRspse(NumericDataError);
+                AddEventErrorWithResponse(NumericDataError);
         }
         else
             if (cmd.isQuery())
                 client->receiveAnswer(RegOutput(m_nESE));
             else
-                AddEventErrorWithRspse(CommandError);
+                AddEventErrorWithResponse(CommandError);
         break;
 
     case servicerequestenable:
@@ -100,13 +100,13 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
                 emit m_pClient->commandAnswered(m_pClient);
             }
             else
-                AddEventErrorWithRspse(NumericDataError);
+                AddEventErrorWithResponse(NumericDataError);
         }
         else
             if (cmd.isQuery())
                 client->receiveAnswer(RegOutput(m_nSRE));
             else
-                AddEventErrorWithRspse(CommandError);
+                AddEventErrorWithResponse(CommandError);
         break;
 
     case clearstatus:
@@ -117,9 +117,9 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         }
         else
             if (cmd.isQuery())
-                AddEventErrorWithRspse(QueryError);
+                AddEventErrorWithResponse(QueryError);
             else
-                AddEventErrorWithRspse(CommandError);
+                AddEventErrorWithResponse(CommandError);
         break;
 
     case reset:
@@ -130,51 +130,51 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
         }
         else
             if (cmd.isQuery())
-                AddEventErrorWithRspse(QueryError);
+                AddEventErrorWithResponse(QueryError);
             else
-                AddEventErrorWithRspse(CommandError);
+                AddEventErrorWithResponse(CommandError);
         break;
 
     case identification:
         if (cmd.isQuery())
             client->receiveAnswer(m_sIdentification);
         else
-            AddEventErrorWithRspse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case eventstatusregister:
         if (cmd.isQuery())
             client->receiveAnswer(RegOutput(m_nESR));
         else
-            AddEventErrorWithRspse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case statusbyte:
         if (cmd.isQuery())
             client->receiveAnswer(RegOutput(m_nSTB));
         else
-            AddEventErrorWithRspse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case selftest:
         if (cmd.isQuery())
             client->receiveAnswer(QString("1")); // for the moment test is passed
         else
-            AddEventErrorWithRspse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case read1error:
         if (cmd.isQuery())
             client->receiveAnswer(mGetScpiError());
         else
-            AddEventErrorWithRspse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case readerrorcount:
         if (cmd.isQuery())
             client->receiveAnswer(QString("%1").arg(m_ErrEventQueue.count()));
         else
-            AddEventErrorWithRspse(CommandError);
+            AddEventErrorWithResponse(CommandError);
         break;
 
     case readallerrors:
@@ -193,7 +193,7 @@ void cIEEE4882::executeCmd(cSCPIClient *client, int cmdCode, const QString &sInp
             }
         }
         else
-            AddEventErrorWithRspse(CommandError);
+            AddEventErrorWithResponse(CommandError);
 
         break;
     }
