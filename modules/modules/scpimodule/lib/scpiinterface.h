@@ -37,11 +37,12 @@ public:
 private:
     void removeCommand(cSCPIClient *client);
     bool checkAllCmds();
+    void waitForBlockingCmd(cSCPIClient *client);
+
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
     QQueue<cmdInfos> m_scpiCmdInExec;
     TimerTemplateQtPtr m_expCmd;
-    void waitForBlockingCmd(cSCPIClient *client);
 };
 }
 
