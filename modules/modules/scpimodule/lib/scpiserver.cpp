@@ -281,8 +281,7 @@ void cSCPIServer::newSerialOn(QVariant serialOn)
 
 void cSCPIServer::controlScpiQueue(QVariant scpiQueue)
 {
-    bool ok;
-    m_ConfigData.m_enableScpiQueue.m_nActive = scpiQueue.toInt(&ok);
+    m_ConfigData.m_enableScpiQueue.m_nActive = scpiQueue.toInt();
 
     if (m_pSCPIInterface->m_enableScpiQueue != scpiQueue)
         m_pSCPIInterface->m_enableScpiQueue = scpiQueue.toBool();
