@@ -229,7 +229,6 @@ void cSCPIServer::activationDone()
     m_optionalScpiQueue->setValue(m_ConfigData.m_enableScpiQueue.m_nActive);
     m_bActive = true;
     connect(m_optionalScpiQueue, &VfModuleParameter::sigValueChanged, this, &cSCPIServer::controlScpiQueue);
-    controlScpiQueue(QVariant(m_ConfigData.m_enableScpiQueue.m_nActive));
     emit activated();
 }
 
