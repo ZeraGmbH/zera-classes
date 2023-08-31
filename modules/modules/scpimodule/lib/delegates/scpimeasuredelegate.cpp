@@ -33,18 +33,17 @@ cSCPIMeasureDelegate::cSCPIMeasureDelegate(const cSCPIMeasureDelegate & delegate
     }
 }
 
-bool cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
     cSCPICommand cmd = sInput;
     quint8 scpiCmdType = getType();
     if ( (cmd.isQuery() && ((scpiCmdType & SCPI::isQuery) > 0)) ||
          (cmd.isCommand(0) && ((scpiCmdType & SCPI::isCmd) > 0)) ) {
         // allowed query or command
-        return client->m_SCPIMeasureDelegateHash[this]->executeClient(client);
+        client->m_SCPIMeasureDelegateHash[this]->executeClient(client);
     }
     else
         client->receiveStatus(SCPI::nak);
-    return true;
 }
 
 bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)

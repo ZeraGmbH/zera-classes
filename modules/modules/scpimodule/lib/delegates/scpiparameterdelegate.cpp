@@ -16,7 +16,7 @@ cSCPIParameterDelegate::~cSCPIParameterDelegate()
     delete m_pSCPICmdInfo;
 }
 
-bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = sInput;
@@ -62,7 +62,6 @@ bool cSCPIParameterDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
     }
     else
         client->receiveStatus(SCPI::nak);
-    return true;
 }
 
 }

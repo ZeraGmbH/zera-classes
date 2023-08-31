@@ -13,7 +13,7 @@ class cSCPIPropertyDelegate: public ScpiBaseDelegate
 public:
     cSCPIPropertyDelegate(QString cmdParent, QString cmd, quint8 type, cSCPIModule* scpimodule, cSCPICmdInfo* scpicmdinfo);
     virtual ~cSCPIPropertyDelegate();
-    virtual bool executeSCPI(cSCPIClient *client, QString& sInput) override;
+    virtual void executeSCPI(cSCPIClient *client, QString& sInput) override;
     void setOutput(cSCPICmdInfo* scpicmdinfo);
     void setOutput(QVariant modInterface);
 private:

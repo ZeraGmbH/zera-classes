@@ -18,7 +18,7 @@ cSCPIPropertyDelegate::~cSCPIPropertyDelegate()
     delete m_pSCPICmdInfo;
 }
 
-bool cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
+void cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
 {
     quint8 scpiCmdType = getType();
     cSCPICommand cmd = sInput;
@@ -26,7 +26,6 @@ bool cSCPIPropertyDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         client->receiveAnswer(m_sAnswer);
     else
         client->receiveStatus(SCPI::nak);
-    return true;
 }
 
 void cSCPIPropertyDelegate::setOutput(cSCPICmdInfo *scpicmdinfo)
