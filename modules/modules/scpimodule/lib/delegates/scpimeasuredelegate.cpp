@@ -46,7 +46,7 @@ void cSCPIMeasureDelegate::executeSCPI(cSCPIClient *client, QString &sInput)
         client->receiveStatus(SCPI::nak);
 }
 
-bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
+void cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
 {
     bool reentryPossible;
     switch (m_nMeasCode)
@@ -87,7 +87,6 @@ bool cSCPIMeasureDelegate::executeClient(cSCPIClient *client)
     }
     else
         client->receiveStatus(SCPI::nak);
-    return true;
 }
 
 void cSCPIMeasureDelegate::addscpimeasureObject(cSCPIMeasure *measureobject)
