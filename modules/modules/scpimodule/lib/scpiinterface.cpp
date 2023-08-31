@@ -85,7 +85,8 @@ bool cSCPIInterface::checkAllCmds()
              ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
              connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
              waitForBlockingCmd(client);
-             return scpiDelegate->executeSCPI(client, cmd);
+             scpiDelegate->executeSCPI(client, cmd);
+             return true;
          }
      }
      return false;

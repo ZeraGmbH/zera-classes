@@ -19,7 +19,7 @@ public:
     virtual ~ScpiBaseDelegate() = default;
     void setCommand(cSCPI *scpiCmdInterface);
     bool executeSCPI(const QString&, QString&) override { return true; } // cSCPIObject requires
-    virtual bool executeSCPI(cSCPIClient *client, QString& sInput) = 0;
+    virtual void executeSCPI(cSCPIClient *client, QString& sInput) = 0;
 
 protected:
     QString m_sCmdParent;
