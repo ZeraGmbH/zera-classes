@@ -66,6 +66,11 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
     return false;
 }
 
+void cSCPIInterface::setEnableQueue(bool enable)
+{
+    m_enableScpiQueue = enable;
+}
+
 void cSCPIInterface::removeCommand(cSCPIClient *client)
 {
     client->disconnect(this);
