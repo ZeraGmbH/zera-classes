@@ -19,6 +19,11 @@ void ScpiTestClient::sendScpiCmds(QString cmds)
     testCmd();
 }
 
+cSCPIInterface* ScpiTestClient::getScpiInterface()
+{
+    return m_pSCPIInterface;
+}
+
 void ScpiTestClient::receiveAnswer(QString answ, bool ok)
 {
     emit sigScpiAnswer(answ);

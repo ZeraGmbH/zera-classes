@@ -23,5 +23,6 @@ endfunction()
 SETUP_QTESTS_MODULE(
     test_scpi_config_load
     test_scpi_cmds_in_session
+    test_scpi_queue
 )
 
