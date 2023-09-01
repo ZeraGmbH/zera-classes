@@ -11,6 +11,7 @@ class ScpiTestClient : public cSCPIClient
 public:
     ScpiTestClient(cSCPIModule* module, cSCPIModuleConfigData &configdata, cSCPIInterface* iface);
     void sendScpiCmds(QString cmds);
+    cSCPIInterface* getScpiInterface();
 signals:
     void sigScpiAnswer(QString answ);
 public slots:
