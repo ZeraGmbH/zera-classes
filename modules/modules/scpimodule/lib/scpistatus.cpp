@@ -26,7 +26,7 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
     cmd = input;
     if (cmd.isQuery())
         client->receiveAnswer(QString("%1").arg(status));
-    else
+    else {
         if (cmd.isCommand(1))
         {
             par = cmd.getParam(0);
@@ -38,6 +38,8 @@ void cSCPIStatus::readwriteStatusReg(cSCPIClient *client, quint16 &status, QStri
         }
         else
             emit eventError(CommandError);
+        emit client->commandAnswered(client);
+    }
 }
 
 
@@ -49,8 +51,10 @@ void cSCPIStatus::readStatusReg(cSCPIClient *client, quint16 &status, QString in
     cmd = input;
     if (cmd.isQuery())
         client->receiveAnswer(QString("%1").arg(status));
-    else
+    else {
         emit eventError(CommandError);
+        emit client->commandAnswered(client);
+    }
 }
 
 
