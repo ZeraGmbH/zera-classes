@@ -6,6 +6,7 @@
 #include <errormessages.h>
 #include <reply.h>
 #include <proxy.h>
+#include <timerfactoryqt.h>
 
 namespace RANGEMODULE
 {
@@ -82,8 +83,8 @@ cRangeModuleMeasProgram::cRangeModuleMeasProgram(cRangeModule* module, std::shar
     connect(&m_dspWatchdogTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::onDspWatchdogTimeout);
     if(m_pModule->m_demo) {
         // Demo timer for dummy actual values
-        m_demoPeriodicTimer.setSingleShot(false);
-        connect(&m_demoPeriodicTimer, &QTimer::timeout, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
+        m_demoPeriodicTimer = TimerFactoryQt::createPeriodic(500);
+        connect(m_demoPeriodicTimer.get(), &TimerTemplateQt::sigExpired, this, &cRangeModuleMeasProgram::handleDemoPeriodicTimer);
     }
 }
 
@@ -99,14 +100,14 @@ void cRangeModuleMeasProgram::start()
     disconnect(this, &cRangeModuleMeasProgram::actualValues, this, 0);
     connect(this, &cRangeModuleMeasProgram::actualValues, this, &cRangeModuleMeasProgram::setInterfaceActualValues);
     if(m_pModule->m_demo)
-        m_demoPeriodicTimer.start(getConfData()->m_fMeasInterval * 1000);
+        m_demoPeriodicTimer->start();
 }
 
 
 void cRangeModuleMeasProgram::stop()
 {
     if(m_pModule->m_demo)
-        m_demoPeriodicTimer.stop();
+        m_demoPeriodicTimer->stop();
 }
 
 
