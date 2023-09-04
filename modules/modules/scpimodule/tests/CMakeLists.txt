@@ -16,6 +16,7 @@ function(SETUP_QTESTS_MODULE)
             scpimodule-testlib
             zera-modules-testlib
             Zera::xml-compare-testlib
+            Zera::zera-timers-testlib
         )
     endforeach()
 endfunction()
