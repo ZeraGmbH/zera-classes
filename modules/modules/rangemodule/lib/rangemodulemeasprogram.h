@@ -8,7 +8,7 @@
 #include <QList>
 #include <QStateMachine>
 #include <QFinalState>
-#include <QTimer>
+#include <timerperiodicqt.h>
 
 namespace RANGEMODULE
 {
@@ -89,7 +89,7 @@ private:
 
     Zera::ProxyClientPtr m_rmClient;
 
-    QTimer m_demoPeriodicTimer;
+    TimerTemplateQtPtr m_demoPeriodicTimer;
 
     void setActualValuesNames();
     void setSCPIMeasInfo();
