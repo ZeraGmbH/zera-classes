@@ -93,3 +93,43 @@ void test_scpi_queue::sendErroneousAndCorrectStandardCmds()
     QCOMPARE(responses[1], "+4");
 }
 
+void test_scpi_queue::sendSubSystemAndStandardCommands()
+{
+    TimerFactoryQtForTest::enableTest();
+
+    ModuleManagerForTest modman;
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
+
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    disableQueuing(client.getScpiInterface());
+    client.sendScpiCmds("MEASURE:RNG1:F?|MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|*OPC?");
+    ModuleManagerForTest::feedEventLoop();
+    TimeMachineForTest::getInstance()->processTimers(2000);
+
+    QCOMPARE(responses.count(), 4);
+    QCOMPARE(responses[0], "+1");
+    QVERIFY(responses[1].startsWith("RNG1:")); //"RNG1:F:[Hz]:14.016426049618836;"
+
+    responses.clear();
+    enableQueuing(client.getScpiInterface());
+    client.sendScpiCmds("MEASURE:RNG1:F?|MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|*OPC?");
+    ModuleManagerForTest::feedEventLoop();
+    TimeMachineForTest::getInstance()->processTimers(2000);
+
+    QCOMPARE(responses.count(), 4);
+    QVERIFY(responses[0].startsWith("RNG1"));
+    QCOMPARE(responses[3], "+1");
+}
+
+

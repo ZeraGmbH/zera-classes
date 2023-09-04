@@ -11,6 +11,7 @@ private slots:
     void sendOneStandardCmdsQueueDisabledAndEnabled();
     void sendErroneousAndCorrectStandardCmds();
 
+    void sendSubSystemAndStandardCommands();
 };
 
 #endif // TEST_SCPI_QUEUE_H
