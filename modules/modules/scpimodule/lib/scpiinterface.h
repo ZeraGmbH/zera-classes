@@ -36,7 +36,7 @@ public:
 
 private:
     void removeCommand(cSCPIClient *client);
-    bool checkAllCmds();
+    void checkAllCmds();
     void waitForBlockingCmd(cSCPIClient *client);
 
     QString m_sName;

@@ -79,7 +79,7 @@ void cSCPIInterface::removeCommand(cSCPIClient *client)
     checkAllCmds();
 }
 
-bool cSCPIInterface::checkAllCmds()
+void cSCPIInterface::checkAllCmds()
 {
     if(!m_scpiCmdInExec.isEmpty()) {
          cSCPIObject* scpiObject;
@@ -91,9 +91,7 @@ bool cSCPIInterface::checkAllCmds()
              connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
              waitForBlockingCmd(client);
              scpiDelegate->executeSCPI(client, cmd);
-             return true;
          }
      }
-     return false;
 }
 }
