@@ -132,9 +132,23 @@ void cSCPIInterface::checkAllCmds()
          QString cmd = cmdInfo.cmd;
          if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
              ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
-             connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
-             waitForBlockingCmd(client);
-             scpiDelegate->executeSCPI(client, cmd);
+             if(m_enableScpiQueue) {
+                 connect(client, &cSCPIClient::commandAnswered, this, &cSCPIInterface::removeCommand);
+                 waitForBlockingCmd(client);
+                 scpiDelegate->executeSCPI(client, cmd);
+             }
+             else {
+                 scpiDelegate->executeSCPI(client, cmd);
+                 while(!m_scpiCmdInExec.isEmpty()) {
+                     cmdInfos cmdInfo = m_scpiCmdInExec.dequeue();
+                     cSCPIClient *client = cmdInfo.client;
+                     QString cmd = cmdInfo.cmd;
+                     if ( (scpiObject = m_pSCPICmdInterface->getSCPIObject(cmd)) != 0) {
+                         ScpiBaseDelegate* scpiDelegate = static_cast<ScpiBaseDelegate*>(scpiObject);
+                         scpiDelegate->executeSCPI(client, cmd);
+                     }
+                 }
+             }
          }
      }
 }
