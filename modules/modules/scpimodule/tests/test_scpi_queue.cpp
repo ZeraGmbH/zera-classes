@@ -132,4 +132,66 @@ void test_scpi_queue::sendSubSystemAndStandardCommands()
     QCOMPARE(responses[3], "+1");
 }
 
+void test_scpi_queue::enableAndDisableQueueWhileExecutingCmds()
+{
+    TimerFactoryQtForTest::enableTest();
 
+    ModuleManagerForTest modman;
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
+
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    enableQueuing(client.getScpiInterface());
+    client.sendScpiCmds("MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|MEASURE:RNG1:UL3?|MEASURE:RNG1:IL1?|MEASURE:RNG1:IL2?|MEASURE:RNG1:IL3?|*OPC?|*IDN?");
+    ModuleManagerForTest::feedEventLoop();
+    TimeMachineForTest::getInstance()->processTimers(1500);
+    QCOMPARE(responses.count(), 3);
+
+    disableQueuing(client.getScpiInterface());
+    TimeMachineForTest::getInstance()->processTimers(2000);
+
+    QCOMPARE(responses.count(), 8);
+    QCOMPARE(responses[4], "+1");  //Since the standard cmds are quick, once we disable the queue they respond first
+    QVERIFY(responses[5].contains("DEMO"));
+}
+
+void test_scpi_queue::disableAndEnableQueueWhileExecutingCmds()
+{
+    TimerFactoryQtForTest::enableTest();
+
+    ModuleManagerForTest modman;
+    RANGEMODULE::cRangeModule rangeModule(1, 1020, modman.getStorageSystem(), true);
+    modman.addModule(&rangeModule, QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
+
+    SCPIMODULE::ScpiModuleForTest scpiModule(1, 9999, modman.getStorageSystem(), true);
+    modman.addModule(&scpiModule, QStringLiteral(CONFIG_SOURCES_SCPIMODULE) + "/" + "demo-scpimodule.xml");
+
+    SCPIMODULE::ScpiTestClient client(&scpiModule, *scpiModule.getConfigData(), scpiModule.getScpiInterface());
+    scpiModule.getSCPIServer()->appendClient(&client);
+
+    QStringList responses;
+    connect(&client, &SCPIMODULE::ScpiTestClient::sigScpiAnswer, &client, [&responses] (QString response) {
+        responses.append(response);
+    });
+
+    disableQueuing(client.getScpiInterface());
+    client.sendScpiCmds("MEASURE:RNG1:UL1?|MEASURE:RNG1:UL2?|MEASURE:RNG1:UL3?|MEASURE:RNG1:IL1?|MEASURE:RNG1:IL2?|MEASURE:RNG1:IL3?|*OPC?|*IDN?");
+    ModuleManagerForTest::feedEventLoop();
+    TimeMachineForTest::getInstance()->processTimers(100);
+    QCOMPARE(responses.count(), 2);
+
+    enableQueuing(client.getScpiInterface());
+    TimeMachineForTest::getInstance()->processTimers(2000);
+
+    QCOMPARE(responses.count(), 8);
+}
