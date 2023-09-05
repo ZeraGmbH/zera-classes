@@ -39,7 +39,7 @@ public:
 private:
     static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
     void removeCommand(cSCPIClient *client);
-    bool checkAllCmds();
+    void checkAllCmds();
     void waitForBlockingCmd(cSCPIClient *client);
 
     QString m_sName;
