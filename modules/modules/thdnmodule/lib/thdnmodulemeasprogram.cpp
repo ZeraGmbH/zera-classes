@@ -675,11 +675,17 @@ void cThdnModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValu
 void cThdnModuleMeasProgram::handleDemoActualValues()
 {
     QVector<float> demoValues;
-    float phase = 0.0;
+    double thdn, thdr;
+
     for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
-       demoValues.append(3.3);
+        float val = 20 * (float)rand() / RAND_MAX ;
+        demoValues.append(val);
+        thdn = demoValues.at(i) / 100.0;
+        thdr = 100.0 * thdn / sqrt(1 + (thdn * thdn));
+        demoValues.replace(i, thdr);
     }
     m_ModuleActualValues = demoValues;
+    Q_ASSERT(demoValues.size() == m_ModuleActualValues.size());
     emit actualValues(&m_ModuleActualValues);
 }
 
