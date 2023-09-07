@@ -724,19 +724,44 @@ void cDftModuleMeasProgram::setInterfaceActualValues(QVector<float> *actualValue
 
 void cDftModuleMeasProgram::handleDemoActualValues()
 {
-    int current = 10;
-    int voltage = 230;
-    double angle = 30;
     QVector<float> valuesDemo;
-    QStringList listEntitiyName;
-    for(const auto veinAct : qAsConst(m_veinActValueList)) {
-        QString name = veinAct->getName();
-        listEntitiyName.append(name);
+    QHash<QString, complex> DftActValuesHash;
+
+    for (int i = 0; i < 2*m_veinActValueList.count(); i++) {
+        double randomVal = (double)rand() / RAND_MAX ;
+        valuesDemo.append(randomVal);
+    }
+    m_ModuleActualValues = valuesDemo;
+
+    //this part is copied from dataReadDsp for better simulated values
+    for (int i = 0; i < m_veinActValueList.count(); i++)
+    {
+        double im;
+        for (int i = 0; i < m_veinActValueList.count(); i++)
+        {
+            im = m_ModuleActualValues[i*2+1] * -1.0;
+            m_ModuleActualValues.replace(i*2+1, im);
+        }
+    }
+    if (getConfData()->m_bRefChannelOn) {
+        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++)
+          DftActValuesHash[getConfData()->m_valueChannelList.at(i)] = complex(m_ModuleActualValues[i*2], m_ModuleActualValues[i*2+1]);
+
+        for (int i = 0; i < getConfData()->m_valueChannelList.count(); i++) {
+            QString key;
+            QStringList sl;
+            key = getConfData()->m_valueChannelList.at(i);
+            sl = key.split('-');
+            // we have 2 entries
+            if (sl.count() == 2) {
+                DftActValuesHash.remove(key);
+                DftActValuesHash[key] = DftActValuesHash[sl.at(0)] - DftActValuesHash[sl.at(1)];
+            }
+            m_ModuleActualValues.replace(i*2, DftActValuesHash[key].re());
+            m_ModuleActualValues.replace(i*2+1, DftActValuesHash[key].im());
+        }
     }
 
-    valuesDemo.resize(m_ModuleActualValues.size());
-    //Q_ASSERT(valuesDemo.size() == m_ModuleActualValues.size());
-    m_ModuleActualValues = valuesDemo;
     emit actualValues(&m_ModuleActualValues);
 }
 
