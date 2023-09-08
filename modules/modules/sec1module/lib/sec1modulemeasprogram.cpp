@@ -533,7 +533,11 @@ void cSec1ModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, Q
             case readrefInputalias:
             {
                 if (reply == ack) {
-                    m_refInputDictionary.setAlias(m_sIt, answer.toString());
+                    QString alias = answer.toString();
+                    if(alias != "0.0")
+                        m_refInputDictionary.setAlias(m_sIt, answer.toString());
+                    else
+                        qWarning("SEC: Improper alias %s received for iterator %i", qPrintable(alias), m_nIt);
                     emit activationContinue();
                 }
                 else
