@@ -26,10 +26,8 @@
                 <inp4>fi3</inp4>
             </dutinput>
             <refinput>
-                <n>3</n>
+                <n>1</n>
                 <inp1>fo0</inp1>
-                <inp2>fo1</inp2>
-                <inp3>fo2</inp3>
             </refinput>
         </measure>
     </configuration>
