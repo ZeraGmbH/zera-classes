@@ -49,5 +49,10 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
     return false; // maybe that it is a common command
 }
 
+ScpiAmbiguityMap cSCPIInterface::checkAmbiguousShortNames()
+{
+    return m_pSCPICmdInterface->checkAmbiguousShortNames();
+}
+
 
 }
