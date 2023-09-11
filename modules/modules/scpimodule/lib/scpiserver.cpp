@@ -215,6 +215,14 @@ void cSCPIServer::setupTCPServer()
 
 void cSCPIServer::activationDone()
 {
+    ScpiAmbiguityMap ambiguityMap = m_pSCPIInterface->checkAmbiguousShortNames();
+    if(!ambiguityMap.isEmpty()) {
+        for(auto iter=ambiguityMap.constBegin(); iter!=ambiguityMap.constEnd(); ++iter) {
+            qWarning("SCPI-module: Ambiguous short %s for %s",
+                     qPrintable(iter.key()),
+                     qPrintable(iter.value().join(" / ")));
+        }
+    }
     QString xml;
     QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
     m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);

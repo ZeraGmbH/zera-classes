@@ -1,6 +1,7 @@
 #ifndef SCPIINTERFACE_H
 #define SCPIINTERFACE_H
 
+#include "scpi.h"
 #include <QObject>
 #include <QString>
 #include <QList>
@@ -26,7 +27,7 @@ public:
     void exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry);
     void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
-
+    ScpiAmbiguityMap checkAmbiguousShortNames();
 
 private:
     QString m_sName;
