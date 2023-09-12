@@ -48,6 +48,7 @@ set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's ad
 set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
 add_definitions(-DZC_DEV_STATE_PATH="${SET_ZC_DEV_STATE_PATH}")
 
+set(OPERATOR_HOME "/home/operator" CACHE FILEPATH "Operator home path")
 set(SET_MODMAN_SESSION_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/sessions/")
 set(SET_MODMAN_CONFIG_PATH  "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
 set(SET_MODMAN_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/zera-modules/")
@@ -57,6 +58,7 @@ set(SET_MODMAN_AUTOMOUNT_PATH "/media/" CACHE STRING "Automount path")
 set(SET_MODMAN_LOGGER_LOCAL_PATH "/home/operator/logger" CACHE STRING "Logger local storage path")
 set(SET_MODMAN_DEFAULT_SESSION "modulemanager_config.json" CACHE STRING "Default session")
 
+add_definitions(-DOPERATOR_HOME="${OPERATOR_HOME}")
 add_definitions(-DMODMAN_SESSION_PATH="${SET_MODMAN_SESSION_PATH}")
 add_definitions(-DMODMAN_CONFIG_PATH="${SET_MODMAN_CONFIG_PATH}")
 add_definitions(-DMODMAN_CONFIG_FILE="${SET_MODMAN_CONFIG_PATH}/${SET_MODMAN_DEFAULT_SESSION}")

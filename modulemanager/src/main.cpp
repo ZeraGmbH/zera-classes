@@ -117,7 +117,8 @@ int main(int argc, char *argv[])
     VeinApiQml::VeinQml *qmlSystem = new VeinApiQml::VeinQml(&a);
     ZeraDBLogger *dataLoggerSystem = new ZeraDBLogger(new VeinLogger::DataSource(storSystem, &a), sqliteFactory, &a); //takes ownership of DataSource
     CustomerDataSystem *customerDataSystem = nullptr;
-    LicenseSystem *licenseSystem = new LicenseSystem({QUrl("file:///home/operator/license-keys")}, &a);
+    QString licenseUrl = QString("file://%1/license-keys").arg(OPERATOR_HOME);
+    LicenseSystem *licenseSystem = new LicenseSystem({QUrl(licenseUrl)}, &a);
     vfExport::vf_export *exportModule=new vfExport::vf_export();
 
     QStringList allowedFolders{QStringLiteral(MODMAN_CUSTOMERDATA_PATH),
