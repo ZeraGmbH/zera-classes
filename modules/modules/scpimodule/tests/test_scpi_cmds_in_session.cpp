@@ -217,7 +217,7 @@ void test_scpi_cmds_in_session::devIfaceVeinComponentMultipleEntitiesForLongXml(
     modman.addModule(&statusModule, QStringLiteral(CONFIG_SOURCES_STATUSMODULE) + "/" + "demo-statusmodule.xml");
 
     std::vector<std::unique_ptr<RANGEMODULE::cRangeModule>> ptrList;
-    for(int i=1; i<=10; i++) {
+    for(int i=1; i<=9; i++) { // remember >=10 makes short names ambiguous
         ptrList.push_back(std::make_unique<RANGEMODULE::cRangeModule>(i, 1019+i, modman.getStorageSystem(), true));
         modman.addModule(ptrList.back().get(), QStringLiteral(CONFIG_SOURCES_RANGEMODULE) + "/" + "mt310s2-rangemodule.xml");
     }
