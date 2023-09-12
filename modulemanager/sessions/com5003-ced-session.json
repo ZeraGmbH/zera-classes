@@ -77,7 +77,7 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "com5003-sec1module2.xml",
+        "configFile" : "com5003-sec1module-energy-comparison.xml",
         "id": 1131
       },
       {
