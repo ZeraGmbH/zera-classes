@@ -107,7 +107,7 @@
       },
       {
         "name" : "sem1module",
-        "configFile" : "com5003-sem1module.xml",
+        "configFile" : "com5003-sem1module-perphase.xml",
         "id": 1200
       },
       {
