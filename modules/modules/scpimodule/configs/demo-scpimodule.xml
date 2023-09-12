@@ -16,7 +16,6 @@
             </serialdevice>
             <device>
                 <name>DEMO</name>
-                <identification>ZERA GmbH Koenigswinter, DEMO, R1.0.0</identification>
             </device>
             <status>
                 <questionable>

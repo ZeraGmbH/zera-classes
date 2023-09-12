@@ -22,7 +22,6 @@ enum moduleconfigstate
     setSerialStopbits,
     setSerialDevice,
     setDeviceName,
-    setDeviceIdentification,
 
     setQuestionableStatusBitCount,
     setOperationStatusBitCount,
