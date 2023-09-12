@@ -68,7 +68,10 @@ ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)
                                                 ":EC01:0001:RES" <<
                                                 ":EC01:0002:RES" <<
                                                 "CONF:EC01:0001:DUTC" <<
-                                                "CONF:EC01:0002:DUTC";
+                                                "CONF:EC01:0002:DUTC" <<
+                                                ":FFT1:IAUX" <<
+                                                ":FFT1:UAUX" <<
+                                                "STAT:DEV1:ACC";
         for(const auto &ignoreEndShort : qAsConst(ignoreEndShortList)) {
             if(iter.key().endsWith(ignoreEndShort))
                 ignore = true;
