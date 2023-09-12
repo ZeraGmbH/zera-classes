@@ -51,7 +51,34 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
 
 ScpiAmbiguityMap cSCPIInterface::checkAmbiguousShortNames()
 {
-    return m_pSCPICmdInterface->checkAmbiguousShortNames();
+    return m_pSCPICmdInterface->checkAmbiguousShortNames(ignoreAmbiguous);
+}
+
+ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)
+{
+    ScpiAmbiguityMap outMap;
+
+    for(auto iter = inMap.constBegin(); iter != inMap.constEnd(); ++iter) {
+        bool ignore = false;
+
+        static QStringList ignoreEndShortList = QStringList() <<
+                                                ":DFT1:UL3-" <<
+                                                ":RMS1:UL3-" <<
+                                                ":LAM1:LAMB" <<
+                                                ":EC01:0001:RES" <<
+                                                ":EC01:0002:RES" <<
+                                                "CONF:EC01:0001:DUTC" <<
+                                                "CONF:EC01:0002:DUTC";
+        for(const auto &ignoreEndShort : qAsConst(ignoreEndShortList)) {
+            if(iter.key().endsWith(ignoreEndShort))
+                ignore = true;
+        }
+
+        if(!ignore)
+            outMap[iter.key()] = iter.value();
+    }
+
+    return outMap;
 }
 
 

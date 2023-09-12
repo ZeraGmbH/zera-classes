@@ -30,6 +30,7 @@ public:
     ScpiAmbiguityMap checkAmbiguousShortNames();
 
 private:
+    static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);
     QString m_sName;
     cSCPI* m_pSCPICmdInterface;
 };
