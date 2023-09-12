@@ -54,7 +54,6 @@ set(SET_MODMAN_CONFIG_PATH  "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
 set(SET_MODMAN_MODULE_PATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/zera-modules/")
 set(SET_MODMAN_CONTENTSET_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/logger-contentsets/")
 set(SET_MODMAN_AUTOMOUNT_PATH "/media/" CACHE STRING "Automount path")
-set(SET_MODMAN_LOGGER_LOCAL_PATH "/home/operator/logger" CACHE STRING "Logger local storage path")
 set(SET_MODMAN_DEFAULT_SESSION "modulemanager_config.json" CACHE STRING "Default session")
 
 add_definitions(-DOPERATOR_HOME="${OPERATOR_HOME}")
@@ -65,7 +64,7 @@ add_definitions(-DMODMAN_MODULE_PATH="${SET_MODMAN_MODULE_PATH}")
 add_definitions(-DMODMAN_CUSTOMERDATA_PATH="${OPERATOR_HOME}/customerdata/")
 add_definitions(-DMODMAN_CONTENTSET_PATH="${SET_MODMAN_CONTENTSET_PATH}")
 add_definitions(-DMODMAN_AUTOMOUNT_PATH="${SET_MODMAN_AUTOMOUNT_PATH}")
-add_definitions(-DMODMAN_LOGGER_LOCAL_PATH="${SET_MODMAN_LOGGER_LOCAL_PATH}")
+add_definitions(-DMODMAN_LOGGER_LOCAL_PATH="${OPERATOR_HOME}/logger")
 
 enable_testing()
 # Inspired by
