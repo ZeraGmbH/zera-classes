@@ -58,6 +58,7 @@ void cSCPIInterface::checkAmbiguousShortNames()
                      qPrintable(iter.key()),
                      qPrintable(iter.value().join(" / ")));
         }
+        Q_ASSERT(false);
     }
 }
 
