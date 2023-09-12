@@ -32,6 +32,19 @@ public:
     cModuleInterface* getModuleInterface();
     void appendClient(cSCPIClient *client);
     cSCPIInterface* getScpiInterface() const;
+private slots:
+    void addSCPIClient();
+    void deleteSCPIClient(QObject* obj);
+    void TCPError(QAbstractSocket::SocketError);
+
+    void setupTCPServer();
+    void activationDone();
+    void shutdownTCPServer();
+    void deactivationDone();
+    void testSerial();
+
+    // vein change handlers
+    void newSerialOn(QVariant serialOn);
 private:
     void createSerialScpi();
     void destroySerialScpi();
@@ -64,20 +77,6 @@ private:
     VfModuleParameter* m_pVeinParamSerialOn = nullptr;
     VfModuleActvalue* m_pVeinSerialScpiDevFileName = nullptr;
     VfModuleActvalue* m_veinDevIface = nullptr;
-
-private slots:
-    void addSCPIClient();
-    void deleteSCPIClient(QObject* obj);
-    void TCPError(QAbstractSocket::SocketError);
-
-    void setupTCPServer();
-    void activationDone();
-    void shutdownTCPServer();
-    void deactivationDone();
-    void testSerial();
-
-    // vein change handlers
-    void newSerialOn(QVariant serialOn);
 };
 
 }
