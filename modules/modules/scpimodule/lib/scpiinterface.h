@@ -27,7 +27,7 @@ public:
     void exportSCPIModelXML(QString &xml, QMap<QString, QString> modelListBaseEntry);
     void addSCPICommand(ScpiBaseDelegate* delegate);
     bool executeCmd(cSCPIClient* client, QString cmd);
-    ScpiAmbiguityMap checkAmbiguousShortNames();
+    void checkAmbiguousShortNames();
 
 private:
     static ScpiAmbiguityMap ignoreAmbiguous(ScpiAmbiguityMap inMap);

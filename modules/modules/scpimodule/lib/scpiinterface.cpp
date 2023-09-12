@@ -49,9 +49,16 @@ bool cSCPIInterface::executeCmd(cSCPIClient *client, QString cmd)
     return false; // maybe that it is a common command
 }
 
-ScpiAmbiguityMap cSCPIInterface::checkAmbiguousShortNames()
+void cSCPIInterface::checkAmbiguousShortNames()
 {
-    return m_pSCPICmdInterface->checkAmbiguousShortNames(ignoreAmbiguous);
+    ScpiAmbiguityMap ambiguityMap = m_pSCPICmdInterface->checkAmbiguousShortNames(ignoreAmbiguous);
+    if(!ambiguityMap.isEmpty()) {
+        for(auto iter=ambiguityMap.constBegin(); iter!=ambiguityMap.constEnd(); ++iter) {
+            qWarning("SCPI-module: Ambiguous short %s for %s",
+                     qPrintable(iter.key()),
+                     qPrintable(iter.value().join(" / ")));
+        }
+    }
 }
 
 ScpiAmbiguityMap cSCPIInterface::ignoreAmbiguous(ScpiAmbiguityMap inMap)
