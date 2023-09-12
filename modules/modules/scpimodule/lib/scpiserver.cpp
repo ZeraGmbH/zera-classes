@@ -25,7 +25,6 @@
 #include "interfaceinterface.h"
 #include "statusinterface.h"
 #include "ieee4882interface.h"
-#include "scpicmdinfo.h"
 #include "scpimoduleconfigdata.h"
 #include <sysinfo.h>
 
@@ -215,16 +214,10 @@ void cSCPIServer::setupTCPServer()
 
 void cSCPIServer::activationDone()
 {
-    ScpiAmbiguityMap ambiguityMap = m_pSCPIInterface->checkAmbiguousShortNames();
-    if(!ambiguityMap.isEmpty()) {
-        for(auto iter=ambiguityMap.constBegin(); iter!=ambiguityMap.constEnd(); ++iter) {
-            qWarning("SCPI-module: Ambiguous short %s for %s",
-                     qPrintable(iter.key()),
-                     qPrintable(iter.value().join(" / ")));
-        }
-    }
-    QString xml;
+    m_pSCPIInterface->checkAmbiguousShortNames();
+
     QMap<QString, QString> modelListBaseEntry({{"RELEASE", SysInfo::getReleaseNr()}});
+    QString xml;
     m_pSCPIInterface->exportSCPIModelXML(xml, modelListBaseEntry);
     m_veinDevIface->setValue(xml);
     m_bActive = true;
