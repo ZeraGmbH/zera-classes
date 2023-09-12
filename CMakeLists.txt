@@ -45,9 +45,6 @@ add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
 
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 
-set(SET_ZC_DEV_STATE_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
-add_definitions(-DZC_DEV_STATE_PATH="${SET_ZC_DEV_STATE_PATH}")
-
 set(OPERATOR_HOME "/home/operator" CACHE FILEPATH "Operator home path")
 set(SET_MODMAN_SESSION_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/sessions/")
 set(SET_MODMAN_CONFIG_PATH  "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
@@ -64,6 +61,7 @@ add_definitions(-DMODMAN_CUSTOMERDATA_PATH="${OPERATOR_HOME}/customerdata/")
 add_definitions(-DMODMAN_CONTENTSET_PATH="${SET_MODMAN_CONTENTSET_PATH}")
 add_definitions(-DMODMAN_AUTOMOUNT_PATH="${SET_MODMAN_AUTOMOUNT_PATH}")
 add_definitions(-DMODMAN_LOGGER_LOCAL_PATH="${OPERATOR_HOME}/logger")
+add_definitions(-DZC_DEV_STATE_PATH="${CMAKE_INSTALL_SYSCONFDIR}/zera/states")
 
 enable_testing()
 # Inspired by
