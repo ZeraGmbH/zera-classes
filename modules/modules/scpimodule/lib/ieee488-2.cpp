@@ -31,12 +31,12 @@ scpiErrorType SCPIError[scpiLastError] = {  {0,(char*)"No error"},
                                             {-500,(char*)"Power on"} };
 
 
-cIEEE4882::cIEEE4882(cSCPIClient *client, QString ident, quint16 errorqueuelen) :
+cIEEE4882::cIEEE4882(cSCPIClient *client, QString deviceFamilyFromConfig, quint16 errorqueuelen) :
     m_pClient(client),
     m_nQueueLen(errorqueuelen)
 {
     m_nSTB = m_nSRE = m_nESR = m_nESE = 0;
-    setIdentification(ident);
+    setIdentification(deviceFamilyFromConfig);
 }
 
 
@@ -221,39 +221,16 @@ void cIEEE4882::setStatusByte(quint8 stb, quint8)
 }
 
 
-void cIEEE4882::setIdentification(QString ident)
+void cIEEE4882::setIdentification(QString deviceFamilyFromConfig)
 {
-    QStringList splitIdent = ident.split(',');
-
-    QString companyName;
-    if(splitIdent.size() >= 1) {
-        companyName = splitIdent[0].simplified();
-    }
-    if(companyName.isEmpty()) {
-        companyName = QStringLiteral("ZERA GmbH Koenigswinter");
-    }
-
-    QString model;
-    if(splitIdent.size() >= 2) {
-        model = splitIdent[1].simplified();
-    }
-    if(model.isEmpty()) {
-        model = QStringLiteral("unknown");
-    }
-
+    QString companyName QStringLiteral("ZERA GmbH Koenigswinter");
     QString releaseNr = SysInfo::getReleaseNr();
-    if(releaseNr.isEmpty() && splitIdent.size() >= 3) { // fallback to xml-config
-        releaseNr = splitIdent[2].simplified();
-    }
-    if(releaseNr.isEmpty()) {
-        releaseNr = QStringLiteral("unknown");
-    }
-
+    if(releaseNr.isEmpty())
+        releaseNr = QStringLiteral("unknokwn-release");
     QString serialNr = SysInfo::getSerialNr();
-    if(serialNr.isEmpty()) { // was zera-setup2 completed??
-        serialNr = QStringLiteral("unknown");
-    }
-    m_sIdentification = QString("%1, %2, %3, %4").arg(companyName).arg(model).arg(serialNr).arg(releaseNr);
+    if(serialNr.isEmpty()) // was zera-setup2 completed??
+        serialNr = QStringLiteral("unknown-serialno");
+    m_sIdentification = QString("%1, %2, %3, %4").arg(companyName, deviceFamilyFromConfig, serialNr, releaseNr);
 }
 
 
