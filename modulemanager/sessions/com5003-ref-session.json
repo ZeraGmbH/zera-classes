@@ -32,7 +32,7 @@
       },
       {
         "name" : "sec1module",
-        "configFile" : "com5003-sec1module3.xml",
+        "configFile" : "com5003-sec1module-ref.xml",
         "id": 1130
       },
       {
