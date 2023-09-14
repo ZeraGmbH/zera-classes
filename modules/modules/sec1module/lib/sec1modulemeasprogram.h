@@ -109,6 +109,7 @@ private slots:
     // vein change handlers
     void newStartStop(QVariant startstop);
     void newDutConstant(QVariant dutconst);
+    void newDutConstantAuto(QVariant dutConstAuto);
     void newDutConstantScale(QVariant uINumDenomValue, const QString componentName);
     void newDutConstantUnit(QVariant dutconstunit);
     void newRefConstant(QVariant refconst);
@@ -227,6 +228,7 @@ private:
     VfModuleParameter* m_pRefInputPar;
     VfModuleParameter* m_pRefConstantPar;
     VfModuleParameter* m_pDutConstantPar;
+    VfModuleParameter* m_pDutConstantAuto;
     VfModuleParameter* m_pDutConstantUScaleDenom;
     VfModuleParameter* m_pDutConstantUScaleNum;
     VfModuleParameter* m_pDutConstantIScaleDenom;
