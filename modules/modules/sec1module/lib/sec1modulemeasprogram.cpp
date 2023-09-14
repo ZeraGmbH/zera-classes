@@ -222,6 +222,16 @@ void cSec1ModuleMeasProgram::generateInterface()
     dValidator = new cDoubleValidator(1e-6, 1.0e20, 1e-5);
     m_pDutConstantPar->setValidator(dValidator);
 
+    m_pDutConstantAuto = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
+                                            key = QString("PAR_DutConstantAuto"),
+                                            QString("Calculate DUT constant to get ~0% error"),
+                                            QVariant((int)0));
+    m_pDutConstantAuto->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:AUTODUTCONSTANT").arg(modNr), "10", m_pDutConstantAuto->getName(), "0", ""));
+    m_pModule->veinModuleParameterHash[key] =  m_pDutConstantAuto; // for modules use
+    cIntValidator *iValidator;
+    iValidator = new cIntValidator(0, 1, 1);
+    m_pDutConstantAuto->setValidator(iValidator);
+
     m_pDutConstantUScaleNum = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                                  key = QString("PAR_DutConstantUScaleNum"),
                                                  QString("Scale the dut constant in case tranformers are used (U fraction numerator)"),
@@ -285,7 +295,6 @@ void cSec1ModuleMeasProgram::generateInterface()
                                            QVariant((double)0.0));
     m_pMRatePar->setSCPIInfo(new cSCPIInfo("CALCULATE", QString("%1:MRATE").arg(modNr), "10", m_pMRatePar->getName(), "0", ""));
     m_pModule->veinModuleParameterHash[key] = m_pMRatePar; // for modules use
-    cIntValidator *iValidator;
     iValidator = new cIntValidator(1, 4294967295, 1);
     m_pMRatePar->setValidator(iValidator);
 
@@ -1144,6 +1153,7 @@ void cSec1ModuleMeasProgram::activationDone()
 
     connect(m_pStartStopPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newStartStop);
     connect(m_pDutConstantPar, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstant);
+    connect(m_pDutConstantAuto, &VfModuleParameter::sigValueChanged, this, &cSec1ModuleMeasProgram::newDutConstantAuto);
     connect(m_pDutConstantUScaleNum, &VfModuleParameter::sigValueChanged,[this](QVariant val){
         this->newDutConstantScale(val,m_pDutConstantUScaleDenom->getName());
     });
@@ -1476,6 +1486,20 @@ void cSec1ModuleMeasProgram::newDutConstant(QVariant dutconst)
     }
 
     emit m_pModule->parameterChanged();
+}
+
+void cSec1ModuleMeasProgram::newDutConstantAuto(QVariant dutConstAuto)
+{
+    bool ok;
+    int calcDutConst = dutConstAuto.toInt(&ok);
+    if (calcDutConst) {
+        int dutConst;
+        if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
+            dutConst = getConfData()->m_nMRate.m_nPar/(m_pEnergyAct->getValue()).toDouble();
+        }
+        getConfData()->m_fDutConstant.m_fPar = dutConst;
+        setInterfaceComponents();
+    }
 }
 
 void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString componentName)
