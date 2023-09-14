@@ -1,3 +1,6 @@
+# Inspired by
+# https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
+
 add_library(testhelpers STATIC
     )
 
@@ -39,8 +42,6 @@ add_custom_target(json-test-session ALL
 
 add_definitions(-DJSON_TEST_DIR="${CMAKE_CURRENT_SOURCE_DIR}/json-test-files")
 
-# Inspired by
-# https://github.com/KDAB/kdabtv/blob/master/Qt-Widgets-and-more/UnitTests/Tests/CMakeLists.txt
 function(SETUP_TESTS)
     foreach(_testname ${ARGN})
         add_test(NAME ${_testname}

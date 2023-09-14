@@ -1,5 +1,3 @@
 add_subdirectory(lib)
+add_subdirectory(testlib)
 
-if(NOT SKIP_UNITTESTS)
-    add_subdirectory(testlib)
-endif()

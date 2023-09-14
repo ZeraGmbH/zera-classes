@@ -149,8 +149,7 @@ install(
     DESTINATION ${SET_MODMAN_CONTENTSET_PATH}
     )
 
-if(NOT SKIP_UNITTESTS)
-    add_subdirectory(tests)
-endif()
+enable_testing()
+add_subdirectory(tests)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
