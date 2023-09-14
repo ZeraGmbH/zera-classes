@@ -1,3 +1,6 @@
 add_subdirectory(modules)
-add_subdirectory(testlib)
+
+if(NOT SKIP_UNITTESTS)
+    add_subdirectory(testlib)
+endif()
 
