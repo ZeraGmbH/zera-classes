@@ -1500,6 +1500,7 @@ void cSec1ModuleMeasProgram::newDutConstantAuto(QVariant dutConstAuto)
         getConfData()->m_fDutConstant.m_fPar = dutConst;
         setInterfaceComponents();
         newStartStop(1);
+        m_pDutConstantAuto->setValue(0);
     }
 }
 
