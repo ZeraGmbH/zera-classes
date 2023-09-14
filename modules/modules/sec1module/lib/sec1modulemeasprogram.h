@@ -149,6 +149,8 @@ private:
     quint32 getStatus();
     void setStatus(quint32 status);
 
+    double getDutConst();
+
     cSec1Module* m_pModule; // the module we live in
     Zera::cSECInterface* m_pSECInterface;
     Zera::PcbInterfacePtr m_pcbInterface;

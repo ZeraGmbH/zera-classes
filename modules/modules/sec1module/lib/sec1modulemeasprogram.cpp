@@ -1493,15 +1493,23 @@ void cSec1ModuleMeasProgram::newDutConstantAuto(QVariant dutConstAuto)
     bool ok;
     int calcDutConst = dutConstAuto.toInt(&ok);
     if (calcDutConst) {
-        int dutConst;
+        double dutConst;
         if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
-            dutConst = getConfData()->m_nMRate.m_nPar/(m_pEnergyAct->getValue()).toDouble();
+            dutConst = getDutConst();
+            getConfData()->m_fDutConstant.m_fPar = dutConst;
+            setInterfaceComponents();
+            newStartStop(1);
         }
-        getConfData()->m_fDutConstant.m_fPar = dutConst;
-        setInterfaceComponents();
-        newStartStop(1);
         m_pDutConstantAuto->setValue(0);
     }
+}
+
+double cSec1ModuleMeasProgram::getDutConst()
+{
+    if(m_sDutConstantUnit.contains(QString("/I")))
+        return (m_pEnergyAct->getValue()).toDouble()*1000/getConfData()->m_nMRate.m_nPar;
+    else
+        return getConfData()->m_nMRate.m_nPar/(m_pEnergyAct->getValue()).toDouble();
 }
 
 void cSec1ModuleMeasProgram::newDutConstantScale(QVariant value,const QString componentName)
