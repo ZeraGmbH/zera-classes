@@ -753,10 +753,17 @@ void cSec1ModuleMeasProgram::setStatus(quint32 status)
 double cSec1ModuleMeasProgram::calculateDutConstant()
 {
     double dutConst;
+
     if(m_sDutConstantUnit.contains(QString("/I")))
         dutConst = m_pEnergyAct->getValue().toDouble() * 1000 / getConfData()->m_nMRate.m_nPar;
     else
         dutConst = getConfData()->m_nMRate.m_nPar / m_pEnergyAct->getValue().toDouble();
+
+    if(dutConst < m_dutConstValidator->getMinValue())
+        dutConst = m_dutConstValidator->getMinValue();
+    if(dutConst > m_dutConstValidator->getMaxValue())
+        dutConst = m_dutConstValidator->getMaxValue();
+
     return dutConst;
 }
 
