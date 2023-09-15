@@ -28,7 +28,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           repo: ZeraGmbH/zera-classes
-          name: source-artifact
+          name: source-artifact-${{ matrix.compiler }}
           workflow: buildAndTest.yml
         continue-on-error: true
 
@@ -50,7 +50,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           repo: ZeraGmbH/zera-classes
-          name: build-artifact
+          name: build-artifact-${{ matrix.compiler }}
           workflow: buildAndTest.yml
         continue-on-error: true
 
@@ -67,7 +67,7 @@ jobs:
         uses: dawidd6/action-download-artifact@v2
         with:
           repo: ZeraGmbH/zera-classes
-          name: install-artifact
+          name: install-artifact-${{ matrix.compiler }}
           workflow: buildAndTest.yml
         continue-on-error: true
 
@@ -78,6 +78,7 @@ jobs:
             rm install_files.tar.xz
           fi
 
+      # Get zera-metaproject sysroot
       - name: Download zera-metaproject's install artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -116,7 +117,7 @@ jobs:
       - name: 'Upload source artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: source-artifact
+          name: source-artifact-${{ matrix.compiler }}
           path: /github/home/source_files.tar.xz
 
       # Keep build files for incremental build
@@ -127,7 +128,7 @@ jobs:
       - name: 'Upload build artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: build-artifact
+          name: build-artifact-${{ matrix.compiler }}
           path: /github/home/build_files.tar.xz
 
       # Keep install files for incremental build / submodule actions
@@ -138,5 +139,5 @@ jobs:
       - name: 'Upload install artifact'
         uses: actions/upload-artifact@v3
         with:
-          name: install-artifact
+          name: install-artifact-${{ matrix.compiler }}
           path: /github/home/install_files.tar.xz
