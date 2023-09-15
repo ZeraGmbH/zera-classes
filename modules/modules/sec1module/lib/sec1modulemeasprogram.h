@@ -8,6 +8,7 @@
 #include "secmeasinputdictionary.h"
 #include "secresourcetypelist.h"
 #include "secrefconstantobserver.h"
+#include <doublevalidator.h>
 #include <stringvalidator.h>
 #include <basemeasprogram.h>
 #include <QDateTime>
@@ -290,6 +291,7 @@ private:
     QDateTime m_WaitStartDateTime;
 
     MultipleResultHelper m_multipleResultHelper;
+    cDoubleValidator *m_dutConstValidator;
 };
 }
 
