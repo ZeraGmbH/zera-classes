@@ -1,4 +1,4 @@
-name: Clean Artifacts
+name: Cleanup Artifacts
 on:
   schedule:
     - cron:  '0 4 * * *'
