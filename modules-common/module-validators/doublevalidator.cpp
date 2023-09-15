@@ -14,6 +14,16 @@ cDoubleValidator::cDoubleValidator(const cDoubleValidator &ref)
     m_fDelta = ref.m_fDelta;
 }
 
+double cDoubleValidator::getMinValue()
+{
+    return m_fMin;
+}
+
+double cDoubleValidator::getMaxValue()
+{
+    return m_fMax;
+}
+
 bool cDoubleValidator::isValidParam(QVariant& newValue)
 {
     bool ok;
