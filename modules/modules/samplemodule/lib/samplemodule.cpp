@@ -85,8 +85,7 @@ void cSampleModule::setupModule()
     pConfData = qobject_cast<cSampleModuleConfiguration*>(m_pConfiguration.get())->getConfigurationData();
 
     // first we build a list of our pll meas channels, that hold informations for other activists
-    for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++)
-    {
+    for (int i = 0; i < pConfData->m_ObsermaticConfPar.m_npllChannelCount; i ++) {
         cPllMeasChannel* pllchn = new cPllMeasChannel(&(pConfData->m_RMSocket),
                                                         &(pConfData->m_PCBServerSocket),
                                                         pConfData->m_ObsermaticConfPar.m_pllChannelList.at(i), i+1);
@@ -153,7 +152,6 @@ void cSampleModule::activationExec()
 void cSampleModule::activationDone()
 {
     m_nActivationIt++;
-
     if (m_nActivationIt < m_ModuleActivistList.count())
         emit activationNext(); // and iterate over our list
     else
@@ -168,17 +166,14 @@ void cSampleModule::activationFinished()
 
     // we have to connect all cmddone from our pll meas channel to pll obsermatic
     // this is also used for synchronizing purpose
-    for (int i = 0; i < m_pllMeasChannelList.count(); i ++)
-    {
+    for (int i = 0; i < m_pllMeasChannelList.count(); i ++) {
         cPllMeasChannel* pllchn = m_pllMeasChannelList.at(i);
         connect(pllchn, &cPllMeasChannel::cmdDone, m_pPllObsermatic, &cPllObsermatic::catchChannelReply);
     }
 
     m_pModuleValidator->setParameterHash(veinModuleParameterHash);
-
     // now we still have to export the json interface information
     exportMetaData();
-
     emit activationReady();
 }
 
