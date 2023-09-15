@@ -32,7 +32,7 @@ jobs:
           workflow: buildAndTest.yml
         continue-on-error: true
 
-      - name: 'Untar source files last build'
+      - name: Untar source files last build
         run: |
           mkdir -p "$GITHUB_WORKSPACE"
           if [ -e source_files.tar.xz ]; then
@@ -40,7 +40,7 @@ jobs:
             rm source_files.tar.xz
           fi
 
-      - name: 'Checkout git'
+      - name: Checkout git
         uses: actions/checkout@v4
         with:
           submodules: recursive
@@ -54,7 +54,7 @@ jobs:
           workflow: buildAndTest.yml
         continue-on-error: true
 
-      - name: 'Untar build files'
+      - name: Untar build files
         run: |
           mkdir -p "$HOME/targetbuild"
           if [ -e build_files.tar.xz ]; then
@@ -71,7 +71,7 @@ jobs:
           workflow: buildAndTest.yml
         continue-on-error: true
 
-      - name: 'Untar install files'
+      - name: Untar install files
         run: |
           if [ -e install_files.tar.xz ]; then
             tar -xf install_files.tar.xz -C /
@@ -86,7 +86,7 @@ jobs:
           name: install-artifact
           workflow: buildAndExportArtifact.yml
 
-      - name: 'Untar zera-metaproject's install artifact'
+      - name: Untar zera-metaproject's install artifact
         run: |
             tar -xf install_files.tar.xz -C /
             rm install_files.tar.xz
@@ -116,29 +116,29 @@ jobs:
         run: |
           tar -c -I 'xz -T0' -f $HOME/source_files.tar.xz "$GITHUB_WORKSPACE"
 
-      - name: 'Upload source artifact'
+      - name: Upload source artifact
         uses: actions/upload-artifact@v3
         with:
           name: source-artifact-${{ matrix.compiler }}
           path: /github/home/source_files.tar.xz
 
       # Keep build files for incremental build
-      - name: 'Tar build files'
+      - name: Tar build files
         run: |
           tar -c -I 'xz -T0' -f $HOME/build_files.tar.xz "$HOME/targetbuild"
 
-      - name: 'Upload build artifact'
+      - name: Upload build artifact
         uses: actions/upload-artifact@v3
         with:
           name: build-artifact-${{ matrix.compiler }}
           path: /github/home/build_files.tar.xz
 
       # Keep install files for incremental build / submodule actions
-      - name: 'Tar install files'
+      - name: Tar install files
         run: |
           tar -c -I 'xz -T0' -f $HOME/install_files.tar.xz "$HOME/install"
 
-      - name: 'Upload install artifact'
+      - name: Upload install artifact
         uses: actions/upload-artifact@v3
         with:
           name: install-artifact-${{ matrix.compiler }}
