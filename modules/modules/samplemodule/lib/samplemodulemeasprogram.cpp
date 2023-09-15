@@ -172,13 +172,10 @@ void cSampleModuleMeasProgram::deleteDspCmdList()
 
 void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant answer)
 {
-    bool ok;
-
-    if (msgnr == 0) // 0 was reserved for async. messages
-    {
+    if (msgnr == 0) { // 0 was reserved for async. messages
         QString sintnr;
         sintnr = answer.toString().section(':', 1, 1);
-        int service = sintnr.toInt(&ok);
+        int service = sintnr.toInt();
         switch (service)
         {
         case irqNr:
@@ -187,28 +184,23 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             break;
         }
     }
-    else
-    {
-        if (m_MsgNrCmdList.contains(msgnr))
-        {
+    else {
+        if (m_MsgNrCmdList.contains(msgnr)) {
             int cmd = m_MsgNrCmdList.take(msgnr);
             switch (cmd)
             {
             case sendrmidentsample:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
-                else
-                {
+                else {
                     emit errMsg((tr(rmidentErrMSG)));
                     emit activationError();
                 }
                 break;
-                break;
             case claimpgrmem:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
-                else
-                {
+                else {
                     emit errMsg((tr(claimresourceErrMsg)));
                     emit activationError();
                 }
@@ -216,8 +208,7 @@ void cSampleModuleMeasProgram::catchInterfaceAnswer(quint32 msgnr, quint8 reply,
             case claimusermem:
                 if (reply == ack) // we only continue if resource manager acknowledges
                     emit activationContinue();
-                else
-                {
+                else {
                     emit errMsg((tr(claimresourceErrMsg)));
                     emit activationError();
                 }
@@ -387,11 +378,8 @@ void cSampleModuleMeasProgram::deactivateDSP()
 
 void cSampleModuleMeasProgram::freePGRMem()
 {
-    //deleteDspVarList();
-    //deleteDspCmdList();
     // we always destroy the whole interface even in case of new configuration while running
     // so the list are gone anyway
-
     m_MsgNrCmdList[m_rmInterface.freeResource("DSP1", "PGRMEMC")] = freepgrmem;
 }
 
@@ -418,11 +406,9 @@ void cSampleModuleMeasProgram::dataAcquisitionDSP()
 
 void cSampleModuleMeasProgram::dataReadDSP()
 {
-    if (m_bActive)
-    {
+    if (m_bActive) {
         m_pDSPInterFace->getData(m_pActualValuesDSP, m_ModuleActualValues);
         emit actualValues(&m_ModuleActualValues); // and send them
-
     }
 }
 
