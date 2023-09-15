@@ -1,7 +1,6 @@
 #include "pllobsermatic.h"
 #include "pllmeaschannel.h"
 #include "samplemodule.h"
-#include "samplechannel.h"
 #include <errormessages.h>
 #include <scpiinfo.h>
 #include <stringvalidator.h>
@@ -29,26 +28,19 @@ cPllObsermatic::cPllObsermatic(cSampleModule* module, cSampleModuleConfigData& c
     connect(&m_deactivationDoneState, &QState::entered, this, &cPllObsermatic::deactivationDone);
 }
 
-
 cPllObsermatic::~cPllObsermatic()
 {
 }
 
-
 void cPllObsermatic::ActionHandler(QVector<float> *actualValues)
 {
     m_ActualValues = *actualValues;
-
     pllAutomatic(); // let pllautomatic do its job
 }
 
-
 void cPllObsermatic::generateInterface()
 {
-    QString s;
     QString key;
-    cSCPIInfo *scpiInfo;
-
     m_pPllChannel = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
                                              key = QString("PAR_PllChannel"),
                                              QString("PLL reference channel"),
@@ -57,7 +49,7 @@ void cPllObsermatic::generateInterface()
     m_pModule->veinModuleParameterHash[key] = m_pPllChannel; // for modules use
 
     // later we have to set the validator for m_pPLLChannel
-    scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pPllChannel->getName(), "0", "");
+    cSCPIInfo *scpiInfo = new cSCPIInfo("CONFIGURATION", "PLLREFERENCE", "10", m_pPllChannel->getName(), "0", "");
     m_pPllChannel->setSCPIInfo(scpiInfo);
 
     m_pParPllAutomaticOnOff = new VfModuleParameter(m_pModule->m_nEntityId, m_pModule->m_pModuleValidator,
@@ -79,21 +71,17 @@ void cPllObsermatic::generateInterface()
     m_pModule->veinModuleComponentList.append(m_pPllSignal);
 }
 
-
 void cPllObsermatic::pllAutomatic()
 {
-    if (m_bActive && (m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) ) // was automatic configured
-    {
-        int i, n;
-        n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
-        for (i = 0; i < n; i++)
-        {
+    if (m_bActive && (m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive == 1) ) { // was automatic configured
+        int i;
+        int n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
+        for (i = 0; i < n; i++) {
             double urValue;
             urValue = m_pllMeasChannelHash[ m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]]->getUrValue();
             if (m_ActualValues[i] > urValue * 10.0 / 100.0)
                 break;
         }
-
         if (i == n)
             i = 0; // if none of our channels has 10% attenuation we take the first channel
 
@@ -102,30 +90,19 @@ void cPllObsermatic::pllAutomatic()
     }
 }
 
-
 void cPllObsermatic::setPllChannelValidator()
 {
-    int i, n;
     QStringList sl;
-    cStringValidator *sValidator;
-
-    n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
-
-    for (i = 0; i < n; i++)
+    for (int i = 0; i < m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count(); i++)
         sl.append(m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(i)]);
 
-    sValidator = new cStringValidator(sl);
+    cStringValidator *sValidator = new cStringValidator(sl);
     m_pPllChannel->setValidator(sValidator);
 }
 
-
 void cPllObsermatic::getPllMeasChannels()
 {
-    int i, n;
-
-    n = m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count();
-    for (i = 0; i < n; i++)
-    {
+    for (int i = 0; i < m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.count(); i++) {
         QString sysName, alias;
         cPllMeasChannel* pllchn;
 
@@ -135,10 +112,8 @@ void cPllObsermatic::getPllMeasChannels()
         m_pllMeasChannelHash[alias] = pllchn;
         m_AliasHash[sysName] = alias;
     }
-
     emit activationContinue();
 }
-
 
 void cPllObsermatic::activationDone()
 {
@@ -154,19 +129,16 @@ void cPllObsermatic::activationDone()
     emit activated();
 }
 
-
 void cPllObsermatic::deactivationInit()
 {
     m_bActive = false;
     emit deactivationContinue();
 }
 
-
 void cPllObsermatic::deactivationDone()
 {
     emit deactivated();
 }
-
 
 void cPllObsermatic::newPllChannel(QVariant channel)
 {
@@ -174,34 +146,25 @@ void cPllObsermatic::newPllChannel(QVariant channel)
     if (!m_pllMeasChannelHash.contains(m_sNewPllChannel))
         m_sNewPllChannel = m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(0)];
 
-    if (m_sNewPllChannel != m_sActPllChannel)
-    {
+    if (m_sNewPllChannel != m_sActPllChannel) {
         m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
         m_MsgNrCmdList[m_pllMeasChannelHash[m_sNewPllChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
     }
-
     emit m_pModule->parameterChanged();
 }
-
 
 // called when pll automatic becomes on or off
 void cPllObsermatic::newPllAuto(QVariant pllauto)
 {
     bool ok;
-
-    if ( (m_bPllAutomatic = (pllauto.toInt(&ok) == 1)) )
-    {
+    if ( (m_bPllAutomatic = (pllauto.toInt(&ok) == 1)) ) {
         m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 1;
         pllAutomatic(); // call once if switched to automatic
     }
     else
-    {
         m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 0;
-    }
-
     emit m_pModule->parameterChanged();
 }
-
 
 void cPllObsermatic::catchChannelReply(quint32 msgnr)
 {
