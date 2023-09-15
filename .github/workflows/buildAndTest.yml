@@ -23,6 +23,61 @@ jobs:
           echo "Workspace: $GITHUB_WORKSPACE"
           echo "CPUs: $(getconf _NPROCESSORS_ONLN)"
 
+      # Prepare source code for incremental build
+      - name: Download source artifact last build
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          repo: ZeraGmbH/zera-classes
+          name: source-artifact
+          workflow: buildAndTest.yml
+        continue-on-error: true
+
+      - name: 'Untar source files last build'
+        run: |
+          mkdir -p "$GITHUB_WORKSPACE"
+          if [ -e source_files.tar.xz ]; then
+            tar -xf source_files.tar.xz -C /
+            rm source_files.tar.xz
+          fi
+
+      - name: 'Checkout git'
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Prepare last build files for incremental build
+      - name: Download build artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          repo: ZeraGmbH/zera-classes
+          name: build-artifact
+          workflow: buildAndTest.yml
+        continue-on-error: true
+
+      - name: 'Untar build files'
+        run: |
+          mkdir -p "$HOME/targetbuild"
+          if [ -e build_files.tar.xz ]; then
+            tar -xf build_files.tar.xz -C /
+            rm build_files.tar.xz
+          fi
+
+      # Prepare last install files for incremental build
+      - name: Download install artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          repo: ZeraGmbH/zera-classes
+          name: install-artifact
+          workflow: buildAndTest.yml
+        continue-on-error: true
+
+      - name: 'Untar install files'
+        run: |
+          if [ -e install_files.tar.xz ]; then
+            tar -xf install_files.tar.xz -C /
+            rm install_files.tar.xz
+          fi
+
       - name: Download zera-metaproject's install artifact
         uses: dawidd6/action-download-artifact@v2
         with:
@@ -33,14 +88,8 @@ jobs:
       - name: 'Untar install artifact'
         run: tar -xf install_files.tar.xz -C /
 
-      - name: Checkout sources
-        uses: actions/checkout@master
-        with:
-          submodules: recursive
-
       - name: Build
         run: |
-          cd $HOME
           mkdir -p "$HOME/targetbuild"
           cd "$HOME/targetbuild"
 
@@ -53,7 +102,41 @@ jobs:
            -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
            -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc"
            make -j $(getconf _NPROCESSORS_ONLN)
-      - name: unittest
+
+      - name: Unittest
         run: |
           cd "$HOME/targetbuild"
           ctest -V
+
+      # Keep sources for incremental checkout
+      - name: Tar sources
+        run: |
+          tar -c -I 'xz -T0' -f $HOME/source_files.tar.xz "$GITHUB_WORKSPACE"
+
+      - name: 'Upload source artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-artifact
+          path: /github/home/source_files.tar.xz
+
+      # Keep build files for incremental build
+      - name: 'Tar build files'
+        run: |
+          tar -c -I 'xz -T0' -f $HOME/build_files.tar.xz "$HOME/targetbuild"
+
+      - name: 'Upload build artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: /github/home/build_files.tar.xz
+
+      # Keep install files for incremental build / submodule actions
+      - name: 'Tar install files'
+        run: |
+          tar -c -I 'xz -T0' -f $HOME/install_files.tar.xz "$HOME/install"
+
+      - name: 'Upload install artifact'
+        uses: actions/upload-artifact@v3
+        with:
+          name: install-artifact
+          path: /github/home/install_files.tar.xz
