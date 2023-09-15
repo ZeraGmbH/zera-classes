@@ -65,10 +65,6 @@ void cSampleModuleConfiguration::setConfiguration(QByteArray xmlString)
 
 QByteArray cSampleModuleConfiguration::exportConfiguration()
 {
-//    QList<QString> keyList = m_exportEntityList.keys();
-//    for (int i = 0; i << keyList.count(); i++)
-//        m_pXMLReader->setValue(keyList.at(i), m_exportEntityList[keyList.at(i)]);
-
     boolParameter* bPar;
     bPar = &m_pSampleModulConfigData->m_ObsermaticConfPar.m_npllAutoAct;
     m_pXMLReader->setValue(bPar->m_sKey, QString("%1").arg(bPar->m_nActive));
@@ -91,11 +87,8 @@ cSampleModuleConfigData *cSampleModuleConfiguration::getConfigurationData()
 
 void cSampleModuleConfiguration::configXMLInfo(QString key)
 {
-    bool ok;
-
-    if (m_ConfigXMLMap.contains(key))
-    {
-        ok = true;
+    if (m_ConfigXMLMap.contains(key)) {
+        bool ok = true;
         int cmd = m_ConfigXMLMap[key];
         switch (cmd)
         {
