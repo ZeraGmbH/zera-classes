@@ -86,8 +86,10 @@ jobs:
           name: install-artifact
           workflow: buildAndExportArtifact.yml
 
-      - name: 'Untar install artifact'
-        run: tar -xf install_files.tar.xz -C /
+      - name: 'Untar zera-metaproject's install artifact'
+        run: |
+            tar -xf install_files.tar.xz -C /
+            rm install_files.tar.xz
 
       - name: Build
         run: |
