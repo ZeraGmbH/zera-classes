@@ -750,6 +750,16 @@ void cSec1ModuleMeasProgram::setStatus(quint32 status)
     m_pStatusAct->setValue(QVariant::fromValue<quint32>(status));
 }
 
+double cSec1ModuleMeasProgram::calculateDutConstant()
+{
+    double dutConst;
+    if(m_sDutConstantUnit.contains(QString("/I")))
+        dutConst = m_pEnergyAct->getValue().toDouble() * 1000 / getConfData()->m_nMRate.m_nPar;
+    else
+        dutConst = getConfData()->m_nMRate.m_nPar / m_pEnergyAct->getValue().toDouble();
+    return dutConst;
+}
+
 void cSec1ModuleMeasProgram::onRefConstantChanged(QString refInputName)
 {
     if(getConfData()->m_sRefInput.m_sPar == refInputName) {
@@ -1491,12 +1501,7 @@ void cSec1ModuleMeasProgram::newDutConstantAuto(QVariant dutConstAuto)
 {
     if (dutConstAuto.toInt()) {
         if (!m_bMeasurementRunning && m_nEnergyCounterFinal != 0) {
-            double dutConst;
-            if(m_sDutConstantUnit.contains(QString("/I")))
-                dutConst = (m_pEnergyAct->getValue()).toDouble()*1000/getConfData()->m_nMRate.m_nPar;
-            else
-                dutConst = getConfData()->m_nMRate.m_nPar/(m_pEnergyAct->getValue()).toDouble();
-            newDutConstant(dutConst);
+            newDutConstant(calculateDutConstant());
         }
         m_pDutConstantAuto->setValue(0);
     }
