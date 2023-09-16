@@ -147,8 +147,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case claimresource:
         if (reply == ack)
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg((tr(claimresourceErrMsg)));
             emit activationError();
         }
