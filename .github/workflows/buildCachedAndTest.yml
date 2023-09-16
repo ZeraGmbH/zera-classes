@@ -96,7 +96,6 @@ jobs:
           repo: ZeraGmbH/zera-metaproject
           name: install-artifact
           workflow: buildAndExportArtifact.yml
-          check_artifacts: true
 
       - name: Untar zera-metaproject's install artifact
         run: |
