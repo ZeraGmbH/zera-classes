@@ -123,24 +123,16 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case readresourceinfosamplechannel:
     {
         bool ok1, ok2, ok3;
-        int max, free;
-        QStringList sl;
-
-
-        sl = answer.toString().split(';');
+        QStringList sl = answer.toString().split(';');
         if ((reply ==ack) && (sl.length() >= 4)) {
-            max = sl.at(0).toInt(&ok1); // fixed position
-            free = sl.at(1).toInt(&ok2);
+            int max = sl.at(0).toInt(&ok1); // fixed position
+            int free = sl.at(1).toInt(&ok2);
             m_sDescription = sl.at(2);
             m_nPort = sl.at(3).toInt(&ok3);
 
             if (ok1 && ok2 && ok3 && ((max == free) == 1))
-            {
                 emit activationContinue();
-            }
-
-            else
-            {
+            else {
                 emit errMsg((tr(resourceInfoErrMsg)));
                 emit activationError();
             }
