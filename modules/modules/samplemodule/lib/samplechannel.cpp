@@ -115,8 +115,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case readresourcesamplechannel:
         if ((reply == ack) && (answer.toString().contains(m_sName)))
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg((tr(resourceErrMsg)));
             emit activationError();
         }
