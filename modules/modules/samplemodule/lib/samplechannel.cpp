@@ -137,13 +137,10 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
                 emit activationError();
             }
         }
-
-        else
-        {
+        else {
             emit errMsg((tr(resourceInfoErrMsg)));
             emit activationError();
         }
-
         break;
 
     }
