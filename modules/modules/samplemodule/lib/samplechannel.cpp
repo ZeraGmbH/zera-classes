@@ -99,8 +99,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case sendsamplechannelrmident:
         if (reply == ack) // we only continue if resource manager acknowledges
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg(tr(rmidentErrMSG));
             emit activationError();
         }
@@ -108,8 +107,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case readresourcetypessamplechannel:
         if ((reply == ack) && (answer.toString().contains("SAMPLE")))
             emit activationContinue();
-        else
-        {
+        else {
             emit errMsg((tr(resourcetypeErrMsg)));
             emit activationError();
         }
