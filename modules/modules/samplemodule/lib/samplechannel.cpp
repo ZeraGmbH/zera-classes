@@ -128,8 +128,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
 
 
         sl = answer.toString().split(';');
-        if ((reply ==ack) && (sl.length() >= 4))
-        {
+        if ((reply ==ack) && (sl.length() >= 4)) {
             max = sl.at(0).toInt(&ok1); // fixed position
             free = sl.at(1).toInt(&ok2);
             m_sDescription = sl.at(2);
