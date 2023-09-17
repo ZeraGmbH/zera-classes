@@ -161,13 +161,11 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         }
         break;
     case readchnaliassamplechannel:
-        if (reply == ack)
-        {
+        if (reply == ack) {
             m_sAlias = answer.toString();
             emit activationContinue();
         }
-        else
-        {
+        else {
             emit errMsg((tr(readaliasErrMsg)));
             emit activationError();
         }
