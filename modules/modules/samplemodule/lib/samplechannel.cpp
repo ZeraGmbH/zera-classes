@@ -194,9 +194,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
 
 void cSampleChannel::setRangeValidator()
 {
-    cStringValidator *sValidator;
-
-    sValidator = new cStringValidator(m_RangeNameList);
+    cStringValidator *sValidator = new cStringValidator(m_RangeNameList);
     m_pChannelRange->setValidator(sValidator);
 }
 
