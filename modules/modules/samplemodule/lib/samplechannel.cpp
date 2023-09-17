@@ -171,13 +171,11 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
         }
         break;
     case readrangelistsamplechannel:
-        if (reply == ack)
-        {
+        if (reply == ack) {
             m_RangeNameList = answer.toStringList();
             emit activationContinue();
         }
-        else
-        {
+        else {
             emit errMsg((tr(readrangelistErrMsg)));
             emit activationError();
         }
