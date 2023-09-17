@@ -1,0 +1,106 @@
+name: Recreate build caches
+on:
+  schedule:
+    - cron:  '0 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        compiler: [gcc, clang]
+
+    container:
+      image: schnitzeltony/fedora-qt5:32
+    steps:
+      - name: Echo github environment
+        run: |
+          echo "Home: $HOME"
+          echo "Workspace: $GITHUB_WORKSPACE"
+          echo "Event name: "${{ github.event_name }}
+          echo "CPUs: $(getconf _NPROCESSORS_ONLN)"
+
+      - name: Checkout git
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      # Get zera-metaproject sysroot
+      # * mandatory
+      # * zera-metaproject's generator workflow name must be set
+      - name: Download zera-metaproject's install artifact
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          repo: ZeraGmbH/zera-metaproject
+          name: install-artifact
+          workflow: buildAndExportArtifact.yml
+
+      - name: Untar zera-metaproject's install artifact
+        run: |
+            tar -xf install_files.tar.xz -C /
+            rm install_files.tar.xz
+
+      # Build & Unitttest
+      - name: Build
+        run: |
+          mkdir -p "$HOME/targetbuild"
+          cd "$HOME/targetbuild"
+
+          if [ "${{ matrix.compiler }}" == "clang" ]; then
+            export CC=clang
+            export CXX=clang++
+          fi
+          cmake $GITHUB_WORKSPACE \
+           -DCMAKE_PREFIX_PATH="$HOME/install/usr;/usr" \
+           -DCMAKE_INSTALL_PREFIX:PATH="$HOME/install/usr" \
+           -DCMAKE_INSTALL_SYSCONFDIR="$HOME/install/etc"
+           make -j $(getconf _NPROCESSORS_ONLN)
+
+      - name: Unittest
+        run: |
+          cd "$HOME/targetbuild"
+          ctest -V
+
+      # Keep sources for incremental checkout
+      - name: Tar sources
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          tar -c -I 'xz -T0' -f $HOME/source-cache-files.tar.xz "$GITHUB_WORKSPACE"
+
+      - name: Upload source artifact
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: source-cache-${{ matrix.compiler }}
+          path: /github/home/source-cache-files.tar.xz
+          retention-days: 1
+
+      # Keep build files for incremental build
+      - name: Tar build files
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          tar -c -I 'xz -T0' -f $HOME/build-cache-files.tar.xz "$HOME/targetbuild"
+
+      - name: Upload build artifact
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-cache-${{ matrix.compiler }}
+          path: /github/home/build-cache-files.tar.xz
+          retention-days: 1
+
+      # Keep install files for incremental build
+      - name: Tar install files
+        if: ${{ github.event_name != 'pull_request' }}
+        run: |
+          tar -c -I 'xz -T0' -f $HOME/install-cache-files.tar.xz "$HOME/install"
+
+      - name: Upload install artifact
+        if: ${{ github.event_name != 'pull_request' }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: install-cache-${{ matrix.compiler }}
+          path: /github/home/install-cache-files.tar.xz
+          retention-days: 1
+

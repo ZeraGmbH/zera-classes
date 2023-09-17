@@ -1,8 +1,11 @@
 name: Build and unittest
 on:
-  schedule:
-    - cron:  '0 4 * * *'
   workflow_dispatch:
+  workflow_run:
+    workflows: ["Recreate build caches"]
+    branches: [master]
+    types:
+      - completed
   pull_request:
     branches:
       - master
@@ -31,18 +34,19 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' }}
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: source-artifact-${{ matrix.compiler }}
+          workflow: recreateBuildCaches.yml
+          name: source-cache-${{ matrix.compiler }}
           check_artifacts: true
         continue-on-error: true
 
       - name: Untar source files last build
         run: |
           mkdir -p "$GITHUB_WORKSPACE"
-          if [ -e source_files.tar.xz ]; then
-            tar -xf source_files.tar.xz -C /
-            rm source_files.tar.xz
+          if [ -e source-cache-files.tar.xz ]; then
+            tar -xf source-cache-files.tar.xz -C /
+            rm source-cache-files.tar.xz
           else
-            echo 'source_files.tar.xz not found'
+            echo 'source-cache-files.tar.xz not found'
           fi
 
       - name: Checkout git
@@ -55,18 +59,19 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' }}
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: build-artifact-${{ matrix.compiler }}
+          workflow: recreateBuildCaches.yml
+          name: build-cache-${{ matrix.compiler }}
           check_artifacts: true
         continue-on-error: true
 
       - name: Untar build files
         run: |
           mkdir -p "$HOME/targetbuild"
-          if [ -e build_files.tar.xz ]; then
-            tar -xf build_files.tar.xz -C /
-            rm build_files.tar.xz
+          if [ -e build-cache-files.tar.xz ]; then
+            tar -xf build-cache-files.tar.xz -C /
+            rm build-cache-files.tar.xz
           else
-            echo 'build_files.tar.xz not found'
+            echo 'build-cache-files.tar.xz not found'
           fi
 
       # Prepare last install files for incremental build
@@ -74,17 +79,18 @@ jobs:
         if: ${{ github.event_name != 'workflow_dispatch' && github.event_name != 'schedule' }}
         uses: dawidd6/action-download-artifact@v2
         with:
-          name: install-artifact-${{ matrix.compiler }}
+          workflow: recreateBuildCaches.yml
+          name: install-cache-${{ matrix.compiler }}
           check_artifacts: true
         continue-on-error: true
 
       - name: Untar install files
         run: |
-          if [ -e install_files.tar.xz ]; then
-            tar -xf install_files.tar.xz -C /
-            rm install_files.tar.xz
+          if [ -e install-cache-files.tar.xz ]; then
+            tar -xf install-cache-files.tar.xz -C /
+            rm install-cache-files.tar.xz
           else
-            echo 'install_files.tar.xz not found'
+            echo 'install-cache-files.tar.xz not found'
           fi
 
       # Get zera-metaproject sysroot
@@ -122,46 +128,4 @@ jobs:
         run: |
           cd "$HOME/targetbuild"
           ctest -V
-
-      # Keep sources for incremental checkout
-      - name: Tar sources
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          tar -c -I 'xz -T0' -f $HOME/source_files.tar.xz "$GITHUB_WORKSPACE"
-
-      - name: Upload source artifact
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: source-artifact-${{ matrix.compiler }}
-          path: /github/home/source_files.tar.xz
-          retention-days: 1
-
-      # Keep build files for incremental build
-      - name: Tar build files
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          tar -c -I 'xz -T0' -f $HOME/build_files.tar.xz "$HOME/targetbuild"
-
-      - name: Upload build artifact
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: build-artifact-${{ matrix.compiler }}
-          path: /github/home/build_files.tar.xz
-          retention-days: 1
-
-      # Keep install files for incremental build / submodule actions
-      - name: Tar install files
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          tar -c -I 'xz -T0' -f $HOME/install_files.tar.xz "$HOME/install"
-
-      - name: Upload install artifact
-        if: ${{ github.event_name != 'pull_request' }}
-        uses: actions/upload-artifact@v3
-        with:
-          name: install-artifact-${{ matrix.compiler }}
-          path: /github/home/install_files.tar.xz
-          retention-days: 1
 
