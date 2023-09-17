@@ -183,8 +183,7 @@ void cSampleChannel::catchInterfaceAnswer(quint32 msgnr, quint8 reply, QVariant 
     case setsamplechannelrange:
         if (reply == ack)
             m_sActRange = m_sNewRange;
-        else
-        {
+        else {
             emit errMsg((tr(setRangeErrMsg)));
             emit executionError();
         }; // perhaps some error output
