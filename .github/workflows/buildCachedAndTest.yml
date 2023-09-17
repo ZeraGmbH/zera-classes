@@ -135,7 +135,7 @@ jobs:
         with:
           name: source-artifact-${{ matrix.compiler }}
           path: /github/home/source_files.tar.xz
-          retention-days: 3
+          retention-days: 1
 
       # Keep build files for incremental build
       - name: Tar build files
@@ -149,7 +149,7 @@ jobs:
         with:
           name: build-artifact-${{ matrix.compiler }}
           path: /github/home/build_files.tar.xz
-          retention-days: 3
+          retention-days: 1
 
       # Keep install files for incremental build / submodule actions
       - name: Tar install files
@@ -163,5 +163,5 @@ jobs:
         with:
           name: install-artifact-${{ matrix.compiler }}
           path: /github/home/install_files.tar.xz
-          retention-days: 3
+          retention-days: 1
 
