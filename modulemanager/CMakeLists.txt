@@ -1,18 +1,3 @@
-
-file(GLOB RESOURCES 
-    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
-    )
-
-add_executable(zera-modulemanager
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-    ${RESOURCES}
-    )
-
-target_link_libraries(zera-modulemanager
-    PRIVATE
-    zera-modulemanager-lib
-)
-
 file(GLOB SESSION_FILES
     ${CMAKE_CURRENT_SOURCE_DIR}/sessions/*.json
 )
@@ -66,19 +51,6 @@ add_custom_target(zera-modulemanager-config ALL
     COMMAND ${JSONLINT} ${CONFIG_FILES}
     )
 
-target_include_directories(zera-modulemanager
-    PUBLIC
-    $<BUILD_INTERFACE:${MY_LIBRARY_SOURCE_DIR}/include>
-    $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/zera-modulemanager>
-    PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}
-    )
-
-install(TARGETS zera-modulemanager
-    EXPORT zera-modulemanagerExport
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-    )
-
 install(
     FILES ${SESSION_FILES}
     DESTINATION ${SET_MODMAN_SESSION_PATH}
@@ -97,5 +69,6 @@ install(
 enable_testing()
 add_subdirectory(tests)
 add_subdirectory(lib)
+add_subdirectory(app)
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

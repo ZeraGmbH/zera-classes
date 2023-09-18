@@ -1,0 +1,19 @@
+file(GLOB RESOURCES 
+    ${CMAKE_CURRENT_SOURCE_DIR}/*.qrc
+    )
+
+add_executable(zera-modulemanager
+    ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${RESOURCES}
+    )
+
+target_link_libraries(zera-modulemanager
+    PRIVATE
+    zera-modulemanager-lib
+)
+
+install(TARGETS zera-modulemanager
+    EXPORT zera-modulemanagerExport
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    )
+
