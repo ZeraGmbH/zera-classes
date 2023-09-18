@@ -24,6 +24,11 @@ double cDoubleValidator::getMaxValue()
     return m_fMax;
 }
 
+double cDoubleValidator::getDelta()
+{
+    return m_fDelta;
+}
+
 bool cDoubleValidator::isValidParam(QVariant& newValue)
 {
     bool ok;
