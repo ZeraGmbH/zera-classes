@@ -59,6 +59,7 @@ function(SETUP_TESTS)
             PUBLIC
             testhelpers
             zera-modulemanager-lib
+            zera-modulemanager-testlib
             )
     endforeach()
 endfunction()
@@ -67,4 +68,5 @@ SETUP_TESTS(
     test_jsonloggercontentloader
     test_jsonconfigfiles
     test_loggercontentsessionloader
+    test_modman_config
     )
