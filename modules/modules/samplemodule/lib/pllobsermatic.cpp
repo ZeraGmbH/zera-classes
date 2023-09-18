@@ -123,7 +123,7 @@ void cPllObsermatic::activationDone()
     connect(m_pPllChannel, &VfModuleParameter::sigValueChanged, this, &cPllObsermatic::newPllChannel);
 
     setPllChannelValidator();
-    newPllChannel(QVariant(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar)); // we set our default channel here
+    sendPllChannel(m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar);
 
     m_bActive = true;
     emit activated();
@@ -140,17 +140,28 @@ void cPllObsermatic::deactivationDone()
     emit deactivated();
 }
 
+void cPllObsermatic::sendPllChannel(QString channelRequested)
+{
+    channelRequested = adjustToValidPllChannel(channelRequested);
+    m_sNewPllChannel = channelRequested;
+    m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
+    m_MsgNrCmdList[m_pllMeasChannelHash[channelRequested]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
+}
+
+QString cPllObsermatic::adjustToValidPllChannel(QVariant channel)
+{
+    QString channelRequested = channel.toString();
+    if (!m_pllMeasChannelHash.contains(channelRequested))
+        channelRequested = m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(0)];
+    return channelRequested;
+}
+
 void cPllObsermatic::newPllChannel(QVariant channel)
 {
-    m_sNewPllChannel = channel.toString();
-    if (!m_pllMeasChannelHash.contains(m_sNewPllChannel))
-        m_sNewPllChannel = m_AliasHash[m_ConfPar.m_ObsermaticConfPar.m_pllChannelList.at(0)];
-
-    if (m_sNewPllChannel != m_sActPllChannel) {
-        m_pPllSignal->setValue(QVariant(1)); // we signal that we are changing pll channel
-        m_MsgNrCmdList[m_pllMeasChannelHash[m_sNewPllChannel]->setyourself4PLL(m_ConfPar.m_ObsermaticConfPar.m_sSampleSystem)] = setpll;
-    }
-    emit m_pModule->parameterChanged();
+    // Isn't this obsolete? Vein transfers changes only.
+    QString channelRequested = adjustToValidPllChannel(channel);
+    if (channelRequested != m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar)
+        sendPllChannel(channelRequested);
 }
 
 // called when pll automatic becomes on or off
@@ -173,7 +184,8 @@ void cPllObsermatic::catchChannelReply(quint32 msgnr)
     case setpll:
         m_pPllSignal->setValue(QVariant(0)); // pll change finished
         m_pPllChannel->setValue(QVariant(m_sNewPllChannel));
-        m_sActPllChannel = m_sNewPllChannel;
+        m_ConfPar.m_ObsermaticConfPar.m_pllChannel.m_sPar = m_sNewPllChannel;
+        emit m_pModule->parameterChanged();
         break;
     }
 }
