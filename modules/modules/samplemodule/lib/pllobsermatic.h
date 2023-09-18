@@ -58,7 +58,6 @@ private:
     QState m_deactivationInitState;
     QFinalState m_deactivationDoneState;
 
-    bool m_bPllAutomatic;
     void pllAutomatic();
 
     void setPllChannelValidator();

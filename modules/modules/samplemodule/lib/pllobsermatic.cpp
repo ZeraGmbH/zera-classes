@@ -156,8 +156,7 @@ void cPllObsermatic::newPllChannel(QVariant channel)
 // called when pll automatic becomes on or off
 void cPllObsermatic::newPllAuto(QVariant pllauto)
 {
-    bool ok;
-    if ( (m_bPllAutomatic = (pllauto.toInt(&ok) == 1)) ) {
+    if ( pllauto.toInt() == 1) {
         m_ConfPar.m_ObsermaticConfPar.m_npllAutoAct.m_nActive = 1;
         pllAutomatic(); // call once if switched to automatic
     }
