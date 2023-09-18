@@ -13,7 +13,6 @@ set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/zeradblogger.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonloggercontentloader.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanagerconfig.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/diriteratorworker.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/jsonloggercontentsessionloader.cpp
     )
 
