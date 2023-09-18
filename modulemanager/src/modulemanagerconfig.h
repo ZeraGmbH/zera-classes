@@ -9,6 +9,7 @@ class ModulemanagerConfig
 public:
     static ModulemanagerConfig *getInstance();
     static void setDemoDevice(QString demoDevice);
+    static QString getConfigFileName();
     bool isValid();
     const QString getDeviceName();
     bool getCustomerDataEnabled();
@@ -16,6 +17,8 @@ public:
     const QString getDefaultSession();
     void setDefaultSession(QString session);
     bool containsDeviceName(QString devName);
+protected:
+    static QString m_configFileName;
 private:
     ModulemanagerConfig();
     const QString getDevNameFromUBoot();
