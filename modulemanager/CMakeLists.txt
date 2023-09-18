@@ -1,8 +1,3 @@
-get_directory_property( DirDefs DIRECTORY ${CMAKE_SOURCE_DIR} COMPILE_DEFINITIONS )
-foreach( d ${DirDefs} )
-    message( STATUS "Found Define: " ${d} )
-endforeach()
-
 set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/modulemanager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/moduleeventhandler.cpp
