@@ -764,6 +764,9 @@ double cSec1ModuleMeasProgram::calculateDutConstant()
     if(dutConst > m_dutConstValidator->getMaxValue())
         dutConst = m_dutConstValidator->getMaxValue();
 
+    int precision = ceil(log10(1/m_dutConstValidator->getDelta()));
+    dutConst = QString::number(dutConst, 'f', precision).toDouble();
+
     return dutConst;
 }
 
