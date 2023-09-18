@@ -1,5 +1,4 @@
 #include "zeradblogger.h"
-#include "diriteratorworker.h"
 
 #include <vcmp_componentdata.h>
 #include <vcmp_remoteproceduredata.h>
