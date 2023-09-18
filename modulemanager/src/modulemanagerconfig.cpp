@@ -8,6 +8,7 @@
 ModulemanagerConfig* ModulemanagerConfig::m_instance = nullptr;
 std::once_flag ModulemanagerConfig::m_onceflag;
 QString ModulemanagerConfig::m_demoDevice;
+QString ModulemanagerConfig::m_configFileName = MODMAN_CONFIG_FILE;
 
 ModulemanagerConfig *ModulemanagerConfig::getInstance()
 {
@@ -18,6 +19,11 @@ ModulemanagerConfig *ModulemanagerConfig::getInstance()
 void ModulemanagerConfig::setDemoDevice(QString demoDevice)
 {
     m_demoDevice = demoDevice;
+}
+
+QString ModulemanagerConfig::getConfigFileName()
+{
+    return m_configFileName;
 }
 
 bool ModulemanagerConfig::isValid()
@@ -100,12 +106,12 @@ void ModulemanagerConfig::setDeviceJson(QJsonObject devJson)
 
 void ModulemanagerConfig::save()
 {
-    cJsonFileLoader::storeJsonFile(MODMAN_CONFIG_FILE, m_jsonConfig);
+    cJsonFileLoader::storeJsonFile(getConfigFileName(), m_jsonConfig);
 }
 
 ModulemanagerConfig::ModulemanagerConfig()
 {
-    m_jsonConfig = cJsonFileLoader::loadJsonFile(MODMAN_CONFIG_FILE);
+    m_jsonConfig = cJsonFileLoader::loadJsonFile(getConfigFileName());
     if(!m_demoDevice.isEmpty())
         m_deviceName = m_demoDevice;
     else {
