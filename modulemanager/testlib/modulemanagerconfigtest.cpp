@@ -3,5 +3,7 @@
 
 void ModulemanagerConfigTest::enableTest()
 {
-    m_configFileName = QDir::cleanPath(QString(MODMAN_CONFIG_PATH) + "/" + "modulemanager_config_dev.json");
+    m_configFileName = QDir::cleanPath(
+        QString(OE_INSTALL_ROOT) + "/" +
+        QString(MODMAN_CONFIG_PATH) + "/" + "modulemanager_config_dev.json");
 }
