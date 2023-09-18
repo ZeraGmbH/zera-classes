@@ -16,6 +16,8 @@ target_include_directories(zera-modulemanager-testlib
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     )
 
+add_definitions(-DOE_INSTALL_ROOT="${OE_INSTALL_ROOT}")
+
 target_link_libraries(zera-modulemanager-testlib
     PUBLIC
     Qt5::Core

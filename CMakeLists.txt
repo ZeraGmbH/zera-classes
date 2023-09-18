@@ -45,6 +45,7 @@ add_definitions(-DZC_CONFIG_PATH="${SET_ZC_CONFIG_PATH}")
 
 set(ZC_SERVICES_IP "" CACHE STRING "Services IP address - change to machine's address for debugging")
 
+set(OE_INSTALL_ROOT "" CACHE STRING "OE build install root - add 'add_definitions' only on test code")
 set(OPERATOR_HOME "/home/operator" CACHE FILEPATH "Operator home path")
 set(SET_MODMAN_SESSION_PATH "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/sessions/")
 set(SET_MODMAN_CONFIG_PATH  "${CMAKE_INSTALL_SYSCONFDIR}/zera/modules/")
