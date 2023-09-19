@@ -1,5 +1,6 @@
 #include "modulemanagerconfig.h"
 #include <zera-jsonfileloader.h>
+#include <QDir>
 #include <QJsonArray>
 #include <QFile>
 #include <QVariant>
@@ -19,7 +20,7 @@ ModulemanagerConfig *ModulemanagerConfig::getInstance()
 void ModulemanagerConfig::setDemoDevice(QString demoDevice)
 {
     m_demoDevice = demoDevice;
-    m_configFileName = QString(MODMAN_CONFIG_PATH) + "/" + QString(MODMAN_TEST_SESSION);
+    m_configFileName = QDir::cleanPath(QString(MODMAN_CONFIG_PATH) + "/" + QString(MODMAN_TEST_SESSION));
 }
 
 QString ModulemanagerConfig::getConfigFileName()
