@@ -1,5 +1,6 @@
 #include "test_modman_session.h"
 #include "jsonsessionloader.h"
+#include "licensesystemmock.h"
 #include "moduleeventhandler.h"
 #include "modulemanager.h"
 #include "modulemanagerconfigtest.h"
@@ -33,6 +34,7 @@ void test_modman_session::loadSession()
     netSystem->setOperationMode(VeinNet::NetworkSystem::VNOM_SUBSCRIPTION);
 
     VeinNet::TcpSystem *tcpSystem = new VeinNet::TcpSystem();
+    LicenseSystemMock *licenseSystem = new LicenseSystemMock;
 
     ZeraModules::ModuleManager *modMan = new ZeraModules::ModuleManager(availableSessionList);
     modMan->setDemo(true);
@@ -46,9 +48,11 @@ void test_modman_session::loadSession()
     subSystems.append(storSystem);
     subSystems.append(netSystem);
     subSystems.append(tcpSystem);
+    subSystems.append(licenseSystem);
     evHandler->setSubsystems(subSystems);
 
     modMan->setStorage(storSystem);
+    modMan->setLicenseSystem(licenseSystem);
     modMan->setEventHandler(evHandler);
     mmController->setStorage(storSystem);
 

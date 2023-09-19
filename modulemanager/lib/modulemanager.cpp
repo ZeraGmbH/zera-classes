@@ -128,7 +128,7 @@ void ModuleManager::setStorage(VeinEvent::StorageSystem *t_storage)
     m_storage = t_storage;
 }
 
-void ModuleManager::setLicenseSystem(LicenseSystem *t_licenseSystem)
+void ModuleManager::setLicenseSystem(LicenseSystemInterface *t_licenseSystem)
 {
     ///@todo move to constructor as the ModuleManager depends on the LicenseSystem
     Q_ASSERT(t_licenseSystem != nullptr);
