@@ -28,18 +28,15 @@ LicenseSystem::LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *t_parent)
 
         const QHash<QString, QByteArray> licenseTable = getLicenseFilesFromPath(licenseUrl.toLocalFile());
 
-        for(const QString &licenseFilePath : licenseTable.keys())
-        {
+        for(const QString &licenseFilePath : licenseTable.keys()) {
             const QByteArray licenseFileData = licenseTable.value(licenseFilePath);
             bool isVerified = false;
             QByteArray licenseJsonData;
             licenseJsonData = sigHandler.verifyCMSSignature(m_certData, licenseFileData, &isVerified);
-            if(isVerified)
-            {
+            if(isVerified) {
                 QJsonParseError parseError;
                 QJsonDocument licenseDocument = QJsonDocument::fromJson(licenseJsonData, &parseError);
-                if(parseError.error == QJsonParseError::NoError)
-                {
+                if(parseError.error == QJsonParseError::NoError) {
                     const QJsonObject licenseRootObject = licenseDocument.object();
                     Q_ASSERT(licenseRootObject.contains(s_expiresDescriptor));
                     Q_ASSERT(licenseRootObject.contains(s_deviceSerialDescriptor));
@@ -48,19 +45,13 @@ LicenseSystem::LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *t_parent)
                     if(isUniversalLicense
                             && isValidLicenseExpiryDate(licenseRootObject.value(s_expiresDescriptor).toString())
                             && isValidLicenseDeviceSerial(licenseRootObject.value(s_deviceSerialDescriptor).toString()))
-                    {
                         m_universalLicenseFound = true;
-                    }
                     Q_ASSERT(isUniversalLicense || licenseRootObject.contains(s_systemNameDescriptor));
                     if(licenseRootObject.contains(s_systemNameDescriptor))
-                    {
                         m_verifiedLicenseDataTable.insert(licenseRootObject.value(s_systemNameDescriptor).toString(), licenseRootObject.toVariantMap());
-                    }
                 }
                 else
-                {
                     qWarning() << "Error parsing license document:" << licenseFilePath << "\n" << "parse error:" << parseError.errorString();
-                }
             }
         }
     }
@@ -69,35 +60,24 @@ LicenseSystem::LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *t_parent)
 bool LicenseSystem::isSystemLicensed(const QString &t_uniqueSystemName)
 {
     bool retVal = false;
-
     if(m_universalLicenseFound == true)
-    {
         retVal = true;
-    }
     else if(m_licensedSystems.contains(t_uniqueSystemName)) //known valid license
-    {
         retVal = true;
-    }
-    else
-    {
+    else {
         const QVariantMap licenseRootObject = m_verifiedLicenseDataTable.value(t_uniqueSystemName);
         const QString licenseDeviceSerial = licenseRootObject.value(s_deviceSerialDescriptor).toString();
-
-        if(isValidLicenseDeviceSerial(licenseDeviceSerial))
-        {
+        if(isValidLicenseDeviceSerial(licenseDeviceSerial)) {
             const QString expiryMonth = licenseRootObject.value(s_expiresDescriptor).toString();
-            if(isValidLicenseExpiryDate(expiryMonth))
-            {
+            if(isValidLicenseExpiryDate(expiryMonth)) {
                 retVal = true;
                 m_licensedSystems.append(licenseRootObject.value(s_systemNameDescriptor).toString());
             }
             else
-            {
                 qWarning() << "License expired for system:" << t_uniqueSystemName << "\n" << "date:" << licenseRootObject.value(s_expiresDescriptor).toString();
-            }
         }
     }
-    return retVal; //m_universalLicenseFound || m_licensedSystems.contains(t_uniqueModuleName);
+    return retVal;
 }
 
 QVariantMap LicenseSystem::systemLicenseConfiguration(const QString &t_systemName) const
@@ -105,11 +85,10 @@ QVariantMap LicenseSystem::systemLicenseConfiguration(const QString &t_systemNam
     return m_verifiedLicenseDataTable.value(t_systemName);
 }
 
-void LicenseSystem::setDeviceSerial(const QString &t_serialNumber)
+void LicenseSystem::setDeviceSerial(const QString &serialNumber)
 {
-    if(t_serialNumber.isEmpty() == false)
-    {
-        m_deviceSerial = t_serialNumber;
+    if(serialNumber.isEmpty() == false) {
+        m_deviceSerial = serialNumber;
         m_serialNumberInitialized = true;
         emit sigSerialNumberInitialized();
     }
@@ -133,25 +112,20 @@ QByteArray LicenseSystem::loadCertData() const
     return retVal;
 }
 
-QByteArray LicenseSystem::loadLicenseFile(const QString &t_filePath) const
+QByteArray LicenseSystem::loadLicenseFile(const QString &filePath) const
 {
     QByteArray retVal;
-    QFile tmpFile(t_filePath);
-    QFileInfo tmpFileInfo(tmpFile);
-
-    if(tmpFile.exists())
-    {
+    QFile tmpFile(filePath);
+    if(tmpFile.exists()) {
+        QFileInfo tmpFileInfo(tmpFile);
         //mimetype is text/plain so use file extension do distinguish licenses from text files
-        if(tmpFileInfo.completeSuffix().toLower() == "p7m") //format: pkcs7 s/mime (Content-Type: multipart/signed; protocol="application/x-pkcs7-signature";)
-        {
+        if(tmpFileInfo.completeSuffix().toLower() == "p7m") { //format: pkcs7 s/mime (Content-Type: multipart/signed; protocol="application/x-pkcs7-signature";)
             tmpFile.open(QFile::ReadOnly);
             retVal = tmpFile.readAll();
             tmpFile.close();
         }
         else
-        {
-            qDebug() << "Ignored regular file:" << t_filePath << "(no .p7m extension)";
-        }
+            qDebug() << "Ignored regular file:" << filePath << "(no .p7m extension)";
     }
     return retVal;
 }

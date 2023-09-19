@@ -16,7 +16,7 @@ class LicenseSystem : public LicenseSystemInterface
 public:
     LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *t_parent = nullptr);
 
-    bool isSystemLicensed(const QString &t_uniqueModuleName) override;
+    bool isSystemLicensed(const QString &uniqueModuleName) override;
     /**
    * @brief Returns the data of the license json objects for the given system
    * @param t_systemName
@@ -24,7 +24,7 @@ public:
    */
     QVariantMap systemLicenseConfiguration(const QString &t_systemName) const;
 
-    void setDeviceSerial(const QString &t_serialNumber);
+    void setDeviceSerial(const QString &serialNumber);
     /**
    * @brief serialNumberIsInitialized
    * @return true if the StatusModule1.PAR_SerialNr was retrieved
@@ -40,10 +40,10 @@ private:
     QByteArray loadCertData() const;
     /**
    * @brief reads a license file from the path
-   * @param t_filePath
+   * @param filePath
    * @return
    */
-    QByteArray loadLicenseFile(const QString &t_filePath) const;
+    QByteArray loadLicenseFile(const QString &filePath) const;
     /**
    * @brief reads all license files in a directory via loadLicenseFile() into a hash
    * @param t_path

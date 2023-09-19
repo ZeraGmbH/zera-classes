@@ -9,7 +9,7 @@ class LicenseSystemInterface : public VeinEvent::EventSystem
 public:
     LicenseSystemInterface(QObject *parent = nullptr) :
         VeinEvent::EventSystem(parent) {}
-    virtual bool isSystemLicensed(const QString &t_uniqueModuleName) = 0;
+    virtual bool isSystemLicensed(const QString &uniqueModuleName) = 0;
     virtual bool serialNumberIsInitialized() const  = 0;
 signals:
     void sigSerialNumberInitialized();
