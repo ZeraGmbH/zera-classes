@@ -4,6 +4,7 @@
 #include "moduleeventhandler.h"
 #include "modulemanager.h"
 #include "modulemanagerconfigtest.h"
+#include "modulemanagertest.h"
 #include "modulemanagercontroller.h"
 #include "vn_introspectionsystem.h"
 #include "vn_networksystem.h"
@@ -19,6 +20,7 @@ void test_modman_session::loadSession()
 {
     ModulemanagerConfigTest::enableTest();
     ModulemanagerConfig::setDemoDevice("demo");
+    ModuleManagerTest::enableTest();
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QString defaultSessionFile = mmConfig->getDefaultSession();

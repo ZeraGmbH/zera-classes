@@ -40,13 +40,13 @@ public:
     void setEventHandler(ModuleEventHandler *t_eventHandler);
     void setDemo(bool demo);
 signals:
-    void sigSessionSwitched(const QString &t_newSessionPath);
+    void sigSessionSwitched(const QString &newSessionFile);
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
 
 public slots:
     void startModule(const QString &t_uniqueName, const QString &t_xmlConfigPath, const QByteArray &t_xmlConfigData, int t_moduleId);
     void destroyModules();
-    void changeSessionFile(const QString &t_newSessionPath);
+    void changeSessionFile(const QString &newSessionFile);
     void setModulesPaused(bool t_paused);
 
 private slots:
@@ -56,6 +56,9 @@ private slots:
     void onModuleError(const QString &t_error);
     void checkModuleList();
     void onModuleEventSystemAdded(VeinEvent::EventSystem *t_eventSystem);
+
+protected:
+    static QString m_sessionPath;
 
 private:
     void saveModuleConfig(ModuleData *t_moduleData);
@@ -69,7 +72,7 @@ private:
     ModuleEventHandler *m_eventHandler=nullptr;
     LicenseSystemInterface *m_licenseSystem=nullptr;
 
-    QString m_sessionPath;
+    QString m_sessionFile;
     QList<QString> m_sessionsAvailable;
 
     bool m_moduleStartLock;
