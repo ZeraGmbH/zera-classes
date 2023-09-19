@@ -1,6 +1,7 @@
 #ifndef MODULELOADER_H
 #define MODULELOADER_H
 
+#include "licensesysteminterface.h"
 #include <virtualmodule.h>
 #include <QVariant>
 #include <QHash>
@@ -21,7 +22,6 @@ class ScriptSystem;
 
 class ModuleEventHandler;
 class MeasurementModuleFactory;
-class LicenseSystem;
 
 namespace ZeraModules
 {
@@ -36,7 +36,7 @@ public:
     bool loadModules();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
     void setStorage(VeinEvent::StorageSystem *t_storage);
-    void setLicenseSystem(LicenseSystem *t_licenseSystem);
+    void setLicenseSystem(LicenseSystemInterface *t_licenseSystem);
     void setEventHandler(ModuleEventHandler *t_eventHandler);
     void setDemo(bool demo);
 signals:
@@ -67,7 +67,7 @@ private:
     bool m_demo;
     VeinEvent::StorageSystem *m_storage=nullptr;
     ModuleEventHandler *m_eventHandler=nullptr;
-    LicenseSystem *m_licenseSystem=nullptr;
+    LicenseSystemInterface *m_licenseSystem=nullptr;
 
     QString m_sessionPath;
     QList<QString> m_sessionsAvailable;

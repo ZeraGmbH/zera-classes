@@ -2,6 +2,7 @@
 #define LICENSESYSTEM_H
 
 #include "modman_util.h"
+#include "licensesysteminterface.h"
 
 #include <ve_eventsystem.h>
 
@@ -9,13 +10,13 @@
 #include <QHash>
 #include <QUrl>
 
-class LicenseSystem : public VeinEvent::EventSystem
+class LicenseSystem : public LicenseSystemInterface
 {
     Q_OBJECT
 public:
     LicenseSystem(const QSet<QUrl> &t_licenseURLs, QObject *t_parent = nullptr);
 
-    bool isSystemLicensed(const QString &t_uniqueModuleName);
+    bool isSystemLicensed(const QString &t_uniqueModuleName) override;
     /**
    * @brief Returns the data of the license json objects for the given system
    * @param t_systemName
@@ -28,13 +29,7 @@ public:
    * @brief serialNumberIsInitialized
    * @return true if the StatusModule1.PAR_SerialNr was retrieved
    */
-    bool serialNumberIsInitialized() const;
-
-signals:
-    /**
-   * @brief Called once the StatusModule1.PAR_SerialNr is retrieved
-   */
-    void sigSerialNumberInitialized();
+    bool serialNumberIsInitialized() const override;
 
 private:
     void processEvent(QEvent *t_event) override;
