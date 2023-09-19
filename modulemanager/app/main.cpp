@@ -55,8 +55,10 @@ int main(int argc, char *argv[])
         ModulemanagerConfig::setDemoDevice(demoDeviceName);
     }
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
+    QString configFileName = mmConfig->getConfigFileName();
+    qInfo() << "Moduleamanger configuration file:" << configFileName;
     if(!mmConfig->isValid()) {
-        fprintf(stderr, "Error loading config file from path: %s", qPrintable(mmConfig->getConfigFileName()));
+        fprintf(stderr, "Error loading config file from path: %s", qPrintable(configFileName));
         return -ENOENT;
     }
     QString deviceName = mmConfig->getDeviceName();
@@ -70,7 +72,7 @@ int main(int argc, char *argv[])
         return -ENODEV;
     }
 
-    qInfo() << "Loading session data for " << deviceName;
+    qInfo() << "Loading session data for" << deviceName;
     const bool customerdataSystemEnabled = mmConfig->getCustomerDataEnabled();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
     if(availableSessionList.isEmpty()) {
