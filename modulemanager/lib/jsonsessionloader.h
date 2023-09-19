@@ -7,21 +7,12 @@ class JsonSessionLoader : public QObject
 {
     Q_OBJECT
 public:
-    explicit JsonSessionLoader(QObject *t_Parent = nullptr);
+    explicit JsonSessionLoader(QObject *parent = nullptr);
     const QString &getSessionFilePath() const;
-
 signals:
-    /**
-   * @brief Emitted for every module json object in a session file
-   * @param t_uniqueModuleName
-   * @param t_xmlPath Path to save back the settings if they were changed
-   * @param t_xmlData
-   * @param t_moduleId This is the module object entity id
-   */
-    void sigLoadModule(QString t_uniqueModuleName, QString t_xmlPath, QByteArray t_xmlData, int t_moduleId);
-
+    void sigLoadModule(QString uniqueModuleName, QString xmlPath, QByteArray xmlData, int moduleEntityId);
 public slots:
-    void loadSession(QString t_filePath);
+    void loadSession(QString filePath);
 
 private:
     void parseModule(QJsonObject moduleObject);
