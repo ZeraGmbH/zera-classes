@@ -19,12 +19,12 @@ namespace ZeraModules
 {
 class ModuleData {
 public:
-    ModuleData(VirtualModule *t_ref, const QString &t_name, const QString &t_confPath, const QByteArray &t_confData, int t_moduleId) :
+    ModuleData(VirtualModule *t_ref, const QString &t_name, const QString &t_confPath, const QByteArray &t_confData, int moduleEntityId) :
         m_reference(t_ref),
         m_uniqueName(t_name),
         m_configPath(t_confPath),
         m_configData(t_confData),
-        m_moduleId(t_moduleId)
+        m_moduleId(moduleEntityId)
     {}
 
     ~ModuleData() {}
@@ -84,16 +84,24 @@ ModuleManager::~ModuleManager()
     m_moduleList.clear();
 }
 
-bool ModuleManager::loadModules()
+QStringList ModuleManager::getModuleFileNames()
 {
-    bool retVal = false;
     QString modulePath = MODMAN_MODULE_PATH;
     qDebug("Loading modules from %s", qPrintable(modulePath));
     QDir moduleDir(modulePath);
-    foreach (QString fileName, moduleDir.entryList(QDir::Files)) {
-        QPluginLoader loader(moduleDir.absoluteFilePath(fileName));
+    QStringList fullNames;
+    for(auto &name : moduleDir.entryList(QDir::Files))
+        fullNames.append(moduleDir.absoluteFilePath(name));
+    return fullNames;
+}
+
+bool ModuleManager::loadModules()
+{
+    bool retVal = false;
+    for(auto& fileName : getModuleFileNames()) {
+        QPluginLoader loader(fileName);
         MeasurementModuleFactory *module = qobject_cast<MeasurementModuleFactory *>(loader.instance());
-        qDebug() << "Analyzing:" << loader.fileName() << "\nfile is a library?" << QLibrary::isLibrary(moduleDir.absoluteFilePath(fileName)) << "loaded:" << loader.isLoaded();
+        qDebug() << "Analyzing:" << loader.fileName() << "\nfile is a library?" << QLibrary::isLibrary(fileName) << "loaded:" << loader.isLoaded();
         if (module) {
             retVal=true;
             m_factoryTable.insert(module->getFactoryName(), module);
@@ -145,19 +153,19 @@ void ModuleManager::setDemo(bool demo)
     m_demo = demo;
 }
 
-void ModuleManager::startModule(const QString & t_uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int t_moduleId)
+void ModuleManager::startModule(const QString & uniqueModuleName, const QString & t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId)
 {
     // do not allow starting until all modules are shut down
     if(m_moduleStartLock == false)
     {
-        qInfo("Starting module %s...", qPrintable(t_uniqueModuleName));
+        qInfo("Starting module %s...", qPrintable(uniqueModuleName));
         MeasurementModuleFactory *tmpFactory=nullptr;
 
-        tmpFactory=m_factoryTable.value(t_uniqueModuleName);
-        if(tmpFactory && m_licenseSystem->isSystemLicensed(t_uniqueModuleName))
+        tmpFactory=m_factoryTable.value(uniqueModuleName);
+        if(tmpFactory && m_licenseSystem->isSystemLicensed(uniqueModuleName))
         {
-            qDebug() << "Creating module:" << t_uniqueModuleName << "with id:" << t_moduleId << "with config file:" << t_xmlConfigPath;
-            VirtualModule *tmpModule = tmpFactory->createModule(t_moduleId, m_storage, m_demo, this);
+            qDebug() << "Creating module:" << uniqueModuleName << "with id:" << moduleEntityId << "with config file:" << t_xmlConfigPath;
+            VirtualModule *tmpModule = tmpFactory->createModule(moduleEntityId, m_storage, m_demo, this);
             if(tmpModule)
             {
                 connect(tmpModule, &VirtualModule::addEventSystem, this, &ModuleManager::onModuleEventSystemAdded);
@@ -174,7 +182,7 @@ void ModuleManager::startModule(const QString & t_uniqueModuleName, const QStrin
 
                 m_moduleStartLock = true;
                 tmpModule->startModule();
-                ModuleData *moduleData = new ModuleData(tmpModule, t_uniqueModuleName, t_xmlConfigPath, QByteArray(), t_moduleId);
+                ModuleData *moduleData = new ModuleData(tmpModule, uniqueModuleName, t_xmlConfigPath, QByteArray(), moduleEntityId);
                 connect(tmpModule, &VirtualModule::parameterChanged, [this, moduleData](){
                     saveModuleConfig(moduleData);
                 });
@@ -184,23 +192,23 @@ void ModuleManager::startModule(const QString & t_uniqueModuleName, const QStrin
         else if(m_licenseSystem->serialNumberIsInitialized())
         {
             if(tmpFactory != nullptr) {
-                qWarning() << "Skipping module:" << t_uniqueModuleName << "No license found!";
+                qWarning() << "Skipping module:" << uniqueModuleName << "No license found!";
             }
             else {
-                qWarning() << "Could not create module:" << t_uniqueModuleName << "!";
+                qWarning() << "Could not create module:" << uniqueModuleName << "!";
             }
             onModuleStartNext();
         }
         else //wait for serial number initialization
         {
-            qInfo("No serialno - enqueue module %s...", qPrintable(t_uniqueModuleName));
-            m_deferredStartList.enqueue(new ModuleData(nullptr, t_uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, t_moduleId));
+            qInfo("No serialno - enqueue module %s...", qPrintable(uniqueModuleName));
+            m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId));
         }
     }
     else
     {
-        qInfo("Locked - enqueue module %s...", qPrintable(t_uniqueModuleName));
-        m_deferredStartList.enqueue(new ModuleData(nullptr, t_uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, t_moduleId));
+        qInfo("Locked - enqueue module %s...", qPrintable(uniqueModuleName));
+        m_deferredStartList.enqueue(new ModuleData(nullptr, uniqueModuleName, t_xmlConfigPath, t_xmlConfigData, moduleEntityId));
     }
 }
 
@@ -226,7 +234,7 @@ void ModuleManager::destroyModules()
 void ModuleManager::changeSessionFile(const QString &newSessionFile)
 {
     if(m_sessionFile != newSessionFile) {
-        const QString sessionFileNameFull = QString("%1/%2").arg(m_sessionPath, newSessionFile);
+        const QString sessionFileNameFull = QDir::cleanPath(QString("%1/%2").arg(m_sessionPath, newSessionFile));
         if(QFile::exists(sessionFileNameFull)) {
             if(m_moduleStartLock == false) { // do not mess up the state machines
                 m_sessionFile = newSessionFile;
@@ -355,4 +363,5 @@ void ModuleManager::saveModuleConfig(ModuleData *t_moduleData)
         qWarning() << "Configuration could not be retrieved from module:" << t_moduleData->m_uniqueName;
     }
 }
+
 }

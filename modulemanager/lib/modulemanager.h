@@ -44,7 +44,7 @@ signals:
     void sigModulesLoaded(const QString &t_sessionPath, const QStringList &t_sessionsAvailable);
 
 public slots:
-    void startModule(const QString &t_uniqueName, const QString &t_xmlConfigPath, const QByteArray &t_xmlConfigData, int t_moduleId);
+    void startModule(const QString &t_uniqueName, const QString &t_xmlConfigPath, const QByteArray &t_xmlConfigData, int moduleEntityId);
     void destroyModules();
     void changeSessionFile(const QString &newSessionFile);
     void setModulesPaused(bool t_paused);
@@ -62,6 +62,7 @@ protected:
 
 private:
     void saveModuleConfig(ModuleData *t_moduleData);
+    virtual QStringList getModuleFileNames();
 
     QHash<QString, MeasurementModuleFactory*> m_factoryTable;
     QList<ModuleData *> m_moduleList;
