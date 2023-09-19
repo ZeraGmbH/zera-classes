@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
         ModulemanagerConfig::setDemoDevice(demoDeviceName);
     }
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
-    QString configFileName = mmConfig->getConfigFileName();
+    QString configFileName = mmConfig->getConfigFileNameFull();
     qInfo() << "Moduleamanger configuration file:" << configFileName;
     if(!mmConfig->isValid()) {
         fprintf(stderr, "Error loading config file from path: %s", qPrintable(configFileName));

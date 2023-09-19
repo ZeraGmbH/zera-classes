@@ -9,7 +9,8 @@
 ModulemanagerConfig* ModulemanagerConfig::m_instance = nullptr;
 std::once_flag ModulemanagerConfig::m_onceflag;
 QString ModulemanagerConfig::m_demoDevice;
-QString ModulemanagerConfig::m_configFileName = QString(MODMAN_CONFIG_PATH) + "/" + QString(MODMAN_DEFAULT_SESSION);
+QString ModulemanagerConfig::m_configFileName = MODMAN_DEFAULT_SESSION;
+QString ModulemanagerConfig::m_configFileDir = MODMAN_CONFIG_PATH;
 
 ModulemanagerConfig *ModulemanagerConfig::getInstance()
 {
@@ -20,12 +21,12 @@ ModulemanagerConfig *ModulemanagerConfig::getInstance()
 void ModulemanagerConfig::setDemoDevice(QString demoDevice)
 {
     m_demoDevice = demoDevice;
-    m_configFileName = QDir::cleanPath(QString(MODMAN_CONFIG_PATH) + "/" + QString(MODMAN_TEST_SESSION));
+    m_configFileName = MODMAN_TEST_SESSION;
 }
 
-QString ModulemanagerConfig::getConfigFileName()
+QString ModulemanagerConfig::getConfigFileNameFull()
 {
-    return m_configFileName;
+    return QDir::cleanPath(m_configFileDir + "/" + m_configFileName);
 }
 
 bool ModulemanagerConfig::isValid()
@@ -108,12 +109,12 @@ void ModulemanagerConfig::setDeviceJson(QJsonObject devJson)
 
 void ModulemanagerConfig::save()
 {
-    cJsonFileLoader::storeJsonFile(getConfigFileName(), m_jsonConfig);
+    cJsonFileLoader::storeJsonFile(getConfigFileNameFull(), m_jsonConfig);
 }
 
 ModulemanagerConfig::ModulemanagerConfig()
 {
-    m_jsonConfig = cJsonFileLoader::loadJsonFile(getConfigFileName());
+    m_jsonConfig = cJsonFileLoader::loadJsonFile(getConfigFileNameFull());
     if(!m_demoDevice.isEmpty())
         m_deviceName = m_demoDevice;
     else {
