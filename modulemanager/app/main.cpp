@@ -66,8 +66,7 @@ int main(int argc, char *argv[])
     }
     if(!mmConfig->containsDeviceName(deviceName)) {
         fprintf(stderr, "No device found with name '%s'\n", qPrintable(deviceName));
-        fprintf(stderr, "* Is demo command line correct?\n");
-        fprintf(stderr, "* Did you select modulemanager_config_dev.json in CMake?\n");
+        fprintf(stderr, "Is demo command line correct?\n");
         return -ENODEV;
     }
 
