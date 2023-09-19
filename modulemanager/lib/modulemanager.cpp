@@ -90,12 +90,7 @@ bool ModuleManager::loadModules()
     QString modulePath = MODMAN_MODULE_PATH;
     qDebug("Loading modules from %s", qPrintable(modulePath));
     QDir moduleDir(modulePath);
-    foreach (QObject *staticModule, QPluginLoader::staticInstances()) {
-        qDebug()<<staticModule;//doNothing();
-    }
-
-    foreach (QString fileName, moduleDir.entryList(QDir::Files))
-    {
+    foreach (QString fileName, moduleDir.entryList(QDir::Files)) {
         QPluginLoader loader(moduleDir.absoluteFilePath(fileName));
         MeasurementModuleFactory *module = qobject_cast<MeasurementModuleFactory *>(loader.instance());
         qDebug() << "Analyzing:" << loader.fileName() << "\nfile is a library?" << QLibrary::isLibrary(moduleDir.absoluteFilePath(fileName)) << "loaded:" << loader.isLoaded();
