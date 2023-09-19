@@ -50,13 +50,15 @@ public:
     int m_moduleId;
 };
 
+QString ModuleManager::m_sessionPath = MODMAN_SESSION_PATH;
+
 
 ModuleManager::ModuleManager(const QStringList &t_sessionList, QObject *t_parent) :
     QObject(t_parent),
     m_moduleStartLock(false)
 {
     m_timerAllModulesLoaded.start();
-    QStringList entryList = QDir(MODMAN_SESSION_PATH).entryList(QStringList({"*.json"}));
+    QStringList entryList = QDir(m_sessionPath).entryList(QStringList({"*.json"}));
     QSet<QString> fileSet(entryList.begin(), entryList.end());
     QSet<QString> expectedSet(t_sessionList.begin(), t_sessionList.end());
     if(fileSet.contains(expectedSet))
@@ -225,24 +227,26 @@ void ModuleManager::destroyModules()
     }
 }
 
-void ModuleManager::changeSessionFile(const QString &t_newSessionPath)
+void ModuleManager::changeSessionFile(const QString &newSessionFile)
 {
-    if(m_sessionPath != t_newSessionPath) {
-        const QString finalSessionPath = QString("%1%2").arg(MODMAN_SESSION_PATH).arg(t_newSessionPath);
-        if(QFile::exists(finalSessionPath)) {
+    if(m_sessionFile != newSessionFile) {
+        const QString sessionFileNameFull = QString("%1/%2").arg(m_sessionPath, newSessionFile);
+        if(QFile::exists(sessionFileNameFull)) {
             if(m_moduleStartLock == false) { // do not mess up the state machines
-                m_sessionPath = t_newSessionPath;
+                m_sessionFile = newSessionFile;
                 m_eventHandler->clearSystems();
                 destroyModules();
-                emit sigSessionSwitched(finalSessionPath);
+                emit sigSessionSwitched(sessionFileNameFull);
             }
             else {
                 qWarning() << "Cannot switch sessions while session change already is in progress";
                 Q_ASSERT(false);
             }
         }
-        else
-            qWarning() << "Session file not found:" << finalSessionPath << "Search path:" << MODMAN_SESSION_PATH;
+        else {
+            qWarning() << "Session file not found:" << sessionFileNameFull << "Search path:" << m_sessionPath;
+            Q_ASSERT(false);
+        }
     }
 }
 
@@ -303,9 +307,9 @@ void ModuleManager::onModuleStartNext()
     }
     else {
         ModulemanagerConfig *mmConfig = ModulemanagerConfig::getInstance();
-        mmConfig->setDefaultSession(m_sessionPath);
+        mmConfig->setDefaultSession(m_sessionFile);
         qInfo("All modules started within %llims", m_timerAllModulesLoaded.elapsed());
-        emit sigModulesLoaded(m_sessionPath, m_sessionsAvailable);
+        emit sigModulesLoaded(m_sessionFile, m_sessionsAvailable);
     }
 }
 
