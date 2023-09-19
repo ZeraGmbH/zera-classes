@@ -87,8 +87,9 @@ ModuleManager::~ModuleManager()
 bool ModuleManager::loadModules()
 {
     bool retVal = false;
-    QDir moduleDir(MODMAN_MODULE_PATH);
-    qDebug() << "Loading modules";
+    QString modulePath = MODMAN_MODULE_PATH;
+    qDebug("Loading modules from %s", qPrintable(modulePath));
+    QDir moduleDir(modulePath);
     foreach (QObject *staticModule, QPluginLoader::staticInstances()) {
         qDebug()<<staticModule;//doNothing();
     }
