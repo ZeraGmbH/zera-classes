@@ -224,25 +224,19 @@ void LicenseSystem::processEvent(QEvent *t_event)
 {
     if(t_event->type()==VeinEvent::CommandEvent::eventType())
     {
-        VeinEvent::CommandEvent *cEvent = nullptr;
-        VeinEvent::EventData *evData = nullptr;
-        cEvent = static_cast<VeinEvent::CommandEvent *>(t_event);
+        VeinEvent::CommandEvent *cEvent = static_cast<VeinEvent::CommandEvent *>(t_event);
         Q_ASSERT(cEvent != nullptr);
 
-        evData = cEvent->eventData();
+        VeinEvent::EventData *evData = cEvent->eventData();
         Q_ASSERT(evData != nullptr);
 
         //statusmodule initializes PAR_SerialNr with our serial number to check the licenses against
         if(evData->entityId() == 1150
                 && evData->type() == VeinComponent::ComponentData::dataType()
-                && evData->eventOrigin() == VeinEvent::EventData::EventOrigin::EO_LOCAL)
-        {
+                && evData->eventOrigin() == VeinEvent::EventData::EventOrigin::EO_LOCAL) {
             VeinComponent::ComponentData *cData = static_cast<VeinComponent::ComponentData *>(evData);
-
-            if(cData->componentName() == QString("PAR_SerialNr"))
-            {
-                if(cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_ADD || cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_SET)
-                {
+            if(cData->componentName() == QString("PAR_SerialNr")) {
+                if(cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_ADD || cData->eventCommand() == VeinComponent::ComponentData::Command::CCMD_SET) {
                     const QString newSerialNumber = cData->newValue().toString();
                     if((newSerialNumber.isEmpty() == false) && (m_deviceSerial != newSerialNumber))
                     {
