@@ -7,7 +7,6 @@ QTEST_MAIN(test_modman_config)
 void test_modman_config::loadDevConfig()
 {
     ModulemanagerConfigTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("demo");
 
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     QVERIFY(mmConfig->isValid());
