@@ -15,6 +15,7 @@ void test_modman_config::loadDevConfig()
     QCOMPARE(availSessions.count(), 2);
     QVERIFY(availSessions.contains("demo-session.json"));
     QVERIFY(availSessions.contains("demo-session1.json"));
+    QCOMPARE(mmConfig->getDefaultSession(), "demo-session.json");
 }
 
 
