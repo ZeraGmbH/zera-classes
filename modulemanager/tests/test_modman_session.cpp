@@ -1,5 +1,5 @@
 #include "test_modman_session.h"
-#include "jsonsessionloader.h"
+#include "jsonsessionloadertest.h"
 #include "licensesystemmock.h"
 #include "moduleeventhandler.h"
 #include "modulemanager.h"
@@ -19,6 +19,10 @@ static constexpr quint16 veinPort = 12001;
 
 void test_modman_session::initTestCase()
 {
+    JsonSessionLoaderTest::enableTests();
+    ModulemanagerConfigTest::enableTest();
+    ModuleManagerTest::enableTest();
+    ModulemanagerConfig::setDemoDevice("demo");
     qRegisterMetaTypeStreamOperators<QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators<QList<float> >("QList<float>");
     qRegisterMetaTypeStreamOperators<QList<double> >("QList<double>");
@@ -33,9 +37,6 @@ void test_modman_session::loadModulePluginsInstalled()
         qInfo("Skipping test_modman_session::loadModulePluginsInstalled in OE");
         return;
     }
-    ModulemanagerConfigTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("demo");
-    ModuleManagerTest::enableTest();
 
     const QStringList emptyAvailableSessionList;
     ZeraModules::ModuleManager modMan(emptyAvailableSessionList);
@@ -47,10 +48,6 @@ void test_modman_session::loadModulePluginsInstalled()
 
 void test_modman_session::loadModulePluginsOE()
 {
-    ModulemanagerConfigTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("demo");
-    ModuleManagerTest::enableTest();
-
     const QStringList emptyAvailableSessionList;
     ModuleManagerTest modMan(emptyAvailableSessionList);
     modMan.setDemo(true);
@@ -61,10 +58,6 @@ void test_modman_session::loadModulePluginsOE()
 
 void test_modman_session::startSession()
 {
-    ModulemanagerConfigTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("demo");
-    ModuleManagerTest::enableTest();
-
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
@@ -114,10 +107,6 @@ void test_modman_session::startSession()
 
 void test_modman_session::keepCodeForNext()
 {
-    ModulemanagerConfigTest::enableTest();
-    ModulemanagerConfig::setDemoDevice("demo");
-    ModuleManagerTest::enableTest();
-
     ModulemanagerConfig* mmConfig = ModulemanagerConfig::getInstance();
     const QString defaultSessionFile = mmConfig->getDefaultSession();
     const QStringList availableSessionList = mmConfig->getAvailableSessions();
