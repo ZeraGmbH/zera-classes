@@ -16,7 +16,21 @@
 QTEST_MAIN(test_modman_session)
 
 
-void test_modman_session::loadSession()
+void test_modman_session::loadModulePlugins()
+{
+    ModulemanagerConfigTest::enableTest();
+    ModulemanagerConfig::setDemoDevice("demo");
+    ModuleManagerTest::enableTest();
+
+    const QStringList emptyAvailableSessionList;
+    ZeraModules::ModuleManager modMan(emptyAvailableSessionList);
+    modMan.setDemo(true);
+
+    bool modulesFound = modMan.loadModules();
+    QVERIFY(modulesFound);
+}
+
+void test_modman_session::startSession()
 {
     ModulemanagerConfigTest::enableTest();
     ModulemanagerConfig::setDemoDevice("demo");
@@ -74,6 +88,4 @@ void test_modman_session::loadSession()
     modMan->changeSessionFile(defaultSessionFile);
     mmController->initOnce();
     tcpSystem->startServer(12000);
-
-
 }
