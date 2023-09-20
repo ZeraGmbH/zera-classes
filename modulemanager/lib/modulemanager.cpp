@@ -95,7 +95,7 @@ QStringList ModuleManager::getModuleFileNames()
     return fullNames;
 }
 
-bool ModuleManager::loadModules()
+bool ModuleManager::loadAllAvailableModulePlugins()
 {
     bool retVal = false;
     for(auto& fileName : getModuleFileNames()) {

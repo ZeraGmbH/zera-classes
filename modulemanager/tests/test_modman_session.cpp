@@ -26,7 +26,7 @@ void test_modman_session::loadModulePlugins()
     ZeraModules::ModuleManager modMan(emptyAvailableSessionList);
     modMan.setDemo(true);
 
-    bool modulesFound = modMan.loadModules();
+    bool modulesFound = modMan.loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
 }
 
@@ -82,7 +82,7 @@ void test_modman_session::startSession()
     qRegisterMetaTypeStreamOperators<QVector<QString> >("QVector<QString>");
     qRegisterMetaTypeStreamOperators<QList<QVariantMap> >("QList<QVariantMap>");
 
-    bool modulesFound = modMan->loadModules();
+    bool modulesFound = modMan->loadAllAvailableModulePlugins();
     QVERIFY(modulesFound);
 
     modMan->changeSessionFile(defaultSessionFile);

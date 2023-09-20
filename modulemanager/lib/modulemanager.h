@@ -33,7 +33,7 @@ class ModuleManager : public QObject
 public:
     explicit ModuleManager(const QStringList &sessionList, QObject *parent = nullptr);
     ~ModuleManager() override;
-    bool loadModules();
+    bool loadAllAvailableModulePlugins();
     void loadScripts(VeinScript::ScriptSystem *t_scriptSystem);
     void setStorage(VeinEvent::StorageSystem *t_storage);
     void setLicenseSystem(LicenseSystemInterface *t_licenseSystem);
