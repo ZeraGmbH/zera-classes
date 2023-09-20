@@ -15,15 +15,32 @@
 
 QTEST_MAIN(test_modman_session)
 
-
-void test_modman_session::loadModulePlugins()
+void test_modman_session::loadModulePluginsInstalled()
 {
+    if(!QString(OE_INSTALL_ROOT).isEmpty()) {
+        qInfo("Skipping test_modman_session::loadModulePluginsInstalled in OE");
+        return;
+    }
     ModulemanagerConfigTest::enableTest();
     ModulemanagerConfig::setDemoDevice("demo");
     ModuleManagerTest::enableTest();
 
     const QStringList emptyAvailableSessionList;
     ZeraModules::ModuleManager modMan(emptyAvailableSessionList);
+    modMan.setDemo(true);
+
+    bool modulesFound = modMan.loadAllAvailableModulePlugins();
+    QVERIFY(modulesFound);
+}
+
+void test_modman_session::loadModulePluginsOE()
+{
+    ModulemanagerConfigTest::enableTest();
+    ModulemanagerConfig::setDemoDevice("demo");
+    ModuleManagerTest::enableTest();
+
+    const QStringList emptyAvailableSessionList;
+    ModuleManagerTest modMan(emptyAvailableSessionList);
     modMan.setDemo(true);
 
     bool modulesFound = modMan.loadAllAvailableModulePlugins();
