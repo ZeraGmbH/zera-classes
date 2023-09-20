@@ -1,11 +1,18 @@
 #include "modulemanagertest.h"
 #include <QDir>
+#include <QCoreApplication>
+#include <QAbstractEventDispatcher>
 
 void ModuleManagerTest::enableTest()
 {
     m_sessionPath = QDir::cleanPath(
                 QString(OE_INSTALL_ROOT) + "/" +
                 QString(MODMAN_SESSION_PATH));
+}
+
+void ModuleManagerTest::feedEventLoop()
+{
+    while(QCoreApplication::eventDispatcher()->processEvents(QEventLoop::AllEvents));
 }
 
 ModuleManagerTest::ModuleManagerTest(const QStringList &sessionList, QObject *parent) :
